@@ -72,6 +72,7 @@ def main():
     mPlotter.plot_temperature()
     mPlotter.plot_salinity()
     mPlotter.plot_potential_density()
+    mPlotter.plot_density()
 
     mPlotter.images_to_movies(outFolder='{}/movies'.format(folder),
                               framesPerSecond=30, extension='mp4')

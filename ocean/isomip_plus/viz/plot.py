@@ -387,7 +387,7 @@ class MoviePlotter(object):
 
     def plot_potential_density(self):
         '''
-        Plot a series of images of salinity at the sea surface or
+        Plot a series of images of potential density at the sea surface or
         ice-ocean interface, sea floor and in an x-z section
         '''
 
@@ -396,6 +396,18 @@ class MoviePlotter(object):
                                            nameInTitle='potential density',
                                            prefix='PotRho', units='kg/m^3',
                                            vmin=1027., vmax=1028.)
+
+    def plot_density(self):
+        '''
+        Plot a series of images of density at the sea surface or
+        ice-ocean interface, sea floor and in an x-z section
+        '''
+
+        da = self.ds.timeMonthly_avg_density
+        self.plot_3d_field_top_bot_section(da,
+                                           nameInTitle='density',
+                                           prefix='Rho', units='kg/m^3',
+                                           vmin=1027., vmax=1032.)
 
     def plot_haney_number(self):
         '''
