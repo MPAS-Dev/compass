@@ -1,3 +1,8 @@
+# Author: Steven Brus
+# Date: August 2019
+# Description: Creates an input file for the pointwiseStats AM for a given mesh
+#              based off of a list of station locations.
+
 import netCDF4
 import numpy as np
 from scipy import spatial
@@ -76,7 +81,7 @@ def create_pointstats_file(mesh_file,stations_files):
   pnt_ids = data_nc.createVariable('pointCellGlobalID',np.int32,(npts,))
   
   # Set variables
-  pnt_ids[:] = idx[:]
+  pnt_ids[:] = idx[:]+1
   data_nc.close()
 
 ######################################################################################

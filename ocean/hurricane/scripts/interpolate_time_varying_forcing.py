@@ -1,3 +1,8 @@
+# Author: Steven Brus
+# Date: August, 2019
+# Description: Interpolates CFSR atmospheric reanalysis data onto the MPAS-O mesh and 
+#              creates an input file to support time varying atmospheric forcing in the model
+
 import netCDF4
 import matplotlib.pyplot as plt
 import numpy as np
@@ -12,6 +17,7 @@ import cartopy
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 from scipy import interpolate
+import write_forcing_file
 plt.switch_backend('agg')
 cartopy.config['pre_existing_data_dir'] = \
     os.getenv('CARTOPY_DIR', cartopy.config.get('pre_existing_data_dir'))
@@ -72,34 +78,6 @@ def interpolate_data_to_grid(grid_file,data_file,var):
 ##################################################################################################
 ##################################################################################################
 
-def write_to_file(filename,data,var,xtime):
-
-  if os.path.isfile(filename):
-    data_nc = netCDF4.Dataset(filename,'a', format='NETCDF3_64BIT_OFFSET')
-  else:
-    data_nc = netCDF4.Dataset(filename,'w', format='NETCDF3_64BIT_OFFSET')
-
-    # Find dimesions
-    ncells = data.shape[1]
-    nsnaps = data.shape[0]
-
-    # Declare dimensions
-    data_nc.createDimension('nCells',ncells)
-    data_nc.createDimension('StrLen',64)
-    data_nc.createDimension('Time',None)
-
-    # Create time variable
-    time = data_nc.createVariable('xtime','S1',('Time','StrLen'))
-    time[:,:] = netCDF4.stringtochar(xtime)
-
-  # Set variables
-  data_var = data_nc.createVariable(var,np.float64,('Time','nCells'))
-  data_var[:,:] = data[:,:]
-  data_nc.close()
-
-##################################################################################################
-##################################################################################################
-
 def plot_interp_data(lon_data,lat_data,data,lon_grid,lat_grid,interp_data,var_label,var_abrev,time):
 
 
@@ -154,7 +132,11 @@ if __name__ == '__main__':
 
   # Interpolation of u and v velocities
   lon_grid,lat_grid,u_interp,lon_data,lat_data,u_data,xtime = interpolate_data_to_grid(grid_file,wind_file,'U_GRD_L103')
+  # Write to NetCDF file
+  subprocess.call(['rm',forcing_file])
+  write_forcing_file.write_to_file(forcing_file,u_interp,'windSpeedU',xtime)
   lon_grid,lat_grid,v_interp,lon_data,lat_data,v_data,xtime = interpolate_data_to_grid(grid_file,wind_file,'V_GRD_L103')
+  write_forcing_file.write_to_file(forcing_file,v_interp,'windSpeedV',xtime)
 
   # Calculate and plot velocity magnitude
   if args.plot:
@@ -168,8 +150,13 @@ if __name__ == '__main__':
 
         plot_interp_data(lon_data,lat_data,data,lon_grid,lat_grid,interp_data,'velocity magnitude','vel',xtime[i])
 
+  del u_interp
+  del u_data
+  del v_interp
+  del v_data
   # Interpolation of atmospheric pressure
   lon_grid,lat_grid,p_interp,lon_data,lat_data,p_data,xtime = interpolate_data_to_grid(grid_file,pres_file,'PRMSL_L101')
+  write_forcing_file.write_to_file(forcing_file,p_interp,'atmosPressure',xtime)
 
   # Plot atmopheric pressure
   if args.plot:
@@ -179,10 +166,6 @@ if __name__ == '__main__':
         print('Plotting pres: '+str(i))
 
         plot_interp_data(lon_data,lat_data,p_data[i,:,:],lon_grid,lat_grid,p_interp[i,:],'atmospheric pressure','pres',xtime[i])
-
-  # Write to NetCDF file
-  subprocess.call(['rm',forcing_file])
-  write_to_file(forcing_file,u_interp,'windSpeedU',xtime)
-  write_to_file(forcing_file,v_interp,'windSpeedV',xtime)
-  write_to_file(forcing_file,p_interp,'atmosPressure',xtime)
+  del p_interp
+  del p_data
 
