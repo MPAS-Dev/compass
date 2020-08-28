@@ -1,0 +1,26 @@
+<!--
+This regression suite tests operator convergence of horizontal advection.
+The cosine bell test case of Skamarock and Gassmann is used with the following
+resolutions
+
+1. QU240
+2. QU120
+3. QU60
+
+This test advects debug tracer around the equator (24 day test).  The tracer
+should return to its initial position.
+-->
+<regression_suite name="horizontal_advection">
+	<test name="QU240 Cosine Bell" core="ocean" configuration="cosine_bell" resolution="QU240" test="default">
+		<script name="run.py"/>
+	</test>
+	<test name="QU120 Cosine Bell" core="ocean" configuration="cosine_bell" resolution="QU120" test="default">
+		<script name="run.py"/>
+	</test>
+	<test name="QU60 Cosine Bell" core="ocean" configuration="cosine_bell" resolution="QU60" test="default">
+		<script name="run.py"/>
+  </test>
+  <test name="RMSE Cosine Bell" core="ocean" configuration="cosine_bell" resolution="RMSE" test="default">
+    <script name="run.py"/>
+  </test>
+</regression_suite>
