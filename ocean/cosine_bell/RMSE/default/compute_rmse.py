@@ -1,22 +1,16 @@
 import numpy as np
 import xarray as xr
 import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-import os 
+import os
 
-%matplotlib inline
-matplotlib.rcParams['figure.figsize'] = (16, 16) # Large figures
-dpi=200;
-
-### axis_font = {'fontname':'Arial', 'size':'18'}    
-title_font = {'fontname':'Arial', 'size':'32', 'color':'black', 'weight':'normal'}
-matplotlib.rc('xtick', labelsize=28)
-matplotlib.rc('ytick', labelsize=28)
+dpi = 200
 
 def rmse(resTag, sliceTime):
 # resTag is the resolution to compute RMSE
 # sliceTag is the time slice, assumes 1 hour output and same for all cases
-    fid = open(resTag+'/default/init_step/namelist.ocean','r')
+    fid = open('../../../{}/default/init_step/namelist.ocean'.format(resTag),'r')
     temp = fid.readlines()
 
     fid.close()
@@ -37,9 +31,9 @@ def rmse(resTag, sliceTime):
             ii = line.find('=')+1
             pd = float(line[ii:])
 
-    init = xr.open_dataset('../../'+resTag+'/default/init_step/initial_state.nc')
+    init = xr.open_dataset('../../../{}/default/init_step/initial_state.nc'.format(resTag))
     #find time since the beginning of run
-    ds = xr.open_dataset('../../'+resTag+'/default/forward/output/output.0001-01-01_00.00.00.nc')
+    ds = xr.open_dataset('../../../{}/default/forward/output/output.0001-01-01_00.00.00.nc'.format(resTag))
     tt=str(ds.xtime[sliceTime].values)
     tt.rfind('_')
     DY = float(tt[10:12])-1
@@ -61,10 +55,9 @@ def rmse(resTag, sliceTime):
     tracer = np.zeros_like(init.tracer1[0,:,0].values)
     latC = init.latCell.values
     lonC = init.lonCell.values
-    for i in range(len(latC)):
-        temp = R*np.arccos(np.sin(latCent)*np.sin(latC[i]) + np.cos(latCent)*np.cos(latC[i])*np.cos(lonC[i] - newLon))
-        if temp < radius:
-            tracer[i] = psi0 / 2.0 * (1.0 + np.cos(3.1415926*temp/radius))
+    temp = R*np.arccos(np.sin(latCent)*np.sin(latC) + np.cos(latCent)*np.cos(latC)*np.cos(lonC - newLon))
+    mask = temp < radius
+    tracer[mask] = psi0 / 2.0 * (1.0 + np.cos(3.1415926*temp[mask]/radius))
 
     #oad forward mode data
     tracerF = ds.tracer1[sliceTime,:,0].values
@@ -87,8 +80,12 @@ ydata = np.asarray(ytemp)
 p = np.polyfit(np.log10(xdata),np.log10(ydata),1)
 conv = abs(p[0])*2.0
 
-plt.loglog(xdata,ydata,'k')
-plt.scatter(xdata,ydata,s=40,c='r')
-plt.annotate('Order of Convergence = {}'.format(np.round(conv,2)),xy=((xdata[-1]+xdata[0])*0.4,ydata[0]),fontsize=28)
-plt.savefig('convergence.png')
+yfit = xdata**p[0]*10**p[1]
+
+plt.loglog(xdata,yfit,'k')
+plt.loglog(xdata,ydata,'or')
+plt.annotate('Order of Convergence = {}'.format(np.round(conv,2)),xycoords='axes fraction',xy=(0.4,0.95),fontsize=14)
+plt.xlabel('Number of Grid Cells',fontsize=14)
+plt.ylabel('L2 Norm',fontsize=14)
+plt.savefig('convergence.png',bbox_inches='tight', pad_inches=0.1)
 
