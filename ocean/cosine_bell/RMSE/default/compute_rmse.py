@@ -7,7 +7,7 @@ import os
 
 dpi = 200
 
-def rmse(resTag, sliceTime):
+def rmse(resTag):
 # resTag is the resolution to compute RMSE
 # sliceTag is the time slice, assumes 1 hour output and same for all cases
     fid = open('../../../{}/default/init_step/namelist.ocean'.format(resTag),'r')
@@ -34,13 +34,16 @@ def rmse(resTag, sliceTime):
     init = xr.open_dataset('../../../{}/default/init_step/initial_state.nc'.format(resTag))
     #find time since the beginning of run
     ds = xr.open_dataset('../../../{}/default/forward/output/output.0001-01-01_00.00.00.nc'.format(resTag))
-    tt=str(ds.xtime[sliceTime].values)
-    tt.rfind('_')
-    DY = float(tt[10:12])-1
+    for j in range(len(ds.xtime)):
+      tt=str(ds.xtime[j].values)
+      tt.rfind('_')
+      DY = float(tt[10:12])-1
+      if DY == pd:
+        sliceTime = j
+        break
     HR = float(tt[13:15])
     MN = float(tt[16:18])
     t = 86400.0*DY+HR*3600.+MN
-
     #find new location of blob center
     #center is based on equatorial velocity
     R = init.sphere_radius
@@ -71,7 +74,7 @@ res = ['QU60','QU120','QU240']
 xtemp = []
 ytemp = []
 for i in range(len(res)):
-    exec('rmse'+res[i]+',nCells'+res[i]+' = rmse(res[i],24)')
+    exec('rmse'+res[i]+',nCells'+res[i]+' = rmse(res[i])')
     exec('xtemp.append(nCells'+res[i]+')')
     exec('ytemp.append(rmse'+res[i]+')')
 xdata = np.asarray(xtemp)
