@@ -1,9 +1,15 @@
 <driver_script name="run.py">
+	<case name="initial_state">
+		<step executable="./run.py" quiet="true" pre_message=" * Initializing ocean state with bathymetry and tracers..." post_message="     complete!  Created file:  initial_state/initial_state.nc"/>
+	</case>
 	<case name="prep_spin_up1">
 		<step executable="./run.py" quiet="true" pre_message=" * Running prep_spin_up1" post_message=" - Complete"/>
 	</case>
 	<case name="simulation">
 		<step executable="./run.py" quiet="true" pre_message=" * Running simulation" post_message=" - Complete"/>
+	</case>
+	<case name="files_for_e3sm">
+		<step executable="./run.py" quiet="true" pre_message=" * Creating ocean and sea-ice initial conditions and supporting files for E3SM" post_message=" - Complete"/>
 	</case>
 	<validation>
 		<compare_fields file1="simulation/output.nc">
