@@ -12,7 +12,9 @@ import os
 from mpas_tools.conversion import convert
 from mpas_tools.io import write_netcdf
 
+
 write_netcdf(convert(xarray.open_dataset('base_mesh.nc'),
-  graphInfoFileName='graph.info'),'base_mesh_final.nc')
+                     graphInfoFileName='graph.info'),
+             'base_mesh_final.nc')
 
 os.remove('base_mesh_final.nc')
