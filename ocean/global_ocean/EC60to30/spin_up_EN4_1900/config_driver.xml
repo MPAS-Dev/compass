@@ -8,9 +8,6 @@
 	<case name="simulation">
 		<step executable="./run.py" quiet="true" pre_message=" * Running simulation" post_message=" - Complete"/>
 	</case>
-	<case name="files_for_e3sm">
-		<step executable="./run.py" quiet="true" pre_message=" * Creating ocean and sea-ice initial conditions and supporting files for E3SM" post_message=" - Complete"/>
-	</case>
 	<validation>
 		<compare_fields file1="simulation/output.nc">
 			<template file="prognostic_comparison.xml" path_base="script_core_dir" path="templates/validations"/>
