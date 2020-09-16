@@ -14,7 +14,7 @@ def rmse(resTag):
     resTag is the resolution to compute RMSE
     """
 
-    fid = open('../../../{}/default/init_step/namelist.ocean'.format(resTag),
+    fid = open('../../../{}/cosine_bell/initial_state/namelist.ocean'.format(resTag),
                'r')
     temp = fid.readlines()
 
@@ -36,10 +36,10 @@ def rmse(resTag):
             ii = line.find('=')+1
             pd = float(line[ii:])
 
-    init = xr.open_dataset('../../../{}/default/init_step/initial_state.nc'
+    init = xr.open_dataset('../../../{}/cosine_bell/initial_state/initial_state.nc'
                            ''.format(resTag))
     # find time since the beginning of run
-    ds = xr.open_dataset('../../../{}/default/forward/output/'
+    ds = xr.open_dataset('../../../{}/cosine_bell/forward/output/'
                          'output.0001-01-01_00.00.00.nc'.format(resTag))
     for j in range(len(ds.xtime)):
         tt = str(ds.xtime[j].values)

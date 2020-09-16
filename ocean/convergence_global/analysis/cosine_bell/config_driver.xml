@@ -1,0 +1,8 @@
+<driver_script name="run.py">
+	<prerequisite core="ocean" configuration="convergence_global" resolution="QU240" test="cosine_bell"/>
+	<prerequisite core="ocean" configuration="convergence_global" resolution="QU120" test="cosine_bell"/>
+	<prerequisite core="ocean" configuration="convergence_global" resolution="QU60" test="cosine_bell"/>
+	<case name="rmse">
+		<step executable="./run.py" quiet="true" pre_message=" * Computing RMSE and convergence order..." post_message="     complete!  Created file:  rmse/convergence.png"/>
+	</case>
+</driver_script>
