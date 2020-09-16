@@ -7,7 +7,7 @@
 
 	<namelist name="namelist.ocean" mode="forward">
 		<template file="templates/template_forward_cosine_bell.xml" path_base="script_configuration_dir"/>
-		<option name="config_dt">'00:30:00'</option>
+		<option name="config_dt">'00:90:00'</option>
 	</namelist>
 
 	<streams name="streams.ocean" keep="immutable" mode="forward">
@@ -16,8 +16,8 @@
 
 	<run_script name="run.py">
 		<step executable="gpmetis">
-		<argument flag="graph.info">144</argument>
+		<argument flag="graph.info">36</argument>
 		</step>
-		<model_run procs="144" threads="1" namelist="namelist.ocean" streams="streams.ocean"/>
+		<model_run procs="36" threads="1" namelist="namelist.ocean" streams="streams.ocean"/>
 	</run_script>
 </config>

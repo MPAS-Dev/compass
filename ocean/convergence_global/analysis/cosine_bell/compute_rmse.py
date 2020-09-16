@@ -79,7 +79,7 @@ def rmse(resTag):
     return rmseValue, init.dims['nCells']
 
 
-res = ['QU60', 'QU120', 'QU240']
+res = ['QU60', 'QU90', 'QU120', 'QU150', 'QU180', 'QU210', 'QU240']
 xtemp = []
 ytemp = []
 for i in range(len(res)):
@@ -96,8 +96,8 @@ yfit = xdata**p[0]*10**p[1]
 
 plt.loglog(xdata, yfit, 'k')
 plt.loglog(xdata, ydata, 'or')
-plt.annotate('Order of Convergence = {}'.format(np.round(conv, 2)),
-             xycoords='axes fraction', xy=(0.4, 0.95), fontsize=14)
+plt.annotate('Order of Convergence = {}'.format(np.round(conv, 3)),
+             xycoords='axes fraction', xy=(0.3, 0.95), fontsize=14)
 plt.xlabel('Number of Grid Cells', fontsize=14)
 plt.ylabel('L2 Norm', fontsize=14)
 plt.savefig('convergence.png', bbox_inches='tight', pad_inches=0.1)
