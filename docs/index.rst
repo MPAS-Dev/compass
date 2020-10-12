@@ -1,24 +1,46 @@
-MPAS-Model
-==========
+COMPASS
+=======
 
-The Model for Prediction Across Scales (MPAS) is a collaborative project for
-developing atmosphere, ocean, and other earth-system simulation components for
-use in climate, regional climate, and weather studies. The primary development
-partners are the climate modeling group at Los Alamos National Laboratory
-(COSIM) and the National Center for Atmospheric Research. Both primary
-partners are responsible for the MPAS framework, operators, and tools common to
-the applications; LANL has primary responsibility for the ocean, sea-ice and
-land-ice models, and NCAR has primary responsibility for the atmospheric model.
+Overview
+--------
 
-The MPAS framework facilitates the rapid development and prototyping of models
-by providing infrastructure typically required by model developers, including
-high-level data types, communication routines, and I/O routines. By using MPAS,
-developers can leverage pre-existing code and focus more on development of
+The COMPASS (Configuration Of Model for Prediction Across Scales Setups)
+infrastructure provides a capability for defining simple test-case workflows.
+It is intended to house a small number of files which can describe the steps to
+setup and configure a test case.
+
+It provides four utility python scripts:
+
+* ``clean_testcase.py``
+* ``list_testcases.py``
+* ``setup_testcase.py``
+* ``manage_regression_suite.py``
+
+and two configuration file templates:
+
+  * ``general.config.test``
+  * ``general.config.ocean``
+
+Each of the python scripts can be run with a ``-h`` argument only to get usage
+information.
+
+Additionally, each core has a directory at the top level (e.g. ocean for the
+ocean test cases). There is also a templates directory where a core can place
+template files that are intended to be available for it's test cases.
+
+An example test case is placed in ``ocean/baroclinic_channel/10km``
+An example template is placed in ``templates/ocean/global_stats.xml``
+
+Test cases are described by XML files. Each test case can have an arbitrary
+number of XML files that configure the steps for setting up the test case.
+
+The various XML files that can be used with this test case infrastructure are
+described in the README files contained in the doc directory.
 
 .. toctree::
    :titlesonly:
 
-   compass/index
-   ocean/index
-
-
+   details
+   scripts
+   ocean
+   ocean_testcases/index
