@@ -1716,7 +1716,7 @@ if __name__ == "__main__":
     old_dir = os.getcwd()
     os.chdir(config.get('script_paths', 'script_path'))
     git_version = subprocess.check_output(
-        ['git', 'describe', '--tags', '--dirty']).decode('utf-8')
+        ['git', 'describe', '--tags', '--dirty', '--always']).decode('utf-8')
     git_version = git_version.strip('\n')
     calling_command = ""
     for arg in sys.argv:
