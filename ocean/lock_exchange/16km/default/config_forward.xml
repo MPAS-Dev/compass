@@ -5,13 +5,12 @@
 	<add_link source="make_graph_file.py" source_path="utility_scripts" dest="make_graph_file.py"/>
 
 	<add_executable source="model" dest="ocean_model"/>
-	<add_executable source="metis" dest="metis"/>
 
 	<namelist name="namelist.ocean" mode="forward">
 		<option name="config_dt">'0000_00:30:00'</option>
 		<option name="config_btr_dt">'0000_00:00:01.5'</option>
 		<option name="config_run_duration">'0000_01:00:00'</option>
-		<option name="config_use_const_visc">.true.</option>
+		<option name="config_use_cvmix_background">.true.</option>
 		<option name="config_implicit_bottom_drag_coeff">0.0</option>
 		<option name="config_use_mom_del2">.true.</option>
 		<option name="config_mom_del2">10.0</option>

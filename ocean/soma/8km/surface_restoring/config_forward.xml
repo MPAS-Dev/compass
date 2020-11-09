@@ -6,13 +6,12 @@
 	<add_link source="../init_step2/graph.info" dest="graph.info"/>
 
 	<get_file dest_path="initial_condition_database" file_name="make_particle_resets.151222.py">
-		<mirror protocol="wget" url="http://oceans11.lanl.gov/mpas_data/initial_condition_database"/>
+		<mirror protocol="wget" url="https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-ocean/initial_condition_database"/>
 	</get_file>
 
 	<add_link source_path="initial_condition_database" source="make_particle_resets.151222.py" dest="make_particle_resets.py"/>
 
 	<add_executable source="model" dest="ocean_model"/>
-	<add_executable source="metis" dest="metis"/>
 
 	<namelist name="namelist.ocean" mode="forward">
 		<template file="soma_template.xml" path_base="script_configuration_dir"/>
@@ -40,7 +39,7 @@
 	</streams>
 
 	<run_script name="run.py">
-		<step executable="./metis">
+		<step executable="gpmetis">
 			<argument flag="graph.info">4</argument>
 		</step>
 		<step executable="python">
