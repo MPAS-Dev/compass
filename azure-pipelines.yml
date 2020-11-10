@@ -157,7 +157,7 @@ jobs:
       set -e
       eval "$(conda shell.bash hook)"
       conda create --yes --quiet --name compass --use-local python=$PYTHON_VERSION \
-          "compass=*=*$(mpi)*"
+          compass
     displayName: Create compass conda environment
 
   - bash: |
@@ -210,7 +210,7 @@ jobs:
       set -e
       eval "$(conda shell.bash hook)"
       conda create --yes --quiet --name compass --use-local python=$PYTHON_VERSION \
-          "compass=*=*$(mpi)*"
+          compass
     displayName: Create compass conda environment
 
   - bash: |
