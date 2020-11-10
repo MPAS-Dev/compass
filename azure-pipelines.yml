@@ -125,10 +125,15 @@ jobs:
     vmImage: 'ubuntu-16.04'
   strategy:
     matrix:
-      Python37:
-        python.version: '3.7'
-      Python38:
+      nompi:
         python.version: '3.8'
+        mpi: 'nompi'
+      openmpi:
+        python.version: '3.8'
+        mpi: 'openmpi'
+      mpich:
+        python.version: '3.8'
+        mpi: 'mpich'
 
   steps:
   - bash: echo "##vso[task.prependpath]$CONDA/bin"
@@ -145,14 +150,14 @@ jobs:
   - bash: |
       eval "$(conda shell.bash hook)"
       conda activate build
-      conda build recipe
+      conda build -m ci/mpi_$(mpi).yaml recipe
     displayName: Build COMPASS metapackage
 
   - bash: |
       set -e
       eval "$(conda shell.bash hook)"
       conda create --yes --quiet --name compass --use-local python=$PYTHON_VERSION \
-          "compass=*=nompi*"
+          "compass=*=*$(mpi)*"
     displayName: Create compass conda environment
 
   - bash: |
@@ -174,10 +179,15 @@ jobs:
     vmImage: 'macOS-10.14'
   strategy:
     matrix:
-      Python37:
-        python.version: '3.7'
-      Python38:
+      nompi:
         python.version: '3.8'
+        mpi: 'nompi'
+      openmpi:
+        python.version: '3.8'
+        mpi: 'openmpi'
+      mpich:
+        python.version: '3.8'
+        mpi: 'mpich'
 
   steps:
   - bash: echo "##vso[task.prependpath]$CONDA/bin"
@@ -194,14 +204,14 @@ jobs:
   - bash: |
       eval "$(conda shell.bash hook)"
       conda activate build
-      conda build recipe
+      conda build -m ci/mpi_$(mpi).yaml recipe
     displayName: Build COMPASS metapackage
 
   - bash: |
       set -e
       eval "$(conda shell.bash hook)"
       conda create --yes --quiet --name compass --use-local python=$PYTHON_VERSION \
-          "compass=*=nompi*"
+          "compass=*=*$(mpi)*"
     displayName: Create compass conda environment
 
   - bash: |
