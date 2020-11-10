@@ -156,8 +156,9 @@ jobs:
   - bash: |
       set -e
       eval "$(conda shell.bash hook)"
-      conda create --yes --quiet --name compass --use-local python=$PYTHON_VERSION \
-          compass
+      conda activate build
+      conda create --yes --quiet --name compass -c ${CONDA_PREFIX}/conda-bld/ \
+          python=$PYTHON_VERSION compass
     displayName: Create compass conda environment
 
   - bash: |
@@ -209,8 +210,9 @@ jobs:
   - bash: |
       set -e
       eval "$(conda shell.bash hook)"
-      conda create --yes --quiet --name compass --use-local python=$PYTHON_VERSION \
-          compass
+      conda activate build
+      conda create --yes --quiet --name compass -c ${CONDA_PREFIX}/conda-bld/ \
+          python=$PYTHON_VERSION compass
     displayName: Create compass conda environment
 
   - bash: |
