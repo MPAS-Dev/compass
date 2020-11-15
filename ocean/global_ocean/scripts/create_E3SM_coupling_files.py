@@ -32,16 +32,6 @@ from netCDF4 import Dataset
 def main():  # {{{
 
     print("****** Creating E3SM coupling files ******")
-    # obtain configuration settings
-    config = configparser.ConfigParser(
-        interpolation=configparser.ExtendedInterpolation())
-    # first, read in the default config options
-    config.read("defaults.ini")
-    if os.path.exists('config_E3SM_coupling_files.ini'):
-        # there are custom config options, too, so we'll read those in next so
-        # they override the defaults where necessary
-        config.read("config_E3SM_coupling_files.ini")
-
     function_list = [initial_condition_ocean,
                      graph_partition_ocean,
                      initial_condition_seaice,
@@ -67,7 +57,21 @@ def main():  # {{{
     parser.add_argument('--email', dest='email', required=False,
                         help='email address of the author to include in '
                              'metadata')
+    parser.add_argument('-f', '--config', dest='config', required=False,
+                        default='config_E3SM_coupling_files.ini',
+                        help='name of a config file to override the defaults')
+
     args = parser.parse_args()
+
+    # obtain configuration settings
+    config = configparser.ConfigParser(
+        interpolation=configparser.ExtendedInterpolation())
+    # first, read in the default config options
+    config.read("defaults.ini")
+    if os.path.exists(args.config):
+        # there are custom config options, too, so we'll read those in next so
+        # they override the defaults where necessary
+        config.read(args.config)
 
     # clean: Delete all directories
     if args.clean:
