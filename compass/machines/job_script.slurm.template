@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+#SBATCH --nodes={{ job.nodes }}
+#SBATCH --time={{ job.time }}
+#SBATCH --account={{ machine.account }}
+#SBATCH --job-name={{ job.name }}
+#SBATCH --output={{ job.name }}.o%j
+#SBATCH --error={{ job.name }}.e%j
+#SBATCH --qos=interactive
+
+export OMP_NUM_THREADS=1
+
+source {{ machine.compass_envs }}/etc/profile.d/conda.sh
+conda activate compass_{{ compass.version }}
+export HDF5_USE_FILE_LOCKING=FALSE
+
+./run.py
