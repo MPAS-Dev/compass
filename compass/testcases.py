@@ -1,6 +1,8 @@
 import os
 import sys
 
+from compass.examples import tests as example_tests
+
 
 def collect():
     """
@@ -14,7 +16,7 @@ def collect():
 
     testcase_list = list()
 
-    for tests in []:
+    for tests in [example_tests]:
         testcase_list.extend(tests.collect())
 
     validate(testcase_list)
