@@ -1,0 +1,83 @@
+from compass.testcase import run_steps, get_default
+from compass.ocean.tests.baroclinic_channel import initial_state, forward
+from compass.ocean.tests import baroclinic_channel
+
+
+def collect(resolution):
+    """
+    Get a dictionary of testcase properties
+
+    Parameters
+    ----------
+    resolution : {'10km'}
+        The resolution of the mesh
+
+    Returns
+    -------
+    testcase : dict
+        A dict of properties of this test case, including its steps
+    """
+    description = 'baroclinic channel {} default'.format(resolution)
+    module = __name__
+
+    name = module.split('.')[-1]
+    subdir = '{}/{}'.format(resolution, name)
+    steps = dict()
+    step = initial_state.collect(resolution)
+    steps[step['name']] = step
+
+    step = forward.collect(resolution, procs=4, threads=1,
+                           testcase_module=module,
+                           namelist_file='namelist.full',
+                           streams_file='streams.full')
+    step['name'] = 'full_run'
+    step['subdir'] = step['name']
+    steps[step['name']] = step
+
+    step = forward.collect(resolution, procs=4, threads=1,
+                           testcase_module=module,
+                           namelist_file='namelist.restart',
+                           streams_file='streams.restart')
+    step['name'] = 'restart_run'
+    step['subdir'] = step['name']
+    steps[step['name']] = step
+
+    testcase = get_default(module, description, steps, subdir=subdir)
+    testcase['resolution'] = resolution
+
+    return testcase
+
+
+def configure(testcase, config):
+    """
+    Modify the configuration options for this testcase.
+
+    Parameters
+    ----------
+    testcase : dict
+        A dictionary of properties of this testcase from the ``collect()``
+        function
+
+    config : configparser.ConfigParser
+        Configuration options for this testcase, a combination of the defaults
+        for the machine, core and configuration
+    """
+    baroclinic_channel.configure(testcase, config)
+
+
+def run(testcase, config):
+    """
+    Run each step of the testcase
+
+    Parameters
+    ----------
+    testcase : dict
+        A dictionary of properties of this testcase from the ``collect()``
+        function
+
+    config : configparser.ConfigParser
+        Configuration options for this testcase, a combination of the defaults
+        for the machine, core and configuration
+    """
+    steps = ['initial_state', 'full_run', 'restart_run']
+    run_steps(testcase, config, steps)
