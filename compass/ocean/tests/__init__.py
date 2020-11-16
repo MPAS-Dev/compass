@@ -1,3 +1,5 @@
+from compass.ocean.tests import baroclinic_channel
+
 
 def collect():
     """
@@ -10,7 +12,7 @@ def collect():
 
     """
     testcases = list()
-    for configuration in []:
+    for configuration in [baroclinic_channel]:
         testcases.extend(configuration.collect())
 
     return testcases
