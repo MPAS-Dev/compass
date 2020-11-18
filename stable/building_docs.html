@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Details &mdash; COMPASS stable documentation</title>
+  <title>Building the Documentation &mdash; COMPASS stable documentation</title>
   
 
   
@@ -37,8 +37,7 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="config" href="config.html" />
-    <link rel="prev" title="COMPASS" href="index.html" /> 
+    <link rel="prev" title="run_config" href="run_config.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -87,18 +86,27 @@
               
             
             
-              <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Details</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="config.html">config</a></li>
-<li class="toctree-l2"><a class="reference internal" href="driver_script.html">driver_script</a></li>
-<li class="toctree-l2"><a class="reference internal" href="template.html">template</a></li>
-<li class="toctree-l2"><a class="reference internal" href="regression_suite.html">regression_suite</a></li>
-<li class="toctree-l2"><a class="reference internal" href="run_config.html">run_config</a></li>
+              <p class="caption"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list_testcases.html">list_testcases.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup_testcase.html">setup_testcase.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clean_testcase.html">clean_testcase.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="manage_regression_suite.html">manage_regression_suite.py</a></li>
 </ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="scripts.html">Scripts</a></li>
+<p class="caption"><span class="caption-text">Ocean</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="ocean.html">COMPASS for ocean test case</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ocean_testcases/index.html">Ocean Test Cases</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="config.html">config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="driver_script.html">driver_script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="template.html">template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="regression_suite.html">regression_suite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="run_config.html">run_config</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Building the Documentation</a></li>
 </ul>
 
             
@@ -145,13 +153,13 @@
     
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li>Details</li>
+      <li>Building the Documentation</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/details.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/building_docs.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -164,24 +172,23 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="details">
-<span id="compass-details"></span><h1>Details<a class="headerlink" href="#details" title="Permalink to this headline">¶</a></h1>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="config.html">config</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="config.html#how-to-use-pre-defined-paths">How to use pre-defined paths</a></li>
-<li class="toctree-l2"><a class="reference internal" href="config.html#description-of-xml-file">Description of XML file</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="driver_script.html">driver_script</a></li>
-<li class="toctree-l1"><a class="reference internal" href="template.html">template</a></li>
-<li class="toctree-l1"><a class="reference internal" href="regression_suite.html">regression_suite</a></li>
-<li class="toctree-l1"><a class="reference internal" href="run_config.html">run_config</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="run_config.html#examples">Examples</a></li>
-</ul>
-</li>
-</ul>
+  <div class="section" id="building-the-documentation">
+<span id="dev-building-docs"></span><h1>Building the Documentation<a class="headerlink" href="#building-the-documentation" title="Permalink to this headline">¶</a></h1>
+<p>To make a local test build of the documentation, you need to set up a conda
+environment with some required packages:</p>
+<p>code-block:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ conda create -y -n test_compass_docs python=3.8 sphinx mock sphinx_rtd_theme
+$ conda activate test_compass_docs
+</pre></div>
 </div>
+<p>Then, to build the documentation, run:</p>
+<p>code-block:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ export DOCS_VERSION=&quot;test&quot;
+$ cd docs
+$ make html
+</pre></div>
+</div>
+<p>Then, you can view the documentation by opening <code class="docutils literal notranslate"><span class="pre">_build/html/index.html</span></code>.</p>
 </div>
 
 
@@ -192,10 +199,8 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="config.html" class="btn btn-neutral float-right" title="config" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
-      
-        <a href="index.html" class="btn btn-neutral float-left" title="COMPASS" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="run_config.html" class="btn btn-neutral float-left" title="run_config" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
