@@ -12,6 +12,7 @@ altered in those files.
    :maxdepth: 2
 
    overview
+   machine/index
    list_testcases
    setup_testcase
    clean_testcase
