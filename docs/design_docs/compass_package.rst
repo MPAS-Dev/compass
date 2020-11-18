@@ -256,13 +256,14 @@ namelist files:
 Design solution: Shared code
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2020/11/16
+Date last modified: 2020/11/18
 
 Contributors: Xylar Asay-Davis
 
 
 By organizing both the testcases themselves and shared framework code into a
-``compass`` Python package, code reuse should be greatly simplified.
+``compass`` Python package, code reuse and organization should be greatly
+simplified.
 
 The organization of the package will be as follows:
 
@@ -337,37 +338,143 @@ Here's how it would be used in the ``setup()`` function of a step:
 Design solution: Shared configuration options
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2020/11/16
+Date last modified: 2020/11/18
 
 Contributors: Xylar Asay-Davis
 
+
+In the work directory, each testcase will have a single config file that is
+populated during the setup phase and which is symlinked within each step of the
+testcase.  The idea of having a single config file per testcase, rather than
+one for each step, is to make it easier for users to modify config options in
+one place at runtime before running all the steps in a testcase.  This will
+hopefully avoid the tedium of altering redundant namelist or config options in
+each step.
+
+The config files will be populated from default config options provided in
+several config files within the ``compass`` package.  Any config options read in
+from a later config file will override the same option from an earlier config
+file, so the order in which the files are loaded is important.  The proposed
+loading order is:
+
+* machine config file (found in ``compass/machines/<machine>.cfg``, with
+  ``default`` being the machine name if none is specified)
+* core config file (found in ``compass/<core>/<core>.cfg``)
+* configuration config file (found in
+  ``compass/<core>/tests/<configuration>/<configuration>.cfg``)
+* any additions or modifications made within the testcase's ``configure()``
+  function.
+
+The ``configure()`` function allows each test case to load one or more config
+files specific to the testcase (e.g. ``<testcase>.cfg`` within the testcase's
+module) and would also allow calls to ``config.set()`` that define config
+options directly.
+
+The resulting config file would be written to ``<testcase>.cfg`` within the
+testcase directory and symlinked to each step subdirectory as stated above.
 
 
 Design solution: Ability specify/modify core counts
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2020/11/16
+Date last modified: 2020/11/18
 
 Contributors: Xylar Asay-Davis
 
+
+(The design solution here is still a work in progress.)
+
+Within the ``run()`` function, a ``step`` will be able to call a function to
+find out how many nodes and cores are available on the system (or in the batch
+job) to run jobs.  Based on this information and a target number of cores, the
+step can figure out how many cores to run with and can (if needed) update
+namelist options related to PIO tasks to be compatible.
 
 
 Design solution: Machine-specific data
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2020/11/16
+Date last modified: 2020/11/18
 
 Contributors: Xylar Asay-Davis
 
+
+The machine config file mentioned in "Shared configuration options" would have
+the following config options:
+
+.. code-block:: ini
+
+    # The paths section describes paths that are used within the ocean core test
+    # cases.
+    [paths]
+
+    # The mesh_database and the initial_condition_database are locations where
+    # meshes / initial conditions might be found on a specific machine. They can be
+    # the same directory, or different directory. Additionally, if they are empty
+    # some test cases might download data into them, which will then be reused if
+    # the test case is run again later.
+    mesh_database = /usr/projects/regionalclimate/COMMON_MPAS/ocean/grids/mesh_database
+    initial_condition_database = /usr/projects/regionalclimate/COMMON_MPAS/ocean/grids/initial_condition_database
+    bathymetry_database = /usr/projects/regionalclimate/COMMON_MPAS/ocean/grids/bathymetry_database
+    compass_envs = /usr/projects/climate/SHARED_CLIMATE/anaconda_envs/base
+
+
+    # The parallel section describes options related to running tests in parallel
+    [parallel]
+
+    # parallel system of execution: slurm or single_node
+    system = slurm
+
+    # whether to use mpirun or srun to run the model
+    parallel_executable = srun
+
+    # cores per node on the machine
+    cores_per_node = 36
+
+    # the slurm account
+    account = climateacme
+
+    # the number of multiprocessing or dask threads to use
+    threads = 18
+
+The various ``paths`` would help with finding mesh or initial condition files.
+These paths are currently assumed to be core independent, so would need to be
+renamed or moved to core-specific sections if different cores wish to have their
+own versions of these paths.
+
+The ``parallel`` options are intended to contain all of the machine-specific
+information needed to determine how many cores a given ``step`` would require
+and to create a job script for each ``testcase`` and ``step``.  The use of
+python thread parallelism is relatively new and experimental in COMPASS, so the
+way that an appropriate value for ``threads`` is determined may need to evolve
+as that capability gets more exploration.
 
 
 Design solution: Looser, more flexible directory structure
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2020/11/16
+Date last modified: 2020/11/18
 
 Contributors: Xylar Asay-Davis
 
+
+Each testcase and step will be defined by a unique subdirectory within the
+work directory.  Within the base work directory, the first two levels of
+subdirectories will be the same as in the current implementation:
+``core/configuration``.  However, testcases will be free to determine the
+(unique) subdirectory structure beyond this top-most level.  Many existing
+testcases will likely stick with the ``resolution/testcase/step`` organization
+structure imposed in the existing COMPASS framework, but others may choose a
+different way of organizing (and, indeed, many test cases already have given the
+``resolution`` subdirectory a name that is seemingly unrelated to the mesh
+resolution).  A unique subdirectory for each testcase and step will be provided
+as a value in ``testcase['subdir']`` or ``step['subdir']`` within the python
+dictionary that describes each testcase or step.  The default ``subdir`` will
+be the name of the testcase or step, but each testcase or step can modify this
+as appropriate in the ``collect()`` function.
+
+COMPASS will list testcases based on their full paths within the work directory,
+since this is they way that they can be uniquely identified.
 
 
 Design solution: User- and developer-friendly documentation
@@ -378,12 +485,57 @@ Date last modified: 2020/11/16
 Contributors: Xylar Asay-Davis
 
 
+Documentation using ``sphinx`` and the ``ReadTheDocs`` template will be built
+out in a manner similar to what has already been done for:
+
+* `geometric_features <https://mpas-dev.github.io/geometric_features/stable/>`_
+
+* `pyremap <https://mpas-dev.github.io/pyremap/stable/>`_
+
+* `MPAS-Tools <https://mpas-dev.github.io/MPAS-Tools/stable/>`_
+
+* `MPAS-Analysis <https://mpas-dev.github.io/MPAS-Analysis/latest/>`_
+
+The documentation will include:
+
+* A user's guide for listing, setting up, and cleaning up testcase
+
+* A user's guide for regression suites
+
+* More detailed tutorials:
+
+  * Running a test case
+
+  * Running the regression suite
+
+* A section for each core
+
+  * A subsection describing the configurations
+
+    * A sub-subsection for each testcase and its steps
+
+  * A subsection for the core's framework code
+
+* A description of the ``compass`` framework code:
+
+  * for use within testcases
+
+  * for listing, setting up and cleaning up testcases
+
+  * for managing regression test suites
+
+* An automated documentation of the API pulled from docstrings
+
+* A developer's guide for creating new testcases
+
+  * core-specific details for developing new testcases
+
 
 Design and Implementation
 -------------------------
 
-Implementation: short-desciption-of-implementation-here
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Implementation: short-description-of-implementation-here
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Date last modified: YYYY/MM/DD
 
@@ -405,8 +557,8 @@ included via blocks like
 Testing
 -------
 
-Testing and Validation: short-desciption-of-testing-here
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Testing and Validation: short-description-of-testing-here
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Date last modified: YYYY/MM/DD
 
