@@ -22,7 +22,7 @@ Some helpful external links:
 Setting config options for ocean test cases
 -------------------------------------------
 
-This documentation is similar to :ref:`setup_testcase`, with some details that
+This documentation is similar to :ref:`setup_overview`, with some details that
 are specific to the ``ocean`` core. If you are new to MPAS-Ocean, it is easiest
 to `download a prepared test case <https://mpas-dev.github.io/ocean/release_6.0/release_6.0.html>`_.
 

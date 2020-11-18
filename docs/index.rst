@@ -12,11 +12,15 @@ altered in those files.
    :maxdepth: 2
 
    overview
-   machine/index
-   list_testcases
-   setup_testcase
-   clean_testcase
-   manage_regression_suite
+   scripts
+
+.. toctree::
+   :caption: Machine-specific instructions
+   :maxdepth: 2
+
+   machines/slurm
+   machines/lanl
+   machines/nersc
 
 .. toctree::
    :caption: Ocean

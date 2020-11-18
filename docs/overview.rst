@@ -79,7 +79,7 @@ Each time you want to work with COMPASS, you will need to run:
 
     conda activate compass
 
-.. _setup_testcase:
+.. _setup_overview:
 
 Setting up a test case
 ----------------------
