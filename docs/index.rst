@@ -1,10 +1,11 @@
 COMPASS
 =======
 
-The COMPASS (Configuration Of Model for Prediction Across Scales Setups)
-infrastructure provides a capability for defining simple test-case workflows.
-It is intended to house a small number of files which can describe the steps to
-setup and configure a test case.
+Configuration Of Model for Prediction Across Scales Setups (COMPASS) is an
+automated system to set up test cases that match the MPAS-Model repository. All
+namelists and streams files begin with the default generated from the
+Registry.xml file, and only the changes relevant to the particular test case are
+altered in those files.
 
 .. toctree::
    :caption: User's guide
