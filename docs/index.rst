@@ -21,6 +21,9 @@ altered in those files.
    machines/slurm
    machines/lanl
    machines/nersc
+   machines/anvil
+   machines/linux
+   machines/osx
 
 .. toctree::
    :caption: Ocean
