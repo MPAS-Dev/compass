@@ -6,7 +6,8 @@ Quick Start
 Set up a COMPASS repository: for beginners
 ------------------------------------------
 
-To begin, obtain the master branch of the compass repository with:
+To begin, obtain the master branch of the
+`compass repository <https://github.com/MPAS-Dev/compass>`_ with:
 
 .. code-block:: bash
 
@@ -203,8 +204,8 @@ example
 
 .. code-block:: bash
 
-    git remote add gitMoniker git@github.com:gitMoniker/compass.git
-    git fetch gitMoniker
+    git remote add mark-petersen git@github.com:mark-petersen/compass.git
+    git fetch mark-petersen
 
 To view all your remotes:
 
