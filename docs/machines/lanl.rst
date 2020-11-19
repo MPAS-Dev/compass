@@ -153,3 +153,40 @@ badger, gnu
     make gfortran CORE=ocean
 
 
+Building Scorpio on Grizzly
+---------------------------
+
+Installation of PIO follows from the following pre-existing module files:
+
+.. code-block:: bash
+
+    module purge
+    module load friendly-testing
+    module load intel/19.0.4 intel-mpi/2019.4 hdf5-parallel/1.8.16 pnetcdf/1.11.2 netcdf-h5parallel/4.7.3 mkl/2019.0.4
+    # note the following MPAS-O assumed location variables
+    export NETCDF=/usr/projects/hpcsoft/toss3/grizzly/netcdf/4.7.3_intel-19.0.4_intel-mpi-2019.4_hdf5-1.8.16/
+    export PNETCDF=/usr/projects/hpcsoft/toss3/grizzly/pnetcdf/1.11.2_intel-19.0.4_intel-mpi-2019.4_hdf5-1.8.16/
+
+Note, DO NOT use openmpi/3.1.5 as there is a bug (RMIO
+`Output from MPAS-O unreadable for large 1.8M cell mesh <https://github.com/MPAS-Dev/MPAS-Model/issues/576>`_
+).
+
+PIO2 from `E3SM-Project/scorpio <https://github.com/E3SM-Project/scorpio>`_
+was used, specifically tag ``scorpio-v1.1.0`` with the following build command
+(note use of intel compilers):
+
+.. code-block:: bash
+
+    CC=mpiicc FC=mpiifort cmake \
+        -DCMAKE_INSTALL_PREFIX=/usr/projects/climate/SHARED_CLIMATE/software/grizzly/pio/1.10.1/intel-19.0.4/intel-mpi-2019.4/netcdf-4.7.3-parallel-netcdf-1.11.2/ \
+        -DPIO_ENABLE_TIMING=OFF -DNetCDF_Fortran_PATH=/usr/projects/hpcsoft/toss3/grizzly/netcdf/4.7.3_intel-19.0.4_intel-mpi-2019.4_hdf5-1.8.16 \
+        -DPnetCDF_Fortran_PATH=/usr/projects/hpcsoft/toss3/grizzly/netcdf/4.7.3_intel-19.0.4_intel-mpi-2019.4_hdf5-1.8.16 \
+        -DNetCDF_C_PATH=/usr/projects/hpcsoft/toss3/grizzly/netcdf/4.7.3_intel-19.0.4_intel-mpi-2019.4_hdf5-1.8.16  \
+        -DPnetCDF_C_PATH=/usr/projects/hpcsoft/toss3/grizzly/pnetcdf/1.11.2_intel-19.0.4_intel-mpi-2019.4_hdf5-1.8.16 ..
+
+build with ``make`` and install with ``make install``.  Then, when you want to
+use it for MPAS builds, set the following environment variable:
+
+.. code-block:: bash
+
+    export PIO=/usr/projects/climate/SHARED_CLIMATE/software/grizzly/pio/1.10.1/intel-19.0.4/intel-mpi-2019.4/netcdf-4.7.3-parallel-netcdf-1.11.2/
