@@ -1,0 +1,432 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>NERSC &mdash; COMPASS stable documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Anvil/Blues" href="anvil.html" />
+    <link rel="prev" title="LANL Institutional Computing" href="lanl.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> COMPASS
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                stable
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/overview.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/scripts.html">Scripts</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Ocean</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../ocean/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ocean/test_cases/index.html">Ocean test cases</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Machine-specific instructions</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="slurm.html">Slurm job queueing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lanl.html">LANL Institutional Computing</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">NERSC</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#cori-gnu">cori, gnu</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cori-intel">cori, intel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#jupyter-notebook-on-remote-data">Jupyter notebook on remote data</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="anvil.html">Anvil/Blues</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linux.html">Personal Linux/OSX Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="osx.html">Personal OSX Machine</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/config.html">config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/driver_script.html">driver_script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/template.html">template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/regression_suite.html">regression_suite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/run_config.html">run_config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/building_docs.html">Building the Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">COMPASS</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>NERSC</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/machine_specific_instructions/nersc.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="nersc">
+<h1>NERSC<a class="headerlink" href="#nersc" title="Permalink to this headline">¶</a></h1>
+<p>login: <code class="docutils literal notranslate"><span class="pre">ssh</span> <span class="pre">$my_moniker&#64;cori.nersc.gov</span></code></p>
+<p>compass environment:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> /global/cfs/cdirs/e3sm/software/anaconda_envs/load_latest_compass.sh
+</pre></div>
+</div>
+<p>example compass config file:
+<a class="reference external" href="https://gist.github.com/mark-petersen/c61095d65216415ee0bb62a76da3c6cb">general.config.ocean_cori</a></p>
+<p>interactive login:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># for Haswell:</span>
+salloc --partition<span class="o">=</span>debug --nodes<span class="o">=</span><span class="m">1</span> --time<span class="o">=</span><span class="m">30</span>:00 -C haswell
+
+<span class="c1"># for KNL:</span>
+salloc --partition<span class="o">=</span>debug --nodes<span class="o">=</span><span class="m">1</span> --time<span class="o">=</span><span class="m">30</span>:00 -C knl
+</pre></div>
+</div>
+<p>Compute time:</p>
+<ul class="simple">
+<li><p>Check hours of compute usage at <a class="reference external" href="https://nim.nersc.gov/">https://nim.nersc.gov/</a></p></li>
+</ul>
+<p>File system:</p>
+<ul class="simple">
+<li><p>Overview: <a class="reference external" href="https://docs.nersc.gov/filesystems/">https://docs.nersc.gov/filesystems/</a></p></li>
+<li><p>home directory: <code class="docutils literal notranslate"><span class="pre">/global/homes/$my_moniker</span></code></p></li>
+<li><p>scratch directory: <code class="docutils literal notranslate"><span class="pre">/global/cscratch1/sd/$my_moniker</span></code></p></li>
+<li><p>Check your individual disk usage with <code class="docutils literal notranslate"><span class="pre">myquota</span></code></p></li>
+<li><p>Check the group disk usage with <code class="docutils literal notranslate"><span class="pre">prjquota</span>&#160; <span class="pre">projectID</span></code>, i.e.
+<code class="docutils literal notranslate"><span class="pre">prjquota</span>&#160; <span class="pre">m2833</span></code> or <code class="docutils literal notranslate"><span class="pre">prjquota</span>&#160; <span class="pre">acme</span></code></p></li>
+</ul>
+<p>Archive:</p>
+<ul class="simple">
+<li><p>NERSC uses HPSS with the commands <code class="docutils literal notranslate"><span class="pre">hsi</span></code> and <code class="docutils literal notranslate"><span class="pre">htar</span></code></p></li>
+<li><p>overview: <a class="reference external" href="https://docs.nersc.gov/filesystems/archive/">https://docs.nersc.gov/filesystems/archive/</a></p></li>
+<li><p>E3SM uses <a class="reference external" href="https://e3sm-project.github.io/zstash/docs/html/index.html">zstash</a></p></li>
+</ul>
+<div class="section" id="cori-gnu">
+<h2>cori, gnu<a class="headerlink" href="#cori-gnu" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>module switch PrgEnv-intel PrgEnv-gnu
+module load cray-netcdf-hdf5parallel
+module load cray-parallel-netcdf
+module load cmake
+<span class="nb">source</span> /global/project/projectdirs/e3sm/software/anaconda_envs/load_latest_e3sm_unified.sh
+<span class="nb">export</span> <span class="nv">PIO</span><span class="o">=</span>/global/u2/h/hgkang/my_programs/Scorpio
+git submodule update --init --recursive
+
+<span class="c1"># debug:</span>
+make gnu-nersc <span class="nv">CORE</span><span class="o">=</span>ocean <span class="nv">USE_PIO2</span><span class="o">=</span><span class="nb">true</span> <span class="nv">OPENMP</span><span class="o">=</span><span class="nb">false</span> <span class="nv">DEBUG</span><span class="o">=</span><span class="nb">true</span> <span class="nv">GEN_F90</span><span class="o">=</span><span class="nb">true</span>
+
+<span class="c1"># optimized:</span>
+make gnu-nersc <span class="nv">CORE</span><span class="o">=</span>ocean <span class="nv">USE_PIO2</span><span class="o">=</span><span class="nb">true</span> <span class="nv">OPENMP</span><span class="o">=</span><span class="nb">false</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="cori-intel">
+<h2>cori, intel<a class="headerlink" href="#cori-intel" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>module rm intel
+module load intel/18.0.1.163
+module load cray-mpich/7.7.6
+module load cray-hdf5-parallel/1.10.2.0
+module load cray-netcdf-hdf5parallel/4.6.1.3
+module load cray-parallel-netcdf/1.8.1.4
+<span class="nb">export</span> <span class="nv">PIO_VERSION</span><span class="o">=</span><span class="m">1</span>.10.1
+<span class="nb">export</span> <span class="nv">PIO</span><span class="o">=</span>/global/homes/m/mpeterse/libraries/pio-<span class="si">${</span><span class="nv">PIO_VERSION</span><span class="si">}</span>-intel
+git submodule update --init --recursive
+
+make intel-nersc <span class="nv">CORE</span><span class="o">=</span>ocean
+PIO on cori
+</pre></div>
+</div>
+<p>We have already compiled PIO on cori, and paths are given in the previous
+instructions. If you need to compile it yourself, you can do that as follows
+(instructions from <a class="reference external" href="http://github.com/xylar">xylar</a>).</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="nb">export</span> <span class="nv">PIO_VERSION</span><span class="o">=</span><span class="m">1</span>.10.1
+
+rm -rf ParallelIO pio-<span class="si">${</span><span class="nv">PIO_VERSION</span><span class="si">}</span>
+
+git clone git@github.com:NCAR/ParallelIO.git
+<span class="nb">cd</span> ParallelIO
+git checkout pio<span class="nv">$PIO_VERSION</span>
+
+<span class="nb">cd</span> pio
+
+<span class="nb">export</span> <span class="nv">PIOSRC</span><span class="o">=</span><span class="sb">`</span><span class="nb">pwd</span><span class="sb">`</span>
+git clone git@github.com:PARALLELIO/genf90.git bin
+git clone git@github.com:CESM-Development/CMake_Fortran_utils.git cmake
+<span class="nb">cd</span> ../..
+
+<span class="c1"># Purge environment:</span>
+module rm PrgEnv-cray
+module rm PrgEnv-gnu
+module rm PrgEnv-intel
+
+module load PrgEnv-intel/6.0.5
+module rm intel
+module load intel/18.0.1.163
+
+module rm craype
+module load craype/2.5.18
+
+module rm pmi
+module load pmi/5.0.14
+
+module rm cray-netcdf
+module rm cray-netcdf-hdf5parallel
+module rm cray-parallel-netcdf
+module rm cray-hdf5-parallel
+module rm cray-hdf5
+
+module rm cray-mpich
+module load cray-mpich/7.7.6
+
+<span class="c1"># Load netcdf and pnetcdf modules</span>
+module load cray-hdf5-parallel/1.10.2.0
+module load cray-netcdf-hdf5parallel/4.6.1.3
+module load cray-parallel-netcdf/1.8.1.4
+
+<span class="nb">export</span> <span class="nv">NETCDF</span><span class="o">=</span><span class="nv">$NETCDF_DIR</span>
+<span class="nb">export</span> <span class="nv">PNETCDF</span><span class="o">=</span><span class="nv">$PARALLEL_NETCDF_DIR</span>
+<span class="nb">export</span> <span class="nv">PHDF5</span><span class="o">=</span><span class="nv">$HDF5_DIR</span>
+<span class="nb">export</span> <span class="nv">MPIROOT</span><span class="o">=</span><span class="nv">$MPICH_DIR</span>
+
+<span class="nb">export</span> <span class="nv">FC</span><span class="o">=</span>ftn
+<span class="nb">export</span> <span class="nv">CC</span><span class="o">=</span>cc
+mkdir pio-<span class="si">${</span><span class="nv">PIO_VERSION</span><span class="si">}</span>
+<span class="nb">cd</span> pio-<span class="si">${</span><span class="nv">PIO_VERSION</span><span class="si">}</span>
+cmake -D <span class="nv">NETCDF_C_DIR</span><span class="o">=</span><span class="nv">$NETCDF</span> -D <span class="nv">NETCDF_Fortran_DIR</span><span class="o">=</span><span class="nv">$NETCDF</span> <span class="se">\</span>
+   -D <span class="nv">PNETCDF_DIR</span><span class="o">=</span><span class="nv">$PNETCDF</span> -D <span class="nv">CMAKE_VERBOSE_MAKEFILE</span><span class="o">=</span><span class="m">1</span> <span class="nv">$PIOSRC</span>
+make
+
+<span class="nv">DEST</span><span class="o">=</span><span class="nv">$HOME</span>/libraries/pio-<span class="si">${</span><span class="nv">PIO_VERSION</span><span class="si">}</span>-intel
+rm -rf <span class="nv">$DEST</span>
+mkdir -p <span class="nv">$DEST</span>
+cp *.a *.h *.mod <span class="nv">$DEST</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="jupyter-notebook-on-remote-data">
+<h2>Jupyter notebook on remote data<a class="headerlink" href="#jupyter-notebook-on-remote-data" title="Permalink to this headline">¶</a></h2>
+<p>You can run Jupyter notebooks on NERSC with direct access to scratch data as
+follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh -Y -L <span class="m">8844</span>:localhost:8844 MONIKER@cori.nersc.gov
+jupyter notebook --no-browser --port <span class="m">8844</span>
+<span class="c1"># in local browser, go to:</span>
+http://localhost:8844/
+</pre></div>
+</div>
+<p>Note that on NERSC, you can also use their
+<a class="reference external" href="https://jupyter.nersc.gov/">Jupyter server</a>,
+it’s really nice and grabs a compute node for you automatically on logon.
+You’ll need to create a python kernel from e3sm-unified following these steps
+(taken from <a class="reference external" href="https://docs.nersc.gov/connect/jupyter/">https://docs.nersc.gov/connect/jupyter/</a>).  After creating the
+kernel, you just go to “Change Kernel” in the Jupyter notebook and you’re ready
+to go.</p>
+<p>You can use one of our default Python 2, Python 3, or R kernels. If you have a
+Conda environment, depending on how it is installed, it may just show up in the
+list of kernels you can use. If not, use the following procedure to enable a
+custom kernel based on a Conda environment. Let’s start by assuming you are a
+user with username <code class="docutils literal notranslate"><span class="pre">user</span></code> who wants to create a Conda environment on Cori and use
+it from Jupyter.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>module load python
+conda create -n myenv <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.7 ipykernel &lt;further-packages-to-install&gt;
+&lt;... installation messages ...&gt;
+<span class="nb">source</span> activate myenv
+python -m ipykernel install --user --name myenv --display-name MyEnv
+   Installed kernelspec myenv in /global/u1/u/user/.local/share/jupyter/kernels/myenv
+</pre></div>
+</div>
+<p>Be sure to specify what version of Python interpreter you want installed. This
+will create and install a JSON file called a “kernel spec” in <code class="docutils literal notranslate"><span class="pre">kernel.json</span></code> at
+the path described in the install command output.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;argv&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;/global/homes/u/user/.conda/envs/myenv/bin/python&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;-m&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;ipykernel_launcher&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;-f&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;{connection_file}&quot;</span>
+    <span class="p">],</span>
+    <span class="nt">&quot;display_name&quot;</span><span class="p">:</span> <span class="s2">&quot;MyEnv&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;language&quot;</span><span class="p">:</span> <span class="s2">&quot;python&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="anvil.html" class="btn btn-neutral float-right" title="Anvil/Blues" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="lanl.html" class="btn btn-neutral float-left" title="LANL Institutional Computing" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright Copyright (c) 2013-2020,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR).
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
