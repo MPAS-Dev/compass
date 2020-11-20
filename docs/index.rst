@@ -11,34 +11,34 @@ altered in those files.
    :caption: User's guide
    :maxdepth: 2
 
-   overview
-   scripts
+   users_guide/overview
+   users_guide/scripts
 
 .. toctree::
    :caption: Ocean
    :maxdepth: 2
 
-   ocean
-   ocean_testcases/index
+   ocean/introduction
+   ocean/test_cases/index
 
 .. toctree::
    :caption: Machine-specific instructions
    :maxdepth: 2
 
-   machines/slurm
-   machines/lanl
-   machines/nersc
-   machines/anvil
-   machines/linux
-   machines/osx
+   machine_specific_instructions/slurm
+   machine_specific_instructions/lanl
+   machine_specific_instructions/nersc
+   machine_specific_instructions/anvil
+   machine_specific_instructions/linux
+   machine_specific_instructions/osx
 
 .. toctree::
    :caption: Developer's guide
    :maxdepth: 2
 
-   config
-   driver_script
-   template
-   regression_suite
-   run_config
-   building_docs
+   developers_guide/config
+   developers_guide/driver_script
+   developers_guide/template
+   developers_guide/regression_suite
+   developers_guide/run_config
+   developers_guide/building_docs
