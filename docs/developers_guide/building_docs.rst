@@ -9,15 +9,15 @@ environment with some required packages:
 
 .. code-block:: bash
 
-  conda create -y -n test_compass_docs python=3.8 sphinx mock sphinx_rtd_theme
-  conda activate test_compass_docs
+  $ conda create -y -n test_compass_docs python=3.8 sphinx mock sphinx_rtd_theme
+  $ conda activate test_compass_docs
 
 Then, to build the documentation, run:
 
 .. code-block:: bash
 
-  export DOCS_VERSION="test"
-  cd docs
-  make html
+  $ export DOCS_VERSION="test"
+  $ cd docs
+  $ make html
 
 Then, you can view the documentation by opening ``_build/html/index.html``.

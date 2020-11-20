@@ -19,7 +19,7 @@ it will only print the flags needed to setup that specific test case.
 
 Command-line options::
 
-    ./list_testcases.py -h
+    $ ./list_testcases.py -h
     usage: list_testcases.py [-h] [-o CORE] [-c CONFIG] [-r RES] [-t TEST]
                              [-n NUMBER]
 
@@ -66,7 +66,7 @@ configuration file.
 
 Command-line options::
 
-    ./setup_testcase.py -h
+    $ ./setup_testcase.py -h
     usage: setup_testcase.py [-h] [-o CORE] [-c CONFIG] [-r RES] [-t TEST]
                              [-n NUM] [-f FILE] [-m FILE] [-b PATH] [-q]
                              [--no_download] [--work_dir PATH]
@@ -117,7 +117,7 @@ setting up a test case.
 
 Command-line options::
 
-    ./clean_testcase.py -h
+    $ ./clean_testcase.py -h
     usage: clean_testcase.py [-h] [-o CORE] [-c CONFIG] [-r RES] [-t TEST]
                              [-n NUM] [-q] [-a] [--work_dir PATH]
 
@@ -161,7 +161,7 @@ for each individual test case, and the run script that runs all test cases.
 
 Command-line options::
 
-    ./manage_regression_suite.py -h
+    $ ./manage_regression_suite.py -h
     usage: manage_regression_suite.py [-h] -t FILE [-f FILE] [-s] [-c] [-v]
                                       [-m FILE] [-b PATH] [--work_dir PATH]
 
