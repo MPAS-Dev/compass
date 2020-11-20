@@ -6,11 +6,11 @@ To set up and run ocean test cases from COMPASS, you will need a conda
 environment.  First, install Miniconda3 (if miniconda is not already
 installed), then create a new conda environment as follows:
 ``` bash
-conda create -n compass_0.1.11 -c conda-forge -c e3sm python=3.7 compass=0.1.11
+conda create -n compass -c conda-forge -c e3sm python=3.8 compass
 ```
 Each time you want to work with COMPASS, you will need to run:
 ```
-conda activate compass_0.1.11
+conda activate compass
 ```
 
 An appropriate conda environment is already available on Los Alamos National
@@ -23,7 +23,7 @@ Values of `<base_path>` are:
 * grizzly and badger - `/usr/projects/climate/SHARED_CLIMATE/anaconda_envs`
 * anvil (blues) - `/lcrc/soft/climate/e3sm-unified/`
 * compy - `/share/apps/E3SM/conda_envs`
-* cori - `/global/cfs/cdirs/acme/software/anaconda_envs`
+* cori - `/global/cfs/cdirs/e3sm/software/anaconda_envs`
 
 ## Setting config options
 
