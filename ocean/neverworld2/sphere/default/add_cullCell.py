@@ -27,13 +27,14 @@ def main():
     latCell = ds['latCell']
     lonCell = ds['lonCell']
 
+# todo connect Drake passage - reentrant channel
     deg = np.pi/180.0
     cullCell = np.zeros(nCells, dtype=np.int32)
     cullCell[np.where( np.logical_or(
-       latCell<  0*deg, np.logical_or( 
-       latCell> 60*deg, np.logical_or(
-       lonCell>100*deg,
-       lonCell<  0*deg
+       latCell<-70*deg, np.logical_or( 
+       latCell> 70*deg, np.logical_or(
+       lonCell<  0*deg,
+       lonCell> 60*deg
        ))))] = 1.0
     ds['cullCell'] = (['nCells'], cullCell)
 

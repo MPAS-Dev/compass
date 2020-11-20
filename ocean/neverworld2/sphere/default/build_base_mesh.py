@@ -19,7 +19,8 @@ def cellWidthVsLatLon():
         longitude in degrees (length m and between -90 and 90)
     """
     ddeg = 10
-    constantCellWidth = 240
+# todo: make higher resolution cases, follow Rossby Radius RRS etc.
+    constantCellWidth = 100
 
     lat = np.arange(-90, 90.01, ddeg)
     lon = np.arange(-180, 180.01, ddeg)
