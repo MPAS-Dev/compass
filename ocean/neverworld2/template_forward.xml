@@ -1,0 +1,37 @@
+<template>
+	<namelist>
+		<option name="config_run_duration">'00-00-01_00:00:00'</option>
+		<option name="config_write_output_on_startup">.false.</option>
+		<option name="config_eos_linear_Tref">10.0</option>
+        <template file="global_stats.xml" path_base="script_core_dir" path="templates/analysis_members"/>
+	</namelist>
+	<streams name="streams.ocean" keep="immutable" mode="forward">
+		<stream name="mesh">
+			<attribute name="filename_template">init.nc</attribute>
+		</stream>
+		<stream name="input">
+			<attribute name="filename_template">init.nc</attribute>
+		</stream>
+		<template file="output.xml" path_base="script_core_dir" path="templates/streams"/>
+        <template file="global_stats.xml" path_base="script_core_dir" path="templates/analysis_members"/>
+		<stream name="highFrequency">
+			<attribute name="name">highFrequency</attribute>
+			<attribute name="filename_template">output/highFrequency.$Y-$M-$D_$h.$m.$s.nc</attribute>
+			<attribute name="type">output</attribute>
+			<attribute name="clobber_mode">truncate</attribute>
+			<attribute name="reference_time">0001-01-01_00:00:00</attribute>
+			<attribute name="filename_interval">01-00-00_00:00:00</attribute>
+			<attribute name="output_interval">0000_00:30:00</attribute>
+			<add_contents>
+				<member name="mesh" type="stream"/>
+				<member name="xtime" type="var"/>
+				<member name="refZMid" type="var"/>
+				<member name="refLayerThickness" type="var"/>
+				<member name="ssh" type="var"/>
+				<member name="normalVelocity" type="var"/>
+				<member name="velocityX" type="var"/>
+				<member name="vertVelocityTop" type="var"/>
+			</add_contents>
+		</stream>
+	</streams>
+</template>
