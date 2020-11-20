@@ -1,6 +1,6 @@
 .. _compass_ocean_testcases:
 
-Ocean Test Cases
+Ocean test cases
 ================
 
 .. toctree::

@@ -88,6 +88,7 @@ grizzly, gnu
 
 .. code-block:: bash
 
+    module use /usr/projects/climate/SHARED_CLIMATE/modulefiles/all
     module load gcc/5.3.0
     module load openmpi/1.10.5 netcdf/4.4.1 parallel-netcdf/1.5.0 pio/1.7.2
     make gfortran CORE=ocean
@@ -125,7 +126,7 @@ grizzly, intel 19 with PIO2
     export I_MPI_F77=ifort
     export I_MPI_F90=ifort
 
-    make gfortran CORE=ocean USE_PIO2=true
+    make ifort CORE=ocean USE_PIO2=true
 
 badger, gnu
 -----------

@@ -1,8 +1,8 @@
 .. _compass_ocean:
 
 
-Ocean test cases
-================
+Introduction
+============
 
 Some helpful external links:
 
@@ -48,8 +48,8 @@ Three other paths are required, ``mesh_database``,
 storing pre-generated mesh files, data sets for creating initial conditions,
 and bathymetry data. These can be empty directories, in which case meshes and
 other data sets will be downloaded as required during test-case setup.  (If a
-test case appears to hang during setup, it is most likely downloading mesh, i
-nitial-condition or bathymetry data.)
+test case appears to hang during setup, it is most likely downloading mesh, 
+initial-condition or bathymetry data.)
 
 On LANL IC, the shared data bases can be found at:
 

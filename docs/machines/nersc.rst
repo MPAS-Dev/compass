@@ -185,13 +185,12 @@ it from Jupyter.
 .. code-block:: bash
 
 
-    cori$ module load python
-    cori$ conda create -n myenv python=3.7 ipykernel <further-packages-to-install>
+    module load python
+    conda create -n myenv python=3.7 ipykernel <further-packages-to-install>
     <... installation messages ...>
-    cori$ source activate myenv
-    cori$ python -m ipykernel install --user --name myenv --display-name MyEnv
-    Installed kernelspec myenv in /global/u1/u/user/.local/share/jupyter/kernels/myenv
-    cori$
+    source activate myenv
+    python -m ipykernel install --user --name myenv --display-name MyEnv
+       Installed kernelspec myenv in /global/u1/u/user/.local/share/jupyter/kernels/myenv
 
 Be sure to specify what version of Python interpreter you want installed. This
 will create and install a JSON file called a "kernel spec" in ``kernel.json`` at

@@ -157,8 +157,8 @@ testing. For the ocean core, they are here:
 
 .. code-block:: bash
 
-    $ ls testing_and_setup/compass/ocean/regression_suites/
-    land_ice_fluxes.xml  light.xml  nightly.xml  rpe_tests.xml
+    ls testing_and_setup/compass/ocean/regression_suites/
+       land_ice_fluxes.xml  light.xml  nightly.xml  rpe_tests.xml
 
 You can set up a regression as follows:
 

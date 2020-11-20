@@ -15,6 +15,13 @@ altered in those files.
    scripts
 
 .. toctree::
+   :caption: Ocean
+   :maxdepth: 2
+
+   ocean
+   ocean_testcases/index
+
+.. toctree::
    :caption: Machine-specific instructions
    :maxdepth: 2
 
@@ -24,13 +31,6 @@ altered in those files.
    machines/anvil
    machines/linux
    machines/osx
-
-.. toctree::
-   :caption: Ocean
-   :maxdepth: 2
-
-   ocean
-   ocean_testcases/index
 
 .. toctree::
    :caption: Developer's guide
