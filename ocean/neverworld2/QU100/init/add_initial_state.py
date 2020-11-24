@@ -176,8 +176,11 @@ def main():
     ytau[:] = np.array([-70.,-45.,-15.,0.,15.,45.,70.])*np.pi/180.
     taud[:] = np.array([0,.2,-0.1,-.02,-.1,.1,0])
     for iCell in range(0, nCells):
-        ks = np.max(0, bisect.bisect_right(ytau,latCell[iCell]) - 1) #determine wind lat interval - only works for *sorted* ytau list
-        windStressZonal[iCell] = 0.1
+        #ks = np.max(0, bisect.bisect_right(ytau,latCell[iCell]) - 1) #determine wind lat interval - only works for *sorted* ytau list
+        if latCell[iCell] > 0:
+            windStressZonal[iCell] = 0.1
+        else:
+            windStressZonal[iCell] = -0.1
         #windStressZonal[iCell] = taud[ks] + ( taud[ks+1] - taud[ks]) * scurve(y, ytau[ks], ytau[ks+1]-ytau[ks])
 
     #surfaceStress[:] = 0.0
