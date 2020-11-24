@@ -10,6 +10,7 @@ from mpas_tools.io import write_netcdf
 import argparse
 import math
 import time
+import bisect
 verbose = True
 
 
@@ -25,11 +26,11 @@ def main():
                         help='Output file, containing initial variables'
                         )
     parser.add_argument('-L', '--nVertLevels', dest='nVertLevels',
-                        default=3,
+                        default=15,
                         help='Number of vertical levels'
                         )
     parser.add_argument('-H', '--maxDepth', dest='maxDepth',
-                        default=3000,
+                        default=4000,
                         help='Number of vertical levels'
                         )
     nVertLevels = int(parser.parse_args().nVertLevels)
@@ -41,8 +42,24 @@ def main():
     nEdges = ds['nEdges'].size
     nVertices = ds['nVertices'].size
 
-    lonCell = ds['lonCell']
-    latCell = ds['latCell']
+    xCell = ds['xCell']
+    xEdge = ds['xEdge']
+    xVertex = ds['xVertex']
+    yCell = ds['yCell']
+    yEdge = ds['yEdge']
+    yVertex = ds['yVertex']
+    latCell=ds['latCell']
+    lonCell=ds['lonCell']
+
+    # x values for convenience
+    xMax = max(xCell)
+    xMin = min(xCell)
+    xMid = 0.5 * (xMin + xMax)
+
+    # y values for convenience
+    yMax = max(yCell)
+    yMin = min(yCell)
+    yMid = 0.5 * (yMin + yMax)
 
     comment('create and initialize variables')
     time1 = time.time()
@@ -52,7 +69,7 @@ def main():
         globals()[var] = np.nan * np.ones(nVertLevels)
 
     vars2D = ['ssh', 'bottomDepth', 'bottomDepthObserved',
-        'surfaceStress', 'atmosphericPressure', 'boundaryLayerDepth']
+        'surfaceStress','windStressZonal','windStressMeridional', 'atmosphericPressure', 'boundaryLayerDepth']
     for var in vars2D:
         globals()[var] = np.nan * np.ones(nCells)
     maxLevelCell = np.ones(nCells, dtype=np.int32)
@@ -68,7 +85,7 @@ def main():
     layerThickness[:] = -1e34
 
     # equally spaced layers
-    refLayerThickness[:] = maxDepth / nVertLevels
+    refLayerThickness[:] = [25.0, 50.0, 100.0, 125.0, 150.0, 175.0, 200.0, 225.0, 250.0, 300.0, 350.0, 400.0, 500.0, 550.0, 600.0] #maxDepth / nVertLevels
     refBottomDepth[0] = refLayerThickness[0]
     refZMid[0] = -0.5 * refLayerThickness[0]
     for k in range(1, nVertLevels):
@@ -109,7 +126,7 @@ def main():
     restingThickness[:, 0] = refLayerThickness[0]
 
     # add tracers
-    T0 = 10.0
+    T0 = 10.0 # Change to add T vertical profile (here or below)
     S0 = 35.0
     for k in range(0, nVertLevels):
         activeCells = k <= maxLevelCell
@@ -121,16 +138,41 @@ def main():
 
     # Coriolis parameter
 # Nairita, add f0+beta here
-    fCell = np.zeros([nCells, nVertLevels])
-    fEdge = np.zeros([nEdges, nVertLevels])
-    fVertex = np.zeros([nVertices, nVertLevels])
-    ds['fCell'] = (('nCells', 'nVertLevels',), fCell)
-    ds['fEdge'] = (('nEdges', 'nVertLevels',), fEdge)
-    ds['fVertex'] = (('nVertices', 'nVertLevels',), fVertex)
+    fCell = np.zeros([nCells])
+    fEdge = np.zeros([nEdges])
+    fVertex = np.zeros([nVertices])
+    ds['fCell'] = (('nCells',), fCell)
+    ds['fEdge'] = (('nEdges',), fEdge)
+    ds['fVertex'] = (('nVertices',), fVertex)
+	
+    for iCell in range(0, nCells):
+        fCell[iCell]=2.0*7.29e-5
 
+    for iEdge in range(0, nEdges):
+        fEdge[iEdge]=2.0*7.29e-5
+
+    for iVertex in range(0, nVertices):
+        fVertex[iVertex]=2.0*7.29e-5
     # surface fields
+    # Reference values of surface zonal wind stress
+    ytau,taud = [-70,-45,-15,0,15,45,70], [0,.2,-0.1,-.02,-.1,.1,0]
 # Nairita, add surface stress here
-    surfaceStress[:] = 0.0
+    ds['windStressZonal'] = (('nCells',), np.zeros([nCells,]))
+    ds['windStressMeridional'] = (('nCells',), np.zeros([nCells,]))
+    #lonCell = ds.variables['lonCell']
+    #latCell = ds.variables['latCell']
+    # For periodic domains, the max cell coordinate is also the domain width
+    Lx = max(lonCell)
+    Ly = max(latCell)
+
+    for iCell in range(0, nCells):
+        x = xCell[iCell]
+        y = yCell[iCell]
+        ks = np.min(0, bisect.bisect_right(ytau,y) - 1) #determine wind lat interval - only works for *sorted* ytau list
+	#layerThickness[0, iCell,:] = np.exp(-(x-Lx/2.0)**2.0-(y-Ly/2.0)**2.0)
+        windStressZonal[iCell] = taud[ks] + ( taud[ks+1] - taud[ks]) * scurve(y, ytau[ks], ytau[ks+1]-ytau[ks])
+
+    #surfaceStress[:] = 0.0
     atmosphericPressure[:] = 0.0
     boundaryLayerDepth[:] = 0.0
     print('   time: %f' % ((time.time() - time1)))
@@ -150,6 +192,13 @@ def main():
     # write_netcdf(ds,'initial_state.nc')
     print('   time: %f' % ((time.time() - time1)))
     print('Total time: %f' % ((time.time() - timeStart)))
+
+
+
+def scurve(x, x0, dx):
+    """Returns 0 for x<x0 or x>x+dx, and a cubic in between."""
+    s = np.minimum(1, np.maximum(0, (x-x0)/dx))
+    return (3 - 2*s)*( s*s )
 
 
 def comment(string):
