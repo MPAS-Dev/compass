@@ -49,6 +49,8 @@ def main():
     yEdge = ds['yEdge']
     yVertex = ds['yVertex']
     latCell=ds['latCell']
+    latEdge=ds['latEdge']
+    latVertex=ds['latVertex']
     lonCell=ds['lonCell']
 
     # x values for convenience
@@ -126,18 +128,26 @@ def main():
     restingThickness[:, 0] = refLayerThickness[0]
 
     # add tracers
-    T0 = 10.0 # Change to add T vertical profile (here or below)
     S0 = 35.0
+    # equally spaced layers
+    refDensity = np.zeros(nVertLevels)
+    refDensity[:] = [1022.6, 1022.81, 1023.2, 1023.74, 1024.32, 1024.9, 1025.47, 1026.0, 1026.48, 1026.9, 1027.27, 1027.58, 1027.82, 1027.99, 1028.1]
+    config_eos_linear_alpha = 0.2
+    config_eos_linear_beta = 0.8
+    config_eos_linear_Tref = 15.0
+    config_eos_linear_Sref = 35.0
+    config_eos_linear_densityref = 1026.0
     for k in range(0, nVertLevels):
         activeCells = k <= maxLevelCell
         salinity[0, activeCells, k] = S0
-        temperature[0, activeCells, k] = T0
+# rho = rho0 - alpha * (T - T0)
+# T = T0 - 1/alpha *(rho - rho0)
+        temperature[0, activeCells, k] = config_eos_linear_Tref - 1/config_eos_linear_alpha*(refDensity[k] - config_eos_linear_densityref)
 
     # initial velocity on edges
     ds['normalVelocity'] = (('Time', 'nEdges', 'nVertLevels',), np.zeros([1, nEdges, nVertLevels]))
 
     # Coriolis parameter
-# Nairita, add f0+beta here
     fCell = np.zeros([nCells])
     fEdge = np.zeros([nEdges])
     fVertex = np.zeros([nVertices])
@@ -145,6 +155,7 @@ def main():
     ds['fEdge'] = (('nEdges',), fEdge)
     ds['fVertex'] = (('nVertices',), fVertex)
 	
+# Alice to do: add realistic Coriolis as function of latitude.
     for iCell in range(0, nCells):
         fCell[iCell]=2.0*7.29e-5
 
