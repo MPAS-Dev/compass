@@ -169,8 +169,8 @@ def main():
     Ly = max(latCell)
     # surface fields
     # Reference values of surface zonal wind stress
-    ds['windStressZonal'] = (('nCells',), np.zeros([nCells,]))
-    ds['windStressMeridional'] = (('nCells',), np.zeros([nCells,]))
+    #ds['windStressZonal'] = (('nCells',), np.zeros([nCells,]))
+    #ds['windStressMeridional'] = (('nCells',), np.zeros([nCells,]))
     ytau = np.zeros(7)
     taud = np.zeros(7)
     ytau[:] = np.array([-70.,-45.,-15.,0.,15.,45.,70.])*np.pi/180.
@@ -183,7 +183,8 @@ def main():
             windStressZonal[iCell] = -0.1
         #windStressZonal[iCell] = taud[ks] + ( taud[ks+1] - taud[ks]) * scurve(y, ytau[ks], ytau[ks+1]-ytau[ks])
 
-    #surfaceStress[:] = 0.0
+    windStressMeridional[:] = 0.0
+    surfaceStress[:] = 0.0
     atmosphericPressure[:] = 0.0
     boundaryLayerDepth[:] = 0.0
     print('   time: %f' % ((time.time() - time1)))
