@@ -164,13 +164,13 @@ def main():
     # For periodic domains, the max cell coordinate is also the domain width
     Lx = max(lonCell)
     Ly = max(latCell)
-
-    for iCell in range(0, nCells):
-        x = xCell[iCell]
-        y = yCell[iCell]
-        ks = np.min(0, bisect.bisect_right(ytau,y) - 1) #determine wind lat interval - only works for *sorted* ytau list
-	#layerThickness[0, iCell,:] = np.exp(-(x-Lx/2.0)**2.0-(y-Ly/2.0)**2.0)
-        windStressZonal[iCell] = taud[ks] + ( taud[ks+1] - taud[ks]) * scurve(y, ytau[ks], ytau[ks+1]-ytau[ks])
+    print('WARNING, WIND IS TURNED OFF')
+    #for iCell in range(0, nCells):
+    #    x = xCell[iCell]
+    #    y = yCell[iCell]
+    #    ks = np.min(0, bisect.bisect_right(ytau,y) - 1) #determine wind lat interval - only works for *sorted* ytau list
+	##layerThickness[0, iCell,:] = np.exp(-(x-Lx/2.0)**2.0-(y-Ly/2.0)**2.0)
+    #    windStressZonal[iCell] = taud[ks] + ( taud[ks+1] - taud[ks]) * scurve(y, ytau[ks], ytau[ks+1]-ytau[ks])
 
     #surfaceStress[:] = 0.0
     atmosphericPressure[:] = 0.0
