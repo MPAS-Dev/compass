@@ -164,24 +164,21 @@ def main():
 
     for iVertex in range(0, nVertices):
         fVertex[iVertex]=2.0*7.29e-5
-    # surface fields
-    # Reference values of surface zonal wind stress
-    ytau,taud = [-70,-45,-15,0,15,45,70], [0,.2,-0.1,-.02,-.1,.1,0]
-# Nairita, add surface stress here
-    ds['windStressZonal'] = (('nCells',), np.zeros([nCells,]))
-    ds['windStressMeridional'] = (('nCells',), np.zeros([nCells,]))
-    #lonCell = ds.variables['lonCell']
-    #latCell = ds.variables['latCell']
     # For periodic domains, the max cell coordinate is also the domain width
     Lx = max(lonCell)
     Ly = max(latCell)
-    print('WARNING, WIND IS TURNED OFF')
-    #for iCell in range(0, nCells):
-    #    x = xCell[iCell]
-    #    y = yCell[iCell]
-    #    ks = np.min(0, bisect.bisect_right(ytau,y) - 1) #determine wind lat interval - only works for *sorted* ytau list
-	##layerThickness[0, iCell,:] = np.exp(-(x-Lx/2.0)**2.0-(y-Ly/2.0)**2.0)
-    #    windStressZonal[iCell] = taud[ks] + ( taud[ks+1] - taud[ks]) * scurve(y, ytau[ks], ytau[ks+1]-ytau[ks])
+    # surface fields
+    # Reference values of surface zonal wind stress
+    ds['windStressZonal'] = (('nCells',), np.zeros([nCells,]))
+    ds['windStressMeridional'] = (('nCells',), np.zeros([nCells,]))
+    ytau = np.zeros(7)
+    taud = np.zeros(7)
+    ytau[:] = np.array([-70.,-45.,-15.,0.,15.,45.,70.])*np.pi/180.
+    taud[:] = np.array([0,.2,-0.1,-.02,-.1,.1,0])
+    for iCell in range(0, nCells):
+        ks = np.max(0, bisect.bisect_right(ytau,latCell[iCell]) - 1) #determine wind lat interval - only works for *sorted* ytau list
+        windStressZonal[iCell] = 0.1
+        #windStressZonal[iCell] = taud[ks] + ( taud[ks+1] - taud[ks]) * scurve(y, ytau[ks], ytau[ks+1]-ytau[ks])
 
     #surfaceStress[:] = 0.0
     atmosphericPressure[:] = 0.0

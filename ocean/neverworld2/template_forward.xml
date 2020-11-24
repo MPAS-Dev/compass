@@ -1,37 +1,30 @@
 <template>
 	<namelist>
-		<option name="config_run_duration">'00-00-01_00:00:00'</option>
-		<option name="config_write_output_on_startup">.false.</option>
-		<option name="config_eos_linear_Tref">10.0</option>
-        <template file="global_stats.xml" path_base="script_core_dir" path="templates/analysis_members"/>
+		<option name="config_ocean_run_mode">'forward'</option>
+		<option name="config_block_decomp_file_prefix">'graph.info.part.'</option>
+		<option name="config_time_integrator">'split_explicit'</option>
+		<option name="config_use_mom_del2">.true.</option>
+		<option name="config_use_mom_del4">.false.</option>
+		<option name="config_use_cvmix">.true.</option>
+		<option name="config_use_cvmix_background">.true.</option>
+		<option name="config_use_cvmix_convection">.true.</option>
+		<option name="config_use_cvmix_shear">.true.</option>
+		<option name="config_use_cvmix_kpp">.true.</option>
+		<option name="config_cvmix_shear_mixing_scheme">'KPP'</option>
+		<option name="config_pressure_gradient_type">'Jacobian_from_TS'</option>
+		<option name="config_eos_type">'linear'</option>
+		<option name="config_eos_linear_densityref">1026</option>
+		<option name="config_eos_linear_Tref">15</option>
+		<option name="config_implicit_bottom_drag_coeff">1.0e-3</option>
+		<option name="config_use_bulk_wind_stress">.true.</option>
+		<option name="config_use_bulk_thickness_flux">.false.</option>
+		<option name="config_use_activeTracers_surface_restoring">.false.</option>
+		<option name="config_use_Redi">.false.</option>
+		<option name="config_use_GM">.false.</option>
+		<option name="config_AM_mixedLayerDepths_enable">.true.</option>
+		<option name="config_AM_mixedLayerDepths_compute_interval">'dt'</option>
 	</namelist>
-	<streams name="streams.ocean" keep="immutable" mode="forward">
-		<stream name="mesh">
-			<attribute name="filename_template">init.nc</attribute>
-		</stream>
-		<stream name="input">
-			<attribute name="filename_template">init.nc</attribute>
-		</stream>
-		<template file="output.xml" path_base="script_core_dir" path="templates/streams"/>
-        <template file="global_stats.xml" path_base="script_core_dir" path="templates/analysis_members"/>
-		<stream name="highFrequency">
-			<attribute name="name">highFrequency</attribute>
-			<attribute name="filename_template">output/highFrequency.$Y-$M-$D_$h.$m.$s.nc</attribute>
-			<attribute name="type">output</attribute>
-			<attribute name="clobber_mode">truncate</attribute>
-			<attribute name="reference_time">0001-01-01_00:00:00</attribute>
-			<attribute name="filename_interval">01-00-00_00:00:00</attribute>
-			<attribute name="output_interval">0000_00:30:00</attribute>
-			<add_contents>
-				<member name="mesh" type="stream"/>
-				<member name="xtime" type="var"/>
-				<member name="refZMid" type="var"/>
-				<member name="refLayerThickness" type="var"/>
-				<member name="ssh" type="var"/>
-				<member name="normalVelocity" type="var"/>
-				<member name="velocityX" type="var"/>
-				<member name="vertVelocityTop" type="var"/>
-			</add_contents>
-		</stream>
+	<streams>
+		<template file="mixed_layer_depths.xml" path_base="script_core_dir" path="templates/analysis_members"/>
 	</streams>
 </template>
