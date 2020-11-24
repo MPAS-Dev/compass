@@ -31,7 +31,7 @@ def main():
                         )
     parser.add_argument('-H', '--maxDepth', dest='maxDepth',
                         default=4000,
-                        help='Number of vertical levels'
+                        help='total depth'
                         )
     nVertLevels = int(parser.parse_args().nVertLevels)
     maxDepth = float(parser.parse_args().maxDepth)
