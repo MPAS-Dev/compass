@@ -208,6 +208,14 @@ current COMPASS implementation:
         main()
 
 
+A Jinja2 template uses curly braces (e.g. ``{{ step.module }}``) to indicate
+where an element of the template will be replaced by a python variable or
+dictionary value.  In this example, ``{{ step.module }}`` will be replaced with
+the contents of ``step['module']`` in the python code, and similarly for other
+replacements in the template.  Other than the replacements, the code can be read
+as normal, in contrast to the existing approach of python scripts that define
+other python scripts via a series of string formatting statements.
+
 The only XML files that would be used would be
 templates for streams files, written in the same syntax as the resulting
 streams files.
