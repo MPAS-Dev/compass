@@ -2,17 +2,16 @@
 # A script to compare MPAS model output to the EISMINT2 test cases.
 # Matt Hoffman, LANL, December 2014
 
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import sys, os
 import datetime
-try:
-    import netCDF4
-except ImportError:
-    print 'Unable to import netCDF4 python modules:'
-    sys.exit
+import netCDF4
 from optparse import OptionParser
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.mlab import griddata
+#from matplotlib.mlab import griddata
+from scipy.interpolate import griddata
 
 # Parse options
 from optparse import OptionParser
@@ -26,7 +25,7 @@ if not options.exp:
     sys.exit('Error: No experiment specified.  Please specify an experiment to visualize with the -e option')
 experiment = options.exp.lower()  # allow lower or upper case to be input, but use lower case in the script logic
 if experiment in ('a','b','c','d','f', 'g'):
-    print 'Visualizing EISMINT2 Experiment ' + experiment
+    print('Visualizing EISMINT2 Experiment ' + experiment)
 else:
     sys.exit("Error: Invalid experiment specified.  Please specify an experiment between 'a' and 'g', excluding 'e'")
 
@@ -61,7 +60,7 @@ def xtimeGetYear(xtime):
 
 
 
-def contourMPAS(field, contour_levs=None):
+def contourMPAS(field, contour_levs=np.array([0])):
   """Contours irregular MPAS data on cells"""
   #-- Now let's grid your data.
   # First we'll make a regular grid to interpolate onto.
@@ -71,12 +70,12 @@ def contourMPAS(field, contour_levs=None):
   yc = np.linspace(yCell.min(), yCell.max(), numrows)
   xi, yi = np.meshgrid(xc, yc)
   #-- Interpolate at the points in xi, yi
-  zi = griddata(xCell, yCell, field, xi, yi)
+  zi = griddata((xCell, yCell), field, (xi, yi))
   #-- Display the results
-  if contour_levs == None:
+  if len(contour_levs)==1:
      im = plt.contour(xi, yi, zi)
   else:
-     im = plt.contour(xi, yi, zi, contour_levs)
+     im = plt.contour(xi, yi, zi, contour_levs, cmap=plt.cm.jet)
 
   #plt.scatter(xCell, yCell, c=temperature[timelev,:,-1], s=100, vmin=zi.min(), vmax=zi.max())  # to see the raw data on top
   plt.colorbar(im)
@@ -111,7 +110,7 @@ layerThicknessFractions = filein.variables['layerThicknessFractions'][:]
 secInYr = 365.0*24.0*3600.0
 
 timelev = -1  # Use final time
-print 'Using final model time of ' + xtime[timelev,:].tostring().strip() + '\n'
+print('Using final model time of ' + xtime[timelev,:].tostring().strip().decode('utf-8') + '\n')
 
 
 ##### Print some stats about the error
@@ -140,7 +139,7 @@ if nCells**0.5 < 100.0:
 else:
   markersize=  max( int(round(  1800.0/(nCells**0.5)  )), 1)
   markershape = '.'
-print 'Using a markersize of ', markersize
+print('Using a markersize of ', markersize)
 
 
 fig = plt.figure(1, facecolor='w')
@@ -149,11 +148,15 @@ fig.suptitle('Payne et al. Fig. 1, 3, 6, 9, or 11', fontsize=12, fontweight='bol
 #markershape='h'
 
 # print ice locations with gray hexagons
-iceIndices = np.where(thickness[timelev,:]>0.0)[0]
-plt.scatter(xCell[iceIndices], yCell[iceIndices], markersize, (0.8, 0.8, 0.8), marker=markershape, edgecolors='none') # print ice locations with gray hexagons
+iceIndices = np.where(thickness[timelev,:]>10.0)[0]
+plt.scatter(xCell[iceIndices], yCell[iceIndices], markersize, c=np.array([[0.8, 0.8, 0.8],]), marker=markershape, edgecolors='none') # print ice locations with gray hexagons
 
 # add contours of ice temperature over the top
-contourMPAS(basalTemperature[timelev,:], np.linspace(240.0, 275.0, 8))
+basalTemp = basalTemperature[timelev,:]
+# fill places below dynamic limit with non-ice value of 273.15
+basalTemp[np.where(thickness[timelev,:]<10.0)] = 273.15
+#plt.scatter(xCell, yCell, markersize, basalTemp[:], marker=markershape, edgecolors='none') # print ice locations with gray hexagons; plt.plot()
+contourMPAS(basalTemp, contour_levs=np.linspace(240.0, 275.0, 8))
 
 plt.axis('equal')
 plt.title('Modeled basal temperature (K) \n at time ' + netCDF4.chartostring(xtime)[timelev].strip() )
@@ -175,7 +178,7 @@ fig.suptitle('Payne et al. Fig. 2 or 4', fontsize=12, fontweight='bold')
 ax1 = fig.add_subplot(131)
 
 # print ice locations with gray hexagons
-plt.scatter(xCell[iceIndices], yCell[iceIndices], markersize, (0.8, 0.8, 0.8), marker=markershape, edgecolors='none') # print ice locations with gray hexagons
+plt.scatter(xCell[iceIndices], yCell[iceIndices], markersize, c=np.array([[0.8, 0.8, 0.8],]), marker=markershape, edgecolors='none') # print ice locations with gray hexagons
 
 # add contours of ice thickness over the top
 contour_intervals = np.linspace(0.0, 5000.0,  5000.0/250.0+1)
@@ -183,7 +186,7 @@ contourMPAS(thickness[timelev,:], contour_levs=contour_intervals)
 #contourMPAS(thickness[timelev,:])
 
 plt.title('Final thickness (m)' )
-plt.axis('equal')
+ax1.set_aspect('equal')
 #plt.xlim( (0.0, 750.0) ); plt.ylim( (0.0, 750.0) )
 plt.xlabel('X position (km)'); plt.ylabel('Y position (km)')
 
@@ -198,14 +201,14 @@ for k in range(nVertLevels):
     flux += speedLevel * thickness[timelev,:] * layerThicknessFractions[k]
 
 # print ice locations with gray hexagons
-plt.scatter(xCell[iceIndices], yCell[iceIndices], markersize, (0.8, 0.8, 0.8), marker=markershape, edgecolors='none') # print ice locations with gray hexagons
+plt.scatter(xCell[iceIndices], yCell[iceIndices], markersize, c=np.array([[0.8, 0.8, 0.8],]), marker=markershape, edgecolors='none') # print ice locations with gray hexagons
 
 # add contours over the top
 #contour_intervals = np.linspace(0.0, 10.0,  10.0/0.5+1)
 contour_intervals = np.linspace(0.0, 20.0,  11)
 contourMPAS(flux * 3600.0*24.0*365.0 / 10000.0, contour_levs=contour_intervals)
 #contourMPAS(flux * 3600.0*24.0*365.0 / 10000.0)
-plt.axis('equal')
+ax.set_aspect('equal')
 plt.title('Final flux (m$^2$ a$^{-1}$ / 10000)' )
 #plt.xlim( (0.0, 750.0) ); plt.ylim( (0.0, 750.0) )
 plt.xlabel('X position (km)'); plt.ylabel('Y position (km)')
@@ -215,14 +218,15 @@ plt.xlabel('X position (km)'); plt.ylabel('Y position (km)')
 ax = fig.add_subplot(132, sharex=ax1, sharey=ax1)
 
 # print ice locations with gray hexagons
-plt.scatter(xCell[iceIndices], yCell[iceIndices], markersize, (0.8, 0.8, 0.8), marker=markershape, edgecolors='none') # print ice locations with gray hexagons
+plt.scatter(xCell[iceIndices], yCell[iceIndices], markersize, c=np.array([[0.8, 0.8, 0.8],]), marker=markershape, edgecolors='none') # print ice locations with gray hexagons
 
 # add contours over the top
 #contour_intervals = np.linspace(0.0, 20.0, 20.0/2.0+1)
 contour_intervals = np.linspace(0.0, 16.0, 16.0/0.5+1)
 #contourMPAS(flwa[timelev,:,:].mean(axis=1) *3600.0*24.0*365.0 / 1.0e-17, contour_levs=contour_intervals)  # NOT SURE WHICH LEVEL FLWA SHOULD COME FROM - so taking column average
-contourMPAS(flwa[timelev,:,:].mean(axis=1) * 3600.0*24.0*365.0 / 1.0e-17)  # NOT SURE WHICH LEVEL FLWA SHOULD COME FROM - so taking column average
-plt.axis('equal')
+if flwa[timelev,:,:].max()>0.0:  # this is not used if FO velo solver is used
+   contourMPAS(flwa[timelev,:,:].mean(axis=1) * 3600.0*24.0*365.0 / 1.0e-17)  # NOT SURE WHICH LEVEL FLWA SHOULD COME FROM - so taking column average
+ax.set_aspect('equal')
 plt.title('Final flow factor (10$^{-17}$ Pa$^{-3}$ a$^{-1}$)' )  # Note: the paper's figure claims units of 10$^{-25}$ Pa$^{-3}$ a$^{-1}$ but the time unit appears to be 10^-17
 #plt.xlim( (0.0, 750.0) ); plt.ylim( (0.0, 750.0) )
 plt.xlabel('X position (km)'); plt.ylabel('Y position (km)')
@@ -292,6 +296,7 @@ else:
     plt.ylabel('Volume (10$^6$ km$^3$)')
 plt.plot( (0.0,), volume, 'ro')  # MPAS results
 plt.xticks(())
+print("MALI volume = {}".format(volume))
 
 fig.add_subplot(152)
 area = (areaCell[iceIndices]).sum() / 1000.0**2 / 10.0**6
@@ -305,6 +310,7 @@ else:
     plt.ylabel('Area (10$^6$ km$^2$)')
 plt.plot( (0.0,), area, 'ro')  # MPAS results
 plt.xticks(())
+print("MALI area = {}".format(area))
 
 fig.add_subplot(153)
 warmBedIndices = np.where(np.logical_and(thickness[timelev,:] > 0.0, basalTemperature[timelev,:] >= (basalPmpTemperature[timelev,:] - 0.01) ) )[0]  # using threshold here to identify melted locations
@@ -323,6 +329,7 @@ else:
     plt.ylabel('Melt fraction')
 plt.plot( (0.0,), meltfraction, 'ro')  # MPAS results
 plt.xticks(())
+print("MALI melt fraction = {}".format(meltfraction))
 
 fig.add_subplot(154)
 dividethickness = thickness[timelev, divideIndex]
@@ -334,6 +341,7 @@ else:
     plt.ylabel('Divide thickness (m)')
 plt.plot( (0.0,), dividethickness, 'ro')  # MPAS results
 plt.xticks(())
+print("MALI divide thickness = {}".format(dividethickness[0]))
 
 fig.add_subplot(155)
 dividebasaltemp = basalTemperature[timelev, divideIndex]
@@ -346,6 +354,7 @@ else:
     plt.ylabel('Divide basal temp. (K)')
 plt.plot( (0.0,), dividebasaltemp, 'ro')  # MPAS results
 plt.xticks(())
+print("MALI divide basal temperature = {}".format(dividebasaltemp[0]))
 
 plt.tight_layout()
 
