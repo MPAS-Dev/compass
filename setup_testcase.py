@@ -1084,10 +1084,10 @@ def process_model_run_step(model_run_tag, configs, script):  # {{{
                             config.get('script_paths', 'work_dir'),
                             config.get('script_paths', 'case_dir'),
                             executable_link)
+                        source = config.get('executables', executable_name)
+                        source = os.path.abspath(source)
                         subprocess.check_call(
-                            ['ln', '-sf',
-                             config.get('executables', executable_name),
-                             link_path],
+                            ['ln', '-sf', source, link_path],
                             stdout=dev_null, stderr=dev_null)
                         grandchild.text = './{}'.format(executable_link)
                     elif arg_text.find('attr_') >= 0:
@@ -1198,6 +1198,7 @@ def add_links(config_file, configs):  # {{{
                 raise ValueError('Configuration {} requires a definition of '
                       '{}.'.format(config_file, source_attr))
             source = configs.get("executables", source_attr)
+            source = os.path.abspath(source)
 
             subprocess.check_call(['ln', '-sf', '{}'.format(source),
                                    '{}/{}'.format(base_path, dest)],
@@ -1252,6 +1253,7 @@ def get_source_file(child, config):  # {{{
             source_path = config.get('script_paths',  source_path_name)
 
     source_file = '{}/{}'.format(source_path, source)
+    source_file = os.path.abspath(source_file)
     return source_file
 # }}}
 
