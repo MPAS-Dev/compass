@@ -3,7 +3,7 @@ LANL Institutional Computing
 
 `LANL IC overview and search <https://int.lanl.gov/hpc/institutional-computing/index.shtml>`_
 
-`DST Calendar <http://hpccalendar.lanl.gov/>`_
+`DST Calendar <http://hpccalendar.lanl.gov/>`_ (within LANL yellow)
 
 Information about Slurm:
 
@@ -44,7 +44,7 @@ Check compute time:
 
 * check job priority: ``sshare -a | head -2; sshare -a | grep $ACCOUNT``
 
-* `LANL Cluster Usage Overview <https://hpcinfo.lanl.gov>`_
+* `LANL Cluster Usage Overview <https://hpcinfo.lanl.gov>`_ (within LANL yellow)
 
 Check disk usage:
 
