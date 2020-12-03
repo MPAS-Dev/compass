@@ -1,25 +1,25 @@
 LANL Institutional Computing
 ============================
 
-See https://int.lanl.gov/hpc/institutional-computing/index.shtml
+`LANL IC overview and search <https://int.lanl.gov/hpc/institutional-computing/index.shtml>`_
 
-DST Calendar: http://hpccalendar.lanl.gov/
+`DST Calendar <http://hpccalendar.lanl.gov/>`_
 
 Information about Slurm:
 
-* `Introduction to Slurm at LANL <https://hpc.lanl.gov/slurm_introduction>`_
+* `Introduction to Slurm at LANL <https://hpc.lanl.gov/job-scheduling/index.html#JobScheduling-IntroductiontoSlurm>`_
 
-* `Basic Slurm Guide for LANL HPC Users <https://hpc.lanl.gov/basic_slurm>`_
+* `Basic Slurm Guide for LANL HPC Users <https://hpc.lanl.gov/job-scheduling/basic-slurm-guide-for-lanl-hpc-users.html>`_
 
-* `Slurm Command Summary <https://hpc.lanl.gov/slurm_commands>`_
+* `Slurm Command Summary <https://hpc.lanl.gov/job-scheduling/slurm-commands.html>`_
 
-* `Slurm: Running Jobs on HPC Platforms <https://hpc.lanl.gov/slurm>`_
+* `Slurm: Running Jobs on HPC Platforms <https://hpc.lanl.gov/job-scheduling/slurm-commands.html#SlurmCommands-SlurmJobSubmission>`_
 
-* example of batch scripts: https://hpc.lanl.gov/slurm#batch_scripts
+* `example of batch scripts <https://hpc.lanl.gov/job-scheduling/basic-slurm-guide-for-lanl-hpc-users.html#BasicSlurmGuideforLANLHPCUsers-BatchScriptGenerator>`_
 
-Machine specifications: `grizzly <https://hpc.lanl.gov/grizzly_home>`_
-`badger <https://hpc.lanl.gov/badger_home>`_
-`turquoise network <https://hpc.lanl.gov/turquoise_access>`_
+Machine specifications: `grizzly <https://hpc.lanl.gov/platforms/grizzly.html>`_
+`badger <https://hpc.lanl.gov/platforms/badger.html>`_
+`turquoise network <https://hpc.lanl.gov/networks/turquoise-network/index.html>`_
 
 login: ``ssh -t $my_moniker@wtrw.lanl.gov ssh gr-fe`` or ``ba-fe``
 
@@ -44,9 +44,7 @@ Check compute time:
 
 * check job priority: ``sshare -a | head -2; sshare -a | grep $ACCOUNT``
 
-* https://hpcinfo.lanl.gov
-
-* https://hpcstats.lanl.gov
+* `LANL Cluster Usage Overview <https://hpcinfo.lanl.gov>`_
 
 Check disk usage:
 
@@ -56,7 +54,7 @@ Check disk usage:
 
 Archiving
 
-* see https://hpc.lanl.gov/turquoise_archive
+* `turquoise HPSS archive <https://hpc.lanl.gov/data/filesystems-and-storage-on-hpc-clusters/hpss-data-archive/index.html>`_
 
 * archive front end: ``ssh -t $my_moniker@wtrw.lanl.gov ssh ar-tn``
 
