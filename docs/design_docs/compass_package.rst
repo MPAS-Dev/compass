@@ -36,12 +36,12 @@ the hope of making the MPAS testcases significantly easier to develop and run.
 Requirements
 ------------
 
-Requirement: Make testcases easy to understand and modify
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Requirement: Make testcases easy to understand, modify and create
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2020/11/16
+Date last modified: 2020/12/04
 
-Contributors: Xylar Asay-Davis
+Contributors: Xylar Asay-Davis, Luke Van Roekel
 
 
 Currently, test cases are written primarily in XML files that are then used to
@@ -50,6 +50,12 @@ We have found that this system is not very intuitive for new users or very easy
 to get started with.  New users would likely have an easier time if test cases
 were written in a more direct way, using a common language rather than custom
 XML tags.
+
+Importantly, creating a testcase should also be as easy as possible.  There is a
+need to balance readability and reusability. There is a risk that the compass
+redesign, as it becomes heavily pythonic, may make it difficult for developers to
+contribute.  But we can't go too far the other way either. We want the best
+balance possible between readability and reusibility.
 
 
 Requirement: Shared code
@@ -230,10 +236,10 @@ create their own batch script or modify an example.
 Algorithmic Formulations
 ------------------------
 
-Design solution: Make testcases easy to understand and modify
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Design solution: Make testcases easy to understand, modify and  and create
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2020/11/16
+Date last modified: 2020/12/04
 
 Contributors: Xylar Asay-Davis
 
@@ -329,6 +335,22 @@ namelist files:
     config_use_cvmix_background = .true.
     config_cvmix_background_diffusion = 0.0
     config_cvmix_background_viscosity = 1.0e-4
+
+Regarding the balance between reusability and readability, it is difficult to
+generalize this to the whole redesign.  To some degree this will be a choice
+left to each test case.  It will be difficult to reuse code across testcases
+and steps within a configuration without some degree of increased complexity.
+The redesign will attempt to include simpler examples, perhaps with less code
+reuse, that can serve as starting points for the creation of new testcases.
+These "prototype" testcases will include additional documentation and commenting
+to help new developers follow them and use them to design their own test cases.
+
+Even without the compass redesign, a certain familiarity with use of python
+packages is somewhere between recommended and required to add new test cases to
+COMPASS.  With the redesign, it will become essentially inevitable that
+developers have a certain minimum level of familiarity with python.  While there
+may be a learning curve, it is hoped that these skills will pay off far beyond
+COMPASS in a way that learning the existing XML-based approach cannot be.
 
 
 Design solution: Shared code
