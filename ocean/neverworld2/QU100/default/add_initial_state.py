@@ -71,10 +71,11 @@ def main():
         globals()[var] = np.nan * np.ones(nVertLevels)
 
     vars2D = ['ssh', 'bottomDepth', 'bottomDepthObserved',
-        'surfaceStress','windStressZonal','windStressMeridional', 'atmosphericPressure', 'boundaryLayerDepth']
+        'windStressZonal','windStressMeridional', 'atmosphericPressure', 'boundaryLayerDepth']
     for var in vars2D:
         globals()[var] = np.nan * np.ones(nCells)
     maxLevelCell = np.ones(nCells, dtype=np.int32)
+    surfaceStress = np.ones(nEdges)
 
     vars3D = [ 'layerThickness','temperature', 'salinity',
          'zMid', 'density']
