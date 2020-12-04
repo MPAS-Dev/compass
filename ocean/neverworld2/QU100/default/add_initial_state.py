@@ -75,7 +75,6 @@ def main():
     for var in vars2D:
         globals()[var] = np.nan * np.ones(nCells)
     maxLevelCell = np.ones(nCells, dtype=np.int32)
-    surfaceStress = np.ones(nEdges)
 
     vars3D = [ 'layerThickness','temperature', 'salinity',
          'zMid', 'density']
@@ -156,7 +155,7 @@ def main():
     ds['fEdge'] = (('nEdges',), fEdge)
     ds['fVertex'] = (('nVertices',), fVertex)
 	
-# Alice to do: add realistic Coriolis as function of latitude.
+# Alice to do: add realistic Coriolis as function of latitude. Use latCell etc.
     for iCell in range(0, nCells):
         fCell[iCell]=2.0*7.29e-5
 
@@ -169,9 +168,6 @@ def main():
     Lx = max(lonCell)
     Ly = max(latCell)
     # surface fields
-    # Reference values of surface zonal wind stress
-    #ds['windStressZonal'] = (('nCells',), np.zeros([nCells,]))
-    #ds['windStressMeridional'] = (('nCells',), np.zeros([nCells,]))
     ytau = np.zeros(7)
     taud = np.zeros(7)
     ytau[:] = np.array([-70.,-45.,-15.,0.,15.,45.,70.])*np.pi/180.
@@ -185,7 +181,6 @@ def main():
         #windStressZonal[iCell] = taud[ks] + ( taud[ks+1] - taud[ks]) * scurve(y, ytau[ks], ytau[ks+1]-ytau[ks])
 
     windStressMeridional[:] = 0.0
-    surfaceStress[:] = 0.0
     atmosphericPressure[:] = 0.0
     boundaryLayerDepth[:] = 0.0
     print('   time: %f' % ((time.time() - time1)))
