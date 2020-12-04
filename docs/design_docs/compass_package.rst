@@ -157,6 +157,76 @@ create a new "configuration" with one or more "testcases", each made up of
 one or more "steps".
 
 
+Requirement: Multiple Testcases can run in parallel
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Date last modified: 2020/12/04
+
+Contributors: Xylar Asay-Davis, Matt Hoffman
+
+Testcases within a test suite should be able to run in parallel with one
+another for reduced wall-clock time.  If possible, there should also be support
+for multiple steps within a testcase running in parallel with one another
+(e.g. the forward runs with different viscosities in the baroclinic channel RPE
+testcase).
+
+
+Requirement: Resolution can be a testcase parameter
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Date last modified: 2020/12/04
+
+Contributors: Xylar Asay-Davis, Mark Petersen
+
+Currently, resolution is hard-coded in the directory structure and in scripts
+for individual configurations like ``build_base_mesh.py``. This works for more
+complex meshes but for convergence tests, it is not useful to have a directory
+per resolution.  Instead, it could be helpful to have a list of resolutions that
+can easily be altered (e.g. ``dx = {min, max, step}`` with a linear or log step)
+with either configuration options or within the code. For convergence tests,
+resolution is a parameter, rather than something fundamental.  This could also
+reduce the number of testcases in the full list.
+
+
+Requirement: Testcase code is easy to alter and rerun
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Date last modified: 2020/12/04
+
+Contributors: Xylar Asay-Davis, Mark Petersen
+
+In the current ``compass``, the created directories include soft links to
+scripts like ``build_base_mesh.py`` and ``add_initial_condition.py``. It is
+easy to edit that file and rerun it, and quickly iterate until one gets the
+desired result. New people also understand this workflow. The new design should
+still be easy to work with.
+
+
+Requirement: Support for pre-made initial condition files
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Date last modified: 2020/12/04
+
+Contributors: Xylar Asay-Davis, Mark Petersen
+
+Ideally, it should be possible for a given test case to either generate an
+initial condition or read a pre-made initial condition from a file (possibly
+downloading this file if it has not been cached).  Alternatively, two different
+versions of a test case could exists, one with the generated and one with the
+pre-made initial condition.
+
+
+Requirement: Easy batch submission
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Date last modified: 2020/12/04
+
+Contributors: Xylar Asay-Davis, Mark Petersen
+
+There should be an easy way for users to submit batch jobs without having to
+create their own batch script or modify an example.
+
+
 Algorithmic Formulations
 ------------------------
 
@@ -537,6 +607,98 @@ The documentation will include:
 * A developer's guide for creating new testcases
 
   * core-specific details for developing new testcases
+
+
+Design solution: Multiple Testcases can run in parallel
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Date last modified: 2020/11/16
+
+Contributors: Xylar Asay-Davis
+
+I plan to use `parsl <https://parsl.readthedocs.io/en/stable/>`_ to support
+parallelism between both testcases and steps within a testcase.  Each step of
+a testcase should provide full paths to its input and output files so that
+``parsl`` can determine when these files are available and "unblock" tasks that
+are free to run.  This will be the only method for determining dependencies, so
+steps will have to be accurate in providing their inputs and outputs.  Testcases
+with an testing suite and and steps within a testcase will also need to be
+ordered in such a way that outputs of a "prerequisite" step are always defined
+before the inputs of any subsequent steps that need them as inputs.  This will
+allow each testcase and test suite to maintain a dictionary of file names and
+associated ``parsl.DataFuture`` objects that can be used to determine when
+each file is available.
+
+This design solution will be fleshed out further as prototyping continues.
+
+
+Design solution: Resolution can be a testcase parameter
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Date last modified: 2020/12/04
+
+Contributors: Xylar Asay-Davis
+
+As mentioned in "Shared code" and "Looser, more flexible directory structure",
+resolution will no longer be part of the directory structure for testcases and
+no restrictions will be placed on how individual test cases handle resolution
+or mesh generation.  To facilitate shared code, a configuration can use the
+same code for a step that generates a mesh and/or initial condition for
+different resolutions, e.g. passing in the resolution as an argument to the
+function.
+
+
+Design solution: Testcase code is easy to alter and rerun
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Date last modified: 2020/12/04
+
+Contributors: Xylar Asay-Davis
+
+There is a local link to the ``compass`` and one could edit any files within
+the package either using the link or in the original location and then simply
+rerun the testcase or step.  Changes do not require a test build of a conda
+package or anything like that.  After some discussion about adding symlinks to
+individual python files within the ``compass`` package, it was dicided that this
+has too many risks of being misunderstood, having unintended consequences, and
+could be difficult to implement.
+
+
+Design solution: Support for pre-made initial condition files
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Date last modified: 2020/12/04
+
+Contributors: Xylar Asay-Davis, Mark Petersen
+
+To some degree, the implementation of this requirement will be left up to
+individual test cases.  It should not be difficult to add a configuration option
+to a given test case selecting whether to generate an initial condition or
+read it from a file (and skipping initialization steps if the latter).
+
+The suggested approach would be to put an initial condition in the
+``initial_condition_database`` under a directory structure similar to the
+``compass`` work directory.  The initial condition would have a date stamp so
+new initial conditions could be added over time without breaking backwards
+compatibility.
+
+
+Design solution: Easy batch submission
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Date last modified: 2020/12/04
+
+Contributors: Xylar Asay-Davis, Mark Petersen
+
+A simpler solution would be to generate a job script appropriate for a given
+machine from a template.  This has been done for performance tests,
+`see example <https://github.com/MPAS-Dev/MPAS-Tools/blob/master/ocean/performance_testing/submit_performance_test_to_queue.py#L96>`_
+for single line command. An alternative will be to use ``parsl`` to handle the
+SLURM (or other) submission.
+
+Prototyping that is currently underway will help to decide which approach we
+use for individual testcases.  ``parsl`` will most likely be used for test
+suites.
 
 
 Design and Implementation
