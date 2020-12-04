@@ -77,9 +77,10 @@ def main():
     maxLevelCell = np.ones(nCells, dtype=np.int32)
 
     vars3D = [ 'layerThickness','temperature', 'salinity',
-         'restingThickness', 'zMid', 'density']
+         'zMid', 'density']
     for var in vars3D:
         globals()[var] = np.nan * np.ones([1, nCells, nVertLevels])
+    restingThickness = np.nan * np.ones([nCells, nVertLevels])
 
     # Note that this line shouldn't be required, but if layerThickness is
     # initialized with nans, the simulation dies. It must multiply by a nan on
@@ -125,7 +126,6 @@ def main():
             zMid[0, iCell, k] = zMid[0, iCell, k + 1] + 0.5 * \
                 (layerThickness[0, iCell, k + 1] + layerThickness[0, iCell, k])
     restingThickness[:, :] = layerThickness[0, :, :]
-    restingThickness[:, 0] = refLayerThickness[0]
 
     # add tracers
     S0 = 35.0
@@ -198,6 +198,7 @@ def main():
         ds[var] = (['nCells'], globals()[var])
     for var in vars3D:
         ds[var] = (['Time', 'nCells', 'nVertLevels'], globals()[var])
+    ds['restingThickness'] = (['nCells', 'nVertLevels'], restingThickness)
     # If you prefer not to have NaN as the fill value, you should consider
     # using mpas_tools.io.write_netcdf() instead
     ds.to_netcdf('initial_state.nc', format='NETCDF3_64BIT_OFFSET')
