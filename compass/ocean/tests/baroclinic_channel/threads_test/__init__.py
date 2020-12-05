@@ -1,6 +1,7 @@
 from compass.testcase import run_steps, get_testcase_default
 from compass.ocean.tests.baroclinic_channel import initial_state, forward
 from compass.ocean.tests import baroclinic_channel
+from compass.validate import compare_variables
 
 
 def collect(resolution):
@@ -28,7 +29,7 @@ def collect(resolution):
 
     for threads in [1, 2]:
         step = forward.collect(resolution, procs=4, threads=threads)
-        step['name'] = '{}proc'.format(4*threads)
+        step['name'] = '{}thread'.format(4*threads)
         step['subdir'] = step['name']
         steps[step['name']] = step
 
@@ -69,5 +70,9 @@ def run(testcase, config):
         Configuration options for this testcase, a combination of the defaults
         for the machine, core and configuration
     """
-    steps = ['initial_state', '4proc', '8proc']
+    steps = ['initial_state', '4thread', '8thread']
     run_steps(testcase, config, steps)
+    variables = ['temperature', 'salinity', 'layerThickness', 'normalVelocity']
+    compare_variables(variables, config, work_dir=testcase['work_dir'],
+                      filename1='4thread/output.nc',
+                      filename2='8thread/output.nc')

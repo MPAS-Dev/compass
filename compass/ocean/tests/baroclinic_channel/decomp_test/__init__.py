@@ -1,6 +1,7 @@
 from compass.testcase import run_steps, get_testcase_default
 from compass.ocean.tests.baroclinic_channel import initial_state, forward
 from compass.ocean.tests import baroclinic_channel
+from compass.validate import compare_variables
 
 
 def collect(resolution):
@@ -71,3 +72,7 @@ def run(testcase, config):
     """
     steps = ['initial_state', '4proc', '8proc']
     run_steps(testcase, config, steps)
+    variables = ['temperature', 'salinity', 'layerThickness', 'normalVelocity']
+    compare_variables(variables, config, work_dir=testcase['work_dir'],
+                      filename1='4proc/output.nc',
+                      filename2='8proc/output.nc')

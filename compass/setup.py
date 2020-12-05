@@ -143,6 +143,11 @@ def setup_case(path, testcase, config_file, machine, work_dir, baseline_dir,
     if config_file is not None:
         config.read(config_file)
 
+    # add the baseline directory for this testcase
+    if baseline_dir is not None:
+        baseline_root = os.path.join(baseline_dir, path)
+        config.set('paths', 'baseline_dir', baseline_root)
+
     # make sure all paths in the paths, namelists and streams sections are
     # absolute paths
     ensure_absolute_paths(config)
