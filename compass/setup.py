@@ -175,10 +175,10 @@ def setup_case(path, testcase, config_file, machine, work_dir, baseline_dir,
         setup(step, config)
 
         # write a run script for each step
-        _write_run(step)
+        _write_run(step, 'step.template')
 
     # write a run script for each testcase
-    _write_run(testcase)
+    _write_run(testcase, 'testcase.template')
 
 
 def main():
@@ -223,7 +223,7 @@ def main():
                 download=(args.no_download is None))
 
 
-def _write_run(test):
+def _write_run(test, template_name):
     """pickle the test/step info and write the run script"""
 
     # if compass/__init__.py exists, we're using a local version of the compass
@@ -239,4 +239,4 @@ def _write_run(test):
         pickle.dump(test, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
     # write a run script
-    generate_run(test)
+    generate_run(test, template_name)
