@@ -6,7 +6,7 @@ from mpas_tools.planar_hex import make_planar_hex_mesh
 from mpas_tools.io import write_netcdf
 from mpas_tools.mesh.conversion import convert, cull
 
-from compass.step import get_default
+from compass.testcase import get_step_default
 
 
 def collect(resolution):
@@ -23,7 +23,7 @@ def collect(resolution):
     step : dict
         A dictionary of properties of this step
     """
-    step = get_default(__name__)
+    step = get_step_default(__name__)
     step['resolution'] = resolution
 
     return step

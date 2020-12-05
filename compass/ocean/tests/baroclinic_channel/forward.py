@@ -1,6 +1,6 @@
 import os
 
-from compass.step import get_default
+from compass.testcase import get_step_default
 from compass.io import symlink
 from compass import namelist, streams
 from compass.model import partition, run_model
@@ -40,7 +40,7 @@ def collect(resolution, procs, threads, testcase_module=None,
     step : dict
         A dictionary of properties of this step
     """
-    step = get_default(__name__)
+    step = get_step_default(__name__)
     step['resolution'] = resolution
     step['procs'] = procs
     step['threads'] = threads

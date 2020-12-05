@@ -1,4 +1,4 @@
-from compass.testcase import run_steps, get_default
+from compass.testcase import run_steps, get_testcase_default
 from compass.ocean.tests.baroclinic_channel import initial_state, forward
 from compass.ocean.tests import baroclinic_channel
 
@@ -42,7 +42,7 @@ def collect(resolution):
     step['subdir'] = step['name']
     steps[step['name']] = step
 
-    testcase = get_default(module, description, steps, subdir=subdir)
+    testcase = get_testcase_default(module, description, steps, subdir=subdir)
     testcase['resolution'] = resolution
 
     return testcase

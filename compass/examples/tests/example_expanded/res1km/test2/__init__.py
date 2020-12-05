@@ -1,5 +1,5 @@
 from compass.config import add_config
-from compass.testcase import get_default, run_steps
+from compass.testcase import get_testcase_default, run_steps
 from compass.examples.tests.example_expanded.res1km.test2 import step1, step2
 
 
@@ -32,7 +32,7 @@ def collect():
         steps[step['name']] = step
 
     # get some default information for the testcase
-    testcase = get_default(module, description, steps, subdir=subdir)
+    testcase = get_testcase_default(module, description, steps, subdir=subdir)
     # add any parameters or other information you would like to have when you
     # are setting up or running the testcase or its steps
     testcase['resolution'] = resolution

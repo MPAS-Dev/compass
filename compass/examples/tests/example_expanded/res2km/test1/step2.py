@@ -3,7 +3,7 @@ import os
 
 from mpas_tools.io import write_netcdf
 
-from compass.step import get_default
+from compass.testcase import get_step_default
 from compass.io import symlink
 
 
@@ -17,7 +17,7 @@ def collect():
         A dictionary of properties of this step
     """
     # get some default information for the step
-    step = get_default(__name__)
+    step = get_step_default(__name__)
     # add any parameters or other information you would like to have when you
     # are setting up or running the testcase or its steps
     step['resolution'] = '2km'

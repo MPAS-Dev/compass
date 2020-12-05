@@ -4,7 +4,7 @@ from netCDF4 import Dataset
 import matplotlib.pyplot as plt
 import cmocean
 
-from compass.step import get_default
+from compass.testcase import get_step_default
 from compass.io import symlink
 
 
@@ -22,7 +22,7 @@ def collect(resolution):
     step : dict
         A dictionary of properties of this step
     """
-    step = get_default(__name__)
+    step = get_step_default(__name__)
     step['resolution'] = resolution
 
     return step

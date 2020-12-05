@@ -7,7 +7,7 @@ import pickle
 import compass.testcases
 from compass.config import add_config, ensure_absolute_paths
 from compass.io import symlink
-from compass.step import generate_run
+from compass.testcase import generate_run
 
 
 def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
