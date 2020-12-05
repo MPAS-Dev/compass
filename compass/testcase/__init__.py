@@ -129,7 +129,7 @@ def run_steps(testcase, config, steps):
     os.chdir(cwd)
 
 
-def generate_run(step):
+def generate_run(step, template_name):
     """
     Generate a ``run.py`` script for the given testcase or step.
 
@@ -138,11 +138,13 @@ def generate_run(step):
     step : dict
         The dictionary of information about the step, used to fill in the
         script template
+
+    template_name : str
+        The name of the template file to use to create the run script
     """
     step_dir = step['work_dir']
 
-    template = Template(resources.read_text('compass.testcase',
-                                            'step.template'))
+    template = Template(resources.read_text('compass.testcase', template_name))
     script = template.render(step=step)
 
     run_filename = os.path.join(step_dir, 'run.py')

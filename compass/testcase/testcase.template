@@ -1,0 +1,21 @@
+#!/usr/bin/env python
+import pickle
+import configparser
+
+from {{ step.module }} import {{ step.run }} as run
+
+
+def main():
+    with open('{{ step.name }}.pickle', 'rb') as handle:
+        test = pickle.load(handle)
+
+    config = configparser.ConfigParser(
+        interpolation=configparser.ExtendedInterpolation())
+    config.read('{{ step.config }}')
+
+    run(test, config)
+
+
+if __name__ == '__main__':
+    main()
+
