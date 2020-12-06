@@ -111,7 +111,7 @@ def setup(step, config):
     step['outputs'] = outputs
 
 
-def run(step, config):
+def run(step, test_suite, config):
     """
     Run this step of the testcase
 
@@ -120,6 +120,9 @@ def run(step, config):
     step : dict
         A dictionary of properties of this step from the ``collect()`` function,
         with modifications from the ``setup()`` function.
+
+    test_suite : dict
+        A dictionary of properties of the test suite
 
     config : configparser.ConfigParser
         Configuration options for this testcase, a combination of the defaults

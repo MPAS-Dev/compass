@@ -61,7 +61,7 @@ def configure(testcase, config):
 # The function must take only the "testcase" and "config" arguments, so
 # any information you need in order to run the testcase should be added to
 # "testcase" if it is not available in "config"
-def run(testcase, config):
+def run(testcase, test_suite, config):
     """
     Run each step of the testcase
 
@@ -71,6 +71,9 @@ def run(testcase, config):
         A dictionary of properties of this testcase from the ``collect()``
         function
 
+    test_suite : dict
+        A dictionary of properties of the test suite
+
     config : configparser.ConfigParser
         Configuration options for this testcase, a combination of the defaults
         for the machine, core and configuration
@@ -79,4 +82,4 @@ def run(testcase, config):
     # desired sequence.  However, it may involve only running a subset of steps
     # if some are optional and not performed by default.
     steps = ['step1', 'step2']
-    run_steps(testcase, config, steps)
+    run_steps(testcase, test_suite, config, steps)
