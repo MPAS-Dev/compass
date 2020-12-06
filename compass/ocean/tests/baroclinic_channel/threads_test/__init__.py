@@ -56,7 +56,7 @@ def configure(testcase, config):
     baroclinic_channel.configure(testcase, config)
 
 
-def run(testcase, config):
+def run(testcase, test_suite, config):
     """
     Run each step of the testcase
 
@@ -66,12 +66,15 @@ def run(testcase, config):
         A dictionary of properties of this testcase from the ``collect()``
         function
 
+    test_suite : dict
+        A dictionary of properties of the test suite
+
     config : configparser.ConfigParser
         Configuration options for this testcase, a combination of the defaults
         for the machine, core and configuration
     """
     steps = ['initial_state', '4thread', '8thread']
-    run_steps(testcase, config, steps)
+    run_steps(testcase, test_suite, config, steps)
     variables = ['temperature', 'salinity', 'layerThickness', 'normalVelocity']
     compare_variables(variables, config, work_dir=testcase['work_dir'],
                       filename1='4thread/output.nc',

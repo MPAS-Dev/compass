@@ -103,7 +103,7 @@ def get_testcase_default(module, description, steps, subdir=None):
     return testcase
 
 
-def run_steps(testcase, config, steps):
+def run_steps(testcase, test_suite, config, steps):
     """
     Run the requested steps of a testcase
 
@@ -113,6 +113,9 @@ def run_steps(testcase, config, steps):
         The dictionary describing the testcase with info from
         :py:func:`compass.testcase.get_default()` and any additional information
         added when collecting and setting up the testcase.
+
+    test_suite : dict
+        A dictionary of properties of the test suite
 
     config : configparser.ConfigParser
         Configuration options for this testcase
@@ -125,7 +128,7 @@ def run_steps(testcase, config, steps):
         step = testcase['steps'][step_name]
         run = getattr(sys.modules[step['module']], step['run'])
         os.chdir(step['work_dir'])
-        run(step, config)
+        run(step, test_suite, config)
     os.chdir(cwd)
 
 

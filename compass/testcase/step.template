@@ -13,7 +13,8 @@ def main():
         interpolation=configparser.ExtendedInterpolation())
     config.read('{{ step.config }}')
 
-    run(test, config)
+    test_suite = dict()
+    run(test, test_suite, config)
 
 
 if __name__ == '__main__':
