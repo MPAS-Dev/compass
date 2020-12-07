@@ -85,8 +85,9 @@ def run(step, test_suite, config, logger):
                                   nonperiodic_y=True)
     write_netcdf(dsMesh, 'base_mesh.nc')
 
-    dsMesh = cull(dsMesh)
-    dsMesh = convert(dsMesh, graphInfoFileName='culled_graph.info')
+    dsMesh = cull(dsMesh, logger=logger)
+    dsMesh = convert(dsMesh, graphInfoFileName='culled_graph.info',
+                     logger=logger)
     write_netcdf(dsMesh, 'culled_mesh.nc')
 
     section = config['baroclinic_channel']
