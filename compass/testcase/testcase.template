@@ -3,6 +3,7 @@ import pickle
 import configparser
 
 from {{ step.module }} import {{ step.run }} as run
+from compass import logging
 
 
 def main():
@@ -13,8 +14,15 @@ def main():
         interpolation=configparser.ExtendedInterpolation())
     config.read('{{ step.config }}')
 
+    # start logging to stdout/stderr
+    test_name = test['path'].replace('/', '_')
+    logger, handler, old_stdout, old_stderr = logging.start(
+        test_name=test_name, log_filename=None)
+
     test_suite = dict()
-    run(test, test_suite, config)
+    run(test, test_suite, config, logger)
+
+    logging.stop(logger, handler, old_stdout, old_stderr)
 
 
 if __name__ == '__main__':
