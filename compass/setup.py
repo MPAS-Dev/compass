@@ -39,6 +39,12 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
 
     download : bool, optional
         Whether to download missing input files during setup
+
+    Returns
+    -------
+    testcases : dict
+        A dictionary of information about each testcase, with the relative path
+        in the work directory as keys
     """
 
     if config_file is None and machine is None:
@@ -69,6 +75,7 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
     for path, testcase in testcases.items():
         setup_case(path, testcase, config_file, machine, work_dir, baseline_dir,
                    download)
+    return testcases
 
 
 def setup_case(path, testcase, config_file, machine, work_dir, baseline_dir,
@@ -121,12 +128,9 @@ def setup_case(path, testcase, config_file, machine, work_dir, baseline_dir,
     add_config(config, 'compass.{}.tests.{}'.format(core, configuration),
                '{}.cfg'.format(configuration), exception=False)
 
-    # make the test case directory if it doesn't exist
     if work_dir is None:
         work_dir = os.getcwd()
 
-    # the testcase directory is the work directory plus the
-    # package subdirectories (minus the root "compass" directory)
     testcase_dir = os.path.join(work_dir, path)
     try:
         os.makedirs(testcase_dir)
