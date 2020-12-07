@@ -11,7 +11,7 @@ from compass.testcase import generate_run
 
 
 def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
-                work_dir=None, baseline_dir=None, download=True):
+                work_dir=None, baseline_dir=None):
     """
     Set up one or more test cases
 
@@ -36,9 +36,6 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
 
     baseline_dir : str, optional
         Location of baseslines that can be compared to
-
-    download : bool, optional
-        Whether to download missing input files during setup
 
     Returns
     -------
@@ -73,13 +70,11 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
 
     print('Setting up testcases:')
     for path, testcase in testcases.items():
-        setup_case(path, testcase, config_file, machine, work_dir, baseline_dir,
-                   download)
+        setup_case(path, testcase, config_file, machine, work_dir, baseline_dir)
     return testcases
 
 
-def setup_case(path, testcase, config_file, machine, work_dir, baseline_dir,
-               download):
+def setup_case(path, testcase, config_file, machine, work_dir, baseline_dir):
     """
     Set up one or more test cases
 
@@ -104,15 +99,15 @@ def setup_case(path, testcase, config_file, machine, work_dir, baseline_dir,
 
     baseline_dir : str, optional
         Location of baseslines that can be compared to
-
-    download : bool, optional
-        Whether to download missing input files during setup
     """
 
     print('  {}'.format(path))
 
     config = configparser.ConfigParser(
         interpolation=configparser.ExtendedInterpolation())
+
+    # start with default compass config options
+    add_config(config, 'compass', 'default.cfg')
 
     # add the machine config file
     if machine is None:
@@ -214,13 +209,6 @@ def main():
     parser.add_argument("-b", "--baseline_dir", dest="baseline_dir",
                         help="Location of baselines that can be compared to",
                         metavar="PATH")
-    parser.add_argument("-q", "--quiet", dest="quiet",
-                        help="If set, the command_history file will not be "
-                             "written", action="store_true")
-    parser.add_argument("--no_download", dest="no_download",
-                        action="store_true",
-                        help="If set, files will not be auto-downloaded "
-                             "during setup")
     args = parser.parse_args(sys.argv[2:])
     if args.test is None:
         tests = None
@@ -228,8 +216,7 @@ def main():
         tests = [args.test]
     setup_cases(tests=tests, numbers=args.case_num,
                 config_file=args.config_file, machine=args.machine,
-                work_dir=args.work_dir, baseline_dir=args.baseline_dir,
-                download=(args.no_download is None))
+                work_dir=args.work_dir, baseline_dir=args.baseline_dir)
 
 
 def _write_run(test, template_name):
