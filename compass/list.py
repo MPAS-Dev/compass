@@ -72,6 +72,15 @@ def list_machines():
             print('   {}'.format(os.path.splitext(config)[0]))
 
 
+def list_suites(cores=['ocean']):
+    print('Suites:')
+    for core in cores:
+        suites = contents('compass.{}.suites'.format(core))
+        for suite in suites:
+            if suite.endswith('.txt'):
+                print('  -c {} -t {}'.format(core, os.path.splitext(suite)[0]))
+
+
 def main():
     parser = argparse.ArgumentParser(
         description='List the available test cases or machines')
@@ -83,12 +92,16 @@ def main():
                         help="The number of the test to list")
     parser.add_argument("--machines", dest="machines", action="store_true",
                         help="List supported machines (instead of test cases)")
+    parser.add_argument("--suites", dest="suites", action="store_true",
+                        help="List test suites (instead of test cases)")
     parser.add_argument("-v", "--verbose", dest="verbose", action="store_true",
                         help="List details of each test case, not just the "
                              "path")
     args = parser.parse_args(sys.argv[2:])
     if args.machines:
         list_machines()
+    elif args.suites:
+        list_suites()
     else:
         list_cases(test_expr=args.test_expr, number=args.number,
                    verbose=args.verbose)
