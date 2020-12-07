@@ -4,6 +4,8 @@ import stat
 from jinja2 import Template
 from importlib import resources
 
+from compass import logging
+
 
 def get_step_default(module):
     """
@@ -103,7 +105,7 @@ def get_testcase_default(module, description, steps, subdir=None):
     return testcase
 
 
-def run_steps(testcase, test_suite, config, steps):
+def run_steps(testcase, test_suite, config, steps, logger):
     """
     Run the requested steps of a testcase
 
@@ -122,13 +124,37 @@ def run_steps(testcase, test_suite, config, steps):
 
     steps : list
         A list of the names of the steps from ``testcase['steps']`` to run
+
+    logger : logging.Logger
+        A logger for output from the testcase
     """
     cwd = os.getcwd()
     for step_name in steps:
         step = testcase['steps'][step_name]
+
+        logger.info(' * Running {}'.format(step_name))
+
+        if 'log_filename' in testcase:
+            step_logger = logger
+            handler = None
+            old_stdout = None
+            old_stderr = None
+        else:
+            log_filename = '{}/{}.log'.format(cwd, step_name)
+            test_name = step['path'].replace('/', '_')
+            step_logger, handler, old_stdout, old_stderr = logging.start(
+                test_name=test_name, log_filename=log_filename)
+            step['log_filename'] = log_filename
+
         run = getattr(sys.modules[step['module']], step['run'])
         os.chdir(step['work_dir'])
-        run(step, test_suite, config)
+        run(step, test_suite, config, step_logger)
+
+        if 'log_filename' not in testcase:
+            logging.stop(step_logger, handler, old_stdout, old_stderr)
+
+        logger.info('     Complete')
+
     os.chdir(cwd)
 
 
