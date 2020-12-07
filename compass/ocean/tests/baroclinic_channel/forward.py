@@ -159,5 +159,6 @@ def run(step, test_suite, config, logger):
     threads = step['threads']
     step_dir = step['work_dir']
     procs = get_core_count(config, procs, step_dir)
-    partition(procs)
-    run_model(config, core='ocean', core_count=procs, threads=threads)
+    partition(procs, logger)
+    run_model(config, core='ocean', core_count=procs, logger=logger,
+              threads=threads)

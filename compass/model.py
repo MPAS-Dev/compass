@@ -1,7 +1,7 @@
 import os
-import subprocess
 
 from compass.io import symlink
+from compass.logging import check_call
 
 
 def symlink_model(config, step_dir):
@@ -21,7 +21,8 @@ def symlink_model(config, step_dir):
     symlink(os.path.abspath(model), os.path.join(step_dir, model_basename))
 
 
-def partition(core_count, executable='gpmetis', graph_file='graph.info'):
+def partition(core_count, logger, executable='gpmetis',
+              graph_file='graph.info'):
     """
     Partition the domain for the requested number of cores
 
@@ -29,6 +30,9 @@ def partition(core_count, executable='gpmetis', graph_file='graph.info'):
     ----------
     core_count : int
         The number of cores that the model should be run on
+
+    logger : logging.Logger
+        A logger for output from the step that is calling this function
 
     executable : str, optional
         The command to use for partitioning
@@ -38,10 +42,10 @@ def partition(core_count, executable='gpmetis', graph_file='graph.info'):
 
     """
     args = [executable, graph_file, '{}'.format(core_count)]
-    subprocess.check_call(args)
+    check_call(args, logger)
 
 
-def run_model(config, core, core_count, threads=1):
+def run_model(config, core, core_count, logger, threads=1):
     """
     Run the model after determining the number of cores
 
@@ -55,6 +59,9 @@ def run_model(config, core, core_count, threads=1):
 
     core_count : int
         The maximum number of cores that the model should be run on
+
+    logger : logging.Logger
+        A logger for output from the step that is calling this function
 
     threads : int
         The number of threads to use for the model run
@@ -75,4 +82,4 @@ def run_model(config, core, core_count, threads=1):
             '-n', namelist,
             '-s', streams]
 
-    subprocess.check_call(args)
+    check_call(args, logger)

@@ -1,5 +1,6 @@
 import logging
 import sys
+import subprocess
 
 
 def start(test_name, log_filename=None):
@@ -133,6 +134,43 @@ class CompassFormatter(logging.Formatter):
         self._fmt = format_orig
 
         return result
+
+
+def check_call(args, logger):
+    """
+    Call the given subprocess with logging to the given logger.
+
+    Parameters
+    ----------
+    args : list
+        A list of argument to the subprocess
+
+    logger : logging.Logger
+        The logger to write output to
+
+    Raises
+    ------
+    subprocess.CalledProcessError
+        If the given subprocess exists with nonzero status
+
+    """
+
+    process = subprocess.Popen(args, stdout=subprocess.PIPE,
+                               stderr=subprocess.PIPE)
+    stdout, stderr = process.communicate()
+
+    if stdout:
+        stdout = stdout.decode('utf-8')
+        for line in stdout.split('\n'):
+            logger.info(line)
+    if stderr:
+        stderr = stderr.decode('utf-8')
+        for line in stderr.split('\n'):
+            logger.error(line)
+
+    if process.returncode != 0:
+        raise subprocess.CalledProcessError(process.returncode,
+                                            ' '.join(args))
 
 
 class StreamToLogger(object):
