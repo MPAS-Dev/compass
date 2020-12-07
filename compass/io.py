@@ -6,17 +6,13 @@ import progressbar
 from compass.config import get_source_file
 
 
-def download(dest_path, file_name, url, config=None, verify=True,
-             exceptions=True, check_size=False):
+def download(file_name, url, config, dest_path=None, dest_option=None,
+             exceptions=True):
     """
     Download a file from a URL to the given path or path name
 
     Parameters
     ----------
-    dest_path : str
-        Either the output path or an option in the ``paths`` config section
-        defining an output path
-
     file_name : str
         The relative path of the source file relative to ``url`` and the
         destination path relative to ``dest_path`` (or the associated config
@@ -25,18 +21,20 @@ def download(dest_path, file_name, url, config=None, verify=True,
     url : str
         The URL where ``file_name`` can be found
 
-    config : configparser.ConfigParser, optional
+    config : configparser.ConfigParser
         Configuration options used to find custom paths if ``dest_path`` is
         a config option
 
-    verify : bool, optional
-        Whether to verify SSL certificates for HTTPS requests
+    dest_path : str, optional
+        The output path; either ``dest_path`` or ``dest_option`` should be
+        specified
+
+    dest_option : str, optional
+        An option in the ``paths`` config section  defining an output path;
+        either ``dest_path`` or ``dest_option`` should be specified
 
     exceptions : bool, optional
         Whether to raise exceptions when the download fails
-
-    check_size : bool, optional
-        Whether to check if the file is complete if it already exists
 
     Returns
     -------
@@ -44,10 +42,23 @@ def download(dest_path, file_name, url, config=None, verify=True,
         The resulting file name if the download was successful
     """
 
-    if config is not None:
-        out_file_name = get_source_file(dest_path, file_name, config)
-    else:
+    if dest_option is not None:
+        out_file_name = get_source_file(dest_option, file_name, config)
+    elif dest_path is not None:
         out_file_name = '{}/{}'.format(dest_path, file_name)
+    else:
+        raise ValueError('One of "dest_option" and "dest_path" must be '
+                         'specified.')
+
+    do_download = config.getboolean('download', 'download')
+    check_size = config.getboolean('download', 'check_size')
+    verify = config.getboolean('download', 'verify')
+
+    if not do_download:
+        if not os.path.exists(out_file_name):
+            raise OSError('File not found and downloading is disabled: '
+                          '{}'.format(out_file_name))
+        return out_file_name
 
     if not check_size and os.path.exists(out_file_name):
         return out_file_name
@@ -188,12 +199,11 @@ def symlink(target, link_name, overwrite=True):
 
 # From https://stackoverflow.com/a/1094933/7728169
 def _sizeof_fmt(num, suffix='B'):
-    '''
+    """
     Covert a number of bytes to a human-readable file size
-    '''
+    """
     for unit in ['', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi']:
         if abs(num) < 1024.0:
             return "%3.1f%s%s" % (num, unit, suffix)
         num /= 1024.0
     return "%.1f%s%s" % (num, 'Yi', suffix)
-

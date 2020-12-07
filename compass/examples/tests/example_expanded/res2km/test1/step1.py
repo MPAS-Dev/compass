@@ -61,10 +61,10 @@ def setup(step, config):
     # download an input file if it's not already in the initial condition
     # database
     filename = download(
-        dest_path=initial_condition_database,
         file_name=step['filename'],
         url='https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/'
-            'mpas-ocean/initial_condition_database')
+            'mpas-ocean/initial_condition_database',
+        config=config, dest_path=initial_condition_database)
 
     inputs.append(filename)
 
