@@ -51,7 +51,7 @@ def configure(testcase, config):
     baroclinic_channel.configure(testcase, config)
 
 
-def run(testcase, test_suite, config):
+def run(testcase, test_suite, config, logger):
     """
     Run each step of the testcase
 
@@ -67,6 +67,9 @@ def run(testcase, test_suite, config):
     config : configparser.ConfigParser
         Configuration options for this testcase, a combination of the defaults
         for the machine, core and configuration
+
+    logger : logging.Logger
+        A logger for output from the testcase
     """
     steps = ['initial_state', 'forward']
-    run_steps(testcase, test_suite, config, steps)
+    run_steps(testcase, test_suite, config, steps, logger)

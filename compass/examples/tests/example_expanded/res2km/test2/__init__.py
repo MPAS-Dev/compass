@@ -71,7 +71,7 @@ def configure(testcase, config):
 # The function must take only the "testcase" and "config" arguments, so
 # any information you need in order to run the testcase should be added to
 # "testcase" if it is not available in "config"
-def run(testcase, test_suite, config):
+def run(testcase, test_suite, config, logger):
     """
     Run each step of the testcase
 
@@ -87,9 +87,12 @@ def run(testcase, test_suite, config):
     config : configparser.ConfigParser
         Configuration options for this testcase, a combination of the defaults
         for the machine, core and configuration
+
+    logger : logging.Logger
+        A logger for output from the testcase
     """
     # typically, this involves running all the steps in the testcase in the
     # desired sequence.  However, it may involve only running a subset of steps
     # if some are optional and not performed by default.
     steps = ['step1', 'step2']
-    run_steps(testcase, test_suite, config, steps)
+    run_steps(testcase, test_suite, config, steps, logger)

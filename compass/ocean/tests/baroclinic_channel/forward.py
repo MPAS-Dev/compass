@@ -135,7 +135,7 @@ def setup(step, config):
     step['outputs'] = outputs
 
 
-def run(step, test_suite, config):
+def run(step, test_suite, config, logger):
     """
     Run this step of the testcase
 
@@ -151,6 +151,9 @@ def run(step, test_suite, config):
     config : configparser.ConfigParser
         Configuration options for this testcase, a combination of the defaults
         for the machine, core and configuration
+
+    logger : logging.Logger
+        A logger for output from the step
     """
     procs = step['procs']
     threads = step['threads']
