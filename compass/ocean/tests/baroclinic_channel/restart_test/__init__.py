@@ -18,7 +18,7 @@ def collect(resolution):
     testcase : dict
         A dict of properties of this test case, including its steps
     """
-    description = 'baroclinic channel {} default'.format(resolution)
+    description = 'baroclinic channel {} restart test'.format(resolution)
     module = __name__
 
     name = module.split('.')[-1]

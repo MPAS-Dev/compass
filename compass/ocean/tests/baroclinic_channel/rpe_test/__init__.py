@@ -18,7 +18,8 @@ def collect(resolution):
     testcase : dict
         A dict of properties of this test case, including its steps
     """
-    description = 'baroclinic channel {} default'.format(resolution)
+    description = 'baroclinic channel {} reference potential energy (RPE)' \
+                  ''.format(resolution)
     module = __name__
 
     res_params = {'1km': {'core_count': 144},
