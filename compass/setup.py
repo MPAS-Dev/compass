@@ -8,6 +8,7 @@ import compass.testcases
 from compass.config import add_config, ensure_absolute_paths
 from compass.io import symlink
 from compass.testcase import generate_run
+from compass import provenance
 
 
 def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
@@ -50,6 +51,9 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
     if tests is None and numbers is None:
         raise ValueError('At least one of tests or numbers is needed.')
 
+    if work_dir is None:
+        work_dir = os.getcwd()
+
     all_testcases = compass.testcases.collect()
     testcases = dict()
     if numbers is not None:
@@ -67,6 +71,8 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
                 raise ValueError('Testcase with path {} is not in '
                                  'testcases'.format(path))
             testcases[path] = all_testcases[path]
+
+    provenance.write(work_dir, testcases)
 
     print('Setting up testcases:')
     for path, testcase in testcases.items():
@@ -94,10 +100,10 @@ def setup_case(path, testcase, config_file, machine, work_dir, baseline_dir):
         The name of one of the machines with defined config options, which can
         be listed with ``compass list --machines``
 
-    work_dir : str, optional
+    work_dir : str
         A directory that will serve as the base for creating case directories
 
-    baseline_dir : str, optional
+    baseline_dir : str
         Location of baseslines that can be compared to
     """
 
@@ -123,9 +129,6 @@ def setup_case(path, testcase, config_file, machine, work_dir, baseline_dir):
     add_config(config, 'compass.{}.tests.{}'.format(core, configuration),
                '{}.cfg'.format(configuration), exception=False)
 
-    if work_dir is None:
-        work_dir = os.getcwd()
-
     testcase_dir = os.path.join(work_dir, path)
     try:
         os.makedirs(testcase_dir)
@@ -135,7 +138,8 @@ def setup_case(path, testcase, config_file, machine, work_dir, baseline_dir):
 
     # add config options specific to the testcase
     if testcase['configure'] is not None:
-        configure = getattr(sys.modules[testcase['module']], testcase['configure'])
+        configure = getattr(sys.modules[testcase['module']],
+                            testcase['configure'])
         configure(testcase, config)
 
     # add the custom config file last, so these options are the defaults
