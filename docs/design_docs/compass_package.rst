@@ -163,18 +163,21 @@ create a new "configuration" with one or more "testcases", each made up of
 one or more "steps".
 
 
-Requirement: Multiple Testcases can run in parallel
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Requirement: Considerations related to running testcases in parallel
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2020/12/04
+Date last modified: 2020/12/10
 
 Contributors: Xylar Asay-Davis, Matt Hoffman
 
-Testcases within a test suite should be able to run in parallel with one
-another for reduced wall-clock time.  If possible, there should also be support
-for multiple steps within a testcase running in parallel with one another
-(e.g. the forward runs with different viscosities in the baroclinic channel RPE
-testcase).
+In the longer term, we would like ot add the capability of running multiple
+testcases within a test suite in parallel with one another for reduced
+wall-clock time.  Similarly, we would also like to support multiple steps within
+a testcase running in parallel with one another (e.g. the forward runs with
+different viscosities in the baroclinic channel RPE testcase).  Full support for
+this capability will not be included in this design, but design choices should
+be mindful of this future addition in the hopes of minimizing future
+modifications, particularly to individual test cases.
 
 
 Requirement: Resolution can be a testcase parameter
@@ -631,27 +634,39 @@ The documentation will include:
   * core-specific details for developing new testcases
 
 
-Design solution: Multiple Testcases can run in parallel
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Design solution: Considerations related to running testcases in parallel
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2020/11/16
+Date last modified: 2020/12/10
 
 Contributors: Xylar Asay-Davis
 
 I plan to use `parsl <https://parsl.readthedocs.io/en/stable/>`_ to support
-parallelism between both testcases and steps within a testcase.  Each step of
-a testcase should provide full paths to its input and output files so that
-``parsl`` can determine when these files are available and "unblock" tasks that
-are free to run.  This will be the only method for determining dependencies, so
-steps will have to be accurate in providing their inputs and outputs.  Testcases
-with an testing suite and and steps within a testcase will also need to be
-ordered in such a way that outputs of a "prerequisite" step are always defined
-before the inputs of any subsequent steps that need them as inputs.  This will
-allow each testcase and test suite to maintain a dictionary of file names and
-associated ``parsl.DataFuture`` objects that can be used to determine when
-each file is available.
+parallelism between both testcases and steps within a testcase.  After reading
+documentation, running tutorials, and beginning prototyping, it seems that the
+relatively new
+`WorkQueueExecutor <https://parsl.readthedocs.io/en/stable/stubs/parsl.executors.WorkQueueExecutor.html#parsl.executors.WorkQueueExecutor>`_
+is likely to be the approach within Parsl that allows the level of flexibility
+and control that we would likely need.  However, this is a new enough feature
+that it is still considered to be ``beta'' and is not available in the latest
+release (v1.0.0).  So it seems premature to settle on this design choice or to
+begin to incorporate it into code (except perhaps as a separate prototype).
 
-This design solution will be fleshed out further as prototyping continues.
+Even so, some design choices can be made with future support for Parsl in mind.
+Each step of a testcase will be required to provide full paths to its input and
+output files so that, in the future, Parsl can determine dependencies between
+testcases and their steps using these files and control execution accordingly.
+This will be the only method for determining dependencies, so steps will have to
+be accurate in providing their inputs and outputs to avoid errors,
+race conditions, or unnecessary blocking.  Testcases with an testing suite and
+steps within a testcase will also need to be ordered in such a way that outputs
+of a "prerequisite" step are always defined before the inputs of any subsequent
+steps that need them as inputs.  In the future, this should allow ``compass``
+to associate each input file with a so-called Parsl ``DataFuture``, which will
+allow each step of a testcase to run only all of its input files are available.
+
+This design solution will be fleshed out further in a separate document at a
+later date.
 
 
 Design solution: Resolution can be a testcase parameter
