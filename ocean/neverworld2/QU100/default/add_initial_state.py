@@ -155,15 +155,15 @@ def main():
     ds['fEdge'] = (('nEdges',), fEdge)
     ds['fVertex'] = (('nVertices',), fVertex)
 	
-# Alice to do: add realistic Coriolis as function of latitude. Use latCell etc.
+## Alice to do: add realistic Coriolis as function of latitude.
     for iCell in range(0, nCells):
-        fCell[iCell]=2.0*7.29e-5
+        fCell[iCell]=2.0*7.2921e-5*np.sin(latCell[iCell]) # numpy sin function takes angle in rad; 
 
     for iEdge in range(0, nEdges):
-        fEdge[iEdge]=2.0*7.29e-5
+        fEdge[iEdge]=2.0*7.2921e-5*np.sin(latEdge[iEdge])
 
     for iVertex in range(0, nVertices):
-        fVertex[iVertex]=2.0*7.29e-5
+        fVertex[iVertex]=2.0*7.2921e-5*np.sin(latVertex[iVertex])
     # For periodic domains, the max cell coordinate is also the domain width
     Lx = max(lonCell)
     Ly = max(latCell)
