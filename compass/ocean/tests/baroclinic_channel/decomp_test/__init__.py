@@ -28,7 +28,7 @@ def collect(resolution):
     steps[step['name']] = step
 
     for procs in [4, 8]:
-        step = forward.collect(resolution, procs=procs, threads=1)
+        step = forward.collect(resolution, cores=procs, threads=1)
         step['name'] = '{}proc'.format(procs)
         step['subdir'] = step['name']
         steps[step['name']] = step

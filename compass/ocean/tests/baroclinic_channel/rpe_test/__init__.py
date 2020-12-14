@@ -22,18 +22,18 @@ def collect(resolution):
                   ''.format(resolution)
     module = __name__
 
-    res_params = {'1km': {'core_count': 144},
-                  '4km': {'core_count': 36},
-                  '10km': {'core_count': 8}}
+    res_params = {'1km': {'core_count': 144, 'min_cores': 36,
+                          'max_memory': 64000, 'max_disk': 64000},
+                  '4km': {'core_count': 36, 'min_cores': 8,
+                          'max_memory': 16000, 'max_disk': 16000},
+                  '10km': {'core_count': 8, 'min_cores': 4,
+                           'max_memory': 2000, 'max_disk': 2000}}
 
     if resolution not in res_params:
         raise ValueError('Unsupported resolution {}. Supported values are: '
                          '{}'.format(resolution, list(res_params)))
 
     res_params = res_params[resolution]
-
-    procs = res_params['core_count']
-
     name = module.split('.')[-1]
     subdir = '{}/{}'.format(resolution, name)
     steps = dict()
@@ -41,7 +41,10 @@ def collect(resolution):
     steps[step['name']] = step
 
     for index, nu in enumerate([1, 5, 10, 20, 200]):
-        step = forward.collect(resolution, procs=procs, threads=1,
+        step = forward.collect(resolution, cores=res_params['core_count'],
+                               min_cores=res_params['min_cores'],
+                               max_memory=res_params['max_memory'],
+                               max_disk=res_params['max_disk'], threads=1,
                                testcase_module=module,
                                namelist_file='namelist.forward',
                                streams_file='streams.forward',

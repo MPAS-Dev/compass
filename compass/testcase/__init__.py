@@ -5,6 +5,7 @@ from jinja2 import Template
 from importlib import resources
 
 from compass import logging
+from compass.parallel import get_available_cores_and_nodes
 
 
 def get_step_default(module):
@@ -132,6 +133,19 @@ def run_steps(testcase, test_suite, config, steps, logger):
     for step_name in steps:
         step = testcase['steps'][step_name]
 
+        if 'cores' in step:
+            available_cores, _ = get_available_cores_and_nodes(config)
+            step['cores'] = min(step['cores'], available_cores)
+        else:
+            logger.warn('Core count not specified for step {}. Default is 1 '
+                        'core.'.format(step_name))
+            step['cores'] = 1
+        if 'min_cores' in step:
+            if step['cores'] < step['min_cores']:
+                raise ValueError(
+                    'Available cores for {} is below the minimum of {}'
+                    ''.format(step['cores'], step['min_cores']))
+
         logger.info(' * Running {}'.format(step_name))
 
         if 'log_filename' in testcase:
@@ -148,7 +162,12 @@ def run_steps(testcase, test_suite, config, steps, logger):
 
         run = getattr(sys.modules[step['module']], step['run'])
         os.chdir(step['work_dir'])
-        run(step, test_suite, config, step_logger)
+
+        try:
+            run(step, test_suite, config, step_logger)
+        except BaseException:
+            logger.info('     Failed')
+            raise
 
         if 'log_filename' not in testcase:
             logging.stop(step_logger, handler, old_stdout, old_stderr)

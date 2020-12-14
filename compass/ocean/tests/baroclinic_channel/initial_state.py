@@ -26,6 +26,12 @@ def collect(resolution):
     step = get_step_default(__name__)
     step['resolution'] = resolution
 
+    step['cores'] = 1
+    step['min_cores'] = 1
+    # Maximum allowed memory and disk usage in MB
+    step['max_memory'] = 8000
+    step['max_disk'] = 8000
+
     return step
 
 

@@ -1,13 +1,14 @@
 import os
+import numpy
 
 from compass.testcase import get_step_default
 from compass.io import symlink
 from compass import namelist, streams
 from compass.model import partition, run_model
-from compass.ocean.tests.baroclinic_channel.parallel import get_core_count
 
 
-def collect(resolution, procs, threads, testcase_module=None,
+def collect(resolution, cores, min_cores=None, max_memory=1000,
+            max_disk=1000, threads=1, testcase_module=None,
             namelist_file=None, streams_file=None, nu=None):
     """
     Get a dictionary of step properties
@@ -17,10 +18,24 @@ def collect(resolution, procs, threads, testcase_module=None,
     resolution : {'1km', '4km', '10km'}
         The name of the resolution to run at
 
-    procs : int
-        The number of cores to run on in forward runs
+    cores : int
+        The number of cores to run on in forward runs. If this many cores are
+        available on the machine or batch job, the task will run on that number.
+        If fewer are available (but no fewer than min_cores), the job will
+        run on all available cores instead.
 
-    threads : int
+    min_cores : int, optional
+        The minimum allowed cores.  If that number of cores are not available on
+        the machine or in the batch job, the run will fail.  By default,
+        ``min_cores = cores``
+
+    max_memory : int, optional
+        The maximum amount of memory (in MB) this step is allowed to use
+
+    max_disk : int, optional
+        The maximum amount of disk space  (in MB) this step is allowed to use
+
+    threads : int, optional
         The number of threads to run with during forward runs
 
     testcase_module : str, optional
@@ -42,7 +57,12 @@ def collect(resolution, procs, threads, testcase_module=None,
     """
     step = get_step_default(__name__)
     step['resolution'] = resolution
-    step['procs'] = procs
+    step['cores'] = cores
+    step['max_memory'] = max_memory
+    step['max_disk'] = max_disk
+    if min_cores is None:
+        min_cores = cores
+    step['min_cores'] = min_cores
     step['threads'] = threads
     if testcase_module is not None:
         step['testcase_module'] = testcase_module
@@ -155,10 +175,49 @@ def run(step, test_suite, config, logger):
     logger : logging.Logger
         A logger for output from the step
     """
-    procs = step['procs']
+    cores = step['cores']
     threads = step['threads']
     step_dir = step['work_dir']
-    procs = get_core_count(config, procs, step_dir)
-    partition(procs, logger)
-    run_model(config, core='ocean', core_count=procs, logger=logger,
+    _update_namelist_pio(config, cores, step_dir)
+    partition(cores, logger)
+    run_model(config, core='ocean', core_count=cores, logger=logger,
               threads=threads)
+
+
+def _update_namelist_pio(config, cores, step_dir):
+    """
+    Determine an appropriate number of cores for MPAS-Ocean to run with, based
+    on the resolution and the available node and core counts.
+
+    Modify the namelist so the number of PIO tasks and the stride between them
+    is consistent with the number of nodes and cores (one PIO task per node).
+
+    Parameters
+    ----------
+     config : configparser.ConfigParser
+        Configuration options for this testcase
+
+    cores : int
+        The number of cores
+
+    step_dir : str
+        The work directory for this step of the testcase
+
+    Returns
+    -------
+    core_count : int
+        The number of cores to use in this step of the testcase
+    """
+
+    cores_per_node = config.getint('parallel', 'cores_per_node')
+
+    # update PIO tasks based on the machine settings and the available number
+    # or cores
+    pio_num_iotasks = int(numpy.ceil(cores/cores_per_node))
+    pio_stride = min(cores_per_node, cores)
+
+    replacements = {'config_pio_num_iotasks': '{}'.format(pio_num_iotasks),
+                    'config_pio_stride': '{}'.format(pio_stride)}
+
+    namelist.update(replacements=replacements, step_work_dir=step_dir,
+                    core='ocean')
