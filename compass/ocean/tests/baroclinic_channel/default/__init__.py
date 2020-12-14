@@ -25,7 +25,7 @@ def collect(resolution):
     steps = dict()
     step = initial_state.collect(resolution)
     steps[step['name']] = step
-    step = forward.collect(resolution, procs=4, threads=1)
+    step = forward.collect(resolution, cores=4, threads=1)
     steps[step['name']] = step
 
     testcase = get_testcase_default(module, description, steps, subdir=subdir)

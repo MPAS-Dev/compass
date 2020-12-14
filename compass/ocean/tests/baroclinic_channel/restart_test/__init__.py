@@ -27,7 +27,7 @@ def collect(resolution):
     step = initial_state.collect(resolution)
     steps[step['name']] = step
 
-    step = forward.collect(resolution, procs=4, threads=1,
+    step = forward.collect(resolution, cores=4, threads=1,
                            testcase_module=module,
                            namelist_file='namelist.full',
                            streams_file='streams.full')
@@ -35,7 +35,7 @@ def collect(resolution):
     step['subdir'] = step['name']
     steps[step['name']] = step
 
-    step = forward.collect(resolution, procs=4, threads=1,
+    step = forward.collect(resolution, cores=4, threads=1,
                            testcase_module=module,
                            namelist_file='namelist.restart',
                            streams_file='streams.restart')
