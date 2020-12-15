@@ -5,6 +5,7 @@ from compass.testcase import get_step_default
 from compass.io import symlink
 from compass import namelist, streams
 from compass.model import partition, run_model
+from compass.parallel import update_namelist_pio
 
 
 def collect(resolution, cores, min_cores=None, max_memory=1000,
@@ -178,46 +179,7 @@ def run(step, test_suite, config, logger):
     cores = step['cores']
     threads = step['threads']
     step_dir = step['work_dir']
-    _update_namelist_pio(config, cores, step_dir)
+    update_namelist_pio(config, cores, step_dir)
     partition(cores, logger)
     run_model(config, core='ocean', core_count=cores, logger=logger,
               threads=threads)
-
-
-def _update_namelist_pio(config, cores, step_dir):
-    """
-    Determine an appropriate number of cores for MPAS-Ocean to run with, based
-    on the resolution and the available node and core counts.
-
-    Modify the namelist so the number of PIO tasks and the stride between them
-    is consistent with the number of nodes and cores (one PIO task per node).
-
-    Parameters
-    ----------
-     config : configparser.ConfigParser
-        Configuration options for this testcase
-
-    cores : int
-        The number of cores
-
-    step_dir : str
-        The work directory for this step of the testcase
-
-    Returns
-    -------
-    core_count : int
-        The number of cores to use in this step of the testcase
-    """
-
-    cores_per_node = config.getint('parallel', 'cores_per_node')
-
-    # update PIO tasks based on the machine settings and the available number
-    # or cores
-    pio_num_iotasks = int(numpy.ceil(cores/cores_per_node))
-    pio_stride = min(cores_per_node, cores)
-
-    replacements = {'config_pio_num_iotasks': '{}'.format(pio_num_iotasks),
-                    'config_pio_stride': '{}'.format(pio_stride)}
-
-    namelist.update(replacements=replacements, step_work_dir=step_dir,
-                    core='ocean')
