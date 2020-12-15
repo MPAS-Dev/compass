@@ -38,7 +38,7 @@ def write(work_dir, testcases):
     provenance_file.write('command: {}\n\n'.format(calling_command))
     provenance_file.write('testcases:\n')
 
-    for module, test in testcases.items():
+    for path, test in testcases.items():
         prefix = '  '
         lines = list()
         for key in ['path', 'description', 'name', 'core',
