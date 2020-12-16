@@ -1,0 +1,27 @@
+<streams>
+
+<immutable_stream name="mesh"
+                  filename_template="adjusting_init.nc"/>
+
+<immutable_stream name="input"
+                  filename_template="adjusting_init.nc"/>
+
+<stream name="output_ssh"
+        type="output"
+        filename_template="output_ssh.nc"
+        output_interval="0000_01:00:00"
+        clobber_mode="truncate">
+
+    <var name="ssh"/>
+    <var name="density"/>
+</stream>
+
+<stream name="output"
+        type="output"
+        filename_template="output.nc"
+        output_interval="none"
+        clobber_mode="truncate">
+    <var name="xtime"/>
+</stream>
+
+</streams>
