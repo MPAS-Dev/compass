@@ -10,10 +10,38 @@ from jinja2 import Template
 from compass.setup import setup_cases
 from compass.io import symlink
 from compass import logging
+from compass.clean import clean_cases
 
 
 def setup_suite(core, suite_name, config_file=None, machine=None, work_dir=None,
                 baseline_dir=None):
+    """
+    Set up a test suite
+
+    Parameters
+    ----------
+    core : str
+        The dynamical core ('ocean', 'landice', etc.) of the test suite
+
+    suite_name : str
+        The name of the test suite.  A file ``<suite_name>.txt`` must exist
+        within the core's ``suites`` package that lists the paths of the tests
+        in the suite
+
+    config_file : str, optional
+        Configuration file with custom options for setting up and running
+        testcases
+
+    machine : str, optional
+        The name of one of the machines with defined config options, which can
+        be listed with ``compass list --machines``
+
+    work_dir : str, optional
+        A directory that will serve as the base for creating testcase directories
+
+    baseline_dir : str, optional
+        Location of baseslines that can be compared to
+    """
 
     if config_file is None and machine is None:
         raise ValueError('At least one of config_file and machine is needed.')
@@ -57,12 +85,54 @@ def setup_suite(core, suite_name, config_file=None, machine=None, work_dir=None,
     os.chmod(run_filename, st.st_mode | stat.S_IEXEC)
 
 
-def clean_suite(core, test_suite, config_file=None, machine=None, work_dir=None,
-                baseline_dir=None):
-    pass
+def clean_suite(core, suite_name, work_dir=None):
+    """
+    Clean up a test suite by removing its testcases and run script
+
+    Parameters
+    ----------
+    core : str
+        The dynamical core ('ocean', 'landice', etc.) of the test suite
+
+    suite_name : str
+        The name of the test suite.  A file ``<suite_name>.txt`` must exist
+        within the core's ``suites`` package that lists the paths of the tests
+        in the suite
+
+    work_dir : str, optional
+        A directory that will serve as the base for creating testcase directories
+    """
+
+    text = resources.read_text('compass.{}.suites'.format(core),
+                               '{}.txt'.format(suite_name))
+    tests = [test.strip() for test in text.split('\n') if len(test.strip()) > 0]
+
+    if work_dir is None:
+        work_dir = os.getcwd()
+    work_dir = os.path.abspath(work_dir)
+
+    clean_cases(tests=tests, work_dir=work_dir)
+
+    # delete the pickle file and run script
+    pickle_file = os.path.join(work_dir, '{}.pickle'.format(suite_name))
+    run_filename = os.path.join(work_dir, '{}.py'.format(suite_name))
+
+    for filename in [pickle_file, run_filename]:
+        try:
+            os.remove(filename)
+        except OSError:
+            pass
 
 
 def run_suite(suite_name):
+    """
+    Run the given test suite
+
+    Parameters
+    ----------
+    suite_name : str
+        The name of the test suite
+    """
     with open('{}.pickle'.format(suite_name), 'rb') as handle:
         test_suite = pickle.load(handle)
 
@@ -156,9 +226,8 @@ def main():
         raise ValueError('One of -s/--setup or -c/--cleanup must be specified')
 
     if args.clean:
-        clean_suite(core=args.core, test_suite=args.test_suite,
-                    config_file=args.config_file, machine=args.machine,
-                    work_dir=args.work_dir, baseline_dir=args.baseline_dir)
+        clean_suite(core=args.core, suite_name=args.test_suite,
+                    work_dir=args.work_dir)
 
     if args.setup:
         setup_suite(core=args.core, suite_name=args.test_suite,
