@@ -1,4 +1,4 @@
-from compass.ocean.tests import baroclinic_channel
+from compass.ocean.tests import baroclinic_channel, ice_shelf_2d
 
 
 def collect():
@@ -12,7 +12,7 @@ def collect():
 
     """
     testcases = list()
-    for configuration in [baroclinic_channel]:
+    for configuration in [baroclinic_channel, ice_shelf_2d]:
         testcases.extend(configuration.collect())
 
     return testcases
