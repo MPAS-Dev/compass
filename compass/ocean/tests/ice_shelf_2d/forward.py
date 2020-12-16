@@ -10,7 +10,7 @@ from compass.parallel import update_namelist_pio
 
 def collect(resolution, cores, min_cores=None, max_memory=1000,
             max_disk=1000, threads=1, testcase_module=None,
-            namelist_file=None, streams_file=None):
+            namelist_file=None, streams_file=None, with_frazil=False):
     """
     Get a dictionary of step properties
 
@@ -48,6 +48,9 @@ def collect(resolution, cores, min_cores=None, max_memory=1000,
     streams_file : str, optional
         The name of a streams file in the testcase package directory
 
+    with_frazil : bool, optional
+        Whether frazil production should be included in the run
+
     Returns
     -------
     step : dict
@@ -73,6 +76,8 @@ def collect(resolution, cores, min_cores=None, max_memory=1000,
     if streams_file is not None:
         step['streams'] = streams_file
 
+    step['with_frazil'] = with_frazil
+
     return step
 
 
@@ -91,6 +96,7 @@ def setup(step, config):
         for the machine, core, configuration and testcase
     """
     step_dir = step['work_dir']
+    with_frazil = step['with_frazil']
 
     # generate the namelist, replacing a few default options
     replacements = dict()
@@ -101,6 +107,10 @@ def setup(step, config):
 
     replacements.update(namelist.parse_replacements(
         'compass.ocean.tests.ice_shelf_2d', 'namelist.forward'))
+
+    if with_frazil:
+        replacements['config_use_frazil_ice_formation'] = '.true.'
+        replacements['config_frazil_maximum_depth'] = '2000.0'
 
     if 'testcase_module' in step:
         testcase_module = step['testcase_module']
@@ -118,6 +128,10 @@ def setup(step, config):
     # generate the streams file
     streams_data = streams.read('compass.ocean.streams',
                                 'streams.land_ice_fluxes')
+
+    if with_frazil:
+        streams_data = streams.read('compass.ocean.streams',
+                                    'streams.frazil', tree=streams_data)
 
     streams_data = streams.read('compass.ocean.tests.ice_shelf_2d',
                                 'streams.forward', tree=streams_data)
