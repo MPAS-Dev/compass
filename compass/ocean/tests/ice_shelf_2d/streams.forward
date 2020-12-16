@@ -1,0 +1,40 @@
+<streams>
+
+<immutable_stream name="mesh"
+                  filename_template="init.nc"/>
+
+<immutable_stream name="input"
+                  filename_template="init.nc"/>
+
+<immutable_stream name="restart"/>
+
+<stream name="output"
+        type="output"
+        filename_template="output.nc"
+        output_interval="0000_00:00:01"
+        clobber_mode="truncate">
+
+    <var_struct name="tracers"/>
+    <stream name="mesh"/>
+    <var name="xtime"/>
+    <var name="normalVelocity"/>
+    <var name="layerThickness"/>
+    <var name="ssh"/>
+    <var name="atmosphericPressure"/>
+    <var name="landIcePressure"/>
+    <var name="landIceDraft"/>
+    <var name="landIceFraction"/>
+    <var name="landIceMask"/>
+    <var name="landIceFreshwaterFlux"/>
+    <var name="landIceHeatFlux"/>
+    <var name="landIceFrictionVelocity"/>
+    <var name="landIceInterfaceTracers"/>
+    <var name="landIceBoundaryLayerTracers"/>
+</stream>
+
+<stream name="globalStatsOutput"
+        output_interval="0000_00:00:01" >
+</stream>
+
+
+</streams>
