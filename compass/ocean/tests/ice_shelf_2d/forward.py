@@ -1,5 +1,4 @@
 import os
-import numpy
 
 from compass.testcase import get_step_default
 from compass.io import symlink
@@ -100,10 +99,6 @@ def setup(step, config):
 
     # generate the namelist, replacing a few default options
     replacements = dict()
-
-    # defaults when global stats are enabled
-    replacements.update(namelist.parse_replacements(
-        'compass.ocean.namelists.analysis', 'namelist.global_stats'))
 
     replacements.update(namelist.parse_replacements(
         'compass.ocean.tests.ice_shelf_2d', 'namelist.forward'))
