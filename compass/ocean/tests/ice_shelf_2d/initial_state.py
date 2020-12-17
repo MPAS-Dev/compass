@@ -1,6 +1,5 @@
 import os
 import xarray
-import numpy
 
 from mpas_tools.planar_hex import make_planar_hex_mesh
 from mpas_tools.io import write_netcdf
@@ -101,11 +100,14 @@ def run(step, test_suite, config, logger):
     write_netcdf(dsMesh, 'culled_mesh.nc')
 
     section = config['ice_shelf_2d']
-    vert_levels = section.getint('vert_levels')
-    bottom_depth = section.getfloat('bottom_depth')
     temperature = section.getfloat('temperature')
     surface_salinity = section.getfloat('surface_salinity')
     bottom_salinity = section.getfloat('bottom_salinity')
+
+    interfaces = generate_grid(config=config)
+
+    bottom_depth = interfaces[-1]
+    vert_levels = len(interfaces) - 1
 
     # points 1 and 2 are where angles on ice shelf are located.
     # point 3 is at the surface.
@@ -118,9 +120,6 @@ def run(step, test_suite, config, logger):
     d3 = bottom_depth
 
     ds = dsMesh.copy()
-
-    interfaces = generate_grid(grid_type='uniform', vert_levels=vert_levels,
-                               max_depth=bottom_depth)
 
     ds['refBottomDepth'] = ('nVertLevels', interfaces[1:])
     ds['refZMid'] = ('nVertLevels', -0.5 * (interfaces[1:] + interfaces[0:-1]))
@@ -143,7 +142,7 @@ def run(step, test_suite, config, logger):
     cellMask = cellMask.transpose('nCells', 'nVertLevels')
 
     restingThickness, layerThickness, zMid = compute_layer_thickness_and_zmid(
-        cellMask, ds.refBottomDepth, ds.bottomDepth, ds.maxLevelCell, ssh=ssh)
+        cellMask, ds.refBottomDepth, ds.bottomDepth, ds.maxLevelCell-1, ssh=ssh)
 
     layerThickness = layerThickness.expand_dims(dim='Time', axis=0)
     ssh = ssh.expand_dims(dim='Time', axis=0)

@@ -3,21 +3,16 @@ from importlib import resources
 import json
 
 
-def generate_grid(grid_type, vert_levels=None, max_depth=None):
+def generate_grid(config):
     """
+    Generate a vertical grid for a test case, using the config options in the
+    ``vertical_grid`` section
 
     Parameters
     ----------
-    grid_type : {'uniform', '60layerPHC', '42layerWOCE', '100layerE3SMv1'}
-        The type of vertical grid
-
-    vert_levels : int, optional
-        The number of vertical levels (one less than the number of interfaces)
-        if the ``grid_type`` does not had a hard-coded number of levels
-
-    max_depth : float, optional
-        The maximum depth of the grid unless, only used for certain
-        values of ``grid_type``
+    config : configparser.ConfigParser
+        Configuration options with parameters used to construct the vertical
+        grid
 
     Returns
     -------
@@ -25,24 +20,27 @@ def generate_grid(grid_type, vert_levels=None, max_depth=None):
         A 1D array of positive depths for layer interfaces in meters
 
     """
+    section = config['vertical_grid']
+    grid_type = section.get('grid_type')
     if grid_type == 'uniform':
-        interfaces = _generate_uniform(vert_levels, max_depth)
+        vert_levels = section.getint('vert_levels')
+        interfaces = _generate_uniform(vert_levels)
     elif grid_type in ['60layerPHC', '42layerWOCE', '100layerE3SMv1']:
         interfaces = _read_json(grid_type)
     else:
         raise ValueError('Unexpected grid type: {}'.format(grid_type))
 
+    if config.has_option('vertical_grid', 'bottom_depth'):
+        bottom_depth = section.getfloat('bottom_depth')
+        # renormalize to the requested range
+        interfaces = (bottom_depth/interfaces[-1]) * interfaces
+
     return interfaces
 
 
-def _generate_uniform(vert_levels, max_depth):
+def _generate_uniform(vert_levels):
     """ Generate uniform layer interfaces between 0 and 1 """
-
-    if vert_levels is None:
-        raise ValueError('Uniform grids require a specified number of vertical '
-                         'levels')
-
-    interfaces = numpy.linspace(0., max_depth, vert_levels+1)
+    interfaces = numpy.linspace(0., 1., vert_levels+1)
     return interfaces
 
 
