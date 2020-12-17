@@ -205,7 +205,7 @@ def _compute_norms(da1, da2, quiet, max_l1_norm, max_l2_norm, max_linf_norm,
     """ Compute norms between variables in two DataArrays """
 
     result = True
-    diff = numpy.abs(da1 - da2)
+    diff = numpy.abs(da1 - da2).values.ravel()
 
     l1_norm = numpy.linalg.norm(diff, ord=1)
     l2_norm = numpy.linalg.norm(diff, ord=2)
