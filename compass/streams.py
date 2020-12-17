@@ -10,7 +10,7 @@ def read(package, streams_filename, tree=None):
     Parameters
     ----------
     package : Package
-        The package name or module object that contains ``namelist``
+        The package name or module object that contains the streams file
 
     streams_filename : str
         The name of the streams file to read from
@@ -53,8 +53,8 @@ def generate(config, tree, step_work_dir, core, mode='forward'):
         one or more streams files parsed with :py:func:`compass.streams.read()`
 
     step_work_dir : str
-        The path for the work directory for the step that this namelist is being
-        generated for
+        The path for the work directory for the step that this streams file is
+        being generated for
 
     core : str
         The name of the MPAS core ('ocean', 'landice', etc.)
