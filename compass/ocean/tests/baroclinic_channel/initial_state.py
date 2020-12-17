@@ -7,6 +7,7 @@ from mpas_tools.io import write_netcdf
 from mpas_tools.mesh.conversion import convert, cull
 
 from compass.testcase import get_step_default
+from compass.ocean.vertical import generate_grid
 
 
 def collect(resolution):
@@ -97,8 +98,6 @@ def run(step, test_suite, config, logger):
     write_netcdf(dsMesh, 'culled_mesh.nc')
 
     section = config['baroclinic_channel']
-    vert_levels = section.getint('vert_levels')
-    bottom_depth = section.getfloat('bottom_depth')
     use_distances = section.getboolean('use_distances')
     gradient_width_dist = section.getfloat('gradient_width_dist')
     gradient_width_frac = section.getfloat('gradient_width_frac')
@@ -110,14 +109,13 @@ def run(step, test_suite, config, logger):
 
     ds = dsMesh.copy()
 
-    nVertLevels = vert_levels
-    spacing = 1. / nVertLevels
-    interfaces = numpy.zeros(nVertLevels+1)
-    interfaces[1:] = numpy.cumsum(spacing * numpy.ones(nVertLevels))
+    interfaces = generate_grid(config=config)
 
-    ds['refBottomDepth'] = ('nVertLevels', bottom_depth * interfaces[1:])
-    ds['refZMid'] = ('nVertLevels',
-                     -0.5 * (interfaces[1:] + interfaces[0:-1]) * bottom_depth)
+    bottom_depth = interfaces[-1]
+    vert_levels = len(interfaces) - 1
+
+    ds['refBottomDepth'] = ('nVertLevels', interfaces[1:])
+    ds['refZMid'] = ('nVertLevels', -0.5 * (interfaces[1:] + interfaces[0:-1]))
     ds['vertCoordMovementWeights'] = xarray.ones_like(ds.refBottomDepth)
 
     xCell = ds.xCell
@@ -171,9 +169,8 @@ def run(step, test_suite, config, logger):
 
     temperature = temperature.expand_dims(dim='Time', axis=0)
 
-    layerThickness = xarray.DataArray(
-        data=bottom_depth * (interfaces[1:] - interfaces[0:-1]),
-        dims='nVertLevels')
+    layerThickness = xarray.DataArray(data=interfaces[1:] - interfaces[0:-1],
+                                      dims='nVertLevels')
     _, layerThickness = xarray.broadcast(xCell, layerThickness)
     layerThickness = layerThickness.transpose('nCells', 'nVertLevels')
     layerThickness = layerThickness.expand_dims(dim='Time', axis=0)
@@ -189,7 +186,7 @@ def run(step, test_suite, config, logger):
     ds['layerThickness'] = layerThickness
     ds['restingThickness'] = layerThickness
     ds['bottomDepth'] = bottom_depth * xarray.ones_like(xCell)
-    ds['maxLevelCell'] = nVertLevels * xarray.ones_like(xCell, dtype=int)
+    ds['maxLevelCell'] = vert_levels * xarray.ones_like(xCell, dtype=int)
     ds['fCell'] = coriolis_parameter * xarray.ones_like(xCell)
     ds['fEdge'] = coriolis_parameter * xarray.ones_like(ds.xEdge)
     ds['fVertex'] = coriolis_parameter * xarray.ones_like(ds.xVertex)
