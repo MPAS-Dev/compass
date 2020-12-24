@@ -187,8 +187,9 @@ def _update_defaults(new_child, defaults):
         if child.attrib['name'] == name:
             found = True
             if child.tag != new_child.tag:
-                raise ValueError('Trying to update streams data with '
-                                 'inconsistent tags.')
+                raise ValueError('Trying to update stream "{}" with '
+                                 'inconsistent tags {} vs. {}.'.format(
+                                     name, child.tag, new_child.tag))
 
             # copy the attributes
             for attr, value in new_child.attrib.items():
