@@ -1,0 +1,112 @@
+<streams>
+
+<immutable_stream name="mesh"
+                  filename_template="init.nc"/>
+
+<immutable_stream name="input"
+                  filename_template="init.nc"/>
+
+<immutable_stream name="restart"
+        output_interval="0030_00:00:00"/>
+
+<stream name="output"
+        output_interval="0000-01-00_00:00:00">
+
+	<stream name="mesh"/>
+	<var_struct name="tracers"/>
+	<var name="layerThickness"/>
+	<var name="ssh"/>
+	<var name="maxLevelEdgeTop"/>
+	<var name="vertCoordMovementWeights"/>
+	<var name="edgeMask"/>
+	<var name="vertexMask"/>
+	<var name="cellMask"/>
+	<var name="refZMid"/>
+	<var name="refLayerThickness"/>
+	<var name="xtime"/>
+	<var name="zMid"/>
+	<var name="zTop"/>
+	<var name="kineticEnergyCell"/>
+	<var name="relativeVorticityCell"/>
+    <var name="velocityZonal"/>
+    <var name="velocityMeridional"/>
+    <var name="density"/>
+    <var name="divergence"/>
+    <var name="displacedDensity"/>
+    <var name="potentialDensity"/>
+    <var name="boundaryLayerDepth"/>
+    <var name="indexBoundaryLayerDepth"/>
+    <var name="indexSurfaceLayerDepth"/>
+    <var name="surfaceFrictionVelocity"/>
+    <var name="surfaceBuoyancyForcing"/>
+    <var name="seaIcePressure"/>
+    <var name="atmosphericPressure"/>
+    <var name="windStressZonal"/>
+    <var name="windStressMeridional"/>
+    <var name="BruntVaisalaFreqTop"/>
+</stream>
+
+<stream name="forcing_data"
+        filename_template="forcing.nc">
+
+    <var_struct name="tracersSurfaceRestoringFields"/>
+    <var_struct name="tracersInteriorRestoringFields"/>
+    <var name="windStressZonal"/>
+    <var name="windStressMeridional"/>
+</stream>
+
+
+<stream name="KPP_testing"
+        output_interval="0001_00:00:00">
+
+</stream>
+
+<stream name="globalStatsOutput"
+        output_interval="0001_00:00:00">
+
+</stream>
+
+<stream name="zonalMeanOutput"
+        output_interval="0003_00:00:00">
+
+</stream>
+
+<stream name="okuboWeissOutput"
+        output_interval="00-00-05_00:00:00"
+        reference_time="0001-01-01_00:00:00">
+
+</stream>
+
+<stream name="highFrequencyOutput"
+        output_interval="00-00-01_00:00:00">
+
+</stream>
+
+<stream name="timeFiltersOutput"
+        output_interval="0000-01-00_00:00:00">
+
+</stream>
+
+<stream name="timeFiltersRestart"/>
+
+<stream name="eliassenPalmOutput"
+        output_interval="00-01-00_00:00:00">
+
+</stream>
+
+<stream name="eliassenPalmRestart"/>
+
+<stream name="lagrPartTrackInput"
+        filename_template="particles.nc">
+
+</stream>
+
+<stream name="lagrPartTrackOutput"/>
+
+<stream name="lagrPartTrackRestart"/>
+
+<stream name="mixedLayerDepthsOutput"/>
+
+
+
+</streams>
