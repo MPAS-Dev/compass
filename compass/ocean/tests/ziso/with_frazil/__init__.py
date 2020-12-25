@@ -1,6 +1,7 @@
 from compass.testcase import run_steps, get_testcase_default
 from compass.ocean.tests.ziso import initial_state, forward
 from compass.ocean.tests import ziso
+from compass.validate import compare_variables
 
 
 def collect(resolution):
@@ -87,5 +88,17 @@ def run(testcase, test_suite, config, logger):
     logger : logging.Logger
         A logger for output from the testcase
     """
+    work_dir = testcase['work_dir']
     steps = ['initial_state', 'forward']
     run_steps(testcase, test_suite, config, steps, logger)
+
+    variables = ['temperature', 'layerThickness']
+    compare_variables(variables, config, work_dir,
+                      filename1='forward/output/output.0001-01-01_00.00.00.nc')
+
+    variables = ['accumulatedFrazilIceMass', 'accumulatedFrazilIceSalinity',
+                 'seaIceEnergy', 'frazilLayerThicknessTendency',
+                 'frazilTemperatureTendency', 'frazilSalinityTendency',
+                 'frazilSurfacePressure', 'accumulatedLandIceFrazilMass']
+    compare_variables(variables, config, work_dir,
+                      filename1='forward/frazil.nc')
