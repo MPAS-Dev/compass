@@ -10,7 +10,8 @@ from compass.ocean import particles
 
 def collect(resolution, cores, min_cores=None, max_memory=1000,
             max_disk=1000, threads=1, testcase_module=None,
-            namelist_file=None, streams_file=None):
+            namelist_file=None, streams_file=None, with_analysis=True,
+            with_frazil=False):
     """
     Get a dictionary of step properties
 
@@ -48,6 +49,12 @@ def collect(resolution, cores, min_cores=None, max_memory=1000,
     streams_file : str, optional
         The name of a streams file in the testcase package directory
 
+    with_analysis : bool, optional
+        Whether the step should run with analysis members turned on
+
+    with_frazil : bool, optional
+        Whether the step should include frazil ice formation
+
     Returns
     -------
     step : dict
@@ -73,6 +80,9 @@ def collect(resolution, cores, min_cores=None, max_memory=1000,
     if streams_file is not None:
         step['streams'] = streams_file
 
+    step['with_analysis'] = with_analysis
+    step['with_frazil'] = with_frazil
+
     return step
 
 
@@ -92,12 +102,24 @@ def setup(step, config):
     """
     resolution = step['resolution']
     step_dir = step['work_dir']
+    with_analysis = step['with_analysis']
+    with_frazil = step['with_frazil']
 
     # generate the namelist, replacing a few default options
     replacements = dict()
 
-    for namelist_file in ['namelist.forward',
-                          'namelist.{}.forward'.format(resolution)]:
+    namelist_files = ['namelist.forward']
+
+    if with_analysis:
+        # we want to include the analysis, too
+        namelist_files.append('namelist.analysis')
+
+    if with_frazil:
+        replacements['config_use_frazil_ice_formation'] = '.true.'
+
+    namelist_files.append('namelist.{}.forward'.format(resolution))
+
+    for namelist_file in namelist_files:
         replacements.update(namelist.parse_replacements(
             'compass.ocean.tests.ziso', namelist_file))
 
@@ -117,6 +139,17 @@ def setup(step, config):
     # generate the streams file
     streams_data = streams.read('compass.ocean.tests.ziso',
                                 'streams.forward')
+
+    if with_analysis:
+        # we want to include analysis streams
+        streams_data = streams.read('compass.ocean.tests.ziso',
+                                    'streams.analysis',
+                                    tree=streams_data)
+
+    if with_frazil:
+        streams_data = streams.read('compass.ocean.streams',
+                                    'streams.frazil',
+                                    tree=streams_data)
 
     streams_data = streams.read('compass.ocean.tests.ziso',
                                 'streams.{}.forward'.format(resolution),
