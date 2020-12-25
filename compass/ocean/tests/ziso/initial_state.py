@@ -11,7 +11,7 @@ from compass.ocean.vertical import generate_grid
 from compass.ocean.vertical.zstar import compute_layer_thickness_and_zmid
 
 
-def collect(resolution):
+def collect(resolution, with_frazil=False):
     """
     Get a dictionary of step properties
 
@@ -20,6 +20,9 @@ def collect(resolution):
     resolution : {'20km'}
         The name of the resolution to run at
 
+    with_frazil : bool, optional
+        Whether the test case will include production of frazil ice
+
     Returns
     -------
     step : dict
@@ -27,6 +30,7 @@ def collect(resolution):
     """
     step = get_step_default(__name__)
     step['resolution'] = resolution
+    step['with_frazil'] = with_frazil
 
     step['cores'] = 1
     step['min_cores'] = 1
@@ -98,12 +102,12 @@ def run(step, test_suite, config, logger):
                      logger=logger)
     write_netcdf(dsMesh, 'culled_mesh.nc')
 
-    ds = _write_initial_state(config, dsMesh)
+    ds = _write_initial_state(config, dsMesh, step['with_frazil'])
 
     _write_forcing(config, ds.yCell, ds.zMid)
 
 
-def _write_initial_state(config, dsMesh):
+def _write_initial_state(config, dsMesh, with_frazil):
     section = config['ziso']
     reference_coriolis = section.getfloat('reference_coriolis')
     coriolis_gradient = section.getfloat('coriolis_gradient')
@@ -117,6 +121,7 @@ def _write_initial_state(config, dsMesh):
     ds['refZMid'] = ('nVertLevels', -0.5 * (interfaces[1:] + interfaces[0:-1]))
     ds['vertCoordMovementWeights'] = xarray.ones_like(ds.refBottomDepth)
 
+    xCell = ds.xCell
     yCell = ds.yCell
 
     shelf_depth = section.getfloat('shelf_depth')
@@ -147,9 +152,32 @@ def _write_initial_state(config, dsMesh):
     initial_temp_t2 = section.getfloat('initial_temp_t2')
     initial_temp_h1 = section.getfloat('initial_temp_h1')
     initial_temp_mt = section.getfloat('initial_temp_mt')
-    temperature = (initial_temp_t1 +
-                   initial_temp_t2 * numpy.tanh(zMid / initial_temp_h1) +
-                   initial_temp_mt * zMid)
+    if with_frazil:
+        extent = section.getfloat('meridional_extent')
+        frazil_anomaly = section.getfloat('frazil_temperature_anomaly')
+        distanceX = extent/4.0 - xCell
+        distanceY = extent/2.0 - yCell
+        distance = numpy.sqrt(distanceY**2 + distanceX**2)
+        scaleFactor = numpy.exp(-distance/extent*20.0)
+
+        mask = zMid > -50.
+
+        frazil_temp = (frazil_anomaly +
+                       initial_temp_t2 * numpy.tanh(zMid / initial_temp_h1) +
+                       initial_temp_mt * zMid +
+                       mask * 1.0*numpy.cos(zMid/50.0 * numpy.pi/2.0))
+
+        temperature = (initial_temp_t1 +
+                       initial_temp_t2 * numpy.tanh(zMid / initial_temp_h1) +
+                       initial_temp_mt * zMid)
+
+        temperature = ((1.0-scaleFactor) * temperature +
+                       scaleFactor * frazil_temp)
+        temperature = temperature.transpose('Time', 'nCells', 'nVertLevels')
+    else:
+        temperature = (initial_temp_t1 +
+                       initial_temp_t2 * numpy.tanh(zMid / initial_temp_h1) +
+                       initial_temp_mt * zMid)
 
     salinity = 34.0 * xarray.ones_like(temperature)
 
@@ -185,7 +213,6 @@ def _write_forcing(config, yCell, zMid):
     restoring_temp_piston_vel = section.getfloat('restoring_temp_piston_vel')
     y_trans = section.getfloat('wind_transition_position')
     wind_stress_max = section.getfloat('wind_stress_max')
-    meridional_extent = section.getfloat('meridional_extent')
     front_width = section.getfloat('antarctic_shelf_front_width')
     front_max = section.getfloat('wind_stress_shelf_front_max')
     restoring_sponge_l = section.getfloat('restoring_sponge_l')
@@ -196,7 +223,7 @@ def _write_forcing(config, yCell, zMid):
     windStressZonal = xarray.where(
         yCell >= y_trans,
         wind_stress_max * numpy.sin(numpy.pi * (yCell - y_trans) /
-                                    (meridional_extent - y_trans))**2,
+                                    (extent - y_trans))**2,
         front_max * numpy.sin(numpy.pi * (y_trans - yCell) /
                               front_width)**2)
 
@@ -225,7 +252,7 @@ def _write_forcing(config, yCell, zMid):
     salinityPistonVelocity = xarray.zeros_like(temperaturePistonVelocity)
 
     # set restoring at northern boundary
-    mask = meridional_extent - yCell <= 1.5 * restoring_sponge_l
+    mask = extent - yCell <= 1.5 * restoring_sponge_l
     mask = mask.broadcast_like(zMid).transpose('Time', 'nCells', 'nVertLevels')
 
     # convert from days to inverse seconds

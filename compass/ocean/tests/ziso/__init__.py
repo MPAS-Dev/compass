@@ -1,4 +1,4 @@
-from compass.ocean.tests.ziso import default
+from compass.ocean.tests.ziso import default, with_frazil
 from compass.config import add_config
 
 
@@ -13,7 +13,7 @@ def collect():
     """
     testcases = list()
     for resolution in ['20km']:
-        for test in [default]:
+        for test in [default, with_frazil]:
             testcases.append(test.collect(resolution=resolution))
 
     return testcases
