@@ -122,12 +122,12 @@ def compare_timers(timers, config, work_dir, rundir1, rundir2=None):
     if config.has_option('paths', 'baseline_dir'):
         baseline_root = config.get('paths', 'baseline_dir')
 
-        _compute_timers(os.path.join(work_dir, rundir1),
-                        os.path.join(baseline_root, rundir1), timers)
+        _compute_timers(os.path.join(baseline_root, rundir1),
+                        os.path.join(work_dir, rundir1), timers)
 
         if rundir2 is not None:
-            _compute_timers(os.path.join(work_dir, rundir2),
-                            os.path.join(baseline_root, rundir2), timers)
+            _compute_timers(os.path.join(baseline_root, rundir2),
+                            os.path.join(work_dir, rundir2), timers)
 
 
 def _compare_variables(variables, filename1, filename2, l1_norm, l2_norm,
@@ -272,8 +272,8 @@ def _find_timer_value(timer_name, directory):
             # Compare files written using built in MPAS timers
             if fnmatch.fnmatch(file, "log.*.out"):
                 timer_line_size = 6
-                name_index = 0
-                total_index = 1
+                name_index = 1
+                total_index = 2
             # Compare files written using GPTL timers
             elif fnmatch.fnmatch(file, "timing.*"):
                 timer_line_size = 6
