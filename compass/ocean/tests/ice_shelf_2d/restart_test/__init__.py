@@ -100,8 +100,9 @@ def run(testcase, test_suite, config, logger):
 
     variables = ['ssh', 'landIcePressure', 'landIceDraft', 'landIceFraction',
                  'landIceMask', 'landIceFrictionVelocity', 'topDrag',
-                 'topDragMagnitude', 'landIceFreshwaterFlux', 'landIceHeatFlux',
-                 'heatFluxToLandIce', 'landIceBoundaryLayerTemperature',
+                 'topDragMagnitude', 'landIceFreshwaterFlux',
+                 'landIceHeatFlux', 'heatFluxToLandIce',
+                 'landIceBoundaryLayerTemperature',
                  'landIceBoundaryLayerSalinity', 'landIceHeatTransferVelocity',
                  'landIceSaltTransferVelocity', 'landIceInterfaceTemperature',
                  'landIceInterfaceSalinity', 'accumulatedLandIceMass',

@@ -25,9 +25,9 @@ The available compass commands are:
     setup   Set up a test case
     clean   Clean up a test case
     suite   Manage a regression test suite
-                   
+
  To get help on an individual command, run:
- 
+
     compass <command> --help
     ''')
 
@@ -35,7 +35,7 @@ The available compass commands are:
     parser.add_argument('-v', '--version',
                         action='version',
                         version='compass {}'.format(compass.__version__),
-                        help = "Show version number and exit")
+                        help="Show version number and exit")
     if len(sys.argv) == 1:
         parser.print_help()
         sys.exit(0)

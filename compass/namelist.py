@@ -45,8 +45,8 @@ def generate(config, replacements, step_work_dir, core, mode='forward'):
         values
 
     step_work_dir : str
-        The path for the work directory for the step that this namelist is being
-        generated for
+        The path for the work directory for the step that this namelist is
+        being generated for
 
     core : str
         The name of the MPAS core ('ocean', 'landice', etc.)
@@ -70,9 +70,9 @@ def generate(config, replacements, step_work_dir, core, mode='forward'):
 def update(replacements, step_work_dir, core):
     """
     Update an existing namelist file with additional ``replacements``.  This
-    would typically be used for namelist options that are only known at runtime,
-    not during setup.  For example, the number of PIO tasks and the stride
-    between tasks, which are related to the number of nodes and cores.
+    would typically be used for namelist options that are only known at
+    runtime, not during setup.  For example, the number of PIO tasks and the
+    stride between tasks, which are related to the number of nodes and cores.
 
     Parameters
     ----------
@@ -81,8 +81,8 @@ def update(replacements, step_work_dir, core):
         values
 
     step_work_dir : str
-        The path for the work directory for the step that this namelist is being
-        generated for
+        The path for the work directory for the step that this namelist is
+        being generated for
 
     core : str
         The name of the MPAS core ('ocean', 'landice', etc.)

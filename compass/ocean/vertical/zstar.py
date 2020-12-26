@@ -29,11 +29,12 @@ def compute_layer_thickness_and_zmid(cellMask, refBottomDepth, bottomDepth,
     -------
     restingThickness : xarray.DataArray
         A reference thickness of each layer (level) for all cells and levels in
-        the mesh if ``ssh`` were zero everywhere, the same as ``layerThickness``
-        if ``ssh`` is not provided
+        the mesh if ``ssh`` were zero everywhere, the same as
+        ``layerThickness`` if ``ssh`` is not provided
 
     layerThickness : xarray.DataArray
-        The thickness of each layer (level) for all cells and levels in the mesh
+        The thickness of each layer (level) for all cells and levels in the
+        mesh
 
     zMid : xarray.DataArray
         The vertical location of the middle of each level for all cells and
@@ -48,7 +49,8 @@ def compute_layer_thickness_and_zmid(cellMask, refBottomDepth, bottomDepth,
     for levelIndex in range(1, nVertLevels):
         refLayerThickness = (refBottomDepth.isel(nVertLevels=levelIndex) -
                              refBottomDepth.isel(nVertLevels=levelIndex-1))
-        sliceThickness = cellMask.isel(nVertLevels=levelIndex)*refLayerThickness
+        sliceThickness = \
+            cellMask.isel(nVertLevels=levelIndex)*refLayerThickness
         mask = levelIndex == maxLevelCell
         partialThickness = (bottomDepth -
                             refBottomDepth.isel(nVertLevels=levelIndex-1))

@@ -85,8 +85,8 @@ def run(step, test_suite, config, logger):
     Parameters
     ----------
     step : dict
-        A dictionary of properties of this step from the ``collect()`` function,
-        with modifications from the ``setup()`` function.
+        A dictionary of properties of this step from the ``collect()``
+        function, with modifications from the ``setup()`` function.
 
     test_suite : dict
         A dictionary of properties of the test suite

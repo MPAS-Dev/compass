@@ -71,8 +71,8 @@ def run(step, config):
     Parameters
     ----------
     step : dict
-        A dictionary of properties of this step from the ``collect()`` function,
-        with modifications from the ``setup()`` function.
+        A dictionary of properties of this step from the ``collect()``
+        function, with modifications from the ``setup()`` function.
 
     config : configparser.ConfigParser
         Configuration options for this testcase, a combination of the defaults

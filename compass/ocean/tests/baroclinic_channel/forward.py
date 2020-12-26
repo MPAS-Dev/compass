@@ -21,13 +21,13 @@ def collect(resolution, cores, min_cores=None, max_memory=1000,
 
     cores : int
         The number of cores to run on in forward runs. If this many cores are
-        available on the machine or batch job, the task will run on that number.
-        If fewer are available (but no fewer than min_cores), the job will
-        run on all available cores instead.
+        available on the machine or batch job, the task will run on that
+        number. If fewer are available (but no fewer than min_cores), the job
+        will run on all available cores instead.
 
     min_cores : int, optional
-        The minimum allowed cores.  If that number of cores are not available on
-        the machine or in the batch job, the run will fail.  By default,
+        The minimum allowed cores.  If that number of cores are not available
+        on the machine or in the batch job, the run will fail.  By default,
         ``min_cores = cores``
 
     max_memory : int, optional
@@ -163,8 +163,8 @@ def run(step, test_suite, config, logger):
     Parameters
     ----------
     step : dict
-        A dictionary of properties of this step from the ``collect()`` function,
-        with modifications from the ``setup()`` function.
+        A dictionary of properties of this step from the ``collect()``
+        function, with modifications from the ``setup()`` function.
 
     test_suite : dict
         A dictionary of properties of the test suite

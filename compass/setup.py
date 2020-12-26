@@ -76,7 +76,8 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
 
     print('Setting up testcases:')
     for path, testcase in testcases.items():
-        setup_case(path, testcase, config_file, machine, work_dir, baseline_dir)
+        setup_case(path, testcase, config_file, machine, work_dir,
+                   baseline_dir)
     return testcases
 
 

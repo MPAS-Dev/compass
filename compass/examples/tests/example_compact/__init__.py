@@ -23,4 +23,3 @@ def collect():
             testcases.append(test.collect(resolution=resolution))
 
     return testcases
-

@@ -72,8 +72,8 @@ def run(step, test_suite, config, logger):
     Parameters
     ----------
     step : dict
-        A dictionary of properties of this step from the ``collect()`` function,
-        with modifications from the ``setup()`` function.
+        A dictionary of properties of this step from the ``collect()``
+        function, with modifications from the ``setup()`` function.
 
     test_suite : dict
         A dictionary of properties of the test suite
@@ -142,7 +142,8 @@ def run(step, test_suite, config, logger):
     cellMask = cellMask.transpose('nCells', 'nVertLevels')
 
     restingThickness, layerThickness, zMid = compute_layer_thickness_and_zmid(
-        cellMask, ds.refBottomDepth, ds.bottomDepth, ds.maxLevelCell-1, ssh=ssh)
+        cellMask, ds.refBottomDepth, ds.bottomDepth, ds.maxLevelCell-1,
+        ssh=ssh)
 
     layerThickness = layerThickness.expand_dims(dim='Time', axis=0)
     ssh = ssh.expand_dims(dim='Time', axis=0)

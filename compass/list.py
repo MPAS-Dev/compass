@@ -50,7 +50,8 @@ def list_cases(test_expr=None, number=None, verbose=False):
                 for key in ['path', 'description', 'name', 'core',
                             'configuration', 'subdir']:
                     key_string = '{}: '.format(key).ljust(15)
-                    lines.append('{}{}{}'.format(prefix, key_string, test[key]))
+                    lines.append('{}{}{}'.format(prefix, key_string,
+                                                 test[key]))
                     if print_number:
                         prefix = '      '
                 lines.append('{}steps:'.format(prefix))

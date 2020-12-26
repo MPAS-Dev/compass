@@ -21,8 +21,8 @@ def read(package, streams_filename, tree=None):
     Returns
     -------
     tree : lxml.etree
-        A tree of XML data describing MPAS i/o streams with the content from the
-        given streams file
+        A tree of XML data describing MPAS i/o streams with the content from
+        the given streams file
     """
     new_tree = etree.fromstring(resources.read_text(package, streams_filename))
 
@@ -100,7 +100,8 @@ def _write(streams, out_filename):
             stream_name = stream.attrib['name']
 
             stream_file.write('\n')
-            stream_file.write('<immutable_stream name="{}"'.format(stream_name))
+            stream_file.write('<immutable_stream name="{}"'.format(
+                stream_name))
             # Process all attributes on the stream
             for attr, val in stream.attrib.items():
                 if attr.strip() != 'name':
