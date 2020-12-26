@@ -1,5 +1,5 @@
 {% set name = "compass" %}
-{% set version = "0.1.12" %}
+{% set version = "1.0.0" %}
 {% set build = 0 %}
 
 {% if mpi == "nompi" %}
@@ -11,8 +11,12 @@ package:
   name: {{ name|lower }}
   version: {{ version }}
 
+source:
+  path: ../
+
 build:
   noarch: python
+  script: {{ PYTHON }} -m pip install . --no-deps -vv
   number: {{ build }}
   {% if mpi != "nompi" %}
   {% set mpi_prefix = "mpi_" + mpi %}
@@ -26,10 +30,16 @@ build:
   # `PKG_NAME * mpi_*` for any mpi
   # `PKG_NAME * nompi_*` for no mpi
   string: "{{ mpi_prefix }}_py_h{{ PKG_HASH }}_{{ build }}"
+  entry_points:
+    - compass = compass.__main__:main
 
 requirements:
+  host:
+    - python >=3.6
+    - pip
+    - setuptools
   run:
-    - python
+    - python >=3.6
     - geometric_features 0.1.13
     - mpas_tools 0.1.0
     - jigsaw 0.9.12
@@ -47,31 +57,39 @@ requirements:
     - ipython
     - jupyter
     - lxml
-    - matplotlib
+    - matplotlib-base
     - cmocean
+    - numpy
+    - xarray
+    - progressbar2
+    - requests
 
 test:
   imports:
-    - geometric_features
-    - mpas_tools
-    - jigsawpy
+    - compass
   commands:
+    - compass list
+    - compass list --help
+    - compass setup --help
+    - compass suite --help
+    - compass clean --help
     - gpmetis --help
     - ffmpeg -help
 
 about:
-  home: https://github.com/MPAS-Dev/MPAS-Model/tree/ocean/develop/testing_and_setup/compass
+  home: https://github.com/MPAS-Dev/compass
   license: BSD 3-Clause
   license_family: BSD
   license_file: LICENSE
-  summary: 'A metapackage for creating test cases in the Model for Prediction Across Scales'
+  summary: 'Test cases for the Model for Prediction Across Scales (MPAS)'
   description: |
-    A metapackage of all the tools needed by COMPASS (Configuration Of Model
-    for Prediction Across Scales Setups), a framework for setting up and running
-    ocean and land-ice test cases in the Model for Prediction Across Scales
-    (MPAS) framework.
-  doc_url: https://github.com/MPAS-Dev/MPAS-Model/blob/ocean/develop/testing_and_setup/compass/README_ocean.md
-  dev_url: https://github.com/MPAS-Dev/MPAS-Model/tree/ocean/develop/testing_and_setup/compass
+    Configuration Of Model for Prediction Across Scales Setups (COMPASS) is an
+    automated system to set up test cases that match the MPAS-Model repository.
+    All namelists and streams files begin with the default generated from the
+    Registry.xml file, and only the changes relevant to the particular test
+    case are altered in those files.
+  doc_url: https://mpas-dev.github.io/compass/stable/
+  dev_url: https://github.com/MPAS-Dev/compass
 
 extra:
   recipe-maintainers:
