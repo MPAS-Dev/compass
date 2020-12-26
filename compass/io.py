@@ -191,7 +191,7 @@ def symlink(target, link_name, overwrite=True):
             raise IsADirectoryError(
                 f"Cannot symlink over existing directory: '{link_name}'")
         os.replace(temp_link_name, link_name)
-    except:
+    except BaseException:
         if os.path.islink(temp_link_name):
             os.remove(temp_link_name)
         raise

@@ -102,9 +102,9 @@ def compare_timers(timers, config, work_dir, rundir1, rundir2=None):
         The work directory for the testcase
 
     rundir1 : str
-        The relative path to a directory within the ``work_dir``. If ``rundir2``
-        is also given, comparison will be performed with ``timers`` in that
-        file.  If a baseline directory was provided when setting up the
+        The relative path to a directory within the ``work_dir``. If
+        ``rundir2`` is also given, comparison will be performed with ``timers``
+        in that file.  If a baseline directory was provided when setting up the
         testcase, the ``timers`` will be compared between this testcase and
         the same relative directory under the baseline version of the testcase.
 
@@ -180,8 +180,9 @@ def _compare_variables(variables, filename1, filename2, l1_norm, l2_norm,
             for time_index in range(0, da1.sizes['Time']):
                 slice1 = da1.isel(Time=time_index)
                 slice2 = da2.isel(Time=time_index)
-                result = _compute_norms(slice1, slice2, quiet, l1_norm, l2_norm,
-                                        linf_norm, time_index=time_index)
+                result = _compute_norms(slice1, slice2, quiet, l1_norm,
+                                        l2_norm, linf_norm,
+                                        time_index=time_index)
                 variable_pass = variable_pass and result
 
         else:
@@ -260,7 +261,8 @@ def _compute_timers(base_directory, comparison_directory, timers):
 
 def _find_timer_value(timer_name, directory):
     """ Find a timer in the given directory """
-    # Build a regular expression for any two characters with a space between them.
+    # Build a regular expression for any two characters with a space between
+    # them.
     regex = re.compile(r'(\S) (\S)')
 
     sub_timer_name = timer_name.replace(' ', '_')
@@ -289,7 +291,8 @@ def _find_timer_value(timer_name, directory):
                     if len(new_block_arr) >= timer_line_size:
                         if sub_timer_name.find(new_block_arr[name_index]) >= 0:
                             try:
-                                timer = timer + float(new_block_arr[total_index])
+                                timer = \
+                                    timer + float(new_block_arr[total_index])
                                 timer_found = True
                             except ValueError:
                                 pass

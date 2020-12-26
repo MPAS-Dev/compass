@@ -72,9 +72,10 @@ def validate(testcases):
                                      '{}'.format(test['path'],  key, step))
 
             if not step['module'] in sys.modules:
-                raise ValueError('step {}/{} has a module {} that could not be '
-                                 'found'.format(test['path'], step['subdir'],
-                                                step['module']))
+                raise ValueError('step {}/{} has a module {} that could not '
+                                 'be found'.format(test['path'],
+                                                   step['subdir'],
+                                                   step['module']))
             module = sys.modules[step['module']]
             for key in ['setup', 'run']:
                 if not hasattr(module, step[key]):

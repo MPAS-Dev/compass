@@ -75,8 +75,8 @@ def run(step, test_suite, config, logger):
     Parameters
     ----------
     step : dict
-        A dictionary of properties of this step from the ``collect()`` function,
-        with modifications from the ``setup()`` function.
+        A dictionary of properties of this step from the ``collect()``
+        function, with modifications from the ``setup()`` function.
 
     test_suite : dict
         A dictionary of properties of the test suite
@@ -128,11 +128,12 @@ def _write_initial_state(config, dsMesh, with_frazil):
     slope_center_position = section.getfloat('slope_center_position')
     slope_half_width = section.getfloat('slope_half_width')
 
-    bottomDepth = shelf_depth + 0.5 * (bottom_depth - shelf_depth) * \
-                  (1.0 + numpy.tanh((yCell - slope_center_position) /
-                                    slope_half_width))
+    bottomDepth = (shelf_depth + 0.5 * (bottom_depth - shelf_depth) *
+                   (1.0 + numpy.tanh((yCell - slope_center_position) /
+                                     slope_half_width)))
 
-    refTopDepth = xarray.DataArray(data=interfaces[0:-1], dims=('nVertLevels',))
+    refTopDepth = xarray.DataArray(data=interfaces[0:-1],
+                                   dims=('nVertLevels',))
 
     cellMask = (refTopDepth < bottomDepth).transpose('nCells', 'nVertLevels')
 
@@ -281,7 +282,7 @@ def _write_forcing(config, yCell, zMid):
         temperatureInteriorRestoringRate)
 
     salinityInteriorRestoringValue = xarray.where(
-        mask, 34.0 , salinityInteriorRestoringValue)
+        mask, 34.0, salinityInteriorRestoringValue)
 
     salinityInteriorRestoringRate = \
         xarray.zeros_like(temperatureInteriorRestoringRate)
@@ -299,6 +300,7 @@ def _write_forcing(config, yCell, zMid):
     dsForcing['salinityInteriorRestoringRate'] = salinityInteriorRestoringRate
     dsForcing['temperatureInteriorRestoringValue'] = \
         temperatureInteriorRestoringValue
-    dsForcing['salinityInteriorRestoringValue'] = salinityInteriorRestoringValue
+    dsForcing['salinityInteriorRestoringValue'] = \
+        salinityInteriorRestoringValue
 
     write_netcdf(dsForcing, 'forcing.nc')

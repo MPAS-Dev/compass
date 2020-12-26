@@ -13,8 +13,8 @@ from compass import logging
 from compass.clean import clean_cases
 
 
-def setup_suite(core, suite_name, config_file=None, machine=None, work_dir=None,
-                baseline_dir=None):
+def setup_suite(core, suite_name, config_file=None, machine=None,
+                work_dir=None, baseline_dir=None):
     """
     Set up a test suite
 
@@ -37,7 +37,8 @@ def setup_suite(core, suite_name, config_file=None, machine=None, work_dir=None,
         be listed with ``compass list --machines``
 
     work_dir : str, optional
-        A directory that will serve as the base for creating testcase directories
+        A directory that will serve as the base for creating testcase
+        directories
 
     baseline_dir : str, optional
         Location of baseslines that can be compared to
@@ -48,7 +49,8 @@ def setup_suite(core, suite_name, config_file=None, machine=None, work_dir=None,
 
     text = resources.read_text('compass.{}.suites'.format(core),
                                '{}.txt'.format(suite_name))
-    tests = [test.strip() for test in text.split('\n') if len(test.strip()) > 0]
+    tests = [test.strip() for test in text.split('\n') if
+             len(test.strip()) > 0]
 
     if work_dir is None:
         work_dir = os.getcwd()
@@ -100,12 +102,14 @@ def clean_suite(core, suite_name, work_dir=None):
         in the suite
 
     work_dir : str, optional
-        A directory that will serve as the base for creating testcase directories
+        A directory that will serve as the base for creating testcase
+        directories
     """
 
     text = resources.read_text('compass.{}.suites'.format(core),
                                '{}.txt'.format(suite_name))
-    tests = [test.strip() for test in text.split('\n') if len(test.strip()) > 0]
+    tests = [test.strip() for test in text.split('\n') if
+             len(test.strip()) > 0]
 
     if work_dir is None:
         work_dir = os.getcwd()

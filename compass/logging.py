@@ -14,8 +14,8 @@ def start(test_name, log_filename=None):
         logger
 
     log_filename : str, optional
-        The name of a file where output should be written.  If none is supplied,
-        output goes to stdout/stderr
+        The name of a file where output should be written.  If none is
+        supplied, output goes to stdout/stderr
 
     Returns
     -------

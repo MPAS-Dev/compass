@@ -29,4 +29,3 @@ def collect():
         testcases.append(test.collect())
 
     return testcases
-

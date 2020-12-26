@@ -67,7 +67,8 @@ def adjust_ssh(variable, iteration_count, config, cores, logger):
     partition(cores, logger)
 
     for iterIndex in range(iteration_count):
-        logger.info(" * Iteration {}/{}".format(iterIndex + 1, iteration_count))
+        logger.info(" * Iteration {}/{}".format(iterIndex + 1,
+                                                iteration_count))
 
         symlink('adjusting_init{}.nc'.format(iterIndex), 'adjusting_init.nc')
 
@@ -82,7 +83,8 @@ def adjust_ssh(variable, iteration_count, config, cores, logger):
         shutil.copy('adjusting_init{}.nc'.format(iterIndex),
                     'adjusting_init{}.nc'.format(iterIndex+1))
 
-        symlink('adjusting_init{}.nc'.format(iterIndex+1),  'adjusting_init.nc')
+        symlink('adjusting_init{}.nc'.format(iterIndex+1),
+                'adjusting_init.nc')
 
         with Dataset('adjusting_init.nc', 'r+') as ds:
 
@@ -112,11 +114,11 @@ def adjust_ssh(variable, iteration_count, config, cores, logger):
             if variable == 'ssh':
                 ds.variables['ssh'][0, :] = finalSSH
                 # also update the landIceDraft variable, which will be used to
-                # compensate for the SSH due to land-ice pressure when computing
-                # sea-surface tilt
+                # compensate for the SSH due to land-ice pressure when
+                # computing sea-surface tilt
                 ds.variables['landIceDraft'][0, :] = finalSSH
-                # we also need to stretch layerThickness to be compatible with the new
-                # SSH
+                # we also need to stretch layerThickness to be compatible with
+                # the new SSH
                 stretch = (finalSSH + bottomDepth) / (initSSH + bottomDepth)
                 layerThickness = ds.variables['layerThickness']
                 for k in range(nVertLevels):

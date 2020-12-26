@@ -45,11 +45,11 @@ def get_step_default(module):
 def get_testcase_default(module, description, steps, subdir=None):
     """
     Set up a default dictionary describing the testcase in the given module.
-    The dictionary contains the full name of the python module for the testcase,
-    the name of the testcase (the final part of the full module name), the
-    subdirectory for the testcase (the same as the ``name`` if not supplied),
-    the names of the ``configure()`` and ``run()`` functions within the module,
-    and empty lists of ``inputs`` and ``outputs``, the ``core`` and
+    The dictionary contains the full name of the python module for the
+    testcase, the name of the testcase (the final part of the full module
+    name), the subdirectory for the testcase (the same as the ``name`` if not
+    supplied), the names of the ``configure()`` and ``run()`` functions within
+    the module, and empty lists of ``inputs`` and ``outputs``, the ``core`` and
     ``configuration`` of the testcase (the parsed from the full module name),
     the description of the testcase provided, and the dictionary of steps.
 
@@ -114,8 +114,8 @@ def run_steps(testcase, test_suite, config, steps, logger):
     ----------
     testcase : dict
         The dictionary describing the testcase with info from
-        :py:func:`compass.testcase.get_default()` and any additional information
-        added when collecting and setting up the testcase.
+        :py:func:`compass.testcase.get_default()` and any additional
+        information added when collecting and setting up the testcase.
 
     test_suite : dict
         A dictionary of properties of the test suite
