@@ -71,7 +71,7 @@ def validate(testcases):
                     raise ValueError('a step in {} is missing the "{}" key: '
                                      '{}'.format(test['path'],  key, step))
 
-            if not step['module'] in sys.modules:
+            if step['module'] not in sys.modules:
                 raise ValueError('step {}/{} has a module {} that could not '
                                  'be found'.format(test['path'],
                                                    step['subdir'],
