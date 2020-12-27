@@ -1,16 +1,12 @@
 import os
 
-from mpas_tools.ocean import build_spherical_mesh
-
 from compass.testcase import get_step_default
 from compass.io import symlink, download
 from compass import namelist, streams
 from compass.model import partition, run_model
 from compass.parallel import update_namelist_pio
-from compass.ocean.tests.global_ocean.cull import cull_mesh
 from compass.ocean.vertical import generate_grid, write_grid
 from compass.ocean.plot import plot_vertical_grid, plot_initial_state
-from compass.ocean.tests.global_ocean.mesh import build_cell_width_lat_lon
 
 
 def collect(mesh_name, cores, min_cores=None, max_memory=1000,
@@ -75,7 +71,6 @@ def setup(step, config):
         Configuration options for this testcase, a combination of the defaults
         for the machine, core, configuration and testcase
     """
-    mesh_name = step['mesh_name']
     step_dir = step['work_dir']
 
     # generate the namelist, replacing a few default options
@@ -122,6 +117,13 @@ def setup(step, config):
 
         symlink(filename, os.path.join(step_dir, local_filename))
 
+    links = {'../mesh/culled_mesh.nc': 'mesh.nc',
+             '../mesh/critical_passages_mask_final.nc': 'critical_passages.nc',
+             '../mesh/culled_graph.info': 'graph.info'}
+    for target, link in links.items():
+        symlink(target, os.path.join(step_dir, link))
+        inputs.append(os.path.abspath(os.path.join(step_dir, target)))
+
     # make a link to the ocean_model executable
     symlink(os.path.abspath(config.get('executables', 'model')),
             os.path.join(step_dir, 'ocean_model'))
@@ -157,13 +159,6 @@ def run(step, test_suite, config, logger):
     cores = step['cores']
     threads = step['threads']
     step_dir = step['work_dir']
-    mesh_name = step['mesh_name']
-
-    # create the base mesh
-    cellWidth, lon, lat = build_cell_width_lat_lon(mesh_name)
-    build_spherical_mesh(cellWidth, lon, lat, out_filename='base_mesh.nc')
-
-    cull_mesh(with_critical_passages=True)
 
     interfaces = generate_grid(config=config)
     write_grid(interfaces=interfaces, out_filename='vertical_grid.nc')
@@ -171,7 +166,7 @@ def run(step, test_suite, config, logger):
                        out_filename='vertical_grid.png')
 
     update_namelist_pio(config, cores, step_dir)
-    partition(cores, logger, graph_file='culled_graph.info')
+    partition(cores, logger, graph_file='graph.info')
 
     run_model(config, core='ocean', core_count=cores, logger=logger,
               threads=threads)

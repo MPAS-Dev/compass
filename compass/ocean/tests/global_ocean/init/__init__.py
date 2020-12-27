@@ -1,5 +1,5 @@
 from compass.testcase import run_steps, get_testcase_default
-from compass.ocean.tests.global_ocean.init import initial_state
+from compass.ocean.tests.global_ocean.init import mesh, initial_state
 from compass.ocean.tests import global_ocean
 from compass.validate import compare_variables
 from compass.config import add_config
@@ -25,6 +25,9 @@ def collect(mesh_name):
     name = module.split('.')[-1]
     subdir = '{}/{}'.format(mesh_name, name)
     steps = dict()
+    step = mesh.collect(mesh_name, cores=4, min_cores=2,
+                        max_memory=1000, max_disk=1000, threads=1)
+    steps[step['name']] = step
     step = initial_state.collect(mesh_name, cores=4, min_cores=2,
                                  max_memory=1000, max_disk=1000, threads=1)
     steps[step['name']] = step
@@ -76,7 +79,7 @@ def run(testcase, test_suite, config, logger):
         A logger for output from the testcase
     """
     work_dir = testcase['work_dir']
-    steps = ['initial_state']
+    steps = ['mesh', 'initial_state']
     run_steps(testcase, test_suite, config, steps, logger)
     variables = ['temperature', 'salinity', 'layerThickness']
     compare_variables(variables, config, work_dir,
