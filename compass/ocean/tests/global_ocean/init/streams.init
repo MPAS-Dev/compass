@@ -1,0 +1,89 @@
+<streams>
+
+<immutable_stream name="input_init"
+        filename_template="culled_mesh.nc">
+</immutable_stream>
+
+<stream name="output_init"
+        type="output"
+        output_interval="0000_00:00:01"
+        clobber_mode="truncate"
+        filename_template="initial_state.nc">
+
+    <stream name="input_init"/>
+    <var_struct name="tracers"/>
+    <var name="refZMid"/>
+    <var name="normalVelocity"/>
+    <var name="layerThickness"/>
+    <var name="restingThickness"/>
+    <var name="seaIcePressure"/>
+    <var name="atmosphericPressure"/>
+    <var name="boundaryLayerDepth"/>
+    <var name="refBottomDepth"/>
+    <var name="bottomDepth"/>
+    <var name="bottomDepthObserved"/>
+    <var name="oceanFracObserved"/>
+    <var name="maxLevelCell"/>
+    <var name="vertCoordMovementWeights"/>
+    <var name="edgeMask"/>
+    <var name="cullCell"/>
+    <var name="landIceDraftObserved"/>
+    <var name="landIceThkObserved"/>
+    <var name="landIceFracObserved"/>
+    <var name="landIceGroundedFracObserved"/>
+    <var name="landIceFraction"/>
+    <var name="landIceMask"/>
+    <var name="landIcePressure"/>
+    <var name="landIceDraft"/>
+    <var name="ssh"/>
+    <var name="modifySSHMask"/>
+    <var name="rx1Cell"/>
+    <var name="rx1Edge"/>
+    <var name="rx1MaxCell"/>
+    <var name="rx1MaxEdge"/>
+    <var name="globalRx1Max"/>
+    <var name="density"/>
+    <var name="rx1InitSmoothingMask"/>
+    <var name="verticalStretch"/>
+</stream>
+
+<stream name="forcing_data_init"
+        type="output"
+        output_interval="0000_00:00:01"
+        clobber_mode="truncate"
+        filename_template="init_mode_forcing_data.nc">
+
+    <var_struct name="tracersSurfaceRestoringFields"/>
+    <var_struct name="tracersInteriorRestoringFields"/>
+    <var_struct name="tracersExponentialDecayFields"/>
+    <var_struct name="tracersIdealAgeFields"/>
+    <var_struct name="tracersTTDFields"/>
+    <var name="windStressZonal"/>
+    <var name="windStressMeridional"/>
+    <var name="landIceSurfaceTemperature"/>
+    <var name="seaIcePressure"/>
+    <var name="atmosphericPressure"/>
+</stream>
+
+<stream name="shortwave_forcing_data_init"
+        type="output"
+        output_interval="0000-00-00_00:00:01"
+        clobber_mode="truncate"
+        filename_template="init_mode_shortwaveData.nc">
+
+    <var name="chlorophyllData"/>
+    <var name="zenithAngle"/>
+    <var name="clearSkyRadiation"/>
+    <var name="xtime"/>
+</stream>
+
+<stream name="critical_passages"
+        filename_template="critical_passages_mask_final.nc"
+        input_interval="initial_only"
+        type="input">
+
+    <var name="transectCellMasks"/>
+    <var name="depthTransects"/>
+</stream>
+
+</streams>

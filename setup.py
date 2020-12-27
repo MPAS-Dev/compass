@@ -47,6 +47,7 @@ setup(name='compass',
                         'numpy',
                         'progressbar2',
                         'requests',
+                        'scipy',
                         'xarray'],
       entry_points={'console_scripts':
                     ['compass = compass.__main__:main']})
