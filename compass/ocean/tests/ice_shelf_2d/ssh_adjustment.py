@@ -93,6 +93,9 @@ def setup(step, config):
     replacements = namelist.parse_replacements(
         'compass.ocean.tests.ice_shelf_2d', 'namelist.forward')
 
+    # we don't want the global stats AM for this run
+    replacements['config_AM_globalStats_enable'] = '.false.'
+
     # we want a shorter run and no freshwater fluxes under the ice shelf from
     # these namelist options
     replacements.update(namelist.parse_replacements(
