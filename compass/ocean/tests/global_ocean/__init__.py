@@ -1,4 +1,4 @@
-from compass.ocean.tests.global_ocean import init
+from compass.ocean.tests.global_ocean import init, performance_test
 from compass.config import add_config
 
 
@@ -14,6 +14,10 @@ def collect():
     testcases = list()
     for mesh_name in ['QU240']:
         for test in [init]:
+            testcases.append(test.collect(mesh_name=mesh_name))
+
+    for mesh_name in ['QU240']:
+        for test in [performance_test]:
             testcases.append(test.collect(mesh_name=mesh_name))
 
     return testcases
