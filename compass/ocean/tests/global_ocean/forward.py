@@ -1,10 +1,12 @@
 import os
+from importlib.resources import contents
 
 from compass.testcase import get_step_default
 from compass.io import symlink
 from compass import namelist, streams
 from compass.model import partition, run_model
 from compass.parallel import update_namelist_pio
+from compass.ocean.tests.global_ocean.mesh import get_mesh_package
 
 
 def collect(mesh_name, cores, min_cores=None, max_memory=1000,
@@ -95,18 +97,20 @@ def setup(step, config):
     # generate the namelist, replacing a few default options
     replacements = dict()
 
-    namelist_files = ['namelist.forward']
-
-    namelist_files.append('namelist.{}.forward'.format(resolution))
-
-    for namelist_file in namelist_files:
-        replacements.update(namelist.parse_replacements(
-            'compass.ocean.tests.ziso', namelist_file))
+    replacements.update(namelist.parse_replacements(
+        'compass.ocean.tests.global_ocean', 'namelist.forward'))
 
     if 'testcase_module' in step:
         testcase_module = step['testcase_module']
     else:
         testcase_module = None
+
+    # add forward namelist options for this mesh
+    mesh_package = get_mesh_package(mesh_name)
+    mesh_package_contents = contents(mesh_package)
+    if 'namelist.forward' in mesh_package_contents:
+        replacements.update(namelist.parse_replacements(
+            mesh_package, 'namelist.forward'))
 
     # see if there's one for the testcase itself
     if 'namelist' in step:
@@ -117,12 +121,13 @@ def setup(step, config):
                       step_work_dir=step_dir, core='ocean', mode='forward')
 
     # generate the streams file
-    streams_data = streams.read('compass.ocean.tests.ziso',
+    streams_data = streams.read('compass.ocean.tests.global_ocean',
                                 'streams.forward')
 
-    streams_data = streams.read('compass.ocean.tests.ziso',
-                                'streams.{}.forward'.format(resolution),
-                                tree=streams_data)
+    # add streams for the mesh
+    if 'streams.forward' in mesh_package_contents:
+        streams.read(mesh_package, 'streams.forward',
+                     tree=streams_data)
 
     # see if there's one for the testcase itself
     if 'streams' in step:
@@ -139,9 +144,10 @@ def setup(step, config):
     inputs = []
     outputs = []
 
-    links = {'../initial_state/ocean.nc': 'init.nc',
-             '../initial_state/forcing.nc': 'forcing.nc',
-             '../initial_state/culled_graph.info': 'graph.info'}
+    links = {'../../init/initial_state/initial_state.nc': 'init.nc',
+             '../../init/initial_state/init_mode_forcing_data.nc':
+                 'forcing_data.nc',
+             '../../init/mesh/culled_graph.info': 'graph.info'}
     for target, link in links.items():
         symlink(target, os.path.join(step_dir, link))
         inputs.append(os.path.abspath(os.path.join(step_dir, target)))
