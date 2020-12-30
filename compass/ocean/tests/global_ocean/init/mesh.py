@@ -103,9 +103,13 @@ def run(step, test_suite, config, logger):
         A logger for output from the step
     """
     mesh_name = step['mesh_name']
+    # only use progress bars if we're not writing to a log file
+    use_progress_bar = 'log_filename' not in step
 
     # create the base mesh
     cellWidth, lon, lat = build_cell_width_lat_lon(mesh_name)
-    build_spherical_mesh(cellWidth, lon, lat, out_filename='base_mesh.nc')
+    build_spherical_mesh(cellWidth, lon, lat, out_filename='base_mesh.nc',
+                         logger=logger, use_progress_bar=use_progress_bar)
 
-    cull_mesh(with_critical_passages=True)
+    cull_mesh(with_critical_passages=True, logger=logger,
+              use_progress_bar=use_progress_bar)

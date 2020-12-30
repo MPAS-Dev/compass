@@ -4,7 +4,7 @@ import stat
 from jinja2 import Template
 from importlib import resources
 
-from compass import logging
+from mpas_tools.logging import LoggingContext
 from compass.parallel import get_available_cores_and_nodes
 
 
@@ -148,29 +148,26 @@ def run_steps(testcase, test_suite, config, steps, logger):
 
         logger.info(' * Running {}'.format(step_name))
 
+        test_name = step['path'].replace('/', '_')
         if 'log_filename' in testcase:
+            step['log_filename'] = testcase['log_filename']
             step_logger = logger
-            handler = None
-            old_stdout = None
-            old_stderr = None
+            log_filename = None
         else:
             log_filename = '{}/{}.log'.format(cwd, step_name)
-            test_name = step['path'].replace('/', '_')
-            step_logger, handler, old_stdout, old_stderr = logging.start(
-                test_name=test_name, log_filename=log_filename)
             step['log_filename'] = log_filename
+            step_logger = None
+        with LoggingContext(name=test_name, logger=step_logger,
+                            log_filename=log_filename) as step_logger:
 
-        run = getattr(sys.modules[step['module']], step['run'])
-        os.chdir(step['work_dir'])
+            run = getattr(sys.modules[step['module']], step['run'])
+            os.chdir(step['work_dir'])
 
-        try:
-            run(step, test_suite, config, step_logger)
-        except BaseException:
-            logger.info('     Failed')
-            raise
-
-        if 'log_filename' not in testcase:
-            logging.stop(step_logger, handler, old_stdout, old_stderr)
+            try:
+                run(step, test_suite, config, step_logger)
+            except BaseException:
+                logger.info('     Failed')
+                raise
 
         logger.info('     Complete')
 

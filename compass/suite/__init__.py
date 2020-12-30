@@ -7,9 +7,10 @@ import configparser
 import stat
 from jinja2 import Template
 
+from mpas_tools.logging import LoggingContext
+
 from compass.setup import setup_cases
 from compass.io import symlink
-from compass import logging
 from compass.clean import clean_cases
 
 
@@ -141,53 +142,48 @@ def run_suite(suite_name):
         test_suite = pickle.load(handle)
 
     # start logging to stdout/stderr
-    logger, handler, old_stdout, old_stderr = logging.start(
-        test_name=suite_name, log_filename=None)
+    with LoggingContext(suite_name) as logger:
 
-    os.environ['PYTHONUNBUFFERED'] = '1'
+        os.environ['PYTHONUNBUFFERED'] = '1'
 
-    try:
-        os.makedirs('case_outputs')
-    except OSError:
-        pass
-
-    success = True
-    cwd = os.getcwd()
-    for test_name in test_suite['testcases']:
-        testcase = test_suite['testcases'][test_name]
-
-        logger.info(' * Running {}'.format(test_name))
-        logger.info('           {}'.format(testcase['description']))
-
-        test_name = testcase['path'].replace('/', '_')
-        log_filename = '{}/case_outputs/{}.log'.format(cwd, test_name)
-        test_logger, test_handler, test_old_stdout, test_old_stderr = \
-            logging.start(test_name=test_name, log_filename=log_filename)
-        testcase['log_filename'] = log_filename
-
-        os.chdir(testcase['work_dir'])
-
-        config = configparser.ConfigParser(
-            interpolation=configparser.ExtendedInterpolation())
-        config.read(testcase['config'])
-
-        run = getattr(sys.modules[testcase['module']], testcase['run'])
         try:
-            run(testcase, test_suite, config, test_logger)
-            logger.info('    PASS')
-        except BaseException:
-            test_logger.exception('Exception raised')
-            logger.error('   FAIL    For more information, see:')
-            logger.error('           case_outputs/{}.log'.format(test_name))
+            os.makedirs('case_outputs')
+        except OSError:
+            pass
 
-        logging.stop(test_logger, test_handler, test_old_stdout,
-                     test_old_stderr)
+        success = True
+        cwd = os.getcwd()
+        for test_name in test_suite['testcases']:
+            testcase = test_suite['testcases'][test_name]
 
-        logger.info('')
+            logger.info(' * Running {}'.format(test_name))
+            logger.info('           {}'.format(testcase['description']))
 
-    os.chdir(cwd)
+            test_name = testcase['path'].replace('/', '_')
+            log_filename = '{}/case_outputs/{}.log'.format(cwd, test_name)
+            with LoggingContext(test_name, log_filename=log_filename) as \
+                    test_logger:
+                testcase['log_filename'] = log_filename
 
-    logging.stop(logger, handler, old_stdout, old_stderr)
+                os.chdir(testcase['work_dir'])
+
+                config = configparser.ConfigParser(
+                    interpolation=configparser.ExtendedInterpolation())
+                config.read(testcase['config'])
+
+                run = getattr(sys.modules[testcase['module']], testcase['run'])
+                try:
+                    run(testcase, test_suite, config, test_logger)
+                    logger.info('    PASS')
+                except BaseException:
+                    test_logger.exception('Exception raised')
+                    logger.error('   FAIL    For more information, see:')
+                    logger.error('           case_outputs/{}.log'.format(
+                        test_name))
+
+            logger.info('')
+
+        os.chdir(cwd)
 
     if not success:
         raise ValueError('One or more tests failed, see above.')
