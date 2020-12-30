@@ -1,7 +1,8 @@
 import os
 
+from mpas_tools.logging import check_call
+
 from compass.io import symlink
-from compass.logging import check_call
 
 
 def symlink_model(config, step_dir):

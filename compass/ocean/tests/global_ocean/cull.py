@@ -7,11 +7,12 @@ from mpas_tools.io import write_netcdf
 from mpas_tools.ocean.coastline_alteration import widen_transect_edge_masks, \
     add_critical_land_blockages, add_land_locked_cells_to_mask
 from mpas_tools.viz.paraview_extractor import extract_vtk
+from mpas_tools.logging import LoggingContext
 
 
 def cull_mesh(with_cavities=False, with_critical_passages=False,
               custom_critical_passages=None, custom_land_blockages=None,
-              preserve_floodplain=False):
+              preserve_floodplain=False, logger=None, use_progress_bar=True):
     """
     First step of initializing the global ocean:
       1. combining Natural Earth land coverage north of 60S with Antarctic
@@ -52,7 +53,24 @@ def cull_mesh(with_cavities=False, with_critical_passages=False,
     preserve_floodplain : bool, optional
         Whether to use the ``cellSeedMask`` field in the base mesh to preserve
         a floodplain at elevations above z=0
+
+    logger : logging.Logger, optional
+        A logger for the output if not stdout
+
+    use_progress_bar : bool, optional
+        Whether to display progress bars (problematic in logging to a file)
     """
+    with LoggingContext(name=__name__, logger=logger) as logger:
+        _cull_mesh_with_logging(
+            logger, with_cavities, with_critical_passages,
+            custom_critical_passages, custom_land_blockages,
+            preserve_floodplain, use_progress_bar)
+
+
+def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
+                            custom_critical_passages, custom_land_blockages,
+                            preserve_floodplain, use_progress_bar):
+    """ Cull the mesh once the logger is defined for sure """
 
     # required for compatibility with MPAS
     netcdf_format = 'NETCDF3_64BIT'
@@ -95,7 +113,8 @@ def cull_mesh(with_cavities=False, with_critical_passages=False,
 
     # Create the land mask based on the land coverage, i.e. coastline data
     dsBaseMesh = xarray.open_dataset('base_mesh.nc')
-    dsLandMask = conversion.mask(dsBaseMesh, fcMask=fcLandCoverage)
+    dsLandMask = conversion.mask(dsBaseMesh, fcMask=fcLandCoverage,
+                                 logger=logger)
 
     dsLandMask = add_land_locked_cells_to_mask(dsLandMask, dsBaseMesh,
                                                latitude_threshold=43.0,
@@ -122,7 +141,8 @@ def cull_mesh(with_cavities=False, with_critical_passages=False,
                 custom_land_blockages))
 
         # create masks from the transects
-        dsCritBlockMask = conversion.mask(dsBaseMesh, fcMask=fcCritBlockages)
+        dsCritBlockMask = conversion.mask(dsBaseMesh, fcMask=fcCritBlockages,
+                                          logger=logger)
 
         dsLandMask = add_critical_land_blockages(dsLandMask, dsCritBlockMask)
 
@@ -141,7 +161,8 @@ def cull_mesh(with_cavities=False, with_critical_passages=False,
                 custom_critical_passages))
 
         # create masks from the transects
-        dsCritPassMask = conversion.mask(dsBaseMesh, fcMask=fcCritPassages)
+        dsCritPassMask = conversion.mask(dsBaseMesh, fcMask=fcCritPassages,
+                                         logger=logger)
 
         # Alter critical passages to be at least two cells wide, to avoid sea
         # ice blockage
@@ -155,19 +176,21 @@ def cull_mesh(with_cavities=False, with_critical_passages=False,
 
     # cull the mesh based on the land mask
     dsCulledMesh = conversion.cull(dsBaseMesh, dsMask=dsLandMask,
-                                   dsPreserve=dsPreserve)
+                                   dsPreserve=dsPreserve, logger=logger)
 
     # create a mask for the flood fill seed points
-    dsSeedMask = conversion.mask(dsCulledMesh, fcSeed=fcSeed)
+    dsSeedMask = conversion.mask(dsCulledMesh, fcSeed=fcSeed, logger=logger)
 
     # cull the mesh a second time using a flood fill from the seed points
     dsCulledMesh = conversion.cull(dsCulledMesh, dsInverse=dsSeedMask,
-                                   graphInfoFileName='culled_graph.info')
+                                   graphInfoFileName='culled_graph.info',
+                                   logger=logger)
     write_netcdf(dsCulledMesh, 'culled_mesh.nc', format=netcdf_format)
 
     if critical_passages:
         # make a new version of the critical passages mask on the culled mesh
-        dsCritPassMask = conversion.mask(dsCulledMesh, fcMask=fcCritPassages)
+        dsCritPassMask = conversion.mask(dsCulledMesh, fcMask=fcCritPassages,
+                                         logger=logger)
         write_netcdf(dsCritPassMask, 'critical_passages_mask_final.nc',
                      format=netcdf_format)
 
@@ -176,24 +199,28 @@ def cull_mesh(with_cavities=False, with_critical_passages=False,
             componentName='bedmachine', objectType='region',
             featureNames=['AntarcticIceCoverage'])
         fcAntarcticIce.to_geojson('ice_coverage.geojson')
-        dsMask = conversion.mask(dsCulledMesh, fcMask=fcAntarcticIce)
+        dsMask = conversion.mask(dsCulledMesh, fcMask=fcAntarcticIce,
+                                 logger=logger)
         landIceMask = dsMask.regionCellMasks.isel(nRegions=0)
         dsLandIceMask = xarray.Dataset()
         dsLandIceMask['landIceMask'] = landIceMask
 
         write_netcdf(dsLandIceMask, 'land_ice_mask.nc', format=netcdf_format)
 
-        dsLandIceCulledMesh = conversion.cull(dsCulledMesh, dsMask=dsMask)
+        dsLandIceCulledMesh = conversion.cull(dsCulledMesh, dsMask=dsMask,
+                                              logger=logger)
         write_netcdf(dsLandIceCulledMesh, 'no_ISC_culled_mesh.nc',
                      format=netcdf_format)
 
     extract_vtk(ignore_time=True, dimension_list=['maxEdges='],
                 variable_list=['allOnCells'],
                 filename_pattern='culled_mesh.nc',
-                out_dir='culled_mesh_vtk')
+                out_dir='culled_mesh_vtk',
+                use_progress_bar=use_progress_bar)
 
     if with_cavities:
         extract_vtk(ignore_time=True, dimension_list=['maxEdges='],
                     variable_list=['allOnCells'],
                     filename_pattern='no_ISC_culled_mesh.nc',
-                    out_dir='no_ISC_culled_mesh_vtk')
+                    out_dir='no_ISC_culled_mesh_vtk',
+                    use_progress_bar=use_progress_bar)
