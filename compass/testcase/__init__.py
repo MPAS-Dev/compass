@@ -89,6 +89,7 @@ def get_testcase_default(module, description, steps, subdir=None):
     path = os.path.join(core, configuration, subdir)
     for step in steps.values():
         step['testcase'] = name
+        step['testcase_subdir'] = subdir
     if hasattr(sys.modules[module], 'configure'):
         configure = 'configure'
     else:
@@ -137,8 +138,8 @@ def run_steps(testcase, test_suite, config, steps, logger):
             available_cores, _ = get_available_cores_and_nodes(config)
             step['cores'] = min(step['cores'], available_cores)
         else:
-            logger.warn('Core count not specified for step {}. Default is 1 '
-                        'core.'.format(step_name))
+            logger.warning('Core count not specified for step {}. Default is '
+                           '1 core.'.format(step_name))
             step['cores'] = 1
         if 'min_cores' in step:
             if step['cores'] < step['min_cores']:
