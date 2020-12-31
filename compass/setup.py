@@ -136,6 +136,7 @@ def setup_case(path, testcase, config_file, machine, work_dir, baseline_dir):
     except OSError:
         pass
     testcase['work_dir'] = testcase_dir
+    testcase['base_work_dir'] = work_dir
 
     # add config options specific to the testcase
     if testcase['configure'] is not None:
@@ -177,6 +178,7 @@ def setup_case(path, testcase, config_file, machine, work_dir, baseline_dir):
                 os.path.join(step_dir, testcase_config))
 
         step['work_dir'] = step_dir
+        step['base_work_dir'] = work_dir
         step['config'] = testcase_config
 
         # set up the step
