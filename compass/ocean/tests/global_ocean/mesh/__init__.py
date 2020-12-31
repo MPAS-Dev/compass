@@ -60,23 +60,3 @@ def get_mesh_package(mesh_name):
     else:
         raise ValueError('Mesh {} missing corresponding package {}'.format(
             mesh_name, package))
-
-
-def mesh_package_has_file(package, filename):
-    """
-
-    Parameters
-    ----------
-    package : str or Package
-        The package in which to check for the file
-
-    filename : str
-        The file to check for
-
-    Returns
-    -------
-    has_file : bool
-        Whether the file is in the package
-    """
-    package_contents = contents(package)
-    return filename in package_contents

@@ -18,7 +18,9 @@ def collect():
 
     for mesh_name in ['QU240']:
         for test in [performance_test]:
-            testcases.append(test.collect(mesh_name=mesh_name))
+            for time_integrator in ['split_explicit', 'RK4']:
+                testcases.append(test.collect(mesh_name=mesh_name,
+                                              time_integrator=time_integrator))
 
     return testcases
 
