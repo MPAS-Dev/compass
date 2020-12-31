@@ -11,7 +11,8 @@ from compass.ocean.tests.global_ocean.mesh import get_mesh_package
 
 def collect(mesh_name, cores, min_cores=None, max_memory=1000,
             max_disk=1000, threads=1, testcase_module=None,
-            namelist_file=None, streams_file=None):
+            namelist_file=None, streams_file=None,
+            time_integrator='split_explicit'):
     """
     Get a dictionary of step properties
 
@@ -49,6 +50,9 @@ def collect(mesh_name, cores, min_cores=None, max_memory=1000,
     streams_file : str, optional
         The name of a streams file in the testcase package directory
 
+    time_integrator : {'split_explicit', 'RK4'}, optional
+        The time integrator to use for the run
+
     Returns
     -------
     step : dict
@@ -74,6 +78,8 @@ def collect(mesh_name, cores, min_cores=None, max_memory=1000,
     if streams_file is not None:
         step['streams'] = streams_file
 
+    step['time_integrator'] = time_integrator
+
     return step
 
 
@@ -93,6 +99,7 @@ def setup(step, config):
     """
     mesh_name = step['mesh_name']
     step_dir = step['work_dir']
+    time_integrator = step['time_integrator']
 
     # generate the namelist, replacing a few default options
     replacements = dict()
@@ -107,7 +114,14 @@ def setup(step, config):
 
     # add forward namelist options for this mesh
     mesh_package = get_mesh_package(mesh_name)
-    mesh_package_contents = contents(mesh_package)
+    mesh_package_contents = list(contents(mesh_package))
+    mesh_namelists = ['namelist.forward',
+                      'namelist.{}'.format(time_integrator.lower())]
+    for mesh_namelist in mesh_namelists:
+        if mesh_namelist in mesh_package_contents:
+            replacements.update(namelist.parse_replacements(
+                mesh_package, mesh_namelist))
+
     if 'namelist.forward' in mesh_package_contents:
         replacements.update(namelist.parse_replacements(
             mesh_package, 'namelist.forward'))
@@ -125,9 +139,11 @@ def setup(step, config):
                                 'streams.forward')
 
     # add streams for the mesh
-    if 'streams.forward' in mesh_package_contents:
-        streams.read(mesh_package, 'streams.forward',
-                     tree=streams_data)
+    mesh_streams = ['streams.forward',
+                    'streams.{}'.format(time_integrator.lower())]
+    for mesh_stream in mesh_streams:
+        if mesh_stream in mesh_package_contents:
+            streams.read(mesh_package, mesh_stream, tree=streams_data)
 
     # see if there's one for the testcase itself
     if 'streams' in step:
@@ -144,11 +160,13 @@ def setup(step, config):
     inputs = []
     outputs = []
 
-    links = {'../../init/initial_state/initial_state.nc': 'init.nc',
-             '../../init/initial_state/init_mode_forcing_data.nc':
-                 'forcing_data.nc',
-             '../../init/mesh/culled_graph.info': 'graph.info'}
+    init_path = _get_init_relative_path(step)
+
+    links = {'initial_state/initial_state.nc': 'init.nc',
+             'initial_state/init_mode_forcing_data.nc':'forcing_data.nc',
+             'mesh/culled_graph.info': 'graph.info'}
     for target, link in links.items():
+        target = os.path.join(init_path, target)
         symlink(target, os.path.join(step_dir, link))
         inputs.append(os.path.abspath(os.path.join(step_dir, target)))
 
@@ -187,3 +205,15 @@ def run(step, test_suite, config, logger):
 
     run_model(config, core='ocean', core_count=cores, logger=logger,
               threads=threads)
+
+
+def _get_init_relative_path(step):
+    """ get the relative path to the init testcase """
+
+    # build a path that has a '..' for each directory in subdir
+    subdir = os.path.join(step['testcase_subdir'], step['subdir'])
+    # skip the mesh directory, which is common to all tests
+    subdirs = subdir.split('/')[1:]
+    path = '/'.join(['..' for _ in subdirs])
+    path = '{}/init'.format(path)
+    return path

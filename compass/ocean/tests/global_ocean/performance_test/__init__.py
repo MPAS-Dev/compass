@@ -4,7 +4,7 @@ from compass.ocean.tests import global_ocean
 from compass.validate import compare_timers
 
 
-def collect(mesh_name):
+def collect(mesh_name, time_integrator):
     """
     Get a dictionary of testcase properties
 
@@ -13,19 +13,23 @@ def collect(mesh_name):
     mesh_name : str
         The name of the mesh
 
+    time_integrator : {'split_explicit', 'RK4'}
+        The time integrator to use for the run
+
     Returns
     -------
     testcase : dict
         A dict of properties of this test case, including its steps
     """
-    description = 'Global Ocean {} - Performance Test'.format(mesh_name)
+    description = 'Global Ocean {} - {} Performance Test'.format(
+        mesh_name, time_integrator)
     module = __name__
 
     name = module.split('.')[-1]
-    subdir = '{}/{}'.format(mesh_name, name)
+    subdir = '{}/{}/{}'.format(mesh_name, name, time_integrator)
     steps = dict()
-
-    step = forward.collect(mesh_name=mesh_name, cores=4, threads=1)
+    step = forward.collect(mesh_name=mesh_name, cores=4, threads=1,
+                           time_integrator=time_integrator)
     steps[step['name']] = step
 
     testcase = get_testcase_default(module, description, steps, subdir=subdir)
