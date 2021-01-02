@@ -205,6 +205,9 @@ def _compute_norms(da1, da2, quiet, max_l1_norm, max_l2_norm, max_linf_norm,
                    time_index=None):
     """ Compute norms between variables in two DataArrays """
 
+    da1 = _rename_duplicate_dims(da1)
+    da2 = _rename_duplicate_dims(da2)
+
     result = True
     diff = numpy.abs(da1 - da2).values.ravel()
 
@@ -255,7 +258,7 @@ def _compute_timers(base_directory, comparison_directory, timers):
             print("Comparing timer {}:".format(timer))
             print("             Base: {}".format(timer1))
             print("          Compare: {}".format(timer2))
-            print("   Percent Change: {}%%".format(percent * 100))
+            print("   Percent Change: {}%".format(percent * 100))
             print("          Speedup: {}".format(speedup))
 
 
@@ -298,3 +301,24 @@ def _find_timer_value(timer_name, directory):
                                 pass
 
     return timer_found, timer
+
+
+def _rename_duplicate_dims(da):
+    dims = list(da.dims)
+    new_dims = list(dims)
+    duplicates = False
+    for index, dim in enumerate(dims):
+        if dim in dims[index+1:]:
+            duplicates = True
+            suffix = 2
+            for other_index, other in enumerate(dims[index+1:]):
+                if other == dim:
+                    new_dims[other_index + index + 1] = \
+                        '{}_{}'.format(dim, suffix)
+                    suffix += 1
+
+    if not duplicates:
+        return da
+
+    da = xarray.DataArray(data=da.values, dims=new_dims)
+    return da
