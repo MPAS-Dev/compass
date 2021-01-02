@@ -12,7 +12,7 @@ from compass.ocean.tests.global_ocean.mesh import get_mesh_package
 def collect(mesh_name, cores, min_cores=None, max_memory=1000,
             max_disk=1000, threads=1, testcase_module=None,
             namelist_file=None, streams_file=None,
-            time_integrator='split_explicit'):
+            time_integrator='split_explicit', initial_state='initial_state'):
     """
     Get a dictionary of step properties
 
@@ -53,6 +53,9 @@ def collect(mesh_name, cores, min_cores=None, max_memory=1000,
     time_integrator : {'split_explicit', 'RK4'}, optional
         The time integrator to use for the run
 
+    initial_state : str, optional
+        The step in the ``init`` testcase for the initial condition
+
     Returns
     -------
     step : dict
@@ -79,6 +82,7 @@ def collect(mesh_name, cores, min_cores=None, max_memory=1000,
         step['streams'] = streams_file
 
     step['time_integrator'] = time_integrator
+    step['initial_state'] = initial_state
 
     return step
 
@@ -100,6 +104,7 @@ def setup(step, config):
     mesh_name = step['mesh_name']
     step_dir = step['work_dir']
     time_integrator = step['time_integrator']
+    initial_state = step['initial_state']
 
     # generate the namelist, replacing a few default options
     replacements = dict()
@@ -162,8 +167,9 @@ def setup(step, config):
 
     init_path = _get_init_relative_path(step)
 
-    links = {'initial_state/initial_state.nc': 'init.nc',
-             'initial_state/init_mode_forcing_data.nc':'forcing_data.nc',
+    links = {'{}/initial_state.nc'.format(initial_state): 'init.nc',
+             '{}/init_mode_forcing_data.nc'.format(initial_state):
+                 'forcing_data.nc',
              'mesh/culled_graph.info': 'graph.info'}
     for target, link in links.items():
         target = os.path.join(init_path, target)
