@@ -9,8 +9,8 @@ from compass.ocean.vertical import generate_grid, write_grid
 from compass.ocean.plot import plot_vertical_grid, plot_initial_state
 
 
-def collect(mesh_name, cores, min_cores=None, max_memory=1000,
-            max_disk=1000, threads=1):
+def collect(mesh_name, cores, min_cores=None, max_memory=1000, max_disk=1000,
+            threads=1, with_bgc=False):
     """
     Get a dictionary of step properties
 
@@ -39,6 +39,9 @@ def collect(mesh_name, cores, min_cores=None, max_memory=1000,
     threads : int, optional
         The number of threads to run with during init runs
 
+    with_bgc : bool, optional
+        Whether to include BGC variables in the initial condition
+
     Returns
     -------
     step : dict
@@ -53,6 +56,8 @@ def collect(mesh_name, cores, min_cores=None, max_memory=1000,
         min_cores = cores
     step['min_cores'] = min_cores
     step['threads'] = threads
+
+    step['with_bgc'] = with_bgc
 
     return step
 
@@ -72,19 +77,20 @@ def setup(step, config):
         for the machine, core, configuration and testcase
     """
     step_dir = step['work_dir']
+    with_bgc = step['with_bgc']
+    package = 'compass.ocean.tests.global_ocean.init'
 
     # generate the namelist, replacing a few default options
-    replacements = dict()
-
-    replacements.update(namelist.parse_replacements(
-        'compass.ocean.tests.global_ocean.init', 'namelist.init'))
+    replacements = namelist.parse_replacements(package, 'namelist.init')
+    if with_bgc:
+        replacements.update(namelist.parse_replacements(
+            package, 'namelist.bgc_ecosys'))
 
     namelist.generate(config=config, replacements=replacements,
                       step_work_dir=step_dir, core='ocean', mode='init')
 
     # generate the streams file
-    streams_data = streams.read('compass.ocean.tests.global_ocean.init',
-                                'streams.init')
+    streams_data = streams.read(package, 'streams.init')
 
     streams.generate(config=config, tree=streams_data, step_work_dir=step_dir,
                      core='ocean', mode='init')
@@ -96,13 +102,23 @@ def setup(step, config):
     outputs = []
 
     filenames = {
-        'temperature.nc': 'PTemp.Jan_p3.filled.mpas100levs.160127.nc',
-        'salinity.nc':
-            'Salt.Jan_p3.noBlackCaspian.filled.mpas100levs.160127.nc',
         'wind_stress.nc':
             'windStress.ncep_1958-2000avg.interp3600x2431.151106.nc',
         'topography.nc': 'ETOPO2v2c_f4_151106.nc',
         'swData.nc': 'chlorophyllA_monthly_averages_1deg.151201.nc'}
+    if with_bgc:
+        filenames.update({
+            'temperature.nc':
+                'PotentialTemperature.01.filled.60levels.PHC.151106.nc',
+            'salinity.nc': 'Salinity.01.filled.60levels.PHC.151106.nc',
+            'ecosys.nc': 'ecosys_jan_IC_360x180x60_corrO2_Dec2014phaeo.nc',
+            'ecosys_forcing.nc':
+                'ecoForcingAllSurface.forMPASO.interp360x180.1timeLevel.nc'})
+    else:
+        filenames.update({
+            'temperature.nc': 'PTemp.Jan_p3.filled.mpas100levs.160127.nc',
+            'salinity.nc':
+                'Salt.Jan_p3.noBlackCaspian.filled.mpas100levs.160127.nc'})
 
     for local_filename, remote_filename in filenames.items():
         # download an input file if it's not already in the initial condition
@@ -161,6 +177,7 @@ def run(step, test_suite, config, logger):
     step_dir = step['work_dir']
 
     interfaces = generate_grid(config=config)
+
     write_grid(interfaces=interfaces, out_filename='vertical_grid.nc')
     plot_vertical_grid(grid_filename='vertical_grid.nc', config=config,
                        out_filename='vertical_grid.png')

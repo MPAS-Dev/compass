@@ -5,7 +5,7 @@ from compass.validate import compare_variables
 from compass.config import add_config
 
 
-def collect(mesh_name):
+def collect(mesh_name, include_bgc=False):
     """
     Get a dictionary of testcase properties
 
@@ -13,6 +13,9 @@ def collect(mesh_name):
     ----------
     mesh_name : str
         The name of the mesh
+
+    include_bgc : bool, optional
+        Whether to include an initial condition with BGC variables
 
     Returns
     -------
@@ -28,9 +31,18 @@ def collect(mesh_name):
     step = mesh.collect(mesh_name, cores=4, min_cores=2,
                         max_memory=1000, max_disk=1000, threads=1)
     steps[step['name']] = step
-    step = initial_state.collect(mesh_name, cores=4, min_cores=2,
-                                 max_memory=1000, max_disk=1000, threads=1)
+    step = initial_state.collect(mesh_name=mesh_name, cores=4,
+                                 min_cores=2, max_memory=1000, max_disk=1000,
+                                 threads=1)
     steps[step['name']] = step
+
+    if include_bgc:
+        step = initial_state.collect(mesh_name=mesh_name, cores=4,
+                                     min_cores=2, max_memory=1000, max_disk=1000,
+                                     threads=1, with_bgc=True)
+        step['name'] = 'initial_state_bgc'
+        step['subdir'] = step['name']
+        steps[step['name']] = step
 
     testcase = get_testcase_default(module, description, steps, subdir=subdir)
     testcase['mesh_name'] = mesh_name
@@ -81,8 +93,23 @@ def run(testcase, test_suite, config, logger):
         A logger for output from the testcase
     """
     work_dir = testcase['work_dir']
+    include_bgc = 'initial_state_bgc' in testcase['steps']
     steps = ['mesh', 'initial_state']
+    if include_bgc:
+        steps.append('initial_state_bgc')
+
     run_steps(testcase, test_suite, config, steps, logger)
     variables = ['temperature', 'salinity', 'layerThickness']
     compare_variables(variables, config, work_dir,
                       filename1='initial_state/initial_state.nc')
+
+    if include_bgc:
+        variables = ['temperature', 'salinity', 'layerThickness', 'PO4', 'NO3',
+                     'SiO3', 'NH4', 'Fe', 'O2', 'DIC', 'DIC_ALT_CO2', 'ALK',
+                     'DOC', 'DON', 'DOFe', 'DOP', 'DOPr', 'DONr', 'zooC',
+                     'spChl', 'spC', 'spFe', 'spCaCO3', 'diatChl', 'diatC',
+                     'diatFe', 'diatSi', 'diazChl', 'diazC', 'diazFe',
+                     'phaeoChl', 'phaeoC', 'phaeoFe', 'DMS', 'DMSP', 'PROT',
+                     'POLY', 'LIP']
+        compare_variables(variables, config, work_dir,
+                          filename1='initial_state_bgc/initial_state.nc')
