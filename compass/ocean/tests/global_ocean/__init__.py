@@ -15,9 +15,8 @@ def collect():
     testcases = list()
     for mesh_name in ['QU240']:
         for test in [init]:
-            testcases.append(test.collect(mesh_name=mesh_name))
-
-    for mesh_name in ['QU240']:
+            testcases.append(test.collect(mesh_name=mesh_name,
+                                          include_bgc=True))
         for test in [performance_test, restart_test, decomp_test,
                      threads_test, analysis_test]:
             for time_integrator in ['split_explicit', 'RK4']:
