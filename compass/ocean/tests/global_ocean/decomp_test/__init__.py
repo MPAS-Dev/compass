@@ -21,7 +21,7 @@ def collect(mesh_name, time_integrator):
     testcase : dict
         A dict of properties of this test case, including its steps
     """
-    description = 'global ocean {} - {} restart test'.format(
+    description = 'global ocean {} - {} decomposition test'.format(
         mesh_name, time_integrator)
     module = __name__
 
@@ -29,14 +29,11 @@ def collect(mesh_name, time_integrator):
     subdir = '{}/{}/{}'.format(mesh_name, name, time_integrator)
 
     steps = dict()
-    for step_prefix in ['full', 'restart']:
-        suffix = '{}.{}'.format(time_integrator.lower(), step_prefix)
-        step = forward.collect(mesh_name=mesh_name, cores=4, threads=1,
-                               testcase_module=module,
-                               namelist_file='namelist.{}'.format(suffix),
-                               streams_file='streams.{}'.format(suffix),
+
+    for procs in [4, 8]:
+        step = forward.collect(mesh_name=mesh_name, cores=procs, threads=1,
                                time_integrator=time_integrator)
-        step['name'] = '{}_run'.format(step_prefix)
+        step['name'] = '{}proc'.format(procs)
         step['subdir'] = step['name']
         steps[step['name']] = step
 
@@ -83,9 +80,9 @@ def run(testcase, test_suite, config, logger):
     logger : logging.Logger
         A logger for output from the testcase
     """
-    steps = ['full_run', 'restart_run']
+    steps = ['4proc', '8proc']
     run_steps(testcase, test_suite, config, steps, logger)
     variables = ['temperature', 'salinity', 'layerThickness', 'normalVelocity']
     compare_variables(variables, config, work_dir=testcase['work_dir'],
-                      filename1='full_run/output.nc',
-                      filename2='restart_run/output.nc')
+                      filename1='4proc/output.nc',
+                      filename2='8proc/output.nc')
