@@ -19,7 +19,7 @@ def collect(mesh_name):
     testcase : dict
         A dict of properties of this test case, including its steps
     """
-    description = 'Global Ocean {} - Init Test'.format(mesh_name)
+    description = 'global ocean {} - init test'.format(mesh_name)
     module = __name__
 
     name = module.split('.')[-1]

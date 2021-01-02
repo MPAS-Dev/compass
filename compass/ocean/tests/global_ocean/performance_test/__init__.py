@@ -21,7 +21,7 @@ def collect(mesh_name, time_integrator):
     testcase : dict
         A dict of properties of this test case, including its steps
     """
-    description = 'Global Ocean {} - {} Performance Test'.format(
+    description = 'global ocean {} - {} performance test'.format(
         mesh_name, time_integrator)
     module = __name__
 
