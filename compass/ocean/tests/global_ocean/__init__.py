@@ -1,5 +1,5 @@
 from compass.ocean.tests.global_ocean import init, performance_test, \
-    restart_test, decomp_test, threads_test
+    restart_test, decomp_test, threads_test, analysis_test
 from compass.config import add_config
 
 
@@ -19,7 +19,7 @@ def collect():
 
     for mesh_name in ['QU240']:
         for test in [performance_test, restart_test, decomp_test,
-                     threads_test]:
+                     threads_test, analysis_test]:
             for time_integrator in ['split_explicit', 'RK4']:
                 testcases.append(test.collect(mesh_name=mesh_name,
                                               time_integrator=time_integrator))
