@@ -7,10 +7,12 @@ from compass.model import partition, run_model
 from compass.parallel import update_namelist_pio
 from compass.ocean.vertical import generate_grid, write_grid
 from compass.ocean.plot import plot_vertical_grid, plot_initial_state
+from compass.ocean.tests.global_ocean.subdir import get_mesh_relative_path
 
 
-def collect(mesh_name, cores, min_cores=None, max_memory=1000, max_disk=1000,
-            threads=1, with_bgc=False):
+def collect(mesh_name, with_ice_shelf_cavities, initial_condition, with_bgc,
+            cores, min_cores=None, max_memory=1000, max_disk=1000,
+            threads=1):
     """
     Get a dictionary of step properties
 
@@ -18,6 +20,15 @@ def collect(mesh_name, cores, min_cores=None, max_memory=1000, max_disk=1000,
     ----------
     mesh_name : str
         The name of the mesh
+
+    with_ice_shelf_cavities : bool
+        Whether the mesh should include ice-shelf cavities
+
+    initial_condition : {'PHC', 'EN4_1900'}, optional
+        The initial condition to build
+
+    with_bgc : bool, optional
+        Whether to include BGC variables in the initial condition
 
     cores : int
         The number of cores to run on in init runs. If this many cores are
@@ -39,9 +50,6 @@ def collect(mesh_name, cores, min_cores=None, max_memory=1000, max_disk=1000,
     threads : int, optional
         The number of threads to run with during init runs
 
-    with_bgc : bool, optional
-        Whether to include BGC variables in the initial condition
-
     Returns
     -------
     step : dict
@@ -57,6 +65,11 @@ def collect(mesh_name, cores, min_cores=None, max_memory=1000, max_disk=1000,
     step['min_cores'] = min_cores
     step['threads'] = threads
 
+    step['with_ice_shelf_cavities'] = with_ice_shelf_cavities
+    if initial_condition not in ['PHC', 'EN4_1900']:
+        raise ValueError('Unknown initial_condition {}'.format(
+            initial_condition))
+    step['initial_condition'] = initial_condition
     step['with_bgc'] = with_bgc
 
     return step
@@ -77,14 +90,19 @@ def setup(step, config):
         for the machine, core, configuration and testcase
     """
     step_dir = step['work_dir']
+    with_ice_shelf_cavities = step['with_ice_shelf_cavities']
+    initial_condition = step['initial_condition']
     with_bgc = step['with_bgc']
     package = 'compass.ocean.tests.global_ocean.init'
 
     # generate the namelist, replacing a few default options
     replacements = namelist.parse_replacements(package, 'namelist.init')
+    if with_ice_shelf_cavities:
+        replacements.update(namelist.parse_replacements(
+            package, 'namelist.wisc'))
     if with_bgc:
         replacements.update(namelist.parse_replacements(
-            package, 'namelist.bgc_ecosys'))
+            package, 'namelist.bgc'))
 
     namelist.generate(config=config, replacements=replacements,
                       step_work_dir=step_dir, core='ocean', mode='init')
@@ -92,33 +110,54 @@ def setup(step, config):
     # generate the streams file
     streams_data = streams.read(package, 'streams.init')
 
+    if with_ice_shelf_cavities:
+        streams_data = streams.read(package, 'streams.wisc', tree=streams_data)
+
     streams.generate(config=config, tree=streams_data, step_work_dir=step_dir,
                      core='ocean', mode='init')
 
+    bathymetry_database = config.get('paths', 'bathymetry_database')
     initial_condition_database = config.get('paths',
                                             'initial_condition_database')
 
     inputs = []
     outputs = []
 
+    remote_filename = \
+        'BedMachineAntarctica_and_GEBCO_2019_0.05_degree.200128.nc'
+    local_filename = 'topography.nc'
+
+    filename = download(
+        file_name=remote_filename,
+        url='https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/'
+            'mpas-ocean/bathymetry_database',
+        config=config, dest_path=bathymetry_database)
+
+    inputs.append(filename)
+
+    symlink(filename, os.path.join(step_dir, local_filename))
+
     filenames = {
         'wind_stress.nc':
             'windStress.ncep_1958-2000avg.interp3600x2431.151106.nc',
-        'topography.nc': 'ETOPO2v2c_f4_151106.nc',
         'swData.nc': 'chlorophyllA_monthly_averages_1deg.151201.nc'}
-    if with_bgc:
+    if initial_condition == 'PHC':
         filenames.update({
             'temperature.nc':
                 'PotentialTemperature.01.filled.60levels.PHC.151106.nc',
-            'salinity.nc': 'Salinity.01.filled.60levels.PHC.151106.nc',
+            'salinity.nc': 'Salinity.01.filled.60levels.PHC.151106.nc'})
+    else:
+        filenames.update({
+            'temperature.nc':
+                'PotentialTemperature.100levels.Levitus.EN4_1900estimate.200813.nc',
+            'salinity.nc':
+                'Salinity.100levels.Levitus.EN4_1900estimate.200813.nc'})
+
+    if with_bgc:
+        filenames.update({
             'ecosys.nc': 'ecosys_jan_IC_360x180x60_corrO2_Dec2014phaeo.nc',
             'ecosys_forcing.nc':
                 'ecoForcingAllSurface.forMPASO.interp360x180.1timeLevel.nc'})
-    else:
-        filenames.update({
-            'temperature.nc': 'PTemp.Jan_p3.filled.mpas100levs.160127.nc',
-            'salinity.nc':
-                'Salt.Jan_p3.noBlackCaspian.filled.mpas100levs.160127.nc'})
 
     for local_filename, remote_filename in filenames.items():
         # download an input file if it's not already in the initial condition
@@ -133,9 +172,15 @@ def setup(step, config):
 
         symlink(filename, os.path.join(step_dir, local_filename))
 
-    links = {'../mesh/culled_mesh.nc': 'mesh.nc',
-             '../mesh/critical_passages_mask_final.nc': 'critical_passages.nc',
-             '../mesh/culled_graph.info': 'graph.info'}
+    mesh_path = '{}/mesh/mesh'.format(get_mesh_relative_path(step))
+
+    links = {'{}/culled_mesh.nc'.format(mesh_path): 'mesh.nc',
+             '{}/critical_passages_mask_final.nc'.format(mesh_path):
+                 'critical_passages.nc',
+             '{}/culled_graph.info'.format(mesh_path): 'graph.info'}
+
+    if with_ice_shelf_cavities:
+        links['{}/land_ice_mask.nc'.format(mesh_path)] = 'land_ice_mask.nc'
     for target, link in links.items():
         symlink(target, os.path.join(step_dir, link))
         inputs.append(os.path.abspath(os.path.join(step_dir, target)))

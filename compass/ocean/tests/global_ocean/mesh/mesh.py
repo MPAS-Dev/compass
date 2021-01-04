@@ -1,14 +1,14 @@
 import os
+import sys
 
 from mpas_tools.ocean import build_spherical_mesh
 
 from compass.testcase import get_step_default
-from compass.ocean.tests.global_ocean.cull import cull_mesh
-from compass.ocean.tests.global_ocean.mesh import build_cell_width_lat_lon
+from compass.ocean.tests.global_ocean.mesh.cull import cull_mesh
 
 
 def collect(mesh_name, cores, min_cores=None, max_memory=1000,
-            max_disk=1000, threads=1):
+            max_disk=1000, threads=1, with_ice_shelf_cavities=False):
     """
     Get a dictionary of step properties
 
@@ -37,6 +37,9 @@ def collect(mesh_name, cores, min_cores=None, max_memory=1000,
     threads : int, optional
         The number of threads to run with during init runs
 
+    with_ice_shelf_cavities : bool, optional
+        Whether the mesh should include ice-shelf cavities
+
     Returns
     -------
     step : dict
@@ -51,6 +54,7 @@ def collect(mesh_name, cores, min_cores=None, max_memory=1000,
         min_cores = cores
     step['min_cores'] = min_cores
     step['threads'] = threads
+    step['with_ice_shelf_cavities'] = with_ice_shelf_cavities
 
     return step
 
@@ -103,6 +107,7 @@ def run(step, test_suite, config, logger):
         A logger for output from the step
     """
     mesh_name = step['mesh_name']
+    with_ice_shelf_cavities = step['with_ice_shelf_cavities']
     # only use progress bars if we're not writing to a log file
     use_progress_bar = 'log_filename' not in step
 
@@ -112,4 +117,70 @@ def run(step, test_suite, config, logger):
                          logger=logger, use_progress_bar=use_progress_bar)
 
     cull_mesh(with_critical_passages=True, logger=logger,
-              use_progress_bar=use_progress_bar)
+              use_progress_bar=use_progress_bar,
+              with_cavities=with_ice_shelf_cavities)
+
+
+def build_cell_width_lat_lon(mesh_name):
+    """
+    Create cell width array for this mesh on a regular latitude-longitude grid
+
+    Parameters
+    ----------
+    mesh_name : str
+        The name of the mesh
+
+    Returns
+    -------
+    cellWidth : numpy.array
+        m x n array of cell width in km
+
+    lon : numpy.array
+        longitude in degrees (length n and between -180 and 180)
+
+    lat : numpy.array
+        longitude in degrees (length m and between -90 and 90)
+    """
+
+    package, _ = get_mesh_package(mesh_name)
+    build_cell_width = getattr(package, 'build_cell_width_lat_lon')
+    return build_cell_width()
+
+
+def get_mesh_package(mesh_name):
+    """
+    Get the system module corresponding to the given mesh name
+
+    Parameters
+    ----------
+    mesh_name : str
+        The name of the mesh
+
+    Returns
+    -------
+    module : Package
+        The system module for the given mesh, one of the packages in
+        ``compass.ocean.tests.global_ocean.mesh`` with the mesh name converted
+        to lowercase
+
+    prefix : str
+        The prefix of the package (the mesh name as lowercase and with 'wisc'
+        suffix removed)
+
+    Raises
+    ------
+    ValueError
+        If the corresponding module for the given mesh does not exist
+
+    """
+    prefix = mesh_name.lower()
+    suffix = 'wisc'
+    if prefix.endswith(suffix):
+        prefix = prefix[:-len(suffix)]
+    package = 'compass.ocean.tests.global_ocean.mesh.{}'.format(prefix)
+    if package in sys.modules:
+        package = sys.modules[package]
+        return package, prefix
+    else:
+        raise ValueError('Mesh {} missing corresponding package {}'.format(
+            mesh_name, package))

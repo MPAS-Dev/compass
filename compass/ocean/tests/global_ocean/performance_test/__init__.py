@@ -1,10 +1,13 @@
 from compass.testcase import run_steps, get_testcase_default
 from compass.ocean.tests.global_ocean import forward
+from compass.ocean.tests.global_ocean.description import get_description
+from compass.ocean.tests.global_ocean.init import get_init_sudbdir
 from compass.ocean.tests import global_ocean
-from compass.validate import compare_timers
+from compass.validate import compare_variables, compare_timers
 
 
-def collect(mesh_name, time_integrator):
+def collect(mesh_name, with_ice_shelf_cavities, initial_condition, with_bgc,
+            time_integrator):
     """
     Get a dictionary of testcase properties
 
@@ -12,6 +15,15 @@ def collect(mesh_name, time_integrator):
     ----------
     mesh_name : str
         The name of the mesh
+
+    with_ice_shelf_cavities : bool
+        Whether the mesh should include ice-shelf cavities
+
+    initial_condition : {'PHC', 'EN4_1900'}
+        The initial condition to build
+
+    with_bgc : bool
+        Whether to include BGC variables in the initial condition
 
     time_integrator : {'split_explicit', 'RK4'}
         The time integrator to use for the run
@@ -21,19 +33,31 @@ def collect(mesh_name, time_integrator):
     testcase : dict
         A dict of properties of this test case, including its steps
     """
-    description = 'global ocean {} - {} performance test'.format(
-        mesh_name, time_integrator)
+    description = get_description(
+        mesh_name, initial_condition, with_bgc, time_integrator,
+        description='performance and validation test')
     module = __name__
 
+    init_subdir = get_init_sudbdir(mesh_name, initial_condition, with_bgc)
+
     name = module.split('.')[-1]
-    subdir = '{}/{}/{}'.format(mesh_name, name, time_integrator)
+    subdir = '{}/{}/{}'.format(init_subdir, name, time_integrator)
     steps = dict()
-    step = forward.collect(mesh_name=mesh_name, cores=4, threads=1,
-                           time_integrator=time_integrator)
+    if with_ice_shelf_cavities:
+        step = forward.collect(mesh_name, with_ice_shelf_cavities, with_bgc,
+                               time_integrator, cores=4, threads=1,
+                               testcase_module=module,
+                               namelist_file='namelist.wisc',
+                               streams_file='streams.wisc')
+    else:
+        step = forward.collect(mesh_name, with_ice_shelf_cavities, with_bgc,
+                               time_integrator, cores=4, threads=1)
     steps[step['name']] = step
 
     testcase = get_testcase_default(module, description, steps, subdir=subdir)
     testcase['mesh_name'] = mesh_name
+    testcase['with_ice_shelf_cavities'] = with_ice_shelf_cavities
+    testcase['with_bgc'] = with_bgc
 
     return testcase
 
@@ -77,6 +101,37 @@ def run(testcase, test_suite, config, logger):
     """
     steps = ['forward']
     work_dir = testcase['work_dir']
+    with_ice_shelf_cavities = testcase['with_ice_shelf_cavities']
+    with_bgc = testcase['with_bgc']
     run_steps(testcase, test_suite, config, steps, logger)
+
+    variables = ['temperature', 'salinity', 'layerThickness', 'normalVelocity']
+
+    if with_bgc:
+        variables.extend(
+            ['PO4', 'NO3', 'SiO3', 'NH4', 'Fe', 'O2', 'DIC', 'DIC_ALT_CO2',
+             'ALK', 'DOC', 'DON', 'DOFe', 'DOP', 'DOPr', 'DONr', 'zooC',
+             'spChl', 'spC', 'spFe', 'spCaCO3', 'diatChl', 'diatC', 'diatFe',
+             'diatSi', 'diazChl', 'diazC', 'diazFe', 'phaeoChl', 'phaeoC',
+             'phaeoFe'])
+
+    compare_variables(variables, config, work_dir=testcase['work_dir'],
+                      filename1='forward/output.nc')
+
+    if with_ice_shelf_cavities:
+        variables = ['ssh', 'landIcePressure', 'landIceDraft',
+                     'landIceFraction', 'landIceMask',
+                     'landIceFrictionVelocity', 'topDrag', 'topDragMagnitude',
+                     'landIceFreshwaterFlux', 'landIceHeatFlux',
+                     'heatFluxToLandIce', 'landIceBoundaryLayerTemperature',
+                     'landIceBoundaryLayerSalinity',
+                     'landIceHeatTransferVelocity',
+                     'landIceSaltTransferVelocity',
+                     'landIceInterfaceTemperature', 'landIceInterfaceSalinity',
+                     'accumulatedLandIceMass', 'accumulatedLandIceHeat']
+
+        compare_variables(variables, config, work_dir=testcase['work_dir'],
+                          filename1='forward/land_ice_fluxes.nc')
+
     timers = ['time integration']
     compare_timers(timers, config, work_dir, rundir1='forward')

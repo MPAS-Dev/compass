@@ -2,9 +2,12 @@ from compass.testcase import run_steps, get_testcase_default
 from compass.ocean.tests.global_ocean import forward
 from compass.ocean.tests import global_ocean
 from compass.validate import compare_variables
+from compass.ocean.tests.global_ocean.description import get_description
+from compass.ocean.tests.global_ocean.init import get_init_sudbdir
 
 
-def collect(mesh_name, time_integrator):
+def collect(mesh_name, with_ice_shelf_cavities, initial_condition, with_bgc,
+            time_integrator):
     """
     Get a dictionary of testcase properties
 
@@ -12,6 +15,15 @@ def collect(mesh_name, time_integrator):
     ----------
     mesh_name : str
         The name of the mesh
+
+    with_ice_shelf_cavities : bool
+        Whether the mesh should include ice-shelf cavities
+
+    initial_condition : {'PHC', 'EN4_1900'}
+        The initial condition to build
+
+    with_bgc : bool
+        Whether to include BGC variables in the initial condition
 
     time_integrator : {'split_explicit', 'RK4'}
         The time integrator to use for the run
@@ -21,18 +33,20 @@ def collect(mesh_name, time_integrator):
     testcase : dict
         A dict of properties of this test case, including its steps
     """
-    description = 'global ocean {} - {} thread test'.format(
-        mesh_name, time_integrator)
+    description = get_description(
+        mesh_name, initial_condition, with_bgc, time_integrator,
+        description='thread test')
     module = __name__
 
+    init_subdir = get_init_sudbdir(mesh_name, initial_condition, with_bgc)
+
     name = module.split('.')[-1]
-    subdir = '{}/{}/{}'.format(mesh_name, name, time_integrator)
+    subdir = '{}/{}/{}'.format(init_subdir, name, time_integrator)
 
     steps = dict()
     for threads in [1, 2]:
-        step = forward.collect(mesh_name=mesh_name, cores=4, threads=threads,
-                               testcase_module=module,
-                               time_integrator=time_integrator)
+        step = forward.collect(mesh_name, with_ice_shelf_cavities, with_bgc,
+                               time_integrator, cores=4, threads=threads)
         step['name'] = '{}thread'.format(4*threads)
         step['subdir'] = step['name']
         steps[step['name']] = step
