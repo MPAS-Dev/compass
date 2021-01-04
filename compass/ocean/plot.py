@@ -182,7 +182,7 @@ def plot_vertical_grid(grid_filename, config,
         min_layer_thickness = config.getfloat('vertical_grid',
                                               'min_layer_thickness')
         txt.extend(
-            ['min thickness reqeusted: {:8.2f}'.format(min_layer_thickness),
+            ['min thickness requested: {:8.2f}'.format(min_layer_thickness),
              'min thickness actual:    {:8.2f}'.format(
                  np.amin(layerThickness[:]))])
 
@@ -190,11 +190,12 @@ def plot_vertical_grid(grid_filename, config,
         max_layer_thickness = config.getfloat('vertical_grid',
                                               'max_layer_thickness')
         txt.extend(
-            ['max thickness reqeusted: {:8.2f}'.format(max_layer_thickness),
+            ['max thickness requested: {:8.2f}'.format(max_layer_thickness),
              'max thickness actual:    {:8.2f}'.format(
                  np.amax(layerThickness[:]))])
 
-    print('\n'.join(txt))
+    txt = '\n'.join(txt)
+    print(txt)
     plt.subplot(2, 2, 4)
     plt.text(0, 0, txt, fontsize=12)
     plt.axis('off')
