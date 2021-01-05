@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 import numpy as np
 from mpas_tools.ocean import build_spherical_mesh
-
+from channel import channel
+from jigsaw_to_netcdf_periodic import jigsaw_to_netcdf_periodic
 
 def cellWidthVsLatLon():
     """
@@ -31,8 +32,13 @@ def cellWidthVsLatLon():
 
 def main():
     cellWidth, lon, lat = cellWidthVsLatLon()
-    build_spherical_mesh(cellWidth, lon, lat, out_filename='base_mesh.nc')
-
+    #build_spherical_mesh(cellWidth, lon, lat, out_filename='base_mesh.nc')
+    channel()
+    msh_filename = 'mesh.msh'
+    output_name = 'base_mesh.nc'
+    on_sphere = True
+    SPHERE_RADIUS = +6371.0
+    jigsaw_to_netcdf_periodic(msh_filename, output_name, on_sphere, sphere_radius=SPHERE_RADIUS)
 
 if __name__ == '__main__':
     main()
