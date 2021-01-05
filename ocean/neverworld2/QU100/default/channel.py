@@ -113,8 +113,15 @@ def channel():
     apos[:, 0] = apos[:, 0] + 60. * np.pi / 180.
 
     posL = init.point
+
+# added by Mark:
+    posL["IDtag"] = np.arange(1,len(posL)+1)
+
     posR = np.copy(posL)
     posR["coord"] = jigsawpy.S2toR3(geom.radii, apos)
+
+# added by Mark:
+    posR["IDtag"] = -1*np.arange(1,len(posL)+1)
 
     idxL = init.edge2
     idxR = np.copy(idxL)
@@ -144,6 +151,9 @@ def channel():
 #-- 3. EXTRACT CHANNEL "PART" FROM FULL SPHERICAL MESH
 
     segment(mesh)
+    # added by Mark:
+    opts.mesh_file = "mesh_final.msh"
+    jigsawpy.savemsh(opts.mesh_file, mesh)
 
 #-- in this case (based on the geometry) there are two
 #-- "connected regions" in the mesh...
