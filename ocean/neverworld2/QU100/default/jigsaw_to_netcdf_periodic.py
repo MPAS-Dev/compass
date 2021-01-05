@@ -10,7 +10,7 @@ from mpas_tools.mesh.creation.util import circumcenter
 import argparse
 
 
-def jigsaw_to_netcdf(msh_filename, output_name, on_sphere, sphere_radius=None):
+def jigsaw_to_netcdf_periodic(msh_filename, output_name, on_sphere, sphere_radius=None):
     """
     Converts mesh data defined in triangle format to NetCDF
 
