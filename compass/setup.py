@@ -177,6 +177,10 @@ def setup_case(path, testcase, config_file, machine, work_dir, baseline_dir):
         symlink(os.path.join('..', testcase_config),
                 os.path.join(step_dir, testcase_config))
 
+        testcase_pickle = '{}.pickle'.format(testcase['name'])
+        symlink(os.path.join('..', testcase_pickle),
+                os.path.join(step_dir, 'testcase_{}'.format(testcase_pickle)))
+
         step['work_dir'] = step_dir
         step['base_work_dir'] = work_dir
         step['config'] = testcase_config
@@ -186,10 +190,10 @@ def setup_case(path, testcase, config_file, machine, work_dir, baseline_dir):
         setup(step, config)
 
         # write a run script for each step
-        _write_run(step, 'step.template')
+        _write_run('step.template', testcase, step=step)
 
     # write a run script for each testcase
-    _write_run(testcase, 'testcase.template')
+    _write_run('testcase.template', testcase)
 
 
 def main():
@@ -226,8 +230,13 @@ def main():
                 work_dir=args.work_dir, baseline_dir=args.baseline_dir)
 
 
-def _write_run(test, template_name):
+def _write_run(template_name, testcase, step=None):
     """pickle the test/step info and write the run script"""
+
+    if step is None:
+        test = testcase
+    else:
+        test = step
 
     # if compass/__init__.py exists, we're using a local version of the compass
     # package and we'll want to link to that in the tests and steps
@@ -242,4 +251,4 @@ def _write_run(test, template_name):
         pickle.dump(test, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
     # write a run script
-    generate_run(test, template_name)
+    generate_run(template_name, testcase, step=step)
