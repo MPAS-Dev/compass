@@ -94,5 +94,4 @@ def run(testcase, test_suite, config, logger):
     # typically, this involves running all the steps in the testcase in the
     # desired sequence.  However, it may involve only running a subset of steps
     # if some are optional and not performed by default.
-    steps = ['step1', 'step2']
-    run_steps(testcase, test_suite, config, steps, logger)
+    run_steps(testcase, test_suite, config, logger)
