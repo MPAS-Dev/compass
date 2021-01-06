@@ -100,5 +100,4 @@ def run(testcase, test_suite, config, logger):
         A logger for output from the testcase
     """
     # just run all the steps in the order they were added
-    steps = list(testcase['steps'])
-    run_steps(testcase, test_suite, config, steps, logger)
+    run_steps(testcase, test_suite, config, logger)
