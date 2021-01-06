@@ -32,6 +32,22 @@ def collect():
                             mesh_name, with_ice_shelf_cavities,
                             initial_condition, with_bgc, time_integrator))
 
+    # for other meshes, we do fewer tests
+    for mesh_name, with_ice_shelf_cavities in [('EC30to60', False),
+                                               ('ECwISC30to60', True)]:
+        testcases.append(mesh.collect(mesh_name, with_ice_shelf_cavities))
+
+        for initial_condition in ['PHC', 'EN4_1900']:
+            with_bgc = False
+            time_integrator = 'split_explicit'
+            testcases.append(init.collect(
+                mesh_name, with_ice_shelf_cavities, initial_condition,
+                with_bgc))
+            for test in [performance_test]:
+                testcases.append(test.collect(
+                    mesh_name, with_ice_shelf_cavities,
+                    initial_condition, with_bgc, time_integrator))
+
     return testcases
 
 
