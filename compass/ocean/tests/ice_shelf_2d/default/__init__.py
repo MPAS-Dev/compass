@@ -75,8 +75,7 @@ def run(testcase, test_suite, config, logger):
     logger : logging.Logger
         A logger for output from the testcase
     """
-    steps = ['initial_state', 'ssh_adjustment', 'forward']
-    run_steps(testcase, test_suite, config, steps, logger)
+    run_steps(testcase, test_suite, config, logger)
 
     variables = ['temperature', 'salinity', 'layerThickness', 'normalVelocity']
     compare_variables(variables, config, work_dir=testcase['work_dir'],
