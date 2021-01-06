@@ -93,20 +93,23 @@ def run(testcase, test_suite, config, logger):
         A logger for output from the testcase
     """
     work_dir = testcase['work_dir']
-    steps = ['initial_state', 'forward']
-    run_steps(testcase, test_suite, config, steps, logger)
-    variables = ['temperature', 'layerThickness']
-    compare_variables(variables, config, work_dir,
-                      filename1='forward/output/output.0001-01-01_00.00.00.nc')
+    run_steps(testcase, test_suite, config, logger)
 
-    variables = ['xParticle', 'yParticle', 'zParticle', 'zLevelParticle',
-                 'buoyancyParticle', 'indexToParticleID', 'currentCell',
-                 'transfered', 'numTimesReset']
-    compare_variables(variables, config, work_dir,
-                      filename1='forward/analysis_members/'
-                                'lagrPartTrack.0001-01-01_00.00.00.nc')
+    steps = testcase['steps_to_run']
+    if 'forward' in steps:
+        variables = ['temperature', 'layerThickness']
+        compare_variables(
+            variables, config, work_dir,
+            filename1='forward/output/output.0001-01-01_00.00.00.nc')
 
-    timers = ['init_lagrPartTrack', 'compute_lagrPartTrack',
-              'write_lagrPartTrack', 'restart_lagrPartTrack',
-              'finalize_lagrPartTrack']
-    compare_timers(timers, config, work_dir, rundir1='forward')
+        variables = ['xParticle', 'yParticle', 'zParticle', 'zLevelParticle',
+                     'buoyancyParticle', 'indexToParticleID', 'currentCell',
+                     'transfered', 'numTimesReset']
+        compare_variables(variables, config, work_dir,
+                          filename1='forward/analysis_members/'
+                                    'lagrPartTrack.0001-01-01_00.00.00.nc')
+
+        timers = ['init_lagrPartTrack', 'compute_lagrPartTrack',
+                  'write_lagrPartTrack', 'restart_lagrPartTrack',
+                  'finalize_lagrPartTrack']
+        compare_timers(timers, config, work_dir, rundir1='forward')
