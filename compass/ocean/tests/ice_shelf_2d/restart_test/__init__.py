@@ -91,30 +91,36 @@ def run(testcase, test_suite, config, logger):
     logger : logging.Logger
         A logger for output from the testcase
     """
-    steps = ['initial_state', 'ssh_adjustment', 'full_run', 'restart_run']
-    run_steps(testcase, test_suite, config, steps, logger)
+    run_steps(testcase, test_suite, config, logger)
     variables = ['temperature', 'salinity', 'layerThickness', 'normalVelocity']
-    compare_variables(variables, config, work_dir=testcase['work_dir'],
-                      filename1='full_run/output.nc',
-                      filename2='restart_run/output.nc')
 
-    variables = ['ssh', 'landIcePressure', 'landIceDraft', 'landIceFraction',
-                 'landIceMask', 'landIceFrictionVelocity', 'topDrag',
-                 'topDragMagnitude', 'landIceFreshwaterFlux',
-                 'landIceHeatFlux', 'heatFluxToLandIce',
-                 'landIceBoundaryLayerTemperature',
-                 'landIceBoundaryLayerSalinity', 'landIceHeatTransferVelocity',
-                 'landIceSaltTransferVelocity', 'landIceInterfaceTemperature',
-                 'landIceInterfaceSalinity', 'accumulatedLandIceMass',
-                 'accumulatedLandIceHeat']
-    compare_variables(variables, config, work_dir=testcase['work_dir'],
-                      filename1='full_run/land_ice_fluxes.nc',
-                      filename2='restart_run/land_ice_fluxes.nc')
+    steps = testcase['steps_to_run']
+    if 'full_run' in steps and 'restart_run' in steps:
+        compare_variables(variables, config, work_dir=testcase['work_dir'],
+                          filename1='full_run/output.nc',
+                          filename2='restart_run/output.nc')
 
-    variables = ['accumulatedFrazilIceMass', 'accumulatedFrazilIceSalinity',
-                 'seaIceEnergy', 'frazilLayerThicknessTendency',
-                 'frazilTemperatureTendency', 'frazilSalinityTendency',
-                 'frazilSurfacePressure', 'accumulatedLandIceFrazilMass']
-    compare_variables(variables, config, work_dir=testcase['work_dir'],
-                      filename1='full_run/frazil.nc',
-                      filename2='restart_run/frazil.nc')
+        variables = ['ssh', 'landIcePressure', 'landIceDraft',
+                     'landIceFraction',
+                     'landIceMask', 'landIceFrictionVelocity', 'topDrag',
+                     'topDragMagnitude', 'landIceFreshwaterFlux',
+                     'landIceHeatFlux', 'heatFluxToLandIce',
+                     'landIceBoundaryLayerTemperature',
+                     'landIceBoundaryLayerSalinity',
+                     'landIceHeatTransferVelocity',
+                     'landIceSaltTransferVelocity',
+                     'landIceInterfaceTemperature',
+                     'landIceInterfaceSalinity', 'accumulatedLandIceMass',
+                     'accumulatedLandIceHeat']
+        compare_variables(variables, config, work_dir=testcase['work_dir'],
+                          filename1='full_run/land_ice_fluxes.nc',
+                          filename2='restart_run/land_ice_fluxes.nc')
+
+        variables = ['accumulatedFrazilIceMass',
+                     'accumulatedFrazilIceSalinity',
+                     'seaIceEnergy', 'frazilLayerThicknessTendency',
+                     'frazilTemperatureTendency', 'frazilSalinityTendency',
+                     'frazilSurfacePressure', 'accumulatedLandIceFrazilMass']
+        compare_variables(variables, config, work_dir=testcase['work_dir'],
+                          filename1='full_run/frazil.nc',
+                          filename2='restart_run/frazil.nc')
