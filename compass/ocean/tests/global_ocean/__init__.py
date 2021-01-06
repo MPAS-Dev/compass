@@ -2,6 +2,7 @@ from compass.ocean.tests.global_ocean import mesh, init, performance_test, \
     restart_test, decomp_test, threads_test, analysis_test, daily_output_test
 from compass.config import add_config
 from compass.ocean.tests.global_ocean.mesh.mesh import get_mesh_package
+from compass.ocean.tests.global_ocean.init import add_descriptions_to_config
 
 
 def collect():
@@ -73,3 +74,4 @@ def configure(testcase, config):
     add_config(config, 'compass.ocean.tests.global_ocean.{}'.format(name),
                '{}.cfg'.format(name), exception=False)
 
+    add_descriptions_to_config(testcase, config)

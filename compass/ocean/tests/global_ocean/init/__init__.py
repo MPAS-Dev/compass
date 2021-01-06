@@ -29,8 +29,6 @@ def collect(mesh_name, with_ice_shelf_cavities, initial_condition, with_bgc):
         A dict of properties of this test case, including its steps
     """
 
-    mesh_params = {'QU240': {'cores': 4, 'min_cores': 2},}
-
     module = __name__
     if with_bgc:
         desc_initial_condition = '{} with BGC'.format(initial_condition)
@@ -142,3 +140,44 @@ def run(testcase, test_suite, config, logger):
         variables = ['ssh', 'landIcePressure']
         compare_variables(variables, config, work_dir,
                           filename1='ssh_adjustment/adjusted_init.nc')
+
+
+def add_descriptions_to_config(testcase, config):
+    """
+    Modify the configuration options for this testcase to include a
+    description of the initial condition, bathymetry, and whether ice-shelf
+    cavities and biogeochemistry were included
+
+    Parameters
+    ----------
+    testcase : dict
+        A dictionary of properties of this testcase from the ``collect()``
+        function
+
+    config : configparser.ConfigParser
+        Configuration options for this testcase, a combination of the defaults
+        for the machine, core and configuration
+    """
+    # add a description of the initial condition
+    if 'initial_condition' in testcase:
+        initial_condition = testcase['initial_condition']
+        descriptions = {'PHC': 'Polar science center Hydrographic Climatology',
+                        'EN4_1900':
+                            "Met Office Hadley Centre's EN4 dataset from 1900"}
+        config.set('global_ocean', 'init_description',
+                   descriptions[initial_condition])
+
+    # a description of the bathymetry
+    config.set('global_ocean', 'bathy_description',
+               'Bathymetry is from GEBCO 2019, combined with BedMachine '
+               'Antarctica around Antarctica.')
+
+    if 'with_bgc' in testcase and testcase['with_bgc']:
+        # todo: this needs to be filled in!
+        config.set('global_ocean', 'bgc_description',
+                   '<<<Missing>>>')
+
+    if 'with_ice_shelf_cavities' in testcase and \
+            testcase['with_ice_shelf_cavities']:
+        config.set('global_ocean', 'wisc_description',
+                   'Includes cavities under the ice shelves around Antarctica')
