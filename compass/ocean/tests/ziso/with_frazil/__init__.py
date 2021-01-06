@@ -89,16 +89,19 @@ def run(testcase, test_suite, config, logger):
         A logger for output from the testcase
     """
     work_dir = testcase['work_dir']
-    steps = ['initial_state', 'forward']
-    run_steps(testcase, test_suite, config, steps, logger)
+    run_steps(testcase, test_suite, config, logger)
 
-    variables = ['temperature', 'layerThickness']
-    compare_variables(variables, config, work_dir,
-                      filename1='forward/output/output.0001-01-01_00.00.00.nc')
+    steps = testcase['steps_to_run']
+    if 'forward' in steps:
+        variables = ['temperature', 'layerThickness']
+        compare_variables(
+            variables, config, work_dir,
+            filename1='forward/output/output.0001-01-01_00.00.00.nc')
 
-    variables = ['accumulatedFrazilIceMass', 'accumulatedFrazilIceSalinity',
-                 'seaIceEnergy', 'frazilLayerThicknessTendency',
-                 'frazilTemperatureTendency', 'frazilSalinityTendency',
-                 'frazilSurfacePressure', 'accumulatedLandIceFrazilMass']
-    compare_variables(variables, config, work_dir,
-                      filename1='forward/frazil.nc')
+        variables = ['accumulatedFrazilIceMass',
+                     'accumulatedFrazilIceSalinity',
+                     'seaIceEnergy', 'frazilLayerThicknessTendency',
+                     'frazilTemperatureTendency', 'frazilSalinityTendency',
+                     'frazilSurfacePressure', 'accumulatedLandIceFrazilMass']
+        compare_variables(variables, config, work_dir,
+                          filename1='forward/frazil.nc')
