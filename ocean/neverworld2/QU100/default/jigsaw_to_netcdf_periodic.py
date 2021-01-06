@@ -45,7 +45,6 @@ def jigsaw_to_netcdf_periodic(msh_filename, init_filename, output_name, on_spher
         ValueError("This script can only compute vertices with triangular "
                    "dual meshes currently.")
 
-    grid.createDimension('nCells', nCells)
     grid.createDimension('nVertices', nVertices)
     grid.createDimension('vertexDegree', vertexDegree)
 
@@ -65,8 +64,7 @@ def jigsaw_to_netcdf_periodic(msh_filename, init_filename, output_name, on_spher
     # IDtagBC is an index to the boundary cells, where +/- are matching.
     IDtagBC = init['POINT'][:, 3].astype(int)
 
-    cullCell = grid.createVariable('cullCell', 'i4', ('nCells',))
-    cullCell[:] = 0
+    cullCell = np.zeros(nCells, dtype=int)
     iCellBCKeep = np.zeros(int(nCellsBC/2+1), dtype=int)
     iCellBCRemove = np.zeros(int(nCellsBC/2+1), dtype=int)
 
@@ -100,10 +98,10 @@ def jigsaw_to_netcdf_periodic(msh_filename, init_filename, output_name, on_spher
         if found == False:
             print('BC cell not found for iCellBC = ',iCellBC)
 
-    iCellReplacement = np.arange(nCells,dtype=int)
+    iCellBCReplacement = np.arange(nCells,dtype=int)
     for iCellBC in range(1,int(nCellsBC/2)+1):
         #print('iCellBC:',iCellBC,'iCellBCKeep[iCellBC]',iCellBCKeep[iCellBC],'iCellBCRemove[iCellBC]',iCellBCRemove[iCellBC])
-        iCellReplacement[iCellBCRemove[iCellBC]] = iCellBCKeep[iCellBC]
+        iCellBCReplacement[iCellBCRemove[iCellBC]] = iCellBCKeep[iCellBC]
 
     if on_sphere:
         grid.on_a_sphere = "YES"
@@ -148,23 +146,42 @@ def jigsaw_to_netcdf_periodic(msh_filename, init_filename, output_name, on_spher
         zVertex_full[iVertex] = pv.z
 
         # change vertex cell pointers for removed boundary cells
-        cellsOnVertex_full[iVertex, 0] = iCellReplacement[cell1 - 1] + 1
-        cellsOnVertex_full[iVertex, 1] = iCellReplacement[cell2 - 1] + 1
-        cellsOnVertex_full[iVertex, 2] = iCellReplacement[cell3 - 1] + 1
+        cellsOnVertex_full[iVertex, 0] = iCellBCReplacement[cell1 - 1] + 1
+        cellsOnVertex_full[iVertex, 1] = iCellBCReplacement[cell2 - 1] + 1
+        cellsOnVertex_full[iVertex, 2] = iCellBCReplacement[cell3 - 1] + 1
 
-    meshDensity_full = grid.createVariable('meshDensity', 'f8', ('nCells',))
+    nCellsRO = int(nCells - nCellsBC/2)
+    grid.createDimension('nCells', nCellsRO)
+    iCellReorder = np.zeros(nCells,dtype=int)
+    # is this zeros or ones based?
+    iCellRO = 0
+    for iCell in range(nCells):
+        if cullCell[iCell]==0:
+            iCellReorder[iCell] = iCellRO
+# Compress variables in memory by removing culled cells.
+# Note these variables are zero-based within this code.
+            xCell_full[iCellRO] = xCell_full[iCell]
+            yCell_full[iCellRO] = yCell_full[iCell]
+            zCell_full[iCellRO] = zCell_full[iCell]
+            iCellRO += 1
 
-    for iCell in np.arange(0, nCells):
-        meshDensity_full[iCell] = 1.0
+    # find location of vertices
+    for iVertex in np.arange(0, nVertices):
+        cell1 = cellsOnVertex_full[iVertex, 0]
+        cell2 = cellsOnVertex_full[iVertex, 1]
+        cell3 = cellsOnVertex_full[iVertex, 2]
 
-    del meshDensity_full
+        # change vertex cell pointers for removed boundary cells
+        cellsOnVertex_full[iVertex, 0] = iCellReorder[cell1 - 1] + 1
+        cellsOnVertex_full[iVertex, 1] = iCellReorder[cell2 - 1] + 1
+        cellsOnVertex_full[iVertex, 2] = iCellReorder[cell3 - 1] + 1
 
     var = grid.createVariable('xCell', 'f8', ('nCells',))
-    var[:] = xCell_full
+    var[:] = xCell_full[0:nCellsRO]
     var = grid.createVariable('yCell', 'f8', ('nCells',))
-    var[:] = yCell_full
+    var[:] = yCell_full[0:nCellsRO]
     var = grid.createVariable('zCell', 'f8', ('nCells',))
-    var[:] = zCell_full
+    var[:] = zCell_full[0:nCellsRO]
     var = grid.createVariable('xVertex', 'f8', ('nVertices',))
     var[:] = xVertex_full
     var = grid.createVariable('yVertex', 'f8', ('nVertices',))
