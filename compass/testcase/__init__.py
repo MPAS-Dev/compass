@@ -103,11 +103,13 @@ def get_testcase_default(module, description, steps, subdir=None):
                 'description': description,
                 'steps': steps,
                 'configure': configure,
-                'run': 'run'}
+                'run': 'run',
+                'new_step_log_file': True,
+                'steps_to_run': list(steps.keys())}
     return testcase
 
 
-def run_steps(testcase, test_suite, config, steps, logger):
+def run_steps(testcase, test_suite, config, logger):
     """
     Run the requested steps of a testcase
 
@@ -115,7 +117,7 @@ def run_steps(testcase, test_suite, config, steps, logger):
     ----------
     testcase : dict
         The dictionary describing the testcase with info from
-        :py:func:`compass.testcase.get_default()` and any additional
+        :py:func:`compass.testcase.get_testcase_default()` and any additional
         information added when collecting and setting up the testcase.
 
     test_suite : dict
@@ -124,76 +126,120 @@ def run_steps(testcase, test_suite, config, steps, logger):
     config : configparser.ConfigParser
         Configuration options for this testcase
 
-    steps : list
-        A list of the names of the steps from ``testcase['steps']`` to run
-
     logger : logging.Logger
         A logger for output from the testcase
     """
     cwd = os.getcwd()
-    for step_name in steps:
+    for step_name in testcase['steps_to_run']:
         step = testcase['steps'][step_name]
-
-        if 'cores' in step:
-            available_cores, _ = get_available_cores_and_nodes(config)
-            step['cores'] = min(step['cores'], available_cores)
-        else:
-            logger.warning('Core count not specified for step {}. Default is '
-                           '1 core.'.format(step_name))
-            step['cores'] = 1
-        if 'min_cores' in step:
-            if step['cores'] < step['min_cores']:
-                raise ValueError(
-                    'Available cores for {} is below the minimum of {}'
-                    ''.format(step['cores'], step['min_cores']))
-
-        logger.info(' * Running {}'.format(step_name))
-
-        test_name = step['path'].replace('/', '_')
+        new_log_file = testcase['new_step_log_file']
         if 'log_filename' in testcase:
             step['log_filename'] = testcase['log_filename']
-            step_logger = logger
-            log_filename = None
+            do_local_logging = True
         else:
-            log_filename = '{}/{}.log'.format(cwd, step_name)
-            step['log_filename'] = log_filename
-            step_logger = None
-        with LoggingContext(name=test_name, logger=step_logger,
-                            log_filename=log_filename) as step_logger:
+            # We only want to do local log output if the step output is being
+            # redirected to a file.  Otherwise, we assume we're probably just
+            # running one step and the local logging is redundant and
+            # unnecessary
+            do_local_logging = new_log_file
 
-            run = getattr(sys.modules[step['module']], step['run'])
-            os.chdir(step['work_dir'])
-
-            try:
-                run(step, test_suite, config, step_logger)
-            except BaseException:
+        if do_local_logging:
+            logger.info(' * Running {}'.format(step_name))
+        try:
+            run_step(step, test_suite, config, logger, new_log_file)
+        except BaseException:
+            if do_local_logging:
                 logger.info('     Failed')
-                raise
+            raise
 
-        logger.info('     Complete')
+        if do_local_logging:
+            logger.info('     Complete')
 
     os.chdir(cwd)
 
 
-def generate_run(step, template_name):
+def run_step(step, test_suite, config, logger, new_log_file):
+    """
+    Run the requested step of a testcase
+
+    Parameters
+    ----------
+    step : dict
+        The dictionary describing the step with info from
+        :py:func:`compass.testcase.get_step_default()` and any additional
+        information added when collecting and setting up the step.
+
+    test_suite : dict
+        A dictionary of properties of the test suite
+
+    config : configparser.ConfigParser
+        Configuration options for this testcase
+
+    logger : logging.Logger
+        A logger for output from the testcase
+
+    new_log_file : bool
+        Whether to log to a new log file
+    """
+    cwd = os.getcwd()
+    step_name = step['name']
+    if 'cores' in step:
+        available_cores, _ = get_available_cores_and_nodes(config)
+        step['cores'] = min(step['cores'], available_cores)
+    else:
+        logger.warning('Core count not specified for step {}. Default is '
+                       '1 core.'.format(step_name))
+        step['cores'] = 1
+    if 'min_cores' in step:
+        if step['cores'] < step['min_cores']:
+            raise ValueError(
+                'Available cores for {} is below the minimum of {}'
+                ''.format(step['cores'], step['min_cores']))
+
+    test_name = step['path'].replace('/', '_')
+    if new_log_file:
+        log_filename = '{}/{}.log'.format(cwd, step_name)
+        step['log_filename'] = log_filename
+        step_logger = None
+    else:
+        step_logger = logger
+        log_filename = None
+    with LoggingContext(name=test_name, logger=step_logger,
+                        log_filename=log_filename) as step_logger:
+        run = getattr(sys.modules[step['module']], step['run'])
+        os.chdir(step['work_dir'])
+
+        run(step, test_suite, config, step_logger)
+
+
+def generate_run(template_name, testcase, step=None):
     """
     Generate a ``run.py`` script for the given testcase or step.
 
     Parameters
     ----------
-    step : dict
-        The dictionary of information about the step, used to fill in the
-        script template
-
     template_name : str
         The name of the template file to use to create the run script
+
+    testcase : dict
+        The dictionary of information about the testcase, used to fill in the
+        script template
+
+    step : dict, optional
+        The dictionary of information about the step, used to fill in the
+        script template
     """
-    step_dir = step['work_dir']
 
     template = Template(resources.read_text('compass.testcase', template_name))
-    script = template.render(step=step)
+    kwargs = {'testcase': testcase}
+    if step is None:
+        work_dir = testcase['work_dir']
+    else:
+        work_dir = step['work_dir']
+        kwargs['step'] = step
+    script = template.render(**kwargs)
 
-    run_filename = os.path.join(step_dir, 'run.py')
+    run_filename = os.path.join(work_dir, 'run.py')
     with open(run_filename, 'w') as handle:
         handle.write(script)
 
