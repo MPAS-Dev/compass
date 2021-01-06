@@ -71,5 +71,4 @@ def run(testcase, test_suite, config, logger):
     logger : logging.Logger
         A logger for output from the testcase
     """
-    steps = ['initial_state', 'forward']
-    run_steps(testcase, test_suite, config, steps, logger)
+    run_steps(testcase, test_suite, config, logger)

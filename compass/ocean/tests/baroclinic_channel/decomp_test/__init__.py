@@ -76,9 +76,10 @@ def run(testcase, test_suite, config, logger):
     logger : logging.Logger
         A logger for output from the testcase
     """
-    steps = ['initial_state', '4proc', '8proc']
-    run_steps(testcase, test_suite, config, steps, logger)
+    run_steps(testcase, test_suite, config, logger)
     variables = ['temperature', 'salinity', 'layerThickness', 'normalVelocity']
-    compare_variables(variables, config, work_dir=testcase['work_dir'],
-                      filename1='4proc/output.nc',
-                      filename2='8proc/output.nc')
+    steps = testcase['steps_to_run']
+    if '4proc' in steps and '8proc' in steps:
+        compare_variables(variables, config, work_dir=testcase['work_dir'],
+                          filename1='4proc/output.nc',
+                          filename2='8proc/output.nc')
