@@ -10,7 +10,7 @@ from mpas_tools.mesh.creation.util import circumcenter
 import argparse
 
 
-def jigsaw_to_netcdf_periodic(msh_filename, output_name, on_sphere, sphere_radius=None):
+def jigsaw_to_netcdf_periodic(msh_filename, init_filename, output_name, on_sphere, sphere_radius=None):
     """
     Converts mesh data defined in triangle format to NetCDF
 
@@ -18,6 +18,8 @@ def jigsaw_to_netcdf_periodic(msh_filename, output_name, on_sphere, sphere_radiu
     ----------
     msh_filename : str
         A JIGSAW mesh file name
+    init_filename : str
+        A JIGSAW mesh file name which contains fixed boundary cells
     output_name: str
         The name of the output file
     on_sphere : bool
@@ -26,7 +28,7 @@ def jigsaw_to_netcdf_periodic(msh_filename, output_name, on_sphere, sphere_radiu
         The radius of the sphere in meters.  If ``on_sphere=True`` this argument
         is required, otherwise it is ignored.
     """
-    # Authors: Phillip J. Wolfram, Matthew Hoffman and Xylar Asay-Davis
+    # Authors: Phillip J. Wolfram, Matthew Hoffman, Xylar Asay-Davis, Mark Petersen
 
     grid = NetCDFFile(output_name, 'w', format='NETCDF3_CLASSIC')
 
@@ -54,6 +56,55 @@ def jigsaw_to_netcdf_periodic(msh_filename, output_name, on_sphere, sphere_radiu
     for cells in [xCell_full, yCell_full, zCell_full]:
         assert cells.shape[0] == nCells, 'Number of anticipated nodes is' \
                                          ' not correct!'
+    # Read from init file, which contains the periodic boundary cells.
+    init = readmsh(init_filename)
+    nCellsBC = init['POINT'].shape[0]
+    xCellBC = init['POINT'][:, 0]
+    yCellBC = init['POINT'][:, 1]
+    zCellBC = init['POINT'][:, 2]
+    # IDtagBC is an index to the boundary cells, where +/- are matching.
+    IDtagBC = init['POINT'][:, 3].astype(int)
+
+    cullCell = grid.createVariable('cullCell', 'i4', ('nCells',))
+    cullCell[:] = 0
+    iCellBCKeep = np.zeros(int(nCellsBC/2+1), dtype=int)
+    iCellBCRemove = np.zeros(int(nCellsBC/2+1), dtype=int)
+
+    # The BC variables are for Boundary Cells. In the init.msh file, the 
+    # boundary cells with positive IDtag are to keep. Matching BC to remove
+    # have negative IDtag, and the IDtag matches for the 'identical' 
+    # periodic cell.
+    for iCellBC in range(nCellsBC):
+        found = False
+        # Find the cell in the mesh file that matches the tagged BC cell in the
+        # init file.  Unfortunately, we need to do this by matching the
+        # locations.
+        for iCell in range(nCells):
+            diff = abs(xCellBC[iCellBC] - xCell_full[iCell]) \
+                +  abs(yCellBC[iCellBC] - yCell_full[iCell]) \
+                +  abs(zCellBC[iCellBC] - zCell_full[iCell])
+            if diff == 0.0:
+                #print('IDtagBC[iCellBC]:',IDtagBC[iCellBC],' iCell: ',iCell)
+                found = True
+                # Invert the indexing. iCellBCKeep and iCellBCRemove are
+                # indexed by the BC index, and the variables contain the global
+                # cell index.
+                if IDtagBC[iCellBC]>0:
+                    iCellBCKeep[IDtagBC[iCellBC]] = iCell
+                else:
+                    iCellBCRemove[-IDtagBC[iCellBC]] = iCell
+                    # cullCell marks the cells to be culled. Must run
+                    # MpasCellCuller after this.
+                    cullCell[iCell] = 1
+                break
+        if found == False:
+            print('BC cell not found for iCellBC = ',iCellBC)
+
+    iCellReplacement = np.arange(nCells,dtype=int)
+    for iCellBC in range(1,int(nCellsBC/2)+1):
+        #print('iCellBC:',iCellBC,'iCellBCKeep[iCellBC]',iCellBCKeep[iCellBC],'iCellBCRemove[iCellBC]',iCellBCRemove[iCellBC])
+        iCellReplacement[iCellBCRemove[iCellBC]] = iCellBCKeep[iCellBC]
+
     if on_sphere:
         grid.on_a_sphere = "YES"
         grid.sphere_radius = sphere_radius
@@ -75,6 +126,7 @@ def jigsaw_to_netcdf_periodic(msh_filename, output_name, on_sphere, sphere_radiu
     yVertex_full = np.zeros((nVertices,))
     zVertex_full = np.zeros((nVertices,))
 
+    # find location of vertices
     for iVertex in np.arange(0, nVertices):
         cell1 = cellsOnVertex_full[iVertex, 0]
         cell2 = cellsOnVertex_full[iVertex, 1]
@@ -95,8 +147,12 @@ def jigsaw_to_netcdf_periodic(msh_filename, output_name, on_sphere, sphere_radiu
         yVertex_full[iVertex] = pv.y
         zVertex_full[iVertex] = pv.z
 
-    meshDensity_full = grid.createVariable(
-        'meshDensity', 'f8', ('nCells',))
+        # change vertex cell pointers for removed boundary cells
+        cellsOnVertex_full[iVertex, 0] = iCellReplacement[cell1 - 1] + 1
+        cellsOnVertex_full[iVertex, 1] = iCellReplacement[cell2 - 1] + 1
+        cellsOnVertex_full[iVertex, 2] = iCellReplacement[cell3 - 1] + 1
+
+    meshDensity_full = grid.createVariable('meshDensity', 'f8', ('nCells',))
 
     for iCell in np.arange(0, nCells):
         meshDensity_full[iCell] = 1.0
