@@ -96,9 +96,8 @@ def run(testcase, test_suite, config, logger):
     logger : logging.Logger
         A logger for output from the testcase
     """
-    steps = ['forward']
     work_dir = testcase['work_dir']
-    run_steps(testcase, test_suite, config, steps, logger)
+    run_steps(testcase, test_suite, config, logger)
 
     variables = [
         'timeDaily_avg_activeTracers_temperature',

@@ -1,10 +1,8 @@
 from compass.testcase import run_steps, get_testcase_default
-from compass.ocean.tests.global_ocean.mesh.mesh import get_mesh_package
 from compass.ocean.tests.global_ocean.init import initial_state, ssh_adjustment
 from compass.ocean.tests.global_ocean.subdir import get_init_sudbdir
 from compass.ocean.tests import global_ocean
 from compass.validate import compare_variables
-from compass.config import add_config
 
 
 def collect(mesh_name, with_ice_shelf_cavities, initial_condition, with_bgc):
@@ -30,6 +28,9 @@ def collect(mesh_name, with_ice_shelf_cavities, initial_condition, with_bgc):
     testcase : dict
         A dict of properties of this test case, including its steps
     """
+
+    mesh_params = {'QU240': {'cores': 4, 'min_cores': 2},}
+
     module = __name__
     if with_bgc:
         desc_initial_condition = '{} with BGC'.format(initial_condition)
@@ -44,20 +45,21 @@ def collect(mesh_name, with_ice_shelf_cavities, initial_condition, with_bgc):
     subdir = '{}/{}'.format(init_subdir, name)
     steps = dict()
     step = initial_state.collect(mesh_name, with_ice_shelf_cavities,
-                                 initial_condition, with_bgc, cores=4,
-                                 min_cores=2, max_memory=1000, max_disk=1000,
-                                 threads=1)
+                                 initial_condition, with_bgc)
     steps[step['name']] = step
 
+    steps_to_run = ['initial_state']
     if with_ice_shelf_cavities:
         step = ssh_adjustment.collect(mesh_name, cores=4)
         steps[step['name']] = step
+        steps_to_run.append('ssh_adjustment')
 
     testcase = get_testcase_default(module, description, steps, subdir=subdir)
     testcase['mesh_name'] = mesh_name
     testcase['with_ice_shelf_cavities'] = with_ice_shelf_cavities
     testcase['initial_condition'] = initial_condition
     testcase['with_bgc'] = with_bgc
+    testcase['steps_to_run'] = steps_to_run
 
     return testcase
 
@@ -77,9 +79,6 @@ def configure(testcase, config):
         for the machine, core and configuration
     """
     global_ocean.configure(testcase, config)
-    mesh_name = testcase['mesh_name']
-    mesh_package, prefix = get_mesh_package(mesh_name)
-    add_config(config, mesh_package, '{}.cfg'.format(prefix), exception=True)
 
 
 def run(testcase, test_suite, config, logger):
@@ -103,29 +102,43 @@ def run(testcase, test_suite, config, logger):
         A logger for output from the testcase
     """
     work_dir = testcase['work_dir']
-    with_ice_shelf_cavities = testcase['with_ice_shelf_cavities']
     with_bgc = testcase['with_bgc']
-    steps = ['initial_state']
-    if with_ice_shelf_cavities:
-        steps.append('ssh_adjustment')
+    steps = testcase['steps_to_run']
+    if 'initial_state' in steps:
+        step = testcase['steps']['initial_state']
+        # get the these properties from the config options
+        for option in ['cores', 'min_cores', 'max_memory', 'max_disk',
+                       'threads']:
+            step[option] = config.getint('global_ocean',
+                                         'init_{}'.format(option))
 
-    run_steps(testcase, test_suite, config, steps, logger)
-    variables = ['temperature', 'salinity', 'layerThickness']
-    compare_variables(variables, config, work_dir,
-                      filename1='initial_state/initial_state.nc')
+    if 'ssh_adjustment' in steps:
+        step = testcase['steps']['ssh_adjustment']
+        # get the these properties from the config options
+        for option in ['cores', 'min_cores', 'max_memory', 'max_disk',
+                       'threads']:
+            step[option] = config.getint('global_ocean',
+                                         'forward_{}'.format(option))
 
-    if with_bgc:
-        variables = ['temperature', 'salinity', 'layerThickness', 'PO4', 'NO3',
-                     'SiO3', 'NH4', 'Fe', 'O2', 'DIC', 'DIC_ALT_CO2', 'ALK',
-                     'DOC', 'DON', 'DOFe', 'DOP', 'DOPr', 'DONr', 'zooC',
-                     'spChl', 'spC', 'spFe', 'spCaCO3', 'diatChl', 'diatC',
-                     'diatFe', 'diatSi', 'diazChl', 'diazC', 'diazFe',
-                     'phaeoChl', 'phaeoC', 'phaeoFe', 'DMS', 'DMSP', 'PROT',
-                     'POLY', 'LIP']
+    run_steps(testcase, test_suite, config, logger)
+
+    if 'initial_state' in steps:
+        variables = ['temperature', 'salinity', 'layerThickness']
         compare_variables(variables, config, work_dir,
                           filename1='initial_state/initial_state.nc')
 
-    if with_ice_shelf_cavities:
+        if with_bgc:
+            variables = ['temperature', 'salinity', 'layerThickness', 'PO4',
+                         'NO3', 'SiO3', 'NH4', 'Fe', 'O2', 'DIC',
+                         'DIC_ALT_CO2', 'ALK', 'DOC', 'DON', 'DOFe', 'DOP',
+                         'DOPr', 'DONr', 'zooC', 'spChl', 'spC', 'spFe',
+                         'spCaCO3', 'diatChl', 'diatC', 'diatFe', 'diatSi',
+                         'diazChl', 'diazC', 'diazFe', 'phaeoChl', 'phaeoC',
+                         'phaeoFe', 'DMS', 'DMSP', 'PROT', 'POLY', 'LIP']
+            compare_variables(variables, config, work_dir,
+                              filename1='initial_state/initial_state.nc')
+
+    if 'ssh_adjustment' in steps:
         variables = ['ssh', 'landIcePressure']
         compare_variables(variables, config, work_dir,
                           filename1='ssh_adjustment/adjusted_init.nc')

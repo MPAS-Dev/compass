@@ -98,9 +98,10 @@ def run(testcase, test_suite, config, logger):
     logger : logging.Logger
         A logger for output from the testcase
     """
-    steps = ['full_run', 'restart_run']
-    run_steps(testcase, test_suite, config, steps, logger)
+    run_steps(testcase, test_suite, config, logger)
     variables = ['temperature', 'salinity', 'layerThickness', 'normalVelocity']
-    compare_variables(variables, config, work_dir=testcase['work_dir'],
-                      filename1='full_run/output.nc',
-                      filename2='restart_run/output.nc')
+    steps = testcase['steps_to_run']
+    if 'full_run' in steps and 'restart_run' in steps:
+        compare_variables(variables, config, work_dir=testcase['work_dir'],
+                          filename1='full_run/output.nc',
+                          filename2='restart_run/output.nc')
