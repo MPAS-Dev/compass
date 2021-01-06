@@ -1,6 +1,7 @@
 from compass.ocean.tests.global_ocean import mesh, init, performance_test, \
     restart_test, decomp_test, threads_test, analysis_test, daily_output_test
 from compass.config import add_config
+from compass.ocean.tests.global_ocean.mesh.mesh import get_mesh_package
 
 
 def collect():
@@ -16,7 +17,7 @@ def collect():
 
     # we do a lot of tests for QU240/QU240wISC
     for mesh_name, with_ice_shelf_cavities in [('QU240', False),
-                                               ('QU240wISC', True)]:
+                                               ('QUwISC240', True)]:
         testcases.append(mesh.collect(mesh_name, with_ice_shelf_cavities))
 
         for initial_condition in ['PHC', 'EN4_1900']:
@@ -48,6 +49,11 @@ def configure(testcase, config):
         Configuration options for this testcase, a combination of the defaults
         for the machine, core and configuration
     """
+    mesh_name = testcase['mesh_name']
+    package, prefix = get_mesh_package(mesh_name)
+    add_config(config, package, '{}.cfg'.format(prefix), exception=True)
+
     name = testcase['name']
     add_config(config, 'compass.ocean.tests.global_ocean.{}'.format(name),
                '{}.cfg'.format(name), exception=False)
+

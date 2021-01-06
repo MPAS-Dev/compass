@@ -12,8 +12,9 @@ from compass.ocean.tests.global_ocean.subdir import get_mesh_relative_path, \
 
 
 def collect(mesh_name, with_ice_shelf_cavities, with_bgc, time_integrator,
-            cores, min_cores=None, max_memory=1000, max_disk=1000, threads=1,
-            testcase_module=None, namelist_file=None, streams_file=None):
+            cores=None, min_cores=None, max_memory=None, max_disk=None,
+            threads=None, testcase_module=None, namelist_file=None,
+            streams_file=None):
     """
     Get a dictionary of step properties
 
@@ -31,25 +32,35 @@ def collect(mesh_name, with_ice_shelf_cavities, with_bgc, time_integrator,
     time_integrator : {'split_explicit', 'RK4'}, optional
         The time integrator to use for the run
 
-    cores : int
+    cores : int, optional
         The number of cores to run on in forward runs. If this many cores are
         available on the machine or batch job, the task will run on that
         number. If fewer are available (but no fewer than min_cores), the job
-        will run on all available cores instead.
+        will run on all available cores instead.  If ``cores`` is not supplied,
+        it will be read from the ``forward_cores`` config option in the
+        ``global_ocean`` section.
 
     min_cores : int, optional
         The minimum allowed cores.  If that number of cores are not available
-        on the machine or in the batch job, the run will fail.  By default,
-        ``min_cores = cores``
+        on the machine or in the batch job, the run will fail.  If
+        ``min_cores`` is not supplied, but ``cores`` is, ``min_cores = cores``.
+        If neither is supplied, ``min_cores`` will be read from the
+        ``forward_min_cores`` config option in the ``global_ocean`` section.
 
     max_memory : int, optional
-        The maximum amount of memory (in MB) this step is allowed to use
+        The maximum amount of memory (in MB) this step is allowed to use. If
+        ``max_memory`` is not supplied, it will be read from the
+        ``forward_max_memory`` config option in the ``global_ocean`` section.
 
     max_disk : int, optional
-        The maximum amount of disk space  (in MB) this step is allowed to use
+        The maximum amount of disk space  (in MB) this step is allowed to use.
+        If  ``max_disk`` is not supplied, it will be read from the
+        ``forward_max_disk`` config option in the ``global_ocean`` section.
 
     threads : int, optional
-        The number of threads to run with during forward runs
+        The number of threads to run with during forward runs. If  ``threads``
+         is not supplied, it will be read from the ``forward_threads`` config
+         option in the ``global_ocean`` section.
 
     testcase_module : str, optional
         The module for the testcase
@@ -67,13 +78,19 @@ def collect(mesh_name, with_ice_shelf_cavities, with_bgc, time_integrator,
     """
     step = get_step_default(__name__)
     step['mesh_name'] = mesh_name
-    step['cores'] = cores
-    step['max_memory'] = max_memory
-    step['max_disk'] = max_disk
-    if min_cores is None:
-        min_cores = cores
-    step['min_cores'] = min_cores
-    step['threads'] = threads
+    if cores is not None:
+        step['cores'] = cores
+        if min_cores is None:
+            step['min_cores'] = cores
+    if max_memory is not None:
+        step['max_memory'] = max_memory
+    if max_disk is not None:
+        step['max_disk'] = max_disk
+    if min_cores is not None:
+        step['min_cores'] = min_cores
+    if threads is not None:
+        step['threads'] = threads
+
     if testcase_module is not None:
         step['testcase_module'] = testcase_module
     else:

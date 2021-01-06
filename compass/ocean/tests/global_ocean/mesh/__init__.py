@@ -4,7 +4,6 @@ from compass.ocean.tests.global_ocean.mesh import qu240
 from compass.testcase import run_steps, get_testcase_default
 from compass.ocean.tests.global_ocean.mesh import mesh
 from compass.ocean.tests import global_ocean
-from compass.config import add_config
 from compass.validate import compare_variables
 
 
@@ -57,9 +56,6 @@ def configure(testcase, config):
         for the machine, core and configuration
     """
     global_ocean.configure(testcase, config)
-    mesh_name = testcase['mesh_name']
-    package, prefix = mesh.get_mesh_package(mesh_name)
-    add_config(config, package, '{}.cfg'.format(prefix), exception=True)
 
 
 def run(testcase, test_suite, config, logger):
@@ -82,8 +78,7 @@ def run(testcase, test_suite, config, logger):
     logger : logging.Logger
         A logger for output from the testcase
     """
-    steps = ['mesh']
-    run_steps(testcase, test_suite, config, steps, logger)
+    run_steps(testcase, test_suite, config, logger)
 
     variables = ['xCell', 'yCell', 'zCell']
     compare_variables(variables, config, testcase['work_dir'],

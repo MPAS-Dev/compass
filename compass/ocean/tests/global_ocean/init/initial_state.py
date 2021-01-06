@@ -10,9 +10,7 @@ from compass.ocean.plot import plot_vertical_grid, plot_initial_state
 from compass.ocean.tests.global_ocean.subdir import get_mesh_relative_path
 
 
-def collect(mesh_name, with_ice_shelf_cavities, initial_condition, with_bgc,
-            cores, min_cores=None, max_memory=1000, max_disk=1000,
-            threads=1):
+def collect(mesh_name, with_ice_shelf_cavities, initial_condition, with_bgc):
     """
     Get a dictionary of step properties
 
@@ -30,26 +28,6 @@ def collect(mesh_name, with_ice_shelf_cavities, initial_condition, with_bgc,
     with_bgc : bool, optional
         Whether to include BGC variables in the initial condition
 
-    cores : int
-        The number of cores to run on in init runs. If this many cores are
-        available on the machine or batch job, the task will run on that
-        number. If fewer are available (but no fewer than min_cores), the job
-        will run on all available cores instead.
-
-    min_cores : int, optional
-        The minimum allowed cores.  If that number of cores are not available
-        on the machine or in the batch job, the run will fail.  By default,
-        ``min_cores = cores``
-
-    max_memory : int, optional
-        The maximum amount of memory (in MB) this step is allowed to use
-
-    max_disk : int, optional
-        The maximum amount of disk space  (in MB) this step is allowed to use
-
-    threads : int, optional
-        The number of threads to run with during init runs
-
     Returns
     -------
     step : dict
@@ -57,13 +35,6 @@ def collect(mesh_name, with_ice_shelf_cavities, initial_condition, with_bgc,
     """
     step = get_step_default(__name__)
     step['mesh_name'] = mesh_name
-    step['cores'] = cores
-    step['max_memory'] = max_memory
-    step['max_disk'] = max_disk
-    if min_cores is None:
-        min_cores = cores
-    step['min_cores'] = min_cores
-    step['threads'] = threads
 
     step['with_ice_shelf_cavities'] = with_ice_shelf_cavities
     if initial_condition not in ['PHC', 'EN4_1900']:

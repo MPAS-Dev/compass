@@ -173,10 +173,7 @@ def get_mesh_package(mesh_name):
         If the corresponding module for the given mesh does not exist
 
     """
-    prefix = mesh_name.lower()
-    suffix = 'wisc'
-    if prefix.endswith(suffix):
-        prefix = prefix[:-len(suffix)]
+    prefix = mesh_name.lower().replace('wisc', '')
     package = 'compass.ocean.tests.global_ocean.mesh.{}'.format(prefix)
     if package in sys.modules:
         package = sys.modules[package]

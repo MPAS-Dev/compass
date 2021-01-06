@@ -45,8 +45,7 @@ def collect(mesh_name, with_ice_shelf_cavities, initial_condition, with_bgc,
     steps = dict()
     if with_ice_shelf_cavities:
         step = forward.collect(mesh_name, with_ice_shelf_cavities, with_bgc,
-                               time_integrator, cores=4, threads=1,
-                               testcase_module=module,
+                               time_integrator, testcase_module=module,
                                namelist_file='namelist.wisc',
                                streams_file='streams.wisc')
     else:
@@ -99,11 +98,17 @@ def run(testcase, test_suite, config, logger):
     logger : logging.Logger
         A logger for output from the testcase
     """
-    steps = ['forward']
     work_dir = testcase['work_dir']
     with_ice_shelf_cavities = testcase['with_ice_shelf_cavities']
     with_bgc = testcase['with_bgc']
-    run_steps(testcase, test_suite, config, steps, logger)
+
+    # get the these properties from the config options
+    step = testcase['steps']['forward']
+    for option in ['cores', 'min_cores', 'max_memory', 'max_disk', 'threads']:
+        step[option] = config.getint('global_ocean',
+                                     'forward_{}'.format(option))
+
+    run_steps(testcase, test_suite, config, logger)
 
     variables = ['temperature', 'salinity', 'layerThickness', 'normalVelocity']
 
