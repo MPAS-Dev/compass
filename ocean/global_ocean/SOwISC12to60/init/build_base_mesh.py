@@ -37,11 +37,12 @@ def cellWidthVsLatLon():
                                            cellWidthPole=45.,
                                            latPosEq=7.5, latWidthEq=3.0)
 
-    # Transition at Equator
     cellWidthNorth = mdt.EC_CellWidthVsLat(lat, cellWidthEq=30.,
                                            cellWidthMidLat=60.,
-                                           cellWidthPole=60.,
+                                           cellWidthPole=35.,
                                            latPosEq=7.5, latWidthEq=3.0)
+
+    # Transition at Equator
     latTransition = 0.0
     latWidthTransition = 2.5
     cellWidthVsLat = mdt.mergeCellWidthVsLat(
@@ -53,7 +54,32 @@ def cellWidthVsLatLon():
 
     _, cellWidth = np.meshgrid(lon, cellWidthVsLat)
 
-    # now, add the high-res region
+    cellWidthAtlantic = mdt.EC_CellWidthVsLat(lat, cellWidthEq=30.,
+                                              cellWidthMidLat=30.,
+                                              cellWidthPole=35.,
+                                              latPosEq=7.5, latWidthEq=3.0)
+
+    cellWidthAtlantic = mdt.mergeCellWidthVsLat(
+        lat,
+        cellWidthSouth,
+        cellWidthAtlantic,
+        latTransition,
+        latWidthTransition)
+
+    _, cellWidthAtlantic = np.meshgrid(lon, cellWidthAtlantic)
+
+    fc = read_feature_collection('atlantic.geojson')
+
+    atlantic_signed_distance = signed_distance_from_geojson(
+        fc, lon, lat, earth_radius, max_length=0.25)
+
+    trans_width = 400e3
+    trans_start = 0.
+    weights = 0.5 * (1 + np.tanh((atlantic_signed_distance - trans_start) /
+                                 trans_width))
+
+    cellWidth = cellWidthAtlantic * (1 - weights) + cellWidth * weights
+
     fc = read_feature_collection('high_res_region.geojson')
 
     so_signed_distance = signed_distance_from_geojson(fc, lon, lat,
@@ -69,35 +95,6 @@ def cellWidthVsLatLon():
                                  trans_width))
 
     cellWidth = dx_min * (1 - weights) + cellWidth * weights
-
-    fc = read_feature_collection('north_mid_res_region.geojson')
-
-    ar_signed_distance = signed_distance_from_geojson(fc, lon, lat,
-                                                      earth_radius,
-                                                      max_length=0.25)
-
-    fc = read_feature_collection('greenland.geojson')
-
-    gr_signed_distance = signed_distance_from_geojson(fc, lon, lat,
-                                                      earth_radius,
-                                                      max_length=0.25)
-
-    frac = (-ar_signed_distance/(-ar_signed_distance + gr_signed_distance))
-
-    frac = np.maximum(0., np.minimum(1., frac))
-
-    dx_min = 15.
-    dx_max = 35.
-
-    arctic_widths = dx_max + (dx_min - dx_max)*frac
-
-    trans_width = 1000e3
-    trans_start = 0.
-
-    weights = 0.5 * (1 + np.tanh((ar_signed_distance - trans_start) /
-                                 trans_width))
-
-    cellWidth = arctic_widths * (1 - weights) + cellWidth * weights
 
     return cellWidth, lon, lat
 
