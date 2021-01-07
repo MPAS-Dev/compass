@@ -1277,9 +1277,7 @@ def append_mesh_metadata(config, filename):  # {{{
                     config.getfloat('mesh', 'max_depth'),
                 'MPAS_Mesh_{}_Number_of_Levels'.format(prefix):
                     config.getfloat('mesh', 'levels'),
-                'MPAS_Mesh_Ice_Shelf_Cavities': ice_shelf_cavities,
-                'MPAS_Mesh_Runoff_Description': config.get(
-                    'mesh', 'runoff_description')}
+                'MPAS_Mesh_Ice_Shelf_Cavities': ice_shelf_cavities}
 
     packages = {'COMPASS': 'compass', 'JIGSAW': 'jigsaw',
                 'JIGSAW-Python': 'jigsawpy', 'MPAS-Tools': 'mpas_tools',
