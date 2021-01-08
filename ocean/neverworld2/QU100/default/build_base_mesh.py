@@ -1,10 +1,7 @@
 #!/usr/bin/env python
 import numpy as np
-import xarray
-from channel import channel
-from jigsaw_to_netcdf_periodic import jigsaw_to_netcdf_periodic
-from mpas_tools.mesh.conversion import convert
-from mpas_tools.io import write_netcdf
+from mpas_tools.ocean import build_spherical_mesh
+
 
 def cellWidthVsLatLon():
     """
@@ -34,15 +31,8 @@ def cellWidthVsLatLon():
 
 def main():
     cellWidth, lon, lat = cellWidthVsLatLon()
-    #channel()
-    msh_filename = 'mesh.msh'
-    init_filename = 'init.msh'
-    triangle_name = 'mesh_triangles.nc'
-    output_name = 'base_mesh.nc'
-    on_sphere = True
-    SPHERE_RADIUS = +6371.0
-    jigsaw_to_netcdf_periodic(msh_filename, init_filename, triangle_name, on_sphere, sphere_radius=SPHERE_RADIUS)
-    write_netcdf(convert(xarray.open_dataset(triangle_name)),output_name)
+    build_spherical_mesh(cellWidth, lon, lat, out_filename='base_mesh.nc')
+
 
 if __name__ == '__main__':
     main()
