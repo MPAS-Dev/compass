@@ -47,7 +47,8 @@ def collect(mesh_name, with_ice_shelf_cavities, initial_condition, with_bgc,
         step = forward.collect(mesh_name, with_ice_shelf_cavities, with_bgc,
                                time_integrator, testcase_module=module,
                                namelist_file='namelist.wisc',
-                               streams_file='streams.wisc')
+                               streams_file='streams.wisc',
+                               outputs=['output.nc', 'land_ice_fluxes.nc'])
     else:
         step = forward.collect(mesh_name, with_ice_shelf_cavities, with_bgc,
                                time_integrator, cores=4, threads=1)
@@ -56,6 +57,7 @@ def collect(mesh_name, with_ice_shelf_cavities, initial_condition, with_bgc,
     testcase = get_testcase_default(module, description, steps, subdir=subdir)
     testcase['mesh_name'] = mesh_name
     testcase['with_ice_shelf_cavities'] = with_ice_shelf_cavities
+    testcase['initial_condition'] = initial_condition
     testcase['with_bgc'] = with_bgc
 
     return testcase
