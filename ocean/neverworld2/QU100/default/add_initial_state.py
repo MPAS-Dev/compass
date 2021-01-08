@@ -173,13 +173,15 @@ def main():
     ytau[:] = np.array([-70.,-45.,-15.,0.,15.,45.,70.])*np.pi/180.
     taud[:] = np.array([0,.2,-0.1,-.02,-.1,.1,0])
     for iCell in range(0, nCells):
+        ks= min(max(0, bisect.bisect_right(ytau,latCell[iCell]) - 1), len(ytau)-2)
+        #print('  ks : %f '%ks)
+        #print('  calcwind : %f '%(taud[ks] + ( taud[ks+1] - taud[ks]) * scurve(latCell[iCell], ytau[ks], ytau[ks+1]-ytau[ks])))
         #ks = np.max(0, bisect.bisect_right(ytau,latCell[iCell]) - 1) #determine wind lat interval - only works for *sorted* ytau list
-        if latCell[iCell] > 0:
-            windStressZonal[iCell] = 0.1
-        else:
-            windStressZonal[iCell] = -0.1
-        #windStressZonal[iCell] = taud[ks] + ( taud[ks+1] - taud[ks]) * scurve(y, ytau[ks], ytau[ks+1]-ytau[ks])
-
+        #if latCell[iCell] > 0:
+        #    windStressZonal[iCell] = 0.1
+        #else:
+        #    windStressZonal[iCell] = -0.1
+        windStressZonal[iCell] = taud[ks] + ( taud[ks+1] - taud[ks]) * scurve(latCell[iCell], ytau[ks], ytau[ks+1]-ytau[ks])
     windStressMeridional[:] = 0.0
     atmosphericPressure[:] = 0.0
     boundaryLayerDepth[:] = 0.0
