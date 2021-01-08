@@ -51,7 +51,7 @@ def collect(mesh_name, with_ice_shelf_cavities, initial_condition, with_bgc,
                                outputs=['output.nc', 'land_ice_fluxes.nc'])
     else:
         step = forward.collect(mesh_name, with_ice_shelf_cavities, with_bgc,
-                               time_integrator, cores=4, threads=1)
+                               time_integrator)
     steps[step['name']] = step
 
     testcase = get_testcase_default(module, description, steps, subdir=subdir)
