@@ -8,8 +8,11 @@
 	<case name="initial_state">
 		<step executable="./run.py" quiet="true" pre_message=" * Initializing ocean state with bathymetry and tracers..." post_message="     complete!  Created file:  initial_state/initial_state.nc"/>
 	</case>
-	<case name="forward">
-		<step executable="./run.py" quiet="true" pre_message=" * running mpas-ocean forward..." post_message="     complete!  created file:  forward*/output.nc"/>
+	<case name="spinup">
+		<step executable="./run.py" quiet="true" pre_message=" * running mpas-ocean spinup..." post_message="     complete!  created file:  spinup*/output.nc"/>
+	</case>
+	<case name="simulation">
+		<step executable="./run.py" quiet="true" pre_message=" * running mpas-ocean simulation..." post_message="     complete!  created file:  simulation*/output.nc"/>
 	</case>
 	<case name="visualize">
 		<step executable="./run.py" quiet="true" pre_message=" * Visualize..." post_message="     complete!  Created files:  visualize/convergence.png and visualize/*sections.png"/>

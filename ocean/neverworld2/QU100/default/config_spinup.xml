@@ -2,14 +2,14 @@
 <config case="forward">
 	<add_link source="../initial_state/initial_state.nc" dest="init.nc"/>
     <add_link source="../initial_state/initial_state.nc" dest="forcing_data.nc"/>
-    <add_link source="../spinup/restart" dest="restart"/>
 	<add_link source="../initial_state/graph.info" dest="graph.info"/>
 
 	<namelist name="namelist.ocean" mode="forward">
 		<template file="template_forward.xml" path_base="script_configuration_dir"/>
 		<template file="template_forward.xml" path_base="script_resolution_dir"/>
-		<option name="config_do_restart">.true.</option>
-		<option name="config_start_time">'file'</option>
+		<option name="config_dt">'00:10:00'</option>
+		<option name="config_btr_dt">'00:00:10'</option>
+		<option name="config_run_duration">'0010_00:00:00'</option>
 		<option name="config_pio_num_iotasks">1</option>
  		<option name="config_pio_stride">4</option>
 	</namelist>
