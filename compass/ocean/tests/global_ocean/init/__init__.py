@@ -161,7 +161,8 @@ def add_descriptions_to_config(testcase, config):
     # add a description of the initial condition
     if 'initial_condition' in testcase:
         initial_condition = testcase['initial_condition']
-        descriptions = {'PHC': 'Polar science center Hydrographic Climatology',
+        descriptions = {'PHC': 'Polar science center Hydrographic '
+                               'Climatology (PHC)',
                         'EN4_1900':
                             "Met Office Hadley Centre's EN4 dataset from 1900"}
         config.set('global_ocean', 'init_description',

@@ -9,12 +9,14 @@ from compass.parallel import update_namelist_pio
 from compass.ocean.tests.global_ocean.mesh.mesh import get_mesh_package
 from compass.ocean.tests.global_ocean.subdir import get_mesh_relative_path, \
     get_initial_condition_relative_path
+from compass.ocean.tests.global_ocean.metadata import \
+    add_mesh_and_init_metadata
 
 
 def collect(mesh_name, with_ice_shelf_cavities, with_bgc, time_integrator,
             cores=None, min_cores=None, max_memory=None, max_disk=None,
             threads=None, testcase_module=None, namelist_file=None,
-            streams_file=None):
+            streams_file=None, outputs=None):
     """
     Get a dictionary of step properties
 
@@ -71,6 +73,10 @@ def collect(mesh_name, with_ice_shelf_cavities, with_bgc, time_integrator,
     streams_file : str, optional
         The name of a streams file in the testcase package directory
 
+    outputs : list, optional
+        List of relative paths to output files within the step, the default
+        is ``['output.nc']``
+
     Returns
     -------
     step : dict
@@ -105,6 +111,10 @@ def collect(mesh_name, with_ice_shelf_cavities, with_bgc, time_integrator,
     step['with_ice_shelf_cavities'] = with_ice_shelf_cavities
     step['with_bgc'] = with_bgc
     step['time_integrator'] = time_integrator
+
+    if outputs is None:
+        outputs = ['output.nc']
+    step['outputs'] = outputs
 
     return step
 
@@ -198,7 +208,6 @@ def setup(step, config):
             os.path.join(step_dir, 'ocean_model'))
 
     inputs = []
-    outputs = []
 
     mesh_path = '{}/mesh/mesh'.format(get_mesh_relative_path(step))
     init_path = '{}/init'.format(get_initial_condition_relative_path(step))
@@ -218,11 +227,11 @@ def setup(step, config):
         symlink(target, os.path.join(step_dir, link))
         inputs.append(os.path.abspath(os.path.join(step_dir, target)))
 
-    for file in ['output.nc']:
-        outputs.append(os.path.join(step_dir, file))
-
     step['inputs'] = inputs
-    step['outputs'] = outputs
+
+    # convert from relative to absolute paths
+    step['outputs'] = [os.path.join(step_dir, file) for file in
+                       step['outputs']]
 
 
 def run(step, test_suite, config, logger):
@@ -253,3 +262,6 @@ def run(step, test_suite, config, logger):
 
     run_model(config, core='ocean', core_count=cores, logger=logger,
               threads=threads)
+
+    add_mesh_and_init_metadata(step['outputs'], config,
+                               init_filename='init.nc')

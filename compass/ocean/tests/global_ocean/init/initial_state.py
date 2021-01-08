@@ -1,5 +1,10 @@
 import os
+import xarray
 
+from mpas_tools.io import write_netcdf
+
+from compass.ocean.tests.global_ocean.metadata import \
+    add_mesh_and_init_metadata
 from compass.testcase import get_step_default
 from compass.io import symlink, download
 from compass import namelist, streams
@@ -203,6 +208,9 @@ def run(step, test_suite, config, logger):
 
     run_model(config, core='ocean', core_count=cores, logger=logger,
               threads=threads)
+
+    add_mesh_and_init_metadata(step['outputs'], config,
+                               init_filename='initial_state.nc')
 
     plot_initial_state(input_file_name='initial_state.nc',
                        output_file_name='initial_state.png')
