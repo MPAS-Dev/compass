@@ -1,5 +1,9 @@
 from compass.ocean.tests.global_ocean import mesh, init, performance_test, \
     restart_test, decomp_test, threads_test, analysis_test, daily_output_test
+from compass.ocean.tests.global_ocean.mesh.qu240.spinup import collect as \
+    collect_qu240_spinup
+from compass.ocean.tests.global_ocean.mesh.ec30to60.spinup import collect as \
+    collect_ec30to60_spinup
 from compass.config import add_config
 from compass.ocean.tests.global_ocean.mesh.mesh import get_mesh_package
 from compass.ocean.tests.global_ocean.init import add_descriptions_to_config
@@ -32,6 +36,10 @@ def collect():
                         testcases.append(test.collect(
                             mesh_name, with_ice_shelf_cavities,
                             initial_condition, with_bgc, time_integrator))
+                for time_integrator in ['split_explicit', 'RK4']:
+                    testcases.append(collect_qu240_spinup(
+                        mesh_name, with_ice_shelf_cavities,
+                        initial_condition, with_bgc, time_integrator))
 
     # for other meshes, we do fewer tests
     for mesh_name, with_ice_shelf_cavities in [('EC30to60', False),
@@ -44,10 +52,12 @@ def collect():
             testcases.append(init.collect(
                 mesh_name, with_ice_shelf_cavities, initial_condition,
                 with_bgc))
-            for test in [performance_test]:
-                testcases.append(test.collect(
-                    mesh_name, with_ice_shelf_cavities,
-                    initial_condition, with_bgc, time_integrator))
+            testcases.append(performance_test.collect(
+                mesh_name, with_ice_shelf_cavities,
+                initial_condition, with_bgc, time_integrator))
+            testcases.append(collect_ec30to60_spinup(
+                mesh_name, with_ice_shelf_cavities,
+                initial_condition, with_bgc, time_integrator))
 
     return testcases
 
