@@ -43,6 +43,12 @@ def collect(mesh_name, with_ice_shelf_cavities, initial_condition, with_bgc,
     name = module.split('.')[-1]
     subdir = '{}/{}/{}'.format(init_subdir, name, time_integrator)
 
+    restart_time = {'split_explicit': '0001-01-01_04:00:00',
+                    'RK4': '0001-01-01_00:10:00'}
+    restart_filename = '../restarts/rst.{}.nc'.format(
+        restart_time[time_integrator])
+    inputs = {'full': None, 'restart': [restart_filename]}
+    outputs = {'full': ['output.nc', restart_filename], 'restart': None}
     steps = dict()
     for step_prefix in ['full', 'restart']:
         suffix = '{}.{}'.format(time_integrator.lower(), step_prefix)
@@ -50,7 +56,9 @@ def collect(mesh_name, with_ice_shelf_cavities, initial_condition, with_bgc,
                                time_integrator, cores=4, threads=1,
                                testcase_module=module,
                                namelist_file='namelist.{}'.format(suffix),
-                               streams_file='streams.{}'.format(suffix))
+                               streams_file='streams.{}'.format(suffix),
+                               inputs=inputs[step_prefix],
+                               outputs=outputs[step_prefix])
         step['name'] = '{}_run'.format(step_prefix)
         step['subdir'] = step['name']
         steps[step['name']] = step
