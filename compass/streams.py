@@ -1,9 +1,10 @@
 from lxml import etree
 from copy import deepcopy
 from importlib import resources
+from jinja2 import Template
 
 
-def read(package, streams_filename, tree=None):
+def read(package, streams_filename, tree=None, replacements=None):
     """
     Parse the given streams file
 
@@ -18,13 +19,23 @@ def read(package, streams_filename, tree=None):
     tree : lxml.etree, optional
         An existing set of streams to add to or modify
 
+    replacements : dict, optional
+        A dictionary of replacements, in which case ``streams_filename`` is
+        assumed to be a Jinja2 template to be rendered with these replacements
+
     Returns
     -------
     tree : lxml.etree
         A tree of XML data describing MPAS i/o streams with the content from
         the given streams file
     """
-    new_tree = etree.fromstring(resources.read_text(package, streams_filename))
+    if replacements is None:
+        text = resources.read_text(package, streams_filename)
+    else:
+        template = Template(resources.read_text(package, streams_filename))
+        text = template.render(**replacements)
+
+    new_tree = etree.fromstring(text)
 
     if tree is None:
         tree = new_tree
@@ -158,8 +169,9 @@ def _update_element(new_child, elements):
         if child.attrib['name'] == name:
             found = True
             if child.tag != new_child.tag:
-                raise ValueError('Trying to update streams data with '
-                                 'inconsistent tags.')
+                raise ValueError('Trying to update stream "{}" with '
+                                 'inconsistent tags {} vs. {}.'.format(
+                                     name, child.tag, new_child.tag))
 
             # copy the attributes
             for attr, value in new_child.attrib.items():

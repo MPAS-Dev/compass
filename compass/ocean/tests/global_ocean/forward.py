@@ -16,7 +16,8 @@ from compass.ocean.tests.global_ocean.metadata import \
 def collect(mesh_name, with_ice_shelf_cavities, with_bgc, time_integrator,
             cores=None, min_cores=None, max_memory=None, max_disk=None,
             threads=None, testcase_module=None, namelist_file=None,
-            streams_file=None, outputs=None):
+            streams_file=None, inputs=None, outputs=None,
+            namelist_replacements=None, stream_replacements=None):
     """
     Get a dictionary of step properties
 
@@ -73,9 +74,23 @@ def collect(mesh_name, with_ice_shelf_cavities, with_bgc, time_integrator,
     streams_file : str, optional
         The name of a streams file in the testcase package directory
 
+    inputs : list, optional
+        List of relative paths to input files for the step.  In addition to
+        this list, the graph file, initial condition and initial forcing are
+        always included as inputs.  No local symlinks within the step folder
+        are created to these inputs.
+
     outputs : list, optional
         List of relative paths to output files within the step, the default
         is ``['output.nc']``
+
+    namelist_replacements : dict, optional
+        A dictionary of namelist options and values that take priority over all
+        other namelist options
+
+    stream_replacements : dict, optional
+        If present, ``streams_file`` is treated as a template and these
+        replacements are used to fill in the template.
 
     Returns
     -------
@@ -115,6 +130,18 @@ def collect(mesh_name, with_ice_shelf_cavities, with_bgc, time_integrator,
     if outputs is None:
         outputs = ['output.nc']
     step['outputs'] = outputs
+
+    if inputs is not None:
+        step['inputs'] = inputs
+
+    if namelist_replacements is not None:
+        step['namelist_replacements'] = namelist_replacements
+
+    if stream_replacements is not None:
+        if streams_file is None:
+            raise ValueError('if streams replacements are provided, a template'
+                             ' must be provided in the streams file.')
+        step['stream_replacements'] = stream_replacements
 
     return step
 
@@ -177,6 +204,10 @@ def setup(step, config):
         replacements.update(namelist.parse_replacements(
             testcase_module, step['namelist']))
 
+    # finally, add or update any replacements passed into collect()
+    if 'namelist_replacements' in step:
+        replacements.update(step['namelist_replacements'])
+
     namelist.generate(config=config, replacements=replacements,
                       step_work_dir=step_dir, core='ocean', mode='forward')
 
@@ -196,9 +227,14 @@ def setup(step, config):
             streams.read(mesh_package, mesh_stream, tree=streams_data)
 
     # see if there's one for the testcase itself
+    if 'stream_replacements' in step:
+        stream_replacements = step['stream_replacements']
+    else:
+        stream_replacements = None
     if 'streams' in step:
         streams_data = streams.read(testcase_module, step['streams'],
-                                    tree=streams_data)
+                                    tree=streams_data,
+                                    replacements=stream_replacements)
 
     streams.generate(config=config, tree=streams_data, step_work_dir=step_dir,
                      core='ocean', mode='forward')
@@ -207,7 +243,10 @@ def setup(step, config):
     symlink(os.path.abspath(config.get('executables', 'model')),
             os.path.join(step_dir, 'ocean_model'))
 
-    inputs = []
+    if 'inputs' in step:
+        inputs = [os.path.join(step_dir, file) for file in step['inputs']]
+    else:
+        inputs = []
 
     mesh_path = '{}/mesh/mesh'.format(get_mesh_relative_path(step))
     init_path = '{}/init'.format(get_initial_condition_relative_path(step))
