@@ -37,6 +37,7 @@ def collect(mesh_name, with_ice_shelf_cavities):
 
     testcase = get_testcase_default(module, description, steps, subdir=subdir)
     testcase['mesh_name'] = mesh_name
+    testcase['with_ice_shelf_cavities'] = with_ice_shelf_cavities
 
     return testcase
 
