@@ -45,14 +45,14 @@ def collect(mesh_name, with_ice_shelf_cavities, initial_condition, with_bgc,
 
     steps = dict()
 
-    restart_times = ['0001-01-02_00:00:00']
+    restart_times = ['0001-01-02_00:00:00', '0001-01-03_00:00:00']
     restart_filenames = [
-        '../restarts/rst.{}.nc'.format(restart_time.replace(':', '.'))
+        'restarts/rst.{}.nc'.format(restart_time.replace(':', '.'))
         for restart_time in restart_times]
 
     step_name = 'damped_spinup_1'
     inputs = None
-    outputs = ['output.nc', restart_filenames[0]]
+    outputs = ['output.nc', '../{}'.format(restart_filenames[0])]
     namelist_replacements = {
         'config_run_duration': "'00-00-01_00:00:00'",
         'config_Rayleigh_friction': '.true.',
@@ -72,8 +72,8 @@ def collect(mesh_name, with_ice_shelf_cavities, initial_condition, with_bgc,
     steps[step['name']] = step
 
     step_name = 'simulation'
-    inputs = [restart_filenames[0]]
-    outputs = None
+    inputs = ['../{}'.format(restart_filenames[0])]
+    outputs = ['../{}'.format(restart_filenames[1])]
     namelist_replacements = {
         'config_run_duration': "'00-00-01_00:00:00'",
         'config_do_restart': '.true.',
@@ -97,6 +97,7 @@ def collect(mesh_name, with_ice_shelf_cavities, initial_condition, with_bgc,
     testcase['with_ice_shelf_cavities'] = with_ice_shelf_cavities
     testcase['initial_condition'] = initial_condition
     testcase['with_bgc'] = with_bgc
+    testcase['restart_filenames'] = restart_filenames
 
     return testcase
 
