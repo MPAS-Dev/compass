@@ -10,6 +10,7 @@ def main():
     with open('testcase_{{ testcase.name }}.pickle', 'rb') as handle:
         testcase = pickle.load(handle)
     testcase['steps_to_run'] = ['{{ step.name }}']
+    testcase['new_step_log_file'] = False
 
     with open('{{ step.name }}.pickle', 'rb') as handle:
         step = pickle.load(handle)
