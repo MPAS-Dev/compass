@@ -1,5 +1,6 @@
 from compass.ocean.tests.global_ocean import mesh, init, performance_test, \
-    restart_test, decomp_test, threads_test, analysis_test, daily_output_test
+    restart_test, decomp_test, threads_test, analysis_test, \
+    daily_output_test, files_for_e3sm
 from compass.ocean.tests.global_ocean.mesh.qu240.spinup import collect as \
     collect_qu240_spinup
 from compass.ocean.tests.global_ocean.mesh.ec30to60.spinup import collect as \
@@ -37,9 +38,15 @@ def collect():
                             mesh_name, with_ice_shelf_cavities,
                             initial_condition, with_bgc, time_integrator))
                 for time_integrator in ['split_explicit', 'RK4']:
-                    testcases.append(collect_qu240_spinup(
+                    testcase = collect_qu240_spinup(
                         mesh_name, with_ice_shelf_cavities,
-                        initial_condition, with_bgc, time_integrator))
+                        initial_condition, with_bgc, time_integrator)
+                    testcases.append(testcase)
+                    restart_filename = testcase['restart_filenames'][-1]
+                    testcases.append(files_for_e3sm.collect(
+                        mesh_name, with_ice_shelf_cavities,
+                        initial_condition, with_bgc, time_integrator,
+                        restart_filename))
 
     # for other meshes, we do fewer tests
     for mesh_name, with_ice_shelf_cavities in [('EC30to60', False),
@@ -55,9 +62,15 @@ def collect():
             testcases.append(performance_test.collect(
                 mesh_name, with_ice_shelf_cavities,
                 initial_condition, with_bgc, time_integrator))
-            testcases.append(collect_ec30to60_spinup(
+            testcase = collect_ec30to60_spinup(
                 mesh_name, with_ice_shelf_cavities,
-                initial_condition, with_bgc, time_integrator))
+                initial_condition, with_bgc, time_integrator)
+            testcases.append(testcase)
+            restart_filename = testcase['restart_filenames'][-1]
+            testcases.append(files_for_e3sm.collect(
+                mesh_name, with_ice_shelf_cavities,
+                initial_condition, with_bgc, time_integrator,
+                restart_filename))
 
     return testcases
 
@@ -79,6 +92,9 @@ def configure(testcase, config):
     mesh_name = testcase['mesh_name']
     package, prefix = get_mesh_package(mesh_name)
     add_config(config, package, '{}.cfg'.format(prefix), exception=True)
+    if testcase['with_ice_shelf_cavities']:
+        config.set('global_ocean', 'prefix', '{}wISC'.format(
+            config.get('global_ocean', 'prefix')))
 
     name = testcase['name']
     add_config(config, 'compass.ocean.tests.global_ocean.{}'.format(name),
