@@ -133,6 +133,7 @@ def run_steps(testcase, test_suite, config, logger):
     for step_name in testcase['steps_to_run']:
         step = testcase['steps'][step_name]
         new_log_file = testcase['new_step_log_file']
+        print(new_log_file)
         if 'log_filename' in testcase:
             step['log_filename'] = testcase['log_filename']
             do_local_logging = True
@@ -155,7 +156,7 @@ def run_steps(testcase, test_suite, config, logger):
         if do_local_logging:
             logger.info('     Complete')
 
-    os.chdir(cwd)
+        os.chdir(cwd)
 
 
 def run_step(step, test_suite, config, logger, new_log_file):
