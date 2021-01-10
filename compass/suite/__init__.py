@@ -50,8 +50,11 @@ def setup_suite(core, suite_name, config_file=None, machine=None,
 
     text = resources.read_text('compass.{}.suites'.format(core),
                                '{}.txt'.format(suite_name))
-    tests = [test.strip() for test in text.split('\n') if
-             len(test.strip()) > 0]
+    tests = list()
+    for test in text.split('\n'):
+        test = test.strip()
+        if len(test) > 0 and test not in tests:
+            tests.append(test)
 
     if work_dir is None:
         work_dir = os.getcwd()
