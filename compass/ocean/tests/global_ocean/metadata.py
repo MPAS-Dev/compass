@@ -141,8 +141,8 @@ def _get_metadata(dsInit, config):
                 '{}_Version_Creation_Date'.format(prefix): creation_date,
                 '{}_Minimum_Resolution_km'.format(prefix): min_res,
                 '{}_Maximum_Resolution_km'.format(prefix): max_res,
-                '{}_Maximum_Depth_m'.format(prefix): max_depth,
-                '{}_Number_of_Levels'.format(prefix): levels,
+                '{}_Maximum_Depth_m'.format(prefix): '{}'.format(max_depth),
+                '{}_Number_of_Levels'.format(prefix): '{}'.format(levels),
                 'MPAS_Mesh_Description': descriptions['mesh'],
                 'MPAS_Mesh_Bathymetry': descriptions['bathy'],
                 'MPAS_Initial_Condition': descriptions['init']}
