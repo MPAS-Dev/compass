@@ -6,6 +6,50 @@ import xarray
 from mpas_tools.io import write_netcdf
 
 
+def get_e3sm_mesh_names(config, levels):
+    """
+    Get short and long E3SM mesh name from config options and the given number
+    of vertical levels (typically taken from an initial condition or restart
+    file).
+
+    Parameters
+    ----------
+    config : configparser.ConfigParser
+        Configuration options for this testcase, a combination of the defaults
+        for the machine, core and configuration
+
+    levels : int
+        The number of vertical levels
+
+    Returns
+    -------
+    short_mesh_name : str
+        The short E3SM name of the ocean and sea-ice mesh
+
+    long_mesh_name : str
+        The long E3SM name of the ocean and sea-ice mesh
+    """
+
+    mesh_prefix = config.get('global_ocean', 'prefix')
+    min_res = config.get('global_ocean', 'min_res')
+    max_res = config.get('global_ocean', 'max_res')
+    config.set('global_ocean', 'levels', '{}'.format(levels))
+    e3sm_version = config.get('global_ocean', 'e3sm_version')
+    mesh_revision = config.get('global_ocean', 'mesh_revision')
+
+    if min_res == max_res:
+        res = min_res
+    else:
+        res = '{}to{}'.format(min_res, max_res)
+
+    short_mesh_name = '{}{}E{}r{}'.format(mesh_prefix, res, e3sm_version,
+                                          mesh_revision)
+    long_mesh_name = '{}{}kmL{}E3SMv{}r{}'.format(mesh_prefix, res, levels,
+                                                  e3sm_version, mesh_revision)
+
+    return short_mesh_name, long_mesh_name
+
+
 def add_mesh_and_init_metadata(output_filenames, config, init_filename):
     """
     Add MPAS mesh and initial condition metadata to NetCDF outputs of the given
@@ -21,8 +65,8 @@ def add_mesh_and_init_metadata(output_filenames, config, init_filename):
         for the machine, core and configuration
 
     init_filename : str
-        The name of a mesh file to get the number of vertical levels and
-        maximum depth from
+        The name of an initial condition file to get the number of vertical
+        levels and maximum depth from
     """
 
     if config.getboolean('global_ocean', 'add_metadata'):
@@ -72,15 +116,7 @@ def _get_metadata(dsInit, config):
     mesh_revision = config.get('global_ocean', 'mesh_revision')
     pull_request = config.get('global_ocean', 'pull_request')
 
-    if min_res == max_res:
-        res = min_res
-    else:
-        res = '{}to{}'.format(min_res, max_res)
-
-    short_name = '{}{}E{}r{}'.format(mesh_prefix, res, e3sm_version,
-                                     mesh_revision)
-    long_name = '{}{}kmL{}E3SMv{}r{}'.format(mesh_prefix, res, levels,
-                                             e3sm_version, mesh_revision)
+    short_name, long_name = get_e3sm_mesh_names(config, levels)
 
     descriptions = dict()
 
