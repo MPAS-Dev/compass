@@ -226,7 +226,8 @@ def main():
     args = parser.parse_args(sys.argv[2:])
 
     if not args.clean and not args.setup:
-        raise ValueError('One of -s/--setup or -c/--cleanup must be specified')
+        raise ValueError('At least one of -s/--setup or --clean must be '
+                         'specified')
 
     if args.clean:
         clean_suite(core=args.core, suite_name=args.test_suite,
