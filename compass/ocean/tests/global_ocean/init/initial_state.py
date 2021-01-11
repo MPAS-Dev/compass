@@ -1,7 +1,4 @@
 import os
-import xarray
-
-from mpas_tools.io import write_netcdf
 
 from compass.ocean.tests.global_ocean.metadata import \
     add_mesh_and_init_metadata
@@ -125,7 +122,8 @@ def setup(step, config):
     else:
         filenames.update({
             'temperature.nc':
-                'PotentialTemperature.100levels.Levitus.EN4_1900estimate.200813.nc',
+                'PotentialTemperature.100levels.Levitus.EN4_1900estimate.'
+                '200813.nc',
             'salinity.nc':
                 'Salinity.100levels.Levitus.EN4_1900estimate.200813.nc'})
 
