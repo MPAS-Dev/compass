@@ -140,8 +140,8 @@ def run(step, test_suite, config, logger):
         os.path.join('..', step['restart_filename']))
 
     # command line execution
-    scrip_filename = 'ocean.{}{}.scrip.{}.nc'.format(mesh_short_name, nomask_str,
-                                                     creation_date)
+    scrip_filename = 'ocean.{}{}.scrip.{}.nc'.format(
+        mesh_short_name,  nomask_str, creation_date)
 
     scrip_from_mpas(restart_filename, scrip_filename)
 
