@@ -27,10 +27,10 @@ def get_available_cores_and_nodes(config):
     parallel_system = config.get('parallel', 'system')
     if parallel_system == 'slurm':
         job_id = os.environ['SLURM_JOB_ID']
-        args = ['squeue', '--noheader', '-j', job_id, '-o', '"%C"']
-        cores = subprocess.check_output(args)
-        args = ['squeue', '--noheader', '-j', job_id, '-o', '"%D"']
-        nodes = subprocess.check_output(args)
+        args = ['squeue', '--noheader', '-j', job_id, '-o', '%C']
+        cores = _get_subprocess_int(args)
+        args = ['squeue', '--noheader', '-j', job_id, '-o', '%D']
+        nodes = _get_subprocess_int(args)
     elif parallel_system == 'single_node':
         cores = multiprocessing.cpu_count()
         nodes = 1
@@ -70,3 +70,10 @@ def update_namelist_pio(config, cores, step_dir):
 
     namelist.update(replacements=replacements, step_work_dir=step_dir,
                     core='ocean')
+
+
+def _get_subprocess_int(args):
+    value = subprocess.check_output(args)
+    value = int(value.decode('utf-8').strip('\n'))
+    return value
+
