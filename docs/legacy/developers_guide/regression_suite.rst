@@ -1,4 +1,4 @@
-.. _compass_regression_suite:
+.. _legacy_compass_regression_suite:
 
 regression\_suite
 =================

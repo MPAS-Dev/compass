@@ -1,4 +1,4 @@
-.. _compass_run_config:
+.. _legacy_compass_run_config:
 
 run\_config
 ===========

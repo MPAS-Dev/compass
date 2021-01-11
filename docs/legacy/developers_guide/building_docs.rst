@@ -1,4 +1,4 @@
-.. _dev_building_docs:
+.. _legacy_dev_building_docs:
 
 **************************
 Building the Documentation

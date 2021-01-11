@@ -1,4 +1,4 @@
-.. _compass_template:
+.. _legacy_compass_template:
 
 template
 ========
@@ -105,7 +105,7 @@ if the template is used within a ``<compare_fields>`` tag.
 
 ``<field>`` - This tag defines a specific field that should be compared if this
 template is used within a ``<compare_fields>`` tag. See
-:ref:`compass_driver_script` for configuration information.
+:ref:`legacy_compass_driver_script` for configuration information.
 
 ``<compare_timers>`` - This tag contains a list of timers that should be compared
 if the template is used within a ``<compare_timers>`` tag.
@@ -129,9 +129,9 @@ application.
           ``<compare_timers>`` tags to define template fields and timers to
           compare.
 
-        * ``path_base``: The base that the path attribute should be used relative
-          to. Can be a pre-defined paths (see :ref:`compass_config` for more
-          information)
+        * ``path_base``: The base that the path attribute should be used
+          relative to. Can be a pre-defined paths (see
+          :ref:`legacy_compass_config` for more information)
 
         * ``path``: The path that the file lives in, relative to ``path_base``.
 

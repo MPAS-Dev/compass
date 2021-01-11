@@ -1,4 +1,4 @@
-.. _quick_start:
+.. _legacy_quick_start:
 
 Quick Start
 ===========
@@ -33,7 +33,7 @@ For MALI:
     make gfortran CORE=landice
 
 
-.. _conda_env:
+.. _legacy_conda_env:
 
 compass conda environment
 -------------------------
@@ -80,7 +80,7 @@ Each time you want to work with COMPASS, you will need to run:
 
     conda activate compass
 
-.. _setup_overview:
+.. _legacy_setup_overview:
 
 Setting up a test case
 ----------------------
@@ -122,7 +122,7 @@ file paths. You can make a copy of the template config file for your core
 (e.g. ``cp general.config.ocean config.ocean``) and modify it with the
 appropriate paths to the appropriate MPAS-Model build and local caches for
 meshes and initial-condition data files.  The documentation for
-:ref:`setup_ocean` includes some examples you can use as a starting point for
+:ref:`legacy_setup_ocean` includes some examples you can use as a starting point for
 specific machines. (Similar documentation for the ``landice`` core will is
 coming soon.)
 

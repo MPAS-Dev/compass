@@ -1,4 +1,4 @@
-.. _compass_config:
+.. _legacy_compass_config:
 
 config
 ======

@@ -1,4 +1,4 @@
-.. _compass_ocean_isomip_plus_at_lanl:
+.. _legacy_compass_ocean_isomip_plus_at_lanl:
 
 Instructions for setting up and running ISOMIP+ Ocean0 on LANL IC
 =================================================================

@@ -1,7 +1,7 @@
 Scripts
 =======
 
-.. _list_testcases:
+.. _legacy_list_testcases:
 
 list\_testcases.py
 ------------------
@@ -46,13 +46,13 @@ Command-line options::
                             If set, script will print the flags to use a the N'th configuration.
 
 
-.. _setup_testcase:
+.. _legacy_setup_testcase:
 
 setup\_testcase.py
 ------------------
 
 This script is used to setup individual test cases. Available test cases
-can be see using the :ref:`list_testcases` script.
+can be see using the :ref:`legacy_list_testcases` script.
 
 Specifically, this script parses XML files that define cases (steps in test
 cases) and driver scripts, and generates directories and scripts to run each
@@ -60,9 +60,9 @@ step in the process of creating a test case.
 
 This script requires a setup configuration file. Configuration files are
 specific to each core. Template configuration files for each core can be seen
-in this directory named ``general.config.{core}`` (see :ref:`compass_config`).
-Each core may have different requirements as far as what is required within a
-configuration file.
+in this directory named ``general.config.{core}`` (see
+:ref:`legacy_compass_config`). Each core may have different requirements as far
+as what is required within a configuration file.
 
 Command-line options::
 
@@ -104,7 +104,7 @@ Command-line options::
       --work_dir PATH       If set, script will create case directories in work_dir rather than the current directory.
 
 
-.. _clean_testcase:
+.. _legacy_clean_testcase:
 
 clean\_testcase.py
 ------------------
@@ -143,7 +143,7 @@ Command-line options::
 
 
 
-.. _manage_regression_suite:
+.. _legacy_manage_regression_suite:
 
 manage\_regression\_suite.py
 ----------------------------

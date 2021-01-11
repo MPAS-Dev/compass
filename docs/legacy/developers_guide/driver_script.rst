@@ -1,4 +1,4 @@
-.. _compass_driver_script:
+.. _legacy_compass_driver_script:
 
 driver\_script
 ==============
@@ -130,7 +130,7 @@ have the comparison pass.
         * ``file``: The file that contains the template that should be expanded here.
 
         * ``path_base``: The base that the path attribute should be used relative
-          to. Can be a pre-defined paths (see :ref:`compass_config`)
+          to. Can be a pre-defined paths (see :ref:`legacy_compass_config`)
 
         * path: The path that the file lives in, relative to path_base.
 

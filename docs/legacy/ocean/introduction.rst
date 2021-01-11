@@ -1,4 +1,4 @@
-.. _compass_ocean:
+.. _legacy_compass_ocean:
 
 
 Introduction
@@ -17,12 +17,12 @@ Some helpful external links:
 
   * https://mpas-dev.github.io/ocean/release_6.0/release_6.0.html
 
-.. _setup_ocean:
+.. _legacy_setup_ocean:
 
 Setting config options for ocean test cases
 -------------------------------------------
 
-This documentation is similar to :ref:`setup_overview`, with some details that
+This documentation is similar to :ref:`legacy_setup_overview`, with some details that
 are specific to the ``ocean`` core. If you are new to MPAS-Ocean, it is easiest
 to `download a prepared test case <https://mpas-dev.github.io/ocean/release_6.0/release_6.0.html>`_.
 
@@ -48,7 +48,7 @@ Three other paths are required, ``mesh_database``,
 storing pre-generated mesh files, data sets for creating initial conditions,
 and bathymetry data. These can be empty directories, in which case meshes and
 other data sets will be downloaded as required during test-case setup.  (If a
-test case appears to hang during setup, it is most likely downloading mesh, 
+test case appears to hang during setup, it is most likely downloading mesh,
 initial-condition or bathymetry data.)
 
 On LANL IC, the shared data bases can be found at:

@@ -1,4 +1,4 @@
-.. _compass_ocean_isomip_plus:
+.. _legacy_compass_ocean_isomip_plus:
 
 ISOMIP+
 =======
