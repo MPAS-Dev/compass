@@ -139,7 +139,6 @@ interactive node (see machine instructions below) and then
 .. code-block:: bash
 
     cd $WORKDIR
-    cd ocean/global_ocean/QU240/init
     ./run.py
 
 Note the sequence of subdirectories is the same as the flags used to set up the
