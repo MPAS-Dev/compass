@@ -82,7 +82,9 @@ cori, intel
     git submodule update --init --recursive
 
     make intel-nersc CORE=ocean
-    PIO on cori
+
+PIO on cori
+-----------
 
 We have already compiled PIO on cori, and paths are given in the previous
 instructions. If you need to compile it yourself, you can do that as follows
