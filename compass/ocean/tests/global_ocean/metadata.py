@@ -2,6 +2,8 @@ import subprocess
 from datetime import datetime
 import numpy
 import xarray
+import os
+import shutil
 
 from mpas_tools.io import write_netcdf
 
@@ -75,10 +77,14 @@ def add_mesh_and_init_metadata(output_filenames, config, init_filename):
 
         for filename in output_filenames:
             if filename.endswith('.nc'):
-                with xarray.open_dataset(filename) as ds:
-                    ds.load()
-                    ds.attrs.update(metadata)
-                    write_netcdf(ds, filename)
+                args = ['ncra']
+                for key, value in metadata.items():
+                    args.extend(['--glb_att_add', '{}={}'.format(key, value)])
+                name, ext = os.path.splitext(filename)
+                new_filename = '{}_with_metadata{}'.format(name, ext)
+                args.extend([filename, new_filename])
+                subprocess.check_call(args)
+                shutil.move(new_filename, filename)
 
 
 def _get_metadata(dsInit, config):
