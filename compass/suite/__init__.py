@@ -167,6 +167,7 @@ def run_suite(suite_name):
             with LoggingContext(test_name, log_filename=log_filename) as \
                     test_logger:
                 testcase['log_filename'] = log_filename
+                testcase['new_step_log_file'] = False
 
                 os.chdir(testcase['work_dir'])
 
