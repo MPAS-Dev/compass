@@ -3,9 +3,9 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>LANL Institutional Computing &mdash; COMPASS stable documentation</title>
   
@@ -16,7 +16,10 @@
 
   
   
+
   
+  
+
   
 
   
@@ -51,7 +54,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> COMPASS
+            <a href="../index.html" class="icon icon-home"> COMPASS
           
 
           
@@ -160,6 +163,8 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
@@ -171,7 +176,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../_sources/machine_specific_instructions/lanl.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -257,7 +262,9 @@ make gfortran <span class="nv">CORE</span><span class="o">=</span>ocean
 </div>
 <div class="section" id="grizzly-intel-17">
 <h2>grizzly, intel 17<a class="headerlink" href="#grizzly-intel-17" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>module load intel/17.0.1
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>module purge
+module use /usr/projects/climate/SHARED_CLIMATE/modulefiles/all
+module load intel/17.0.1
 module load openmpi/1.10.5 netcdf/4.4.1 parallel-netcdf/1.5.0 pio/1.7.2
 make ifort <span class="nv">CORE</span><span class="o">=</span>ocean
 </pre></div>
@@ -265,6 +272,7 @@ make ifort <span class="nv">CORE</span><span class="o">=</span>ocean
 </div>
 <div class="section" id="grizzly-intel-19-with-pio2">
 <h2>grizzly, intel 19 with PIO2<a class="headerlink" href="#grizzly-intel-19-with-pio2" title="Permalink to this headline">¶</a></h2>
+<p><em>Note: Intel 19 and PIO2 currently not functioning. Compile fails on PIO2 test. -Mark P, Jan 12 2021</em></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>module purge
 module use /usr/projects/climate/SHARED_CLIMATE/modulefiles/all/scorpio
 module load friendly-testing
@@ -344,37 +352,29 @@ use it for MPAS builds, set the following environment variable:</p>
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="nersc.html" class="btn btn-neutral float-right" title="NERSC" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="slurm.html" class="btn btn-neutral float-left" title="Slurm job queueing" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="nersc.html" class="btn btn-neutral float-right" title="NERSC" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="slurm.html" class="btn btn-neutral float-left" title="Slurm job queueing" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright Copyright (c) 2013-2020,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR).
+        &#169; Copyright Copyright (c) 2013-2020,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 

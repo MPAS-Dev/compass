@@ -102,12 +102,16 @@ grizzly, intel 17
 
 .. code-block:: bash
 
+    module purge
+    module use /usr/projects/climate/SHARED_CLIMATE/modulefiles/all
     module load intel/17.0.1
     module load openmpi/1.10.5 netcdf/4.4.1 parallel-netcdf/1.5.0 pio/1.7.2
     make ifort CORE=ocean
 
 grizzly, intel 19 with PIO2
 ---------------------------
+
+*Note: Intel 19 and PIO2 currently not functioning. Compile fails on PIO2 test. -Mark P, Jan 12 2021*
 
 .. code-block:: bash
 
