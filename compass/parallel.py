@@ -63,7 +63,11 @@ def update_namelist_pio(config, cores, step_dir):
     # update PIO tasks based on the machine settings and the available number
     # or cores
     pio_num_iotasks = int(numpy.ceil(cores/cores_per_node))
-    pio_stride = min(cores_per_node, cores)
+    pio_stride = cores//pio_num_iotasks
+    if pio_stride > cores_per_node:
+        raise ValueError('Not enough nodes for the number of cores.  cores: '
+                         '{}, cores per node: {}'.format(cores,
+                                                         cores_per_node))
 
     replacements = {'config_pio_num_iotasks': '{}'.format(pio_num_iotasks),
                     'config_pio_stride': '{}'.format(pio_stride)}
