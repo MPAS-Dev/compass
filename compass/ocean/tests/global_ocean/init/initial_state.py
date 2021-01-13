@@ -70,6 +70,9 @@ def setup(step, config):
 
     # generate the namelist, replacing a few default options
     replacements = namelist.parse_replacements(package, 'namelist.init')
+    ic_namelist = 'namelist.{}'.format(initial_condition.lower())
+    replacements.update(namelist.parse_replacements(
+        package, ic_namelist))
     if with_ice_shelf_cavities:
         replacements.update(namelist.parse_replacements(
             package, 'namelist.wisc'))
