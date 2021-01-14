@@ -11,16 +11,16 @@ Summary
 -------
 
 While the existing COMPASS infrastructure has served us well in providing a
-framework for setting up MPAS testcases and test suites, several shortcomings
+framework for setting up MPAS test cases and test suites, several shortcomings
 have emerged over the years.  First, new users have not found the current
 system of creating XML files that are parsed into python scripts, namelists and
 streams files very intuitive or easy to modify.  Second, the current scripts and
 XML files do not lend themselves to code reuse, leading to a cumbersome system
 of symlinked scripts and XML config files.  Third, the only way that users
-currently have of modifying testcases to edit namelists, streams files and run
-scripts for each step individually after the testcase has been set up.  Fourth
+currently have of modifying test cases to edit namelists, streams files and run
+scripts for each step individually after the test case has been set up.  Fourth
 and related, there is not a way for users to easily constrain or modify
-how many cores a given testcase uses, making it hard to configure testcases
+how many cores a given test case uses, making it hard to configure test cases
 in a way that is appropriate for multiple machines.  Fifth and also related,
 COMPASS does not currently have a way to provide machine-specific paths and
 other information that could allow for better automation on supported machines.
@@ -28,15 +28,15 @@ Sixth, the directory structure imposed by COMPASS
 (``core/configuration/resoltuion/testcase/step``) is too rigid for many
 applications. Finally, COMPASS is not well documented and the documentation that
 does exist is not very helpful either for new users or for new developers
-interested in creating new testcases.
+interested in creating new test cases.
 
 The proposed ``compass`` python package should address these challenges with
-the hope of making the MPAS testcases significantly easier to develop and run.
+the hope of making the MPAS test cases significantly easier to develop and run.
 
 Requirements
 ------------
 
-Requirement: Make testcases easy to understand, modify and create
+Requirement: Make test cases easy to understand, modify and create
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Date last modified: 2020/12/04
@@ -51,7 +51,7 @@ to get started with.  New users would likely have an easier time if test cases
 were written in a more direct way, using a common language rather than custom
 XML tags.
 
-Importantly, creating a testcase should also be as easy as possible.  There is a
+Importantly, creating a test case should also be as easy as possible.  There is a
 need to balance readability and reusability. There is a risk that the compass
 redesign, as it becomes heavily pythonic, may make it difficult for developers to
 contribute.  But we can't go too far the other way either. We want the best
@@ -65,12 +65,12 @@ Date last modified: 2020/11/16
 
 Contributors: Xylar Asay-Davis
 
-Currently, there are two approaches to sharing code between COMPASS testcases.
+Currently, there are two approaches to sharing code between COMPASS test cases.
 In some cases, shared code is part of an external package, often ``mpas_tools``,
 which is appropriate for code that may be used outside of COMPASS.  However,
 this approach is cumbersome for testing, so it is not the preferred approach for
-COMPASS-specific code.  In other cases, scripts are symlinked in testcases and
-run with testcase-specific flags.  This approach is also cumbersome and does
+COMPASS-specific code.  In other cases, scripts are symlinked in test cases and
+run with test-case-specific flags.  This approach is also cumbersome and does
 not lend itself to code reuse between scripts.  Finally, many test cases attempt
 to share XML files using symlinks, a practice that has led to frequent
 unintended consequences when a linked file is modified with changes appropriate
@@ -86,12 +86,12 @@ Date last modified: 2020/11/16
 
 Contributors: Xylar Asay-Davis
 
-Currently, COMPASS reads a configuration file as part of setting up testcases,
-but these configuration options are largely unavailable to testcases themselves.
-Some steps of some testcases (e.g. ``files_for_e3sm`` in some
+Currently, COMPASS reads a configuration file as part of setting up test cases,
+but these configuration options are largely unavailable to test cases themselves.
+Some steps of some test cases (e.g. ``files_for_e3sm`` in some
 ``ocean/global_ocean`` test cases) have their own dedicated config files, but
-these are again separate from the config file used to set up testcases, are
-awkward to modify (requiring editing after testcase generation).
+these are again separate from the config file used to set up test cases, are
+awkward to modify (requiring editing after test case generation).
 
 
 Requirement: Ability specify/modify core counts
@@ -101,13 +101,13 @@ Date last modified: 2020/11/16
 
 Contributors: Xylar Asay-Davis
 
-Some testcases involve multiple steps of running the MPAS model, each with a
+Some test cases involve multiple steps of running the MPAS model, each with a
 hard-coded number of cores (and often with a corresponding hard-coded number of
 PIO tasks), which makes it tedious to modify the number of cores or nodes that
-a given testcase uses.  This problem is exacerbated in test suites, where it is
+a given test case uses.  This problem is exacerbated in test suites, where it is
 even more difficult and tedious to modify processor counts for individual test
 cases.  A system is needed where the user can more easily override the default
-number of cores used in one or more steps of a testcase.  The number of PIO
+number of cores used in one or more steps of a test case.  The number of PIO
 tasks and the stride between them should be updated automatically to accommodate
 the new core count.
 
@@ -119,14 +119,14 @@ Date last modified: 2020/11/16
 
 Contributors: Xylar Asay-Davis
 
-Currently, many COMPASS testcases have hard-coded processor counts and related
+Currently, many COMPASS test cases have hard-coded processor counts and related
 information that are likely only appropriate for one machine.  Users must
 specify the paths to shared datasets such as meshes and initial conditions.
 Users must also know where to load the ``compass`` conda environment appropriate
-for running testcases.  If information were available on the system being used,
+for running test cases.  If information were available on the system being used,
 such as the number of cores per node and the locations of shared paths,
-testcases and the COMPASS infrastructure could take advantage of this to
-automate many aspects of setting up and running testcases that are currently
+test cases and the COMPASS infrastructure could take advantage of this to
+automate many aspects of setting up and running test cases that are currently
 unnecessarily redundant and tedious.
 
 Requirement: Looser, more flexible directory structure
@@ -138,12 +138,12 @@ Contributors: Xylar Asay-Davis
 
 The directory structure currently imposed by COMPASS
 (``core/configuration/resoltuion/testcase/step``) is too rigid for many
-applications.  Some testcases (e.g. convergence tests) require multiple
-resolutions within the testcase.  Some configurations would prefer to sort
-testcases based on another parameter or property besides resolution.  It would
+applications.  Some test cases (e.g. convergence tests) require multiple
+resolutions within the test case.  Some configurations would prefer to sort
+test cases based on another parameter or property besides resolution.  It would
 be convenient if the directory structure could be more flexible, depending on
-the needs of a given configuration and testcase.  Even so, it is important that
-the subdirectory of each testcase and step is unique, they do not overwrite one
+the needs of a given configuration and test case.  Even so, it is important that
+the subdirectory of each test case and step is unique, they do not overwrite one
 another.
 
 
@@ -156,14 +156,14 @@ Contributors: Xylar Asay-Davis
 
 We need a set of user-friendly documentation on how to setup and activate an
 appropriate conda environment; build the appropriate MPAS core; list and setup
-a testcase; and run the testcase in via a batch queuing system.
+a test case; and run the test case in via a batch queuing system.
 
 Similarly, we need a set of developer-friendly documentation to describe how to
-create a new "configuration" with one or more "testcases", each made up of
+create a new "configuration" with one or more "test cases", each made up of
 one or more "steps".
 
 
-Requirement: Considerations related to running testcases in parallel
+Requirement: Considerations related to running test cases in parallel
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Date last modified: 2020/12/10
@@ -171,16 +171,16 @@ Date last modified: 2020/12/10
 Contributors: Xylar Asay-Davis, Matt Hoffman
 
 In the longer term, we would like ot add the capability of running multiple
-testcases within a test suite in parallel with one another for reduced
+test cases within a test suite in parallel with one another for reduced
 wall-clock time.  Similarly, we would also like to support multiple steps within
-a testcase running in parallel with one another (e.g. the forward runs with
-different viscosities in the baroclinic channel RPE testcase).  Full support for
+a test case running in parallel with one another (e.g. the forward runs with
+different viscosities in the baroclinic channel RPE test case).  Full support for
 this capability will not be included in this design, but design choices should
 be mindful of this future addition in the hopes of minimizing future
 modifications, particularly to individual test cases.
 
 
-Requirement: Resolution can be a testcase parameter
+Requirement: Resolution can be a test case parameter
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Date last modified: 2020/12/04
@@ -194,10 +194,10 @@ per resolution.  Instead, it could be helpful to have a list of resolutions that
 can easily be altered (e.g. ``dx = {min, max, step}`` with a linear or log step)
 with either configuration options or within the code. For convergence tests,
 resolution is a parameter, rather than something fundamental.  This could also
-reduce the number of testcases in the full list.
+reduce the number of test cases in the full list.
 
 
-Requirement: Testcase code is easy to alter and rerun
+Requirement: Test case code is easy to alter and rerun
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Date last modified: 2020/12/04
@@ -239,7 +239,7 @@ create their own batch script or modify an example.
 Algorithmic Formulations
 ------------------------
 
-Design solution: Make testcases easy to understand, modify and  and create
+Design solution: Make test cases easy to understand, modify and  and create
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Date last modified: 2020/12/04
@@ -247,17 +247,17 @@ Date last modified: 2020/12/04
 Contributors: Xylar Asay-Davis
 
 
-The proposed solution would be to write testcases as Python packages made up
-of modules and functions within a larger ``compass`` package.  A testcase will
-have separate functions to collect information on the testcase (the equivalent
+The proposed solution would be to write test cases as Python packages made up
+of modules and functions within a larger ``compass`` package.  A test case will
+have separate functions to collect information on the test case (the equivalent
 of parsing ``config_driver.xml`` in the current implementation), configure it
-by adding testcase-specific config options, and run the default steps.  Each
-step of a testcase (equivalent to the other ``config_*.xml`` files) will be
-a module (possibly shared between testcases) that implements functions for
+by adding test-case-specific config options, and run the default steps.  Each
+step of a test case (equivalent to the other ``config_*.xml`` files) will be
+a module (possibly shared between test cases) that implements functions for
 collecting information of the step (equivalent to parsing ``config_*.xml``),
 setting up the step (downloading files, making symlinks, creating namelist and
 streams files), and running the step.  A balance will have to be struck between
-code reusability and readability within each configuration (a set of testcases).
+code reusability and readability within each configuration (a set of test cases).
 
 Readability would be improved by using Jinja2 templates for code generation,
 rather than via string manipulation within python scripts as is the case in the
@@ -341,11 +341,11 @@ namelist files:
 
 Regarding the balance between reusability and readability, it is difficult to
 generalize this to the whole redesign.  To some degree this will be a choice
-left to each test case.  It will be difficult to reuse code across testcases
+left to each test case.  It will be difficult to reuse code across test cases
 and steps within a configuration without some degree of increased complexity.
 The redesign will attempt to include simpler examples, perhaps with less code
-reuse, that can serve as starting points for the creation of new testcases.
-These "prototype" testcases will include additional documentation and commenting
+reuse, that can serve as starting points for the creation of new test cases.
+These "prototype" test cases will include additional documentation and commenting
 to help new developers follow them and use them to design their own test cases.
 
 Even without the compass redesign, a certain familiarity with use of python
@@ -364,7 +364,7 @@ Date last modified: 2020/11/18
 Contributors: Xylar Asay-Davis
 
 
-By organizing both the testcases themselves and shared framework code into a
+By organizing both the test cases themselves and shared framework code into a
 ``compass`` Python package, code reuse and organization should be greatly
 simplified.
 
@@ -395,12 +395,12 @@ The organization of the package will be as follows:
 The proposed solution would slightly modify the naming conventions currently
 used in COMPASS. A ``core`` would be the same as it now is -- corresponding to
 an MPAS dynamical core such as ``ocean`` or ``landice``.  A ``configuration``
-would also retain its current meaning -- a group of testcases such as
+would also retain its current meaning -- a group of test cases such as
 ``global_ocean`` or ``MISMIP3D``.  For at least two reasons described above
 in "Looser, more flexible directory structure", we do not include
 ``resolution`` as the next level of hierarchy.  Instead, a ``configuration``
 contains ``testcases`` which can be given any convenient name to distinguish it
-from other testcases within that ``configuration``.  Several variants of a
+from other test cases within that ``configuration``.  Several variants of a
 ``testcase`` can define by varying a parameter or other characteristic
 (including resolution) but there need not be defined with separate packages
 or modules.  This is an important aspect of the code reuse provided by this
@@ -416,7 +416,7 @@ In addition to defining ``testcases`` and ``steps``, ``cores`` and
 more general (e.g. for creating meshes or initial conditions).  The main
 ``compass`` package would also include several framework modules and package,
 some for infrastructure related to listing, setting up and cleaning up
-testcases, and others for tasks common to many testcases.  As an example of the
+test cases, and others for tasks common to many test cases.  As an example of the
 latter, ``io.py`` defines functions for downloading files and creating symlinks.
 Here's how it would be used in the ``setup()`` function of a step:
 
@@ -446,11 +446,11 @@ Date last modified: 2020/11/18
 Contributors: Xylar Asay-Davis
 
 
-In the work directory, each testcase will have a single config file that is
+In the work directory, each test case will have a single config file that is
 populated during the setup phase and which is symlinked within each step of the
-testcase.  The idea of having a single config file per testcase, rather than
+test case.  The idea of having a single config file per test case, rather than
 one for each step, is to make it easier for users to modify config options in
-one place at runtime before running all the steps in a testcase.  This will
+one place at runtime before running all the steps in a test case.  This will
 hopefully avoid the tedium of altering redundant namelist or config options in
 each step.
 
@@ -465,16 +465,16 @@ loading order is:
 * core config file (found in ``compass/<core>/<core>.cfg``)
 * configuration config file (found in
   ``compass/<core>/tests/<configuration>/<configuration>.cfg``)
-* any additions or modifications made within the testcase's ``configure()``
+* any additions or modifications made within the test case's ``configure()``
   function.
 
 The ``configure()`` function allows each test case to load one or more config
-files specific to the testcase (e.g. ``<testcase>.cfg`` within the testcase's
+files specific to the test case (e.g. ``<testcase>.cfg`` within the test case's
 module) and would also allow calls to ``config.set()`` that define config
 options directly.
 
 The resulting config file would be written to ``<testcase>.cfg`` within the
-testcase directory and symlinked to each step subdirectory as stated above.
+test case directory and symlinked to each step subdirectory as stated above.
 
 
 Design solution: Ability specify/modify core counts
@@ -561,22 +561,22 @@ Date last modified: 2020/11/18
 Contributors: Xylar Asay-Davis
 
 
-Each testcase and step will be defined by a unique subdirectory within the
+Each test case and step will be defined by a unique subdirectory within the
 work directory.  Within the base work directory, the first two levels of
 subdirectories will be the same as in the current implementation:
-``core/configuration``.  However, testcases will be free to determine the
+``core/configuration``.  However, test cases will be free to determine the
 (unique) subdirectory structure beyond this top-most level.  Many existing
-testcases will likely stick with the ``resolution/testcase/step`` organization
+test cases will likely stick with the ``resolution/testcase/step`` organization
 structure imposed in the existing COMPASS framework, but others may choose a
 different way of organizing (and, indeed, many test cases already have given the
 ``resolution`` subdirectory a name that is seemingly unrelated to the mesh
-resolution).  A unique subdirectory for each testcase and step will be provided
+resolution).  A unique subdirectory for each test case and step will be provided
 as a value in ``testcase['subdir']`` or ``step['subdir']`` within the python
-dictionary that describes each testcase or step.  The default ``subdir`` will
-be the name of the testcase or step, but each testcase or step can modify this
+dictionary that describes each test case or step.  The default ``subdir`` will
+be the name of the test case or step, but each test case or step can modify this
 as appropriate in the ``collect()`` function.
 
-COMPASS will list testcases based on their full paths within the work directory,
+COMPASS will list test cases based on their full paths within the work directory,
 since this is they way that they can be uniquely identified.
 
 
@@ -601,7 +601,7 @@ out in a manner similar to what has already been done for:
 
 The documentation will include:
 
-* A user's guide for listing, setting up, and cleaning up testcase
+* A user's guide for listing, setting up, and cleaning up test case
 
 * A user's guide for regression suites
 
@@ -615,26 +615,26 @@ The documentation will include:
 
   * A subsection describing the configurations
 
-    * A sub-subsection for each testcase and its steps
+    * A sub-subsection for each test case and its steps
 
   * A subsection for the core's framework code
 
 * A description of the ``compass`` framework code:
 
-  * for use within testcases
+  * for use within test cases
 
-  * for listing, setting up and cleaning up testcases
+  * for listing, setting up and cleaning up test cases
 
   * for managing regression test suites
 
 * An automated documentation of the API pulled from docstrings
 
-* A developer's guide for creating new testcases
+* A developer's guide for creating new test cases
 
-  * core-specific details for developing new testcases
+  * core-specific details for developing new test cases
 
 
-Design solution: Considerations related to running testcases in parallel
+Design solution: Considerations related to running test cases in parallel
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Date last modified: 2020/12/10
@@ -642,7 +642,7 @@ Date last modified: 2020/12/10
 Contributors: Xylar Asay-Davis
 
 I plan to use `parsl <https://parsl.readthedocs.io/en/stable/>`_ to support
-parallelism between both testcases and steps within a testcase.  After reading
+parallelism between both test cases and steps within a test case.  After reading
 documentation, running tutorials, and beginning prototyping, it seems that the
 relatively new
 `WorkQueueExecutor <https://parsl.readthedocs.io/en/stable/stubs/parsl.executors.WorkQueueExecutor.html#parsl.executors.WorkQueueExecutor>`_
@@ -653,23 +653,23 @@ release (v1.0.0).  So it seems premature to settle on this design choice or to
 begin to incorporate it into code (except perhaps as a separate prototype).
 
 Even so, some design choices can be made with future support for Parsl in mind.
-Each step of a testcase will be required to provide full paths to its input and
+Each step of a test case will be required to provide full paths to its input and
 output files so that, in the future, Parsl can determine dependencies between
-testcases and their steps using these files and control execution accordingly.
+test cases and their steps using these files and control execution accordingly.
 This will be the only method for determining dependencies, so steps will have to
 be accurate in providing their inputs and outputs to avoid errors,
-race conditions, or unnecessary blocking.  Testcases with an testing suite and
-steps within a testcase will also need to be ordered in such a way that outputs
+race conditions, or unnecessary blocking.  Test cases with an testing suite and
+steps within a test case will also need to be ordered in such a way that outputs
 of a "prerequisite" step are always defined before the inputs of any subsequent
 steps that need them as inputs.  In the future, this should allow ``compass``
 to associate each input file with a so-called Parsl ``DataFuture``, which will
-allow each step of a testcase to run only all of its input files are available.
+allow each step of a test case to run only all of its input files are available.
 
 This design solution will be fleshed out further in a separate document at a
 later date.
 
 
-Design solution: Resolution can be a testcase parameter
+Design solution: Resolution can be a test case parameter
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Date last modified: 2020/12/04
@@ -677,7 +677,7 @@ Date last modified: 2020/12/04
 Contributors: Xylar Asay-Davis
 
 As mentioned in "Shared code" and "Looser, more flexible directory structure",
-resolution will no longer be part of the directory structure for testcases and
+resolution will no longer be part of the directory structure for test cases and
 no restrictions will be placed on how individual test cases handle resolution
 or mesh generation.  To facilitate shared code, a configuration can use the
 same code for a step that generates a mesh and/or initial condition for
@@ -685,7 +685,7 @@ different resolutions, e.g. passing in the resolution as an argument to the
 function.
 
 
-Design solution: Testcase code is easy to alter and rerun
+Design solution: Test case code is easy to alter and rerun
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Date last modified: 2020/12/04
@@ -694,7 +694,7 @@ Contributors: Xylar Asay-Davis
 
 There is a local link to the ``compass`` and one could edit any files within
 the package either using the link or in the original location and then simply
-rerun the testcase or step.  Changes do not require a test build of a conda
+rerun the test case or step.  Changes do not require a test build of a conda
 package or anything like that.  After some discussion about adding symlinks to
 individual python files within the ``compass`` package, it was dicided that this
 has too many risks of being misunderstood, having unintended consequences, and
@@ -734,7 +734,7 @@ for single line command. An alternative will be to use ``parsl`` to handle the
 SLURM (or other) submission.
 
 Prototyping that is currently underway will help to decide which approach we
-use for individual testcases.  ``parsl`` will most likely be used for test
+use for individual test cases.  ``parsl`` will most likely be used for test
 suites.
 
 
