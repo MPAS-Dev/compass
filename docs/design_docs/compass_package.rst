@@ -17,7 +17,7 @@ system of creating XML files that are parsed into python scripts, namelists and
 streams files very intuitive or easy to modify.  Second, the current scripts and
 XML files do not lend themselves to code reuse, leading to a cumbersome system
 of symlinked scripts and XML config files.  Third, the only way that users
-currently have of modifying test cases to edit namelists, streams files and run
+currently have of modifying test cases is to edit namelists, streams files and run
 scripts for each step individually after the test case has been set up.  Fourth
 and related, there is not a way for users to easily constrain or modify
 how many cores a given test case uses, making it hard to configure test cases
@@ -37,7 +37,7 @@ Requirements
 ------------
 
 Requirement: Make test cases easy to understand, modify and create
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Date last modified: 2020/12/04
 
@@ -164,7 +164,7 @@ one or more "steps".
 
 
 Requirement: Considerations related to running test cases in parallel
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Date last modified: 2020/12/10
 
@@ -181,7 +181,7 @@ modifications, particularly to individual test cases.
 
 
 Requirement: Resolution can be a test case parameter
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Date last modified: 2020/12/04
 
@@ -198,7 +198,7 @@ reduce the number of test cases in the full list.
 
 
 Requirement: Test case code is easy to alter and rerun
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Date last modified: 2020/12/04
 
@@ -236,11 +236,11 @@ There should be an easy way for users to submit batch jobs without having to
 create their own batch script or modify an example.
 
 
-Algorithmic Formulations
-------------------------
+Algorithm Design
+----------------
 
-Design solution: Make test cases easy to understand, modify and  and create
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Algorithm design: Make test cases easy to understand, modify and  and create
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Date last modified: 2020/12/04
 
@@ -356,8 +356,8 @@ may be a learning curve, it is hoped that these skills will pay off far beyond
 COMPASS in a way that learning the existing XML-based approach cannot be.
 
 
-Design solution: Shared code
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Algorithm design: Shared code
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Date last modified: 2020/11/18
 
@@ -438,8 +438,8 @@ Here's how it would be used in the ``setup()`` function of a step:
         symlink(filename, os.path.join(step['work_dir'], 'input_file.nc'))
 
 
-Design solution: Shared configuration options
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Algorithm design: Shared configuration options
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Date last modified: 2020/11/18
 
@@ -477,8 +477,8 @@ The resulting config file would be written to ``<testcase>.cfg`` within the
 test case directory and symlinked to each step subdirectory as stated above.
 
 
-Design solution: Ability specify/modify core counts
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Algorithm design: Ability specify/modify core counts
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Date last modified: 2020/11/18
 
@@ -494,8 +494,8 @@ step can figure out how many cores to run with and can (if needed) update
 namelist options related to PIO tasks to be compatible.
 
 
-Design solution: Machine-specific data
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Algorithm design: Machine-specific data
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Date last modified: 2020/11/18
 
@@ -553,8 +553,8 @@ way that an appropriate value for ``threads`` is determined may need to evolve
 as that capability gets more exploration.
 
 
-Design solution: Looser, more flexible directory structure
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Algorithm design: Looser, more flexible directory structure
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Date last modified: 2020/11/18
 
@@ -580,8 +580,8 @@ COMPASS will list test cases based on their full paths within the work directory
 since this is they way that they can be uniquely identified.
 
 
-Design solution: User- and developer-friendly documentation
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Algorithm design: User- and developer-friendly documentation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Date last modified: 2020/11/16
 
@@ -634,8 +634,8 @@ The documentation will include:
   * core-specific details for developing new test cases
 
 
-Design solution: Considerations related to running test cases in parallel
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Algorithm design: Considerations related to running test cases in parallel
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Date last modified: 2020/12/10
 
@@ -669,8 +669,8 @@ This design solution will be fleshed out further in a separate document at a
 later date.
 
 
-Design solution: Resolution can be a test case parameter
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Algorithm design: Resolution can be a test case parameter
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Date last modified: 2020/12/04
 
@@ -685,8 +685,8 @@ different resolutions, e.g. passing in the resolution as an argument to the
 function.
 
 
-Design solution: Test case code is easy to alter and rerun
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Algorithm design: Test case code is easy to alter and rerun
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Date last modified: 2020/12/04
 
@@ -701,8 +701,8 @@ has too many risks of being misunderstood, having unintended consequences, and
 could be difficult to implement.
 
 
-Design solution: Support for pre-made initial condition files
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Algorithm design: Support for pre-made initial condition files
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Date last modified: 2020/12/04
 
@@ -720,8 +720,8 @@ new initial conditions could be added over time without breaking backwards
 compatibility.
 
 
-Design solution: Easy batch submission
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Algorithm design: Easy batch submission
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Date last modified: 2020/12/04
 
@@ -738,40 +738,6 @@ use for individual test cases.  ``parsl`` will most likely be used for test
 suites.
 
 
-Design and Implementation
--------------------------
+Implementation
+--------------
 
-Implementation: short-description-of-implementation-here
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Date last modified: YYYY/MM/DD
-
-Contributors: (add your name to this list if it does not appear)
-
-This section should detail the plan for implementing the design solution for
-requirement XXX. In general, this section is software-centric with a focus on
-software implementation. Pseudo code is appropriate in this section. Links to
-actual source code are appropriate. Project management items, such as git
-branches, timelines and staffing are also appropriate. Pseudo code can be
-included via blocks like
-
-.. code-block:: python
-
-   def example_function(foo):
-       return foo**2.0
-
-
-Testing
--------
-
-Testing and Validation: short-description-of-testing-here
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Date last modified: YYYY/MM/DD
-
-Contributors: (add your name to this list if it does not appear)
-
-How will XXX be tested, i.e., how will be we know when we have met requirement
-XXX? What testing will be included for use with ``py.test`` for continuous
-integration? Description of how testing that requires off-line or specialized
-setup will be used.
