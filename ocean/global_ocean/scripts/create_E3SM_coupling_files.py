@@ -97,7 +97,7 @@ def main():  # {{{
         config.get('main', 'ice_shelf_cavities')))
 
     parse_mesh_metadata(config)
-    mesh_name = config.get('mesh', 'long_name')
+    mesh_name = config.get('mesh', 'short_name')
 
     shutil.copyfile('mesh_before_metadata.nc', 'mesh.nc')
     append_mesh_metadata(config, 'mesh.nc')
@@ -146,7 +146,7 @@ def main():  # {{{
 
 def initial_condition_ocean(config):  # {{{
 
-    mesh_name = config.get('mesh', 'long_name')
+    mesh_name = config.get('mesh', 'short_name')
 
     # create links
     init_filename = config.get('main', 'initial_condition')
@@ -175,7 +175,7 @@ def initial_condition_ocean(config):  # {{{
 
 def graph_partition_ocean(config):  # {{{
 
-    mesh_name = config.get('mesh', 'long_name')
+    mesh_name = config.get('mesh', 'short_name')
     date_string = config.get('main', 'date_string')
 
     # create links
@@ -212,7 +212,7 @@ def graph_partition_ocean(config):  # {{{
 
 def initial_condition_seaice(config):  # {{{
 
-    mesh_name = config.get('mesh', 'long_name')
+    mesh_name = config.get('mesh', 'short_name')
 
     init_filename = config.get('main', 'initial_condition')
     base_path = os.path.dirname(os.getcwd())
@@ -248,7 +248,7 @@ def initial_condition_seaice(config):  # {{{
 
 def scrip(config):  # {{{
 
-    mesh_name = config.get('mesh', 'long_name')
+    mesh_name = config.get('mesh', 'short_name')
     date_string = config.get('main', 'date_string')
     ice_shelf_cavities = config.getboolean('main', 'ice_shelf_cavities')
 
@@ -284,7 +284,7 @@ def scrip(config):  # {{{
 
 def transects_and_regions(config):  # {{{
 
-    mesh_name = config.get('mesh', 'long_name')
+    mesh_name = config.get('mesh', 'short_name')
     ice_shelf_cavities = config.getboolean('main', 'ice_shelf_cavities')
 
     make_moc_masks(mesh_name)
@@ -320,7 +320,7 @@ def transects_and_regions(config):  # {{{
 
 def mapping_analysis(config):  # {{{
 
-    mesh_name = config.get('mesh', 'long_name')
+    mesh_name = config.get('mesh', 'short_name')
 
     make_analysis_lat_lon_map(config, mesh_name)
     make_analysis_polar_map(config, mesh_name, projection='antarctic')
@@ -514,7 +514,7 @@ def make_domain_files(config, mapping_suffix):  # {{{
 
 def mapping_runoff(config):  # {{{
 
-    short_name = config.get('mesh', 'long_name')
+    short_name = config.get('mesh', 'short_name')
     date_string = config.get('main', 'date_string')
     ice_shelf_cavities = config.getboolean('main', 'ice_shelf_cavities')
 
@@ -592,7 +592,7 @@ def mapping_runoff(config):  # {{{
 
 def salinity_restoring(config):  # {{{
 
-    mesh_name = config.get('mesh', 'long_name')
+    mesh_name = config.get('mesh', 'short_name')
     date_string = config.get('main', 'date_string')
     ice_shelf_cavities = config.getboolean('main', 'ice_shelf_cavities')
 
@@ -677,7 +677,7 @@ def salinity_restoring(config):  # {{{
 
 def prescribed_ismf(config):  # {{{
 
-    mesh_name = config.get('mesh', 'long_name')
+    mesh_name = config.get('mesh', 'short_name')
     date_string = config.get('main', 'date_string')
     ice_shelf_cavities = config.getboolean('main', 'ice_shelf_cavities')
 
@@ -1277,9 +1277,7 @@ def append_mesh_metadata(config, filename):  # {{{
                     config.getfloat('mesh', 'max_depth'),
                 'MPAS_Mesh_{}_Number_of_Levels'.format(prefix):
                     config.getfloat('mesh', 'levels'),
-                'MPAS_Mesh_Ice_Shelf_Cavities': ice_shelf_cavities,
-                'MPAS_Mesh_Runoff_Description': config.get(
-                    'mesh', 'runoff_description')}
+                'MPAS_Mesh_Ice_Shelf_Cavities': ice_shelf_cavities}
 
     packages = {'COMPASS': 'compass', 'JIGSAW': 'jigsaw',
                 'JIGSAW-Python': 'jigsawpy', 'MPAS-Tools': 'mpas_tools',
