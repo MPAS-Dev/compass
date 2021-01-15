@@ -1789,6 +1789,9 @@ additional arguments to the ``collect()`` function along with the resolution.
 A similar strategy to these examples was employed in the idealized ocean
 configurations: ``baroclinic_channel``, ``ziso`` and ``ice_shelf_2d``.
 
+global ocean configuration
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 The ``global_ocean`` configuration works with variable resolution meshes,
 requiring more significant numbers of parameters and even a function for
 defining the resolution.  For this reason, it turned out to be more practical
@@ -2098,24 +2101,143 @@ The global ocean configuration includes many other test cases and steps, and
 is quite complex compared to idealized test cases, so may need the most
 discussion.
 
+Whew! That was a lot, thanks for bearing with me.
+
 .. _imp_shared_code:
 
 Implementation: Shared code
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2021/01/14
+Date last modified: 2021/01/15
 
 Contributors: Xylar Asay-Davis
 
+The package includes myriad examples of code sharing so I will highlight a few.
+
+compass framework
+~~~~~~~~~~~~~~~~~
+
+The ``compass`` framework (modules and packages not in the core-specific
+packages) has a lot of code that is shared across existing test cases and could
+be very useful for future ones.
+
+Most of the framework currently has roughly the same functionality as legacy
+COMPASS, but it has been broken into more modules that make it clear what
+functionality each contains, e.g. ``compass.namelists`` and ``compass.streams``
+are for manipulating namelists and streams files, respectively;
+``compass.io`` has functionality for downloading files from LCRC and creating
+symlinks; and ``compass.validation`` can be used to ensure that variables are
+bit-for-bit identical between steps or when compared with a baseline, and to
+compare timers with a baseline.  This functionality was all included in 4 very
+long scripts in legacy COMPASS.
+
+One example that doesn't have a clear analog in legacy COMPASS is the
+``compass.parallel`` module.  It contains two functions:
+``get_available_cores_and_nodes()``, which can find out the number of total
+cores and nodes available for running steps, and
+``update_namelist_pio()``, which updates the number of PIO tasks and the
+stride between tasks based on the number of cores that a step is actually
+running with.
+
+within a core
+~~~~~~~~~~~~~
+
+Legacy COMPASS shares functionality with a core by having scripts at the core
+level that are linked within test cases and which take command-line arguments
+that function roughly the same way as function arguments.  But these scripts
+are not able to share any code between them unless it is from ``mpas_tools``
+or another external package.
+
+A core in ``compass`` could, theoretically, build out functionality as complex
+as in MPAS-Model if desired.  Indeed, it is my ambition to gradually replace
+"init mode" in MPAS-Ocean with equivalent python functionality, starting with
+simpler test cases.  This has already been accomplished for the 3 idealized
+test cases included in the proposed design.
+
+The current shared functionality in the ``ocean`` core includes:
+
+  * ``compass.ocean.namelists`` and ``compass.ocean.streams``: namelist
+    replacements and streams that are similar to core-level templates in legacy
+    COMPASS.  Current templates are for adjusting sea surface height in
+    ice-shelf cavities, and outputting variables related to frazil and
+    land-ice fluxes,
+
+  * ``compass.ocean.suites``: the ocean test suites
+
+  * ``compass.ocean.vertical``: supports for 1D vertical coordinates and the 3D
+    z* coordinate.
+
+  * ``compass.ocean.iceshelf``: computes sea-surface height and
+    land-ice pressure, and adjusts them to match one another
+
+  * ``compass.ocean.particles``: initialization of particles
+
+  * ``compass.ocean.plot``: plots initial state and 1D vertical grid
 
 
+within a configuration
+~~~~~~~~~~~~~~~~~~~~~~
+
+So far, the most common type of shared code within configurations are modules
+defining steps that are used in multiple test cases.  For example, the
+``baroclinic_channel`` configuration uses shared modules to define the
+``initial_state`` and ``forward`` steps of each test case.  Configurations
+also often include namelist and streams files with replacements to use across
+test cases.
+
+In addition to shared steps, the ``global_ocean`` configuration includes
+some additional shared modules:
+
+  * ``compass.ocean.tests.global_ocean.description``: creates a description of
+    a test case (basically the long name of the testcase) given its parameters
+
+  * ``compass.ocean.tests.global_ocean.mesh``: defines properties of each
+    global mesh (as well as a ``mesh`` test case)
+
+  * ``compass.ocean.tests.global_ocean.metadata``: determines the values of a
+    set of metadata related to the E3SM mesh name, initial condition, conda
+    environment, etc. that are added to nearly all ``global_ocean`` NetCDF
+    output
+
+  * ``compass.ocean.tests.global_ocean.subdir``: helps with maintaining the
+    slightly complex subdirectory structure within ``global_ocean`` test cases.
+
+The shared code in ``global_ocean`` has made it easy to define 138 different
+test cases using the QU240 (or QUwISC240) mesh.  This is possible because
+the same conceptual test (e.g. restart) can be defined:
+
+  * with or without ice-shelf cavities
+
+  * with the PHC or EN4 1900 initial conditions
+
+  * with or without BGC support
+
+  * with the RK4 or split-explicit time integrators
+
+In practice, this is likely overkill and many of these variants will never be
+used.  So we will likely wish to reduce the number of tests back to closer to
+what it was in legacy COMPASS in the near future.  But I wanted to demonstrate
+the capability first.
+
+Also, I want to note that it is because of this flexibility that I added an
+RK4 restart test, which failed and showed us that there was a recent problem
+with RK4 restarts (https://github.com/MPAS-Dev/MPAS-Model/issues/777).
+
+within a test case
+~~~~~~~~~~~~~~~~~~
+
+There aren't too many cases so far where reuse of code within a test case is
+particularly useful.  The main way this currently occurs is when the same
+module for a step gets used multiple times within a test case.  For example,
+the `baroclinic_channel.rpe_test` test case uses the same forward run with
+5 different viscosities.
 
 .. _imp_shared_config:
 
 Implementation: Shared configuration options
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2021/01/14
+Date last modified: 2021/01/15
 
 Contributors: Xylar Asay-Davis
 
