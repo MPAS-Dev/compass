@@ -42,3 +42,5 @@ altered in those files.
    developers_guide/regression_suite
    developers_guide/run_config
    developers_guide/building_docs
+
+   design_docs/index

@@ -724,7 +724,7 @@ relatively new
 `WorkQueueExecutor <https://parsl.readthedocs.io/en/stable/stubs/parsl.executors.WorkQueueExecutor.html#parsl.executors.WorkQueueExecutor>`_
 is likely to be the approach within Parsl that allows the level of flexibility
 and control that we would likely need.  However, this is a new enough feature
-that it is still considered to be ``beta'' and is not available in the latest
+that it is still considered to be "beta" and is not available in the latest
 release (v1.0.0).  So it seems premature to settle on this design choice or to
 begin to incorporate it into code (except perhaps as a separate prototype).
 
@@ -849,7 +849,7 @@ https://github.com/MPAS-Dev/compass/pull/28
 Implementation: Make test cases easy to understand, modify and  and create
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2021/01/14
+Date last modified: 2021/01/15
 
 Contributors: Xylar Asay-Davis
 
@@ -870,7 +870,7 @@ will not go into the details of how these work under the hood because the idea
 is that developers of new test cases would not need to know these details.
 These ``collect()`` functions don't need to take any arguments but they can
 have some (such as the resolution or other parameters) if it helps with code
-reuse (see :ref:`_imp_shared_code`).  ``collect()`` returns a python dictionary
+reuse (see :ref:`imp_shared_code`).  ``collect()`` returns a python dictionary
 that describes properties of the test case or step.  These dictionaries are
 a little bit of a crutch that allows me to avoid using python classes.  It
 isn't clear that they will be a whole lot more intuitive for developers who are
@@ -1089,16 +1089,23 @@ setup
 Test cases do not have a ``setup()`` function because the only setting up they
 typically include is to update config options in ``configure()``.  The
 ``setup()`` function in a step can be used to:
-* add parameters to the ``step`` dictionary
-* download and cache any files from the LCRC server (or elsewhere) that the
-  step requires
-* make symlinks to cached data files from the server, small data files within
-  ``compass`` itself, or output of other steps in this or another test case
-* update namelist options (if the MPAS model will be called)
-* update the streams file (if the MPAS model will be called)
-* add absolute paths of all require input files to the ``step['inputs']`` list
-* add absolute paths of all output files that are available to other test cases
-  and steps to the ``step['outputs']`` list
+
+  * add parameters to the ``step`` dictionary
+
+  * download and cache any files from the LCRC server (or elsewhere) that the
+    step requires
+
+  * make symlinks to cached data files from the server, small data files within
+    ``compass`` itself, or output of other steps in this or another test case
+
+  * update namelist options (if the MPAS model will be called)
+
+  * update the streams file (if the MPAS model will be called)
+
+  * add absolute paths of all require input files to the ``step['inputs']`` list
+
+  * add absolute paths of all output files that are available to other test cases
+    and steps to the ``step['outputs']`` list
 
 Namelist options always begin with a template produced when the MPAS model is
 compiled.  Replacements are stored as keys and values in a python dictionary.
@@ -1216,9 +1223,10 @@ run
 The ``run()`` function of a test case should, at a minimum, call the
 function ``compass.testcase.run_steps()`` to run the steps of the test case.
 It can also:
-* read config options and use them to update the number of cores and threads
-  that a step can use
-* perform validation that variables and timers
+
+  * read config options and use them to update the number of cores and threads
+    that a step can use
+  * perform validation that variables and timers
 
 Here is a relatively complex example:
 

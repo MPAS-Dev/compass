@@ -57,8 +57,10 @@ interfaces and sequencing.
 If you want to add math, the syntax is almost identical to Latex:
 
 .. math::
+
    (a + b)^2  &=  (a + b)(a + b) \\
               &=  a^2 + 2ab + b^2
+
 If you want to add an image, keep in mind that these should be quite small
 (jpegs are preferred but small pngs are okay) to keep the size of the repo
 small.  Here is an example:
@@ -86,8 +88,10 @@ branches, timelines and staffing are also appropriate. Pseudo code can be
 included via blocks like
 
 .. code-block:: python
+
    def example_function(foo):
        return foo**2.0
+
 Testing
 -------
 
