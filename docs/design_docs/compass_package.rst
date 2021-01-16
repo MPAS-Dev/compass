@@ -2536,6 +2536,70 @@ Date last modified: 2021/01/16
 Contributors: Xylar Asay-Davis
 
 
+Machine-specific configuration options are in a set of config files under
+``compass/machines``.  As an example, the config file for Anvil looks like:
+
+.. code-block:: cfg
+
+    # The paths section describes paths that are used within the ocean core test
+    # cases.
+    [paths]
+
+    # The mesh_database and the initial_condition_database are locations where
+    # meshes / initial conditions might be found on a specific machine. They can be
+    # the same directory, or different directory. Additionally, if they are empty
+    # some test cases might download data into them, which will then be reused if
+    # the test case is run again later.
+    mesh_database = /lcrc/group/e3sm/public_html/mpas_standalonedata/mpas-ocean/mesh_database
+    initial_condition_database = /lcrc/group/e3sm/public_html/mpas_standalonedata/mpas-ocean/initial_condition_database
+    bathymetry_database = /lcrc/group/e3sm/public_html/mpas_standalonedata/mpas-ocean/bathymetry_database
+    compass_envs = /lcrc/soft/climate/e3sm-unified/base
+
+
+    # The parallel section describes options related to running tests in parallel
+    [parallel]
+
+    # parallel system of execution: slurm or single_node
+    system = slurm
+
+    # whether to use mpirun or srun to run the model
+    parallel_executable = srun
+
+    # cores per node on the machine
+    cores_per_node = 36
+
+    # the number of multiprocessing or dask threads to use
+    threads = 18
+
+It is likely that ``cores_per_node`` can be detected using a Slurm command and
+doesn't need to be supplied.  This is something I have not fully explored yet.
+
+The ``threads`` option is not currently used and would also need to be
+explored.
+
+Additional config options are needed to support automatically generating
+job scripts, but this will be left for future work.
+
+The available machines are listed with:
+
+.. code-block:: bash
+
+    python -m compass list --machine
+
+.. code-block:: none
+
+    Machines:
+       anvil
+       badger
+       default
+       cori-haswell
+       chrysalis
+       cori-knl
+       compy
+       grizzly
+
+When setting up a test case or test suite, the ``--machine`` or ``-m`` flag
+is used to specify the machine.
 
 
 
