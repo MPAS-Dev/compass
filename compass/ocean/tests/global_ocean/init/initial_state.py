@@ -168,7 +168,7 @@ def setup(step, config):
 
     for file in ['initial_state.nc', 'culled_graph.info',
                  'init_mode_forcing_data.nc']:
-        outputs.append(os.path.join(step_dir, file))
+        outputs.append(os.path.abspath(os.path.join(step_dir, file)))
 
     step['inputs'] = inputs
     step['outputs'] = outputs

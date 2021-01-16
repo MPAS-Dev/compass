@@ -80,7 +80,7 @@ def setup(step, config):
 
     for file in ['culled_mesh.nc', 'culled_graph.info',
                  'critical_passages_mask_final.nc']:
-        outputs.append(os.path.join(step_dir, file))
+        outputs.append(os.path.abspath(os.path.join(step_dir, file)))
 
     step['inputs'] = inputs
     step['outputs'] = outputs
