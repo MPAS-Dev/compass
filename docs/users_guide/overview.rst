@@ -3,6 +3,8 @@
 Quick Start
 ===========
 
+.. _compass_repo:
+
 Set up a COMPASS repository: for beginners
 ------------------------------------------
 
