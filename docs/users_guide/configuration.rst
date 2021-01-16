@@ -41,6 +41,64 @@ different sources:
 * a user's config file that is passed in to the ``compass setup`` (see
   :ref:`setup_overview`) or ``compass suite`` (see :ref:`suite_overview`).
 
+As a user, this last one is the only config file you will need to set up
+yourself.  If you are on one of the :ref:`supported_machines` and you have
+built the MPAS-Model code in the default location (see :ref:`compass_repo`),
+you won't need to create a config file at all.
+
+If you are using a machine that ``compass`` doesn't know about, you will need
+to provide some config options to tell it where you would like to cache some
+data files and how many cores you have:
+
+.. code-block:: cfg
+
+    # The paths section points COMPASS to external paths
+    [paths]
+
+    # The mesh_database and the initial_condition_database are locations where
+    # meshes / initial conditions might be found on a specific machine. They can be
+    # the same directory, or different directory. Additionally, if they are empty
+    # some test cases might download data into them, which will then be reused if
+    # the test case is run again later.
+    mesh_database = /home/xylar/data/mpas/meshes
+    initial_condition_database = /home/xylar/data/mpas/initial_conditions
+    bathymetry_database = /home/xylar/data/mpas/bathymetry_database
+
+
+    # The parallel section describes options related to running tests in parallel
+    [parallel]
+
+    # parallel system of execution: slurm or single_node
+    system = single_node
+
+    # whether to use mpirun or srun to run the model
+    parallel_executable = mpirun
+
+    # cores per node on the machine
+    cores_per_node = 8
+
+    # the number of multiprocessing or dask threads to use
+    threads = 8
+
+The comments in this example are hopefully pretty self-explanatory.  If you
+have build MPAS-Model in another location, which is often useful if you are
+developing the model yourself, you will need to provide the path to the
+location where the model is build (i.e. where the ``ocean_model`` or
+``landice_model`` executables are found):
+
+.. code-block:: cfg
+
+    # The paths section points COMPASS to external paths
+    [paths]
+
+    # the relative or absolute path to the root of a branch where MPAS-Ocean
+    # has been built
+    mpas_model = /home/xylar/code/MPAS-Model/ocean/develop
+
+You are free to add any other sections and config options to your config file,
+in which case they will override the values specified in one of the other
+config files listed above.
+
 A typical config file resulting from all of this looks like:
 
 .. code-block:: cfg
