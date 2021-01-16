@@ -81,7 +81,12 @@ follows:
 
 .. code-block:: bash
 
-    conda create -n compass python=3.8 compass
+    conda create -n compass python=3.8 geometric_features=0.1.13 \
+        mpas_tools=0.2.0 jigsaw=0.9.12 jigsawpy=0.2.1 metis \
+        cartopy_offlinedata ffmpeg mpich "esmf=*=mpi_mpich_*" \
+        "netcdf4=*=nompi_*" nco  "pyremap>=0.0.7,<0.1.0" rasterio affine \
+        ipython jupyter lxml matplotlib cmocean numpy xarray progressbar2 \
+        requests scipy git
 
 Each time you want to work with COMPASS, you will need to run:
 
@@ -137,17 +142,13 @@ working on one of the known machines).  You can run:
 
 to see what machines are currently supported.  The config file ``ocean.cfg``
 specifies config options that override the defaults from compass as a whole,
-individual testcases, or machines.  At a minimum, this config file needs to
-specify the path to the build of the chosen branch of MPAS-Model:
+individual testcases, or machines.  If you are working on a supported machine
+and running MPAS-Model out of the default directory for your MPAS component
+(e.g. ``MPAS-Model/ocean/develop``), you do not need a config file.
 
-.. code-block:: cfg
-
-    [paths]
-
-    mpas_model = MPAS-Model/ocean/develop
-
-If you are not on one of the supported machines, you will need some more
-details, like in this example:
+If you are not on one of the supported machines or you with to use a build of
+your MPAS component in a directory other than the default, you will need to
+create a config file like in this example for MPAS-Ocean:
 
 .. code-block:: cfg
 
@@ -212,8 +213,6 @@ cases in one call. For the ocean core, they can be listed with:
 .. code-block:: bash
 
     python -m compass list --suites
-
-Currently, there are three: ``nightly``, ``quwisc240`` and ``qu240_spinups``.
 
 You can set up a suite as follows:
 
