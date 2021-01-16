@@ -2317,6 +2317,17 @@ there is no reason a test case cannot just set its config options or read them
 from a file without calling a configuration-level function, this is just a
 convenience.
 
+Finally, config options are taken from the user's config file if one was passed
+in with the ``-f`` or ``--config_file`` commandline flag:
+
+.. code-block:: bash
+
+    python -m compass setup -n 10 11 12 13 14 \
+        -w ~/scratch/mpas/test_baroclinic_channel -m anvil -f ocean.cfg
+
+    python -m compass suite -s -c ocean -t nightly -m anvil -f ocean.cfg \
+        -w ~/scratch/mpas/test_nightly
+
 A typical config file resulting from all of this looks like:
 
 .. code-block:: cfg
@@ -2416,11 +2427,103 @@ that preserves comments.
 Implementation: Ability specify/modify core counts
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2021/01/14
+Date last modified: 2021/01/16
 
 Contributors: Xylar Asay-Davis
 
+Each ``step`` dictionary is expected to include two keys, ``cores`` and
+``min_cores`` by the time the test case call ``compass.testcase.run_steps()``.
+``cores`` is the target number of cores for the step and ``min_cores`` is the
+minimum number of cores, below which the test case would probably fail. Before
+a step is run, ``compass`` finds out how many total cores are available to run
+the test. If the number is below ``step['min_cores']``, an error is raised.
+Otherwise, the test case will run with ``step['cores']`` or the number of
+available cores, whichever is lower.
 
+The idea is that the same test case could be run efficiently on one or more
+nodes of an HPC machine but could also be run on a laptop or desktop if the
+minimum number of required cores is reasonable.
+
+There are a variety of ways that the ``cores`` and ``min_cores`` entries can be
+added.  The most straightforward is to add them in the step's ``collect()``
+function.  They could be arguments to the function:
+
+.. code-block:: python
+
+    from compass.testcase import get_step_default
+
+
+    def collect(cores, min_cores=None):
+
+        step = get_step_default(__name__)
+        step['cores'] = cores
+        if min_cores is None:
+            min_cores = cores
+        step['min_cores'] = min_cores
+        return step
+
+or just hard coded:
+
+.. code-block:: python
+
+    from compass.testcase import get_step_default
+
+
+    def collect():
+        step = get_step_default(__name__)
+        step['cores'] = 1
+        step['min_cores'] = 1
+        return step
+
+Or they could be defined later in the process, at setup or in the test
+case's ``run()`` function.  (Defining them in the step's ``run()`` is too late,
+since the number of cores to actually use is determined before this call is
+made.)  In ``global_ocean``, the number of cores and minimum cores are set
+using config options.  Since users could modify these before calling the
+``run.py`` script, they are parsed in the test case's ``run()`` function
+before ``run_steps()`` is called:
+
+.. code-block:: python
+
+    def run(testcase, test_suite, config, logger):
+        work_dir = testcase['work_dir']
+        steps = testcase['steps_to_run']
+        if 'initial_state' in steps:
+            step = testcase['steps']['initial_state']
+            # get the these properties from the config options
+            for option in ['cores', 'min_cores', 'max_memory', 'max_disk',
+                           'threads']:
+                step[option] = config.getint('global_ocean',
+                                             'init_{}'.format(option))
+
+        run_steps(testcase, test_suite, config, logger)
+
+
+The ``steps_to_run`` entry in ``testcase`` is a list of the subset of the
+steps that were actually requested to run from the test case.  For example,
+if you run a step on its own, it still actually runs the test case but only
+requesting that one step.  Some test cases include steps that are not run by
+default, so ``step_to_run`` will be assigned to only those steps that should
+run by default:
+
+.. code-block:: python
+
+    from compass.testcase import get_testcase_default
+
+
+    def collect(with_ice_shelf_cavities):
+        ...
+        steps_to_run = ['initial_state']
+        if with_ice_shelf_cavities:
+            steps_to_run.append('ssh_adjustment')
+
+        testcase = get_testcase_default(module, description, steps, subdir=subdir)
+        testcase['steps_to_run'] = steps_to_run
+
+        return testcase
+
+The number of PIO tasks and the stride between tasks can then be modified
+if needed so that there is one PIO task per node.
 
 
 .. _imp_machine:
@@ -2428,7 +2531,7 @@ Contributors: Xylar Asay-Davis
 Implementation: Machine-specific data
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2021/01/14
+Date last modified: 2021/01/16
 
 Contributors: Xylar Asay-Davis
 
