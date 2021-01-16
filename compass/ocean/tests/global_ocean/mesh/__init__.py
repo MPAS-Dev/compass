@@ -79,6 +79,12 @@ def run(testcase, test_suite, config, logger):
     logger : logging.Logger
         A logger for output from the testcase
     """
+    step = testcase['steps']['mesh']
+    # get the these properties from the config options
+    for option in ['cores', 'min_cores', 'max_memory', 'max_disk']:
+        step[option] = config.getint('global_ocean',
+                                     'mesh_{}'.format(option))
+
     run_steps(testcase, test_suite, config, logger)
 
     variables = ['xCell', 'yCell', 'zCell']
