@@ -8,3 +8,5 @@ Design Documents
    :titlesonly:
 
    compass_package
+
+   template

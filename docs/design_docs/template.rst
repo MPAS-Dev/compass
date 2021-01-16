@@ -1,5 +1,5 @@
-Some descriptive title
-======================
+Template
+========
 
 date: YYYY/MM/DD
 
