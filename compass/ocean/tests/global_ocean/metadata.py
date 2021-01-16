@@ -159,7 +159,7 @@ def _get_metadata(dsInit, config):
     if 'bgc' in descriptions:
         metadata['MPAS_Mesh_Biogeochemistry'] = descriptions['bgc']
 
-    packages = {'COMPASS': 'compass', 'JIGSAW': 'jigsaw',
+    packages = {'compass': 'compass', 'JIGSAW': 'jigsaw',
                 'JIGSAW-Python': 'jigsawpy', 'MPAS-Tools': 'mpas_tools',
                 'NCO': 'nco', 'ESMF': 'esmf',
                 'geometric_features': 'geometric_features',

@@ -16,7 +16,7 @@ def main():
     """
 
     parser = argparse.ArgumentParser(
-        description="Perform COMPASS operations",
+        description="Perform compass operations",
         usage='''
 compass <command> [<args>]
 

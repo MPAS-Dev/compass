@@ -53,7 +53,7 @@ def setup(step, config):
     # one of the required parts of setup is to define any input files from
     # other steps or testcases that are required by this step, and any output
     # files that are produced by this step that might be used in other steps
-    # or testcases.  This allows COMPASS to determine dependencies between
+    # or testcases.  This allows compass to determine dependencies between
     # testcases and their steps
     inputs = []
     outputs = []
