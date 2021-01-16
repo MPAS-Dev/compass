@@ -2740,11 +2740,23 @@ this capability.
 Implementation: User- and developer-friendly documentation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2021/01/14
+Date last modified: 2021/01/16
 
 Contributors: Xylar Asay-Davis
 
 
+The documentation is still very much a work in progress and may be added with
+a separate pull request so that commits related to the infrastructure don't get
+intermixed with those for documentation.
+
+Documentation will continue to be generated automatically with Azure Pipelines
+using sphinx, as is the case for this design doc.
+
+The legacy COMPASS documentation will be renamed with "legacy" added to its
+titles (e.g. "Legacy User's Guide") and will be included at the end of the
+table of contents.
+
+More soon...
 
 
 .. _imp_parallel:
@@ -2752,11 +2764,39 @@ Contributors: Xylar Asay-Davis
 Implementation: Considerations related to running test cases in parallel
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2021/01/14
+Date last modified: 2021/01/16
 
 Contributors: Xylar Asay-Davis
 
 
+While an implementation of test-case parallelism will be left to a future
+design document and implementation, several parts of the current ``compass``
+design and implementation were made with this work in mind.
+
+test_suite argument
+~~~~~~~~~~~~~~~~~~~
+
+The ``run()`` functions of test cases and steps includes a ``test_suite``
+dictionary as an argument.  This dictionary currently has little information
+of use to individual test cases (the work directory, the list of test cases
+and the name of the suite) but could be used in the future to hold information
+used to configure Parsl.
+
+cores, max_memory and max_disk
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Each step keeps track of not only the number of cores (and threads) used but
+also the maximum allowed memory and disk.  While the latter two are not
+currently used for anything and the values in most test case are just
+placeholders, they are expected to be useful for Parsl ``WorkerQueues``.
+
+inputs and outputs
+~~~~~~~~~~~~~~~~~~
+
+An effort has been made to be thorough about providing an absolute path to the
+inputs and outputs of each step.  These are not used for very anything at
+present but they would be used by Parsl to determine dependencies between
+steps to figure out which can run in parallel with one another.
 
 
 .. _imp_res:
@@ -2764,11 +2804,20 @@ Contributors: Xylar Asay-Davis
 Implementation: Resolution can be a test case parameter
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2021/01/14
+Date last modified: 2021/01/16
 
 Contributors: Xylar Asay-Davis
 
 
+This was discussed in :ref:`imp_dir_struct`.  For all of the ocean
+configurations, either the resolution or the name of the mesh (which implicitly
+includes the resolution) is an argument to the ``collect()`` function of each
+test case and step.  All test cases use that resolution or mesh name as a
+subdirectory within the relative path of the test case.  So far, no convergence
+tests have been added where resolution is a parameter that varies across steps
+in a test case but the ``rpe_test`` test case of the ``baroclinic_channel``
+includes viscosity as a parameter that varies across steps, and resolution is
+expected to be easy to use in the same way for future test cases.
 
 
 .. _imp_alter_code:
@@ -2776,11 +2825,15 @@ Contributors: Xylar Asay-Davis
 Implementation: Test case code is easy to alter and rerun
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2021/01/14
+Date last modified: 2021/01/16
 
 Contributors: Xylar Asay-Davis
 
 
+Local symlinks to the ``compass`` directory seem to provide and easy method for
+altering code and having it affect test cases and steps immediately without
+the need to build a conda package or a conda environment, or even to rerun
+``python -m compass setup`` in most cases.
 
 
 .. _imp_premade_ic:
@@ -2788,10 +2841,14 @@ Contributors: Xylar Asay-Davis
 Implementation: Support for pre-made initial condition files
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2021/01/14
+Date last modified: 2021/01/16
 
 Contributors: Xylar Asay-Davis, Mark Petersen
 
+
+This work has not been included in any of the test cases that are part of the
+current implementation.  Nothing in the implementation should preclude adding
+this capability later on.
 
 
 .. _imp_batch:
@@ -2799,8 +2856,13 @@ Contributors: Xylar Asay-Davis, Mark Petersen
 Implementation: Easy batch submission
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2021/01/14
+Date last modified: 2021/01/16
 
 Contributors: Xylar Asay-Davis, Mark Petersen
 
 
+Batch scripts are not yet generated automatically as part of setting up a
+test case.  Additional machine-specific config options will be needed to make
+this possible. This capability will be part of a future design.  Nothing in the
+current implementation should preclude adding this capability later on.
+Indeed, it likely wouldn't be to much work.
