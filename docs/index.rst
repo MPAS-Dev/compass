@@ -44,6 +44,7 @@ functionality is added.
    :maxdepth: 2
 
    developers_guide/overview
+   design_docs/index
 
 .. toctree::
    :caption: Legacy Version
