@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# COMPASS documentation build configuration file, created by
+# compass documentation build configuration file, created by
 # sphinx-quickstart on Sat Mar 25 14:39:11 2017.
 #
 # This file is execfile()d with the current directory set to its
@@ -51,11 +51,11 @@ source_suffix = ['.rst']
 master_doc = 'index'
 
 # General information about the project.
-project = u'COMPASS'
-copyright = u'Copyright (c) 2013-2020,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;' \
+project = u'compass'
+copyright = u'Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;' \
             u'Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR).'
 author = u'Xylar Asay-Davis, Matt Hoffman, Doug Jacobsen, Mark Petersen, ' \
-         u'Philip Wolfram Tong Zhang'
+         u'Philip Wolfram, Luke Van Roekel, Tong Zhang'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -146,7 +146,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'compass.tex', u'COMPASS Documentation',
+    (master_doc, 'compass.tex', u'compass Documentation',
      author, 'manual'),
 ]
 
@@ -156,7 +156,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'compass', u'COMPASS Documentation',
+    (master_doc, 'compass', u'compass Documentation',
      [author], 1)
 ]
 
@@ -167,8 +167,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'compass', u'COMPASS Documentation',
-     author, 'COMPASS', 'One line description of project.',
+    (master_doc, 'compass', u'compass Documentation',
+     author, 'compass', 'One line description of project.',
      'Miscellaneous'),
 ]
 
