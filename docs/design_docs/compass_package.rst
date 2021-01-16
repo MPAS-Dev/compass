@@ -2602,17 +2602,137 @@ When setting up a test case or test suite, the ``--machine`` or ``-m`` flag
 is used to specify the machine.
 
 
-
 .. _imp_dir_struct:
 
 Implementation: Looser, more flexible directory structure
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2021/01/14
+Date last modified: 2021/01/16
 
 Contributors: Xylar Asay-Davis
 
+Test cases (and steps) in ``compass`` are uniquely defined by their relative
+paths within the work directory.  The first two subdirectories in this path
+must be the name of the core and of the configuration.  The names and
+organization beyond that are quite flexible.  Steps are expected to be nested
+somewhere within test cases but there is no restriction on the number of levels
+of subdirectories or their meaning beyond that of the configuration.
 
+The idealized ocean configurations that have been implemented so far and the
+example configurations use the same organization as in legacy COMPASS:
+
+.. code-block:: none
+
+    core/configuration/resolution/testcase/step
+
+For example:
+
+.. code-block:: none
+
+    ocean/baroclinic_channel/10km/default/initial_state
+
+But the ``global_ocean`` configuration takes full advantage of the new
+flexibility.  Here are the directories for test cases using the QU240 mesh:
+
+.. code-block:: none
+
+    ocean/global_ocean/QU240/mesh
+    ocean/global_ocean/QU240/PHC/init
+    ocean/global_ocean/QU240/PHC/performance_test/split_explicit
+    ocean/global_ocean/QU240/PHC/performance_test/RK4
+    ocean/global_ocean/QU240/PHC/restart_test/split_explicit
+    ocean/global_ocean/QU240/PHC/restart_test/RK4
+    ocean/global_ocean/QU240/PHC/decomp_test/split_explicit
+    ocean/global_ocean/QU240/PHC/decomp_test/RK4
+    ocean/global_ocean/QU240/PHC/threads_test/split_explicit
+    ocean/global_ocean/QU240/PHC/threads_test/RK4
+    ocean/global_ocean/QU240/PHC/analysis_test/split_explicit
+    ocean/global_ocean/QU240/PHC/analysis_test/RK4
+    ocean/global_ocean/QU240/PHC/daily_output_test/split_explicit
+    ocean/global_ocean/QU240/PHC/daily_output_test/RK4
+    ocean/global_ocean/QU240/PHC/spinup/split_explicit
+    ocean/global_ocean/QU240/PHC/files_for_e3sm/split_explicit
+    ocean/global_ocean/QU240/PHC/spinup/RK4
+    ocean/global_ocean/QU240/PHC/files_for_e3sm/RK4
+    ocean/global_ocean/QU240/PHC_BGC/init
+    ocean/global_ocean/QU240/PHC_BGC/performance_test/split_explicit
+    ocean/global_ocean/QU240/PHC_BGC/performance_test/RK4
+    ocean/global_ocean/QU240/PHC_BGC/restart_test/split_explicit
+    ocean/global_ocean/QU240/PHC_BGC/restart_test/RK4
+    ocean/global_ocean/QU240/PHC_BGC/decomp_test/split_explicit
+    ocean/global_ocean/QU240/PHC_BGC/decomp_test/RK4
+    ocean/global_ocean/QU240/PHC_BGC/threads_test/split_explicit
+    ocean/global_ocean/QU240/PHC_BGC/threads_test/RK4
+    ocean/global_ocean/QU240/PHC_BGC/analysis_test/split_explicit
+    ocean/global_ocean/QU240/PHC_BGC/analysis_test/RK4
+    ocean/global_ocean/QU240/PHC_BGC/daily_output_test/split_explicit
+    ocean/global_ocean/QU240/PHC_BGC/daily_output_test/RK4
+    ocean/global_ocean/QU240/PHC_BGC/spinup/split_explicit
+    ocean/global_ocean/QU240/PHC_BGC/files_for_e3sm/split_explicit
+    ocean/global_ocean/QU240/PHC_BGC/spinup/RK4
+    ocean/global_ocean/QU240/PHC_BGC/files_for_e3sm/RK4
+    ocean/global_ocean/QU240/EN4_1900/init
+    ocean/global_ocean/QU240/EN4_1900/performance_test/split_explicit
+    ocean/global_ocean/QU240/EN4_1900/performance_test/RK4
+    ocean/global_ocean/QU240/EN4_1900/restart_test/split_explicit
+    ocean/global_ocean/QU240/EN4_1900/restart_test/RK4
+    ocean/global_ocean/QU240/EN4_1900/decomp_test/split_explicit
+    ocean/global_ocean/QU240/EN4_1900/decomp_test/RK4
+    ocean/global_ocean/QU240/EN4_1900/threads_test/split_explicit
+    ocean/global_ocean/QU240/EN4_1900/threads_test/RK4
+    ocean/global_ocean/QU240/EN4_1900/analysis_test/split_explicit
+    ocean/global_ocean/QU240/EN4_1900/analysis_test/RK4
+    ocean/global_ocean/QU240/EN4_1900/daily_output_test/split_explicit
+    ocean/global_ocean/QU240/EN4_1900/daily_output_test/RK4
+    ocean/global_ocean/QU240/EN4_1900/spinup/split_explicit
+    ocean/global_ocean/QU240/EN4_1900/files_for_e3sm/split_explicit
+    ocean/global_ocean/QU240/EN4_1900/spinup/RK4
+    ocean/global_ocean/QU240/EN4_1900/files_for_e3sm/RK4
+    ocean/global_ocean/QU240/EN4_1900_BGC/init
+    ocean/global_ocean/QU240/EN4_1900_BGC/performance_test/split_explicit
+    ocean/global_ocean/QU240/EN4_1900_BGC/performance_test/RK4
+    ocean/global_ocean/QU240/EN4_1900_BGC/restart_test/split_explicit
+    ocean/global_ocean/QU240/EN4_1900_BGC/restart_test/RK4
+    ocean/global_ocean/QU240/EN4_1900_BGC/decomp_test/split_explicit
+    ocean/global_ocean/QU240/EN4_1900_BGC/decomp_test/RK4
+    ocean/global_ocean/QU240/EN4_1900_BGC/threads_test/split_explicit
+    ocean/global_ocean/QU240/EN4_1900_BGC/threads_test/RK4
+    ocean/global_ocean/QU240/EN4_1900_BGC/analysis_test/split_explicit
+    ocean/global_ocean/QU240/EN4_1900_BGC/analysis_test/RK4
+    ocean/global_ocean/QU240/EN4_1900_BGC/daily_output_test/split_explicit
+    ocean/global_ocean/QU240/EN4_1900_BGC/daily_output_test/RK4
+    ocean/global_ocean/QU240/EN4_1900_BGC/spinup/split_explicit
+    ocean/global_ocean/QU240/EN4_1900_BGC/files_for_e3sm/split_explicit
+    ocean/global_ocean/QU240/EN4_1900_BGC/spinup/RK4
+    ocean/global_ocean/QU240/EN4_1900_BGC/files_for_e3sm/RK4
+
+As in legacy COMPASS, there is a subdirectory for the mesh.  In the proposed
+design, there is a ``mesh`` test case with a single ``mesh`` step within that
+subdirectory.  The mesh constructed and culled within that test case serves
+as the starting point for all other test cases using the mesh.
+
+Then, there are 4 different subdirectories for variants of the initial
+condition: either PHC or EN4_1900, and either with or without BGC.  Each of
+these subdirectories has an ``init`` test case that creates the initial
+condition.  The results of this test case are then used in all other steps
+within the subdirectory for that initial condition.
+
+Each remaining test case includes one or more forward model runs, or uses the
+results of such a run.  Since the forward model can be run with either the
+split-explicit or the RK4 time integrator, variants of each test case are
+supported with each time integrator.  It is important that these are
+conceptually separate test cases because we use both the split-explicit and
+the RK4 versions of many test cases in our test suites.  Each requires a set of
+corresponding namelist options and modifications to streams, so it is also not
+trivial for a user to switch between the two time integrators simply by
+manually modifying the test case at runtime.
+
+We will likely never use many the 69 test cases defined for the QU240 mesh
+so it will likely be better to drop many of these unused configurations from
+the list of available test cases.  For now, I have provided the full set as
+an indication of how powerful the flexibility and code reuse in the new
+``compass`` can be, and how critical the flexible directory structure is for
+this capability.
 
 
 .. _imp_docs:
