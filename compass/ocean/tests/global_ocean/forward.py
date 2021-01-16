@@ -269,8 +269,8 @@ def setup(step, config):
     step['inputs'] = inputs
 
     # convert from relative to absolute paths
-    step['outputs'] = [os.path.join(step_dir, file) for file in
-                       step['outputs']]
+    step['outputs'] = [os.path.abspath(os.path.join(step_dir, file)) for file
+                       in step['outputs']]
 
 
 def run(step, test_suite, config, logger):

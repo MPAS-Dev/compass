@@ -145,7 +145,7 @@ def setup(step, config):
         symlink(target, os.path.join(step_dir, link))
         inputs.append(os.path.abspath(os.path.join(step_dir, target)))
 
-    outputs.append(os.path.join(step_dir, 'adjusted_init.nc'))
+    outputs.append(os.path.abspath(os.path.join(step_dir, 'adjusted_init.nc')))
 
     step['inputs'] = inputs
     step['outputs'] = outputs
