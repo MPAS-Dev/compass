@@ -503,11 +503,15 @@ loading order is:
 
 * machine config file (found in ``compass/machines/<machine>.cfg``, with
   ``default`` being the machine name if none is specified)
+
 * core config file (found in ``compass/<core>/<core>.cfg``)
+
 * configuration config file (found in
   ``compass/<core>/tests/<configuration>/<configuration>.cfg``)
+
 * any additions or modifications made within the test case's ``configure()``
   function.
+
 * the config file passed in by the user at the command line (if any).
 
 The ``configure()`` function allows each test case to load one or more config
@@ -2237,12 +2241,177 @@ the `baroclinic_channel.rpe_test` test case uses the same forward run with
 Implementation: Shared configuration options
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2021/01/15
+Date last modified: 2021/01/16
 
 Contributors: Xylar Asay-Davis
 
+As discussed in :ref:`alg_shared_config`, the proposed design builds up the
+config file for a given test from several sources.  Some of the config options
+are related to setting up the test case (e.g. the locations of cached data
+files) but the majority are related to running the steps of the test case.
 
+During setup of a test case and its steps, The config file is assembled from
+a number of sources.  Before the ``configure()`` function of the test case is
+called, config options come from:
 
+* the default config file, ``default.cfg``, which sets a few options related to
+  downloading files during setup (whether to download and whether to check the
+  size of files already downloaded)
+
+* the machine config file (using ``machines/default.cfg`` if none was
+  specified) with information on the parallel system and (typically) the paths
+  to cached data files
+
+* the core's config file.  For the ocean core, this sets default paths to
+  the MPAS model build (including the namelist templates).  It uses "extended
+  interpolation" in the config file to use config opitons within other config
+  options, e.g. ``model = ${paths:mpas_model}/ocean_model``.
+
+* the configuration's config file if one is found.  For idealized
+  configurations, these include config options that were previously init-mode
+  namelist options.  For ``global_ocean``, these include defaults for mesh
+  metadata (again using "extended interpolation"); the default number of cores
+  and other resource usage for mesh, init and forward steps; and options
+  related to files created for E3SM initial conditions.
+
+Then, the ``configure()`` function is called on the test case itself.  All of
+the current ocean test cases first call a shared ``configure()`` function at
+the configuration level, e.g.:
+
+.. code-block:: python
+
+    from compass.ocean.tests import global_ocean
+
+    def configure(testcase, config):
+        global_ocean.configure(testcase, config)
+
+where ``configure()`` in ``global_ocean`` is:
+
+.. code-block:: python
+
+    from compass.config import add_config
+    from compass.ocean.tests.global_ocean.mesh.mesh import get_mesh_package
+    from compass.ocean.tests.global_ocean.init import add_descriptions_to_config
+
+    def configure(testcase, config):
+        mesh_name = testcase['mesh_name']
+        package, prefix = get_mesh_package(mesh_name)
+        add_config(config, package, '{}.cfg'.format(prefix), exception=True)
+        if testcase['with_ice_shelf_cavities']:
+            config.set('global_ocean', 'prefix', '{}wISC'.format(
+                config.get('global_ocean', 'prefix')))
+
+        name = testcase['name']
+        add_config(config, 'compass.ocean.tests.global_ocean.{}'.format(name),
+                   '{}.cfg'.format(name), exception=False)
+
+        add_descriptions_to_config(testcase, config)
+
+In this case, a config options related to the mesh are loaded, then those
+related to ice-shelf cavities (if they are included in the mesh), then those
+specific to the test case itself.
+
+Although none of the existing ocean test cases do so, further changes could be
+made to the config file beyond those at the configuration level.  Indeed,
+there is no reason a test case cannot just set its config options or read them
+from a file without calling a configuration-level function, this is just a
+convenience.
+
+A typical config file resulting from all of this looks like:
+
+.. code-block:: cfg
+
+    [download]
+    download = True
+    check_size = False
+    verify = True
+
+    [parallel]
+    system = single_node
+    parallel_executable = mpirun
+    cores_per_node = 8
+    threads = 8
+
+    [paths]
+    mpas_model = /home/xylar/code/mpas-work/compass/compass_1.0/MPAS-Model/ocean/develop
+    mesh_database = /home/xylar/data/mpas/meshes
+    initial_condition_database = /home/xylar/data/mpas/initial_conditions
+    bathymetry_database = /home/xylar/data/mpas/bathymetry_database
+
+    [namelists]
+    forward = /home/xylar/code/mpas-work/compass/compass_1.0/MPAS-Model/ocean/develop/default_inputs/namelist.ocean.forward
+    init = /home/xylar/code/mpas-work/compass/compass_1.0/MPAS-Model/ocean/develop/default_inputs/namelist.ocean.init
+
+    [streams]
+    forward = /home/xylar/code/mpas-work/compass/compass_1.0/MPAS-Model/ocean/develop/default_inputs/streams.ocean.forward
+    init = /home/xylar/code/mpas-work/compass/compass_1.0/MPAS-Model/ocean/develop/default_inputs/streams.ocean.init
+
+    [executables]
+    model = /home/xylar/code/mpas-work/compass/compass_1.0/MPAS-Model/ocean/develop/ocean_model
+
+    [ssh_adjustment]
+    iterations = 10
+
+    [global_ocean]
+    mesh_cores = 1
+    mesh_min_cores = 1
+    mesh_max_memory = 1000
+    mesh_max_disk = 1000
+    init_cores = 4
+    init_min_cores = 1
+    init_max_memory = 1000
+    init_max_disk = 1000
+    init_threads = 1
+    forward_cores = 4
+    forward_min_cores = 1
+    forward_threads = 1
+    forward_max_memory = 1000
+    forward_max_disk = 1000
+    add_metadata = True
+    prefix = QU
+    mesh_description = MPAS quasi-uniform mesh for E3SM version ${e3sm_version} at
+        ${min_res}-km global resolution with ${levels} vertical
+        level
+    bathy_description = Bathymetry is from GEBCO 2019, combined with BedMachine Antarctica around Antarctica.
+    init_description = <<<Missing>>>
+    e3sm_version = 2
+    mesh_revision = 1
+    min_res = 240
+    max_res = 240
+    max_depth = autodetect
+    levels = autodetect
+    creation_date = autodetect
+    author = Xylar Asay-Davis
+    email = xylar@lanl.gov
+    pull_request = https://github.com/MPAS-Dev/compass/pull/28
+
+    [files_for_e3sm]
+    enable_ocean_initial_condition = true
+    enable_ocean_graph_partition = true
+    enable_seaice_initial_condition = true
+    enable_scrip = true
+    enable_diagnostics_files = true
+    comparisonlatresolution = 0.5
+    comparisonlonresolution = 0.5
+    comparisonantarcticstereowidth = 6000.
+    comparisonantarcticstereoresolution = 10.
+    comparisonarcticstereowidth = 6000.
+    comparisonarcticstereoresolution = 10.
+
+    [vertical_grid]
+    grid_type = tanh_dz
+    vert_levels = 16
+    bottom_depth = 3000.0
+    min_layer_thickness = 3.0
+    max_layer_thickness = 500.0
+
+Unfortunately, all comments are lost in the process of combining config
+options.  Comments are not parsed by ``ConfigParser``, and there is not a
+standard for which comments are associated with which options.  So users
+would need to search through the code for the original config or look through
+the documentation to know what the config options are used for.  In the future,
+we could consider implementing our own customized version of ``ConfigParser``
+that preserves comments.
 
 Implementation: Ability specify/modify core counts
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
