@@ -1,4 +1,4 @@
-.. _ocean_barocinic_channel:
+.. _ocean_baroclinic_channel:
 
 baroclinic_channel
 ==================
@@ -13,7 +13,7 @@ temperature is cooler in the southern half of the domain than in the north,
 with a gradient between the two halves that is sinusoidally perturbed in the
 meridional direction.  The surface temperature is also warmer than at depth.
 
-.. image:: images/baroclinic_channel.jpg
+.. image:: images/baroclinic_channel.png
    :width: 500 px
    :align: center
 

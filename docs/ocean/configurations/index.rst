@@ -1,6 +1,6 @@
 .. _ocean_configs:
 
-Ocean configurations
+ocean configurations
 ====================
 
 .. toctree::
