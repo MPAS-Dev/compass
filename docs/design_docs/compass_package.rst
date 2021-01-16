@@ -2866,3 +2866,210 @@ test case.  Additional machine-specific config options will be needed to make
 this possible. This capability will be part of a future design.  Nothing in the
 current implementation should preclude adding this capability later on.
 Indeed, it likely wouldn't be to much work.
+
+
+Testing
+-------
+
+.. _test_easy:
+
+Testing: Make test cases easy to understand, modify and create
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Date last modified: 2021/01/16
+
+Contributors: Xylar Asay-Davis, Luke Van Roekel
+
+
+Luke Van Roekel has agreed to attempt to implement a configuration
+("single-column") and its test cases and steps as a test of the ease of
+understanding, modifying and creating test cases.  Mark Petersen will be asked
+to do the same.  Since the ``landice`` core has not yet been added, we will
+hold off for follow-up work for Matt Hoffman to try adding a test case.
+
+More following those additions...
+
+.. _test_shared_code:
+
+Testing: Shared code
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+Date last modified: 2021/01/16
+
+Contributors: Xylar Asay-Davis
+
+
+All of the test cases (except ``example_expanded``) in the proposed
+implementation use shared code.  Since there are 174 test cases, not all have
+been tested but all test cases in the ocean nightly suite have been tested,
+along with the QUwISC240 equivalents of the QU240 tests in the nightly suite
+and the spin-up and files for E3SM tests of all 4 supported global ocean
+meshes.  The 10 km RPE test for the ``baroclinic_channel`` configuration has
+also been run successfully.  The higher resolution verisons of that test case
+have not yet been tested.
+
+So far, there is no indication of problems with shared code, but this is
+something of a subjective thing to test, beyond the proof of concept that code
+can, indeed, be shared.
+
+
+.. _test_shared_options:
+
+Testing: Shared configuration options
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Date last modified: 2021/01/16
+
+Contributors: Xylar Asay-Davis
+
+
+All test cases include a config file and most test cases make use of config
+options from that file.
+
+I verified that altering the following config options in the
+``ocean/global_ocean/QU240/PHC/init`` test case:
+
+.. code-block:: cfg
+
+    [global_ocean]
+    init_cores = 2
+
+    [vertical_grid]
+    vert_levels = 32
+    max_layer_thickness = 250.0
+
+Did indeed use 2 MPI tasks to produce an initial condition with 32 vertical
+levels, and a target maximum layer thickness of 250.0 m (actual was 245.35 m).
+
+It would be nearly impossible to test altering all parameters to see if they
+have the intended effect, so this will not be part of this testing.
+
+
+.. _test_core_count:
+
+Testing: Ability specify/modify core counts
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Date last modified: 2021/01/16
+
+Contributors: Xylar Asay-Davis
+
+
+This was included in :ref:`test_shared_options`.
+
+
+.. _test_machine_data:
+
+Testing: Machine-specific data
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Date last modified: 2021/01/14
+
+Contributors: Xylar Asay-Davis
+
+
+I ran the ocean nightly test suite on Anvil, providing ``-m anvil`` and no
+user config file.  This worked successfully and no cached files were
+downloaded, meaning the cache directories were found successfully via Anvil's
+config file.  I verified that the number of available cores and nodes in my job
+were successfully detected via Slurm commands.
+
+
+.. _test_dir_struct:
+
+Testing: Looser, more flexible directory structure
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Date last modified: 2021/01/16
+
+Contributors: Xylar Asay-Davis
+
+
+Testing of the ocean nightly suite includes tests of the flexible directory
+structure because it uses the ``global_ocean`` configuration.  More to the
+point, this capability has been tested by showing that test cases can be
+implemented using the flexible directory structure.
+
+
+.. _test_docs:
+
+Testing: User- and developer-friendly documentation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Date last modified: 2021/01/16
+
+Contributors: Xylar Asay-Davis
+
+
+Users and developers will be asked to run test cases and suites with the
+documentation and to add new test cases.  This has not yet happened because
+the documentation is still being written.
+
+
+.. _test_parallel:
+
+Testing: Considerations related to running test cases in parallel
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Date last modified: 2021/01/16
+
+Contributors: Xylar Asay-Davis, Matt Hoffman
+
+
+This has not yet been implemented so will be tested as part of a later design.
+
+
+.. _test_res:
+
+Testing: Resolution can be a test case parameter
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Date last modified: 2021/01/16
+
+Contributors: Xylar Asay-Davis, Mark Petersen
+
+
+Resolution is a parameter in many existing test cases.  No test case has yet
+been implemented that includes multiple steps with different resolutions so
+no testing of such a test case is possible at this time.
+
+
+.. _test_alter_code:
+
+Testing: Test case code is easy to alter and rerun
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Date last modified: 2021/01/16
+
+Contributors: Xylar Asay-Davis, Mark Petersen
+
+
+Xylar and Mark have both demonstrated that it is easy to modify code and rerun
+test cases without additional work because of the symlinks to the ``compass``
+directory.
+
+
+.. _test_premade_ic:
+
+Testing: Support for pre-made initial condition files
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Date last modified: 2021/01/16
+
+Contributors: Xylar Asay-Davis, Mark Petersen
+
+
+This was not yet implemented so no testing was performed.
+
+
+.. _test_batch:
+
+Testing: Easy batch submission
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Date last modified: 2021/01/16
+
+Contributors: Xylar Asay-Davis, Mark Petersen
+
+
+This was not yet implemented so no testing was performed.
