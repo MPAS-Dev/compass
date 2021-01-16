@@ -189,7 +189,7 @@ Running a test case
 -------------------
 
 After compiling the code and setting up a test case, you can log into an
-interactive node (see :ref:`blah`) and then
+interactive node (see :ref:`machines`) and then
 
 .. code-block:: bash
 
@@ -202,6 +202,8 @@ test cases.
 In order to run a bit-for-bit test with a previous case, use
 ``-b $PREVIOUS_WORKDIR`` to specify a "baseline".
 
+
+.. _suite_overview:
 
 Test Suites
 -----------
