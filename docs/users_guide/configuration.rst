@@ -26,7 +26,7 @@ different sources:
 
 * the configuration's config file if one is defined.  For idealized
   configurations, these include config options that were init-mode namelist
-  options in :ref:`legacy_compass`.  For :ref:`global_ocean`, these include
+  options in :ref:`legacy_compass`.  For :ref:`ocean_global_ocean`, these include
   defaults for mesh metadata (again using
   `extended interpolation <https://docs.python.org/3/library/configparser.html#configparser.ExtendedInterpolation>`_);
   the default number of cores and other resource usage for mesh, init and
@@ -35,7 +35,7 @@ different sources:
 
 * any number of config files from the test case.  There might be different
   config options depending on how the test case is configured (e.g. only if a
-  certain feature is enabled.  For example, :ref:`global_ocean` loads different
+  certain feature is enabled.  For example, :ref:`ocean_global_ocean` loads different
   sets of config options for different meshes.
 
 * a user's config file that is passed in to the ``compass setup`` (see

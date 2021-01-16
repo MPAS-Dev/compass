@@ -9,11 +9,11 @@ compass supports test cases for two main MPAS dynamical cores, :ref:`ocean`
 Test cases are grouped under these two "cores" and then into "configurations",
 which are groups of test cases that are part of the same framework, serve a
 similar purpose, or are variants on one another.  Example of ocean
-configurations include "idealized" setups like :ref:`baroclinic_channel`,
-:ref:`ziso` and "realistic" domains like :ref:`global_ocean`.  Idealized
-configurations typically use analytic functions to define their topography,
-initial conditions and forcing data (i.e. boundary conditions), whereas
-realistic configurations most often use data files for all fo these.
+configurations include "idealized" setups like :ref:`ocean_baroclinic_channel`,
+:ref:`ocean_ziso` and "realistic" domains like :ref:`ocean_global_ocean`.
+Idealized configurations typically use analytic functions to define their
+topography, initial conditions and forcing data (i.e. boundary conditions),
+whereas realistic configurations most often use data files for all fo these.
 
 compass test cases are made up of one or more steps.  These are the smallest
 units of work in compass. You can run an individual step on its own if you
@@ -25,8 +25,8 @@ configuration options (see :ref:`config_files`) that you choose.
 
 In compass, test cases are identified by their subdirectory relative to a work
 directory that the user chooses.  For example, the default test case from
-the :ref:`baroclinic_channel` configuration at 10-km resolution is identified
-as:
+the :ref:`ocean_baroclinic_channel` configuration at 10-km resolution is
+identified as:
 
 .. code-block:: none
 

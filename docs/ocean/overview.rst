@@ -5,10 +5,11 @@ ocean core
 
 The ``ocean`` core in compass contains test cases for the
 `MPAS-Ocean <https://mpas-dev.github.io/ocean/ocean.html>`_) model.
-Currently, there are 4 configurations---:ref:`baroclinic_channel`,
-:ref:`global_ocean`, :ref:`ice_shelf_2d`, and :ref:`ziso`, each with several
-:ref:`test_cases`.  Many more ``ocean`` test cases are still available through
-:ref:`legacy_compass` (see legacy :ref:`legacy_compass_ocean_testcases`).
+Currently, there are 4 configurations---:ref:`ocean_baroclinic_channel`,
+:ref:`ocean_global_ocean`, :ref:`ocean_ice_shelf_2d`, and :ref:`ocean_ziso`,
+each with several :ref:`test_cases`.  Many more ``ocean`` test cases are still
+available through :ref:`legacy_compass` (see legacy
+:ref:`legacy_compass_ocean_testcases`).
 
 Some helpful external links:
 
