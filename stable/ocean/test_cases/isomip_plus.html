@@ -433,7 +433,7 @@ vim job_script.bash
 <span class="nv">months_per_job</span><span class="o">=</span><span class="m">24</span>
 <span class="nv">end_date</span><span class="o">=</span><span class="s2">&quot;0003-01-01_00:00:00&quot;</span>
 
-<span class="k">for</span> month in <span class="sb">`</span>seq <span class="m">0</span> <span class="nv">$months_per_job</span><span class="sb">`</span>
+<span class="k">for</span> month <span class="k">in</span> <span class="sb">`</span>seq <span class="m">0</span> <span class="nv">$months_per_job</span><span class="sb">`</span>
 <span class="k">do</span>
     ./check_progress.py -f namelist.ocean -e <span class="nv">$end_date</span>
     ./run.py
