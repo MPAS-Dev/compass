@@ -46,7 +46,7 @@ def collect(mesh_name, with_ice_shelf_cavities, initial_condition, with_bgc,
     restart_time = {'split_explicit': '0001-01-01_04:00:00',
                     'RK4': '0001-01-01_00:10:00'}
     restart_filename = '../restarts/rst.{}.nc'.format(
-        restart_time[time_integrator])
+        restart_time[time_integrator].replace(':', '.'))
     inputs = {'full': None, 'restart': [restart_filename]}
     outputs = {'full': ['output.nc', restart_filename], 'restart': None}
     steps = dict()
