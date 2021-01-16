@@ -5,7 +5,7 @@ Quick Start
 
 .. _compass_repo:
 
-Set up a COMPASS repository: for beginners
+Set up a compass repository: for beginners
 ------------------------------------------
 
 To begin, obtain the master branch of the
@@ -17,7 +17,7 @@ To begin, obtain the master branch of the
     cd compass
     git submodule update --init --recursive
 
-The MPAS repository is a submodule of COMPASS repository.  For example, to
+The MPAS repository is a submodule of compass repository.  For example, to
 compile MPAS-Ocean:
 
 .. code-block:: bash
@@ -90,7 +90,7 @@ follows:
         ipython jupyter lxml matplotlib cmocean numpy xarray progressbar2 \
         requests scipy git
 
-Each time you want to work with COMPASS, you will need to run:
+Each time you want to work with compass, you will need to run:
 
 .. code-block:: bash
 
@@ -154,7 +154,7 @@ create a config file like in this example for MPAS-Ocean:
 
 .. code-block:: cfg
 
-    # The paths section points COMPASS to external paths
+    # The paths section points compass to external paths
     [paths]
 
     # the relative or absolute path to the root of a branch where MPAS-Ocean
@@ -210,7 +210,7 @@ In order to run a bit-for-bit test with a previous case, use
 Test Suites
 -----------
 
-COMPASS includes several suites of test cases for code regressions and
+compass includes several suites of test cases for code regressions and
 bit-for-bit testing, as well as simply to make it easier to run several test
 cases in one call. For the ocean core, they can be listed with:
 
@@ -239,7 +239,7 @@ and
     ./nightly.py
 
 
-Set up a COMPASS repository with worktrees: for advanced users
+Set up a compass repository with worktrees: for advanced users
 --------------------------------------------------------------
 
 This section uses ``git worktree``, which provides more flexibility but is more

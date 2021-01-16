@@ -52,7 +52,7 @@ data files and how many cores you have:
 
 .. code-block:: cfg
 
-    # The paths section points COMPASS to external paths
+    # The paths section points compass to external paths
     [paths]
 
     # The mesh_database and the initial_condition_database are locations where
@@ -88,7 +88,7 @@ location where the model is build (i.e. where the ``ocean_model`` or
 
 .. code-block:: cfg
 
-    # The paths section points COMPASS to external paths
+    # The paths section points compass to external paths
     [paths]
 
     # the relative or absolute path to the root of a branch where MPAS-Ocean
