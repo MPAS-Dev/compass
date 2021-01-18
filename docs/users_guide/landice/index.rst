@@ -1,6 +1,6 @@
 .. _landice:
 
-landice core
+Landice core
 ============
 
 The ``landice`` core in compass contains test cases for the MPAS-Albany

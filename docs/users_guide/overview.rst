@@ -117,6 +117,22 @@ and you get output like this:
   17: ocean/global_ocean/QU240/PHC/performance_test/split_explicit
   18: ocean/global_ocean/QU240/PHC/performance_test/RK4
 
+The list is long, so it will likely be useful to grep for particular content:
+
+.. code-block:: bash
+
+    python -m compass list | grep baroclinic_channel
+
+.. code-block:: none
+
+   8: ocean/baroclinic_channel/1km/rpe_test
+   9: ocean/baroclinic_channel/4km/rpe_test
+  10: ocean/baroclinic_channel/10km/rpe_test
+  11: ocean/baroclinic_channel/10km/decomp_test
+  12: ocean/baroclinic_channel/10km/default
+  13: ocean/baroclinic_channel/10km/restart_test
+  14: ocean/baroclinic_channel/10km/threads_test
+
 To set up a particular test case, you can either use the full path of the
 test case:
 
@@ -191,7 +207,7 @@ Running a test case
 -------------------
 
 After compiling the code and setting up a test case, you can log into an
-interactive node (see :ref:`machines`) and then
+interactive node (see :ref:`supported_machines`) and then
 
 .. code-block:: bash
 

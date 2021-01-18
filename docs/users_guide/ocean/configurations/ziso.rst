@@ -3,8 +3,8 @@
 ziso
 ====
 
-The :py:mod:`compass.ocean.tests.ziso` configuration implements variants of the
-Zonally Idealized Southern Ocean (ZISO) test case from
+The ``ocean/ziso`` configuration implements variants of the Zonally Idealized
+Southern Ocean (ZISO) test case from
 `Ringler et al. (2016) <https://doi.org/10.1175/JPO-D-16-0096.1>`_.  From that
 paper:
 
@@ -28,10 +28,8 @@ See that paper for more details on the test case.
 
 The implementation of ``ziso`` in ``compass`` includes two test cases,
 ``default`` and ``with_frazil``.  Both test cases have 2 steps,
-:py:mod:`compass.ocean.tests.ziso.initial_state`, which defines
-the mesh and initial conditions for the model, and
-:py:mod:`compass.ocean.tests.ziso.forward`, which performs time
-integration of the model.
+``initial_state``, which defines the mesh and initial conditions for the model,
+and ``forward``, which performs time integration of the model.
 
 Currently, the only version of the test case is at 20-km horizontal resolution,
 but versions of the test case at finer horizontal resolution are expected to
@@ -150,7 +148,7 @@ condition.
 default
 -------
 
-:py:mod:`compass.ocean.tests.ziso.default` is the default version of the ZISO
+``ocean/ziso/20km/default`` is the default version of the ZISO
 test case from `Ringler et al. (2016) <https://doi.org/10.1175/JPO-D-16-0096.1>`_.
 The ``default`` test case also includes particles from the Lagrangian, in Situ,
 Global, High-Performance Particle Tracking (LIGHT;
@@ -169,7 +167,7 @@ prognostic and particle-relate variables for regression testing.
 with_frazil
 -----------
 
-:py:mod:`compass.ocean.tests.ziso.with_frazil` uses an different initial
+``ocean/ziso/20km/with_frazil`` uses an different initial
 temperature field that is cold enough to produce frazil ice:
 
 .. image:: images/ziso_frazil.png

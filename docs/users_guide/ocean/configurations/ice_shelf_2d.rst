@@ -3,7 +3,7 @@
 ice_shelf_2d
 ============
 
-The :py:mod:`compass.ocean.tests.ice_shelf_2d` configuration describes a
+The ``ocean/ice_shelf_2d`` configuration describes a
 series of very simplified ice-shelf test cases where topography and initial
 conditions only vary in the y direction.  The test case currently supports
 only 5-km horizontal resolution and 20 vertical levels, each 50 m thick.
@@ -31,14 +31,11 @@ it is a quick and useful test of the parameterization of land-ice melt fluxes
 and of frazil formation below ice shelves.
 
 Both of the ``ice_shelf_2d`` test cases are composed of 3 types of steps:
-:py:mod:`compass.ocean.tests.ice_shelf_2d.initial_state`, which defines
-the mesh and initial conditions for the model;
-:py:mod:`compass.ocean.tests.ice_shelf_2d.ssh_adjustment`, which modifies the
-``landIcePressure`` field (the pressure from the overlying ice shelf) so it is
-in dynamic balance with the ``ssh`` (sea-surface height) field that also
-corresponds to the ice draft under the ice shelf; and
-:py:mod:`compass.ocean.tests.ice_shelf_2d.forward`, which performs time
-integration of the model.
+``initial_state``, which defines the mesh and initial conditions for the model;
+``ssh_adjustment``, which modifies the ``landIcePressure`` field (the pressure
+from the overlying ice shelf) so it is in dynamic balance with the ``ssh``
+(sea-surface height) field that also corresponds to the ice draft under the
+ice shelf; and ``forward``, which performs time integration of the model.
 
 shared config options
 ---------------------
@@ -104,7 +101,7 @@ temperature and salinity of the test case by altering these options.
 default
 -------
 
-:py:mod:`compass.ocean.tests.ice_shelf_2d.default` includes a relatively
+``ocean/ice_shelf_2d/5km/default`` includes a relatively
 strenuous, iterative process to dynamically adjust ``landIcePressure`` and
 ``ssh`` to be compatible with one another in the ``ssh_adjustment`` step.
 In this test case, we perform 15 iterations of adjustment, enough that changes
@@ -132,7 +129,7 @@ Frazil-ice formation is not included in this test case.
 restart_test
 ------------
 
-:py:mod:`compass.ocean.tests.ice_shelf_2d.restart_test` performs fewer
+``ocean/ice_shelf_2d/5km/restart_test`` performs fewer
 iterations of ``ssh_adjustment`` than ``default``, but it does include
 frazil-ice formation.  The model is integrated forward in time for a 2 time
 steps (10 min) in the ``full_run`` step, saving a restart file every 5 minutes.

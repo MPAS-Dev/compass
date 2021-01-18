@@ -3,8 +3,8 @@
 baroclinic_channel
 ==================
 
-The :py:mod:`compass.ocean.tests.baroclinic_channel` configuration implements
-variants of the Baroclinic Eddies test case from
+The ``ocean/baroclinic_channel`` configuration implements variants of the
+Baroclinic Eddies test case from
 `Ilicak et al. (2012) <https://doi.org/10.1016/j.ocemod.2011.10.003>`_.
 
 The domain is zonally periodic with solid northern and southern boundaries.
@@ -22,11 +22,9 @@ resolution.  By default, the 20 vertical layers each have 50-m uniform
 thickness.
 
 The configuration includes 5 test cases.  All test cases have 2 steps,
-:py:mod:`compass.ocean.tests.baroclinic_channel.initial_state`, which defines
-the mesh and initial conditions for the model, and
-:py:mod:`compass.ocean.tests.baroclinic_channel.forward`, which performs time
-integration of the model.
-
+``initial_state``, which defines the mesh and initial conditions for the model,
+and ``forward`` (given another name in many test cases to distinguish multiple
+forward runs), which performs time integration of the model.
 
 config options
 --------------
@@ -84,47 +82,49 @@ All units are mks, with temperature in degrees Celsius and salinity in PSU.
 default
 -------
 
-:py:mod:`compass.ocean.tests.baroclinic_channel.default` is the default
-version of the baroclinic eddies test case for a short (15 min) test run
-and validation of prognostic variables for regression testing.  Currently, only
-10-km horizontal resolution is supported.
+``ocean/baroclinic_channel/10km/default`` is the default version of the
+baroclinic eddies test case for a short (15 min) test run and validation of
+prognostic variables for regression testing.  Currently, only 10-km horizontal
+resolution is supported.
 
 decomp_test
 -----------
 
-:py:mod:`compass.ocean.tests.baroclinic_channel.decomp_test` runs a short (15
-min) integration of the model forward in time on 4 (``4proc`` step) and then on
-8 processors (``8proc`` step) to make sure the resulting prognostic variables
-are bit-for-bit identical between the two runs. Currently, only 10-km
-horizontal resolution is supported.
+``ocean/baroclinic_channel/10km/decomp_test`` runs a short (15 min) integration
+of the model forward in time on 4 (``4proc`` step) and then on 8 processors
+(``8proc`` step) to make sure the resulting prognostic variables are
+bit-for-bit identical between the two runs. Currently, only 10-km horizontal
+resolution is supported.
 
 thread_test
 -----------
 
-:py:mod:`compass.ocean.tests.baroclinic_channel.thread_test` runs a short (15
-min) integration of the model forward in time on 1 threads per processor
-(``1thread`` step) and then on 2 threads (``2thread`` step) to make sure the
-resulting prognostic variables are bit-for-bit identical between the two runs.
-Currently, only 10-km horizontal resolution is supported.
+``ocean/baroclinic_channel/10km/thread_test`` runs a short (15 min) integration
+of the model forward in time on 1 threads per processor (``1thread`` step) and
+then on 2 threads (``2thread`` step) to make sure the resulting prognostic
+variables are bit-for-bit identical between the two runs. Currently, only 10-km
+horizontal resolution is supported.
 
 restart_test
 ------------
 
-:py:mod:`compass.ocean.tests.baroclinic_channel.restart_test` runs a short (10
-min) integration of the model forward in time (``full_run`` step), saving a
-restart file every 5 minutes.  Then, a second run (``restart_run`` step) is
-performed from the restart file 5 minutes into the simulation and prognostic
-variables are compared between the "full" and "restart" runs at minute 10 to
-make sure they are bit-for-bit identical. Currently, only 10-km horizontal
-resolution is supported.
+``ocean/baroclinic_channel/10km/restart_test`` runs a short (10 min)
+integration of the model forward in time (``full_run`` step), saving a restart
+file every 5 minutes.  Then, a second run (``restart_run`` step) is performed
+from the restart file 5 minutes into the simulation and prognostic variables
+are compared between the "full" and "restart" runs at minute 10 to make sure
+they are bit-for-bit identical. Currently, only 10-km horizontal resolution is
+supported.
 
 rpe_test
 --------
 
-:py:mod:`compass.ocean.tests.baroclinic_channel.rpe_test` performs longer (20
-day) integration of the model forward in time at 5 different values of the
-viscosity (with steps named ``rpe_test_1_nu_1``, ``rpe_test_2_nu_5``, etc.).
-This test supports all 3 horizontal resolutions (1, 4 and 10 km).  Results of
-this test have been used to show that MPAS-Ocean has lower spurious dissipation
-of reference potential energy (RPE) than POP, MOM and MITgcm models
+``ocean/baroclinic_channel/1km/rpe_test``,
+``ocean/baroclinic_channel/4km/rpe_test``, and
+``ocean/baroclinic_channel/10km/rpe_test`` perform longer (20 day) integration
+of the model forward in time at 5 different values of the viscosity (with steps
+named ``rpe_test_1_nu_1``, ``rpe_test_2_nu_5``, etc.) at any of the 3 supported
+horizontal resolutions (1, 4 and 10 km).  Results of these tests have been used
+to show that MPAS-Ocean has lower spurious dissipation of reference potential
+energy (RPE) than POP, MOM and MITgcm models
 (`Petersen et al. 2015 <https://doi.org/10.1016/j.ocemod.2014.12.004>`_).
