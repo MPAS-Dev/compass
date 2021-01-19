@@ -82,7 +82,8 @@ machine.
 Slurm job queueing
 ------------------
 
-Most HPC systems now use `slurm <https://slurm.schedmd.com/documentation.html>`_.
+Most HPC systems now use the
+`slurm workload manager <https://slurm.schedmd.com/documentation.html>`_.
 Here are some basic commands:
 
 .. code-block:: bash
