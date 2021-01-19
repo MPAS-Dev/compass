@@ -1,0 +1,344 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Personal Linux/OSX Machine &mdash; compass 1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Personal OSX Machine" href="osx.html" />
+    <link rel="prev" title="Grizzly" href="grizzly.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> compass
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testcase.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../suite.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Machines</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#config-options">config options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#slurm-job-queueing">Slurm job queueing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#supported-machines">Supported Machines</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#other-machines">Other Machines</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Personal Linux/OSX Machine</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#installation-of-mpas-dependencies-including-scorpio-and-the-compass-conda-environment">Installation of MPAS dependencies including SCORPIO and the compass conda environment</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#setup-before-compiling-running">Setup before compiling/running</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="osx.html">Personal OSX Machine</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Legacy User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../legacy/users_guide/overview.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../legacy/users_guide/scripts.html">Scripts</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Legacy Ocean Test Cases</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../legacy/ocean/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../legacy/ocean/test_cases/index.html">Ocean test cases</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Legacy Instructions for Machines</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../legacy/machine_specific_instructions/slurm.html">Slurm job queueing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../legacy/machine_specific_instructions/lanl.html">LANL Institutional Computing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../legacy/machine_specific_instructions/nersc.html">NERSC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../legacy/machine_specific_instructions/anvil.html">Anvil/Blues</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../legacy/machine_specific_instructions/linux.html">Personal Linux/OSX Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../legacy/machine_specific_instructions/osx.html">Personal OSX Machine</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Legacy Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../legacy/developers_guide/config.html">config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../legacy/developers_guide/driver_script.html">driver_script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../legacy/developers_guide/template.html">template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../legacy/developers_guide/regression_suite.html">regression_suite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../legacy/developers_guide/run_config.html">run_config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../legacy/developers_guide/building_docs.html">Building the Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">compass</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Machines</a> &raquo;</li>
+        
+      <li>Personal Linux/OSX Machine</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../_sources/users_guide/machines/linux.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="personal-linux-osx-machine">
+<span id="machine-linux"></span><h1>Personal Linux/OSX Machine<a class="headerlink" href="#personal-linux-osx-machine" title="Permalink to this headline">¶</a></h1>
+<p>This approach worked for <a class="reference external" href="http://github.com/xylar">xylar</a> under Ubuntu 18.04
+and <a class="reference external" href="http://github.com/vanroekel">vanroekel</a> under Max OS X 10.14.6.</p>
+<div class="section" id="installation-of-mpas-dependencies-including-scorpio-and-the-compass-conda-environment">
+<h2>Installation of MPAS dependencies including SCORPIO and the compass conda environment<a class="headerlink" href="#installation-of-mpas-dependencies-including-scorpio-and-the-compass-conda-environment" title="Permalink to this headline">¶</a></h2>
+<p>First, run the following script in an empty directory that you can delete later:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="nb">set</span> -e
+
+<span class="nb">export</span> <span class="nv">PNETCDF_VERSION</span><span class="o">=</span><span class="m">1</span>.12.0
+<span class="nb">export</span> <span class="nv">SCORPIO_VERSION</span><span class="o">=</span><span class="m">1</span>.1.1
+
+<span class="c1"># modify this to fit your system</span>
+<span class="nb">export</span> <span class="nv">CONDA_PATH</span><span class="o">=</span>/home/xylar/miniconda3
+
+<span class="nb">source</span> <span class="si">${</span><span class="nv">CONDA_PATH</span><span class="si">}</span>/etc/profile.d/conda.sh
+
+conda create -y -n mpas -c e3sm <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.8 <span class="s2">&quot;compass=0.1.6=mpi_mpich*&quot;</span> <span class="se">\</span>
+    netcdf-fortran mpich fortran-compiler cxx-compiler c-compiler m4 git cmake
+
+conda activate mpas
+
+<span class="c1"># modify this</span>
+<span class="nb">export</span> <span class="nv">PREFIX</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CONDA_PATH</span><span class="si">}</span><span class="s2">/envs/mpas&quot;</span>
+
+<span class="nb">export</span> <span class="nv">MPICC</span><span class="o">=</span>mpicc
+<span class="nb">export</span> <span class="nv">MPICXX</span><span class="o">=</span>mpicxx
+<span class="nb">export</span> <span class="nv">MPIF77</span><span class="o">=</span>mpifort
+<span class="nb">export</span> <span class="nv">MPIF90</span><span class="o">=</span>mpifort
+<span class="nb">export</span> <span class="nv">LDFLAGS</span><span class="o">=</span><span class="s2">&quot;-L</span><span class="si">${</span><span class="nv">PREFIX</span><span class="si">}</span><span class="s2">/lib&quot;</span>
+
+rm -rf pnetcdf-<span class="si">${</span><span class="nv">PNETCDF_VERSION</span><span class="si">}</span>*
+
+wget https://parallel-netcdf.github.io/Release/pnetcdf-<span class="si">${</span><span class="nv">PNETCDF_VERSION</span><span class="si">}</span>.tar.gz
+
+tar xvf pnetcdf-<span class="si">${</span><span class="nv">PNETCDF_VERSION</span><span class="si">}</span>.tar.gz
+<span class="nb">cd</span> pnetcdf-<span class="si">${</span><span class="nv">PNETCDF_VERSION</span><span class="si">}</span>
+
+./configure --prefix<span class="o">=</span><span class="si">${</span><span class="nv">PREFIX</span><span class="si">}</span>
+make
+make install
+
+<span class="nb">cd</span> ..
+
+rm -rf scorpio*
+
+git clone git@github.com:E3SM-Project/scorpio.git
+<span class="nb">cd</span> scorpio
+git checkout scorpio-v<span class="nv">$SCORPIO_VERSION</span>
+
+mkdir build
+<span class="nb">cd</span> build
+<span class="nv">CC</span><span class="o">=</span>mpicc <span class="nv">FC</span><span class="o">=</span>mpifort cmake -DCMAKE_INSTALL_PREFIX<span class="o">=</span><span class="nv">$PREFIX</span> <span class="se">\</span>
+    -DPIO_ENABLE_TIMING<span class="o">=</span>OFF -DNetCDF_Fortran_PATH<span class="o">=</span><span class="nv">$PREFIX</span> <span class="se">\</span>
+    -DPnetCDF_Fortran_PATH<span class="o">=</span><span class="nv">$PREFIX</span> -DNetCDF_C_PATH<span class="o">=</span><span class="nv">$PREFIX</span> <span class="se">\</span>
+    -DPnetCDF_C_PATH<span class="o">=</span><span class="nv">$PREFIX</span> ..
+
+make
+make install
+
+<span class="nb">cd</span> ../..
+</pre></div>
+</div>
+</div>
+<div class="section" id="setup-before-compiling-running">
+<h2>Setup before compiling/running<a class="headerlink" href="#setup-before-compiling-running" title="Permalink to this headline">¶</a></h2>
+<p>Then, when you want to build or run MPAS-Ocean, source a file containing:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda activate mpas
+<span class="c1"># Modify this path to point to your mpas conda environment</span>
+<span class="nb">export</span> <span class="nv">PREFIX</span><span class="o">=</span><span class="s2">&quot;/home/xylar/miniconda3/envs/mpas&quot;</span>
+<span class="c1"># this step might not be needed</span>
+<span class="nb">export</span> <span class="nv">MPAS_EXTERNAL_LIBS</span><span class="o">=</span><span class="s2">&quot;-L</span><span class="si">${</span><span class="nv">PREFIX</span><span class="si">}</span><span class="s2">/lib -lnetcdff&quot;</span>
+<span class="nb">export</span> <span class="nv">NETCDF</span><span class="o">=</span><span class="si">${</span><span class="nv">PREFIX</span><span class="si">}</span>
+<span class="nb">export</span> <span class="nv">PNETCDF</span><span class="o">=</span><span class="si">${</span><span class="nv">PREFIX</span><span class="si">}</span>
+<span class="nb">export</span> <span class="nv">PIO</span><span class="o">=</span><span class="si">${</span><span class="nv">PREFIX</span><span class="si">}</span>
+<span class="c1"># change to one of the other cores as needed</span>
+<span class="nb">export</span> <span class="nv">CORE</span><span class="o">=</span>ocean
+<span class="nb">export</span> <span class="nv">AUTOCLEAN</span><span class="o">=</span><span class="nb">true</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="osx.html" class="btn btn-neutral float-right" title="Personal OSX Machine" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="grizzly.html" class="btn btn-neutral float-left" title="Grizzly" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
