@@ -32,10 +32,9 @@ and of frazil formation below ice shelves.
 
 Both of the ``ice_shelf_2d`` test cases are composed of 3 types of steps:
 ``initial_state``, which defines the mesh and initial conditions for the model;
-``ssh_adjustment``, which modifies the ``landIcePressure`` field (the pressure
-from the overlying ice shelf) so it is in dynamic balance with the ``ssh``
-(sea-surface height) field that also corresponds to the ice draft under the
-ice shelf; and ``forward``, which performs time integration of the model.
+``ssh_adjustment``, which modifies the ``landIcePressure`` field to balance
+the ``ssh`` field, see :ref:`ocean_ssh_adjustment`; and ``forward``, which
+performs time integration of the model.
 
 shared config options
 ---------------------
