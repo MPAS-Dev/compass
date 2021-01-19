@@ -1,3 +1,5 @@
+.. _machine_chrysalis:
+
 Chrysalis
 =========
 

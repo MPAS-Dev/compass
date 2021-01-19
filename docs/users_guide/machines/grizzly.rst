@@ -1,3 +1,5 @@
+.. _machine_grizzly:
+
 Grizzly
 =======
 
