@@ -12,7 +12,7 @@ from compass import provenance
 
 
 def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
-                work_dir=None, baseline_dir=None):
+                work_dir=None, baseline_dir=None, mpas_model_path=None):
     """
     Set up one or more test cases
 
@@ -37,6 +37,10 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
 
     baseline_dir : str, optional
         Location of baseslines that can be compared to
+
+    mpas_model_path : str, optional
+        The relative or absolute path to the root of a branch where the MPAS
+        model has been built
 
     Returns
     -------
@@ -77,11 +81,12 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
     print('Setting up testcases:')
     for path, testcase in testcases.items():
         setup_case(path, testcase, config_file, machine, work_dir,
-                   baseline_dir)
+                   baseline_dir, mpas_model_path)
     return testcases
 
 
-def setup_case(path, testcase, config_file, machine, work_dir, baseline_dir):
+def setup_case(path, testcase, config_file, machine, work_dir, baseline_dir,
+               mpas_model_path):
     """
     Set up one or more test cases
 
@@ -106,6 +111,10 @@ def setup_case(path, testcase, config_file, machine, work_dir, baseline_dir):
 
     baseline_dir : str
         Location of baseslines that can be compared to
+
+    mpas_model_path : str
+        The relative or absolute path to the root of a branch where the MPAS
+        model has been built
     """
 
     print('  {}'.format(path))
@@ -152,6 +161,10 @@ def setup_case(path, testcase, config_file, machine, work_dir, baseline_dir):
     if baseline_dir is not None:
         baseline_root = os.path.join(baseline_dir, path)
         config.set('paths', 'baseline_dir', baseline_root)
+
+    # set the mpas_model path from the command line if provided
+    if mpas_model_path is not None:
+        config.set('paths', 'mpas_model', mpas_model_path)
 
     # make sure all paths in the paths, namelists and streams sections are
     # absolute paths
@@ -220,6 +233,11 @@ def main():
     parser.add_argument("-b", "--baseline_dir", dest="baseline_dir",
                         help="Location of baselines that can be compared to",
                         metavar="PATH")
+    parser.add_argument("-p", "--mpas_model", dest="mpas_model",
+                        help="The path to the build of the MPAS model for the "
+                             "core.",
+                        metavar="PATH")
+
     args = parser.parse_args(sys.argv[2:])
     if args.test is None:
         tests = None
@@ -227,7 +245,8 @@ def main():
         tests = [args.test]
     setup_cases(tests=tests, numbers=args.case_num,
                 config_file=args.config_file, machine=args.machine,
-                work_dir=args.work_dir, baseline_dir=args.baseline_dir)
+                work_dir=args.work_dir, baseline_dir=args.baseline_dir,
+                mpas_model_path=args.mpas_model)
 
 
 def _write_run(template_name, testcase, step=None):
