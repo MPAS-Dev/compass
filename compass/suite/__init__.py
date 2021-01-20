@@ -189,7 +189,9 @@ def run_suite(suite_name):
 
         os.chdir(cwd)
 
-    if not success:
+    if success:
+        logger.info('All passed successfully!')
+    else:
         raise ValueError('One or more tests failed, see above.')
 
 
