@@ -166,10 +166,11 @@ def run_suite(suite_name):
         except OSError:
             pass
 
-        success = True
+        all_succeeded = True
         cwd = os.getcwd()
         suite_start = time.time()
         test_times = dict()
+        success = dict()
         for test_name in test_suite['testcases']:
             testcase = test_suite['testcases'][test_name]
 
@@ -194,12 +195,14 @@ def run_suite(suite_name):
                 try:
                     run(testcase, test_suite, config, test_logger)
                     logger.info('    PASS')
+                    success[test_name] = 'PASS'
                 except BaseException:
                     test_logger.exception('Exception raised')
                     logger.error('   FAIL    For more information, see:')
                     logger.error('           case_outputs/{}.log'.format(
                         test_name))
-                    success = False
+                    success[test_name] = 'FAIL'
+                    all_succeeded = False
                 test_times[test_name] = time.time() - test_start
 
             logger.info('')
@@ -211,12 +214,13 @@ def run_suite(suite_name):
         for test_name, test_time in test_times.items():
             mins = int(numpy.floor(test_time / 60.0))
             secs = int(numpy.ceil(test_time - mins * 60))
-            logger.info('{:02d}:{:02d} {}'.format(mins, secs, test_name))
+            logger.info('{:02d}:{:02d} {} {}'.format(
+                mins, secs, success[test_name], test_name))
         mins = int(numpy.floor(suite_time / 60.0))
         secs = int(numpy.ceil(suite_time - mins * 60))
         logger.info('Total runtime {:02d}:{:02d}'.format(mins, secs))
 
-        if success:
+        if all_succeeded:
             logger.info('PASS: All passed successfully!')
         else:
             logger.error('FAIL: One or more tests failed, see above.')
