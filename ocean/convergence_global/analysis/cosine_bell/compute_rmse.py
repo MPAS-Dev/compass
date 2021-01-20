@@ -14,8 +14,8 @@ def rmse(resTag):
     resTag is the resolution to compute RMSE
     """
 
-    fid = open('../../../{}/cosine_bell/initial_state/namelist.ocean'.format(resTag),
-               'r')
+    fid = open('../../../{}/cosine_bell/initial_state/'
+               'namelist.ocean'.format(resTag), 'r')
     temp = fid.readlines()
 
     fid.close()
@@ -36,8 +36,8 @@ def rmse(resTag):
             ii = line.find('=')+1
             pd = float(line[ii:])
 
-    init = xr.open_dataset('../../../{}/cosine_bell/initial_state/initial_state.nc'
-                           ''.format(resTag))
+    init = xr.open_dataset('../../../{}/cosine_bell/initial_state/'
+                           'initial_state.nc'.format(resTag))
     # find time since the beginning of run
     ds = xr.open_dataset('../../../{}/cosine_bell/forward/output/'
                          'output.0001-01-01_00.00.00.nc'.format(resTag))
@@ -101,4 +101,3 @@ plt.annotate('Order of Convergence = {}'.format(np.round(conv, 3)),
 plt.xlabel('Number of Grid Cells', fontsize=14)
 plt.ylabel('L2 Norm', fontsize=14)
 plt.savefig('convergence.png', bbox_inches='tight', pad_inches=0.1)
-
