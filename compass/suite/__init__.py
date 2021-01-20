@@ -6,6 +6,8 @@ import pickle
 import configparser
 import stat
 from jinja2 import Template
+import time
+import numpy
 
 from mpas_tools.logging import LoggingContext
 
@@ -156,6 +158,8 @@ def run_suite(suite_name):
 
         success = True
         cwd = os.getcwd()
+        suite_start = time.time()
+        test_times = dict()
         for test_name in test_suite['testcases']:
             testcase = test_suite['testcases'][test_name]
 
@@ -176,6 +180,7 @@ def run_suite(suite_name):
                 config.read(testcase['config'])
 
                 run = getattr(sys.modules[testcase['module']], testcase['run'])
+                test_start = time.time()
                 try:
                     run(testcase, test_suite, config, test_logger)
                     logger.info('    PASS')
@@ -184,15 +189,28 @@ def run_suite(suite_name):
                     logger.error('   FAIL    For more information, see:')
                     logger.error('           case_outputs/{}.log'.format(
                         test_name))
+                    success = False
+                test_times[test_name] = time.time() - test_start
 
             logger.info('')
+        suite_time = time.time() - suite_start
 
         os.chdir(cwd)
 
-    if success:
-        logger.info('All passed successfully!')
-    else:
-        raise ValueError('One or more tests failed, see above.')
+        logger.info('Test Runtimes:')
+        for test_name, test_time in test_times.items():
+            mins = int(numpy.floor(test_time / 60.0))
+            secs = int(numpy.ceil(test_time - mins * 60))
+            logger.info('{:02d}:{:02d} {}'.format(mins, secs, test_name))
+        mins = int(numpy.floor(suite_time / 60.0))
+        secs = int(numpy.ceil(suite_time - mins * 60))
+        logger.info('Total runtime {:02d}:{:02d}'.format(mins, secs))
+
+        if success:
+            logger.info('PASS: All passed successfully!')
+        else:
+            logger.error('FAIL: One or more tests failed, see above.')
+            sys.exit(1)
 
 
 def main():
