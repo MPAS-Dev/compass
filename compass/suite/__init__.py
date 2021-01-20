@@ -17,7 +17,7 @@ from compass.clean import clean_cases
 
 
 def setup_suite(core, suite_name, config_file=None, machine=None,
-                work_dir=None, baseline_dir=None):
+                work_dir=None, baseline_dir=None, mpas_model_path=None):
     """
     Set up a test suite
 
@@ -45,6 +45,10 @@ def setup_suite(core, suite_name, config_file=None, machine=None,
 
     baseline_dir : str, optional
         Location of baseslines that can be compared to
+
+    mpas_model_path : str, optional
+        The relative or absolute path to the root of a branch where the MPAS
+        model has been built
     """
 
     if config_file is None and machine is None:
@@ -63,7 +67,8 @@ def setup_suite(core, suite_name, config_file=None, machine=None,
     work_dir = os.path.abspath(work_dir)
 
     testcases = setup_cases(tests, config_file=config_file, machine=machine,
-                            work_dir=work_dir, baseline_dir=baseline_dir)
+                            work_dir=work_dir, baseline_dir=baseline_dir,
+                            mpas_model_path=mpas_model_path)
 
     # if compass/__init__.py exists, we're using a local version of the compass
     # package and we'll want to link to that in the tests and steps
@@ -249,6 +254,10 @@ def main():
                         help="If set, script will setup the test suite in "
                         "work_dir rather in this script's location.",
                         metavar="PATH")
+    parser.add_argument("-p", "--mpas_model", dest="mpas_model",
+                        help="The path to the build of the MPAS model for the "
+                             "core.",
+                        metavar="PATH")
     args = parser.parse_args(sys.argv[2:])
 
     if not args.clean and not args.setup:
@@ -262,7 +271,8 @@ def main():
     if args.setup:
         setup_suite(core=args.core, suite_name=args.test_suite,
                     config_file=args.config_file, machine=args.machine,
-                    work_dir=args.work_dir, baseline_dir=args.baseline_dir)
+                    work_dir=args.work_dir, baseline_dir=args.baseline_dir,
+                    mpas_model_path=args.mpas_model)
 
 
 def _get_required_cores(testcases):
