@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<config case="initial_state">
+
+	<add_executable source="model" dest="ocean_model"/>
+	<add_link source="../base_mesh/base_mesh.nc" dest="mesh.nc"/>
+	<add_link source="../base_mesh/graph.info" dest="graph.info"/>
+	<add_link source_path="script_core_dir" source="scripts/plots/plot_initial_state.py" dest="plot_initial_state.py"/>
+	<namelist name="namelist.ocean" mode="init">
+		<option name="config_init_configuration">'cosine_bell'</option>
+		<option name="config_ocean_run_mode">'init'</option>
+		<option name="config_use_debugTracers">.true.</option>
+		<option name="config_cosine_bell_temperature">15.0</option>
+		<option name="config_cosine_bell_salinity">35.0</option>
+		<option name="config_cosine_bell_lat_center">0.0</option>
+		<option name="config_cosine_bell_lon_center">3.14159265</option>
+		<option name="config_cosine_bell_radius">2123666.6667</option>
+		<option name="config_cosine_bell_psi0">1.0</option>
+		<option name="config_cosine_bell_vel_pd">24.0</option>
+	</namelist>
+
+	<streams name="streams.ocean" keep="immutable" mode="init">
+		<stream name="input_init">
+			<attribute name="filename_template">mesh.nc</attribute>
+		</stream>
+		<stream name="output_init">
+			<attribute name="type">output</attribute>
+			<attribute name="output_interval">0000_00:00:01</attribute>
+			<attribute name="clobber_mode">truncate</attribute>
+			<attribute name="filename_template">initial_state.nc</attribute>
+			<add_contents>
+				<member name="input_init" type="stream"/>
+				<member name="tracers" type="var_struct"/>
+				<member name="refZMid" type="var"/>
+				<member name="normalVelocity" type="var"/>
+				<member name="layerThickness" type="var"/>
+				<member name="restingThickness" type="var"/>
+				<member name="surfaceStress" type="var"/>
+				<member name="atmosphericPressure" type="var"/>
+				<member name="boundaryLayerDepth" type="var"/>
+				<member name="refBottomDepth" type="var"/>
+				<member name="bottomDepth" type="var"/>
+				<member name="bottomDepthObserved" type="var"/>
+				<member name="maxLevelCell" type="var"/>
+				<member name="vertCoordMovementWeights" type="var"/>
+				<member name="edgeMask" type="var"/>
+				<member name="cullCell" type="var"/>
+			</add_contents>
+		</stream>
+	</streams>
+
+	<run_script name="run.py">
+	<step executable="gpmetis">
+	  <argument flag="graph.info">36</argument>
+	</step>
+	<model_run procs="1" threads="1" namelist="namelist.ocean" streams="streams.ocean"/>
+  </run_script>
+</config>

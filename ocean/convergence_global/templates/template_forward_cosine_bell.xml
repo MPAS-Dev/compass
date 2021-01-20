@@ -1,0 +1,68 @@
+<template>
+	<namelist name="namelist.ocean" mode="forward">
+		<option name="config_ocean_run_mode">'forward'</option>
+		<option name="config_run_duration">'0024_00:00:00'</option>
+		<option name="config_vert_coord_movement">'impermeable_interfaces'</option>
+		<option name="config_block_decomp_file_prefix">'graph.info.part.'</option>
+		<option name="config_time_integrator">'RK4'</option>
+		<option name="config_disable_thick_all_tend">.true.</option>
+		<option name="config_disable_thick_hadv">.true.</option>
+		<option name="config_disable_thick_vadv">.true.</option>
+		<option name="config_disable_thick_sflux">.true.</option>
+		<option name="config_disable_vel_all_tend">.true.</option>
+		<option name="config_disable_vel_coriolis">.true.</option>
+		<option name="config_disable_vel_pgrad">.true.</option>
+		<option name="config_disable_vel_hmix">.true.</option>
+		<option name="config_disable_vel_surface_stress">.true.</option>
+		<option name="config_disable_vel_explicit_bottom_drag">.true.</option>
+		<option name="config_disable_vel_vmix">.true.</option>
+		<option name="config_disable_vel_vadv">.true.</option>
+		<option name="config_disable_tr_hmix">.true.</option>
+		<option name="config_disable_tr_vmix">.true.</option>
+		<option name="config_disable_tr_sflux">.true.</option>
+		<option name="config_disable_tr_nonlocalflux">.true.</option>
+		<option name="config_use_cvmix">.false.</option>
+		<option name="config_eos_type">'linear'</option>
+		<option name="config_use_bulk_wind_stress">.false.</option>
+		<option name="config_use_activeTracers_surface_restoring">.false.</option>
+		<option name="config_use_activeTracers_interior_restoring">.false.</option>
+		<option name="config_use_bulk_thickness_flux">.false.</option>
+		<option name="config_use_activeTracers">.true.</option>
+		<option name="config_use_debugTracers">.true.</option>
+		<option name="config_AM_mixedLayerDepths_enable">.false.</option>
+		<option name="config_use_activeTracers_surface_bulk_forcing">.false.</option>
+		<option name="config_check_ssh_consistency">.false.</option>
+	</namelist>
+
+	<streams name="streams.ocean" keep="immutable" mode="forward">
+		<stream name="mesh">
+			<attribute name="filename_template">init.nc</attribute>
+		</stream>
+		<stream name="input">
+			<attribute name="filename_template">init.nc</attribute>
+		</stream>
+		<stream name="restart">
+			<attribute name="output_interval">0030_00:00:00</attribute>
+		</stream>
+		<stream name="output">
+			<attribute name="type">output</attribute>
+			<attribute name="filename_template">output/output.$Y-$M-$D_$h.$m.$s.nc</attribute>
+			<attribute name="output_interval">0024_00:00:00</attribute>
+			<attribute name="filename_interval">01-00-00_00:00:00</attribute>
+			<attribute name="clobber_mode">truncate</attribute>
+			<attribute name="reference_time">0001-01-01_00:00:00</attribute>
+			<add_contents>
+				<member name="tracers" type="var_struct"/>
+				<member name="mesh" type="stream"/>
+				<member name="xtime" type="var"/>
+				<member name="normalVelocity" type="var"/>
+				<member name="layerThickness" type="var"/>
+				<member name="refZMid" type="var"/>
+				<member name="refLayerThickness" type="var"/>
+				<member name="kineticEnergyCell" type="var"/>
+				<member name="relativeVorticityCell" type="var"/>
+			</add_contents>
+		</stream>
+
+	</streams>
+</template>
