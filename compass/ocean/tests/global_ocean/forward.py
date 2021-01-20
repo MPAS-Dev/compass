@@ -272,6 +272,12 @@ def setup(step, config):
     step['outputs'] = [os.path.abspath(os.path.join(step_dir, file)) for file
                        in step['outputs']]
 
+    for option in ['cores', 'min_cores', 'max_memory', 'max_disk',
+                   'threads']:
+        if option not in step:
+            step[option] = config.getint('global_ocean',
+                                         'forward_{}'.format(option))
+
 
 def run(step, test_suite, config, logger):
     """
