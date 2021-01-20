@@ -92,6 +92,11 @@ def setup_suite(core, suite_name, config_file=None, machine=None,
     st = os.stat(run_filename)
     os.chmod(run_filename, st.st_mode | stat.S_IEXEC)
 
+    max_cores, max_of_min_cores = _get_required_cores(testcases)
+
+    print('target cores: {}'.format(max_cores))
+    print('minimum cores: {}'.format(max_of_min_cores))
+
 
 def clean_suite(core, suite_name, work_dir=None):
     """
@@ -258,3 +263,16 @@ def main():
         setup_suite(core=args.core, suite_name=args.test_suite,
                     config_file=args.config_file, machine=args.machine,
                     work_dir=args.work_dir, baseline_dir=args.baseline_dir)
+
+
+def _get_required_cores(testcases):
+    """ Get the maximum number of target cores and the max of min cores """
+
+    max_cores = 0
+    max_of_min_cores = 0
+    for test_name, testcase in testcases.items():
+        for step_name, step in testcase['steps'].items():
+            max_cores = max(max_cores, step['cores'])
+            max_of_min_cores = max(max_of_min_cores, step['min_cores'])
+
+    return max_cores, max_of_min_cores

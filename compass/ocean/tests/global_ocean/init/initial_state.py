@@ -173,6 +173,12 @@ def setup(step, config):
     step['inputs'] = inputs
     step['outputs'] = outputs
 
+    # get the these properties from the config options
+    for option in ['cores', 'min_cores', 'max_memory', 'max_disk',
+                   'threads']:
+        step[option] = config.getint('global_ocean',
+                                     'init_{}'.format(option))
+
 
 def run(step, test_suite, config, logger):
     """
