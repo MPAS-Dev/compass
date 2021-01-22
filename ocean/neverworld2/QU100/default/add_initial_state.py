@@ -102,7 +102,7 @@ def main():
 
 
     # NeverWorld2 domain
-    NW2_lonW, NW2_lonE = 0, 80
+    NW2_lonW, NW2_lonE = 0, 60
     NW2_latS, NW2_latN = -70, 70
     
     D0 = 4000 # Nominal depth (m)
@@ -121,16 +121,12 @@ def main():
     T.add_EW_coast(-360, 360, NW2_latS, cw, cd)
     T.add_EW_coast(-360, 360, NW2_latN, cw, cd)
     bottomDepthObserved[:] = -T.z[:]
-    print('T.z')
-    print(T.z)
-    print('bottomDepthObserved[:]')
-    print(bottomDepthObserved[:])
 
     # Compute maxLevelCell and layerThickness for z-level (variation only on top)
     vertCoordMovementWeights[:] = 0.0
     vertCoordMovementWeights[0] = 1.0
-    maxLevelCell[:] = nVertLevels-1
-    bottomDepth[:] = D0
+    maxLevelCell[:] = 2
+    bottomDepth[:] = refBottomDepth[2]
     for iCell in range(0, nCells):
         for k in range(nVertLevels - 1, 0, -1):
             if bottomDepthObserved[iCell] > refBottomDepth[k - 1]:
@@ -145,9 +141,11 @@ def main():
                 break
         layerThickness[0, iCell, 0:maxLevelCell[iCell] ] = refLayerThickness[0:maxLevelCell[iCell]]
         layerThickness[0, iCell, 0] += ssh[iCell]
+        # enforce minimum of 3 layers
+        maxLevelCell[iCell] = max(maxLevelCell[iCell],2)
+        bottomDepth[iCell] = max(bottomDepth[iCell],refBottomDepth[2])
 
     # Compute zMid (same, regardless of vertical coordinate)
-    print('size layerThickness',np.shape(layerThickness))
     for iCell in range(0, nCells):
         k = maxLevelCell[iCell]
         zMid[0, iCell, k] = -bottomDepth[iCell] + \
