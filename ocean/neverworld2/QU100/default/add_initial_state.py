@@ -95,9 +95,11 @@ def main():
         refBottomDepth[k] = refBottomDepth[k - 1] + refLayerThickness[k]
         refZMid[k] = -refBottomDepth[k - 1] - 0.5 * refLayerThickness[k]
 
-    # Gaussian function in depth for deep sea ridge
-    bottomDepthObserved[:] = maxDepth
+    # initialize topography
     ssh[:] = 0.0
+    for iCell in range(0, nCells):
+# use latCell[iCell], lonCell[iCell]
+        bottomDepthObserved[iCell] = maxDepth
 
     # Compute maxLevelCell and layerThickness for z-level (variation only on top)
     vertCoordMovementWeights[:] = 0.0
