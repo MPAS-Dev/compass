@@ -63,6 +63,7 @@ def main():
     yMax = max(yCell)
     yMin = min(yCell)
     yMid = 0.5 * (yMin + yMax)
+    rad2deg = 180.0/np.pi
 
     comment('create and initialize variables')
     time1 = time.time()
@@ -112,18 +113,23 @@ def main():
     # Logical domain (grid points)
     # this is for structured grid: nj, ni = 140, 80
     # Simple "Atlantic" box with re-entrant Drake passage
-    T = topo_builder.topo(lonCell, latCell, D0)
+    T = topo_builder.topo(lonCell*rad2deg, latCell*rad2deg, D0)
     T.add_NS_coast(NW2_lonW, -40, 90, cw, cd)
     T.add_NS_coast(NW2_lonE, -40, 90, cw, cd)
     T.add_NS_coast(NW2_lonW, -90, -60, cw, cd)
     T.add_NS_coast(NW2_lonE, -90, -60, cw, cd)
     T.add_EW_coast(-360, 360, NW2_latS, cw, cd)
     T.add_EW_coast(-360, 360, NW2_latN, cw, cd)
-    bottomDepthObserved = -T.z
+    bottomDepthObserved[:] = -T.z[:]
+    print('T.z')
+    print(T.z)
+    print('bottomDepthObserved[:]')
+    print(bottomDepthObserved[:])
 
     # Compute maxLevelCell and layerThickness for z-level (variation only on top)
     vertCoordMovementWeights[:] = 0.0
     vertCoordMovementWeights[0] = 1.0
+    maxLevelCell[:] = nVertLevels
     for iCell in range(0, nCells):
         for k in range(nVertLevels - 1, 0, -1):
             if bottomDepthObserved[iCell] > refBottomDepth[k - 1]:
