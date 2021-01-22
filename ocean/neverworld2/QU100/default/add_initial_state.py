@@ -129,7 +129,8 @@ def main():
     # Compute maxLevelCell and layerThickness for z-level (variation only on top)
     vertCoordMovementWeights[:] = 0.0
     vertCoordMovementWeights[0] = 1.0
-    maxLevelCell[:] = nVertLevels
+    maxLevelCell[:] = nVertLevels-1
+    bottomDepth[:] = D0
     for iCell in range(0, nCells):
         for k in range(nVertLevels - 1, 0, -1):
             if bottomDepthObserved[iCell] > refBottomDepth[k - 1]:
@@ -146,6 +147,7 @@ def main():
         layerThickness[0, iCell, 0] += ssh[iCell]
 
     # Compute zMid (same, regardless of vertical coordinate)
+    print('size layerThickness',np.shape(layerThickness))
     for iCell in range(0, nCells):
         k = maxLevelCell[iCell]
         zMid[0, iCell, k] = -bottomDepth[iCell] + \
