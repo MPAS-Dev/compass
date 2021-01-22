@@ -7,8 +7,8 @@ from compass.testcase import get_step_default
 from compass.io import symlink
 
 
-def collect(mesh_name, restart_filename, cores=1, min_cores=None,
-            max_memory=1000, max_disk=1000, threads=1):
+def collect(mesh_name, restart_filename, with_ice_shelf_cavities, cores=1,
+            min_cores=None, max_memory=1000, max_disk=1000, threads=1):
     """
     Get a dictionary of step properties
 
@@ -20,6 +20,9 @@ def collect(mesh_name, restart_filename, cores=1, min_cores=None,
     restart_filename : str
         The relative path to a restart file to use as the initial condition
         for E3SM
+
+    with_ice_shelf_cavities : bool
+        Whether the mesh should include ice-shelf cavities
 
     cores : int, optional
         The number of cores to run on in init runs. If this many cores are
@@ -56,6 +59,7 @@ def collect(mesh_name, restart_filename, cores=1, min_cores=None,
     step['min_cores'] = min_cores
     step['threads'] = threads
     step['restart_filename'] = restart_filename
+    step['with_ice_shelf_cavities'] = with_ice_shelf_cavities
 
     return step
 
@@ -113,6 +117,8 @@ def run(step, test_suite, config, logger):
     logger : logging.Logger
         A logger for output from the step
     """
+    with_ice_shelf_cavities = step['with_ice_shelf_cavities']
+
     with xarray.open_dataset('restart.nc') as ds:
         mesh_short_name = ds.attrs['MPAS_Mesh_Short_Name']
 
@@ -137,6 +143,9 @@ def run(step, test_suite, config, logger):
                  'cellsOnVertex', 'edgesOnVertex', 'fVertex',
                  'indexToVertexID', 'kiteAreasOnVertex', 'latVertex',
                  'lonVertex', 'xVertex', 'yVertex', 'zVertex']
+
+    if with_ice_shelf_cavities:
+        keep_vars.append('landIceMask')
 
     symlink(restart_filename, source_filename)
     with xarray.open_dataset(source_filename) as ds:

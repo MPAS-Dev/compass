@@ -59,7 +59,8 @@ def collect(mesh_name, with_ice_shelf_cavities, initial_condition, with_bgc,
     steps[step['name']] = step
     step = ocean_graph_partition.collect(mesh_name, restart_filename)
     steps[step['name']] = step
-    step = seaice_initial_condition.collect(mesh_name, restart_filename)
+    step = seaice_initial_condition.collect(mesh_name, restart_filename,
+                                            with_ice_shelf_cavities)
     steps[step['name']] = step
     step = scrip.collect(mesh_name, restart_filename, with_ice_shelf_cavities)
     steps[step['name']] = step
