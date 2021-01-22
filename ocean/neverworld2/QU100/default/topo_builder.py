@@ -6,24 +6,19 @@ class topo:
     A class to aid in playing with the design of idealized domains
     """
     
-    def __init__(self, nj, ni, dlon=1, dlat=1, lon0=0, lat0=0, D=1):
+    def __init__(self, lonCell, latCell, D=1):
         """
         Create a topo object with a mesh of nj*ni cells with depth -D
         on a mesg ranging from lon0..lon0+dlon and lat0..lat0+dlat.
         
         By default D=1, dlon=1, dlat=1, lon0=0 and lat0=0.
         """
-        self.z = -D * numpy.ones((nj,ni))
+        nCells = len(lonCell)
+        self.z = -D * numpy.ones(nCells)
         self.D0 = D # Nominal deepest depth
-        # Coordinates of grid nodes (0..1)
-        self.xg = numpy.arange(ni+1)/ni * dlon + lon0
-        self.yg = numpy.arange(nj+1)/nj * dlat + lat0
-        # Coordinates of cell centers (0..1)
-        self.xc = (numpy.arange(ni)+0.5)/ni * dlon + lon0
-        self.yc = (numpy.arange(nj)+0.5)/nj * dlat + lat0
         # Store 2D arrays of coordinates
-        self.XG, self.YG = numpy.meshgrid(self.xg, self.yg)
-        self.XC, self.YC = numpy.meshgrid(self.xc, self.yc)
+        self.XC = lonCell
+        self.YC = latCell
     # Some 1D functions to generate simple shapes
     def heaviside(x, x0):
         """Returns 0 for x < x0, 1 or x >= x0"""

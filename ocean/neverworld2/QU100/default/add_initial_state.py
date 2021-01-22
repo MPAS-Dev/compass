@@ -11,6 +11,7 @@ import argparse
 import math
 import time
 import bisect
+import topo_builder
 verbose = True
 
 
@@ -97,9 +98,28 @@ def main():
 
     # initialize topography
     ssh[:] = 0.0
-    for iCell in range(0, nCells):
-# use latCell[iCell], lonCell[iCell]
-        bottomDepthObserved[iCell] = maxDepth
+
+
+    # NeverWorld2 domain
+    NW2_lonW, NW2_lonE = 0, 80
+    NW2_latS, NW2_latN = -70, 70
+    
+    D0 = 4000 # Nominal depth (m)
+    cd = 200 # Depth of coastal shelf (m)
+    drake = 2500 # Depth of Drake sill (m)
+    cw = 5 # Width of coastal shelf (degrees)
+    
+    # Logical domain (grid points)
+    # this is for structured grid: nj, ni = 140, 80
+    # Simple "Atlantic" box with re-entrant Drake passage
+    T = topo_builder.topo(lonCell, latCell, D0)
+    T.add_NS_coast(NW2_lonW, -40, 90, cw, cd)
+    T.add_NS_coast(NW2_lonE, -40, 90, cw, cd)
+    T.add_NS_coast(NW2_lonW, -90, -60, cw, cd)
+    T.add_NS_coast(NW2_lonE, -90, -60, cw, cd)
+    T.add_EW_coast(-360, 360, NW2_latS, cw, cd)
+    T.add_EW_coast(-360, 360, NW2_latN, cw, cd)
+    bottomDepthObserved = -T.z
 
     # Compute maxLevelCell and layerThickness for z-level (variation only on top)
     vertCoordMovementWeights[:] = 0.0
