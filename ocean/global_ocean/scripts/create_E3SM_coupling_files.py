@@ -213,6 +213,7 @@ def graph_partition_ocean(config):  # {{{
 def initial_condition_seaice(config):  # {{{
 
     mesh_name = config.get('mesh', 'short_name')
+    ice_shelf_cavities = config.getboolean('main', 'ice_shelf_cavities')
 
     init_filename = config.get('main', 'initial_condition')
     base_path = os.path.dirname(os.getcwd())
@@ -222,17 +223,21 @@ def initial_condition_seaice(config):  # {{{
     make_link(init_filename, mesh_name + '.nc')
 
     filename = 'seaice.{}.nc'.format(mesh_name)
+
+    variables = \
+        'areaCell,cellsOnCell,edgesOnCell,fCell,indexToCellID,latCell,' \
+        'lonCell,meshDensity,nEdgesOnCell,verticesOnCell,xCell,yCell,zCell,' \
+        'angleEdge,cellsOnEdge,dcEdge,dvEdge,edgesOnEdge,fEdge,' \
+        'indexToEdgeID,latEdge,lonEdge,nEdgesOnCell,nEdgesOnEdge,' \
+        'verticesOnEdge,weightsOnEdge,xEdge,yEdge,zEdge,areaTriangle,' \
+        'cellsOnVertex,edgesOnVertex,fVertex,indexToVertexID,' \
+        'kiteAreasOnVertex,latVertex,lonVertex,xVertex,yVertex,zVertex'
+
+    if ice_shelf_cavities:
+        variables = '{},landIceMask'.format(variables)
+
     # command line execution
-    args = ['ncks', '-v',
-            'areaCell,cellsOnCell,edgesOnCell,fCell,indexToCellID,latCell,'
-            'lonCell,meshDensity,nEdgesOnCell,verticesOnCell,xCell,yCell,zCell,'
-            'angleEdge,cellsOnEdge,dcEdge,dvEdge,edgesOnEdge,fEdge,'
-            'indexToEdgeID,latEdge,lonEdge,nEdgesOnCell,nEdgesOnEdge,'
-            'verticesOnEdge,weightsOnEdge,xEdge,yEdge,zEdge,areaTriangle,'
-            'cellsOnVertex,edgesOnVertex,fVertex,indexToVertexID,'
-            'kiteAreasOnVertex,latVertex,lonVertex,xVertex,yVertex,zVertex',
-            '-O',
-            '{}.nc'.format(mesh_name),
+    args = ['ncks', '-v', variables, '-O', '{}.nc'.format(mesh_name),
             filename]
     run_command(args)
 
