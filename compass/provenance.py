@@ -4,6 +4,18 @@ import subprocess
 
 
 def write(work_dir, testcases):
+    """
+    Write a file with provenance, such as the git version, conda packages,
+    command, and test cases, to the work directory
+
+    Parameters
+    ----------
+    work_dir : str
+        The path to the work directory where the test cases will be set up
+
+    testcases : dict
+        A dictionary describing all of the test cases and their steps
+    """
     try:
         args = ['git', 'describe', '--tags', '--dirty', '--always']
         git_version = subprocess.check_output(args).decode('utf-8')
