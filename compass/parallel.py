@@ -80,4 +80,3 @@ def _get_subprocess_int(args):
     value = subprocess.check_output(args)
     value = int(value.decode('utf-8').strip('\n'))
     return value
-
