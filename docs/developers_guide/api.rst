@@ -15,8 +15,8 @@ Cores
    :titlesonly:
    :maxdepth: 1
 
-   api_examples
-   api_ocean
+   examples/api
+   ocean/api
 
 
 compass framework
