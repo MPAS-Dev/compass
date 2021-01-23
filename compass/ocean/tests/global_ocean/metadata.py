@@ -5,8 +5,6 @@ import xarray
 import os
 import shutil
 
-from mpas_tools.io import write_netcdf
-
 
 def get_e3sm_mesh_names(config, levels):
     """

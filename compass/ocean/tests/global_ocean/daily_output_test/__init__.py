@@ -1,9 +1,7 @@
-import traceback
-
 from compass.testcase import run_steps, get_testcase_default
 from compass.ocean.tests.global_ocean import forward
 from compass.ocean.tests import global_ocean
-from compass.validate import compare_variables, compare_timers
+from compass.validate import compare_variables
 from compass.ocean.tests.global_ocean.description import get_description
 from compass.ocean.tests.global_ocean.init import get_init_sudbdir
 
