@@ -73,7 +73,10 @@ def list_machines():
             print('   {}'.format(os.path.splitext(config)[0]))
 
 
-def list_suites(cores=['ocean']):
+def list_suites(cores=None):
+    if cores is None:
+        # add new cores here to make sure they get listed, too!
+        cores = ['ocean']
     print('Suites:')
     for core in cores:
         suites = contents('compass.{}.suites'.format(core))
