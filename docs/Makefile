@@ -4,7 +4,7 @@
 # You can set these variables from the command line.
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
-SPHINXPROJ    = mpas_model
+SPHINXPROJ    = compass
 SOURCEDIR     = .
 BUILDDIR      = _build
 
