@@ -80,9 +80,8 @@ def get_source_file(source_path, source, config):
     Parameters
     ----------
     source_path : str
-        The keyword path for a path as defined in :ref:`compass_config`_,
-        a config option from
-        a relative or absolute directory for the source
+        The keyword path for a path as defined in :ref:`dev_config`,
+        a config option from a relative or absolute directory for the source
 
     source : str
         The basename or relative path of the source within the ``source_path``

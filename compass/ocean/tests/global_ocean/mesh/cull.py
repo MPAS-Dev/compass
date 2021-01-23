@@ -15,20 +15,30 @@ def cull_mesh(with_cavities=False, with_critical_passages=False,
               preserve_floodplain=False, logger=None, use_progress_bar=True):
     """
     First step of initializing the global ocean:
+
       1. combining Natural Earth land coverage north of 60S with Antarctic
          ice coverage or grounded ice coverage from Bedmap2
+
       2. combining transects defining critical passages (if
          ``with_critical_passages=True``)
+
       3. combining points used to seed a flood fill of the global ocean.
+
       4. create masks from land coverage
+
       5. add land-locked cells to land coverage mask.
+
       6. create masks from transects (if
          ``with_critical_passages=True``)
+
       7. cull cells based on land coverage but with transects present
+
       8. create flood-fill mask based on seeds
+
       9. cull cells based on flood-fill mask
+
       10. create masks from transects on the final culled mesh (if
-         ``with_critical_passages=True``)
+          ``with_critical_passages=True``)
 
     Parameters
     ----------
