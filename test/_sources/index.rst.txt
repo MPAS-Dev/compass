@@ -44,12 +44,13 @@ functionality is added.
    users_guide/ocean/index
    users_guide/machines/index
 
-..
-    .. toctree::
-       :caption: Developer's guide
-       :maxdepth: 2
+.. toctree::
+   :caption: Developer's guide
+   :maxdepth: 2
 
-       developers_guide/overview
+   developers_guide/overview
+   developers_guide/building_docs
+   developers_guide/api
 
 .. _legacy_compass:
 

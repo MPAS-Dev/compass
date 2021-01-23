@@ -1,0 +1,473 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>compass.ocean.tests.global_ocean.init.initial_state &mdash; compass 1.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../../../" src="../../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../../_static/jquery.js"></script>
+        <script src="../../../../../../_static/underscore.js"></script>
+        <script src="../../../../../../_static/doctools.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../../../index.html" class="icon icon-home"> compass
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/overview.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/testcase.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/configuration.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/suite.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/api.html">API reference</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Legacy User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../legacy/users_guide/overview.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../legacy/users_guide/scripts.html">Scripts</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Legacy Ocean Test Cases</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../legacy/ocean/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../legacy/ocean/test_cases/index.html">Ocean test cases</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Legacy Instructions for Machines</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../legacy/machine_specific_instructions/slurm.html">Slurm job queueing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../legacy/machine_specific_instructions/lanl.html">LANL Institutional Computing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../legacy/machine_specific_instructions/nersc.html">NERSC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../legacy/machine_specific_instructions/anvil.html">Anvil/Blues</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../legacy/machine_specific_instructions/linux.html">Personal Linux/OSX Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../legacy/machine_specific_instructions/osx.html">Personal OSX Machine</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Legacy Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../legacy/developers_guide/config.html">config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../legacy/developers_guide/driver_script.html">driver_script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../legacy/developers_guide/template.html">template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../legacy/developers_guide/regression_suite.html">regression_suite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../legacy/developers_guide/run_config.html">run_config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../legacy/developers_guide/building_docs.html">Building the Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">compass</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../../tests.html">compass.ocean.tests</a> &raquo;</li>
+        
+          <li><a href="../../global_ocean.html">compass.ocean.tests.global_ocean</a> &raquo;</li>
+        
+          <li><a href="../init.html">compass.ocean.tests.global_ocean.init</a> &raquo;</li>
+        
+      <li>compass.ocean.tests.global_ocean.init.initial_state</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for compass.ocean.tests.global_ocean.init.initial_state</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.metadata</span> <span class="kn">import</span> \
+    <span class="n">add_mesh_and_init_metadata</span>
+<span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">get_step_default</span>
+<span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">symlink</span><span class="p">,</span> <span class="n">download</span>
+<span class="kn">from</span> <span class="nn">compass</span> <span class="kn">import</span> <span class="n">namelist</span><span class="p">,</span> <span class="n">streams</span>
+<span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">partition</span><span class="p">,</span> <span class="n">run_model</span>
+<span class="kn">from</span> <span class="nn">compass.parallel</span> <span class="kn">import</span> <span class="n">update_namelist_pio</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.vertical</span> <span class="kn">import</span> <span class="n">generate_grid</span><span class="p">,</span> <span class="n">write_grid</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.plot</span> <span class="kn">import</span> <span class="n">plot_vertical_grid</span><span class="p">,</span> <span class="n">plot_initial_state</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.subdir</span> <span class="kn">import</span> <span class="n">get_mesh_relative_path</span>
+
+
+<div class="viewcode-block" id="collect"><a class="viewcode-back" href="../../../../../../developers_guide/generated/compass.ocean.tests.global_ocean.init.initial_state.collect.html#compass.ocean.tests.global_ocean.init.initial_state.collect">[docs]</a><span class="k">def</span> <span class="nf">collect</span><span class="p">(</span><span class="n">mesh_name</span><span class="p">,</span> <span class="n">with_ice_shelf_cavities</span><span class="p">,</span> <span class="n">initial_condition</span><span class="p">,</span> <span class="n">with_bgc</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get a dictionary of step properties</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mesh_name : str</span>
+<span class="sd">        The name of the mesh</span>
+
+<span class="sd">    with_ice_shelf_cavities : bool</span>
+<span class="sd">        Whether the mesh should include ice-shelf cavities</span>
+
+<span class="sd">    initial_condition : {&#39;PHC&#39;, &#39;EN4_1900&#39;}, optional</span>
+<span class="sd">        The initial condition to build</span>
+
+<span class="sd">    with_bgc : bool, optional</span>
+<span class="sd">        Whether to include BGC variables in the initial condition</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    step : dict</span>
+<span class="sd">        A dictionary of properties of this step</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">step</span> <span class="o">=</span> <span class="n">get_step_default</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+    <span class="n">step</span><span class="p">[</span><span class="s1">&#39;mesh_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mesh_name</span>
+
+    <span class="n">step</span><span class="p">[</span><span class="s1">&#39;with_ice_shelf_cavities&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">with_ice_shelf_cavities</span>
+    <span class="k">if</span> <span class="n">initial_condition</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;PHC&#39;</span><span class="p">,</span> <span class="s1">&#39;EN4_1900&#39;</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown initial_condition </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">initial_condition</span><span class="p">))</span>
+    <span class="n">step</span><span class="p">[</span><span class="s1">&#39;initial_condition&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">initial_condition</span>
+    <span class="n">step</span><span class="p">[</span><span class="s1">&#39;with_bgc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">with_bgc</span>
+
+    <span class="k">return</span> <span class="n">step</span></div>
+
+
+<div class="viewcode-block" id="setup"><a class="viewcode-back" href="../../../../../../developers_guide/generated/compass.ocean.tests.global_ocean.init.initial_state.setup.html#compass.ocean.tests.global_ocean.init.initial_state.setup">[docs]</a><span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set up the test case in the work directory, including downloading any</span>
+<span class="sd">    dependencies</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    step : dict</span>
+<span class="sd">        A dictionary of properties of this step from the ``collect()`` function</span>
+
+<span class="sd">    config : configparser.ConfigParser</span>
+<span class="sd">        Configuration options for this testcase, a combination of the defaults</span>
+<span class="sd">        for the machine, core, configuration and testcase</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">step_dir</span> <span class="o">=</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;work_dir&#39;</span><span class="p">]</span>
+    <span class="n">with_ice_shelf_cavities</span> <span class="o">=</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;with_ice_shelf_cavities&#39;</span><span class="p">]</span>
+    <span class="n">initial_condition</span> <span class="o">=</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;initial_condition&#39;</span><span class="p">]</span>
+    <span class="n">with_bgc</span> <span class="o">=</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;with_bgc&#39;</span><span class="p">]</span>
+    <span class="n">package</span> <span class="o">=</span> <span class="s1">&#39;compass.ocean.tests.global_ocean.init&#39;</span>
+
+    <span class="c1"># generate the namelist, replacing a few default options</span>
+    <span class="n">replacements</span> <span class="o">=</span> <span class="n">namelist</span><span class="o">.</span><span class="n">parse_replacements</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">&#39;namelist.init&#39;</span><span class="p">)</span>
+    <span class="n">ic_namelist</span> <span class="o">=</span> <span class="s1">&#39;namelist.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">initial_condition</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+    <span class="n">replacements</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">namelist</span><span class="o">.</span><span class="n">parse_replacements</span><span class="p">(</span>
+        <span class="n">package</span><span class="p">,</span> <span class="n">ic_namelist</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
+        <span class="n">replacements</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">namelist</span><span class="o">.</span><span class="n">parse_replacements</span><span class="p">(</span>
+            <span class="n">package</span><span class="p">,</span> <span class="s1">&#39;namelist.wisc&#39;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">with_bgc</span><span class="p">:</span>
+        <span class="n">replacements</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">namelist</span><span class="o">.</span><span class="n">parse_replacements</span><span class="p">(</span>
+            <span class="n">package</span><span class="p">,</span> <span class="s1">&#39;namelist.bgc&#39;</span><span class="p">))</span>
+
+    <span class="n">namelist</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">replacements</span><span class="o">=</span><span class="n">replacements</span><span class="p">,</span>
+                      <span class="n">step_work_dir</span><span class="o">=</span><span class="n">step_dir</span><span class="p">,</span> <span class="n">core</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>
+
+    <span class="c1"># generate the streams file</span>
+    <span class="n">streams_data</span> <span class="o">=</span> <span class="n">streams</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">&#39;streams.init&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
+        <span class="n">streams_data</span> <span class="o">=</span> <span class="n">streams</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">&#39;streams.wisc&#39;</span><span class="p">,</span> <span class="n">tree</span><span class="o">=</span><span class="n">streams_data</span><span class="p">)</span>
+
+    <span class="n">streams</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">tree</span><span class="o">=</span><span class="n">streams_data</span><span class="p">,</span> <span class="n">step_work_dir</span><span class="o">=</span><span class="n">step_dir</span><span class="p">,</span>
+                     <span class="n">core</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>
+
+    <span class="n">bathymetry_database</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="s1">&#39;bathymetry_database&#39;</span><span class="p">)</span>
+    <span class="n">initial_condition_database</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;paths&#39;</span><span class="p">,</span>
+                                            <span class="s1">&#39;initial_condition_database&#39;</span><span class="p">)</span>
+
+    <span class="n">inputs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">outputs</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">remote_filename</span> <span class="o">=</span> \
+        <span class="s1">&#39;BedMachineAntarctica_and_GEBCO_2019_0.05_degree.200128.nc&#39;</span>
+    <span class="n">local_filename</span> <span class="o">=</span> <span class="s1">&#39;topography.nc&#39;</span>
+
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">download</span><span class="p">(</span>
+        <span class="n">file_name</span><span class="o">=</span><span class="n">remote_filename</span><span class="p">,</span>
+        <span class="n">url</span><span class="o">=</span><span class="s1">&#39;https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/&#39;</span>
+            <span class="s1">&#39;mpas-ocean/bathymetry_database&#39;</span><span class="p">,</span>
+        <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">dest_path</span><span class="o">=</span><span class="n">bathymetry_database</span><span class="p">)</span>
+
+    <span class="n">inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+    <span class="n">symlink</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">step_dir</span><span class="p">,</span> <span class="n">local_filename</span><span class="p">))</span>
+
+    <span class="n">filenames</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;wind_stress.nc&#39;</span><span class="p">:</span>
+            <span class="s1">&#39;windStress.ncep_1958-2000avg.interp3600x2431.151106.nc&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;swData.nc&#39;</span><span class="p">:</span> <span class="s1">&#39;chlorophyllA_monthly_averages_1deg.151201.nc&#39;</span><span class="p">}</span>
+    <span class="k">if</span> <span class="n">initial_condition</span> <span class="o">==</span> <span class="s1">&#39;PHC&#39;</span><span class="p">:</span>
+        <span class="n">filenames</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+            <span class="s1">&#39;temperature.nc&#39;</span><span class="p">:</span>
+                <span class="s1">&#39;PotentialTemperature.01.filled.60levels.PHC.151106.nc&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;salinity.nc&#39;</span><span class="p">:</span> <span class="s1">&#39;Salinity.01.filled.60levels.PHC.151106.nc&#39;</span><span class="p">})</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">filenames</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+            <span class="s1">&#39;temperature.nc&#39;</span><span class="p">:</span>
+                <span class="s1">&#39;PotentialTemperature.100levels.Levitus.EN4_1900estimate.&#39;</span>
+                <span class="s1">&#39;200813.nc&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;salinity.nc&#39;</span><span class="p">:</span>
+                <span class="s1">&#39;Salinity.100levels.Levitus.EN4_1900estimate.200813.nc&#39;</span><span class="p">})</span>
+
+    <span class="k">if</span> <span class="n">with_bgc</span><span class="p">:</span>
+        <span class="n">filenames</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+            <span class="s1">&#39;ecosys.nc&#39;</span><span class="p">:</span> <span class="s1">&#39;ecosys_jan_IC_360x180x60_corrO2_Dec2014phaeo.nc&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;ecosys_forcing.nc&#39;</span><span class="p">:</span>
+                <span class="s1">&#39;ecoForcingAllSurface.forMPASO.interp360x180.1timeLevel.nc&#39;</span><span class="p">})</span>
+
+    <span class="k">for</span> <span class="n">local_filename</span><span class="p">,</span> <span class="n">remote_filename</span> <span class="ow">in</span> <span class="n">filenames</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="c1"># download an input file if it&#39;s not already in the initial condition</span>
+        <span class="c1"># database</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">download</span><span class="p">(</span>
+            <span class="n">file_name</span><span class="o">=</span><span class="n">remote_filename</span><span class="p">,</span>
+            <span class="n">url</span><span class="o">=</span><span class="s1">&#39;https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/&#39;</span>
+                <span class="s1">&#39;mpas-ocean/initial_condition_database&#39;</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">dest_path</span><span class="o">=</span><span class="n">initial_condition_database</span><span class="p">)</span>
+
+        <span class="n">inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+        <span class="n">symlink</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">step_dir</span><span class="p">,</span> <span class="n">local_filename</span><span class="p">))</span>
+
+    <span class="n">mesh_path</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/mesh/mesh&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">get_mesh_relative_path</span><span class="p">(</span><span class="n">step</span><span class="p">))</span>
+
+    <span class="n">links</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/culled_mesh.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_path</span><span class="p">):</span> <span class="s1">&#39;mesh.nc&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/critical_passages_mask_final.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_path</span><span class="p">):</span>
+                 <span class="s1">&#39;critical_passages.nc&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/culled_graph.info&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_path</span><span class="p">):</span> <span class="s1">&#39;graph.info&#39;</span><span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
+        <span class="n">links</span><span class="p">[</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/land_ice_mask.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_path</span><span class="p">)]</span> <span class="o">=</span> <span class="s1">&#39;land_ice_mask.nc&#39;</span>
+    <span class="k">for</span> <span class="n">target</span><span class="p">,</span> <span class="n">link</span> <span class="ow">in</span> <span class="n">links</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">symlink</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">step_dir</span><span class="p">,</span> <span class="n">link</span><span class="p">))</span>
+        <span class="n">inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">step_dir</span><span class="p">,</span> <span class="n">target</span><span class="p">)))</span>
+
+    <span class="c1"># make a link to the ocean_model executable</span>
+    <span class="n">symlink</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;executables&#39;</span><span class="p">,</span> <span class="s1">&#39;model&#39;</span><span class="p">)),</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">step_dir</span><span class="p">,</span> <span class="s1">&#39;ocean_model&#39;</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;initial_state.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;culled_graph.info&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;init_mode_forcing_data.nc&#39;</span><span class="p">]:</span>
+        <span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">step_dir</span><span class="p">,</span> <span class="n">file</span><span class="p">)))</span>
+
+    <span class="n">step</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">inputs</span>
+    <span class="n">step</span><span class="p">[</span><span class="s1">&#39;outputs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">outputs</span>
+
+    <span class="c1"># get the these properties from the config options</span>
+    <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;cores&#39;</span><span class="p">,</span> <span class="s1">&#39;min_cores&#39;</span><span class="p">,</span> <span class="s1">&#39;max_memory&#39;</span><span class="p">,</span> <span class="s1">&#39;max_disk&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;threads&#39;</span><span class="p">]:</span>
+        <span class="n">step</span><span class="p">[</span><span class="n">option</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span>
+                                     <span class="s1">&#39;init_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">option</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="run"><a class="viewcode-back" href="../../../../../../developers_guide/generated/compass.ocean.tests.global_ocean.init.initial_state.run.html#compass.ocean.tests.global_ocean.init.initial_state.run">[docs]</a><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">test_suite</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Run this step of the testcase</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    step : dict</span>
+<span class="sd">        A dictionary of properties of this step from the ``collect()``</span>
+<span class="sd">        function, with modifications from the ``setup()`` function.</span>
+
+<span class="sd">    test_suite : dict</span>
+<span class="sd">        A dictionary of properties of the test suite</span>
+
+<span class="sd">    config : configparser.ConfigParser</span>
+<span class="sd">        Configuration options for this testcase, a combination of the defaults</span>
+<span class="sd">        for the machine, core and configuration</span>
+
+<span class="sd">    logger : logging.Logger</span>
+<span class="sd">        A logger for output from the step</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cores</span> <span class="o">=</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;cores&#39;</span><span class="p">]</span>
+    <span class="n">threads</span> <span class="o">=</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;threads&#39;</span><span class="p">]</span>
+    <span class="n">step_dir</span> <span class="o">=</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;work_dir&#39;</span><span class="p">]</span>
+
+    <span class="n">interfaces</span> <span class="o">=</span> <span class="n">generate_grid</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
+
+    <span class="n">write_grid</span><span class="p">(</span><span class="n">interfaces</span><span class="o">=</span><span class="n">interfaces</span><span class="p">,</span> <span class="n">out_filename</span><span class="o">=</span><span class="s1">&#39;vertical_grid.nc&#39;</span><span class="p">)</span>
+    <span class="n">plot_vertical_grid</span><span class="p">(</span><span class="n">grid_filename</span><span class="o">=</span><span class="s1">&#39;vertical_grid.nc&#39;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+                       <span class="n">out_filename</span><span class="o">=</span><span class="s1">&#39;vertical_grid.png&#39;</span><span class="p">)</span>
+
+    <span class="n">update_namelist_pio</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">cores</span><span class="p">,</span> <span class="n">step_dir</span><span class="p">)</span>
+    <span class="n">partition</span><span class="p">(</span><span class="n">cores</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">graph_file</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">)</span>
+
+    <span class="n">run_model</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">core</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span> <span class="n">core_count</span><span class="o">=</span><span class="n">cores</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
+              <span class="n">threads</span><span class="o">=</span><span class="n">threads</span><span class="p">)</span>
+
+    <span class="n">add_mesh_and_init_metadata</span><span class="p">(</span><span class="n">step</span><span class="p">[</span><span class="s1">&#39;outputs&#39;</span><span class="p">],</span> <span class="n">config</span><span class="p">,</span>
+                               <span class="n">init_filename</span><span class="o">=</span><span class="s1">&#39;initial_state.nc&#39;</span><span class="p">)</span>
+
+    <span class="n">plot_initial_state</span><span class="p">(</span><span class="n">input_file_name</span><span class="o">=</span><span class="s1">&#39;initial_state.nc&#39;</span><span class="p">,</span>
+                       <span class="n">output_file_name</span><span class="o">=</span><span class="s1">&#39;initial_state.png&#39;</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
