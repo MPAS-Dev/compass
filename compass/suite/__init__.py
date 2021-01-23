@@ -229,7 +229,7 @@ def run_suite(suite_name):
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Set up a regression test suite')
+        description='Set up a regression test suite', prog='compass suite')
     parser.add_argument("-c", "--core", dest="core",
                         help="The core for the test suite",
                         metavar="CORE", required=True)

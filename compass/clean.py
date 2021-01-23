@@ -62,7 +62,7 @@ def clean_cases(tests=None, numbers=None, work_dir=None):
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Clean up one or more test cases')
+        description='Clean up one or more test cases', prog='compass clean')
 
     parser.add_argument("-t", "--test", dest="test",
                         help="Relative path for a test case to set up",

@@ -84,7 +84,8 @@ def list_suites(cores=['ocean']):
 
 def main():
     parser = argparse.ArgumentParser(
-        description='List the available test cases or machines')
+        description='List the available test cases or machines',
+        prog='compass list')
     parser.add_argument("-t", "--test_expr", dest="test_expr",
                         help="A regular expression for a test path name to "
                              "search for",
