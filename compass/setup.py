@@ -211,7 +211,7 @@ def setup_case(path, testcase, config_file, machine, work_dir, baseline_dir,
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Set up one or more test cases')
+        description='Set up one or more test cases', prog='compass setup')
     parser.add_argument("-t", "--test", dest="test",
                         help="Relative path for a test case to set up",
                         metavar="PATH")
