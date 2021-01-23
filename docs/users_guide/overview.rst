@@ -133,6 +133,8 @@ The list is long, so it will likely be useful to grep for particular content:
   13: ocean/baroclinic_channel/10km/restart_test
   14: ocean/baroclinic_channel/10km/threads_test
 
+See :ref:`dev_compass_list` for more information.
+
 To set up a particular test case, you can either use the full path of the
 test case:
 
@@ -143,7 +145,7 @@ test case:
 
 or you can replace the ``-t`` flag with the simple shortcut: ``-n 15``.  You
 can set up several test cases at once by passing test numbers separated by
-spaces: ``-n 15 16 17``
+spaces: ``-n 15 16 17``.  See :ref:`dev_compass_setup` for more details.
 
 Here ``$WORKDIR`` is a path, usually to your scratch space. For example,
 
@@ -202,7 +204,6 @@ create a config file like in this example for MPAS-Ocean:
     # the number of multiprocessing or dask threads to use
     threads = 8
 
-
 Running a test case
 -------------------
 
@@ -244,7 +245,8 @@ You can set up a suite as follows:
 where the details are similar to setting up a case. You can use the same
 config file (e.g. ``ocean.cfg``) and you can specify a "baseline" with
 ``-b $PREVIOUS_WORKDIR`` for bit-for-bit comparison of the output with a
-previous run of the ``nightly`` suite.
+previous run of the ``nightly`` suite. See :ref:`dev_compass_suite` for more
+on this command.
 
 To run the regression suite, log into an interactive node, load your modules,
 and
