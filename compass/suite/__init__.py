@@ -235,7 +235,7 @@ def main():
                         metavar="CORE", required=True)
     parser.add_argument("-t", "--test_suite", dest="test_suite",
                         help="Path to file containing a test suite to setup",
-                        metavar="FILE", required=True)
+                        metavar="SUITE", required=True)
     parser.add_argument("-f", "--config_file", dest="config_file",
                         help="Configuration file for test case setup",
                         metavar="FILE")
