@@ -51,7 +51,7 @@ Then, run the following script to build the docs:
     echo "version: $version"
     export DOCS_VERSION="test"
     cd docs || exit 1
-    rm -rf developers_guide/generated/ _build/
+    rm -rf developers_guide/generated/ developers_guide/*/generated/ _build/
     make html
 
 Finally, you can view the documentation by opening ``_build/html/index.html``.

@@ -110,8 +110,16 @@
 <p class="caption"><span class="caption-text">Developer's guide</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/cores.html">Cores</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/docs.html">Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers_guide/building_docs.html">Building the Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers_guide/api.html">API reference</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Code and Documentation Versions</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Legacy User's guide</span></p>
 <ul>
@@ -311,6 +319,7 @@ of your local compass repo or branch, run:</p>
 14: ocean/baroclinic_channel/10km/threads_test
 </pre></div>
 </div>
+<p>See <a class="reference internal" href="../developers_guide/command_line.html#dev-compass-list"><span class="std std-ref">compass list</span></a> for more information.</p>
 <p>To set up a particular test case, you can either use the full path of the
 test case:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m compass setup -f ocean.cfg -t ocean/global_ocean/QU240/mesh <span class="se">\</span>
@@ -319,7 +328,7 @@ test case:</p>
 </div>
 <p>or you can replace the <code class="docutils literal notranslate"><span class="pre">-t</span></code> flag with the simple shortcut: <code class="docutils literal notranslate"><span class="pre">-n</span> <span class="pre">15</span></code>.  You
 can set up several test cases at once by passing test numbers separated by
-spaces: <code class="docutils literal notranslate"><span class="pre">-n</span> <span class="pre">15</span> <span class="pre">16</span> <span class="pre">17</span></code></p>
+spaces: <code class="docutils literal notranslate"><span class="pre">-n</span> <span class="pre">15</span> <span class="pre">16</span> <span class="pre">17</span></code>.  See <a class="reference internal" href="../developers_guide/command_line.html#dev-compass-setup"><span class="std std-ref">compass setup</span></a> for more details.</p>
 <p>Here <code class="docutils literal notranslate"><span class="pre">$WORKDIR</span></code> is a path, usually to your scratch space. For example,</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>-w /lustre/scratch4/turquoise/<span class="nv">$USER</span>/runs/191210_test_new_branch
 </pre></div>
@@ -400,7 +409,8 @@ cases in one call. For the ocean core, they can be listed with:</p>
 <p>where the details are similar to setting up a case. You can use the same
 config file (e.g. <code class="docutils literal notranslate"><span class="pre">ocean.cfg</span></code>) and you can specify a “baseline” with
 <code class="docutils literal notranslate"><span class="pre">-b</span> <span class="pre">$PREVIOUS_WORKDIR</span></code> for bit-for-bit comparison of the output with a
-previous run of the <code class="docutils literal notranslate"><span class="pre">nightly</span></code> suite.</p>
+previous run of the <code class="docutils literal notranslate"><span class="pre">nightly</span></code> suite. See <a class="reference internal" href="../developers_guide/command_line.html#dev-compass-suite"><span class="std std-ref">compass suite</span></a> for more
+on this command.</p>
 <p>To run the regression suite, log into an interactive node, load your modules,
 and</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> <span class="nv">$WORKDIR</span>

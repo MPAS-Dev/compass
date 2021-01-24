@@ -1,0 +1,593 @@
+.. _dev_cores:
+
+Cores
+=====
+
+The test cases in compass are organized by "core", corresponding to a dynamical
+core in MPAS, and then into "configurations".  Currently, there are two cores,
+``examples`` which simply houses some very basic examples (as the name implies)
+and ``ocean``, which encompasses all the test cases for MPAS-Ocean.   Test
+cases for MALI will be added to the ``landice`` core in the near future.
+
+From a developer's perspective, a core is a package within ``compass`` that:
+
+1. contains a ``tests`` package, which contains packages for each
+   configuration, each of which contains various packages and modules for
+   test cases and their steps.
+
+2. collects all the test cases of each configuration  together in the
+   ``collect()`` function in ``compass/<core>/tests/__init__.py`` (see below)
+
+3. contains a ``<core>.cfg`` config file containing any default config options
+   that are universal to all configurations of the core
+
+The core can also contain other packages and modules besides ``tests`` as part
+of its "framework".  The core's framework is a mix of shared code and other
+files (config files, namelists, streams files, etc.) that is expected to be
+used only by modules and packages within the core, not by other cores or the
+main compass :ref:`dev_framework`.
+
+The ``collect()`` function of a core should simply call the ``collect()``
+functions for each configuration, extending the list of test cases with those
+from the configuration.  This would look something like
+:py:func:`compass.examples.test.collect()` from the ``examples`` core:
+
+.. code-block:: python
+
+    from compass.examples.tests import example_compact, example_expanded
+
+
+    def collect():
+        """
+        Get a list of testcases in this configuration
+
+        Returns
+        -------
+        testcases : list
+            A dictionary of configurations within this core
+
+        """
+        testcases = list()
+        # make sure you add your configuration to this list so it is included
+        # in the available testcases
+        for configuration in [example_compact, example_expanded]:
+            testcases.extend(configuration.collect())
+
+        return testcases
+
+The config file for the core should, at the very least, define the
+default value for the ``mpas_model`` path in the ``[paths]`` section.
+Typically, it will also define the paths to the model executable and the
+default namelist and streams files for "forward mode" (and, for some cores,
+"init mode").  From the ``examples`` core, these the MPAS dynamical core
+is given the dummy name ``core`` (which does not actually exist).  This would
+be replaced by ``ocean`` or ``landice`` throughout the config file for those
+cores:
+
+.. code-block:: cfg
+
+    # This config file has default config options for the "examples" core
+
+    # The paths section points compass to external paths
+    [paths]
+
+    # the relative or absolute path to the root of a branch where MPAS core
+    # has been built
+    mpas_model = MPAS-Model/core/develop
+
+    # The namelists section defines paths to example_compact namelists that will be used
+    # to generate specific namelists. By default, these point to the forward and
+    # init namelists in the default_inputs directory after a successful build of
+    # the core model.  Change these in a custom config file if you need a different
+    # example_compact.
+    [namelists]
+    forward = ${paths:mpas_model}/default_inputs/namelist.core.forward
+
+    # The streams section defines paths to example_compact streams files that will be used
+    # to generate specific streams files. By default, these point to the forward and
+    # init streams files in the default_inputs directory after a successful build of
+    # the core model. Change these in a custom config file if you need a different
+    # example_compact.
+    [streams]
+    forward = ${paths:mpas_model}/default_inputs/streams.core.forward
+
+
+    # The executables section defines paths to required executables. These
+    # executables are provided for use by specific test cases.  Most tools that
+    # compass needs should be in the conda environment, so this is only the path
+    # to the MPAS core executable by default.
+    [executables]
+    model = ${paths:mpas_model}/core_model
+
+.. _dev_configs:
+
+Configurations
+--------------
+
+Configurations are the next level of test-case organization below
+:ref:`dev_cores`.  Typically, the test cases within a configuration are part of
+the same framework, serve a similar purpose, or are variants on one another.
+Often, they have a common topography and initial condition, perhaps with
+different mesh resolutions.  It is common for a configuration to include
+"framework" modules that are shared between its test cases and steps (but
+typically not with other configurations).  Each core will typically include a
+mix of "idealized" configurations (e.g. :ref:`dev_ocean_baroclinic_channel` or
+:ref:`dev_ocean_ziso`) and "realistic" domains (e.g.
+:ref:`dev_ocean_global_ocean`).
+
+Each configuration is a python package within the core's ``tests`` package.
+While it is not required, a configuration will typically include a config file
+with a set of default config options that are the starting point for all its
+test case, named ``<configuration>.cfg``.  As an example, here is the config
+file for the ``example_compact`` configuration:
+
+.. code-block:: cfg
+
+    # default namelist options for the "example_compact" configuration
+    [example_compact]
+
+    # A parameter that we will use in setting up or running the test case
+    parameter1 = 0.
+
+    # Another parameter
+    parameter2 = False
+
+Some configuration options will provide defaults for config options that are
+shared across the core (as is the case for the ``[vertical_grid]`` config
+section in the ocean core).  But most config options for a configuration will
+typically go into a section with the same name as teh configuration, as in the
+example above.
+
+The ``__init__.py`` file for the configuration must define a ``collect()``
+function that makes a list of test cases within the configuration.  This list
+is made by calling the ``collect()`` functions of each test case.  Returning
+to the ``example_compact`` configuration, the function
+:py:func:`compass.examples.test.example_compact.collect()` looks like this:
+
+.. code-block:: python
+
+    from compass.examples.tests.example_compact import test1, test2
+
+
+    def collect():
+        testcases = list()
+        for resolution in ['1km', '2km']:
+            for test in [test1, test2]:
+                testcases.append(test.collect(resolution=resolution))
+
+        return testcases
+
+As in this example, it may be useful for a configuration to make several
+versions of a test case by passing different parameters.  In the example, we
+create versions of both ``test1`` and ``test2`` at both ``1km`` and ``2km``
+resolution.  We will explore this further when we talk about
+:ref:`dev_testcases` and :ref:`dev_steps` below.
+
+It is also common for a configuration to have a ``configure()`` function that
+can be shared across its tests, see :ref:`dev_testcase_configure`.
+
+An example of a shared ``configure()`` function is
+:py:func:`compass.ocean.test.baroclinic_channel.configure()`:
+
+.. code-block:: python
+
+
+    def configure(testcase, config):
+        resolution = testcase['resolution']
+        res_params = {'10km': {'nx': 16,
+                               'ny': 50,
+                               'dc': 10e3},
+                      '4km': {'nx': 40,
+                              'ny': 126,
+                              'dc': 4e3},
+                      '1km': {'nx': 160,
+                              'ny': 500,
+                              'dc': 1e3}}
+
+        if resolution not in res_params:
+            raise ValueError('Unsupported resolution {}. Supported values are: '
+                             '{}'.format(resolution, list(res_params)))
+        res_params = res_params[resolution]
+        for param in res_params:
+            config.set('baroclinic_channel', param, '{}'.format(res_params[param]))
+
+In the ``baroclinic_channel`` configuration, 3 resolutions are supported:
+``1km``, ``4km`` and ``10km``.  Here, we use a dictionary to define parameters
+(the size of the mesh) associated with each resolution and then to set config
+options with those parameters.  This approach is appropriate if we want a user
+to be able to modify these config options before running the test case (in this
+case, if they would like to run on a mesh of a different size or resolution).
+If these parameters should be held fixed, they should not be added to the
+``config`` object but rather to the ``testcase`` or ``step`` dictionary that
+the user cannot change, as we will discuss below.
+
+As with cores and the main ``compass`` package, configurations also can have
+a shared "framework" of packages, modules, config files, namelists, and streams
+files that is shared among test cases and steps.
+
+.. _dev_testcases:
+
+Test cases
+----------
+
+In many ways, test cases are the fundamental building blocks of ``compass``,
+since a user can't set up an individual step of test case (tough they can run
+the steps one at a time).
+
+A test case can be a module but is usually a python package so it can
+incorporate modules for its steps and/or config files, namelists, and streams
+files.  The test case must include ``collect()``, ``configure()`` and ``run()``
+functions with the `API <https://en.wikipedia.org/wiki/API>`_ given below.
+(Technically, you can name these functions something else but we don't suggest
+doing this.)
+
+.. _dev_testcase_dict:
+
+testcase dictionary
+^^^^^^^^^^^^^^^^^^^
+
+
+
+.. _dev_testcase_collect:
+
+collect()
+^^^^^^^^^
+
+The ``collect()`` function must include the following, each of which is
+described in more detail below:
+
+1. call the ``collect()`` functions for the steps in the test case, adding them
+   to a ``steps`` dictionary,
+
+2. call :py:func:`compass.testcase.get_testcase_default()`
+
+3. return the resulting python dictionary ``testcase``.
+
+You can include argument (typically parameters) to ``collect()`` as long as
+the configuration's ``collect()`` function will know what these should be.  In
+the example below, the argument is the resolution (as a string).
+
+It is important that the ``collect()`` function doesn't perform any
+time-consuming calculations, download files, or otherwise use significant
+resources because this function is called quite often for every single test
+case and step: when test cases are listed, set up, or cleaned up, and also when
+test suites are set up or cleaned up.
+
+Since the API for ``collect()`` is a bit flexible, we will provide an example,
+:py:func:`compass.ocean.tests.baroclinic_channel.rpe_test.collect()`:
+
+.. code-block:: python
+
+    from compass.testcase import get_testcase_default
+    from compass.ocean.tests.baroclinic_channel import initial_state, forward
+
+
+    def collect(resolution):
+        """
+        Get a dictionary of testcase properties
+
+        Parameters
+        ----------
+        resolution : {'1km', '4km', '10km'}
+            The resolution of the mesh
+
+        Returns
+        -------
+        testcase : dict
+            A dict of properties of this test case, including its steps
+        """
+        description = 'baroclinic channel {} reference potential energy (RPE)' \
+                      ''.format(resolution)
+        module = __name__
+
+        res_params = {'1km': {'core_count': 144, 'min_cores': 36,
+                              'max_memory': 64000, 'max_disk': 64000},
+                      '4km': {'core_count': 36, 'min_cores': 8,
+                              'max_memory': 16000, 'max_disk': 16000},
+                      '10km': {'core_count': 8, 'min_cores': 4,
+                               'max_memory': 2000, 'max_disk': 2000}}
+
+        if resolution not in res_params:
+            raise ValueError('Unsupported resolution {}. Supported values are: '
+                             '{}'.format(resolution, list(res_params)))
+
+        res_params = res_params[resolution]
+        name = module.split('.')[-1]
+        subdir = '{}/{}'.format(resolution, name)
+        steps = dict()
+        step = initial_state.collect(resolution)
+        steps[step['name']] = step
+
+        for index, nu in enumerate([1, 5, 10, 20, 200]):
+            step = forward.collect(resolution, cores=res_params['core_count'],
+                                   min_cores=res_params['min_cores'],
+                                   max_memory=res_params['max_memory'],
+                                   max_disk=res_params['max_disk'], threads=1,
+                                   testcase_module=module,
+                                   namelist_file='namelist.forward',
+                                   streams_file='streams.forward',
+                                   nu=float(nu))
+            step['name'] = 'rpe_test_{}_nu_{}'.format(index+1, nu)
+            step['subdir'] = step['name']
+            steps[step['name']] = step
+
+        step = analysis.collect(resolution)
+        steps[step['name']] = step
+
+        testcase = get_testcase_default(module, description, steps, subdir=subdir)
+        testcase['resolution'] = resolution
+
+        return testcase
+
+We have deliberately chosen a fairly complex example to demonstrate how to make
+full use of :ref:`dev_code_sharing` in a test case.
+
+The test case imports the modules for its steps (``initial_state`` and
+``forward`` in this case) so it can call the ``collect()`` function for each
+step.  The steps are collected in a python dictionary ``steps`` with the names
+of the steps as keys and individual ``step`` dictionaries as values (so a
+nested dictionary).  The ``step`` dictionary is described in :ref:`dev_steps`.
+
+Then, :py:func:`compass.testcase.get_testcase_default()` is called.  The
+required arguments are the current module, a short description of the test
+case, and the ``steps`` dictionary. The name of the module is determined from
+the `__name__ <https://docs.python.org/3/reference/import.html?highlight=__name__#__name__>`_
+attribute of the package or module.
+
+By default, the test case will get set up in a subdirectory of the
+configuration that is the name of the individual module or package (e.g.
+``rpe_test`` for in the example above, since the package is called
+``rpe_test``).  Similarly, by default each step will go into a subdirectory
+with the module name of the step (e.g. ``initial_state`` or ``forward``).
+However, ``compass`` is flexible about the subdirectory structure and the names
+of the subdirectories.  This flexibility was an important requirement in
+moving away from :ref:`legacy_compass`.  You can give the subdirectory for
+the test case and steps whatever name makes sense to you. If an argument is
+passed to the test case's ``collect()`` function, it would typically make sense
+to have the subdirectory of the test case depend in some way on this argument.
+This is because each test case must end up in a unique subdirectory.  In the
+example above, the ``baroclinic_channel`` configuration will call ``collect()``
+with each of the 3 supported resolutions.  Each test case will go into a
+different subdirectory: ``1km/rpe_test``, ``4km/rpe_test`` and
+``10km/rpe_test``.
+
+In the example above, the same ``forward`` step is included in the test case
+5 times with a different viscosity parameter ``nu`` for each.  The value of
+``nu`` is passed to the step's ``collect()`` function (along with a number of
+other parameters related to required resources, namelists and streams files).
+The resulting ``step`` dictionary will give each step the same name and
+subdirectory by default: ``forward``.  This would not work because then all
+the steps would end up in the same place, so the name is changed to something
+unique.  In this example, the steps are given rather clumsy
+names---``rpe_test_1_nu_1``, ``rpe_test_2_nu_5``, etc.---but these could be any
+unique names.
+
+.. _dev_testcase_configure:
+
+configure()
+^^^^^^^^^^^
+
+The ``configure()`` function is used to set config options or build them up
+from defaults stored in config files within the test case or its configuration.
+The ``config`` object that is modified in this function will be written to a
+config file for the test case (see :ref:`config_files`). We already discussed
+the ``configure()`` function a little bit in :ref:`dev_configs` because
+it is common for test cases to call a shared ``configure()`` function.
+
+``configure()`` always takes two arguments, the ``testcase`` dictionary that
+was returned by ``collect()`` and the ``config`` object with config options
+to add or modify.
+
+:py:func:`compass.ocean.tests.baroclinic_channel.rpe_test.configure()` simply
+calls the shared function in its configuration,
+:py:func:`compass.ocean.tests.baroclinic_channel.configure()`:
+
+.. code-block:: python
+
+    from compass.ocean.tests import baroclinic_channel
+
+
+    def configure(testcase, config):
+        """
+        Modify the configuration options for this testcase.
+
+        Parameters
+        ----------
+        testcase : dict
+            A dictionary of properties of this testcase from the ``collect()``
+            function
+
+        config : configparser.ConfigParser
+            Configuration options for this testcase, a combination of the defaults
+            for the machine, core and configuration
+        """
+        baroclinic_channel.configure(testcase, config)
+
+
+:py:func:`compass.ocean.tests.baroclinic_channel.configure()` was already
+shown in :ref:`dev_configs` above.  It sets parameters for the number of
+cells in the mesh in the x and y directions and the resolution of those cells.
+
+In a pinch, the ``configure()`` function can also be used to perform other
+operations at the test-case level during when a test case is being set up.
+An example of this would be creating a symlink to a README file that is shared
+across the whole test case, as in
+:py:func:`compass.ocean.tests.global_ocean.files_for_e3sm.configure()`:
+
+
+.. code-block:: python
+
+    from importlib.resources import path
+
+    from compass.ocean.tests import global_ocean
+    from compass.io import symlink
+
+
+    def configure(testcase, config):
+        """
+        Modify the configuration options for this testcase.
+
+        Parameters
+        ----------
+        testcase : dict
+            A dictionary of properties of this testcase from the ``collect()``
+            function
+
+        config : configparser.ConfigParser
+            Configuration options for this testcase, a combination of the defaults
+            for the machine, core and configuration
+        """
+        global_ocean.configure(testcase, config)
+        with path('compass.ocean.tests.global_ocean.files_for_e3sm', 'README') as \
+                target:
+            symlink(str(target), '{}/README'.format(testcase['work_dir']))
+
+
+.. _dev_testcase_run:
+
+run()
+^^^^^
+
+``run()`` takes 4 arguments:
+
+* ``testcase`` -- A dictionary of properties of this testcase returned by
+  ``collect()``,
+
+* ``test_suite`` -- A dictionary of properties of the test suite (currently
+  not used),
+
+* ``config`` -- the config options for this testcase (see :ref:`config_files`),
+
+* ``logger`` -- A logger for output from the testcase.
+
+In its simplest form, ``run()`` just calls
+:py:func:`compass.testcase.run_steps()` with the same arguments to run all of
+the steps of the test case:
+
+.. code-block:: python
+
+    from compass.testcase import run_steps
+
+
+    def run(testcase, test_suite, config, logger):
+        """
+        Run each step of the testcase
+
+        Parameters
+        ----------
+        testcase : dict
+            A dictionary of properties of this testcase from the ``collect()``
+            function
+
+        test_suite : dict
+            A dictionary of properties of the test suite
+
+        config : configparser.ConfigParser
+            Configuration options for this testcase, a combination of the defaults
+            for the machine, core and configuration
+
+        logger : logging.Logger
+            A logger for output from the testcase
+        """
+        # just run all the steps in the order they were added
+        run_steps(testcase, test_suite, config, logger)
+
+
+``run()`` is also the right place to perform :ref:`dev_validation` of variables
+in output files and/or timers in a simulation log.
+
+In some circumstances, it will also be appropriate to update properties of
+the steps in the test case based on config options that the user may have
+changed.  This should only be necessary for config options related to the
+resources used by the step: the target number of cores, the minimum number of
+cores, the number of threads, the maximum memory usage, and the maximum disk
+usage.  Other config options can simply be read in from within the step's
+``run()`` function as needed.  But these performance-related config options
+affect how the step runs and must be set *before* the step can run.
+
+In this complex example,
+:py:func:`compass.ocean.tests.global_ocean.init.run()`, we see examples of both
+updating the ``steps`` dictionary based on config options and of validation of
+variables in the output:
+
+.. code-block:: python
+
+    def run(testcase, test_suite, config, logger):
+        """
+        Run each step of the testcase
+
+        Parameters
+        ----------
+        testcase : dict
+            A dictionary of properties of this testcase from the ``collect()``
+            function
+
+        test_suite : dict
+            A dictionary of properties of the test suite
+
+        config : configparser.ConfigParser
+            Configuration options for this testcase, a combination of the defaults
+            for the machine, core and configuration
+
+        logger : logging.Logger
+            A logger for output from the testcase
+        """
+        work_dir = testcase['work_dir']
+        with_bgc = testcase['with_bgc']
+        steps = testcase['steps_to_run']
+        if 'initial_state' in steps:
+            step = testcase['steps']['initial_state']
+            # get the these properties from the config options
+            for option in ['cores', 'min_cores', 'max_memory', 'max_disk',
+                           'threads']:
+                step[option] = config.getint('global_ocean',
+                                             'init_{}'.format(option))
+
+        if 'ssh_adjustment' in steps:
+            step = testcase['steps']['ssh_adjustment']
+            # get the these properties from the config options
+            for option in ['cores', 'min_cores', 'max_memory', 'max_disk',
+                           'threads']:
+                step[option] = config.getint('global_ocean',
+                                             'forward_{}'.format(option))
+
+        run_steps(testcase, test_suite, config, logger)
+
+        if 'initial_state' in steps:
+            variables = ['temperature', 'salinity', 'layerThickness']
+            compare_variables(variables, config, work_dir,
+                              filename1='initial_state/initial_state.nc')
+
+            if with_bgc:
+                variables = ['temperature', 'salinity', 'layerThickness', 'PO4',
+                             'NO3', 'SiO3', 'NH4', 'Fe', 'O2', 'DIC',
+                             'DIC_ALT_CO2', 'ALK', 'DOC', 'DON', 'DOFe', 'DOP',
+                             'DOPr', 'DONr', 'zooC', 'spChl', 'spC', 'spFe',
+                             'spCaCO3', 'diatChl', 'diatC', 'diatFe', 'diatSi',
+                             'diazChl', 'diazC', 'diazFe', 'phaeoChl', 'phaeoC',
+                             'phaeoFe', 'DMS', 'DMSP', 'PROT', 'POLY', 'LIP']
+                compare_variables(variables, config, work_dir,
+                                  filename1='initial_state/initial_state.nc')
+
+        if 'ssh_adjustment' in steps:
+            variables = ['ssh', 'landIcePressure']
+            compare_variables(variables, config, work_dir,
+                              filename1='ssh_adjustment/adjusted_init.nc')
+
+
+
+.. _dev_steps:
+
+Steps
+-----
+
+Steps are...
+
+
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   examples/index
+   ocean/index
+
