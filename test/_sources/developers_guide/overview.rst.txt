@@ -171,7 +171,7 @@ clear what functionality each contains, e.g. ``compass.namelists`` and
 ``compass.streams`` are for manipulating :ref:`dev_namelist` and
 :ref:`dev_streams` files, respectively; ``compass.io`` has functionality for
 downloading files from the
-`LCRC server <https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-ocean/>`_
+`LCRC server <https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/>`_
 and creating symlinks; and ``compass.validation`` can be used to ensure that
 variables are bit-for-bit identical between steps or when compared with a
 baseline, and to compare timers with a baseline.  This functionality was all
@@ -239,4 +239,29 @@ forward run with 5 different values of the viscosity.
 
 Dictionaries not classes
 ------------------------
+
+In the process of developing
+`MPAS-Analysis <https://github.com/MPAS-Dev/MPAS-Analysis/>`_, we found that
+many of our developers were not very comfortable with
+`classes <https://docs.python.org/3/tutorial/classes.html>`_, methods,
+`inheritance <https://docs.python.org/3/tutorial/classes.html#inheritance>`_
+and other concepts related to
+`object-oriented programming <https://en.wikipedia.org/wiki/Object-oriented_programming>`_.
+In MPAS-Analysis, tasks are implemented as classes to make it easier to use
+python's `multiprocessing <https://docs.python.org/3/library/multiprocessing.html>`_
+capability.  In practice, this led to code that was complex enough that only
+a handful of developers felt comfortable contributing directly to the code.
+
+Since we would like developers to feel comfortable contributing new test cases
+to ``compass`` even if they are relatively new to python, we decided not to
+use classes here.  But we did need a data structure to represent all of the
+data associated with a test case and another for a step.  We settled on
+`python dictionaries <https://docs.python.org/3/tutorial/datastructures.html#dictionaries>`_
+as the simplest data structure for storing this data.
+
+You can take a look at the :ref:`dev_testcase_dict` and :ref:`dev_step_dict`
+for a full listing of the typical entries in these dictionaries. Some entries
+are required for the compass :ref:`dev_framework` to work properly.  Others
+are used to keep track of parameters of a test case or step that the user
+should not alter and therefore that should not be in the :ref:`config_files`.
 

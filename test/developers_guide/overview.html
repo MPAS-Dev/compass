@@ -119,6 +119,8 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="command_line.html">Command-line interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cores.html">Cores</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/index.html">Examples core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ocean/index.html">Ocean core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="framework.html">Framework</a></li>
 <li class="toctree-l1"><a class="reference internal" href="docs.html">Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="building_docs.html">Building the Documentation</a></li>
@@ -361,7 +363,7 @@ clear what functionality each contains, e.g. <code class="docutils literal notra
 <code class="docutils literal notranslate"><span class="pre">compass.streams</span></code> are for manipulating <a class="reference internal" href="framework.html#dev-namelist"><span class="std std-ref">Namelist</span></a> and
 <a class="reference internal" href="framework.html#dev-streams"><span class="std std-ref">Streams</span></a> files, respectively; <code class="docutils literal notranslate"><span class="pre">compass.io</span></code> has functionality for
 downloading files from the
-<a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-ocean/">LCRC server</a>
+<a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/">LCRC server</a>
 and creating symlinks; and <code class="docutils literal notranslate"><span class="pre">compass.validation</span></code> can be used to ensure that
 variables are bit-for-bit identical between steps or when compared with a
 baseline, and to compare timers with a baseline.  This functionality was all
@@ -420,6 +422,28 @@ forward run with 5 different values of the viscosity.</p>
 </div>
 <div class="section" id="dictionaries-not-classes">
 <span id="dev-dicts-not-classes"></span><h2>Dictionaries not classes<a class="headerlink" href="#dictionaries-not-classes" title="Permalink to this headline">¶</a></h2>
+<p>In the process of developing
+<a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/">MPAS-Analysis</a>, we found that
+many of our developers were not very comfortable with
+<a class="reference external" href="https://docs.python.org/3/tutorial/classes.html">classes</a>, methods,
+<a class="reference external" href="https://docs.python.org/3/tutorial/classes.html#inheritance">inheritance</a>
+and other concepts related to
+<a class="reference external" href="https://en.wikipedia.org/wiki/Object-oriented_programming">object-oriented programming</a>.
+In MPAS-Analysis, tasks are implemented as classes to make it easier to use
+python’s <a class="reference external" href="https://docs.python.org/3/library/multiprocessing.html">multiprocessing</a>
+capability.  In practice, this led to code that was complex enough that only
+a handful of developers felt comfortable contributing directly to the code.</p>
+<p>Since we would like developers to feel comfortable contributing new test cases
+to <code class="docutils literal notranslate"><span class="pre">compass</span></code> even if they are relatively new to python, we decided not to
+use classes here.  But we did need a data structure to represent all of the
+data associated with a test case and another for a step.  We settled on
+<a class="reference external" href="https://docs.python.org/3/tutorial/datastructures.html#dictionaries">python dictionaries</a>
+as the simplest data structure for storing this data.</p>
+<p>You can take a look at the <a class="reference internal" href="cores.html#dev-testcase-dict"><span class="std std-ref">testcase dictionary</span></a> and <a class="reference internal" href="cores.html#dev-step-dict"><span class="std std-ref">step dictionary</span></a>
+for a full listing of the typical entries in these dictionaries. Some entries
+are required for the compass <a class="reference internal" href="framework.html#dev-framework"><span class="std std-ref">Framework</span></a> to work properly.  Others
+are used to keep track of parameters of a test case or step that the user
+should not alter and therefore that should not be in the <a class="reference internal" href="../users_guide/configuration.html#config-files"><span class="std std-ref">Configuration Files</span></a>.</p>
 </div>
 </div>
 
