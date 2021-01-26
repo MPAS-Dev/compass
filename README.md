@@ -9,10 +9,12 @@ to setup and configure a test case.
 
 ## Documentation
 
-The latest COMPASS documentation can be found here:
+The latest compass documentation can be found here:
 
 [http://mpas-dev.github.io/compass/stable/](http://mpas-dev.github.io/compass/stable/)
 
-The documentation is currently limited to the scripts for listing and setting
-up test cases, with extremely limited documentation of the testcases themselves.
-We plan to build out the documentation in the coming months.
+Documentation on the [legacy verion of COMPASS](https://github.com/MPAS-Dev/compass/tree/legacy)
+can be found here:
+
+[http://mpas-dev.github.io/compass/legacy/](http://mpas-dev.github.io/compass/legacy/)
+
