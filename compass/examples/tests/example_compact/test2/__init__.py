@@ -22,7 +22,7 @@ def collect(resolution):
         A dict of properties of this test case, including its steps
     """
     # fill in a useful description of the test case
-    description = 'Tempate {} test2'.format(resolution)
+    description = 'Template {} test2'.format(resolution)
     # This example assumes that it is possible to call a "collect" function
     # that is generic to all testcases with a different parameter ("resolution"
     # in this case).
