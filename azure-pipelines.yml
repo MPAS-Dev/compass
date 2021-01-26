@@ -2,6 +2,7 @@ trigger:
   branches:
     include:
     - master
+    - legacy
   tags:
     include:
     - '*'
@@ -9,6 +10,7 @@ pr:
   branches:
     include:
     - master
+    - legacy
 
 jobs:
 - job:
@@ -69,6 +71,9 @@ jobs:
         echo "This build is for branch $branch"
         if [[ ${branch} == "master" ]]; then
           export DOCS_VERSION="stable"
+          run=True
+        elif [[ ${branch} == "legacy" ]]; then
+          export DOCS_VERSION="legacy"
           run=True
         else
           echo "We don't build docs for $branch"
