@@ -13,7 +13,7 @@ def collect():
         A dict of properties of this test case, including its steps
     """
     # fill in a useful description of the test case
-    description = 'Tempate 2km test1'
+    description = 'Template 2km test1'
     module = __name__
     resolution = '2km'
 
