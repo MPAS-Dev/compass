@@ -32,8 +32,12 @@ def get_step_default(module):
 
     """
     name = module.split('.')[-1]
+    core = module.split('.')[1]
+    configuration = module.split('.')[3]
     step = {'module': module,
             'name': name,
+            'core': core,
+            'configuration': configuration,
             'subdir': name,
             'setup': 'setup',
             'run': 'run',
@@ -44,41 +48,41 @@ def get_step_default(module):
 
 def get_testcase_default(module, description, steps, subdir=None):
     """
-    Set up a default dictionary describing the testcase in the given module.
+    Set up a default dictionary describing the test case in the given module.
     The dictionary contains the full name of the python module for the
-    testcase, the name of the testcase (the final part of the full module
-    name), the subdirectory for the testcase (the same as the ``name`` if not
+    test case, the name of the test case (the final part of the full module
+    name), the subdirectory for the test case (the same as the ``name`` if not
     supplied), the names of the ``configure()`` and ``run()`` functions within
-    the module, and empty lists of ``inputs`` and ``outputs``, the ``core`` and
-    ``configuration`` of the testcase (the parsed from the full module name),
-    the description of the testcase provided, and the dictionary of steps.
+    the module, the ``core`` and ``configuration`` of the test case (the parsed
+    from the full module name), the description of the test case provided, and
+    the dictionary of steps.
 
     Parameters
     ----------
     module : str
-        The full name of the python module for the testcase, usually supplied
+        The full name of the python module for the test case, usually supplied
         from ``__name__``
 
     description : str
-        A description of the testcase
+        A description of the test case
 
     steps : dict
-        A dictionary of steps within the testcase, with the names of each step
+        A dictionary of steps within the test case, with the names of each step
         as keys and a dictionary of information on the step as values.  Each
         step's dictionary must contain, at a minimum, the information added by
         :py:func:`compass.testcase.get_default()`
 
     subdir : str, optional
-        The subdirectory for the testcase, which defaults to the name of the
-        testcase (parsed from the module name).  If a testcase supports
+        The subdirectory for the test case, which defaults to the name of the
+        test case (parsed from the module name).  If a test case supports
         various parameter values, such as various resolutions, it may be
         useful to supply a subdirectory so that the location of each variant of
-        the testcase is placed in a unique working directory
+        the test case is placed in a unique working directory
 
     Returns
     -------
     testcase : dict
-        A dictionary with the default information about the testcase, most of
+        A dictionary with the default information about the test case, most of
         which can be modified as appropriate
     """
     name = module.split('.')[-1]
@@ -89,9 +93,13 @@ def get_testcase_default(module, description, steps, subdir=None):
     path = os.path.join(core, configuration, subdir)
     for step in steps.values():
         step['testcase'] = name
-        step['core'] = core
-        step['configuration'] = configuration
         step['testcase_subdir'] = subdir
+        if step['core'] != core:
+            raise ValueError("The step's core doesn't match the test case's "
+                             "core")
+        if step['configuration'] != configuration:
+            raise ValueError("The step's configuration doesn't match the test "
+                             "case's configuration")
     if hasattr(sys.modules[module], 'configure'):
         configure = 'configure'
     else:
@@ -113,23 +121,23 @@ def get_testcase_default(module, description, steps, subdir=None):
 
 def run_steps(testcase, test_suite, config, logger):
     """
-    Run the requested steps of a testcase
+    Run the requested steps of a test case
 
     Parameters
     ----------
     testcase : dict
-        The dictionary describing the testcase with info from
+        The dictionary describing the test case with info from
         :py:func:`compass.testcase.get_testcase_default()` and any additional
-        information added when collecting and setting up the testcase.
+        information added when collecting and setting up the test case.
 
     test_suite : dict
         A dictionary of properties of the test suite
 
     config : configparser.ConfigParser
-        Configuration options for this testcase
+        Configuration options for this test case
 
     logger : logging.Logger
-        A logger for output from the testcase
+        A logger for output from the test case
     """
     cwd = os.getcwd()
     for step_name in testcase['steps_to_run']:
@@ -162,7 +170,7 @@ def run_steps(testcase, test_suite, config, logger):
 
 def run_step(step, test_suite, config, logger, new_log_file):
     """
-    Run the requested step of a testcase
+    Run the requested step of a test case
 
     Parameters
     ----------
@@ -175,10 +183,10 @@ def run_step(step, test_suite, config, logger, new_log_file):
         A dictionary of properties of the test suite
 
     config : configparser.ConfigParser
-        Configuration options for this testcase
+        Configuration options for this test case
 
     logger : logging.Logger
-        A logger for output from the testcase
+        A logger for output from the test case
 
     new_log_file : bool
         Whether to log to a new log file
@@ -198,6 +206,17 @@ def run_step(step, test_suite, config, logger, new_log_file):
                 'Available cores for {} is below the minimum of {}'
                 ''.format(step['cores'], step['min_cores']))
 
+    missing_files = list()
+    for input_file in step['inputs']:
+        if not os.path.exists(input_file):
+            missing_files.append(input_file)
+
+    if len(missing_files) > 0:
+        raise OSError(
+            'input file(s) missing in step {} of {}/{}/{}: {}'.format(
+                step_name, step['core'], step['configuration'],
+                step['testcase_subdir'], missing_files))
+
     test_name = step['path'].replace('/', '_')
     if new_log_file:
         log_filename = '{}/{}.log'.format(cwd, step_name)
@@ -213,10 +232,21 @@ def run_step(step, test_suite, config, logger, new_log_file):
 
         run(step, test_suite, config, step_logger)
 
+    missing_files = list()
+    for output_file in step['outputs']:
+        if not os.path.exists(output_file):
+            missing_files.append(output_file)
+
+    if len(missing_files) > 0:
+        raise OSError(
+            'output file(s) missing in step {} of {}/{}/{}: {}'.format(
+                step_name, step['core'], step['configuration'],
+                step['testcase_subdir'], missing_files))
+
 
 def generate_run(template_name, testcase, step=None):
     """
-    Generate a ``run.py`` script for the given testcase or step.
+    Generate a ``run.py`` script for the given test case or step.
 
     Parameters
     ----------
@@ -224,7 +254,7 @@ def generate_run(template_name, testcase, step=None):
         The name of the template file to use to create the run script
 
     testcase : dict
-        The dictionary of information about the testcase, used to fill in the
+        The dictionary of information about the test case, used to fill in the
         script template
 
     step : dict, optional

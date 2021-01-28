@@ -4,7 +4,110 @@ from importlib import resources
 from jinja2 import Template
 
 
-def read(package, streams_filename, tree=None, replacements=None):
+def add_streams_file(step, package, streams, template_replacements=None,
+                     out_name=None):
+    """
+    Add a streams file to the step to be parsed later with a call to
+    :py:func:`compass.streams.generate_streams()`.
+
+    Parameters
+    ----------
+    step : dict
+        A dictionary of properties of this step
+
+    package : Package
+        The package name or module object that contains the streams file
+
+    streams : str
+        The name of the streams file to read from
+
+    template_replacements : dict, optional
+        A dictionary of replacements, in which case ``streams`` must be a
+        Jinja2 template to be rendered with these replacements
+
+    out_name : str, optional
+        The name of the streams file to write out, ``streams.<core>`` by
+        default
+    """
+    if 'streams_data' not in step:
+        step['streams_data'] = dict()
+    if out_name is None:
+        out_name = 'streams.{}'.format(step['core'])
+
+    if out_name not in step['streams_data']:
+        step['streams_data'][out_name] = list()
+
+    step['streams_data'][out_name].append(
+        dict(package=package, streams=streams,
+             replacements=template_replacements))
+
+
+def generate_streams(step, config, out_name=None, mode='forward'):
+    """
+    Writes out a streams file in the work directory with new values given
+    by parsing the files and dictionaries in the step's ``streams_data``.
+
+    Parameters
+    ----------
+    step : dict
+        A dictionary of properties of this step from the ``collect()``
+        function, used to get the work directory and the core that the test
+        case belongs to.
+
+    config : configparser.ConfigParser
+        Configuration options used determine the name of the streams file and
+        the default streams and options
+
+    out_name : str, optional
+        The name of the streams file (without a path), with a default value of
+        ``streams.<core>``
+
+    mode : {'init', 'forward'}, optional
+        The mode that the model will run in
+    """
+
+    step_work_dir = step['work_dir']
+    core = step['core']
+    if out_name is None:
+        out_name = 'streams.{}'.format(core)
+
+    if out_name not in step['streams_data']:
+        raise ValueError("It doesn't look like there are streams files for the"
+                         " output file name {}".format(out_name))
+
+    # generate the streams file
+    tree = None
+
+    for entry in step['streams_data'][out_name]:
+        tree = _read(package=entry['package'],
+                     streams_filename=entry['streams'],
+                     replacements=entry['replacements'], tree=tree)
+
+    defaults_filename = config.get('streams', mode)
+    out_filename = '{}/{}'.format(step_work_dir, out_name)
+
+    defaults_tree = etree.parse(defaults_filename)
+
+    defaults = next(defaults_tree.iter('streams'))
+    streams = next(tree.iter('streams'))
+
+    for stream in streams:
+        _update_defaults(stream, defaults)
+
+    # remove any streams that aren't requested
+    for default in defaults:
+        found = False
+        for stream in streams:
+            if stream.attrib['name'] == default.attrib['name']:
+                found = True
+                break
+        if not found:
+            defaults.remove(default)
+
+    _write(defaults_tree, out_filename)
+
+
+def _read(package, streams_filename, tree=None, replacements=None):
     """
     Parse the given streams file
 
@@ -37,66 +140,9 @@ def read(package, streams_filename, tree=None, replacements=None):
 
     new_tree = etree.fromstring(text)
 
-    if tree is None:
-        tree = new_tree
-    else:
-        streams = next(tree.iter('streams'))
-        new_streams = next(new_tree.iter('streams'))
-
-        for new_stream in new_streams:
-            _update_element(new_stream, streams)
+    tree = _update_tree(tree, new_tree)
 
     return tree
-
-
-def generate(config, tree, step_work_dir, core, mode='forward'):
-    """
-    Writes out a steams file in the ``work_case_dir``
-
-    Parameters
-    ----------
-    config : configparser.ConfigParser
-        Configuration options used determine the name of the streams file and
-        the default streams and options
-
-    tree : lxml.etree
-        A tree of XML data describing MPAS i/o streams with the content from
-        one or more streams files parsed with :py:func:`compass.streams.read()`
-
-    step_work_dir : str
-        The path for the work directory for the step that this streams file is
-        being generated for
-
-    core : str
-        The name of the MPAS core ('ocean', 'landice', etc.)
-
-    mode : {'init', 'forward'}, optional
-        The mode that the model will run in
-    """
-    out_name = 'streams.{}'.format(core)
-
-    defaults_filename = config.get('streams', mode)
-    out_filename = '{}/{}'.format(step_work_dir, out_name)
-
-    defaults_tree = etree.parse(defaults_filename)
-
-    defaults = next(defaults_tree.iter('streams'))
-    streams = next(tree.iter('streams'))
-
-    for stream in streams:
-        _update_defaults(stream, defaults)
-
-    # remove any streams that aren't requested
-    for default in defaults:
-        found = False
-        for stream in streams:
-            if stream.attrib['name'] == default.attrib['name']:
-                found = True
-                break
-        if not found:
-            defaults.remove(default)
-
-    _write(defaults_tree, out_filename)
 
 
 def _write(streams, out_filename):
@@ -154,6 +200,20 @@ def _write(streams, out_filename):
 
         stream_file.write('\n')
         stream_file.write('</streams>\n')
+
+
+def _update_tree(tree, new_tree):
+
+    if tree is None:
+        tree = new_tree
+    else:
+        streams = next(tree.iter('streams'))
+        new_streams = next(new_tree.iter('streams'))
+
+        for new_stream in new_streams:
+            _update_element(new_stream, streams)
+
+    return tree
 
 
 def _update_element(new_child, elements):
