@@ -65,19 +65,19 @@ def run_model(step, config, logger, update_pio=True, partition_graph=True,
     threads = step['threads']
     step_dir = step['work_dir']
 
-    if update_pio:
-        update_namelist_pio(config, cores, step_dir)
-
-    if partition_graph:
-        partition(cores, config, logger, graph_file=graph_file)
-
-    os.environ['OMP_NUM_THREADS'] = '{}'.format(threads)
-
     if namelist is None:
         namelist = 'namelist.{}'.format(core)
 
     if streams is None:
         streams = 'streams.{}'.format(core)
+
+    if update_pio:
+        update_namelist_pio(namelist, config, cores, step_dir)
+
+    if partition_graph:
+        partition(cores, config, logger, graph_file=graph_file)
+
+    os.environ['OMP_NUM_THREADS'] = '{}'.format(threads)
 
     parallel_executable = config.get('parallel', 'parallel_executable')
     model = config.get('executables', 'model')
@@ -117,13 +117,16 @@ def partition(cores, config, logger, graph_file='graph.info'):
     check_call(args, logger)
 
 
-def update_namelist_pio(config, cores, step_dir):
+def update_namelist_pio(namelist, config, cores, step_dir):
     """
     Modify the namelist so the number of PIO tasks and the stride between them
     is consistent with the number of nodes and cores (one PIO task per node).
 
     Parameters
     ----------
+    namelist : str
+        The name of the namelist file
+
      config : configparser.ConfigParser
         Configuration options for this test case
 
@@ -148,4 +151,5 @@ def update_namelist_pio(config, cores, step_dir):
     replacements = {'config_pio_num_iotasks': '{}'.format(pio_num_iotasks),
                     'config_pio_stride': '{}'.format(pio_stride)}
 
-    update(replacements=replacements, step_work_dir=step_dir, core='ocean')
+    update(replacements=replacements, step_work_dir=step_dir,
+           out_name=namelist)
