@@ -182,7 +182,7 @@ In this file, put:
    module use /usr/projects/climate/SHARED_CLIMATE/modulefiles/all/
    module load git
    if [ -f "load_compass_env.sh" ]; then
-       # this figures out from the testing_and_setup/compass directory or from
+       # this figures out from the local checkout of the compass repo or from
        # within a test case which version of the compass environment to load
        source load_compass_env.sh
    else
@@ -266,11 +266,16 @@ Take a coffee break, this will take some time.
 
 Okay you're back and refreshed?  Let's set up a test case.
 
+You also need to clone the compass repo and check out the ``legacy`` branch:
+
 .. code-block:: bash
 
-   cd testing_and_setup/compass/
+    git clone git@github.com:MPAS-Dev/compass.git
+    cd compass
+    git checkout legacy
+    git submodule update --init --recursive
 
-COMPASS (COnfiguration of Model for Prediction Across Scales Setups -- yes, a litle tortured) is a set of python
+COMPASS (COnfiguration of Model for Prediction Across Scales Setups -- yes, a little tortured) is a set of python
 scripts we use to set up and run our test cases.  To build test cases, you need to tell COMPASS where to find a few
 thing on Grizzly.  Open a file ``config.ocean`` and put the following in it:
 

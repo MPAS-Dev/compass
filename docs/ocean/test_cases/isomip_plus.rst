@@ -125,16 +125,11 @@ has not yet been implemented in COMPASS.
 Setting up a run in COMPASS
 ---------------------------
 
-In a local check-out of the ``MPAS-Dev/MPAS-Model/ocean/develop`` branch:
-
-.. code-block:: bash
-
-   cd testing_and_setup/compass/
-
+Start with a local check-out of the ``MPAS-Dev/compass/legacy`` branch.
 To build test cases, you need to tell COMPASS where to find a few thing.
 Open a file ``config.ocean`` and put the following, where we have used the
 example path ``usr/projects/climate/username/mpas/model/ocean/develop`` as the
-location where MPAS-Ocena has been checked out and compiled:
+location where MPAS-Ocean has been checked out and compiled:
 
 .. code-block:: ini
 
