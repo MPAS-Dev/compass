@@ -89,6 +89,8 @@ def get_testcase_default(module, description, steps, subdir=None):
     path = os.path.join(core, configuration, subdir)
     for step in steps.values():
         step['testcase'] = name
+        step['core'] = core
+        step['configuration'] = configuration
         step['testcase_subdir'] = subdir
     if hasattr(sys.modules[module], 'configure'):
         configure = 'configure'
