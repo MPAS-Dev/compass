@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import cmocean
 
 from compass.testcase import get_step_default
-from compass.io import symlink
+from compass.io import symlink, add_input_file, add_output_file
 
 
 def collect(resolution):
@@ -51,23 +51,13 @@ def setup(step, config):
     resolution = step['resolution']
     step_dir = step['work_dir']
 
-    inputs = []
-    outputs = []
-
-    links = dict()
     for index, nu in enumerate([1, 5, 10, 20, 200]):
-        links['../rpe_test_{}_nu_{}/output.nc'.format(index+1, nu)] = \
-            'output_{}.nc'.format(index+1)
+        add_input_file(
+            step, filename='output_{}.nc'.format(index+1),
+            target='../rpe_test_{}_nu_{}/output.nc'.format(index+1, nu))
 
-    for target, link in links.items():
-        symlink(target, os.path.join(step_dir, link))
-        inputs.append(os.path.abspath(os.path.join(step_dir, target)))
-
-    filename = 'sections_baroclinic_channel_{}.png'.format(resolution)
-    outputs.append(os.path.join(step_dir, filename))
-
-    step['inputs'] = inputs
-    step['outputs'] = outputs
+    add_output_file(
+        step, filename='sections_baroclinic_channel_{}.png'.format(resolution))
 
 
 def run(step, test_suite, config, logger):
