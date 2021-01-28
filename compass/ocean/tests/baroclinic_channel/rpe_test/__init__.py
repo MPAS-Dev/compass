@@ -2,6 +2,8 @@ from compass.testcase import run_steps, get_testcase_default
 from compass.ocean.tests.baroclinic_channel import initial_state, forward
 from compass.ocean.tests.baroclinic_channel.rpe_test import analysis
 from compass.ocean.tests import baroclinic_channel
+from compass.namelist import add_namelist_file
+from compass.streams import add_streams_file
 
 
 def collect(resolution):
@@ -45,10 +47,16 @@ def collect(resolution):
                                min_cores=res_params['min_cores'],
                                max_memory=res_params['max_memory'],
                                max_disk=res_params['max_disk'], threads=1,
-                               testcase_module=module,
-                               namelist_file='namelist.forward',
-                               streams_file='streams.forward',
                                nu=float(nu))
+
+        # add the local namelist and streams file
+        add_namelist_file(
+            step, 'compass.ocean.tests.baroclinic_channel.rpe_test',
+            'namelist.forward')
+        add_streams_file(
+            step, 'compass.ocean.tests.baroclinic_channel.rpe_test',
+            'streams.forward')
+
         step['name'] = 'rpe_test_{}_nu_{}'.format(index+1, nu)
         step['subdir'] = step['name']
         steps[step['name']] = step

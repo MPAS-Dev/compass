@@ -2,6 +2,8 @@ from compass.testcase import run_steps, get_testcase_default
 from compass.ocean.tests.baroclinic_channel import initial_state, forward
 from compass.ocean.tests import baroclinic_channel
 from compass.validate import compare_variables
+from compass.namelist import add_namelist_file
+from compass.streams import add_streams_file
 
 
 def collect(resolution):
@@ -27,21 +29,20 @@ def collect(resolution):
     step = initial_state.collect(resolution)
     steps[step['name']] = step
 
-    step = forward.collect(resolution, cores=4, threads=1,
-                           testcase_module=module,
-                           namelist_file='namelist.full',
-                           streams_file='streams.full')
-    step['name'] = 'full_run'
-    step['subdir'] = step['name']
-    steps[step['name']] = step
+    for part in ['full', 'restart']:
+        step = forward.collect(resolution, cores=4, threads=1)
 
-    step = forward.collect(resolution, cores=4, threads=1,
-                           testcase_module=module,
-                           namelist_file='namelist.restart',
-                           streams_file='streams.restart')
-    step['name'] = 'restart_run'
-    step['subdir'] = step['name']
-    steps[step['name']] = step
+        # add the local namelist and streams file
+        add_namelist_file(
+            step, 'compass.ocean.tests.baroclinic_channel.restart_test',
+            'namelist.{}'.format(part))
+        add_streams_file(
+            step, 'compass.ocean.tests.baroclinic_channel.restart_test',
+            'streams.{}'.format(part))
+
+        step['name'] = '{}_run'.format(part)
+        step['subdir'] = step['name']
+        steps[step['name']] = step
 
     testcase = get_testcase_default(module, description, steps, subdir=subdir)
     testcase['resolution'] = resolution

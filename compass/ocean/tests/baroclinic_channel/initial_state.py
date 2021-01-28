@@ -1,4 +1,3 @@
-import os
 import xarray
 import numpy
 
@@ -8,6 +7,7 @@ from mpas_tools.mesh.conversion import convert, cull
 
 from compass.testcase import get_step_default
 from compass.ocean.vertical import generate_grid
+from compass.io import add_output_file
 
 
 def collect(resolution):
@@ -50,17 +50,9 @@ def setup(step, config):
         Configuration options for this testcase, a combination of the defaults
         for the machine, core, configuration and testcase
     """
-    step_dir = step['work_dir']
-
-    inputs = []
-    outputs = []
-
     for file in ['base_mesh.nc', 'culled_mesh.nc', 'culled_graph.info',
                  'ocean.nc']:
-        outputs.append(os.path.join(step_dir, file))
-
-    step['inputs'] = inputs
-    step['outputs'] = outputs
+        add_output_file(step, filename=file)
 
 
 def run(step, test_suite, config, logger):
