@@ -138,6 +138,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/run_config.html">run_config</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/building_docs.html">Building the Documentation</a></li>
 </ul>
+<p class="caption"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../versions.html">Code and Documentation Versions</a></li>
+</ul>
 
             
           
@@ -350,7 +354,7 @@ module purge
 module use /usr/projects/climate/SHARED_CLIMATE/modulefiles/all/
 module load git
 <span class="k">if</span> <span class="o">[</span> -f <span class="s2">&quot;load_compass_env.sh&quot;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
-    <span class="c1"># this figures out from the testing_and_setup/compass directory or from</span>
+    <span class="c1"># this figures out from the local checkout of the compass repo or from</span>
     <span class="c1"># within a test case which version of the compass environment to load</span>
     <span class="nb">source</span> load_compass_env.sh
 <span class="k">else</span>
@@ -418,10 +422,14 @@ git logg
 <div class="section" id="setting-up-a-test-case">
 <h2>5. Setting up a test case<a class="headerlink" href="#setting-up-a-test-case" title="Permalink to this headline">¶</a></h2>
 <p>Okay you’re back and refreshed?  Let’s set up a test case.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> testing_and_setup/compass/
+<p>You also need to clone the compass repo and check out the <code class="docutils literal notranslate"><span class="pre">legacy</span></code> branch:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone git@github.com:MPAS-Dev/compass.git
+<span class="nb">cd</span> compass
+git checkout legacy
+git submodule update --init --recursive
 </pre></div>
 </div>
-<p>COMPASS (COnfiguration of Model for Prediction Across Scales Setups – yes, a litle tortured) is a set of python
+<p>COMPASS (COnfiguration of Model for Prediction Across Scales Setups – yes, a little tortured) is a set of python
 scripts we use to set up and run our test cases.  To build test cases, you need to tell COMPASS where to find a few
 thing on Grizzly.  Open a file <code class="docutils literal notranslate"><span class="pre">config.ocean</span></code> and put the following in it:</p>
 <div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="c1"># This file is the ocean core&#39;s configuration file. It is specific to the ocean</span>

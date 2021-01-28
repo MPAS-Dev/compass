@@ -13,6 +13,7 @@ To begin, obtain the master branch of the
 
     git clone git@github.com:MPAS-Dev/compass.git
     cd compass
+    git checkout legacy
     git submodule update --init --recursive
 
 The MPAS repository is a submodule of COMPASS repository.  For example, to
@@ -157,7 +158,7 @@ testing. For the ocean core, they are here:
 
 .. code-block:: bash
 
-    ls testing_and_setup/compass/ocean/regression_suites/
+    ls ocean/regression_suites/
        land_ice_fluxes.xml  light.xml  nightly.xml  rpe_tests.xml
 
 You can set up a regression as follows:
@@ -196,8 +197,9 @@ branches at once. Begin where you keep your repositories:
 
     mkdir compass
     cd compass
-    git clone git@github.com:MPAS-Dev/compass.git master
+    git clone git@github.com:MPAS-Dev/compass.git legacy
     cd master
+    git checkout legacy
 
 The ``MPAS-Dev/compass`` repo is now ``origin``. You can add more remotes. For
 example
@@ -240,7 +242,6 @@ executable:
    compass.
 
    .. code-block:: bash
-
 
      git submodule update --init --recursive
      cd MPAS-Model/ocean/develop/
