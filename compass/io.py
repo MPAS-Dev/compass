@@ -6,6 +6,70 @@ import progressbar
 from compass.config import get_source_file
 
 
+def add_input_file(step, filename=None, target=None, database=None,
+                   url=None):
+    """
+    Add an input file to the step.  The file can be local, a symlink to
+    a file that will be created in another step, a symlink to a file in one
+    of the databases for files cached after download, and/or come from a
+    specified URL.
+
+    Parameters
+    ----------
+    step : dict
+        A dictionary of properties of this step
+
+    filename : str, optional
+        The relative path of the input file within the step's work directory.
+        The default is the file name (without the path) of ``target``.
+
+    target : str, optional
+        A file that will be the target of a symlink to ``filename``.  If
+        ``database`` is not specified, this should be an absolute path or a
+        relative path from the step's work directory.  If ``database`` is
+        specified, this is a relative path within the database and the name
+        of the remote file to download.
+
+    database : str, optional
+        The name of a database for caching local files.  This will be a
+        subdirectory of the local cache directory for this core.  If ``url``
+        is not provided, the URL for downloading the file will be determined
+        by combining the base URL of the data server, the relative path for the
+        core, ``database`` and ``target``.
+
+    url : str, optional
+        The base URL for downloading ``target`` (if provided, or ``filename``
+        if not).  This option should be set if the file is not in a database on
+        the data server. The file's URL is determined by combining ``url``
+        with the filename (without the directory) from ``target`` (or
+        ``filename`` if ``target`` is not provided).  ``database`` is not
+        included in the file's URL even if it is provided.
+    """
+    if filename is None:
+        if target is None:
+            raise ValueError('At least one of local_name and target are '
+                             'required.')
+        filename = os.path.basename(target)
+
+    step['inputs'].append(dict(filename=filename, target=target,
+                               database=database, url=url))
+
+
+def add_output_file(step, filename):
+    """
+    Add the output file to the step
+
+    Parameters
+    ----------
+    step : dict
+        A dictionary of properties of this step
+
+    filename : str
+        The relative path of the output file within the step's work directory
+    """
+    step['outputs'].append(filename)
+
+
 def download(file_name, url, config, dest_path=None, dest_option=None,
              exceptions=True):
     """
@@ -195,6 +259,80 @@ def symlink(target, link_name, overwrite=True):
         if os.path.islink(temp_link_name):
             os.remove(temp_link_name)
         raise
+
+
+def process_step_inputs_and_outputs(step, config):
+    """
+    Process the inputs to and outputs from a step added with
+    :py:func:`compass.io.add_input_file` and
+    :py:func:`compass.io.add_output_file`.  This includes downloading files,
+    making symlinks, and converting relative paths to absolute paths.
+
+    Parameters
+    ----------
+    step : dict
+        A dictionary of properties of this step
+
+    config : configparser.ConfigParser
+        Configuration options used to get the server base url, core path on
+        the server and cache root for databases if any files are to be
+        downloaded to these locations
+   """
+    core = step['core']
+    step_dir = step['work_dir']
+
+    inputs = []
+    for entry in step['inputs']:
+        filename = entry['filename']
+        target = entry['target']
+        database = entry['database']
+        url = entry['url']
+
+        download_target = None
+        download_path = None
+
+        if database is not None:
+            # we're downloading a file to a cache of a database (if it's not
+            # already there.
+            if url is None:
+                base_url = config.get('download', 'server_base_url')
+                core_path = config.get('download', 'core_path')
+                url = '{}/{}/{}'.format(base_url, core_path, database)
+
+            if target is None:
+                target = filename
+
+            download_target = target
+
+            database_root = config.get('paths',
+                                       '{}_database_root'.format(core))
+            download_path = os.path.join(database_root, database)
+        elif url is not None:
+            if target is None:
+                download_target = filename
+                download_path = '.'
+            else:
+                download_path, download_target = os.path.split(target)
+
+        if url is not None:
+            download_target = download(download_target, url, config,
+                                       download_path)
+            if target is not None:
+                # this is the absolute path that we presumably want
+                target = download_target
+
+        if target is not None:
+            symlink(target, os.path.join(step_dir, filename))
+            inputs.append(target)
+        else:
+            inputs.append(filename)
+
+    # convert inputs and outputs to absolute paths
+    step['inputs'] = [os.path.abspath(os.path.join(step_dir, filename)) for
+                      filename in inputs]
+
+    step['outputs'] = [os.path.abspath(os.path.join(step_dir, filename)) for
+                       filename in step['outputs']]
 
 
 # From https://stackoverflow.com/a/1094933/7728169
