@@ -6,7 +6,7 @@ import pickle
 
 import compass.testcases
 from compass.config import add_config, ensure_absolute_paths
-from compass.io import symlink
+from compass.io import symlink, process_step_inputs_and_outputs
 from compass.testcase import generate_run
 from compass import provenance
 
@@ -201,6 +201,8 @@ def setup_case(path, testcase, config_file, machine, work_dir, baseline_dir,
         # set up the step
         setup = getattr(sys.modules[step['module']], step['setup'])
         setup(step, config)
+
+        process_step_inputs_and_outputs(step, config)
 
         # write a run script for each step
         _write_run('step.template', testcase, step=step)
