@@ -1,56 +1,45 @@
-from compass.testcase import run_steps, get_testcase_default
+from compass.testcase import set_testcase_subdir, add_step, run_steps
 from compass.ocean.tests.baroclinic_channel import initial_state, forward
 from compass.ocean.tests import baroclinic_channel
 from compass.validate import compare_variables
 
 
-def collect(resolution):
+def collect(testcase):
     """
-    Get a dictionary of testcase properties
+    Update the dictionary of test case properties and add steps
 
     Parameters
     ----------
-    resolution : {'10km'}
-        The resolution of the mesh
-
-    Returns
-    -------
     testcase : dict
-        A dict of properties of this test case, including its steps
+        A dictionary of properties of this test case, which can be updated
     """
-    description = 'baroclinic channel {} thread test'.format(resolution)
-    module = __name__
+    resolution = testcase['resolution']
+    testcase['description'] = \
+        'baroclinic channel {} thread test'.format(resolution)
 
-    name = module.split('.')[-1]
-    subdir = '{}/{}'.format(resolution, name)
-    steps = dict()
-    step = initial_state.collect(resolution)
-    steps[step['name']] = step
+    subdir = '{}/{}'.format(resolution, testcase['name'])
+    set_testcase_subdir(testcase, subdir)
+
+    add_step(testcase, initial_state, resolution=resolution)
 
     for threads in [1, 2]:
-        step = forward.collect(resolution, cores=4, threads=threads)
-        step['name'] = '{}thread'.format(4*threads)
-        step['subdir'] = step['name']
-        steps[step['name']] = step
-
-    testcase = get_testcase_default(module, description, steps, subdir=subdir)
-    testcase['resolution'] = resolution
-
-    return testcase
+        name = '{}thread'.format(threads)
+        add_step(testcase, forward, name=name, subdir=name, cores=4,
+                 threads=threads, resolution=resolution)
 
 
 def configure(testcase, config):
     """
-    Modify the configuration options for this testcase.
+    Modify the configuration options for this test case.
 
     Parameters
     ----------
     testcase : dict
-        A dictionary of properties of this testcase from the ``collect()``
+        A dictionary of properties of this test case from the ``collect()``
         function
 
     config : configparser.ConfigParser
-        Configuration options for this testcase, a combination of the defaults
+        Configuration options for this test case, a combination of the defaults
         for the machine, core and configuration
     """
     baroclinic_channel.configure(testcase, config)
@@ -58,28 +47,28 @@ def configure(testcase, config):
 
 def run(testcase, test_suite, config, logger):
     """
-    Run each step of the testcase
+    Run each step of the test case
 
     Parameters
     ----------
     testcase : dict
-        A dictionary of properties of this testcase from the ``collect()``
+        A dictionary of properties of this test case from the ``collect()``
         function
 
     test_suite : dict
         A dictionary of properties of the test suite
 
     config : configparser.ConfigParser
-        Configuration options for this testcase, a combination of the defaults
+        Configuration options for this test case, a combination of the defaults
         for the machine, core and configuration
 
     logger : logging.Logger
-        A logger for output from the testcase
+        A logger for output from the test case
     """
     run_steps(testcase, test_suite, config, logger)
     variables = ['temperature', 'salinity', 'layerThickness', 'normalVelocity']
     steps = testcase['steps_to_run']
-    if '4thread' in steps and '8thread' in steps:
+    if '1thread' in steps and '2thread' in steps:
         compare_variables(variables, config, work_dir=testcase['work_dir'],
-                          filename1='4thread/output.nc',
-                          filename2='8thread/output.nc')
+                          filename1='1thread/output.nc',
+                          filename2='2thread/output.nc')

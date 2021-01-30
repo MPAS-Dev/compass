@@ -1,37 +1,28 @@
-import os
 import numpy as np
 from netCDF4 import Dataset
 import matplotlib.pyplot as plt
 import cmocean
 
-from compass.testcase import get_step_default
-from compass.io import symlink, add_input_file, add_output_file
+from compass.io import add_input_file, add_output_file
 
 
-def collect(resolution):
+def collect(testcase, step):
     """
-    Get a dictionary of step properties
+    Update the dictionary of step properties
 
     Parameters
     ----------
-    resolution : {'1km', '4km', '10km'}
-        The name of the resolution to run at
+    testcase : dict
+        A dictionary of properties of this test case, which should not be
+        modified here
 
-    Returns
-    -------
     step : dict
-        A dictionary of properties of this step
+        A dictionary of properties of this step, which can be updated
     """
-    step = get_step_default(__name__)
-    step['resolution'] = resolution
-
-    step['cores'] = 1
-    step['min_cores'] = 1
-    # Maximum allowed memory and disk usage in MB
-    step['max_memory'] = 8000
-    step['max_disk'] = 8000
-
-    return step
+    defaults = dict(cores=1, min_cores=1, max_memory=8000, max_disk=8000,
+                    threads=1)
+    for key, value in defaults.items():
+        step.setdefault(key, value)
 
 
 def setup(step, config):
@@ -42,16 +33,15 @@ def setup(step, config):
     Parameters
     ----------
     step : dict
-        A dictionary of properties of this step from the ``collect()`` function
+        A dictionary of properties of this step
 
     config : configparser.ConfigParser
-        Configuration options for this testcase, a combination of the defaults
-        for the machine, core, configuration and testcase
+        Configuration options for this test case
     """
     resolution = step['resolution']
-    step_dir = step['work_dir']
+    nus = step['nus']
 
-    for index, nu in enumerate([1, 5, 10, 20, 200]):
+    for index, nu in enumerate(nus):
         add_input_file(
             step, filename='output_{}.nc'.format(index+1),
             target='../rpe_test_{}_nu_{}/output.nc'.format(index+1, nu))
@@ -67,27 +57,26 @@ def run(step, test_suite, config, logger):
     Parameters
     ----------
     step : dict
-        A dictionary of properties of this step from the ``collect()``
-        function, with modifications from the ``setup()`` function.
+        A dictionary of properties of this step
 
     test_suite : dict
         A dictionary of properties of the test suite
 
     config : configparser.ConfigParser
-        Configuration options for this testcase, a combination of the defaults
-        for the machine, core and configuration
+        Configuration options for this test case
 
     logger : logging.Logger
         A logger for output from the step
     """
     filename = step['outputs'][0]
+    nus = step['nus']
     section = config['baroclinic_channel']
     nx = section.getint('nx')
     ny = section.getint('ny')
-    _plot(nx, ny, filename)
+    _plot(nx, ny, filename, nus)
 
 
-def _plot(nx, ny, filename):
+def _plot(nx, ny, filename, nus):
     """
     Plot section of the baroclinic channel at different viscosities
 
@@ -98,13 +87,18 @@ def _plot(nx, ny, filename):
 
     ny : int
         The number of cells in the y direction (before culling)
+
+    filename : str
+        The output file name
+
+    nus : list of float
+        The viscosity values
     """
 
     plt.switch_backend('Agg')
 
     nRow = 1
     nCol = 5
-    nu = ['1', '5', '10', '100', '200']
     iTime = [0]
     time = ['20']
 
@@ -136,7 +130,7 @@ def _plot(nx, ny, filename):
                 cmap='cmo.thermal',
                 vmin=11.8,
                 vmax=13.0)
-            ax.set_title("day {}, $\\nu_h=${}".format(time[iRow], nu[iCol]))
+            ax.set_title("day {}, $\\nu_h=${}".format(time[iRow], nus[iCol]))
             ax.set_xticks(np.arange(0, 161, step=40))
             ax.set_yticks(np.arange(0, 501, step=50))
 

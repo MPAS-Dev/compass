@@ -1,10 +1,11 @@
+from compass.testcase import add_testcase
 from compass.ocean.tests.baroclinic_channel import decomp_test, default, \
     restart_test, rpe_test, threads_test
 
 
 def collect():
     """
-    Get a list of testcases in this configuration
+    Get a list of test cases in this configuration
 
     Returns
     -------
@@ -14,27 +15,25 @@ def collect():
     testcases = list()
     for resolution in ['1km', '4km', '10km']:
         for test in [rpe_test]:
-            testcases.append(test.collect(resolution=resolution))
+            add_testcase(testcases, test, resolution=resolution)
     for resolution in ['10km']:
         for test in [decomp_test, default, restart_test, threads_test]:
-            testcases.append(test.collect(resolution=resolution))
+            add_testcase(testcases, test, resolution=resolution)
 
     return testcases
 
 
 def configure(testcase, config):
     """
-    Modify the configuration options for this testcase.
+    Modify the configuration options for this test case
 
     Parameters
     ----------
     testcase : dict
-        A dictionary of properties of this testcase from the ``collect()``
-        function
+        A dictionary of properties of this test case
 
     config : configparser.ConfigParser
-        Configuration options for this testcase, a combination of the defaults
-        for the machine, core and configuration
+        Configuration options for this test case
     """
     resolution = testcase['resolution']
     res_params = {'10km': {'nx': 16,

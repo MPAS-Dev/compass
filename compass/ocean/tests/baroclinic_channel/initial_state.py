@@ -5,35 +5,27 @@ from mpas_tools.planar_hex import make_planar_hex_mesh
 from mpas_tools.io import write_netcdf
 from mpas_tools.mesh.conversion import convert, cull
 
-from compass.testcase import get_step_default
 from compass.ocean.vertical import generate_grid
 from compass.io import add_output_file
 
 
-def collect(resolution):
+def collect(testcase, step):
     """
-    Get a dictionary of step properties
+    Update the dictionary of step properties
 
     Parameters
     ----------
-    resolution : {'1km', '4km', '10km'}
-        The name of the resolution to run at
+    testcase : dict
+        A dictionary of properties of this test case, which should not be
+        modified here
 
-    Returns
-    -------
     step : dict
-        A dictionary of properties of this step
+        A dictionary of properties of this step, which can be updated
     """
-    step = get_step_default(__name__)
-    step['resolution'] = resolution
-
-    step['cores'] = 1
-    step['min_cores'] = 1
-    # Maximum allowed memory and disk usage in MB
-    step['max_memory'] = 8000
-    step['max_disk'] = 8000
-
-    return step
+    defaults = dict(cores=1, min_cores=1, max_memory=8000, max_disk=8000,
+                    threads=1)
+    for key, value in defaults.items():
+        step.setdefault(key, value)
 
 
 def setup(step, config):
@@ -44,11 +36,11 @@ def setup(step, config):
     Parameters
     ----------
     step : dict
-        A dictionary of properties of this step from the ``collect()`` function
+        A dictionary of properties of this step
 
     config : configparser.ConfigParser
-        Configuration options for this testcase, a combination of the defaults
-        for the machine, core, configuration and testcase
+        Configuration options for this test case, a combination of the defaults
+        for the machine, core, configuration and test case
     """
     for file in ['base_mesh.nc', 'culled_mesh.nc', 'culled_graph.info',
                  'ocean.nc']:
@@ -57,19 +49,18 @@ def setup(step, config):
 
 def run(step, test_suite, config, logger):
     """
-    Run this step of the testcase
+    Run this step of the test case
 
     Parameters
     ----------
     step : dict
-        A dictionary of properties of this step from the ``collect()``
-        function, with modifications from the ``setup()`` function.
+        A dictionary of properties of this step
 
     test_suite : dict
         A dictionary of properties of the test suite
 
     config : configparser.ConfigParser
-        Configuration options for this testcase, a combination of the defaults
+        Configuration options for this test case, a combination of the defaults
         for the machine, core and configuration
 
     logger : logging.Logger
