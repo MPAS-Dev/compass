@@ -8,115 +8,94 @@ from mpas_tools.logging import LoggingContext
 from compass.parallel import get_available_cores_and_nodes
 
 
-def get_step_default(module):
+def add_testcase(testcases, module, **kwargs):
     """
-    Set up a default dictionary describing the step in the given module.  The
-    dictionary contains the full name of the python module for the step, the
-    name of the step (the name of the python file without the ``.py``
-    extension), the subdirectory for the step (the same as the ``name``),
-    the names of the ``setup()`` and ``run()`` functions within the module,
-    and empty lists of ``inputs`` and ``outputs``, to be filled with the
-    files required to run the step or produced by the step, respectively.
+    Add a test case to a list of test cases in a configuration.  This should
+    be called for each test case in a configuration's ``collect()`` function.
+
+    Any additional keyword arguments passed to this function will be added
+    as keys and values to the ``testcase`` dictionary
 
     Parameters
     ----------
-    module : str
-        The full name of the python module for the step, usually supplied from
-        ``__name__``
+    testcases : `list`
+        A list of test-case dictionaries to which the one for this test case
+        should be appended
+
+    module : `module`
+        The python module containing the test case
+
+    **kwargs
+        Additional keyword arguments.
 
     Returns
     -------
-    step : dict
-        A dictionary with the default information about the step, most of which
-        can be modified as appropriate
-
+    testcase : `dict`
+        A dictionary of information about the test case
     """
-    name = module.split('.')[-1]
-    core = module.split('.')[1]
-    configuration = module.split('.')[3]
-    step = {'module': module,
-            'name': name,
-            'core': core,
-            'configuration': configuration,
-            'subdir': name,
-            'setup': 'setup',
-            'run': 'run',
-            'inputs': [],
-            'outputs': []}
-    return step
 
+    testcase = _get_testcase_default(module.__name__)
+    testcase.update(kwargs)
+    module.collect(testcase)
+    if testcase['description'] is None:
+        raise ValueError('No description was added for {}'.format(
+            testcase['path']))
+    testcases.append(testcase)
 
-def get_testcase_default(module, description, steps, subdir=None):
-    """
-    Set up a default dictionary describing the test case in the given module.
-    The dictionary contains the full name of the python module for the
-    test case, the name of the test case (the final part of the full module
-    name), the subdirectory for the test case (the same as the ``name`` if not
-    supplied), the names of the ``configure()`` and ``run()`` functions within
-    the module, the ``core`` and ``configuration`` of the test case (the parsed
-    from the full module name), the description of the test case provided, and
-    the dictionary of steps.
-
-    Parameters
-    ----------
-    module : str
-        The full name of the python module for the test case, usually supplied
-        from ``__name__``
-
-    description : str
-        A description of the test case
-
-    steps : dict
-        A dictionary of steps within the test case, with the names of each step
-        as keys and a dictionary of information on the step as values.  Each
-        step's dictionary must contain, at a minimum, the information added by
-        :py:func:`compass.testcase.get_default()`
-
-    subdir : str, optional
-        The subdirectory for the test case, which defaults to the name of the
-        test case (parsed from the module name).  If a test case supports
-        various parameter values, such as various resolutions, it may be
-        useful to supply a subdirectory so that the location of each variant of
-        the test case is placed in a unique working directory
-
-    Returns
-    -------
-    testcase : dict
-        A dictionary with the default information about the test case, most of
-        which can be modified as appropriate
-    """
-    name = module.split('.')[-1]
-    core = module.split('.')[1]
-    configuration = module.split('.')[3]
-    if subdir is None:
-        subdir = name
-    path = os.path.join(core, configuration, subdir)
-    for step in steps.values():
-        step['testcase'] = name
-        step['testcase_subdir'] = subdir
-        if step['core'] != core:
-            raise ValueError("The step's core doesn't match the test case's "
-                             "core")
-        if step['configuration'] != configuration:
-            raise ValueError("The step's configuration doesn't match the test "
-                             "case's configuration")
-    if hasattr(sys.modules[module], 'configure'):
-        configure = 'configure'
-    else:
-        configure = None
-    testcase = {'module': module,
-                'name': name,
-                'path': path,
-                'core': core,
-                'configuration': configuration,
-                'subdir': subdir,
-                'description': description,
-                'steps': steps,
-                'configure': configure,
-                'run': 'run',
-                'new_step_log_file': True,
-                'steps_to_run': list(steps.keys())}
     return testcase
+
+
+def set_testcase_subdir(testcase, subdir):
+    """
+    Replaces the default subdirectory and relative path in the test case using
+    the given subdirectory.  This should be called in the test case's
+    ``collect()`` function if the default subdirectory (the name of the test
+    case) is not used.
+
+    Parameters
+    ----------
+    testcase : `dict`
+        A dictionary of information about the test case
+
+    subdir : `str`
+        A subdirectory for the test case within the configuration
+    """
+    testcase['subdir'] = subdir
+    testcase['path'] = os.path.join(testcase['core'],
+                                    testcase['configuration'], subdir)
+
+
+def add_step(testcase, module, **kwargs):
+    """
+    Add a step to the dictionary of steps in the test case.  This should
+    be called for each step in a test case's ``collect()`` function.
+
+    Any additional keyword arguments passed to this function will be added
+    as keys and values to the ``step`` dictionary
+
+    Parameters
+    ----------
+    testcase : `dict`
+        A dictionary of information about the test case
+
+    module : `module`
+        The python module containing the step
+
+    **kwargs
+        Additional keyword arguments.
+
+    Returns
+    -------
+    step : `dict`
+        A dictionary of information about the step
+    """
+
+    step = _get_step_default(module.__name__, testcase)
+    step.update(kwargs)
+    module.collect(testcase, step)
+    testcase['steps'][step['name']] = step
+    testcase['steps_to_run'].append(step['name'])
+    return step
 
 
 def run_steps(testcase, test_suite, config, logger):
@@ -278,3 +257,91 @@ def generate_run(template_name, testcase, step=None):
     # make sure it has execute permission
     st = os.stat(run_filename)
     os.chmod(run_filename, st.st_mode | stat.S_IEXEC)
+
+
+def _get_step_default(module, testcase):
+    """
+    Set up a default dictionary describing the step in the given module.  The
+    dictionary contains the full name of the python module for the step, the
+    name of the step (the name of the python file without the ``.py``
+    extension), the subdirectory for the step (the same as the ``name``),
+    the names of the ``setup()`` and ``run()`` functions within the module,
+    and empty lists of ``inputs`` and ``outputs``, to be filled with the
+    files required to run the step or produced by the step, respectively.
+
+    Parameters
+    ----------
+    module : str
+        The full name of the python module for the step, usually supplied from
+        ``__name__``
+
+    testcase : dict
+        A dictionary with information about the test case that this step
+        belongs to
+
+    Returns
+    -------
+    step : dict
+        A dictionary with the default information about the step, most of which
+        can be modified as appropriate
+
+    """
+    name = module.split('.')[-1]
+    step = {'module': module,
+            'name': name,
+            'core': testcase['core'],
+            'configuration': testcase['configuration'],
+            'testcase': testcase['name'],
+            'testcase_subdir': testcase['subdir'],
+            'subdir': name,
+            'setup': 'setup',
+            'run': 'run',
+            'inputs': [],
+            'outputs': []}
+    return step
+
+
+def _get_testcase_default(module):
+    """
+    Set up a default dictionary describing the test case in the given module.
+    The dictionary contains the full name of the python module for the
+    test case, the name of the test case (the final part of the full module
+    name), the default subdirectory for the test case (the same as the
+    ``name``), the names of the ``configure()`` and ``run()`` functions within
+    the module, and the ``core`` and ``configuration`` of the test case (the
+    parsed from the full module name).
+
+    Parameters
+    ----------
+    module : str
+        The full name of the python module for the test case, usually supplied
+        from ``__name__``
+
+    Returns
+    -------
+    testcase : dict
+        A dictionary with the default information about the test case, most of
+        which can be modified as appropriate
+    """
+    name = module.split('.')[-1]
+    core = module.split('.')[1]
+    configuration = module.split('.')[3]
+    subdir = name
+    path = os.path.join(core, configuration, subdir)
+    if hasattr(sys.modules[module], 'configure'):
+        configure = 'configure'
+    else:
+        configure = None
+    testcase = {'module': module,
+                'name': name,
+                'path': path,
+                'core': core,
+                'configuration': configuration,
+                'subdir': subdir,
+                'description': None,
+                'steps': dict(),
+                'configure': configure,
+                'run': 'run',
+                'new_step_log_file': True,
+                'steps_to_run': list()}
+    return testcase
