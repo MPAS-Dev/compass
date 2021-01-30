@@ -1,4 +1,4 @@
-from compass.testcase import run_steps, get_testcase_default
+from compass.testcase import set_testcase_subdir, add_step, run_steps
 from compass.ocean.tests.baroclinic_channel import initial_state, forward
 from compass.ocean.tests import baroclinic_channel
 from compass.validate import compare_variables
@@ -6,31 +6,28 @@ from compass.namelist import add_namelist_file
 from compass.streams import add_streams_file
 
 
-def collect(resolution):
+def collect(testcase):
     """
-    Get a dictionary of testcase properties
+    Update the dictionary of test case properties and add steps
 
     Parameters
     ----------
-    resolution : {'10km'}
-        The resolution of the mesh
-
-    Returns
-    -------
     testcase : dict
-        A dict of properties of this test case, including its steps
+        A dictionary of properties of this test case, which can be updated
     """
-    description = 'baroclinic channel {} restart test'.format(resolution)
-    module = __name__
+    resolution = testcase['resolution']
+    testcase['description'] = \
+        'baroclinic channel {} restart test'.format(resolution)
 
-    name = module.split('.')[-1]
-    subdir = '{}/{}'.format(resolution, name)
-    steps = dict()
-    step = initial_state.collect(resolution)
-    steps[step['name']] = step
+    subdir = '{}/{}'.format(resolution, testcase['name'])
+    set_testcase_subdir(testcase, subdir)
+
+    add_step(testcase, initial_state, resolution=resolution)
 
     for part in ['full', 'restart']:
-        step = forward.collect(resolution, cores=4, threads=1)
+        name = '{}_run'.format(part)
+        step = add_step(testcase, forward, name=name, subdir=name, cores=4,
+                        threads=1, resolution=resolution)
 
         # add the local namelist and streams file
         add_namelist_file(
@@ -40,28 +37,19 @@ def collect(resolution):
             step, 'compass.ocean.tests.baroclinic_channel.restart_test',
             'streams.{}'.format(part))
 
-        step['name'] = '{}_run'.format(part)
-        step['subdir'] = step['name']
-        steps[step['name']] = step
-
-    testcase = get_testcase_default(module, description, steps, subdir=subdir)
-    testcase['resolution'] = resolution
-
-    return testcase
-
 
 def configure(testcase, config):
     """
-    Modify the configuration options for this testcase.
+    Modify the configuration options for this test case.
 
     Parameters
     ----------
     testcase : dict
-        A dictionary of properties of this testcase from the ``collect()``
+        A dictionary of properties of this test case from the ``collect()``
         function
 
     config : configparser.ConfigParser
-        Configuration options for this testcase, a combination of the defaults
+        Configuration options for this test case, a combination of the defaults
         for the machine, core and configuration
     """
     baroclinic_channel.configure(testcase, config)
@@ -69,23 +57,23 @@ def configure(testcase, config):
 
 def run(testcase, test_suite, config, logger):
     """
-    Run each step of the testcase
+    Run each step of the test case
 
     Parameters
     ----------
     testcase : dict
-        A dictionary of properties of this testcase from the ``collect()``
+        A dictionary of properties of this test case from the ``collect()``
         function
 
     test_suite : dict
         A dictionary of properties of the test suite
 
     config : configparser.ConfigParser
-        Configuration options for this testcase, a combination of the defaults
+        Configuration options for this test case, a combination of the defaults
         for the machine, core and configuration
 
     logger : logging.Logger
-        A logger for output from the testcase
+        A logger for output from the test case
     """
     run_steps(testcase, test_suite, config, logger)
     variables = ['temperature', 'salinity', 'layerThickness', 'normalVelocity']
