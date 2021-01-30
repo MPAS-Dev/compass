@@ -78,7 +78,7 @@ def validate(testcases):
                                                    step['module']))
             module = sys.modules[step['module']]
             for key in ['setup', 'run']:
-                if not hasattr(module, step[key]):
+                if step[key] is not None and not hasattr(module, step[key]):
                     raise ValueError('step {}/{}: could not find function '
                                      '{}.{}()'.format(test['path'],
                                                       step['subdir'],

@@ -287,6 +287,11 @@ def _get_step_default(module, testcase):
 
     """
     name = module.split('.')[-1]
+    # some steps may not need a setup function
+    if hasattr(sys.modules[module], 'setup'):
+        setup = 'setup'
+    else:
+        setup = None
     step = {'module': module,
             'name': name,
             'core': testcase['core'],
@@ -294,7 +299,7 @@ def _get_step_default(module, testcase):
             'testcase': testcase['name'],
             'testcase_subdir': testcase['subdir'],
             'subdir': name,
-            'setup': 'setup',
+            'setup': setup,
             'run': 'run',
             'inputs': [],
             'outputs': []}
@@ -328,6 +333,7 @@ def _get_testcase_default(module):
     configuration = module.split('.')[3]
     subdir = name
     path = os.path.join(core, configuration, subdir)
+    # some test cases may not need a configure function
     if hasattr(sys.modules[module], 'configure'):
         configure = 'configure'
     else:
