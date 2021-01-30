@@ -45,7 +45,7 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
     Returns
     -------
     testcases : dict
-        A dictionary of information about each testcase, with the relative path
+        A dictionary of information about each test case, with the relative path
         in the work directory as keys
     """
 
@@ -96,7 +96,7 @@ def setup_case(path, testcase, config_file, machine, work_dir, baseline_dir,
         Relative path for a test cases to set up
 
     testcase : dict
-        A dictionary describing the testcase
+        A dictionary describing the test case
 
     config_file : str
         Configuration file with custom options for setting up and running test
@@ -147,7 +147,7 @@ def setup_case(path, testcase, config_file, machine, work_dir, baseline_dir,
     testcase['work_dir'] = testcase_dir
     testcase['base_work_dir'] = work_dir
 
-    # add config options specific to the testcase
+    # add config options specific to the test case
     if testcase['configure'] is not None:
         configure = getattr(sys.modules[testcase['module']],
                             testcase['configure'])
@@ -157,7 +157,7 @@ def setup_case(path, testcase, config_file, machine, work_dir, baseline_dir,
     if config_file is not None:
         config.read(config_file)
 
-    # add the baseline directory for this testcase
+    # add the baseline directory for this test case
     if baseline_dir is not None:
         baseline_root = os.path.join(baseline_dir, path)
         config.set('paths', 'baseline_dir', baseline_root)
@@ -199,15 +199,16 @@ def setup_case(path, testcase, config_file, machine, work_dir, baseline_dir,
         step['config'] = testcase_config
 
         # set up the step
-        setup = getattr(sys.modules[step['module']], step['setup'])
-        setup(step, config)
+        if step['setup'] is not None:
+            setup = getattr(sys.modules[step['module']], step['setup'])
+            setup(step, config)
 
         process_step_inputs_and_outputs(step, config)
 
         # write a run script for each step
         _write_run('step.template', testcase, step=step)
 
-    # write a run script for each testcase
+    # write a run script for each test case
     _write_run('testcase.template', testcase)
 
 
