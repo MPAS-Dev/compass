@@ -1,90 +1,73 @@
-from compass.testcase import run_steps, get_testcase_default
+from compass.testcase import set_testcase_subdir, add_step, run_steps
 from compass.ocean.tests.global_ocean import forward
 from compass.ocean.tests import global_ocean
 from compass.validate import compare_variables
 from compass.ocean.tests.global_ocean.description import get_description
 from compass.ocean.tests.global_ocean.init import get_init_sudbdir
+from compass.namelist import add_namelist_file
+from compass.streams import add_streams_file
+from compass.io import add_input_file, add_output_file
 
 
-def collect(mesh_name, with_ice_shelf_cavities, initial_condition, with_bgc,
-            time_integrator):
+def collect(testcase):
     """
-    Get a dictionary of testcase properties
+    Update the dictionary of test case properties and add steps
 
     Parameters
     ----------
-    mesh_name : str
-        The name of the mesh
-
-    with_ice_shelf_cavities : bool
-        Whether the mesh should include ice-shelf cavities
-
-    initial_condition : {'PHC', 'EN4_1900'}
-        The initial condition to build
-
-    with_bgc : bool
-        Whether to include BGC variables in the initial condition
-
-    time_integrator : {'split_explicit', 'RK4'}
-        The time integrator to use for the run
-
-    Returns
-    -------
     testcase : dict
-        A dict of properties of this test case, including its steps
+        A dictionary of properties of this test case, which can be updated
     """
-    description = get_description(
-        mesh_name, initial_condition, with_bgc, time_integrator,
-        description='restart test')
+    mesh_name = testcase['mesh_name']
+    with_ice_shelf_cavities = testcase['with_ice_shelf_cavities']
+    initial_condition = testcase['initial_condition']
+    with_bgc = testcase['with_bgc']
+    time_integrator = testcase['time_integrator']
+    name = testcase['name']
     module = __name__
 
-    init_subdir = get_init_sudbdir(mesh_name, initial_condition, with_bgc)
+    testcase['description'] = get_description(
+        mesh_name, initial_condition, with_bgc, time_integrator,
+        description='restart test')
 
-    name = module.split('.')[-1]
+    init_subdir = get_init_sudbdir(mesh_name, initial_condition, with_bgc)
     subdir = '{}/{}/{}'.format(init_subdir, name, time_integrator)
+    set_testcase_subdir(testcase, subdir)
 
     restart_time = {'split_explicit': '0001-01-01_04:00:00',
                     'RK4': '0001-01-01_00:10:00'}
     restart_filename = '../restarts/rst.{}.nc'.format(
         restart_time[time_integrator].replace(':', '.'))
-    inputs = {'full': None, 'restart': [restart_filename]}
-    outputs = {'full': ['output.nc', restart_filename], 'restart': None}
-    steps = dict()
-    for step_prefix in ['full', 'restart']:
-        suffix = '{}.{}'.format(time_integrator.lower(), step_prefix)
-        step = forward.collect(mesh_name, with_ice_shelf_cavities, with_bgc,
-                               time_integrator, cores=4, threads=1,
-                               testcase_module=module,
-                               namelist_file='namelist.{}'.format(suffix),
-                               streams_file='streams.{}'.format(suffix),
-                               inputs=inputs[step_prefix],
-                               outputs=outputs[step_prefix])
-        step['name'] = '{}_run'.format(step_prefix)
-        step['subdir'] = step['name']
-        steps[step['name']] = step
+    input_file = {'restart': restart_filename}
+    output_file = {'full': restart_filename}
+    for part in ['full', 'restart']:
+        name = '{}_run'.format(part)
+        step = add_step(testcase, forward, name=name, subdir=name, cores=4,
+                        threads=1, mesh_name=mesh_name,
+                        with_ice_shelf_cavities=with_ice_shelf_cavities,
+                        initial_condition=initial_condition, with_bgc=with_bgc,
+                        time_integrator=time_integrator)
 
-    testcase = get_testcase_default(module, description, steps, subdir=subdir)
-    testcase['mesh_name'] = mesh_name
-    testcase['with_ice_shelf_cavities'] = with_ice_shelf_cavities
-    testcase['initial_condition'] = initial_condition
-    testcase['with_bgc'] = with_bgc
-
-    return testcase
+        suffix = '{}.{}'.format(time_integrator.lower(), part)
+        add_namelist_file(step, module, 'namelist.{}'.format(suffix))
+        add_streams_file(step, module, 'streams.{}'.format(suffix))
+        if part in input_file:
+            add_input_file(step, filename=input_file[part])
+        if part in output_file:
+            add_output_file(step, filename=output_file[part])
 
 
 def configure(testcase, config):
     """
-    Modify the configuration options for this testcase.
+    Modify the configuration options for this test case
 
     Parameters
     ----------
     testcase : dict
-        A dictionary of properties of this testcase from the ``collect()``
-        function
+        A dictionary of properties of this test case
 
     config : configparser.ConfigParser
-        Configuration options for this testcase, a combination of the defaults
-        for the machine, core and configuration
+        Configuration options for this test case
     """
     global_ocean.configure(testcase, config)
 
@@ -96,18 +79,16 @@ def run(testcase, test_suite, config, logger):
     Parameters
     ----------
     testcase : dict
-        A dictionary of properties of this testcase from the ``collect()``
-        function
+        A dictionary of properties of this test case
 
     test_suite : dict
         A dictionary of properties of the test suite
 
     config : configparser.ConfigParser
-        Configuration options for this testcase, a combination of the defaults
-        for the machine, core and configuration
+        Configuration options for this test case
 
     logger : logging.Logger
-        A logger for output from the testcase
+        A logger for output from the test case
     """
     run_steps(testcase, test_suite, config, logger)
     variables = ['temperature', 'salinity', 'layerThickness', 'normalVelocity']

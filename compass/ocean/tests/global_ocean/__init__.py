@@ -1,18 +1,18 @@
 from compass.ocean.tests.global_ocean import mesh, init, performance_test, \
     restart_test, decomp_test, threads_test, analysis_test, \
     daily_output_test, files_for_e3sm
-from compass.ocean.tests.global_ocean.mesh.qu240.spinup import collect as \
-    collect_qu240_spinup
-from compass.ocean.tests.global_ocean.mesh.ec30to60.spinup import collect as \
-    collect_ec30to60_spinup
+from compass.ocean.tests.global_ocean.mesh.qu240 import spinup as qu240_spinup
+from compass.ocean.tests.global_ocean.mesh.ec30to60 import spinup as \
+    ec30to60_spinup
 from compass.config import add_config
 from compass.ocean.tests.global_ocean.mesh.mesh import get_mesh_package
 from compass.ocean.tests.global_ocean.init import add_descriptions_to_config
+from compass.testcase import add_testcase
 
 
 def collect():
     """
-    Get a list of testcases in this configuration
+    Get a list of test cases in this configuration
 
     Returns
     -------
@@ -24,70 +24,82 @@ def collect():
     # we do a lot of tests for QU240/QU240wISC
     for mesh_name, with_ice_shelf_cavities in [('QU240', False),
                                                ('QUwISC240', True)]:
-        testcases.append(mesh.collect(mesh_name, with_ice_shelf_cavities))
+        add_testcase(testcases, mesh, mesh_name=mesh_name,
+                     with_ice_shelf_cavities=with_ice_shelf_cavities)
 
         for initial_condition in ['PHC', 'EN4_1900']:
             for with_bgc in [False, True]:
-                testcases.append(init.collect(
-                    mesh_name, with_ice_shelf_cavities, initial_condition,
-                    with_bgc))
+                add_testcase(testcases, init, mesh_name=mesh_name,
+                             with_ice_shelf_cavities=with_ice_shelf_cavities,
+                             initial_condition=initial_condition,
+                             with_bgc=with_bgc)
                 for test in [performance_test, restart_test, decomp_test,
                              threads_test, analysis_test, daily_output_test]:
                     for time_integrator in ['split_explicit', 'RK4']:
-                        testcases.append(test.collect(
-                            mesh_name, with_ice_shelf_cavities,
-                            initial_condition, with_bgc, time_integrator))
+                        add_testcase(
+                            testcases, test, mesh_name=mesh_name,
+                            with_ice_shelf_cavities=with_ice_shelf_cavities,
+                            initial_condition=initial_condition,
+                            with_bgc=with_bgc, time_integrator=time_integrator)
                 for time_integrator in ['split_explicit', 'RK4']:
-                    testcase = collect_qu240_spinup(
-                        mesh_name, with_ice_shelf_cavities,
-                        initial_condition, with_bgc, time_integrator)
-                    testcases.append(testcase)
+                    testcase = add_testcase(
+                        testcases, qu240_spinup, mesh_name=mesh_name,
+                        with_ice_shelf_cavities=with_ice_shelf_cavities,
+                        initial_condition=initial_condition,
+                        with_bgc=with_bgc, time_integrator=time_integrator)
+
                     restart_filename = testcase['restart_filenames'][-1]
-                    testcases.append(files_for_e3sm.collect(
-                        mesh_name, with_ice_shelf_cavities,
-                        initial_condition, with_bgc, time_integrator,
-                        restart_filename))
+                    add_testcase(
+                        testcases, files_for_e3sm, mesh_name=mesh_name,
+                        with_ice_shelf_cavities=with_ice_shelf_cavities,
+                        initial_condition=initial_condition,
+                        with_bgc=with_bgc, time_integrator=time_integrator,
+                        restart_filename=restart_filename)
 
     # for other meshes, we do fewer tests
     for mesh_name, with_ice_shelf_cavities in [('EC30to60', False),
                                                ('ECwISC30to60', True)]:
-        testcases.append(mesh.collect(mesh_name, with_ice_shelf_cavities))
+        add_testcase(testcases, mesh, mesh_name=mesh_name,
+                     with_ice_shelf_cavities=with_ice_shelf_cavities)
 
         for initial_condition in ['PHC', 'EN4_1900']:
             with_bgc = False
             time_integrator = 'split_explicit'
-            testcases.append(init.collect(
-                mesh_name, with_ice_shelf_cavities, initial_condition,
-                with_bgc))
-            testcases.append(performance_test.collect(
-                mesh_name, with_ice_shelf_cavities,
-                initial_condition, with_bgc, time_integrator))
-            testcase = collect_ec30to60_spinup(
-                mesh_name, with_ice_shelf_cavities,
-                initial_condition, with_bgc, time_integrator)
-            testcases.append(testcase)
+            add_testcase(testcases, init, mesh_name=mesh_name,
+                         with_ice_shelf_cavities=with_ice_shelf_cavities,
+                         initial_condition=initial_condition,
+                         with_bgc=with_bgc)
+            add_testcase(testcases, performance_test, mesh_name=mesh_name,
+                         with_ice_shelf_cavities=with_ice_shelf_cavities,
+                         initial_condition=initial_condition,
+                         with_bgc=with_bgc, time_integrator=time_integrator)
+            testcase = add_testcase(
+                testcases, ec30to60_spinup, mesh_name=mesh_name,
+                with_ice_shelf_cavities=with_ice_shelf_cavities,
+                initial_condition=initial_condition,
+                with_bgc=with_bgc, time_integrator=time_integrator)
+
             restart_filename = testcase['restart_filenames'][-1]
-            testcases.append(files_for_e3sm.collect(
-                mesh_name, with_ice_shelf_cavities,
-                initial_condition, with_bgc, time_integrator,
-                restart_filename))
+            add_testcase(testcases, files_for_e3sm, mesh_name=mesh_name,
+                         with_ice_shelf_cavities=with_ice_shelf_cavities,
+                         initial_condition=initial_condition,
+                         with_bgc=with_bgc, time_integrator=time_integrator,
+                         restart_filename=restart_filename)
 
     return testcases
 
 
 def configure(testcase, config):
     """
-    Modify the configuration options for this testcase.
+    Modify the configuration options for this test case
 
     Parameters
     ----------
     testcase : dict
-        A dictionary of properties of this testcase from the ``collect()``
-        function
+        A dictionary of properties of this test case
 
     config : configparser.ConfigParser
-        Configuration options for this testcase, a combination of the defaults
-        for the machine, core and configuration
+        Configuration options for this test case
     """
     mesh_name = testcase['mesh_name']
     package, prefix = get_mesh_package(mesh_name)

@@ -1,80 +1,54 @@
-from compass.testcase import run_steps, get_testcase_default
+from compass.testcase import set_testcase_subdir, add_step, run_steps
 from compass.ocean.tests.global_ocean.init import initial_state, ssh_adjustment
 from compass.ocean.tests.global_ocean.subdir import get_init_sudbdir
 from compass.ocean.tests import global_ocean
 from compass.validate import compare_variables
 
 
-def collect(mesh_name, with_ice_shelf_cavities, initial_condition, with_bgc):
+def collect(testcase):
     """
-    Get a dictionary of testcase properties
+    Update the dictionary of test case properties and add steps
 
     Parameters
     ----------
-    mesh_name : str
-        The name of the mesh
-
-    with_ice_shelf_cavities : bool
-        Whether the mesh should include ice-shelf cavities
-
-    initial_condition : {'PHC', 'EN4_1900'}
-        The initial condition to build
-
-    with_bgc : bool
-        Whether to include BGC fields in the initial condition
-
-    Returns
-    -------
     testcase : dict
-        A dict of properties of this test case, including its steps
+        A dictionary of properties of this test case, which can be updated
     """
+    mesh_name = testcase['mesh_name']
+    with_ice_shelf_cavities = testcase['with_ice_shelf_cavities']
+    initial_condition = testcase['initial_condition']
+    with_bgc = testcase['with_bgc']
 
-    module = __name__
     if with_bgc:
         desc_initial_condition = '{} with BGC'.format(initial_condition)
     else:
         desc_initial_condition = initial_condition
-    description = 'global ocean {} - {} initial condition'.format(
+    testcase['description'] = 'global ocean {} - {} initial condition'.format(
         mesh_name, desc_initial_condition)
 
     init_subdir = get_init_sudbdir(mesh_name, initial_condition, with_bgc)
+    subdir = '{}/{}'.format(init_subdir, testcase['name'])
+    set_testcase_subdir(testcase, subdir)
 
-    name = module.split('.')[-1]
-    subdir = '{}/{}'.format(init_subdir, name)
-    steps = dict()
-    step = initial_state.collect(mesh_name, with_ice_shelf_cavities,
-                                 initial_condition, with_bgc)
-    steps[step['name']] = step
+    add_step(testcase, initial_state,
+             with_ice_shelf_cavities=with_ice_shelf_cavities,
+             initial_condition=initial_condition, with_bgc=with_bgc)
 
-    steps_to_run = ['initial_state']
     if with_ice_shelf_cavities:
-        step = ssh_adjustment.collect(mesh_name, cores=4)
-        steps[step['name']] = step
-        steps_to_run.append('ssh_adjustment')
-
-    testcase = get_testcase_default(module, description, steps, subdir=subdir)
-    testcase['mesh_name'] = mesh_name
-    testcase['with_ice_shelf_cavities'] = with_ice_shelf_cavities
-    testcase['initial_condition'] = initial_condition
-    testcase['with_bgc'] = with_bgc
-    testcase['steps_to_run'] = steps_to_run
-
-    return testcase
+        add_step(testcase, ssh_adjustment, cores=4)
 
 
 def configure(testcase, config):
     """
-    Modify the configuration options for this testcase.
+    Modify the configuration options for this test case
 
     Parameters
     ----------
     testcase : dict
-        A dictionary of properties of this testcase from the ``collect()``
-        function
+        A dictionary of properties of this test case
 
     config : configparser.ConfigParser
-        Configuration options for this testcase, a combination of the defaults
-        for the machine, core and configuration
+        Configuration options for this test case
     """
     global_ocean.configure(testcase, config)
 
@@ -86,18 +60,16 @@ def run(testcase, test_suite, config, logger):
     Parameters
     ----------
     testcase : dict
-        A dictionary of properties of this testcase from the ``collect()``
-        function
+        A dictionary of properties of this test case
 
     test_suite : dict
         A dictionary of properties of the test suite
 
     config : configparser.ConfigParser
-        Configuration options for this testcase, a combination of the defaults
-        for the machine, core and configuration
+        Configuration options for this test case
 
     logger : logging.Logger
-        A logger for output from the testcase
+        A logger for output from the test case
     """
     work_dir = testcase['work_dir']
     with_bgc = testcase['with_bgc']
@@ -151,12 +123,10 @@ def add_descriptions_to_config(testcase, config):
     Parameters
     ----------
     testcase : dict
-        A dictionary of properties of this testcase from the ``collect()``
-        function
+        A dictionary of properties of this test case
 
     config : configparser.ConfigParser
-        Configuration options for this testcase, a combination of the defaults
-        for the machine, core and configuration
+        Configuration options for this test case
     """
     # add a description of the initial condition
     if 'initial_condition' in testcase:

@@ -15,8 +15,7 @@ def get_e3sm_mesh_names(config, levels):
     Parameters
     ----------
     config : configparser.ConfigParser
-        Configuration options for this testcase, a combination of the defaults
-        for the machine, core and configuration
+        Configuration options for this test case
 
     levels : int
         The number of vertical levels
@@ -61,8 +60,7 @@ def add_mesh_and_init_metadata(output_filenames, config, init_filename):
         A list of output files.
 
     config : configparser.ConfigParser
-        Configuration options for this testcase, a combination of the defaults
-        for the machine, core and configuration
+        Configuration options for this test case
 
     init_filename : str
         The name of an initial condition file to get the number of vertical
