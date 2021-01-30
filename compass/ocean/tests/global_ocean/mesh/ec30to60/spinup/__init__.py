@@ -1,125 +1,108 @@
-from compass.testcase import run_steps, get_testcase_default
+from compass.testcase import set_testcase_subdir, add_step, run_steps
 from compass.ocean.tests.global_ocean import forward
 from compass.ocean.tests.global_ocean.description import get_description
 from compass.ocean.tests.global_ocean.init import get_init_sudbdir
 from compass.ocean.tests import global_ocean
 from compass.validate import compare_variables
+from compass.namelist import add_namelist_options
+from compass.streams import add_streams_file
+from compass.io import add_input_file, add_output_file
 
 
-def collect(mesh_name, with_ice_shelf_cavities, initial_condition, with_bgc,
-            time_integrator):
+def collect(testcase):
     """
-    Get a dictionary of testcase properties
+    Update the dictionary of test case properties and add steps
 
     Parameters
     ----------
-    mesh_name : str
-        The name of the mesh
-
-    with_ice_shelf_cavities : bool
-        Whether the mesh should include ice-shelf cavities
-
-    initial_condition : {'PHC', 'EN4_1900'}
-        The initial condition to build
-
-    with_bgc : bool
-        Whether to include BGC variables in the initial condition
-
-    time_integrator : {'split_explicit', 'RK4'}
-        The time integrator to use for the run
-
-    Returns
-    -------
     testcase : dict
-        A dict of properties of this test case, including its steps
+        A dictionary of properties of this test case, which can be updated
     """
+    mesh_name = testcase['mesh_name']
+    with_ice_shelf_cavities = testcase['with_ice_shelf_cavities']
+    initial_condition = testcase['initial_condition']
+    with_bgc = testcase['with_bgc']
+    time_integrator = testcase['time_integrator']
+    name = testcase['name']
+    module = __name__
+
     if time_integrator != 'split_explicit':
         raise ValueError('{} spin-up not defined for {}'.format(
             mesh_name, time_integrator))
 
-    description = get_description(
+    testcase['description'] = get_description(
         mesh_name, initial_condition, with_bgc, time_integrator,
         description='spin-up')
-    module = __name__
 
     init_subdir = get_init_sudbdir(mesh_name, initial_condition, with_bgc)
-
-    name = module.split('.')[-1]
     subdir = '{}/{}/{}'.format(init_subdir, name, time_integrator)
-
-    steps = dict()
+    set_testcase_subdir(testcase, subdir)
 
     restart_times = ['0001-01-11_00:00:00', '0001-01-21_00:00:00']
     restart_filenames = [
         'restarts/rst.{}.nc'.format(restart_time.replace(':', '.'))
         for restart_time in restart_times]
 
+    # first spin-up step
     step_name = 'damped_spinup_1'
-    inputs = None
-    outputs = ['output.nc', '../{}'.format(restart_filenames[0])]
-    namelist_replacements = {
+    step = add_step(testcase, forward, name=step_name, subdir=step_name,
+                    mesh_name=mesh_name,
+                    with_ice_shelf_cavities=with_ice_shelf_cavities,
+                    initial_condition=initial_condition, with_bgc=with_bgc,
+                    time_integrator=time_integrator)
+
+    namelist_options = {
         'config_run_duration': "'00-00-10_00:00:00'",
         'config_dt': "'00:20:00'",
         'config_Rayleigh_friction': '.true.',
         'config_Rayleigh_damping_coeff': '1.0e-4'}
+    add_namelist_options(step, namelist_options)
+
     stream_replacements = {
         'output_interval': '00-00-10_00:00:00',
         'restart_interval': '00-00-10_00:00:00'}
-    step = forward.collect(mesh_name, with_ice_shelf_cavities,
-                           with_bgc,  time_integrator,
-                           testcase_module=module,
-                           streams_file='streams.template',
-                           namelist_replacements=namelist_replacements,
-                           stream_replacements=stream_replacements,
-                           inputs=inputs, outputs=outputs)
-    step['name'] = step_name
-    step['subdir'] = step['name']
-    steps[step['name']] = step
+    add_streams_file(step, module, 'streams.template',
+                     template_replacements=stream_replacements)
 
+    add_output_file(step, filename='../{}'.format(restart_filenames[0]))
+
+    # final spin-up step
     step_name = 'simulation'
-    inputs = ['../{}'.format(restart_filenames[0])]
-    outputs = ['../{}'.format(restart_filenames[1])]
-    namelist_replacements = {
+    step = add_step(testcase, forward, name=step_name, subdir=step_name,
+                    mesh_name=mesh_name,
+                    with_ice_shelf_cavities=with_ice_shelf_cavities,
+                    initial_condition=initial_condition, with_bgc=with_bgc,
+                    time_integrator=time_integrator)
+
+    namelist_options = {
         'config_run_duration': "'00-00-10_00:00:00'",
         'config_do_restart': '.true.',
         'config_start_time': "'{}'".format(restart_times[0])}
+    add_namelist_options(step,  namelist_options)
+
     stream_replacements = {
         'output_interval': '00-00-10_00:00:00',
         'restart_interval': '00-00-10_00:00:00'}
-    step = forward.collect(mesh_name, with_ice_shelf_cavities,
-                           with_bgc,  time_integrator,
-                           testcase_module=module,
-                           streams_file='streams.template',
-                           namelist_replacements=namelist_replacements,
-                           stream_replacements=stream_replacements,
-                           inputs=inputs, outputs=outputs)
-    step['name'] = step_name
-    step['subdir'] = step['name']
-    steps[step['name']] = step
+    add_streams_file(step, module, 'streams.template',
+                     template_replacements=stream_replacements)
 
-    testcase = get_testcase_default(module, description, steps, subdir=subdir)
-    testcase['mesh_name'] = mesh_name
-    testcase['with_ice_shelf_cavities'] = with_ice_shelf_cavities
-    testcase['initial_condition'] = initial_condition
-    testcase['with_bgc'] = with_bgc
+    add_input_file(step, filename='../{}'.format(restart_filenames[0]))
+    add_output_file(step, filename='../{}'.format(restart_filenames[1]))
+
     testcase['restart_filenames'] = restart_filenames
-
-    return testcase
 
 
 def configure(testcase, config):
     """
-    Modify the configuration options for this testcase.
+    Modify the configuration options for this test case
 
     Parameters
     ----------
     testcase : dict
-        A dictionary of properties of this testcase from the ``collect()``
-        function
+        A dictionary of properties of this test case
 
     config : configparser.ConfigParser
-        Configuration options for this testcase, a combination of the defaults
-        for the machine, core and configuration
+        Configuration options for this test case
     """
     global_ocean.configure(testcase, config)
 
@@ -131,18 +114,16 @@ def run(testcase, test_suite, config, logger):
     Parameters
     ----------
     testcase : dict
-        A dictionary of properties of this testcase from the ``collect()``
-        function
+        A dictionary of properties of this test case
 
     test_suite : dict
         A dictionary of properties of the test suite
 
     config : configparser.ConfigParser
-        Configuration options for this testcase, a combination of the defaults
-        for the machine, core and configuration
+        Configuration options for this test case
 
     logger : logging.Logger
-        A logger for output from the testcase
+        A logger for output from the test case
     """
     # get the these properties from the config options
     for step_name in testcase['steps_to_run']:
