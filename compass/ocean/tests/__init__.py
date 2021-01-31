@@ -4,7 +4,7 @@ from compass.ocean.tests import baroclinic_channel, global_ocean, \
 
 def collect():
     """
-    Get a list of testcases in this configuration
+    Get a list of test cases in this configuration
 
     Returns
     -------
