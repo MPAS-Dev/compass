@@ -1,33 +1,34 @@
-from compass.examples.tests.example_compact.testcase import collect as \
-    collect_testcase
-
 from compass.config import add_config
-from compass.testcase import run_steps
+from compass.testcase import add_step, set_testcase_subdir, run_steps
+from compass.examples.tests.example_compact import step1, step2
 
 
-# "resolution" is just an example argument.  The argument can be any parameter
-# that distinguishes different variants of a test
-def collect(resolution):
+# See test1 for more details
+def collect(testcase):
     """
-    Get a dictionary of testcase properties
+    Update the dictionary of test case properties and add steps
 
     Parameters
     ----------
-    resolution : {'1km', '2km'}
-        The resolution of the mesh
-
-    Returns
-    -------
     testcase : dict
-        A dict of properties of this test case, including its steps
+        A dictionary of properties of this test case, which can be updated
     """
-    # fill in a useful description of the test case
-    description = 'Template {} test2'.format(resolution)
-    # This example assumes that it is possible to call a "collect" function
-    # that is generic to all testcases with a different parameter ("resolution"
-    # in this case).
-    testcase = collect_testcase(__name__, description, resolution)
-    return testcase
+    # you can get any information out of the "testcase" dictionary, e.g. to
+    # pass them on to steps.  Some of the entries will be from the framework
+    # while others are passed in as keyword arguments to "add_testcase" in the
+    # configuration's "collect()"
+    resolution = testcase['resolution']
+
+    # you must add a description
+    testcase['description'] = 'Template {} test2'.format(resolution)
+
+    # You can change the subdirectory from the default, the name of the test
+    # case.  In this case, we add a directory for the resolution.
+    subdir = '{}/{}'.format(resolution, testcase['name'])
+    set_testcase_subdir(testcase, subdir)
+
+    add_step(testcase, step1, resolution=resolution)
+    add_step(testcase, step2, resolution=resolution)
 
 
 # this function can be used to add the contents of a config file as in the
@@ -42,15 +43,13 @@ def configure(testcase, config):
     Parameters
     ----------
     testcase : dict
-        A dictionary of properties of this testcase from the ``collect()``
-        function
+        A dictionary of properties of this test case
 
     config : configparser.ConfigParser
-        Configuration options for this testcase, a combination of the defaults
-        for the machine, core and configuration
+        Configuration options for this test case
     """
     # add (or override) some configuration options that will be used during any
-    # or all of the steps in this testcase
+    # or all of the steps in this test case
     add_config(config, 'compass.examples.tests.example_compact.test2',
                'test2.cfg')
 
@@ -59,29 +58,27 @@ def configure(testcase, config):
 
 
 # The function must take only the "testcase" and "config" arguments, so
-# any information you need in order to run the testcase should be added to
+# any information you need in order to run the test case should be added to
 # "testcase" if it is not available in "config"
 def run(testcase, test_suite, config, logger):
     """
-    Run each step of the testcase
+    Run each step of the test case
 
     Parameters
     ----------
     testcase : dict
-        A dictionary of properties of this testcase from the ``collect()``
-        function
+        A dictionary of properties of this test case
 
     test_suite : dict
         A dictionary of properties of the test suite
 
     config : configparser.ConfigParser
-        Configuration options for this testcase, a combination of the defaults
-        for the machine, core and configuration
+        Configuration options for this test case
 
     logger : logging.Logger
-        A logger for output from the testcase
+        A logger for output from the test case
     """
-    # typically, this involves running all the steps in the testcase in the
+    # typically, this involves running all the steps in the test case in the
     # desired sequence.  However, it may involve only running a subset of steps
     # if some are optional and not performed by default.
     run_steps(testcase, test_suite, config, logger)
