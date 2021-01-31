@@ -286,6 +286,12 @@ def _get_required_cores(testcases):
     max_of_min_cores = 0
     for test_name, testcase in testcases.items():
         for step_name, step in testcase['steps'].items():
+            if 'cores' not in step:
+                raise ValueError('step {} in test {} has no "cores" '
+                                 'entry'.format(step_name, test_name))
+            if 'min_cores' not in step:
+                raise ValueError('step {} in test {} has no "min_cores" '
+                                 'entry'.format(step_name, test_name))
             max_cores = max(max_cores, step['cores'])
             max_of_min_cores = max(max_of_min_cores, step['min_cores'])
 
