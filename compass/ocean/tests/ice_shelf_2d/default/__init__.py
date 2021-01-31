@@ -1,56 +1,42 @@
-from compass.testcase import run_steps, get_testcase_default
+from compass.testcase import set_testcase_subdir, add_step, run_steps
 from compass.ocean.tests.ice_shelf_2d import initial_state, ssh_adjustment,\
     forward
 from compass.ocean.tests import ice_shelf_2d
 from compass.validate import compare_variables
 
 
-def collect(resolution):
+def collect(testcase):
     """
-    Get a dictionary of testcase properties
+    Update the dictionary of test case properties and add steps
 
     Parameters
     ----------
-    resolution : {'5km'}
-        The resolution of the mesh
-
-    Returns
-    -------
     testcase : dict
-        A dict of properties of this test case, including its steps
+        A dictionary of properties of this test case, which can be updated
     """
-    description = '2D ice-shelf {} default test'.format(resolution)
-    module = __name__
+    resolution = testcase['resolution']
+    testcase['description'] = '2D ice-shelf {} default test'.format(resolution)
 
-    name = module.split('.')[-1]
-    subdir = '{}/{}'.format(resolution, name)
-    steps = dict()
-    step = initial_state.collect(resolution)
-    steps[step['name']] = step
-    step = ssh_adjustment.collect(resolution, cores=4)
-    steps[step['name']] = step
-    step = forward.collect(resolution, cores=4, threads=1)
-    steps[step['name']] = step
+    set_testcase_subdir(testcase, '{}/{}'.format(resolution, testcase['name']))
 
-    testcase = get_testcase_default(module, description, steps, subdir=subdir)
-    testcase['resolution'] = resolution
-
-    return testcase
+    add_step(testcase, initial_state, resolution=resolution)
+    add_step(testcase, ssh_adjustment, resolution=resolution, cores=4,
+             threads=1)
+    add_step(testcase, forward, resolution=resolution, cores=4, threads=1,
+             with_frazil=True)
 
 
 def configure(testcase, config):
     """
-    Modify the configuration options for this testcase.
+    Modify the configuration options for this test case
 
     Parameters
     ----------
     testcase : dict
-        A dictionary of properties of this testcase from the ``collect()``
-        function
+        A dictionary of properties of this test case
 
     config : configparser.ConfigParser
-        Configuration options for this testcase, a combination of the defaults
-        for the machine, core and configuration
+        Configuration options for this test case
     """
     ice_shelf_2d.configure(testcase, config)
 
@@ -62,18 +48,16 @@ def run(testcase, test_suite, config, logger):
     Parameters
     ----------
     testcase : dict
-        A dictionary of properties of this testcase from the ``collect()``
-        function
+        A dictionary of properties of this test case
 
     test_suite : dict
         A dictionary of properties of the test suite
 
     config : configparser.ConfigParser
-        Configuration options for this testcase, a combination of the defaults
-        for the machine, core and configuration
+        Configuration options for this test case
 
     logger : logging.Logger
-        A logger for output from the testcase
+        A logger for output from the test case
     """
     run_steps(testcase, test_suite, config, logger)
 
