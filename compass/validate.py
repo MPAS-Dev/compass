@@ -8,7 +8,7 @@ import fnmatch
 def compare_variables(variables, config, work_dir, filename1, filename2=None,
                       l1_norm=0.0, l2_norm=0.0, linf_norm=0.0, quiet=False):
     """
-    Compare variables between files in the current testcase and/or with the
+    Compare variables between files in the current test case and/or with the
     baseline results.
 
     Parameters
@@ -17,21 +17,21 @@ def compare_variables(variables, config, work_dir, filename1, filename2=None,
         A list of variable names to compare
 
     config : configparser.ConfigParser
-        Configuration options for the testcase
+        Configuration options for the test case
 
     work_dir : str
-        The work directory for the testcase
+        The work directory for the test case
 
     filename1 : str
         The relative path to a file within the ``work_dir``.  If ``filename2``
         is also given, comparison will be performed with ``variables`` in that
         file.  If a baseline directory was provided when setting up the
-        testcase, the ``variables`` will be compared between this testcase and
-        the same relative filename in the baseline version of the testcase.
+        test case, the ``variables`` will be compared between this test case and
+        the same relative filename in the baseline version of the test case.
 
     filename2 : str, optional
         The relative path to another file within the ``work_dir`` if comparing
-        between files within the current testcase.  If a baseline directory
+        between files within the current test case.  If a baseline directory
         was provided, the ``variables`` from this file will also be compared
         with those in the corresponding baseline file.
 
@@ -87,7 +87,7 @@ def compare_variables(variables, config, work_dir, filename1, filename2=None,
 
 def compare_timers(timers, config, work_dir, rundir1, rundir2=None):
     """
-    Compare variables between files in the current testcase and/or with the
+    Compare variables between files in the current test case and/or with the
     baseline results.
 
     Parameters
@@ -96,21 +96,21 @@ def compare_timers(timers, config, work_dir, rundir1, rundir2=None):
         A list of timer names to compare
 
     config : configparser.ConfigParser
-        Configuration options for the testcase
+        Configuration options for the test case
 
     work_dir : str
-        The work directory for the testcase
+        The work directory for the test case
 
     rundir1 : str
         The relative path to a directory within the ``work_dir``. If
         ``rundir2`` is also given, comparison will be performed with ``timers``
         in that file.  If a baseline directory was provided when setting up the
-        testcase, the ``timers`` will be compared between this testcase and
-        the same relative directory under the baseline version of the testcase.
+        test case, the ``timers`` will be compared between this test case and
+        the same relative directory under the baseline version of the test case.
 
     rundir2 : str, optional
         The relative path to another file within the ``work_dir`` if comparing
-        between files within the current testcase.  If a baseline directory
+        between files within the current test case.  If a baseline directory
         was provided, the ``timers`` from this file will also be compared with
         those in the corresponding baseline directory.
     """
