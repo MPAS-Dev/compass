@@ -1,87 +1,59 @@
 import xarray
-import os
 
 from mpas_tools.io import write_netcdf
 
-from compass.testcase import get_step_default
-from compass.io import symlink
+from compass.io import add_input_file, add_output_file
 
 
-def collect():
+# see step1.py for a detailed explanation
+def collect(testcase, step):
     """
-    Get a dictionary of step properties
-
-    Returns
-    -------
-    step : dict
-        A dictionary of properties of this step
-    """
-    # get some default information for the step
-    step = get_step_default(__name__)
-    # add any parameters or other information you would like to have when you
-    # are setting up or running the testcase or its steps
-    step['resolution'] = '2km'
-
-    return step
-
-
-def setup(step, config):
-    """
-    Set up the test case in the work directory, including downloading any
-    dependencies
+    Update the dictionary of step properties
 
     Parameters
     ----------
+    testcase : dict
+        A dictionary of properties of this test case, which should not be
+        modified here
+
     step : dict
-        A dictionary of properties of this step from the ``collect()`` function
-
-    config : configparser.ConfigParser
-        Configuration options for this step, a combination of the defaults for
-        the machine, core, configuration and testcase
+        A dictionary of properties of this step, which can be updated
     """
-    step_dir = step['work_dir']
+    step['resolution'] = '2km'
 
-    # one of the required parts of setup is to define any input files from
-    # other steps or testcases that are required by this step, and any output
-    # files that are produced by this step that might be used in other steps
-    # or testcases.  This allows compass to determine dependencies between
-    # testcases and their steps
-    inputs = []
-    outputs = []
+    defaults = dict(cores=1, min_cores=1, max_memory=1000, max_disk=1000,
+                    threads=1)
+    for key, value in defaults.items():
+        step.setdefault(key, value)
 
-    # add a link to the output from step1 and add it as an input to this step
-    filename = os.path.abspath(os.path.join(step_dir,
-                                            '../step1/output_file.nc'))
-    symlink(filename, os.path.join(step_dir, 'input_file.nc'))
-    inputs.append(filename)
+    # this time, we won't download the file, we'll get it from step1
+    add_input_file(step, filename='input_file.nc',
+                   target='../step1/output_file.nc')
 
-    # list all the output files that will be produced in the step1 subdirectory
-    for file in ['output_file.nc']:
-        outputs.append(os.path.join(step_dir, file))
+    add_output_file(step, filename='output_file.nc')
 
-    step['inputs'] = inputs
-    step['outputs'] = outputs
+
+# this step doesn't have anything to do in the setup function, so we skip it
 
 
 def run(step, test_suite, config, logger):
     """
-    Run this step of the testcase
+    Run this step of the test case
 
     Parameters
     ----------
     step : dict
-        A dictionary of properties of this step from the ``collect()``
-        function, with modifications from the ``setup()`` function.
+        A dictionary of properties of this step
 
     test_suite : dict
         A dictionary of properties of the test suite
 
     config : configparser.ConfigParser
-        Configuration options for this testcase, a combination of the defaults
-        for the machine, core and configuration
+        Configuration options for this test case
 
     logger : logging.Logger
         A logger for output from the step
     """
+    # Again, we just read in the input and write out the output
     ds = xarray.open_dataset('input_file.nc')
     write_netcdf(ds, 'output_file.nc')

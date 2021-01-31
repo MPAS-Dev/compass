@@ -1,43 +1,38 @@
 from compass.config import add_config
-from compass.testcase import get_testcase_default, run_steps
+from compass.testcase import add_step, set_testcase_subdir, run_steps
 from compass.examples.tests.example_expanded.res1km.test2 import step1, step2
 
 
-def collect():
+# This function is used to define the test case by adding to or modifying the
+# information in the "testcase" dictionary.  Typically, this involves adding
+# steps to the test case and then potentially adding additional namelist and/or
+# streams files to the step.  It must also include setting the "descriptions"
+# of the test case.
+def collect(testcase):
     """
-    Get a dictionary of testcase properties
+    Update the dictionary of test case properties and add steps
 
-    Returns
-    -------
+    Parameters
+    ----------
     testcase : dict
-        A dict of properties of this test case, including its steps
+        A dictionary of properties of this test case, which can be updated
     """
-    # fill in a useful description of the test case
-    description = 'Template 1km test2'
-    module = __name__
+    # You can set information about the test case, the resolution in this case
     resolution = '1km'
-
-    # the name of the testcase is the last part of the Python module (the
-    # folder it's in, so "test1" or "test2" in the "example_expanded"
-    # configuration
-    name = module.split('.')[-1]
-    # A subdirectory for the testcase after setup.  This can be anything that
-    # will ensure that the testcase ends up in a unique directory
-    subdir = '{}/{}'.format(resolution, name)
-    # make a dictionary of steps for this testcase by calling each step's
-    # "collect" function
-    steps = dict()
-    for step_module in [step1, step2]:
-        step = step_module.collect()
-        steps[step['name']] = step
-
-    # get some default information for the testcase
-    testcase = get_testcase_default(module, description, steps, subdir=subdir)
-    # add any parameters or other information you would like to have when you
-    # are setting up or running the testcase or its steps
     testcase['resolution'] = resolution
 
-    return testcase
+    # you must add a description
+    testcase['description'] = 'Template 1km test2'
+
+    # You can change the subdirectory from the default, the name of the test
+    # case.  In this case, we add a directory for the resolution.
+    subdir = '{}/{}'.format(resolution, testcase['name'])
+    set_testcase_subdir(testcase, subdir)
+
+    # we can pass keyword argument to the step so they get added to the "step"
+    # dictionary and can be used throughout the step
+    add_step(testcase, step1)
+    add_step(testcase, step2)
 
 
 # this function can be used to add the contents of a config file as in the
@@ -52,12 +47,10 @@ def configure(testcase, config):
     Parameters
     ----------
     testcase : dict
-        A dictionary of properties of this testcase from the ``collect()``
-        function
+        A dictionary of properties of this test case
 
     config : configparser.ConfigParser
-        Configuration options for this testcase, a combination of the defaults
-        for the machine, core and configuration
+        Configuration options for this test case
     """
     # add (or override) some configuration options that will be used during any
     # or all of the steps in this testcase
@@ -78,18 +71,16 @@ def run(testcase, test_suite, config, logger):
     Parameters
     ----------
     testcase : dict
-        A dictionary of properties of this testcase from the ``collect()``
-        function
+        A dictionary of properties of this test case
 
     test_suite : dict
         A dictionary of properties of the test suite
 
     config : configparser.ConfigParser
-        Configuration options for this testcase, a combination of the defaults
-        for the machine, core and configuration
+        Configuration options for this test case
 
     logger : logging.Logger
-        A logger for output from the testcase
+        A logger for output from the test case
     """
     # typically, this involves running all the steps in the testcase in the
     # desired sequence.  However, it may involve only running a subset of steps

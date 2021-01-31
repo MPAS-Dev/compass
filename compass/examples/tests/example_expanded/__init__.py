@@ -1,3 +1,4 @@
+from compass.testcase import add_testcase
 from compass.examples.tests.example_expanded.res1km import test1 as \
     res1km_test1
 from compass.examples.tests.example_expanded.res1km import test2 as \
@@ -13,7 +14,7 @@ from compass.examples.tests.example_expanded.res2km import test2 as \
 # distinguish different test cases in this configuration
 def collect():
     """
-    Get a list of testcases in this configuration
+    Get a list of test cases in this configuration
 
     Returns
     -------
@@ -26,6 +27,6 @@ def collect():
     # in total.
     testcases = list()
     for test in [res1km_test1, res1km_test2, res2km_test1, res2km_test2]:
-        testcases.append(test.collect())
+        add_testcase(testcases, test)
 
     return testcases

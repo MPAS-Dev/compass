@@ -1,37 +1,89 @@
 import xarray
-import os
 
 from mpas_tools.io import write_netcdf
 
-from compass.testcase import get_step_default
-from compass.io import download, symlink
+from compass.io import add_input_file, add_output_file
 
 
-# "resolution" is just an example argument.  The argument can be any parameter
-# that distinguishes different variants of a test
-def collect(resolution):
+# this function is used to define the step by adding to or modifying the
+# information in the "step" dictionary.  You can add or override options in
+# the dictionary directly, or you can call functions to add namelist files,
+# namelist options from a dictionary, streams files from a file or template,
+# input and output files.  At this stage, you cannot set config options so
+# information added to "step" should typically be data not available for users
+# to change at runtime.  The "testcase" dictionary is here to get information,
+# e.g. name or location of the test case, but should not be altered.
+def collect(testcase, step):
     """
-    Get a dictionary of step properties
+    Update the dictionary of step properties
 
     Parameters
     ----------
-    resolution : {'1km', '2km'}
-        The name of the resolution to run at
+    testcase : dict
+        A dictionary of properties of this test case, which should not be
+        modified here
 
-    Returns
-    -------
     step : dict
-        A dictionary of properties of this step
+        A dictionary of properties of this step, which can be updated
     """
-    # get some default information for the step
-    step = get_step_default(__name__)
-    # add any parameters or other information you would like to have when you
-    # are setting up or running the testcase or its steps
-    step['resolution'] = resolution
+    # the "testcase" and "step" dictionaries will contain some information that
+    # is either added by the framework or passed in to "add_step" as a keyword
+    # argument.  In this case, we get the name of the test case that was added
+    # by the framework and the resolution, which was passed as a keyword
+    # argument to "add_step".
+    testcase_name = testcase['name']
+    resolution = step['resolution']
 
-    return step
+    # We will set these 5 options in "step" unless they were already set to
+    # something else in a call to "add_step" within the test case  These
+    # options are all related to the resources that the test case is allowed
+    # to use, but something similar could be done for any data you want ot add
+    # to "step"
+    defaults = dict(cores=1, min_cores=1, max_memory=1000, max_disk=1000,
+                    threads=1)
+    for key, value in defaults.items():
+        step.setdefault(key, value)
+
+    # Sometimes it is handy to use dictionaries or nested dictionaries to
+    # define sets of parameters for different test cases, resolutions, etc.
+    # that share the same step.  In the example, we use different file names
+    # for the input file for the two different test cases "test1" and "test2"
+    targets = {'test1': 'particle_regions.151113.nc',
+               'test2': 'layer_depth.80Layer.180619.nc'}
+
+    if testcase_name not in targets:
+        raise ValueError('Unsupported test case name {}. Supported test cases '
+                         'are: {}'.format(testcase, list(targets)))
+    target = targets[testcase_name]
+
+    # one of the required parts of setup is to define any input files from
+    # other steps or test cases that are required by this step, and any output
+    # files that are produced by this step that might be used in other steps
+    # or test cases.  This allows compass to determine dependencies between
+    # test cases and their steps.  This can be done either in "collect" or
+    # "setup".
+
+    # we will download the file "target" to the initial_condition_database
+    # from the data server (we don't have to give a URL) if it hasn't already
+    # been downloaded and then make a local link called "input_file.nc" to it
+    # in the step.  This won't happen yet (because we haven't decided if we're
+    # going to set up this step yet) but we're storing the information about
+    # what to do if we do decide we will set up this step later.
+    add_input_file(step, filename='input_file.nc', target=target,
+                   database='initial_condition_database')
+
+    # effectively, we're promising that this step creates a file
+    # "output_file.nc" that other steps could use as an input if they want to
+    add_output_file(step, filename='output_file.nc')
 
 
+# This function gets called to set up the test case.  It can add input, output,
+# namelist an streams files, just like "collect".  It can also do things that
+# depend on config options for the test case (but shouldn't set config options
+# because these might mess up other steps that share the same config options).
+# The function must take only the "step" and "config" arguments, so any
+# information you need should be added to "step" if it is not available in
+# "config"
 def setup(step, config):
     """
     Set up the test case in the work directory, including downloading any
@@ -40,23 +92,19 @@ def setup(step, config):
     Parameters
     ----------
     step : dict
-        A dictionary of properties of this step from the ``collect()`` function
+        A dictionary of properties of this step
 
     config : configparser.ConfigParser
         Configuration options for this step, a combination of the defaults for
-        the machine, core, configuration and testcase
+        the machine, core, configuration and test case
     """
     resolution = step['resolution']
-    testcase = step['testcase']
     # This is a way to handle a few parameters that are specific to different
-    # testcases or resolutions, all of which can be handled by this function
+    # test cases or resolutions, all of which can be handled by this function
     res_params = {'1km': {'parameter4': 1.0,
                           'parameter5': 500},
                   '2km': {'parameter4': 2.0,
                           'parameter5': 250}}
-
-    test_params = {'test1': {'filename': 'particle_regions.151113.nc'},
-                   'test2': {'filename': 'layer_depth.80Layer.180619.nc'}}
 
     # copy the appropriate parameters into the step dict for use in run
     if resolution not in res_params:
@@ -69,72 +117,33 @@ def setup(step, config):
     for param in res_params:
         step[param] = res_params[param]
 
-    if testcase not in test_params:
-        raise ValueError('Unsupported testcase name {}. Supported testcases '
-                         'are: {}'.format(testcase, list(test_params)))
-    test_params = test_params[testcase]
 
-    # add the parameters for this testcase to the step dictionary so they
-    # are available to the run() function
-    for param in test_params:
-        step[param] = test_params[param]
-
-    initial_condition_database = config.get('paths',
-                                            'initial_condition_database')
-    step_dir = step['work_dir']
-
-    # one of the required parts of setup is to define any input files from
-    # other steps or testcases that are required by this step, and any output
-    # files that are produced by this step that might be used in other steps
-    # or testcases.  This allows compass to determine dependencies between
-    # testcases and their steps
-    inputs = []
-    outputs = []
-
-    # download an input file if it's not already in the initial condition
-    # database
-    filename = download(
-        file_name=step['filename'],
-        url='https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/'
-            'mpas-ocean/initial_condition_database',
-        config=config, dest_path=initial_condition_database)
-
-    inputs.append(filename)
-
-    symlink(filename, os.path.join(step_dir, 'input_file.nc'))
-
-    # list all the output files that will be produced in the step1 subdirectory
-    for file in ['output_file.nc']:
-        outputs.append(os.path.join(step_dir, file))
-
-    step['inputs'] = inputs
-    step['outputs'] = outputs
-
-
+# This function runs the step.  It must take the 4 arguments "step",
+# "test_suite", "config" and "logger".  The step should then perform the main
+# "work" of the step such as running the model or doing other computations.
 def run(step, test_suite, config, logger):
     """
-    Run this step of the testcase
+    Run this step of the test case
 
     Parameters
     ----------
     step : dict
-        A dictionary of properties of this step from the ``collect()``
-        function, with modifications from the ``setup()`` function.
+        A dictionary of properties of this step
 
     test_suite : dict
         A dictionary of properties of the test suite
 
     config : configparser.ConfigParser
-        Configuration options for this testcase, a combination of the defaults
-        for the machine, core and configuration
+        Configuration options for this test case
 
     logger : logging.Logger
         A logger for output from the step
     """
-    test_config = config['example_compact']
-    parameter1 = test_config.getfloat('parameter1')
-    parameter2 = test_config.getboolean('parameter2')
+    section = config['example_compact']
+    parameter1 = section.getfloat('parameter1')
+    parameter2 = section.getboolean('parameter2')
     testcase = step['testcase']
 
+    # we just read in the input file and write it out to the output file
     ds = xarray.open_dataset('input_file.nc')
     write_netcdf(ds, 'output_file.nc')
