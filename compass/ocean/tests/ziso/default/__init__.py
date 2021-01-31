@@ -1,28 +1,26 @@
-from compass.testcase import run_steps, get_testcase_default
+from compass.testcase import set_testcase_subdir, add_step, run_steps
+from compass.namelist import add_namelist_file
 from compass.ocean.tests.ziso import initial_state, forward
 from compass.ocean.tests import ziso
 from compass.validate import compare_variables, compare_timers
 
 
-def collect(resolution):
+def collect(testcase):
     """
-    Get a dictionary of testcase properties
+    Update the dictionary of test case properties and add steps
 
     Parameters
     ----------
-    resolution : {'10km'}
-        The resolution of the mesh
-
-    Returns
-    -------
     testcase : dict
-        A dict of properties of this test case, including its steps
+        A dictionary of properties of this test case, which can be updated
     """
-    description = 'Zonally periodic Idealized Southern Ocean (ZISO) {} '\
-                  'default test'.format(resolution)
+    resolution = testcase['resolution']
+    testcase['description'] = 'Zonally periodic Idealized Southern Ocean '\
+                              '(ZISO) {} default test'.format(resolution)
+
     module = __name__
 
-    res_params = {'20km': {'core_count': 4, 'min_cores': 2,
+    res_params = {'20km': {'cores': 4, 'min_cores': 2,
                            'max_memory': 1000, 'max_disk': 1000}}
 
     if resolution not in res_params:
@@ -31,43 +29,34 @@ def collect(resolution):
 
     res_params = res_params[resolution]
 
-    name = module.split('.')[-1]
-    subdir = '{}/{}'.format(resolution, name)
-    steps = dict()
-    step = initial_state.collect(resolution)
-    steps[step['name']] = step
+    subdir = '{}/{}'.format(resolution, testcase['name'])
+    set_testcase_subdir(testcase, subdir)
 
-    # particles are on only for the 20km test case
-    if resolution in ['20km']:
-        namelist_file = 'namelist.{}.forward'.format(resolution)
-    else:
-        namelist_file = None
-    step = forward.collect(resolution, cores=res_params['core_count'],
-                           min_cores=res_params['min_cores'],
-                           max_memory=res_params['max_memory'],
-                           max_disk=res_params['max_disk'], threads=1,
-                           testcase_module=module, namelist_file=namelist_file)
-    steps[step['name']] = step
+    add_step(testcase, initial_state, resolution=resolution, with_frazil=False)
 
-    testcase = get_testcase_default(module, description, steps, subdir=subdir)
-    testcase['resolution'] = resolution
-
-    return testcase
+    step = add_step(testcase, forward, resolution=resolution,
+                    cores=res_params['cores'],
+                    min_cores=res_params['min_cores'],
+                    max_memory=res_params['max_memory'],
+                    max_disk=res_params['max_disk'], with_analysis=True,
+                    with_frazil=False)
+    if resolution == '20km':
+        # particles are on only for the 20km test case
+        add_namelist_file(step, module,
+                          'namelist.{}.forward'.format(resolution))
 
 
 def configure(testcase, config):
     """
-    Modify the configuration options for this testcase.
+    Modify the configuration options for this test case
 
     Parameters
     ----------
     testcase : dict
-        A dictionary of properties of this testcase from the ``collect()``
-        function
+        A dictionary of properties of this test case
 
     config : configparser.ConfigParser
-        Configuration options for this testcase, a combination of the defaults
-        for the machine, core and configuration
+        Configuration options for this test case
     """
     ziso.configure(testcase, config)
 
@@ -79,18 +68,16 @@ def run(testcase, test_suite, config, logger):
     Parameters
     ----------
     testcase : dict
-        A dictionary of properties of this testcase from the ``collect()``
-        function
+        A dictionary of properties of this test case
 
     test_suite : dict
         A dictionary of properties of the test suite
 
     config : configparser.ConfigParser
-        Configuration options for this testcase, a combination of the defaults
-        for the machine, core and configuration
+        Configuration options for this test case
 
     logger : logging.Logger
-        A logger for output from the testcase
+        A logger for output from the test case
     """
     work_dir = testcase['work_dir']
     run_steps(testcase, test_suite, config, logger)
