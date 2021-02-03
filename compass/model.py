@@ -1,5 +1,6 @@
 import os
 import numpy
+import xarray
 
 from mpas_tools.logging import check_call
 
@@ -127,7 +128,7 @@ def update_namelist_pio(namelist, config, cores, step_dir):
     namelist : str
         The name of the namelist file
 
-     config : configparser.ConfigParser
+    config : configparser.ConfigParser
         Configuration options for this test case
 
     cores : int
@@ -153,3 +154,64 @@ def update_namelist_pio(namelist, config, cores, step_dir):
 
     update(replacements=replacements, step_work_dir=step_dir,
            out_name=namelist)
+
+
+def make_graph_file(mesh_filename, graph_filename='graph.info',
+                    weight_field=None):
+    """
+    Make a graph file from the MPAS mesh for use in the Metis graph
+    partitioning software
+
+    Parameters
+    ----------
+     mesh_filename : str
+        The name of the input MPAS mesh file
+
+    graph_filename : str, optional
+        The name of the output graph file
+
+    weight_field : str
+        The name of a variable in the MPAS mesh file to use as a field of
+        weights
+    """
+
+    with xarray.open_dataset(mesh_filename) as ds:
+
+        nCells = ds.sizes['nCells']
+
+        nEdgesOnCell = ds.nEdgesOnCell.values
+        cellsOnCell = ds.cellsOnCell.values - 1
+        if weight_field is not None:
+            if weight_field in ds:
+                raise ValueError('weight_field {} not found in {}'.format(
+                    weight_field, mesh_filename))
+            weights = ds[weight_field].values
+        else:
+            weights = None
+
+    nEdges = 0
+    for i in range(nCells):
+        for j in range(nEdgesOnCell[i]):
+            if cellsOnCell[i][j] != -1:
+                nEdges = nEdges + 1
+
+    nEdges = nEdges/2
+
+    with open(graph_filename, 'w+') as graph:
+        if weights is None:
+            graph.write('{} {}\n'.format(nCells, nEdges))
+
+            for i in range(nCells):
+                for j in range(0, nEdgesOnCell[i]):
+                    if cellsOnCell[i][j] >= 0:
+                        graph.write('{} '.format(cellsOnCell[i][j]+1))
+                graph.write('\n')
+        else:
+            graph.write('{} {} 010\n'.format(nCells, nEdges))
+
+            for i in range(nCells):
+                graph.write('{} '.format(int(weights[i])))
+                for j in range(0, nEdgesOnCell[i]):
+                    if cellsOnCell[i][j] >= 0:
+                        graph.write('{} '.format(cellsOnCell[i][j] + 1))
+                graph.write('\n')
