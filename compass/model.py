@@ -113,9 +113,10 @@ def partition(cores, config, logger, graph_file='graph.info'):
         The name of the graph file to partition
 
     """
-    executable = config.get('parallel', 'partition_executable')
-    args = [executable, graph_file, '{}'.format(cores)]
-    check_call(args, logger)
+    if cores > 1:
+        executable = config.get('parallel', 'partition_executable')
+        args = [executable, graph_file, '{}'.format(cores)]
+        check_call(args, logger)
 
 
 def update_namelist_pio(namelist, config, cores, step_dir):
