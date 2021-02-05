@@ -133,9 +133,9 @@ def main():
 
                 maxLevelCell[iCell] = k
                 # Partial bottom cells
-                bottomDepth[iCell] = bottomDepthObserved[iCell]
+                #bottomDepth[iCell] = bottomDepthObserved[iCell]
                 # No partial bottom cells
-                #bottomDepth[iCell] = refBottomDepth[k]
+                bottomDepth[iCell] = refBottomDepth[k]
 
                 layerThickness[0, iCell, k] = bottomDepth[iCell] - refBottomDepth[k - 1]
                 break
@@ -154,6 +154,11 @@ def main():
             zMid[0, iCell, k] = zMid[0, iCell, k + 1] + 0.5 * \
                 (layerThickness[0, iCell, k + 1] + layerThickness[0, iCell, k])
     restingThickness[:, :] = layerThickness[0, :, :]
+
+    # Compute zMid (same, regardless of vertical coordinate)
+    for iCell in range(0, nCells):
+        if abs(bottomDepth[iCell] - sum(layerThickness[0,iCell,0:maxLevelCell[iCell]]))>1.0:
+            print(iCell,maxLevelCell[iCell],bottomDepth[iCell],sum(layerThickness[0,iCell,0:maxLevelCell[iCell]]))
 
     # add tracers
     S0 = 35.0
