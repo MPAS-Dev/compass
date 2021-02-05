@@ -1,0 +1,38 @@
+<streams>
+
+<immutable_stream name="input"
+                  filename_template="landice_grid.nc"/>
+
+<immutable_stream name="restart"
+                  type="input;output"
+                  filename_template="restart.$Y.nc"
+                  filename_interval="output_interval"
+                  output_interval="25000-00-00_00:00:00"
+                  clobber_mode="truncate"
+                  precision="double"
+                  input_interval="initial_only"/>
+
+<stream name="output"
+        type="output"
+        filename_template="output.nc"
+        output_interval="0100-00-00_00:00:00"
+        clobber_mode="truncate">
+
+    <stream name="basicmesh"/>
+    <var name="xtime"/>
+    <var name="daysSinceStart"/>
+    <var name="normalVelocity"/>
+    <var name="thickness"/>
+    <var name="temperature"/>
+    <var name="surfaceTemperature"/>
+    <var name="basalTemperature"/>
+    <var name="waterFrac"/>
+    <var name="basalMassBal"/>
+    <var name="enthalpy"/>
+    <var name="groundedBasalMassBal"/>
+    <var name="basalWaterThickness"/>
+
+</stream>
+
+
+</streams>
