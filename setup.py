@@ -29,7 +29,7 @@ os.chdir(here)
 
 data_files = package_files('compass', prefixes=['namelist', 'streams'],
                            extensions=['cfg', 'template', 'json', 'txt',
-                                       'geojson'])
+                                       'geojson', 'mat'])
 
 setup(name='compass',
       version=version,
