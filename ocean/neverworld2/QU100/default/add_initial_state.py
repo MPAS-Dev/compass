@@ -121,29 +121,46 @@ def main():
     T.add_EW_coast(-360, 360, NW2_latS, cw, cd)
     T.add_EW_coast(-360, 360, NW2_latN, cw, cd)
     bottomDepthObserved[:] = -T.z[:]
-
+    print('Depth range: ', min(bottomDepthObserved), max(bottomDepthObserved))
     # Compute maxLevelCell and layerThickness for z-level (variation only on top)
     vertCoordMovementWeights[:] = 0.0
     vertCoordMovementWeights[0] = 1.0
     maxLevelCell[:] = 2
     bottomDepth[:] = refBottomDepth[2]
+    print('bottomDepth range: ', min(bottomDepth), max(bottomDepth))
     for iCell in range(0, nCells):
-        for k in range(nVertLevels - 1, 0, -1):
+        for k in range(nVertLevels-1, 0, -1):
             if bottomDepthObserved[iCell] > refBottomDepth[k - 1]:
-
+                k = max(k, 2) #enforce minimun of 3 layers, i.e. 175m
                 maxLevelCell[iCell] = k
                 # Partial bottom cells
-                #bottomDepth[iCell] = bottomDepthObserved[iCell]
+                bottomDepth[iCell] = max(bottomDepthObserved[iCell], refBottomDepth[2])
                 # No partial bottom cells
-                bottomDepth[iCell] = refBottomDepth[k]
-
+                #bottomDepth[iCell] = refBottomDepth[k]
                 layerThickness[0, iCell, k] = bottomDepth[iCell] - refBottomDepth[k - 1]
                 break
-        layerThickness[0, iCell, 0:maxLevelCell[iCell] ] = refLayerThickness[0:maxLevelCell[iCell]]
-        layerThickness[0, iCell, 0] += ssh[iCell]
+        if bottomDepthObserved[iCell] <=  refBottomDepth[0]: 
+           print('do you ever get in this loop?')
+           k = 2 #enforce minimun of 3 layers, i.e. 175m
+           maxLevelCell[iCell] = k
+           bottomDepth[iCell] = refBottomDepth[k]
+           layerThickness[0, iCell, k] = bottomDepth[iCell] - refBottomDepth[k - 1]
+           #print(iCell, maxLevelCell[iCell],bottomDepth[iCell], layerThickness[0, iCell, 0:k+1] )
         # enforce minimum of 3 layers
-        maxLevelCell[iCell] = max(maxLevelCell[iCell],2)
-        bottomDepth[iCell] = max(bottomDepth[iCell],refBottomDepth[2])
+        #maxLevelCell[iCell] = max(maxLevelCell[iCell],2)
+        #bottomDepth[iCell] = max(bottomDepth[iCell],refBottomDepth[2])
+        #if maxLevelCell[iCell]<2:
+        #   print(iCell, maxLevelCell[iCell],bottomDepth[iCell])
+        #print(iCell, maxLevelCell[iCell])
+        #print(iCell, layerThickness[0, iCell, maxLevelCell[iCell] ], refLayerThickness[maxLevelCell[iCell]])
+        layerThickness[0, iCell, 0:maxLevelCell[iCell] ] = refLayerThickness[0:maxLevelCell[iCell]]
+        #print('after: ', iCell, layerThickness[0, iCell, 1], refLayerThickness[1])
+        layerThickness[0, iCell, 0] += ssh[iCell]
+        if bottomDepthObserved[iCell] <  refBottomDepth[2]:
+           print('shallow: ', iCell,  maxLevelCell[iCell], layerThickness[0, iCell, 0: maxLevelCell[iCell]+1], refLayerThickness[0: maxLevelCell[iCell]+1])
+           #print(iCell, layerThickness[0, iCell, 0] )
+    print('bottomDepth range: ', min(bottomDepth), max(bottomDepth))
+    #print('LayerThickness range: ', min(layerThickness), max(layerThickness))
 
     # Compute zMid (same, regardless of vertical coordinate)
     for iCell in range(0, nCells):
@@ -156,9 +173,10 @@ def main():
     restingThickness[:, :] = layerThickness[0, :, :]
 
     # Compute zMid (same, regardless of vertical coordinate)
-    for iCell in range(0, nCells):
-        if abs(bottomDepth[iCell] - sum(layerThickness[0,iCell,0:maxLevelCell[iCell]]))>1.0:
-            print(iCell,maxLevelCell[iCell],bottomDepth[iCell],sum(layerThickness[0,iCell,0:maxLevelCell[iCell]]))
+    #for iCell in range(0, nCells):
+    #    if abs(bottomDepth[iCell] - sum(layerThickness[0,iCell,0:maxLevelCell[iCell]+1]))>1.0:
+    #        print(iCell,maxLevelCell[iCell],bottomDepth[iCell],sum(layerThickness[0,iCell,0:maxLevelCell[iCell]+1]))
+    #        print(iCell,np.argmin(layerThickness[0,iCell,0:maxLevelCell[iCell]+1]), 'blab',min(layerThickness[0,iCell,0:maxLevelCell[iCell]+1]))
 
     # add tracers
     S0 = 35.0
@@ -170,17 +188,9 @@ def main():
     config_eos_linear_Tref = 15.0
     config_eos_linear_Sref = 35.0
     config_eos_linear_densityref = 1026.0
-    for k in range(0, nVertLevels):
-        activeCells = k <= maxLevelCell
-        salinity[0, activeCells, k] = S0
-# rho = rho0 - alpha * (T - T0)
-# T = T0 - 1/alpha *(rho - rho0)
-        temperature[0, activeCells, k] = config_eos_linear_Tref - 1/config_eos_linear_alpha*(refDensity[k] - config_eos_linear_densityref)
-
-    # initial velocity on edges
-    ds['normalVelocity'] = (('Time', 'nEdges', 'nVertLevels',), np.zeros([1, nEdges, nVertLevels]))
-
-    # Coriolis parameter
+    fCell = np.zeros([nCells])
+    fEdge = np.zeros([nEdges])
+    fCell = np.zeros([nCells])
     fCell = np.zeros([nCells])
     fEdge = np.zeros([nEdges])
     fVertex = np.zeros([nVertices])
