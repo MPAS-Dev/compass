@@ -145,22 +145,11 @@ def main():
            maxLevelCell[iCell] = k
            bottomDepth[iCell] = refBottomDepth[k]
            layerThickness[0, iCell, k] = bottomDepth[iCell] - refBottomDepth[k - 1]
-           #print(iCell, maxLevelCell[iCell],bottomDepth[iCell], layerThickness[0, iCell, 0:k+1] )
-        # enforce minimum of 3 layers
-        #maxLevelCell[iCell] = max(maxLevelCell[iCell],2)
-        #bottomDepth[iCell] = max(bottomDepth[iCell],refBottomDepth[2])
-        #if maxLevelCell[iCell]<2:
-        #   print(iCell, maxLevelCell[iCell],bottomDepth[iCell])
-        #print(iCell, maxLevelCell[iCell])
-        #print(iCell, layerThickness[0, iCell, maxLevelCell[iCell] ], refLayerThickness[maxLevelCell[iCell]])
         layerThickness[0, iCell, 0:maxLevelCell[iCell] ] = refLayerThickness[0:maxLevelCell[iCell]]
-        #print('after: ', iCell, layerThickness[0, iCell, 1], refLayerThickness[1])
         layerThickness[0, iCell, 0] += ssh[iCell]
-        if bottomDepthObserved[iCell] <  refBottomDepth[2]:
-           print('shallow: ', iCell,  maxLevelCell[iCell], layerThickness[0, iCell, 0: maxLevelCell[iCell]+1], refLayerThickness[0: maxLevelCell[iCell]+1])
-           #print(iCell, layerThickness[0, iCell, 0] )
+        #if bottomDepthObserved[iCell] <  refBottomDepth[2]:
+        #   print('shallow: ', iCell,  maxLevelCell[iCell], layerThickness[0, iCell, 0: maxLevelCell[iCell]+1], refLayerThickness[0: maxLevelCell[iCell]+1])
     print('bottomDepth range: ', min(bottomDepth), max(bottomDepth))
-    #print('LayerThickness range: ', min(layerThickness), max(layerThickness))
 
     # Compute zMid (same, regardless of vertical coordinate)
     for iCell in range(0, nCells):
@@ -172,7 +161,7 @@ def main():
                 (layerThickness[0, iCell, k + 1] + layerThickness[0, iCell, k])
     restingThickness[:, :] = layerThickness[0, :, :]
 
-    # Compute zMid (same, regardless of vertical coordinate)
+    # Check from Mark
     #for iCell in range(0, nCells):
     #    if abs(bottomDepth[iCell] - sum(layerThickness[0,iCell,0:maxLevelCell[iCell]+1]))>1.0:
     #        print(iCell,maxLevelCell[iCell],bottomDepth[iCell],sum(layerThickness[0,iCell,0:maxLevelCell[iCell]+1]))
