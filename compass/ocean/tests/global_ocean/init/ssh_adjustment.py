@@ -30,6 +30,28 @@ def collect(testcase, step):
     if 'cores' in step:
         step.setdefault('min_cores', step['cores'])
 
+    add_namelist_file(
+        step, 'compass.ocean.tests.global_ocean', 'namelist.forward')
+    add_namelist_options(step, {'config_AM_globalStats_enable': '.false.'})
+    add_namelist_file(step, 'compass.ocean.namelists', 'namelist.ssh_adjust')
+
+    add_streams_file(step,  'compass.ocean.streams', 'streams.ssh_adjust')
+    add_streams_file(step,  'compass.ocean.tests.global_ocean.init',
+                     'streams.ssh_adjust')
+
+    mesh_path = '{}/mesh/mesh'.format(get_mesh_relative_path(step))
+    init_path = '{}/init/initial_state'.format(
+        get_initial_condition_relative_path(step))
+
+    add_input_file(step, filename='adjusting_init0.nc',
+                   target='{}/initial_state.nc'.format(init_path))
+    add_input_file(step, filename='forcing_data.nc',
+                   target='{}/init_mode_forcing_data.nc'.format(init_path))
+    add_input_file(step, filename='graph.info',
+                   target='{}/culled_graph.info'.format(mesh_path))
+
+    add_output_file(step, filename='adjusted_init.nc')
+
 
 def setup(step, config):
     """
@@ -44,33 +66,10 @@ def setup(step, config):
     config : configparser.ConfigParser
         Configuration options for this test case
     """
-    step_dir = step['work_dir']
-
-    # generate namelist file
-    add_namelist_file(
-        step, 'compass.ocean.tests.global_ocean', 'namelist.forward')
-    add_namelist_options(step, {'config_AM_globalStats_enable': '.false.'})
-    add_namelist_file(step, 'compass.ocean.namelists', 'namelist.ssh_adjust')
     generate_namelist(step, config, mode='forward')
-
-    # generate the streams file
-    add_streams_file(step,  'compass.ocean.streams', 'streams.ssh_adjust')
     generate_streams(step, config, mode='forward')
 
     add_model_as_input(step, config)
-
-    mesh_path = '{}/mesh/mesh'.format(get_mesh_relative_path(step))
-    init_path = '{}/init/initial_state'.format(
-        get_initial_condition_relative_path(step))
-
-    add_input_file(step, filename='adjusting_init0.nc',
-                   target='{}/initial_state.nc'.format(init_path))
-    add_input_file(step, filename='forcing_data.nc',
-                   target='{}/init_mode_forcing_data.nc'.format(init_path))
-    add_input_file(step, filename='graph.info',
-                   target='{}/culled_graph.info'.format(mesh_path))
-
-    add_output_file(step, filename='adjusted_init.nc')
 
     # get the these properties from the config options
     for option in ['cores', 'min_cores', 'max_memory', 'max_disk',
