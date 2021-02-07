@@ -166,7 +166,7 @@ def run_suite(suite_name):
         except OSError:
             pass
 
-        all_succeeded = True
+        failures = 0
         cwd = os.getcwd()
         suite_start = time.time()
         test_times = dict()
@@ -202,7 +202,7 @@ def run_suite(suite_name):
                     logger.error('           case_outputs/{}.log'.format(
                         test_name))
                     success[test_name] = 'FAIL'
-                    all_succeeded = False
+                    failures += 1
                 test_times[test_name] = time.time() - test_start
 
             logger.info('')
@@ -220,10 +220,14 @@ def run_suite(suite_name):
         secs = int(numpy.ceil(suite_time - mins * 60))
         logger.info('Total runtime {:02d}:{:02d}'.format(mins, secs))
 
-        if all_succeeded:
+        if failures == 0:
             logger.info('PASS: All passed successfully!')
         else:
-            logger.error('FAIL: One or more tests failed, see above.')
+            if failures == 1:
+                message = '1 test'
+            else:
+                message = '{} tests'.format(failures)
+            logger.error('FAIL: {} failed, see above.'.format(message))
             sys.exit(1)
 
 
