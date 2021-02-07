@@ -2,7 +2,7 @@ from importlib.resources import path
 
 from compass.testcase import set_testcase_subdir, add_step, run_steps
 from compass.ocean.tests.global_ocean.description import get_description
-from compass.ocean.tests.global_ocean.init import get_init_sudbdir
+from compass.ocean.tests.global_ocean.subdir import get_forward_sudbdir
 from compass.ocean.tests import global_ocean
 from compass.io import symlink
 from compass.ocean.tests.global_ocean.files_for_e3sm import \
@@ -31,12 +31,11 @@ def collect(testcase):
         mesh_name, initial_condition, with_bgc, time_integrator,
         description='files for E3SM')
 
-    init_subdir = get_init_sudbdir(mesh_name, initial_condition, with_bgc)
-    subdir = '{}/{}/{}'.format(init_subdir, name, time_integrator)
+    subdir = get_forward_sudbdir(mesh_name, initial_condition, with_bgc,
+                                 time_integrator, name)
     set_testcase_subdir(testcase, subdir)
 
-    restart_filename = '../../spinup/{}/{}'.format(time_integrator,
-                                                   restart_filename)
+    restart_filename = '../spinup/{}'.format(restart_filename)
 
     add_step(testcase, ocean_initial_condition, mesh_name=mesh_name,
              restart_filename=restart_filename)

@@ -27,34 +27,81 @@ def collect():
         add_testcase(testcases, mesh, mesh_name=mesh_name,
                      with_ice_shelf_cavities=with_ice_shelf_cavities)
 
-        for initial_condition in ['PHC', 'EN4_1900']:
-            for with_bgc in [False, True]:
-                add_testcase(testcases, init, mesh_name=mesh_name,
-                             with_ice_shelf_cavities=with_ice_shelf_cavities,
-                             initial_condition=initial_condition,
-                             with_bgc=with_bgc)
-                for test in [performance_test, restart_test, decomp_test,
-                             threads_test, analysis_test, daily_output_test]:
-                    for time_integrator in ['split_explicit', 'RK4']:
-                        add_testcase(
-                            testcases, test, mesh_name=mesh_name,
-                            with_ice_shelf_cavities=with_ice_shelf_cavities,
-                            initial_condition=initial_condition,
-                            with_bgc=with_bgc, time_integrator=time_integrator)
-                for time_integrator in ['split_explicit', 'RK4']:
-                    testcase = add_testcase(
-                        testcases, qu240_spinup, mesh_name=mesh_name,
-                        with_ice_shelf_cavities=with_ice_shelf_cavities,
-                        initial_condition=initial_condition,
-                        with_bgc=with_bgc, time_integrator=time_integrator)
+        initial_condition = 'PHC'
+        with_bgc = False
+        time_integrator = 'split_explicit'
+        add_testcase(testcases, init, mesh_name=mesh_name,
+                     with_ice_shelf_cavities=with_ice_shelf_cavities,
+                     initial_condition=initial_condition,
+                     with_bgc=with_bgc)
+        for test in [performance_test, restart_test, decomp_test,
+                     threads_test, analysis_test, daily_output_test]:
+            add_testcase(
+                testcases, test, mesh_name=mesh_name,
+                with_ice_shelf_cavities=with_ice_shelf_cavities,
+                initial_condition=initial_condition,
+                with_bgc=with_bgc, time_integrator=time_integrator)
 
-                    restart_filename = testcase['restart_filenames'][-1]
-                    add_testcase(
-                        testcases, files_for_e3sm, mesh_name=mesh_name,
-                        with_ice_shelf_cavities=with_ice_shelf_cavities,
-                        initial_condition=initial_condition,
-                        with_bgc=with_bgc, time_integrator=time_integrator,
-                        restart_filename=restart_filename)
+        testcase = add_testcase(
+            testcases, qu240_spinup, mesh_name=mesh_name,
+            with_ice_shelf_cavities=with_ice_shelf_cavities,
+            initial_condition=initial_condition,
+            with_bgc=with_bgc, time_integrator=time_integrator)
+
+        restart_filename = testcase['restart_filenames'][-1]
+        add_testcase(
+            testcases, files_for_e3sm, mesh_name=mesh_name,
+            with_ice_shelf_cavities=with_ice_shelf_cavities,
+            initial_condition=initial_condition,
+            with_bgc=with_bgc, time_integrator=time_integrator,
+            restart_filename=restart_filename)
+
+        time_integrator = 'RK4'
+        for test in [performance_test, restart_test, decomp_test,
+                     threads_test]:
+            add_testcase(
+                testcases, test, mesh_name=mesh_name,
+                with_ice_shelf_cavities=with_ice_shelf_cavities,
+                initial_condition=initial_condition,
+                with_bgc=with_bgc, time_integrator=time_integrator)
+
+        time_integrator = 'split_explicit'
+        initial_condition = 'EN4_1900'
+        with_bgc = False
+        add_testcase(testcases, init, mesh_name=mesh_name,
+                     with_ice_shelf_cavities=with_ice_shelf_cavities,
+                     initial_condition=initial_condition,
+                     with_bgc=with_bgc)
+        add_testcase(testcases, performance_test, mesh_name=mesh_name,
+                     with_ice_shelf_cavities=with_ice_shelf_cavities,
+                     initial_condition=initial_condition,
+                     with_bgc=with_bgc,
+                     time_integrator=time_integrator)
+        testcase = add_testcase(
+            testcases, qu240_spinup, mesh_name=mesh_name,
+            with_ice_shelf_cavities=with_ice_shelf_cavities,
+            initial_condition=initial_condition,
+            with_bgc=with_bgc, time_integrator=time_integrator)
+
+        restart_filename = testcase['restart_filenames'][-1]
+        add_testcase(
+            testcases, files_for_e3sm, mesh_name=mesh_name,
+            with_ice_shelf_cavities=with_ice_shelf_cavities,
+            initial_condition=initial_condition,
+            with_bgc=with_bgc, time_integrator=time_integrator,
+            restart_filename=restart_filename)
+
+        with_bgc = True
+        initial_condition = 'PHC'
+        add_testcase(testcases, init, mesh_name=mesh_name,
+                     with_ice_shelf_cavities=with_ice_shelf_cavities,
+                     initial_condition=initial_condition,
+                     with_bgc=with_bgc)
+        add_testcase(testcases, performance_test, mesh_name=mesh_name,
+                     with_ice_shelf_cavities=with_ice_shelf_cavities,
+                     initial_condition=initial_condition,
+                     with_bgc=with_bgc,
+                     time_integrator=time_integrator)
 
     # for other meshes, we do fewer tests
     for mesh_name, with_ice_shelf_cavities in [('EC30to60', False),
