@@ -3,7 +3,7 @@ import os
 
 def get_init_sudbdir(mesh_name, initial_condition, with_bgc):
     """
-    Get the subdirectory specific to the initial condition that all testscases
+    Get the subdirectory specific to the initial condition that all test cases
     (other than mesh) are under
 
     Parameters
@@ -21,13 +21,54 @@ def get_init_sudbdir(mesh_name, initial_condition, with_bgc):
     -------
     init_subdir : str
         The subdirectory
-
     """
     if with_bgc:
         init_subdir = '{}/{}_BGC'.format(mesh_name, initial_condition)
     else:
         init_subdir = '{}/{}'.format(mesh_name, initial_condition)
     return init_subdir
+
+
+def get_forward_sudbdir(mesh_name, initial_condition, with_bgc,
+                        time_integrator, name):
+    """
+    Get the subdirectory specific to the initial condition that all test cases
+    (other than mesh) are under
+
+    Parameters
+    ----------
+    mesh_name : str
+        The name of the mesh
+
+    initial_condition : {'PHC', 'EN4_1900'}
+        The initial condition to build
+
+    with_bgc : bool
+        Whether to include BGC fields in the initial condition
+
+    time_integrator : {'split_explicit', 'RK4'}
+        The time integrator for forward runs
+
+    name : str
+        The name of the test case
+
+    Returns
+    -------
+    init_subdir : str
+        The subdirectory
+    """
+
+    init_subdir = get_init_sudbdir(mesh_name, initial_condition, with_bgc)
+    if time_integrator == 'split_explicit':
+        # this is the default so we won't make a subdir for the time integrator
+        subdir = '{}/{}'.format(init_subdir, name)
+    elif time_integrator == 'RK4':
+        subdir = '{}/{}/{}'.format(init_subdir, time_integrator, name)
+    else:
+        raise ValueError('Unexpected time integrator {}'.format(
+            time_integrator))
+
+    return subdir
 
 
 def get_mesh_relative_path(step):

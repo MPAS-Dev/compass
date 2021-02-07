@@ -1,7 +1,7 @@
 from compass.testcase import set_testcase_subdir, add_step, run_steps
 from compass.ocean.tests.global_ocean import forward
 from compass.ocean.tests.global_ocean.description import get_description
-from compass.ocean.tests.global_ocean.init import get_init_sudbdir
+from compass.ocean.tests.global_ocean.subdir import get_forward_sudbdir
 from compass.ocean.tests import global_ocean
 from compass.validate import compare_variables, compare_timers
 from compass.namelist import add_namelist_file
@@ -29,8 +29,8 @@ def collect(testcase):
         mesh_name, initial_condition, with_bgc, time_integrator,
         description='performance and validation test')
 
-    init_subdir = get_init_sudbdir(mesh_name, initial_condition, with_bgc)
-    subdir = '{}/{}/{}'.format(init_subdir, name, time_integrator)
+    subdir = get_forward_sudbdir(mesh_name, initial_condition, with_bgc,
+                                 time_integrator, name)
     set_testcase_subdir(testcase, subdir)
 
     step = add_step(testcase, forward, mesh_name=mesh_name,
