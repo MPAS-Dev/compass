@@ -54,31 +54,34 @@ file can be empty or it can have code in it.  If it has functions inside of
 it, those functions act like they're directly in the package.  As an example,
 the compass file
 `compass/testcase/__init__.py <https://github.com/MPAS-Dev/compass/tree/master/compass/testcase/__init__.py>`_
-has a function :py:func:`compass.testcase.get_step_default()` that looks like
-this:
+has a function :py:func:`compass.testcase.add_testcase()` that looks like
+this (with the `docstring <https://www.python.org/dev/peps/pep-0257/>`_
+stripped out):
 
 .. code-block:: python
 
-    def get_step_default(module):
-        name = module.split('.')[-1]
-        step = {'module': module,
-                'name': name,
-                'subdir': name,
-                'setup': 'setup',
-                'run': 'run',
-                'inputs': [],
-                'outputs': []}
-        return step
+    def add_testcase(testcases, module, **kwargs):
+
+        testcase = _get_testcase_default(module.__name__)
+        testcase.update(kwargs)
+        module.collect(testcase)
+        if testcase['description'] is None:
+            raise ValueError('No description was added for {}'.format(
+                testcase['path']))
+        testcases.append(testcase)
+
+        return testcase
 
 The details aren't important.  The point is that the function can be imported
 like so:
 
 .. code-block:: python
 
-    from compass.testcase import get_step_default
+    from compass.testcase import add_testcase
 
 
-    step = get_step_default(__name__)
+    testcases = list()
+    add_testcase(testcases, some_testcase)
 
 So you don't ever refer to ``__init__.py``, it's like a hidden shortcut so the
 its contents can be referenced with just the subdirectory (package) name.
@@ -98,7 +101,7 @@ purposes of the ``compass`` package, every single file ending in ``.py`` in the
 ``compass`` package is a module (except maybe the ``__init__.py``, not sure
 about those...).
 
-As an exmaple, the ``compass`` package contains a module ``testcases.py`` (a
+As an example, the ``compass`` package contains a module ``testcases.py`` (a
 little confusing, since there's a ``testcase`` package too, but trust us for
 now that there's a good reason for this).  There's a function
 :py:func:`compass.testcases.collect()` in that module:
@@ -109,7 +112,7 @@ now that there's a good reason for this).  There's a function
 
     testcase_list = list()
 
-    for tests in [example_tests, ocean_tests]:
+    for tests in [example_tests, landice_tests, ocean_tests]:
         testcase_list.extend(tests.collect())
 
     validate(testcase_list)
@@ -178,12 +181,9 @@ baseline, and to compare timers with a baseline.  This functionality was all
 included in 4 very long scripts in :ref:`legacy_compass`.
 
 One example that doesn't have a clear analog in :ref:`legacy_compass` is the
-``compass.parallel`` module.  It contains two functions:
-:py:func:`compass.parallel.get_available_cores_and_nodes()`, which can find out
-the number of total cores and nodes available for running steps, and
-:py:func:`compass.parallel.update_namelist_pio()`, which updates the number of
-PIO tasks and the stride between tasks based on the number of cores that a step
-is actually running with.
+``compass.parallel`` module.  It contains a function
+:py:func:`compass.parallel.get_available_cores_and_nodes()` that can find out
+the number of total cores and nodes available for running steps.
 
 Within a core
 ~~~~~~~~~~~~~
