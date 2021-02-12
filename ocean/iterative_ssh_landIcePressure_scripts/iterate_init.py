@@ -97,7 +97,8 @@ for iterIndex in range(args.first_iteration, args.iteration_count):
     nVertLevels = len(initFile.dimensions['nVertLevels'])
     initSSH = initFile.variables['ssh'][0, :]
     bottomDepth = initFile.variables['bottomDepth'][:]
-    modifySSHMask = initFile.variables['modifySSHMask'][0, :]
+    modifyLandIcePressureMask = \
+        initFile.variables['modifyLandIcePressureMask'][0, :]
     landIcePressure = initFile.variables['landIcePressure'][0, :]
     lonCell = initFile.variables['lonCell'][:]
     latCell = initFile.variables['latCell'][:]
@@ -109,7 +110,7 @@ for iterIndex in range(args.first_iteration, args.iteration_count):
     topDensity = inSSHFile.variables['density'][nTime - 1, :, 0]
     inSSHFile.close()
 
-    mask = numpy.logical_and(maxLevelCell > 0, modifySSHMask == 1)
+    mask = numpy.logical_and(maxLevelCell > 0, modifyLandIcePressureMask == 1)
 
     deltaSSH = mask * (finalSSH - initSSH)
 
