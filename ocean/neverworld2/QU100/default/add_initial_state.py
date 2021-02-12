@@ -162,10 +162,10 @@ def main():
     restingThickness[:, :] = layerThickness[0, :, :]
 
     # Check from Mark
-    #for iCell in range(0, nCells):
-    #    if abs(bottomDepth[iCell] - sum(layerThickness[0,iCell,0:maxLevelCell[iCell]+1]))>1.0:
-    #        print(iCell,maxLevelCell[iCell],bottomDepth[iCell],sum(layerThickness[0,iCell,0:maxLevelCell[iCell]+1]))
-    #        print(iCell,np.argmin(layerThickness[0,iCell,0:maxLevelCell[iCell]+1]), 'blab',min(layerThickness[0,iCell,0:maxLevelCell[iCell]+1]))
+    for iCell in range(0, nCells):
+        if abs(bottomDepth[iCell] - sum(layerThickness[0,iCell,0:maxLevelCell[iCell]+1]))>1.0:
+            print(iCell,maxLevelCell[iCell],bottomDepth[iCell],sum(layerThickness[0,iCell,0:maxLevelCell[iCell]+1]))
+            print(iCell,np.argmin(layerThickness[0,iCell,0:maxLevelCell[iCell]+1]), 'blab',min(layerThickness[0,iCell,0:maxLevelCell[iCell]+1]))
 
     # add tracers
     S0 = 35.0
@@ -177,6 +177,17 @@ def main():
     config_eos_linear_Tref = 15.0
     config_eos_linear_Sref = 35.0
     config_eos_linear_densityref = 1026.0
+    for k in range(0, nVertLevels):
+        activeCells = k <= maxLevelCell
+        salinity[0, activeCells, k] = S0
+# rho = rho0 - alpha * (T - T0)
+# T = T0 - 1/alpha *(rho - rho0)
+        temperature[0, activeCells, k] = config_eos_linear_Tref - 1/config_eos_linear_alpha*(refDensity[k] - config_eos_linear_densityref)
+
+    # initial velocity on edges
+    ds['normalVelocity'] = (('Time', 'nEdges', 'nVertLevels',), np.zeros([1, nEdges, nVertLevels]))
+
+    # Coriolis parameter
     fCell = np.zeros([nCells])
     fEdge = np.zeros([nEdges])
     fCell = np.zeros([nCells])
