@@ -31,7 +31,7 @@ def cellWidthVsLatLon():
 
 def main():
     cellWidth, lon, lat = cellWidthVsLatLon()
-    build_spherical_mesh(cellWidth, lon, lat, out_filename='base_mesh.nc')
+    build_spherical_mesh(cellWidth, lon, lat, out_filename='jigsaw_mesh.nc')
 
 
 if __name__ == '__main__':
