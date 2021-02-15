@@ -89,6 +89,11 @@ def main():
                             ds2.isel(Time=iTime), cellMask):
             success = False
 
+        print('  checking density')
+        if not compare_vars('density', ds1.isel(Time=0),
+                            ds2.isel(Time=iTime), cellMask):
+            success = False
+
         print('  checking "inner" normal velocity')
         if not compare_vars('normalVelocity', ds1.isel(Time=0),
                             ds2.isel(Time=iTime), edgeMaskInner):
