@@ -32,15 +32,14 @@
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
     
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="compass.streams.read" href="compass.streams.read.html" />
-    <link rel="prev" title="compass.parallel.update_namelist_pio" href="compass.parallel.update_namelist_pio.html" /> 
+    <link rel="next" title="compass.streams.add_streams_file" href="compass.streams.add_streams_file.html" />
+    <link rel="prev" title="compass.parallel.get_available_cores_and_nodes" href="compass.parallel.get_available_cores_and_nodes.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -105,6 +104,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../command_line.html">Command-line interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cores.html">Cores</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ocean/index.html">Ocean core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../framework.html">Framework</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../docs.html">Documentation</a></li>
@@ -134,34 +134,6 @@
 <p class="caption"><span class="caption-text">Versions</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../versions.html">Code and Documentation Versions</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Legacy User's guide</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/users_guide/overview.html">Quick Start</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/users_guide/scripts.html">Scripts</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Legacy Ocean Test Cases</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/ocean/introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/ocean/test_cases/index.html">Ocean test cases</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Legacy Instructions for Machines</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/machine_specific_instructions/slurm.html">Slurm job queueing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/machine_specific_instructions/lanl.html">LANL Institutional Computing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/machine_specific_instructions/nersc.html">NERSC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/machine_specific_instructions/anvil.html">Anvil/Blues</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/machine_specific_instructions/linux.html">Personal Linux/OSX Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/machine_specific_instructions/osx.html">Personal OSX Machine</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Legacy Developer's guide</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/developers_guide/config.html">config</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/developers_guide/driver_script.html">driver_script</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/developers_guide/template.html">template</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/developers_guide/regression_suite.html">regression_suite</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/developers_guide/run_config.html">run_config</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/developers_guide/building_docs.html">Building the Documentation</a></li>
 </ul>
 
             
@@ -235,7 +207,7 @@
 <h1>compass.provenance.write<a class="headerlink" href="#compass-provenance-write" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt id="compass.provenance.write">
-<code class="sig-prename descclassname">compass.provenance.</code><code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">work_dir</span></em>, <em class="sig-param"><span class="n">testcases</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compass/provenance.html#write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compass.provenance.write" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">compass.provenance.</span></code><code class="sig-name descname"><span class="pre">write</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">work_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">testcases</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compass/provenance.html#write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.provenance.write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a file with provenance, such as the git version, conda packages,
 command, and test cases, to the work directory</p>
 <dl class="field-list simple">
@@ -256,8 +228,8 @@ command, and test cases, to the work directory</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="compass.streams.read.html" class="btn btn-neutral float-right" title="compass.streams.read" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="compass.parallel.update_namelist_pio.html" class="btn btn-neutral float-left" title="compass.parallel.update_namelist_pio" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="compass.streams.add_streams_file.html" class="btn btn-neutral float-right" title="compass.streams.add_streams_file" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="compass.parallel.get_available_cores_and_nodes.html" class="btn btn-neutral float-left" title="compass.parallel.get_available_cores_and_nodes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

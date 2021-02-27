@@ -32,7 +32,6 @@
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -116,18 +115,14 @@
 <li class="toctree-l3"><a class="reference internal" href="#inputs-and-outputs">inputs and outputs</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#step-dictionary">step dictionary</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dev-step-collect">collect()</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#setup">setup()</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#namelists">namelists</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#streams">streams</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#downloads-symlinks-inputs-and-outputs">downloads, symlinks, inputs and outputs</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="#setup">setup()</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dev-step-run">run()</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="examples/index.html">Examples core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ocean/index.html">Ocean core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="framework.html">Framework</a></li>
 <li class="toctree-l1"><a class="reference internal" href="docs.html">Documentation</a></li>
@@ -137,34 +132,6 @@
 <p class="caption"><span class="caption-text">Versions</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../versions.html">Code and Documentation Versions</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Legacy User's guide</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../legacy/users_guide/overview.html">Quick Start</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../legacy/users_guide/scripts.html">Scripts</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Legacy Ocean Test Cases</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../legacy/ocean/introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../legacy/ocean/test_cases/index.html">Ocean test cases</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Legacy Instructions for Machines</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../legacy/machine_specific_instructions/slurm.html">Slurm job queueing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../legacy/machine_specific_instructions/lanl.html">LANL Institutional Computing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../legacy/machine_specific_instructions/nersc.html">NERSC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../legacy/machine_specific_instructions/anvil.html">Anvil/Blues</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../legacy/machine_specific_instructions/linux.html">Personal Linux/OSX Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../legacy/machine_specific_instructions/osx.html">Personal OSX Machine</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Legacy Developer's guide</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../legacy/developers_guide/config.html">config</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../legacy/developers_guide/driver_script.html">driver_script</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../legacy/developers_guide/template.html">template</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../legacy/developers_guide/regression_suite.html">regression_suite</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../legacy/developers_guide/run_config.html">run_config</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../legacy/developers_guide/building_docs.html">Building the Documentation</a></li>
 </ul>
 
             
@@ -235,10 +202,10 @@
   <div class="section" id="cores">
 <span id="dev-cores"></span><h1>Cores<a class="headerlink" href="#cores" title="Permalink to this headline">¶</a></h1>
 <p>The test cases in compass are organized by “core”, corresponding to a dynamical
-core in MPAS, and then into “configurations”.  Currently, there are two cores,
-<code class="docutils literal notranslate"><span class="pre">examples</span></code> which simply houses some very basic examples (as the name implies)
-and <code class="docutils literal notranslate"><span class="pre">ocean</span></code>, which encompasses all the test cases for MPAS-Ocean.   Test
-cases for MALI will be added to the <code class="docutils literal notranslate"><span class="pre">landice</span></code> core in the near future.</p>
+core in MPAS, and then into “configurations”.  Currently, there are three
+cores, <code class="docutils literal notranslate"><span class="pre">examples</span></code> which simply houses some very basic examples (as the name
+implies); <code class="docutils literal notranslate"><span class="pre">landice</span></code>, which has test cases for MALI; and <code class="docutils literal notranslate"><span class="pre">ocean</span></code>, which
+encompasses all the test cases for MPAS-Ocean.</p>
 <p>From a developer’s perspective, a core is a package within <code class="docutils literal notranslate"><span class="pre">compass</span></code> that:</p>
 <ol class="arabic simple">
 <li><p>contains a <code class="docutils literal notranslate"><span class="pre">tests</span></code> package, which contains packages for each
@@ -284,10 +251,14 @@ from the configuration.  This would look something like
 default value for the <code class="docutils literal notranslate"><span class="pre">mpas_model</span></code> path in the <code class="docutils literal notranslate"><span class="pre">[paths]</span></code> section.
 Typically, it will also define the paths to the model executable and the
 default namelist and streams files for “forward mode” (and, for some cores,
-“init mode”).  From the <code class="docutils literal notranslate"><span class="pre">examples</span></code> core, these the MPAS dynamical core
-is given the dummy name <code class="docutils literal notranslate"><span class="pre">core</span></code> (which does not actually exist).  This would
-be replaced by <code class="docutils literal notranslate"><span class="pre">ocean</span></code> or <code class="docutils literal notranslate"><span class="pre">landice</span></code> throughout the config file for those
-cores:</p>
+“init mode”).  From the <code class="docutils literal notranslate"><span class="pre">examples</span></code> core, the MPAS dynamical core is given
+the dummy name <code class="docutils literal notranslate"><span class="pre">core</span></code> (which does not actually exist).  This would be
+replaced by the name of the dynamical core (<code class="docutils literal notranslate"><span class="pre">ocean</span></code> or <code class="docutils literal notranslate"><span class="pre">landice</span></code>)
+throughout the config file for those cores.</p>
+<p>The config file also contains the name of a subdirectory on the
+<a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/">LCRC server</a>
+for the dynamical core in the <code class="docutils literal notranslate"><span class="pre">core_path</span></code> option in the <code class="docutils literal notranslate"><span class="pre">downloads</span></code>
+section:</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># This config file has default config options for the &quot;examples&quot; core</span>
 
 <span class="c1"># The paths section points compass to external paths</span>
@@ -320,20 +291,27 @@ cores:</p>
 <span class="c1"># to the MPAS core executable by default.</span>
 <span class="k">[executables]</span>
 <span class="na">model</span> <span class="o">=</span> <span class="s">${paths:mpas_model}/core_model</span>
+
+<span class="c1"># Options related to downloading files</span>
+<span class="k">[download]</span>
+
+<span class="c1"># the path on the server, which is the one for MPAS-Ocean since we use some of</span>
+<span class="c1"># its files</span>
+<span class="na">core_path</span> <span class="o">=</span> <span class="s">mpas-ocean</span>
 </pre></div>
 </div>
 <div class="section" id="configurations">
 <span id="dev-configs"></span><h2>Configurations<a class="headerlink" href="#configurations" title="Permalink to this headline">¶</a></h2>
 <p>Configurations are the next level of test-case organization below
-<a class="reference internal" href="#dev-cores"><span class="std std-ref">Cores</span></a>.  Typically, the test cases within a configuration are part of
-the same framework, serve a similar purpose, or are variants on one another.
-Often, they have a common topography and initial condition, perhaps with
-different mesh resolutions.  It is common for a configuration to include
-“framework” modules that are shared between its test cases and steps (but
-typically not with other configurations).  Each core will typically include a
-mix of “idealized” configurations (e.g. <a class="reference internal" href="ocean/configurations/baroclinic_channel.html#dev-ocean-baroclinic-channel"><span class="std std-ref">baroclinic_channel</span></a> or
-<a class="reference internal" href="ocean/configurations/ziso.html#dev-ocean-ziso"><span class="std std-ref">ziso</span></a>) and “realistic” domains (e.g.
-<a class="reference internal" href="ocean/configurations/global_ocean.html#dev-ocean-global-ocean"><span class="std std-ref">global_ocean</span></a>).</p>
+<a class="reference internal" href="#dev-cores"><span class="std std-ref">Cores</span></a>.  Typically, the test cases within a configuration are
+in some way conceptually linked, serving a similar purpose or being variants on
+one another. Often, they have a common topography and initial condition,
+perhaps with different mesh resolutions, parameters, or both.  It is common for
+a configuration to include “framework” modules that are shared between its test
+cases and steps (but typically not with other configurations).  Each core will
+typically include a mix of “idealized” configurations (e.g.
+<a class="reference internal" href="ocean/configurations/baroclinic_channel.html#dev-ocean-baroclinic-channel"><span class="std std-ref">baroclinic_channel</span></a> or <a class="reference internal" href="ocean/configurations/ziso.html#dev-ocean-ziso"><span class="std std-ref">ziso</span></a>) and “realistic”
+domains (e.g. <a class="reference internal" href="ocean/configurations/global_ocean.html#dev-ocean-global-ocean"><span class="std std-ref">global_ocean</span></a>).</p>
 <p>Each configuration is a python package within the core’s <code class="docutils literal notranslate"><span class="pre">tests</span></code> package.
 While it is not required, a configuration will typically include a config file
 with a set of default config options that are the starting point for all its
@@ -352,21 +330,19 @@ file for the <code class="docutils literal notranslate"><span class="pre">exampl
 <p>Some configuration options will provide defaults for config options that are
 shared across the core (as is the case for the <code class="docutils literal notranslate"><span class="pre">[vertical_grid]</span></code> config
 section in the ocean core).  But most config options for a configuration will
-typically go into a section with the same name as teh configuration, as in the
+typically go into a section with the same name as the configuration, as in the
 example above.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> file for the configuration must define a <code class="docutils literal notranslate"><span class="pre">collect()</span></code>
 function that makes a list of test cases within the configuration.  This list
-is made by calling the <code class="docutils literal notranslate"><span class="pre">collect()</span></code> functions of each test case.  Returning
-to the <code class="docutils literal notranslate"><span class="pre">example_compact</span></code> configuration, the function
-<code class="xref py py-func docutils literal notranslate"><span class="pre">compass.examples.test.example_compact.collect()</span></code> looks like this:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.examples.tests.example_compact</span> <span class="kn">import</span> <span class="n">test1</span><span class="p">,</span> <span class="n">test2</span>
-
-
-<span class="k">def</span> <span class="nf">collect</span><span class="p">():</span>
+is made by calling <a class="reference internal" href="generated/compass.testcase.add_testcase.html#compass.testcase.add_testcase" title="compass.testcase.add_testcase"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.add_testcase()</span></code></a>, passing in the
+module for each test case.  Returning to the <code class="docutils literal notranslate"><span class="pre">example_compact</span></code> configuration,
+the function <a class="reference internal" href="examples/generated/compass.examples.tests.example_compact.collect.html#compass.examples.tests.example_compact.collect" title="compass.examples.tests.example_compact.collect"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.examples.tests.example_compact.collect()</span></code></a> looks
+like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">collect</span><span class="p">():</span>
     <span class="n">testcases</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">resolution</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;1km&#39;</span><span class="p">,</span> <span class="s1">&#39;2km&#39;</span><span class="p">]:</span>
         <span class="k">for</span> <span class="n">test</span> <span class="ow">in</span> <span class="p">[</span><span class="n">test1</span><span class="p">,</span> <span class="n">test2</span><span class="p">]:</span>
-            <span class="n">testcases</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">test</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">))</span>
+            <span class="n">add_testcase</span><span class="p">(</span><span class="n">testcases</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">testcases</span>
 </pre></div>
@@ -379,7 +355,7 @@ resolution.  We will explore this further when we talk about
 <p>It is also common for a configuration to have a <code class="docutils literal notranslate"><span class="pre">configure()</span></code> function that
 can be shared across its tests, see <a class="reference internal" href="#dev-testcase-configure"><span class="std std-ref">configure()</span></a>.</p>
 <p>An example of a shared <code class="docutils literal notranslate"><span class="pre">configure()</span></code> function is
-<code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.test.baroclinic_channel.configure()</span></code>:</p>
+<a class="reference internal" href="ocean/generated/compass.ocean.tests.baroclinic_channel.configure.html#compass.ocean.tests.baroclinic_channel.configure" title="compass.ocean.tests.baroclinic_channel.configure"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.tests.baroclinic_channel.configure()</span></code></a>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="n">testcase</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
     <span class="n">resolution</span> <span class="o">=</span> <span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;resolution&#39;</span><span class="p">]</span>
     <span class="n">res_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;10km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nx&#39;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
@@ -415,15 +391,15 @@ files that is shared among test cases and steps.</p>
 </div>
 <div class="section" id="test-cases">
 <span id="dev-testcases"></span><h2>Test cases<a class="headerlink" href="#test-cases" title="Permalink to this headline">¶</a></h2>
-<p>In many ways, test cases are the fundamental building blocks of <code class="docutils literal notranslate"><span class="pre">compass</span></code>,
-since a user can’t set up an individual step of test case (tough they can run
-the steps one at a time).</p>
+<p>In many ways, test cases are compass’s fundamental building blocks, since a
+user can’t set up an individual step of test case (tough they can run the steps
+one at a time).</p>
 <p>A test case can be a module but is usually a python package so it can
 incorporate modules for its steps and/or config files, namelists, and streams
-files.  The test case must include <code class="docutils literal notranslate"><span class="pre">collect()</span></code>, <code class="docutils literal notranslate"><span class="pre">configure()</span></code> and <code class="docutils literal notranslate"><span class="pre">run()</span></code>
-functions with the <a class="reference external" href="https://en.wikipedia.org/wiki/API">API</a> given below.
-(Technically, you can name these functions something else but we don’t suggest
-doing this.)</p>
+files.  The test case must include <code class="docutils literal notranslate"><span class="pre">collect()</span></code> and <code class="docutils literal notranslate"><span class="pre">run()</span></code> functions with
+the <a class="reference external" href="https://en.wikipedia.org/wiki/API">API</a> given below. Most test cases
+will also have a <code class="docutils literal notranslate"><span class="pre">configure()</span></code> function to add to the config options, but
+this is not required.</p>
 <div class="section" id="testcase-dictionary">
 <span id="dev-testcase-dict"></span><h3>testcase dictionary<a class="headerlink" href="#testcase-dictionary" title="Permalink to this headline">¶</a></h3>
 <p>As discussed previously, we have opted to keep track of the data associated
@@ -431,118 +407,102 @@ with a test case using <a class="reference internal" href="overview.html#dev-dic
 <p>The <code class="docutils literal notranslate"><span class="pre">testcase</span></code> dictionary will typically look like this example from the
 <code class="docutils literal notranslate"><span class="pre">ocean/baroclinic_channel/10km/default</span></code> test case at the beginning of
 <a class="reference internal" href="ocean/generated/compass.ocean.tests.baroclinic_channel.default.run.html#compass.ocean.tests.baroclinic_channel.default.run" title="compass.ocean.tests.baroclinic_channel.default.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.tests.baroclinic_channel.default.run()</span></code></a>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">testcase</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;module&#39;</span><span class="p">:</span> <span class="s1">&#39;compass.ocean.tests.baroclinic_channel.default&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;baroclinic channel 10km default&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;steps&#39;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s1">&#39;initial_state&#39;</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="s1">&#39;module&#39;</span><span class="p">:</span> <span class="s1">&#39;compass.ocean.tests.baroclinic_channel.initial_state&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;initial_state&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;subdir&#39;</span><span class="p">:</span> <span class="s1">&#39;initial_state&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;setup&#39;</span><span class="p">:</span> <span class="s1">&#39;setup&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;run&#39;</span><span class="p">:</span> <span class="s1">&#39;run&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;inputs&#39;</span><span class="p">:</span> <span class="p">[],</span>
-                    <span class="s1">&#39;outputs&#39;</span><span class="p">:</span> <span class="p">[],</span>
-                    <span class="s1">&#39;resolution&#39;</span><span class="p">:</span> <span class="s1">&#39;10km&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-                    <span class="s1">&#39;min_cores&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-                    <span class="s1">&#39;max_memory&#39;</span><span class="p">:</span> <span class="mi">8000</span><span class="p">,</span>
-                    <span class="s1">&#39;max_disk&#39;</span><span class="p">:</span> <span class="mi">8000</span><span class="p">,</span>
-                    <span class="s1">&#39;testcase&#39;</span><span class="p">:</span> <span class="s1">&#39;default&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;testcase_subdir&#39;</span><span class="p">:</span> <span class="s1">&#39;10km/default&#39;</span><span class="p">},</span>
-                <span class="s1">&#39;forward&#39;</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="s1">&#39;module&#39;</span><span class="p">:</span> <span class="s1">&#39;compass.ocean.tests.baroclinic_channel.forward&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;forward&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;subdir&#39;</span><span class="p">:</span> <span class="s1">&#39;forward&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;setup&#39;</span><span class="p">:</span> <span class="s1">&#39;setup&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;run&#39;</span><span class="p">:</span> <span class="s1">&#39;run&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;inputs&#39;</span><span class="p">:</span> <span class="p">[],</span>
-                    <span class="s1">&#39;outputs&#39;</span><span class="p">:</span> <span class="p">[],</span>
-                    <span class="s1">&#39;resolution&#39;</span><span class="p">:</span> <span class="s1">&#39;10km&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-                    <span class="s1">&#39;max_memory&#39;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
-                    <span class="s1">&#39;max_disk&#39;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
-                    <span class="s1">&#39;min_cores&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-                    <span class="s1">&#39;threads&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-                    <span class="s1">&#39;testcase&#39;</span><span class="p">:</span> <span class="s1">&#39;default&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;testcase_subdir&#39;</span><span class="p">:</span> <span class="s1">&#39;10km/default&#39;</span><span class="p">}},</span>
-            <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;default&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;core&#39;</span><span class="p">:</span> <span class="s1">&#39;ocean&#39;</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">testcase</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;base_work_dir&#39;</span><span class="p">:</span> <span class="s1">&#39;/home/xylar/data/mpas/test_new_run_model/nightly/new_api&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;config&#39;</span><span class="p">:</span> <span class="s1">&#39;default.cfg&#39;</span><span class="p">,</span>
             <span class="s1">&#39;configuration&#39;</span><span class="p">:</span> <span class="s1">&#39;baroclinic_channel&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;subdir&#39;</span><span class="p">:</span> <span class="s1">&#39;10km/default&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="s1">&#39;ocean/baroclinic_channel/10km/default&#39;</span><span class="p">,</span>
             <span class="s1">&#39;configure&#39;</span><span class="p">:</span> <span class="s1">&#39;configure&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;run&#39;</span><span class="p">:</span> <span class="s1">&#39;run&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;core&#39;</span><span class="p">:</span> <span class="s1">&#39;ocean&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;baroclinic channel 10km default test&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;module&#39;</span><span class="p">:</span> <span class="s1">&#39;compass.ocean.tests.baroclinic_channel.default&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;default&#39;</span><span class="p">,</span>
             <span class="s1">&#39;new_step_log_file&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="s1">&#39;ocean/baroclinic_channel/10km/default&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;resolution&#39;</span><span class="p">:</span> <span class="s1">&#39;10km&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;run&#39;</span><span class="p">:</span> <span class="s1">&#39;run&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;steps&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;forward&#39;</span><span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">},</span>
+                      <span class="s1">&#39;initial_state&#39;</span><span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">}},</span>
             <span class="s1">&#39;steps_to_run&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;initial_state&#39;</span><span class="p">,</span> <span class="s1">&#39;forward&#39;</span><span class="p">],</span>
-            <span class="s1">&#39;resolution&#39;</span><span class="p">:</span> <span class="s1">&#39;10km&#39;</span><span class="p">}</span>
+            <span class="s1">&#39;subdir&#39;</span><span class="p">:</span> <span class="s1">&#39;10km/default&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;work_dir&#39;</span><span class="p">:</span> <span class="s1">&#39;/home/xylar/data/mpas/test_new_run_model/nightly/new_api/ocean/baroclinic_channel/10km/default&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
 <dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">module</span></code></dt><dd><p>The full name of the module or package where the test case is defined.
-This entry should be defined by passing <code class="docutils literal notranslate"><span class="pre">module=__name__</span></code> as an argument
-to <a class="reference internal" href="generated/compass.testcase.get_testcase_default.html#compass.testcase.get_testcase_default" title="compass.testcase.get_testcase_default"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.get_testcase_default()</span></code></a> in
-<a class="reference internal" href="#dev-testcase-collect"><span class="std std-ref">collect()</span></a>.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">base_work_dir</span></code></dt><dd><p>The base directory where the test cases or test suite have been set up.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">description</span></code></dt><dd><p>A short (one line) description of the test case.  Typically, this is
-similar to the <code class="docutils literal notranslate"><span class="pre">path</span></code> of the test, just put into words.  This is passed
-as the <code class="docutils literal notranslate"><span class="pre">description</span></code> argument to
-<a class="reference internal" href="generated/compass.testcase.get_testcase_default.html#compass.testcase.get_testcase_default" title="compass.testcase.get_testcase_default"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.get_testcase_default()</span></code></a> in
-<a class="reference internal" href="#dev-testcase-collect"><span class="std std-ref">collect()</span></a>.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">steps</span></code></dt><dd><p>A dictionary of steps in the test case with the names of the steps as keys
-and each <a class="reference internal" href="#dev-step-dict"><span class="std std-ref">step dictionary</span></a> as the corresponding value.  The <code class="docutils literal notranslate"><span class="pre">steps</span></code>
-dictionary should created in <a class="reference internal" href="#dev-testcase-collect"><span class="std std-ref">collect()</span></a> by calling each
-step’s <a class="reference internal" href="#dev-step-collect"><span class="std std-ref">collect()</span></a> and then passed in as the <code class="docutils literal notranslate"><span class="pre">steps</span></code> argument
-to <a class="reference internal" href="generated/compass.testcase.get_testcase_default.html#compass.testcase.get_testcase_default" title="compass.testcase.get_testcase_default"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.get_testcase_default()</span></code></a>.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">name</span></code></dt><dd><p>The name of the test case.  The default is the last part of <code class="docutils literal notranslate"><span class="pre">module</span></code> and
-is set by <a class="reference internal" href="generated/compass.testcase.get_testcase_default.html#compass.testcase.get_testcase_default" title="compass.testcase.get_testcase_default"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.get_testcase_default()</span></code></a>.  You can
-modify this entry in <a class="reference internal" href="#dev-testcase-collect"><span class="std std-ref">collect()</span></a> anytime after calling
-<code class="docutils literal notranslate"><span class="pre">get_testcase_default()</span></code>.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">core</span></code></dt><dd><p>Which of the <a class="reference internal" href="#dev-cores"><span class="std std-ref">Cores</span></a> this test case belongs to.  This entry is
-added automatically by <a class="reference internal" href="generated/compass.testcase.get_testcase_default.html#compass.testcase.get_testcase_default" title="compass.testcase.get_testcase_default"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.get_testcase_default()</span></code></a>
-when it is called in <a class="reference internal" href="#dev-testcase-collect"><span class="std std-ref">collect()</span></a> and should not be
-modified.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">config</span></code></dt><dd><p>The config file for the test case, typically <code class="docutils literal notranslate"><span class="pre">&lt;name&gt;.cfg</span></code>, where
+<code class="docutils literal notranslate"><span class="pre">&lt;name&gt;</span></code> is the name of the test case.</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">configuration</span></code></dt><dd><p>Which of the <a class="reference internal" href="#dev-configs"><span class="std std-ref">Configurations</span></a> this test case belongs to.  This entry is
-added automatically by <a class="reference internal" href="generated/compass.testcase.get_testcase_default.html#compass.testcase.get_testcase_default" title="compass.testcase.get_testcase_default"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.get_testcase_default()</span></code></a>
-when it is called in <a class="reference internal" href="#dev-testcase-collect"><span class="std std-ref">collect()</span></a> and should not be
+added automatically by <a class="reference internal" href="generated/compass.testcase.add_testcase.html#compass.testcase.add_testcase" title="compass.testcase.add_testcase"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.add_testcase()</span></code></a> when it
+is called in the configuration’s <code class="docutils literal notranslate"><span class="pre">collect()</span></code> function and should not be
 modified.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">subdir</span></code></dt><dd><p>The subdirectory for the test case within the configuration.  The default
-is the the last part of the <code class="docutils literal notranslate"><span class="pre">module</span></code> and is set by
-<a class="reference internal" href="generated/compass.testcase.get_testcase_default.html#compass.testcase.get_testcase_default" title="compass.testcase.get_testcase_default"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.get_testcase_default()</span></code></a>.  You can modify this
-entry in <a class="reference internal" href="#dev-testcase-collect"><span class="std std-ref">collect()</span></a> anytime after calling
-<code class="docutils literal notranslate"><span class="pre">get_testcase_default()</span></code>.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">path</span></code></dt><dd><p>The relative path of the test case within the base work directory, the
-combination of the <code class="docutils literal notranslate"><span class="pre">core</span></code>, <code class="docutils literal notranslate"><span class="pre">configuration</span></code> and <code class="docutils literal notranslate"><span class="pre">subdir</span></code>.  This entry
-is added automatically by the <a class="reference internal" href="framework.html#dev-framework"><span class="std std-ref">Framework</span></a> after
-<a class="reference internal" href="#dev-testcase-collect"><span class="std std-ref">collect()</span></a> is called and should not be modified.</p>
-</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">configure</span></code></dt><dd><p>The name of the <a class="reference internal" href="#dev-testcase-configure"><span class="std std-ref">configure()</span></a> function for setting config
-options, set by <a class="reference internal" href="generated/compass.testcase.get_testcase_default.html#compass.testcase.get_testcase_default" title="compass.testcase.get_testcase_default"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.get_testcase_default()</span></code></a>.  This
+options, set by <a class="reference internal" href="generated/compass.testcase.add_testcase.html#compass.testcase.add_testcase" title="compass.testcase.add_testcase"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.add_testcase()</span></code></a>.  This
 entry should only be modified if you have an important reason not to name
 the function in your test case’s module <code class="docutils literal notranslate"><span class="pre">configure</span></code>.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">run</span></code></dt><dd><p>The name of the <a class="reference internal" href="#dev-testcase-run"><span class="std std-ref">run()</span></a> function for running the test case,
-set by <a class="reference internal" href="generated/compass.testcase.get_testcase_default.html#compass.testcase.get_testcase_default" title="compass.testcase.get_testcase_default"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.get_testcase_default()</span></code></a>.  This entry
-should only be modified if you have an important reason not to name the
-function in your test case’s module <code class="docutils literal notranslate"><span class="pre">run</span></code>.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">core</span></code></dt><dd><p>Which of the <a class="reference internal" href="#dev-cores"><span class="std std-ref">Cores</span></a> this test case belongs to.  This entry is
+added automatically by <a class="reference internal" href="generated/compass.testcase.add_testcase.html#compass.testcase.add_testcase" title="compass.testcase.add_testcase"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.add_testcase()</span></code></a> when it
+is called in the configuration’s <code class="docutils literal notranslate"><span class="pre">collect()</span></code> function and should not be
+modified.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">description</span></code></dt><dd><p>A short (one line) description of the test case.  Typically, this is
+similar to the <code class="docutils literal notranslate"><span class="pre">path</span></code> of the test, just put into words.  This should be
+set by the test case in <a class="reference internal" href="#dev-testcase-collect"><span class="std std-ref">collect()</span></a>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">module</span></code></dt><dd><p>The full name of the module or package where the test case is defined.
+This entry is added automatically by
+<a class="reference internal" href="generated/compass.testcase.add_testcase.html#compass.testcase.add_testcase" title="compass.testcase.add_testcase"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.add_testcase()</span></code></a> when it is called in the
+configuration’s <code class="docutils literal notranslate"><span class="pre">collect()</span></code> function and should not been to be modified.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">name</span></code></dt><dd><p>The name of the test case.  The default is the last part of <code class="docutils literal notranslate"><span class="pre">module</span></code> and
+is set by <a class="reference internal" href="generated/compass.testcase.add_testcase.html#compass.testcase.add_testcase" title="compass.testcase.add_testcase"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.add_testcase()</span></code></a>.  It is not typically
+necessary to change the name of the test case, but this could be done by
+passing <code class="docutils literal notranslate"><span class="pre">name</span></code> as a keyword argument to <code class="docutils literal notranslate"><span class="pre">add_testcase()</span></code> or within the
+test case’s <a class="reference internal" href="#dev-testcase-collect"><span class="std std-ref">collect()</span></a> function.</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">new_step_log_file</span></code></dt><dd><p>An entry used by the compass <a class="reference internal" href="framework.html#dev-framework"><span class="std std-ref">Framework</span></a> to determine if the steps
 of this test case need their own log files or if they should perform
 <a class="reference internal" href="framework.html#dev-logging"><span class="std std-ref">Logging</span></a> to the same logger as the test case itself.  This entry
 should not be altered.</p>
 </dd>
+<dt><code class="docutils literal notranslate"><span class="pre">path</span></code></dt><dd><p>The relative path of the test case within the base work directory, the
+combination of the <code class="docutils literal notranslate"><span class="pre">core</span></code>, <code class="docutils literal notranslate"><span class="pre">configuration</span></code> and <code class="docutils literal notranslate"><span class="pre">subdir</span></code>.  This entry
+is added automatically by the <a class="reference internal" href="framework.html#dev-framework"><span class="std std-ref">Framework</span></a> after
+<a class="reference internal" href="#dev-testcase-collect"><span class="std std-ref">collect()</span></a> is called and should not be modified.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">run</span></code></dt><dd><p>The name of the <a class="reference internal" href="#dev-testcase-run"><span class="std std-ref">run()</span></a> function for running the test case,
+set by <a class="reference internal" href="generated/compass.testcase.add_testcase.html#compass.testcase.add_testcase" title="compass.testcase.add_testcase"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.add_testcase()</span></code></a>.  This entry
+should only be modified if you have an important reason not to name the
+function in your test case’s module <code class="docutils literal notranslate"><span class="pre">run</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">steps</span></code></dt><dd><p>A dictionary of steps in the test case with the names of the steps as keys
+and each <a class="reference internal" href="#dev-step-dict"><span class="std std-ref">step dictionary</span></a> as the corresponding value.  The <code class="docutils literal notranslate"><span class="pre">steps</span></code>
+dictionary is created by <a class="reference internal" href="generated/compass.testcase.add_testcase.html#compass.testcase.add_testcase" title="compass.testcase.add_testcase"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.add_testcase()</span></code></a> and
+passed to the test case’s <a class="reference internal" href="#dev-testcase-collect"><span class="std std-ref">collect()</span></a>.  New steps are
+added by calling <a class="reference internal" href="generated/compass.testcase.add_step.html#compass.testcase.add_step" title="compass.testcase.add_step"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.add_step()</span></code></a>.</p>
+</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">steps_to_run</span></code></dt><dd><p>A list of the steps to run.  By default, this is the names of all of the
 steps in <code class="docutils literal notranslate"><span class="pre">steps</span></code> in the order they were added.  You can modify these
 in <a class="reference internal" href="#dev-testcase-collect"><span class="std std-ref">collect()</span></a> after calling
-<a class="reference internal" href="generated/compass.testcase.get_testcase_default.html#compass.testcase.get_testcase_default" title="compass.testcase.get_testcase_default"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.get_testcase_default()</span></code></a> if some steps should not
+<a class="reference internal" href="generated/compass.testcase.add_testcase.html#compass.testcase.add_testcase" title="compass.testcase.add_testcase"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.add_testcase()</span></code></a> if some steps should not
 be run by default. If a user asks to run a single step from the test case,
 the <a class="reference internal" href="#dev-testcase-run"><span class="std std-ref">run()</span></a> function for test case is still called but with
 this list set to just the name of the step to run.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">subdir</span></code></dt><dd><p>The subdirectory for the test case within the configuration.  The default
+is the the last part of the <code class="docutils literal notranslate"><span class="pre">module</span></code> (the same as the default <code class="docutils literal notranslate"><span class="pre">name</span></code>)
+and is set by <a class="reference internal" href="generated/compass.testcase.add_testcase.html#compass.testcase.add_testcase" title="compass.testcase.add_testcase"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.add_testcase()</span></code></a>.  Most commonly,
+this entry would be modified within the test case’s
+<a class="reference internal" href="#dev-testcase-collect"><span class="std std-ref">collect()</span></a> function by calling
+<a class="reference internal" href="generated/compass.testcase.set_testcase_subdir.html#compass.testcase.set_testcase_subdir" title="compass.testcase.set_testcase_subdir"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.set_testcase_subdir()</span></code></a>. You can also modify
+this entry by passing <code class="docutils literal notranslate"><span class="pre">subdir=&lt;subdir&gt;</span></code> as a keyword argument to
+<a class="reference internal" href="generated/compass.testcase.add_testcase.html#compass.testcase.add_testcase" title="compass.testcase.add_testcase"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.add_testcase()</span></code></a> in the configuration’s
+<code class="docutils literal notranslate"><span class="pre">collect()</span></code> function.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">work_dir</span></code></dt><dd><p>The directory where the test case has been set up, a combination of
+<code class="docutils literal notranslate"><span class="pre">base_work_dir</span></code> and <code class="docutils literal notranslate"><span class="pre">path</span></code>.</p>
 </dd>
 </dl>
 <p>You can add other entries to the dictionary to pass information between the
@@ -552,131 +512,118 @@ for this purpose.</p>
 </div>
 <div class="section" id="collect">
 <span id="dev-testcase-collect"></span><h3>collect()<a class="headerlink" href="#collect" title="Permalink to this headline">¶</a></h3>
-<p>The <code class="docutils literal notranslate"><span class="pre">collect()</span></code> function must include the following, each of which is
-described in more detail below:</p>
-<ol class="arabic simple">
-<li><p>call the <code class="docutils literal notranslate"><span class="pre">collect()</span></code> functions for the steps in the test case, adding them
-to a <code class="docutils literal notranslate"><span class="pre">steps</span></code> dictionary,</p></li>
-<li><p>call <a class="reference internal" href="generated/compass.testcase.get_testcase_default.html#compass.testcase.get_testcase_default" title="compass.testcase.get_testcase_default"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.get_testcase_default()</span></code></a></p></li>
-<li><p>return the resulting python dictionary <code class="docutils literal notranslate"><span class="pre">testcase</span></code>.</p></li>
-</ol>
-<p>You can include argument (typically parameters) to <code class="docutils literal notranslate"><span class="pre">collect()</span></code> as long as
-the configuration’s <code class="docutils literal notranslate"><span class="pre">collect()</span></code> function will know what these should be.  In
-the example below, the argument is the resolution (as a string).</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">collect()</span></code> function must call <a class="reference internal" href="generated/compass.testcase.add_step.html#compass.testcase.add_step" title="compass.testcase.add_step"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.add_step()</span></code></a> for
+each step in the test case.</p>
+<p>The argument to <code class="docutils literal notranslate"><span class="pre">collect()</span></code> is the dictionary <code class="docutils literal notranslate"><span class="pre">testcase</span></code> describing the
+test case, which will include the keys and values from any keyword arguments
+passed to <a class="reference internal" href="generated/compass.testcase.add_testcase.html#compass.testcase.add_testcase" title="compass.testcase.add_testcase"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.add_testcase()</span></code></a>. In the example below, the
+resolution (as a string) as been passed in this way.</p>
 <p>It is important that the <code class="docutils literal notranslate"><span class="pre">collect()</span></code> function doesn’t perform any
 time-consuming calculations, download files, or otherwise use significant
 resources because this function is called quite often for every single test
 case and step: when test cases are listed, set up, or cleaned up, and also when
-test suites are set up or cleaned up.</p>
-<p>Since the API for <code class="docutils literal notranslate"><span class="pre">collect()</span></code> is a bit flexible, we will provide an example,
+test suites are set up or cleaned up.  However, it is okay to add input,
+output, streams and namelist files to the steps in the test case by calling any
+of the following functions:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="generated/compass.io.add_input_file.html#compass.io.add_input_file" title="compass.io.add_input_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.io.add_input_file()</span></code></a></p></li>
+<li><p><a class="reference internal" href="generated/compass.io.add_output_file.html#compass.io.add_output_file" title="compass.io.add_output_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.io.add_output_file()</span></code></a></p></li>
+<li><p><a class="reference internal" href="generated/compass.namelist.add_namelist_file.html#compass.namelist.add_namelist_file" title="compass.namelist.add_namelist_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.namelist.add_namelist_file()</span></code></a></p></li>
+<li><p><a class="reference internal" href="generated/compass.namelist.add_namelist_options.html#compass.namelist.add_namelist_options" title="compass.namelist.add_namelist_options"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.namelist.add_namelist_options()</span></code></a></p></li>
+<li><p><a class="reference internal" href="generated/compass.streams.add_streams_file.html#compass.streams.add_streams_file" title="compass.streams.add_streams_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.streams.add_streams_file()</span></code></a></p></li>
+</ul>
+<p>Each of these functions just caches information about the the inputs, outputs,
+namelists or streams files to be read later if the test case in question gets
+set up, so each takes a negligible amount of time.</p>
+<p>As an example, here is
 <a class="reference internal" href="ocean/generated/compass.ocean.tests.baroclinic_channel.rpe_test.collect.html#compass.ocean.tests.baroclinic_channel.rpe_test.collect" title="compass.ocean.tests.baroclinic_channel.rpe_test.collect"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.tests.baroclinic_channel.rpe_test.collect()</span></code></a>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">get_testcase_default</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">set_testcase_subdir</span><span class="p">,</span> <span class="n">add_step</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.baroclinic_channel</span> <span class="kn">import</span> <span class="n">initial_state</span><span class="p">,</span> <span class="n">forward</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.baroclinic_channel.rpe_test</span> <span class="kn">import</span> <span class="n">analysis</span>
+<span class="kn">from</span> <span class="nn">compass.namelist</span> <span class="kn">import</span> <span class="n">add_namelist_file</span>
+<span class="kn">from</span> <span class="nn">compass.streams</span> <span class="kn">import</span> <span class="n">add_streams_file</span>
 
 
-<span class="k">def</span> <span class="nf">collect</span><span class="p">(</span><span class="n">resolution</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">collect</span><span class="p">(</span><span class="n">testcase</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Get a dictionary of testcase properties</span>
+<span class="sd">    Update the dictionary of test case properties and add steps</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    resolution : {&#39;1km&#39;, &#39;4km&#39;, &#39;10km&#39;}</span>
-<span class="sd">        The resolution of the mesh</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
 <span class="sd">    testcase : dict</span>
-<span class="sd">        A dict of properties of this test case, including its steps</span>
+<span class="sd">        A dictionary of properties of this test case, which can be updated</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;baroclinic channel </span><span class="si">{}</span><span class="s1"> reference potential energy (RPE)&#39;</span> \
-                  <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">)</span>
-    <span class="n">module</span> <span class="o">=</span> <span class="vm">__name__</span>
+    <span class="n">resolution</span> <span class="o">=</span> <span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;resolution&#39;</span><span class="p">]</span>
+    <span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;baroclinic channel </span><span class="si">{}</span><span class="s1"> reference potential &#39;</span>\
+                              <span class="s1">&#39;energy (RPE)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">)</span>
 
-    <span class="n">res_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;1km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;core_count&#39;</span><span class="p">:</span> <span class="mi">144</span><span class="p">,</span> <span class="s1">&#39;min_cores&#39;</span><span class="p">:</span> <span class="mi">36</span><span class="p">,</span>
+    <span class="n">nus</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">200</span><span class="p">]</span>
+
+    <span class="n">res_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;1km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="mi">144</span><span class="p">,</span> <span class="s1">&#39;min_cores&#39;</span><span class="p">:</span> <span class="mi">36</span><span class="p">,</span>
                           <span class="s1">&#39;max_memory&#39;</span><span class="p">:</span> <span class="mi">64000</span><span class="p">,</span> <span class="s1">&#39;max_disk&#39;</span><span class="p">:</span> <span class="mi">64000</span><span class="p">},</span>
-                  <span class="s1">&#39;4km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;core_count&#39;</span><span class="p">:</span> <span class="mi">36</span><span class="p">,</span> <span class="s1">&#39;min_cores&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+                  <span class="s1">&#39;4km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="mi">36</span><span class="p">,</span> <span class="s1">&#39;min_cores&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
                           <span class="s1">&#39;max_memory&#39;</span><span class="p">:</span> <span class="mi">16000</span><span class="p">,</span> <span class="s1">&#39;max_disk&#39;</span><span class="p">:</span> <span class="mi">16000</span><span class="p">},</span>
-                  <span class="s1">&#39;10km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;core_count&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span> <span class="s1">&#39;min_cores&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+                  <span class="s1">&#39;10km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span> <span class="s1">&#39;min_cores&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
                            <span class="s1">&#39;max_memory&#39;</span><span class="p">:</span> <span class="mi">2000</span><span class="p">,</span> <span class="s1">&#39;max_disk&#39;</span><span class="p">:</span> <span class="mi">2000</span><span class="p">}}</span>
 
     <span class="k">if</span> <span class="n">resolution</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">res_params</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unsupported resolution </span><span class="si">{}</span><span class="s1">. Supported values are: &#39;</span>
                          <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">res_params</span><span class="p">)))</span>
 
-    <span class="n">res_params</span> <span class="o">=</span> <span class="n">res_params</span><span class="p">[</span><span class="n">resolution</span><span class="p">]</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">subdir</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-    <span class="n">steps</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-    <span class="n">step</span> <span class="o">=</span> <span class="n">initial_state</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">resolution</span><span class="p">)</span>
-    <span class="n">steps</span><span class="p">[</span><span class="n">step</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">step</span>
+    <span class="n">defaults</span> <span class="o">=</span> <span class="n">res_params</span><span class="p">[</span><span class="n">resolution</span><span class="p">]</span>
 
-    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">nu</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">200</span><span class="p">]):</span>
-        <span class="n">step</span> <span class="o">=</span> <span class="n">forward</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="n">res_params</span><span class="p">[</span><span class="s1">&#39;core_count&#39;</span><span class="p">],</span>
-                               <span class="n">min_cores</span><span class="o">=</span><span class="n">res_params</span><span class="p">[</span><span class="s1">&#39;min_cores&#39;</span><span class="p">],</span>
-                               <span class="n">max_memory</span><span class="o">=</span><span class="n">res_params</span><span class="p">[</span><span class="s1">&#39;max_memory&#39;</span><span class="p">],</span>
-                               <span class="n">max_disk</span><span class="o">=</span><span class="n">res_params</span><span class="p">[</span><span class="s1">&#39;max_disk&#39;</span><span class="p">],</span> <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                               <span class="n">testcase_module</span><span class="o">=</span><span class="n">module</span><span class="p">,</span>
-                               <span class="n">namelist_file</span><span class="o">=</span><span class="s1">&#39;namelist.forward&#39;</span><span class="p">,</span>
-                               <span class="n">streams_file</span><span class="o">=</span><span class="s1">&#39;streams.forward&#39;</span><span class="p">,</span>
-                               <span class="n">nu</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">nu</span><span class="p">))</span>
-        <span class="n">step</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;rpe_test_</span><span class="si">{}</span><span class="s1">_nu_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">nu</span><span class="p">)</span>
-        <span class="n">step</span><span class="p">[</span><span class="s1">&#39;subdir&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
-        <span class="n">steps</span><span class="p">[</span><span class="n">step</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">step</span>
+    <span class="n">subdir</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+    <span class="n">set_testcase_subdir</span><span class="p">(</span><span class="n">testcase</span><span class="p">,</span> <span class="n">subdir</span><span class="p">)</span>
 
-    <span class="n">step</span> <span class="o">=</span> <span class="n">analysis</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">resolution</span><span class="p">)</span>
-    <span class="n">steps</span><span class="p">[</span><span class="n">step</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">step</span>
+    <span class="n">add_step</span><span class="p">(</span><span class="n">testcase</span><span class="p">,</span> <span class="n">initial_state</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">)</span>
 
-    <span class="n">testcase</span> <span class="o">=</span> <span class="n">get_testcase_default</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">steps</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
-    <span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;resolution&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">resolution</span>
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">nu</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">nus</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;rpe_test_</span><span class="si">{}</span><span class="s1">_nu_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">nu</span><span class="p">)</span>
+        <span class="c1"># we pass the defaults for the resolution on as keyword arguments</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="n">add_step</span><span class="p">(</span><span class="n">testcase</span><span class="p">,</span> <span class="n">forward</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                        <span class="n">nu</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">nu</span><span class="p">),</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span> <span class="o">**</span><span class="n">defaults</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">testcase</span>
+        <span class="c1"># add the local namelist and streams file</span>
+        <span class="n">add_namelist_file</span><span class="p">(</span>
+            <span class="n">step</span><span class="p">,</span> <span class="s1">&#39;compass.ocean.tests.baroclinic_channel.rpe_test&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;namelist.forward&#39;</span><span class="p">)</span>
+        <span class="n">add_streams_file</span><span class="p">(</span>
+            <span class="n">step</span><span class="p">,</span> <span class="s1">&#39;compass.ocean.tests.baroclinic_channel.rpe_test&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;streams.forward&#39;</span><span class="p">)</span>
+
+    <span class="n">add_step</span><span class="p">(</span><span class="n">testcase</span><span class="p">,</span> <span class="n">analysis</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span> <span class="n">nus</span><span class="o">=</span><span class="n">nus</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>We have deliberately chosen a fairly complex example to demonstrate how to make
 full use of <a class="reference internal" href="overview.html#dev-code-sharing"><span class="std std-ref">Code sharing</span></a> in a test case.</p>
-<p>The test case imports the modules for its steps (<code class="docutils literal notranslate"><span class="pre">initial_state</span></code> and
-<code class="docutils literal notranslate"><span class="pre">forward</span></code> in this case) so it can call the <code class="docutils literal notranslate"><span class="pre">collect()</span></code> function for each
-step.  The steps are collected in a python dictionary <code class="docutils literal notranslate"><span class="pre">steps</span></code> with the names
-of the steps as keys and individual <code class="docutils literal notranslate"><span class="pre">step</span></code> dictionaries as values (so a
-nested dictionary).  The <code class="docutils literal notranslate"><span class="pre">step</span></code> dictionary is described in <a class="reference internal" href="#dev-steps"><span class="std std-ref">Steps</span></a>.</p>
-<p>Then, <a class="reference internal" href="generated/compass.testcase.get_testcase_default.html#compass.testcase.get_testcase_default" title="compass.testcase.get_testcase_default"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.get_testcase_default()</span></code></a> is called.  The
-required arguments are the current module, a short description of the test
-case, and the <code class="docutils literal notranslate"><span class="pre">steps</span></code> dictionary. The name of the module is determined from
-the <a class="reference external" href="https://docs.python.org/3/reference/import.html?highlight=__name__#__name__">__name__</a>
-attribute of the package or module.  This will automatically detect and set the
-default values for the <code class="docutils literal notranslate"><span class="pre">name</span></code>, <code class="docutils literal notranslate"><span class="pre">core</span></code>, <code class="docutils literal notranslate"><span class="pre">configuration</span></code>, <code class="docutils literal notranslate"><span class="pre">subdir</span></code>,
-<code class="docutils literal notranslate"><span class="pre">configure</span></code>, <code class="docutils literal notranslate"><span class="pre">run</span></code>, and <code class="docutils literal notranslate"><span class="pre">steps_to_run</span></code> entries in the
-<a class="reference internal" href="#dev-testcase-dict"><span class="std std-ref">testcase dictionary</span></a>.  After the call, you can update any of these
-(typically just <code class="docutils literal notranslate"><span class="pre">name</span></code> and <code class="docutils literal notranslate"><span class="pre">subdir</span></code>) that you need to.  None of these
-entries should be altered in <a class="reference internal" href="#dev-testcase-configure"><span class="std std-ref">configure()</span></a> or
-<a class="reference internal" href="#dev-testcase-run"><span class="std std-ref">run()</span></a>; they are fixed properties of the test case once it
-has been “collected”.</p>
-<p>By default, the test case will get set up in a subdirectory of the
-configuration that is the name of the individual module or package (e.g.
-<code class="docutils literal notranslate"><span class="pre">rpe_test</span></code> for in the example above, since the package is called
-<code class="docutils literal notranslate"><span class="pre">rpe_test</span></code>).  Similarly, by default each step will go into a subdirectory
-with the module name of the step (e.g. <code class="docutils literal notranslate"><span class="pre">initial_state</span></code> or <code class="docutils literal notranslate"><span class="pre">forward</span></code>).
-However, <code class="docutils literal notranslate"><span class="pre">compass</span></code> is flexible about the subdirectory structure and the names
-of the subdirectories.  This flexibility was an important requirement in
-moving away from <a class="reference internal" href="../index.html#legacy-compass"><span class="std std-ref">Legacy COMPASS</span></a>.  You can give the subdirectory for
-the test case and steps whatever name makes sense to you. If an argument is
-passed to the test case’s <code class="docutils literal notranslate"><span class="pre">collect()</span></code> function, it would typically make sense
-to have the subdirectory of the test case depend in some way on this argument.
-This is because each test case must end up in a unique subdirectory.  In the
-example above, the <code class="docutils literal notranslate"><span class="pre">baroclinic_channel</span></code> configuration will call <code class="docutils literal notranslate"><span class="pre">collect()</span></code>
-with each of the 3 supported resolutions.  Each test case will go into a
-different subdirectory: <code class="docutils literal notranslate"><span class="pre">1km/rpe_test</span></code>, <code class="docutils literal notranslate"><span class="pre">4km/rpe_test</span></code> and
-<code class="docutils literal notranslate"><span class="pre">10km/rpe_test</span></code>.</p>
+<p>The test case imports the modules for its steps (<code class="docutils literal notranslate"><span class="pre">initial_state</span></code>,
+<code class="docutils literal notranslate"><span class="pre">forward</span></code>, and <code class="docutils literal notranslate"><span class="pre">analysis</span></code> in this case) so it can call
+<a class="reference internal" href="generated/compass.testcase.add_step.html#compass.testcase.add_step" title="compass.testcase.add_step"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.add_step()</span></code></a>, passing each as an argument.  In the
+process, the steps are added to the <code class="docutils literal notranslate"><span class="pre">steps</span></code> dictionary (see
+<a class="reference internal" href="#dev-steps"><span class="std std-ref">Steps</span></a>).</p>
+<p>By default, the test ase will go into a directory with the same name as the
+test case (<code class="docutils literal notranslate"><span class="pre">rpe_test</span></code> in this case).  However, <code class="docutils literal notranslate"><span class="pre">compass</span></code> is flexible
+about the subdirectory structure and the names of the subdirectories.  This
+flexibility was an important requirement in moving away from
+<a class="reference internal" href="../index.html#legacy-compass"><span class="std std-ref">Legacy COMPASS</span></a>.  Each test case and step must end up in a unique
+directory, so it may be important that the name and subdirectory of each test
+case or step depends in some way on the arguments passed to
+<a class="reference internal" href="generated/compass.testcase.add_testcase.html#compass.testcase.add_testcase" title="compass.testcase.add_testcase"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.add_testcase()</span></code></a> or
+<a class="reference internal" href="generated/compass.testcase.add_step.html#compass.testcase.add_step" title="compass.testcase.add_step"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.add_step()</span></code></a>.  In the example above, the
+<code class="docutils literal notranslate"><span class="pre">baroclinic_channel</span></code> configuration calls
+<a class="reference internal" href="generated/compass.testcase.add_testcase.html#compass.testcase.add_testcase" title="compass.testcase.add_testcase"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.add_testcase()</span></code></a> with each of the 3 supported
+resolutions.  We use <a class="reference internal" href="generated/compass.testcase.set_testcase_subdir.html#compass.testcase.set_testcase_subdir" title="compass.testcase.set_testcase_subdir"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.set_testcase_subdir()</span></code></a> to
+give the test case a unique directory for each resolution: <code class="docutils literal notranslate"><span class="pre">1km/rpe_test</span></code>,
+<code class="docutils literal notranslate"><span class="pre">4km/rpe_test</span></code> and <code class="docutils literal notranslate"><span class="pre">10km/rpe_test</span></code>, .</p>
 <p>In the example above, the same <code class="docutils literal notranslate"><span class="pre">forward</span></code> step is included in the test case
 5 times with a different viscosity parameter <code class="docutils literal notranslate"><span class="pre">nu</span></code> for each.  The value of
-<code class="docutils literal notranslate"><span class="pre">nu</span></code> is passed to the step’s <code class="docutils literal notranslate"><span class="pre">collect()</span></code> function (along with a number of
-other parameters related to required resources, namelists and streams files).
-The resulting <code class="docutils literal notranslate"><span class="pre">step</span></code> dictionary will give each step the same name and
-subdirectory by default: <code class="docutils literal notranslate"><span class="pre">forward</span></code>.  This would not work because then all
-the steps would end up in the same place, so the name is changed to something
-unique.  In this example, the steps are given rather clumsy
-names—<code class="docutils literal notranslate"><span class="pre">rpe_test_1_nu_1</span></code>, <code class="docutils literal notranslate"><span class="pre">rpe_test_2_nu_5</span></code>, etc.—but these could be any
-unique names.</p>
+<code class="docutils literal notranslate"><span class="pre">nu</span></code> is passed to <a class="reference internal" href="generated/compass.testcase.add_step.html#compass.testcase.add_step" title="compass.testcase.add_step"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.add_step()</span></code></a>, along with
+the unique <code class="docutils literal notranslate"><span class="pre">name</span></code> and <code class="docutils literal notranslate"><span class="pre">subdir</span></code> of the step, and several other parameters:
+<code class="docutils literal notranslate"><span class="pre">resolution</span></code>, <code class="docutils literal notranslate"><span class="pre">cores</span></code>, <code class="docutils literal notranslate"><span class="pre">min_cores</span></code>, <code class="docutils literal notranslate"><span class="pre">max_memory</span></code>, and <code class="docutils literal notranslate"><span class="pre">max_disk</span></code>.
+(We use a trick to pass the last 4 of these with the <code class="docutils literal notranslate"><span class="pre">defaults</span></code> dictionary
+using the <code class="docutils literal notranslate"><span class="pre">**defaults</span></code> argument.)  In this example, the steps are given
+rather clumsy names—<code class="docutils literal notranslate"><span class="pre">rpe_test_1_nu_1</span></code>, <code class="docutils literal notranslate"><span class="pre">rpe_test_2_nu_5</span></code>, etc.—but
+these could be any unique names.</p>
 </div>
 <div class="section" id="configure">
 <span id="dev-testcase-configure"></span><h3>configure()<a class="headerlink" href="#configure" title="Permalink to this headline">¶</a></h3>
@@ -746,7 +693,7 @@ across the whole test case, as in
         <span class="n">symlink</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">target</span><span class="p">),</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/README&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;work_dir&#39;</span><span class="p">]))</span>
 </pre></div>
 </div>
-<p>In general, <code class="docutils literal notranslate"><span class="pre">configure()</span></code> is not the right place for adding or altering
+<p>The <code class="docutils literal notranslate"><span class="pre">configure()</span></code> function is not the right place for adding or altering
 entries in the <a class="reference internal" href="#dev-testcase-dict"><span class="std std-ref">testcase dictionary</span></a>.</p>
 </div>
 <div class="section" id="run">
@@ -887,8 +834,8 @@ fail merely because the user didn’t ask for that particular step (yet).</p>
 are set up into subdirectories inside of the work directory for the test case.
 Typically, a user will run all steps in a test case but certain test cases may
 prefer to have steps that are not run by default (e.g. a long forward
-simulation) but which are available for a user to manually alter and then run
-on their own.</p>
+simulation or optional visualization) but which are available for a user to
+manually alter and then run on their own.</p>
 <p>A step is described by a <code class="docutils literal notranslate"><span class="pre">step</span></code> dictionary and has <a class="reference internal" href="#dev-step-collect"><span class="std std-ref">collect()</span></a>,
 <a class="reference internal" href="#dev-step-setup"><span class="std std-ref">setup()</span></a>, and <a class="reference internal" href="#dev-step-run"><span class="std std-ref">run()</span></a> functions, described below.</p>
 <div class="section" id="inputs-and-outputs">
@@ -907,21 +854,28 @@ aren’t used by any other steps in any test cases as long as the step will be
 sure to generate them.</p>
 <p>The inputs and outputs need to be defined during <a class="reference internal" href="#dev-step-collect"><span class="std std-ref">collect()</span></a> or
 <a class="reference internal" href="#dev-step-setup"><span class="std std-ref">setup()</span></a> because they are needed before <a class="reference internal" href="#dev-step-run"><span class="std std-ref">run()</span></a> is
-called (to determine which steps depend on which other steps).</p>
-<p>Because of this relationship, there can be some cases to avoid.  The name of
-an output file should not depend on a config option.  Otherwise, if the user
-changes the config option, the file actually created may have a different name
-than expected, in which case the step will fail.  This would be true even if
-a subsequent step would have been able to read in the same config option and
-modify the name of the expected input file.</p>
+called (to determine which steps depend on which other steps).  Inputs are
+added with <a class="reference internal" href="generated/compass.io.add_input_file.html#compass.io.add_input_file" title="compass.io.add_input_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.io.add_input_file()</span></code></a> and outputs with
+<a class="reference internal" href="generated/compass.io.add_output_file.html#compass.io.add_output_file" title="compass.io.add_output_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.io.add_output_file()</span></code></a>, see <a class="reference internal" href="framework.html#dev-io"><span class="std std-ref">IO</span></a>.  Inputs may be
+symbolic links to files in <code class="docutils literal notranslate"><span class="pre">compass</span></code>, from the various databases on the
+<a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/">LCRC server</a>,
+downloaded from another source, or from another step.</p>
+<p>Because the inputs and outputs need to be defined before the step runs, there
+can be some cases to avoid.  The name of an output file should not depend on a
+config option.  Otherwise, if the user changes the config option, the file
+actually created may have a different name than expected, in which case the
+step will fail.  This would be true even if a subsequent step would have been
+able to read in the same config option and modify the name of the expected
+input file.</p>
 <p>Along the same lines, an input or output file name should not depend on data
 from an input file that does not exist during <a class="reference internal" href="#dev-step-setup"><span class="std std-ref">setup()</span></a>.  Since the
-file does not exist, there is no way to read the file within
-<a class="reference internal" href="#dev-step-setup"><span class="std std-ref">setup()</span></a> and determine the file name.</p>
+file does not exist, there is no way to read the file with the dependency
+within <a class="reference internal" href="#dev-step-setup"><span class="std std-ref">setup()</span></a> and determine the resulting input or output file
+name.</p>
 <p>Both of these issues have arisen for the
 <a class="reference internal" href="ocean/configurations/global_ocean.html#dev-ocean-global-ocean-files-for-e3sm"><span class="std std-ref">files_for_e3sm test case</span></a> test case from the
 <a class="reference internal" href="ocean/configurations/global_ocean.html#dev-ocean-global-ocean"><span class="std std-ref">global_ocean</span></a> configuration.  Output files are named using the
-“sort name” of the mesh in E3SM, which depends both on config options and on
+“short name” of the mesh in E3SM, which depends both on config options and on
 the number of vertical levels, which is read in from a mesh file created in a
 previous step.  For now, the outputs of this step are not used by any other
 steps so it is safe to simply omit them, but this could become problematic in
@@ -934,245 +888,235 @@ the future if new steps are added that depend on
 python dictionary <code class="docutils literal notranslate"><span class="pre">step</span></code> to keep track of data (other than config options)
 that are needed to collect, setup and run a step.  The <code class="docutils literal notranslate"><span class="pre">step</span></code> dictionary will
 typically look like this example from the
-<code class="docutils literal notranslate"><span class="pre">ocean/baroclinic_channel/10km/default/initial_state</span></code> step at the beginning of
-<a class="reference internal" href="ocean/generated/compass.ocean.tests.baroclinic_channel.initial_state.run.html#compass.ocean.tests.baroclinic_channel.initial_state.run" title="compass.ocean.tests.baroclinic_channel.initial_state.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.tests.baroclinic_channel.initial_state.run()</span></code></a>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">step</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;module&#39;</span><span class="p">:</span> <span class="s1">&#39;compass.ocean.tests.baroclinic_channel.initial_state&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;initial_state&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;subdir&#39;</span><span class="p">:</span> <span class="s1">&#39;initial_state&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;inputs&#39;</span><span class="p">:</span> <span class="p">[],</span>
-        <span class="s1">&#39;outputs&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;/home/xylar/data/mpas/test_baroclinic_channel/ocean/baroclinic_channel/10km/default/initial_state/base_mesh.nc&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;/home/xylar/data/mpas/test_baroclinic_channel/ocean/baroclinic_channel/10km/default/initial_state/culled_mesh.nc&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;/home/xylar/data/mpas/test_baroclinic_channel/ocean/baroclinic_channel/10km/default/initial_state/culled_graph.info&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;/home/xylar/data/mpas/test_baroclinic_channel/ocean/baroclinic_channel/10km/default/initial_state/ocean.nc&#39;</span><span class="p">],</span>
+<code class="docutils literal notranslate"><span class="pre">ocean/baroclinic_channel/10km/default/initial_state</span></code> step at the beginning
+of <a class="reference internal" href="ocean/generated/compass.ocean.tests.baroclinic_channel.initial_state.run.html#compass.ocean.tests.baroclinic_channel.initial_state.run" title="compass.ocean.tests.baroclinic_channel.initial_state.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.tests.baroclinic_channel.initial_state.run()</span></code></a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">step</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;base_work_dir&#39;</span><span class="p">:</span> <span class="s1">&#39;/home/xylar/data/mpas/test_new_run_model/nightly/new_api&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;config&#39;</span><span class="p">:</span> <span class="s1">&#39;default.cfg&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;configuration&#39;</span><span class="p">:</span> <span class="s1">&#39;baroclinic_channel&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;core&#39;</span><span class="p">:</span> <span class="s1">&#39;ocean&#39;</span><span class="p">,</span>
         <span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="s1">&#39;min_cores&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="s1">&#39;max_memory&#39;</span><span class="p">:</span> <span class="mi">8000</span><span class="p">,</span>
+        <span class="s1">&#39;inputs&#39;</span><span class="p">:</span> <span class="p">[],</span>
         <span class="s1">&#39;max_disk&#39;</span><span class="p">:</span> <span class="mi">8000</span><span class="p">,</span>
-        <span class="s1">&#39;setup&#39;</span><span class="p">:</span> <span class="s1">&#39;setup&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;run&#39;</span><span class="p">:</span> <span class="s1">&#39;run&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;max_memory&#39;</span><span class="p">:</span> <span class="mi">8000</span><span class="p">,</span>
+        <span class="s1">&#39;min_cores&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s1">&#39;module&#39;</span><span class="p">:</span> <span class="s1">&#39;compass.ocean.tests.baroclinic_channel.initial_state&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;initial_state&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;outputs&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;/home/xylar/data/mpas/test_new_run_model/nightly/new_api/ocean/baroclinic_channel/10km/default/initial_state/base_mesh.nc&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;/home/xylar/data/mpas/test_new_run_model/nightly/new_api/ocean/baroclinic_channel/10km/default/initial_state/culled_mesh.nc&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;/home/xylar/data/mpas/test_new_run_model/nightly/new_api/ocean/baroclinic_channel/10km/default/initial_state/culled_graph.info&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;/home/xylar/data/mpas/test_new_run_model/nightly/new_api/ocean/baroclinic_channel/10km/default/initial_state/ocean.nc&#39;</span><span class="p">],</span>
         <span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="s1">&#39;ocean/baroclinic_channel/10km/default/initial_state&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;resolution&#39;</span><span class="p">:</span> <span class="s1">&#39;10km&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;run&#39;</span><span class="p">:</span> <span class="s1">&#39;run&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;setup&#39;</span><span class="p">:</span> <span class="s1">&#39;setup&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;subdir&#39;</span><span class="p">:</span> <span class="s1">&#39;initial_state&#39;</span><span class="p">,</span>
         <span class="s1">&#39;testcase&#39;</span><span class="p">:</span> <span class="s1">&#39;default&#39;</span><span class="p">,</span>
         <span class="s1">&#39;testcase_subdir&#39;</span><span class="p">:</span> <span class="s1">&#39;10km/default&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;work_dir&#39;</span><span class="p">:</span> <span class="s1">&#39;/home/xylar/data/mpas/test_baroclinic_channel/ocean/baroclinic_channel/10km/default/initial_state&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;base_work_dir&#39;</span><span class="p">:</span> <span class="s1">&#39;/home/xylar/data/mpas/test_baroclinic_channel/&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;config&#39;</span><span class="p">:</span> <span class="s1">&#39;default.cfg&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;resolution&#39;</span><span class="p">:</span> <span class="s1">&#39;10km&#39;</span><span class="p">}</span>
+        <span class="s1">&#39;threads&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s1">&#39;work_dir&#39;</span><span class="p">:</span> <span class="s1">&#39;/home/xylar/data/mpas/test_new_run_model/nightly/new_api/ocean/baroclinic_channel/10km/default/initial_state&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
 <dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">module</span></code></dt><dd><p>The full name of the module where the step case is defined. This entry
-should be defined by passing <code class="docutils literal notranslate"><span class="pre">module=__name__</span></code> as an argument
-to <a class="reference internal" href="generated/compass.testcase.get_step_default.html#compass.testcase.get_step_default" title="compass.testcase.get_step_default"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.get_step_default()</span></code></a> in
-<a class="reference internal" href="#dev-step-collect"><span class="std std-ref">collect()</span></a>.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">base_work_dir</span></code></dt><dd><p>The base directory where the test cases or test suite have been set up.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">name</span></code></dt><dd><p>The name of the step, by default the last part of the <code class="docutils literal notranslate"><span class="pre">module</span></code> and
-is set by <a class="reference internal" href="generated/compass.testcase.get_step_default.html#compass.testcase.get_step_default" title="compass.testcase.get_step_default"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.get_step_default()</span></code></a>.  You can
-modify this entry in <a class="reference internal" href="#dev-step-collect"><span class="std std-ref">collect()</span></a> anytime after calling
-<code class="docutils literal notranslate"><span class="pre">get_step_default()</span></code>.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">config</span></code></dt><dd><p>The config file for the test case, typically <code class="docutils literal notranslate"><span class="pre">&lt;name&gt;.cfg</span></code>, where
+<code class="docutils literal notranslate"><span class="pre">&lt;name&gt;</span></code> is the name of the test case.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">subdir</span></code></dt><dd><p>The subdirectory for the step within the test case.  The default is the the
-last part of the <code class="docutils literal notranslate"><span class="pre">module</span></code> and is set by
-<a class="reference internal" href="generated/compass.testcase.get_step_default.html#compass.testcase.get_step_default" title="compass.testcase.get_step_default"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.get_step_default()</span></code></a>.  You can modify this
-entry in <a class="reference internal" href="#dev-step-collect"><span class="std std-ref">collect()</span></a> anytime after calling
-<code class="docutils literal notranslate"><span class="pre">get_step_default()</span></code>.  The value of <code class="docutils literal notranslate"><span class="pre">subdir</span></code> is nearly always the
-same as for <code class="docutils literal notranslate"><span class="pre">name</span></code>.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">configuration</span></code></dt><dd><p>Which of the <a class="reference internal" href="#dev-configs"><span class="std std-ref">Configurations</span></a> this test case belongs to.  This entry is
+added automatically by <a class="reference internal" href="generated/compass.testcase.add_step.html#compass.testcase.add_step" title="compass.testcase.add_step"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.add_step()</span></code></a> when it
+is called in the configuration’s <code class="docutils literal notranslate"><span class="pre">collect()</span></code> function and should not be
+modified.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">inputs</span></code></dt><dd><p>A list of absolute paths of input files to the step, see
-<a class="reference internal" href="#dev-step-inputs-outputs"><span class="std std-ref">inputs and outputs</span></a>, that should be defined in
-<a class="reference internal" href="#dev-step-setup"><span class="std std-ref">setup()</span></a> (or, less commonly, in <a class="reference internal" href="#dev-step-collect"><span class="std std-ref">collect()</span></a>).</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">outputs</span></code></dt><dd><p>A list of absolute paths of outputs files from the step, see
-<a class="reference internal" href="#dev-step-inputs-outputs"><span class="std std-ref">inputs and outputs</span></a>, that should be defined in
-<a class="reference internal" href="#dev-step-setup"><span class="std std-ref">setup()</span></a> (or, less commonly, in <a class="reference internal" href="#dev-step-collect"><span class="std std-ref">collect()</span></a>).</p>
+<dt><code class="docutils literal notranslate"><span class="pre">core</span></code></dt><dd><p>Which of the <a class="reference internal" href="#dev-cores"><span class="std std-ref">Cores</span></a> this test case belongs to.  This entry is
+added automatically by <a class="reference internal" href="generated/compass.testcase.add_step.html#compass.testcase.add_step" title="compass.testcase.add_step"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.add_step()</span></code></a> when it
+is called in the configuration’s <code class="docutils literal notranslate"><span class="pre">collect()</span></code> function and should not be
+modified.</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">cores</span></code></dt><dd><p>The “target” number of cores that the step would ideally run on if that
-number is available.  This entry should be set in <a class="reference internal" href="#dev-step-collect"><span class="std std-ref">collect()</span></a>
-or  <a class="reference internal" href="#dev-step-setup"><span class="std std-ref">setup()</span></a> if it is known in advance, or in the test case’s
-<a class="reference internal" href="#dev-testcase-run"><span class="std std-ref">run()</span></a> if it comes from a config option that a user might
-alter.</p>
+number is available.  This entry should be set via keyword argument to
+<a class="reference internal" href="generated/compass.testcase.add_step.html#compass.testcase.add_step" title="compass.testcase.add_step"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.add_step()</span></code></a>, in <a class="reference internal" href="#dev-step-collect"><span class="std std-ref">collect()</span></a>
+or  in <a class="reference internal" href="#dev-step-setup"><span class="std std-ref">setup()</span></a> if it is known in advance, or in the test
+case’s <a class="reference internal" href="#dev-testcase-run"><span class="std std-ref">run()</span></a> if it comes from a config option that a user
+might alter.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">max_memory</span></code></dt><dd><p>The maximum amount of memory the step is allowed to use.  This is a
-placeholder for the time being and is not used. This entry should be set in
-<a class="reference internal" href="#dev-step-collect"><span class="std std-ref">collect()</span></a> or  <a class="reference internal" href="#dev-step-setup"><span class="std std-ref">setup()</span></a> if it is known in
-advance, or in the test case’s <a class="reference internal" href="#dev-testcase-run"><span class="std std-ref">run()</span></a> if it comes from a
-config option that a user might alter.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">inputs</span></code></dt><dd><p>A list of absolute paths of input files to the step, added with calls to
+<a class="reference internal" href="generated/compass.io.add_input_file.html#compass.io.add_input_file" title="compass.io.add_input_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.io.add_input_file()</span></code></a>.</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">max_disk</span></code></dt><dd><p>The maximum amount of disk space the step is allowed to use.  This is a
-placeholder for the time being and is not used. This entry should be set in
-<a class="reference internal" href="#dev-step-collect"><span class="std std-ref">collect()</span></a> or  <a class="reference internal" href="#dev-step-setup"><span class="std std-ref">setup()</span></a> if it is known in
+placeholder for the time being and is not used. This entry should be set
+via keyword argument to <a class="reference internal" href="generated/compass.testcase.add_step.html#compass.testcase.add_step" title="compass.testcase.add_step"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.add_step()</span></code></a>, in
+<a class="reference internal" href="#dev-step-collect"><span class="std std-ref">collect()</span></a> or in <a class="reference internal" href="#dev-step-setup"><span class="std std-ref">setup()</span></a> if it is known in
 advance, or in the test case’s <a class="reference internal" href="#dev-testcase-run"><span class="std std-ref">run()</span></a> if it comes from a
 config option that a user might alter.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">setup</span></code></dt><dd><p>The name of the <a class="reference internal" href="#dev-step-setup"><span class="std std-ref">setup()</span></a> function for setting up the step.
-This entry is added by <a class="reference internal" href="generated/compass.testcase.get_testcase_default.html#compass.testcase.get_testcase_default" title="compass.testcase.get_testcase_default"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.get_testcase_default()</span></code></a>
-and should only be modified if you have an important reason not to name
-the function in your step’s module <code class="docutils literal notranslate"><span class="pre">configure</span></code>.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">max_memory</span></code></dt><dd><p>The maximum amount of memory the step is allowed to use.  This is a
+placeholder for the time being and is not used. This entry should be set
+via keyword argument to <a class="reference internal" href="generated/compass.testcase.add_step.html#compass.testcase.add_step" title="compass.testcase.add_step"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.add_step()</span></code></a>, in
+<a class="reference internal" href="#dev-step-collect"><span class="std std-ref">collect()</span></a> or in <a class="reference internal" href="#dev-step-setup"><span class="std std-ref">setup()</span></a> if it is known in
+advance, or in the test case’s <a class="reference internal" href="#dev-testcase-run"><span class="std std-ref">run()</span></a> if it comes from a
+config option that a user might alter.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">run</span></code></dt><dd><p>The name of the <a class="reference internal" href="#dev-step-run"><span class="std std-ref">run()</span></a> function for running the step, set
-by <a class="reference internal" href="generated/compass.testcase.get_testcase_default.html#compass.testcase.get_testcase_default" title="compass.testcase.get_testcase_default"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.get_testcase_default()</span></code></a>.  This entry should
-only be modified if you have an important reason not to name the function
-in your step’s module <code class="docutils literal notranslate"><span class="pre">run</span></code>.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">min_cores</span></code></dt><dd><p>The minimum number of cores that the step can run on.  If fewer cores are
+available on the system, the step will fail.  This entry should be set via
+keyword argument to <a class="reference internal" href="generated/compass.testcase.add_step.html#compass.testcase.add_step" title="compass.testcase.add_step"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.add_step()</span></code></a>, in
+<a class="reference internal" href="#dev-step-collect"><span class="std std-ref">collect()</span></a> or  in <a class="reference internal" href="#dev-step-setup"><span class="std std-ref">setup()</span></a> if it is known in
+advance, or in the test case’s <a class="reference internal" href="#dev-testcase-run"><span class="std std-ref">run()</span></a> if it comes from a
+config option that a user might alter.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">path</span></code></dt><dd><p>The relative path of the step within the base work directory, the
-combination of the <code class="docutils literal notranslate"><span class="pre">core</span></code>, <code class="docutils literal notranslate"><span class="pre">configuration</span></code>, test case’s <code class="docutils literal notranslate"><span class="pre">subdir</span></code>
-and the step’s <code class="docutils literal notranslate"><span class="pre">subdir</span></code>.  This entry is added automatically by the
-<a class="reference internal" href="framework.html#dev-framework"><span class="std std-ref">Framework</span></a> after <a class="reference internal" href="#dev-testcase-collect"><span class="std std-ref">collect()</span></a> is called and should
-not be modified.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">module</span></code></dt><dd><p>The full name of the module where the step is defined. This entry is added
+automatically by <a class="reference internal" href="generated/compass.testcase.add_step.html#compass.testcase.add_step" title="compass.testcase.add_step"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.add_step()</span></code></a> when it is called
+in the test case’s <a class="reference internal" href="#dev-testcase-collect"><span class="std std-ref">collect()</span></a> function and should not been
+to be modified.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">testcase</span></code></dt><dd><p>The name of the test case that this step belongs to.  This is set by the
-<a class="reference internal" href="framework.html#dev-framework"><span class="std std-ref">Framework</span></a> and should not be modified.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">name</span></code></dt><dd><p>The name of the step.  The default is the last part of <code class="docutils literal notranslate"><span class="pre">module</span></code> and is
+set by <a class="reference internal" href="generated/compass.testcase.add_step.html#compass.testcase.add_step" title="compass.testcase.add_step"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.add_step()</span></code></a>.  You can modify this entry
+by passing <code class="docutils literal notranslate"><span class="pre">name=&lt;name&gt;</span></code> as a keyword argument to this function when it
+is called in the test case’s <a class="reference internal" href="#dev-testcase-collect"><span class="std std-ref">collect()</span></a> function.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">testcase_subdir</span></code></dt><dd><p>The subdirectory of the test case that this step belongs to.  This is set
-by the <a class="reference internal" href="framework.html#dev-framework"><span class="std std-ref">Framework</span></a> and should not be modified.  It can be useful
-for finding the paths to other steps in the test case.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">outputs</span></code></dt><dd><p>A list of absolute paths of output files to the step, added with calls to
+<a class="reference internal" href="generated/compass.io.add_output_file.html#compass.io.add_output_file" title="compass.io.add_output_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.io.add_output_file()</span></code></a>.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">work_dir</span></code></dt><dd><p>The absolute path where the step will be or has been set up.  This is set
-by the <a class="reference internal" href="framework.html#dev-framework"><span class="std std-ref">Framework</span></a> before calling <a class="reference internal" href="#dev-step-setup"><span class="std std-ref">setup()</span></a> and should
-not be modified.  It can be helpful for determining absolute paths for
-input and output files.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">path</span></code></dt><dd><p>The relative path of the steps within the base work directory, the
+combination of the <code class="docutils literal notranslate"><span class="pre">core</span></code>, <code class="docutils literal notranslate"><span class="pre">configuration</span></code>, <code class="docutils literal notranslate"><span class="pre">testcase_subdir</span></code> and
+<code class="docutils literal notranslate"><span class="pre">subdir</span></code>.  This entry is added automatically by the <a class="reference internal" href="framework.html#dev-framework"><span class="std std-ref">Framework</span></a>
+after <a class="reference internal" href="#dev-step-collect"><span class="std std-ref">collect()</span></a> is called and should not be modified.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">base_work_dir</span></code></dt><dd><p>The absolute path to the base location where test cases are set up.  This
-is set by the <a class="reference internal" href="framework.html#dev-framework"><span class="std std-ref">Framework</span></a> before calling <a class="reference internal" href="#dev-step-setup"><span class="std std-ref">setup()</span></a> and
-should not be modified.  It can be helpful for determining absolute paths
-for input and output files.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">run</span></code></dt><dd><p>The name of the <a class="reference internal" href="#dev-step-run"><span class="std std-ref">run()</span></a> function for running the step,
+set by <a class="reference internal" href="generated/compass.testcase.add_step.html#compass.testcase.add_step" title="compass.testcase.add_step"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.add_step()</span></code></a>.  This entry should only be
+modified if you have an important reason not to name the function in your
+test case’s module <code class="docutils literal notranslate"><span class="pre">run</span></code>.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">config</span></code></dt><dd><p>The name of the config file where config options will read in for the
-step.  This config file is shared across the test case.  This entry
-is set by the <a class="reference internal" href="framework.html#dev-framework"><span class="std std-ref">Framework</span></a> before calling <a class="reference internal" href="#dev-step-setup"><span class="std std-ref">setup()</span></a> and
-should not be modified.  It is used internally by the <a class="reference internal" href="framework.html#dev-framework"><span class="std std-ref">Framework</span></a>
-and likely won’t be useful within the step because config options are
-available in the <code class="docutils literal notranslate"><span class="pre">config</span></code> object.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">steup</span></code></dt><dd><p>The name of the <a class="reference internal" href="#dev-step-setup"><span class="std std-ref">setup()</span></a> function for setting up the step,
+set by <a class="reference internal" href="generated/compass.testcase.add_step.html#compass.testcase.add_step" title="compass.testcase.add_step"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.add_step()</span></code></a>.  This entry should only be
+modified if you have an important reason not to name the function in your
+test case’s module <code class="docutils literal notranslate"><span class="pre">setup</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">subdir</span></code></dt><dd><p>The subdirectory for the step within the test case.  The default is the the
+last part of the <code class="docutils literal notranslate"><span class="pre">module</span></code> (the same as the default <code class="docutils literal notranslate"><span class="pre">name</span></code>) and is set
+by <a class="reference internal" href="generated/compass.testcase.add_step.html#compass.testcase.add_step" title="compass.testcase.add_step"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.add_step()</span></code></a>.  You can modify this entry by
+passing <code class="docutils literal notranslate"><span class="pre">subdir=&lt;subdir&gt;</span></code> as a keyword argument to this function when it
+is called in the configuration’s <code class="docutils literal notranslate"><span class="pre">collect()</span></code> function.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">testcase</span></code></dt><dd><p>The name of the test case that this step belongs to.  This comes from the
+test case and should not be modified by the step.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">testcase_subdir</span></code></dt><dd><p>The subdirectory for the test case within the configuration.  This comes
+from the test case and should not be modified by the step.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">threads</span></code></dt><dd><p>The number of threads used by the step.  This entry should be set via
+keyword argument to <a class="reference internal" href="generated/compass.testcase.add_step.html#compass.testcase.add_step" title="compass.testcase.add_step"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.add_step()</span></code></a>, in
+<a class="reference internal" href="#dev-step-collect"><span class="std std-ref">collect()</span></a> or  in <a class="reference internal" href="#dev-step-setup"><span class="std std-ref">setup()</span></a> if it is known in
+advance, or in the test case’s <a class="reference internal" href="#dev-testcase-run"><span class="std std-ref">run()</span></a> if it comes from a
+config option that a user might alter.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">work_dir</span></code></dt><dd><p>The directory where the step has been set up, a combination of
+<code class="docutils literal notranslate"><span class="pre">base_work_dir</span></code> and <code class="docutils literal notranslate"><span class="pre">path</span></code>.</p>
 </dd>
 </dl>
 <p>You can add other entries to the dictionary to pass information between the
-<a class="reference internal" href="#dev-step-collect"><span class="std std-ref">collect()</span></a>, <a class="reference internal" href="#dev-step-setup"><span class="std std-ref">setup()</span></a>, and <a class="reference internal" href="#dev-step-run"><span class="std std-ref">run()</span></a>.  In the
-example above, <code class="docutils literal notranslate"><span class="pre">resolution</span></code> has been added for this purpose.</p>
+<a class="reference internal" href="#dev-step-collect"><span class="std std-ref">collect()</span></a>, <a class="reference internal" href="#dev-step-setup"><span class="std std-ref">setup()</span></a>, and <a class="reference internal" href="#dev-step-run"><span class="std std-ref">run()</span></a>.  In
+the example above, <code class="docutils literal notranslate"><span class="pre">resolution</span></code> has been added for this purpose.</p>
 </div>
 <div class="section" id="dev-step-collect">
-<span id="id1"></span><h3>collect()<a class="headerlink" href="#dev-step-collect" title="Permalink to this headline">¶</a></h3>
-<p>The <code class="docutils literal notranslate"><span class="pre">collect()</span></code> function for a step must:</p>
-<ol class="arabic simple">
-<li><p>call <a class="reference internal" href="generated/compass.testcase.get_step_default.html#compass.testcase.get_step_default" title="compass.testcase.get_step_default"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.get_step_default()</span></code></a></p></li>
-</ol>
-<ol class="arabic simple" start="3">
-<li><p>return the resulting python dictionary <code class="docutils literal notranslate"><span class="pre">step</span></code>.</p></li>
-</ol>
-<p>You can include argument (typically parameters) to <code class="docutils literal notranslate"><span class="pre">collect()</span></code> as long as
-the test case’s <code class="docutils literal notranslate"><span class="pre">collect()</span></code> function will know what these should be.  In
-the example below, there are lots of arguments.  Some, like <code class="docutils literal notranslate"><span class="pre">resolution</span></code>,
-are required while others, like the viscosity <code class="docutils literal notranslate"><span class="pre">nu</span></code> are not.</p>
-<p>Typically, <code class="docutils literal notranslate"><span class="pre">collect()</span></code> will do little more than call
-<a class="reference internal" href="generated/compass.testcase.get_step_default.html#compass.testcase.get_step_default" title="compass.testcase.get_step_default"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.get_step_default()</span></code></a> and add the parameters to
-<code class="docutils literal notranslate"><span class="pre">step</span></code> for use in <a class="reference internal" href="#dev-step-setup"><span class="std std-ref">setup()</span></a> and <a class="reference internal" href="#dev-step-run"><span class="std std-ref">run()</span></a>.</p>
+<span id="id2"></span><h3>collect()<a class="headerlink" href="#dev-step-collect" title="Permalink to this headline">¶</a></h3>
+<p>The arguments to <code class="docutils literal notranslate"><span class="pre">collect()</span></code> are the dictionaries <code class="docutils literal notranslate"><span class="pre">testcase</span></code> describing the
+test case and <code class="docutils literal notranslate"><span class="pre">step</span></code> describing the step.  The latter will include the keys
+and values from any keyword arguments passed to
+<a class="reference internal" href="generated/compass.testcase.add_step.html#compass.testcase.add_step" title="compass.testcase.add_step"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.add_step()</span></code></a>. In the example below, the resolution
+(as a string) as been passed in this way.</p>
+<p>As with the test case’s <a class="reference internal" href="#dev-testcase-collect"><span class="std std-ref">collect()</span></a>, it is important that the
+step’s <code class="docutils literal notranslate"><span class="pre">collect()</span></code> function doesn’t perform any time-consuming calculations,
+download files, or otherwise use significant resources because this function is
+called quite often for every single test case and step: when test cases are
+listed, set up, or cleaned up, and also when test suites are set up or cleaned
+up.  However, it is okay to add input, output, streams and namelist files to
+the step by calling any of the following functions:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="generated/compass.io.add_input_file.html#compass.io.add_input_file" title="compass.io.add_input_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.io.add_input_file()</span></code></a></p></li>
+<li><p><a class="reference internal" href="generated/compass.io.add_output_file.html#compass.io.add_output_file" title="compass.io.add_output_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.io.add_output_file()</span></code></a></p></li>
+<li><p><a class="reference internal" href="generated/compass.namelist.add_namelist_file.html#compass.namelist.add_namelist_file" title="compass.namelist.add_namelist_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.namelist.add_namelist_file()</span></code></a></p></li>
+<li><p><a class="reference internal" href="generated/compass.namelist.add_namelist_options.html#compass.namelist.add_namelist_options" title="compass.namelist.add_namelist_options"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.namelist.add_namelist_options()</span></code></a></p></li>
+<li><p><a class="reference internal" href="generated/compass.streams.add_streams_file.html#compass.streams.add_streams_file" title="compass.streams.add_streams_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.streams.add_streams_file()</span></code></a></p></li>
+</ul>
+<p>Each of these functions just caches information about the the inputs, outputs,
+namelists or streams files to be read later if the test case in question gets
+set up, so each takes a negligible amount of time.</p>
 <p>The following is the contents of
-<a class="reference internal" href="ocean/generated/compass.ocean.tests.baroclinic_channel.forward.collect.html#compass.ocean.tests.baroclinic_channel.forward.collect" title="compass.ocean.tests.baroclinic_channel.forward.collect"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.tests.baroclinic_channel.forward.collect()</span></code></a>, which is an
-example of a <code class="docutils literal notranslate"><span class="pre">collect()</span></code> function with a large number of arguments:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">get_step_default</span>
+<a class="reference internal" href="ocean/generated/compass.ocean.tests.baroclinic_channel.forward.collect.html#compass.ocean.tests.baroclinic_channel.forward.collect" title="compass.ocean.tests.baroclinic_channel.forward.collect"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.tests.baroclinic_channel.forward.collect()</span></code></a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.namelist</span> <span class="kn">import</span> <span class="n">add_namelist_file</span><span class="p">,</span> <span class="n">add_namelist_options</span>
+<span class="kn">from</span> <span class="nn">compass.streams</span> <span class="kn">import</span> <span class="n">add_streams_file</span>
 
 
-<span class="k">def</span> <span class="nf">collect</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="n">cores</span><span class="p">,</span> <span class="n">min_cores</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_memory</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
-            <span class="n">max_disk</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">testcase_module</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">namelist_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">streams_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nu</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">collect</span><span class="p">(</span><span class="n">testcase</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Get a dictionary of step properties</span>
+<span class="sd">    Update the dictionary of step properties</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    resolution : {&#39;1km&#39;, &#39;4km&#39;, &#39;10km&#39;}</span>
-<span class="sd">        The name of the resolution to run at</span>
+<span class="sd">    testcase : dict</span>
+<span class="sd">        A dictionary of properties of this test case, which should not be</span>
+<span class="sd">        modified here</span>
 
-<span class="sd">    cores : int</span>
-<span class="sd">        The number of cores to run on in forward runs. If this many cores are</span>
-<span class="sd">        available on the machine or batch job, the task will run on that</span>
-<span class="sd">        number. If fewer are available (but no fewer than min_cores), the job</span>
-<span class="sd">        will run on all available cores instead.</span>
-
-<span class="sd">    min_cores : int, optional</span>
-<span class="sd">        The minimum allowed cores.  If that number of cores are not available</span>
-<span class="sd">        on the machine or in the batch job, the run will fail.  By default,</span>
-<span class="sd">        ``min_cores = cores``</span>
-
-<span class="sd">    max_memory : int, optional</span>
-<span class="sd">        The maximum amount of memory (in MB) this step is allowed to use</span>
-
-<span class="sd">    max_disk : int, optional</span>
-<span class="sd">        The maximum amount of disk space  (in MB) this step is allowed to use</span>
-
-<span class="sd">    threads : int, optional</span>
-<span class="sd">        The number of threads to run with during forward runs</span>
-
-<span class="sd">    testcase_module : str, optional</span>
-<span class="sd">        The module for the testcase</span>
-
-<span class="sd">    namelist_file : str, optional</span>
-<span class="sd">        The name of a namelist file in the testcase package directory</span>
-
-<span class="sd">    streams_file : str, optional</span>
-<span class="sd">        The name of a streams file in the testcase package directory</span>
-
-<span class="sd">    nu : float, optional</span>
-<span class="sd">        The viscosity for this step</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
 <span class="sd">    step : dict</span>
-<span class="sd">        A dictionary of properties of this step</span>
+<span class="sd">        A dictionary of properties of this step, which can be updated</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">step</span> <span class="o">=</span> <span class="n">get_step_default</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
-    <span class="n">step</span><span class="p">[</span><span class="s1">&#39;resolution&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">resolution</span>
-    <span class="n">step</span><span class="p">[</span><span class="s1">&#39;cores&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cores</span>
-    <span class="n">step</span><span class="p">[</span><span class="s1">&#39;max_memory&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_memory</span>
-    <span class="n">step</span><span class="p">[</span><span class="s1">&#39;max_disk&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_disk</span>
-    <span class="k">if</span> <span class="n">min_cores</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">min_cores</span> <span class="o">=</span> <span class="n">cores</span>
-    <span class="n">step</span><span class="p">[</span><span class="s1">&#39;min_cores&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">min_cores</span>
-    <span class="n">step</span><span class="p">[</span><span class="s1">&#39;threads&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">threads</span>
-    <span class="k">if</span> <span class="n">testcase_module</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">step</span><span class="p">[</span><span class="s1">&#39;testcase_module&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">testcase_module</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">namelist_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">streams_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;You must supply a testcase module for the &#39;</span>
-                             <span class="s1">&#39;namelist and/or streams file&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">namelist_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">step</span><span class="p">[</span><span class="s1">&#39;namelist&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">namelist_file</span>
-    <span class="k">if</span> <span class="n">streams_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">step</span><span class="p">[</span><span class="s1">&#39;streams&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">streams_file</span>
+    <span class="n">defaults</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">max_memory</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">max_disk</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">defaults</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">nu</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">step</span><span class="p">[</span><span class="s1">&#39;nu&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nu</span>
+    <span class="n">step</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;min_cores&#39;</span><span class="p">,</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;cores&#39;</span><span class="p">])</span>
 
-    <span class="k">return</span> <span class="n">step</span>
+    <span class="n">add_namelist_file</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="s1">&#39;compass.ocean.tests.baroclinic_channel&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;namelist.forward&#39;</span><span class="p">)</span>
+    <span class="n">add_namelist_file</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="s1">&#39;compass.ocean.tests.baroclinic_channel&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;namelist.</span><span class="si">{}</span><span class="s1">.forward&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step</span><span class="p">[</span><span class="s1">&#39;resolution&#39;</span><span class="p">]))</span>
+    <span class="k">if</span> <span class="s1">&#39;nu&#39;</span> <span class="ow">in</span> <span class="n">step</span><span class="p">:</span>
+        <span class="c1"># update the viscosity to the requested value</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_mom_del2&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step</span><span class="p">[</span><span class="s1">&#39;nu&#39;</span><span class="p">])}</span>
+        <span class="n">add_namelist_options</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
+
+    <span class="n">add_streams_file</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="s1">&#39;compass.ocean.tests.baroclinic_channel&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;streams.forward&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Below, we will follow how these parameters are use later in the step.</p>
+<p>A set of default parameters (<code class="docutils literal notranslate"><span class="pre">max_memory</span></code>, <code class="docutils literal notranslate"><span class="pre">max_disk</span></code> and <code class="docutils literal notranslate"><span class="pre">threads</span></code>) is
+added to <code class="docutils literal notranslate"><span class="pre">step</span></code> if these parameters have not already been set.  Similarly,
+<code class="docutils literal notranslate"><span class="pre">min_cores</span></code> is set to <code class="docutils literal notranslate"><span class="pre">cores</span></code> if it has not already been set.</p>
+<p>Then, two files with modifications to the namelist options are added (for
+later processing), and an additional config option is set manually via
+a python dictionary of namelist options.</p>
+<p>Finally, a file with modifications to the default streams is also added (again,
+for later processing).</p>
 </div>
 <div class="section" id="setup">
 <span id="dev-step-setup"></span><h3>setup()<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">setup()</span></code> function is called when a user is setting up each step either
 as part of a call to <a class="reference internal" href="command_line.html#dev-compass-setup"><span class="std std-ref">compass setup</span></a> or <a class="reference internal" href="command_line.html#dev-compass-suite"><span class="std std-ref">compass suite</span></a>.
-Typical activities that are involved in setting up a step include:</p>
-<ol class="arabic simple">
-<li><p>downloading files, most often from the
-<a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/">LCRC server</a>.</p></li>
-<li><p>making symlinks to files from <code class="docutils literal notranslate"><span class="pre">compass</span></code>, in a local cache directory, or
-other steps.</p></li>
-<li><p>creating a list of <a class="reference internal" href="#dev-step-inputs-outputs"><span class="std std-ref">inputs and outputs</span></a>.</p></li>
-<li><p>adding the contents of one or more <a class="reference internal" href="../users_guide/configuration.html#config-files"><span class="std std-ref">Configuration Files</span></a> to the <code class="docutils literal notranslate"><span class="pre">config</span></code>
-object, or using <code class="docutils literal notranslate"><span class="pre">config.set()</span></code> to set config options directly.</p></li>
-<li><p>modifying namelist options from their defaults either by parsing namelist
-files or by directly adding entries to a <code class="docutils literal notranslate"><span class="pre">replacements</span></code> dictionary, then
-generating the namelist file that will be used by the MPAS model.</p></li>
-<li><p>adding or modifying streams by parsing stream files to create an XML tree,
-then generating the streams file that will be used by the MPAS model.</p></li>
-</ol>
+As in <a class="reference internal" href="#dev-step-collect"><span class="std std-ref">collect()</span></a>, you can add input, output, streams and namelist
+files to the step by calling any of the following functions:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="generated/compass.io.add_input_file.html#compass.io.add_input_file" title="compass.io.add_input_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.io.add_input_file()</span></code></a></p></li>
+<li><p><a class="reference internal" href="generated/compass.io.add_output_file.html#compass.io.add_output_file" title="compass.io.add_output_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.io.add_output_file()</span></code></a></p></li>
+<li><p><a class="reference internal" href="generated/compass.namelist.add_namelist_file.html#compass.namelist.add_namelist_file" title="compass.namelist.add_namelist_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.namelist.add_namelist_file()</span></code></a></p></li>
+<li><p><a class="reference internal" href="generated/compass.namelist.add_namelist_options.html#compass.namelist.add_namelist_options" title="compass.namelist.add_namelist_options"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.namelist.add_namelist_options()</span></code></a></p></li>
+<li><p><a class="reference internal" href="generated/compass.streams.add_streams_file.html#compass.streams.add_streams_file" title="compass.streams.add_streams_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.streams.add_streams_file()</span></code></a></p></li>
+</ul>
+<p>You can also add the contents of one or more <a class="reference internal" href="../users_guide/configuration.html#config-files"><span class="std std-ref">Configuration Files</span></a> to the
+<code class="docutils literal notranslate"><span class="pre">config</span></code> object, or use <code class="docutils literal notranslate"><span class="pre">config.set()</span></code> to set config options directly.</p>
+<p>If namelists and streams files have been defined, you should call
+<a class="reference internal" href="generated/compass.namelist.generate_namelist.html#compass.namelist.generate_namelist" title="compass.namelist.generate_namelist"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.namelist.generate_namelist()</span></code></a> and
+<a class="reference internal" href="generated/compass.streams.generate_streams.html#compass.streams.generate_streams" title="compass.streams.generate_streams"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.streams.generate_streams()</span></code></a> somewhere in <code class="docutils literal notranslate"><span class="pre">setup()</span></code>.</p>
+<p>If you are running the MPAS model, you should call
+<a class="reference internal" href="generated/compass.model.add_model_as_input.html#compass.model.add_model_as_input" title="compass.model.add_model_as_input"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.model.add_model_as_input()</span></code></a> to create a symlink to the
+MPAS model’s executable.</p>
 <p>Set up should not do any major computations or any time-consuming operations
 other than downloading files.</p>
-<p>As an example, here is a slightly modified version of
+<p>As an example, here is
 <a class="reference internal" href="ocean/generated/compass.ocean.tests.baroclinic_channel.forward.setup.html#compass.ocean.tests.baroclinic_channel.forward.setup" title="compass.ocean.tests.baroclinic_channel.forward.setup"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.tests.baroclinic_channel.forward.setup()</span></code></a>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
-
-<span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">symlink</span>
-<span class="kn">from</span> <span class="nn">compass</span> <span class="kn">import</span> <span class="n">namelist</span><span class="p">,</span> <span class="n">streams</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">add_input_file</span><span class="p">,</span> <span class="n">add_output_file</span>
+<span class="kn">from</span> <span class="nn">compass.namelist</span> <span class="kn">import</span> <span class="n">generate_namelist</span>
+<span class="kn">from</span> <span class="nn">compass.streams</span> <span class="kn">import</span> <span class="n">generate_streams</span>
+<span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">add_model_as_input</span>
 
 
 <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
@@ -1183,336 +1127,34 @@ other than downloading files.</p>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    step : dict</span>
-<span class="sd">        A dictionary of properties of this step from the ``collect()`` function</span>
+<span class="sd">        A dictionary of properties of this step</span>
 
 <span class="sd">    config : configparser.ConfigParser</span>
-<span class="sd">        Configuration options for this testcase, a combination of the defaults</span>
-<span class="sd">        for the machine, core, configuration and testcase</span>
+<span class="sd">        Configuration options for this test case, a combination of the defaults</span>
+<span class="sd">        for the machine, core, configuration and test case</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">resolution</span> <span class="o">=</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;resolution&#39;</span><span class="p">]</span>
-    <span class="n">step_dir</span> <span class="o">=</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;work_dir&#39;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="s1">&#39;testcase_module&#39;</span> <span class="ow">in</span> <span class="n">step</span><span class="p">:</span>
-        <span class="n">testcase_module</span> <span class="o">=</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;testcase_module&#39;</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">testcase_module</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="c1"># generate the namelist and streams files file from the various files and</span>
+    <span class="c1"># replacements we have collected</span>
+    <span class="n">generate_namelist</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+    <span class="n">generate_streams</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
 
-    <span class="c1"># generate the namelist, replacing a few default options</span>
-    <span class="n">replacements</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="n">add_model_as_input</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">namelist_file</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;namelist.forward&#39;</span><span class="p">,</span>
-                          <span class="s1">&#39;namelist.</span><span class="si">{}</span><span class="s1">.forward&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">)]:</span>
-        <span class="n">new_replacements</span> <span class="o">=</span> <span class="n">namelist</span><span class="o">.</span><span class="n">parse_replacements</span><span class="p">(</span>
-            <span class="s1">&#39;compass.ocean.tests.baroclinic_channel&#39;</span><span class="p">,</span> <span class="n">namelist_file</span><span class="p">)</span>
-        <span class="n">replacements</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">new_replacements</span><span class="p">)</span>
+    <span class="n">add_input_file</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;init.nc&#39;</span><span class="p">,</span>
+                   <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../initial_state/ocean.nc&#39;</span><span class="p">)</span>
+    <span class="n">add_input_file</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span>
+                   <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../initial_state/culled_graph.info&#39;</span><span class="p">)</span>
 
-    <span class="c1"># see if there&#39;s one for the testcase itself</span>
-    <span class="k">if</span> <span class="s1">&#39;namelist&#39;</span> <span class="ow">in</span> <span class="n">step</span><span class="p">:</span>
-        <span class="n">new_replacements</span> <span class="o">=</span> <span class="n">namelist</span><span class="o">.</span><span class="n">parse_replacements</span><span class="p">(</span>
-            <span class="n">testcase_module</span><span class="p">,</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;namelist&#39;</span><span class="p">])</span>
-        <span class="n">replacements</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">new_replacements</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="s1">&#39;nu&#39;</span> <span class="ow">in</span> <span class="n">step</span><span class="p">:</span>
-        <span class="c1"># update the viscosity to the requested value</span>
-        <span class="n">replacements</span><span class="p">[</span><span class="s1">&#39;config_mom_del2] = &#39;</span><span class="p">{}</span><span class="s1">&#39;.format(step[&#39;</span><span class="n">nu</span><span class="s1">&#39;])</span>
-
-    <span class="n">namelist</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">replacements</span><span class="o">=</span><span class="n">replacements</span><span class="p">,</span>
-                      <span class="n">step_work_dir</span><span class="o">=</span><span class="n">step_dir</span><span class="p">,</span> <span class="n">core</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">)</span>
-
-    <span class="c1"># generate the streams file</span>
-    <span class="n">streams_data</span> <span class="o">=</span> <span class="n">streams</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.baroclinic_channel&#39;</span><span class="p">,</span>
-                                <span class="s1">&#39;streams.forward&#39;</span><span class="p">)</span>
-
-    <span class="c1"># see if there&#39;s one for the testcase itself</span>
-    <span class="k">if</span> <span class="s1">&#39;streams&#39;</span> <span class="ow">in</span> <span class="n">step</span><span class="p">:</span>
-        <span class="n">streams_data</span> <span class="o">=</span> <span class="n">streams</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">testcase_module</span><span class="p">,</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;streams&#39;</span><span class="p">],</span>
-                                    <span class="n">tree</span><span class="o">=</span><span class="n">streams_data</span><span class="p">)</span>
-
-    <span class="n">streams</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">tree</span><span class="o">=</span><span class="n">streams_data</span><span class="p">,</span> <span class="n">step_work_dir</span><span class="o">=</span><span class="n">step_dir</span><span class="p">,</span>
-                     <span class="n">core</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">)</span>
-
-    <span class="c1"># make a link to the ocean_model executable</span>
-    <span class="n">symlink</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;executables&#39;</span><span class="p">,</span> <span class="s1">&#39;model&#39;</span><span class="p">)),</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">step_dir</span><span class="p">,</span> <span class="s1">&#39;ocean_model&#39;</span><span class="p">))</span>
-
-    <span class="n">inputs</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">outputs</span> <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="n">links</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;../initial_state/ocean.nc&#39;</span><span class="p">:</span> <span class="s1">&#39;init.nc&#39;</span><span class="p">,</span>
-             <span class="s1">&#39;../initial_state/culled_graph.info&#39;</span><span class="p">:</span> <span class="s1">&#39;graph.info&#39;</span><span class="p">}</span>
-    <span class="k">for</span> <span class="n">target</span><span class="p">,</span> <span class="n">link</span> <span class="ow">in</span> <span class="n">links</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">symlink</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">step_dir</span><span class="p">,</span> <span class="n">link</span><span class="p">))</span>
-        <span class="n">inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">step_dir</span><span class="p">,</span> <span class="n">target</span><span class="p">)))</span>
-
-    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;output.nc&#39;</span><span class="p">]:</span>
-        <span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">step_dir</span><span class="p">,</span> <span class="n">file</span><span class="p">))</span>
-
-    <span class="n">step</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">inputs</span>
-    <span class="n">step</span><span class="p">[</span><span class="s1">&#39;outputs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">outputs</span>
+    <span class="n">add_output_file</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;output.nc&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Let’s go back through this a few bits at a time.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">resolution</span> <span class="o">=</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;resolution&#39;</span><span class="p">]</span>
-<span class="n">step_dir</span> <span class="o">=</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;work_dir&#39;</span><span class="p">]</span>
-<span class="k">if</span> <span class="s1">&#39;testcase_module&#39;</span> <span class="ow">in</span> <span class="n">step</span><span class="p">:</span>
-    <span class="n">testcase_module</span> <span class="o">=</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;testcase_module&#39;</span><span class="p">]</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="n">testcase_module</span> <span class="o">=</span> <span class="kc">None</span>
-</pre></div>
-</div>
-<p>This just pulls the resolution, the step’s work directory and (if available)
-the test case’s module out of the <code class="docutils literal notranslate"><span class="pre">step</span></code> dictionary for convenience.</p>
-<div class="section" id="namelists">
-<span id="dev-step-namelists"></span><h4>namelists<a class="headerlink" href="#namelists" title="Permalink to this headline">¶</a></h4>
-<p>The next segment adds a bunch of “replacements” to a dictionary that is used to
-update the default namelist from the MPAS model.</p>
-<p>First, we create an emtpy dictionary
-.. code-block:: python</p>
-<blockquote>
-<div><p># generate the namelist, replacing a few default options
-replacements = dict()</p>
-</div></blockquote>
-<p>Then, we add replacements from 2 files that are part of the
-<code class="docutils literal notranslate"><span class="pre">compass.ocean.tests.baroclinic</span></code> package.  Let’s say we’re setting up the
-10-km version of the test case (<code class="docutils literal notranslate"><span class="pre">resolution</span> <span class="pre">=</span> <span class="pre">10km</span></code>).  Then, the files are
-<code class="docutils literal notranslate"><span class="pre">namelist.forward</span></code> and <code class="docutils literal notranslate"><span class="pre">namelist.10km.forward</span></code>.  The first one contains
-namelist options that are appropriate for all <code class="docutils literal notranslate"><span class="pre">baroclinic_channel</span></code> test
-cases and the second has some config options (like the time step) that are
-specific to the resolution.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">namelist_file</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;namelist.forward&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;namelist.</span><span class="si">{}</span><span class="s1">.forward&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">)]:</span>
-    <span class="n">new_replacements</span> <span class="o">=</span> <span class="n">namelist</span><span class="o">.</span><span class="n">parse_replacements</span><span class="p">(</span>
-        <span class="s1">&#39;compass.ocean.tests.baroclinic_channel&#39;</span><span class="p">,</span> <span class="n">namelist_file</span><span class="p">)</span>
-    <span class="n">replacements</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">new_replacements</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>First, we parse the new replacements from the file using
-<a class="reference internal" href="generated/compass.namelist.parse_replacements.html#compass.namelist.parse_replacements" title="compass.namelist.parse_replacements"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.namelist.parse_replacements()</span></code></a>, then we add them to our
-<code class="docutils literal notranslate"><span class="pre">replacements</span></code> dictionary (updating anything that was already in there with
-the new value).</p>
-<p>Here’s what these two files look like:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>config_write_output_on_startup = .false.
-config_run_duration = &#39;0000_00:15:00&#39;
-config_use_mom_del2 = .true.
-config_implicit_bottom_drag_coeff = 1.0e-2
-config_use_cvmix_background = .true.
-config_cvmix_background_diffusion = 0.0
-config_cvmix_background_viscosity = 1.0e-4
-</pre></div>
-</div>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>config_dt = &#39;00:05:00&#39;
-config_btr_dt = &#39;00:00:15&#39;
-config_mom_del2 = 10.0
-</pre></div>
-</div>
-<p>Some <code class="docutils literal notranslate"><span class="pre">baroclinic_channel</span></code> test cases have their own namelist options as well.
-These test cases will pass a namelist file and the module (or package actually
-if we’re being picky) for the test case as arguments to <code class="docutils literal notranslate"><span class="pre">collect()</span></code>. If they
-were included, we added them to <code class="docutils literal notranslate"><span class="pre">step</span></code>.  So if <code class="docutils literal notranslate"><span class="pre">namelist</span></code> is found in the
-step dictionary, we add its replacements, too:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># see if there&#39;s one for the testcase itself</span>
-<span class="k">if</span> <span class="s1">&#39;namelist&#39;</span> <span class="ow">in</span> <span class="n">step</span><span class="p">:</span>
-    <span class="n">new_replacements</span> <span class="o">=</span> <span class="n">namelist</span><span class="o">.</span><span class="n">parse_replacements</span><span class="p">(</span>
-        <span class="n">testcase_module</span><span class="p">,</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;namelist&#39;</span><span class="p">])</span>
-    <span class="n">replacements</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">new_replacements</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>For the <code class="docutils literal notranslate"><span class="pre">rpe_test</span></code>, there is such a <code class="docutils literal notranslate"><span class="pre">namelist.forward</span></code>:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>config_run_duration = &#39;20_00:00:00&#39;
-</pre></div>
-</div>
-<p>It changes the duration of the run from the <code class="docutils literal notranslate"><span class="pre">baroclinic_channel</span></code> default of
-15 minutes to 20 days (yikes!).</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">rpe_test</span></code> test case also passes a value for the viscosity <code class="docutils literal notranslate"><span class="pre">nu</span></code> to
-<code class="docutils literal notranslate"><span class="pre">collect()</span></code> so we can do a parameter study with 5 different values.  If
-<code class="docutils literal notranslate"><span class="pre">nu</span></code> was passed to <code class="docutils literal notranslate"><span class="pre">collect()</span></code>, it gets added to <code class="docutils literal notranslate"><span class="pre">step</span></code> and we now use it
-to update the appropriate namelist option, <code class="docutils literal notranslate"><span class="pre">config_mom_del2</span></code>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="s1">&#39;nu&#39;</span> <span class="ow">in</span> <span class="n">step</span><span class="p">:</span>
-    <span class="c1"># update the viscosity to the requested value</span>
-    <span class="n">replacements</span><span class="p">[</span><span class="s1">&#39;config_mom_del2] = &#39;</span><span class="p">{}</span><span class="s1">&#39;.format(step[&#39;</span><span class="n">nu</span><span class="s1">&#39;])</span>
-</pre></div>
-</div>
-<p>Okay, now we’re ready to generate a namelist file with
-<a class="reference internal" href="generated/compass.namelist.generate.html#compass.namelist.generate" title="compass.namelist.generate"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.namelist.generate()</span></code></a> by starting with the defaults for
-<code class="docutils literal notranslate"><span class="pre">forward</span></code> mode in the <code class="docutils literal notranslate"><span class="pre">ocean</span></code> core and substituting our replacements:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">namelist</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">replacements</span><span class="o">=</span><span class="n">replacements</span><span class="p">,</span>
-                  <span class="n">step_work_dir</span><span class="o">=</span><span class="n">step_dir</span><span class="p">,</span> <span class="n">core</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="streams">
-<span id="dev-step-streams"></span><h4>streams<a class="headerlink" href="#streams" title="Permalink to this headline">¶</a></h4>
-<p>The next section is the same concept but for streams files.  Here, things get
-a little more complicated because streams files are XML documents, requiring
-some slightly more sophisticated parsing.</p>
-<p>It’s not as easy to start with an empty XML tree and merging XML trees isn’t
-quite as simple as calling their <code class="docutils literal notranslate"><span class="pre">.update()</span></code> method like for the replacements
-dictionary we used for namelists above.  Instead, we just parse the first
-streams file with <a class="reference internal" href="generated/compass.streams.read.html#compass.streams.read" title="compass.streams.read"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.streams.read()</span></code></a> but without passing the
-optional <code class="docutils literal notranslate"><span class="pre">tree</span></code> argument.  This tells the function to make a fresh XML tree
-with the streams from this file:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># generate the streams file</span>
-<span class="n">streams_data</span> <span class="o">=</span> <span class="n">streams</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.baroclinic_channel&#39;</span><span class="p">,</span>
-                            <span class="s1">&#39;streams.forward&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Here’s what the streams file looks like:</p>
-<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;streams&gt;</span>
-
-<span class="nt">&lt;immutable_stream</span> <span class="na">name=</span><span class="s">&quot;mesh&quot;</span>
-                  <span class="na">filename_template=</span><span class="s">&quot;init.nc&quot;</span><span class="nt">/&gt;</span>
-
-<span class="nt">&lt;immutable_stream</span> <span class="na">name=</span><span class="s">&quot;input&quot;</span>
-                  <span class="na">filename_template=</span><span class="s">&quot;init.nc&quot;</span><span class="nt">/&gt;</span>
-
-<span class="nt">&lt;immutable_stream</span> <span class="na">name=</span><span class="s">&quot;restart&quot;</span><span class="nt">/&gt;</span>
-
-<span class="nt">&lt;stream</span> <span class="na">name=</span><span class="s">&quot;output&quot;</span>
-        <span class="na">type=</span><span class="s">&quot;output&quot;</span>
-        <span class="na">filename_template=</span><span class="s">&quot;output.nc&quot;</span>
-        <span class="na">output_interval=</span><span class="s">&quot;0000_00:00:01&quot;</span>
-        <span class="na">clobber_mode=</span><span class="s">&quot;truncate&quot;</span><span class="nt">&gt;</span>
-
-    <span class="nt">&lt;var_struct</span> <span class="na">name=</span><span class="s">&quot;tracers&quot;</span><span class="nt">/&gt;</span>
-    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;xtime&quot;</span><span class="nt">/&gt;</span>
-    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;normalVelocity&quot;</span><span class="nt">/&gt;</span>
-    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;layerThickness&quot;</span><span class="nt">/&gt;</span>
-<span class="nt">&lt;/stream&gt;</span>
-
-<span class="nt">&lt;/streams&gt;</span>
-</pre></div>
-</div>
-<p>These are all streams that are already defined in the default forward streams
-for MPAS-Ocean, so the defaults will be updated.  If only the attributes of
-a stream are given, the contents of the stream (the <code class="docutils literal notranslate"><span class="pre">var</span></code>, <code class="docutils literal notranslate"><span class="pre">var_struct</span></code>
-and <code class="docutils literal notranslate"><span class="pre">var_array</span></code> tags within the stream) are taken from the defaults.  If
-any contents are given, as for the <code class="docutils literal notranslate"><span class="pre">output</span></code> stream in the example above, they
-replace the default contents.  Currently, there is no way to add or remove
-contents from the defaults, just keep the default contents or replace them all.</p>
-<p>Just like for the <code class="docutils literal notranslate"><span class="pre">namelist</span></code> passed in from the test case, we might have a
-<code class="docutils literal notranslate"><span class="pre">streams</span></code> file passed in from the test case.  If so, we parse it as well,
-this time updating <code class="docutils literal notranslate"><span class="pre">streams_data</span></code> by passing it in as the <code class="docutils literal notranslate"><span class="pre">tree</span></code> argument
-to <a class="reference internal" href="generated/compass.streams.read.html#compass.streams.read" title="compass.streams.read"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.streams.read()</span></code></a>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># see if there&#39;s one for the testcase itself</span>
-<span class="k">if</span> <span class="s1">&#39;streams&#39;</span> <span class="ow">in</span> <span class="n">step</span><span class="p">:</span>
-    <span class="n">streams_data</span> <span class="o">=</span> <span class="n">streams</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">testcase_module</span><span class="p">,</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;streams&#39;</span><span class="p">],</span>
-                                <span class="n">tree</span><span class="o">=</span><span class="n">streams_data</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>For the <code class="docutils literal notranslate"><span class="pre">rpe_test</span></code> test case, <code class="docutils literal notranslate"><span class="pre">streams.forward</span></code> is passed in and it looks
-like this:</p>
-<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;streams&gt;</span>
-
-<span class="nt">&lt;stream</span> <span class="na">name=</span><span class="s">&quot;output&quot;</span>
-        <span class="na">type=</span><span class="s">&quot;output&quot;</span>
-        <span class="na">filename_template=</span><span class="s">&quot;output.nc&quot;</span>
-        <span class="na">output_interval=</span><span class="s">&quot;0000-00-20_00:00:00&quot;</span>
-        <span class="na">clobber_mode=</span><span class="s">&quot;truncate&quot;</span><span class="nt">&gt;</span>
-
-    <span class="nt">&lt;var_struct</span> <span class="na">name=</span><span class="s">&quot;tracers&quot;</span><span class="nt">/&gt;</span>
-    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;xtime&quot;</span><span class="nt">/&gt;</span>
-    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;density&quot;</span><span class="nt">/&gt;</span>
-    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;daysSinceStartOfSim&quot;</span><span class="nt">/&gt;</span>
-    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;relativeVorticity&quot;</span><span class="nt">/&gt;</span>
-<span class="nt">&lt;/stream&gt;</span>
-
-<span class="nt">&lt;/streams&gt;</span>
-</pre></div>
-</div>
-<p>The only stream to update ith <code class="docutils literal notranslate"><span class="pre">output</span></code>.  Many of its attributes are updated
-unnecessarily to the same values as before, but the <code class="docutils literal notranslate"><span class="pre">output_interval</span></code> is
-increased to 20 days (the duration of the run) and the output variables are
-changed.  The variables <code class="docutils literal notranslate"><span class="pre">normalVelocity</span></code> and <code class="docutils literal notranslate"><span class="pre">layerThickness</span></code> are included
-in the forward runs of most <code class="docutils literal notranslate"><span class="pre">baroclinic_channel</span></code> test cases but they will be
-dropped in the <code class="docutils literal notranslate"><span class="pre">rpe_test</span></code> because they are not included when the <code class="docutils literal notranslate"><span class="pre">output</span></code>
-stream gets updated.</p>
-<p>Okay, now we’re ready to generate a streams file with
-<a class="reference internal" href="generated/compass.streams.generate.html#compass.streams.generate" title="compass.streams.generate"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.streams.generate()</span></code></a> by starting with the defaults for
-<code class="docutils literal notranslate"><span class="pre">forward</span></code> mode for any streams in the <code class="docutils literal notranslate"><span class="pre">ocean</span></code> core and updating it with
-our <code class="docutils literal notranslate"><span class="pre">streams_data</span></code>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">streams</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">tree</span><span class="o">=</span><span class="n">streams_data</span><span class="p">,</span> <span class="n">step_work_dir</span><span class="o">=</span><span class="n">step_dir</span><span class="p">,</span>
-                 <span class="n">core</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Any streams that are not included in <code class="docutils literal notranslate"><span class="pre">streams_data</span></code> will be dropped.  Any
-streams where only attributes were modified will get the contents from the
-default stream and the attributes will first come from the defaults and then
-be replaced by values from <code class="docutils literal notranslate"><span class="pre">streams_data</span></code> where they were provided.</p>
-</div>
-<div class="section" id="downloads-symlinks-inputs-and-outputs">
-<span id="dev-step-downloads"></span><h4>downloads, symlinks, inputs and outputs<a class="headerlink" href="#downloads-symlinks-inputs-and-outputs" title="Permalink to this headline">¶</a></h4>
-<p>The particular example we’re using in this section doesn’t download any input
-files.  Here’s a snippet from
-<a class="reference internal" href="ocean/generated/compass.ocean.tests.global_ocean.init.initial_state.setup.html#compass.ocean.tests.global_ocean.init.initial_state.setup" title="compass.ocean.tests.global_ocean.init.initial_state.setup"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.init.initial_state.setup()</span></code></a> that
-does:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">symlink</span><span class="p">,</span> <span class="n">download</span>
-
-<span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
-
-    <span class="n">bathymetry_database</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="s1">&#39;bathymetry_database&#39;</span><span class="p">)</span>
-
-    <span class="n">inputs</span> <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="n">remote_filename</span> <span class="o">=</span> \
-        <span class="s1">&#39;BedMachineAntarctica_and_GEBCO_2019_0.05_degree.200128.nc&#39;</span>
-    <span class="n">local_filename</span> <span class="o">=</span> <span class="s1">&#39;topography.nc&#39;</span>
-
-    <span class="n">filename</span> <span class="o">=</span> <span class="n">download</span><span class="p">(</span>
-        <span class="n">file_name</span><span class="o">=</span><span class="n">remote_filename</span><span class="p">,</span>
-        <span class="n">url</span><span class="o">=</span><span class="s1">&#39;https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/&#39;</span>
-            <span class="s1">&#39;mpas-ocean/bathymetry_database&#39;</span><span class="p">,</span>
-        <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">dest_path</span><span class="o">=</span><span class="n">bathymetry_database</span><span class="p">)</span>
-
-    <span class="n">inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-    <span class="n">symlink</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">step_dir</span><span class="p">,</span> <span class="n">local_filename</span><span class="p">))</span>
-</pre></div>
-</div>
-<p>In this example, the remote file
-<a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-ocean/bathymetry_databaseBedMachineAntarctica_and_GEBCO_2019_0.05_degree.200128.nc">BedMachineAntarctica_and_GEBCO_2019_0.05_degree.200128.nc</a>
-gets downloaded into the bathymetry database (if it’s not already there).  We
-take advantage of the fact that <a class="reference internal" href="generated/compass.io.download.html#compass.io.download" title="compass.io.download"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.io.download()</span></code></a> returns the
-full path to the file, and append this file to the list of inputs to the step.
-(This input didn’t come from another step, so it’s probably overkill but it
-does no harm, see <a class="reference internal" href="#dev-step-inputs-outputs"><span class="std std-ref">inputs and outputs</span></a>).  Finally, we create a local
-symlink called <code class="docutils literal notranslate"><span class="pre">topography.nc</span></code> to the file in the bathymetry database.</p>
-<p>Returning to our previous example,
-<a class="reference internal" href="ocean/generated/compass.ocean.tests.baroclinic_channel.forward.setup.html#compass.ocean.tests.baroclinic_channel.forward.setup" title="compass.ocean.tests.baroclinic_channel.forward.setup"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.tests.baroclinic_channel.forward.setup()</span></code></a>, we make a
-symlink to the <code class="docutils literal notranslate"><span class="pre">ocean_model</span></code> executable (which we locate using the <code class="docutils literal notranslate"><span class="pre">model</span></code>
-config option from the <code class="docutils literal notranslate"><span class="pre">executables</span></code> section).</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># make a link to the ocean_model executable</span>
-<span class="n">symlink</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;executables&#39;</span><span class="p">,</span> <span class="s1">&#39;model&#39;</span><span class="p">)),</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">step_dir</span><span class="p">,</span> <span class="s1">&#39;ocean_model&#39;</span><span class="p">))</span>
-</pre></div>
-</div>
-<p>Then, we make symlinks to two files, <code class="docutils literal notranslate"><span class="pre">ocean.nc</span></code> and <code class="docutils literal notranslate"><span class="pre">culled_graph.info</span></code>
-from the <code class="docutils literal notranslate"><span class="pre">initial_state</span></code> step of the same test case (giving them new names
-here).  At the same time, we also add the absolute paths to these files to the
-<code class="docutils literal notranslate"><span class="pre">inputs</span></code> list, which means this step will fail to run if those files don’t
-exist.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">inputs</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">outputs</span> <span class="o">=</span> <span class="p">[]</span>
-
-<span class="n">links</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;../initial_state/ocean.nc&#39;</span><span class="p">:</span> <span class="s1">&#39;init.nc&#39;</span><span class="p">,</span>
-         <span class="s1">&#39;../initial_state/culled_graph.info&#39;</span><span class="p">:</span> <span class="s1">&#39;graph.info&#39;</span><span class="p">}</span>
-<span class="k">for</span> <span class="n">target</span><span class="p">,</span> <span class="n">link</span> <span class="ow">in</span> <span class="n">links</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-    <span class="n">symlink</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">step_dir</span><span class="p">,</span> <span class="n">link</span><span class="p">))</span>
-    <span class="n">inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">step_dir</span><span class="p">,</span> <span class="n">target</span><span class="p">)))</span>
-</pre></div>
-</div>
-<p>Then, we add the absolute path to the one significant output file from this
-step, <code class="docutils literal notranslate"><span class="pre">output.nc</span></code>, to the list of output files:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;output.nc&#39;</span><span class="p">]:</span>
-    <span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">step_dir</span><span class="p">,</span> <span class="n">file</span><span class="p">))</span>
-</pre></div>
-</div>
-<p>Finally, we add the inputs and outputs as entries the step dictionary.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">step</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">inputs</span>
-<span class="n">step</span><span class="p">[</span><span class="s1">&#39;outputs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">outputs</span>
-</pre></div>
-</div>
-</div>
+<p>First, the namelist and streams file are generated.  Then, the model’s
+executable is linked (and included among the <code class="docutils literal notranslate"><span class="pre">inputs</span></code>).  Two other input
+files are added (symlinks from the <code class="docutils literal notranslate"><span class="pre">initial_state</span></code> step).  Finally, an output
+file is added.</p>
 </div>
 <div class="section" id="dev-step-run">
-<span id="id2"></span><h3>run()<a class="headerlink" href="#dev-step-run" title="Permalink to this headline">¶</a></h3>
+<span id="id3"></span><h3>run()<a class="headerlink" href="#dev-step-run" title="Permalink to this headline">¶</a></h3>
 <p>Okay, we’re ready to define how the step will run!</p>
 <p>The contents of <code class="docutils literal notranslate"><span class="pre">run()</span></code> can vary quite a lot between steps.</p>
 <p>In the test <code class="docutils literal notranslate"><span class="pre">baroclinic_channel</span></code> configuration, the <code class="docutils literal notranslate"><span class="pre">run()</span></code> function for
@@ -1663,54 +1305,40 @@ involved:</p>
 </div>
 <p>Without going into all the details of this function, it creates a mesh that
 is periodic in x (but not y), then adds a vertical grid and an initial
-condition to an <a class="reference external" href="http://xarray.pydata.org/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v0.16.3.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">xarray.Dataset</span></code></a>, which is then written out to
+condition to an <a class="reference external" href="http://xarray.pydata.org/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v0.17.1.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">xarray.Dataset</span></code></a>, which is then written out to
 the file <code class="docutils literal notranslate"><span class="pre">ocean.nc</span></code>.</p>
 <p>In the example step we’ve been using,
-<a class="reference internal" href="ocean/generated/compass.ocean.tests.baroclinic_channel.forward.run.html#compass.ocean.tests.baroclinic_channel.forward.run" title="compass.ocean.tests.baroclinic_channel.forward.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.tests.baroclinic_channel.forward.run()</span></code></a> looks like this:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">partition</span><span class="p">,</span> <span class="n">run_model</span>
-<span class="kn">from</span> <span class="nn">compass.parallel</span> <span class="kn">import</span> <span class="n">update_namelist_pio</span>
+<a class="reference internal" href="ocean/generated/compass.ocean.tests.baroclinic_channel.forward.run.html#compass.ocean.tests.baroclinic_channel.forward.run" title="compass.ocean.tests.baroclinic_channel.forward.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.tests.baroclinic_channel.forward.run()</span></code></a> looks like
+this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">run_model</span>
 
 
 <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">test_suite</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Run this step of the testcase</span>
+<span class="sd">    Run this step of the test case</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    step : dict</span>
-<span class="sd">        A dictionary of properties of this step from the ``collect()``</span>
-<span class="sd">        function, with modifications from the ``setup()`` function.</span>
+<span class="sd">        A dictionary of properties of this step</span>
 
 <span class="sd">    test_suite : dict</span>
 <span class="sd">        A dictionary of properties of the test suite</span>
 
 <span class="sd">    config : configparser.ConfigParser</span>
-<span class="sd">        Configuration options for this testcase, a combination of the defaults</span>
+<span class="sd">        Configuration options for this test case, a combination of the defaults</span>
 <span class="sd">        for the machine, core and configuration</span>
 
 <span class="sd">    logger : logging.Logger</span>
 <span class="sd">        A logger for output from the step</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">cores</span> <span class="o">=</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;cores&#39;</span><span class="p">]</span>
-    <span class="n">threads</span> <span class="o">=</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;threads&#39;</span><span class="p">]</span>
-    <span class="n">step_dir</span> <span class="o">=</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;work_dir&#39;</span><span class="p">]</span>
-    <span class="n">update_namelist_pio</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">cores</span><span class="p">,</span> <span class="n">step_dir</span><span class="p">)</span>
-    <span class="n">partition</span><span class="p">(</span><span class="n">cores</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
-    <span class="n">run_model</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">core</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span> <span class="n">core_count</span><span class="o">=</span><span class="n">cores</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
-              <span class="n">threads</span><span class="o">=</span><span class="n">threads</span><span class="p">)</span>
+    <span class="n">run_model</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>We just get the number of cores, threads and the work directory for the step
-from the <code class="docutils literal notranslate"><span class="pre">step</span></code> dictionary.  Then, we run
-<a class="reference internal" href="generated/compass.parallel.update_namelist_pio.html#compass.parallel.update_namelist_pio" title="compass.parallel.update_namelist_pio"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.parallel.update_namelist_pio()</span></code></a> with the number of cores we
-want so it can update the <code class="docutils literal notranslate"><span class="pre">namelist.ocean</span></code> file to have one PIO task per node
-(a configuration we have found to work pretty reliably).</p>
-<p>Then, a call to <a class="reference internal" href="generated/compass.model.partition.html#compass.model.partition" title="compass.model.partition"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.model.partition()</span></code></a> creates a graph partition
-for the requested number of cores using
-<a class="reference external" href="http://glaros.dtc.umn.edu/gkhome/metis/metis/overview">gpmetis</a>.</p>
-<p>Finally, MPAS-Ocean is run with the requested number of cores and threads using
-<a class="reference internal" href="generated/compass.model.run_model.html#compass.model.run_model" title="compass.model.run_model"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.model.run_model()</span></code></a>.</p>
-<p>This is a common approach to forward runs.</p>
+<p>the <a class="reference internal" href="generated/compass.model.run_model.html#compass.model.run_model" title="compass.model.run_model"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.model.run_model()</span></code></a> function takes care of updating the
+namelist options for the test case to make sure the PIO tasks and stride are
+consistent with the requested number of cores, creates a graph partition for
+the requested number of cores, and runs the model.</p>
 <p>To get a feel for different types of <code class="docutils literal notranslate"><span class="pre">run()</span></code> functions, it may be best to
 explore different test cases.</p>
 </div>

@@ -16,6 +16,7 @@ Cores
    :maxdepth: 1
 
    examples/api
+   landice/api
    ocean/api
 
 
@@ -97,8 +98,11 @@ io
 .. autosummary::
    :toctree: generated/
 
+   add_input_file
+   add_output_file
    download
    symlink
+   process_step_inputs_and_outputs
 
 model
 ^^^^^
@@ -108,9 +112,11 @@ model
 .. autosummary::
    :toctree: generated/
 
-   symlink_model
-   partition
+   add_model_as_input
    run_model
+   partition
+   update_namelist_pio
+   make_graph_file
 
 namelist
 ^^^^^^^^
@@ -120,8 +126,9 @@ namelist
 .. autosummary::
    :toctree: generated/
 
-   parse_replacements
-   generate
+   add_namelist_file
+   add_namelist_options
+   generate_namelist
    update
 
 parallel
@@ -133,7 +140,6 @@ parallel
    :toctree: generated/
 
    get_available_cores_and_nodes
-   update_namelist_pio
 
 provenance
 ^^^^^^^^^^
@@ -153,8 +159,8 @@ streams
 .. autosummary::
    :toctree: generated/
 
-   read
-   generate
+   add_streams_file
+   generate_streams
 
 testcase
 ^^^^^^^^
@@ -164,8 +170,9 @@ testcase
 .. autosummary::
    :toctree: generated/
 
-   get_step_default
-   get_testcase_default
+   add_testcase
+   set_testcase_subdir
+   add_step
    run_steps
    run_step
    generate_run

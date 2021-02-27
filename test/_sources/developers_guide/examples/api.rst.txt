@@ -27,7 +27,6 @@ example_expanded
    res1km.test1.step1.setup
    res1km.test1.step1.run
    res1km.test1.step2.collect
-   res1km.test1.step2.setup
    res1km.test1.step2.run
    res1km.test2.collect
    res1km.test2.configure
@@ -36,7 +35,6 @@ example_expanded
    res1km.test2.step1.setup
    res1km.test2.step1.run
    res1km.test2.step2.collect
-   res1km.test2.step2.setup
    res2km.test2.step2.run
    res2km.test1.collect
    res2km.test1.configure
@@ -45,7 +43,6 @@ example_expanded
    res2km.test1.step1.setup
    res2km.test1.step1.run
    res2km.test1.step2.collect
-   res2km.test1.step2.setup
    res2km.test1.step2.run
    res2km.test2.collect
    res2km.test2.configure
@@ -54,7 +51,6 @@ example_expanded
    res2km.test2.step1.setup
    res2km.test2.step1.run
    res2km.test2.step2.collect
-   res2km.test2.step2.setup
    res2km.test2.step2.run
 
 
@@ -77,5 +73,4 @@ example_compact
    step1.setup
    step1.run
    step2.collect
-   step2.setup
    step2.run

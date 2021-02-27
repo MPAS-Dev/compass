@@ -32,14 +32,13 @@
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
     
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="compass.parallel.update_namelist_pio" href="compass.parallel.update_namelist_pio.html" />
+    <link rel="next" title="compass.provenance.write" href="compass.provenance.write.html" />
     <link rel="prev" title="compass.namelist.update" href="compass.namelist.update.html" /> 
 </head>
 
@@ -105,6 +104,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../command_line.html">Command-line interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cores.html">Cores</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ocean/index.html">Ocean core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../framework.html">Framework</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../docs.html">Documentation</a></li>
@@ -119,7 +119,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../api.html#namelist">namelist</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="../api.html#parallel">parallel</a><ul class="current">
 <li class="toctree-l4 current"><a class="current reference internal" href="#">compass.parallel.get_available_cores_and_nodes</a></li>
-<li class="toctree-l4"><a class="reference internal" href="compass.parallel.update_namelist_pio.html">compass.parallel.update_namelist_pio</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#provenance">provenance</a></li>
@@ -135,34 +134,6 @@
 <p class="caption"><span class="caption-text">Versions</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../versions.html">Code and Documentation Versions</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Legacy User's guide</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/users_guide/overview.html">Quick Start</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/users_guide/scripts.html">Scripts</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Legacy Ocean Test Cases</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/ocean/introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/ocean/test_cases/index.html">Ocean test cases</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Legacy Instructions for Machines</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/machine_specific_instructions/slurm.html">Slurm job queueing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/machine_specific_instructions/lanl.html">LANL Institutional Computing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/machine_specific_instructions/nersc.html">NERSC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/machine_specific_instructions/anvil.html">Anvil/Blues</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/machine_specific_instructions/linux.html">Personal Linux/OSX Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/machine_specific_instructions/osx.html">Personal OSX Machine</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Legacy Developer's guide</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/developers_guide/config.html">config</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/developers_guide/driver_script.html">driver_script</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/developers_guide/template.html">template</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/developers_guide/regression_suite.html">regression_suite</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/developers_guide/run_config.html">run_config</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/developers_guide/building_docs.html">Building the Documentation</a></li>
 </ul>
 
             
@@ -236,11 +207,11 @@
 <h1>compass.parallel.get_available_cores_and_nodes<a class="headerlink" href="#compass-parallel-get-available-cores-and-nodes" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt id="compass.parallel.get_available_cores_and_nodes">
-<code class="sig-prename descclassname">compass.parallel.</code><code class="sig-name descname">get_available_cores_and_nodes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compass/parallel.html#get_available_cores_and_nodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compass.parallel.get_available_cores_and_nodes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">compass.parallel.</span></code><code class="sig-name descname"><span class="pre">get_available_cores_and_nodes</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compass/parallel.html#get_available_cores_and_nodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.parallel.get_available_cores_and_nodes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the number of total cores and nodes available for running steps</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/library/configparser.html#configparser.ConfigParser" title="(in Python v3.9)"><em>configparser.ConfigParser</em></a>) – Configuration options for the testcase</p>
+<dd class="field-odd"><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/library/configparser.html#configparser.ConfigParser" title="(in Python v3.9)"><em>configparser.ConfigParser</em></a>) – Configuration options for the test case</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul class="simple">
@@ -260,7 +231,7 @@
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="compass.parallel.update_namelist_pio.html" class="btn btn-neutral float-right" title="compass.parallel.update_namelist_pio" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="compass.provenance.write.html" class="btn btn-neutral float-right" title="compass.provenance.write" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
         <a href="compass.namelist.update.html" class="btn btn-neutral float-left" title="compass.namelist.update" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 

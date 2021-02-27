@@ -32,7 +32,6 @@
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -40,7 +39,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Configurations" href="configurations/index.html" />
-    <link rel="prev" title="Examples core" href="../examples/index.html" /> 
+    <link rel="prev" title="Land-ice Framework" href="../landice/framework.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -105,6 +104,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../command_line.html">Command-line interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cores.html">Cores</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../landice/index.html">Landice core</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Ocean core</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="configurations/index.html">Configurations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="framework.html">Ocean framework</a></li>
@@ -118,34 +118,6 @@
 <p class="caption"><span class="caption-text">Versions</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../versions.html">Code and Documentation Versions</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Legacy User's guide</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/users_guide/overview.html">Quick Start</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/users_guide/scripts.html">Scripts</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Legacy Ocean Test Cases</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/ocean/introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/ocean/test_cases/index.html">Ocean test cases</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Legacy Instructions for Machines</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/machine_specific_instructions/slurm.html">Slurm job queueing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/machine_specific_instructions/lanl.html">LANL Institutional Computing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/machine_specific_instructions/nersc.html">NERSC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/machine_specific_instructions/anvil.html">Anvil/Blues</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/machine_specific_instructions/linux.html">Personal Linux/OSX Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/machine_specific_instructions/osx.html">Personal OSX Machine</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Legacy Developer's guide</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/developers_guide/config.html">config</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/developers_guide/driver_script.html">driver_script</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/developers_guide/template.html">template</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/developers_guide/regression_suite.html">regression_suite</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/developers_guide/run_config.html">run_config</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/developers_guide/building_docs.html">Building the Documentation</a></li>
 </ul>
 
             
@@ -215,27 +187,6 @@
             
   <div class="section" id="ocean-core">
 <span id="dev-ocean"></span><h1>Ocean core<a class="headerlink" href="#ocean-core" title="Permalink to this headline">¶</a></h1>
-<p>The <code class="docutils literal notranslate"><span class="pre">ocean</span></code> core in compass contains test cases for the
-<a class="reference external" href="https://mpas-dev.github.io/ocean/ocean.html">MPAS-Ocean</a>) model.  For more
-information on MPAS-Ocean, see the most recent
-<a class="reference external" href="https://doi.org/10.5281/zenodo.1246893">user’s guide</a> for version 6.
-Currently, there are 4 configurations—<a class="reference internal" href="../../users_guide/ocean/configurations/baroclinic_channel.html#ocean-baroclinic-channel"><span class="std std-ref">baroclinic_channel</span></a>,
-<a class="reference internal" href="../../users_guide/ocean/configurations/global_ocean.html#ocean-global-ocean"><span class="std std-ref">global_ocean</span></a>, <a class="reference internal" href="../../users_guide/ocean/configurations/ice_shelf_2d.html#ocean-ice-shelf-2d"><span class="std std-ref">ice_shelf_2d</span></a>, and <a class="reference internal" href="../../users_guide/ocean/configurations/ziso.html#ocean-ziso"><span class="std std-ref">ziso</span></a>,
-each with several <a class="reference internal" href="../../users_guide/testcase.html#test-cases"><span class="std std-ref">Test Cases</span></a>.  Many more <code class="docutils literal notranslate"><span class="pre">ocean</span></code> test cases are still
-available through <a class="reference internal" href="../../index.html#legacy-compass"><span class="std std-ref">Legacy COMPASS</span></a> (see legacy
-<a class="reference internal" href="../../legacy/ocean/test_cases/index.html#legacy-compass-ocean-testcases"><span class="std std-ref">Ocean test cases</span></a>).</p>
-<p>Some helpful external links:</p>
-<ul class="simple">
-<li><p>MPAS website: <a class="reference external" href="https://mpas-dev.github.io">https://mpas-dev.github.io</a></p></li>
-<li><p><a class="reference external" href="https://zenodo.org/record/1246893#.WvsFWNMvzMU">MPAS-Ocean User’s Guide</a>
-includes a quick start guide and description of all flags and variables.</p></li>
-<li><p>Test cases (not requiring <code class="docutils literal notranslate"><span class="pre">compass</span></code>) for latest MPAS-Ocean release:</p>
-<ul>
-<li><p><a class="reference external" href="https://mpas-dev.github.io/ocean/releases.html">https://mpas-dev.github.io/ocean/releases.html</a></p></li>
-<li><p><a class="reference external" href="https://mpas-dev.github.io/ocean/release_6.0/release_6.0.html">https://mpas-dev.github.io/ocean/release_6.0/release_6.0.html</a></p></li>
-</ul>
-</li>
-</ul>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="configurations/index.html">Configurations</a><ul>
@@ -257,7 +208,7 @@ includes a quick start guide and description of all flags and variables.</p></li
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
         <a href="configurations/index.html" class="btn btn-neutral float-right" title="Configurations" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="../examples/index.html" class="btn btn-neutral float-left" title="Examples core" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../landice/framework.html" class="btn btn-neutral float-left" title="Land-ice Framework" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

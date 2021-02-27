@@ -10,8 +10,9 @@ information on MPAS-Ocean, see the most recent
 Currently, there are 4 configurations---:ref:`ocean_baroclinic_channel`,
 :ref:`ocean_global_ocean`, :ref:`ocean_ice_shelf_2d`, and :ref:`ocean_ziso`,
 each with several :ref:`test_cases`.  Many more ``ocean`` test cases are still
-available through :ref:`legacy_compass` (see legacy
-:ref:`legacy_compass_ocean_testcases`).
+available through :ref:`legacy_compass` (see
+`legacy ocean test cases <https://mpas-dev.github.io/compass/legacy/ocean/test_cases/index.html>`_
+for a few examples).
 
 Some helpful external links:
 

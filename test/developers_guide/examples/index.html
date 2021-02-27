@@ -32,14 +32,13 @@
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
     
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Ocean core" href="../ocean/index.html" />
+    <link rel="next" title="Landice core" href="../landice/index.html" />
     <link rel="prev" title="Cores" href="../cores.html" /> 
 </head>
 
@@ -104,7 +103,15 @@
 <li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../command_line.html">Command-line interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cores.html">Cores</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Examples core</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Examples core</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#configurations">Configurations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#example-expanded">example_expanded</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-compact">example_compact</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ocean/index.html">Ocean core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../framework.html">Framework</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../docs.html">Documentation</a></li>
@@ -114,34 +121,6 @@
 <p class="caption"><span class="caption-text">Versions</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../versions.html">Code and Documentation Versions</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Legacy User's guide</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/users_guide/overview.html">Quick Start</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/users_guide/scripts.html">Scripts</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Legacy Ocean Test Cases</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/ocean/introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/ocean/test_cases/index.html">Ocean test cases</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Legacy Instructions for Machines</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/machine_specific_instructions/slurm.html">Slurm job queueing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/machine_specific_instructions/lanl.html">LANL Institutional Computing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/machine_specific_instructions/nersc.html">NERSC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/machine_specific_instructions/anvil.html">Anvil/Blues</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/machine_specific_instructions/linux.html">Personal Linux/OSX Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/machine_specific_instructions/osx.html">Personal OSX Machine</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Legacy Developer's guide</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/developers_guide/config.html">config</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/developers_guide/driver_script.html">driver_script</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/developers_guide/template.html">template</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/developers_guide/regression_suite.html">regression_suite</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/developers_guide/run_config.html">run_config</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/developers_guide/building_docs.html">Building the Documentation</a></li>
 </ul>
 
             
@@ -211,7 +190,235 @@
             
   <div class="section" id="examples-core">
 <span id="dev-examples"></span><h1>Examples core<a class="headerlink" href="#examples-core" title="Permalink to this headline">¶</a></h1>
-<p>The <code class="docutils literal notranslate"><span class="pre">examples</span></code> core…</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">examples</span></code> core is by no means a fully developed compass core.  It
+contains two example configurations, each with 4 test cases with 2 steps per
+test case.  The test cases and steps are, themselves, trivial—they download
+a couple of small files (if they aren’t already in the local cache), read them
+in and write them back out.  Both examples are identical in what they do but
+quite different in how they are written.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">example_expanded</span></code> configuration is intended to show how a configuration
+<em>could</em> be written in a very verbose way with the code for each test case
+and step completely independent of all the others.  We emphasize from the start
+that this is <em>absolutely not</em> the way that we recommend writing test cases. It
+is tedious to update as changes are made to the API for test cases or steps, or
+as bugs are discovered.  It also makes future work much harder if you or
+another developer wants to modify or expand the code.  But it is meant to be
+simple and easy to follow.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">example_compact</span></code> configuration is meant to show how the same test cases
+can be written in a more compact form with more <a class="reference internal" href="../overview.html#dev-code-sharing"><span class="std std-ref">Code sharing</span></a>.  There
+aren’t separate packages for test cases at different resolution or separate
+modules for the 2 steps within each test case.</p>
+<div class="section" id="configurations">
+<h2>Configurations<a class="headerlink" href="#configurations" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="example-expanded">
+<span id="dev-examples-example-expanded"></span><h3>example_expanded<a class="headerlink" href="#example-expanded" title="Permalink to this headline">¶</a></h3>
+<p>The code for <code class="docutils literal notranslate"><span class="pre">example_expanded</span></code> contains the shared config options in
+<code class="docutils literal notranslate"><span class="pre">example_expanded.cfg</span></code>:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># default namelist options for the &quot;example_expanded&quot; configuration</span>
+<span class="k">[example_expanded]</span>
+
+<span class="c1"># A parameter that we will use in setting up or running the test case</span>
+<span class="na">parameter1</span> <span class="o">=</span> <span class="s">0.</span>
+
+<span class="c1"># Another parameter</span>
+<span class="na">parameter2</span> <span class="o">=</span> <span class="s">False</span>
+</pre></div>
+</div>
+<p>There is a section with the name of the configuration and some parameters with
+their default values.</p>
+<p>The configuration also contains packages for the 2 supported resolutions:
+<code class="docutils literal notranslate"><span class="pre">res1km</span></code> and <code class="docutils literal notranslate"><span class="pre">res2km</span></code>.  (Python packages aren’t allowed to start with
+numbers so we add a <code class="docutils literal notranslate"><span class="pre">res</span></code> prefix.)  Each resolution has packages for the 2
+test cases—<code class="docutils literal notranslate"><span class="pre">test1</span></code> and <code class="docutils literal notranslate"><span class="pre">test2</span></code>—and each of these have 2
+steps—<code class="docutils literal notranslate"><span class="pre">step1.py</span></code> and <code class="docutils literal notranslate"><span class="pre">step2.py</span></code>—along with a config file (e.g.
+<code class="docutils literal notranslate"><span class="pre">test1.cfg</span></code>) that overrides the config options:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># default namelist options for the &quot;example_expanded&quot; configuration</span>
+<span class="k">[example_expanded]</span>
+
+<span class="c1"># A parameter that we will use in setting up or running the test case</span>
+<span class="na">parameter1</span> <span class="o">=</span> <span class="s">1.</span>
+
+<span class="c1"># Another parameter</span>
+<span class="na">parameter2</span> <span class="o">=</span> <span class="s">False</span>
+</pre></div>
+</div>
+<p>These test cases are pretty well commented so we won’t go through the code in
+detail, but will cover the basics.</p>
+<p>Each test case is added in
+<a class="reference internal" href="generated/compass.examples.tests.example_expanded.collect.html#compass.examples.tests.example_expanded.collect" title="compass.examples.tests.example_expanded.collect"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.examples.tests.example_expanded.collect()</span></code></a> using the
+framework function <a class="reference internal" href="../generated/compass.testcase.add_testcase.html#compass.testcase.add_testcase" title="compass.testcase.add_testcase"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.add_testcase()</span></code></a>.  No extra
+keyword arguments are passed to <code class="docutils literal notranslate"><span class="pre">add_testcase()</span></code> because each test case
+simply has its parameters hard-coded (in contrast to
+<a class="reference internal" href="#dev-examples-example-compact"><span class="std std-ref">example_compact</span></a>).  Each test case has the required
+<a class="reference internal" href="../cores.html#dev-testcase-collect"><span class="std std-ref">collect()</span></a> and <a class="reference internal" href="../cores.html#dev-testcase-run"><span class="std std-ref">run()</span></a> functions, and the
+optional <a class="reference internal" href="../cores.html#dev-testcase-configure"><span class="std std-ref">configure()</span></a>.  We add the parameters to the
+<code class="docutils literal notranslate"><span class="pre">testcase</span></code> python dictionary and give the test case a description,
+use <a class="reference internal" href="../generated/compass.testcase.set_testcase_subdir.html#compass.testcase.set_testcase_subdir" title="compass.testcase.set_testcase_subdir"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.set_testcase_subdir()</span></code></a> to give the test cases
+a unique subdirectory that includes the resolution, and call
+<a class="reference internal" href="../generated/compass.testcase.add_step.html#compass.testcase.add_step" title="compass.testcase.add_step"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.add_step()</span></code></a> for each step, passing the resolution
+as a keyword parameter that will be added to the <code class="docutils literal notranslate"><span class="pre">step</span></code> dictionary.</p>
+<p>In <code class="docutils literal notranslate"><span class="pre">configure()</span></code>, we add config options from the local config file and then
+add the resolution to the config file. (You will have to decide if this makes
+sense for your test case—should the user be able to change this parameter or
+should it remain fixed for this test case?).</p>
+<p>In <code class="docutils literal notranslate"><span class="pre">run()</span></code>, we simply call <a class="reference internal" href="../generated/compass.testcase.run_steps.html#compass.testcase.run_steps" title="compass.testcase.run_steps"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.run_steps()</span></code></a> to run
+each of the steps in the test case.</p>
+<p>Each step has the required <a class="reference internal" href="../cores.html#dev-step-collect"><span class="std std-ref">collect()</span></a> and <a class="reference internal" href="../cores.html#dev-step-run"><span class="std std-ref">run()</span></a>
+functions.  <code class="docutils literal notranslate"><span class="pre">step1</span></code> in each test case also has the optional
+<a class="reference internal" href="../cores.html#dev-step-setup"><span class="std std-ref">setup()</span></a> function, but <code class="docutils literal notranslate"><span class="pre">step2</span></code> does not need it.  The
+<code class="docutils literal notranslate"><span class="pre">collect()</span></code> function sets several parameters (<code class="docutils literal notranslate"><span class="pre">cores</span></code>, <code class="docutils literal notranslate"><span class="pre">min_cores</span></code>,
+<code class="docutils literal notranslate"><span class="pre">max_memory</span></code>, <code class="docutils literal notranslate"><span class="pre">max_disk</span></code>, and <code class="docutils literal notranslate"><span class="pre">threads</span></code>), adds an input file using
+<a class="reference internal" href="../generated/compass.io.add_input_file.html#compass.io.add_input_file" title="compass.io.add_input_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.io.add_input_file()</span></code></a>, and adds an output file using
+<a class="reference internal" href="../generated/compass.io.add_output_file.html#compass.io.add_output_file" title="compass.io.add_output_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.io.add_output_file()</span></code></a>.  In <code class="docutils literal notranslate"><span class="pre">step1</span></code>, we indicate that the
+input file should be downloaded from the initial-condition database, while in
+<code class="docutils literal notranslate"><span class="pre">step2</span></code>, the input file points to the output from <code class="docutils literal notranslate"><span class="pre">step1</span></code>.</p>
+<p>In <code class="docutils literal notranslate"><span class="pre">step1</span></code>, <code class="docutils literal notranslate"><span class="pre">setup()</span></code> adds some parameters to the <code class="docutils literal notranslate"><span class="pre">step</span></code> dictionary.</p>
+<p>In the <code class="docutils literal notranslate"><span class="pre">run()</span></code> function for <code class="docutils literal notranslate"><span class="pre">step1</span></code>, some parameters are retrieved from the
+<code class="docutils literal notranslate"><span class="pre">step</span></code> dictionary, then the input file is read in and immediately written out
+to the output file.</p>
+<p><code class="docutils literal notranslate"><span class="pre">step2</span></code> is even simpler.  It has no <code class="docutils literal notranslate"><span class="pre">setup()</span></code> and in <code class="docutils literal notranslate"><span class="pre">run()</span></code> it reads in
+the input file and writes the results to the output file.</p>
+<p>Obviously, these are trivial and rather dull examples.</p>
+</div>
+<div class="section" id="example-compact">
+<span id="dev-examples-example-compact"></span><h3>example_compact<a class="headerlink" href="#example-compact" title="Permalink to this headline">¶</a></h3>
+<p>The main purpose of this example is to show how to do
+<a class="reference internal" href="#dev-examples-example-expanded"><span class="std std-ref">example_expanded</span></a> “right”, with <a class="reference internal" href="../overview.html#dev-code-sharing"><span class="std std-ref">Code sharing</span></a>.</p>
+<p>Instead of packages for each resolution, these become keyword arguments to
+<a class="reference internal" href="../generated/compass.testcase.add_testcase.html#compass.testcase.add_testcase" title="compass.testcase.add_testcase"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.add_testcase()</span></code></a> in
+<a class="reference internal" href="generated/compass.examples.tests.example_compact.collect.html#compass.examples.tests.example_compact.collect" title="compass.examples.tests.example_compact.collect"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.examples.tests.example_compact.collect()</span></code></a> that are
+automatically added to the <code class="docutils literal notranslate"><span class="pre">testcase</span></code> dictionary by the <a class="reference internal" href="../framework.html#dev-framework"><span class="std std-ref">Framework</span></a>.
+Similarly, parameters are passed on to the steps in each test case’s
+<a class="reference internal" href="../cores.html#dev-testcase-collect"><span class="std std-ref">collect()</span></a> function by passing them as keyword argument to
+<a class="reference internal" href="../generated/compass.testcase.add_step.html#compass.testcase.add_step" title="compass.testcase.add_step"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.add_step()</span></code></a>.
+There is only one package for each test case (<code class="docutils literal notranslate"><span class="pre">test1</span></code> and <code class="docutils literal notranslate"><span class="pre">test2</span></code>), and
+they both share the modules <code class="docutils literal notranslate"><span class="pre">step1.py</span></code> and <code class="docutils literal notranslate"><span class="pre">step2.py</span></code> (there are 4 copies
+of each in <a class="reference internal" href="#dev-examples-example-expanded"><span class="std std-ref">example_expanded</span></a>).</p>
+<p>Rather than going through each test case and step, we will focus on the
+differences compared with <a class="reference internal" href="#dev-examples-example-expanded"><span class="std std-ref">example_expanded</span></a>.</p>
+<p>Each test case’s <a class="reference internal" href="../cores.html#dev-testcase-collect"><span class="std std-ref">collect()</span></a> now retrieves the resolution from
+the <code class="docutils literal notranslate"><span class="pre">testcase</span></code> dictionary.  The resolution is then used in the description
+of the test case and is passed to the steps via
+<a class="reference internal" href="../generated/compass.testcase.add_step.html#compass.testcase.add_step" title="compass.testcase.add_step"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.testcase.add_step()</span></code></a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">collect</span><span class="p">(</span><span class="n">testcase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Update the dictionary of test case properties and add steps</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    testcase : dict</span>
+<span class="sd">        A dictionary of properties of this test case, which can be updated</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># you can get any information out of the &quot;testcase&quot; dictionary, e.g. to</span>
+    <span class="c1"># pass them on to steps.  Some of the entries will be from the framework</span>
+    <span class="c1"># while others are passed in as keyword arguments to &quot;add_testcase&quot; in the</span>
+    <span class="c1"># configuration&#39;s &quot;collect()&quot;</span>
+    <span class="n">resolution</span> <span class="o">=</span> <span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;resolution&#39;</span><span class="p">]</span>
+
+    <span class="c1"># you must add a description</span>
+    <span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Template </span><span class="si">{}</span><span class="s1"> test1&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">)</span>
+
+    <span class="c1"># You can change the subdirectory from the default, the name of the test</span>
+    <span class="c1"># case.  In this case, we add a directory for the resolution.</span>
+    <span class="n">subdir</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+    <span class="n">set_testcase_subdir</span><span class="p">(</span><span class="n">testcase</span><span class="p">,</span> <span class="n">subdir</span><span class="p">)</span>
+
+    <span class="c1"># we can pass keyword argument to the step so they get added to the &quot;step&quot;</span>
+    <span class="c1"># dictionary and can be used throughout the step</span>
+    <span class="n">add_step</span><span class="p">(</span><span class="n">testcase</span><span class="p">,</span> <span class="n">step1</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">)</span>
+    <span class="n">add_step</span><span class="p">(</span><span class="n">testcase</span><span class="p">,</span> <span class="n">step2</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The other functions in the test case are not changed from
+<a class="reference internal" href="#dev-examples-example-expanded"><span class="std std-ref">example_expanded</span></a>.</p>
+<p>The steps now retrieve the resolution from the <code class="docutils literal notranslate"><span class="pre">step</span></code> dictionary:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">collect</span><span class="p">(</span><span class="n">testcase</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Update the dictionary of step properties</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    testcase : dict</span>
+<span class="sd">        A dictionary of properties of this test case, which should not be</span>
+<span class="sd">        modified here</span>
+
+<span class="sd">    step : dict</span>
+<span class="sd">        A dictionary of properties of this step, which can be updated</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># the &quot;testcase&quot; and &quot;step&quot; dictionaries will contain some information that</span>
+    <span class="c1"># is either added by the framework or passed in to &quot;add_step&quot; as a keyword</span>
+    <span class="c1"># argument.  In this case, we get the name of the test case that was added</span>
+    <span class="c1"># by the framework and the resolution, which was passed as a keyword</span>
+    <span class="c1"># argument to &quot;add_step&quot;.</span>
+    <span class="n">testcase_name</span> <span class="o">=</span> <span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+    <span class="n">resolution</span> <span class="o">=</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;resolution&#39;</span><span class="p">]</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>the input file for <code class="docutils literal notranslate"><span class="pre">step1</span></code> depends on the test case.  This is handled by
+having a dictionary that can be used to select the appropriate input file
+based on the name of the test case:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+<span class="n">targets</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;test1&#39;</span><span class="p">:</span> <span class="s1">&#39;particle_regions.151113.nc&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;test2&#39;</span><span class="p">:</span> <span class="s1">&#39;layer_depth.80Layer.180619.nc&#39;</span><span class="p">}</span>
+
+<span class="k">if</span> <span class="n">testcase_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">targets</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unsupported test case name </span><span class="si">{}</span><span class="s1">. Supported test cases &#39;</span>
+                     <span class="s1">&#39;are: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">testcase</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">targets</span><span class="p">)))</span>
+<span class="n">target</span> <span class="o">=</span> <span class="n">targets</span><span class="p">[</span><span class="n">testcase_name</span><span class="p">]</span>
+
+<span class="o">...</span>
+<span class="n">add_input_file</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;input_file.nc&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">,</span>
+               <span class="n">database</span><span class="o">=</span><span class="s1">&#39;initial_condition_database&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The appropriate file for the test case is then added as an input file that
+should be downloaded from the initial-condition database.</p>
+<p>Similarly, in <code class="docutils literal notranslate"><span class="pre">setup</span></code>, there are several parameters that differ depending on
+which resolution the step is run with.  These are handled with a nested
+dictionary of possible parameters and selecting which parameters
+are appropriate for the given resolution:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set up the test case in the work directory, including downloading any</span>
+<span class="sd">    dependencies</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    step : dict</span>
+<span class="sd">        A dictionary of properties of this step</span>
+
+<span class="sd">    config : configparser.ConfigParser</span>
+<span class="sd">        Configuration options for this step, a combination of the defaults for</span>
+<span class="sd">        the machine, core, configuration and test case</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">resolution</span> <span class="o">=</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;resolution&#39;</span><span class="p">]</span>
+    <span class="c1"># This is a way to handle a few parameters that are specific to different</span>
+    <span class="c1"># test cases or resolutions, all of which can be handled by this function</span>
+    <span class="n">res_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;1km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;parameter4&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+                          <span class="s1">&#39;parameter5&#39;</span><span class="p">:</span> <span class="mi">500</span><span class="p">},</span>
+                  <span class="s1">&#39;2km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;parameter4&#39;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span>
+                          <span class="s1">&#39;parameter5&#39;</span><span class="p">:</span> <span class="mi">250</span><span class="p">}}</span>
+
+    <span class="c1"># copy the appropriate parameters into the step dict for use in run</span>
+    <span class="k">if</span> <span class="n">resolution</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">res_params</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unsupported resolution </span><span class="si">{}</span><span class="s1">. Supported values are: &#39;</span>
+                         <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">res_params</span><span class="p">)))</span>
+    <span class="n">res_params</span> <span class="o">=</span> <span class="n">res_params</span><span class="p">[</span><span class="n">resolution</span><span class="p">]</span>
+
+    <span class="c1"># add the parameters for this resolution to the step dictionary so they</span>
+    <span class="c1"># are available to the run() function</span>
+    <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">res_params</span><span class="p">:</span>
+        <span class="n">step</span><span class="p">[</span><span class="n">param</span><span class="p">]</span> <span class="o">=</span> <span class="n">res_params</span><span class="p">[</span><span class="n">param</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>We get the resolution from <code class="docutils literal notranslate"><span class="pre">step</span></code>, then we select the appropriate dictionary
+from the nested dictionary <code class="docutils literal notranslate"><span class="pre">res_params</span></code> for our resolution,
+<code class="docutils literal notranslate"><span class="pre">res_params</span> <span class="pre">=</span> <span class="pre">res_params[resolution]</span></code>, and we add these parameters
+to <code class="docutils literal notranslate"><span class="pre">step</span></code>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">run()</span></code> function is unchanged, as is <code class="docutils literal notranslate"><span class="pre">run()</span></code> functions for <code class="docutils literal notranslate"><span class="pre">step2</span></code>.</p>
+</div>
+</div>
 </div>
 
 
@@ -220,7 +427,7 @@
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="../ocean/index.html" class="btn btn-neutral float-right" title="Ocean core" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../landice/index.html" class="btn btn-neutral float-right" title="Landice core" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
         <a href="../cores.html" class="btn btn-neutral float-left" title="Cores" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 

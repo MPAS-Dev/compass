@@ -32,7 +32,6 @@
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -105,6 +104,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../command_line.html">Command-line interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../cores.html">Cores</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Examples core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Ocean core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../framework.html">Framework</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../docs.html">Documentation</a></li>
@@ -112,6 +112,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../../api.html">API reference</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="../../api.html#cores">Cores</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../../examples/api.html">examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../landice/api.html">landice</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="../api.html">ocean</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="../api.html#configurations">Configurations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api.html#ocean-framework">ocean framework</a></li>
@@ -126,34 +127,6 @@
 <p class="caption"><span class="caption-text">Versions</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../versions.html">Code and Documentation Versions</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Legacy User's guide</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../legacy/users_guide/overview.html">Quick Start</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../legacy/users_guide/scripts.html">Scripts</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Legacy Ocean Test Cases</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../legacy/ocean/introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../legacy/ocean/test_cases/index.html">Ocean test cases</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Legacy Instructions for Machines</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../legacy/machine_specific_instructions/slurm.html">Slurm job queueing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../legacy/machine_specific_instructions/lanl.html">LANL Institutional Computing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../legacy/machine_specific_instructions/nersc.html">NERSC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../legacy/machine_specific_instructions/anvil.html">Anvil/Blues</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../legacy/machine_specific_instructions/linux.html">Personal Linux/OSX Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../legacy/machine_specific_instructions/osx.html">Personal OSX Machine</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Legacy Developer's guide</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../legacy/developers_guide/config.html">config</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../legacy/developers_guide/driver_script.html">driver_script</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../legacy/developers_guide/template.html">template</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../legacy/developers_guide/regression_suite.html">regression_suite</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../legacy/developers_guide/run_config.html">run_config</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../legacy/developers_guide/building_docs.html">Building the Documentation</a></li>
 </ul>
 
             
@@ -229,30 +202,15 @@
 <h1>compass.ocean.tests.baroclinic_channel.forward.collect<a class="headerlink" href="#compass-ocean-tests-baroclinic-channel-forward-collect" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt id="compass.ocean.tests.baroclinic_channel.forward.collect">
-<code class="sig-prename descclassname">compass.ocean.tests.baroclinic_channel.forward.</code><code class="sig-name descname">collect</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">resolution</span></em>, <em class="sig-param"><span class="n">cores</span></em>, <em class="sig-param"><span class="n">min_cores</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">max_memory</span><span class="o">=</span><span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">max_disk</span><span class="o">=</span><span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">threads</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">testcase_module</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">namelist_file</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">streams_file</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">nu</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/ocean/tests/baroclinic_channel/forward.html#collect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compass.ocean.tests.baroclinic_channel.forward.collect" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get a dictionary of step properties</p>
+<code class="sig-prename descclassname"><span class="pre">compass.ocean.tests.baroclinic_channel.forward.</span></code><code class="sig-name descname"><span class="pre">collect</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">testcase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/ocean/tests/baroclinic_channel/forward.html#collect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.ocean.tests.baroclinic_channel.forward.collect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the dictionary of step properties</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>resolution</strong> (<em>{'1km'</em><em>, </em><em>'4km'</em><em>, </em><em>'10km'}</em>) – The name of the resolution to run at</p></li>
-<li><p><strong>cores</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – The number of cores to run on in forward runs. If this many cores are
-available on the machine or batch job, the task will run on that
-number. If fewer are available (but no fewer than min_cores), the job
-will run on all available cores instead.</p></li>
-<li><p><strong>min_cores</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) – The minimum allowed cores.  If that number of cores are not available
-on the machine or in the batch job, the run will fail.  By default,
-<code class="docutils literal notranslate"><span class="pre">min_cores</span> <span class="pre">=</span> <span class="pre">cores</span></code></p></li>
-<li><p><strong>max_memory</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) – The maximum amount of memory (in MB) this step is allowed to use</p></li>
-<li><p><strong>max_disk</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) – The maximum amount of disk space  (in MB) this step is allowed to use</p></li>
-<li><p><strong>threads</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) – The number of threads to run with during forward runs</p></li>
-<li><p><strong>testcase_module</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – The module for the testcase</p></li>
-<li><p><strong>namelist_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – The name of a namelist file in the testcase package directory</p></li>
-<li><p><strong>streams_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – The name of a streams file in the testcase package directory</p></li>
-<li><p><strong>nu</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a><em>, </em><em>optional</em>) – The viscosity for this step</p></li>
+<li><p><strong>testcase</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – A dictionary of properties of this test case, which should not be
+modified here</p></li>
+<li><p><strong>step</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – A dictionary of properties of this step, which can be updated</p></li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>step</strong> (<em>dict</em>) – A dictionary of properties of this step</p>
 </dd>
 </dl>
 </dd></dl>

@@ -32,7 +32,6 @@
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -105,6 +104,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../command_line.html">Command-line interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../cores.html">Cores</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Examples core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Ocean core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../framework.html">Framework</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../docs.html">Documentation</a></li>
@@ -112,6 +112,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../../api.html">API reference</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="../../api.html#cores">Cores</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../../examples/api.html">examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../landice/api.html">landice</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="../api.html">ocean</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="../api.html#configurations">Configurations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api.html#ocean-framework">ocean framework</a></li>
@@ -126,34 +127,6 @@
 <p class="caption"><span class="caption-text">Versions</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../versions.html">Code and Documentation Versions</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Legacy User's guide</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../legacy/users_guide/overview.html">Quick Start</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../legacy/users_guide/scripts.html">Scripts</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Legacy Ocean Test Cases</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../legacy/ocean/introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../legacy/ocean/test_cases/index.html">Ocean test cases</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Legacy Instructions for Machines</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../legacy/machine_specific_instructions/slurm.html">Slurm job queueing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../legacy/machine_specific_instructions/lanl.html">LANL Institutional Computing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../legacy/machine_specific_instructions/nersc.html">NERSC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../legacy/machine_specific_instructions/anvil.html">Anvil/Blues</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../legacy/machine_specific_instructions/linux.html">Personal Linux/OSX Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../legacy/machine_specific_instructions/osx.html">Personal OSX Machine</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Legacy Developer's guide</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../legacy/developers_guide/config.html">config</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../legacy/developers_guide/driver_script.html">driver_script</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../legacy/developers_guide/template.html">template</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../legacy/developers_guide/regression_suite.html">regression_suite</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../legacy/developers_guide/run_config.html">run_config</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../legacy/developers_guide/building_docs.html">Building the Documentation</a></li>
 </ul>
 
             
@@ -229,55 +202,15 @@
 <h1>compass.ocean.tests.global_ocean.forward.collect<a class="headerlink" href="#compass-ocean-tests-global-ocean-forward-collect" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt id="compass.ocean.tests.global_ocean.forward.collect">
-<code class="sig-prename descclassname">compass.ocean.tests.global_ocean.forward.</code><code class="sig-name descname">collect</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mesh_name</span></em>, <em class="sig-param"><span class="n">with_ice_shelf_cavities</span></em>, <em class="sig-param"><span class="n">with_bgc</span></em>, <em class="sig-param"><span class="n">time_integrator</span></em>, <em class="sig-param"><span class="n">cores</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">min_cores</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">max_memory</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">max_disk</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">threads</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">testcase_module</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">namelist_file</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">streams_file</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">inputs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">outputs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">namelist_replacements</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">stream_replacements</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/ocean/tests/global_ocean/forward.html#collect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compass.ocean.tests.global_ocean.forward.collect" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get a dictionary of step properties</p>
+<code class="sig-prename descclassname"><span class="pre">compass.ocean.tests.global_ocean.forward.</span></code><code class="sig-name descname"><span class="pre">collect</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">testcase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/ocean/tests/global_ocean/forward.html#collect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.ocean.tests.global_ocean.forward.collect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the dictionary of step properties</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>mesh_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of the mesh</p></li>
-<li><p><strong>with_ice_shelf_cavities</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Whether the mesh should include ice-shelf cavities</p></li>
-<li><p><strong>with_bgc</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether BGC variables are included in the initial condition</p></li>
-<li><p><strong>time_integrator</strong> (<em>{'split_explicit'</em><em>, </em><em>'RK4'}</em><em>, </em><em>optional</em>) – The time integrator to use for the run</p></li>
-<li><p><strong>cores</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) – The number of cores to run on in forward runs. If this many cores are
-available on the machine or batch job, the task will run on that
-number. If fewer are available (but no fewer than min_cores), the job
-will run on all available cores instead.  If <code class="docutils literal notranslate"><span class="pre">cores</span></code> is not supplied,
-it will be read from the <code class="docutils literal notranslate"><span class="pre">forward_cores</span></code> config option in the
-<code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> section.</p></li>
-<li><p><strong>min_cores</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) – The minimum allowed cores.  If that number of cores are not available
-on the machine or in the batch job, the run will fail.  If
-<code class="docutils literal notranslate"><span class="pre">min_cores</span></code> is not supplied, but <code class="docutils literal notranslate"><span class="pre">cores</span></code> is, <code class="docutils literal notranslate"><span class="pre">min_cores</span> <span class="pre">=</span> <span class="pre">cores</span></code>.
-If neither is supplied, <code class="docutils literal notranslate"><span class="pre">min_cores</span></code> will be read from the
-<code class="docutils literal notranslate"><span class="pre">forward_min_cores</span></code> config option in the <code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> section.</p></li>
-<li><p><strong>max_memory</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) – The maximum amount of memory (in MB) this step is allowed to use. If
-<code class="docutils literal notranslate"><span class="pre">max_memory</span></code> is not supplied, it will be read from the
-<code class="docutils literal notranslate"><span class="pre">forward_max_memory</span></code> config option in the <code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> section.</p></li>
-<li><p><strong>max_disk</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) – The maximum amount of disk space  (in MB) this step is allowed to use.
-If  <code class="docutils literal notranslate"><span class="pre">max_disk</span></code> is not supplied, it will be read from the
-<code class="docutils literal notranslate"><span class="pre">forward_max_disk</span></code> config option in the <code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> section.</p></li>
-<li><p><strong>threads</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) – <dl class="simple">
-<dt>The number of threads to run with during forward runs. If  <code class="docutils literal notranslate"><span class="pre">threads</span></code></dt><dd><p>is not supplied, it will be read from the <code class="docutils literal notranslate"><span class="pre">forward_threads</span></code> config
-option in the <code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> section.</p>
-</dd>
-</dl>
-</p></li>
-<li><p><strong>testcase_module</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – The module for the testcase</p></li>
-<li><p><strong>namelist_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – The name of a namelist file in the testcase package directory</p></li>
-<li><p><strong>streams_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – The name of a streams file in the testcase package directory</p></li>
-<li><p><strong>inputs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em>, </em><em>optional</em>) – List of relative paths to input files for the step.  In addition to
-this list, the graph file, initial condition and initial forcing are
-always included as inputs.  No local symlinks within the step folder
-are created to these inputs.</p></li>
-<li><p><strong>outputs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em>, </em><em>optional</em>) – List of relative paths to output files within the step, the default
-is <code class="docutils literal notranslate"><span class="pre">['output.nc']</span></code></p></li>
-<li><p><strong>namelist_replacements</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a><em>, </em><em>optional</em>) – A dictionary of namelist options and values that take priority over all
-other namelist options</p></li>
-<li><p><strong>stream_replacements</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a><em>, </em><em>optional</em>) – If present, <code class="docutils literal notranslate"><span class="pre">streams_file</span></code> is treated as a template and these
-replacements are used to fill in the template.</p></li>
+<li><p><strong>testcase</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – A dictionary of properties of this test case, which should not be
+modified here</p></li>
+<li><p><strong>step</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – A dictionary of properties of this step, which can be updated</p></li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>step</strong> (<em>dict</em>) – A dictionary of properties of this step</p>
 </dd>
 </dl>
 </dd></dl>

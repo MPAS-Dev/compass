@@ -32,7 +32,6 @@
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -40,7 +39,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="compass.ocean.tests.collect" href="generated/compass.ocean.tests.collect.html" />
-    <link rel="prev" title="compass.examples.tests.example_compact.step2.run" href="../examples/generated/compass.examples.tests.example_compact.step2.run.html" /> 
+    <link rel="prev" title="compass.landice.tests.enthalpy_benchmark.setup_mesh.run" href="../landice/generated/compass.landice.tests.enthalpy_benchmark.setup_mesh.run.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -105,6 +104,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../command_line.html">Command-line interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cores.html">Cores</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="index.html">Ocean core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../framework.html">Framework</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../docs.html">Documentation</a></li>
@@ -112,6 +112,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../api.html">API reference</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="../api.html#cores">Cores</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../examples/api.html">examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../landice/api.html">landice</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">ocean</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#configurations">Configurations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ocean-framework">ocean framework</a></li>
@@ -126,34 +127,6 @@
 <p class="caption"><span class="caption-text">Versions</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../versions.html">Code and Documentation Versions</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Legacy User's guide</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/users_guide/overview.html">Quick Start</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/users_guide/scripts.html">Scripts</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Legacy Ocean Test Cases</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/ocean/introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/ocean/test_cases/index.html">Ocean test cases</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Legacy Instructions for Machines</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/machine_specific_instructions/slurm.html">Slurm job queueing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/machine_specific_instructions/lanl.html">LANL Institutional Computing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/machine_specific_instructions/nersc.html">NERSC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/machine_specific_instructions/anvil.html">Anvil/Blues</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/machine_specific_instructions/linux.html">Personal Linux/OSX Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/machine_specific_instructions/osx.html">Personal OSX Machine</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Legacy Developer's guide</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/developers_guide/config.html">config</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/developers_guide/driver_script.html">driver_script</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/developers_guide/template.html">template</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/developers_guide/regression_suite.html">regression_suite</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/developers_guide/run_config.html">run_config</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/developers_guide/building_docs.html">Building the Documentation</a></li>
 </ul>
 
             
@@ -234,7 +207,7 @@
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.collect.html#compass.ocean.tests.collect" title="compass.ocean.tests.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">collect</span></code></a>()</p></td>
-<td><p>Get a list of testcases in this configuration</p></td>
+<td><p>Get a list of test cases in this configuration</p></td>
 </tr>
 </tbody>
 </table>
@@ -247,49 +220,49 @@
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.baroclinic_channel.collect.html#compass.ocean.tests.baroclinic_channel.collect" title="compass.ocean.tests.baroclinic_channel.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">collect</span></code></a>()</p></td>
-<td><p>Get a list of testcases in this configuration</p></td>
+<td><p>Get a list of test cases in this configuration</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.baroclinic_channel.configure.html#compass.ocean.tests.baroclinic_channel.configure" title="compass.ocean.tests.baroclinic_channel.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure</span></code></a>(testcase, config)</p></td>
-<td><p>Modify the configuration options for this testcase.</p></td>
+<td><p>Modify the configuration options for this test case</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.baroclinic_channel.decomp_test.collect.html#compass.ocean.tests.baroclinic_channel.decomp_test.collect" title="compass.ocean.tests.baroclinic_channel.decomp_test.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decomp_test.collect</span></code></a>(resolution)</p></td>
-<td><p>Get a dictionary of testcase properties</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.baroclinic_channel.decomp_test.collect.html#compass.ocean.tests.baroclinic_channel.decomp_test.collect" title="compass.ocean.tests.baroclinic_channel.decomp_test.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decomp_test.collect</span></code></a>(testcase)</p></td>
+<td><p>Update the dictionary of test case properties and add steps</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.baroclinic_channel.decomp_test.configure.html#compass.ocean.tests.baroclinic_channel.decomp_test.configure" title="compass.ocean.tests.baroclinic_channel.decomp_test.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decomp_test.configure</span></code></a>(testcase, config)</p></td>
-<td><p>Modify the configuration options for this testcase.</p></td>
+<td><p>Modify the configuration options for this test case.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.baroclinic_channel.decomp_test.run.html#compass.ocean.tests.baroclinic_channel.decomp_test.run" title="compass.ocean.tests.baroclinic_channel.decomp_test.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decomp_test.run</span></code></a>(testcase, test_suite, …)</p></td>
-<td><p>Run each step of the testcase</p></td>
+<td><p>Run each step of the test case</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.baroclinic_channel.default.collect.html#compass.ocean.tests.baroclinic_channel.default.collect" title="compass.ocean.tests.baroclinic_channel.default.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">default.collect</span></code></a>(resolution)</p></td>
-<td><p>Get a dictionary of testcase properties</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.baroclinic_channel.default.collect.html#compass.ocean.tests.baroclinic_channel.default.collect" title="compass.ocean.tests.baroclinic_channel.default.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">default.collect</span></code></a>(testcase)</p></td>
+<td><p>Update the dictionary of test case properties and add steps</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.baroclinic_channel.default.configure.html#compass.ocean.tests.baroclinic_channel.default.configure" title="compass.ocean.tests.baroclinic_channel.default.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">default.configure</span></code></a>(testcase, config)</p></td>
-<td><p>Modify the configuration options for this testcase.</p></td>
+<td><p>Modify the configuration options for this test case.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.baroclinic_channel.default.run.html#compass.ocean.tests.baroclinic_channel.default.run" title="compass.ocean.tests.baroclinic_channel.default.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">default.run</span></code></a>(testcase, test_suite, config, logger)</p></td>
-<td><p>Run each step of the testcase</p></td>
+<td><p>Run each step of the test case</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.baroclinic_channel.restart_test.collect.html#compass.ocean.tests.baroclinic_channel.restart_test.collect" title="compass.ocean.tests.baroclinic_channel.restart_test.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">restart_test.collect</span></code></a>(resolution)</p></td>
-<td><p>Get a dictionary of testcase properties</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.baroclinic_channel.restart_test.collect.html#compass.ocean.tests.baroclinic_channel.restart_test.collect" title="compass.ocean.tests.baroclinic_channel.restart_test.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">restart_test.collect</span></code></a>(testcase)</p></td>
+<td><p>Update the dictionary of test case properties and add steps</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.baroclinic_channel.restart_test.configure.html#compass.ocean.tests.baroclinic_channel.restart_test.configure" title="compass.ocean.tests.baroclinic_channel.restart_test.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">restart_test.configure</span></code></a>(testcase, config)</p></td>
-<td><p>Modify the configuration options for this testcase.</p></td>
+<td><p>Modify the configuration options for this test case.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.baroclinic_channel.restart_test.run.html#compass.ocean.tests.baroclinic_channel.restart_test.run" title="compass.ocean.tests.baroclinic_channel.restart_test.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">restart_test.run</span></code></a>(testcase, test_suite, …)</p></td>
-<td><p>Run each step of the testcase</p></td>
+<td><p>Run each step of the test case</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.baroclinic_channel.rpe_test.collect.html#compass.ocean.tests.baroclinic_channel.rpe_test.collect" title="compass.ocean.tests.baroclinic_channel.rpe_test.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rpe_test.collect</span></code></a>(resolution)</p></td>
-<td><p>Get a dictionary of testcase properties</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.baroclinic_channel.rpe_test.collect.html#compass.ocean.tests.baroclinic_channel.rpe_test.collect" title="compass.ocean.tests.baroclinic_channel.rpe_test.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rpe_test.collect</span></code></a>(testcase)</p></td>
+<td><p>Update the dictionary of test case properties and add steps</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.baroclinic_channel.rpe_test.configure.html#compass.ocean.tests.baroclinic_channel.rpe_test.configure" title="compass.ocean.tests.baroclinic_channel.rpe_test.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rpe_test.configure</span></code></a>(testcase, config)</p></td>
-<td><p>Modify the configuration options for this testcase.</p></td>
+<td><p>Modify the configuration options for this test case.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.baroclinic_channel.rpe_test.run.html#compass.ocean.tests.baroclinic_channel.rpe_test.run" title="compass.ocean.tests.baroclinic_channel.rpe_test.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rpe_test.run</span></code></a>(testcase, test_suite, config, …)</p></td>
-<td><p>Run each step of the testcase</p></td>
+<td><p>Run each step of the test case</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.baroclinic_channel.rpe_test.analysis.collect.html#compass.ocean.tests.baroclinic_channel.rpe_test.analysis.collect" title="compass.ocean.tests.baroclinic_channel.rpe_test.analysis.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rpe_test.analysis.collect</span></code></a>(resolution)</p></td>
-<td><p>Get a dictionary of step properties</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.baroclinic_channel.rpe_test.analysis.collect.html#compass.ocean.tests.baroclinic_channel.rpe_test.analysis.collect" title="compass.ocean.tests.baroclinic_channel.rpe_test.analysis.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rpe_test.analysis.collect</span></code></a>(testcase, step)</p></td>
+<td><p>Update the dictionary of step properties</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.baroclinic_channel.rpe_test.analysis.setup.html#compass.ocean.tests.baroclinic_channel.rpe_test.analysis.setup" title="compass.ocean.tests.baroclinic_channel.rpe_test.analysis.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rpe_test.analysis.setup</span></code></a>(step, config)</p></td>
 <td><p>Set up the test case in the work directory, including downloading any dependencies</p></td>
@@ -297,32 +270,32 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.baroclinic_channel.rpe_test.analysis.run.html#compass.ocean.tests.baroclinic_channel.rpe_test.analysis.run" title="compass.ocean.tests.baroclinic_channel.rpe_test.analysis.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rpe_test.analysis.run</span></code></a>(step, test_suite, …)</p></td>
 <td><p>Run this step of the testcase</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.baroclinic_channel.threads_test.collect.html#compass.ocean.tests.baroclinic_channel.threads_test.collect" title="compass.ocean.tests.baroclinic_channel.threads_test.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">threads_test.collect</span></code></a>(resolution)</p></td>
-<td><p>Get a dictionary of testcase properties</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.baroclinic_channel.threads_test.collect.html#compass.ocean.tests.baroclinic_channel.threads_test.collect" title="compass.ocean.tests.baroclinic_channel.threads_test.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">threads_test.collect</span></code></a>(testcase)</p></td>
+<td><p>Update the dictionary of test case properties and add steps</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.baroclinic_channel.threads_test.configure.html#compass.ocean.tests.baroclinic_channel.threads_test.configure" title="compass.ocean.tests.baroclinic_channel.threads_test.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">threads_test.configure</span></code></a>(testcase, config)</p></td>
-<td><p>Modify the configuration options for this testcase.</p></td>
+<td><p>Modify the configuration options for this test case.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.baroclinic_channel.threads_test.run.html#compass.ocean.tests.baroclinic_channel.threads_test.run" title="compass.ocean.tests.baroclinic_channel.threads_test.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">threads_test.run</span></code></a>(testcase, test_suite, …)</p></td>
-<td><p>Run each step of the testcase</p></td>
+<td><p>Run each step of the test case</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.baroclinic_channel.forward.collect.html#compass.ocean.tests.baroclinic_channel.forward.collect" title="compass.ocean.tests.baroclinic_channel.forward.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward.collect</span></code></a>(resolution, cores[, …])</p></td>
-<td><p>Get a dictionary of step properties</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.baroclinic_channel.forward.collect.html#compass.ocean.tests.baroclinic_channel.forward.collect" title="compass.ocean.tests.baroclinic_channel.forward.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward.collect</span></code></a>(testcase, step)</p></td>
+<td><p>Update the dictionary of step properties</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.baroclinic_channel.forward.setup.html#compass.ocean.tests.baroclinic_channel.forward.setup" title="compass.ocean.tests.baroclinic_channel.forward.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward.setup</span></code></a>(step, config)</p></td>
 <td><p>Set up the test case in the work directory, including downloading any dependencies</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.baroclinic_channel.forward.run.html#compass.ocean.tests.baroclinic_channel.forward.run" title="compass.ocean.tests.baroclinic_channel.forward.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward.run</span></code></a>(step, test_suite, config, logger)</p></td>
-<td><p>Run this step of the testcase</p></td>
+<td><p>Run this step of the test case</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.baroclinic_channel.initial_state.collect.html#compass.ocean.tests.baroclinic_channel.initial_state.collect" title="compass.ocean.tests.baroclinic_channel.initial_state.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">initial_state.collect</span></code></a>(resolution)</p></td>
-<td><p>Get a dictionary of step properties</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.baroclinic_channel.initial_state.collect.html#compass.ocean.tests.baroclinic_channel.initial_state.collect" title="compass.ocean.tests.baroclinic_channel.initial_state.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">initial_state.collect</span></code></a>(testcase, step)</p></td>
+<td><p>Update the dictionary of step properties</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.baroclinic_channel.initial_state.setup.html#compass.ocean.tests.baroclinic_channel.initial_state.setup" title="compass.ocean.tests.baroclinic_channel.initial_state.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">initial_state.setup</span></code></a>(step, config)</p></td>
 <td><p>Set up the test case in the work directory, including downloading any dependencies</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.baroclinic_channel.initial_state.run.html#compass.ocean.tests.baroclinic_channel.initial_state.run" title="compass.ocean.tests.baroclinic_channel.initial_state.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">initial_state.run</span></code></a>(step, test_suite, config, …)</p></td>
-<td><p>Run this step of the testcase</p></td>
+<td><p>Run this step of the test case</p></td>
 </tr>
 </tbody>
 </table>
@@ -338,94 +311,88 @@
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.collect.html#compass.ocean.tests.global_ocean.collect" title="compass.ocean.tests.global_ocean.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">collect</span></code></a>()</p></td>
-<td><p>Get a list of testcases in this configuration</p></td>
+<td><p>Get a list of test cases in this configuration</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.configure.html#compass.ocean.tests.global_ocean.configure" title="compass.ocean.tests.global_ocean.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure</span></code></a>(testcase, config)</p></td>
-<td><p>Modify the configuration options for this testcase.</p></td>
+<td><p>Modify the configuration options for this test case</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.analysis_test.collect.html#compass.ocean.tests.global_ocean.analysis_test.collect" title="compass.ocean.tests.global_ocean.analysis_test.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">analysis_test.collect</span></code></a>(mesh_name, …)</p></td>
-<td><p>Get a dictionary of testcase properties</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.analysis_test.collect.html#compass.ocean.tests.global_ocean.analysis_test.collect" title="compass.ocean.tests.global_ocean.analysis_test.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">analysis_test.collect</span></code></a>(testcase)</p></td>
+<td><p>Update the dictionary of test case properties and add steps</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.analysis_test.configure.html#compass.ocean.tests.global_ocean.analysis_test.configure" title="compass.ocean.tests.global_ocean.analysis_test.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">analysis_test.configure</span></code></a>(testcase, config)</p></td>
-<td><p>Modify the configuration options for this testcase.</p></td>
+<td><p>Modify the configuration options for this test case</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.analysis_test.run.html#compass.ocean.tests.global_ocean.analysis_test.run" title="compass.ocean.tests.global_ocean.analysis_test.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">analysis_test.run</span></code></a>(testcase, test_suite, …)</p></td>
 <td><p>Run each step of the testcase</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.daily_output_test.collect.html#compass.ocean.tests.global_ocean.daily_output_test.collect" title="compass.ocean.tests.global_ocean.daily_output_test.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">daily_output_test.collect</span></code></a>(mesh_name, …)</p></td>
-<td><p>Get a dictionary of testcase properties</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.daily_output_test.collect.html#compass.ocean.tests.global_ocean.daily_output_test.collect" title="compass.ocean.tests.global_ocean.daily_output_test.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">daily_output_test.collect</span></code></a>(testcase)</p></td>
+<td><p>Update the dictionary of test case properties and add steps</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.daily_output_test.configure.html#compass.ocean.tests.global_ocean.daily_output_test.configure" title="compass.ocean.tests.global_ocean.daily_output_test.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">daily_output_test.configure</span></code></a>(testcase, config)</p></td>
-<td><p>Modify the configuration options for this testcase.</p></td>
+<td><p>Modify the configuration options for this test case</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.daily_output_test.run.html#compass.ocean.tests.global_ocean.daily_output_test.run" title="compass.ocean.tests.global_ocean.daily_output_test.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">daily_output_test.run</span></code></a>(testcase, test_suite, …)</p></td>
 <td><p>Run each step of the testcase</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.decomp_test.collect.html#compass.ocean.tests.global_ocean.decomp_test.collect" title="compass.ocean.tests.global_ocean.decomp_test.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decomp_test.collect</span></code></a>(mesh_name, …)</p></td>
-<td><p>Get a dictionary of testcase properties</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.decomp_test.collect.html#compass.ocean.tests.global_ocean.decomp_test.collect" title="compass.ocean.tests.global_ocean.decomp_test.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decomp_test.collect</span></code></a>(testcase)</p></td>
+<td><p>Update the dictionary of test case properties and add steps</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.decomp_test.configure.html#compass.ocean.tests.global_ocean.decomp_test.configure" title="compass.ocean.tests.global_ocean.decomp_test.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decomp_test.configure</span></code></a>(testcase, config)</p></td>
-<td><p>Modify the configuration options for this testcase.</p></td>
+<td><p>Modify the configuration options for this test case</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.decomp_test.run.html#compass.ocean.tests.global_ocean.decomp_test.run" title="compass.ocean.tests.global_ocean.decomp_test.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decomp_test.run</span></code></a>(testcase, test_suite, …)</p></td>
 <td><p>Run each step of the testcase</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.files_for_e3sm.collect.html#compass.ocean.tests.global_ocean.files_for_e3sm.collect" title="compass.ocean.tests.global_ocean.files_for_e3sm.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">files_for_e3sm.collect</span></code></a>(mesh_name, …)</p></td>
-<td><p>Get a dictionary of testcase properties</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.files_for_e3sm.collect.html#compass.ocean.tests.global_ocean.files_for_e3sm.collect" title="compass.ocean.tests.global_ocean.files_for_e3sm.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">files_for_e3sm.collect</span></code></a>(testcase)</p></td>
+<td><p>Update the dictionary of test case properties and add steps</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.files_for_e3sm.configure.html#compass.ocean.tests.global_ocean.files_for_e3sm.configure" title="compass.ocean.tests.global_ocean.files_for_e3sm.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">files_for_e3sm.configure</span></code></a>(testcase, config)</p></td>
-<td><p>Modify the configuration options for this testcase.</p></td>
+<td><p>Modify the configuration options for this test case</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.files_for_e3sm.run.html#compass.ocean.tests.global_ocean.files_for_e3sm.run" title="compass.ocean.tests.global_ocean.files_for_e3sm.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">files_for_e3sm.run</span></code></a>(testcase, test_suite, …)</p></td>
 <td><p>Run each step of the testcase</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.files_for_e3sm.ocean_graph_partition.collect.html#compass.ocean.tests.global_ocean.files_for_e3sm.ocean_graph_partition.collect" title="compass.ocean.tests.global_ocean.files_for_e3sm.ocean_graph_partition.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">files_for_e3sm.ocean_graph_partition.collect</span></code></a>(…)</p></td>
-<td><p>Get a dictionary of step properties</p></td>
+<td><p>Update the dictionary of step properties</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.files_for_e3sm.ocean_graph_partition.setup.html#compass.ocean.tests.global_ocean.files_for_e3sm.ocean_graph_partition.setup" title="compass.ocean.tests.global_ocean.files_for_e3sm.ocean_graph_partition.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">files_for_e3sm.ocean_graph_partition.setup</span></code></a>(…)</p></td>
-<td><p>Set up the test case in the work directory, including downloading any dependencies</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.files_for_e3sm.ocean_graph_partition.run.html#compass.ocean.tests.global_ocean.files_for_e3sm.ocean_graph_partition.run" title="compass.ocean.tests.global_ocean.files_for_e3sm.ocean_graph_partition.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">files_for_e3sm.ocean_graph_partition.run</span></code></a>(…)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.files_for_e3sm.ocean_graph_partition.run.html#compass.ocean.tests.global_ocean.files_for_e3sm.ocean_graph_partition.run" title="compass.ocean.tests.global_ocean.files_for_e3sm.ocean_graph_partition.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">files_for_e3sm.ocean_graph_partition.run</span></code></a>(…)</p></td>
 <td><p>Run this step of the testcase</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition.collect.html#compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition.collect" title="compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">files_for_e3sm.ocean_initial_condition.collect</span></code></a>(…)</p></td>
-<td><p>Get a dictionary of step properties</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition.setup.html#compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition.setup" title="compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">files_for_e3sm.ocean_initial_condition.setup</span></code></a>(…)</p></td>
-<td><p>Set up the test case in the work directory, including downloading any dependencies</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition.collect.html#compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition.collect" title="compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">files_for_e3sm.ocean_initial_condition.collect</span></code></a>(…)</p></td>
+<td><p>Update the dictionary of step properties</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition.run.html#compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition.run" title="compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">files_for_e3sm.ocean_initial_condition.run</span></code></a>(…)</p></td>
 <td><p>Run this step of the testcase</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.files_for_e3sm.scrip.collect.html#compass.ocean.tests.global_ocean.files_for_e3sm.scrip.collect" title="compass.ocean.tests.global_ocean.files_for_e3sm.scrip.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">files_for_e3sm.scrip.collect</span></code></a>(mesh_name, …)</p></td>
-<td><p>Get a dictionary of step properties</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.files_for_e3sm.scrip.collect.html#compass.ocean.tests.global_ocean.files_for_e3sm.scrip.collect" title="compass.ocean.tests.global_ocean.files_for_e3sm.scrip.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">files_for_e3sm.scrip.collect</span></code></a>(testcase, step)</p></td>
+<td><p>Update the dictionary of step properties</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.files_for_e3sm.scrip.setup.html#compass.ocean.tests.global_ocean.files_for_e3sm.scrip.setup" title="compass.ocean.tests.global_ocean.files_for_e3sm.scrip.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">files_for_e3sm.scrip.setup</span></code></a>(step, config)</p></td>
-<td><p>Set up the test case in the work directory, including downloading any dependencies</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.files_for_e3sm.scrip.run.html#compass.ocean.tests.global_ocean.files_for_e3sm.scrip.run" title="compass.ocean.tests.global_ocean.files_for_e3sm.scrip.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">files_for_e3sm.scrip.run</span></code></a>(step, test_suite, …)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.files_for_e3sm.scrip.run.html#compass.ocean.tests.global_ocean.files_for_e3sm.scrip.run" title="compass.ocean.tests.global_ocean.files_for_e3sm.scrip.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">files_for_e3sm.scrip.run</span></code></a>(step, test_suite, …)</p></td>
 <td><p>Run this step of the testcase</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition.collect.html#compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition.collect" title="compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">files_for_e3sm.seaice_initial_condition.collect</span></code></a>(…)</p></td>
-<td><p>Get a dictionary of step properties</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition.setup.html#compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition.setup" title="compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">files_for_e3sm.seaice_initial_condition.setup</span></code></a>(…)</p></td>
-<td><p>Set up the test case in the work directory, including downloading any dependencies</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition.collect.html#compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition.collect" title="compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">files_for_e3sm.seaice_initial_condition.collect</span></code></a>(…)</p></td>
+<td><p>Update the dictionary of step properties</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition.run.html#compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition.run" title="compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">files_for_e3sm.seaice_initial_condition.run</span></code></a>(…)</p></td>
 <td><p>Run this step of the testcase</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.init.collect.html#compass.ocean.tests.global_ocean.init.collect" title="compass.ocean.tests.global_ocean.init.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">init.collect</span></code></a>(mesh_name, …)</p></td>
-<td><p>Get a dictionary of testcase properties</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.files_for_e3sm.diagnostics_files.collect.html#compass.ocean.tests.global_ocean.files_for_e3sm.diagnostics_files.collect" title="compass.ocean.tests.global_ocean.files_for_e3sm.diagnostics_files.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">files_for_e3sm.diagnostics_files.collect</span></code></a>(…)</p></td>
+<td><p>Update the dictionary of step properties</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.files_for_e3sm.diagnostics_files.run.html#compass.ocean.tests.global_ocean.files_for_e3sm.diagnostics_files.run" title="compass.ocean.tests.global_ocean.files_for_e3sm.diagnostics_files.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">files_for_e3sm.diagnostics_files.run</span></code></a>(step, …)</p></td>
+<td><p>Run this step of the testcase</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.init.collect.html#compass.ocean.tests.global_ocean.init.collect" title="compass.ocean.tests.global_ocean.init.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">init.collect</span></code></a>(testcase)</p></td>
+<td><p>Update the dictionary of test case properties and add steps</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.init.configure.html#compass.ocean.tests.global_ocean.init.configure" title="compass.ocean.tests.global_ocean.init.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">init.configure</span></code></a>(testcase, config)</p></td>
-<td><p>Modify the configuration options for this testcase.</p></td>
+<td><p>Modify the configuration options for this test case</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.init.run.html#compass.ocean.tests.global_ocean.init.run" title="compass.ocean.tests.global_ocean.init.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">init.run</span></code></a>(testcase, test_suite, config, logger)</p></td>
 <td><p>Run each step of the testcase</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.init.initial_state.collect.html#compass.ocean.tests.global_ocean.init.initial_state.collect" title="compass.ocean.tests.global_ocean.init.initial_state.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">init.initial_state.collect</span></code></a>(mesh_name, …)</p></td>
-<td><p>Get a dictionary of step properties</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.init.initial_state.collect.html#compass.ocean.tests.global_ocean.init.initial_state.collect" title="compass.ocean.tests.global_ocean.init.initial_state.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">init.initial_state.collect</span></code></a>(testcase, step)</p></td>
+<td><p>Update the dictionary of step properties</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.init.initial_state.setup.html#compass.ocean.tests.global_ocean.init.initial_state.setup" title="compass.ocean.tests.global_ocean.init.initial_state.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">init.initial_state.setup</span></code></a>(step, config)</p></td>
 <td><p>Set up the test case in the work directory, including downloading any dependencies</p></td>
@@ -433,8 +400,8 @@
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.init.initial_state.run.html#compass.ocean.tests.global_ocean.init.initial_state.run" title="compass.ocean.tests.global_ocean.init.initial_state.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">init.initial_state.run</span></code></a>(step, test_suite, …)</p></td>
 <td><p>Run this step of the testcase</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.init.ssh_adjustment.collect.html#compass.ocean.tests.global_ocean.init.ssh_adjustment.collect" title="compass.ocean.tests.global_ocean.init.ssh_adjustment.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">init.ssh_adjustment.collect</span></code></a>(mesh_name, cores)</p></td>
-<td><p>Get a dictionary of step properties</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.init.ssh_adjustment.collect.html#compass.ocean.tests.global_ocean.init.ssh_adjustment.collect" title="compass.ocean.tests.global_ocean.init.ssh_adjustment.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">init.ssh_adjustment.collect</span></code></a>(testcase, step)</p></td>
+<td><p>Update the dictionary of step properties</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.init.ssh_adjustment.setup.html#compass.ocean.tests.global_ocean.init.ssh_adjustment.setup" title="compass.ocean.tests.global_ocean.init.ssh_adjustment.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">init.ssh_adjustment.setup</span></code></a>(step, config)</p></td>
 <td><p>Set up the test case in the work directory, including downloading any dependencies</p></td>
@@ -442,11 +409,11 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.init.ssh_adjustment.run.html#compass.ocean.tests.global_ocean.init.ssh_adjustment.run" title="compass.ocean.tests.global_ocean.init.ssh_adjustment.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">init.ssh_adjustment.run</span></code></a>(step, test_suite, …)</p></td>
 <td><p>Run this step of the testcase</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.mesh.collect.html#compass.ocean.tests.global_ocean.mesh.collect" title="compass.ocean.tests.global_ocean.mesh.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.collect</span></code></a>(mesh_name, with_ice_shelf_cavities)</p></td>
-<td><p>Get a dictionary of testcase properties</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.mesh.collect.html#compass.ocean.tests.global_ocean.mesh.collect" title="compass.ocean.tests.global_ocean.mesh.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.collect</span></code></a>(testcase)</p></td>
+<td><p>Update the dictionary of test case properties and add steps</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.mesh.configure.html#compass.ocean.tests.global_ocean.mesh.configure" title="compass.ocean.tests.global_ocean.mesh.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.configure</span></code></a>(testcase, config)</p></td>
-<td><p>Modify the configuration options for this testcase.</p></td>
+<td><p>Modify the configuration options for this test case</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.mesh.run.html#compass.ocean.tests.global_ocean.mesh.run" title="compass.ocean.tests.global_ocean.mesh.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.run</span></code></a>(testcase, test_suite, config, logger)</p></td>
 <td><p>Run each step of the testcase</p></td>
@@ -454,23 +421,23 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.mesh.cull.cull_mesh.html#compass.ocean.tests.global_ocean.mesh.cull.cull_mesh" title="compass.ocean.tests.global_ocean.mesh.cull.cull_mesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.cull.cull_mesh</span></code></a>([with_cavities, …])</p></td>
 <td><p>First step of initializing the global ocean:</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.mesh.mesh.collect.html#compass.ocean.tests.global_ocean.mesh.mesh.collect" title="compass.ocean.tests.global_ocean.mesh.mesh.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.mesh.collect</span></code></a>(mesh_name, cores[, …])</p></td>
-<td><p>Get a dictionary of step properties</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.mesh.mesh.collect.html#compass.ocean.tests.global_ocean.mesh.mesh.collect" title="compass.ocean.tests.global_ocean.mesh.mesh.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.mesh.collect</span></code></a>(testcase, step)</p></td>
+<td><p>Update the dictionary of step properties</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.mesh.mesh.setup.html#compass.ocean.tests.global_ocean.mesh.mesh.setup" title="compass.ocean.tests.global_ocean.mesh.mesh.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.mesh.setup</span></code></a>(step, config)</p></td>
 <td><p>Set up the test case in the work directory, including downloading any dependencies</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.mesh.mesh.run.html#compass.ocean.tests.global_ocean.mesh.mesh.run" title="compass.ocean.tests.global_ocean.mesh.mesh.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.mesh.run</span></code></a>(step, test_suite, config, logger)</p></td>
-<td><p>Run this step of the testcase</p></td>
+<td><p>Run this step of the test case</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.mesh.ec30to60.build_cell_width_lat_lon.html#compass.ocean.tests.global_ocean.mesh.ec30to60.build_cell_width_lat_lon" title="compass.ocean.tests.global_ocean.mesh.ec30to60.build_cell_width_lat_lon"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.ec30to60.build_cell_width_lat_lon</span></code></a>()</p></td>
 <td><p>Create cell width array for this mesh on a regular latitude-longitude grid</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.mesh.ec30to60.spinup.collect.html#compass.ocean.tests.global_ocean.mesh.ec30to60.spinup.collect" title="compass.ocean.tests.global_ocean.mesh.ec30to60.spinup.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.ec30to60.spinup.collect</span></code></a>(mesh_name, …)</p></td>
-<td><p>Get a dictionary of testcase properties</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.mesh.ec30to60.spinup.collect.html#compass.ocean.tests.global_ocean.mesh.ec30to60.spinup.collect" title="compass.ocean.tests.global_ocean.mesh.ec30to60.spinup.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.ec30to60.spinup.collect</span></code></a>(testcase)</p></td>
+<td><p>Update the dictionary of test case properties and add steps</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.mesh.ec30to60.spinup.configure.html#compass.ocean.tests.global_ocean.mesh.ec30to60.spinup.configure" title="compass.ocean.tests.global_ocean.mesh.ec30to60.spinup.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.ec30to60.spinup.configure</span></code></a>(testcase, config)</p></td>
-<td><p>Modify the configuration options for this testcase.</p></td>
+<td><p>Modify the configuration options for this test case</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.mesh.ec30to60.spinup.run.html#compass.ocean.tests.global_ocean.mesh.ec30to60.spinup.run" title="compass.ocean.tests.global_ocean.mesh.ec30to60.spinup.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.ec30to60.spinup.run</span></code></a>(testcase, …)</p></td>
 <td><p>Run each step of the testcase</p></td>
@@ -478,44 +445,44 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.mesh.qu240.build_cell_width_lat_lon.html#compass.ocean.tests.global_ocean.mesh.qu240.build_cell_width_lat_lon" title="compass.ocean.tests.global_ocean.mesh.qu240.build_cell_width_lat_lon"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.qu240.build_cell_width_lat_lon</span></code></a>()</p></td>
 <td><p>Create cell width array for this mesh on a regular latitude-longitude grid</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.mesh.qu240.spinup.collect.html#compass.ocean.tests.global_ocean.mesh.qu240.spinup.collect" title="compass.ocean.tests.global_ocean.mesh.qu240.spinup.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.qu240.spinup.collect</span></code></a>(mesh_name, …)</p></td>
-<td><p>Get a dictionary of testcase properties</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.mesh.qu240.spinup.collect.html#compass.ocean.tests.global_ocean.mesh.qu240.spinup.collect" title="compass.ocean.tests.global_ocean.mesh.qu240.spinup.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.qu240.spinup.collect</span></code></a>(testcase)</p></td>
+<td><p>Update the dictionary of test case properties and add steps</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.mesh.qu240.spinup.configure.html#compass.ocean.tests.global_ocean.mesh.qu240.spinup.configure" title="compass.ocean.tests.global_ocean.mesh.qu240.spinup.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.qu240.spinup.configure</span></code></a>(testcase, config)</p></td>
-<td><p>Modify the configuration options for this testcase.</p></td>
+<td><p>Modify the configuration options for this test case</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.mesh.qu240.spinup.run.html#compass.ocean.tests.global_ocean.mesh.qu240.spinup.run" title="compass.ocean.tests.global_ocean.mesh.qu240.spinup.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh.qu240.spinup.run</span></code></a>(testcase, test_suite, …)</p></td>
 <td><p>Run each step of the testcase</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.performance_test.collect.html#compass.ocean.tests.global_ocean.performance_test.collect" title="compass.ocean.tests.global_ocean.performance_test.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">performance_test.collect</span></code></a>(mesh_name, …)</p></td>
-<td><p>Get a dictionary of testcase properties</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.performance_test.collect.html#compass.ocean.tests.global_ocean.performance_test.collect" title="compass.ocean.tests.global_ocean.performance_test.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">performance_test.collect</span></code></a>(testcase)</p></td>
+<td><p>Update the dictionary of test case properties and add steps</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.performance_test.configure.html#compass.ocean.tests.global_ocean.performance_test.configure" title="compass.ocean.tests.global_ocean.performance_test.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">performance_test.configure</span></code></a>(testcase, config)</p></td>
-<td><p>Modify the configuration options for this testcase.</p></td>
+<td><p>Modify the configuration options for this test case</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.performance_test.run.html#compass.ocean.tests.global_ocean.performance_test.run" title="compass.ocean.tests.global_ocean.performance_test.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">performance_test.run</span></code></a>(testcase, test_suite, …)</p></td>
 <td><p>Run each step of the testcase</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.restart_test.collect.html#compass.ocean.tests.global_ocean.restart_test.collect" title="compass.ocean.tests.global_ocean.restart_test.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">restart_test.collect</span></code></a>(mesh_name, …)</p></td>
-<td><p>Get a dictionary of testcase properties</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.restart_test.collect.html#compass.ocean.tests.global_ocean.restart_test.collect" title="compass.ocean.tests.global_ocean.restart_test.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">restart_test.collect</span></code></a>(testcase)</p></td>
+<td><p>Update the dictionary of test case properties and add steps</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.restart_test.configure.html#compass.ocean.tests.global_ocean.restart_test.configure" title="compass.ocean.tests.global_ocean.restart_test.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">restart_test.configure</span></code></a>(testcase, config)</p></td>
-<td><p>Modify the configuration options for this testcase.</p></td>
+<td><p>Modify the configuration options for this test case</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.restart_test.run.html#compass.ocean.tests.global_ocean.restart_test.run" title="compass.ocean.tests.global_ocean.restart_test.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">restart_test.run</span></code></a>(testcase, test_suite, …)</p></td>
 <td><p>Run each step of the testcase</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.threads_test.collect.html#compass.ocean.tests.global_ocean.threads_test.collect" title="compass.ocean.tests.global_ocean.threads_test.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">threads_test.collect</span></code></a>(mesh_name, …)</p></td>
-<td><p>Get a dictionary of testcase properties</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.threads_test.collect.html#compass.ocean.tests.global_ocean.threads_test.collect" title="compass.ocean.tests.global_ocean.threads_test.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">threads_test.collect</span></code></a>(testcase)</p></td>
+<td><p>Update the dictionary of test case properties and add steps</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.threads_test.configure.html#compass.ocean.tests.global_ocean.threads_test.configure" title="compass.ocean.tests.global_ocean.threads_test.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">threads_test.configure</span></code></a>(testcase, config)</p></td>
-<td><p>Modify the configuration options for this testcase.</p></td>
+<td><p>Modify the configuration options for this test case</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.threads_test.run.html#compass.ocean.tests.global_ocean.threads_test.run" title="compass.ocean.tests.global_ocean.threads_test.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">threads_test.run</span></code></a>(testcase, test_suite, …)</p></td>
 <td><p>Run each step of the testcase</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.forward.collect.html#compass.ocean.tests.global_ocean.forward.collect" title="compass.ocean.tests.global_ocean.forward.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward.collect</span></code></a>(mesh_name, …[, cores, …])</p></td>
-<td><p>Get a dictionary of step properties</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.forward.collect.html#compass.ocean.tests.global_ocean.forward.collect" title="compass.ocean.tests.global_ocean.forward.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward.collect</span></code></a>(testcase, step)</p></td>
+<td><p>Update the dictionary of step properties</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.forward.setup.html#compass.ocean.tests.global_ocean.forward.setup" title="compass.ocean.tests.global_ocean.forward.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward.setup</span></code></a>(step, config)</p></td>
 <td><p>Set up the test case in the work directory, including downloading any dependencies</p></td>
@@ -544,12 +511,15 @@
 <td><p>Add MPAS mesh and initial condition metadata to NetCDF outputs of the given step</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.subdir.get_init_sudbdir.html#compass.ocean.tests.global_ocean.subdir.get_init_sudbdir" title="compass.ocean.tests.global_ocean.subdir.get_init_sudbdir"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subdir.get_init_sudbdir</span></code></a>(mesh_name, …)</p></td>
-<td><p>Get the subdirectory specific to the initial condition that all testscases (other than mesh) are under</p></td>
+<td><p>Get the subdirectory specific to the initial condition that all test cases (other than mesh) are under</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.subdir.get_mesh_relative_path.html#compass.ocean.tests.global_ocean.subdir.get_mesh_relative_path" title="compass.ocean.tests.global_ocean.subdir.get_mesh_relative_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subdir.get_mesh_relative_path</span></code></a>(step)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.subdir.get_forward_sudbdir.html#compass.ocean.tests.global_ocean.subdir.get_forward_sudbdir" title="compass.ocean.tests.global_ocean.subdir.get_forward_sudbdir"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subdir.get_forward_sudbdir</span></code></a>(mesh_name, …)</p></td>
+<td><p>Get the subdirectory specific to the initial condition that all test cases (other than mesh) are under</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.subdir.get_mesh_relative_path.html#compass.ocean.tests.global_ocean.subdir.get_mesh_relative_path" title="compass.ocean.tests.global_ocean.subdir.get_mesh_relative_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subdir.get_mesh_relative_path</span></code></a>(step)</p></td>
 <td><p>get the relative path to the subdirectory with the mesh name in the global_ocean configuration</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.subdir.get_initial_condition_relative_path.html#compass.ocean.tests.global_ocean.subdir.get_initial_condition_relative_path" title="compass.ocean.tests.global_ocean.subdir.get_initial_condition_relative_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subdir.get_initial_condition_relative_path</span></code></a>(step)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.global_ocean.subdir.get_initial_condition_relative_path.html#compass.ocean.tests.global_ocean.subdir.get_initial_condition_relative_path" title="compass.ocean.tests.global_ocean.subdir.get_initial_condition_relative_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subdir.get_initial_condition_relative_path</span></code></a>(step)</p></td>
 <td><p>get the relative path to the subdirectory with the initial condition name (<code class="docutils literal notranslate"><span class="pre">PHC</span></code>, <code class="docutils literal notranslate"><span class="pre">EN4_1900</span></code>, etc.) in the global_ocean configuration</p></td>
 </tr>
 </tbody>
@@ -565,31 +535,31 @@
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ice_shelf_2d.collect.html#compass.ocean.tests.ice_shelf_2d.collect" title="compass.ocean.tests.ice_shelf_2d.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">collect</span></code></a>()</p></td>
-<td><p>Get a list of testcases in this configuration</p></td>
+<td><p>Get a list of test cases in this configuration</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ice_shelf_2d.configure.html#compass.ocean.tests.ice_shelf_2d.configure" title="compass.ocean.tests.ice_shelf_2d.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure</span></code></a>(testcase, config)</p></td>
-<td><p>Modify the configuration options for this testcase.</p></td>
+<td><p>Modify the configuration options for this test case</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ice_shelf_2d.default.collect.html#compass.ocean.tests.ice_shelf_2d.default.collect" title="compass.ocean.tests.ice_shelf_2d.default.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">default.collect</span></code></a>(resolution)</p></td>
-<td><p>Get a dictionary of testcase properties</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ice_shelf_2d.default.collect.html#compass.ocean.tests.ice_shelf_2d.default.collect" title="compass.ocean.tests.ice_shelf_2d.default.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">default.collect</span></code></a>(testcase)</p></td>
+<td><p>Update the dictionary of test case properties and add steps</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ice_shelf_2d.default.configure.html#compass.ocean.tests.ice_shelf_2d.default.configure" title="compass.ocean.tests.ice_shelf_2d.default.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">default.configure</span></code></a>(testcase, config)</p></td>
-<td><p>Modify the configuration options for this testcase.</p></td>
+<td><p>Modify the configuration options for this test case</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ice_shelf_2d.default.run.html#compass.ocean.tests.ice_shelf_2d.default.run" title="compass.ocean.tests.ice_shelf_2d.default.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">default.run</span></code></a>(testcase, test_suite, config, logger)</p></td>
 <td><p>Run each step of the testcase</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ice_shelf_2d.restart_test.collect.html#compass.ocean.tests.ice_shelf_2d.restart_test.collect" title="compass.ocean.tests.ice_shelf_2d.restart_test.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">restart_test.collect</span></code></a>(resolution)</p></td>
-<td><p>Get a dictionary of testcase properties</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ice_shelf_2d.restart_test.collect.html#compass.ocean.tests.ice_shelf_2d.restart_test.collect" title="compass.ocean.tests.ice_shelf_2d.restart_test.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">restart_test.collect</span></code></a>(testcase)</p></td>
+<td><p>Update the dictionary of test case properties and add steps</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ice_shelf_2d.restart_test.configure.html#compass.ocean.tests.ice_shelf_2d.restart_test.configure" title="compass.ocean.tests.ice_shelf_2d.restart_test.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">restart_test.configure</span></code></a>(testcase, config)</p></td>
-<td><p>Modify the configuration options for this testcase.</p></td>
+<td><p>Modify the configuration options for this test case</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ice_shelf_2d.restart_test.run.html#compass.ocean.tests.ice_shelf_2d.restart_test.run" title="compass.ocean.tests.ice_shelf_2d.restart_test.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">restart_test.run</span></code></a>(testcase, test_suite, …)</p></td>
 <td><p>Run each step of the testcase</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ice_shelf_2d.forward.collect.html#compass.ocean.tests.ice_shelf_2d.forward.collect" title="compass.ocean.tests.ice_shelf_2d.forward.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward.collect</span></code></a>(resolution, cores[, …])</p></td>
-<td><p>Get a dictionary of step properties</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ice_shelf_2d.forward.collect.html#compass.ocean.tests.ice_shelf_2d.forward.collect" title="compass.ocean.tests.ice_shelf_2d.forward.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward.collect</span></code></a>(testcase, step)</p></td>
+<td><p>Update the dictionary of step properties</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ice_shelf_2d.forward.setup.html#compass.ocean.tests.ice_shelf_2d.forward.setup" title="compass.ocean.tests.ice_shelf_2d.forward.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward.setup</span></code></a>(step, config)</p></td>
 <td><p>Set up the test case in the work directory, including downloading any dependencies</p></td>
@@ -597,22 +567,19 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ice_shelf_2d.forward.run.html#compass.ocean.tests.ice_shelf_2d.forward.run" title="compass.ocean.tests.ice_shelf_2d.forward.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward.run</span></code></a>(step, test_suite, config, logger)</p></td>
 <td><p>Run this step of the testcase</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ice_shelf_2d.initial_state.collect.html#compass.ocean.tests.ice_shelf_2d.initial_state.collect" title="compass.ocean.tests.ice_shelf_2d.initial_state.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">initial_state.collect</span></code></a>(resolution)</p></td>
-<td><p>Get a dictionary of step properties</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ice_shelf_2d.initial_state.collect.html#compass.ocean.tests.ice_shelf_2d.initial_state.collect" title="compass.ocean.tests.ice_shelf_2d.initial_state.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">initial_state.collect</span></code></a>(testcase, step)</p></td>
+<td><p>Update the dictionary of step properties</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ice_shelf_2d.initial_state.setup.html#compass.ocean.tests.ice_shelf_2d.initial_state.setup" title="compass.ocean.tests.ice_shelf_2d.initial_state.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">initial_state.setup</span></code></a>(step, config)</p></td>
-<td><p>Set up the test case in the work directory, including downloading any dependencies</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ice_shelf_2d.initial_state.run.html#compass.ocean.tests.ice_shelf_2d.initial_state.run" title="compass.ocean.tests.ice_shelf_2d.initial_state.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">initial_state.run</span></code></a>(step, test_suite, config, …)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ice_shelf_2d.initial_state.run.html#compass.ocean.tests.ice_shelf_2d.initial_state.run" title="compass.ocean.tests.ice_shelf_2d.initial_state.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">initial_state.run</span></code></a>(step, test_suite, config, …)</p></td>
 <td><p>Run this step of the testcase</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ice_shelf_2d.ssh_adjustment.collect.html#compass.ocean.tests.ice_shelf_2d.ssh_adjustment.collect" title="compass.ocean.tests.ice_shelf_2d.ssh_adjustment.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ssh_adjustment.collect</span></code></a>(resolution, cores[, …])</p></td>
-<td><p>Get a dictionary of step properties</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ice_shelf_2d.ssh_adjustment.collect.html#compass.ocean.tests.ice_shelf_2d.ssh_adjustment.collect" title="compass.ocean.tests.ice_shelf_2d.ssh_adjustment.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ssh_adjustment.collect</span></code></a>(testcase, step)</p></td>
+<td><p>Update the dictionary of step properties</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ice_shelf_2d.ssh_adjustment.setup.html#compass.ocean.tests.ice_shelf_2d.ssh_adjustment.setup" title="compass.ocean.tests.ice_shelf_2d.ssh_adjustment.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ssh_adjustment.setup</span></code></a>(step, config)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ice_shelf_2d.ssh_adjustment.setup.html#compass.ocean.tests.ice_shelf_2d.ssh_adjustment.setup" title="compass.ocean.tests.ice_shelf_2d.ssh_adjustment.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ssh_adjustment.setup</span></code></a>(step, config)</p></td>
 <td><p>Set up the test case in the work directory, including downloading any dependencies</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ice_shelf_2d.ssh_adjustment.run.html#compass.ocean.tests.ice_shelf_2d.ssh_adjustment.run" title="compass.ocean.tests.ice_shelf_2d.ssh_adjustment.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ssh_adjustment.run</span></code></a>(step, test_suite, config, …)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ice_shelf_2d.ssh_adjustment.run.html#compass.ocean.tests.ice_shelf_2d.ssh_adjustment.run" title="compass.ocean.tests.ice_shelf_2d.ssh_adjustment.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ssh_adjustment.run</span></code></a>(step, test_suite, config, …)</p></td>
 <td><p>Run this step of the testcase</p></td>
 </tr>
 </tbody>
@@ -627,31 +594,31 @@
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ziso.collect.html#compass.ocean.tests.ziso.collect" title="compass.ocean.tests.ziso.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">collect</span></code></a>()</p></td>
-<td><p>Get a list of testcases in this configuration</p></td>
+<td><p>Get a list of test cases in this configuration</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ziso.configure.html#compass.ocean.tests.ziso.configure" title="compass.ocean.tests.ziso.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure</span></code></a>(testcase, config)</p></td>
-<td><p>Modify the configuration options for this testcase.</p></td>
+<td><p>Modify the configuration options for this test case</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ziso.default.collect.html#compass.ocean.tests.ziso.default.collect" title="compass.ocean.tests.ziso.default.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">default.collect</span></code></a>(resolution)</p></td>
-<td><p>Get a dictionary of testcase properties</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ziso.default.collect.html#compass.ocean.tests.ziso.default.collect" title="compass.ocean.tests.ziso.default.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">default.collect</span></code></a>(testcase)</p></td>
+<td><p>Update the dictionary of test case properties and add steps</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ziso.default.configure.html#compass.ocean.tests.ziso.default.configure" title="compass.ocean.tests.ziso.default.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">default.configure</span></code></a>(testcase, config)</p></td>
-<td><p>Modify the configuration options for this testcase.</p></td>
+<td><p>Modify the configuration options for this test case</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ziso.default.run.html#compass.ocean.tests.ziso.default.run" title="compass.ocean.tests.ziso.default.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">default.run</span></code></a>(testcase, test_suite, config, logger)</p></td>
 <td><p>Run each step of the testcase</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ziso.with_frazil.collect.html#compass.ocean.tests.ziso.with_frazil.collect" title="compass.ocean.tests.ziso.with_frazil.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">with_frazil.collect</span></code></a>(resolution)</p></td>
-<td><p>Get a dictionary of testcase properties</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ziso.with_frazil.collect.html#compass.ocean.tests.ziso.with_frazil.collect" title="compass.ocean.tests.ziso.with_frazil.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">with_frazil.collect</span></code></a>(testcase)</p></td>
+<td><p>Update the dictionary of test case properties and add steps</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ziso.with_frazil.configure.html#compass.ocean.tests.ziso.with_frazil.configure" title="compass.ocean.tests.ziso.with_frazil.configure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">with_frazil.configure</span></code></a>(testcase, config)</p></td>
-<td><p>Modify the configuration options for this testcase.</p></td>
+<td><p>Modify the configuration options for this test case</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ziso.with_frazil.run.html#compass.ocean.tests.ziso.with_frazil.run" title="compass.ocean.tests.ziso.with_frazil.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">with_frazil.run</span></code></a>(testcase, test_suite, …)</p></td>
 <td><p>Run each step of the testcase</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ziso.forward.collect.html#compass.ocean.tests.ziso.forward.collect" title="compass.ocean.tests.ziso.forward.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward.collect</span></code></a>(resolution, cores[, …])</p></td>
-<td><p>Get a dictionary of step properties</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ziso.forward.collect.html#compass.ocean.tests.ziso.forward.collect" title="compass.ocean.tests.ziso.forward.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward.collect</span></code></a>(testcase, step)</p></td>
+<td><p>Update the dictionary of step properties</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ziso.forward.setup.html#compass.ocean.tests.ziso.forward.setup" title="compass.ocean.tests.ziso.forward.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward.setup</span></code></a>(step, config)</p></td>
 <td><p>Set up the test case in the work directory, including downloading any dependencies</p></td>
@@ -659,13 +626,10 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ziso.forward.run.html#compass.ocean.tests.ziso.forward.run" title="compass.ocean.tests.ziso.forward.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward.run</span></code></a>(step, test_suite, config, logger)</p></td>
 <td><p>Run this step of the testcase</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ziso.initial_state.collect.html#compass.ocean.tests.ziso.initial_state.collect" title="compass.ocean.tests.ziso.initial_state.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">initial_state.collect</span></code></a>(resolution[, with_frazil])</p></td>
-<td><p>Get a dictionary of step properties</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ziso.initial_state.collect.html#compass.ocean.tests.ziso.initial_state.collect" title="compass.ocean.tests.ziso.initial_state.collect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">initial_state.collect</span></code></a>(testcase, step)</p></td>
+<td><p>Update the dictionary of step properties</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ziso.initial_state.setup.html#compass.ocean.tests.ziso.initial_state.setup" title="compass.ocean.tests.ziso.initial_state.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">initial_state.setup</span></code></a>(step, config)</p></td>
-<td><p>Set up the test case in the work directory, including downloading any dependencies</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ziso.initial_state.run.html#compass.ocean.tests.ziso.initial_state.run" title="compass.ocean.tests.ziso.initial_state.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">initial_state.run</span></code></a>(step, test_suite, config, …)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.tests.ziso.initial_state.run.html#compass.ocean.tests.ziso.initial_state.run" title="compass.ocean.tests.ziso.initial_state.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">initial_state.run</span></code></a>(step, test_suite, config, …)</p></td>
 <td><p>Run this step of the testcase</p></td>
 </tr>
 </tbody>
@@ -719,7 +683,7 @@
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
         <a href="generated/compass.ocean.tests.collect.html" class="btn btn-neutral float-right" title="compass.ocean.tests.collect" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="../examples/generated/compass.examples.tests.example_compact.step2.run.html" class="btn btn-neutral float-left" title="compass.examples.tests.example_compact.step2.run" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../landice/generated/compass.landice.tests.enthalpy_benchmark.setup_mesh.run.html" class="btn btn-neutral float-left" title="compass.landice.tests.enthalpy_benchmark.setup_mesh.run" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

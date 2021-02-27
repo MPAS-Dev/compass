@@ -32,7 +32,6 @@
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -105,6 +104,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../command_line.html">Command-line interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cores.html">Cores</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ocean/index.html">Ocean core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../framework.html">Framework</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../docs.html">Documentation</a></li>
@@ -135,34 +135,6 @@
 <p class="caption"><span class="caption-text">Versions</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../versions.html">Code and Documentation Versions</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Legacy User's guide</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/users_guide/overview.html">Quick Start</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/users_guide/scripts.html">Scripts</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Legacy Ocean Test Cases</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/ocean/introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/ocean/test_cases/index.html">Ocean test cases</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Legacy Instructions for Machines</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/machine_specific_instructions/slurm.html">Slurm job queueing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/machine_specific_instructions/lanl.html">LANL Institutional Computing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/machine_specific_instructions/nersc.html">NERSC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/machine_specific_instructions/anvil.html">Anvil/Blues</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/machine_specific_instructions/linux.html">Personal Linux/OSX Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/machine_specific_instructions/osx.html">Personal OSX Machine</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Legacy Developer's guide</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/developers_guide/config.html">config</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/developers_guide/driver_script.html">driver_script</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/developers_guide/template.html">template</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/developers_guide/regression_suite.html">regression_suite</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/developers_guide/run_config.html">run_config</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../legacy/developers_guide/building_docs.html">Building the Documentation</a></li>
 </ul>
 
             
@@ -236,22 +208,22 @@
 <h1>compass.validate.compare_variables<a class="headerlink" href="#compass-validate-compare-variables" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt id="compass.validate.compare_variables">
-<code class="sig-prename descclassname">compass.validate.</code><code class="sig-name descname">compare_variables</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">variables</span></em>, <em class="sig-param"><span class="n">config</span></em>, <em class="sig-param"><span class="n">work_dir</span></em>, <em class="sig-param"><span class="n">filename1</span></em>, <em class="sig-param"><span class="n">filename2</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">l1_norm</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">l2_norm</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">linf_norm</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">quiet</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compass/validate.html#compare_variables"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#compass.validate.compare_variables" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compare variables between files in the current testcase and/or with the
+<code class="sig-prename descclassname"><span class="pre">compass.validate.</span></code><code class="sig-name descname"><span class="pre">compare_variables</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variables</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">work_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l1_norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l2_norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linf_norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compass/validate.html#compare_variables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.validate.compare_variables" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compare variables between files in the current test case and/or with the
 baseline results.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>variables</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a>) – A list of variable names to compare</p></li>
-<li><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/library/configparser.html#configparser.ConfigParser" title="(in Python v3.9)"><em>configparser.ConfigParser</em></a>) – Configuration options for the testcase</p></li>
-<li><p><strong>work_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The work directory for the testcase</p></li>
+<li><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/library/configparser.html#configparser.ConfigParser" title="(in Python v3.9)"><em>configparser.ConfigParser</em></a>) – Configuration options for the test case</p></li>
+<li><p><strong>work_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The work directory for the test case</p></li>
 <li><p><strong>filename1</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The relative path to a file within the <code class="docutils literal notranslate"><span class="pre">work_dir</span></code>.  If <code class="docutils literal notranslate"><span class="pre">filename2</span></code>
 is also given, comparison will be performed with <code class="docutils literal notranslate"><span class="pre">variables</span></code> in that
 file.  If a baseline directory was provided when setting up the
-testcase, the <code class="docutils literal notranslate"><span class="pre">variables</span></code> will be compared between this testcase and
-the same relative filename in the baseline version of the testcase.</p></li>
+test case, the <code class="docutils literal notranslate"><span class="pre">variables</span></code> will be compared between this test case and
+the same relative filename in the baseline version of the test case.</p></li>
 <li><p><strong>filename2</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – The relative path to another file within the <code class="docutils literal notranslate"><span class="pre">work_dir</span></code> if comparing
-between files within the current testcase.  If a baseline directory
+between files within the current test case.  If a baseline directory
 was provided, the <code class="docutils literal notranslate"><span class="pre">variables</span></code> from this file will also be compared
 with those in the corresponding baseline file.</p></li>
 <li><p><strong>l1_norm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a><em>, </em><em>optional</em>) – The maximum allowed L1 norm difference between the variables in

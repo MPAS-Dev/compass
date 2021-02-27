@@ -84,17 +84,15 @@ test cases and steps
    files_for_e3sm.configure
    files_for_e3sm.run
    files_for_e3sm.ocean_graph_partition.collect
-   files_for_e3sm.ocean_graph_partition.setup
    files_for_e3sm.ocean_graph_partition.run
    files_for_e3sm.ocean_initial_condition.collect
-   files_for_e3sm.ocean_initial_condition.setup
    files_for_e3sm.ocean_initial_condition.run
    files_for_e3sm.scrip.collect
-   files_for_e3sm.scrip.setup
    files_for_e3sm.scrip.run
    files_for_e3sm.seaice_initial_condition.collect
-   files_for_e3sm.seaice_initial_condition.setup
    files_for_e3sm.seaice_initial_condition.run
+   files_for_e3sm.diagnostics_files.collect
+   files_for_e3sm.diagnostics_files.run
 
    init.collect
    init.configure
@@ -154,6 +152,7 @@ global_ocean framework
    metadata.add_mesh_and_init_metadata
 
    subdir.get_init_sudbdir
+   subdir.get_forward_sudbdir
    subdir.get_mesh_relative_path
    subdir.get_initial_condition_relative_path
 
@@ -181,7 +180,6 @@ ice_shelf_2d
    forward.run
 
    initial_state.collect
-   initial_state.setup
    initial_state.run
 
    ssh_adjustment.collect
@@ -212,7 +210,6 @@ ziso
    forward.run
 
    initial_state.collect
-   initial_state.setup
    initial_state.run
 
 ocean framework

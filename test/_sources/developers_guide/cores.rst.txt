@@ -4,10 +4,10 @@ Cores
 =====
 
 The test cases in compass are organized by "core", corresponding to a dynamical
-core in MPAS, and then into "configurations".  Currently, there are two cores,
-``examples`` which simply houses some very basic examples (as the name implies)
-and ``ocean``, which encompasses all the test cases for MPAS-Ocean.   Test
-cases for MALI will be added to the ``landice`` core in the near future.
+core in MPAS, and then into "configurations".  Currently, there are three
+cores, ``examples`` which simply houses some very basic examples (as the name
+implies); ``landice``, which has test cases for MALI; and ``ocean``, which
+encompasses all the test cases for MPAS-Ocean.
 
 From a developer's perspective, a core is a package within ``compass`` that:
 
@@ -59,10 +59,15 @@ The config file for the core should, at the very least, define the
 default value for the ``mpas_model`` path in the ``[paths]`` section.
 Typically, it will also define the paths to the model executable and the
 default namelist and streams files for "forward mode" (and, for some cores,
-"init mode").  From the ``examples`` core, these the MPAS dynamical core
-is given the dummy name ``core`` (which does not actually exist).  This would
-be replaced by ``ocean`` or ``landice`` throughout the config file for those
-cores:
+"init mode").  From the ``examples`` core, the MPAS dynamical core is given
+the dummy name ``core`` (which does not actually exist).  This would be
+replaced by the name of the dynamical core (``ocean`` or ``landice``)
+throughout the config file for those cores.
+
+The config file also contains the name of a subdirectory on the
+`LCRC server <https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/>`_
+for the dynamical core in the ``core_path`` option in the ``downloads``
+section:
 
 .. code-block:: cfg
 
@@ -99,21 +104,28 @@ cores:
     [executables]
     model = ${paths:mpas_model}/core_model
 
+    # Options related to downloading files
+    [download]
+
+    # the path on the server, which is the one for MPAS-Ocean since we use some of
+    # its files
+    core_path = mpas-ocean
+
 .. _dev_configs:
 
 Configurations
 --------------
 
 Configurations are the next level of test-case organization below
-:ref:`dev_cores`.  Typically, the test cases within a configuration are part of
-the same framework, serve a similar purpose, or are variants on one another.
-Often, they have a common topography and initial condition, perhaps with
-different mesh resolutions.  It is common for a configuration to include
-"framework" modules that are shared between its test cases and steps (but
-typically not with other configurations).  Each core will typically include a
-mix of "idealized" configurations (e.g. :ref:`dev_ocean_baroclinic_channel` or
-:ref:`dev_ocean_ziso`) and "realistic" domains (e.g.
-:ref:`dev_ocean_global_ocean`).
+:ref:`dev_cores`.  Typically, the test cases within a configuration are
+in some way conceptually linked, serving a similar purpose or being variants on
+one another. Often, they have a common topography and initial condition,
+perhaps with different mesh resolutions, parameters, or both.  It is common for
+a configuration to include "framework" modules that are shared between its test
+cases and steps (but typically not with other configurations).  Each core will
+typically include a mix of "idealized" configurations (e.g.
+:ref:`dev_ocean_baroclinic_channel` or :ref:`dev_ocean_ziso`) and "realistic"
+domains (e.g. :ref:`dev_ocean_global_ocean`).
 
 Each configuration is a python package within the core's ``tests`` package.
 While it is not required, a configuration will typically include a config file
@@ -135,25 +147,23 @@ file for the ``example_compact`` configuration:
 Some configuration options will provide defaults for config options that are
 shared across the core (as is the case for the ``[vertical_grid]`` config
 section in the ocean core).  But most config options for a configuration will
-typically go into a section with the same name as teh configuration, as in the
+typically go into a section with the same name as the configuration, as in the
 example above.
 
 The ``__init__.py`` file for the configuration must define a ``collect()``
 function that makes a list of test cases within the configuration.  This list
-is made by calling the ``collect()`` functions of each test case.  Returning
-to the ``example_compact`` configuration, the function
-:py:func:`compass.examples.test.example_compact.collect()` looks like this:
+is made by calling :py:func:`compass.testcase.add_testcase()`, passing in the
+module for each test case.  Returning to the ``example_compact`` configuration,
+the function :py:func:`compass.examples.tests.example_compact.collect()` looks
+like this:
 
 .. code-block:: python
-
-    from compass.examples.tests.example_compact import test1, test2
-
 
     def collect():
         testcases = list()
         for resolution in ['1km', '2km']:
             for test in [test1, test2]:
-                testcases.append(test.collect(resolution=resolution))
+                add_testcase(testcases, test, resolution=resolution)
 
         return testcases
 
@@ -167,7 +177,7 @@ It is also common for a configuration to have a ``configure()`` function that
 can be shared across its tests, see :ref:`dev_testcase_configure`.
 
 An example of a shared ``configure()`` function is
-:py:func:`compass.ocean.test.baroclinic_channel.configure()`:
+:py:func:`compass.ocean.tests.baroclinic_channel.configure()`:
 
 .. code-block:: python
 
@@ -210,16 +220,16 @@ files that is shared among test cases and steps.
 Test cases
 ----------
 
-In many ways, test cases are the fundamental building blocks of ``compass``,
-since a user can't set up an individual step of test case (tough they can run
-the steps one at a time).
+In many ways, test cases are compass's fundamental building blocks, since a
+user can't set up an individual step of test case (tough they can run the steps
+one at a time).
 
 A test case can be a module but is usually a python package so it can
 incorporate modules for its steps and/or config files, namelists, and streams
-files.  The test case must include ``collect()``, ``configure()`` and ``run()``
-functions with the `API <https://en.wikipedia.org/wiki/API>`_ given below.
-(Technically, you can name these functions something else but we don't suggest
-doing this.)
+files.  The test case must include ``collect()`` and ``run()`` functions with
+the `API <https://en.wikipedia.org/wiki/API>`_ given below. Most test cases
+will also have a ``configure()`` function to add to the config options, but
+this is not required.
 
 .. _dev_testcase_dict:
 
@@ -236,113 +246,66 @@ The ``testcase`` dictionary will typically look like this example from the
 .. code-block:: python
 
 
-    testcase = {'module': 'compass.ocean.tests.baroclinic_channel.default',
-                'description': 'baroclinic channel 10km default',
-                'steps': {
-                    'initial_state': {
-                        'module': 'compass.ocean.tests.baroclinic_channel.initial_state',
-                        'name': 'initial_state',
-                        'subdir': 'initial_state',
-                        'setup': 'setup',
-                        'run': 'run',
-                        'inputs': [],
-                        'outputs': [],
-                        'resolution': '10km',
-                        'cores': 1,
-                        'min_cores': 1,
-                        'max_memory': 8000,
-                        'max_disk': 8000,
-                        'testcase': 'default',
-                        'testcase_subdir': '10km/default'},
-                    'forward': {
-                        'module': 'compass.ocean.tests.baroclinic_channel.forward',
-                        'name': 'forward',
-                        'subdir': 'forward',
-                        'setup': 'setup',
-                        'run': 'run',
-                        'inputs': [],
-                        'outputs': [],
-                        'resolution': '10km',
-                        'cores': 4,
-                        'max_memory': 1000,
-                        'max_disk': 1000,
-                        'min_cores': 4,
-                        'threads': 1,
-                        'testcase': 'default',
-                        'testcase_subdir': '10km/default'}},
-                'name': 'default',
-                'core': 'ocean',
+    testcase = {'base_work_dir': '/home/xylar/data/mpas/test_new_run_model/nightly/new_api',
+                'config': 'default.cfg',
                 'configuration': 'baroclinic_channel',
-                'subdir': '10km/default',
-                'path': 'ocean/baroclinic_channel/10km/default',
                 'configure': 'configure',
-                'run': 'run',
+                'core': 'ocean',
+                'description': 'baroclinic channel 10km default test',
+                'module': 'compass.ocean.tests.baroclinic_channel.default',
+                'name': 'default',
                 'new_step_log_file': True,
+                'path': 'ocean/baroclinic_channel/10km/default',
+                'resolution': '10km',
+                'run': 'run',
+                'steps': {'forward': {...},
+                          'initial_state': {...}},
                 'steps_to_run': ['initial_state', 'forward'],
-                'resolution': '10km'}
+                'subdir': '10km/default',
+                'work_dir': '/home/xylar/data/mpas/test_new_run_model/nightly/new_api/ocean/baroclinic_channel/10km/default'}
 
-``module``
-    The full name of the module or package where the test case is defined.
-    This entry should be defined by passing ``module=__name__`` as an argument
-    to :py:func:`compass.testcase.get_testcase_default()` in
-    :ref:`dev_testcase_collect`.
+``base_work_dir``
+    The base directory where the test cases or test suite have been set up.
 
-``description``
-    A short (one line) description of the test case.  Typically, this is
-    similar to the ``path`` of the test, just put into words.  This is passed
-    as the ``description`` argument to
-    :py:func:`compass.testcase.get_testcase_default()` in
-    :ref:`dev_testcase_collect`.
-
-``steps``
-    A dictionary of steps in the test case with the names of the steps as keys
-    and each :ref:`dev_step_dict` as the corresponding value.  The ``steps``
-    dictionary should created in :ref:`dev_testcase_collect` by calling each
-    step's :ref:`dev_step_collect` and then passed in as the ``steps`` argument
-    to :py:func:`compass.testcase.get_testcase_default()`.
-
-``name``
-    The name of the test case.  The default is the last part of ``module`` and
-    is set by :py:func:`compass.testcase.get_testcase_default()`.  You can
-    modify this entry in :ref:`dev_testcase_collect` anytime after calling
-    ``get_testcase_default()``.
-
-``core``
-    Which of the :ref:`dev_cores` this test case belongs to.  This entry is
-    added automatically by :py:func:`compass.testcase.get_testcase_default()`
-    when it is called in :ref:`dev_testcase_collect` and should not be
-    modified.
+``config``
+    The config file for the test case, typically ``<name>.cfg``, where
+    ``<name>`` is the name of the test case.
 
 ``configuration``
     Which of the :ref:`dev_configs` this test case belongs to.  This entry is
-    added automatically by :py:func:`compass.testcase.get_testcase_default()`
-    when it is called in :ref:`dev_testcase_collect` and should not be
+    added automatically by :py:func:`compass.testcase.add_testcase()` when it
+    is called in the configuration's ``collect()`` function and should not be
     modified.
-
-``subdir``
-    The subdirectory for the test case within the configuration.  The default
-    is the the last part of the ``module`` and is set by
-    :py:func:`compass.testcase.get_testcase_default()`.  You can modify this
-    entry in :ref:`dev_testcase_collect` anytime after calling
-    ``get_testcase_default()``.
-
-``path``
-    The relative path of the test case within the base work directory, the
-    combination of the ``core``, ``configuration`` and ``subdir``.  This entry
-    is added automatically by the :ref:`dev_framework` after
-    :ref:`dev_testcase_collect` is called and should not be modified.
 
 ``configure``
     The name of the :ref:`dev_testcase_configure` function for setting config
-    options, set by :py:func:`compass.testcase.get_testcase_default()`.  This
+    options, set by :py:func:`compass.testcase.add_testcase()`.  This
     entry should only be modified if you have an important reason not to name
     the function in your test case's module ``configure``.
 
-``run``
-    The name of the :ref:`dev_testcase_run` function for running the test case,
-    set by :py:func:`compass.testcase.get_testcase_default()`.  This entry
-    should only be modified if you have an important reason not to name the
-    function in your test case's module ``run``.
+``core``
+    Which of the :ref:`dev_cores` this test case belongs to.  This entry is
+    added automatically by :py:func:`compass.testcase.add_testcase()` when it
+    is called in the configuration's ``collect()`` function and should not be
+    modified.
+
+``description``
+    A short (one line) description of the test case.  Typically, this is
+    similar to the ``path`` of the test, just put into words.  This should be
+    set by the test case in :ref:`dev_testcase_collect`.
+
+``module``
+    The full name of the module or package where the test case is defined.
+    This entry is added automatically by
+    :py:func:`compass.testcase.add_testcase()` when it is called in the
+    configuration's ``collect()`` function and should not been to be modified.
+
+``name``
+    The name of the test case.  The default is the last part of ``module`` and
+    is set by :py:func:`compass.testcase.add_testcase()`.  It is not typically
+    necessary to change the name of the test case, but this could be done by
+    passing ``name`` as a keyword argument to ``add_testcase()`` or within the
+    test case's :ref:`dev_testcase_collect` function.
 
 ``new_step_log_file``
     An entry used by the compass :ref:`dev_framework` to determine if the steps
@@ -350,14 +313,48 @@ The ``testcase`` dictionary will typically look like this example from the
     :ref:`dev_logging` to the same logger as the test case itself.  This entry
     should not be altered.
 
+``path``
+    The relative path of the test case within the base work directory, the
+    combination of the ``core``, ``configuration`` and ``subdir``.  This entry
+    is added automatically by the :ref:`dev_framework` after
+    :ref:`dev_testcase_collect` is called and should not be modified.
+
+``run``
+    The name of the :ref:`dev_testcase_run` function for running the test case,
+    set by :py:func:`compass.testcase.add_testcase()`.  This entry
+    should only be modified if you have an important reason not to name the
+    function in your test case's module ``run``.
+
+``steps``
+    A dictionary of steps in the test case with the names of the steps as keys
+    and each :ref:`dev_step_dict` as the corresponding value.  The ``steps``
+    dictionary is created by :py:func:`compass.testcase.add_testcase()` and
+    passed to the test case's :ref:`dev_testcase_collect`.  New steps are
+    added by calling :py:func:`compass.testcase.add_step()`.
+
 ``steps_to_run``
     A list of the steps to run.  By default, this is the names of all of the
     steps in ``steps`` in the order they were added.  You can modify these
     in :ref:`dev_testcase_collect` after calling
-    :py:func:`compass.testcase.get_testcase_default()` if some steps should not
+    :py:func:`compass.testcase.add_testcase()` if some steps should not
     be run by default. If a user asks to run a single step from the test case,
     the :ref:`dev_testcase_run` function for test case is still called but with
     this list set to just the name of the step to run.
+
+``subdir``
+    The subdirectory for the test case within the configuration.  The default
+    is the the last part of the ``module`` (the same as the default ``name``)
+    and is set by :py:func:`compass.testcase.add_testcase()`.  Most commonly,
+    this entry would be modified within the test case's
+    :ref:`dev_testcase_collect` function by calling
+    :py:func:`compass.testcase.set_testcase_subdir()`. You can also modify
+    this entry by passing ``subdir=<subdir>`` as a keyword argument to
+    :py:func:`compass.testcase.add_testcase()` in the configuration's
+    ``collect()`` function.
+
+``work_dir``
+    The directory where the test case has been set up, a combination of
+    ``base_work_dir`` and ``path``.
 
 You can add other entries to the dictionary to pass information between the
 :ref:`dev_testcase_collect`, :ref:`dev_testcase_configure` and
@@ -369,141 +366,130 @@ for this purpose.
 collect()
 ^^^^^^^^^
 
-The ``collect()`` function must include the following, each of which is
-described in more detail below:
+The ``collect()`` function must call :py:func:`compass.testcase.add_step()` for
+each step in the test case.
 
-1. call the ``collect()`` functions for the steps in the test case, adding them
-   to a ``steps`` dictionary,
-
-2. call :py:func:`compass.testcase.get_testcase_default()`
-
-3. return the resulting python dictionary ``testcase``.
-
-You can include argument (typically parameters) to ``collect()`` as long as
-the configuration's ``collect()`` function will know what these should be.  In
-the example below, the argument is the resolution (as a string).
+The argument to ``collect()`` is the dictionary ``testcase`` describing the
+test case, which will include the keys and values from any keyword arguments
+passed to :py:func:`compass.testcase.add_testcase()`. In the example below, the
+resolution (as a string) as been passed in this way.
 
 It is important that the ``collect()`` function doesn't perform any
 time-consuming calculations, download files, or otherwise use significant
 resources because this function is called quite often for every single test
 case and step: when test cases are listed, set up, or cleaned up, and also when
-test suites are set up or cleaned up.
+test suites are set up or cleaned up.  However, it is okay to add input,
+output, streams and namelist files to the steps in the test case by calling any
+of the following functions:
 
-Since the API for ``collect()`` is a bit flexible, we will provide an example,
+* :py:func:`compass.io.add_input_file()`
+
+* :py:func:`compass.io.add_output_file()`
+
+* :py:func:`compass.namelist.add_namelist_file()`
+
+* :py:func:`compass.namelist.add_namelist_options()`
+
+* :py:func:`compass.streams.add_streams_file()`
+
+Each of these functions just caches information about the the inputs, outputs,
+namelists or streams files to be read later if the test case in question gets
+set up, so each takes a negligible amount of time.
+
+As an example, here is
 :py:func:`compass.ocean.tests.baroclinic_channel.rpe_test.collect()`:
 
 .. code-block:: python
 
-    from compass.testcase import get_testcase_default
+    from compass.testcase import set_testcase_subdir, add_step
     from compass.ocean.tests.baroclinic_channel import initial_state, forward
+    from compass.ocean.tests.baroclinic_channel.rpe_test import analysis
+    from compass.namelist import add_namelist_file
+    from compass.streams import add_streams_file
 
 
-    def collect(resolution):
+    def collect(testcase):
         """
-        Get a dictionary of testcase properties
+        Update the dictionary of test case properties and add steps
 
         Parameters
         ----------
-        resolution : {'1km', '4km', '10km'}
-            The resolution of the mesh
-
-        Returns
-        -------
         testcase : dict
-            A dict of properties of this test case, including its steps
+            A dictionary of properties of this test case, which can be updated
         """
-        description = 'baroclinic channel {} reference potential energy (RPE)' \
-                      ''.format(resolution)
-        module = __name__
+        resolution = testcase['resolution']
+        testcase['description'] = 'baroclinic channel {} reference potential '\
+                                  'energy (RPE)'.format(resolution)
 
-        res_params = {'1km': {'core_count': 144, 'min_cores': 36,
+        nus = [1, 5, 10, 20, 200]
+
+        res_params = {'1km': {'cores': 144, 'min_cores': 36,
                               'max_memory': 64000, 'max_disk': 64000},
-                      '4km': {'core_count': 36, 'min_cores': 8,
+                      '4km': {'cores': 36, 'min_cores': 8,
                               'max_memory': 16000, 'max_disk': 16000},
-                      '10km': {'core_count': 8, 'min_cores': 4,
+                      '10km': {'cores': 8, 'min_cores': 4,
                                'max_memory': 2000, 'max_disk': 2000}}
 
         if resolution not in res_params:
             raise ValueError('Unsupported resolution {}. Supported values are: '
                              '{}'.format(resolution, list(res_params)))
 
-        res_params = res_params[resolution]
-        name = module.split('.')[-1]
-        subdir = '{}/{}'.format(resolution, name)
-        steps = dict()
-        step = initial_state.collect(resolution)
-        steps[step['name']] = step
+        defaults = res_params[resolution]
 
-        for index, nu in enumerate([1, 5, 10, 20, 200]):
-            step = forward.collect(resolution, cores=res_params['core_count'],
-                                   min_cores=res_params['min_cores'],
-                                   max_memory=res_params['max_memory'],
-                                   max_disk=res_params['max_disk'], threads=1,
-                                   testcase_module=module,
-                                   namelist_file='namelist.forward',
-                                   streams_file='streams.forward',
-                                   nu=float(nu))
-            step['name'] = 'rpe_test_{}_nu_{}'.format(index+1, nu)
-            step['subdir'] = step['name']
-            steps[step['name']] = step
+        subdir = '{}/{}'.format(resolution, testcase['name'])
+        set_testcase_subdir(testcase, subdir)
 
-        step = analysis.collect(resolution)
-        steps[step['name']] = step
+        add_step(testcase, initial_state, resolution=resolution)
 
-        testcase = get_testcase_default(module, description, steps, subdir=subdir)
-        testcase['resolution'] = resolution
+        for index, nu in enumerate(nus):
+            name = 'rpe_test_{}_nu_{}'.format(index+1, nu)
+            # we pass the defaults for the resolution on as keyword arguments
+            step = add_step(testcase, forward, name=name, subdir=name, threads=1,
+                            nu=float(nu), resolution=resolution, **defaults)
 
-        return testcase
+            # add the local namelist and streams file
+            add_namelist_file(
+                step, 'compass.ocean.tests.baroclinic_channel.rpe_test',
+                'namelist.forward')
+            add_streams_file(
+                step, 'compass.ocean.tests.baroclinic_channel.rpe_test',
+                'streams.forward')
+
+        add_step(testcase, analysis, resolution=resolution, nus=nus)
 
 We have deliberately chosen a fairly complex example to demonstrate how to make
 full use of :ref:`dev_code_sharing` in a test case.
 
-The test case imports the modules for its steps (``initial_state`` and
-``forward`` in this case) so it can call the ``collect()`` function for each
-step.  The steps are collected in a python dictionary ``steps`` with the names
-of the steps as keys and individual ``step`` dictionaries as values (so a
-nested dictionary).  The ``step`` dictionary is described in :ref:`dev_steps`.
+The test case imports the modules for its steps (``initial_state``,
+``forward``, and ``analysis`` in this case) so it can call
+:py:func:`compass.testcase.add_step()`, passing each as an argument.  In the
+process, the steps are added to the ``steps`` dictionary (see
+:ref:`dev_steps`).
 
-Then, :py:func:`compass.testcase.get_testcase_default()` is called.  The
-required arguments are the current module, a short description of the test
-case, and the ``steps`` dictionary. The name of the module is determined from
-the `__name__ <https://docs.python.org/3/reference/import.html?highlight=__name__#__name__>`_
-attribute of the package or module.  This will automatically detect and set the
-default values for the ``name``, ``core``, ``configuration``, ``subdir``,
-``configure``, ``run``, and ``steps_to_run`` entries in the
-:ref:`dev_testcase_dict`.  After the call, you can update any of these
-(typically just ``name`` and ``subdir``) that you need to.  None of these
-entries should be altered in :ref:`dev_testcase_configure` or
-:ref:`dev_testcase_run`; they are fixed properties of the test case once it
-has been "collected".
-
-By default, the test case will get set up in a subdirectory of the
-configuration that is the name of the individual module or package (e.g.
-``rpe_test`` for in the example above, since the package is called
-``rpe_test``).  Similarly, by default each step will go into a subdirectory
-with the module name of the step (e.g. ``initial_state`` or ``forward``).
-However, ``compass`` is flexible about the subdirectory structure and the names
-of the subdirectories.  This flexibility was an important requirement in
-moving away from :ref:`legacy_compass`.  You can give the subdirectory for
-the test case and steps whatever name makes sense to you. If an argument is
-passed to the test case's ``collect()`` function, it would typically make sense
-to have the subdirectory of the test case depend in some way on this argument.
-This is because each test case must end up in a unique subdirectory.  In the
-example above, the ``baroclinic_channel`` configuration will call ``collect()``
-with each of the 3 supported resolutions.  Each test case will go into a
-different subdirectory: ``1km/rpe_test``, ``4km/rpe_test`` and
-``10km/rpe_test``.
+By default, the test ase will go into a directory with the same name as the
+test case (``rpe_test`` in this case).  However, ``compass`` is flexible
+about the subdirectory structure and the names of the subdirectories.  This
+flexibility was an important requirement in moving away from
+:ref:`legacy_compass`.  Each test case and step must end up in a unique
+directory, so it may be important that the name and subdirectory of each test
+case or step depends in some way on the arguments passed to
+:py:func:`compass.testcase.add_testcase()` or
+:py:func:`compass.testcase.add_step()`.  In the example above, the
+``baroclinic_channel`` configuration calls
+:py:func:`compass.testcase.add_testcase()` with each of the 3 supported
+resolutions.  We use :py:func:`compass.testcase.set_testcase_subdir()` to
+give the test case a unique directory for each resolution: ``1km/rpe_test``,
+``4km/rpe_test`` and ``10km/rpe_test``, .
 
 In the example above, the same ``forward`` step is included in the test case
 5 times with a different viscosity parameter ``nu`` for each.  The value of
-``nu`` is passed to the step's ``collect()`` function (along with a number of
-other parameters related to required resources, namelists and streams files).
-The resulting ``step`` dictionary will give each step the same name and
-subdirectory by default: ``forward``.  This would not work because then all
-the steps would end up in the same place, so the name is changed to something
-unique.  In this example, the steps are given rather clumsy
-names---``rpe_test_1_nu_1``, ``rpe_test_2_nu_5``, etc.---but these could be any
-unique names.
+``nu`` is passed to :py:func:`compass.testcase.add_step()`, along with
+the unique ``name`` and ``subdir`` of the step, and several other parameters:
+``resolution``, ``cores``, ``min_cores``, ``max_memory``, and ``max_disk``.
+(We use a trick to pass the last 4 of these with the ``defaults`` dictionary
+using the ``**defaults`` argument.)  In this example, the steps are given
+rather clumsy names---``rpe_test_1_nu_1``, ``rpe_test_2_nu_5``, etc.---but
+these could be any unique names.
 
 .. _dev_testcase_configure:
 
@@ -586,7 +572,7 @@ across the whole test case, as in
             symlink(str(target), '{}/README'.format(testcase['work_dir']))
 
 
-In general, ``configure()`` is not the right place for adding or altering
+The ``configure()`` function is not the right place for adding or altering
 entries in the :ref:`dev_testcase_dict`.
 
 .. _dev_testcase_run:
@@ -743,8 +729,8 @@ Steps are the smallest units of work that can be executed on their own in
 are set up into subdirectories inside of the work directory for the test case.
 Typically, a user will run all steps in a test case but certain test cases may
 prefer to have steps that are not run by default (e.g. a long forward
-simulation) but which are available for a user to manually alter and then run
-on their own.
+simulation or optional visualization) but which are available for a user to
+manually alter and then run on their own.
 
 A step is described by a ``step`` dictionary and has :ref:`dev_step_collect`,
 :ref:`dev_step_setup`, and :ref:`dev_step_run` functions, described below.
@@ -769,24 +755,31 @@ sure to generate them.
 
 The inputs and outputs need to be defined during :ref:`dev_step_collect` or
 :ref:`dev_step_setup` because they are needed before :ref:`dev_step_run` is
-called (to determine which steps depend on which other steps).
+called (to determine which steps depend on which other steps).  Inputs are
+added with :py:func:`compass.io.add_input_file()` and outputs with
+:py:func:`compass.io.add_output_file()`, see :ref:`dev_io`.  Inputs may be
+symbolic links to files in ``compass``, from the various databases on the
+`LCRC server <https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/>`_,
+downloaded from another source, or from another step.
 
-Because of this relationship, there can be some cases to avoid.  The name of
-an output file should not depend on a config option.  Otherwise, if the user
-changes the config option, the file actually created may have a different name
-than expected, in which case the step will fail.  This would be true even if
-a subsequent step would have been able to read in the same config option and
-modify the name of the expected input file.
+Because the inputs and outputs need to be defined before the step runs, there
+can be some cases to avoid.  The name of an output file should not depend on a
+config option.  Otherwise, if the user changes the config option, the file
+actually created may have a different name than expected, in which case the
+step will fail.  This would be true even if a subsequent step would have been
+able to read in the same config option and modify the name of the expected
+input file.
 
 Along the same lines, an input or output file name should not depend on data
 from an input file that does not exist during :ref:`dev_step_setup`.  Since the
-file does not exist, there is no way to read the file within
-:ref:`dev_step_setup` and determine the file name.
+file does not exist, there is no way to read the file with the dependency
+within :ref:`dev_step_setup` and determine the resulting input or output file
+name.
 
 Both of these issues have arisen for the
 :ref:`dev_ocean_global_ocean_files_for_e3sm` test case from the
 :ref:`dev_ocean_global_ocean` configuration.  Output files are named using the
-"sort name" of the mesh in E3SM, which depends both on config options and on
+"short name" of the mesh in E3SM, which depends both on config options and on
 the number of vertical levels, which is read in from a mesh file created in a
 previous step.  For now, the outputs of this step are not used by any other
 steps so it is safe to simply omit them, but this could become problematic in
@@ -802,240 +795,240 @@ Just as a test case is described by a :ref:`dev_testcase_dict`, we use a
 python dictionary ``step`` to keep track of data (other than config options)
 that are needed to collect, setup and run a step.  The ``step`` dictionary will
 typically look like this example from the
-``ocean/baroclinic_channel/10km/default/initial_state`` step at the beginning of
-:py:func:`compass.ocean.tests.baroclinic_channel.initial_state.run()`:
+``ocean/baroclinic_channel/10km/default/initial_state`` step at the beginning
+of :py:func:`compass.ocean.tests.baroclinic_channel.initial_state.run()`:
 
 .. code-block:: python
 
 
-    step = {'module': 'compass.ocean.tests.baroclinic_channel.initial_state',
-            'name': 'initial_state',
-            'subdir': 'initial_state',
-            'inputs': [],
-            'outputs': ['/home/xylar/data/mpas/test_baroclinic_channel/ocean/baroclinic_channel/10km/default/initial_state/base_mesh.nc',
-                        '/home/xylar/data/mpas/test_baroclinic_channel/ocean/baroclinic_channel/10km/default/initial_state/culled_mesh.nc',
-                        '/home/xylar/data/mpas/test_baroclinic_channel/ocean/baroclinic_channel/10km/default/initial_state/culled_graph.info',
-                        '/home/xylar/data/mpas/test_baroclinic_channel/ocean/baroclinic_channel/10km/default/initial_state/ocean.nc'],
+    step = {'base_work_dir': '/home/xylar/data/mpas/test_new_run_model/nightly/new_api',
+            'config': 'default.cfg',
+            'configuration': 'baroclinic_channel',
+            'core': 'ocean',
             'cores': 1,
-            'min_cores': 1,
-            'max_memory': 8000,
+            'inputs': [],
             'max_disk': 8000,
-            'setup': 'setup',
-            'run': 'run',
+            'max_memory': 8000,
+            'min_cores': 1,
+            'module': 'compass.ocean.tests.baroclinic_channel.initial_state',
+            'name': 'initial_state',
+            'outputs': ['/home/xylar/data/mpas/test_new_run_model/nightly/new_api/ocean/baroclinic_channel/10km/default/initial_state/base_mesh.nc',
+                        '/home/xylar/data/mpas/test_new_run_model/nightly/new_api/ocean/baroclinic_channel/10km/default/initial_state/culled_mesh.nc',
+                        '/home/xylar/data/mpas/test_new_run_model/nightly/new_api/ocean/baroclinic_channel/10km/default/initial_state/culled_graph.info',
+                        '/home/xylar/data/mpas/test_new_run_model/nightly/new_api/ocean/baroclinic_channel/10km/default/initial_state/ocean.nc'],
             'path': 'ocean/baroclinic_channel/10km/default/initial_state',
+            'resolution': '10km',
+            'run': 'run',
+            'setup': 'setup',
+            'subdir': 'initial_state',
             'testcase': 'default',
             'testcase_subdir': '10km/default',
-            'work_dir': '/home/xylar/data/mpas/test_baroclinic_channel/ocean/baroclinic_channel/10km/default/initial_state',
-            'base_work_dir': '/home/xylar/data/mpas/test_baroclinic_channel/',
-            'config': 'default.cfg',
-            'resolution': '10km'}
+            'threads': 1,
+            'work_dir': '/home/xylar/data/mpas/test_new_run_model/nightly/new_api/ocean/baroclinic_channel/10km/default/initial_state'}
 
-``module``
-    The full name of the module where the step case is defined. This entry
-    should be defined by passing ``module=__name__`` as an argument
-    to :py:func:`compass.testcase.get_step_default()` in
-    :ref:`dev_step_collect`.
+``base_work_dir``
+    The base directory where the test cases or test suite have been set up.
 
-``name``
-    The name of the step, by default the last part of the ``module`` and
-    is set by :py:func:`compass.testcase.get_step_default()`.  You can
-    modify this entry in :ref:`dev_step_collect` anytime after calling
-    ``get_step_default()``.
+``config``
+    The config file for the test case, typically ``<name>.cfg``, where
+    ``<name>`` is the name of the test case.
 
-``subdir``
-    The subdirectory for the step within the test case.  The default is the the
-    last part of the ``module`` and is set by
-    :py:func:`compass.testcase.get_step_default()`.  You can modify this
-    entry in :ref:`dev_step_collect` anytime after calling
-    ``get_step_default()``.  The value of ``subdir`` is nearly always the
-    same as for ``name``.
+``configuration``
+    Which of the :ref:`dev_configs` this test case belongs to.  This entry is
+    added automatically by :py:func:`compass.testcase.add_step()` when it
+    is called in the configuration's ``collect()`` function and should not be
+    modified.
 
-``inputs``
-    A list of absolute paths of input files to the step, see
-    :ref:`dev_step_inputs_outputs`, that should be defined in
-    :ref:`dev_step_setup` (or, less commonly, in :ref:`dev_step_collect`).
-
-``outputs``
-    A list of absolute paths of outputs files from the step, see
-    :ref:`dev_step_inputs_outputs`, that should be defined in
-    :ref:`dev_step_setup` (or, less commonly, in :ref:`dev_step_collect`).
+``core``
+    Which of the :ref:`dev_cores` this test case belongs to.  This entry is
+    added automatically by :py:func:`compass.testcase.add_step()` when it
+    is called in the configuration's ``collect()`` function and should not be
+    modified.
 
 ``cores``
     The "target" number of cores that the step would ideally run on if that
-    number is available.  This entry should be set in :ref:`dev_step_collect`
-    or  :ref:`dev_step_setup` if it is known in advance, or in the test case's
-    :ref:`dev_testcase_run` if it comes from a config option that a user might
-    alter.
+    number is available.  This entry should be set via keyword argument to
+    :py:func:`compass.testcase.add_step()`, in :ref:`dev_step_collect`
+    or  in :ref:`dev_step_setup` if it is known in advance, or in the test
+    case's :ref:`dev_testcase_run` if it comes from a config option that a user
+    might alter.
 
-``max_memory``
-    The maximum amount of memory the step is allowed to use.  This is a
-    placeholder for the time being and is not used. This entry should be set in
-    :ref:`dev_step_collect` or  :ref:`dev_step_setup` if it is known in
-    advance, or in the test case's :ref:`dev_testcase_run` if it comes from a
-    config option that a user might alter.
+``inputs``
+    A list of absolute paths of input files to the step, added with calls to
+    :py:func:`compass.io.add_input_file()`.
 
 ``max_disk``
     The maximum amount of disk space the step is allowed to use.  This is a
-    placeholder for the time being and is not used. This entry should be set in
-    :ref:`dev_step_collect` or  :ref:`dev_step_setup` if it is known in
+    placeholder for the time being and is not used. This entry should be set
+    via keyword argument to :py:func:`compass.testcase.add_step()`, in
+    :ref:`dev_step_collect` or in :ref:`dev_step_setup` if it is known in
     advance, or in the test case's :ref:`dev_testcase_run` if it comes from a
     config option that a user might alter.
 
-``setup``
-    The name of the :ref:`dev_step_setup` function for setting up the step.
-    This entry is added by :py:func:`compass.testcase.get_testcase_default()`
-    and should only be modified if you have an important reason not to name
-    the function in your step's module ``configure``.
+``max_memory``
+    The maximum amount of memory the step is allowed to use.  This is a
+    placeholder for the time being and is not used. This entry should be set
+    via keyword argument to :py:func:`compass.testcase.add_step()`, in
+    :ref:`dev_step_collect` or in :ref:`dev_step_setup` if it is known in
+    advance, or in the test case's :ref:`dev_testcase_run` if it comes from a
+    config option that a user might alter.
 
-``run``
-    The name of the :ref:`dev_step_run` function for running the step, set
-    by :py:func:`compass.testcase.get_testcase_default()`.  This entry should
-    only be modified if you have an important reason not to name the function
-    in your step's module ``run``.
+``min_cores``
+    The minimum number of cores that the step can run on.  If fewer cores are
+    available on the system, the step will fail.  This entry should be set via
+    keyword argument to :py:func:`compass.testcase.add_step()`, in
+    :ref:`dev_step_collect` or  in :ref:`dev_step_setup` if it is known in
+    advance, or in the test case's :ref:`dev_testcase_run` if it comes from a
+    config option that a user might alter.
+
+``module``
+    The full name of the module where the step is defined. This entry is added
+    automatically by :py:func:`compass.testcase.add_step()` when it is called
+    in the test case's :ref:`dev_testcase_collect` function and should not been
+    to be modified.
+
+``name``
+    The name of the step.  The default is the last part of ``module`` and is
+    set by :py:func:`compass.testcase.add_step()`.  You can modify this entry
+    by passing ``name=<name>`` as a keyword argument to this function when it
+    is called in the test case's :ref:`dev_testcase_collect` function.
+
+``outputs``
+    A list of absolute paths of output files to the step, added with calls to
+    :py:func:`compass.io.add_output_file()`.
 
 ``path``
-    The relative path of the step within the base work directory, the
-    combination of the ``core``, ``configuration``, test case's ``subdir``
-    and the step's ``subdir``.  This entry is added automatically by the
-    :ref:`dev_framework` after :ref:`dev_testcase_collect` is called and should
-    not be modified.
+    The relative path of the steps within the base work directory, the
+    combination of the ``core``, ``configuration``, ``testcase_subdir`` and
+    ``subdir``.  This entry is added automatically by the :ref:`dev_framework`
+    after :ref:`dev_step_collect` is called and should not be modified.
+
+``run``
+    The name of the :ref:`dev_step_run` function for running the step,
+    set by :py:func:`compass.testcase.add_step()`.  This entry should only be
+    modified if you have an important reason not to name the function in your
+    test case's module ``run``.
+
+``steup``
+    The name of the :ref:`dev_step_setup` function for setting up the step,
+    set by :py:func:`compass.testcase.add_step()`.  This entry should only be
+    modified if you have an important reason not to name the function in your
+    test case's module ``setup``.
+
+``subdir``
+    The subdirectory for the step within the test case.  The default is the the
+    last part of the ``module`` (the same as the default ``name``) and is set
+    by :py:func:`compass.testcase.add_step()`.  You can modify this entry by
+    passing ``subdir=<subdir>`` as a keyword argument to this function when it
+    is called in the configuration's ``collect()`` function.
 
 ``testcase``
-    The name of the test case that this step belongs to.  This is set by the
-    :ref:`dev_framework` and should not be modified.
+    The name of the test case that this step belongs to.  This comes from the
+    test case and should not be modified by the step.
 
 ``testcase_subdir``
-    The subdirectory of the test case that this step belongs to.  This is set
-    by the :ref:`dev_framework` and should not be modified.  It can be useful
-    for finding the paths to other steps in the test case.
+    The subdirectory for the test case within the configuration.  This comes
+    from the test case and should not be modified by the step.
+
+``threads``
+    The number of threads used by the step.  This entry should be set via
+    keyword argument to :py:func:`compass.testcase.add_step()`, in
+    :ref:`dev_step_collect` or  in :ref:`dev_step_setup` if it is known in
+    advance, or in the test case's :ref:`dev_testcase_run` if it comes from a
+    config option that a user might alter.
 
 ``work_dir``
-    The absolute path where the step will be or has been set up.  This is set
-    by the :ref:`dev_framework` before calling :ref:`dev_step_setup` and should
-    not be modified.  It can be helpful for determining absolute paths for
-    input and output files.
-
-``base_work_dir``
-    The absolute path to the base location where test cases are set up.  This
-    is set by the :ref:`dev_framework` before calling :ref:`dev_step_setup` and
-    should not be modified.  It can be helpful for determining absolute paths
-    for input and output files.
-
-``config``
-    The name of the config file where config options will read in for the
-    step.  This config file is shared across the test case.  This entry
-    is set by the :ref:`dev_framework` before calling :ref:`dev_step_setup` and
-    should not be modified.  It is used internally by the :ref:`dev_framework`
-    and likely won't be useful within the step because config options are
-    available in the ``config`` object.
+    The directory where the step has been set up, a combination of
+    ``base_work_dir`` and ``path``.
 
 You can add other entries to the dictionary to pass information between the
-:ref:`dev_step_collect`, :ref:`dev_step_setup`, and :ref:`dev_step_run`.  In the
-example above, ``resolution`` has been added for this purpose.
+:ref:`dev_step_collect`, :ref:`dev_step_setup`, and :ref:`dev_step_run`.  In
+the example above, ``resolution`` has been added for this purpose.
 
 .. _dev_step_collect:
 
 collect()
 ^^^^^^^^^
 
-The ``collect()`` function for a step must:
+The arguments to ``collect()`` are the dictionaries ``testcase`` describing the
+test case and ``step`` describing the step.  The latter will include the keys
+and values from any keyword arguments passed to
+:py:func:`compass.testcase.add_step()`. In the example below, the resolution
+(as a string) as been passed in this way.
 
-1. call :py:func:`compass.testcase.get_step_default()`
+As with the test case's :ref:`dev_testcase_collect`, it is important that the
+step's ``collect()`` function doesn't perform any time-consuming calculations,
+download files, or otherwise use significant resources because this function is
+called quite often for every single test case and step: when test cases are
+listed, set up, or cleaned up, and also when test suites are set up or cleaned
+up.  However, it is okay to add input, output, streams and namelist files to
+the step by calling any of the following functions:
 
-3. return the resulting python dictionary ``step``.
+* :py:func:`compass.io.add_input_file()`
 
-You can include argument (typically parameters) to ``collect()`` as long as
-the test case's ``collect()`` function will know what these should be.  In
-the example below, there are lots of arguments.  Some, like ``resolution``,
-are required while others, like the viscosity ``nu`` are not.
+* :py:func:`compass.io.add_output_file()`
 
-Typically, ``collect()`` will do little more than call
-:py:func:`compass.testcase.get_step_default()` and add the parameters to
-``step`` for use in :ref:`dev_step_setup` and :ref:`dev_step_run`.
+* :py:func:`compass.namelist.add_namelist_file()`
+
+* :py:func:`compass.namelist.add_namelist_options()`
+
+* :py:func:`compass.streams.add_streams_file()`
+
+Each of these functions just caches information about the the inputs, outputs,
+namelists or streams files to be read later if the test case in question gets
+set up, so each takes a negligible amount of time.
 
 The following is the contents of
-:py:func:`compass.ocean.tests.baroclinic_channel.forward.collect()`, which is an
-example of a ``collect()`` function with a large number of arguments:
+:py:func:`compass.ocean.tests.baroclinic_channel.forward.collect()`:
 
 .. code-block:: python
 
-    from compass.testcase import get_step_default
+    from compass.namelist import add_namelist_file, add_namelist_options
+    from compass.streams import add_streams_file
 
 
-    def collect(resolution, cores, min_cores=None, max_memory=1000,
-                max_disk=1000, threads=1, testcase_module=None,
-                namelist_file=None, streams_file=None, nu=None):
+    def collect(testcase, step):
         """
-        Get a dictionary of step properties
+        Update the dictionary of step properties
 
         Parameters
         ----------
-        resolution : {'1km', '4km', '10km'}
-            The name of the resolution to run at
+        testcase : dict
+            A dictionary of properties of this test case, which should not be
+            modified here
 
-        cores : int
-            The number of cores to run on in forward runs. If this many cores are
-            available on the machine or batch job, the task will run on that
-            number. If fewer are available (but no fewer than min_cores), the job
-            will run on all available cores instead.
-
-        min_cores : int, optional
-            The minimum allowed cores.  If that number of cores are not available
-            on the machine or in the batch job, the run will fail.  By default,
-            ``min_cores = cores``
-
-        max_memory : int, optional
-            The maximum amount of memory (in MB) this step is allowed to use
-
-        max_disk : int, optional
-            The maximum amount of disk space  (in MB) this step is allowed to use
-
-        threads : int, optional
-            The number of threads to run with during forward runs
-
-        testcase_module : str, optional
-            The module for the testcase
-
-        namelist_file : str, optional
-            The name of a namelist file in the testcase package directory
-
-        streams_file : str, optional
-            The name of a streams file in the testcase package directory
-
-        nu : float, optional
-            The viscosity for this step
-
-        Returns
-        -------
         step : dict
-            A dictionary of properties of this step
+            A dictionary of properties of this step, which can be updated
         """
-        step = get_step_default(__name__)
-        step['resolution'] = resolution
-        step['cores'] = cores
-        step['max_memory'] = max_memory
-        step['max_disk'] = max_disk
-        if min_cores is None:
-            min_cores = cores
-        step['min_cores'] = min_cores
-        step['threads'] = threads
-        if testcase_module is not None:
-            step['testcase_module'] = testcase_module
-        else:
-            if namelist_file is not None or streams_file is not None:
-                raise ValueError('You must supply a testcase module for the '
-                                 'namelist and/or streams file')
-        if namelist_file is not None:
-            step['namelist'] = namelist_file
-        if streams_file is not None:
-            step['streams'] = streams_file
+        defaults = dict(max_memory=1000, max_disk=1000, threads=1)
+        for key, value in defaults.items():
+            step.setdefault(key, value)
 
-        if nu is not None:
-            step['nu'] = nu
+        step.setdefault('min_cores', step['cores'])
 
-        return step
+        add_namelist_file(step, 'compass.ocean.tests.baroclinic_channel',
+                          'namelist.forward')
+        add_namelist_file(step, 'compass.ocean.tests.baroclinic_channel',
+                          'namelist.{}.forward'.format(step['resolution']))
+        if 'nu' in step:
+            # update the viscosity to the requested value
+            options = {'config_mom_del2': '{}'.format(step['nu'])}
+            add_namelist_options(step, options)
 
-Below, we will follow how these parameters are use later in the step.
+        add_streams_file(step, 'compass.ocean.tests.baroclinic_channel',
+                         'streams.forward')
+
+
+A set of default parameters (``max_memory``, ``max_disk`` and ``threads``) is
+added to ``step`` if these parameters have not already been set.  Similarly,
+``min_cores`` is set to ``cores`` if it has not already been set.
+
+Then, two files with modifications to the namelist options are added (for
+later processing), and an additional config option is set manually via
+a python dictionary of namelist options.
+
+Finally, a file with modifications to the default streams is also added (again,
+for later processing).
 
 .. _dev_step_setup:
 
@@ -1044,38 +1037,42 @@ setup()
 
 The ``setup()`` function is called when a user is setting up each step either
 as part of a call to :ref:`dev_compass_setup` or :ref:`dev_compass_suite`.
-Typical activities that are involved in setting up a step include:
+As in :ref:`dev_step_collect`, you can add input, output, streams and namelist
+files to the step by calling any of the following functions:
 
-1. downloading files, most often from the
-   `LCRC server <https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/>`_.
+* :py:func:`compass.io.add_input_file()`
 
-2. making symlinks to files from ``compass``, in a local cache directory, or
-   other steps.
+* :py:func:`compass.io.add_output_file()`
 
-3. creating a list of :ref:`dev_step_inputs_outputs`.
+* :py:func:`compass.namelist.add_namelist_file()`
 
-4. adding the contents of one or more :ref:`config_files` to the ``config``
-   object, or using ``config.set()`` to set config options directly.
+* :py:func:`compass.namelist.add_namelist_options()`
 
-5. modifying namelist options from their defaults either by parsing namelist
-   files or by directly adding entries to a ``replacements`` dictionary, then
-   generating the namelist file that will be used by the MPAS model.
+* :py:func:`compass.streams.add_streams_file()`
 
-6. adding or modifying streams by parsing stream files to create an XML tree,
-   then generating the streams file that will be used by the MPAS model.
+You can also add the contents of one or more :ref:`config_files` to the
+``config`` object, or use ``config.set()`` to set config options directly.
+
+If namelists and streams files have been defined, you should call
+:py:func:`compass.namelist.generate_namelist()` and
+:py:func:`compass.streams.generate_streams()` somewhere in ``setup()``.
+
+If you are running the MPAS model, you should call
+:py:func:`compass.model.add_model_as_input()` to create a symlink to the
+MPAS model's executable.
 
 Set up should not do any major computations or any time-consuming operations
 other than downloading files.
 
-As an example, here is a slightly modified version of
+As an example, here is
 :py:func:`compass.ocean.tests.baroclinic_channel.forward.setup()`:
 
 .. code-block:: python
 
-    import os
-
-    from compass.io import symlink
-    from compass import namelist, streams
+    from compass.io import add_input_file, add_output_file
+    from compass.namelist import generate_namelist
+    from compass.streams import generate_streams
+    from compass.model import add_model_as_input
 
 
     def setup(step, config):
@@ -1086,384 +1083,30 @@ As an example, here is a slightly modified version of
         Parameters
         ----------
         step : dict
-            A dictionary of properties of this step from the ``collect()`` function
+            A dictionary of properties of this step
 
         config : configparser.ConfigParser
-            Configuration options for this testcase, a combination of the defaults
-            for the machine, core, configuration and testcase
+            Configuration options for this test case, a combination of the defaults
+            for the machine, core, configuration and test case
         """
-        resolution = step['resolution']
-        step_dir = step['work_dir']
-        if 'testcase_module' in step:
-            testcase_module = step['testcase_module']
-        else:
-            testcase_module = None
-
-        # generate the namelist, replacing a few default options
-        replacements = dict()
-
-        for namelist_file in ['namelist.forward',
-                              'namelist.{}.forward'.format(resolution)]:
-            new_replacements = namelist.parse_replacements(
-                'compass.ocean.tests.baroclinic_channel', namelist_file)
-            replacements.update(new_replacements)
-
-        # see if there's one for the testcase itself
-        if 'namelist' in step:
-            new_replacements = namelist.parse_replacements(
-                testcase_module, step['namelist'])
-            replacements.update(new_replacements)
-
-        if 'nu' in step:
-            # update the viscosity to the requested value
-            replacements['config_mom_del2] = '{}'.format(step['nu'])
-
-        namelist.generate(config=config, replacements=replacements,
-                          step_work_dir=step_dir, core='ocean', mode='forward')
-
-        # generate the streams file
-        streams_data = streams.read('compass.ocean.tests.baroclinic_channel',
-                                    'streams.forward')
-
-        # see if there's one for the testcase itself
-        if 'streams' in step:
-            streams_data = streams.read(testcase_module, step['streams'],
-                                        tree=streams_data)
-
-        streams.generate(config=config, tree=streams_data, step_work_dir=step_dir,
-                         core='ocean', mode='forward')
-
-        # make a link to the ocean_model executable
-        symlink(os.path.abspath(config.get('executables', 'model')),
-                os.path.join(step_dir, 'ocean_model'))
-
-        inputs = []
-        outputs = []
-
-        links = {'../initial_state/ocean.nc': 'init.nc',
-                 '../initial_state/culled_graph.info': 'graph.info'}
-        for target, link in links.items():
-            symlink(target, os.path.join(step_dir, link))
-            inputs.append(os.path.abspath(os.path.join(step_dir, target)))
-
-        for file in ['output.nc']:
-            outputs.append(os.path.join(step_dir, file))
-
-        step['inputs'] = inputs
-        step['outputs'] = outputs
-
-Let's go back through this a few bits at a time.
-
-.. code-block:: python
-
-        resolution = step['resolution']
-        step_dir = step['work_dir']
-        if 'testcase_module' in step:
-            testcase_module = step['testcase_module']
-        else:
-            testcase_module = None
-
-This just pulls the resolution, the step's work directory and (if available)
-the test case's module out of the ``step`` dictionary for convenience.
-
-.. _dev_step_namelists:
-
-namelists
-~~~~~~~~~
-
-The next segment adds a bunch of "replacements" to a dictionary that is used to
-update the default namelist from the MPAS model.
-
-First, we create an emtpy dictionary
-.. code-block:: python
-
-        # generate the namelist, replacing a few default options
-        replacements = dict()
-
-Then, we add replacements from 2 files that are part of the
-``compass.ocean.tests.baroclinic`` package.  Let's say we're setting up the
-10-km version of the test case (``resolution = 10km``).  Then, the files are
-``namelist.forward`` and ``namelist.10km.forward``.  The first one contains
-namelist options that are appropriate for all ``baroclinic_channel`` test
-cases and the second has some config options (like the time step) that are
-specific to the resolution.
-
-.. code-block:: python
-
-        for namelist_file in ['namelist.forward',
-                              'namelist.{}.forward'.format(resolution)]:
-            new_replacements = namelist.parse_replacements(
-                'compass.ocean.tests.baroclinic_channel', namelist_file)
-            replacements.update(new_replacements)
-
-First, we parse the new replacements from the file using
-:py:func:`compass.namelist.parse_replacements()`, then we add them to our
-``replacements`` dictionary (updating anything that was already in there with
-the new value).
-
-Here's what these two files look like:
-
-.. code-block:: none
-
-    config_write_output_on_startup = .false.
-    config_run_duration = '0000_00:15:00'
-    config_use_mom_del2 = .true.
-    config_implicit_bottom_drag_coeff = 1.0e-2
-    config_use_cvmix_background = .true.
-    config_cvmix_background_diffusion = 0.0
-    config_cvmix_background_viscosity = 1.0e-4
-
-.. code-block:: none
-
-    config_dt = '00:05:00'
-    config_btr_dt = '00:00:15'
-    config_mom_del2 = 10.0
-
-Some ``baroclinic_channel`` test cases have their own namelist options as well.
-These test cases will pass a namelist file and the module (or package actually
-if we're being picky) for the test case as arguments to ``collect()``. If they
-were included, we added them to ``step``.  So if ``namelist`` is found in the
-step dictionary, we add its replacements, too:
-
-.. code-block:: python
-
-        # see if there's one for the testcase itself
-        if 'namelist' in step:
-            new_replacements = namelist.parse_replacements(
-                testcase_module, step['namelist'])
-            replacements.update(new_replacements)
-
-For the ``rpe_test``, there is such a ``namelist.forward``:
-
-.. code-block:: none
-
-    config_run_duration = '20_00:00:00'
-
-It changes the duration of the run from the ``baroclinic_channel`` default of
-15 minutes to 20 days (yikes!).
-
-The ``rpe_test`` test case also passes a value for the viscosity ``nu`` to
-``collect()`` so we can do a parameter study with 5 different values.  If
-``nu`` was passed to ``collect()``, it gets added to ``step`` and we now use it
-to update the appropriate namelist option, ``config_mom_del2``:
-
-.. code-block:: python
-
-        if 'nu' in step:
-            # update the viscosity to the requested value
-            replacements['config_mom_del2] = '{}'.format(step['nu'])
-
-Okay, now we're ready to generate a namelist file with
-:py:func:`compass.namelist.generate()` by starting with the defaults for
-``forward`` mode in the ``ocean`` core and substituting our replacements:
-
-.. code-block:: python
-
-        namelist.generate(config=config, replacements=replacements,
-                          step_work_dir=step_dir, core='ocean', mode='forward')
-
-.. _dev_step_streams:
-
-streams
-~~~~~~~
-
-The next section is the same concept but for streams files.  Here, things get
-a little more complicated because streams files are XML documents, requiring
-some slightly more sophisticated parsing.
-
-It's not as easy to start with an empty XML tree and merging XML trees isn't
-quite as simple as calling their ``.update()`` method like for the replacements
-dictionary we used for namelists above.  Instead, we just parse the first
-streams file with :py:func:`compass.streams.read()` but without passing the
-optional ``tree`` argument.  This tells the function to make a fresh XML tree
-with the streams from this file:
-
-.. code-block:: python
-
-        # generate the streams file
-        streams_data = streams.read('compass.ocean.tests.baroclinic_channel',
-                                    'streams.forward')
-
-Here's what the streams file looks like:
-
-.. code-block:: xml
-
-    <streams>
-
-    <immutable_stream name="mesh"
-                      filename_template="init.nc"/>
-
-    <immutable_stream name="input"
-                      filename_template="init.nc"/>
-
-    <immutable_stream name="restart"/>
-
-    <stream name="output"
-            type="output"
-            filename_template="output.nc"
-            output_interval="0000_00:00:01"
-            clobber_mode="truncate">
-
-        <var_struct name="tracers"/>
-        <var name="xtime"/>
-        <var name="normalVelocity"/>
-        <var name="layerThickness"/>
-    </stream>
-
-    </streams>
-
-These are all streams that are already defined in the default forward streams
-for MPAS-Ocean, so the defaults will be updated.  If only the attributes of
-a stream are given, the contents of the stream (the ``var``, ``var_struct``
-and ``var_array`` tags within the stream) are taken from the defaults.  If
-any contents are given, as for the ``output`` stream in the example above, they
-replace the default contents.  Currently, there is no way to add or remove
-contents from the defaults, just keep the default contents or replace them all.
-
-Just like for the ``namelist`` passed in from the test case, we might have a
-``streams`` file passed in from the test case.  If so, we parse it as well,
-this time updating ``streams_data`` by passing it in as the ``tree`` argument
-to :py:func:`compass.streams.read()`:
-
-.. code-block:: python
-
-        # see if there's one for the testcase itself
-        if 'streams' in step:
-            streams_data = streams.read(testcase_module, step['streams'],
-                                        tree=streams_data)
-
-For the ``rpe_test`` test case, ``streams.forward`` is passed in and it looks
-like this:
-
-.. code-block:: xml
-
-    <streams>
-
-    <stream name="output"
-            type="output"
-            filename_template="output.nc"
-            output_interval="0000-00-20_00:00:00"
-            clobber_mode="truncate">
-
-        <var_struct name="tracers"/>
-        <var name="xtime"/>
-        <var name="density"/>
-        <var name="daysSinceStartOfSim"/>
-        <var name="relativeVorticity"/>
-    </stream>
-
-    </streams>
-
-The only stream to update ith ``output``.  Many of its attributes are updated
-unnecessarily to the same values as before, but the ``output_interval`` is
-increased to 20 days (the duration of the run) and the output variables are
-changed.  The variables ``normalVelocity`` and ``layerThickness`` are included
-in the forward runs of most ``baroclinic_channel`` test cases but they will be
-dropped in the ``rpe_test`` because they are not included when the ``output``
-stream gets updated.
-
-Okay, now we're ready to generate a streams file with
-:py:func:`compass.streams.generate()` by starting with the defaults for
-``forward`` mode for any streams in the ``ocean`` core and updating it with
-our ``streams_data``:
-
-.. code-block:: python
-
-        streams.generate(config=config, tree=streams_data, step_work_dir=step_dir,
-                         core='ocean', mode='forward')
-
-Any streams that are not included in ``streams_data`` will be dropped.  Any
-streams where only attributes were modified will get the contents from the
-default stream and the attributes will first come from the defaults and then
-be replaced by values from ``streams_data`` where they were provided.
-
-
-.. _dev_step_downloads:
-
-downloads, symlinks, inputs and outputs
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The particular example we're using in this section doesn't download any input
-files.  Here's a snippet from
-:py:func:`compass.ocean.tests.global_ocean.init.initial_state.setup()` that
-does:
-
-.. code-block:: python
-
-    from compass.io import symlink, download
-
-    def setup(step, config):
-
-        bathymetry_database = config.get('paths', 'bathymetry_database')
-
-        inputs = []
-
-        remote_filename = \
-            'BedMachineAntarctica_and_GEBCO_2019_0.05_degree.200128.nc'
-        local_filename = 'topography.nc'
-
-        filename = download(
-            file_name=remote_filename,
-            url='https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/'
-                'mpas-ocean/bathymetry_database',
-            config=config, dest_path=bathymetry_database)
-
-        inputs.append(filename)
-        symlink(filename, os.path.join(step_dir, local_filename))
-
-In this example, the remote file
-`BedMachineAntarctica_and_GEBCO_2019_0.05_degree.200128.nc <https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-ocean/bathymetry_databaseBedMachineAntarctica_and_GEBCO_2019_0.05_degree.200128.nc>`_
-gets downloaded into the bathymetry database (if it's not already there).  We
-take advantage of the fact that :py:func:`compass.io.download()` returns the
-full path to the file, and append this file to the list of inputs to the step.
-(This input didn't come from another step, so it's probably overkill but it
-does no harm, see :ref:`dev_step_inputs_outputs`).  Finally, we create a local
-symlink called ``topography.nc`` to the file in the bathymetry database.
-
-Returning to our previous example,
-:py:func:`compass.ocean.tests.baroclinic_channel.forward.setup()`, we make a
-symlink to the ``ocean_model`` executable (which we locate using the ``model``
-config option from the ``executables`` section).
-
-.. code-block:: python
-
-        # make a link to the ocean_model executable
-        symlink(os.path.abspath(config.get('executables', 'model')),
-                os.path.join(step_dir, 'ocean_model'))
-
-Then, we make symlinks to two files, ``ocean.nc`` and ``culled_graph.info``
-from the ``initial_state`` step of the same test case (giving them new names
-here).  At the same time, we also add the absolute paths to these files to the
-``inputs`` list, which means this step will fail to run if those files don't
-exist.
-
-.. code-block:: python
-
-        inputs = []
-        outputs = []
-
-        links = {'../initial_state/ocean.nc': 'init.nc',
-                 '../initial_state/culled_graph.info': 'graph.info'}
-        for target, link in links.items():
-            symlink(target, os.path.join(step_dir, link))
-            inputs.append(os.path.abspath(os.path.join(step_dir, target)))
-
-Then, we add the absolute path to the one significant output file from this
-step, ``output.nc``, to the list of output files:
-
-.. code-block:: python
-
-
-        for file in ['output.nc']:
-            outputs.append(os.path.join(step_dir, file))
-
-Finally, we add the inputs and outputs as entries the step dictionary.
-
-.. code-block:: python
-
-
-        step['inputs'] = inputs
-        step['outputs'] = outputs
+        # generate the namelist and streams files file from the various files and
+        # replacements we have collected
+        generate_namelist(step, config)
+        generate_streams(step, config)
+
+        add_model_as_input(step, config)
+
+        add_input_file(step, filename='init.nc',
+                       target='../initial_state/ocean.nc')
+        add_input_file(step, filename='graph.info',
+                       target='../initial_state/culled_graph.info')
+
+        add_output_file(step, filename='output.nc')
+
+First, the namelist and streams file are generated.  Then, the model's
+executable is linked (and included among the ``inputs``).  Two other input
+files are added (symlinks from the ``initial_state`` step).  Finally, an output
+file is added.
 
 .. _dev_step_run:
 
@@ -1628,56 +1271,39 @@ condition to an :py:class:`xarray.Dataset`, which is then written out to
 the file ``ocean.nc``.
 
 In the example step we've been using,
-:py:func:`compass.ocean.tests.baroclinic_channel.forward.run()` looks like this:
+:py:func:`compass.ocean.tests.baroclinic_channel.forward.run()` looks like
+this:
 
 .. code-block:: python
 
-    from compass.model import partition, run_model
-    from compass.parallel import update_namelist_pio
+    from compass.model import run_model
 
 
     def run(step, test_suite, config, logger):
         """
-        Run this step of the testcase
+        Run this step of the test case
 
         Parameters
         ----------
         step : dict
-            A dictionary of properties of this step from the ``collect()``
-            function, with modifications from the ``setup()`` function.
+            A dictionary of properties of this step
 
         test_suite : dict
             A dictionary of properties of the test suite
 
         config : configparser.ConfigParser
-            Configuration options for this testcase, a combination of the defaults
+            Configuration options for this test case, a combination of the defaults
             for the machine, core and configuration
 
         logger : logging.Logger
             A logger for output from the step
         """
-        cores = step['cores']
-        threads = step['threads']
-        step_dir = step['work_dir']
-        update_namelist_pio(config, cores, step_dir)
-        partition(cores, logger)
-        run_model(config, core='ocean', core_count=cores, logger=logger,
-                  threads=threads)
+        run_model(step, config, logger)
 
-We just get the number of cores, threads and the work directory for the step
-from the ``step`` dictionary.  Then, we run
-:py:func:`compass.parallel.update_namelist_pio()` with the number of cores we
-want so it can update the ``namelist.ocean`` file to have one PIO task per node
-(a configuration we have found to work pretty reliably).
-
-Then, a call to :py:func:`compass.model.partition()` creates a graph partition
-for the requested number of cores using
-`gpmetis <http://glaros.dtc.umn.edu/gkhome/metis/metis/overview>`_.
-
-Finally, MPAS-Ocean is run with the requested number of cores and threads using
-:py:func:`compass.model.run_model()`.
-
-This is a common approach to forward runs.
+the :py:func:`compass.model.run_model()` function takes care of updating the
+namelist options for the test case to make sure the PIO tasks and stride are
+consistent with the requested number of cores, creates a graph partition for
+the requested number of cores, and runs the model.
 
 To get a feel for different types of ``run()`` functions, it may be best to
 explore different test cases.

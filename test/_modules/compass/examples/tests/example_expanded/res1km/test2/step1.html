@@ -32,7 +32,6 @@
         <script src="../../../../../../../_static/jquery.js"></script>
         <script src="../../../../../../../_static/underscore.js"></script>
         <script src="../../../../../../../_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../../../../../../_static/js/theme.js"></script>
 
@@ -103,6 +102,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../../developers_guide/command_line.html">Command-line interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../../developers_guide/cores.html">Cores</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../../developers_guide/examples/index.html">Examples core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../developers_guide/landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../../developers_guide/ocean/index.html">Ocean core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../../developers_guide/framework.html">Framework</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../../developers_guide/docs.html">Documentation</a></li>
@@ -112,34 +112,6 @@
 <p class="caption"><span class="caption-text">Versions</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../../versions.html">Code and Documentation Versions</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Legacy User's guide</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../../../legacy/users_guide/overview.html">Quick Start</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../../../legacy/users_guide/scripts.html">Scripts</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Legacy Ocean Test Cases</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../../../legacy/ocean/introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../../../legacy/ocean/test_cases/index.html">Ocean test cases</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Legacy Instructions for Machines</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../../../legacy/machine_specific_instructions/slurm.html">Slurm job queueing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../../../legacy/machine_specific_instructions/lanl.html">LANL Institutional Computing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../../../legacy/machine_specific_instructions/nersc.html">NERSC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../../../legacy/machine_specific_instructions/anvil.html">Anvil/Blues</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../../../legacy/machine_specific_instructions/linux.html">Personal Linux/OSX Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../../../legacy/machine_specific_instructions/osx.html">Personal OSX Machine</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Legacy Developer's guide</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../../../legacy/developers_guide/config.html">config</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../../../legacy/developers_guide/driver_script.html">driver_script</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../../../legacy/developers_guide/template.html">template</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../../../legacy/developers_guide/regression_suite.html">regression_suite</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../../../legacy/developers_guide/run_config.html">run_config</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../../../legacy/developers_guide/building_docs.html">Building the Documentation</a></li>
 </ul>
 
             
@@ -213,32 +185,79 @@
             
   <h1>Source code for compass.examples.tests.example_expanded.res1km.test2.step1</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">xarray</span>
-<span class="kn">import</span> <span class="nn">os</span>
 
 <span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
 
-<span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">get_step_default</span>
-<span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">download</span><span class="p">,</span> <span class="n">symlink</span>
+<span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">add_input_file</span><span class="p">,</span> <span class="n">add_output_file</span>
 
 
-<div class="viewcode-block" id="collect"><a class="viewcode-back" href="../../../../../../../developers_guide/examples/generated/compass.examples.tests.example_expanded.res1km.test2.step1.collect.html#compass.examples.tests.example_expanded.res1km.test2.step1.collect">[docs]</a><span class="k">def</span> <span class="nf">collect</span><span class="p">():</span>
+<span class="c1"># this function is used to define the step by adding to or modifying the</span>
+<span class="c1"># information in the &quot;step&quot; dictionary.  You can add or override options in</span>
+<span class="c1"># the dictionary directly, or you can call functions to add namelist files,</span>
+<span class="c1"># namelist options from a dictionary, streams files from a file or template,</span>
+<span class="c1"># input and output files.  At this stage, you cannot set config options so</span>
+<span class="c1"># information added to &quot;step&quot; should typically be data not available for users</span>
+<span class="c1"># to change at runtime.  The &quot;testcase&quot; dictionary is here to get information,</span>
+<span class="c1"># e.g. name or location of the test case, but should not be altered.</span>
+<div class="viewcode-block" id="collect"><a class="viewcode-back" href="../../../../../../../developers_guide/examples/generated/compass.examples.tests.example_expanded.res1km.test2.step1.collect.html#compass.examples.tests.example_expanded.res1km.test2.step1.collect">[docs]</a><span class="k">def</span> <span class="nf">collect</span><span class="p">(</span><span class="n">testcase</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Get a dictionary of step properties</span>
+<span class="sd">    Update the dictionary of step properties</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    testcase : dict</span>
+<span class="sd">        A dictionary of properties of this test case, which should not be</span>
+<span class="sd">        modified here</span>
+
 <span class="sd">    step : dict</span>
-<span class="sd">        A dictionary of properties of this step</span>
+<span class="sd">        A dictionary of properties of this step, which can be updated</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># get some default information for the step</span>
-    <span class="n">step</span> <span class="o">=</span> <span class="n">get_step_default</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
-    <span class="c1"># add any parameters or other information you would like to have when you</span>
-    <span class="c1"># are setting up or running the testcase or its steps</span>
+    <span class="c1"># the &quot;testcase&quot; and &quot;step&quot; dictionaries will contain some information that</span>
+    <span class="c1"># is either added by the framework or passed in to &quot;add_step&quot; as a keyword</span>
+    <span class="c1"># argument.  In this case, we get the name of the test case that was added</span>
+    <span class="c1"># by the framework</span>
+    <span class="n">testcase_name</span> <span class="o">=</span> <span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
     <span class="n">step</span><span class="p">[</span><span class="s1">&#39;resolution&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;1km&#39;</span>
 
-    <span class="k">return</span> <span class="n">step</span></div>
+    <span class="c1"># We will set these 5 options in &quot;step&quot; unless they were already set to</span>
+    <span class="c1"># something else in a call to &quot;add_step&quot; within the test case  These</span>
+    <span class="c1"># options are all related to the resources that the test case is allowed</span>
+    <span class="c1"># to use, but something similar could be done for any data you want ot add</span>
+    <span class="c1"># to &quot;step&quot;</span>
+    <span class="n">defaults</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_memory</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">max_disk</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+                    <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">defaults</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="c1"># one of the required parts of setup is to define any input files from</span>
+    <span class="c1"># other steps or test cases that are required by this step, and any output</span>
+    <span class="c1"># files that are produced by this step that might be used in other steps</span>
+    <span class="c1"># or test cases.  This allows compass to determine dependencies between</span>
+    <span class="c1"># test cases and their steps.  This can be done either in &quot;collect&quot; or</span>
+    <span class="c1"># &quot;setup&quot;.</span>
+
+    <span class="c1"># we will download the file &quot;target&quot; to the initial_condition_database</span>
+    <span class="c1"># from the data server (we don&#39;t have to give a URL) if it hasn&#39;t already</span>
+    <span class="c1"># been downloaded and then make a local link called &quot;input_file.nc&quot; to it</span>
+    <span class="c1"># in the step.  This won&#39;t happen yet (because we haven&#39;t decided if we&#39;re</span>
+    <span class="c1"># going to set up this step yet) but we&#39;re storing the information about</span>
+    <span class="c1"># what to do if we do decide we will set up this step later.</span>
+    <span class="n">add_input_file</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;input_file.nc&#39;</span><span class="p">,</span>
+                   <span class="n">target</span><span class="o">=</span><span class="s1">&#39;layer_depth.80Layer.180619.nc&#39;</span><span class="p">,</span>
+                   <span class="n">database</span><span class="o">=</span><span class="s1">&#39;initial_condition_database&#39;</span><span class="p">)</span>
+
+    <span class="c1"># effectively, we&#39;re promising that this step creates a file</span>
+    <span class="c1"># &quot;output_file.nc&quot; that other steps could use as an input if they want to</span>
+    <span class="n">add_output_file</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;output_file.nc&#39;</span><span class="p">)</span></div>
 
 
+<span class="c1"># This function gets called to set up the test case.  It can add input, output,</span>
+<span class="c1"># namelist an streams files, just like &quot;collect&quot;.  It can also do things that</span>
+<span class="c1"># depend on config options for the test case (but shouldn&#39;t set config options</span>
+<span class="c1"># because these might mess up other steps that share the same config options).</span>
+<span class="c1"># The function must take only the &quot;step&quot; and &quot;config&quot; arguments, so any</span>
+<span class="c1"># information you need should be added to &quot;step&quot; if it is not available in</span>
+<span class="c1"># &quot;config&quot;</span>
 <div class="viewcode-block" id="setup"><a class="viewcode-back" href="../../../../../../../developers_guide/examples/generated/compass.examples.tests.example_expanded.res1km.test2.step1.setup.html#compass.examples.tests.example_expanded.res1km.test2.step1.setup">[docs]</a><span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Set up the test case in the work directory, including downloading any</span>
@@ -247,50 +266,14 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    step : dict</span>
-<span class="sd">        A dictionary of properties of this step from the ``collect()`` function</span>
+<span class="sd">        A dictionary of properties of this step</span>
 
 <span class="sd">    config : configparser.ConfigParser</span>
 <span class="sd">        Configuration options for this step, a combination of the defaults for</span>
 <span class="sd">        the machine, core, configuration and testcase</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">resolution</span> <span class="o">=</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;resolution&#39;</span><span class="p">]</span>
-    <span class="n">testcase</span> <span class="o">=</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;testcase&#39;</span><span class="p">]</span>
-
     <span class="n">step</span><span class="p">[</span><span class="s1">&#39;parameter4&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
-    <span class="n">step</span><span class="p">[</span><span class="s1">&#39;parameter5&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">500</span>
-
-    <span class="n">step</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;layer_depth.80Layer.180619.nc&#39;</span>
-
-    <span class="n">initial_condition_database</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;paths&#39;</span><span class="p">,</span>
-                                            <span class="s1">&#39;initial_condition_database&#39;</span><span class="p">)</span>
-    <span class="n">step_dir</span> <span class="o">=</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;work_dir&#39;</span><span class="p">]</span>
-
-    <span class="c1"># one of the required parts of setup is to define any input files from</span>
-    <span class="c1"># other steps or testcases that are required by this step, and any output</span>
-    <span class="c1"># files that are produced by this step that might be used in other steps</span>
-    <span class="c1"># or testcases.  This allows compass to determine dependencies between</span>
-    <span class="c1"># testcases and their steps</span>
-    <span class="n">inputs</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">outputs</span> <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="c1"># download an input file if it&#39;s not already in the initial condition</span>
-    <span class="c1"># database</span>
-    <span class="n">filename</span> <span class="o">=</span> <span class="n">download</span><span class="p">(</span>
-        <span class="n">file_name</span><span class="o">=</span><span class="n">step</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">],</span>
-        <span class="n">url</span><span class="o">=</span><span class="s1">&#39;https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/&#39;</span>
-            <span class="s1">&#39;mpas-ocean/initial_condition_database&#39;</span><span class="p">,</span>
-        <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">dest_path</span><span class="o">=</span><span class="n">initial_condition_database</span><span class="p">)</span>
-
-    <span class="n">inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-
-    <span class="n">symlink</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">step_dir</span><span class="p">,</span> <span class="s1">&#39;input_file.nc&#39;</span><span class="p">))</span>
-
-    <span class="c1"># list all the output files that will be produced in the step1 subdirectory</span>
-    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;output_file.nc&#39;</span><span class="p">]:</span>
-        <span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">step_dir</span><span class="p">,</span> <span class="n">file</span><span class="p">))</span>
-
-    <span class="n">step</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">inputs</span>
-    <span class="n">step</span><span class="p">[</span><span class="s1">&#39;outputs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">outputs</span></div>
+    <span class="n">step</span><span class="p">[</span><span class="s1">&#39;parameter5&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">500</span></div>
 
 
 <div class="viewcode-block" id="run"><a class="viewcode-back" href="../../../../../../../developers_guide/examples/generated/compass.examples.tests.example_expanded.res1km.test2.step1.run.html#compass.examples.tests.example_expanded.res1km.test2.step1.run">[docs]</a><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">test_suite</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
@@ -300,15 +283,13 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    step : dict</span>
-<span class="sd">        A dictionary of properties of this step from the ``collect()``</span>
-<span class="sd">        function, with modifications from the ``setup()`` function.</span>
+<span class="sd">        A dictionary of properties of this step</span>
 
 <span class="sd">    test_suite : dict</span>
 <span class="sd">        A dictionary of properties of the test suite</span>
 
 <span class="sd">    config : configparser.ConfigParser</span>
-<span class="sd">        Configuration options for this testcase, a combination of the defaults</span>
-<span class="sd">        for the machine, core and configuration</span>
+<span class="sd">        Configuration options for this test case</span>
 
 <span class="sd">    logger : logging.Logger</span>
 <span class="sd">        A logger for output from the step</span>
