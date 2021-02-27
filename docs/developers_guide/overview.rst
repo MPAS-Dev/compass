@@ -19,6 +19,23 @@ Before we dig into the details of now to develop new test cases and other
 infrastructure for ``compass``, we first give a little bit of background on
 the design philosophy behind the package.
 
+.. _dev_style:
+
+Code Style
+----------
+
+All code is required to adhere fairly strictly to the
+`PEP8 style guide <https://www.python.org/dev/peps/pep-0008/>`_.  A bot will
+flag any PEP8 violations as part of each pull request to
+https://github.com/MPAS-Dev/compass.  Please consider using an editor that
+automatically flags PEP8 violations during code development, such as
+`pycharm <https://www.jetbrains.com/pycharm/>`_ or
+`spyder <https://www.spyder-ide.org/>`_, or a linter, such as
+`flake8 <https://flake8.pycqa.org/en/latest/>`_ or
+`pep8 <https://pep8.readthedocs.io/>`_.  We discourage you from automatically
+reformatting your code (e.g. with `autopep8 <https://github.com/hhatto/autopep8>`_)
+because this can often produce undesirable and confusing results.
+
 .. _dev_packages:
 
 Packages and Modules
