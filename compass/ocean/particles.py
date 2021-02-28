@@ -122,11 +122,11 @@ def remap_particles(init_filename, particle_filename, graph_filename):
         path of graph partition file of form */*.info.part
 
     particle_filename : str
-        path of output netCDF particle file
+        path of input/output netCDF particle file
     """
     # load the files
     with netCDF4.Dataset(init_filename, "r") as f_in, \
-            netCDF4.Dataset(graph_filename, "r+") as f_part:
+            netCDF4.Dataset(particle_filename, "r+") as f_part:
 
         # get the particle data
         xpart = f_part.variables["xParticle"]
@@ -158,7 +158,7 @@ def remap_particles(init_filename, particle_filename, graph_filename):
             k=1)
 
         # load the decomposition (apply to latest time step)
-        decomp = np.genfromtxt(particle_filename)
+        decomp = np.genfromtxt(graph_filename)
         currentBlock[-1, :] = decomp[cellIndices]
         currentCell[-1, :] = -1
         currentCellGlobalID[-1, :] = cellIndices + 1
