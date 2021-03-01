@@ -24,23 +24,28 @@ The ``nightly`` test suite includes the following test cases:
     ocean/baroclinic_channel/10km/threads_test
     ocean/baroclinic_channel/10km/decomp_test
     ocean/baroclinic_channel/10km/restart_test
+
     ocean/global_ocean/QU240/mesh
     ocean/global_ocean/QU240/PHC/init
-    ocean/global_ocean/QU240/PHC/performance_test/split_explicit
-    ocean/global_ocean/QU240/PHC/performance_test/RK4
-    ocean/global_ocean/QU240/PHC/restart_test/split_explicit
-    ocean/global_ocean/QU240/PHC/restart_test/RK4
-    ocean/global_ocean/QU240/PHC/decomp_test/split_explicit
-    ocean/global_ocean/QU240/PHC/decomp_test/RK4
-    ocean/global_ocean/QU240/PHC/threads_test/split_explicit
-    ocean/global_ocean/QU240/PHC/threads_test/RK4
-    ocean/global_ocean/QU240/PHC/analysis_test/split_explicit
-    ocean/global_ocean/QU240/PHC_BGC/init
-    ocean/global_ocean/QU240/PHC_BGC/performance_test/split_explicit
-    ocean/global_ocean/QU240/PHC_BGC/restart_test/split_explicit
+    ocean/global_ocean/QU240/PHC/performance_test
+    ocean/global_ocean/QU240/PHC/restart_test
+    ocean/global_ocean/QU240/PHC/decomp_test
+    ocean/global_ocean/QU240/PHC/threads_test
+    ocean/global_ocean/QU240/PHC/analysis_test
+
+    ocean/global_ocean/QU240/PHC/RK4/performance_test
+    ocean/global_ocean/QU240/PHC/RK4/restart_test
+    ocean/global_ocean/QU240/PHC/RK4/decomp_test
+    ocean/global_ocean/QU240/PHC/RK4/threads_test
+
     ocean/global_ocean/QU240/EN4_1900/init
-    ocean/global_ocean/QU240/EN4_1900/performance_test/split_explicit
+    ocean/global_ocean/QU240/EN4_1900/performance_test
+
+    ocean/global_ocean/QU240/PHC_BGC/init
+    ocean/global_ocean/QU240/PHC_BGC/performance_test
+
     ocean/ice_shelf_2d/5km/restart_test
+
     ocean/ziso/20km/default
     ocean/ziso/20km/with_frazil
 
@@ -85,20 +90,19 @@ quwisc240 test suite
 
     ocean/global_ocean/QUwISC240/mesh
     ocean/global_ocean/QUwISC240/PHC/init
-    ocean/global_ocean/QUwISC240/PHC/performance_test/split_explicit
-    ocean/global_ocean/QUwISC240/PHC/performance_test/RK4
-    ocean/global_ocean/QUwISC240/PHC/restart_test/split_explicit
-    ocean/global_ocean/QUwISC240/PHC/restart_test/RK4
-    ocean/global_ocean/QUwISC240/PHC/decomp_test/split_explicit
-    ocean/global_ocean/QUwISC240/PHC/decomp_test/RK4
-    ocean/global_ocean/QUwISC240/PHC/threads_test/split_explicit
-    ocean/global_ocean/QUwISC240/PHC/threads_test/RK4
-    ocean/global_ocean/QUwISC240/PHC/analysis_test/split_explicit
-    ocean/global_ocean/QUwISC240/PHC_BGC/init
-    ocean/global_ocean/QUwISC240/PHC_BGC/performance_test/split_explicit
-    ocean/global_ocean/QUwISC240/PHC_BGC/restart_test/split_explicit
+    ocean/global_ocean/QUwISC240/PHC/performance_test
+    ocean/global_ocean/QUwISC240/PHC/restart_test
+    ocean/global_ocean/QUwISC240/PHC/decomp_test
+    ocean/global_ocean/QUwISC240/PHC/threads_test
+    ocean/global_ocean/QUwISC240/PHC/analysis_test
+    ocean/global_ocean/QUwISC240/PHC/RK4/performance_test
+    ocean/global_ocean/QUwISC240/PHC/RK4/restart_test
+    ocean/global_ocean/QUwISC240/PHC/RK4/decomp_test
+    ocean/global_ocean/QUwISC240/PHC/RK4/threads_test
     ocean/global_ocean/QUwISC240/EN4_1900/init
-    ocean/global_ocean/QUwISC240/EN4_1900/performance_test/split_explicit
+    ocean/global_ocean/QUwISC240/EN4_1900/performance_test
+    ocean/global_ocean/QUwISC240/PHC_BGC/init
+    ocean/global_ocean/QUwISC240/PHC_BGC/performance_test
 
 This test suite performs exactly the same set of tests for the QUwISC240 mesh
 that are performed on the QU240 mesh in the :ref:`ocean_suite_nightly`.  Since
@@ -121,13 +125,14 @@ qu240_spinups test suite
 
     ocean/global_ocean/QU240/mesh
     ocean/global_ocean/QU240/PHC/init
-    ocean/global_ocean/QU240/PHC/spinup/split_explicit
-    ocean/global_ocean/QU240/PHC/files_for_e3sm/split_explicit
+    ocean/global_ocean/QU240/PHC/spinup
+    ocean/global_ocean/QU240/PHC/files_for_e3sm
 
     ocean/global_ocean/QUwISC240/mesh
     ocean/global_ocean/QUwISC240/PHC/init
-    ocean/global_ocean/QUwISC240/PHC/spinup/split_explicit
-    ocean/global_ocean/QUwISC240/PHC/files_for_e3sm/split_explicit
+    ocean/global_ocean/QUwISC240/PHC/spinup
+    ocean/global_ocean/QUwISC240/PHC/files_for_e3sm
+
 
 This suite includes all the tests needed to spin up an initial condition for
 E3SM on both the QU240 and QUwISC240 meshes.  They are grouped into a test
@@ -146,14 +151,13 @@ ec30to60 test suite
 
     ocean/global_ocean/EC30to60/mesh
     ocean/global_ocean/EC30to60/PHC/init
-    ocean/global_ocean/EC30to60/PHC/performance_test/split_explicit
-    ocean/global_ocean/EC30to60/PHC/spinup/split_explicit
-    ocean/global_ocean/EC30to60/PHC/files_for_e3sm/split_explicit
+    ocean/global_ocean/EC30to60/PHC/performance_test
+    ocean/global_ocean/EC30to60/PHC/spinup
+    ocean/global_ocean/EC30to60/PHC/files_for_e3sm
     ocean/global_ocean/EC30to60/EN4_1900/init
-    ocean/global_ocean/EC30to60/EN4_1900/performance_test/split_explicit
-    ocean/global_ocean/EC30to60/EN4_1900/spinup/split_explicit
-    ocean/global_ocean/EC30to60/EN4_1900/files_for_e3sm/split_explicit
-
+    ocean/global_ocean/EC30to60/EN4_1900/performance_test
+    ocean/global_ocean/EC30to60/EN4_1900/spinup
+    ocean/global_ocean/EC30to60/EN4_1900/files_for_e3sm
 
 This suite is included for convenience so all the tests needed to spin up an
 initial condition for E3SM on the EC30to60 mesh can be run with a single
@@ -172,13 +176,13 @@ ecwisc30to60 test suite
 
     ocean/global_ocean/ECwISC30to60/mesh
     ocean/global_ocean/ECwISC30to60/PHC/init
-    ocean/global_ocean/ECwISC30to60/PHC/performance_test/split_explicit
-    ocean/global_ocean/ECwISC30to60/PHC/spinup/split_explicit
-    ocean/global_ocean/ECwISC30to60/PHC/files_for_e3sm/split_explicit
+    ocean/global_ocean/ECwISC30to60/PHC/performance_test
+    ocean/global_ocean/ECwISC30to60/PHC/spinup
+    ocean/global_ocean/ECwISC30to60/PHC/files_for_e3sm
     ocean/global_ocean/ECwISC30to60/EN4_1900/init
-    ocean/global_ocean/ECwISC30to60/EN4_1900/performance_test/split_explicit
-    ocean/global_ocean/ECwISC30to60/EN4_1900/spinup/split_explicit
-    ocean/global_ocean/ECwISC30to60/EN4_1900/files_for_e3sm/split_explicit
+    ocean/global_ocean/ECwISC30to60/EN4_1900/performance_test
+    ocean/global_ocean/ECwISC30to60/EN4_1900/spinup
+    ocean/global_ocean/ECwISC30to60/EN4_1900/files_for_e3sm
 
 Similarly to the previous two suites, this suite is included for convenience so
 all the tests needed to spin up an initial condition for E3SM on the
