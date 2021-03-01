@@ -404,7 +404,7 @@ vertical mesh and and initial condition.
 The default vertical coordinate depends on the mesh being used, as described
 in :ref:`global_ocean_meshes`.  Possible grid types are described in
 :ref:`ocean_vertical` and include ``uniform``, ``tanh_dz``, ``60layerPHC``,
-``42layerWOCE``, and ``100layerE3SMv1``.
+and ``100layerE3SMv1``.
 
 compass supports two different types of initial conditions.  One is derived
 from the Polar science center Hydrographic Climatology

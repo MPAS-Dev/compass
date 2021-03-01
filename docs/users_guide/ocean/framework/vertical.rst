@@ -29,8 +29,8 @@ file:
     # The maximum layer thickness
     max_layer_thickness = 500.0
 
-Possible grid types are: ``uniform``, ``tanh_dz``, ``60layerPHC``,
-``42layerWOCE``, and ``100layerE3SMv1``.
+Possible grid types are: ``uniform``, ``tanh_dz``, ``60layerPHC``, and
+``100layerE3SMv1``.
 
 The meaning of the other config options depends grid type.
 
@@ -111,8 +111,8 @@ The following config options are all required.  This is an example of a
 
 This is the vertical grid used by the Polar science center Hydrographic Climatology
 (`PHC <http://psc.apl.washington.edu/nonwp_projects/PHC/Climatology.html>`_).
-Layer thicknesses vary over 60 layers from 5 m at the surface to 250 m at the
-seafloor, which is at 5375 m depth.  To get the default grid, use:
+Layer thicknesses vary over 60 layers from 10 m at the surface to 250 m at the
+seafloor, which is at 5500 m depth.  To get the default grid, use:
 
 .. code-block:: cfg
 
@@ -121,26 +121,6 @@ seafloor, which is at 5375 m depth.  To get the default grid, use:
 
     # the type of vertical grid
     grid_type = 60layerPHC
-
-If the ``bottom_depth`` option is also defined, the depths will be renormalized
-so that bottom of the deepest layer is at ``z = -bottom_depth``
-
-42layerWOCE
------------
-
-This is the vertical grid used by the World Ocean Circulation Experiment
-(`WOCE <https://icdc.cen.uni-hamburg.de/en/woce-climatology.html>`_) Global
-Hydrographic Climatology. Layer thicknesses vary over 42 layers from 5 m at the
-surface to 250 m at the seafloor, which is at 5875 m depth.  To get the default
-grid, use:
-
-.. code-block:: cfg
-
-    # Options related to the vertical grid
-    [vertical_grid]
-
-    # the type of vertical grid
-    grid_type = 42layerWOCE
 
 If the ``bottom_depth`` option is also defined, the depths will be renormalized
 so that bottom of the deepest layer is at ``z = -bottom_depth``
