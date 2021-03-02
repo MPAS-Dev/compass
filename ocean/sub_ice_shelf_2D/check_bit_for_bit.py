@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import os
 import xarray
 import sys
 import numpy
@@ -7,9 +8,14 @@ import numpy
 
 filename1 = sys.argv[1]
 filename2 = sys.argv[2]
+filename3 = filename2[:-3]+'_endtime.nc'
+
+# Compare only the last time slice of filename2 with filename1. 
+# Time dimension is length 3 in z_level test cases so min argument to -d is 2
+os.system('ncks -d Time,2 '+filename2+' '+filename3)
 
 ds1 = xarray.open_dataset(filename1)
-ds2 = xarray.open_dataset(filename2)
+ds2 = xarray.open_dataset(filename3)
 
 var_list = list()
 for var in ds1:
