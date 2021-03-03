@@ -1,5 +1,5 @@
 # make sure to add all meshes here so they will be found in sys.modules below
-from compass.ocean.tests.global_ocean.mesh import qu240, ec30to60
+from compass.ocean.tests.global_ocean.mesh import qu240, ec30to60, so12to60
 
 from compass.testcase import set_testcase_subdir, add_step, run_steps
 from compass.ocean.tests.global_ocean.mesh import mesh

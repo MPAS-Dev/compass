@@ -4,6 +4,8 @@ from compass.ocean.tests.global_ocean import mesh, init, performance_test, \
 from compass.ocean.tests.global_ocean.mesh.qu240 import spinup as qu240_spinup
 from compass.ocean.tests.global_ocean.mesh.ec30to60 import spinup as \
     ec30to60_spinup
+from compass.ocean.tests.global_ocean.mesh.so12to60 import spinup as \
+    so12to60_spinup
 from compass.config import add_config
 from compass.ocean.tests.global_ocean.mesh.mesh import get_mesh_package
 from compass.ocean.tests.global_ocean.init import add_descriptions_to_config
@@ -105,7 +107,8 @@ def collect():
 
     # for other meshes, we do fewer tests
     for mesh_name, with_ice_shelf_cavities in [('EC30to60', False),
-                                               ('ECwISC30to60', True)]:
+                                               ('ECwISC30to60', True),
+                                               ('SOwISC12to60', True)]:
         add_testcase(testcases, mesh, mesh_name=mesh_name,
                      with_ice_shelf_cavities=with_ice_shelf_cavities)
 
