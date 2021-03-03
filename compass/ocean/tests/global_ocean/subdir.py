@@ -32,8 +32,8 @@ def get_init_sudbdir(mesh_name, initial_condition, with_bgc):
 def get_forward_sudbdir(mesh_name, initial_condition, with_bgc,
                         time_integrator, name):
     """
-    Get the subdirectory specific to the initial condition that all test cases
-    (other than mesh) are under
+    Get the subdirectory for the forward run with the given mesh, initial
+    condition, time integrator, BGC, and test-case name
 
     Parameters
     ----------
