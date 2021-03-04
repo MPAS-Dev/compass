@@ -122,6 +122,11 @@ test cases and steps
    mesh.qu240.spinup.configure
    mesh.qu240.spinup.run
 
+   mesh.so12to60.build_cell_width_lat_lon
+   mesh.so12to60.spinup.collect
+   mesh.so12to60.spinup.configure
+   mesh.so12to60.spinup.run
+
    performance_test.collect
    performance_test.configure
    performance_test.run
