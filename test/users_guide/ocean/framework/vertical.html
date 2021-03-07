@@ -104,7 +104,6 @@
 <li class="toctree-l4"><a class="reference internal" href="#uniform">uniform</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#tanh-dz">tanh_dz</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#layerphc">60layerPHC</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#layerwoce">42layerWOCE</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#layere3smv1">100layerE3SMv1</a></li>
 </ul>
 </li>
@@ -228,8 +227,8 @@ file:</p>
 <span class="na">max_layer_thickness</span> <span class="o">=</span> <span class="s">500.0</span>
 </pre></div>
 </div>
-<p>Possible grid types are: <code class="docutils literal notranslate"><span class="pre">uniform</span></code>, <code class="docutils literal notranslate"><span class="pre">tanh_dz</span></code>, <code class="docutils literal notranslate"><span class="pre">60layerPHC</span></code>,
-<code class="docutils literal notranslate"><span class="pre">42layerWOCE</span></code>, and <code class="docutils literal notranslate"><span class="pre">100layerE3SMv1</span></code>.</p>
+<p>Possible grid types are: <code class="docutils literal notranslate"><span class="pre">uniform</span></code>, <code class="docutils literal notranslate"><span class="pre">tanh_dz</span></code>, <code class="docutils literal notranslate"><span class="pre">60layerPHC</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">100layerE3SMv1</span></code>.</p>
 <p>The meaning of the other config options depends grid type.</p>
 <div class="section" id="uniform">
 <h2>uniform<a class="headerlink" href="#uniform" title="Permalink to this headline">¶</a></h2>
@@ -296,30 +295,13 @@ number of vertical levels (one less than the number of layer interfaces) and
 <h2>60layerPHC<a class="headerlink" href="#layerphc" title="Permalink to this headline">¶</a></h2>
 <p>This is the vertical grid used by the Polar science center Hydrographic Climatology
 (<a class="reference external" href="http://psc.apl.washington.edu/nonwp_projects/PHC/Climatology.html">PHC</a>).
-Layer thicknesses vary over 60 layers from 5 m at the surface to 250 m at the
-seafloor, which is at 5375 m depth.  To get the default grid, use:</p>
+Layer thicknesses vary over 60 layers from 10 m at the surface to 250 m at the
+seafloor, which is at 5500 m depth.  To get the default grid, use:</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span>
 <span class="k">[vertical_grid]</span>
 
 <span class="c1"># the type of vertical grid</span>
 <span class="na">grid_type</span> <span class="o">=</span> <span class="s">60layerPHC</span>
-</pre></div>
-</div>
-<p>If the <code class="docutils literal notranslate"><span class="pre">bottom_depth</span></code> option is also defined, the depths will be renormalized
-so that bottom of the deepest layer is at <code class="docutils literal notranslate"><span class="pre">z</span> <span class="pre">=</span> <span class="pre">-bottom_depth</span></code></p>
-</div>
-<div class="section" id="layerwoce">
-<h2>42layerWOCE<a class="headerlink" href="#layerwoce" title="Permalink to this headline">¶</a></h2>
-<p>This is the vertical grid used by the World Ocean Circulation Experiment
-(<a class="reference external" href="https://icdc.cen.uni-hamburg.de/en/woce-climatology.html">WOCE</a>) Global
-Hydrographic Climatology. Layer thicknesses vary over 42 layers from 5 m at the
-surface to 250 m at the seafloor, which is at 5875 m depth.  To get the default
-grid, use:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span>
-<span class="k">[vertical_grid]</span>
-
-<span class="c1"># the type of vertical grid</span>
-<span class="na">grid_type</span> <span class="o">=</span> <span class="s">42layerWOCE</span>
 </pre></div>
 </div>
 <p>If the <code class="docutils literal notranslate"><span class="pre">bottom_depth</span></code> option is also defined, the depths will be renormalized

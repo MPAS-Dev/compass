@@ -222,11 +222,12 @@ Meshes
 ------
 
 The process for creating global ocean meshes is described below in the
-:ref:`global_ocean_mesh`.  compass currently supports 4 meshes.  Two are at
+:ref:`global_ocean_mesh`.  compass currently supports 5 meshes.  Two are at
 such coarse horizontal resolution (240 km) that they are mostly useful for
-testing purposes, not scientific simulations.  The remaining meshes, which vary
+testing purposes, not scientific simulations.  Two more meshes, which vary
 in resolution between 30 and 60 km, are used as the lowest resolution meshes
 in E3SM's `science campaigns <https://e3sm.org/research/science-campaigns/>`_.
+The final mesh has resolution focused in the Southern Ocean around Antarctica.
 
 .. _global_ocean_mesh_qu240:
 
@@ -296,6 +297,24 @@ ocean domain.
 A variant of this mesh has been used for low resolution simulations as part of
 the `E3SM v1 Cryosphere Campaign <https://e3sm.org/research/cryosphere-ocean/v1-cryosphere-ocean/>`_.
 
+.. _global_ocean_mesh_sowisc12to60:
+
+SOwISC12to60
+^^^^^^^^^^^^
+
+The Southern Ocean 12- to 60-km mesh with ice-shelf cavities (SOwISC12to60),
+sometimes called the Southern Ocean regionally refined mesh (SORRM) is intended
+to be the main simulation mesh for the
+`E3SM v2 Cryosphere Science Campaign <https://e3sm.org/research/cryosphere-ocean/v2-cryosphere-research/>`_.
+
+The mesh has 12 km resolution around Antarctica, tapering to 45 km in mid
+Southern latitudes, 30 km at the equator and in the North Atlantic, 60 km
+in the North Pacific, and 35 km in the Arctic.  The mesh includes the
+:ref:`global_ocean_ice_shelf_cavities` around Antarctica in the ocean domain.
+
+.. image:: images/sowisc12to60.png
+   :width: 500 px
+   :align: center
 
 .. _global_ocean_ice_shelf_cavities:
 
@@ -404,7 +423,7 @@ vertical mesh and and initial condition.
 The default vertical coordinate depends on the mesh being used, as described
 in :ref:`global_ocean_meshes`.  Possible grid types are described in
 :ref:`ocean_vertical` and include ``uniform``, ``tanh_dz``, ``60layerPHC``,
-``42layerWOCE``, and ``100layerE3SMv1``.
+and ``100layerE3SMv1``.
 
 compass supports two different types of initial conditions.  One is derived
 from the Polar science center Hydrographic Climatology

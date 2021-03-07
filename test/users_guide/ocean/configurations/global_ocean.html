@@ -406,11 +406,12 @@ you may wish to set:</p>
 <div class="section" id="meshes">
 <span id="global-ocean-meshes"></span><h2>Meshes<a class="headerlink" href="#meshes" title="Permalink to this headline">¶</a></h2>
 <p>The process for creating global ocean meshes is described below in the
-<a class="reference internal" href="#global-ocean-mesh"><span class="std std-ref">mesh test case</span></a>.  compass currently supports 4 meshes.  Two are at
+<a class="reference internal" href="#global-ocean-mesh"><span class="std std-ref">mesh test case</span></a>.  compass currently supports 5 meshes.  Two are at
 such coarse horizontal resolution (240 km) that they are mostly useful for
-testing purposes, not scientific simulations.  The remaining meshes, which vary
+testing purposes, not scientific simulations.  Two more meshes, which vary
 in resolution between 30 and 60 km, are used as the lowest resolution meshes
-in E3SM’s <a class="reference external" href="https://e3sm.org/research/science-campaigns/">science campaigns</a>.</p>
+in E3SM’s <a class="reference external" href="https://e3sm.org/research/science-campaigns/">science campaigns</a>.
+The final mesh has resolution focused in the Southern Ocean around Antarctica.</p>
 <div class="section" id="qu240">
 <span id="global-ocean-mesh-qu240"></span><h3>QU240<a class="headerlink" href="#qu240" title="Permalink to this headline">¶</a></h3>
 <p>The quasi-uniform 240-km (QU240) mesh, is a global mesh with approximately
@@ -457,6 +458,18 @@ ocean domain.</p>
 <a class="reference internal image-reference" href="../../../_images/ecwisc30to60.png"><img alt="../../../_images/ecwisc30to60.png" class="align-center" src="../../../_images/ecwisc30to60.png" style="width: 500px;" /></a>
 <p>A variant of this mesh has been used for low resolution simulations as part of
 the <a class="reference external" href="https://e3sm.org/research/cryosphere-ocean/v1-cryosphere-ocean/">E3SM v1 Cryosphere Campaign</a>.</p>
+</div>
+<div class="section" id="sowisc12to60">
+<span id="global-ocean-mesh-sowisc12to60"></span><h3>SOwISC12to60<a class="headerlink" href="#sowisc12to60" title="Permalink to this headline">¶</a></h3>
+<p>The Southern Ocean 12- to 60-km mesh with ice-shelf cavities (SOwISC12to60),
+sometimes called the Southern Ocean regionally refined mesh (SORRM) is intended
+to be the main simulation mesh for the
+<a class="reference external" href="https://e3sm.org/research/cryosphere-ocean/v2-cryosphere-research/">E3SM v2 Cryosphere Science Campaign</a>.</p>
+<p>The mesh has 12 km resolution around Antarctica, tapering to 45 km in mid
+Southern latitudes, 30 km at the equator and in the North Atlantic, 60 km
+in the North Pacific, and 35 km in the Arctic.  The mesh includes the
+<a class="reference internal" href="#global-ocean-ice-shelf-cavities"><span class="std std-ref">Ice-shelf cavities</span></a> around Antarctica in the ocean domain.</p>
+<a class="reference internal image-reference" href="../../../_images/sowisc12to60.png"><img alt="../../../_images/sowisc12to60.png" class="align-center" src="../../../_images/sowisc12to60.png" style="width: 500px;" /></a>
 </div>
 </div>
 <div class="section" id="ice-shelf-cavities">
@@ -541,7 +554,7 @@ vertical mesh and and initial condition.</p>
 <p>The default vertical coordinate depends on the mesh being used, as described
 in <a class="reference internal" href="#global-ocean-meshes"><span class="std std-ref">Meshes</span></a>.  Possible grid types are described in
 <a class="reference internal" href="../framework/vertical.html#ocean-vertical"><span class="std std-ref">Vertical coordinate</span></a> and include <code class="docutils literal notranslate"><span class="pre">uniform</span></code>, <code class="docutils literal notranslate"><span class="pre">tanh_dz</span></code>, <code class="docutils literal notranslate"><span class="pre">60layerPHC</span></code>,
-<code class="docutils literal notranslate"><span class="pre">42layerWOCE</span></code>, and <code class="docutils literal notranslate"><span class="pre">100layerE3SMv1</span></code>.</p>
+and <code class="docutils literal notranslate"><span class="pre">100layerE3SMv1</span></code>.</p>
 <p>compass supports two different types of initial conditions.  One is derived
 from the Polar science center Hydrographic Climatology
 (<a class="reference external" href="http://psc.apl.washington.edu/nonwp_projects/PHC/Climatology.html">PHC</a>).

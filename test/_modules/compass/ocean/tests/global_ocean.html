@@ -186,6 +186,8 @@
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.qu240</span> <span class="kn">import</span> <span class="n">spinup</span> <span class="k">as</span> <span class="n">qu240_spinup</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.ec30to60</span> <span class="kn">import</span> <span class="n">spinup</span> <span class="k">as</span> \
     <span class="n">ec30to60_spinup</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.so12to60</span> <span class="kn">import</span> <span class="n">spinup</span> <span class="k">as</span> \
+    <span class="n">so12to60_spinup</span>
 <span class="kn">from</span> <span class="nn">compass.config</span> <span class="kn">import</span> <span class="n">add_config</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.mesh</span> <span class="kn">import</span> <span class="n">get_mesh_package</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.init</span> <span class="kn">import</span> <span class="n">add_descriptions_to_config</span>
@@ -287,7 +289,8 @@
 
     <span class="c1"># for other meshes, we do fewer tests</span>
     <span class="k">for</span> <span class="n">mesh_name</span><span class="p">,</span> <span class="n">with_ice_shelf_cavities</span> <span class="ow">in</span> <span class="p">[(</span><span class="s1">&#39;EC30to60&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
-                                               <span class="p">(</span><span class="s1">&#39;ECwISC30to60&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)]:</span>
+                                               <span class="p">(</span><span class="s1">&#39;ECwISC30to60&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+                                               <span class="p">(</span><span class="s1">&#39;SOwISC12to60&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)]:</span>
         <span class="n">add_testcase</span><span class="p">(</span><span class="n">testcases</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">mesh_name</span><span class="o">=</span><span class="n">mesh_name</span><span class="p">,</span>
                      <span class="n">with_ice_shelf_cavities</span><span class="o">=</span><span class="n">with_ice_shelf_cavities</span><span class="p">)</span>
 
