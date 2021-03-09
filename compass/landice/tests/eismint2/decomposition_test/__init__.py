@@ -1,4 +1,4 @@
-from compass.testcase import add_step, run_steps
+from compass.testcase import add_step, run_steps, set_testcase_subdir
 from compass.namelist import add_namelist_options
 from compass.streams import add_streams_file
 from compass.validate import compare_variables
@@ -14,9 +14,20 @@ def collect(testcase):
     testcase : dict
         A dictionary of properties of this test case, which can be updated
     """
-    testcase['description'] = 'EISMINT2 decomposition test'
+    thermal_solver = testcase['thermal_solver']
+
+    if thermal_solver == 'enthalpy':
+        testcase['description'] = 'EISMINT2 enthalpy decomposition test'
+        set_testcase_subdir(testcase, 'enthalpy_decomposition_test')
+    elif thermal_solver == 'temperature':
+        testcase['description'] = 'EISMINT2 decomposition test'
+    else:
+        raise ValueError('Unknown thermal_solver {}'.format(thermal_solver))
 
     add_step(testcase, setup_mesh)
+
+    options = {'config_run_duration': "'3000-00-00_00:00:00'",
+               'config_thermal_solver': "'{}'".format(thermal_solver)}
 
     experiment = 'f'
     for procs in [1, 4]:
@@ -24,7 +35,6 @@ def collect(testcase):
         step = add_step(testcase, run_experiment, name=name, subdir=name,
                         cores=procs, threads=1, experiment=experiment)
 
-        options = {'config_run_duration': "'3000-00-00_00:00:00'"}
         add_namelist_options(step, options)
 
         add_streams_file(step,
