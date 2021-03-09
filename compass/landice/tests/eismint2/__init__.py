@@ -1,5 +1,6 @@
 from compass.testcase import add_testcase
-from compass.landice.tests.eismint2 import standard_experiments
+from compass.landice.tests.eismint2 import standard_experiments, \
+    decomposition_test
 
 
 def collect():
@@ -12,7 +13,7 @@ def collect():
         A list of tests within this configuration
     """
     testcases = list()
-    for test in [standard_experiments]:
+    for test in [standard_experiments, decomposition_test]:
         add_testcase(testcases, test)
 
     return testcases
