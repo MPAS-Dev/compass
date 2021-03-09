@@ -17,7 +17,7 @@ def cull_mesh(with_cavities=False, with_critical_passages=False,
     First step of initializing the global ocean:
 
       1. combining Natural Earth land coverage north of 60S with Antarctic
-         ice coverage or grounded ice coverage from Bedmap2
+         ice coverage or grounded ice coverage from BedMachineAntarctica
 
       2. combining transects defining critical passages (if
          ``with_critical_passages=True``)
