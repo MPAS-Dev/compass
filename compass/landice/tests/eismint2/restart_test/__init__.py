@@ -1,6 +1,6 @@
-from compass.testcase import add_step, run_steps
+from compass.testcase import add_step, run_steps, set_testcase_subdir
 from compass.validate import compare_variables
-from compass.namelist import add_namelist_file
+from compass.namelist import add_namelist_file, add_namelist_options
 from compass.streams import add_streams_file
 from compass.landice.tests.eismint2 import setup_mesh, run_experiment
 
@@ -14,7 +14,15 @@ def collect(testcase):
     testcase : dict
         A dictionary of properties of this test case, which can be updated
     """
-    testcase['description'] = 'EISMINT2 restart test'
+    thermal_solver = testcase['thermal_solver']
+
+    if thermal_solver == 'enthalpy':
+        testcase['description'] = 'EISMINT2 enthalpy restart test'
+        set_testcase_subdir(testcase, 'enthalpy_restart_test')
+    elif thermal_solver == 'temperature':
+        testcase['description'] = 'EISMINT2 restart test'
+    else:
+        raise ValueError('Unknown thermal_solver {}'.format(thermal_solver))
 
     add_step(testcase, setup_mesh)
 
@@ -24,10 +32,13 @@ def collect(testcase):
     step = add_step(testcase, run_experiment, name=name, subdir=name, cores=4,
                     threads=1, experiment=experiment)
 
+    options = {'config_thermal_solver': "'{}'".format(thermal_solver)}
+
     # modify the namelist options and streams file
     add_namelist_file(
         step, 'compass.landice.tests.eismint2.restart_test',
         'namelist.full', out_name='namelist.landice')
+    add_namelist_options(step, options, out_name='namelist.landice')
     add_streams_file(
         step, 'compass.landice.tests.eismint2.restart_test',
         'streams.full', out_name='streams.landice')
@@ -41,6 +52,7 @@ def collect(testcase):
     add_namelist_file(
         step, 'compass.landice.tests.eismint2.restart_test',
         'namelist.restart', out_name='namelist.landice')
+    add_namelist_options(step, options, out_name='namelist.landice')
     add_streams_file(
         step, 'compass.landice.tests.eismint2.restart_test',
         'streams.restart', out_name='streams.landice')
@@ -48,6 +60,7 @@ def collect(testcase):
     add_namelist_file(
         step, 'compass.landice.tests.eismint2.restart_test',
         'namelist.restart.rst', out_name='namelist.landice.rst')
+    add_namelist_options(step, options, out_name='namelist.landice.rst')
     add_streams_file(
         step, 'compass.landice.tests.eismint2.restart_test',
         'streams.restart.rst', out_name='streams.landice.rst')

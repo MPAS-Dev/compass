@@ -13,7 +13,9 @@ def collect():
         A list of tests within this configuration
     """
     testcases = list()
-    for test in [standard_experiments, decomposition_test, restart_test]:
-        add_testcase(testcases, test)
+    add_testcase(testcases, standard_experiments)
+    for thermal_solver in ['temperature', 'enthalpy']:
+        for test in [decomposition_test, restart_test]:
+            add_testcase(testcases, test, thermal_solver=thermal_solver)
 
     return testcases
