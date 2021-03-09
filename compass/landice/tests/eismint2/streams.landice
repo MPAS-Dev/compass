@@ -1,0 +1,58 @@
+<streams>
+
+<immutable_stream name="input"
+                  filename_template="initial_condition.nc"/>
+
+<immutable_stream name="restart"
+                  type="input;output"
+                  filename_template="restart.$Y.nc"
+                  filename_interval="output_interval"
+                  output_interval="50000-00-00_00:00:00"
+                  clobber_mode="truncate"
+                  precision="double"
+                  input_interval="initial_only"/>
+
+<stream name="output"
+        type="output"
+        filename_template="output.nc"
+        output_interval="0500-00-00_00:00:00"
+        clobber_mode="truncate">
+
+    <stream name="basicmesh"/>
+    <var name="xtime"/>
+    <var name="thickness"/>
+    <var name="temperature"/>
+    <var name="basalTemperature"/>
+    <var name="basalPmpTemperature"/>
+    <var name="surfaceTemperature"/>
+    <var name="flowParamA"/>
+    <var name="surfaceSpeed"/>
+    <var name="basalFrictionFlux"/>
+    <var name="heatDissipation"/>
+    <var name="uReconstructX"/>
+    <var name="uReconstructY"/>
+    <var name="beta"/>
+    <var name="daysSinceStart"/>
+    <var name="allowableDtACFL"/>
+    <var name="allowableDtDCFL"/>
+    <var name="deltat"/>
+
+</stream>
+
+<stream name="globalStatsOutput"
+        type="output"
+        filename_template="globalStats.nc"
+        output_interval="0000-00-01_00:00:00"
+        reference_time="0000-01-01_00:00:00"
+        clobber_mode="overwrite">
+
+    <var name="xtime"/>
+    <var name="deltat"/>
+    <var name="daysSinceStart"/>
+    <var name="allowableDtACFL"/>
+    <var name="allowableDtDCFL"/>
+    <var_struct name="globalStatsAM"/>
+
+</stream>
+
+</streams>
