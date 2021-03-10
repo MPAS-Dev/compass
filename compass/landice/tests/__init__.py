@@ -1,4 +1,4 @@
-from compass.landice.tests import dome, enthalpy_benchmark, eismint2
+from compass.landice.tests import dome, enthalpy_benchmark, eismint2, greenland
 
 
 def collect():
@@ -12,7 +12,7 @@ def collect():
 
     """
     testcases = list()
-    for configuration in [dome, enthalpy_benchmark, eismint2]:
+    for configuration in [dome, enthalpy_benchmark, eismint2, greenland]:
         testcases.extend(configuration.collect())
 
     return testcases
