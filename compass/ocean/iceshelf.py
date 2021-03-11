@@ -7,7 +7,7 @@ from compass.io import symlink
 from compass.model import update_namelist_pio, partition, run_model
 
 
-def compute_land_ice_pressure_and_draft(ssh, modifySSHMask, ref_density):
+def compute_land_ice_pressure_and_draft(ssh, modify_mask, ref_density):
     """
     Compute the pressure from and overlying ice shelf and the ice-shelf draft
 
@@ -16,7 +16,7 @@ def compute_land_ice_pressure_and_draft(ssh, modifySSHMask, ref_density):
     ssh : xarray.DataArray
         The sea surface height (the ice draft)
 
-    modifySSHMask : xarray.DataArray
+    modify_mask : xarray.DataArray
         A mask that is 1 where ``landIcePressure`` can be deviate from 0
 
     ref_density : float
@@ -32,7 +32,7 @@ def compute_land_ice_pressure_and_draft(ssh, modifySSHMask, ref_density):
     """
     gravity = constants['SHR_CONST_G']
     landIcePressure = \
-        modifySSHMask*numpy.maximum(-ref_density * gravity * ssh, 0.)
+        modify_mask*numpy.maximum(-ref_density * gravity * ssh, 0.)
     landIceDraft = ssh
     return landIcePressure, landIceDraft
 
@@ -96,7 +96,7 @@ def adjust_ssh(variable, iteration_count, step, config, logger):
             nVertLevels = len(ds.dimensions['nVertLevels'])
             initSSH = ds.variables['ssh'][0, :]
             bottomDepth = ds.variables['bottomDepth'][:]
-            modifySSHMask = ds.variables['modifySSHMask'][0, :]
+            modifyLandIcePressureMask = ds.variables['modifyLandIcePressureMask'][0, :]
             landIcePressure = ds.variables['landIcePressure'][0, :]
             lonCell = ds.variables['lonCell'][:]
             latCell = ds.variables['latCell'][:]
@@ -109,7 +109,8 @@ def adjust_ssh(variable, iteration_count, step, config, logger):
                 finalSSH = ds_ssh.variables['ssh'][nTime - 1, :]
                 topDensity = ds_ssh.variables['density'][nTime - 1, :, 0]
 
-            mask = numpy.logical_and(maxLevelCell > 0, modifySSHMask == 1)
+            mask = numpy.logical_and(maxLevelCell > 0,
+                                     modifyLandIcePressureMask == 1)
 
             deltaSSH = mask * (finalSSH - initSSH)
 
