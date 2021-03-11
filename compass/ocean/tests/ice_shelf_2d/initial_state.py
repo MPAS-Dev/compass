@@ -117,14 +117,14 @@ def run(step, test_suite, config, logger):
 
     layerThickness = layerThickness.expand_dims(dim='Time', axis=0)
     ssh = ssh.expand_dims(dim='Time', axis=0)
-    modifySSHMask = xarray.where(yCell < y3, 1, 0).expand_dims(
+    modify_mask = xarray.where(yCell < y3, 1, 0).expand_dims(
         dim='Time', axis=0)
-    landIceFraction = modifySSHMask.astype(float)
-    landIceMask = modifySSHMask.copy()
+    landIceFraction = modify_mask.astype(float)
+    landIceMask = modify_mask.copy()
 
     ref_density = constants['SHR_CONST_RHOSW']
     landIcePressure, landIceDraft = compute_land_ice_pressure_and_draft(
-        ssh=ssh, modifySSHMask=modifySSHMask, ref_density=ref_density)
+        ssh=ssh, modify_mask=modify_mask, ref_density=ref_density)
 
     salinity = surface_salinity + ((bottom_salinity - surface_salinity) *
                                    (zMid / (-bottom_depth)))
@@ -145,7 +145,7 @@ def run(step, test_suite, config, logger):
     ds['fCell'] = xarray.zeros_like(ds.xCell)
     ds['fEdge'] = xarray.zeros_like(ds.xEdge)
     ds['fVertex'] = xarray.zeros_like(ds.xVertex)
-    ds['modifySSHMask'] = modifySSHMask
+    ds['modifyLandIcePressureMask'] = modify_mask
     ds['landIceFraction'] = landIceFraction
     ds['landIceMask'] = landIceMask
     ds['landIcePressure'] = landIcePressure
