@@ -76,7 +76,7 @@ def list_machines():
 def list_suites(cores=None):
     if cores is None:
         # add new cores here to make sure they get listed, too!
-        cores = ['ocean']
+        cores = ['ocean', 'landice']
     print('Suites:')
     for core in cores:
         suites = contents('compass.{}.suites'.format(core))
