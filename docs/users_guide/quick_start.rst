@@ -140,8 +140,7 @@ test case:
 
 .. code-block:: bash
 
-    python -m compass setup -f ocean.cfg -t ocean/global_ocean/QU240/mesh \
-        -w $WORKDIR -m $MACHINE
+    python -m compass setup -t ocean/global_ocean/QU240/mesh -m $MACHINE -w $WORKDIR
 
 or you can replace the ``-t`` flag with the simple shortcut: ``-n 15``.  You
 can set up several test cases at once by passing test numbers separated by
@@ -151,7 +150,7 @@ Here ``$WORKDIR`` is a path, usually to your scratch space. For example,
 
 .. code-block:: bash
 
-    -w /lustre/scratch4/turquoise/$USER/runs/191210_test_new_branch
+    -w /lustre/scratch4/turquoise/$USER/runs/210131_test_new_branch
 
 ``$MACHINE`` is one of the known machines (omit the ``-m`` flag if you are not
 working on one of the known machines).  You can run:
@@ -160,15 +159,22 @@ working on one of the known machines).  You can run:
 
     python -m compass list --machines
 
-to see what machines are currently supported.  The config file ``ocean.cfg``
-specifies config options that override the defaults from compass as a whole,
+to see what machines are currently supported.
+
+You may name a config file with ``-f``:
+
+.. code-block:: bash
+
+    python -m compass setup -t ocean/global_ocean/QU240/mesh -f ocean.cfg -w $WORKDIR
+
+to specify config options that override the defaults from compass as a whole,
 individual testcases, or machines.  If you are working on a supported machine
 and running MPAS-Model out of the default directory for your MPAS component
 (e.g. ``MPAS-Model/ocean/develop``), you do not need a config file.
 
-If you are not on one of the supported machines or you with to use a build of
-your MPAS component in a directory other than the default, you will need to
-create a config file like in this example for MPAS-Ocean:
+If you are not on one of the supported machines, you will need to create a
+config file like in this example for MPAS-Ocean. See also
+``example_configs/*.cfg`` in the repository.
 
 .. code-block:: cfg
 
@@ -239,11 +245,10 @@ You can set up a suite as follows:
 
 .. code-block:: bash
 
-    python -m compass suite -s -f ocean.cfg -c ocean -t nightly -m $MACHINE \
-       -w $WORKDIR
+    python -m compass suite -s -c ocean -t nightly -m $MACHINE -w $WORKDIR
 
 where the details are similar to setting up a case. You can use the same
-config file (e.g. ``ocean.cfg``) and you can specify a "baseline" with
+config file (e.g. ``-f ocean.cfg``) and you can specify a "baseline" with
 ``-b $PREVIOUS_WORKDIR`` for bit-for-bit comparison of the output with a
 previous run of the ``nightly`` suite. See :ref:`dev_compass_suite` for more
 on this command.

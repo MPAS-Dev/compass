@@ -36,7 +36,7 @@ functionality is added.
    :caption: User's guide
    :maxdepth: 2
 
-   users_guide/overview
+   users_guide/quick_start
    users_guide/testcase
    users_guide/configuration
    users_guide/suite
