@@ -174,8 +174,7 @@ def run_suite(suite_name):
         for test_name in test_suite['testcases']:
             testcase = test_suite['testcases'][test_name]
 
-            logger.info(' * Running {}'.format(test_name))
-            logger.info('           {}'.format(testcase['description']))
+            logger.info('{}'.format(test_name))
 
             test_name = testcase['path'].replace('/', '_')
             log_filename = '{}/case_outputs/{}.log'.format(cwd, test_name)
@@ -194,18 +193,15 @@ def run_suite(suite_name):
                 test_start = time.time()
                 try:
                     run(testcase, test_suite, config, test_logger)
-                    logger.info('    PASS')
+                    logger.info('  PASS')
                     success[test_name] = 'PASS'
                 except BaseException:
                     test_logger.exception('Exception raised')
-                    logger.error('   FAIL    For more information, see:')
-                    logger.error('           case_outputs/{}.log'.format(
-                        test_name))
+                    logger.error('  FAIL see: case_outputs/{}.log'.format(test_name))
                     success[test_name] = 'FAIL'
                     failures += 1
                 test_times[test_name] = time.time() - test_start
 
-            logger.info('')
         suite_time = time.time() - suite_start
 
         os.chdir(cwd)
