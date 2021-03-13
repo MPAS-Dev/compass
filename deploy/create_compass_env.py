@@ -15,41 +15,35 @@ def get_envs():
     # to use.
 
     envs = [{'suffix': '_nompi',
-             'version': '0.1.12',
+             'version': '1.0',
              'python': '3.8',
              'mpi': 'nompi'},
             {'suffix': '',
-             'version': '0.1.12',
+             'version': '1.0',
              'python': '3.8',
              'mpi': 'mpich'}]
 
     # whether to delete and rebuild each environment if it already exists
-    force_recreate = False
+    force_recreate = True
 
     # whether these are to be test environments
-    is_test = False
+    is_test = True
 
     return envs, force_recreate, is_test
 
 
 def get_host_info():
     hostname = socket.gethostname()
+    system_mpich_version = None
     if hostname.startswith('cori') or hostname.startswith('dtn'):
         base_path = "/global/cfs/cdirs/e3sm/software/anaconda_envs/base"
         activ_path = "/global/cfs/cdirs/e3sm/software/anaconda_envs"
         group = "e3sm"
-    elif hostname.startswith('acme1') or hostname.startswith('aims4'):
-        base_path = "/usr/local/e3sm_unified/envs/base"
-        activ_path = "/usr/local/e3sm_unified/envs"
-        group = "climate"
-    elif hostname.startswith('blueslogin'):
+    elif hostname.startswith('blueslogin') or hostname.startswith('chrysalis'):
         base_path = "/lcrc/soft/climate/e3sm-unified/base"
         activ_path = "/lcrc/soft/climate/e3sm-unified"
         group = "cels"
-    elif hostname.startswith('rhea'):
-        base_path = "/ccs/proj/cli900/sw/rhea/e3sm-unified/base"
-        activ_path = "/ccs/proj/cli900/sw/rhea/e3sm-unified"
-        group = "cli900"
+        system_mpich_version = "3.3.*"
     elif hostname.startswith('cooley'):
         base_path = "/lus/theta-fs0/projects/ccsm/acme/tools/e3sm-unified/base"
         activ_path = "/lus/theta-fs0/projects/ccsm/acme/tools/e3sm-unified"
@@ -58,7 +52,7 @@ def get_host_info():
         base_path = "/share/apps/E3SM/conda_envs/base"
         activ_path = "/share/apps/E3SM/conda_envs"
         group = "users"
-    elif hostname.startswith('gr-fe') or hostname.startswith('wf-fe'):
+    elif hostname.startswith('gr-fe') or hostname.startswith('ba-fe'):
         base_path = "/usr/projects/climate/SHARED_CLIMATE/anaconda_envs/base"
         activ_path = "/usr/projects/climate/SHARED_CLIMATE/anaconda_envs"
         group = "climate"
@@ -71,7 +65,7 @@ def get_host_info():
             "Unknown host name {}.  Add env_path and group for "
             "this machine to the script.".format(hostname))
 
-    return base_path, activ_path, group
+    return base_path, activ_path, group, system_mpich_version
 
 
 def check_env(base_path, env_name, env):
@@ -80,13 +74,17 @@ def check_env(base_path, env_name, env):
     activate = 'source {}/etc/profile.d/conda.sh; conda activate {}'.format(
         base_path, env_name)
 
-    imports = ['geometric_features', 'mpas_tools', 'jigsawpy']
+    imports = ['geometric_features', 'mpas_tools', 'jigsawpy', 'compass']
     for import_name in imports:
         command = '{}; python -c "import {}"'.format(activate, import_name)
         test_command(command, os.environ, import_name)
 
     commands = [['gpmetis', '--help'],
-                ['ffmpeg', '--help']]
+                ['ffmpeg', '--help'],
+                ['compass', 'list'],
+                ['compass', 'setup', '--help'],
+                ['compass', 'suite', '--help'],
+                ['compass', 'clean', '--help']]
 
     for command in commands:
         package = command[0]
@@ -107,7 +105,7 @@ def test_command(command, env, package):
 def main():
     envs, force_recreate, is_test = get_envs()
 
-    base_path, activ_path, group = get_host_info()
+    base_path, activ_path, group, system_mpich_version = get_host_info()
 
     if not os.path.exists(base_path):
         miniconda = 'Miniconda3-latest-Linux-x86_64.sh'
@@ -141,9 +139,17 @@ def main():
         else:
             mpi_prefix = 'mpi_{}'.format(mpi)
 
-        channels = '--override-channels -c conda-forge -c defaults -c e3sm'
+        channels = '--override-channels -c conda-forge -c defaults'
+        if is_test:
+            channels = '{} -c e3sm/label/test'.format(channels)
+        else:
+            channels = '{} -c e3sm'.format(channels)
         packages = 'python={} "compass={}={}_*"'.format(
             python, version, mpi_prefix)
+
+        if mpi == 'mpich' and system_mpich_version is not None:
+            packages = '{} "mpich={}=external*"'.format(
+                packages, system_mpich_version)
 
         if is_test:
             env_name = 'test_compass_{}{}'.format(version, suffix)
