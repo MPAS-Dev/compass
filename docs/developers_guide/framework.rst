@@ -17,7 +17,7 @@ Configuration
 -------------
 
 The ``compass.config`` includes functions for creating and manipulating config
-options and :ref:`config_files`.
+options and :ref:`configuration_files`.
 
 
 The :py:func:`compass.config.add_config()` function can be used to add the

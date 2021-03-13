@@ -37,9 +37,9 @@ functionality is added.
    :maxdepth: 2
 
    users_guide/quick_start
-   users_guide/testcase
-   users_guide/configuration
-   users_guide/suite
+   users_guide/test_cases
+   users_guide/configuration_files
+   users_guide/test_suites
    users_guide/landice/index
    users_guide/ocean/index
    users_guide/machines/index

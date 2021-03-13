@@ -21,7 +21,7 @@ like.  Currently, the steps in a test case run in sequence but there are plans
 to allow steps that don't depend on one another to run in parallel in the
 future.  Also, there is no requirement that all steps defined in a test case
 must run when that test case is run.  Some steps may be disabled depending on
-configuration options (see :ref:`config_files`) that you choose.
+configuration options (see :ref:`configuration_files`) that you choose.
 
 In compass, test cases are identified by their subdirectory relative to a work
 directory that the user chooses.  For example, the default test case from
