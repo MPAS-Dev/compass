@@ -6,7 +6,7 @@ import fnmatch
 
 
 def compare_variables(variables, config, work_dir, filename1, filename2=None,
-                      l1_norm=0.0, l2_norm=0.0, linf_norm=0.0, quiet=False):
+                      l1_norm=0.0, l2_norm=0.0, linf_norm=0.0, quiet=True):
     """
     Compare variables between files in the current test case and/or with the
     baseline results.
@@ -164,9 +164,6 @@ def _compare_variables(variables, filename1, filename2, l1_norm, l2_norm,
                                      variable, filename1, filename2))
 
         if not quiet:
-            print("Beginning variable comparisons for all time levels "
-                  "of field '{}'. Note any time levels reported are "
-                  "0-based.".format(variable))
             print("    Pass thresholds are:")
             if l1_norm is not None:
                 print("       L1: {:16.14e}".format(l1_norm))
@@ -177,7 +174,11 @@ def _compare_variables(variables, filename1, filename2, l1_norm, l2_norm,
                     linf_norm))
         variable_pass = True
         if 'Time' in da1.dims:
-            for time_index in range(0, da1.sizes['Time']):
+            time_range = range(0, da1.sizes['Time'])
+            time_str = ', '.join(['{}'.format(j) for j in time_range])
+            print('{} '.format(variable)+(20-len(variable))*' '+
+                'Time index: '+time_str)
+            for time_index in time_range:
                 slice1 = da1.isel(Time=time_index)
                 slice2 = da2.isel(Time=time_index)
                 result = _compute_norms(slice1, slice2, quiet, l1_norm,
@@ -186,16 +187,16 @@ def _compare_variables(variables, filename1, filename2, l1_norm, l2_norm,
                 variable_pass = variable_pass and result
 
         else:
+            print('{}'.format(variable))
             result = _compute_norms(da1, da2, quiet, l1_norm, l2_norm,
                                     linf_norm)
             variable_pass = variable_pass and result
 
         if variable_pass:
-            print(' ** PASS Comparison of {} between {} and\n'
-                  '    {}'.format(variable, filename1, filename2))
+            print('  PASS {}\n'.format(filename1))
         else:
-            print(' ** FAIL Comparison of {} between {} and\n'
-                  '    {}'.format(variable, filename1, filename2))
+            print('  FAIL {}\n'.format(filename1))
+        print('       {}\n'.format(filename2))
         all_pass = all_pass and variable_pass
 
     return all_pass
