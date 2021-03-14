@@ -1,0 +1,17 @@
+source {{ conda_base }}/etc/profile.d/conda.sh
+conda activate {{ compass_env }}
+
+{{ modules }}
+
+export NETCDF=$(dirname $(dirname $(which nc-config)))
+export NETCDFF=$(dirname $(dirname $(which nf-config)))
+export PNETCDF=$(dirname $(dirname $(which pnetcdf-config)))
+export PIO={{ scorpio_path }}
+export ESMF={{ esmf_path }}
+
+{{ env_vars }}
+
+export AUTOCLEAN=true
+export USE_PIO2=true
+export  HDF5_USE_FILE_LOCKING=FALSE
+
