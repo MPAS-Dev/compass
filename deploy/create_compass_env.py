@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import subprocess
+import re
 import os
 import socket
 import glob
@@ -15,11 +16,9 @@ def get_envs():
     # to use.
 
     envs = [{'suffix': '_nompi',
-             'version': '1.0',
              'python': '3.8',
              'mpi': 'nompi'},
             {'suffix': '',
-             'version': '1.0',
              'python': '3.8',
              'mpi': 'mpich'}]
 
@@ -129,8 +128,13 @@ def main():
     subprocess.check_call(commands, executable='/bin/bash', shell=True)
     print('done')
 
+    with open(os.path.join('..', 'compass', '__init__.py')) as f:
+        init_file = f.read()
+
+    version = re.search(r'{}\s*=\s*[(]([^)]*)[)]'.format('__version_info__'),
+                        init_file).group(1).replace(', ', '.')
+
     for env in envs:
-        version = env['version']
         suffix = env['suffix']
         python = env['python']
         mpi = env['mpi']
