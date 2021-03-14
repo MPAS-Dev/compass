@@ -176,8 +176,7 @@ def _compare_variables(variables, filename1, filename2, l1_norm, l2_norm,
         if 'Time' in da1.dims:
             time_range = range(0, da1.sizes['Time'])
             time_str = ', '.join(['{}'.format(j) for j in time_range])
-            print('{} '.format(variable)+(20-len(variable))*' '+
-                'Time index: '+time_str)
+            print('{} Time index: {}'.format(variable.ljust(20), time_str))
             for time_index in time_range:
                 slice1 = da1.isel(Time=time_index)
                 slice2 = da2.isel(Time=time_index)
