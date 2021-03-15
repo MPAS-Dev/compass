@@ -220,6 +220,16 @@ def main():
     else:
         esmf_netcdf = 'export ESMF_NETCDF="nc-config"'
 
+    if 'cori' in machine:
+        netcdf_paths = 'export NETCDF_C_PATH=$NETCDF_DIR\n' \
+            'export NETCDF_FORTRAN_PATH=$NETCDF_DIR\n' \
+            'export PNETCDF_PATH=$PNETCDF_DIR'
+    else:
+        netcdf_paths = \
+            'export NETCDF_C_PATH=$(dirname $(dirname $(which nc-config)))\n' \
+            'export NETCDF_FORTRAN_PATH=$(dirname $(dirname $(which nf-config)))\n' \
+            'export PNETCDF_PATH=$(dirname $(dirname $(which pnetcdf-config)))'
+
 
     suffix = 'scorpio_{}_esmf_{}_{}_{}_{}'.format(
         scorpio, esmf, machine, compiler, mpilib)
@@ -236,7 +246,7 @@ def main():
                              esmf_path=esmf_path, esmf_branch=esmf_branch,
                              esmf_compilers=esmf_compilers, esmf_comm=esmf_comm,
                              esmf_netcdf=esmf_netcdf, base_path=base_path,
-                             build_dir=build_dir)
+                             build_dir=build_dir, netcdf_paths=netcdf_paths)
     print('Writing {}'.format(script_filename))
     with open(script_filename, 'w') as handle:
         handle.write(script)
@@ -252,7 +262,8 @@ def main():
     script = template.render(conda_base=conda_base, compass_version=compass,
                              modules='\n'.join(commands),
                              scorpio_path=scorpio_path, esmf_path=esmf_path,
-                             env_vars='\n'.join(env_vars))
+                             env_vars='\n'.join(env_vars),
+                             netcdf_paths=netcdf_paths)
     script_filename = '../machines/{}_{}_{}.sh'.format(
         machine, compiler, mpilib)
 

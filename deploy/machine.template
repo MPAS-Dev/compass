@@ -3,9 +3,8 @@ conda activate compass_{{ compass_version }}
 
 {{ modules }}
 
-export NETCDF=$(dirname $(dirname $(which nc-config)))
-export NETCDFF=$(dirname $(dirname $(which nf-config)))
-export PNETCDF=$(dirname $(dirname $(which pnetcdf-config)))
+{{ netcdf_paths }}
+
 export PIO={{ scorpio_path }}
 export ESMF={{ esmf_path }}
 
