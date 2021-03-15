@@ -6,6 +6,8 @@ rm -rf {{ build_dir }}
 mkdir {{ build_dir }}
 cd {{ build_dir }}
 
+build_dir=$(pwd)
+
 export SCORPIO_VERSION={{ scorpio }}
 
 {{ modules }}
@@ -35,7 +37,7 @@ make
 rm -rf $SCORPIO_PATH
 make install
 
-
+cd $build_dir
 
 rm -rf esmf*
 git clone git@github.com:esmf-org/esmf.git
@@ -57,9 +59,11 @@ export ESMF_PNETCDF="pnetcdf-config"
 {{ esmf_compilers }}
 export ESMF_COMM={{ esmf_comm }}
 
-make -j 8 build_apps
+make -j 8
 rm -rf $ESMF_PATH
 make install
+
+cd $build_dir
 
 chgrp -R {{ group }} {{ base_path }}
 chmod -R ug+rwX {{ group }} {{ base_path }}
