@@ -153,6 +153,19 @@ def main():
         # machine
 
         for child in comp:
+           mpi_match = False
+           if 'MPILIB' in child.attrib:
+               mpi = child.attrib['MPILIB']
+               if mpi[0] == '!':
+                   mpi_match = mpi[1:] != mpilib
+               else:
+                   mpi_match = mpi == mpilib
+           else:
+               mpi_match = True
+
+           if not mpi_match:
+               continue
+
            if child.tag == 'MPICC':
                mpicc = child.text.strip()
            elif child.tag == 'MPICXX':
@@ -191,7 +204,15 @@ def main():
     elif mpilib == 'impi':
         esmf_comm = 'intelmpi'
     else:
-        esmf_com = mpilib
+        esmf_comm = mpilib
+
+    if machine == 'grizzly':
+        esmf_netcdf = \
+            'export ESMF_NETCDF="split"\n' \
+            'export ESMF_NETCDF_INCLUDE=$NETCDF_C_PATH/include\n' \
+            'export ESMF_NETCDF_LIBPATH=$NETCDF_C_PATH/lib64'
+    else:
+        esmf_netcdf = 'export ESMF_NETCDF="nc-config"'
 
 
     suffix = 'scorpio_{}_esmf_{}_{}_{}_{}'.format(
@@ -208,7 +229,8 @@ def main():
                              mpifc=mpifc, mpicxx=mpicxx, group=group,
                              esmf_path=esmf_path, esmf_branch=esmf_branch,
                              esmf_compilers=esmf_compilers, esmf_comm=esmf_comm,
-                             base_path=base_path, build_dir=build_dir)
+                             esmf_netcdf=esmf_netcdf, base_path=base_path,
+                             build_dir=build_dir)
     print('Writing {}'.format(script_filename))
     with open(script_filename, 'w') as handle:
         handle.write(script)

@@ -7,7 +7,6 @@ mkdir {{ build_dir }}
 cd {{ build_dir }}
 
 export SCORPIO_VERSION={{ scorpio }}
-export ESMF_VERSION={{ esmf }}
 
 {{ modules }}
 
@@ -52,7 +51,7 @@ export ESMF_INSTALL_HEADERDIR=${ESMF_PATH}/include
 export ESMF_INSTALL_LIBDIR=${ESMF_PATH}/lib
 export ESMF_INSTALL_MODDIR=${ESMF_PATH}/mod
 
-export ESMF_NETCDF="nc-config"
+{{ esmf_netcdf }}
 export ESMF_PNETCDF="pnetcdf-config"
 
 {{ esmf_compilers }}
