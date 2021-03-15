@@ -9,8 +9,8 @@ from jinja2 import Template
 
 
 def get_host_info(machine):
-    if machine == 'cori':
-        base_path = "/global/cfs/cdirs/e3sm/software/compass"
+    if machine == 'cori-haswell':
+        base_path = "/global/cfs/cdirs/e3sm/software/compass/cori-haswell"
         conda_base = "/global/cfs/cdirs/e3sm/software/anaconda_envs/base"
         group = "e3sm"
     elif machine == 'anvil':
@@ -112,6 +112,12 @@ def main():
         raise ValueError('MPI library {} not found on {}. Try: {}'.format(
             mpilib, machine, mpilibs))
 
+    machine_os = None
+    for child in mach:
+        if child.tag == 'OS':
+            machine_os = child.text
+            break
+
     commands = []
     modules = next(mach.iter('module_system'))
     for module in modules:
@@ -142,9 +148,9 @@ def main():
     for comp in compilers:
         if comp.tag != 'compiler':
             continue
-        if 'COMPILER' not in comp.attrib or comp.attrib['COMPILER'] != compiler:
+        if 'COMPILER' in comp.attrib and comp.attrib['COMPILER'] != compiler:
             continue
-        if 'OS' in comp.attrib:
+        if 'OS' in comp.attrib and comp.attrib['OS'] != machine_os:
             continue
         if 'MACH' in comp.attrib and comp.attrib['MACH'] != machine:
             continue
