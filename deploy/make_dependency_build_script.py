@@ -11,27 +11,27 @@ from jinja2 import Template
 def get_host_info(machine):
     if machine == 'cori':
         base_path = "/global/cfs/cdirs/e3sm/software/compass"
-        conda_base = "/global/cfs/cdirs/e3sm/software/anaconda_envs"
+        conda_base = "/global/cfs/cdirs/e3sm/software/anaconda_envs/base"
         group = "e3sm"
     elif machine == 'anvil':
         base_path = "/lcrc/soft/climate/compass/anvil"
-        conda_base = "/lcrc/soft/climate/e3sm-unified"
+        conda_base = "/lcrc/soft/climate/e3sm-unified/base"
         group = "climate"
     elif machine == 'chrysalis':
         base_path = "/lcrc/soft/climate/compass/anvil"
-        conda_base = "/lcrc/soft/climate/e3sm-unified"
+        conda_base = "/lcrc/soft/climate/e3sm-unified/base"
         group = "climate"
     elif machine == 'compy':
         base_path = "/share/apps/E3SM/compass"
-        conda_base = "/share/apps/E3SM/conda_envs"
+        conda_base = "/share/apps/E3SM/conda_envs/base"
         group = "users"
     elif machine == 'grizzly':
         base_path = "/usr/projects/climate/SHARED_CLIMATE/compass/grizzly"
-        conda_base = "/usr/projects/climate/SHARED_CLIMATE/anaconda_envs"
+        conda_base = "/usr/projects/climate/SHARED_CLIMATE/anaconda_envs/base"
         group = "climate"
     elif machine == 'badger':
         base_path = "/usr/projects/climate/SHARED_CLIMATE/compass/badger"
-        conda_base = "/usr/projects/climate/SHARED_CLIMATE/anaconda_envs"
+        conda_base = "/usr/projects/climate/SHARED_CLIMATE/anaconda_envs/base"
         group = "climate"
     else:
         raise ValueError(
