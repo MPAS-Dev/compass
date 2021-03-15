@@ -151,12 +151,8 @@ def _make_analysis_lat_lon_map(config, mesh_name, cores, logger):
                                            dLat=comparisonLonResolution)
     outGridName = outDescriptor.meshName
 
-    mappingFileName = 'map_{}_to_{}_bilinear.nc'.format(mesh_name, outGridName)
-
-    remapper = Remapper(inDescriptor, outDescriptor, mappingFileName)
-
-    remapper.build_mapping_file(method='bilinear', mpiTasks=cores, tempdir='.',
-                                logger=logger)
+    _make_mapping_file(mesh_name, outGridName, inDescriptor, outDescriptor,
+                       cores, config, logger)
 
 
 def _make_analysis_polar_map(config, mesh_name, projection, cores, logger):
@@ -181,12 +177,28 @@ def _make_analysis_polar_map(config, mesh_name, projection, cores, logger):
         comparisonStereoWidth,  comparisonStereoWidth,
         comparisonStereoResolution, upperProj)
 
+    _make_mapping_file(mesh_name, outGridName, inDescriptor, outDescriptor,
+                       cores, config, logger)
+
+
+def _make_mapping_file(mesh_name, outGridName, inDescriptor, outDescriptor,
+                       cores, config, logger):
+
+    if 'ESMF' in os.environ:
+        parallel_executable = config.get('parallel', 'parallel_executable')
+        esmf_path = os.environ['ESMF']
+    else:
+        parallel_executable = None
+        esmf_path = None
+
+
     mappingFileName = 'map_{}_to_{}_bilinear.nc'.format(mesh_name, outGridName)
 
     remapper = Remapper(inDescriptor, outDescriptor, mappingFileName)
 
     remapper.build_mapping_file(method='bilinear', mpiTasks=cores, tempdir='.',
-                                logger=logger)
+                                logger=logger, esmf_path=esmf_path,
+                                esmf_parallel_exec=parallel_executable)
 
 
 def _make_moc_masks(mesh_short_name, logger):
