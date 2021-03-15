@@ -217,6 +217,11 @@ def main():
             'export ESMF_NETCDF="split"\n' \
             'export ESMF_NETCDF_INCLUDE=$NETCDF_C_PATH/include\n' \
             'export ESMF_NETCDF_LIBPATH=$NETCDF_C_PATH/lib64'
+    elif machine == 'badger':
+        esmf_netcdf = \
+            'export ESMF_NETCDF="split"\n' \
+            'export ESMF_NETCDF_INCLUDE=$NETCDF_C_PATH/include\n' \
+            'export ESMF_NETCDF_LIBPATH=$NETCDF_C_PATH/lib64'
     else:
         esmf_netcdf = 'export ESMF_NETCDF="nc-config"'
 
