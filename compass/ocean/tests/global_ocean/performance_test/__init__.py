@@ -58,7 +58,7 @@ class PerformanceTest(ForwardTestCase):
                  'diatFe', 'diatSi', 'diazChl', 'diazC', 'diazFe', 'phaeoChl',
                  'phaeoC', 'phaeoFe'])
 
-        compare_variables(variables, self.config, work_dir=self.work_dir,
+        compare_variables(test_case=self, variables=variables,
                           filename1='forward/output.nc')
 
         if self.mesh.with_ice_shelf_cavities:
@@ -72,7 +72,7 @@ class PerformanceTest(ForwardTestCase):
                 'landIceInterfaceSalinity', 'accumulatedLandIceMass',
                 'accumulatedLandIceHeat']
 
-            compare_variables(variables, self.config, work_dir=self.work_dir,
+            compare_variables(test_case=self, variables=variables,
                               filename1='forward/land_ice_fluxes.nc')
 
         timers = ['time integration']
