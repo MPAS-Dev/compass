@@ -5,22 +5,22 @@ import re
 import fnmatch
 
 
-def compare_variables(variables, config, work_dir, filename1, filename2=None,
+def compare_variables(test_case, variables, filename1, filename2=None,
                       l1_norm=0.0, l2_norm=0.0, linf_norm=0.0, quiet=True):
     """
     Compare variables between files in the current test case and/or with the
-    baseline results.
+    baseline results.  The results of the comparison are added to the
+    test case's "validation" dictionary, which the framework can use later to
+    log the test case results and/or to raise an exception to indicate that
+    the test case has failed.
 
     Parameters
     ----------
+    test_case : compass.TestCase
+        An object describing a test case to validate
+
     variables : list
         A list of variable names to compare
-
-    config : configparser.ConfigParser
-        Configuration options for the test case
-
-    work_dir : str
-        The work directory for the test case
 
     filename1 : str
         The relative path to a file within the ``work_dir``.  If ``filename2``
@@ -49,40 +49,51 @@ def compare_variables(variables, config, work_dir, filename1, filename2=None,
 
     quiet : bool, optional
         Whether to print
-
-    Raises
-    ------
-    ValueError
-        If one or more of the norms is outside the required bounds
-
     """
+    work_dir = test_case.work_dir
 
-    all_pass = True
+    if test_case.validation is not None:
+        validation = test_case.validation
+    else:
+        validation = {'internal_pass': None,
+                      'baseline_pass': None}
+
     if filename2 is not None:
-        result = _compare_variables(
+        internal_pass = _compare_variables(
             variables, os.path.join(work_dir, filename1),
             os.path.join(work_dir, filename2), l1_norm, l2_norm, linf_norm,
             quiet)
-        all_pass = all_pass and result
 
-    if config.has_option('paths', 'baseline_dir'):
-        baseline_root = config.get('paths', 'baseline_dir')
+        if validation['internal_pass'] is None:
+            validation['internal_pass'] = internal_pass
+        else:
+            validation['internal_pass'] = \
+                validation['internal_pass'] and internal_pass
+
+    if test_case.baseline_dir is not None:
+        baseline_root = test_case.baseline_dir
+        baseline_pass = True
 
         result = _compare_variables(
             variables, os.path.join(work_dir, filename1),
             os.path.join(baseline_root, filename1), l1_norm=0.0, l2_norm=0.0,
             linf_norm=0.0, quiet=quiet)
-        all_pass = all_pass and result
+        baseline_pass = baseline_pass and result
 
         if filename2 is not None:
             result = _compare_variables(
                 variables, os.path.join(work_dir, filename2),
                 os.path.join(baseline_root, filename2), l1_norm=0.0,
                 l2_norm=0.0, linf_norm=0.0, quiet=quiet)
-            all_pass = all_pass and result
+            baseline_pass = baseline_pass and result
 
-    if not all_pass:
-        raise ValueError('Comparison failed, see above.')
+        if validation['baseline_pass'] is None:
+            validation['baseline_pass'] = baseline_pass
+        else:
+            validation['baseline_pass'] = \
+                validation['baseline_pass'] and baseline_pass
+
+    test_case.validation = validation
 
 
 def compare_timers(timers, config, work_dir, rundir1, rundir2=None):

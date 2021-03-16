@@ -62,14 +62,48 @@ def run_suite(suite_name):
                 test_start = time.time()
                 try:
                     test_case.run()
-                    logger.info('  PASS')
-                    success[test_name] = 'PASS'
+                    internal_status = 'PASS'
+                    test_pass = True
                 except BaseException:
+                    internal_status = 'FAIL'
+                    test_pass = False
                     test_logger.exception('Exception raised')
-                    logger.error(
-                        '  FAIL see: case_outputs/{}.log'.format(test_name))
+
+                baseline_status = None
+                if test_case.validation is not None:
+                    internal_pass = test_case.validation['internal_pass']
+                    baseline_pass = test_case.validation['baseline_pass']
+
+                    if internal_pass is not None and not internal_pass:
+                        internal_status = 'FAIL'
+                        test_logger.exception(
+                            'Internal test case validation failed')
+                        test_pass = False
+
+                    if baseline_pass is not None:
+                        if baseline_pass:
+                            baseline_status = 'PASS'
+                        else:
+                            baseline_status = 'FAIL'
+                            test_logger.exception('Baseline validation failed')
+                            test_pass = False
+
+                if baseline_status is None:
+                    status = '  {}'.format(internal_status)
+                else:
+                    status = '  {}  compare: {}'.format(internal_status,
+                                                        baseline_status)
+
+                if test_pass:
+                    logger.info(status)
+                    success[test_name] = 'PASS'
+                else:
+                    logger.error(status)
+                    logger.error('  see: case_outputs/{}.log'.format(
+                        test_name))
                     success[test_name] = 'FAIL'
                     failures += 1
+
                 test_times[test_name] = time.time() - test_start
 
         suite_time = time.time() - suite_start
