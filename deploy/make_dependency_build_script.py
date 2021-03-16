@@ -18,7 +18,7 @@ def get_host_info(machine):
         conda_base = "/lcrc/soft/climate/e3sm-unified/base"
         group = "climate"
     elif machine == 'chrysalis':
-        base_path = "/lcrc/soft/climate/compass/anvil"
+        base_path = "/lcrc/soft/climate/compass/chrysalis"
         conda_base = "/lcrc/soft/climate/e3sm-unified/base"
         group = "climate"
     elif machine == 'compy':
