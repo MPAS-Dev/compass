@@ -190,10 +190,10 @@ def main():
     env_vars = []
 
     if 'intel' in compiler:
-        esmf_compilers = 'export ESMF_COMPILER=intel'
+        esmf_compilers = '    export ESMF_COMPILER=intel'
     else:
-        esmf_compilers = 'export ESMF_F90={}\n' \
-                         'export ESMF_CXX={}'.format(mpifc, mpicxx)
+        esmf_compilers = '    export ESMF_F90={}\n' \
+                         '    export ESMF_CXX={}'.format(mpifc, mpicxx)
 
     if 'intel' in compiler and machine == 'anvil':
         env_vars.extend(['export I_MPI_CC=icc',
@@ -214,16 +214,16 @@ def main():
 
     if machine == 'grizzly':
         esmf_netcdf = \
-            'export ESMF_NETCDF="split"\n' \
-            'export ESMF_NETCDF_INCLUDE=$NETCDF_C_PATH/include\n' \
-            'export ESMF_NETCDF_LIBPATH=$NETCDF_C_PATH/lib64'
+            '    export ESMF_NETCDF="split"\n' \
+            '    export ESMF_NETCDF_INCLUDE=$NETCDF_C_PATH/include\n' \
+            '    export ESMF_NETCDF_LIBPATH=$NETCDF_C_PATH/lib64'
     elif machine == 'badger':
         esmf_netcdf = \
-            'export ESMF_NETCDF="split"\n' \
-            'export ESMF_NETCDF_INCLUDE=$NETCDF_C_PATH/include\n' \
-            'export ESMF_NETCDF_LIBPATH=$NETCDF_C_PATH/lib64'
+            '    export ESMF_NETCDF="split"\n' \
+            '    export ESMF_NETCDF_INCLUDE=$NETCDF_C_PATH/include\n' \
+            '    export ESMF_NETCDF_LIBPATH=$NETCDF_C_PATH/lib64'
     else:
-        esmf_netcdf = 'export ESMF_NETCDF="nc-config"'
+        esmf_netcdf = '    export ESMF_NETCDF="nc-config"'
 
     if 'cori' in machine:
         netcdf_paths = 'export NETCDF_C_PATH=$NETCDF_DIR\n' \
