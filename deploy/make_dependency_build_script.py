@@ -22,7 +22,7 @@ def get_host_info(machine):
         conda_base = "/lcrc/soft/climate/e3sm-unified/base"
         group = "climate"
     elif machine == 'compy':
-        base_path = "/share/apps/E3SM/compass"
+        base_path = "/share/apps/E3SM/conda_envs/compass"
         conda_base = "/share/apps/E3SM/conda_envs/base"
         group = "users"
     elif machine == 'grizzly':
@@ -191,6 +191,10 @@ def main():
 
     if 'intel' in compiler:
         esmf_compilers = '    export ESMF_COMPILER=intel'
+    elif compiler == 'pgi':
+        esmf_compilers = '    export ESMF_COMPILER=pgi\n' \
+                         '    export ESMF_F90={}\n' \
+                         '    export ESMF_CXX={}'.format(mpifc, mpicxx)
     else:
         esmf_compilers = '    export ESMF_F90={}\n' \
                          '    export ESMF_CXX={}'.format(mpifc, mpicxx)
