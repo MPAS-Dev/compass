@@ -38,7 +38,7 @@ def cellWidthVsLatLon():
     _, cellWidth = np.meshgrid(lon, cellWidthVsLat)
 
     cellWidthAtlantic = mdt.RRS_CellWidthVsLat(
-        lat, cellWidthEq=30., cellWidthPole=14.)
+        lat, cellWidthEq=30., cellWidthPole=12.)
 
     _, cellWidthAtlantic = np.meshgrid(lon, cellWidthAtlantic)
 
@@ -63,7 +63,7 @@ def cellWidthVsLatLon():
     # Equivalent to 20 degrees latitude
     trans_width = 1600e3
     trans_start = 500e3
-    dx_min = 14.
+    dx_min = 12.
 
     weights = 0.5 * (1 + np.tanh((so_signed_distance - trans_start) /
                                  trans_width))
