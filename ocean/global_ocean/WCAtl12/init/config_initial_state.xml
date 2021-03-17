@@ -32,17 +32,17 @@
 	<add_link source_path="initial_condition_database" source="chlorophyllA_monthly_averages_1deg.151201.nc" dest="swData.nc"/>
 
 	<namelist name="namelist.ocean" mode="init">
+		<template file="template_initial_state.xml" path_base="script_configuration_dir"/>
 		<template file="template_critical_passages.xml" path_base="script_core_dir" path="global_ocean"/>
 		<option name="config_global_ocean_depth_file">'layer_depth.nc'</option>
 		<option name="config_global_ocean_depth_conversion_factor">0.01</option>
 		<option name="config_global_ocean_tracer_depth_conversion_factor">0.01</option>
 		<option name="config_global_ocean_minimum_depth">10</option>
 		<option name="config_global_ocean_deepen_critical_passages">.false.</option>
-		<option name="config_global_ocean_topography_smooth_iterations">10</option>
-		<option name="config_global_ocean_topography_smooth_weight">0.92</option>
 	</namelist>
 
 	<streams name="streams.ocean" keep="immutable" mode="init">
+		<template file="template_initial_state.xml" path_base="script_configuration_dir"/>
 		<template file="template_critical_passages.xml" path_base="script_core_dir" path="global_ocean"/>
 	</streams>
 
