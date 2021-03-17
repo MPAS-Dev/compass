@@ -33,7 +33,7 @@ def cellWidthVsLatLon():
     lat = np.linspace(-90., 90., nlat)
 
     cellWidthVsLat = mdt.EC_CellWidthVsLat(
-        lat, cellWidthEq=30., cellWidthMidLat=60., cellWidthPole=35.)
+        lat, cellWidthEq=30., cellWidthMidLat=45., cellWidthPole=35.)
 
     _, cellWidth = np.meshgrid(lon, cellWidthVsLat)
 
