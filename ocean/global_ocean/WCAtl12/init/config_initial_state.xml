@@ -20,8 +20,6 @@
 		<mirror protocol="wget" url="https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-ocean/initial_condition_database/"/>
 	</get_file>
 
-	<add_link source="../culled_mesh/culled_mesh.nc" dest="mesh.nc"/>
-	<add_link source="../culled_mesh/culled_graph.info" dest="graph.info"/>
 	<add_link source="../culled_mesh/critical_passages_mask_final.nc" dest="critical_passages.nc"/>
 	<add_link source_path="script_core_dir" source="scripts/plots/plot_initial_state.py" dest="plot_initial_state.py"/>
 	<add_link source_path="initial_condition_database" source="Salinity.01.filled.60levels.PHC.151106.nc" dest="layer_depth.nc"/>
@@ -39,6 +37,18 @@
 		<option name="config_global_ocean_tracer_depth_conversion_factor">0.01</option>
 		<option name="config_global_ocean_minimum_depth">10</option>
 		<option name="config_global_ocean_deepen_critical_passages">.false.</option>
+		<option name="config_global_ocean_topography_file">'topography.nc'</option>
+		<option name="config_global_ocean_topography_nlat_dimname">'lat'</option>
+		<option name="config_global_ocean_topography_nlon_dimname">'lon'</option>
+		<option name="config_global_ocean_topography_latlon_degrees">.true.</option>
+		<option name="config_global_ocean_topography_lat_varname">'lat'</option>
+		<option name="config_global_ocean_topography_lon_varname">'lon'</option>
+		<option name="config_global_ocean_topography_varname">'bathymetry'</option>
+		<option name="config_global_ocean_topography_has_ocean_frac">.false.</option>
+		<option name="config_global_ocean_topography_ocean_frac_varname">'ocean_mask'</option>
+		<option name="config_global_ocean_topography_method">'bilinear_interpolation'</option>
+		<option name="config_global_ocean_fill_bathymetry_holes">.true.</option>
+
 	</namelist>
 
 	<streams name="streams.ocean" keep="immutable" mode="init">
