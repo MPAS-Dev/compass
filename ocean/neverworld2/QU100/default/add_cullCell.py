@@ -36,8 +36,15 @@ def main():
        lonCell<  0*deg,
        lonCell> 60*deg
        ))))] = 1.0
-    ds['cullCell'] = (['nCells'], cullCell)
+#    ds['cullCell'] = (['nCells'], cullCell)
 
+
+#  set to zero (ocean exists!) for the reentrant channel 
+    cullCell[np.where( np.logical_and(
+       latCell<  -40*deg,
+       latCell> -70*deg
+       ))] = 0.0
+    ds['cullCell'] = (['nCells'], cullCell)
     #ds.to_netcdf('initial_state.nc', format='NETCDF3_64BIT_OFFSET')
     write_netcdf(ds,parser.parse_args().input_file)
     print('Total time: %f' % ((time.time() - timeStart)))
