@@ -42,7 +42,7 @@ def main():
 #  set to zero (ocean exists!) for the reentrant channel 
     cullCell[np.where( np.logical_and(
        latCell<  -40*deg,
-       latCell> -70*deg
+       latCell> -60*deg
        ))] = 0.0
     ds['cullCell'] = (['nCells'], cullCell)
     #ds.to_netcdf('initial_state.nc', format='NETCDF3_64BIT_OFFSET')
