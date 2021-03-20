@@ -122,6 +122,10 @@ def main():
     T.add_EW_coast(-360, 360, NW2_latN, cw, cd)
     T.add_circular_ridge(NW2_lonW, -50, 10, 2, drake) # Drake sill
     T.add_NS_ridge(30, -90, 90, 30, D0/2) # Mid-Atlantic ridge
+    T.add_EW_coast(NW2_lonE, 360, -60, cw, cd)
+    T.add_EW_coast(-360, NW2_lonW, -60, cw, cd)
+    T.add_EW_coast(NW2_lonE, 360, -40, cw, cd)
+    T.add_EW_coast(-360, NW2_lonW, -40, cw, cd)
     bottomDepthObserved[:] = -T.z[:]
     print('Depth range: ', min(bottomDepthObserved), max(bottomDepthObserved))
     # Compute maxLevelCell and layerThickness for z-level (variation only on top)
