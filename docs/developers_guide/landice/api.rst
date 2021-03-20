@@ -101,3 +101,26 @@ eismint2
    setup_mesh.collect
    setup_mesh.run
 
+
+greenland
+~~~~~~~~~
+
+.. currentmodule:: compass.landice.tests.greenland
+
+.. autosummary::
+   :toctree: generated/
+
+   collect
+
+   decomposition_test.collect
+   decomposition_test.run
+
+   restart_test.collect
+   restart_test.run
+
+   smoke_test.collect
+   smoke_test.run
+
+   run_model.collect
+   run_model.setup
+   run_model.run
