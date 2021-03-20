@@ -124,3 +124,37 @@ greenland
    run_model.collect
    run_model.setup
    run_model.run
+
+hydro_radial
+~~~~~~~~~~~~
+
+.. currentmodule:: compass.landice.tests.hydro_radial
+
+.. autosummary::
+   :toctree: generated/
+
+   collect
+
+   decomposition_test.collect
+   decomposition_test.run
+
+   restart_test.collect
+   restart_test.run
+
+   spinup_test.collect
+   spinup_test.run
+
+   steady_state_drift_test.collect
+   steady_state_drift_test.run
+
+   run_model.collect
+   run_model.setup
+   run_model.run
+
+   setup_mesh.collect
+   setup_mesh.run
+
+   visualize.collect
+   visualize.run
+   visualize.visualize_hydro_radial
+

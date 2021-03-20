@@ -15,3 +15,4 @@ in the coming months.
    enthalpy_benchmark
    eismint2
    greenland
+   hydro_radial
