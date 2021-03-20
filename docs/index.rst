@@ -49,10 +49,23 @@ functionality is added.
    :maxdepth: 2
 
    developers_guide/overview
+   developers_guide/command_line
+   developers_guide/cores
+   developers_guide/examples/index
+   developers_guide/landice/index
+   developers_guide/ocean/index
+   developers_guide/framework
+   developers_guide/docs
    developers_guide/building_docs
    developers_guide/api
 
    design_docs/index
+
+.. toctree::
+   :caption: Versions
+   :maxdepth: 2
+
+   versions
 
 .. _legacy_compass:
 
@@ -60,9 +73,12 @@ Legacy COMPASS
 ==============
 
 The legacy version of COMPASS is controlled by 4 scripts
-(:ref:`legacy_list_testcases`, :ref:`legacy_setup_testcase`,
-:ref:`legacy_clean_testcase`, and :ref:`legacy_manage_regression_suite`), and
-test cases are defined by a series of XML files with a strict directory
+(`list_testcases.py <https://mpas-dev.github.io/compass/legacy/users_guide/scripts.html#list-testcases-py>`_,
+`setup_testcases.py <https://mpas-dev.github.io/compass/legacy/users_guide/scripts.html#setup-testcases-py>`_,
+`clean_testcases.py <https://mpas-dev.github.io/compass/legacy/users_guide/scripts.html#clean-testcases-py>`_,
+and
+`manage_regression_suite.py <https://mpas-dev.github.io/compass/legacy/users_guide/scripts.html#manage-regression-suite-py>`_),
+and test cases are defined by a series of XML files with a strict directory
 structure.  Over the years, we have found this structure to be confusing for
 both new and experienced developers, with serious limitations on flexibility
 of test case design and code reuse.  We do not anticipate any new test cases
@@ -70,37 +86,10 @@ being added to the legacy version but it will take time for legacy test cases
 to be ported to the new ``compass`` python package.  Therefore, the legacy
 framework and test cases are expected to persist for the medium term.
 
-.. toctree::
-   :caption: Legacy User's guide
-   :maxdepth: 2
+Documentation for legacy COMPASS can be found at:
 
-   legacy/users_guide/overview
-   legacy/users_guide/scripts
+http://mpas-dev.github.io/compass/legacy/
 
-.. toctree::
-   :caption: Legacy Ocean Test Cases
-   :maxdepth: 2
+the code can be found in the ``legacy`` branch on the COMPASS GitHub repo:
 
-   legacy/ocean/introduction
-   legacy/ocean/test_cases/index
-
-.. toctree::
-   :caption: Legacy Instructions for Machines
-   :maxdepth: 2
-
-   legacy/machine_specific_instructions/slurm
-   legacy/machine_specific_instructions/lanl
-   legacy/machine_specific_instructions/nersc
-   legacy/machine_specific_instructions/anvil
-   legacy/machine_specific_instructions/linux
-   legacy/machine_specific_instructions/osx
-.. toctree::
-   :caption: Legacy Developer's guide
-   :maxdepth: 2
-
-   legacy/developers_guide/config
-   legacy/developers_guide/driver_script
-   legacy/developers_guide/template
-   legacy/developers_guide/regression_suite
-   legacy/developers_guide/run_config
-   legacy/developers_guide/building_docs
+https://github.com/MPAS-Dev/compass/tree/legacy
