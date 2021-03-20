@@ -103,7 +103,7 @@ case, including:
 
 * A description of any common framework within the core that the configuration
   or test case pages may need to refer to.  This should only include framework
-  that users may need to be aware of, e.g. because of :ref:`config_files`
+  that users may need to be aware of, e.g. because of :ref:`configuration_files`
   or :ref:`dev_namelist` options they may wish to edit.
 
 * A description of each test suite, including which test cases are included

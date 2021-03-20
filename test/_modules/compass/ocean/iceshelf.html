@@ -88,10 +88,10 @@
             
               <p class="caption"><span class="caption-text">User's guide</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/overview.html">Quick Start</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/testcase.html">Test Cases</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/configuration.html">Configuration Files</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/suite.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/configuration_files.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/test_suites.html">Test Suites</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../users_guide/landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../users_guide/ocean/index.html">Ocean core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../users_guide/machines/index.html">Machines</a></li>
@@ -187,7 +187,7 @@
 <span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">update_namelist_pio</span><span class="p">,</span> <span class="n">partition</span><span class="p">,</span> <span class="n">run_model</span>
 
 
-<div class="viewcode-block" id="compute_land_ice_pressure_and_draft"><a class="viewcode-back" href="../../../developers_guide/ocean/generated/compass.ocean.iceshelf.compute_land_ice_pressure_and_draft.html#compass.ocean.iceshelf.compute_land_ice_pressure_and_draft">[docs]</a><span class="k">def</span> <span class="nf">compute_land_ice_pressure_and_draft</span><span class="p">(</span><span class="n">ssh</span><span class="p">,</span> <span class="n">modifySSHMask</span><span class="p">,</span> <span class="n">ref_density</span><span class="p">):</span>
+<div class="viewcode-block" id="compute_land_ice_pressure_and_draft"><a class="viewcode-back" href="../../../developers_guide/ocean/generated/compass.ocean.iceshelf.compute_land_ice_pressure_and_draft.html#compass.ocean.iceshelf.compute_land_ice_pressure_and_draft">[docs]</a><span class="k">def</span> <span class="nf">compute_land_ice_pressure_and_draft</span><span class="p">(</span><span class="n">ssh</span><span class="p">,</span> <span class="n">modify_mask</span><span class="p">,</span> <span class="n">ref_density</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute the pressure from and overlying ice shelf and the ice-shelf draft</span>
 
@@ -196,7 +196,7 @@
 <span class="sd">    ssh : xarray.DataArray</span>
 <span class="sd">        The sea surface height (the ice draft)</span>
 
-<span class="sd">    modifySSHMask : xarray.DataArray</span>
+<span class="sd">    modify_mask : xarray.DataArray</span>
 <span class="sd">        A mask that is 1 where ``landIcePressure`` can be deviate from 0</span>
 
 <span class="sd">    ref_density : float</span>
@@ -212,7 +212,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">gravity</span> <span class="o">=</span> <span class="n">constants</span><span class="p">[</span><span class="s1">&#39;SHR_CONST_G&#39;</span><span class="p">]</span>
     <span class="n">landIcePressure</span> <span class="o">=</span> \
-        <span class="n">modifySSHMask</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="o">-</span><span class="n">ref_density</span> <span class="o">*</span> <span class="n">gravity</span> <span class="o">*</span> <span class="n">ssh</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span>
+        <span class="n">modify_mask</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="o">-</span><span class="n">ref_density</span> <span class="o">*</span> <span class="n">gravity</span> <span class="o">*</span> <span class="n">ssh</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span>
     <span class="n">landIceDraft</span> <span class="o">=</span> <span class="n">ssh</span>
     <span class="k">return</span> <span class="n">landIcePressure</span><span class="p">,</span> <span class="n">landIceDraft</span></div>
 
@@ -276,7 +276,7 @@
             <span class="n">nVertLevels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">])</span>
             <span class="n">initSSH</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
             <span class="n">bottomDepth</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;bottomDepth&#39;</span><span class="p">][:]</span>
-            <span class="n">modifySSHMask</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;modifySSHMask&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="n">modifyLandIcePressureMask</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;modifyLandIcePressureMask&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
             <span class="n">landIcePressure</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;landIcePressure&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
             <span class="n">lonCell</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;lonCell&#39;</span><span class="p">][:]</span>
             <span class="n">latCell</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;latCell&#39;</span><span class="p">][:]</span>
@@ -289,7 +289,8 @@
                 <span class="n">finalSSH</span> <span class="o">=</span> <span class="n">ds_ssh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">][</span><span class="n">nTime</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
                 <span class="n">topDensity</span> <span class="o">=</span> <span class="n">ds_ssh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;density&#39;</span><span class="p">][</span><span class="n">nTime</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span>
 
-            <span class="n">mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">maxLevelCell</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">modifySSHMask</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">maxLevelCell</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span>
+                                     <span class="n">modifyLandIcePressureMask</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
 
             <span class="n">deltaSSH</span> <span class="o">=</span> <span class="n">mask</span> <span class="o">*</span> <span class="p">(</span><span class="n">finalSSH</span> <span class="o">-</span> <span class="n">initSSH</span><span class="p">)</span>
 
