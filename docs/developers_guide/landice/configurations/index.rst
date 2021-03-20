@@ -9,3 +9,4 @@ Configurations
 
    dome
    enthalpy_benchmark
+   eismint2

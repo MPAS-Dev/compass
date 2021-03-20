@@ -13,3 +13,4 @@ in the coming months.
 
    dome
    enthalpy_benchmark
+   eismint2

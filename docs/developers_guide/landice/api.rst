@@ -71,3 +71,33 @@ enthalpy_benchmark
    setup_mesh.collect
    setup_mesh.run
 
+
+eismint2
+~~~~~~~~
+
+.. currentmodule:: compass.landice.tests.eismint2
+
+.. autosummary::
+   :toctree: generated/
+
+   collect
+
+   decomposition_test.collect
+   decomposition_test.run
+
+   restart_test.collect
+   restart_test.run
+
+   standard_experiments.collect
+   standard_experiments.run
+   standard_experiments.visualize.collect
+   standard_experiments.visualize.run
+   standard_experiments.visualize.visualize_eismint2
+
+   run_experiment.collect
+   run_experiment.setup
+   run_experiment.run
+
+   setup_mesh.collect
+   setup_mesh.run
+
