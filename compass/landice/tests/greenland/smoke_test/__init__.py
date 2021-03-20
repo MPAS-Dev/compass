@@ -1,4 +1,4 @@
-from compass.testcase import add_step, run_steps, set_testcase_subdir
+from compass.testcase import add_step, run_steps
 from compass.landice.tests.greenland import run_model
 
 
