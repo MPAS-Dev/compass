@@ -23,7 +23,7 @@ install_requires = \
      'cartopy',
      'cmocean',
      'ipython',
-     'jigsawpy==0.2.1',
+     'jigsawpy==0.3.3',
      'jupyter',
      'lxml',
      'matplotlib',
