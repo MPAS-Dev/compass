@@ -18,6 +18,24 @@ def package_files(directory, prefixes, extensions):
     return paths
 
 
+install_requires = \
+    ['affine',
+     'cartopy',
+     'cmocean',
+     'ipython',
+     'jigsawpy==0.2.1',
+     'jupyter',
+     'lxml',
+     'matplotlib',
+     'netcdf4',
+     'numpy',
+     'progressbar2',
+     'pyamg',
+     'rasterio',
+     'requests',
+     'scipy',
+     'xarray']
+
 here = os.path.abspath(os.path.dirname(__file__))
 with open(os.path.join(here, 'compass', '__init__.py')) as f:
     init_file = f.read()
@@ -59,12 +77,6 @@ setup(name='compass',
       ],
       packages=find_packages(include=['compass', 'compass.*']),
       package_data={'': data_files},
-      install_requires=['matplotlib',
-                        'netCDF4',
-                        'numpy',
-                        'progressbar2',
-                        'requests',
-                        'scipy',
-                        'xarray'],
+      install_requires=install_requires,
       entry_points={'console_scripts':
                     ['compass = compass.__main__:main']})

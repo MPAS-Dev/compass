@@ -40,33 +40,37 @@ requirements:
     - setuptools
   run:
     - python >=3.6
+    - affine
+    - cartopy
+    - cartopy_offlinedata
+    - cmocean
+    - esmf * {{ mpi_prefix }}_*
+    - ffmpeg
     - geometric_features 0.3.0
-    - mpas_tools 0.2.0
+    - git
+    - ipython
     - jigsaw 0.9.12
     - jigsawpy 0.2.1
-    - metis
-    - cartopy_offlinedata
-    - ffmpeg
-    - {{ mpi }}  # [mpi != 'nompi']
-    - esmf * {{ mpi_prefix }}_*
-    - netcdf4 * nompi_*
-    - nco
-    - pyremap >=0.0.7,<0.1.0
-    - rasterio
-    - affine
-    - ipython
     - jupyter
     - lxml
     - matplotlib-base
-    - cmocean
+    - metis
+    - mpas_tools 0.2.0
+    - {{ mpi }}  # [mpi != 'nompi']
+    - nco
+    - netcdf4 * nompi_*
     - numpy
-    - xarray
     - progressbar2
+    - pyamg
+    - pyremap >=0.0.7,<0.1.0
+    - rasterio
     - requests
     - scipy
-    - git
+    - xarray
 
 test:
+  requires:
+    - pip
   imports:
     - compass
   commands:
@@ -77,8 +81,8 @@ test:
     - compass setup --help
     - compass suite --help
     - compass clean --help
-    - gpmetis --help
-    - ffmpeg -help
+    - pip check
+
 
 about:
   home: https://github.com/MPAS-Dev/compass
