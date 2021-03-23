@@ -83,12 +83,12 @@ follows:
 
 .. code-block:: bash
 
-    conda create -n compass python=3.8 geometric_features=0.1.13 \
-        mpas_tools=0.2.0 jigsaw=0.9.12 jigsawpy=0.2.1 metis \
-        cartopy_offlinedata ffmpeg mpich "esmf=*=mpi_mpich_*" \
-        "netcdf4=*=nompi_*" nco  "pyremap>=0.0.7,<0.1.0" rasterio affine \
-        ipython jupyter lxml matplotlib cmocean numpy xarray progressbar2 \
-        requests scipy git
+    conda create -n compass python=3.8 affine cartopy cartopy_offlinedata \
+        cmocean "esmf=*=mpi_mpich*" ffmpeg "geometric_features=0.3.0" git \
+        ipython "jigsaw=0.9.14" "jigsawpy=0.3.3" jupyter lxml matplotlib \
+        metis "mpas_tools=0.2.0" mpich nco "netcdf4=*=nompi_*" numpy \
+        progressbar2 pyamg "pyremap>=0.0.7,<0.1.0" rasterio requests scipy \
+        xarray
 
 Each time you want to work with compass, you will need to run:
 

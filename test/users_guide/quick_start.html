@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Quick Start &mdash; compass 1.0.0 documentation</title>
+  <title>Quick Start &mdash; compass test documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                1.0.0
+                test
               </div>
             
           
@@ -253,12 +253,12 @@ conda config --set channel_priority strict
 </div>
 <p>then create a new conda environment (called <code class="docutils literal notranslate"><span class="pre">compass</span></code> in this example) as
 follows:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda create -n compass <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.8 <span class="nv">geometric_features</span><span class="o">=</span><span class="m">0</span>.1.13 <span class="se">\</span>
-    <span class="nv">mpas_tools</span><span class="o">=</span><span class="m">0</span>.2.0 <span class="nv">jigsaw</span><span class="o">=</span><span class="m">0</span>.9.12 <span class="nv">jigsawpy</span><span class="o">=</span><span class="m">0</span>.2.1 metis <span class="se">\</span>
-    cartopy_offlinedata ffmpeg mpich <span class="s2">&quot;esmf=*=mpi_mpich_*&quot;</span> <span class="se">\</span>
-    <span class="s2">&quot;netcdf4=*=nompi_*&quot;</span> nco  <span class="s2">&quot;pyremap&gt;=0.0.7,&lt;0.1.0&quot;</span> rasterio affine <span class="se">\</span>
-    ipython jupyter lxml matplotlib cmocean numpy xarray progressbar2 <span class="se">\</span>
-    requests scipy git
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda create -n compass <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.8 affine cartopy cartopy_offlinedata <span class="se">\</span>
+    cmocean <span class="s2">&quot;esmf=*=mpi_mpich*&quot;</span> ffmpeg <span class="s2">&quot;geometric_features=0.3.0&quot;</span> git <span class="se">\</span>
+    ipython <span class="s2">&quot;jigsaw=0.9.14&quot;</span> <span class="s2">&quot;jigsawpy=0.3.3&quot;</span> jupyter lxml matplotlib <span class="se">\</span>
+    metis <span class="s2">&quot;mpas_tools=0.2.0&quot;</span> mpich nco <span class="s2">&quot;netcdf4=*=nompi_*&quot;</span> numpy <span class="se">\</span>
+    progressbar2 pyamg <span class="s2">&quot;pyremap&gt;=0.0.7,&lt;0.1.0&quot;</span> rasterio requests scipy <span class="se">\</span>
+    xarray
 </pre></div>
 </div>
 <p>Each time you want to work with compass, you will need to run:</p>
