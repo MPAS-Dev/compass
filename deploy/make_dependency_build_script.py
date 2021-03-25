@@ -58,7 +58,7 @@ def main():
     parser.add_argument("-s", "--scorpio", dest="scorpio", default="1.1.6",
                         help="The SCORPIO version to build", metavar="SCORPIO")
 
-    parser.add_argument("-e", "--esmf", dest="esmf", default="8.0.1",
+    parser.add_argument("-e", "--esmf", dest="esmf", default="8.1.0",
                         help="The ESMF version to build", metavar="ESMF")
 
     args = parser.parse_args()
