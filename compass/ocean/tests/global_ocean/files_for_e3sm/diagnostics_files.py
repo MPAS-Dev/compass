@@ -6,9 +6,9 @@ from pyremap import get_lat_lon_descriptor, get_polar_descriptor, \
     MpasMeshDescriptor, Remapper
 from geometric_features import GeometricFeatures
 from geometric_features.aggregation import get_aggregator_by_name
-from mpas_tools.mesh.conversion import mask
+from mpas_tools.logging import check_call
+from mpas_tools.ocean.moc import add_moc_southern_boundary_transects
 from mpas_tools.io import write_netcdf
-from mpas_tools.ocean.moc import make_moc_basins_and_transects
 
 from compass.io import symlink
 from compass.step import Step
@@ -63,7 +63,6 @@ class DiagnosticsFiles(Step):
         logger = self.logger
 
         restart_filename = 'restart.nc'
-
         with xarray.open_dataset(restart_filename) as ds:
             mesh_short_name = ds.attrs['MPAS_Mesh_Short_Name']
 
@@ -76,27 +75,30 @@ class DiagnosticsFiles(Step):
                 os.makedirs(directory)
             except OSError:
                 pass
-
-        _make_moc_masks(mesh_short_name, logger)
+        _make_moc_masks(mesh_short_name, logger, cores)
 
         gf = GeometricFeatures()
-
         region_groups = ['Antarctic Regions', 'Arctic Ocean Regions',
                          'Arctic Sea Ice Regions', 'Ocean Basins',
-                         'Ocean Subbasins', 'ISMIP6 Regions',
-                         'Transport Transects']
+                         'Ocean Subbasins', 'ISMIP6 Regions']
 
         if with_ice_shelf_cavities:
             region_groups.append('Ice Shelves')
 
         for region_group in region_groups:
             function, prefix, date = get_aggregator_by_name(region_group)
-
             suffix = '{}{}'.format(prefix, date)
-
             fcMask = function(gf)
             _make_region_masks(mesh_short_name, suffix=suffix, fcMask=fcMask,
-                               logger=logger)
+                               logger=logger, cores=cores)
+
+        transect_groups = ['Transport Transects']
+        for transect_group in transect_groups:
+            function, prefix, date = get_aggregator_by_name(transect_group)
+            suffix = '{}{}'.format(prefix, date)
+            fcMask = function(gf)
+            _make_transect_masks(mesh_short_name, suffix=suffix, fcMask=fcMask,
+                                 logger=logger, cores=cores)
 
         _make_analysis_lat_lon_map(config, mesh_short_name, cores, logger)
         _make_analysis_polar_map(config, mesh_short_name,
@@ -115,7 +117,7 @@ class DiagnosticsFiles(Step):
                     '{}/{}'.format(output_dir, filename))
 
 
-def _make_region_masks(mesh_name, suffix, fcMask, logger):
+def _make_region_masks(mesh_name, suffix, fcMask, logger, cores):
     mesh_filename = 'restart.nc'
 
     geojson_filename = '{}.geojson'.format(suffix)
@@ -123,11 +125,39 @@ def _make_region_masks(mesh_name, suffix, fcMask, logger):
 
     fcMask.to_geojson(geojson_filename)
 
-    dsMesh = xarray.open_dataset(mesh_filename)
+    args = ['compute_mpas_region_masks',
+            '-m', mesh_filename,
+            '-g', geojson_filename,
+            '-o', mask_filename,
+            '-t', 'cell',
+            '--process_count', '{}'.format(cores)]
+    check_call(args, logger=logger)
 
-    dsMask = mask(dsMesh, fcMask=fcMask, logger=logger)
+    # make links in output directory
+    output_dir = '../assembled_files/diagnostics/mpas_analysis/' \
+                 'region_masks'
+    symlink('../../../../diagnostics_files/{}'.format(mask_filename),
+            '{}/{}'.format(output_dir, mask_filename))
 
-    write_netcdf(dsMask, mask_filename)
+
+def _make_transect_masks(mesh_name, suffix, fcMask, logger, cores,
+                         subdivision_threshold=10e3):
+    mesh_filename = 'restart.nc'
+
+    geojson_filename = '{}.geojson'.format(suffix)
+    mask_filename = '{}_{}.nc'.format(mesh_name, suffix)
+
+    fcMask.to_geojson(geojson_filename)
+
+    args = ['compute_mpas_transect_masks',
+            '-m', mesh_filename,
+            '-g', geojson_filename,
+            '-o', mask_filename,
+            '-t', 'edge',
+            '-s', '{}'.format(subdivision_threshold),
+            '--process_count', '{}'.format(cores),
+            '--add_edge_sign']
+    check_call(args, logger=logger)
 
     # make links in output directory
     output_dir = '../assembled_files/diagnostics/mpas_analysis/' \
@@ -195,22 +225,40 @@ def _make_mapping_file(mesh_name, outGridName, inDescriptor, outDescriptor,
                                 esmf_parallel_exec=parallel_executable)
 
 
-def _make_moc_masks(mesh_short_name, logger):
+def _make_moc_masks(mesh_short_name, logger, cores):
     gf = GeometricFeatures()
 
     mesh_filename = 'restart.nc'
 
-    mask_filename = '{}_moc_masks.nc'.format(mesh_short_name)
-    mask_and_transect_filename = '{}_moc_masks_and_transects.nc'.format(
-        mesh_short_name)
+    function, prefix, date = get_aggregator_by_name('MOC Basins')
+    fcMask = function(gf)
 
-    geojson_filename = 'moc_basins.geojson'
+    suffix = '{}{}'.format(prefix, date)
 
-    make_moc_basins_and_transects(gf, mesh_filename,
-                                  mask_and_transect_filename,
-                                  geojson_filename=geojson_filename,
-                                  mask_filename=mask_filename,
-                                  logger=logger)
+    geojson_filename = '{}.geojson'.format(suffix)
+    mask_filename = '{}_{}.nc'.format(mesh_short_name, suffix)
+
+    fcMask.to_geojson(geojson_filename)
+
+    args = ['compute_mpas_region_masks',
+            '-m', mesh_filename,
+            '-g', geojson_filename,
+            '-o', mask_filename,
+            '-t', 'cell',
+            '--process_count', '{}'.format(cores)]
+    check_call(args, logger=logger)
+
+    mask_and_transect_filename = '{}_mocBasinsAndTransects{}.nc'.format(
+        mesh_short_name, date)
+
+    dsMesh = xarray.open_dataset(mesh_filename)
+    dsMask = xarray.open_dataset(mask_filename)
+
+    dsMasksAndTransects = add_moc_southern_boundary_transects(
+        dsMask, dsMesh, logger=logger)
+
+    write_netcdf(dsMasksAndTransects, mask_and_transect_filename,
+                 char_dim_name='StrLen')
 
     # make links in output directories (both inputdata and diagnostics)
     output_dir = '../assembled_files/inputdata/ocn/mpas-o/{}'.format(
