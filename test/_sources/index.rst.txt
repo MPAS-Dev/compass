@@ -48,6 +48,7 @@ functionality is added.
    :caption: Developer's guide
    :maxdepth: 2
 
+   developers_guide/quick_start
    developers_guide/overview
    developers_guide/command_line
    developers_guide/cores

@@ -42,9 +42,9 @@ different sources:
   :ref:`setup_overview`) or ``compass suite`` (see :ref:`suite_overview`).
 
 As a user, this last one is the only config file you will need to set up
-yourself.  If you are on one of the :ref:`supported_machines` and you have
-built the MPAS-Model code in the default location (see :ref:`compass_repo`),
-you won't need to create a config file at all.
+yourself.  If you are on one of the :ref:`supported_machines` and you provide
+a path to the location where you have build the MPAS model (with the ``-p``
+flag), you won't need to create a config file at all.
 
 If you are using a machine that ``compass`` doesn't know about, you will need
 to provide some config options to tell it where you would like to cache some
