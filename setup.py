@@ -45,7 +45,8 @@ version = re.search(r'{}\s*=\s*[(]([^)]*)[)]'.format('__version_info__'),
 
 os.chdir(here)
 
-data_files = package_files('compass', prefixes=['namelist', 'streams'],
+data_files = package_files('compass',
+                           prefixes=['namelist', 'streams', 'README'],
                            extensions=['cfg', 'template', 'json', 'txt',
                                        'geojson', 'mat'])
 
