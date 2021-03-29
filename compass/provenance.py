@@ -16,12 +16,14 @@ def write(work_dir, test_cases):
     test_cases : dict
         A dictionary describing all of the test cases and their steps
     """
-    try:
-        args = ['git', 'describe', '--tags', '--dirty', '--always']
-        git_version = subprocess.check_output(args).decode('utf-8')
-        git_version = git_version.strip('\n')
-    except subprocess.CalledProcessError:
-        git_version = None
+    git_version = None
+    if os.path.exists('.git'):
+        try:
+            args = ['git', 'describe', '--tags', '--dirty', '--always']
+            git_version = subprocess.check_output(args).decode('utf-8')
+            git_version = git_version.strip('\n')
+        except subprocess.CalledProcessError:
+            pass
 
     try:
         args = ['conda', 'list']
