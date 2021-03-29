@@ -29,7 +29,8 @@ def get_available_cores_and_nodes(config):
         args = ['squeue', '--noheader', '-j', job_id, '-o', '%D']
         nodes = _get_subprocess_int(args)
     elif parallel_system == 'single_node':
-        cores = multiprocessing.cpu_count()
+        cores_per_node = config.getint('parallel', 'cores_per_node')
+        cores = min(multiprocessing.cpu_count(), cores_per_node)
         nodes = 1
     else:
         raise ValueError('Unexpected parallel system: {}'.format(
