@@ -2,28 +2,28 @@
 import pickle
 import configparser
 
-from {{ testcase.module }} import {{ testcase.run }} as run
 from mpas_tools.logging import LoggingContext
 
 
 def main():
-    with open('testcase_{{ testcase.name }}.pickle', 'rb') as handle:
-        testcase = pickle.load(handle)
-    testcase['steps_to_run'] = ['{{ step.name }}']
-    testcase['new_step_log_file'] = False
+    with open('test_case_{{ test_case.name }}.pickle', 'rb') as handle:
+        test_case = pickle.load(handle)
+    test_case.steps_to_run = ['{{ step.name }}']
+    test_case.new_step_log_file = False
 
     with open('{{ step.name }}.pickle', 'rb') as handle:
         step = pickle.load(handle)
 
     config = configparser.ConfigParser(
         interpolation=configparser.ExtendedInterpolation())
-    config.read('{{ step.config }}')
+    config.read('{{ step.config_filename }}')
+    test_case.config = config
 
     # start logging to stdout/stderr
-    test_name = step['path'].replace('/', '_')
+    test_name = step.path.replace('/', '_')
     with LoggingContext(name=test_name) as logger:
-        test_suite = dict()
-        run(testcase, test_suite, config, logger)
+        test_case.logger = logger
+        test_case.run()
 
 
 if __name__ == '__main__':
