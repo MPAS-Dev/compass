@@ -4,8 +4,7 @@ import sys
 import os
 from importlib.resources import contents
 
-from compass.testcases import collect
-from compass import machines
+from compass.mpas_cores import get_mpas_cores
 
 
 def list_cases(test_expr=None, number=None, verbose=False):
@@ -23,19 +22,24 @@ def list_cases(test_expr=None, number=None, verbose=False):
     verbose : bool, optional
         Whether to print details of each test or just the subdirectories
     """
-    testcases = collect()
+    mpas_cores = get_mpas_cores()
 
     if number is None:
         print('Testcases:')
 
-    for test_number, (module, test) in enumerate(testcases.items()):
+    test_cases = []
+    for mpas_core in mpas_cores:
+        for test_group in mpas_core.test_groups.values():
+            for test_case in test_group.test_cases.values():
+                test_cases.append(test_case)
+
+    for test_number, test_case in enumerate(test_cases):
         print_number = False
         print_test = False
         if number is not None:
             if number == test_number:
                 print_test = True
-        elif test_expr is None or re.match(test_expr, module) or \
-                re.match(test_expr, test['path']):
+        elif test_expr is None or re.match(test_expr, test_case.path):
             print_test = True
             print_number = True
 
@@ -47,26 +51,30 @@ def list_cases(test_expr=None, number=None, verbose=False):
                 prefix = ''
             if verbose:
                 lines = list()
-                for key in ['path', 'description', 'name', 'core',
-                            'configuration', 'subdir']:
+                to_print = {'path': test_case.path,
+                            'name': test_case.name,
+                            'MPAS core': test_case.mpas_core.name,
+                            'test group': test_case.test_group.name,
+                            'subdir': test_case.subdir}
+                for key in to_print:
                     key_string = '{}: '.format(key).ljust(15)
                     lines.append('{}{}{}'.format(prefix, key_string,
-                                                 test[key]))
+                                                 to_print[key]))
                     if print_number:
                         prefix = '      '
                 lines.append('{}steps:'.format(prefix))
-                for step in test['steps']:
+                for step in test_case.steps.keys():
                     lines.append('{} - {}'.format(prefix, step))
                 lines.append('')
                 print_string = '\n'.join(lines)
             else:
-                print_string = '{}{}'.format(prefix, test['path'])
+                print_string = '{}{}'.format(prefix, test_case.path)
 
             print(print_string)
 
 
 def list_machines():
-    machine_configs = contents(machines)
+    machine_configs = contents('compass.machines')
     print('Machines:')
     for config in machine_configs:
         if config.endswith('.cfg'):
@@ -75,11 +83,13 @@ def list_machines():
 
 def list_suites(cores=None):
     if cores is None:
-        # add new cores here to make sure they get listed, too!
-        cores = ['ocean', 'landice']
+        cores = [mpas_core.name for mpas_core in get_mpas_cores()]
     print('Suites:')
     for core in cores:
-        suites = contents('compass.{}.suites'.format(core))
+        try:
+            suites = contents('compass.{}.suites'.format(core))
+        except FileNotFoundError:
+            continue
         for suite in suites:
             if suite.endswith('.txt'):
                 print('  -c {} -t {}'.format(core, os.path.splitext(suite)[0]))
