@@ -155,6 +155,15 @@ class Step:
         """
         self.outputs.append(filename)
 
+    def add_model_as_input(self):
+        """
+        make a link to the model executable and add it to the inputs
+        """
+        model = self.config.get('executables', 'model')
+        model_basename = os.path.basename(model)
+        self.add_input_file(filename=model_basename,
+                            target=os.path.abspath(model))
+
     def generate(self):
         """
         Generate a ``run.py`` script for the test case or step.

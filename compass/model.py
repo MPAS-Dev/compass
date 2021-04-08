@@ -5,25 +5,6 @@ import xarray
 from mpas_tools.logging import check_call
 
 from compass.namelist import update
-from compass.io import add_input_file
-
-
-def add_model_as_input(step, config):
-    """
-    make a link to the model executable and add it to the inputs
-
-    Parameters
-    ----------
-    step : dict
-        A dictionary of properties of this step
-
-    config : configparser.ConfigParser
-        Configuration options for the test case
-    """
-    model = config.get('executables', 'model')
-    model_basename = os.path.basename(model)
-    add_input_file(step, filename=model_basename,
-                   target=os.path.abspath(model))
 
 
 def run_model(step, config, logger, update_pio=True, partition_graph=True,
