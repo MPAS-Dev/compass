@@ -5,72 +5,71 @@ from mpas_tools.planar_hex import make_planar_hex_mesh
 from mpas_tools.io import write_netcdf
 from mpas_tools.mesh.conversion import convert, cull
 
-from compass.ocean.vertical import generate_grid
 from compass.ocean.vertical.zstar import compute_layer_thickness_and_zmid
-from compass.io import add_output_file
+from compass.ocean.vertical import generate_grid
+from compass.step import Step
 
 
-def collect(testcase, step):
+class InitialState(Step):
     """
-    Update the dictionary of step properties
+    A step for creating a mesh and initial condition for ZISO test cases
 
-    Parameters
+    Attributes
     ----------
-    testcase : dict
-        A dictionary of properties of this test case, which should not be
-        modified here
+    resolution : str
+        The resolution of the test case
 
-    step : dict
-        A dictionary of properties of this step, which can be updated
+    with_frazil : bool
+        Whether frazil formation is included in the simulation
     """
-    defaults = dict(cores=1, min_cores=1, max_memory=8000, max_disk=8000,
-                    threads=1)
-    for key, value in defaults.items():
-        step.setdefault(key, value)
 
-    for file in ['base_mesh.nc', 'culled_mesh.nc', 'culled_graph.info',
-                 'ocean.nc', 'forcing.nc']:
-        add_output_file(step, filename=file)
+    def __init__(self, test_case, resolution, with_frazil):
+        """
+        Update the dictionary of step properties
 
+        Parameters
+        ----------
+        test_case : compass.TestCase
+            The test case this step belongs to
 
-# no setup() is needed for this step
+        resolution : str
+            The resolution of the test case
 
+        with_frazil : bool
+            Whether frazil formation is included in the simulation
+        """
+        super().__init__(test_case=test_case, name='initial_state')
+        self.resolution = resolution
+        self.with_frazil = with_frazil
 
-def run(step, test_suite, config, logger):
-    """
-    Run this step of the testcase
+        for file in ['base_mesh.nc', 'culled_mesh.nc', 'culled_graph.info',
+                     'ocean.nc', 'forcing.nc']:
+            self.add_output_file(file)
 
-    Parameters
-    ----------
-    step : dict
-        A dictionary of properties of this step
+    def run(self):
+        """
+        Run this step of the test case
+        """
+        config = self.config
+        logger = self.logger
 
-    test_suite : dict
-        A dictionary of properties of the test suite
+        section = config['ziso']
+        nx = section.getint('nx')
+        ny = section.getint('ny')
+        dc = section.getfloat('dc')
 
-    config : configparser.ConfigParser
-        Configuration options for this test case
+        dsMesh = make_planar_hex_mesh(nx=nx, ny=ny, dc=dc, nonperiodic_x=False,
+                                      nonperiodic_y=True)
+        write_netcdf(dsMesh, 'base_mesh.nc')
 
-    logger : logging.Logger
-        A logger for output from the step
-   """
-    section = config['ziso']
-    nx = section.getint('nx')
-    ny = section.getint('ny')
-    dc = section.getfloat('dc')
+        dsMesh = cull(dsMesh, logger=logger)
+        dsMesh = convert(dsMesh, graphInfoFileName='culled_graph.info',
+                         logger=logger)
+        write_netcdf(dsMesh, 'culled_mesh.nc')
 
-    dsMesh = make_planar_hex_mesh(nx=nx, ny=ny, dc=dc, nonperiodic_x=False,
-                                  nonperiodic_y=True)
-    write_netcdf(dsMesh, 'base_mesh.nc')
+        ds = _write_initial_state(config, dsMesh, self.with_frazil)
 
-    dsMesh = cull(dsMesh, logger=logger)
-    dsMesh = convert(dsMesh, graphInfoFileName='culled_graph.info',
-                     logger=logger)
-    write_netcdf(dsMesh, 'culled_mesh.nc')
-
-    ds = _write_initial_state(config, dsMesh, step['with_frazil'])
-
-    _write_forcing(config, ds.yCell, ds.zMid)
+        _write_forcing(config, ds.yCell, ds.zMid)
 
 
 def _write_initial_state(config, dsMesh, with_frazil):

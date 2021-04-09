@@ -1,108 +1,115 @@
-from compass.io import add_input_file, add_output_file
-from compass.namelist import add_namelist_file, add_namelist_options,\
-    generate_namelist
-from compass.streams import add_streams_file, generate_streams
-from compass.model import add_model_as_input, partition, run_model
+from compass.step import Step
+from compass.model import partition, run_model
 from compass.ocean import particles
 
 
-def collect(testcase, step):
+class Forward(Step):
     """
-    Update the dictionary of step properties
+    A step for performing forward MPAS-Ocean runs as part of ZISO test cases.
 
-    Parameters
+    Attributes
     ----------
-    testcase : dict
-        A dictionary of properties of this test case, which should not be
-        modified here
+    resolution : str
+        The resolution of the test case
 
-    step : dict
-        A dictionary of properties of this step, which can be updated
+    with_analysis : bool, optional
+        whether analysis members are enabled as part of the run
+
+    with_frazil : bool, optional
+        whether the run includes frazil formation
     """
-    resolution = step['resolution']
-    with_analysis = step['with_analysis']
-    with_frazil = step['with_frazil']
+    def __init__(self, test_case, resolution, name='forward', subdir=None,
+                 cores=1, min_cores=None, threads=1, with_analysis=False,
+                 with_frazil=False):
+        """
+        Create a new test case
 
-    defaults = dict(max_memory=1000, max_disk=1000, threads=1)
-    for key, value in defaults.items():
-        step.setdefault(key, value)
+        Parameters
+        ----------
+        test_case : compass.TestCase
+            The test case this step belongs to
 
-    step.setdefault('min_cores', step['cores'])
+        resolution : str
+            The resolution of the test case
 
-    add_namelist_file(step, 'compass.ocean.tests.ziso', 'namelist.forward')
-    add_streams_file(step, 'compass.ocean.tests.ziso', 'streams.forward')
+        name : str
+            the name of the test case
 
-    if with_analysis:
-        add_namelist_file(step, 'compass.ocean.tests.ziso',
-                          'namelist.analysis')
-        add_streams_file(step, 'compass.ocean.tests.ziso', 'streams.analysis')
+        subdir : str, optional
+            the subdirectory for the step.  The default is ``name``
 
-    if with_frazil:
-        add_namelist_options(step,
-                             {'config_use_frazil_ice_formation': '.true.'})
-        add_streams_file(step, 'compass.ocean.streams', 'streams.frazil')
+        cores : int, optional
+            the number of cores the step would ideally use.  If fewer cores
+            are available on the system, the step will run on all available
+            cores as long as this is not below ``min_cores``
 
-    add_namelist_file(step, 'compass.ocean.tests.ziso',
-                      'namelist.{}.forward'.format(resolution))
-    add_streams_file(step, 'compass.ocean.tests.ziso',
-                     'streams.{}.forward'.format(resolution))
+        min_cores : int, optional
+            the number of cores the step requires.  If the system has fewer
+            than this number of cores, the step will fail
 
-    add_input_file(step, filename='init.nc',
-                   target='../initial_state/ocean.nc')
-    add_input_file(step, filename='forcing.nc',
-                   target='../initial_state/forcing.nc')
-    add_input_file(step, filename='graph.info',
-                   target='../initial_state/culled_graph.info')
+        threads : int, optional
+            the number of threads the step will use
 
-    add_output_file(step, filename='output/output.0001-01-01_00.00.00.nc')
+        with_analysis : bool, optional
+            whether analysis members are enabled as part of the run
 
-    if with_analysis:
-        add_output_file(
-            step,
-            filename='analysis_members/lagrPartTrack.0001-01-01_00.00.00.nc')
+        with_frazil : bool, optional
+            whether the run includes frazil formation
+        """
+        self.resolution = resolution
+        self.with_analysis = with_analysis
+        self.with_frazil = with_frazil
+        if min_cores is None:
+            min_cores = cores
+        super().__init__(test_case=test_case, name=name, subdir=subdir,
+                         cores=cores, min_cores=min_cores, threads=threads)
 
+        self.add_namelist_file('compass.ocean.tests.ziso', 'namelist.forward')
+        self.add_streams_file('compass.ocean.tests.ziso', 'streams.forward')
 
-def setup(step, config):
-    """
-    Set up the test case in the work directory, including downloading any
-    dependencies
+        if with_analysis:
+            self.add_namelist_file('compass.ocean.tests.ziso',
+                                   'namelist.analysis')
+            self.add_streams_file('compass.ocean.tests.ziso',
+                                  'streams.analysis')
 
-    Parameters
-    ----------
-    step : dict
-        A dictionary of properties of this step
+        if with_frazil:
+            self.add_namelist_options(
+                {'config_use_frazil_ice_formation': '.true.'})
+            self.add_streams_file('compass.ocean.streams', 'streams.frazil')
 
-    config : configparser.ConfigParser
-        Configuration options for this test case
-    """
-    generate_namelist(step, config)
-    generate_streams(step, config)
+        self.add_namelist_file('compass.ocean.tests.ziso',
+                               'namelist.{}.forward'.format(resolution))
+        self.add_streams_file('compass.ocean.tests.ziso',
+                              'streams.{}.forward'.format(resolution))
 
-    add_model_as_input(step, config)
+        self.add_input_file(filename='init.nc',
+                            target='../initial_state/ocean.nc')
+        self.add_input_file(filename='forcing.nc',
+                            target='../initial_state/forcing.nc')
+        self.add_input_file(filename='graph.info',
+                            target='../initial_state/culled_graph.info')
 
+        self.add_output_file(filename='output/output.0001-01-01_00.00.00.nc')
 
-def run(step, test_suite, config, logger):
-    """
-    Run this step of the testcase
+        if with_analysis:
+            self.add_output_file(
+                filename='analysis_members/lagrPartTrack.0001-01-01_00.00.00.nc')
 
-    Parameters
-    ----------
-    step : dict
-        A dictionary of properties of this step
+    def setup(self):
+        """
+        Set up the test case in the work directory, including downloading any
+        dependencies
+        """
+        self.add_model_as_input()
 
-    test_suite : dict
-        A dictionary of properties of the test suite
-
-    config : configparser.ConfigParser
-        Configuration options for this test case
-
-    logger : logging.Logger
-        A logger for output from the step
-    """
-    cores = step['cores']
-
-    partition(cores, config, logger)
-    particles.write(init_filename='init.nc', particle_filename='particles.nc',
-                    graph_filename='graph.info.part.{}'.format(cores),
-                    types='buoyancy')
-    run_model(step, config, logger, partition_graph=False)
+    def run(self):
+        """
+        Run this step of the test case
+        """
+        cores = self.cores
+        partition(cores, self.config, self.logger)
+        particles.write(init_filename='init.nc', particle_filename='particles.nc',
+                        graph_filename='graph.info.part.{}'.format(cores),
+                        types='buoyancy')
+        run_model(self, partition_graph=False)

@@ -1,39 +1,40 @@
-from compass.testcase import add_testcase
-from compass.ocean.tests.ziso import default, with_frazil
+from compass.testgroup import TestGroup
+from compass.ocean.tests.ziso.default import Default
+from compass.ocean.tests.ziso.with_frazil import WithFrazil
 from compass.config import add_config
 
 
-def collect():
+class Ziso(TestGroup):
     """
-    Get a list of test cases in this configuration
-
-    Returns
-    -------
-    testcases : list
-        A list of tests within this configuration
+    A test group for Zonally Invariant Southern Ocean (ZISO) test cases
     """
-    testcases = list()
-    for resolution in ['20km']:
-        for test in [default, with_frazil]:
-            add_testcase(testcases, test, resolution=resolution)
+    def __init__(self, mpas_core):
+        """
+        mpas_core : compass.MpasCore
+            the MPAS core that this test group belongs to
+        """
+        super().__init__(mpas_core=mpas_core, name='ziso')
 
-    return testcases
+        for resolution in ['20km']:
+            Default(test_group=self, resolution=resolution)
+            WithFrazil(test_group=self, resolution=resolution)
 
 
-def configure(testcase, config):
+def configure(name, resolution, config):
     """
     Modify the configuration options for this test case
 
     Parameters
     ----------
-    testcase : dict
-        A dictionary of properties of this test case
+    name : str
+        the name of the test case
+
+    resolution : str
+        The resolution of the test case
 
     config : configparser.ConfigParser
         Configuration options for this test case
     """
-    resolution = testcase['resolution']
-    name = testcase['name']
     res_params = {'20km': {'nx': 50,
                            'ny': 112,
                            'dc': 20e3}}
