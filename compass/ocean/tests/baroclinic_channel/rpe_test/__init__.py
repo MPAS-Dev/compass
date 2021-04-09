@@ -1,97 +1,76 @@
-from compass.testcase import set_testcase_subdir, add_step, run_steps
-from compass.ocean.tests.baroclinic_channel import initial_state, forward
-from compass.ocean.tests.baroclinic_channel.rpe_test import analysis
+from compass.testcase import TestCase
+from compass.ocean.tests.baroclinic_channel.initial_state import InitialState
+from compass.ocean.tests.baroclinic_channel.forward import Forward
+from compass.ocean.tests.baroclinic_channel.rpe_test.analysis import Analysis
 from compass.ocean.tests import baroclinic_channel
-from compass.namelist import add_namelist_file
-from compass.streams import add_streams_file
 
 
-def collect(testcase):
+class RpeTest(TestCase):
     """
-    Update the dictionary of test case properties and add steps
+    The reference potential energy (RPE) test case for the baroclinic channel
+    test group performs a 20-day integration of the model forward in time at
+    5 different values of the viscosity at the given resolution.
 
-    Parameters
+    Attributes
     ----------
-    testcase : dict
-        A dictionary of properties of this test case, which can be updated
+    resolution : str
+        The resolution of the test case
     """
-    resolution = testcase['resolution']
-    testcase['description'] = 'baroclinic channel {} reference potential '\
-                              'energy (RPE)'.format(resolution)
 
-    nus = [1, 5, 10, 20, 200]
+    def __init__(self, test_group, resolution):
+        """
+        Create the test case
 
-    res_params = {'1km': {'cores': 144, 'min_cores': 36,
-                          'max_memory': 64000, 'max_disk': 64000},
-                  '4km': {'cores': 36, 'min_cores': 8,
-                          'max_memory': 16000, 'max_disk': 16000},
-                  '10km': {'cores': 8, 'min_cores': 4,
-                           'max_memory': 2000, 'max_disk': 2000}}
+        Parameters
+        ----------
+        test_group : compass.ocean.tests.baroclinic_channel.BaroclinicChannel
+            The test group that this test case belongs to
 
-    if resolution not in res_params:
-        raise ValueError('Unsupported resolution {}. Supported values are: '
-                         '{}'.format(resolution, list(res_params)))
+        resolution : str
+            The resolution of the test case
+        """
+        name = 'rpe_test'
+        subdir = '{}/{}'.format(resolution, name)
+        super().__init__(test_group=test_group, name=name,
+                         subdir=subdir)
 
-    defaults = res_params[resolution]
+        nus = [1, 5, 10, 20, 200]
 
-    subdir = '{}/{}'.format(resolution, testcase['name'])
-    set_testcase_subdir(testcase, subdir)
+        res_params = {'1km': {'cores': 144, 'min_cores': 36},
+                      '4km': {'cores': 36, 'min_cores': 8},
+                      '10km': {'cores': 8, 'min_cores': 4}}
 
-    add_step(testcase, initial_state, resolution=resolution)
+        if resolution not in res_params:
+            raise ValueError(
+                'Unsupported resolution {}. Supported values are: '
+                '{}'.format(resolution, list(res_params)))
 
-    for index, nu in enumerate(nus):
-        name = 'rpe_test_{}_nu_{}'.format(index+1, nu)
-        # we pass the defaults for the resolution on as keyword arguments
-        step = add_step(testcase, forward, name=name, subdir=name, threads=1,
-                        nu=float(nu), resolution=resolution, **defaults)
+        params = res_params[resolution]
 
-        # add the local namelist and streams file
-        add_namelist_file(
-            step, 'compass.ocean.tests.baroclinic_channel.rpe_test',
-            'namelist.forward')
-        add_streams_file(
-            step, 'compass.ocean.tests.baroclinic_channel.rpe_test',
-            'streams.forward')
+        self.resolution = resolution
 
-    add_step(testcase, analysis, resolution=resolution, nus=nus)
+        InitialState(test_case=self, resolution=resolution)
 
+        for index, nu in enumerate(nus):
+            name = 'rpe_test_{}_nu_{}'.format(index + 1, nu)
+            step = Forward(
+                test_case=self, name=name, subdir=name, cores=params['cores'],
+                min_cores=params['min_cores'], resolution=resolution,
+                nu=float(nu))
 
-def configure(testcase, config):
-    """
-    Modify the configuration options for this test case.
+            step.add_namelist_file(
+                'compass.ocean.tests.baroclinic_channel.rpe_test',
+                'namelist.forward')
+            step.add_streams_file(
+                'compass.ocean.tests.baroclinic_channel.rpe_test',
+                'streams.forward')
 
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case from the ``collect()``
-        function
+        Analysis(test_case=self, resolution=resolution, nus=nus)
 
-    config : configparser.ConfigParser
-        Configuration options for this test case, a combination of the defaults
-        for the machine, core and configuration
-    """
-    baroclinic_channel.configure(testcase, config)
+    def configure(self):
+        """
+        Modify the configuration options for this test case.
+        """
+        baroclinic_channel.configure(self.resolution, self.config)
 
-
-def run(testcase, test_suite, config, logger):
-    """
-    Run each step of the test case
-
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case from the ``collect()``
-        function
-
-    test_suite : dict
-        A dictionary of properties of the test suite
-
-    config : configparser.ConfigParser
-        Configuration options for this test case, a combination of the defaults
-        for the machine, core and configuration
-
-    logger : logging.Logger
-        A logger for output from the test case
-    """
-    # just run all the steps in the order they were added
-    run_steps(testcase, test_suite, config, logger)
+    # no run() is needed because we're doing the default: running all steps

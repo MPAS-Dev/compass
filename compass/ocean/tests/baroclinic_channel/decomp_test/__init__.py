@@ -1,74 +1,64 @@
-from compass.testcase import set_testcase_subdir, add_step, run_steps
-from compass.ocean.tests.baroclinic_channel import initial_state, forward
+from compass.testcase import TestCase
+from compass.ocean.tests.baroclinic_channel.initial_state import InitialState
+from compass.ocean.tests.baroclinic_channel.forward import Forward
 from compass.ocean.tests import baroclinic_channel
 from compass.validate import compare_variables
 
 
-def collect(testcase):
+class DecompTest(TestCase):
     """
-    Update the dictionary of test case properties and add steps
+    A decomposition test case for the baroclinic channel test group, which
+    makes sure the model produces identical results on 1 and 4 cores.
 
-    Parameters
+    Attributes
     ----------
-    testcase : dict
-        A dictionary of properties of this test case, which can be updated
+    resolution : str
+        The resolution of the test case
     """
-    resolution = testcase['resolution']
-    testcase['description'] = \
-        'baroclinic channel {} decomposition test'.format(resolution)
 
-    subdir = '{}/{}'.format(resolution, testcase['name'])
-    set_testcase_subdir(testcase, subdir)
+    def __init__(self, test_group, resolution):
+        """
+        Create the test case
 
-    add_step(testcase, initial_state, resolution=resolution)
+        Parameters
+        ----------
+        test_group : compass.ocean.tests.baroclinic_channel.BaroclinicChannel
+            The test group that this test case belongs to
 
-    for procs in [4, 8]:
-        name = '{}proc'.format(procs)
-        add_step(testcase, forward, name=name, subdir=name, cores=procs,
-                 threads=1, resolution=resolution)
+        resolution : str
+            The resolution of the test case
+        """
+        name = 'decomp_test'
+        self.resolution = resolution
+        subdir = '{}/{}'.format(resolution, name)
+        super().__init__(test_group=test_group, name=name,
+                         subdir=subdir)
 
+        InitialState(test_case=self, resolution=resolution)
 
-def configure(testcase, config):
-    """
-    Modify the configuration options for this test case.
+        for procs in [4, 8]:
+            name = '{}proc'.format(procs)
+            Forward(test_case=self, name=name, subdir=name, cores=procs,
+                    threads=1, resolution=resolution)
 
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case from the ``collect()``
-        function
+    def configure(self):
+        """
+        Modify the configuration options for this test case.
+        """
+        baroclinic_channel.configure(self.resolution, self.config)
 
-    config : configparser.ConfigParser
-        Configuration options for this test case, a combination of the defaults
-        for the machine, core and configuration
-    """
-    baroclinic_channel.configure(testcase, config)
+    def run(self):
+        """
+        Run each step of the test case
+        """
+        # run the steps
+        super().run()
 
-
-def run(testcase, test_suite, config, logger):
-    """
-    Run each step of the test case
-
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case from the ``collect()``
-        function
-
-    test_suite : dict
-        A dictionary of properties of the test suite
-
-    config : configparser.ConfigParser
-        Configuration options for this test case, a combination of the defaults
-        for the machine, core and configuration
-
-    logger : logging.Logger
-        A logger for output from the test case
-    """
-    run_steps(testcase, test_suite, config, logger)
-    variables = ['temperature', 'salinity', 'layerThickness', 'normalVelocity']
-    steps = testcase['steps_to_run']
-    if '4proc' in steps and '8proc' in steps:
-        compare_variables(variables, config, work_dir=testcase['work_dir'],
-                          filename1='4proc/output.nc',
-                          filename2='8proc/output.nc')
+        # perform validation
+        variables = ['temperature', 'salinity', 'layerThickness',
+                     'normalVelocity']
+        steps = self.steps_to_run
+        if '4proc' in steps and '8proc' in steps:
+            compare_variables(variables, self.config, work_dir=self.work_dir,
+                              filename1='4proc/output.nc',
+                              filename2='8proc/output.nc')

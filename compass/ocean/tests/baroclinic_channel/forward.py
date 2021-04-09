@@ -1,88 +1,84 @@
-from compass.io import add_input_file, add_output_file
-from compass.namelist import add_namelist_file, add_namelist_options, \
-    generate_namelist
-from compass.streams import add_streams_file, generate_streams
-from compass.model import add_model_as_input, run_model
+from compass.model import run_model
+from compass.step import Step
 
 
-def collect(testcase, step):
+class Forward(Step):
     """
-    Update the dictionary of step properties
+    A step for performing forward MPAS-Ocean runs as part of baroclinic
+    channel test cases.
 
-    Parameters
+    Attributes
     ----------
-    testcase : dict
-        A dictionary of properties of this test case, which should not be
-        modified here
-
-    step : dict
-        A dictionary of properties of this step, which can be updated
+    resolution : str
+        The resolution of the test case
     """
-    defaults = dict(max_memory=1000, max_disk=1000, threads=1)
-    for key, value in defaults.items():
-        step.setdefault(key, value)
+    def __init__(self, test_case, resolution, name='forward', subdir=None,
+                 cores=1, min_cores=None, threads=1, nu=None):
+        """
+        Create a new test case
 
-    step.setdefault('min_cores', step['cores'])
+        Parameters
+        ----------
+        test_case : compass.TestCase
+            The test case this step belongs to
 
-    add_namelist_file(step, 'compass.ocean.tests.baroclinic_channel',
-                      'namelist.forward')
-    add_namelist_file(step, 'compass.ocean.tests.baroclinic_channel',
-                      'namelist.{}.forward'.format(step['resolution']))
-    if 'nu' in step:
-        # update the viscosity to the requested value
-        options = {'config_mom_del2': '{}'.format(step['nu'])}
-        add_namelist_options(step, options)
+        resolution : str
+            The resolution of the test case
 
-    add_streams_file(step, 'compass.ocean.tests.baroclinic_channel',
-                     'streams.forward')
+        name : str
+            the name of the test case
 
+        subdir : str, optional
+            the subdirectory for the step.  The default is ``name``
 
-def setup(step, config):
-    """
-    Set up the test case in the work directory, including downloading any
-    dependencies
+        cores : int, optional
+            the number of cores the step would ideally use.  If fewer cores
+            are available on the system, the step will run on all available
+            cores as long as this is not below ``min_cores``
 
-    Parameters
-    ----------
-    step : dict
-        A dictionary of properties of this step
+        min_cores : int, optional
+            the number of cores the step requires.  If the system has fewer
+            than this number of cores, the step will fail
 
-    config : configparser.ConfigParser
-        Configuration options for this test case, a combination of the defaults
-        for the machine, core, configuration and test case
-    """
-    # generate the namelist and streams files file from the various files and
-    # replacements we have collected
-    generate_namelist(step, config)
-    generate_streams(step, config)
+        threads : int, optional
+            the number of threads the step will use
 
-    add_model_as_input(step, config)
+        nu : float, optional
+            the viscosity (if different from the default for the test group)
+        """
+        self.resolution = resolution
+        if min_cores is None:
+            min_cores = cores
+        super().__init__(test_case=test_case, name=name, subdir=subdir,
+                         cores=cores, min_cores=min_cores, threads=threads)
+        self.add_namelist_file('compass.ocean.tests.baroclinic_channel',
+                               'namelist.forward')
+        self.add_namelist_file('compass.ocean.tests.baroclinic_channel',
+                               'namelist.{}.forward'.format(resolution))
+        if nu is not None:
+            # update the viscosity to the requested value
+            options = {'config_mom_del2': '{}'.format(nu)}
+            self.add_namelist_options(options)
 
-    add_input_file(step, filename='init.nc',
-                   target='../initial_state/ocean.nc')
-    add_input_file(step, filename='graph.info',
-                   target='../initial_state/culled_graph.info')
+        self.add_streams_file('compass.ocean.tests.baroclinic_channel',
+                              'streams.forward')
 
-    add_output_file(step, filename='output.nc')
+        self.add_input_file(filename='init.nc',
+                            target='../initial_state/ocean.nc')
+        self.add_input_file(filename='graph.info',
+                            target='../initial_state/culled_graph.info')
 
+        self.add_output_file(filename='output.nc')
 
-def run(step, test_suite, config, logger):
-    """
-    Run this step of the test case
+    def setup(self):
+        """
+        Set up the test case in the work directory, including downloading any
+        dependencies
+        """
+        self.add_model_as_input()
 
-    Parameters
-    ----------
-    step : dict
-        A dictionary of properties of this step
-
-    test_suite : dict
-        A dictionary of properties of the test suite
-
-    config : configparser.ConfigParser
-        Configuration options for this test case, a combination of the defaults
-        for the machine, core and configuration
-
-    logger : logging.Logger
-        A logger for output from the step
-    """
-    run_model(step, config, logger)
+    def run(self):
+        """
+        Run this step of the test case
+        """
+        run_model(self)

@@ -6,172 +6,151 @@ from mpas_tools.io import write_netcdf
 from mpas_tools.mesh.conversion import convert, cull
 
 from compass.ocean.vertical import generate_grid
-from compass.io import add_output_file
+from compass.step import Step
 
 
-def collect(testcase, step):
+class InitialState(Step):
     """
-    Update the dictionary of step properties
+    A step for creating a mesh and initial condition for baroclinic channel
+    test cases
 
-    Parameters
+    Attributes
     ----------
-    testcase : dict
-        A dictionary of properties of this test case, which should not be
-        modified here
-
-    step : dict
-        A dictionary of properties of this step, which can be updated
+    resolution : str
+        The resolution of the test case
     """
-    defaults = dict(cores=1, min_cores=1, max_memory=8000, max_disk=8000,
-                    threads=1)
-    for key, value in defaults.items():
-        step.setdefault(key, value)
+    def __init__(self, test_case, resolution):
+        """
+        Update the dictionary of step properties
 
+        Parameters
+        ----------
+        test_case : compass.TestCase
+            The test case this step belongs to
 
-def setup(step, config):
-    """
-    Set up the test case in the work directory, including downloading any
-    dependencies
+        resolution : str
+            The resolution of the test case
+        """
+        super().__init__(test_case=test_case, name='initial_state')
+        self.resolution = resolution
 
-    Parameters
-    ----------
-    step : dict
-        A dictionary of properties of this step
+        for file in ['base_mesh.nc', 'culled_mesh.nc', 'culled_graph.info',
+                     'ocean.nc']:
+            self.add_output_file(file)
 
-    config : configparser.ConfigParser
-        Configuration options for this test case, a combination of the defaults
-        for the machine, core, configuration and test case
-    """
-    for file in ['base_mesh.nc', 'culled_mesh.nc', 'culled_graph.info',
-                 'ocean.nc']:
-        add_output_file(step, filename=file)
+    def run(self):
+        """
+        Run this step of the test case
+        """
+        config = self.config
+        logger = self.logger
 
+        section = config['baroclinic_channel']
+        nx = section.getint('nx')
+        ny = section.getint('ny')
+        dc = section.getfloat('dc')
 
-def run(step, test_suite, config, logger):
-    """
-    Run this step of the test case
+        dsMesh = make_planar_hex_mesh(nx=nx, ny=ny, dc=dc, nonperiodic_x=False,
+                                      nonperiodic_y=True)
+        write_netcdf(dsMesh, 'base_mesh.nc')
 
-    Parameters
-    ----------
-    step : dict
-        A dictionary of properties of this step
+        dsMesh = cull(dsMesh, logger=logger)
+        dsMesh = convert(dsMesh, graphInfoFileName='culled_graph.info',
+                         logger=logger)
+        write_netcdf(dsMesh, 'culled_mesh.nc')
 
-    test_suite : dict
-        A dictionary of properties of the test suite
+        section = config['baroclinic_channel']
+        use_distances = section.getboolean('use_distances')
+        gradient_width_dist = section.getfloat('gradient_width_dist')
+        gradient_width_frac = section.getfloat('gradient_width_frac')
+        bottom_temperature = section.getfloat('bottom_temperature')
+        surface_temperature = section.getfloat('surface_temperature')
+        temperature_difference = section.getfloat('temperature_difference')
+        salinity = section.getfloat('salinity')
+        coriolis_parameter = section.getfloat('coriolis_parameter')
 
-    config : configparser.ConfigParser
-        Configuration options for this test case, a combination of the defaults
-        for the machine, core and configuration
+        ds = dsMesh.copy()
 
-    logger : logging.Logger
-        A logger for output from the step
-   """
-    section = config['baroclinic_channel']
-    nx = section.getint('nx')
-    ny = section.getint('ny')
-    dc = section.getfloat('dc')
+        interfaces = generate_grid(config=config)
 
-    dsMesh = make_planar_hex_mesh(nx=nx, ny=ny, dc=dc, nonperiodic_x=False,
-                                  nonperiodic_y=True)
-    write_netcdf(dsMesh, 'base_mesh.nc')
+        bottom_depth = interfaces[-1]
+        vert_levels = len(interfaces) - 1
 
-    dsMesh = cull(dsMesh, logger=logger)
-    dsMesh = convert(dsMesh, graphInfoFileName='culled_graph.info',
-                     logger=logger)
-    write_netcdf(dsMesh, 'culled_mesh.nc')
+        ds['refBottomDepth'] = ('nVertLevels', interfaces[1:])
+        ds['refZMid'] = ('nVertLevels', -0.5 * (interfaces[1:] + interfaces[0:-1]))
+        ds['vertCoordMovementWeights'] = xarray.ones_like(ds.refBottomDepth)
 
-    section = config['baroclinic_channel']
-    use_distances = section.getboolean('use_distances')
-    gradient_width_dist = section.getfloat('gradient_width_dist')
-    gradient_width_frac = section.getfloat('gradient_width_frac')
-    bottom_temperature = section.getfloat('bottom_temperature')
-    surface_temperature = section.getfloat('surface_temperature')
-    temperature_difference = section.getfloat('temperature_difference')
-    salinity = section.getfloat('salinity')
-    coriolis_parameter = section.getfloat('coriolis_parameter')
+        xCell = ds.xCell
+        yCell = ds.yCell
 
-    ds = dsMesh.copy()
+        xMin = xCell.min().values
+        xMax = xCell.max().values
+        yMin = yCell.min().values
+        yMax = yCell.max().values
 
-    interfaces = generate_grid(config=config)
+        yMid = 0.5*(yMin + yMax)
+        xPerturbMin = xMin + 4.0 * (xMax - xMin) / 6.0
+        xPerturbMax = xMin + 5.0 * (xMax - xMin) / 6.0
 
-    bottom_depth = interfaces[-1]
-    vert_levels = len(interfaces) - 1
+        if use_distances:
+            perturbationWidth = gradient_width_dist
+        else:
+            perturbationWidth = (yMax - yMin) * gradient_width_frac
 
-    ds['refBottomDepth'] = ('nVertLevels', interfaces[1:])
-    ds['refZMid'] = ('nVertLevels', -0.5 * (interfaces[1:] + interfaces[0:-1]))
-    ds['vertCoordMovementWeights'] = xarray.ones_like(ds.refBottomDepth)
+        yOffset = perturbationWidth * numpy.sin(
+            6.0 * numpy.pi * (xCell - xMin) / (xMax - xMin))
 
-    xCell = ds.xCell
-    yCell = ds.yCell
+        temp_vert = (bottom_temperature +
+                     (surface_temperature - bottom_temperature) *
+                     ((ds.refZMid + bottom_depth) / bottom_depth))
 
-    xMin = xCell.min().values
-    xMax = xCell.max().values
-    yMin = yCell.min().values
-    yMax = yCell.max().values
+        frac = xarray.where(yCell < yMid - yOffset, 1., 0.)
 
-    yMid = 0.5*(yMin + yMax)
-    xPerturbMin = xMin + 4.0 * (xMax - xMin) / 6.0
-    xPerturbMax = xMin + 5.0 * (xMax - xMin) / 6.0
+        mask = numpy.logical_and(yCell >= yMid - yOffset,
+                                 yCell < yMid - yOffset + perturbationWidth)
+        frac = xarray.where(mask,
+                            1. - (yCell - (yMid - yOffset)) / perturbationWidth,
+                            frac)
 
-    if use_distances:
-        perturbationWidth = gradient_width_dist
-    else:
-        perturbationWidth = (yMax - yMin) * gradient_width_frac
+        temperature = temp_vert - temperature_difference * frac
+        temperature = temperature.transpose('nCells', 'nVertLevels')
 
-    yOffset = perturbationWidth * numpy.sin(
-        6.0 * numpy.pi * (xCell - xMin) / (xMax - xMin))
+        # Determine yOffset for 3rd crest in sin wave
+        yOffset = 0.5 * perturbationWidth * numpy.sin(
+            numpy.pi * (xCell - xPerturbMin) / (xPerturbMax - xPerturbMin))
 
-    temp_vert = (bottom_temperature +
-                 (surface_temperature - bottom_temperature) *
-                 ((ds.refZMid + bottom_depth) / bottom_depth))
+        mask = numpy.logical_and(
+            numpy.logical_and(yCell >= yMid - yOffset - 0.5 * perturbationWidth,
+                              yCell <= yMid - yOffset + 0.5 * perturbationWidth),
+            numpy.logical_and(xCell >= xPerturbMin,
+                              xCell <= xPerturbMax))
 
-    frac = xarray.where(yCell < yMid - yOffset, 1., 0.)
+        temperature = (temperature +
+                       mask * 0.3 * (1. - ((yCell - (yMid - yOffset)) /
+                                           (0.5 * perturbationWidth))))
 
-    mask = numpy.logical_and(yCell >= yMid - yOffset,
-                             yCell < yMid - yOffset + perturbationWidth)
-    frac = xarray.where(mask,
-                        1. - (yCell - (yMid - yOffset)) / perturbationWidth,
-                        frac)
+        temperature = temperature.expand_dims(dim='Time', axis=0)
 
-    temperature = temp_vert - temperature_difference * frac
-    temperature = temperature.transpose('nCells', 'nVertLevels')
+        layerThickness = xarray.DataArray(data=interfaces[1:] - interfaces[0:-1],
+                                          dims='nVertLevels')
+        _, layerThickness = xarray.broadcast(xCell, layerThickness)
+        layerThickness = layerThickness.transpose('nCells', 'nVertLevels')
+        layerThickness = layerThickness.expand_dims(dim='Time', axis=0)
 
-    # Determine yOffset for 3rd crest in sin wave
-    yOffset = 0.5 * perturbationWidth * numpy.sin(
-        numpy.pi * (xCell - xPerturbMin) / (xPerturbMax - xPerturbMin))
+        normalVelocity = xarray.zeros_like(ds.xEdge)
+        normalVelocity, _ = xarray.broadcast(normalVelocity, ds.refBottomDepth)
+        normalVelocity = normalVelocity.transpose('nEdges', 'nVertLevels')
+        normalVelocity = normalVelocity.expand_dims(dim='Time', axis=0)
 
-    mask = numpy.logical_and(
-        numpy.logical_and(yCell >= yMid - yOffset - 0.5 * perturbationWidth,
-                          yCell <= yMid - yOffset + 0.5 * perturbationWidth),
-        numpy.logical_and(xCell >= xPerturbMin,
-                          xCell <= xPerturbMax))
+        ds['temperature'] = temperature
+        ds['salinity'] = salinity * xarray.ones_like(temperature)
+        ds['normalVelocity'] = normalVelocity
+        ds['layerThickness'] = layerThickness
+        ds['restingThickness'] = layerThickness
+        ds['bottomDepth'] = bottom_depth * xarray.ones_like(xCell)
+        ds['maxLevelCell'] = vert_levels * xarray.ones_like(xCell, dtype=int)
+        ds['fCell'] = coriolis_parameter * xarray.ones_like(xCell)
+        ds['fEdge'] = coriolis_parameter * xarray.ones_like(ds.xEdge)
+        ds['fVertex'] = coriolis_parameter * xarray.ones_like(ds.xVertex)
 
-    temperature = (temperature +
-                   mask * 0.3 * (1. - ((yCell - (yMid - yOffset)) /
-                                       (0.5 * perturbationWidth))))
-
-    temperature = temperature.expand_dims(dim='Time', axis=0)
-
-    layerThickness = xarray.DataArray(data=interfaces[1:] - interfaces[0:-1],
-                                      dims='nVertLevels')
-    _, layerThickness = xarray.broadcast(xCell, layerThickness)
-    layerThickness = layerThickness.transpose('nCells', 'nVertLevels')
-    layerThickness = layerThickness.expand_dims(dim='Time', axis=0)
-
-    normalVelocity = xarray.zeros_like(ds.xEdge)
-    normalVelocity, _ = xarray.broadcast(normalVelocity, ds.refBottomDepth)
-    normalVelocity = normalVelocity.transpose('nEdges', 'nVertLevels')
-    normalVelocity = normalVelocity.expand_dims(dim='Time', axis=0)
-
-    ds['temperature'] = temperature
-    ds['salinity'] = salinity * xarray.ones_like(temperature)
-    ds['normalVelocity'] = normalVelocity
-    ds['layerThickness'] = layerThickness
-    ds['restingThickness'] = layerThickness
-    ds['bottomDepth'] = bottom_depth * xarray.ones_like(xCell)
-    ds['maxLevelCell'] = vert_levels * xarray.ones_like(xCell, dtype=int)
-    ds['fCell'] = coriolis_parameter * xarray.ones_like(xCell)
-    ds['fEdge'] = coriolis_parameter * xarray.ones_like(ds.xEdge)
-    ds['fVertex'] = coriolis_parameter * xarray.ones_like(ds.xVertex)
-
-    write_netcdf(ds, 'ocean.nc')
+        write_netcdf(ds, 'ocean.nc')

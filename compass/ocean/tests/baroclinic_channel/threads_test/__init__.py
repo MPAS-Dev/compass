@@ -1,74 +1,64 @@
-from compass.testcase import set_testcase_subdir, add_step, run_steps
-from compass.ocean.tests.baroclinic_channel import initial_state, forward
+from compass.testcase import TestCase
+from compass.ocean.tests.baroclinic_channel.initial_state import InitialState
+from compass.ocean.tests.baroclinic_channel.forward import Forward
 from compass.ocean.tests import baroclinic_channel
 from compass.validate import compare_variables
 
 
-def collect(testcase):
+class ThreadsTest(TestCase):
     """
-    Update the dictionary of test case properties and add steps
+    A thread test case for the baroclinic channel test group, which makes sure
+    the model produces identical results with 1 and 2 threads.
 
-    Parameters
+    Attributes
     ----------
-    testcase : dict
-        A dictionary of properties of this test case, which can be updated
+    resolution : str
+        The resolution of the test case
     """
-    resolution = testcase['resolution']
-    testcase['description'] = \
-        'baroclinic channel {} thread test'.format(resolution)
 
-    subdir = '{}/{}'.format(resolution, testcase['name'])
-    set_testcase_subdir(testcase, subdir)
+    def __init__(self, test_group, resolution):
+        """
+        Create the test case
 
-    add_step(testcase, initial_state, resolution=resolution)
+        Parameters
+        ----------
+        test_group : compass.ocean.tests.baroclinic_channel.BaroclinicChannel
+            The test group that this test case belongs to
 
-    for threads in [1, 2]:
-        name = '{}thread'.format(threads)
-        add_step(testcase, forward, name=name, subdir=name, cores=4,
-                 threads=threads, resolution=resolution)
+        resolution : str
+            The resolution of the test case
+        """
+        name = 'threads_test'
+        self.resolution = resolution
+        subdir = '{}/{}'.format(resolution, name)
+        super().__init__(test_group=test_group, name=name,
+                         subdir=subdir)
 
+        InitialState(test_case=self, resolution=resolution)
 
-def configure(testcase, config):
-    """
-    Modify the configuration options for this test case.
+        for threads in [1, 2]:
+            name = '{}thread'.format(threads)
+            Forward(test_case=self, name=name, subdir=name, cores=4,
+                    threads=threads, resolution=resolution)
 
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case from the ``collect()``
-        function
+    def configure(self):
+        """
+        Modify the configuration options for this test case.
+        """
+        baroclinic_channel.configure(self.resolution, self.config)
 
-    config : configparser.ConfigParser
-        Configuration options for this test case, a combination of the defaults
-        for the machine, core and configuration
-    """
-    baroclinic_channel.configure(testcase, config)
+    def run(self):
+        """
+        Run each step of the test case
+        """
+        # run the steps
+        super().run()
 
-
-def run(testcase, test_suite, config, logger):
-    """
-    Run each step of the test case
-
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case from the ``collect()``
-        function
-
-    test_suite : dict
-        A dictionary of properties of the test suite
-
-    config : configparser.ConfigParser
-        Configuration options for this test case, a combination of the defaults
-        for the machine, core and configuration
-
-    logger : logging.Logger
-        A logger for output from the test case
-    """
-    run_steps(testcase, test_suite, config, logger)
-    variables = ['temperature', 'salinity', 'layerThickness', 'normalVelocity']
-    steps = testcase['steps_to_run']
-    if '1thread' in steps and '2thread' in steps:
-        compare_variables(variables, config, work_dir=testcase['work_dir'],
-                          filename1='1thread/output.nc',
-                          filename2='2thread/output.nc')
+        # perform validation
+        variables = ['temperature', 'salinity', 'layerThickness',
+                     'normalVelocity']
+        steps = self.steps_to_run
+        if '1thread' in steps and '2thread' in steps:
+            compare_variables(variables, self.config, work_dir=self.work_dir,
+                              filename1='1thread/output.nc',
+                              filename2='2thread/output.nc')

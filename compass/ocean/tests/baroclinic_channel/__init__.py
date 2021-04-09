@@ -1,41 +1,43 @@
-from compass.testcase import add_testcase
-from compass.ocean.tests.baroclinic_channel import decomp_test, default, \
-    restart_test, rpe_test, threads_test
+from compass.testgroup import TestGroup
+from compass.ocean.tests.baroclinic_channel.decomp_test import DecompTest
+from compass.ocean.tests.baroclinic_channel.default import Default
+from compass.ocean.tests.baroclinic_channel.restart_test import RestartTest
+from compass.ocean.tests.baroclinic_channel.rpe_test import RpeTest
+from compass.ocean.tests.baroclinic_channel.threads_test import ThreadsTest
 
 
-def collect():
+class BaroclinicChannel(TestGroup):
     """
-    Get a list of test cases in this configuration
-
-    Returns
-    -------
-    testcases : list
-        A list of tests within this configuration
+    A test group for baroclinic channel test cases
     """
-    testcases = list()
-    for resolution in ['1km', '4km', '10km']:
-        for test in [rpe_test]:
-            add_testcase(testcases, test, resolution=resolution)
-    for resolution in ['10km']:
-        for test in [decomp_test, default, restart_test, threads_test]:
-            add_testcase(testcases, test, resolution=resolution)
+    def __init__(self, mpas_core):
+        """
+        mpas_core : compass.MpasCore
+            the MPAS core that this test group belongs to
+        """
+        super().__init__(mpas_core=mpas_core, name='baroclinic_channel')
 
-    return testcases
+        for resolution in ['1km', '4km', '10km']:
+            RpeTest(test_group=self, resolution=resolution)
+        for resolution in ['10km']:
+            DecompTest(test_group=self, resolution=resolution)
+            Default(test_group=self, resolution=resolution)
+            RestartTest(test_group=self, resolution=resolution)
+            ThreadsTest(test_group=self, resolution=resolution)
 
 
-def configure(testcase, config):
+def configure(resolution, config):
     """
-    Modify the configuration options for this test case
+    Modify the configuration options for one of the baroclinic test cases
 
     Parameters
     ----------
-    testcase : dict
-        A dictionary of properties of this test case
+    resolution : str
+        The resolution of the test case
 
     config : configparser.ConfigParser
         Configuration options for this test case
     """
-    resolution = testcase['resolution']
     res_params = {'10km': {'nx': 16,
                            'ny': 50,
                            'dc': 10e3},

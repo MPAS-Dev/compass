@@ -3,77 +3,57 @@ from netCDF4 import Dataset
 import matplotlib.pyplot as plt
 import cmocean
 
-from compass.io import add_input_file, add_output_file
+from compass.step import Step
 
 
-def collect(testcase, step):
+class Analysis(Step):
     """
-    Update the dictionary of step properties
+    A step for plotting the results of a series of RPE runs in the baroclinic
+    channel test group
 
-    Parameters
+    Attributes
     ----------
-    testcase : dict
-        A dictionary of properties of this test case, which should not be
-        modified here
+    resolution : str
+        The resolution of the test case
 
-    step : dict
-        A dictionary of properties of this step, which can be updated
+    nus : list of float
+        A list of viscosities
     """
-    defaults = dict(cores=1, min_cores=1, max_memory=8000, max_disk=8000,
-                    threads=1)
-    for key, value in defaults.items():
-        step.setdefault(key, value)
+    def __init__(self, test_case, resolution, nus):
+        """
+        Update the dictionary of step properties
 
+        Parameters
+        ----------
+        test_case : compass.TestCase
+            The test case this step belongs to
 
-def setup(step, config):
-    """
-    Set up the test case in the work directory, including downloading any
-    dependencies
+        resolution : str
+            The resolution of the test case
 
-    Parameters
-    ----------
-    step : dict
-        A dictionary of properties of this step
+        nus : list of float
+            A list of viscosities
+        """
+        super().__init__(test_case=test_case, name='analysis')
+        self.resolution = resolution
+        self.nus = nus
 
-    config : configparser.ConfigParser
-        Configuration options for this test case
-    """
-    resolution = step['resolution']
-    nus = step['nus']
+        for index, nu in enumerate(nus):
+            self.add_input_file(
+                filename='output_{}.nc'.format(index+1),
+                target='../rpe_test_{}_nu_{}/output.nc'.format(index+1, nu))
 
-    for index, nu in enumerate(nus):
-        add_input_file(
-            step, filename='output_{}.nc'.format(index+1),
-            target='../rpe_test_{}_nu_{}/output.nc'.format(index+1, nu))
+        self.add_output_file(
+            filename='sections_baroclinic_channel_{}.png'.format(resolution))
 
-    add_output_file(
-        step, filename='sections_baroclinic_channel_{}.png'.format(resolution))
-
-
-def run(step, test_suite, config, logger):
-    """
-    Run this step of the testcase
-
-    Parameters
-    ----------
-    step : dict
-        A dictionary of properties of this step
-
-    test_suite : dict
-        A dictionary of properties of the test suite
-
-    config : configparser.ConfigParser
-        Configuration options for this test case
-
-    logger : logging.Logger
-        A logger for output from the step
-    """
-    filename = step['outputs'][0]
-    nus = step['nus']
-    section = config['baroclinic_channel']
-    nx = section.getint('nx')
-    ny = section.getint('ny')
-    _plot(nx, ny, filename, nus)
+    def run(self):
+        """
+        Run this step of the test case
+        """
+        section = self.config['baroclinic_channel']
+        nx = section.getint('nx')
+        ny = section.getint('ny')
+        _plot(nx, ny, self.outputs[0], self.nus)
 
 
 def _plot(nx, ny, filename, nus):
