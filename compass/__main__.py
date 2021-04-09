@@ -4,10 +4,7 @@ import sys
 import argparse
 
 import compass
-from compass.list import main as main_list
-from compass.setup import main as main_setup
-from compass.clean import main as main_clean
-from compass.suite import main as main_suite
+from compass import list, setup, clean, suite
 
 
 def main():
@@ -42,10 +39,10 @@ The available compass commands are:
 
     args = parser.parse_args(sys.argv[1:2])
 
-    commands = {'list': main_list,
-                'setup': main_setup,
-                'clean': main_clean,
-                'suite': main_suite}
+    commands = {'list': list.main,
+                'setup': setup.main,
+                'clean': clean.main,
+                'suite': suite.main}
     if args.command not in commands:
         print('Unrecognized command {}'.format(args.command))
         parser.print_help()
