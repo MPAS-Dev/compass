@@ -7,21 +7,15 @@ from mpas_tools.logging import check_call
 from compass.namelist import update
 
 
-def run_model(step, config, logger, update_pio=True, partition_graph=True,
+def run_model(step, update_pio=True, partition_graph=True,
               graph_file='graph.info', namelist=None, streams=None):
     """
     Run the model after determining the number of cores
 
     Parameters
     ----------
-    step : dict
-        A dictionary of properties of this step
-
-    config : configparser.ConfigParser
-        Configuration options for the test case
-
-    logger : logging.Logger
-        A logger for output from the step that is calling this function
+    step : compass.Step
+        a step
 
     update_pio : bool, optional
         Whether to modify the namelist so the number of PIO tasks and the
@@ -42,16 +36,18 @@ def run_model(step, config, logger, update_pio=True, partition_graph=True,
     streams : str, optional
         The name of the streams file, default is ``streams.<core>``
     """
-    core = step['core']
-    cores = step['cores']
-    threads = step['threads']
-    step_dir = step['work_dir']
+    mpas_core = step.mpas_core.name
+    cores = step.cores
+    threads = step.threads
+    step_dir = step.work_dir
+    config = step.config
+    logger = step.logger
 
     if namelist is None:
-        namelist = 'namelist.{}'.format(core)
+        namelist = 'namelist.{}'.format(mpas_core)
 
     if streams is None:
-        streams = 'streams.{}'.format(core)
+        streams = 'streams.{}'.format(mpas_core)
 
     if update_pio:
         update_namelist_pio(namelist, config, cores, step_dir)
