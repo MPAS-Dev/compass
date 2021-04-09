@@ -37,7 +37,7 @@ def compute_land_ice_pressure_and_draft(ssh, modify_mask, ref_density):
     return landIcePressure, landIceDraft
 
 
-def adjust_ssh(variable, iteration_count, step, config, logger):
+def adjust_ssh(variable, iteration_count, step):
     """
     Adjust the sea surface height or land-ice pressure to be dynamically
     consistent with one another.  A series of short model runs are performed,
@@ -51,17 +51,13 @@ def adjust_ssh(variable, iteration_count, step, config, logger):
     iteration_count : int
         The number of iterations of adjustment
 
-    step : dict
-        A dictionary of properties of this step
-
-    config : configparser.ConfigParser
-        Configuration options for this testcase
-
-    logger : logging.Logger
-        A logger for output from the step
+    step : compass.Step
+        the step for performing SSH or land-ice pressure adjustment
     """
-    cores = step['cores']
-    step_dir = step['work_dir']
+    cores = step.cores
+    step_dir = step.work_dir
+    config = step.config
+    logger = step.logger
 
     if variable not in ['ssh', 'landIcePressure']:
         raise ValueError("Unknown variable to modify: {}".format(variable))
@@ -76,8 +72,7 @@ def adjust_ssh(variable, iteration_count, step, config, logger):
         symlink('adjusting_init{}.nc'.format(iterIndex), 'adjusting_init.nc')
 
         logger.info("   * Running forward model")
-        run_model(step, config, logger, update_pio=False,
-                  partition_graph=False)
+        run_model(step, update_pio=False, partition_graph=False)
         logger.info("   - Complete")
 
         logger.info("   * Updating SSH or land-ice pressure")

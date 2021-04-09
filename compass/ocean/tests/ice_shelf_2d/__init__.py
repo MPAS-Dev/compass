@@ -1,39 +1,40 @@
-from compass.ocean.tests.ice_shelf_2d import default, restart_test
 from compass.config import add_config
-from compass.testcase import add_testcase
+from compass.testgroup import TestGroup
+from compass.ocean.tests.ice_shelf_2d.default import Default
+from compass.ocean.tests.ice_shelf_2d.restart_test import RestartTest
 
 
-def collect():
+class IceShelf2d(TestGroup):
     """
-    Get a list of test cases in this configuration
-
-    Returns
-    -------
-    testcases : list
-        A list of tests within this configuration
+    A test group for ice-shelf 2D test cases
     """
-    testcases = list()
-    for resolution in ['5km']:
-        for test in [default, restart_test]:
-            add_testcase(testcases, test, resolution=resolution)
+    def __init__(self, mpas_core):
+        """
+        mpas_core : compass.MpasCore
+            the MPAS core that this test group belongs to
+        """
+        super().__init__(mpas_core=mpas_core, name='ice_shelf_2d')
 
-    return testcases
+        for resolution in ['5km']:
+            Default(test_group=self, resolution=resolution)
+            RestartTest(test_group=self, resolution=resolution)
 
 
-def configure(testcase, config):
+def configure(name, resolution, config):
     """
     Modify the configuration options for this test case
 
     Parameters
     ----------
-    testcase : dict
-        A dictionary of properties of this test case
+    name : str
+        the name of the test case
+
+    resolution : str
+        The resolution of the test case
 
     config : configparser.ConfigParser
         Configuration options for this test case
     """
-    resolution = testcase['resolution']
-    name = testcase['name']
     res_params = {'5km': {'nx': 10, 'ny': 44, 'dc': 5e3}}
 
     if resolution not in res_params:

@@ -1,78 +1,73 @@
-from compass.testcase import set_testcase_subdir, add_step, run_steps
-from compass.ocean.tests.ice_shelf_2d import initial_state, ssh_adjustment,\
-    forward
+from compass.testcase import TestCase
+from compass.ocean.tests.ice_shelf_2d.initial_state import InitialState
+from compass.ocean.tests.ice_shelf_2d.ssh_adjustment import SshAdjustment
+from compass.ocean.tests.ice_shelf_2d.forward import Forward
 from compass.ocean.tests import ice_shelf_2d
 from compass.validate import compare_variables
 
 
-def collect(testcase):
+class Default(TestCase):
     """
-    Update the dictionary of test case properties and add steps
+    The default ice-shelf 2D test case, which performs a short forward run with
+    the z-star vertical coordinate and with 15 iterations of adjustment to make
+    the pressure from the weight of the ice shelf match the sea-surface height
 
-    Parameters
+    Attributes
     ----------
-    testcase : dict
-        A dictionary of properties of this test case, which can be updated
+    resolution : str
+        The horizontal resolution of the test case
     """
-    resolution = testcase['resolution']
-    testcase['description'] = '2D ice-shelf {} default test'.format(resolution)
 
-    set_testcase_subdir(testcase, '{}/{}'.format(resolution, testcase['name']))
+    def __init__(self, test_group, resolution):
+        """
+        Create the test case
 
-    add_step(testcase, initial_state, resolution=resolution)
-    add_step(testcase, ssh_adjustment, resolution=resolution, cores=4,
-             threads=1)
-    add_step(testcase, forward, resolution=resolution, cores=4, threads=1,
-             with_frazil=True)
+        Parameters
+        ----------
+        test_group : compass.ocean.tests.ice_shelf_2d.IceShelf2d
+            The test group that this test case belongs to
 
+        resolution : str
+            The resolution of the test case
+        """
+        name = 'default'
+        self.resolution = resolution
+        subdir = '{}/{}'.format(resolution, name)
+        super().__init__(test_group=test_group, name=name,
+                         subdir=subdir)
 
-def configure(testcase, config):
-    """
-    Modify the configuration options for this test case
+        InitialState(test_case=self, resolution=resolution)
+        SshAdjustment(test_case=self,  cores=4, threads=1)
+        Forward(test_case=self, cores=4, threads=1, resolution=resolution,
+                with_frazil=True)
 
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case
+    def configure(self):
+        """
+        Modify the configuration options for this test case.
+        """
+        ice_shelf_2d.configure(self.name, self.resolution, self.config)
 
-    config : configparser.ConfigParser
-        Configuration options for this test case
-    """
-    ice_shelf_2d.configure(testcase, config)
+    def run(self):
+        """
+        Run each step of the test case
+        """
+        # run the steps
+        super().run()
 
+        # perform validation
+        variables = ['temperature', 'salinity', 'layerThickness',
+                     'normalVelocity']
+        compare_variables(variables, self.config, work_dir=self.work_dir,
+                          filename1='forward/output.nc')
 
-def run(testcase, test_suite, config, logger):
-    """
-    Run each step of the testcase
-
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case
-
-    test_suite : dict
-        A dictionary of properties of the test suite
-
-    config : configparser.ConfigParser
-        Configuration options for this test case
-
-    logger : logging.Logger
-        A logger for output from the test case
-    """
-    run_steps(testcase, test_suite, config, logger)
-
-    variables = ['temperature', 'salinity', 'layerThickness', 'normalVelocity']
-    compare_variables(variables, config, work_dir=testcase['work_dir'],
-                      filename1='forward/output.nc')
-
-    variables = ['ssh', 'landIcePressure', 'landIceDraft', 'landIceFraction',
-                 'landIceMask', 'landIceFrictionVelocity', 'topDrag',
-                 'topDragMagnitude', 'landIceFreshwaterFlux',
-                 'landIceHeatFlux', 'heatFluxToLandIce',
-                 'landIceBoundaryLayerTemperature',
-                 'landIceBoundaryLayerSalinity', 'landIceHeatTransferVelocity',
-                 'landIceSaltTransferVelocity', 'landIceInterfaceTemperature',
-                 'landIceInterfaceSalinity', 'accumulatedLandIceMass',
-                 'accumulatedLandIceHeat']
-    compare_variables(variables, config, work_dir=testcase['work_dir'],
-                      filename1='forward/land_ice_fluxes.nc')
+        variables = \
+            ['ssh', 'landIcePressure', 'landIceDraft', 'landIceFraction',
+             'landIceMask', 'landIceFrictionVelocity', 'topDrag',
+             'topDragMagnitude', 'landIceFreshwaterFlux',
+             'landIceHeatFlux', 'heatFluxToLandIce',
+             'landIceBoundaryLayerTemperature', 'landIceBoundaryLayerSalinity',
+             'landIceHeatTransferVelocity', 'landIceSaltTransferVelocity',
+             'landIceInterfaceTemperature', 'landIceInterfaceSalinity',
+             'accumulatedLandIceMass', 'accumulatedLandIceHeat']
+        compare_variables(variables, self.config, work_dir=self.work_dir,
+                          filename1='forward/land_ice_fluxes.nc')

@@ -1,104 +1,100 @@
-from compass.testcase import set_testcase_subdir, add_step, run_steps
-from compass.ocean.tests.ice_shelf_2d import initial_state, ssh_adjustment, \
-    forward
+from compass.testcase import TestCase
+from compass.ocean.tests.ice_shelf_2d.initial_state import InitialState
+from compass.ocean.tests.ice_shelf_2d.ssh_adjustment import SshAdjustment
+from compass.ocean.tests.ice_shelf_2d.forward import Forward
 from compass.ocean.tests import ice_shelf_2d
 from compass.validate import compare_variables
-from compass.namelist import add_namelist_file
-from compass.streams import add_streams_file
 
 
-def collect(testcase):
+class RestartTest(TestCase):
     """
-    Update the dictionary of test case properties and add steps
+    A restart test case for the ice-shelf 2D test case test group, which makes
+    sure the model produces identical results with one longer run and two
+    shorter runs with a restart in between.
 
-    Parameters
+    Attributes
     ----------
-    testcase : dict
-        A dictionary of properties of this test case, which can be updated
+    resolution : str
+        The resolution of the test case
     """
-    resolution = testcase['resolution']
-    testcase['description'] = \
-        '2D ice-shelf {} restart test with frazil'.format(resolution)
 
-    set_testcase_subdir(testcase, '{}/{}'.format(resolution, testcase['name']))
+    def __init__(self, test_group, resolution):
+        """
+        Create the test case
 
-    add_step(testcase, initial_state, resolution=resolution)
-    add_step(testcase, ssh_adjustment, resolution=resolution, cores=4,
-             threads=1)
+        Parameters
+        ----------
+        test_group : compass.ocean.tests.ice_shelf_2d.IceShelf2d
+            The test group that this test case belongs to
 
-    module = __name__
-    for part in ['full', 'restart']:
-        name = '{}_run'.format(part)
-        step = add_step(testcase, forward, name=name, subdir=name,
-                        resolution=resolution, cores=4, threads=1,
-                        with_frazil=True)
-        add_namelist_file(step, module, 'namelist.{}'.format(part))
-        add_streams_file(step, module, 'streams.{}'.format(part))
+        resolution : str
+            The resolution of the test case
+        """
+        name = 'restart_test'
+        self.resolution = resolution
+        subdir = '{}/{}'.format(resolution, name)
+        super().__init__(test_group=test_group, name=name,
+                         subdir=subdir)
 
+        InitialState(test_case=self, resolution=resolution)
+        SshAdjustment(test_case=self, cores=4, threads=1)
 
-def configure(testcase, config):
-    """
-    Modify the configuration options for this test case
+        for part in ['full', 'restart']:
+            name = '{}_run'.format(part)
+            step = Forward(test_case=self, name=name, subdir=name, cores=4,
+                           threads=1, resolution=resolution, with_frazil=True)
 
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case
+            step.add_namelist_file(
+                'compass.ocean.tests.ice_shelf_2d.restart_test',
+                'namelist.{}'.format(part))
+            step.add_streams_file(
+                'compass.ocean.tests.ice_shelf_2d.restart_test',
+                'streams.{}'.format(part))
 
-    config : configparser.ConfigParser
-        Configuration options for this test case
-    """
-    ice_shelf_2d.configure(testcase, config)
+    def configure(self):
+        """
+        Modify the configuration options for this test case.
+        """
+        ice_shelf_2d.configure(self.name, self.resolution, self.config)
 
+    def run(self):
+        """
+        Run each step of the test case
+        """
+        # run the steps
+        super().run()
 
-def run(testcase, test_suite, config, logger):
-    """
-    Run each step of the testcase
+        # perform validation
+        steps = self.steps_to_run
+        if 'full_run' in steps and 'restart_run' in steps:
+            variables = ['temperature', 'salinity', 'layerThickness',
+                         'normalVelocity']
+            compare_variables(variables, self.config, work_dir=self.work_dir,
+                              filename1='full_run/output.nc',
+                              filename2='restart_run/output.nc')
 
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case
+            variables = ['ssh', 'landIcePressure', 'landIceDraft',
+                         'landIceFraction',
+                         'landIceMask', 'landIceFrictionVelocity', 'topDrag',
+                         'topDragMagnitude', 'landIceFreshwaterFlux',
+                         'landIceHeatFlux', 'heatFluxToLandIce',
+                         'landIceBoundaryLayerTemperature',
+                         'landIceBoundaryLayerSalinity',
+                         'landIceHeatTransferVelocity',
+                         'landIceSaltTransferVelocity',
+                         'landIceInterfaceTemperature',
+                         'landIceInterfaceSalinity', 'accumulatedLandIceMass',
+                         'accumulatedLandIceHeat']
+            compare_variables(variables, self.config, work_dir=self.work_dir,
+                              filename1='full_run/land_ice_fluxes.nc',
+                              filename2='restart_run/land_ice_fluxes.nc')
 
-    test_suite : dict
-        A dictionary of properties of the test suite
-
-    config : configparser.ConfigParser
-        Configuration options for this test case
-
-    logger : logging.Logger
-        A logger for output from the test case
-    """
-    run_steps(testcase, test_suite, config, logger)
-    variables = ['temperature', 'salinity', 'layerThickness', 'normalVelocity']
-
-    steps = testcase['steps_to_run']
-    if 'full_run' in steps and 'restart_run' in steps:
-        compare_variables(variables, config, work_dir=testcase['work_dir'],
-                          filename1='full_run/output.nc',
-                          filename2='restart_run/output.nc')
-
-        variables = ['ssh', 'landIcePressure', 'landIceDraft',
-                     'landIceFraction',
-                     'landIceMask', 'landIceFrictionVelocity', 'topDrag',
-                     'topDragMagnitude', 'landIceFreshwaterFlux',
-                     'landIceHeatFlux', 'heatFluxToLandIce',
-                     'landIceBoundaryLayerTemperature',
-                     'landIceBoundaryLayerSalinity',
-                     'landIceHeatTransferVelocity',
-                     'landIceSaltTransferVelocity',
-                     'landIceInterfaceTemperature',
-                     'landIceInterfaceSalinity', 'accumulatedLandIceMass',
-                     'accumulatedLandIceHeat']
-        compare_variables(variables, config, work_dir=testcase['work_dir'],
-                          filename1='full_run/land_ice_fluxes.nc',
-                          filename2='restart_run/land_ice_fluxes.nc')
-
-        variables = ['accumulatedFrazilIceMass',
-                     'accumulatedFrazilIceSalinity',
-                     'seaIceEnergy', 'frazilLayerThicknessTendency',
-                     'frazilTemperatureTendency', 'frazilSalinityTendency',
-                     'frazilSurfacePressure', 'accumulatedLandIceFrazilMass']
-        compare_variables(variables, config, work_dir=testcase['work_dir'],
-                          filename1='full_run/frazil.nc',
-                          filename2='restart_run/frazil.nc')
+            variables = ['accumulatedFrazilIceMass',
+                         'accumulatedFrazilIceSalinity',
+                         'seaIceEnergy', 'frazilLayerThicknessTendency',
+                         'frazilTemperatureTendency', 'frazilSalinityTendency',
+                         'frazilSurfacePressure',
+                         'accumulatedLandIceFrazilMass']
+            compare_variables(variables, self.config, work_dir=self.work_dir,
+                              filename1='full_run/frazil.nc',
+                              filename2='restart_run/frazil.nc')
