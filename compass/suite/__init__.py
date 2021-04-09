@@ -283,8 +283,8 @@ def _get_required_cores(test_cases):
 
     max_cores = 0
     max_of_min_cores = 0
-    for test_name, test_case in test_cases.items():
-        for step_name, step in test_case.steps.items():
+    for test_case in test_cases.values():
+        for step in test_case.steps.values():
             max_cores = max(max_cores, step.cores)
             max_of_min_cores = max(max_of_min_cores, step.min_cores)
 

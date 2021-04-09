@@ -85,12 +85,11 @@ class TestCase:
         self.name = name
         self.mpas_core = test_group.mpas_core
         self.test_group = test_group
-        test_group.add_test_case(self)
-
         if subdir is not None:
             self.subdir = subdir
         else:
             self.subdir = name
+        test_group.add_test_case(self)
 
         self.path = os.path.join(self.mpas_core.name, test_group.name,
                                  self.subdir)

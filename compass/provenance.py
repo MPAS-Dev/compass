@@ -62,8 +62,12 @@ def write(work_dir, test_cases):
             key_string = '{}: '.format(key).ljust(15)
             lines.append('{}{}{}'.format(prefix, key_string, to_print[key]))
         lines.append('{}steps:'.format(prefix))
-        for step in test_case.steps:
-            lines.append('{} - {}'.format(prefix, step))
+        for step in test_case.steps.values():
+            if step.name == step.subdir:
+                lines.append('{} - {}'.format(prefix, step.name))
+            else:
+                lines.append('{} - {}: {}'.format(prefix, step.name,
+                                                  step.subdir))
         lines.append('')
         print_string = '\n'.join(lines)
 

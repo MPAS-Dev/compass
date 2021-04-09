@@ -45,4 +45,4 @@ class TestGroup:
         test_case : compass.TestCase
             The test case to add
         """
-        self.test_cases[test_case.name] = test_case
+        self.test_cases[test_case.subdir] = test_case

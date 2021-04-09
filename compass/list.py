@@ -63,8 +63,12 @@ def list_cases(test_expr=None, number=None, verbose=False):
                     if print_number:
                         prefix = '      '
                 lines.append('{}steps:'.format(prefix))
-                for step in test_case.steps.keys():
-                    lines.append('{} - {}'.format(prefix, step))
+                for step in test_case.steps.values():
+                    if step.name == step.subdir:
+                        lines.append('{} - {}'.format(prefix, step.name))
+                    else:
+                        lines.append('{} - {}: {}'.format(prefix, step.name,
+                                                          step.subdir))
                 lines.append('')
                 print_string = '\n'.join(lines)
             else:

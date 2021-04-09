@@ -156,6 +156,10 @@ class Step:
         self.test_case = test_case
         self.mpas_core = test_case.mpas_core
         self.test_group = test_case.test_group
+        if subdir is not None:
+            self.subdir = subdir
+        else:
+            self.subdir = name
         test_case.add_step(self, run_by_default=run_by_default)
 
         self.cores = cores
@@ -163,11 +167,6 @@ class Step:
         self.threads = threads
         self.max_memory = max_memory
         self.max_disk = max_disk
-
-        if subdir is not None:
-            self.subdir = subdir
-        else:
-            self.subdir = name
 
         self.path = os.path.join(self.mpas_core.name, self.test_group.name,
                                  test_case.subdir, self.subdir)
