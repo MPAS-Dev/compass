@@ -16,17 +16,23 @@ class TestGroup:
     mpas_core
     """
 
-    def __init__(self, name):
+    def __init__(self, mpas_core, name):
         """
         Create a new test group
 
         Parameters
         ----------
+        mpas_core : compass.MpasCore
+            the MPAS core that this test group belongs to
+
         name : str
             the name of the test group
         """
         self.name = name
-        self.mpas_core = None
+        self.mpas_core = mpas_core
+        mpas_core.add_test_group(self)
+
+        # test cases will be added with calls to add_test_case()
         self.test_cases = dict()
 
     def add_test_case(self, test_case):
@@ -39,6 +45,3 @@ class TestGroup:
             The test case to add
         """
         self.test_cases[test_case.name] = test_case
-        test_case.test_group = self
-        for step in test_case.steps.values():
-            step.test_group = self

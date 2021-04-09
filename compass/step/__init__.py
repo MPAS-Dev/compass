@@ -23,13 +23,17 @@ class Step:
         the name of the test case
     """
 
-    def __init__(self, name, subdir=None, cores=1, min_cores=1,
-                 threads=1, max_memory=1000, max_disk=1000):
+    def __init__(self, test_case, name, subdir=None, cores=1, min_cores=1,
+                 threads=1, max_memory=1000, max_disk=1000,
+                 run_by_default=True):
         """
         Create a new test case
 
         Parameters
         ----------
+        test_case : compass.TestCase
+            The test case this step belongs to
+
         name : str
             the name of the test case
 
@@ -57,11 +61,17 @@ class Step:
             the amount of disk space that the step is allowed to use in MB.
             This is currently just a placeholder for later use with task
             parallelism
+
+        run_by_default : bool, optional
+            Whether to add this step to the list of steps to run when the
+            test case gets run.  If ``run_by_default=False``, this step is
+            optional and users would need to run it manually.
         """
         self.name = name
-        self.mpas_core = None
-        self.test_group = None
-        self.test_case = None
+        self.test_case = test_case
+        self.mpas_core = test_case.mpas_core
+        self.test_group = test_case.test_group
+        test_case.add_step(self, run_by_default=run_by_default)
 
         self.cores = cores
         self.min_cores = min_cores
@@ -69,26 +79,29 @@ class Step:
         self.max_memory = max_memory
         self.max_disk = max_disk
 
-        self.inputs = list()
-        self.outputs = list()
-
-        self.namelist_data = dict()
-        self.streams_data = dict()
-
-        self.config = None
-        self.config_filename = None
-
-        self.logger = None
-        self.log_filename = None
-
         if subdir is not None:
             self.subdir = subdir
         else:
             self.subdir = name
 
-        self.path = None
+        self.path = os.path.join(self.mpas_core.name, self.test_group.name,
+                                 test_case.subdir, self.subdir)
+
+        # child steps (or test cases) will add to these
+        self.inputs = list()
+        self.outputs = list()
+        self.namelist_data = dict()
+        self.streams_data = dict()
+
+        # these will be set later during setup
+        self.config = None
+        self.config_filename = None
         self.work_dir = None
         self.base_work_dir = None
+
+        # these will be set before running the step
+        self.logger = None
+        self.log_filename = None
 
     def setup(self):
         """
@@ -177,8 +190,9 @@ class Step:
     def add_namelist_file(self, package, namelist, out_name=None,
                           mode='forward'):
         """
-        Add a namelist file to the step to be parsed later with a call to
-        :py:func:`compass.namelist.generate_namelist()`.
+        Add a file with updates to namelist options to the step to be parsed
+        when generating a complete namelist file if and when the step gets set
+        up.
 
         Parameters
         ----------
@@ -196,7 +210,7 @@ class Step:
             The mode that the model will run in
         """
         if out_name is None:
-            out_name = 'namelist.{}'.format(self.mpas_core)
+            out_name = 'namelist.{}'.format(self.mpas_core.name)
 
         if out_name not in self.namelist_data:
             self.namelist_data[out_name] = list()
@@ -208,7 +222,8 @@ class Step:
 
     def add_namelist_options(self, options, out_name=None, mode='forward'):
         """
-        Parse the replacement namelist options from the given file
+        Add the namelist replacements to be parsed when generating a namelist
+        file if and when the step gets set up.
 
         Parameters
         ----------
@@ -224,7 +239,7 @@ class Step:
             The mode that the model will run in
         """
         if out_name is None:
-            out_name = 'namelist.{}'.format(self.mpas_core)
+            out_name = 'namelist.{}'.format(self.mpas_core.name)
 
         if out_name not in self.namelist_data:
             self.namelist_data[out_name] = list()
@@ -236,8 +251,8 @@ class Step:
     def add_streams_file(self, package, streams, template_replacements=None,
                          out_name=None, mode='forward'):
         """
-        Add a streams file to the step to be parsed later with a call to
-        :py:func:`compass.streams.generate_streams()`.
+        Add a streams file to the step to be parsed when generating a complete
+        streams file if and when the step gets set up.
 
         Parameters
         ----------
@@ -259,7 +274,7 @@ class Step:
             The mode that the model will run in
         """
         if out_name is None:
-            out_name = 'streams.{}'.format(self.mpas_core)
+            out_name = 'streams.{}'.format(self.mpas_core.name)
 
         if out_name not in self.streams_data:
             self.streams_data[out_name] = list()
@@ -301,7 +316,7 @@ class Step:
         files, making symlinks, and converting relative paths to absolute
         paths.
        """
-        mpas_core = self.mpas_core
+        mpas_core = self.mpas_core.name
         step_dir = self.work_dir
         config = self.config
 

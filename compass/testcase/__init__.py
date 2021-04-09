@@ -48,12 +48,15 @@ class TestCase:
     log_filename
     """
 
-    def __init__(self, name, subdir=None):
+    def __init__(self, test_group, name, subdir=None):
         """
         Create a new test case
 
         Parameters
         ----------
+        test_group : compass.TestGroup
+            the test group that this test case belongs to
+
         name : str
             the name of the test case
 
@@ -61,46 +64,32 @@ class TestCase:
             the subdirectory for the test case.  The default is ``name``
         """
         self.name = name
-        self.mpas_core = None
-        self.test_group = None
-
-        self.steps = dict()
-        self.steps_to_run = list()
-
-        self.config = None
-        self.config_filename = None
-
-        self.logger = None
-        self.log_filename = None
+        self.mpas_core = test_group.mpas_core
+        self.test_group = test_group
+        test_group.add_test_case(self)
 
         if subdir is not None:
             self.subdir = subdir
         else:
             self.subdir = name
 
-        self.path = None
-        self.new_step_log_file = True
+        self.path = os.path.join(self.mpas_core.name, test_group.name,
+                                 self.subdir)
+
+        # steps will be added by calling add_step()
+        self.steps = dict()
+        self.steps_to_run = list()
+
+        # these will be set during setup
+        self.config = None
+        self.config_filename = None
         self.work_dir = None
         self.base_work_dir = None
 
-    def add_step(self, step, run_by_default=True):
-        """
-        Add a step to the test case
-
-        Parameters
-        ----------
-        step : compass.Step
-            The step to add
-
-        run_by_default : bool, optional
-            Whether to add this step to the list of steps to run when the
-            ``run()`` method gets called.  If ``run_by_default=False``, users
-            would need to run this step manually.
-        """
-        self.steps[step.name] = step
-        step.test_case = self
-        if run_by_default:
-            self.steps_to_run.append(step.name)
+        # these will be set when running the test case
+        self.new_step_log_file = True
+        self.logger = None
+        self.log_filename = None
 
     def configure(self):
         """
@@ -147,6 +136,24 @@ class TestCase:
                 logger.info('     Complete')
 
             os.chdir(cwd)
+
+    def add_step(self, step, run_by_default=True):
+        """
+        Add a step to the test case
+
+        Parameters
+        ----------
+        step : compass.Step
+            The step to add
+
+        run_by_default : bool, optional
+            Whether to add this step to the list of steps to run when the
+            ``run()`` method gets called.  If ``run_by_default=False``, users
+            would need to run this step manually.
+        """
+        self.steps[step.name] = step
+        if run_by_default:
+            self.steps_to_run.append(step.name)
 
     def generate(self):
         """
