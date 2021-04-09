@@ -21,6 +21,91 @@ class Step:
     ----------
     name : str
         the name of the test case
+
+    test_case : compass.TestCase
+        The test case this step belongs to
+
+    test_group : compass.TestGroup
+        The test group the test case belongs to
+
+    mpas_core : compass.MpasCore
+        The MPAS core the test group belongs to
+
+    subdir : str
+        the subdirectory for the step
+
+    path : str
+        the path within the base work directory of the step, made up of
+        ``mpas_core``, ``test_group``, the test case's ``subdir`` and the
+        step's ``subdir``
+
+    cores : int
+        the number of cores the step would ideally use.  If fewer cores
+        are available on the system, the step will run on all available
+        cores as long as this is not below ``min_cores``
+
+    min_cores : int
+        the number of cores the step requires.  If the system has fewer
+        than this number of cores, the step will fail
+
+    threads : int
+        the number of threads the step will use
+
+    max_memory : int
+        the amount of memory that the step is allowed to use in MB.
+        This is currently just a placeholder for later use with task
+        parallelism
+
+    max_disk : int
+        the amount of disk space that the step is allowed to use in MB.
+        This is currently just a placeholder for later use with task
+        parallelism
+
+    input_data : list of dict
+        a list of dict used to define input files typically to be
+        downloaded to a database and/or symlinked in the work directory
+
+    inputs : list of str
+        a list of absolute paths of input files produced from ``input_data`` as
+        part of setting up the step.  These input files must all exist at run
+        time or the step will raise an exception
+
+    outputs : list of str
+        a list of absolute paths of output files produced by this step and
+        available as inputs to other test cases and steps.  These files must
+        exist after the test has run or an exception will be raised
+
+    namelist_data : dict
+        a dictionary used internally to keep track of updates to the default
+        namelist options from calls to
+        :py:meth:`compass.Step.add_namelist_file`
+        and :py:meth:`compass.Step.add_namelist_options`
+
+    streams_data : dict
+        a dictionary used internally to keep track of updates to the default
+        streams from calls to :py:meth:`compass.Step.add_streams_file`
+
+    config : configparser.ConfigParser
+        Configuration options for this test case, a combination of the defaults
+        for the machine, core and configuration
+
+    config_filename : str
+        The local name of the config file that ``config`` has been written to
+        during setup and read from during run
+
+    work_dir : str
+        The step's work directory, defined during setup as the combination
+        of ``base_work_dir`` and ``path``
+
+    base_work_dir : str
+        The base work directory
+
+    logger : logging.Logger
+        A logger for output from the step
+
+    log_filename : str
+        At run time, the name of a log file where output/errors from the step
+        are being logged, or ``None`` if output is to stdout/stderr
     """
 
     def __init__(self, test_case, name, subdir=None, cores=1, min_cores=1,
@@ -88,6 +173,7 @@ class Step:
                                  test_case.subdir, self.subdir)
 
         # child steps (or test cases) will add to these
+        self.input_data = list()
         self.inputs = list()
         self.outputs = list()
         self.namelist_data = dict()
@@ -163,8 +249,8 @@ class Step:
                                  'required.')
             filename = os.path.basename(target)
 
-        self.inputs.append(dict(filename=filename, target=target,
-                                database=database, url=url))
+        self.input_data.append(dict(filename=filename, target=target,
+                                    database=database, url=url))
 
     def add_output_file(self, filename):
         """
@@ -321,7 +407,7 @@ class Step:
         config = self.config
 
         inputs = []
-        for entry in self.inputs:
+        for entry in self.input_data:
             filename = entry['filename']
             target = entry['target']
             database = entry['database']

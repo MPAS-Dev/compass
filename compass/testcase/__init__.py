@@ -17,9 +17,11 @@ class TestCase:
     name : str
         the name of the test case
 
-    mpas_core
+    test_group : compass.TestGroup
+        The test group the test case belongs to
 
-    test_group
+    mpas_core : compass.MpasCore
+        The MPAS core the test group belongs to
 
     steps : dict
         A dictionary of steps in the test case with step names as keys
@@ -30,22 +32,39 @@ class TestCase:
         those tests that should run by default if some steps are optional and
         should be run manually by the user.
 
+    subdir : str
+        the subdirectory for the test case
+
+    path : str
+        the path within the base work directory of the test case, made up of
+        ``mpas_core``, ``test_group``, and the test case's ``subdir``
+
     config : configparser.ConfigParser
-        Configuration options for this test case, a combination of the
-        defaults for the machine, MPAS core, test group, and any added in
-        this test case's ``configure()`` method
+        Configuration options for this test case, a combination of the defaults
+        for the machine, core and configuration
+
+    config_filename : str
+        The local name of the config file that ``config`` has been written to
+        during setup and read from during run
+
+    work_dir : str
+        The test case's work directory, defined during setup as the combination
+        of ``base_work_dir`` and ``path``
+
+    base_work_dir : str
+        The base work directory
 
     logger : logging.Logger
-        A logger for output from the test case (either to stdout/stderr or to
-        a log file)
+        A logger for output from the test case
 
-    path
+    log_filename : str
+        At run time, the name of a log file where output/errors from the test
+        case are being logged, or ``None`` if output is to stdout/stderr
 
-    subdir
-
-    new_step_log_file
-
-    log_filename
+    new_step_log_file : bool
+        Whether to create a new log file for each step or to log output to a
+        common log file for the whole test case.  The latter is used when
+        running the test case as part of a test suite
     """
 
     def __init__(self, test_group, name, subdir=None):

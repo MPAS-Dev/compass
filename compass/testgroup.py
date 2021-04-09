@@ -9,11 +9,12 @@ class TestGroup:
     name : str
         the name of the test group
 
+    mpas_core : compass.MpasCore
+        the MPAS core that this test group belongs to
+
     test_cases : dict
         A dictionary of test cases in the test group with the names of the
         test cases as keys
-
-    mpas_core
     """
 
     def __init__(self, mpas_core, name):
