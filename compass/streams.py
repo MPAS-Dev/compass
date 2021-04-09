@@ -4,110 +4,7 @@ from importlib import resources
 from jinja2 import Template
 
 
-def add_streams_file(step, package, streams, template_replacements=None,
-                     out_name=None):
-    """
-    Add a streams file to the step to be parsed later with a call to
-    :py:func:`compass.streams.generate_streams()`.
-
-    Parameters
-    ----------
-    step : dict
-        A dictionary of properties of this step
-
-    package : Package
-        The package name or module object that contains the streams file
-
-    streams : str
-        The name of the streams file to read from
-
-    template_replacements : dict, optional
-        A dictionary of replacements, in which case ``streams`` must be a
-        Jinja2 template to be rendered with these replacements
-
-    out_name : str, optional
-        The name of the streams file to write out, ``streams.<core>`` by
-        default
-    """
-    if 'streams_data' not in step:
-        step['streams_data'] = dict()
-    if out_name is None:
-        out_name = 'streams.{}'.format(step['core'])
-
-    if out_name not in step['streams_data']:
-        step['streams_data'][out_name] = list()
-
-    step['streams_data'][out_name].append(
-        dict(package=package, streams=streams,
-             replacements=template_replacements))
-
-
-def generate_streams(step, config, out_name=None, mode='forward'):
-    """
-    Writes out a streams file in the work directory with new values given
-    by parsing the files and dictionaries in the step's ``streams_data``.
-
-    Parameters
-    ----------
-    step : dict
-        A dictionary of properties of this step from the ``collect()``
-        function, used to get the work directory and the core that the test
-        case belongs to.
-
-    config : configparser.ConfigParser
-        Configuration options used determine the name of the streams file and
-        the default streams and options
-
-    out_name : str, optional
-        The name of the streams file (without a path), with a default value of
-        ``streams.<core>``
-
-    mode : {'init', 'forward'}, optional
-        The mode that the model will run in
-    """
-
-    step_work_dir = step['work_dir']
-    core = step['core']
-    if out_name is None:
-        out_name = 'streams.{}'.format(core)
-
-    if out_name not in step['streams_data']:
-        raise ValueError("It doesn't look like there are streams files for the"
-                         " output file name {}".format(out_name))
-
-    # generate the streams file
-    tree = None
-
-    for entry in step['streams_data'][out_name]:
-        tree = _read(package=entry['package'],
-                     streams_filename=entry['streams'],
-                     replacements=entry['replacements'], tree=tree)
-
-    defaults_filename = config.get('streams', mode)
-    out_filename = '{}/{}'.format(step_work_dir, out_name)
-
-    defaults_tree = etree.parse(defaults_filename)
-
-    defaults = next(defaults_tree.iter('streams'))
-    streams = next(tree.iter('streams'))
-
-    for stream in streams:
-        _update_defaults(stream, defaults)
-
-    # remove any streams that aren't requested
-    for default in defaults:
-        found = False
-        for stream in streams:
-            if stream.attrib['name'] == default.attrib['name']:
-                found = True
-                break
-        if not found:
-            defaults.remove(default)
-
-    _write(defaults_tree, out_filename)
-
-
-def _read(package, streams_filename, tree=None, replacements=None):
+def read(package, streams_filename, tree=None, replacements=None):
     """
     Parse the given streams file
 
@@ -145,7 +42,7 @@ def _read(package, streams_filename, tree=None, replacements=None):
     return tree
 
 
-def _write(streams, out_filename):
+def write(streams, out_filename):
     """ write the streams XML data to the file """
 
     with open(out_filename, 'w') as stream_file:
@@ -202,6 +99,42 @@ def _write(streams, out_filename):
         stream_file.write('</streams>\n')
 
 
+def update_defaults(new_child, defaults):
+    """
+    Update a stream or its children (sub-stream, var, etc.) starting from the
+    defaults or add it if it's new.
+    """
+    if 'name' not in new_child.attrib:
+        return
+
+    name = new_child.attrib['name']
+    found = False
+    for child in defaults:
+        if child.attrib['name'] == name:
+            found = True
+            if child.tag != new_child.tag:
+                raise ValueError('Trying to update stream "{}" with '
+                                 'inconsistent tags {} vs. {}.'.format(
+                                     name, child.tag, new_child.tag))
+
+            # copy the attributes
+            for attr, value in new_child.attrib.items():
+                child.attrib[attr] = value
+
+            if len(new_child) > 0:
+                # we don't want default grandchildren
+                for grandchild in child:
+                    child.remove(grandchild)
+
+            # copy or add the grandchildren's contents
+            for new_grandchild in new_child:
+                update_defaults(new_grandchild, child)
+
+    if not found:
+        # add a deep copy of the element
+        defaults.append(deepcopy(new_child))
+
+
 def _update_tree(tree, new_tree):
 
     if tree is None:
@@ -244,39 +177,3 @@ def _update_element(new_child, elements):
     if not found:
         # add a deep copy of the element
         elements.append(deepcopy(new_child))
-
-
-def _update_defaults(new_child, defaults):
-    """
-    Update a stream or its children (sub-stream, var, etc.) starting from the
-    defaults or add it if it's new.
-    """
-    if 'name' not in new_child.attrib:
-        return
-
-    name = new_child.attrib['name']
-    found = False
-    for child in defaults:
-        if child.attrib['name'] == name:
-            found = True
-            if child.tag != new_child.tag:
-                raise ValueError('Trying to update stream "{}" with '
-                                 'inconsistent tags {} vs. {}.'.format(
-                                     name, child.tag, new_child.tag))
-
-            # copy the attributes
-            for attr, value in new_child.attrib.items():
-                child.attrib[attr] = value
-
-            if len(new_child) > 0:
-                # we don't want default grandchildren
-                for grandchild in child:
-                    child.remove(grandchild)
-
-            # copy or add the grandchildren's contents
-            for new_grandchild in new_child:
-                _update_defaults(new_grandchild, child)
-
-    if not found:
-        # add a deep copy of the element
-        defaults.append(deepcopy(new_child))

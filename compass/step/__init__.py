@@ -2,8 +2,11 @@ import os
 import stat
 from jinja2 import Template
 from importlib import resources
+from lxml import etree
 
 from compass.io import download, symlink
+import compass.namelist
+import compass.streams
 
 
 class Step:
@@ -21,7 +24,7 @@ class Step:
     """
 
     def __init__(self, name, subdir=None, cores=1, min_cores=1,
-                 max_memory=1000, max_disk=1000):
+                 threads=1, max_memory=1000, max_disk=1000):
         """
         Create a new test case
 
@@ -42,6 +45,9 @@ class Step:
             the number of cores the step requires.  If the system has fewer
             than this number of cores, the step will fail
 
+        threads : int, optional
+            the number of threads the step will use
+
         max_memory : int, optional
             the amount of memory that the step is allowed to use in MB.
             This is currently just a placeholder for later use with task
@@ -59,11 +65,15 @@ class Step:
 
         self.cores = cores
         self.min_cores = min_cores
+        self.threads = threads
         self.max_memory = max_memory
         self.max_disk = max_disk
 
         self.inputs = list()
         self.outputs = list()
+
+        self.namelist_data = dict()
+        self.streams_data = dict()
 
         self.config = None
         self.config_filename = None
@@ -164,10 +174,108 @@ class Step:
         self.add_input_file(filename=model_basename,
                             target=os.path.abspath(model))
 
+    def add_namelist_file(self, package, namelist, out_name=None,
+                          mode='forward'):
+        """
+        Add a namelist file to the step to be parsed later with a call to
+        :py:func:`compass.namelist.generate_namelist()`.
+
+        Parameters
+        ----------
+        package : Package
+            The package name or module object that contains ``namelist``
+
+        namelist : str
+            The name of the namelist replacements file to read from
+
+        out_name : str, optional
+            The name of the namelist file to write out, ``namelist.<core>`` by
+            default
+
+        mode : {'init', 'forward'}, optional
+            The mode that the model will run in
+        """
+        if out_name is None:
+            out_name = 'namelist.{}'.format(self.mpas_core)
+
+        if out_name not in self.namelist_data:
+            self.namelist_data[out_name] = list()
+
+        namelist_list = self.namelist_data[out_name]
+
+        namelist_list.append(dict(package=package, namelist=namelist,
+                                  mode=mode))
+
+    def add_namelist_options(self, options, out_name=None, mode='forward'):
+        """
+        Parse the replacement namelist options from the given file
+
+        Parameters
+        ----------
+        options : dict
+            A dictionary of options and value to replace namelist options with
+            new values.
+
+        out_name : str, optional
+            The name of the namelist file to write out, ``namelist.<core>`` by
+            default
+
+        mode : {'init', 'forward'}, optional
+            The mode that the model will run in
+        """
+        if out_name is None:
+            out_name = 'namelist.{}'.format(self.mpas_core)
+
+        if out_name not in self.namelist_data:
+            self.namelist_data[out_name] = list()
+
+        namelist_list = self.namelist_data[out_name]
+
+        namelist_list.append(dict(options=options, mode=mode))
+
+    def add_streams_file(self, package, streams, template_replacements=None,
+                         out_name=None, mode='forward'):
+        """
+        Add a streams file to the step to be parsed later with a call to
+        :py:func:`compass.streams.generate_streams()`.
+
+        Parameters
+        ----------
+        package : Package
+            The package name or module object that contains the streams file
+
+        streams : str
+            The name of the streams file to read from
+
+        template_replacements : dict, optional
+            A dictionary of replacements, in which case ``streams`` must be a
+            Jinja2 template to be rendered with these replacements
+
+        out_name : str, optional
+            The name of the streams file to write out, ``streams.<core>`` by
+            default
+
+        mode : {'init', 'forward'}, optional
+            The mode that the model will run in
+        """
+        if out_name is None:
+            out_name = 'streams.{}'.format(self.mpas_core)
+
+        if out_name not in self.streams_data:
+            self.streams_data[out_name] = list()
+
+        self.streams_data[out_name].append(
+            dict(package=package, streams=streams,
+                 replacements=template_replacements, mode=mode))
+
     def generate(self):
         """
         Generate a ``run.py`` script for the test case or step.
         """
+
+        self._process_inputs_and_outputs()
+        self._generate_namelists()
+        self._generate_streams()
 
         template = Template(
             resources.read_text('compass.step', 'step.template'))
@@ -185,7 +293,7 @@ class Step:
         st = os.stat(run_filename)
         os.chmod(run_filename, st.st_mode | stat.S_IEXEC)
 
-    def process_inputs_and_outputs(self):
+    def _process_inputs_and_outputs(self):
         """
         Process the inputs to and outputs from a step added with
         :py:meth:`compass.Step.add_input_file` and
@@ -249,3 +357,90 @@ class Step:
 
         self.outputs = [os.path.abspath(os.path.join(step_dir, filename)) for
                         filename in self.outputs]
+
+    def _generate_namelists(self):
+        """
+        Writes out a namelist file in the work directory with new values given
+        by parsing the files and dictionaries in the step's ``namelist_data``.
+        """
+
+        step_work_dir = self.work_dir
+        config = self.config
+
+        for out_name in self.namelist_data:
+
+            replacements = dict()
+
+            mode = None
+
+            for entry in self.namelist_data[out_name]:
+                if mode is None:
+                    mode = entry['mode']
+                else:
+                    assert mode == entry['mode']
+                if 'options' in entry:
+                    # this is a dictionary of replacement namelist options
+                    options = entry['options']
+                else:
+                    options = compass.namelist.parse_replacements(
+                        entry['package'], entry['namelist'])
+                replacements.update(options)
+
+            defaults_filename = config.get('namelists', mode)
+            out_filename = '{}/{}'.format(step_work_dir, out_name)
+
+            namelist = compass.namelist.ingest(defaults_filename)
+
+            namelist = compass.namelist.replace(namelist, replacements)
+
+            compass.namelist.write(namelist, out_filename)
+
+    def _generate_streams(self):
+        """
+        Writes out a streams file in the work directory with new values given
+        by parsing the files and dictionaries in the step's ``streams_data``.
+        """
+
+        step_work_dir = self.work_dir
+        config = self.config
+
+        for out_name in self.streams_data:
+
+            # generate the streams file
+            tree = None
+
+            mode = None
+
+            for entry in self.streams_data[out_name]:
+                if mode is None:
+                    mode = entry['mode']
+                else:
+                    assert mode == entry['mode']
+
+                tree = compass.streams.read(
+                    package=entry['package'],
+                    streams_filename=entry['streams'],
+                    replacements=entry['replacements'], tree=tree)
+
+            defaults_filename = config.get('streams', mode)
+            out_filename = '{}/{}'.format(step_work_dir, out_name)
+
+            defaults_tree = etree.parse(defaults_filename)
+
+            defaults = next(defaults_tree.iter('streams'))
+            streams = next(tree.iter('streams'))
+
+            for stream in streams:
+                compass.streams.update_defaults(stream, defaults)
+
+            # remove any streams that aren't requested
+            for default in defaults:
+                found = False
+                for stream in streams:
+                    if stream.attrib['name'] == default.attrib['name']:
+                        found = True
+                        break
+                if not found:
+                    defaults.remove(default)
+
+            compass.streams.write(defaults_tree, out_filename)

@@ -207,8 +207,6 @@ def setup_case(path, test_case, config_file, machine, work_dir, baseline_dir,
         # set up the step
         step.setup()
 
-        step.process_inputs_and_outputs()
-
         # write a run script for each step
         _write_run(step)
 
