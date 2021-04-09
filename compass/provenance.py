@@ -3,7 +3,7 @@ import sys
 import subprocess
 
 
-def write(work_dir, testcases):
+def write(work_dir, test_cases):
     """
     Write a file with provenance, such as the git version, conda packages,
     command, and test cases, to the work directory
@@ -13,7 +13,7 @@ def write(work_dir, testcases):
     work_dir : str
         The path to the work directory where the test cases will be set up
 
-    testcases : dict
+    test_cases : dict
         A dictionary describing all of the test cases and their steps
     """
     try:
@@ -48,17 +48,21 @@ def write(work_dir, testcases):
     if git_version is not None:
         provenance_file.write('git_version: {}\n\n'.format(git_version))
     provenance_file.write('command: {}\n\n'.format(calling_command))
-    provenance_file.write('testcases:\n')
+    provenance_file.write('test cases:\n')
 
-    for path, test in testcases.items():
+    for path, test_case in test_cases.items():
         prefix = '  '
         lines = list()
-        for key in ['path', 'description', 'name', 'core',
-                    'configuration', 'subdir', 'module']:
+        to_print = {'path': test_case.path,
+                    'name': test_case.name,
+                    'MPAS core': test_case.mpas_core.name,
+                    'test group': test_case.test_group.name,
+                    'subdir': test_case.subdir}
+        for key in to_print:
             key_string = '{}: '.format(key).ljust(15)
-            lines.append('{}{}{}'.format(prefix, key_string, test[key]))
+            lines.append('{}{}{}'.format(prefix, key_string, to_print[key]))
         lines.append('{}steps:'.format(prefix))
-        for step in test['steps']:
+        for step in test_case.steps:
             lines.append('{} - {}'.format(prefix, step))
         lines.append('')
         print_string = '\n'.join(lines)
