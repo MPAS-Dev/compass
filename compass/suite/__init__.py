@@ -16,15 +16,15 @@ from compass.io import symlink
 from compass.clean import clean_cases
 
 
-def setup_suite(core, suite_name, config_file=None, machine=None,
+def setup_suite(mpas_core, suite_name, config_file=None, machine=None,
                 work_dir=None, baseline_dir=None, mpas_model_path=None):
     """
     Set up a test suite
 
     Parameters
     ----------
-    core : str
-        The dynamical core ('ocean', 'landice', etc.) of the test suite
+    mpas_core : str
+        The MPAS core ('ocean', 'landice', etc.) of the test suite
 
     suite_name : str
         The name of the test suite.  A file ``<suite_name>.txt`` must exist
@@ -33,14 +33,14 @@ def setup_suite(core, suite_name, config_file=None, machine=None,
 
     config_file : str, optional
         Configuration file with custom options for setting up and running
-        testcases
+        test cases
 
     machine : str, optional
         The name of one of the machines with defined config options, which can
         be listed with ``compass list --machines``
 
     work_dir : str, optional
-        A directory that will serve as the base for creating testcase
+        A directory that will serve as the base for creating test case
         directories
 
     baseline_dir : str, optional
@@ -54,7 +54,7 @@ def setup_suite(core, suite_name, config_file=None, machine=None,
     if config_file is None and machine is None:
         raise ValueError('At least one of config_file and machine is needed.')
 
-    text = resources.read_text('compass.{}.suites'.format(core),
+    text = resources.read_text('compass.{}.suites'.format(mpas_core),
                                '{}.txt'.format(suite_name))
     tests = list()
     for test in text.split('\n'):
@@ -66,9 +66,9 @@ def setup_suite(core, suite_name, config_file=None, machine=None,
         work_dir = os.getcwd()
     work_dir = os.path.abspath(work_dir)
 
-    testcases = setup_cases(tests, config_file=config_file, machine=machine,
-                            work_dir=work_dir, baseline_dir=baseline_dir,
-                            mpas_model_path=mpas_model_path)
+    test_cases = setup_cases(tests, config_file=config_file, machine=machine,
+                             work_dir=work_dir, baseline_dir=baseline_dir,
+                             mpas_model_path=mpas_model_path)
 
     # if compass/__init__.py exists, we're using a local version of the compass
     # package and we'll want to link to that in the tests and steps
@@ -77,7 +77,7 @@ def setup_suite(core, suite_name, config_file=None, machine=None,
         symlink(compass_path, os.path.join(work_dir, 'compass'))
 
     test_suite = {'name': suite_name,
-                  'testcases': testcases,
+                  'test_cases': test_cases,
                   'work_dir': work_dir}
 
     # pickle the test or step dictionary for use at runtime
@@ -97,20 +97,20 @@ def setup_suite(core, suite_name, config_file=None, machine=None,
     st = os.stat(run_filename)
     os.chmod(run_filename, st.st_mode | stat.S_IEXEC)
 
-    max_cores, max_of_min_cores = _get_required_cores(testcases)
+    max_cores, max_of_min_cores = _get_required_cores(test_cases)
 
     print('target cores: {}'.format(max_cores))
     print('minimum cores: {}'.format(max_of_min_cores))
 
 
-def clean_suite(core, suite_name, work_dir=None):
+def clean_suite(mpas_core, suite_name, work_dir=None):
     """
-    Clean up a test suite by removing its testcases and run script
+    Clean up a test suite by removing its test cases and run script
 
     Parameters
     ----------
-    core : str
-        The dynamical core ('ocean', 'landice', etc.) of the test suite
+    mpas_core : str
+        The MPAS core ('ocean', 'landice', etc.) of the test suite
 
     suite_name : str
         The name of the test suite.  A file ``<suite_name>.txt`` must exist
@@ -118,11 +118,11 @@ def clean_suite(core, suite_name, work_dir=None):
         in the suite
 
     work_dir : str, optional
-        A directory that will serve as the base for creating testcase
+        A directory that will serve as the base for creating test case
         directories
     """
 
-    text = resources.read_text('compass.{}.suites'.format(core),
+    text = resources.read_text('compass.{}.suites'.format(mpas_core),
                                '{}.txt'.format(suite_name))
     tests = [test.strip() for test in text.split('\n') if
              len(test.strip()) > 0]
@@ -171,33 +171,35 @@ def run_suite(suite_name):
         suite_start = time.time()
         test_times = dict()
         success = dict()
-        for test_name in test_suite['testcases']:
-            testcase = test_suite['testcases'][test_name]
+        for test_name in test_suite['test_cases']:
+            test_case = test_suite['test_cases'][test_name]
 
             logger.info('{}'.format(test_name))
 
-            test_name = testcase['path'].replace('/', '_')
+            test_name = test_case.path.replace('/', '_')
             log_filename = '{}/case_outputs/{}.log'.format(cwd, test_name)
             with LoggingContext(test_name, log_filename=log_filename) as \
                     test_logger:
-                testcase['log_filename'] = log_filename
-                testcase['new_step_log_file'] = False
+                test_case.logger = test_logger
+                test_case.log_filename = log_filename
+                test_case.new_step_log_file = False
 
-                os.chdir(testcase['work_dir'])
+                os.chdir(test_case.work_dir)
 
                 config = configparser.ConfigParser(
                     interpolation=configparser.ExtendedInterpolation())
-                config.read(testcase['config'])
+                config.read(test_case.config_filename)
+                test_case.config = config
 
-                run = getattr(sys.modules[testcase['module']], testcase['run'])
                 test_start = time.time()
                 try:
-                    run(testcase, test_suite, config, test_logger)
+                    test_case.run()
                     logger.info('  PASS')
                     success[test_name] = 'PASS'
                 except BaseException:
                     test_logger.exception('Exception raised')
-                    logger.error('  FAIL see: case_outputs/{}.log'.format(test_name))
+                    logger.error(
+                        '  FAIL see: case_outputs/{}.log'.format(test_name))
                     success[test_name] = 'FAIL'
                     failures += 1
                 test_times[test_name] = time.time() - test_start
@@ -231,7 +233,7 @@ def main():
     parser = argparse.ArgumentParser(
         description='Set up a regression test suite', prog='compass suite')
     parser.add_argument("-c", "--core", dest="core",
-                        help="The core for the test suite",
+                        help="The MPAS core for the test suite",
                         metavar="CORE", required=True)
     parser.add_argument("-t", "--test_suite", dest="test_suite",
                         help="Path to file containing a test suite to setup",
@@ -245,9 +247,6 @@ def main():
     parser.add_argument("--clean", dest="clean",
                         help="Option to determine if regression suite should "
                              "be cleaned or not.", action="store_true")
-    parser.add_argument("-v", "--verbose", dest="verbose",
-                        help="Use verbose output from setup_testcase.py",
-                        action="store_true")
     parser.add_argument("-m", "--machine", dest="machine",
                         help="The name of the machine for loading machine-"
                              "related config options", metavar="MACH")
@@ -269,30 +268,24 @@ def main():
                          'specified')
 
     if args.clean:
-        clean_suite(core=args.core, suite_name=args.test_suite,
+        clean_suite(mpas_core=args.core, suite_name=args.test_suite,
                     work_dir=args.work_dir)
 
     if args.setup:
-        setup_suite(core=args.core, suite_name=args.test_suite,
+        setup_suite(mpas_core=args.core, suite_name=args.test_suite,
                     config_file=args.config_file, machine=args.machine,
                     work_dir=args.work_dir, baseline_dir=args.baseline_dir,
                     mpas_model_path=args.mpas_model)
 
 
-def _get_required_cores(testcases):
+def _get_required_cores(test_cases):
     """ Get the maximum number of target cores and the max of min cores """
 
     max_cores = 0
     max_of_min_cores = 0
-    for test_name, testcase in testcases.items():
-        for step_name, step in testcase['steps'].items():
-            if 'cores' not in step:
-                raise ValueError('step {} in test {} has no "cores" '
-                                 'entry'.format(step_name, test_name))
-            if 'min_cores' not in step:
-                raise ValueError('step {} in test {} has no "min_cores" '
-                                 'entry'.format(step_name, test_name))
-            max_cores = max(max_cores, step['cores'])
-            max_of_min_cores = max(max_of_min_cores, step['min_cores'])
+    for test_name, test_case in test_cases.items():
+        for step_name, step in test_case.steps.items():
+            max_cores = max(max_cores, step.cores)
+            max_of_min_cores = max(max_of_min_cores, step.min_cores)
 
     return max_cores, max_of_min_cores
