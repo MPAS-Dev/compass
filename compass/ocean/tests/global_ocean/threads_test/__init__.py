@@ -1,81 +1,52 @@
-from compass.testcase import set_testcase_subdir, add_step, run_steps
-from compass.ocean.tests.global_ocean import forward
-from compass.ocean.tests import global_ocean
 from compass.validate import compare_variables
-from compass.ocean.tests.global_ocean.description import get_description
-from compass.ocean.tests.global_ocean.subdir import get_forward_sudbdir
+from compass.ocean.tests.global_ocean.forward import ForwardTestCase, \
+    ForwardStep
 
 
-def collect(testcase):
+class ThreadsTest(ForwardTestCase):
     """
-    Update the dictionary of test case properties and add steps
-
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case, which can be updated
+    A test case for performing two short forward runs to make sure the results
+    are identical with 1 and 2 thread per MPI process
     """
-    mesh_name = testcase['mesh_name']
-    with_ice_shelf_cavities = testcase['with_ice_shelf_cavities']
-    initial_condition = testcase['initial_condition']
-    with_bgc = testcase['with_bgc']
-    time_integrator = testcase['time_integrator']
-    name = testcase['name']
 
-    testcase['description'] = get_description(
-        mesh_name, initial_condition, with_bgc, time_integrator,
-        description='thread test')
+    def __init__(self, test_group, mesh, init, time_integrator):
+        """
+        Create test case
 
-    subdir = get_forward_sudbdir(mesh_name, initial_condition, with_bgc,
-                                 time_integrator, name)
-    set_testcase_subdir(testcase, subdir)
+        Parameters
+        ----------
+        test_group : compass.ocean.tests.global_ocean.GlobalOcean
+            The global ocean test group that this test case belongs to
 
-    for threads in [1, 2]:
-        name = '{}thread'.format(threads)
-        add_step(testcase, forward, name=name, subdir=name, cores=4,
-                 threads=threads, mesh_name=mesh_name,
-                 with_ice_shelf_cavities=with_ice_shelf_cavities,
-                 initial_condition=initial_condition, with_bgc=with_bgc,
-                 time_integrator=time_integrator)
+        mesh : compass.ocean.tests.global_ocean.mesh.Mesh
+            The test case that produces the mesh for this run
 
+        init : compass.ocean.tests.global_ocean.init.Init
+            The test case that produces the initial condition for this run
 
-def configure(testcase, config):
-    """
-    Modify the configuration options for this test case
+        time_integrator : {'split_explicit', 'RK4'}
+            The time integrator to use for the forward run
+        """
+        super().__init__(test_group=test_group, mesh=mesh, init=init,
+                         time_integrator=time_integrator,
+                         name='threads_test')
+        for threads in [1, 2]:
+            name = '{}thread'.format(threads)
+            ForwardStep(test_case=self, mesh=mesh, init=init,
+                        time_integrator=time_integrator, name=name,
+                        subdir=name, cores=4, threads=threads)
 
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case
+    def run(self):
+        """
+        Run each step of the testcase
+        """
+        # get cores, threads from config options and run the steps
+        super().run()
 
-    config : configparser.ConfigParser
-        Configuration options for this test case
-    """
-    global_ocean.configure(testcase, config)
-
-
-def run(testcase, test_suite, config, logger):
-    """
-    Run each step of the testcase
-
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case
-
-    test_suite : dict
-        A dictionary of properties of the test suite
-
-    config : configparser.ConfigParser
-        Configuration options for this test case
-
-    logger : logging.Logger
-        A logger for output from the test case
-    """
-    run_steps(testcase, test_suite, config, logger)
-    variables = ['temperature', 'salinity', 'layerThickness', 'normalVelocity']
-    steps = testcase['steps_to_run']
-    if '1thread' in steps and '2thread' in steps:
-        compare_variables(variables, config, work_dir=testcase['work_dir'],
-                          filename1='1thread/output.nc',
-                          filename2='2thread/output.nc')
+        variables = ['temperature', 'salinity', 'layerThickness',
+                     'normalVelocity']
+        steps = self.steps_to_run
+        if '1thread' in steps and '2thread' in steps:
+            compare_variables(variables, self.config, work_dir=self.work_dir,
+                              filename1='1thread/output.nc',
+                              filename2='2thread/output.nc')

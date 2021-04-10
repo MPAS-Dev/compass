@@ -1,17 +1,26 @@
 from compass.validate import compare_variables
-from compass.ocean.tests.global_ocean.forward import ForwardTestCase, \
-    ForwardStep
+from compass.ocean.tests.global_ocean.forward import ForwardTestCase
 
 
-class DecompTest(ForwardTestCase):
+class DynamicAdjustment(ForwardTestCase):
     """
-    A test case for performing two short forward runs to make sure the results
-    are identical with 4 and 8 cores
+    A parent test case for performing dynamic adjustment (dissipating
+    fast-moving waves) from an MPAS-Ocean initial condition.
+
+    The final stage of the dynamic adjustment is assumed to be called
+    ``simulation``, and is expected to have a file ``output.nc`` that can be
+    compared against a baseline.
+
+    Attributes
+    ----------
+    restart_filenames : list of str
+        A list of restart files from each dynamic-adjustment step
     """
 
-    def __init__(self, test_group, mesh, init, time_integrator):
+    def __init__(self, test_group, mesh, init, time_integrator,
+                 restart_filenames):
         """
-        Create test case
+        Create the test case
 
         Parameters
         ----------
@@ -26,15 +35,15 @@ class DecompTest(ForwardTestCase):
 
         time_integrator : {'split_explicit', 'RK4'}
             The time integrator to use for the forward run
+
+        restart_filenames : list of str
+            A list of restart files from each dynamic-adjustment step
         """
         super().__init__(test_group=test_group, mesh=mesh, init=init,
                          time_integrator=time_integrator,
-                         name='decomp_test')
-        for procs in [4, 8]:
-            name = '{}proc'.format(procs)
-            ForwardStep(test_case=self, mesh=mesh, init=init,
-                        time_integrator=time_integrator, name=name,
-                        subdir=name, cores=procs, threads=1)
+                         name='dynamic_adjustment')
+
+        self.restart_filenames = restart_filenames
 
     def run(self):
         """
@@ -45,8 +54,6 @@ class DecompTest(ForwardTestCase):
 
         variables = ['temperature', 'salinity', 'layerThickness',
                      'normalVelocity']
-        steps = self.steps_to_run
-        if '4proc' in steps and '8proc' in steps:
-            compare_variables(variables, self.config, work_dir=self.work_dir,
-                              filename1='4proc/output.nc',
-                              filename2='8proc/output.nc')
+
+        compare_variables(variables, self.config, work_dir=self.work_dir,
+                          filename1='simulation/output.nc')

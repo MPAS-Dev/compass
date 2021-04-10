@@ -1,95 +1,99 @@
+import os
 from importlib.resources import path
 
-from compass.testcase import set_testcase_subdir, add_step, run_steps
-from compass.ocean.tests.global_ocean.description import get_description
-from compass.ocean.tests.global_ocean.subdir import get_forward_sudbdir
-from compass.ocean.tests import global_ocean
 from compass.io import symlink
-from compass.ocean.tests.global_ocean.files_for_e3sm import \
-    ocean_initial_condition, ocean_graph_partition, seaice_initial_condition, \
-    scrip, diagnostics_files
+from compass.testcase import TestCase
+from compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition \
+    import OceanInitialCondition
+from compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition \
+    import SeaiceInitialCondition
+from compass.ocean.tests.global_ocean.files_for_e3sm.ocean_graph_partition \
+    import OceanGraphPartition
+from compass.ocean.tests.global_ocean.files_for_e3sm.scrip import Scrip
+from compass.ocean.tests.global_ocean.files_for_e3sm.diagnostics_files \
+    import DiagnosticsFiles
+from compass.ocean.tests.global_ocean.forward import get_forward_subdir
+from compass.ocean.tests.global_ocean.configure import configure_global_ocean
 
 
-def collect(testcase):
+class FilesForE3SM(TestCase):
     """
-    Update the dictionary of test case properties and add steps
+    A test case for assembling files needed for MPAS-Ocean and MPAS-Seaice
+    initial conditions in E3SM as well as files needed for diagnostics from
+    the Meridional Overturning Circulation analysis member and MPAS-Analysis
 
-    Parameters
+    Attributes
     ----------
-    testcase : dict
-        A dictionary of properties of this test case, which can be updated
+    mesh : compass.ocean.tests.global_ocean.mesh.Mesh
+        The test case that produces the mesh for this run
+
+    init : compass.ocean.tests.global_ocean.init.Init
+        The test case that produces the initial condition for this run
+
+    dynamic_adjustment : compass.ocean.tests.global_ocean.dynamic_adjustment.DynamicAdjustment
+        The test case that performs dynamic adjustment to dissipate
+        fast-moving waves from the initial condition
+
+    restart_filename : str
+        A restart file from the end of the dynamic adjustment test case to use
+        as the basis for an E3SM initial condition
     """
-    mesh_name = testcase['mesh_name']
-    with_ice_shelf_cavities = testcase['with_ice_shelf_cavities']
-    initial_condition = testcase['initial_condition']
-    with_bgc = testcase['with_bgc']
-    time_integrator = testcase['time_integrator']
-    name = testcase['name']
-    restart_filename = testcase['restart_filename']
+    def __init__(self, test_group, mesh, init, dynamic_adjustment):
+        """
+        Create test case for creating a global MPAS-Ocean mesh
 
-    testcase['description'] = get_description(
-        mesh_name, initial_condition, with_bgc, time_integrator,
-        description='files for E3SM')
+        Parameters
+        ----------
+        test_group : compass.ocean.tests.global_ocean.GlobalOcean
+            The global ocean test group that this test case belongs to
 
-    subdir = get_forward_sudbdir(mesh_name, initial_condition, with_bgc,
-                                 time_integrator, name)
-    set_testcase_subdir(testcase, subdir)
+        mesh : compass.ocean.tests.global_ocean.mesh.Mesh
+            The test case that produces the mesh for this run
 
-    restart_filename = '../spinup/{}'.format(restart_filename)
+        init : compass.ocean.tests.global_ocean.init.Init
+            The test case that produces the initial condition for this run
 
-    add_step(testcase, ocean_initial_condition, mesh_name=mesh_name,
-             restart_filename=restart_filename)
+        dynamic_adjustment : compass.ocean.tests.global_ocean.dynamic_adjustment.DynamicAdjustment
+            The test case that performs dynamic adjustment to dissipate
+            fast-moving waves from the initial condition
+        """
+        name = 'files_for_e3sm'
+        time_integrator = dynamic_adjustment.time_integrator
+        subdir = get_forward_subdir(init.init_subdir, time_integrator, name)
 
-    add_step(testcase, ocean_graph_partition, mesh_name=mesh_name,
-             restart_filename=restart_filename)
+        super().__init__(test_group=test_group, name=name, subdir=subdir)
+        self.mesh = mesh
+        self.init = init
+        self.dynamic_adjustment = dynamic_adjustment
 
-    add_step(testcase, seaice_initial_condition, mesh_name=mesh_name,
-             restart_filename=restart_filename,
-             with_ice_shelf_cavities=with_ice_shelf_cavities)
+        restart_filename = os.path.join(
+            '..', 'dynamic_adjustment',
+            dynamic_adjustment.restart_filenames[-1])
+        self.restart_filename = restart_filename
 
-    add_step(testcase, scrip, mesh_name=mesh_name,
-             restart_filename=restart_filename,
-             with_ice_shelf_cavities=with_ice_shelf_cavities)
+        OceanInitialCondition(test_case=self,
+                              restart_filename=restart_filename)
 
-    add_step(testcase, diagnostics_files, mesh_name=mesh_name,
-             restart_filename=restart_filename,
-             with_ice_shelf_cavities=with_ice_shelf_cavities)
+        OceanGraphPartition(test_case=self, mesh=mesh,
+                            restart_filename=restart_filename)
 
+        SeaiceInitialCondition(
+            test_case=self, restart_filename=restart_filename,
+            with_ice_shelf_cavities=mesh.with_ice_shelf_cavities)
 
-def configure(testcase, config):
-    """
-    Modify the configuration options for this test case
+        Scrip(
+            test_case=self, restart_filename=restart_filename,
+            with_ice_shelf_cavities=mesh.with_ice_shelf_cavities)
 
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case
+        DiagnosticsFiles(
+            test_case=self, restart_filename=restart_filename,
+            with_ice_shelf_cavities=mesh.with_ice_shelf_cavities)
 
-    config : configparser.ConfigParser
-        Configuration options for this test case
-    """
-    global_ocean.configure(testcase, config)
-    with path('compass.ocean.tests.global_ocean.files_for_e3sm', 'README') as \
-            target:
-        symlink(str(target), '{}/README'.format(testcase['work_dir']))
-
-
-def run(testcase, test_suite, config, logger):
-    """
-    Run each step of the testcase
-
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case
-
-    test_suite : dict
-        A dictionary of properties of the test suite
-
-    config : configparser.ConfigParser
-        Configuration options for this test case
-
-    logger : logging.Logger
-        A logger for output from the test case
-    """
-    run_steps(testcase, test_suite, config, logger)
+    def configure(self):
+        """
+        Modify the configuration options for this test case
+        """
+        configure_global_ocean(test_case=self, mesh=self.mesh)
+        with path('compass.ocean.tests.global_ocean.files_for_e3sm',
+                  'README') as target:
+            symlink(str(target), '{}/README'.format(self.work_dir))

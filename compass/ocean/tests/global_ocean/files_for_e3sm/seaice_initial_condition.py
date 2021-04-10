@@ -3,90 +3,88 @@ import xarray
 
 from mpas_tools.io import write_netcdf
 
-from compass.io import symlink, add_input_file
+from compass.io import symlink
+from compass.step import Step
 
 
-def collect(testcase, step):
+class SeaiceInitialCondition(Step):
     """
-    Update the dictionary of step properties
+    A step for creating an E3SM sea-ice initial condition from variables from
+    an MPAS-Ocean restart file
 
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case, which should not be
-        modified here
-
-    step : dict
-        A dictionary of properties of this step, which can be updated
+    with_ice_shelf_cavities : bool
+        Whether the mesh includes ice-shelf cavities
     """
-    defaults = dict(cores=1, min_cores=1, max_memory=1000, max_disk=1000,
-                    threads=1)
-    for key, value in defaults.items():
-        step.setdefault(key, value)
+    def __init__(self, test_case, restart_filename, with_ice_shelf_cavities):
+        """
+        Create a new step
 
-    add_input_file(step, filename='README', target='../README')
-    add_input_file(step, filename='restart.nc',
-                   target='../{}'.format(step['restart_filename']))
+        Parameters
+        ----------
+        test_case : compass.ocean.tests.global_ocean.files_for_e3sm.FilesForE3SM
+            The test case this step belongs to
 
-    # for now, we won't define any outputs because they include the mesh short
-    # name, which is not known at setup time.  Currently, this is safe because
-    # no other steps depend on the outputs of this one.
+        restart_filename : str
+            A restart file from the end of the dynamic adjustment test case to
+            use as the basis for an E3SM initial condition
 
+        with_ice_shelf_cavities : bool
+            Whether the mesh includes ice-shelf cavities
+        """
 
-def run(step, test_suite, config, logger):
-    """
-    Run this step of the testcase
+        super().__init__(test_case, name='seaice_initial_condition', cores=1,
+                         min_cores=1, threads=1)
 
-    Parameters
-    ----------
-    step : dict
-        A dictionary of properties of this step
+        self.add_input_file(filename='README', target='../README')
+        self.add_input_file(filename='restart.nc',
+                            target='../{}'.format(restart_filename))
 
-    test_suite : dict
-        A dictionary of properties of the test suite
+        self.with_ice_shelf_cavities = with_ice_shelf_cavities
 
-    config : configparser.ConfigParser
-        Configuration options for this test case
+        # for now, we won't define any outputs because they include the mesh
+        # short name, which is not known at setup time.  Currently, this is
+        # safe because no other steps depend on the outputs of this one.
 
-    logger : logging.Logger
-        A logger for output from the step
-    """
-    with_ice_shelf_cavities = step['with_ice_shelf_cavities']
+    def run(self):
+        """
+        Run this step of the testcase
+            """
+        with_ice_shelf_cavities = self.with_ice_shelf_cavities
 
-    with xarray.open_dataset('restart.nc') as ds:
-        mesh_short_name = ds.attrs['MPAS_Mesh_Short_Name']
+        with xarray.open_dataset('restart.nc') as ds:
+            mesh_short_name = ds.attrs['MPAS_Mesh_Short_Name']
+            mesh_prefix = ds.attrs['MPAS_Mesh_Prefix']
+            prefix = 'MPAS_Mesh_{}'.format(mesh_prefix)
+            creation_date = ds.attrs['{}_Version_Creation_Date'.format(prefix)]
 
-    try:
-        os.makedirs('../assembled_files/inputdata/ocn/mpas-cice/{}'.format(
-            mesh_short_name))
-    except OSError:
-        pass
+        try:
+            os.makedirs('../assembled_files/inputdata/ocn/mpas-seaice/{}'.format(
+                mesh_short_name))
+        except OSError:
+            pass
 
-    restart_filename = os.path.abspath(
-        os.path.join('..', step['restart_filename']))
-    source_filename = '{}.nc'.format(mesh_short_name)
-    dest_filename = 'seaice.{}.nc'.format(mesh_short_name)
+        dest_filename = 'mpassi.{}.{}.nc'.format(mesh_short_name,
+                                                 creation_date)
 
-    keep_vars = ['areaCell', 'cellsOnCell', 'edgesOnCell', 'fCell',
-                 'indexToCellID', 'latCell', 'lonCell', 'meshDensity',
-                 'nEdgesOnCell', 'verticesOnCell', 'xCell', 'yCell', 'zCell',
-                 'angleEdge', 'cellsOnEdge', 'dcEdge', 'dvEdge', 'edgesOnEdge',
-                 'fEdge', 'indexToEdgeID', 'latEdge', 'lonEdge',
-                 'nEdgesOnCell', 'nEdgesOnEdge', 'verticesOnEdge',
-                 'weightsOnEdge', 'xEdge', 'yEdge', 'zEdge', 'areaTriangle',
-                 'cellsOnVertex', 'edgesOnVertex', 'fVertex',
-                 'indexToVertexID', 'kiteAreasOnVertex', 'latVertex',
-                 'lonVertex', 'xVertex', 'yVertex', 'zVertex']
+        keep_vars = [
+            'areaCell', 'cellsOnCell', 'edgesOnCell', 'fCell', 'indexToCellID',
+            'latCell', 'lonCell', 'meshDensity', 'nEdgesOnCell',
+            'verticesOnCell', 'xCell', 'yCell', 'zCell', 'angleEdge',
+            'cellsOnEdge', 'dcEdge', 'dvEdge', 'edgesOnEdge', 'fEdge',
+            'indexToEdgeID', 'latEdge', 'lonEdge', 'nEdgesOnCell',
+            'nEdgesOnEdge', 'verticesOnEdge', 'weightsOnEdge', 'xEdge',
+            'yEdge', 'zEdge', 'areaTriangle', 'cellsOnVertex', 'edgesOnVertex',
+            'fVertex', 'indexToVertexID', 'kiteAreasOnVertex', 'latVertex',
+            'lonVertex', 'xVertex', 'yVertex', 'zVertex']
 
-    if with_ice_shelf_cavities:
-        keep_vars.append('landIceMask')
+        if with_ice_shelf_cavities:
+            keep_vars.append('landIceMask')
 
-    symlink(restart_filename, source_filename)
-    with xarray.open_dataset(source_filename) as ds:
-        ds.load()
-        ds = ds[keep_vars]
-        write_netcdf(ds, dest_filename)
+        with xarray.open_dataset('restart.nc') as ds:
+            ds.load()
+            ds = ds[keep_vars]
+            write_netcdf(ds, dest_filename)
 
-    symlink('../../../../../seaice_initial_condition/{}'.format(dest_filename),
-            '../assembled_files/inputdata/ocn/mpas-cice/{}/{}'.format(
-                mesh_short_name, dest_filename))
+        symlink('../../../../../seaice_initial_condition/{}'.format(dest_filename),
+                '../assembled_files/inputdata/ocn/mpas-seaice/{}/{}'.format(
+                    mesh_short_name, dest_filename))

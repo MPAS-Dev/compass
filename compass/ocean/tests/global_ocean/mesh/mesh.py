@@ -1,140 +1,110 @@
-import sys
-
 from mpas_tools.ocean import build_spherical_mesh
 
 from compass.ocean.tests.global_ocean.mesh.cull import cull_mesh
-from compass.io import add_output_file
+from compass.step import Step
 
 
-def collect(testcase, step):
+class MeshStep(Step):
     """
-    Update the dictionary of step properties
+    A step for creating a global MPAS-Ocean mesh
 
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case, which should not be
-        modified here
-
-    step : dict
-        A dictionary of properties of this step, which can be updated
-    """
-    defaults = dict(cores=1, min_cores=1, max_memory=8000, max_disk=8000,
-                    threads=1)
-    for key, value in defaults.items():
-        step.setdefault(key, value)
-
-
-def setup(step, config):
-    """
-    Set up the test case in the work directory, including downloading any
-    dependencies
-
-    Parameters
-    ----------
-    step : dict
-        A dictionary of properties of this step
-
-    config : configparser.ConfigParser
-        Configuration options for this test case, a combination of the defaults
-        for the machine, core, configuration and test case
-    """
-    for file in ['culled_mesh.nc', 'culled_graph.info',
-                 'critical_passages_mask_final.nc']:
-        add_output_file(step, filename=file)
-
-
-def run(step, test_suite, config, logger):
-    """
-    Run this step of the test case
-
-    Parameters
-    ----------
-    step : dict
-        A dictionary of properties of this step
-
-    test_suite : dict
-        A dictionary of properties of the test suite
-
-    config : configparser.ConfigParser
-        Configuration options for this test case, a combination of the defaults
-        for the machine, core and configuration
-
-    logger : logging.Logger
-        A logger for output from the step
-    """
-    mesh_name = step['mesh_name']
-    with_ice_shelf_cavities = step['with_ice_shelf_cavities']
-    # only use progress bars if we're not writing to a log file
-    use_progress_bar = 'log_filename' not in step
-
-    # create the base mesh
-    cellWidth, lon, lat = build_cell_width_lat_lon(mesh_name)
-    build_spherical_mesh(cellWidth, lon, lat, out_filename='base_mesh.nc',
-                         logger=logger, use_progress_bar=use_progress_bar)
-
-    cull_mesh(with_critical_passages=True, logger=logger,
-              use_progress_bar=use_progress_bar,
-              with_cavities=with_ice_shelf_cavities)
-
-
-def build_cell_width_lat_lon(mesh_name):
-    """
-    Create cell width array for this mesh on a regular latitude-longitude grid
-
-    Parameters
+    Attributes
     ----------
     mesh_name : str
         The name of the mesh
 
-    Returns
-    -------
-    cellWidth : numpy.array
-        m x n array of cell width in km
+    with_ice_shelf_cavities : bool
+        Whether the mesh includes ice-shelf cavities
 
-    lon : numpy.array
-        longitude in degrees (length n and between -180 and 180)
+    package : str
+        The python package for the mesh
 
-    lat : numpy.array
-        longitude in degrees (length m and between -90 and 90)
+    mesh_config_filename : str
+        The name of the mesh config file
     """
+    def __init__(self, test_case, mesh_name, with_ice_shelf_cavities,
+                 package, mesh_config_filename, name='mesh', subdir=None):
+        """
+        Create a new step
 
-    package, _ = get_mesh_package(mesh_name)
-    build_cell_width = getattr(sys.modules[package],
-                               'build_cell_width_lat_lon')
-    return build_cell_width()
+        Parameters
+        ----------
+        test_case : compass.ocean.tests.global_ocean.mesh.Mesh
+            The test case this step belongs to
 
+        mesh_name : str
+            The name of the mesh
 
-def get_mesh_package(mesh_name):
-    """
-    Get the system module corresponding to the given mesh name
+        with_ice_shelf_cavities : bool
+            Whether the mesh includes ice-shelf cavities
 
-    Parameters
-    ----------
-    mesh_name : str
-        The name of the mesh
+        package : str
+            The python package for the mesh
 
-    Returns
-    -------
-    module : Package
-        The system module for the given mesh, one of the packages in
-        ``compass.ocean.tests.global_ocean.mesh`` with the mesh name converted
-        to lowercase
+        mesh_config_filename : str
+            The name of the mesh config file
 
-    prefix : str
-        The prefix of the package (the mesh name as lowercase and with 'wisc'
-        suffix removed)
+        name : str, optional
+            the name of the step
 
-    Raises
-    ------
-    ValueError
-        If the corresponding module for the given mesh does not exist
+        subdir : str, optional
+            the subdirectory for the step.  The default is ``name``
+        """
+        super().__init__(test_case, name=name, subdir=subdir, cores=None,
+                         min_cores=None, threads=None)
+        for file in ['culled_mesh.nc', 'culled_graph.info',
+                     'critical_passages_mask_final.nc']:
+            self.add_output_file(filename=file)
 
-    """
-    prefix = mesh_name.lower().replace('wisc', '')
-    package = 'compass.ocean.tests.global_ocean.mesh.{}'.format(prefix)
-    if package not in sys.modules:
-        raise ValueError('Mesh {} missing corresponding package {}'.format(
-            mesh_name, package))
+        self.mesh_name = mesh_name
+        self.with_ice_shelf_cavities = with_ice_shelf_cavities
+        self.package = package
+        self.mesh_config_filename = mesh_config_filename
 
-    return package, prefix
+    def setup(self):
+        """
+        Set up the test case in the work directory, including downloading any
+        dependencies.
+        """
+        # get the these properties from the config options
+        config = self.config
+        self.cores = config.getint('global_ocean', 'mesh_cores')
+        self.min_cores = config.getint('global_ocean', 'mesh_min_cores')
+
+    def run(self):
+        """
+        Run this step of the test case
+        """
+        with_ice_shelf_cavities = self.with_ice_shelf_cavities
+        logger = self.logger
+
+        # only use progress bars if we're not writing to a log file
+        use_progress_bar = self.log_filename is None
+
+        # create the base mesh
+        cellWidth, lon, lat = self.build_cell_width_lat_lon()
+        build_spherical_mesh(cellWidth, lon, lat, out_filename='base_mesh.nc',
+                             logger=logger, use_progress_bar=use_progress_bar)
+
+        cull_mesh(with_critical_passages=True, logger=logger,
+                  use_progress_bar=use_progress_bar,
+                  with_cavities=with_ice_shelf_cavities)
+
+    def build_cell_width_lat_lon(self):
+        """
+        A function for creating cell width array for this mesh on a regular
+        latitude-longitude grid.  Child classes need to override this function
+        to return the expected data
+
+        Returns
+        -------
+        cellWidth : numpy.array
+            m x n array of cell width in km
+
+        lon : numpy.array
+            longitude in degrees (length n and between -180 and 180)
+
+        lat : numpy.array
+            longitude in degrees (length m and between -90 and 90)
+        """
+        pass

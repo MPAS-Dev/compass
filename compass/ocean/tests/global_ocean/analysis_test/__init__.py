@@ -1,151 +1,142 @@
 import traceback
-
-from compass.testcase import set_testcase_subdir, add_step, run_steps
-from compass.ocean.tests.global_ocean import forward
-from compass.ocean.tests import global_ocean
 from compass.validate import compare_variables, compare_timers
-from compass.ocean.tests.global_ocean.description import get_description
-from compass.ocean.tests.global_ocean.subdir import get_forward_sudbdir
-from compass.namelist import add_namelist_file
-from compass.streams import add_streams_file
+from compass.ocean.tests.global_ocean.forward import ForwardTestCase, \
+    ForwardStep
 
 
-def collect(testcase):
+class AnalysisTest(ForwardTestCase):
     """
-    Update the dictionary of test case properties and add steps
-
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case, which can be updated
+    A test case for performing a short forward run with an MPAS-Ocean global
+    initial condition and check nearly all MPAS-Ocean analysis members to make
+    sure they run successfully and output is identical to a baseline (if one
+    is provided).
     """
-    mesh_name = testcase['mesh_name']
-    with_ice_shelf_cavities = testcase['with_ice_shelf_cavities']
-    initial_condition = testcase['initial_condition']
-    with_bgc = testcase['with_bgc']
-    time_integrator = testcase['time_integrator']
-    name = testcase['name']
 
-    testcase['description'] = get_description(
-        mesh_name, initial_condition, with_bgc, time_integrator,
-        description='analysis test')
+    def __init__(self, test_group, mesh, init, time_integrator):
+        """
+        Create test case
 
-    subdir = get_forward_sudbdir(mesh_name, initial_condition, with_bgc,
-                                 time_integrator, name)
-    set_testcase_subdir(testcase, subdir)
+        Parameters
+        ----------
+        test_group : compass.ocean.tests.global_ocean.GlobalOcean
+            The global ocean test group that this test case belongs to
 
-    step = add_step(testcase, forward, cores=4, threads=1, mesh_name=mesh_name,
-                    with_ice_shelf_cavities=with_ice_shelf_cavities,
-                    initial_condition=initial_condition, with_bgc=with_bgc,
-                    time_integrator=time_integrator)
+        mesh : compass.ocean.tests.global_ocean.mesh.Mesh
+            The test case that produces the mesh for this run
 
-    module = __name__
-    add_namelist_file(step, module, 'namelist.forward')
-    add_streams_file(step, module, 'streams.forward')
+        init : compass.ocean.tests.global_ocean.init.Init
+            The test case that produces the initial condition for this run
 
+        time_integrator : {'split_explicit', 'RK4'}
+            The time integrator to use for the forward run
+        """
+        super().__init__(test_group=test_group, mesh=mesh, init=init,
+                         time_integrator=time_integrator,
+                         name='analysis_test')
 
-def configure(testcase, config):
-    """
-    Modify the configuration options for this test case
+        step = ForwardStep(test_case=self, mesh=mesh, init=init,
+                           time_integrator=time_integrator, cores=4,
+                           threads=1)
 
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case
+        module = self.__module__
+        step.add_namelist_file(module, 'namelist.forward')
+        step.add_streams_file(module, 'streams.forward')
 
-    config : configparser.ConfigParser
-        Configuration options for this test case
-    """
-    global_ocean.configure(testcase, config)
+    def run(self):
+        """
+        Run each step of the testcase
+        """
+        # get cores, threads from config options and run the steps
+        super().run()
 
+        config = self.config
+        work_dir = self.work_dir
 
-def run(testcase, test_suite, config, logger):
-    """
-    Run each step of the testcase
+        variables = {
+            'forward/output.nc':
+                ['temperature', 'salinity', 'layerThickness',
+                 'normalVelocity'],
+            'forward/analysis_members/globalStats.0001-01-01_00.00.00.nc':
+                ['kineticEnergyCellMax', 'kineticEnergyCellMin',
+                 'kineticEnergyCellAvg', 'temperatureAvg', 'salinityAvg'],
+            'forward/analysis_members/debugDiagnostics.0001-01-01.nc':
+                ['rx1MaxCell'],
+            'forward/analysis_members/highFrequencyOutput.0001-01-01.nc':
+                ['temperatureAt250m'],
+            'forward/analysis_members/mixedLayerDepths.0001-01-01.nc':
+                ['dThreshMLD', 'tThreshMLD'],
+            'forward/analysis_members/waterMassCensus.0001-01-01_00.00.00.nc':
+                ['waterMassCensusTemperatureValues'],
+            'forward/analysis_members/eliassenPalm.0001-01-01.nc':
+                ['EPFT'],
+            'forward/analysis_members/'
+            'layerVolumeWeightedAverage.0001-01-01_00.00.00.nc':
+                ['avgVolumeTemperature', 'avgVolumeRelativeVorticityCell'],
+            'forward/analysis_members/okuboWeiss.0001-01-01_00.00.00.nc':
+                ['okuboWeiss'],
+            'forward/analysis_members/zonalMeans.0001-01-01_00.00.00.nc':
+                ['velocityZonalZonalMean', 'temperatureZonalMean'],
+            'forward/analysis_members/'
+            'meridionalHeatTransport.0001-01-01_00.00.00.nc':
+                ['meridionalHeatTransportLat'],
+            'forward/analysis_members/'
+            'surfaceAreaWeightedAverages.0001-01-01_00.00.00.nc':
+                ['avgSurfaceSalinity', 'avgSeaSurfacePressure'],
+            'forward/analysis_members/'
+            'eddyProductVariables.0001-01-01.nc':
+                ['SSHSquared', 'velocityZonalSquared',
+                 'velocityZonalTimesTemperature'],
+            'forward/analysis_members/oceanHeatContent.0001-01-01.nc':
+                ['oceanHeatContentSfcToBot', 'oceanHeatContentSfcTo700m',
+                 'oceanHeatContent700mTo2000m', 'oceanHeatContent2000mToBot'],
+            'forward/analysis_members/mixedLayerHeatBudget.0001-01-01.nc':
+                ['temperatureHorAdvectionMLTend', 'salinityHorAdvectionMLTend',
+                 'temperatureML', 'salinityML', 'bruntVaisalaFreqML']}
 
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case
+        failed = list()
+        for filename, variables in variables.items():
+            try:
+                compare_variables(variables, config, work_dir=work_dir,
+                                  filename1=filename)
+            except ValueError:
+                traceback.print_exc()
+                failed.append(filename)
 
-    test_suite : dict
-        A dictionary of properties of the test suite
+        if len(failed) > 0:
+            raise ValueError('Comparison failed, see above, for the following '
+                             'files:\n{}.'.format('\n'.join(failed)))
 
-    config : configparser.ConfigParser
-        Configuration options for this test case
+        timers = ['compute_globalStats', 'write_globalStats',
+                  'compute_debugDiagnostics', 'write_debugDiagnostics',
+                  'compute_eliassenPalm', 'write_eliassenPalm',
+                  'compute_highFrequency', 'write_highFrequency',
+                  'compute_layerVolumeWeightedAverage',
+                  'write_layerVolumeWeightedAverage',
+                  'compute_meridionalHeatTransport',
+                  'write_meridionalHeatTransport', 'compute_mixedLayerDepths',
+                  'write_mixedLayerDepths', 'compute_okuboWeiss',
+                  'write_okuboWeiss', 'compute_surfaceAreaWeightedAverages',
+                  'write_surfaceAreaWeightedAverages',
+                  'compute_waterMassCensus',
+                  'write_waterMassCensus', 'compute_zonalMean',
+                  'write_zonalMean',
+                  'compute_eddyProductVariables', 'write_eddyProductVariables',
+                  'compute_oceanHeatContent', 'write_oceanHeatContent',
+                  'compute_mixedLayerHeatBudget', 'write_mixedLayerHeatBudget']
+        compare_timers(timers, config, work_dir, rundir1='forward')
 
-    logger : logging.Logger
-        A logger for output from the test case
-    """
-    work_dir = testcase['work_dir']
-    run_steps(testcase, test_suite, config, logger)
+        variables = ['temperature', 'salinity', 'layerThickness',
+                     'normalVelocity']
+        if self.init.with_bgc:
+            variables.extend(
+                ['PO4', 'NO3', 'SiO3', 'NH4', 'Fe', 'O2', 'DIC', 'DIC_ALT_CO2',
+                 'ALK', 'DOC', 'DON', 'DOFe', 'DOP', 'DOPr', 'DONr', 'zooC',
+                 'spChl', 'spC', 'spFe', 'spCaCO3', 'diatChl', 'diatC',
+                 'diatFe', 'diatSi', 'diazChl', 'diazC', 'diazFe', 'phaeoChl',
+                 'phaeoC', 'phaeoFe'])
 
-    variables = {
-        'forward/output.nc':
-            ['temperature', 'salinity', 'layerThickness', 'normalVelocity'],
-        'forward/analysis_members/globalStats.0001-01-01_00.00.00.nc':
-            ['kineticEnergyCellMax', 'kineticEnergyCellMin',
-             'kineticEnergyCellAvg', 'temperatureAvg', 'salinityAvg'],
-        'forward/analysis_members/debugDiagnostics.0001-01-01.nc':
-            ['rx1MaxCell'],
-        'forward/analysis_members/highFrequencyOutput.0001-01-01.nc':
-            ['temperatureAt250m'],
-        'forward/analysis_members/mixedLayerDepths.0001-01-01.nc':
-            ['dThreshMLD', 'tThreshMLD'],
-        'forward/analysis_members/waterMassCensus.0001-01-01_00.00.00.nc':
-            ['waterMassCensusTemperatureValues'],
-        'forward/analysis_members/eliassenPalm.0001-01-01.nc':
-            ['EPFT'],
-        'forward/analysis_members/'
-        'layerVolumeWeightedAverage.0001-01-01_00.00.00.nc':
-            ['avgVolumeTemperature', 'avgVolumeRelativeVorticityCell'],
-        'forward/analysis_members/okuboWeiss.0001-01-01_00.00.00.nc':
-            ['okuboWeiss'],
-        'forward/analysis_members/zonalMeans.0001-01-01_00.00.00.nc':
-            ['velocityZonalZonalMean', 'temperatureZonalMean'],
-        'forward/analysis_members/'
-        'meridionalHeatTransport.0001-01-01_00.00.00.nc':
-            ['meridionalHeatTransportLat'],
-        'forward/analysis_members/'
-        'surfaceAreaWeightedAverages.0001-01-01_00.00.00.nc':
-            ['avgSurfaceSalinity', 'avgSeaSurfacePressure'],
-        'forward/analysis_members/'
-        'eddyProductVariables.0001-01-01.nc':
-            ['SSHSquared', 'velocityZonalSquared',
-             'velocityZonalTimesTemperature'],
-        'forward/analysis_members/oceanHeatContent.0001-01-01.nc':
-            ['oceanHeatContentSfcToBot', 'oceanHeatContentSfcTo700m',
-             'oceanHeatContent700mTo2000m', 'oceanHeatContent2000mToBot'],
-        'forward/analysis_members/mixedLayerHeatBudget.0001-01-01.nc':
-            ['temperatureHorAdvectionMLTend', 'salinityHorAdvectionMLTend',
-             'temperatureML', 'salinityML', 'bruntVaisalaFreqML']}
+        compare_variables(variables, self.config, work_dir=self.work_dir,
+                          filename1='forward/output.nc')
 
-    failed = list()
-    for filename, variables in variables.items():
-        try:
-            compare_variables(variables, config, work_dir=work_dir,
-                              filename1=filename)
-        except ValueError:
-            traceback.print_exc()
-            failed.append(filename)
-
-    if len(failed) > 0:
-        raise ValueError('Comparison failed, see above, for the following '
-                         'files:\n{}.'.format('\n'.join(failed)))
-
-    timers = ['compute_globalStats', 'write_globalStats',
-              'compute_debugDiagnostics', 'write_debugDiagnostics',
-              'compute_eliassenPalm', 'write_eliassenPalm',
-              'compute_highFrequency', 'write_highFrequency',
-              'compute_layerVolumeWeightedAverage',
-              'write_layerVolumeWeightedAverage',
-              'compute_meridionalHeatTransport',
-              'write_meridionalHeatTransport', 'compute_mixedLayerDepths',
-              'write_mixedLayerDepths', 'compute_okuboWeiss',
-              'write_okuboWeiss', 'compute_surfaceAreaWeightedAverages',
-              'write_surfaceAreaWeightedAverages', 'compute_waterMassCensus',
-              'write_waterMassCensus', 'compute_zonalMean', 'write_zonalMean',
-              'compute_eddyProductVariables', 'write_eddyProductVariables',
-              'compute_oceanHeatContent', 'write_oceanHeatContent',
-              'compute_mixedLayerHeatBudget', 'write_mixedLayerHeatBudget']
-    compare_timers(timers, config, work_dir, rundir1='forward')
+        timers = ['time integration']
+        compare_timers(timers, self.config, self.work_dir, rundir1='forward')

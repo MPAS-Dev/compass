@@ -1,154 +1,118 @@
-from compass.testcase import set_testcase_subdir, add_step, run_steps
-from compass.ocean.tests.global_ocean.init import initial_state, ssh_adjustment
-from compass.ocean.tests.global_ocean.subdir import get_init_sudbdir
-from compass.ocean.tests import global_ocean
+import os
+
+from compass.testcase import TestCase
+from compass.ocean.tests.global_ocean.init.initial_state import InitialState
+from compass.ocean.tests.global_ocean.init.ssh_adjustment import SshAdjustment
+from compass.ocean.tests.global_ocean.configure import configure_global_ocean
 from compass.validate import compare_variables
 
 
-def collect(testcase):
+class Init(TestCase):
     """
-    Update the dictionary of test case properties and add steps
+    A test case for creating initial conditions on a global MPAS-Ocean mesh
 
-    Parameters
+    Attributes
     ----------
-    testcase : dict
-        A dictionary of properties of this test case, which can be updated
+    mesh : compass.ocean.tests.global_ocean.mesh.Mesh
+        The test case that creates the mesh used by this test case
+
+    initial_condition : {'PHC', 'EN4_1900'}
+        The initial condition dataset to use
+
+    with_bgc : bool
+        Whether to include biogeochemistry (BGC) in the initial condition
+
+    init_subdir : str
+        The subdirectory within the test group for all test cases with this
+        initial condition
     """
-    mesh_name = testcase['mesh_name']
-    with_ice_shelf_cavities = testcase['with_ice_shelf_cavities']
-    initial_condition = testcase['initial_condition']
-    with_bgc = testcase['with_bgc']
+    def __init__(self, test_group, mesh, initial_condition, with_bgc):
+        """
+        Create the test case
 
-    if with_bgc:
-        desc_initial_condition = '{} with BGC'.format(initial_condition)
-    else:
-        desc_initial_condition = initial_condition
-    testcase['description'] = 'global ocean {} - {} initial condition'.format(
-        mesh_name, desc_initial_condition)
+        Parameters
+        ----------
+        test_group : compass.ocean.tests.global_ocean.GlobalOcean
+            The global ocean test group that this test case belongs to
 
-    init_subdir = get_init_sudbdir(mesh_name, initial_condition, with_bgc)
-    subdir = '{}/{}'.format(init_subdir, testcase['name'])
-    set_testcase_subdir(testcase, subdir)
+        mesh : compass.ocean.tests.global_ocean.mesh.Mesh
+            The test case that creates the mesh used by this test case
 
-    add_step(testcase, initial_state,
-             with_ice_shelf_cavities=with_ice_shelf_cavities,
-             initial_condition=initial_condition, with_bgc=with_bgc)
+        initial_condition : {'PHC', 'EN4_1900'}
+            The initial condition dataset to use
 
-    if with_ice_shelf_cavities:
-        add_step(testcase, ssh_adjustment, cores=4)
-
-
-def configure(testcase, config):
-    """
-    Modify the configuration options for this test case
-
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case
-
-    config : configparser.ConfigParser
-        Configuration options for this test case
-    """
-    global_ocean.configure(testcase, config)
-
-
-def run(testcase, test_suite, config, logger):
-    """
-    Run each step of the testcase
-
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case
-
-    test_suite : dict
-        A dictionary of properties of the test suite
-
-    config : configparser.ConfigParser
-        Configuration options for this test case
-
-    logger : logging.Logger
-        A logger for output from the test case
-    """
-    work_dir = testcase['work_dir']
-    with_bgc = testcase['with_bgc']
-    steps = testcase['steps_to_run']
-    if 'initial_state' in steps:
-        step = testcase['steps']['initial_state']
-        # get the these properties from the config options
-        for option in ['cores', 'min_cores', 'max_memory', 'max_disk',
-                       'threads']:
-            step[option] = config.getint('global_ocean',
-                                         'init_{}'.format(option))
-
-    if 'ssh_adjustment' in steps:
-        step = testcase['steps']['ssh_adjustment']
-        # get the these properties from the config options
-        for option in ['cores', 'min_cores', 'max_memory', 'max_disk',
-                       'threads']:
-            step[option] = config.getint('global_ocean',
-                                         'forward_{}'.format(option))
-
-    run_steps(testcase, test_suite, config, logger)
-
-    if 'initial_state' in steps:
-        variables = ['temperature', 'salinity', 'layerThickness']
-        compare_variables(variables, config, work_dir,
-                          filename1='initial_state/initial_state.nc')
-
+        with_bgc : bool
+            Whether to include biogeochemistry (BGC) in the initial condition
+        """
+        name = 'init'
+        mesh_name = mesh.mesh_name
         if with_bgc:
-            variables = ['temperature', 'salinity', 'layerThickness', 'PO4',
-                         'NO3', 'SiO3', 'NH4', 'Fe', 'O2', 'DIC',
-                         'DIC_ALT_CO2', 'ALK', 'DOC', 'DON', 'DOFe', 'DOP',
-                         'DOPr', 'DONr', 'zooC', 'spChl', 'spC', 'spFe',
-                         'spCaCO3', 'diatChl', 'diatC', 'diatFe', 'diatSi',
-                         'diazChl', 'diazC', 'diazFe', 'phaeoChl', 'phaeoC',
-                         'phaeoFe', 'DMS', 'DMSP', 'PROT', 'POLY', 'LIP']
+            ic_dir = '{}_BGC'.format(initial_condition)
+        else:
+            ic_dir = initial_condition
+        self.init_subdir = os.path.join(mesh_name, ic_dir)
+        subdir = os.path.join(self.init_subdir, name)
+        super().__init__(test_group=test_group, name=name, subdir=subdir)
+
+        self.mesh = mesh
+        self.initial_condition = initial_condition
+        self.with_bgc = with_bgc
+
+        InitialState(
+            test_case=self, mesh=mesh,
+            initial_condition=initial_condition, with_bgc=with_bgc)
+
+        if mesh.with_ice_shelf_cavities:
+            SshAdjustment(test_case=self, cores=4)
+
+    def configure(self):
+        """
+        Modify the configuration options for this test case
+        """
+        configure_global_ocean(test_case=self, mesh=self.mesh)
+
+    def run(self):
+        """
+        Run each step of the testcase
+        """
+        config = self.config
+        steps = self.steps_to_run
+        work_dir = self.work_dir
+        if 'initial_state' in steps:
+            step = self.steps['initial_state']
+            # get the these properties from the config options
+            step.cores = config.getint('global_ocean', 'init_cores')
+            step.min_cores = config.getint('global_ocean', 'init_min_cores')
+            step.threads = config.getint('global_ocean', 'init_threads')
+
+        if 'ssh_adjustment' in steps:
+            step = self.steps['ssh_adjustment']
+            # get the these properties from the config options
+            step.cores = config.getint('global_ocean', 'forward_cores')
+            step.min_cores = config.getint('global_ocean', 'forward_min_cores')
+            step.threads = config.getint('global_ocean', 'forward_threads')
+
+        # run the steps
+        super().run()
+
+        if 'initial_state' in steps:
+            variables = ['temperature', 'salinity', 'layerThickness']
             compare_variables(variables, config, work_dir,
                               filename1='initial_state/initial_state.nc')
 
-    if 'ssh_adjustment' in steps:
-        variables = ['ssh', 'landIcePressure']
-        compare_variables(variables, config, work_dir,
-                          filename1='ssh_adjustment/adjusted_init.nc')
+            if self.with_bgc:
+                variables = [
+                    'temperature', 'salinity', 'layerThickness', 'PO4', 'NO3',
+                    'SiO3', 'NH4', 'Fe', 'O2', 'DIC', 'DIC_ALT_CO2', 'ALK',
+                    'DOC', 'DON', 'DOFe', 'DOP', 'DOPr', 'DONr', 'zooC',
+                    'spChl', 'spC', 'spFe', 'spCaCO3', 'diatChl', 'diatC',
+                    'diatFe', 'diatSi', 'diazChl', 'diazC', 'diazFe',
+                    'phaeoChl', 'phaeoC', 'phaeoFe', 'DMS', 'DMSP', 'PROT',
+                    'POLY', 'LIP']
+                compare_variables(variables, config, work_dir,
+                                  filename1='initial_state/initial_state.nc')
 
-
-def add_descriptions_to_config(testcase, config):
-    """
-    Modify the configuration options for this testcase to include a
-    description of the initial condition, bathymetry, and whether ice-shelf
-    cavities and biogeochemistry were included
-
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case
-
-    config : configparser.ConfigParser
-        Configuration options for this test case
-    """
-    # add a description of the initial condition
-    if 'initial_condition' in testcase:
-        initial_condition = testcase['initial_condition']
-        descriptions = {'PHC': 'Polar science center Hydrographic '
-                               'Climatology (PHC)',
-                        'EN4_1900':
-                            "Met Office Hadley Centre's EN4 dataset from 1900"}
-        config.set('global_ocean', 'init_description',
-                   descriptions[initial_condition])
-
-    # a description of the bathymetry
-    config.set('global_ocean', 'bathy_description',
-               'Bathymetry is from GEBCO 2019, combined with BedMachine '
-               'Antarctica around Antarctica.')
-
-    if 'with_bgc' in testcase and testcase['with_bgc']:
-        # todo: this needs to be filled in!
-        config.set('global_ocean', 'bgc_description',
-                   '<<<Missing>>>')
-
-    if 'with_ice_shelf_cavities' in testcase and \
-            testcase['with_ice_shelf_cavities']:
-        config.set('global_ocean', 'wisc_description',
-                   'Includes cavities under the ice shelves around Antarctica')
+        if 'ssh_adjustment' in steps:
+            variables = ['ssh', 'landIcePressure']
+            compare_variables(variables, config, work_dir,
+                              filename1='ssh_adjustment/adjusted_init.nc')

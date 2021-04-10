@@ -10,109 +10,109 @@ from mpas_tools.mesh.conversion import mask
 from mpas_tools.io import write_netcdf
 from mpas_tools.ocean.moc import make_moc_basins_and_transects
 
-from compass.io import symlink, add_input_file
+from compass.io import symlink
+from compass.step import Step
 
 
-def collect(testcase, step):
+class DiagnosticsFiles(Step):
     """
-    Update the dictionary of step properties
+    A step for creating files needed for the Meridional Overturning Circulation
+     analysis member and diagnostics from MPAS-Analysis
 
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case, which should not be
-        modified here
-
-    step : dict
-        A dictionary of properties of this step, which can be updated
+    with_ice_shelf_cavities : bool
+        Whether the mesh includes ice-shelf cavities
     """
-    defaults = dict(cores=18, min_cores=1, max_memory=1000, max_disk=1000,
-                    threads=1)
-    for key, value in defaults.items():
-        step.setdefault(key, value)
 
-    add_input_file(step, filename='README', target='../README')
-    add_input_file(step, filename='restart.nc',
-                   target='../{}'.format(step['restart_filename']))
+    def __init__(self, test_case, restart_filename, with_ice_shelf_cavities):
+        """
+        Create a step
 
-    # for now, we won't define any outputs because they include the mesh short
-    # name, which is not known at setup time.  Currently, this is safe because
-    # no other steps depend on the outputs of this one.
+        Parameters
+        ----------
+        test_case : compass.ocean.tests.global_ocean.files_for_e3sm.FilesForE3SM
+            The test case this step belongs to
 
+        restart_filename : str
+            A restart file from the end of the dynamic adjustment test case to
+            use as the basis for an E3SM initial condition
 
-def run(step, test_suite, config, logger):
-    """
-    Run this step of the testcase
+        with_ice_shelf_cavities : bool
+            Whether the mesh includes ice-shelf cavities
+        """
 
-    Parameters
-    ----------
-    step : dict
-        A dictionary of properties of this step
+        super().__init__(test_case, name='diagnostics_files', cores=18,
+                         min_cores=1, threads=1)
 
-    test_suite : dict
-        A dictionary of properties of the test suite
+        self.add_input_file(filename='README', target='../README')
+        self.add_input_file(filename='restart.nc',
+                            target='../{}'.format(restart_filename))
 
-    config : configparser.ConfigParser
-        Configuration options for this test case
+        self.with_ice_shelf_cavities = with_ice_shelf_cavities
 
-    logger : logging.Logger
-        A logger for output from the step
-    """
-    with_ice_shelf_cavities = step['with_ice_shelf_cavities']
-    cores = step['cores']
+        # for now, we won't define any outputs because they include the mesh
+        # short name, which is not known at setup time.  Currently, this is
+        # safe because no other steps depend on the outputs of this one.
 
-    restart_filename = 'restart.nc'
+    def run(self):
+        """
+        Run this step of the testcase
+            """
+        with_ice_shelf_cavities = self.with_ice_shelf_cavities
+        cores = self.cores
+        config = self.config
+        logger = self.logger
 
-    with xarray.open_dataset(restart_filename) as ds:
-        mesh_short_name = ds.attrs['MPAS_Mesh_Short_Name']
-        mesh_prefix = ds.attrs['MPAS_Mesh_Prefix']
-        prefix = 'MPAS_Mesh_{}'.format(mesh_prefix)
+        restart_filename = 'restart.nc'
 
-    for directory in [
-            '../assembled_files/inputdata/ocn/mpas-o/{}'.format(
-                mesh_short_name),
-            '../assembled_files/diagnostics/mpas_analysis/region_masks',
-            '../assembled_files/diagnostics/mpas_analysis/maps']:
-        try:
-            os.makedirs(directory)
-        except OSError:
-            pass
+        with xarray.open_dataset(restart_filename) as ds:
+            mesh_short_name = ds.attrs['MPAS_Mesh_Short_Name']
 
-    _make_moc_masks(mesh_short_name, logger)
+        for directory in [
+                '../assembled_files/inputdata/ocn/mpas-o/{}'.format(
+                    mesh_short_name),
+                '../assembled_files/diagnostics/mpas_analysis/region_masks',
+                '../assembled_files/diagnostics/mpas_analysis/maps']:
+            try:
+                os.makedirs(directory)
+            except OSError:
+                pass
 
-    gf = GeometricFeatures()
+        _make_moc_masks(mesh_short_name, logger)
 
-    region_groups = ['Antarctic Regions', 'Arctic Ocean Regions',
-                     'Arctic Sea Ice Regions', 'Ocean Basins',
-                     'Ocean Subbasins', 'ISMIP6 Regions',
-                     'Transport Transects']
+        gf = GeometricFeatures()
 
-    if with_ice_shelf_cavities:
-        region_groups.append('Ice Shelves')
+        region_groups = ['Antarctic Regions', 'Arctic Ocean Regions',
+                         'Arctic Sea Ice Regions', 'Ocean Basins',
+                         'Ocean Subbasins', 'ISMIP6 Regions',
+                         'Transport Transects']
 
-    for region_group in region_groups:
-        function, prefix, date = get_aggregator_by_name(region_group)
+        if with_ice_shelf_cavities:
+            region_groups.append('Ice Shelves')
 
-        suffix = '{}{}'.format(prefix, date)
+        for region_group in region_groups:
+            function, prefix, date = get_aggregator_by_name(region_group)
 
-        fcMask = function(gf)
-        _make_region_masks(mesh_short_name, suffix=suffix, fcMask=fcMask,
-                           logger=logger)
+            suffix = '{}{}'.format(prefix, date)
 
-    _make_analysis_lat_lon_map(config, mesh_short_name, cores, logger)
-    _make_analysis_polar_map(config, mesh_short_name, projection='antarctic',
-                             cores=cores, logger=logger)
-    _make_analysis_polar_map(config, mesh_short_name, projection='arctic',
-                             cores=cores, logger=logger)
+            fcMask = function(gf)
+            _make_region_masks(mesh_short_name, suffix=suffix, fcMask=fcMask,
+                               logger=logger)
 
-    # make links in output directory
-    files = glob.glob('map_*')
+        _make_analysis_lat_lon_map(config, mesh_short_name, cores, logger)
+        _make_analysis_polar_map(config, mesh_short_name,
+                                 projection='antarctic', cores=cores,
+                                 logger=logger)
+        _make_analysis_polar_map(config, mesh_short_name, projection='arctic',
+                                 cores=cores, logger=logger)
 
-    # make links in output directory
-    output_dir = '../assembled_files/diagnostics/mpas_analysis/maps'
-    for filename in files:
-        symlink('../../../../diagnostics_files/{}'.format(filename),
-                '{}/{}'.format(output_dir, filename))
+        # make links in output directory
+        files = glob.glob('map_*')
+
+        # make links in output directory
+        output_dir = '../assembled_files/diagnostics/mpas_analysis/maps'
+        for filename in files:
+            symlink('../../../../diagnostics_files/{}'.format(filename),
+                    '{}/{}'.format(output_dir, filename))
 
 
 def _make_region_masks(mesh_name, suffix, fcMask, logger):
@@ -200,7 +200,8 @@ def _make_moc_masks(mesh_short_name, logger):
 
     geojson_filename = 'moc_basins.geojson'
 
-    make_moc_basins_and_transects(gf, mesh_filename, mask_and_transect_filename,
+    make_moc_basins_and_transects(gf, mesh_filename,
+                                  mask_and_transect_filename,
                                   geojson_filename=geojson_filename,
                                   mask_filename=mask_filename,
                                   logger=logger)

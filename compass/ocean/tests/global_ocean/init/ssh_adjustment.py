@@ -1,101 +1,86 @@
-import os
-
-from compass.io import symlink, add_input_file, add_output_file
-from compass.namelist import add_namelist_file, add_namelist_options, \
-    generate_namelist
-from compass.streams import add_streams_file, generate_streams
+from compass.step import Step
 from compass.ocean.iceshelf import adjust_ssh
-from compass.ocean.tests.global_ocean.subdir import get_mesh_relative_path, \
-    get_initial_condition_relative_path
-from compass.model import add_model_as_input
 
 
-def collect(testcase, step):
+class SshAdjustment(Step):
     """
-    Update the dictionary of step properties
-
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case, which should not be
-        modified here
-
-    step : dict
-        A dictionary of properties of this step, which can be updated
+    A step for iteratively adjusting the pressure from the weight of the ice
+    shelf to match the sea-surface height as part of ice-shelf 2D test cases
     """
-    defaults = dict(max_memory=8000, max_disk=8000, threads=1)
-    for key, value in defaults.items():
-        step.setdefault(key, value)
+    def __init__(self, test_case, cores=None, min_cores=None, threads=None):
+        """
+        Update the dictionary of step properties
 
-    if 'cores' in step:
-        step.setdefault('min_cores', step['cores'])
+        Parameters
+        ----------
+        test_case : compass.ocean.tests.global_ocean.init.Init
+            The test case this step belongs to
 
-    add_namelist_file(
-        step, 'compass.ocean.tests.global_ocean', 'namelist.forward')
-    add_namelist_options(step, {'config_AM_globalStats_enable': '.false.'})
-    add_namelist_file(step, 'compass.ocean.namelists', 'namelist.ssh_adjust')
+        cores : int, optional
+            the number of cores the step would ideally use.  If fewer cores
+            are available on the system, the step will run on all available
+            cores as long as this is not below ``min_cores``
 
-    add_streams_file(step,  'compass.ocean.streams', 'streams.ssh_adjust')
-    add_streams_file(step,  'compass.ocean.tests.global_ocean.init',
-                     'streams.ssh_adjust')
+        min_cores : int, optional
+            the number of cores the step requires.  If the system has fewer
+            than this number of cores, the step will fail
 
-    mesh_path = '{}/mesh/mesh'.format(get_mesh_relative_path(step))
-    init_path = '{}/init/initial_state'.format(
-        get_initial_condition_relative_path(step))
+        threads : int, optional
+            the number of threads the step will use
 
-    add_input_file(step, filename='adjusting_init0.nc',
-                   target='{}/initial_state.nc'.format(init_path))
-    add_input_file(step, filename='forcing_data.nc',
-                   target='{}/init_mode_forcing_data.nc'.format(init_path))
-    add_input_file(step, filename='graph.info',
-                   target='{}/culled_graph.info'.format(mesh_path))
+        """
+        if min_cores is None:
+            min_cores = cores
+        super().__init__(test_case=test_case, name='ssh_adjustment',
+                         cores=cores, min_cores=min_cores, threads=threads)
 
-    add_output_file(step, filename='adjusted_init.nc')
+        self.add_namelist_file(
+            'compass.ocean.tests.global_ocean', 'namelist.forward')
+        self.add_namelist_options({'config_AM_globalStats_enable': '.false.'})
+        self.add_namelist_file('compass.ocean.namelists',
+                               'namelist.ssh_adjust')
 
+        self.add_streams_file('compass.ocean.streams', 'streams.ssh_adjust')
+        self.add_streams_file('compass.ocean.tests.global_ocean.init',
+                              'streams.ssh_adjust')
 
-def setup(step, config):
-    """
-    Set up the test case in the work directory, including downloading any
-    dependencies
+        mesh_path = test_case.mesh.mesh_step.path
+        init_path = test_case.steps['initial_state'].path
 
-    Parameters
-    ----------
-    step : dict
-        A dictionary of properties of this step
+        self.add_input_file(
+            filename='adjusting_init0.nc',
+            work_dir_target='{}/initial_state.nc'.format(init_path))
+        self.add_input_file(
+            filename='forcing_data.nc',
+            work_dir_target='{}/init_mode_forcing_data.nc'.format(init_path))
+        self.add_input_file(
+            filename='graph.info',
+            work_dir_target='{}/culled_graph.info'.format(mesh_path))
 
-    config : configparser.ConfigParser
-        Configuration options for this test case
-    """
-    generate_namelist(step, config, mode='forward')
-    generate_streams(step, config, mode='forward')
+        self.add_output_file(filename='adjusted_init.nc')
 
-    add_model_as_input(step, config)
+    def setup(self):
+        """
+        Set up the test case in the work directory, including downloading any
+        dependencies
+        """
+        self.add_model_as_input()
 
-    # get the these properties from the config options
-    for option in ['cores', 'min_cores', 'max_memory', 'max_disk',
-                   'threads']:
-        step[option] = config.getint('global_ocean',
-                                     'forward_{}'.format(option))
+        if self.cores is None:
+            self.cores = self.config.getint(
+                'global_ocean', 'forward_cores')
+        if self.min_cores is None:
+            self.min_cores = self.config.getint(
+                'global_ocean', 'forward_min_cores')
+        if self.threads is None:
+            self.threads = self.config.getint(
+                'global_ocean', 'forward_threads')
 
-
-def run(step, test_suite, config, logger):
-    """
-    Run this step of the testcase
-
-    Parameters
-    ----------
-    step : dict
-        A dictionary of properties of this step
-
-    test_suite : dict
-        A dictionary of properties of the test suite
-
-    config : configparser.ConfigParser
-        Configuration options for this test case
-
-    logger : logging.Logger
-        A logger for output from the step
-    """
-    iteration_count = config.getint('ssh_adjustment', 'iterations')
-    adjust_ssh(variable='landIcePressure', iteration_count=iteration_count,
-               step=step, config=config, logger=logger)
+    def run(self):
+        """
+        Run this step of the testcase
+        """
+        config = self.config
+        iteration_count = config.getint('ssh_adjustment', 'iterations')
+        adjust_ssh(variable='landIcePressure', iteration_count=iteration_count,
+                   step=self)

@@ -1,74 +1,78 @@
-# make sure to add all meshes here so they will be found in sys.modules below
-from compass.ocean.tests.global_ocean.mesh import qu240, ec30to60, so12to60
-
-from compass.testcase import set_testcase_subdir, add_step, run_steps
-from compass.ocean.tests.global_ocean.mesh import mesh
-from compass.ocean.tests import global_ocean
+from compass.testcase import TestCase
+from compass.ocean.tests.global_ocean.mesh.qu240 import QU240Mesh
+from compass.ocean.tests.global_ocean.mesh.ec30to60 import EC30to60Mesh
+from compass.ocean.tests.global_ocean.mesh.so12to60 import SO12to60Mesh
+from compass.ocean.tests.global_ocean.configure import configure_global_ocean
 from compass.validate import compare_variables
 
 
-def collect(testcase):
+class Mesh(TestCase):
     """
-    Update the dictionary of test case properties and add steps
+    A test case for creating a global MPAS-Ocean mesh
 
-    Parameters
+    Attributes
     ----------
-    testcase : dict
-        A dictionary of properties of this test case, which can be updated
+    mesh_step : compass.ocean.tests.global_ocean.mesh.mesh.MeshStep
+        The step for creating the mesh
+
+    with_ice_shelf_cavities : bool
+        Whether the mesh includes ice-shelf cavities
     """
-    mesh_name = testcase['mesh_name']
-    with_ice_shelf_cavities = testcase['with_ice_shelf_cavities']
-    testcase['description'] = \
-        'global ocean {} - mesh creation'.format(mesh_name)
+    def __init__(self, test_group, mesh_name):
+        """
+        Create test case for creating a global MPAS-Ocean mesh
 
-    subdir = '{}/{}'.format(mesh_name, testcase['name'])
-    set_testcase_subdir(testcase, subdir)
+        Parameters
+        ----------
+        test_group : compass.ocean.tests.global_ocean.GlobalOcean
+            The global ocean test group that this test case belongs to
 
-    add_step(testcase, mesh, mesh_name=mesh_name,
-             with_ice_shelf_cavities=with_ice_shelf_cavities)
+        mesh_name : str
+            The name of the mesh
+        """
+        name = 'mesh'
+        subdir = '{}/{}'.format(mesh_name, name)
+        super().__init__(test_group=test_group, name=name, subdir=subdir)
+        if mesh_name in 'QU240':
+            self.mesh_step = QU240Mesh(self, mesh_name,
+                                       with_ice_shelf_cavities=False)
+        elif mesh_name in 'QUwISC240':
+            self.mesh_step = QU240Mesh(self, mesh_name,
+                                       with_ice_shelf_cavities=True)
+        elif mesh_name in 'EC30to60':
+            self.mesh_step = EC30to60Mesh(self, mesh_name,
+                                          with_ice_shelf_cavities=False)
+        elif mesh_name in 'ECwISC30to60':
+            self.mesh_step = EC30to60Mesh(self, mesh_name,
+                                          with_ice_shelf_cavities=True)
+        elif mesh_name in 'SOwISC12to60':
+            self.mesh_step = SO12to60Mesh(self, mesh_name,
+                                          with_ice_shelf_cavities=True)
+        else:
+            raise ValueError('Unknown mesh name {}'.format(mesh_name))
 
+        self.mesh_name = mesh_name
+        self.with_ice_shelf_cavities = self.mesh_step.with_ice_shelf_cavities
 
-def configure(testcase, config):
-    """
-    Modify the configuration options for this test case
+    def configure(self):
+        """
+        Modify the configuration options for this test case
+        """
+        configure_global_ocean(test_case=self, mesh=self)
 
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case
+    def run(self):
+        """
+        Run each step of the testcase
+        """
+        step = self.mesh_step
+        config = self.config
+        # get the these properties from the config options
+        step.cores = config.getint('global_ocean', 'mesh_cores')
+        step.min_cores = config.getint('global_ocean', 'mesh_min_cores')
 
-    config : configparser.ConfigParser
-        Configuration options for this test case
-    """
-    global_ocean.configure(testcase, config)
+        # run the step
+        super().run()
 
-
-def run(testcase, test_suite, config, logger):
-    """
-    Run each step of the testcase
-
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case
-
-    test_suite : dict
-        A dictionary of properties of the test suite
-
-    config : configparser.ConfigParser
-        Configuration options for this test case
-
-    logger : logging.Logger
-        A logger for output from the test case
-    """
-    step = testcase['steps']['mesh']
-    # get the these properties from the config options
-    for option in ['cores', 'min_cores', 'max_memory', 'max_disk']:
-        step[option] = config.getint('global_ocean',
-                                     'mesh_{}'.format(option))
-
-    run_steps(testcase, test_suite, config, logger)
-
-    variables = ['xCell', 'yCell', 'zCell']
-    compare_variables(variables, config, testcase['work_dir'],
-                      filename1='mesh/culled_mesh.nc')
+        variables = ['xCell', 'yCell', 'zCell']
+        compare_variables(variables, config, self.work_dir,
+                          filename1='mesh/culled_mesh.nc')

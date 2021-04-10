@@ -3,94 +3,87 @@ import xarray
 
 from mpas_tools.scrip.from_mpas import scrip_from_mpas
 
-from compass.io import symlink, add_input_file
+from compass.io import symlink
+from compass.step import Step
 
 
-def collect(testcase, step):
+class Scrip(Step):
     """
-    Update the dictionary of step properties
+    A step for creating SCRIP files from the MPAS-Ocean mesh
 
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case, which should not be
-        modified here
-
-    step : dict
-        A dictionary of properties of this step, which can be updated
+    with_ice_shelf_cavities : bool
+        Whether the mesh includes ice-shelf cavities
     """
-    defaults = dict(cores=1, min_cores=1, max_memory=1000, max_disk=1000,
-                    threads=1)
-    for key, value in defaults.items():
-        step.setdefault(key, value)
+    def __init__(self, test_case, restart_filename, with_ice_shelf_cavities):
+        """
+        Create a new step
 
-    add_input_file(step, filename='README', target='../README')
-    add_input_file(step, filename='restart.nc',
-                   target='../{}'.format(step['restart_filename']))
+        Parameters
+        ----------
+        test_case : compass.ocean.tests.global_ocean.files_for_e3sm.FilesForE3SM
+            The test case this step belongs to
 
-    # for now, we won't define any outputs because they include the mesh short
-    # name, which is not known at setup time.  Currently, this is safe because
-    # no other steps depend on the outputs of this one.
+        restart_filename : str
+            A restart file from the end of the dynamic adjustment test case to
+            use as the basis for an E3SM initial condition
 
+        with_ice_shelf_cavities : bool
+            Whether the mesh includes ice-shelf cavities
+        """
 
-def run(step, test_suite, config, logger):
-    """
-    Run this step of the testcase
+        super().__init__(test_case, name='scrip', cores=1,
+                         min_cores=1, threads=1)
 
-    Parameters
-    ----------
-    step : dict
-        A dictionary of properties of this step
+        self.add_input_file(filename='README', target='../README')
+        self.add_input_file(filename='restart.nc',
+                            target='../{}'.format(restart_filename))
 
-    test_suite : dict
-        A dictionary of properties of the test suite
+        self.with_ice_shelf_cavities = with_ice_shelf_cavities
 
-    config : configparser.ConfigParser
-        Configuration options for this test case
+        # for now, we won't define any outputs because they include the mesh
+        # short name, which is not known at setup time.  Currently, this is
+        # safe because no other steps depend on the outputs of this one.
 
-    logger : logging.Logger
-        A logger for output from the step
-    """
-    with xarray.open_dataset('restart.nc') as ds:
-        mesh_short_name = ds.attrs['MPAS_Mesh_Short_Name']
-        mesh_prefix = ds.attrs['MPAS_Mesh_Prefix']
-        prefix = 'MPAS_Mesh_{}'.format(mesh_prefix)
-        creation_date = ds.attrs['{}_Version_Creation_Date'.format(prefix)]
+    def run(self):
+        """
+        Run this step of the testcase
+            """
+        with_ice_shelf_cavities = self.with_ice_shelf_cavities
 
-    try:
-        os.makedirs('../assembled_files/inputdata/ocn/mpas-o/{}'.format(
-            mesh_short_name))
-    except OSError:
-        pass
+        with xarray.open_dataset('restart.nc') as ds:
+            mesh_short_name = ds.attrs['MPAS_Mesh_Short_Name']
+            mesh_prefix = ds.attrs['MPAS_Mesh_Prefix']
+            prefix = 'MPAS_Mesh_{}'.format(mesh_prefix)
+            creation_date = ds.attrs['{}_Version_Creation_Date'.format(prefix)]
 
-    with_ice_shelf_cavities = step['with_ice_shelf_cavities']
+        try:
+            os.makedirs('../assembled_files/inputdata/ocn/mpas-o/{}'.format(
+                mesh_short_name))
+        except OSError:
+            pass
 
-    if with_ice_shelf_cavities:
-        nomask_str = '.nomask'
-    else:
-        nomask_str = ''
+        if with_ice_shelf_cavities:
+            nomask_str = '.nomask'
+        else:
+            nomask_str = ''
 
-    restart_filename = os.path.abspath(
-        os.path.join('..', step['restart_filename']))
+        scrip_filename = 'ocean.{}{}.scrip.{}.nc'.format(
+            mesh_short_name,  nomask_str, creation_date)
 
-    # command line execution
-    scrip_filename = 'ocean.{}{}.scrip.{}.nc'.format(
-        mesh_short_name,  nomask_str, creation_date)
+        scrip_from_mpas('restart.nc', scrip_filename)
 
-    scrip_from_mpas(restart_filename, scrip_filename)
+        symlink('../../../../../scrip/{}'.format(scrip_filename),
+                '../assembled_files/inputdata/ocn/mpas-o/{}/{}'.format(
+                    mesh_short_name, scrip_filename))
 
-    symlink('../../../../../scrip/{}'.format(scrip_filename),
-            '../assembled_files/inputdata/ocn/mpas-o/{}/{}'.format(
-                mesh_short_name, scrip_filename))
+        if with_ice_shelf_cavities:
+            scrip_mask_filename = 'ocean.{}.mask.scrip.{}.nc'.format(
+                mesh_short_name, creation_date)
+            scrip_from_mpas('restart.nc', scrip_mask_filename,
+                            useLandIceMask=True)
 
-    if with_ice_shelf_cavities:
-        scrip_mask_filename = 'ocean.{}.mask.scrip.{}.nc'.format(
-            mesh_short_name, creation_date)
-        scrip_from_mpas(restart_filename, scrip_mask_filename,
-                        useLandIceMask=True)
-
-        symlink(
-            '../../../../../scrip/{}'.format(
-                scrip_mask_filename),
-            '../assembled_files/inputdata/ocn/mpas-o/{}/{}'.format(
-                mesh_short_name, scrip_mask_filename))
+            symlink(
+                '../../../../../scrip/{}'.format(
+                    scrip_mask_filename),
+                '../assembled_files/inputdata/ocn/mpas-o/{}/{}'.format(
+                    mesh_short_name, scrip_mask_filename))

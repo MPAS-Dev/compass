@@ -1,165 +1,139 @@
-from compass.ocean.tests.global_ocean import mesh, init, performance_test, \
-    restart_test, decomp_test, threads_test, analysis_test, \
-    daily_output_test, files_for_e3sm
-from compass.ocean.tests.global_ocean.mesh.qu240 import spinup as qu240_spinup
-from compass.ocean.tests.global_ocean.mesh.ec30to60 import spinup as \
-    ec30to60_spinup
-from compass.ocean.tests.global_ocean.mesh.so12to60 import spinup as \
-    so12to60_spinup
-from compass.config import add_config
-from compass.ocean.tests.global_ocean.mesh.mesh import get_mesh_package
-from compass.ocean.tests.global_ocean.init import add_descriptions_to_config
-from compass.testcase import add_testcase
+from compass.testgroup import TestGroup
+
+from compass.ocean.tests.global_ocean.mesh import Mesh
+from compass.ocean.tests.global_ocean.mesh.qu240.dynamic_adjustment import \
+    QU240DynamicAdjustment
+from compass.ocean.tests.global_ocean.mesh.ec30to60.dynamic_adjustment import \
+    EC30to60DynamicAdjustment
+from compass.ocean.tests.global_ocean.mesh.so12to60.dynamic_adjustment import \
+    SO12to60DynamicAdjustment
+from compass.ocean.tests.global_ocean.init import Init
+from compass.ocean.tests.global_ocean.performance_test import PerformanceTest
+from compass.ocean.tests.global_ocean.restart_test import RestartTest
+from compass.ocean.tests.global_ocean.decomp_test import DecompTest
+from compass.ocean.tests.global_ocean.threads_test import ThreadsTest
+from compass.ocean.tests.global_ocean.analysis_test import AnalysisTest
+from compass.ocean.tests.global_ocean.daily_output_test import DailyOutputTest
+from compass.ocean.tests.global_ocean.files_for_e3sm import FilesForE3SM
 
 
-def collect():
+class GlobalOcean(TestGroup):
     """
-    Get a list of test cases in this configuration
-
-    Returns
-    -------
-    testcases : list
-        A list of tests within this configuration
+    A test group for setting up global initial conditions and performing
+    regression testing and dynamic adjustment for MPAS-Ocean
     """
-    testcases = list()
+    def __init__(self, mpas_core):
+        """
+        mpas_core : compass.MpasCore
+            the MPAS core that this test group belongs to
+        """
+        super().__init__(mpas_core=mpas_core, name='global_ocean')
 
-    # we do a lot of tests for QU240/QU240wISC
-    for mesh_name, with_ice_shelf_cavities in [('QU240', False),
-                                               ('QUwISC240', True)]:
-        add_testcase(testcases, mesh, mesh_name=mesh_name,
-                     with_ice_shelf_cavities=with_ice_shelf_cavities)
+        # we do a lot of tests for QU240/QUwISC240
+        for mesh_name in ['QU240', 'QUwISC240']:
+            mesh = Mesh(test_group=self, mesh_name=mesh_name)
 
-        initial_condition = 'PHC'
-        with_bgc = False
-        time_integrator = 'split_explicit'
-        add_testcase(testcases, init, mesh_name=mesh_name,
-                     with_ice_shelf_cavities=with_ice_shelf_cavities,
-                     initial_condition=initial_condition,
-                     with_bgc=with_bgc)
-        for test in [performance_test, restart_test, decomp_test,
-                     threads_test, analysis_test, daily_output_test]:
-            add_testcase(
-                testcases, test, mesh_name=mesh_name,
-                with_ice_shelf_cavities=with_ice_shelf_cavities,
-                initial_condition=initial_condition,
-                with_bgc=with_bgc, time_integrator=time_integrator)
+            init = Init(test_group=self, mesh=mesh,
+                        initial_condition='PHC',
+                        with_bgc=False)
 
-        testcase = add_testcase(
-            testcases, qu240_spinup, mesh_name=mesh_name,
-            with_ice_shelf_cavities=with_ice_shelf_cavities,
-            initial_condition=initial_condition,
-            with_bgc=with_bgc, time_integrator=time_integrator)
-
-        restart_filename = testcase['restart_filenames'][-1]
-        add_testcase(
-            testcases, files_for_e3sm, mesh_name=mesh_name,
-            with_ice_shelf_cavities=with_ice_shelf_cavities,
-            initial_condition=initial_condition,
-            with_bgc=with_bgc, time_integrator=time_integrator,
-            restart_filename=restart_filename)
-
-        time_integrator = 'RK4'
-        for test in [performance_test, restart_test, decomp_test,
-                     threads_test]:
-            add_testcase(
-                testcases, test, mesh_name=mesh_name,
-                with_ice_shelf_cavities=with_ice_shelf_cavities,
-                initial_condition=initial_condition,
-                with_bgc=with_bgc, time_integrator=time_integrator)
-
-        time_integrator = 'split_explicit'
-        initial_condition = 'EN4_1900'
-        with_bgc = False
-        add_testcase(testcases, init, mesh_name=mesh_name,
-                     with_ice_shelf_cavities=with_ice_shelf_cavities,
-                     initial_condition=initial_condition,
-                     with_bgc=with_bgc)
-        add_testcase(testcases, performance_test, mesh_name=mesh_name,
-                     with_ice_shelf_cavities=with_ice_shelf_cavities,
-                     initial_condition=initial_condition,
-                     with_bgc=with_bgc,
-                     time_integrator=time_integrator)
-        testcase = add_testcase(
-            testcases, qu240_spinup, mesh_name=mesh_name,
-            with_ice_shelf_cavities=with_ice_shelf_cavities,
-            initial_condition=initial_condition,
-            with_bgc=with_bgc, time_integrator=time_integrator)
-
-        restart_filename = testcase['restart_filenames'][-1]
-        add_testcase(
-            testcases, files_for_e3sm, mesh_name=mesh_name,
-            with_ice_shelf_cavities=with_ice_shelf_cavities,
-            initial_condition=initial_condition,
-            with_bgc=with_bgc, time_integrator=time_integrator,
-            restart_filename=restart_filename)
-
-        with_bgc = True
-        initial_condition = 'PHC'
-        add_testcase(testcases, init, mesh_name=mesh_name,
-                     with_ice_shelf_cavities=with_ice_shelf_cavities,
-                     initial_condition=initial_condition,
-                     with_bgc=with_bgc)
-        add_testcase(testcases, performance_test, mesh_name=mesh_name,
-                     with_ice_shelf_cavities=with_ice_shelf_cavities,
-                     initial_condition=initial_condition,
-                     with_bgc=with_bgc,
-                     time_integrator=time_integrator)
-
-    # for other meshes, we do fewer tests
-    for mesh_name, with_ice_shelf_cavities in [('EC30to60', False),
-                                               ('ECwISC30to60', True),
-                                               ('SOwISC12to60', True)]:
-        add_testcase(testcases, mesh, mesh_name=mesh_name,
-                     with_ice_shelf_cavities=with_ice_shelf_cavities)
-
-        for initial_condition in ['PHC', 'EN4_1900']:
-            with_bgc = False
             time_integrator = 'split_explicit'
-            add_testcase(testcases, init, mesh_name=mesh_name,
-                         with_ice_shelf_cavities=with_ice_shelf_cavities,
-                         initial_condition=initial_condition,
-                         with_bgc=with_bgc)
-            add_testcase(testcases, performance_test, mesh_name=mesh_name,
-                         with_ice_shelf_cavities=with_ice_shelf_cavities,
-                         initial_condition=initial_condition,
-                         with_bgc=with_bgc, time_integrator=time_integrator)
-            testcase = add_testcase(
-                testcases, ec30to60_spinup, mesh_name=mesh_name,
-                with_ice_shelf_cavities=with_ice_shelf_cavities,
-                initial_condition=initial_condition,
-                with_bgc=with_bgc, time_integrator=time_integrator)
+            PerformanceTest(
+                test_group=self, mesh=mesh, init=init,
+                time_integrator=time_integrator)
+            RestartTest(
+                test_group=self, mesh=mesh, init=init,
+                time_integrator=time_integrator)
+            DecompTest(
+                test_group=self, mesh=mesh, init=init,
+                time_integrator=time_integrator)
+            ThreadsTest(
+                test_group=self, mesh=mesh, init=init,
+                time_integrator=time_integrator)
+            AnalysisTest(
+                test_group=self, mesh=mesh, init=init,
+                time_integrator=time_integrator)
+            DailyOutputTest(
+                test_group=self, mesh=mesh, init=init,
+                time_integrator=time_integrator)
 
-            restart_filename = testcase['restart_filenames'][-1]
-            add_testcase(testcases, files_for_e3sm, mesh_name=mesh_name,
-                         with_ice_shelf_cavities=with_ice_shelf_cavities,
-                         initial_condition=initial_condition,
-                         with_bgc=with_bgc, time_integrator=time_integrator,
-                         restart_filename=restart_filename)
+            dynamic_adjustment = QU240DynamicAdjustment(
+                test_group=self, mesh=mesh, init=init,
+                time_integrator=time_integrator)
+            FilesForE3SM(
+                test_group=self, mesh=mesh, init=init,
+                dynamic_adjustment=dynamic_adjustment)
 
-    return testcases
+            time_integrator = 'RK4'
+            PerformanceTest(
+                test_group=self, mesh=mesh, init=init,
+                time_integrator=time_integrator)
+            RestartTest(
+                test_group=self, mesh=mesh, init=init,
+                time_integrator=time_integrator)
+            DecompTest(
+                test_group=self, mesh=mesh, init=init,
+                time_integrator=time_integrator)
+            ThreadsTest(
+                test_group=self, mesh=mesh, init=init,
+                time_integrator=time_integrator)
 
+            # EN4_1900 tests
+            time_integrator = 'split_explicit'
+            init = Init(test_group=self, mesh=mesh,
+                        initial_condition='EN4_1900',
+                        with_bgc=False)
+            PerformanceTest(
+                test_group=self, mesh=mesh, init=init,
+                time_integrator=time_integrator)
+            dynamic_adjustment = QU240DynamicAdjustment(
+                test_group=self, mesh=mesh, init=init,
+                time_integrator=time_integrator)
+            FilesForE3SM(
+                test_group=self, mesh=mesh, init=init,
+                dynamic_adjustment=dynamic_adjustment)
 
-def configure(testcase, config):
-    """
-    Modify the configuration options for this test case
+            # BGC tests
+            init = Init(test_group=self, mesh=mesh,
+                        initial_condition='PHC',
+                        with_bgc=True)
+            PerformanceTest(
+                test_group=self, mesh=mesh, init=init,
+                time_integrator=time_integrator)
 
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case
+        # for other meshes, we do fewer tests
+        for mesh_name in ['EC30to60', 'ECwISC30to60']:
+            mesh = Mesh(test_group=self, mesh_name=mesh_name)
 
-    config : configparser.ConfigParser
-        Configuration options for this test case
-    """
-    mesh_name = testcase['mesh_name']
-    package, prefix = get_mesh_package(mesh_name)
-    add_config(config, package, '{}.cfg'.format(prefix), exception=True)
-    if testcase['with_ice_shelf_cavities']:
-        config.set('global_ocean', 'prefix', '{}wISC'.format(
-            config.get('global_ocean', 'prefix')))
+            init = Init(test_group=self, mesh=mesh,
+                        initial_condition='PHC',
+                        with_bgc=False)
 
-    name = testcase['name']
-    add_config(config, 'compass.ocean.tests.global_ocean.{}'.format(name),
-               '{}.cfg'.format(name), exception=False)
+            time_integrator = 'split_explicit'
+            PerformanceTest(
+                test_group=self, mesh=mesh, init=init,
+                time_integrator=time_integrator)
+            dynamic_adjustment = EC30to60DynamicAdjustment(
+                test_group=self, mesh=mesh, init=init,
+                time_integrator=time_integrator)
+            FilesForE3SM(
+                test_group=self, mesh=mesh, init=init,
+                dynamic_adjustment=dynamic_adjustment)
 
-    add_descriptions_to_config(testcase, config)
+        # SOwISC12to60: just the version with cavities for now
+        for mesh_name in ['SOwISC12to60']:
+            mesh = Mesh(test_group=self, mesh_name=mesh_name)
+
+            init = Init(test_group=self, mesh=mesh,
+                        initial_condition='PHC',
+                        with_bgc=False)
+            time_integrator = 'split_explicit'
+            PerformanceTest(
+                test_group=self, mesh=mesh, init=init,
+                time_integrator=time_integrator)
+            dynamic_adjustment = SO12to60DynamicAdjustment(
+                test_group=self, mesh=mesh, init=init,
+                time_integrator=time_integrator)
+            FilesForE3SM(
+                test_group=self, mesh=mesh, init=init,
+                dynamic_adjustment=dynamic_adjustment)

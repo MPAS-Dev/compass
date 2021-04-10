@@ -7,96 +7,122 @@ from mpas_tools.mesh.creation.signed_distance import \
 from geometric_features import read_feature_collection
 from mpas_tools.cime.constants import constants
 
+from compass.ocean.tests.global_ocean.mesh.mesh import MeshStep
 
-def build_cell_width_lat_lon():
+
+class SO12to60Mesh(MeshStep):
     """
-    Create cell width array for this mesh on a regular latitude-longitude grid
-
-    Returns
-    -------
-    cellWidth : numpy.array
-        m x n array of cell width in km
-
-    lon : numpy.array
-        longitude in degrees (length n and between -180 and 180)
-
-    lat : numpy.array
-        longitude in degrees (length m and between -90 and 90)
+    A step for creating SOwISC12to60 meshes
     """
-    package = __name__
+    def __init__(self, test_case, mesh_name, with_ice_shelf_cavities):
+        """
+        Create a new step
 
-    dlon = 0.1
-    dlat = dlon
-    earth_radius = constants['SHR_CONST_REARTH']
-    nlon = int(360./dlon) + 1
-    nlat = int(180./dlat) + 1
-    lon = np.linspace(-180., 180., nlon)
-    lat = np.linspace(-90., 90., nlat)
+        Parameters
+        ----------
+        test_case : compass.TestCase
+            The test case this step belongs to
 
-    cellWidthSouth = mdt.EC_CellWidthVsLat(lat, cellWidthEq=30.,
-                                           cellWidthMidLat=45.,
-                                           cellWidthPole=45.,
-                                           latPosEq=7.5, latWidthEq=3.0)
+        mesh_name : str
+            The name of the mesh
 
-    cellWidthNorth = mdt.EC_CellWidthVsLat(lat, cellWidthEq=30.,
-                                           cellWidthMidLat=60.,
-                                           cellWidthPole=35.,
-                                           latPosEq=7.5, latWidthEq=3.0)
+        with_ice_shelf_cavities : bool
+            Whether the mesh includes ice-shelf cavities
+        """
 
-    # Transition at Equator
-    latTransition = 0.0
-    latWidthTransition = 2.5
-    cellWidthVsLat = mdt.mergeCellWidthVsLat(
-        lat,
-        cellWidthSouth,
-        cellWidthNorth,
-        latTransition,
-        latWidthTransition)
+        super().__init__(test_case, mesh_name, with_ice_shelf_cavities,
+                         package=self.__module__,
+                         mesh_config_filename='so12to60.cfg')
 
-    _, cellWidth = np.meshgrid(lon, cellWidthVsLat)
+    def build_cell_width_lat_lon(self):
+        """
+        Create cell width array for this mesh on a regular latitude-longitude
+        grid
 
-    cellWidthAtlantic = mdt.EC_CellWidthVsLat(lat, cellWidthEq=30.,
-                                              cellWidthMidLat=30.,
-                                              cellWidthPole=35.,
-                                              latPosEq=7.5, latWidthEq=3.0)
+        Returns
+        -------
+        cellWidth : numpy.array
+            m x n array of cell width in km
 
-    cellWidthAtlantic = mdt.mergeCellWidthVsLat(
-        lat,
-        cellWidthSouth,
-        cellWidthAtlantic,
-        latTransition,
-        latWidthTransition)
+        lon : numpy.array
+            longitude in degrees (length n and between -180 and 180)
 
-    _, cellWidthAtlantic = np.meshgrid(lon, cellWidthAtlantic)
+        lat : numpy.array
+            longitude in degrees (length m and between -90 and 90)
+        """
 
-    with resources.path(package, 'atlantic.geojson') as path:
-        fc = read_feature_collection(str(path))
+        dlon = 0.1
+        dlat = dlon
+        earth_radius = constants['SHR_CONST_REARTH']
+        nlon = int(360./dlon) + 1
+        nlat = int(180./dlat) + 1
+        lon = np.linspace(-180., 180., nlon)
+        lat = np.linspace(-90., 90., nlat)
 
-    atlantic_signed_distance = signed_distance_from_geojson(
-        fc, lon, lat, earth_radius, max_length=0.25)
+        cellWidthSouth = mdt.EC_CellWidthVsLat(lat, cellWidthEq=30.,
+                                               cellWidthMidLat=45.,
+                                               cellWidthPole=45.,
+                                               latPosEq=7.5, latWidthEq=3.0)
 
-    trans_width = 400e3
-    trans_start = 0.
-    weights = 0.5 * (1 + np.tanh((atlantic_signed_distance - trans_start) /
-                                 trans_width))
+        cellWidthNorth = mdt.EC_CellWidthVsLat(lat, cellWidthEq=30.,
+                                               cellWidthMidLat=60.,
+                                               cellWidthPole=35.,
+                                               latPosEq=7.5, latWidthEq=3.0)
 
-    cellWidth = cellWidthAtlantic * (1 - weights) + cellWidth * weights
+        # Transition at Equator
+        latTransition = 0.0
+        latWidthTransition = 2.5
+        cellWidthVsLat = mdt.mergeCellWidthVsLat(
+            lat,
+            cellWidthSouth,
+            cellWidthNorth,
+            latTransition,
+            latWidthTransition)
 
-    with resources.path(package, 'high_res_region.geojson') as path:
-        fc = read_feature_collection(str(path))
+        _, cellWidth = np.meshgrid(lon, cellWidthVsLat)
 
-    so_signed_distance = signed_distance_from_geojson(fc, lon, lat,
-                                                      earth_radius,
-                                                      max_length=0.25)
+        cellWidthAtlantic = mdt.EC_CellWidthVsLat(lat, cellWidthEq=30.,
+                                                  cellWidthMidLat=30.,
+                                                  cellWidthPole=35.,
+                                                  latPosEq=7.5, latWidthEq=3.0)
 
-    # Equivalent to 20 degrees latitude
-    trans_width = 1600e3
-    trans_start = 500e3
-    dx_min = 12.
+        cellWidthAtlantic = mdt.mergeCellWidthVsLat(
+            lat,
+            cellWidthSouth,
+            cellWidthAtlantic,
+            latTransition,
+            latWidthTransition)
 
-    weights = 0.5 * (1 + np.tanh((so_signed_distance - trans_start) /
-                                 trans_width))
+        _, cellWidthAtlantic = np.meshgrid(lon, cellWidthAtlantic)
 
-    cellWidth = dx_min * (1 - weights) + cellWidth * weights
+        with resources.path(self.package, 'atlantic.geojson') as path:
+            fc = read_feature_collection(str(path))
 
-    return cellWidth, lon, lat
+        atlantic_signed_distance = signed_distance_from_geojson(
+            fc, lon, lat, earth_radius, max_length=0.25)
+
+        trans_width = 400e3
+        trans_start = 0.
+        weights = 0.5 * (1 + np.tanh((atlantic_signed_distance - trans_start) /
+                                     trans_width))
+
+        cellWidth = cellWidthAtlantic * (1 - weights) + cellWidth * weights
+
+        with resources.path(self.package, 'high_res_region.geojson') as path:
+            fc = read_feature_collection(str(path))
+
+        so_signed_distance = signed_distance_from_geojson(fc, lon, lat,
+                                                          earth_radius,
+                                                          max_length=0.25)
+
+        # Equivalent to 20 degrees latitude
+        trans_width = 1600e3
+        trans_start = 500e3
+        dx_min = 12.
+
+        weights = 0.5 * (1 + np.tanh((so_signed_distance - trans_start) /
+                                     trans_width))
+
+        cellWidth = dx_min * (1 - weights) + cellWidth * weights
+
+        return cellWidth, lon, lat
