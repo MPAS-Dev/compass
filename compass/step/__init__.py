@@ -205,7 +205,7 @@ class Step:
         pass
 
     def add_input_file(self, filename=None, target=None, database=None,
-                       url=None):
+                       url=None, work_dir_target=None):
         """
         Add an input file to the step.  The file can be local, a symlink to
         a file that will be created in another step, a symlink to a file in one
@@ -241,6 +241,11 @@ class Step:
             ``target`` (or ``filename`` if ``target`` is not provided).
             ``database`` is not included in the file's URL even if it is
             provided.
+
+        work_dir_target : str, optional
+            Same as ``target`` but with a path relative to the base work
+            directory.  This is useful if it is not easy to determine the
+            relative path between the step's work directory and the target.
         """
         if filename is None:
             if target is None:
@@ -249,7 +254,8 @@ class Step:
             filename = os.path.basename(target)
 
         self.input_data.append(dict(filename=filename, target=target,
-                                    database=database, url=url))
+                                    database=database, url=url,
+                                    work_dir_target=work_dir_target))
 
     def add_output_file(self, filename):
         """
@@ -411,6 +417,10 @@ class Step:
             target = entry['target']
             database = entry['database']
             url = entry['url']
+            work_dir_target = entry['work_dir_target']
+
+            if work_dir_target is not None:
+                target = os.path.join(self.base_work_dir, work_dir_target)
 
             download_target = None
             download_path = None
