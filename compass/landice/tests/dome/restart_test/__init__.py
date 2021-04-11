@@ -1,102 +1,95 @@
-from compass.testcase import set_testcase_subdir, add_step, run_steps
 from compass.validate import compare_variables
-from compass.namelist import add_namelist_file
-from compass.streams import add_streams_file
-from compass.landice.tests.dome import setup_mesh, run_model, visualize
+from compass.testcase import TestCase
+from compass.landice.tests.dome.setup_mesh import SetupMesh
+from compass.landice.tests.dome.run_model import RunModel
+from compass.landice.tests.dome.visualize import Visualize
 
 
-def collect(testcase):
+class RestartTest(TestCase):
     """
-    Update the dictionary of test case properties and add steps
+    A test case for performing two MALI runs of a dome setup, one full run and
+    one run broken into two segments with a restart.  The test case verifies
+    that the results of the two runs are identical.
 
-    Parameters
+    Attributes
     ----------
-    testcase : dict
-        A dictionary of properties of this test case, which can be updated
+    mesh_type : str
+        The resolution or tye of mesh of the test case
     """
-    mesh_type = testcase['mesh_type']
-    testcase['description'] = 'dome - {} - restart test'.format(
-        mesh_type.replace('_', ' '))
 
-    subdir = '{}/{}'.format(mesh_type, testcase['name'])
-    set_testcase_subdir(testcase, subdir)
+    def __init__(self, test_group, mesh_type):
+        """
+        Create the test case
 
-    add_step(testcase, setup_mesh, mesh_type=mesh_type)
+        Parameters
+        ----------
+        test_group : compass.landice.tests.dome.Dome
+            The test group that this test case belongs to
 
-    name = 'full_run'
-    step = add_step(testcase, run_model, name=name, subdir=name, cores=4,
-                    threads=1, mesh_type=mesh_type)
+        mesh_type : str
+            The resolution or tye of mesh of the test case
+        """
+        name = 'restart_test'
+        self.mesh_type = mesh_type
+        subdir = '{}/{}'.format(mesh_type, name)
+        super().__init__(test_group=test_group, name=name,
+                         subdir=subdir)
 
-    # modify the namelist options and streams file
-    add_namelist_file(
-        step, 'compass.landice.tests.dome.restart_test',
-        'namelist.full', out_name='namelist.landice')
-    add_streams_file(
-        step, 'compass.landice.tests.dome.restart_test',
-        'streams.full', out_name='streams.landice')
+        SetupMesh(test_case=self, mesh_type=mesh_type)
 
-    input_dir = name
-    name = 'visualize_{}'.format(name)
-    add_step(testcase, visualize, name=name, subdir=name,
-             mesh_type=mesh_type, input_dir=input_dir)
+        name = 'full_run'
+        step = RunModel(test_case=self, name=name, subdir=name, cores=4,
+                        threads=1, mesh_type=mesh_type)
+        # modify the namelist options and streams file
+        step.add_namelist_file(
+            'compass.landice.tests.dome.restart_test',
+            'namelist.full', out_name='namelist.landice')
+        step.add_streams_file(
+            'compass.landice.tests.dome.restart_test',
+            'streams.full', out_name='streams.landice')
 
-    name = 'restart_run'
-    step = add_step(testcase, run_model, name=name, subdir=name, cores=4,
-                    threads=1, mesh_type=mesh_type,
-                    suffixes=['landice', 'landice.rst'])
+        input_dir = name
+        name = 'visualize_{}'.format(name)
+        Visualize(test_case=self, mesh_type=mesh_type, name=name, subdir=name,
+                  input_dir=input_dir, run_by_default=False)
 
-    # modify the namelist options and streams file
-    add_namelist_file(
-        step, 'compass.landice.tests.dome.restart_test',
-        'namelist.restart', out_name='namelist.landice')
-    add_streams_file(
-        step, 'compass.landice.tests.dome.restart_test',
-        'streams.restart', out_name='streams.landice')
+        name = 'restart_run'
+        step = RunModel(test_case=self, name=name, subdir=name, cores=4,
+                        threads=1, mesh_type=mesh_type,
+                        suffixes=['landice', 'landice.rst'])
 
-    add_namelist_file(
-        step, 'compass.landice.tests.dome.restart_test',
-        'namelist.restart.rst', out_name='namelist.landice.rst')
-    add_streams_file(
-        step, 'compass.landice.tests.dome.restart_test',
-        'streams.restart.rst', out_name='streams.landice.rst')
+        # modify the namelist options and streams file
+        step.add_namelist_file(
+            'compass.landice.tests.dome.restart_test',
+            'namelist.restart', out_name='namelist.landice')
+        step.add_streams_file(
+            'compass.landice.tests.dome.restart_test',
+            'streams.restart', out_name='streams.landice')
 
-    input_dir = name
-    name = 'visualize_{}'.format(name)
-    add_step(testcase, visualize, name=name, subdir=name,
-             mesh_type=mesh_type, input_dir=input_dir)
+        step.add_namelist_file(
+            'compass.landice.tests.dome.restart_test',
+            'namelist.restart.rst', out_name='namelist.landice.rst')
+        step.add_streams_file(
+            'compass.landice.tests.dome.restart_test',
+            'streams.restart.rst', out_name='streams.landice.rst')
 
-    # we don't want to run the visualize step by default.  The user will do
-    # this manually if they want viz
-    testcase['steps_to_run'] = ['setup_mesh', 'full_run', 'restart_run']
+        input_dir = name
+        name = 'visualize_{}'.format(name)
+        Visualize(test_case=self, mesh_type=mesh_type, name=name, subdir=name,
+                  input_dir=input_dir, run_by_default=False)
 
+    # no configure() method is needed
 
-# no configure function is needed
+    def run(self):
+        """
+        Run each step of the test case
+        """
+        # run the steps
+        super().run()
 
-
-def run(testcase, test_suite, config, logger):
-    """
-    Run each step of the test case
-
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case from the ``collect()``
-        function
-
-    test_suite : dict
-        A dictionary of properties of the test suite
-
-    config : configparser.ConfigParser
-        Configuration options for this test case, a combination of the defaults
-        for the machine, core and configuration
-
-    logger : logging.Logger
-        A logger for output from the test case
-    """
-    run_steps(testcase, test_suite, config, logger)
-    variables = ['thickness', 'normalVelocity']
-    steps = testcase['steps_to_run']
-    if 'full_run' in steps and 'restart_run' in steps:
-        compare_variables(variables, config, work_dir=testcase['work_dir'],
-                          filename1='full_run/output.nc',
-                          filename2='restart_run/output.nc')
+        variables = ['thickness', 'normalVelocity']
+        steps = self.steps_to_run
+        if 'full_run' in steps and 'restart_run' in steps:
+            compare_variables(variables, self.config, work_dir=self.work_dir,
+                              filename1='full_run/output.nc',
+                              filename2='restart_run/output.nc')

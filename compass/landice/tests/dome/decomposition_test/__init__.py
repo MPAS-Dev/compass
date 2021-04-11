@@ -1,67 +1,64 @@
-from compass.testcase import add_step, run_steps, set_testcase_subdir
 from compass.validate import compare_variables
-from compass.landice.tests.dome import setup_mesh, run_model, visualize
+from compass.testcase import TestCase
+from compass.landice.tests.dome.setup_mesh import SetupMesh
+from compass.landice.tests.dome.run_model import RunModel
+from compass.landice.tests.dome.visualize import Visualize
 
 
-def collect(testcase):
+class DecompositionTest(TestCase):
     """
-    Update the dictionary of test case properties and add steps
+    A test case for performing two MALI runs of a dome setup, one with one core
+    and one with four.  The test case verifies that the results of the two runs
+    are identical.
 
-    Parameters
+    Attributes
     ----------
-    testcase : dict
-        A dictionary of properties of this test case, which can be updated
+    mesh_type : str
+        The resolution or tye of mesh of the test case
     """
-    mesh_type = testcase['mesh_type']
-    testcase['description'] = \
-        'dome - {} - decomposition test'.format(mesh_type.replace('_', ' '))
 
-    subdir = '{}/{}'.format(mesh_type, testcase['name'])
-    set_testcase_subdir(testcase, subdir)
+    def __init__(self, test_group, mesh_type):
+        """
+        Create the test case
 
-    add_step(testcase, setup_mesh, mesh_type=mesh_type)
+        Parameters
+        ----------
+        test_group : compass.landice.tests.dome.Dome
+            The test group that this test case belongs to
 
-    for procs in [1, 4]:
-        name = '{}proc_run'.format(procs)
-        add_step(testcase, run_model, name=name, subdir=name, cores=procs,
-                 threads=1, mesh_type=mesh_type)
-        input_dir = name
-        name = 'visualize_{}'.format(name)
-        add_step(testcase, visualize, name=name, subdir=name,
-                 mesh_type=mesh_type, input_dir=input_dir)
+        mesh_type : str
+            The resolution or tye of mesh of the test case
+        """
+        name = 'decomposition_test'
+        self.mesh_type = mesh_type
+        subdir = '{}/{}'.format(mesh_type, name)
+        super().__init__(test_group=test_group, name=name,
+                         subdir=subdir)
 
-    # we don't want to run the visualize step by default.  The user will do
-    # this manually if they want viz
-    testcase['steps_to_run'] = ['setup_mesh', '1proc_run', '4proc_run']
+        SetupMesh(test_case=self, mesh_type=mesh_type)
 
+        for procs in [1, 4]:
+            name = '{}proc_run'.format(procs)
+            RunModel(test_case=self, name=name, subdir=name, cores=procs,
+                     threads=1, mesh_type=mesh_type)
 
-# no configure function is needed
+            input_dir = name
+            name = 'visualize_{}'.format(name)
+            Visualize(test_case=self, mesh_type=mesh_type, name=name,
+                      subdir=name, input_dir=input_dir, run_by_default=False)
 
+    # no configure() method is needed
 
-def run(testcase, test_suite, config, logger):
-    """
-    Run each step of the test case
+    def run(self):
+        """
+        Run each step of the test case
+        """
+        # run the steps
+        super().run()
 
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case from the ``collect()``
-        function
-
-    test_suite : dict
-        A dictionary of properties of the test suite
-
-    config : configparser.ConfigParser
-        Configuration options for this test case, a combination of the defaults
-        for the machine, core and configuration
-
-    logger : logging.Logger
-        A logger for output from the test case
-    """
-    run_steps(testcase, test_suite, config, logger)
-    variables = ['thickness', 'normalVelocity']
-    steps = testcase['steps_to_run']
-    if '1proc_run' in steps and '4proc_run' in steps:
-        compare_variables(variables, config, work_dir=testcase['work_dir'],
-                          filename1='1proc_run/output.nc',
-                          filename2='4proc_run/output.nc')
+        variables = ['thickness', 'normalVelocity']
+        steps = self.steps_to_run
+        if '1proc_run' in steps and '4proc_run' in steps:
+            compare_variables(variables, self.config, work_dir=self.work_dir,
+                              filename1='1proc_run/output.nc',
+                              filename2='4proc_run/output.nc')

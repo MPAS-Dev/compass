@@ -6,95 +6,86 @@ from mpas_tools.io import write_netcdf
 from mpas_tools.mesh.conversion import convert, cull
 from mpas_tools.logging import check_call
 
-from compass.io import add_input_file, add_output_file
 from compass.model import make_graph_file
+from compass.step import Step
 
 
-def collect(testcase, step):
+class SetupMesh(Step):
     """
-    Update the dictionary of step properties
+    A step for creating a mesh and initial condition for dome test cases
 
-    Parameters
+    Attributes
     ----------
-    testcase : dict
-        A dictionary of properties of this test case, which should not be
-        modified here
-
-    step : dict
-        A dictionary of properties of this step, which can be updated
+    mesh_type : str
+        The resolution or mesh type of the test case
     """
-    mesh_type = step['mesh_type']
+    def __init__(self, test_case, mesh_type):
+        """
+        Update the dictionary of step properties
 
-    defaults = dict(cores=1, min_cores=1, max_memory=8000, max_disk=8000,
-                    threads=1)
-    for key, value in defaults.items():
-        step.setdefault(key, value)
+        Parameters
+        ----------
+        test_case : compass.TestCase
+            The test case this step belongs to
 
-    if mesh_type == 'variable_resolution':
-        # download and link the mesh
+        mesh_type : str
+            The resolution or mesh type of the test case
+        """
+        super().__init__(test_case=test_case, name='setup_mesh')
+        self.mesh_type = mesh_type
 
-        add_input_file(step, filename='mpas_grid.nc',
-                       target='dome_varres_grid.nc', database='')
+        if mesh_type == 'variable_resolution':
+            # download and link the mesh
+            # the empty database is a trick for downloading to the root of
+            # the local MALI file cache
+            self.add_input_file(filename='mpas_grid.nc',
+                                target='dome_varres_grid.nc', database='')
 
-    add_output_file(step, filename='graph.info')
-    add_output_file(step, filename='landice_grid.nc')
+        self.add_output_file(filename='graph.info')
+        self.add_output_file(filename='landice_grid.nc')
 
+    # no setup() method is needed
 
-# no setup function is needed
+    def run(self):
+        """
+        Run this step of the test case
+       """
+        mesh_type = self.mesh_type
+        logger = self.logger
+        config = self.config
+        section = config['dome']
 
+        if mesh_type == '2000m':
+            nx = section.getint('nx')
+            ny = section.getint('ny')
+            dc = section.getfloat('dc')
 
-def run(step, test_suite, config, logger):
-    """
-    Run this step of the test case
+            dsMesh = make_planar_hex_mesh(nx=nx, ny=ny, dc=dc,
+                                          nonperiodic_x=True,
+                                          nonperiodic_y=True)
 
-    Parameters
-    ----------
-    step : dict
-        A dictionary of properties of this step from the ``collect()``
-        function, with modifications from the ``setup()`` function.
+            write_netcdf(dsMesh, 'grid.nc')
 
-    test_suite : dict
-        A dictionary of properties of the test suite
+            dsMesh = cull(dsMesh, logger=logger)
+            dsMesh = convert(dsMesh, logger=logger)
+            write_netcdf(dsMesh, 'mpas_grid.nc')
 
-    config : configparser.ConfigParser
-        Configuration options for this test case, a combination of the defaults
-        for the machine, core and configuration
+        levels = section.get('levels')
+        args = ['create_landice_grid_from_generic_MPAS_grid.py',
+                '-i', 'mpas_grid.nc',
+                '-o', 'landice_grid.nc',
+                '-l', levels]
 
-    logger : logging.Logger
-        A logger for output from the step
-   """
-    mesh_type = step['mesh_type']
-    section = config['dome']
+        check_call(args, logger)
 
-    if mesh_type == '2000m':
-        nx = section.getint('nx')
-        ny = section.getint('ny')
-        dc = section.getfloat('dc')
+        make_graph_file(mesh_filename='landice_grid.nc',
+                        graph_filename='graph.info')
 
-        dsMesh = make_planar_hex_mesh(nx=nx, ny=ny, dc=dc, nonperiodic_x=True,
-                                      nonperiodic_y=True)
-
-        write_netcdf(dsMesh, 'grid.nc')
-
-        dsMesh = cull(dsMesh, logger=logger)
-        dsMesh = convert(dsMesh, logger=logger)
-        write_netcdf(dsMesh, 'mpas_grid.nc')
-
-    levels = section.get('levels')
-    args = ['create_landice_grid_from_generic_MPAS_grid.py',
-            '-i', 'mpas_grid.nc',
-            '-o', 'landice_grid.nc',
-            '-l', levels]
-
-    check_call(args, logger)
-
-    make_graph_file(mesh_filename='landice_grid.nc',
-                    graph_filename='graph.info')
-
-    _setup_dome_initial_conditions(config, logger, filename='landice_grid.nc')
+        _setup_dome_initial_conditions(config, logger,
+                                       filename='landice_grid.nc')
 
 
-def _setup_dome_initial_conditions(config, logger, filename='landice_grid.nc'):
+def _setup_dome_initial_conditions(config, logger, filename):
     """
     Add the initial condition to the given MPAS mesh file
 
@@ -107,7 +98,7 @@ def _setup_dome_initial_conditions(config, logger, filename='landice_grid.nc'):
     logger : logging.Logger
         A logger for output from the step
 
-    filename : str, optional
+    filename : str
         file to setup dome
     """
     section = config['dome']
@@ -138,8 +129,8 @@ def _setup_dome_initial_conditions(config, logger, filename='landice_grid.nc'):
     r = ((xCell[:] - x0) ** 2 + (yCell[:] - y0) ** 2) ** 0.5
 
     if put_origin_on_a_cell:
-        # Center the dome in the center of the cell that is closest to the center
-        # of the domain.
+        # Center the dome in the center of the cell that is closest to the
+        # center of the domain.
         centerCellIndex = numpy.abs(r[:]).argmin()
         xShift = -1.0 * xCell[centerCellIndex]
         yShift = -1.0 * yCell[centerCellIndex]

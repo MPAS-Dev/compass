@@ -2,64 +2,65 @@ import numpy
 import netCDF4
 import matplotlib.pyplot as plt
 
-from compass.io import add_input_file
+from compass.step import Step
 
 
-def collect(testcase, step):
+class Visualize(Step):
     """
-    Update the dictionary of step properties
+    A step for visualizing the output from a dome test case
 
-    Parameters
+    Attributes
     ----------
-    testcase : dict
-        A dictionary of properties of this test case, which should not be
-        modified here
-
-    step : dict
-        A dictionary of properties of this step, which can be updated
+    mesh_type : str
+        The resolution or mesh type of the test case
     """
-    defaults = dict(cores=1, max_memory=1000, max_disk=1000, threads=1,
-                    input_dir='run_model')
-    for key, value in defaults.items():
-        step.setdefault(key, value)
+    def __init__(self, test_case, mesh_type, name='visualize', subdir=None,
+                 input_dir='run_model', run_by_default=False):
+        """
+        Update the dictionary of step properties
 
-    step.setdefault('min_cores', step['cores'])
+        Parameters
+        ----------
+        test_case : compass.TestCase
+            The test case this step belongs to
 
-    input_dir = step['input_dir']
+        mesh_type : str
+            The resolution or mesh type of the test case
 
-    add_input_file(step, filename='output.nc',
-                   target='../{}/output.nc'.format(input_dir))
+        name : str, optional
+            the name of the test case
 
-    # depending on settings, this will produce no outputs, so we won't add any
+        subdir : str, optional
+            the subdirectory for the step.  The default is ``name``
+
+        input_dir : str, optional
+            The input directory within the test case with a file ``output.nc``
+            to visualize
+
+        run_by_default : bool, optional
+            Whether this step gets run by default.  The default behavior for
+            this step is that it has to be run manually by the user.
+        """
+        super().__init__(test_case=test_case, name=name, subdir=subdir,
+                         run_by_default=run_by_default)
+        self.mesh_type = mesh_type
+
+        self.add_input_file(filename='output.nc',
+                            target='../{}/output.nc'.format(input_dir))
+
+        # depending on settings, this may produce no outputs, so we won't add
+        # any
+
+    # no setup method is needed
+
+    def run(self):
+        """
+        Run this step of the test case
+        """
+        visualize_dome(self.config, self.logger, filename='output.nc')
 
 
-# no setup function is needed
-
-
-def run(step, test_suite, config, logger):
-    """
-    Run this step of the test case
-
-    Parameters
-    ----------
-    step : dict
-        A dictionary of properties of this step from the ``collect()``
-        function, with modifications from the ``setup()`` function.
-
-    test_suite : dict
-        A dictionary of properties of the test suite
-
-    config : configparser.ConfigParser
-        Configuration options for this test case, a combination of the defaults
-        for the machine, core and configuration
-
-    logger : logging.Logger
-        A logger for output from the step
-    """
-    visualize_dome(config, logger, filename='output.nc')
-
-
-def visualize_dome(config, logger, filename='output.nc'):
+def visualize_dome(config, logger, filename):
     """
     Plot the output from a dome test case
 
@@ -72,7 +73,7 @@ def visualize_dome(config, logger, filename='output.nc'):
     logger : logging.Logger
         A logger for output from the step
 
-    filename : str, optional
+    filename : str
         file to visualize
     """
     section = config['dome_viz']
