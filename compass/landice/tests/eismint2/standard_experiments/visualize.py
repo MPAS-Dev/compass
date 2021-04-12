@@ -4,60 +4,45 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.interpolate import griddata
 
+from compass.step import Step
 
-def collect(testcase, step):
+
+class Visualize(Step):
     """
-    Update the dictionary of step properties
-
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case, which should not be
-        modified here
-
-    step : dict
-        A dictionary of properties of this step, which can be updated
+    A step for visualizing the output from a EISMINT2 test case
     """
-    defaults = dict(cores=1, max_memory=1000, max_disk=1000, threads=1)
-    for key, value in defaults.items():
-        step.setdefault(key, value)
+    def __init__(self, test_case):
+        """
+        Update the dictionary of step properties
 
-    step.setdefault('min_cores', step['cores'])
+        Parameters
+        ----------
+        test_case : compass.landice.tests.eismint2.standard_experiments.StandardExperiments
+            The test case this step belongs to
+        """
+        super().__init__(test_case=test_case, name='visualize')
 
+        # depending on settings, this may produce no outputs, so we won't add
+        # any
 
-# no setup function is needed
+    # no setup() method is needed
 
+    def run(self):
+        """
+        Run this step of the test case
+        """
+        config = self.config
+        logger = self.logger
+        experiment = config.get('eismint2_viz', 'experiment')
 
-def run(step, test_suite, config, logger):
-    """
-    Run this step of the test case
+        if ',' in experiment:
+            experiments = [exp.strip() for exp in experiment.split(',')]
+        else:
+            experiments = [experiment]
 
-    Parameters
-    ----------
-    step : dict
-        A dictionary of properties of this step from the ``collect()``
-        function, with modifications from the ``setup()`` function.
-
-    test_suite : dict
-        A dictionary of properties of the test suite
-
-    config : configparser.ConfigParser
-        Configuration options for this test case, a combination of the defaults
-        for the machine, core and configuration
-
-    logger : logging.Logger
-        A logger for output from the step
-    """
-    experiment = config.get('eismint2_viz', 'experiment')
-
-    if ',' in experiment:
-        experiments = [exp.strip() for exp in experiment.split(',')]
-    else:
-        experiments = [experiment]
-
-    for experiment in experiments:
-        logger.info('Plotting Experiment {}'.format(experiment))
-        visualize_eismint2(config, logger, experiment)
+        for experiment in experiments:
+            logger.info('Plotting Experiment {}'.format(experiment))
+            visualize_eismint2(config, logger, experiment)
 
 
 def visualize_eismint2(config, logger, experiment):
@@ -84,7 +69,7 @@ def visualize_eismint2(config, logger, experiment):
     filename = '../experiment_{}/output.nc'.format(experiment)
 
     # open supplied MPAS output file and get variables needed
-    filein = netCDF4.Dataset(filename,'r')
+    filein = netCDF4.Dataset(filename, 'r')
     xCell = filein.variables['xCell'][:]/1000.0
     yCell = filein.variables['yCell'][:]/1000.0
     xtime = filein.variables['xtime'][:]
@@ -93,7 +78,6 @@ def visualize_eismint2(config, logger, experiment):
     years = _xtime_get_year(xtime)
 
     thickness = filein.variables['thickness']
-    temperature = filein.variables['temperature']
     basalTemperature = filein.variables['basalTemperature']
     basalPmpTemperature = filein.variables['basalPmpTemperature']
     flwa = filein.variables['flowParamA']
@@ -130,22 +114,23 @@ def visualize_eismint2(config, logger, experiment):
     fig = plt.figure(1, facecolor='w')
     fig.suptitle('Payne et al. Fig. 1, 3, 6, 9, or 11', fontsize=10, fontweight='bold')
 
-    iceIndices = np.where(thickness[timelev,:]>10.0)[0]
+    iceIndices = np.where(thickness[timelev, :] > 10.0)[0]
     plt.scatter(xCell[iceIndices], yCell[iceIndices], markersize,
-                c=np.array([[0.8, 0.8, 0.8],]), marker=markershape,
+                c=np.array([[0.8, 0.8, 0.8], ]), marker=markershape,
                 edgecolors='none')
 
     # add contours of ice temperature over the top
-    basalTemp = basalTemperature[timelev,:]
+    basalTemp = basalTemperature[timelev, :]
     # fill places below dynamic limit with non-ice value of 273.15
-    basalTemp[np.where(thickness[timelev,:]<10.0)] = 273.15
+    basalTemp[np.where(thickness[timelev, :] < 10.0)] = 273.15
     _contour_mpas(basalTemp, nCells, xCell, yCell,
                   contour_levs=np.linspace(240.0, 275.0, 8))
 
     plt.axis('equal')
     plt.title('Modeled basal temperature (K) \n at time {}'.format(
         netCDF4.chartostring(xtime)[timelev].strip()))
-    plt.xlim( (0.0, 1500.0) ); plt.ylim( (0.0, 1500.0) )
+    plt.xlim((0.0, 1500.0))
+    plt.ylim((0.0, 1500.0))
     plt.xlabel('X position (km)')
     plt.ylabel('Y position (km)')
 
@@ -163,30 +148,31 @@ def visualize_eismint2(config, logger, experiment):
     ax1 = fig.add_subplot(131)
 
     plt.scatter(xCell[iceIndices], yCell[iceIndices], markersize,
-                c=np.array([[0.8, 0.8, 0.8],]), marker=markershape,
+                c=np.array([[0.8, 0.8, 0.8], ]), marker=markershape,
                 edgecolors='none')
 
     # add contours of ice thickness over the top
     contour_intervals = np.linspace(0.0, 5000.0,  int(5000.0/250.0)+1)
-    _contour_mpas(thickness[timelev,:], nCells, xCell, yCell,
+    _contour_mpas(thickness[timelev, :], nCells, xCell, yCell,
                   contour_levs=contour_intervals)
 
-    plt.title('Final thickness (m)' )
+    plt.title('Final thickness (m)')
     ax1.set_aspect('equal')
-    plt.xlabel('X position (km)'); plt.ylabel('Y position (km)')
+    plt.xlabel('X position (km)')
+    plt.ylabel('Y position (km)')
 
     # ================
     # panel c - flux
     ax = fig.add_subplot(133, sharex=ax1, sharey=ax1)
 
-    flux = np.zeros( (nCells,) )
+    flux = np.zeros((nCells,))
     for k in range(nVertLevels):
-        speedLevel = (uReconstructX[timelev,:,k:k+2].mean(axis=1)**2 +
-                      uReconstructY[timelev,:,k:k+2].mean(axis=1)**2)**0.5
-        flux += speedLevel * thickness[timelev,:] * layerThicknessFractions[k]
+        speedLevel = (uReconstructX[timelev, :, k:k+2].mean(axis=1)**2 +
+                      uReconstructY[timelev, :, k:k+2].mean(axis=1)**2)**0.5
+        flux += speedLevel * thickness[timelev, :] * layerThicknessFractions[k]
 
     plt.scatter(xCell[iceIndices], yCell[iceIndices], markersize,
-                c=np.array([[0.8, 0.8, 0.8],]), marker=markershape,
+                c=np.array([[0.8, 0.8, 0.8], ]), marker=markershape,
                 edgecolors='none')
 
     # add contours over the top
@@ -194,31 +180,33 @@ def visualize_eismint2(config, logger, experiment):
     _contour_mpas(flux * 3600.0*24.0*365.0 / 10000.0, nCells, xCell, yCell,
                   contour_levs=contour_intervals)
     ax.set_aspect('equal')
-    plt.title('Final flux (m$^2$ a$^{-1}$ / 10000)' )
-    plt.xlabel('X position (km)'); plt.ylabel('Y position (km)')
+    plt.title('Final flux (m$^2$ a$^{-1}$ / 10000)')
+    plt.xlabel('X position (km)')
+    plt.ylabel('Y position (km)')
 
     # ================
     # panel b - flow factor
     ax = fig.add_subplot(132, sharex=ax1, sharey=ax1)
 
     plt.scatter(xCell[iceIndices], yCell[iceIndices], markersize,
-                c=np.array([[0.8, 0.8, 0.8],]), marker=markershape,
+                c=np.array([[0.8, 0.8, 0.8], ]), marker=markershape,
                 edgecolors='none')
 
     # add contours over the top
-    contour_intervals = np.linspace(0.0, 16.0, int(16.0/0.5)+1)
+    # contour_intervals = np.linspace(0.0, 16.0, int(16.0/0.5)+1)
 
     # this is not used if FO velo solver is used
-    if flwa[timelev,:,:].max() > 0.0:
+    if flwa[timelev, :, :].max() > 0.0:
         # NOT SURE WHICH LEVEL FLWA SHOULD COME FROM - so taking column average
         _contour_mpas(
-            flwa[timelev,:,:].mean(axis=1) * 3600.0*24.0*365.0 / 1.0e-17,
+            flwa[timelev, :, :].mean(axis=1) * 3600.0*24.0*365.0 / 1.0e-17,
             nCells, xCell, yCell)
     ax.set_aspect('equal')
     # Note: the paper's figure claims units of 10$^{-25}$ Pa$^{-3}$ a$^{-1}$
     # but the time unit appears to be 10^-17
-    plt.title('Final flow factor (10$^{-17}$ Pa$^{-3}$ a$^{-1}$)' )
-    plt.xlabel('X position (km)'); plt.ylabel('Y position (km)')
+    plt.title('Final flow factor (10$^{-17}$ Pa$^{-3}$ a$^{-1}$)')
+    plt.xlabel('X position (km)')
+    plt.ylabel('Y position (km)')
 
     if save_images:
         plt.savefig('EISMINT2-{}-steady.png'.format(experiment), dpi=150)
@@ -239,19 +227,19 @@ def visualize_eismint2(config, logger, experiment):
         endTime = 80000.0
 
     # get index at divide - we set this up to be 750,750
-    divideIndex = np.logical_and( xCell == 750.0, yCell == 750.0)
+    divideIndex = np.logical_and(xCell == 750.0, yCell == 750.0)
 
     # panel a - thickness
     fig.add_subplot(211)
     timeInd = np.nonzero(years <= endTime)[0][0:]
-    plt.plot( years[timeInd]/1000.0, thickness[timeInd, divideIndex], 'k.-')
+    plt.plot(years[timeInd]/1000.0, thickness[timeInd, divideIndex], 'k.-')
     plt.ylabel('Thickness (m)')
 
     # panel b - basal temperature
     fig.add_subplot(212)
     # skip the first index cause basalTemperature isn't calculated then
     timeInd = np.nonzero(years <= endTime)[0][1:]
-    plt.plot( years[timeInd]/1000.0, basalTemperature[timeInd, divideIndex], 'k.-')
+    plt.plot(years[timeInd]/1000.0, basalTemperature[timeInd, divideIndex], 'k.-')
     plt.ylabel('Basal temperature (K)')
     plt.xlabel('Time (kyr)')
 
@@ -308,19 +296,20 @@ def visualize_eismint2(config, logger, experiment):
                  'min/mean/max of community', fontsize=10, fontweight='bold')
 
     fig.add_subplot(151)
-    volume = (thickness[timelev,iceIndices] * areaCell[iceIndices]).sum() / 1000.0**3 / 10.0**6
+    volume = ((thickness[timelev, iceIndices] * areaCell[iceIndices]).sum()
+              / 1000.0**3 / 10.0**6)
     # benchmark results
-    plt.plot( np.zeros((3,)), bench['volume'], 'k*')
+    plt.plot(np.zeros((3,)), bench['volume'], 'k*')
     if bench['stattype'] == 'relative':
-        initIceIndices = np.where(thickness[0,:]>0.0)[0]
+        initIceIndices = np.where(thickness[0, :] > 0.0)[0]
         total_volume = \
-            (thickness[0,initIceIndices] * areaCell[initIceIndices]).sum()
+            (thickness[0, initIceIndices] * areaCell[initIceIndices]).sum()
         volume = (volume / (total_volume / 1000.0**3 / 10.0**6) - 1.0) * 100.0
         plt.ylabel('Volume change (%)')
     else:
         plt.ylabel('Volume (10$^6$ km$^3$)')
     # MPAS results
-    plt.plot( (0.0,), volume, 'ro')
+    plt.plot((0.0,), volume, 'ro')
     plt.xticks(())
     logger.info("MALI volume = {}".format(volume))
 
@@ -328,7 +317,7 @@ def visualize_eismint2(config, logger, experiment):
     area = (areaCell[iceIndices]).sum() / 1000.0**2 / 10.0**6
     areaAbsolute = area
     # benchmark results
-    plt.plot( np.zeros((3,)), bench['area'], 'k*')
+    plt.plot(np.zeros((3,)), bench['area'], 'k*')
     if bench['stattype'] == 'relative':
         initArea = (areaCell[initIceIndices]).sum() / 1000.0**2 / 10.0**6
         area = (area / initArea - 1.0) * 100.0
@@ -336,30 +325,30 @@ def visualize_eismint2(config, logger, experiment):
     else:
         plt.ylabel('Area (10$^6$ km$^2$)')
     # MPAS results
-    plt.plot( (0.0,), area, 'ro')
+    plt.plot((0.0,), area, 'ro')
     plt.xticks(())
     logger.info("MALI area = {}".format(area))
 
     fig.add_subplot(153)
     # using threshold here to identify melted locations
     warmBedIndices = np.where(
-        np.logical_and(thickness[timelev,:] > 0.0,
-                       basalTemperature[timelev,:] >=
-                       (basalPmpTemperature[timelev,:] - 0.01)))[0]
+        np.logical_and(thickness[timelev, :] > 0.0,
+                       basalTemperature[timelev, :] >=
+                       (basalPmpTemperature[timelev, :] - 0.01)))[0]
     meltfraction = (areaCell[warmBedIndices].sum() / 1000.0**2 / 10.0**6 /
                     areaAbsolute)
     # benchmark results
-    plt.plot( np.zeros((3,)), bench['meltfraction'], 'k*')
+    plt.plot(np.zeros((3,)), bench['meltfraction'], 'k*')
     if bench['stattype'] == 'relative':
         # use time 1 instead of 0 since these fields aren't fully populated at
         # time 0
-        initIceIndices = np.where(thickness[1,:]>0.0)[0]
+        initIceIndices = np.where(thickness[1, :] > 0.0)[0]
         initArea = (areaCell[initIceIndices].sum() / 1000.0**2 / 10.0**6)
         # using threshold here to identify melted locations
         initWarmBedIndices = \
-            np.where(np.logical_and(thickness[1,:] > 0.0,
-                                    basalTemperature[1,:] >=
-                                    (basalPmpTemperature[1,:] - 0.01)))[0]
+            np.where(np.logical_and(thickness[1, :] > 0.0,
+                                    basalTemperature[1, :] >=
+                                    (basalPmpTemperature[1, :] - 0.01)))[0]
         initWarmArea = (areaCell[initWarmBedIndices].sum() / 1000.0**2 /
                         10.0**6)
         initMeltFraction = initWarmArea / initArea
@@ -368,28 +357,28 @@ def visualize_eismint2(config, logger, experiment):
     else:
         plt.ylabel('Melt fraction')
     # MPAS results
-    plt.plot( (0.0,), meltfraction, 'ro')
+    plt.plot((0.0,), meltfraction, 'ro')
     plt.xticks(())
     logger.info("MALI melt fraction = {}".format(meltfraction))
 
     fig.add_subplot(154)
     dividethickness = thickness[timelev, divideIndex]
     # benchmark results
-    plt.plot( np.zeros((3,)), bench['dividethickness'], 'k*')
+    plt.plot(np.zeros((3,)), bench['dividethickness'], 'k*')
     if bench['stattype'] == 'relative':
         dividethickness = \
             (dividethickness / thickness[0, divideIndex] - 1.0) * 100.0
         plt.ylabel('Divide thickness change (%)')
     else:
         plt.ylabel('Divide thickness (m)')
-    plt.plot( (0.0,), dividethickness, 'ro')  # MPAS results
+    plt.plot((0.0,), dividethickness, 'ro')  # MPAS results
     plt.xticks(())
     logger.info("MALI divide thickness = {}".format(dividethickness[0]))
 
     fig.add_subplot(155)
     dividebasaltemp = basalTemperature[timelev, divideIndex]
     # benchmark results
-    plt.plot( np.zeros((3,)), bench['dividebasaltemp'], 'k*')
+    plt.plot(np.zeros((3,)), bench['dividebasaltemp'], 'k*')
     if bench['stattype'] == 'relative':
         # use time 1 instead of 0 since these fields aren't fully populated at
         # time 0
@@ -397,7 +386,7 @@ def visualize_eismint2(config, logger, experiment):
         plt.ylabel('Divide basal temp. change (K)')
     else:
         plt.ylabel('Divide basal temp. (K)')
-    plt.plot( (0.0,), dividebasaltemp, 'ro')  # MPAS results
+    plt.plot((0.0,), dividebasaltemp, 'ro')  # MPAS results
     plt.xticks(())
     logger.info(
         "MALI divide basal temperature = {}".format(dividebasaltemp[0]))
@@ -431,7 +420,7 @@ def _xtime_to_numtime(xtime):
     for stritem in xtimestr:
         # Get an array of strings that are Y,M,D,h,m,s
         itemarray = \
-            stritem.strip().replace('_', '-').replace(':','-').split('-')
+            stritem.strip().replace('_', '-').replace(':', '-').split('-')
         results = [int(i) for i in itemarray]
         # datetime has a bug where years less than 1900 are invalid on some
         # systems

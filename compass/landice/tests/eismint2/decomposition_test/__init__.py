@@ -1,75 +1,66 @@
-from compass.testcase import add_step, run_steps, set_testcase_subdir
-from compass.namelist import add_namelist_options
-from compass.streams import add_streams_file
 from compass.validate import compare_variables
-from compass.landice.tests.eismint2 import setup_mesh, run_experiment
+from compass.testcase import TestCase
+from compass.landice.tests.eismint2.setup_mesh import SetupMesh
+from compass.landice.tests.eismint2.run_experiment import RunExperiment
 
 
-def collect(testcase):
+class DecompositionTest(TestCase):
     """
-    Update the dictionary of test case properties and add steps
-
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case, which can be updated
+    A test case for performing two MALI runs of a EISMINT2 setup, one with one
+    core and one with four.  The test case verifies that the results of the two
+    runs are identical.
     """
-    thermal_solver = testcase['thermal_solver']
+    def __init__(self, test_group, thermal_solver):
+        """
+        Create the test case
 
-    if thermal_solver == 'enthalpy':
-        testcase['description'] = 'EISMINT2 enthalpy decomposition test'
-        set_testcase_subdir(testcase, 'enthalpy_decomposition_test')
-    elif thermal_solver == 'temperature':
-        testcase['description'] = 'EISMINT2 decomposition test'
-    else:
-        raise ValueError('Unknown thermal_solver {}'.format(thermal_solver))
+        Parameters
+        ----------
+        test_group : compass.landice.tests.eismint2.Eismint2
+            The test group that this test case belongs to
 
-    add_step(testcase, setup_mesh)
+        thermal_solver : {'temperature', 'enthalpy'}
+            The formulation of the thermodynamics to use
+        """
+        if thermal_solver == 'enthalpy':
+            name = 'enthalpy_decomposition_test'
+        elif thermal_solver == 'temperature':
+            name = 'decomposition_test'
+        else:
+            raise ValueError(
+                'Unknown thermal_solver {}'.format(thermal_solver))
+        super().__init__(test_group=test_group, name=name)
 
-    options = {'config_run_duration': "'3000-00-00_00:00:00'",
-               'config_thermal_solver': "'{}'".format(thermal_solver)}
+        SetupMesh(test_case=self)
 
-    experiment = 'f'
-    for procs in [1, 4]:
-        name = '{}proc_run'.format(procs)
-        step = add_step(testcase, run_experiment, name=name, subdir=name,
-                        cores=procs, threads=1, experiment=experiment)
+        options = {'config_run_duration': "'3000-00-00_00:00:00'",
+                   'config_thermal_solver': "'{}'".format(thermal_solver)}
 
-        add_namelist_options(step, options)
+        experiment = 'f'
+        for procs in [1, 4]:
+            name = '{}proc_run'.format(procs)
+            step = RunExperiment(test_case=self, name=name, subdir=name,
+                                 cores=procs, threads=1, experiment=experiment)
 
-        add_streams_file(step,
-                         'compass.landice.tests.eismint2.decomposition_test',
-                         'streams.landice')
+            step.add_namelist_options(options)
 
+            step.add_streams_file(
+                'compass.landice.tests.eismint2.decomposition_test',
+                'streams.landice')
 
-# no configure function is needed
+    # no configure() method is needed
 
+    def run(self):
+        """
+        Run each step of the test case
+        """
+        # run the steps
+        super().run()
 
-def run(testcase, test_suite, config, logger):
-    """
-    Run each step of the test case
-
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case from the ``collect()``
-        function
-
-    test_suite : dict
-        A dictionary of properties of the test suite
-
-    config : configparser.ConfigParser
-        Configuration options for this test case, a combination of the defaults
-        for the machine, core and configuration
-
-    logger : logging.Logger
-        A logger for output from the test case
-    """
-    run_steps(testcase, test_suite, config, logger)
-    variables = ['thickness', 'temperature', 'basalTemperature',
-                 'heatDissipation']
-    steps = testcase['steps_to_run']
-    if '1proc_run' in steps and '4proc_run' in steps:
-        compare_variables(variables, config, work_dir=testcase['work_dir'],
-                          filename1='1proc_run/output.nc',
-                          filename2='4proc_run/output.nc')
+        variables = ['thickness', 'temperature', 'basalTemperature',
+                     'heatDissipation']
+        steps = self.steps_to_run
+        if '1proc_run' in steps and '4proc_run' in steps:
+            compare_variables(variables, self.config, work_dir=self.work_dir,
+                              filename1='1proc_run/output.nc',
+                              filename2='4proc_run/output.nc')

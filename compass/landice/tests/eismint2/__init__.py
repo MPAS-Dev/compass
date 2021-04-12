@@ -1,21 +1,23 @@
-from compass.testcase import add_testcase
-from compass.landice.tests.eismint2 import standard_experiments, \
-    decomposition_test, restart_test
+from compass.testgroup import TestGroup
+from compass.landice.tests.eismint2.standard_experiments import \
+    StandardExperiments
+from compass.landice.tests.eismint2.decomposition_test import DecompositionTest
+from compass.landice.tests.eismint2.restart_test import RestartTest
 
 
-def collect():
+class Eismint2(TestGroup):
     """
-    Get a list of test cases in this configuration
-
-    Returns
-    -------
-    testcases : list
-        A list of tests within this configuration
+    A test group for eismint2 test cases
     """
-    testcases = list()
-    add_testcase(testcases, standard_experiments)
-    for thermal_solver in ['temperature', 'enthalpy']:
-        for test in [decomposition_test, restart_test]:
-            add_testcase(testcases, test, thermal_solver=thermal_solver)
+    def __init__(self, mpas_core):
+        """
+        mpas_core : compass.landice.Landice
+            the MPAS core that this test group belongs to
+        """
+        super().__init__(mpas_core=mpas_core, name='eismint2')
 
-    return testcases
+        StandardExperiments(test_group=self)
+
+        for thermal_solver in ['temperature', 'enthalpy']:
+            DecompositionTest(test_group=self, thermal_solver=thermal_solver)
+            RestartTest(test_group=self, thermal_solver=thermal_solver)

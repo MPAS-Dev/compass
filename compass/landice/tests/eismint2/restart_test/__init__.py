@@ -1,99 +1,91 @@
-from compass.testcase import add_step, run_steps, set_testcase_subdir
 from compass.validate import compare_variables
-from compass.namelist import add_namelist_file, add_namelist_options
-from compass.streams import add_streams_file
-from compass.landice.tests.eismint2 import setup_mesh, run_experiment
+from compass.testcase import TestCase
+from compass.landice.tests.eismint2.setup_mesh import SetupMesh
+from compass.landice.tests.eismint2.run_experiment import RunExperiment
 
 
-def collect(testcase):
+class RestartTest(TestCase):
     """
-    Update the dictionary of test case properties and add steps
-
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case, which can be updated
+    A test case for performing two MALI runs of an EISMINT2 setup, one full run
+    and one run broken into two segments with a restart.  The test case
+    verifies that the results of the two runs are identical.
     """
-    thermal_solver = testcase['thermal_solver']
 
-    if thermal_solver == 'enthalpy':
-        testcase['description'] = 'EISMINT2 enthalpy restart test'
-        set_testcase_subdir(testcase, 'enthalpy_restart_test')
-    elif thermal_solver == 'temperature':
-        testcase['description'] = 'EISMINT2 restart test'
-    else:
-        raise ValueError('Unknown thermal_solver {}'.format(thermal_solver))
+    def __init__(self, test_group, thermal_solver):
+        """
+        Create the test case
 
-    add_step(testcase, setup_mesh)
+        Parameters
+        ----------
+        test_group : compass.landice.tests.eismint2.Eismint2
+            The test group that this test case belongs to
 
-    experiment = 'f'
+        thermal_solver : {'temperature', 'enthalpy'}
+            The formulation of the thermodynamics to use
+        """
+        if thermal_solver == 'enthalpy':
+            name = 'enthalpy_restart_test'
+        elif thermal_solver == 'temperature':
+            name = 'restart_test'
+        else:
+            raise ValueError(
+                'Unknown thermal_solver {}'.format(thermal_solver))
+        super().__init__(test_group=test_group, name=name)
 
-    name = 'full_run'
-    step = add_step(testcase, run_experiment, name=name, subdir=name, cores=4,
-                    threads=1, experiment=experiment)
+        SetupMesh(test_case=self)
 
-    options = {'config_thermal_solver': "'{}'".format(thermal_solver)}
+        experiment = 'f'
 
-    # modify the namelist options and streams file
-    add_namelist_file(
-        step, 'compass.landice.tests.eismint2.restart_test',
-        'namelist.full', out_name='namelist.landice')
-    add_namelist_options(step, options, out_name='namelist.landice')
-    add_streams_file(
-        step, 'compass.landice.tests.eismint2.restart_test',
-        'streams.full', out_name='streams.landice')
+        name = 'full_run'
+        step = RunExperiment(test_case=self, name=name, subdir=name, cores=4,
+                             threads=1, experiment=experiment)
 
-    name = 'restart_run'
-    step = add_step(testcase, run_experiment, name=name, subdir=name, cores=4,
-                    threads=1, experiment=experiment,
-                    suffixes=['landice', 'landice.rst'])
+        options = {'config_thermal_solver': "'{}'".format(thermal_solver)}
 
-    # modify the namelist options and streams file
-    add_namelist_file(
-        step, 'compass.landice.tests.eismint2.restart_test',
-        'namelist.restart', out_name='namelist.landice')
-    add_namelist_options(step, options, out_name='namelist.landice')
-    add_streams_file(
-        step, 'compass.landice.tests.eismint2.restart_test',
-        'streams.restart', out_name='streams.landice')
+        # modify the namelist options and streams file
+        step.add_namelist_file(
+            'compass.landice.tests.eismint2.restart_test',
+            'namelist.full', out_name='namelist.landice')
+        step.add_namelist_options(options, out_name='namelist.landice')
+        step.add_streams_file(
+            'compass.landice.tests.eismint2.restart_test',
+            'streams.full', out_name='streams.landice')
 
-    add_namelist_file(
-        step, 'compass.landice.tests.eismint2.restart_test',
-        'namelist.restart.rst', out_name='namelist.landice.rst')
-    add_namelist_options(step, options, out_name='namelist.landice.rst')
-    add_streams_file(
-        step, 'compass.landice.tests.eismint2.restart_test',
-        'streams.restart.rst', out_name='streams.landice.rst')
+        name = 'restart_run'
+        step = RunExperiment(test_case=self, name=name, subdir=name, cores=4,
+                             threads=1, experiment=experiment,
+                             suffixes=['landice', 'landice.rst'])
 
+        # modify the namelist options and streams file
+        step.add_namelist_file(
+            'compass.landice.tests.eismint2.restart_test',
+            'namelist.restart', out_name='namelist.landice')
+        step.add_namelist_options(options, out_name='namelist.landice')
+        step.add_streams_file(
+            'compass.landice.tests.eismint2.restart_test',
+            'streams.restart', out_name='streams.landice')
 
-# no configure function is needed
+        step.add_namelist_file(
+            'compass.landice.tests.eismint2.restart_test',
+            'namelist.restart.rst', out_name='namelist.landice.rst')
+        step.add_namelist_options(options, out_name='namelist.landice.rst')
+        step.add_streams_file(
+            'compass.landice.tests.eismint2.restart_test',
+            'streams.restart.rst', out_name='streams.landice.rst')
 
+    # no configure() method is needed
 
-def run(testcase, test_suite, config, logger):
-    """
-    Run each step of the test case
+    def run(self):
+        """
+        Run each step of the test case
+        """
+        # run the steps
+        super().run()
 
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case from the ``collect()``
-        function
-
-    test_suite : dict
-        A dictionary of properties of the test suite
-
-    config : configparser.ConfigParser
-        Configuration options for this test case, a combination of the defaults
-        for the machine, core and configuration
-
-    logger : logging.Logger
-        A logger for output from the test case
-    """
-    run_steps(testcase, test_suite, config, logger)
-    variables = ['thickness', 'temperature', 'basalTemperature',
-                 'heatDissipation']
-    steps = testcase['steps_to_run']
-    if 'full_run' in steps and 'restart_run' in steps:
-        compare_variables(variables, config, work_dir=testcase['work_dir'],
-                          filename1='full_run/output.nc',
-                          filename2='restart_run/output.nc')
+        variables = ['thickness', 'temperature', 'basalTemperature',
+                     'heatDissipation']
+        steps = self.steps_to_run
+        if 'full_run' in steps and 'restart_run' in steps:
+            compare_variables(variables, self.config, work_dir=self.work_dir,
+                              filename1='full_run/output.nc',
+                              filename2='restart_run/output.nc')

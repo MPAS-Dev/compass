@@ -1,63 +1,45 @@
-from compass.testcase import add_step, run_steps
-from compass.landice.tests.eismint2 import setup_mesh, run_experiment
-from compass.landice.tests.eismint2.standard_experiments import visualize
+from compass.testcase import TestCase
+from compass.landice.tests.eismint2.setup_mesh import SetupMesh
+from compass.landice.tests.eismint2.run_experiment import RunExperiment
+from compass.landice.tests.eismint2.standard_experiments.visualize import \
+    Visualize
 
 
-def collect(testcase):
+class StandardExperiments(TestCase):
     """
-    Update the dictionary of test case properties and add steps
-
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case, which can be updated
+    A test case for performing the standard EISMINT2 experiments.
     """
-    testcase['description'] = 'EISMINT2 standard experiments'
 
-    add_step(testcase, setup_mesh)
+    def __init__(self, test_group):
+        """
+        Create the test case
 
-    for experiment in ['a', 'b', 'c', 'd', 'f', 'g']:
-        name = 'experiment_{}'.format(experiment)
-        add_step(testcase, run_experiment, name=name, subdir=name, cores=4,
-                 threads=1, experiment=experiment)
+        Parameters
+        ----------
+        test_group : compass.landice.tests.eismint2.Eismint2
+            The test group that this test case belongs to
 
-    add_step(testcase, visualize)
+        mesh_type : str
+            The resolution or tye of mesh of the test case
+        """
+        name = 'standard_experiments'
+        super().__init__(test_group=test_group, name=name)
 
+        SetupMesh(test_case=self)
 
-def configure(testcase, config):
-    """
-    Modify the configuration options for this test case
+        for experiment in ['a', 'b', 'c', 'd', 'f', 'g']:
+            name = 'experiment_{}'.format(experiment)
+            RunExperiment(test_case=self, name=name, subdir=name, cores=4,
+                          threads=1, experiment=experiment)
 
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case
+        Visualize(test_case=self)
 
-    config : configparser.ConfigParser
-        Configuration options for this test case
-    """
-    # We want to visualize all test cases by default
-    config.set('eismint2_viz', 'experiment', 'a, b, c, d, f, g')
+    def configure(self):
+        """
+        Modify the configuration options for this test case
+        """
+        # We want to visualize all test cases by default
+        self.config.set('eismint2_viz', 'experiment', 'a, b, c, d, f, g')
 
-
-def run(testcase, test_suite, config, logger):
-    """
-    Run each step of the test case
-
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case from the ``collect()``
-        function
-
-    test_suite : dict
-        A dictionary of properties of the test suite
-
-    config : configparser.ConfigParser
-        Configuration options for this test case, a combination of the defaults
-        for the machine, core and configuration
-
-    logger : logging.Logger
-        A logger for output from the test case
-    """
-    run_steps(testcase, test_suite, config, logger)
+    # no run() method is needed because we will just do the default: run all
+    # the steps

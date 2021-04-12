@@ -4,128 +4,122 @@ import shutil
 
 from mpas_tools.logging import check_call
 
-from compass.io import add_input_file, add_output_file
-from compass.namelist import add_namelist_file, generate_namelist
-from compass.streams import add_streams_file, generate_streams
-from compass.model import add_model_as_input, run_model
+from compass.model import run_model
+from compass.step import Step
 
 
-def collect(testcase, step):
+class RunExperiment(Step):
     """
-    Update the dictionary of step properties
+    A step for performing forward MALI runs as part of eismint2 test cases.
 
-    Parameters
+    Attributes
     ----------
-    testcase : dict
-        A dictionary of properties of this test case, which should not be
-        modified here
+    experiment : {'a', 'b', 'c', 'd', 'f', 'g'}
+        The EISMINT2 experiment (a-d or f-g) to perform
 
-    step : dict
-        A dictionary of properties of this step, which can be updated
+    suffixes : list of str, optional
+        a list of suffixes for namelist and streams files produced
+        for this step.  Most steps most runs will just have a
+        ``namelist.landice`` and a ``streams.landice`` (the default) but
+        the ``restart_run`` step of the ``restart_test`` runs the model
+        twice, the second time with ``namelist.landice.rst`` and
+        ``streams.landice.rst``
     """
-    defaults = dict(max_memory=1000, max_disk=1000, threads=1,
-                    suffixes=['landice'])
-    for key, value in defaults.items():
-        step.setdefault(key, value)
+    def __init__(self, test_case, experiment, name='run_model', subdir=None,
+                 cores=1, min_cores=None, threads=1, suffixes=None):
+        """
+        Create a new test case
 
-    step.setdefault('min_cores', step['cores'])
+        Parameters
+        ----------
+        test_case : compass.TestCase
+            The test case this step belongs to
 
-    experiment = step['experiment']
+        experiment : {'a', 'b', 'c', 'd', 'f', 'g'}
+            The EISMINT2 experiment (a-d or f-g) to perform
 
-    # most runs will just have a namelist.landice and a streams.landice but
-    # the restart_run step of the restart_test runs the model twice, the second
-    # time with namelist.landice.rst and streams.landice.rst
-    for suffix in step['suffixes']:
-        add_namelist_file(
-            step, 'compass.landice.tests.eismint2', 'namelist.landice',
-            out_name='namelist.{}'.format(suffix))
+        name : str, optional
+            the name of the test case
 
-        add_streams_file(
-            step, 'compass.landice.tests.eismint2', 'streams.landice',
-            out_name='streams.{}'.format(suffix))
+        subdir : str, optional
+            the subdirectory for the step.  The default is ``name``
 
-    if experiment in ('a', 'f', 'g'):
-        add_input_file(step, filename='landice_grid.nc',
-                       target='../setup_mesh/landice_grid.nc')
-    else:
-        add_input_file(step, filename='experiment_a_output.nc',
-                       target='../experiment_a/output.nc')
+        cores : int, optional
+            the number of cores the step would ideally use.  If fewer cores
+            are available on the system, the step will run on all available
+            cores as long as this is not below ``min_cores``
 
-    add_input_file(step, filename='graph.info',
-                   target='../setup_mesh/graph.info')
+        min_cores : int, optional
+            the number of cores the step requires.  If the system has fewer
+            than this number of cores, the step will fail
 
-    add_output_file(step, filename='output.nc')
+        threads : int, optional
+            the number of threads the step will use
 
+        suffixes : list of str, optional
+            a list of suffixes for namelist and streams files produced
+            for this step.  Most steps most runs will just have a
+            ``namelist.landice`` and a ``streams.landice`` (the default) but
+            the ``restart_run`` step of the ``restart_test`` runs the model
+            twice, the second time with ``namelist.landice.rst`` and
+            ``streams.landice.rst``
+        """
+        self.experiment = experiment
+        if suffixes is None:
+            suffixes = ['landice']
+        self.suffixes = suffixes
+        if min_cores is None:
+            min_cores = cores
+        super().__init__(test_case=test_case, name=name, subdir=subdir,
+                         cores=cores, min_cores=min_cores, threads=threads)
 
-def setup(step, config):
-    """
-    Set up the test case in the work directory, including downloading any
-    dependencies
+        for suffix in suffixes:
+            self.add_namelist_file(
+                'compass.landice.tests.eismint2', 'namelist.landice',
+                out_name='namelist.{}'.format(suffix))
 
-    Parameters
-    ----------
-    step : dict
-        A dictionary of properties of this step from the ``collect()`` function
+            self.add_streams_file(
+                'compass.landice.tests.eismint2', 'streams.landice',
+                out_name='streams.{}'.format(suffix))
 
-    config : configparser.ConfigParser
-        Configuration options for this test case, a combination of the defaults
-        for the machine, core, configuration and test case
-    """
-    # again, most runs will just have a namelist.landice and a streams.landice
-    # but the restart_run step of the restart_test runs the model twice, the
-    # second time with namelist.landice.rst and streams.landice.rst
-    for suffix in step['suffixes']:
-        generate_namelist(step, config, out_name='namelist.{}'.format(suffix))
-        generate_streams(step, config, out_name='streams.{}'.format(suffix))
+        if experiment in ('a', 'f', 'g'):
+            self.add_input_file(filename='landice_grid.nc',
+                                target='../setup_mesh/landice_grid.nc')
+        else:
+            self.add_input_file(filename='experiment_a_output.nc',
+                                target='../experiment_a/output.nc')
 
-    add_model_as_input(step, config)
+        self.add_input_file(filename='graph.info',
+                            target='../setup_mesh/graph.info')
 
+        self.add_output_file(filename='output.nc')
 
-def run(step, test_suite, config, logger):
-    """
-    Run this step of the test case
+    def setup(self):
+        """
+        Set up the test case in the work directory, including downloading any
+        dependencies
+        """
+        self.add_model_as_input()
 
-    Parameters
-    ----------
-    step : dict
-        A dictionary of properties of this step from the ``collect()``
-        function, with modifications from the ``setup()`` function.
+    def run(self):
+        """
+        Run this step of the test case
+        """
+        _setup_eismint2_initial_conditions(self.logger, self.experiment,
+                                           filename='initial_condition.nc')
 
-    test_suite : dict
-        A dictionary of properties of the test suite
-
-    config : configparser.ConfigParser
-        Configuration options for this test case, a combination of the defaults
-        for the machine, core and configuration
-
-    logger : logging.Logger
-        A logger for output from the step
-    """
-
-    experiment = step['experiment']
-
-    _setup_eismint2_initial_conditions(config, logger, experiment,
-                                       filename='initial_condition.nc')
-
-    # again, most runs will just have a namelist.landice and a streams.landice
-    # but the restart_run step of the restart_test runs the model twice, the
-    # second time with namelist.landice.rst and streams.landice.rst
-    for suffix in step['suffixes']:
-        run_model(step, config, logger, namelist='namelist.{}'.format(suffix),
-                  streams='streams.{}'.format(suffix))
+        for suffix in self.suffixes:
+            run_model(self, namelist='namelist.{}'.format(suffix),
+                      streams='streams.{}'.format(suffix))
 
 
-def _setup_eismint2_initial_conditions(config, logger, experiment, filename):
+def _setup_eismint2_initial_conditions(logger, experiment, filename):
     """
     Add the initial condition for the given EISMINT2 experiment to the given
     MPAS mesh file
 
     Parameters
     ----------
-    config : configparser.ConfigParser
-        Configuration options for this test case, a combination of the defaults
-        for the machine, core and configuration
-
     logger : logging.Logger
         A logger for output from the step
 
@@ -136,8 +130,6 @@ def _setup_eismint2_initial_conditions(config, logger, experiment, filename):
         file to add the initial condition to
 
     """
-    section = config['eismint2']
-
     if experiment in ('a', 'b', 'c', 'd', 'f', 'g'):
         logger.info('Setting up EISMINT2 Experiment {}'.format(experiment))
     else:
