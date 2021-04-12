@@ -4,121 +4,99 @@ import matplotlib.pyplot as plt
 from scipy.io import loadmat
 from importlib.resources import path
 
-from compass.io import add_input_file
+from compass.step import Step
 
 
-def collect(testcase, step):
+class Visualize(Step):
     """
-    Update the dictionary of step properties
-
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case, which should not be
-        modified here
-
-    step : dict
-        A dictionary of properties of this step, which can be updated
+    A step for visualizing the output from a dome test case
     """
-    defaults = dict(cores=1, max_memory=1000, max_disk=1000, threads=1,
-                    input_dir='run_model')
-    for key, value in defaults.items():
-        step.setdefault(key, value)
+    def __init__(self, test_case):
+        """
+        Update the dictionary of step properties
 
-    step.setdefault('min_cores', step['cores'])
+        Parameters
+        ----------
+        test_case : compass.TestCase
+            The test case this step belongs to
+        """
+        super().__init__(test_case=test_case, name='visualize')
 
-    for phase in range(1, 4):
-        add_input_file(step, filename='output{}.nc'.format(phase),
-                       target='../phase{}/output.nc'.format(phase))
+        for phase in range(1, 4):
+            self.add_input_file(filename='output{}.nc'.format(phase),
+                                target='../phase{}/output.nc'.format(phase))
 
-    filename = 'enthA_analy_result.mat'
-    with path('compass.landice.tests.enthalpy_benchmark.A', filename) as \
-            target:
-        add_input_file(step, filename=filename, target=str(target))
+        filename = 'enthA_analy_result.mat'
+        with path('compass.landice.tests.enthalpy_benchmark.A', filename) as \
+                target:
+            self.add_input_file(filename=filename, target=str(target))
 
+    # no setup() method is needed
 
-# no setup function is needed
+    def run(self):
+        """
+        Run this step of the test case
+        """
+        logger = self.logger
+        section = self.config['enthalpy_benchmark_viz']
 
+        display_image = section.getboolean('display_image')
 
-def run(step, test_suite, config, logger):
-    """
-    Run this step of the test case
+        if not display_image:
+            plt.switch_backend('Agg')
 
-    Parameters
-    ----------
-    step : dict
-        A dictionary of properties of this step from the ``collect()``
-        function, with modifications from the ``setup()`` function.
+        anaData = loadmat('enthA_analy_result.mat')
+        basalMelt = anaData['basalMelt']
 
-    test_suite : dict
-        A dictionary of properties of the test suite
+        SPY = 31556926
 
-    config : configparser.ConfigParser
-        Configuration options for this test case, a combination of the defaults
-        for the machine, core and configuration
+        years = list()
+        basalMeanTs = list()
+        basalMeanBmbs = list()
+        basalMeanWaterThicknesses = list()
 
-    logger : logging.Logger
-        A logger for output from the step
-    """
-    section = config['enthalpy_benchmark_viz']
+        for phase in range(1, 4):
+            filename = 'output{}.nc'.format(phase)
+            year, basalMeanT, basalMeanBmb, basalMeanWaterThickness = \
+                _get_data(filename, SPY)
+            years.append(year)
+            basalMeanTs.append(basalMeanT)
+            basalMeanBmbs.append(basalMeanBmb)
+            basalMeanWaterThicknesses.append(basalMeanWaterThickness)
 
-    display_image = section.getboolean('display_image')
+        year = np.concatenate(years)[1::] / 1000.0
+        basalMeanT = np.concatenate(basalMeanTs)[1::]
+        basalMeanBmb = np.concatenate(basalMeanBmbs)[1::]
+        basalMeanWaterThickness = np.concatenate(basalMeanWaterThicknesses)[1::]
 
-    if not display_image:
-        plt.switch_backend('Agg')
+        plt.figure(1)
+        plt.subplot(311)
+        plt.plot(year, basalMeanT - 273.15)
+        plt.ylabel(r'$T_{\rm b}$ ($^\circ \rm C$)')
+        plt.text(10, -28, '(a)', fontsize=20)
+        plt.grid(True)
 
-    anaData = loadmat('enthA_analy_result.mat')
-    basalMelt = anaData['basalMelt']
+        plt.subplot(312)
+        plt.plot(year, -basalMeanBmb * SPY)
+        plt.plot(basalMelt[1, :] / 1000.0, basalMelt[0, :], linewidth=2)
+        plt.ylabel(r'$a_{\rm b}$ (mm a$^{-1}$ w.e.)')
+        plt.text(10, -1.6, '(b)', fontsize=20)
+        plt.grid(True)
 
-    SPY = 31556926
+        plt.subplot(313)
+        plt.plot(year, basalMeanWaterThickness * 910.0 / 1000.0)
+        plt.ylabel(r'$H_{\rm w}$ (m)')
+        plt.xlabel('Year (ka)')
+        plt.text(10, 8, '(c)', fontsize=20)
+        plt.grid(True)
 
-    years = list()
-    basalMeanTs = list()
-    basalMeanBmbs = list()
-    basalMeanWaterThicknesses = list()
+        # Create image plot
+        plotname = 'enthalpy_A_results.png'
+        plt.savefig(plotname, dpi=150)
+        logger.info('Saved plot as {}'.format(plotname))
 
-    for phase in range(1, 4):
-        filename = 'output{}.nc'.format(phase)
-        year, basalMeanT, basalMeanBmb, basalMeanWaterThickness = \
-            _get_data(filename, SPY)
-        years.append(year)
-        basalMeanTs.append(basalMeanT)
-        basalMeanBmbs.append(basalMeanBmb)
-        basalMeanWaterThicknesses.append(basalMeanWaterThickness)
-
-    year = np.concatenate(years)[1::] / 1000.0
-    basalMeanT = np.concatenate(basalMeanTs)[1::]
-    basalMeanBmb = np.concatenate(basalMeanBmbs)[1::]
-    basalMeanWaterThickness = np.concatenate(basalMeanWaterThicknesses)[1::]
-
-    plt.figure(1)
-    plt.subplot(311)
-    plt.plot(year, basalMeanT - 273.15)
-    plt.ylabel(r'$T_{\rm b}$ ($^\circ \rm C$)')
-    plt.text(10, -28, '(a)', fontsize=20)
-    plt.grid(True)
-
-    plt.subplot(312)
-    plt.plot(year, -basalMeanBmb * SPY)
-    plt.plot(basalMelt[1, :] / 1000.0, basalMelt[0, :], linewidth=2)
-    plt.ylabel(r'$a_{\rm b}$ (mm a$^{-1}$ w.e.)')
-    plt.text(10, -1.6, '(b)', fontsize=20)
-    plt.grid(True)
-
-    plt.subplot(313)
-    plt.plot(year, basalMeanWaterThickness * 910.0 / 1000.0)
-    plt.ylabel(r'$H_{\rm w}$ (m)')
-    plt.xlabel('Year (ka)')
-    plt.text(10, 8, '(c)', fontsize=20)
-    plt.grid(True)
-
-    # Create image plot
-    plotname = 'enthalpy_A_results.png'
-    plt.savefig(plotname, dpi=150)
-    logger.info('Saved plot as {}'.format(plotname))
-
-    if display_image:
-        plt.show()
+        if display_image:
+            plt.show()
 
 
 def _get_data(filename, SPY):

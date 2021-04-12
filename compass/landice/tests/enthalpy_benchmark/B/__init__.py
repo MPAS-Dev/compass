@@ -1,68 +1,45 @@
 from importlib.resources import path
 
 from compass.io import symlink
-from compass.testcase import add_step, run_steps
 from compass.config import add_config
-from compass.landice.tests.enthalpy_benchmark import setup_mesh, run_model
-from compass.landice.tests.enthalpy_benchmark.B import visualize
+from compass.landice.tests.enthalpy_benchmark.setup_mesh import SetupMesh
+from compass.landice.tests.enthalpy_benchmark.run_model import RunModel
+from compass.landice.tests.enthalpy_benchmark.A.visualize import Visualize
+from compass.testcase import TestCase
 
 
-def collect(testcase):
+class B(TestCase):
     """
-    Update the dictionary of test case properties and add steps
+    The Kleiner enthalpy benchmark test case B
 
-    Parameters
+    Attributes
     ----------
-    testcase : dict
-        A dictionary of properties of this test case, which can be updated
     """
-    testcase['description'] = 'Kleiner enthalpy benchmark B'
 
-    add_step(testcase, setup_mesh)
+    def __init__(self, test_group):
+        """
+        Create the test case
 
-    add_step(testcase, run_model, cores=1, threads=1)
+        Parameters
+        ----------
+        test_group : compass.landice.tests.enthalpy_benchmark.EnthalpyBenchmark
+            The test group that this test case belongs to
+        """
+        super().__init__(test_group=test_group, name='B')
 
-    add_step(testcase, visualize)
+        SetupMesh(test_case=self)
+        RunModel(test_case=self, name='run_model', cores=1, threads=1)
+        Visualize(test_case=self)
 
+    def configure(self):
+        """
+        Modify the configuration options for this test case
+        """
+        add_config(self.config, 'compass.landice.tests.enthalpy_benchmark.B',
+                   'B.cfg', exception=True)
 
-def configure(testcase, config):
-    """
-    Modify the configuration options for this test case
+        with path('compass.landice.tests.enthalpy_benchmark', 'README') as \
+                target:
+            symlink(str(target), '{}/README'.format(self.work_dir))
 
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case
-
-    config : configparser.ConfigParser
-        Configuration options for this test case
-    """
-    add_config(config, 'compass.landice.tests.enthalpy_benchmark.B',
-               'B.cfg', exception=True)
-
-    with path('compass.landice.tests.enthalpy_benchmark', 'README') as \
-            target:
-        symlink(str(target), '{}/README'.format(testcase['work_dir']))
-
-
-def run(testcase, test_suite, config, logger):
-    """
-    Run each step of the test case
-
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case from the ``collect()``
-        function
-
-    test_suite : dict
-        A dictionary of properties of the test suite
-
-    config : configparser.ConfigParser
-        Configuration options for this test case, a combination of the defaults
-        for the machine, core and configuration
-
-    logger : logging.Logger
-        A logger for output from the test case
-    """
-    run_steps(testcase, test_suite, config, logger)
+    # no run() method needed: we just run the steps, the default behavior

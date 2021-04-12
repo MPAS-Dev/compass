@@ -1,18 +1,18 @@
-from compass.testcase import add_testcase
-from compass.landice.tests.enthalpy_benchmark import A, B
+from compass.testgroup import TestGroup
+from compass.landice.tests.enthalpy_benchmark.A import A
+from compass.landice.tests.enthalpy_benchmark.B import B
 
 
-def collect():
+class EnthalpyBenchmark(TestGroup):
     """
-    Get a list of test cases in this configuration
-
-    Returns
-    -------
-    testcases : list
-        A list of tests within this configuration
+    A test group for enthalpy benchmark test cases
     """
-    testcases = list()
-    for test in [A, B]:
-        add_testcase(testcases, test)
+    def __init__(self, mpas_core):
+        """
+        mpas_core : compass.landice.Landice
+            the MPAS core that this test group belongs to
+        """
+        super().__init__(mpas_core=mpas_core, name='enthalpy_benchmark')
 
-    return testcases
+        A(test_group=self)
+        B(test_group=self)

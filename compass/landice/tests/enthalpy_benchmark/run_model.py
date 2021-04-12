@@ -1,104 +1,95 @@
 import os
 from netCDF4 import Dataset
 
-from compass.io import add_input_file, add_output_file
-from compass.namelist import add_namelist_file, generate_namelist
-from compass.streams import add_streams_file, generate_streams
-from compass.model import add_model_as_input, run_model
+from compass.model import run_model
+from compass.step import Step
 
 
-def collect(testcase, step):
+class RunModel(Step):
     """
-    Update the dictionary of step properties
+    A step for performing forward MALI runs as part of dome test cases.
 
-    Parameters
+    Attributes
     ----------
-    testcase : dict
-        A dictionary of properties of this test case, which should not be
-        modified here
-
-    step : dict
-        A dictionary of properties of this step, which can be updated
+    restart_filename : str, optional
+        The name of a restart file to continue the run from
     """
-    defaults = dict(max_memory=1000, max_disk=1000, threads=1)
-    for key, value in defaults.items():
-        step.setdefault(key, value)
+    def __init__(self, test_case, name, restart_filename=None, subdir=None,
+                 cores=1, min_cores=None, threads=1):
+        """
+        Create a new test case
 
-    step.setdefault('min_cores', step['cores'])
+        Parameters
+        ----------
+        test_case : compass.TestCase
+            The test case this step belongs to
 
-    add_namelist_file(
-        step, 'compass.landice.tests.enthalpy_benchmark',
-        'namelist.landice')
-    add_streams_file(
-        step, 'compass.landice.tests.enthalpy_benchmark',
-        'streams.landice')
+        name : str
+            the name of the test case
 
-    add_input_file(step, filename='landice_grid.nc',
-                   target='../setup_mesh/landice_grid.nc')
-    add_input_file(step, filename='graph.info',
-                   target='../setup_mesh/graph.info')
+        restart_filename : str, optional
+            The name of a restart file to continue the run from
 
-    if 'restart_filename' in step:
-        target = step['restart_filename']
-        filename = os.path.basename(target)
-        add_input_file(step, filename=filename, target=target)
+        subdir : str, optional
+            the subdirectory for the step.  The default is ``name``
 
-    add_output_file(step, filename='output.nc')
+        cores : int, optional
+            the number of cores the step would ideally use.  If fewer cores
+            are available on the system, the step will run on all available
+            cores as long as this is not below ``min_cores``
 
+        min_cores : int, optional
+            the number of cores the step requires.  If the system has fewer
+            than this number of cores, the step will fail
 
-def setup(step, config):
-    """
-    Set up the test case in the work directory, including downloading any
-    dependencies
+        threads : int, optional
+            the number of threads the step will use
+        """
+        self.restart_filename = restart_filename
+        if min_cores is None:
+            min_cores = cores
+        super().__init__(test_case=test_case, name=name, subdir=subdir,
+                         cores=cores, min_cores=min_cores, threads=threads)
 
-    Parameters
-    ----------
-    step : dict
-        A dictionary of properties of this step from the ``collect()`` function
+        self.add_namelist_file('compass.landice.tests.enthalpy_benchmark',
+                               'namelist.landice')
+        self.add_streams_file('compass.landice.tests.enthalpy_benchmark',
+                              'streams.landice')
 
-    config : configparser.ConfigParser
-        Configuration options for this test case, a combination of the defaults
-        for the machine, core, configuration and test case
-    """
-    generate_namelist(step, config)
-    generate_streams(step, config)
+        self.add_input_file(filename='landice_grid.nc',
+                            target='../setup_mesh/landice_grid.nc')
+        self.add_input_file(filename='graph.info',
+                            target='../setup_mesh/graph.info')
 
-    add_model_as_input(step, config)
+        if restart_filename is not None:
+            filename = os.path.basename(restart_filename)
+            self.add_input_file(filename=filename, target=restart_filename)
 
+        self.add_output_file(filename='output.nc')
 
-def run(step, test_suite, config, logger):
-    """
-    Run this step of the test case
+    def setup(self):
+        """
+        Set up the test case in the work directory, including downloading any
+        dependencies
+        """
+        self.add_model_as_input()
 
-    Parameters
-    ----------
-    step : dict
-        A dictionary of properties of this step from the ``collect()``
-        function, with modifications from the ``setup()`` function.
+    def run(self):
+        """
+        Run this step of the test case
+        """
+        if self.restart_filename is not None:
+            self._update_surface_air_temperature()
 
-    test_suite : dict
-        A dictionary of properties of the test suite
+        run_model(self)
 
-    config : configparser.ConfigParser
-        Configuration options for this test case, a combination of the defaults
-        for the machine, core and configuration
-
-    logger : logging.Logger
-        A logger for output from the step
-    """
-    section = config['enthalpy_benchmark']
-    if 'restart_filename' in step:
-        _update_surface_air_temperature(step, section)
-
-    run_model(step, config, logger)
-
-
-def _update_surface_air_temperature(step, section):
-    phase = step['name']
-    # set the surface air temperature
-    option = '{}_surface_air_temperature'.format(phase)
-    surface_air_temperature = section.getfloat(option)
-    filename = step['restart_filename']
-    with Dataset(filename, 'r+') as data:
-        data.variables['surfaceAirTemperature'][0, :] = \
-            surface_air_temperature
+    def _update_surface_air_temperature(self):
+        section = self.config['enthalpy_benchmark']
+        phase = self.name
+        # set the surface air temperature
+        option = '{}_surface_air_temperature'.format(phase)
+        surface_air_temperature = section.getfloat(option)
+        filename = self.restart_filename
+        with Dataset(filename, 'r+') as data:
+            data.variables['surfaceAirTemperature'][0, :] = \
+                surface_air_temperature
