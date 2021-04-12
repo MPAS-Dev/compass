@@ -84,7 +84,13 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
                                  'test_cases'.format(path))
             test_cases[path] = all_test_cases[path]
 
-    provenance.write(work_dir, test_cases)
+    # get the MPAS core of the first test case.  We'll assume all tests are
+    # for this core
+    first_path = next(iter(test_cases))
+    mpas_core = test_cases[first_path].mpas_core.name
+    provenance.write(work_dir, test_cases, mpas_core=mpas_core,
+                     config_filename=config_file,
+                     mpas_model_path=mpas_model_path)
 
     print('Setting up test cases:')
     for path, test_case in test_cases.items():
