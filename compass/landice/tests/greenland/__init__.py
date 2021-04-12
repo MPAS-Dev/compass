@@ -1,20 +1,20 @@
-from compass.testcase import add_testcase
-from compass.landice.tests.greenland import smoke_test, decomposition_test, \
-    restart_test
+from compass.testgroup import TestGroup
+from compass.landice.tests.greenland.smoke_test import SmokeTest
+from compass.landice.tests.greenland.decomposition_test import DecompositionTest
+from compass.landice.tests.greenland.restart_test import RestartTest
 
 
-def collect():
+class Greenland(TestGroup):
     """
-    Get a list of test cases in this configuration
-
-    Returns
-    -------
-    testcases : list
-        A list of tests within this configuration
+    A test group for Greenland test cases
     """
-    testcases = list()
-    for resolution in ['20km']:
-        for test in [smoke_test, decomposition_test, restart_test]:
-            add_testcase(testcases, test, resolution=resolution)
+    def __init__(self, mpas_core):
+        """
+        mpas_core : compass.landice.Landice
+            the MPAS core that this test group belongs to
+        """
+        super().__init__(mpas_core=mpas_core, name='greenland')
 
-    return testcases
+        SmokeTest(test_group=self)
+        DecompositionTest(test_group=self)
+        RestartTest(test_group=self)

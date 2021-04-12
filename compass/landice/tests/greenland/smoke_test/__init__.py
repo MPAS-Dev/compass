@@ -1,43 +1,29 @@
-from compass.testcase import add_step, run_steps
-from compass.landice.tests.greenland import run_model
+from compass.testcase import TestCase
+from compass.landice.tests.greenland.run_model import RunModel
 
 
-def collect(testcase):
+class SmokeTest(TestCase):
     """
-    Update the dictionary of test case properties and add steps
-
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case, which can be updated
+    The default test case for the Greenland test group simply downloads the
+    mesh and initial condition, then performs a short forward run on 4 cores.
     """
-    resolution = testcase['resolution']
-    testcase['description'] = 'GIS {} smoke test'.format(resolution)
 
-    add_step(testcase, run_model, cores=4, threads=1, resolution=resolution)
+    def __init__(self, test_group):
+        """
+        Create the test case
 
+        Parameters
+        ----------
+        test_group : compass.landice.tests.greenland.Greenland
+            The test group that this test case belongs to
+        """
+        name = 'smoke_test'
+        super().__init__(test_group=test_group, name=name)
 
-# no configure function is needed
+        RunModel(test_case=self, cores=4, threads=1)
 
+    # no configure() method is needed because we will use the default dome
+    # config options
 
-def run(testcase, test_suite, config, logger):
-    """
-    Run each step of the test case
-
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case from the ``collect()``
-        function
-
-    test_suite : dict
-        A dictionary of properties of the test suite
-
-    config : configparser.ConfigParser
-        Configuration options for this test case, a combination of the defaults
-        for the machine, core and configuration
-
-    logger : logging.Logger
-        A logger for output from the test case
-    """
-    run_steps(testcase, test_suite, config, logger)
+    # no run() method is needed because we're doing the default: running all
+    # steps
