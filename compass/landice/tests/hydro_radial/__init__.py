@@ -1,20 +1,24 @@
-from compass.testcase import add_testcase
-from compass.landice.tests.hydro_radial import decomposition_test, \
-    restart_test, spinup_test, steady_state_drift_test
+from compass.testgroup import TestGroup
+from compass.landice.tests.hydro_radial.decomposition_test import \
+    DecompositionTest
+from compass.landice.tests.hydro_radial.restart_test import RestartTest
+from compass.landice.tests.hydro_radial.spinup_test import SpinupTest
+from compass.landice.tests.hydro_radial.steady_state_drift_test import \
+    SteadyStateDriftTest
 
 
-def collect():
+class HydroRadial(TestGroup):
     """
-    Get a list of test cases in this configuration
-
-    Returns
-    -------
-    testcases : list
-        A list of tests within this configuration
+    A test group for radially symmetric hydrology test cases
     """
-    testcases = list()
-    for test in [decomposition_test, restart_test, spinup_test,
-                 steady_state_drift_test]:
-        add_testcase(testcases, test)
+    def __init__(self, mpas_core):
+        """
+        mpas_core : compass.landice.Landice
+            the MPAS core that this test group belongs to
+        """
+        super().__init__(mpas_core=mpas_core, name='hydro_radial')
 
-    return testcases
+        DecompositionTest(test_group=self)
+        RestartTest(test_group=self)
+        SpinupTest(test_group=self)
+        SteadyStateDriftTest(test_group=self)

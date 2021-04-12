@@ -1,56 +1,39 @@
-from compass.testcase import add_step, run_steps
-from compass.namelist import add_namelist_file
-from compass.streams import add_streams_file
-from compass.landice.tests.hydro_radial import setup_mesh, run_model, visualize
+from compass.testcase import TestCase
+from compass.landice.tests.hydro_radial.setup_mesh import SetupMesh
+from compass.landice.tests.hydro_radial.run_model import RunModel
+from compass.landice.tests.hydro_radial.visualize import Visualize
 
 
-def collect(testcase):
+class SpinupTest(TestCase):
     """
-    Update the dictionary of test case properties and add steps
-
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case, which can be updated
+    A spin-up test case for the radially symmetric hydrological test group that
+    creates the mesh and initial condition, then performs a long short forward
+    run on 4 cores until a quasi-steady state is reached.
     """
-    testcase['description'] = 'hydro-radial spinup test'
 
-    add_step(testcase, setup_mesh, initial_condition='zero')
+    def __init__(self, test_group):
+        """
+        Create the test case
 
-    step = add_step(testcase, run_model, cores=4, threads=1)
+        Parameters
+        ----------
+        test_group : compass.landice.tests.hydro_radial.HydroRadial
+            The test group that this test case belongs to
+        """
+        super().__init__(test_group=test_group, name='spinup_test')
 
-    add_namelist_file(
-        step, 'compass.landice.tests.hydro_radial.spinup_test',
-        'namelist.landice')
+        SetupMesh(test_case=self, initial_condition='zero')
+        step = RunModel(test_case=self, cores=4, threads=1)
+        step.add_namelist_file(
+            'compass.landice.tests.hydro_radial.spinup_test',
+            'namelist.landice')
 
-    add_streams_file(
-        step, 'compass.landice.tests.hydro_radial.spinup_test',
-        'streams.landice')
+        step.add_streams_file(
+            'compass.landice.tests.hydro_radial.spinup_test',
+            'streams.landice')
+        Visualize(test_case=self, run_by_default=False)
 
-    add_step(testcase, visualize, input_dir='run_model')
+    # no configure() method is needed
 
-
-# no configure function is needed
-
-
-def run(testcase, test_suite, config, logger):
-    """
-    Run each step of the test case
-
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case from the ``collect()``
-        function
-
-    test_suite : dict
-        A dictionary of properties of the test suite
-
-    config : configparser.ConfigParser
-        Configuration options for this test case, a combination of the defaults
-        for the machine, core and configuration
-
-    logger : logging.Logger
-        A logger for output from the test case
-    """
-    run_steps(testcase, test_suite, config, logger)
+    # no run() method is needed because we're doing the default: running all
+    # steps

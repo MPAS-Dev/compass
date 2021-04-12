@@ -3,68 +3,59 @@ import netCDF4
 import matplotlib.pyplot as plt
 from importlib.resources import path
 
-from compass.io import add_input_file
+from compass.step import Step
 
 
-def collect(testcase, step):
+class Visualize(Step):
     """
-    Update the dictionary of step properties
-
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case, which should not be
-        modified here
-
-    step : dict
-        A dictionary of properties of this step, which can be updated
+    A step for visualizing the output from a dome test case
     """
-    defaults = dict(cores=1, max_memory=1000, max_disk=1000, threads=1,
-                    input_dir='run_model')
-    for key, value in defaults.items():
-        step.setdefault(key, value)
+    def __init__(self, test_case, name='visualize', subdir=None,
+                 input_dir='run_model', run_by_default=False):
+        """
+        Update the dictionary of step properties
 
-    step.setdefault('min_cores', step['cores'])
+        Parameters
+        ----------
+        test_case : compass.TestCase
+            The test case this step belongs to
 
-    input_dir = step['input_dir']
+        name : str, optional
+            the name of the test case
 
-    add_input_file(step, filename='output.nc',
-                   target='../{}/output.nc'.format(input_dir))
+        subdir : str, optional
+            the subdirectory for the step.  The default is ``name``
 
-    add_input_file(step, filename='landice_grid.nc',
-                   target='../{}/landice_grid.nc'.format(input_dir))
+        input_dir : str, optional
+            The input directory within the test case with a file ``output.nc``
+            to visualize
 
-    filename = 'near_exact_solution_r_P_W.txt'
-    with path('compass.landice.tests.hydro_radial', filename) as target:
-        add_input_file(step, filename=filename, target=str(target))
+        run_by_default : bool, optional
+            Whether this step gets run by default.  The default behavior for
+            this step is that it has to be run manually by the user.
+        """
+        super().__init__(test_case=test_case, name=name, subdir=subdir,
+                         run_by_default=run_by_default)
+
+        self.add_input_file(filename='output.nc',
+                            target='../{}/output.nc'.format(input_dir))
+
+        self.add_input_file(filename='landice_grid.nc',
+                            target='../{}/landice_grid.nc'.format(input_dir))
+
+        filename = 'near_exact_solution_r_P_W.txt'
+        with path('compass.landice.tests.hydro_radial', filename) as target:
+            self.add_input_file(filename=filename, target=str(target))
 
     # depending on settings, this will produce no outputs, so we won't add any
 
+    # no setup method is needed
 
-# no setup function is needed
-
-
-def run(step, test_suite, config, logger):
-    """
-    Run this step of the test case
-
-    Parameters
-    ----------
-    step : dict
-        A dictionary of properties of this step from the ``collect()``
-        function, with modifications from the ``setup()`` function.
-
-    test_suite : dict
-        A dictionary of properties of the test suite
-
-    config : configparser.ConfigParser
-        Configuration options for this test case, a combination of the defaults
-        for the machine, core and configuration
-
-    logger : logging.Logger
-        A logger for output from the step
-    """
-    visualize_hydro_radial(config, logger)
+    def run(self):
+        """
+        Run this step of the test case
+        """
+        visualize_hydro_radial(self.config, self.logger)
 
 
 def visualize_hydro_radial(config, logger):

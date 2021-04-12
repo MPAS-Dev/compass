@@ -7,101 +7,92 @@ from mpas_tools.io import write_netcdf
 from mpas_tools.mesh.conversion import convert, cull
 from mpas_tools.logging import check_call
 
-from compass.io import add_input_file, add_output_file
 from compass.model import make_graph_file
+from compass.step import Step
 
 
-def collect(testcase, step):
+class SetupMesh(Step):
     """
-    Update the dictionary of step properties
+    A step for creating a mesh and initial condition for dome test cases
 
-    Parameters
+    Attributes
     ----------
-    testcase : dict
-        A dictionary of properties of this test case, which should not be
-        modified here
-
-    step : dict
-        A dictionary of properties of this step, which can be updated
+    initial_condition : {'zero', 'exact'}
+        The type of initial condition to set up.  'zero' means nearly zero ice
+        thickness.  'exact' uses a precomputed near exact solution from a file.
     """
-    defaults = dict(cores=1, min_cores=1, max_memory=8000, max_disk=8000,
-                    threads=1)
-    for key, value in defaults.items():
-        step.setdefault(key, value)
+    def __init__(self, test_case, initial_condition):
+        """
+        Update the dictionary of step properties
 
-    initial_condition = step['initial_condition']
+        Parameters
+        ----------
+        test_case : compass.TestCase
+            The test case this step belongs to
 
-    if initial_condition == 'exact':
-        filename = 'near_exact_solution_r_P_W.txt'
-        with path('compass.landice.tests.hydro_radial', filename) as target:
-            add_input_file(step, filename=filename, target=str(target))
-    elif initial_condition != 'zero':
-        raise ValueError("Unknown initial condition type specified "
-                         "{}.".format(initial_condition))
+        initial_condition : {'zero', 'exact'}
+            The type of initial condition to set up.  'zero' means nearly zero
+            ice thickness.  'exact' uses a precomputed near exact solution from
+            a file.
+        """
+        super().__init__(test_case=test_case, name='setup_mesh')
 
-    add_output_file(step, filename='graph.info')
-    add_output_file(step, filename='landice_grid.nc')
+        self.initial_condition = initial_condition
 
+        if initial_condition == 'exact':
+            filename = 'near_exact_solution_r_P_W.txt'
+            with path('compass.landice.tests.hydro_radial', filename) as target:
+                self.add_input_file(filename=filename, target=str(target))
+        elif initial_condition != 'zero':
+            raise ValueError("Unknown initial condition type specified "
+                             "{}.".format(initial_condition))
 
-# no setup function is needed
+        self.add_output_file(filename='graph.info')
+        self.add_output_file(filename='landice_grid.nc')
 
+    # no setup() method is needed
 
-def run(step, test_suite, config, logger):
-    """
-    Run this step of the test case
+    def run(self):
+        """
+        Run this step of the test case
+        """
+        initial_condition = self.initial_condition
+        logger = self.logger
+        section = self.config['hydro_radial']
 
-    Parameters
-    ----------
-    step : dict
-        A dictionary of properties of this step from the ``collect()``
-        function, with modifications from the ``setup()`` function.
+        nx = section.getint('nx')
+        ny = section.getint('ny')
+        dc = section.getfloat('dc')
 
-    test_suite : dict
-        A dictionary of properties of the test suite
+        dsMesh = make_planar_hex_mesh(nx=nx, ny=ny, dc=dc, nonperiodic_x=True,
+                                      nonperiodic_y=True)
 
-    config : configparser.ConfigParser
-        Configuration options for this test case, a combination of the defaults
-        for the machine, core and configuration
+        write_netcdf(dsMesh, 'grid.nc')
 
-    logger : logging.Logger
-        A logger for output from the step
-   """
-    initial_condition = step['initial_condition']
+        dsMesh = cull(dsMesh, logger=logger)
+        dsMesh = convert(dsMesh, logger=logger)
+        write_netcdf(dsMesh, 'mpas_grid.nc')
 
-    section = config['hydro_radial']
+        levels = section.get('levels')
+        args = ['create_landice_grid_from_generic_MPAS_grid.py',
+                '-i', 'mpas_grid.nc',
+                '-o', 'landice_grid.nc',
+                '-l', levels,
+                '--hydro',
+                '--diri']
 
-    nx = section.getint('nx')
-    ny = section.getint('ny')
-    dc = section.getfloat('dc')
+        check_call(args, logger)
 
-    dsMesh = make_planar_hex_mesh(nx=nx, ny=ny, dc=dc, nonperiodic_x=True,
-                                  nonperiodic_y=True)
+        make_graph_file(mesh_filename='landice_grid.nc',
+                        graph_filename='graph.info')
 
-    write_netcdf(dsMesh, 'grid.nc')
-
-    dsMesh = cull(dsMesh, logger=logger)
-    dsMesh = convert(dsMesh, logger=logger)
-    write_netcdf(dsMesh, 'mpas_grid.nc')
-
-    levels = section.get('levels')
-    args = ['create_landice_grid_from_generic_MPAS_grid.py',
-            '-i', 'mpas_grid.nc',
-            '-o', 'landice_grid.nc',
-            '-l', levels,
-            '--hydro',
-            '--diri']
-
-    check_call(args, logger)
-
-    make_graph_file(mesh_filename='landice_grid.nc',
-                    graph_filename='graph.info')
-
-    _setup_hydro_radial_initial_conditions(logger, filename='landice_grid.nc',
-                                           initial_condition=initial_condition)
+        _setup_hydro_radial_initial_conditions(
+            logger, filename='landice_grid.nc',
+            initial_condition=initial_condition)
 
 
-def _setup_hydro_radial_initial_conditions(logger, filename='landice_grid.nc',
-                                           initial_condition='zero'):
+def _setup_hydro_radial_initial_conditions(logger, filename,
+                                           initial_condition):
     """
     Add the initial condition to the given MPAS mesh file
 
@@ -110,10 +101,10 @@ def _setup_hydro_radial_initial_conditions(logger, filename='landice_grid.nc',
     logger : logging.Logger
         A logger for output from the step
 
-    filename : str, optional
+    filename : str
         file to setup hydro_radial
 
-    initial_condition : {'zero', 'exact'}, optional
+    initial_condition : {'zero', 'exact'}
         the type of initial condition
     """
     # Open the file, get needed dimensions

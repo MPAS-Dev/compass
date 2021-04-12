@@ -1,46 +1,31 @@
-from compass.testcase import add_step, run_steps
-from compass.landice.tests.hydro_radial import setup_mesh, run_model, visualize
+from compass.testcase import TestCase
+from compass.landice.tests.hydro_radial.setup_mesh import SetupMesh
+from compass.landice.tests.hydro_radial.run_model import RunModel
+from compass.landice.tests.hydro_radial.visualize import Visualize
 
 
-def collect(testcase):
+class SteadyStateDriftTest(TestCase):
     """
-    Update the dictionary of test case properties and add steps
-
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case, which can be updated
+    This test case assesses the drift of the model away from an initial
+    condition that is a quasi-exact solution.
     """
-    testcase['description'] = 'hydro-radial steady-state drift test'
 
-    add_step(testcase, setup_mesh, initial_condition='exact')
+    def __init__(self, test_group):
+        """
+        Create the test case
 
-    add_step(testcase, run_model, cores=4, threads=1)
+        Parameters
+        ----------
+        test_group : compass.landice.tests.hydro_radial.HydroRadial
+            The test group that this test case belongs to
+        """
+        super().__init__(test_group=test_group, name='steady_state_drift_test')
 
-    add_step(testcase, visualize, input_dir='run_model')
+        SetupMesh(test_case=self, initial_condition='exact')
+        RunModel(test_case=self, cores=4, threads=1)
+        Visualize(test_case=self, run_by_default=False)
 
+    # no configure() method is needed
 
-# no configure function is needed
-
-
-def run(testcase, test_suite, config, logger):
-    """
-    Run each step of the test case
-
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case from the ``collect()``
-        function
-
-    test_suite : dict
-        A dictionary of properties of the test suite
-
-    config : configparser.ConfigParser
-        Configuration options for this test case, a combination of the defaults
-        for the machine, core and configuration
-
-    logger : logging.Logger
-        A logger for output from the test case
-    """
-    run_steps(testcase, test_suite, config, logger)
+    # no run() method is needed because we're doing the default: running all
+    # steps

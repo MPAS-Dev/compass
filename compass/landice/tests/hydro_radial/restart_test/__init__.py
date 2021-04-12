@@ -1,97 +1,84 @@
-from compass.testcase import add_step, run_steps
 from compass.validate import compare_variables
-from compass.namelist import add_namelist_file
-from compass.streams import add_streams_file
-from compass.landice.tests.hydro_radial import setup_mesh, run_model, visualize
+from compass.testcase import TestCase
+from compass.landice.tests.hydro_radial.setup_mesh import SetupMesh
+from compass.landice.tests.hydro_radial.run_model import RunModel
+from compass.landice.tests.hydro_radial.visualize import Visualize
 
 
-def collect(testcase):
+class RestartTest(TestCase):
     """
-    Update the dictionary of test case properties and add steps
-
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case, which can be updated
+    A test case for performing two MALI runs of a radially symmetric
+    hydrological setup, one full run and one run broken into two segments with
+    a restart.  The test case verifies that the results of the two runs are
+    identical.
     """
-    testcase['description'] = 'hydro-radial restart test'
 
-    add_step(testcase, setup_mesh, initial_condition='zero')
+    def __init__(self, test_group):
+        """
+        Create the test case
 
-    name = 'full_run'
-    step = add_step(testcase, run_model, name=name, subdir=name, cores=1,
-                    threads=1)
+        Parameters
+        ----------
+        test_group : compass.landice.tests.hydro_radial.Dome
+            The test group that this test case belongs to
+        """
+        super().__init__(test_group=test_group, name='restart_test')
 
-    # modify the namelist options and streams file
-    add_namelist_file(
-        step, 'compass.landice.tests.hydro_radial.restart_test',
-        'namelist.full', out_name='namelist.landice')
-    add_streams_file(
-        step, 'compass.landice.tests.hydro_radial.restart_test',
-        'streams.full', out_name='streams.landice')
+        SetupMesh(test_case=self, initial_condition='zero')
 
-    input_dir = name
-    name = 'visualize_{}'.format(name)
-    add_step(testcase, visualize, name=name, subdir=name,
-             input_dir=input_dir)
+        name = 'full_run'
+        step = RunModel(test_case=self, name=name, subdir=name, cores=4,
+                        threads=1)
+        # modify the namelist options and streams file
+        step.add_namelist_file(
+            'compass.landice.tests.hydro_radial.restart_test',
+            'namelist.full', out_name='namelist.landice')
+        step.add_streams_file(
+            'compass.landice.tests.hydro_radial.restart_test',
+            'streams.full', out_name='streams.landice')
 
-    name = 'restart_run'
-    step = add_step(testcase, run_model, name=name, subdir=name, cores=1,
-                    threads=1, initial_condition='zero',
-                    suffixes=['landice', 'landice.rst'])
+        input_dir = name
+        name = 'visualize_{}'.format(name)
+        Visualize(test_case=self, name=name, subdir=name,
+                  input_dir=input_dir, run_by_default=False)
 
-    # modify the namelist options and streams file
-    add_namelist_file(
-        step, 'compass.landice.tests.hydro_radial.restart_test',
-        'namelist.restart', out_name='namelist.landice')
-    add_streams_file(
-        step, 'compass.landice.tests.hydro_radial.restart_test',
-        'streams.restart', out_name='streams.landice')
+        name = 'restart_run'
+        step = RunModel(test_case=self, name=name, subdir=name, cores=4,
+                        threads=1,
+                        suffixes=['landice', 'landice.rst'])
 
-    add_namelist_file(
-        step, 'compass.landice.tests.hydro_radial.restart_test',
-        'namelist.restart.rst', out_name='namelist.landice.rst')
-    add_streams_file(
-        step, 'compass.landice.tests.hydro_radial.restart_test',
-        'streams.restart.rst', out_name='streams.landice.rst')
+        # modify the namelist options and streams file
+        step.add_namelist_file(
+            'compass.landice.tests.hydro_radial.restart_test',
+            'namelist.restart', out_name='namelist.landice')
+        step.add_streams_file(
+            'compass.landice.tests.hydro_radial.restart_test',
+            'streams.restart', out_name='streams.landice')
 
-    input_dir = name
-    name = 'visualize_{}'.format(name)
-    add_step(testcase, visualize, name=name, subdir=name,
-             input_dir=input_dir)
+        step.add_namelist_file(
+            'compass.landice.tests.hydro_radial.restart_test',
+            'namelist.restart.rst', out_name='namelist.landice.rst')
+        step.add_streams_file(
+            'compass.landice.tests.hydro_radial.restart_test',
+            'streams.restart.rst', out_name='streams.landice.rst')
 
-    # we don't want to run the visualize step by default.  The user will do
-    # this manually if they want viz
-    testcase['steps_to_run'] = ['setup_mesh', 'full_run', 'restart_run']
+        input_dir = name
+        name = 'visualize_{}'.format(name)
+        Visualize(test_case=self, name=name, subdir=name,
+                  input_dir=input_dir, run_by_default=False)
 
+    # no configure() method is needed
 
-# no configure function is needed
+    def run(self):
+        """
+        Run each step of the test case
+        """
+        # run the steps
+        super().run()
 
-
-def run(testcase, test_suite, config, logger):
-    """
-    Run each step of the test case
-
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case from the ``collect()``
-        function
-
-    test_suite : dict
-        A dictionary of properties of the test suite
-
-    config : configparser.ConfigParser
-        Configuration options for this test case, a combination of the defaults
-        for the machine, core and configuration
-
-    logger : logging.Logger
-        A logger for output from the test case
-    """
-    run_steps(testcase, test_suite, config, logger)
-    variables = ['waterThickness', 'waterPressure']
-    steps = testcase['steps_to_run']
-    if 'full_run' in steps and 'restart_run' in steps:
-        compare_variables(variables, config, work_dir=testcase['work_dir'],
-                          filename1='full_run/output.nc',
-                          filename2='restart_run/output.nc')
+        variables = ['waterThickness', 'waterPressure']
+        steps = self.steps_to_run
+        if 'full_run' in steps and 'restart_run' in steps:
+            compare_variables(variables, self.config, work_dir=self.work_dir,
+                              filename1='full_run/output.nc',
+                              filename2='restart_run/output.nc')

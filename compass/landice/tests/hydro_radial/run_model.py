@@ -1,97 +1,91 @@
-from compass.io import add_input_file, add_output_file
-from compass.namelist import add_namelist_file, generate_namelist
-from compass.streams import add_streams_file, generate_streams
-from compass.model import add_model_as_input, run_model
+from compass.model import run_model
+from compass.step import Step
 
 
-def collect(testcase, step):
+class RunModel(Step):
     """
-    Update the dictionary of step properties
+    A step for performing forward MALI runs as part of radially symmetric
+     hydrological test cases.
 
-    Parameters
-    ----------
-    testcase : dict
-        A dictionary of properties of this test case, which should not be
-        modified here
-
-    step : dict
-        A dictionary of properties of this step, which can be updated
+    suffixes : list of str, optional
+        a list of suffixes for namelist and streams files produced
+        for this step.  Most steps most runs will just have a
+        ``namelist.landice`` and a ``streams.landice`` (the default) but
+        the ``restart_run`` step of the ``restart_test`` runs the model
+        twice, the second time with ``namelist.landice.rst`` and
+        ``streams.landice.rst``
     """
-    defaults = dict(max_memory=1000, max_disk=1000, threads=1,
-                    suffixes=['landice'])
-    for key, value in defaults.items():
-        step.setdefault(key, value)
+    def __init__(self, test_case, name='run_model', subdir=None,
+                 cores=1, min_cores=None, threads=1, suffixes=None):
+        """
+        Create a new test case
 
-    step.setdefault('min_cores', step['cores'])
+        Parameters
+        ----------
+        test_case : compass.TestCase
+            The test case this step belongs to
 
-    # most runs will just have a namelist.landice and a streams.landice but
-    # the restart_run step of the restart_test runs the model twice, the second
-    # time with namelist.landice.rst and streams.landice.rst
-    for suffix in step['suffixes']:
-        add_namelist_file(
-            step, 'compass.landice.tests.hydro_radial', 'namelist.landice',
-            out_name='namelist.{}'.format(suffix))
+        name : str, optional
+            the name of the test case
 
-        add_streams_file(
-            step, 'compass.landice.tests.hydro_radial', 'streams.landice',
-            out_name='streams.{}'.format(suffix))
+        subdir : str, optional
+            the subdirectory for the step.  The default is ``name``
 
-    add_input_file(step, filename='landice_grid.nc',
-                   target='../setup_mesh/landice_grid.nc')
-    add_input_file(step, filename='graph.info',
-                   target='../setup_mesh/graph.info')
+        cores : int, optional
+            the number of cores the step would ideally use.  If fewer cores
+            are available on the system, the step will run on all available
+            cores as long as this is not below ``min_cores``
 
-    add_output_file(step, filename='output.nc')
+        min_cores : int, optional
+            the number of cores the step requires.  If the system has fewer
+            than this number of cores, the step will fail
 
+        threads : int, optional
+            the number of threads the step will use
 
-def setup(step, config):
-    """
-    Set up the test case in the work directory, including downloading any
-    dependencies
+        suffixes : list of str, optional
+            a list of suffixes for namelist and streams files produced
+            for this step.  Most steps most runs will just have a
+            ``namelist.landice`` and a ``streams.landice`` (the default) but
+            the ``restart_run`` step of the ``restart_test`` runs the model
+            twice, the second time with ``namelist.landice.rst`` and
+            ``streams.landice.rst``
+        """
+        if suffixes is None:
+            suffixes = ['landice']
+        self.suffixes = suffixes
+        if min_cores is None:
+            min_cores = cores
+        super().__init__(test_case=test_case, name=name, subdir=subdir,
+                         cores=cores, min_cores=min_cores, threads=threads)
 
-    Parameters
-    ----------
-    step : dict
-        A dictionary of properties of this step from the ``collect()`` function
+        for suffix in suffixes:
+            self.add_namelist_file(
+                'compass.landice.tests.hydro_radial', 'namelist.landice',
+                out_name='namelist.{}'.format(suffix))
 
-    config : configparser.ConfigParser
-        Configuration options for this test case, a combination of the defaults
-        for the machine, core, configuration and test case
-    """
-    # again, most runs will just have a namelist.landice and a streams.landice
-    # but the restart_run step of the restart_test runs the model twice, the
-    # second time with namelist.landice.rst and streams.landice.rst
-    for suffix in step['suffixes']:
-        generate_namelist(step, config, out_name='namelist.{}'.format(suffix))
-        generate_streams(step, config, out_name='streams.{}'.format(suffix))
+            self.add_streams_file(
+                'compass.landice.tests.hydro_radial', 'streams.landice',
+                out_name='streams.{}'.format(suffix))
 
-    add_model_as_input(step, config)
+        self.add_input_file(filename='landice_grid.nc',
+                            target='../setup_mesh/landice_grid.nc')
+        self.add_input_file(filename='graph.info',
+                            target='../setup_mesh/graph.info')
 
+        self.add_output_file(filename='output.nc')
 
-def run(step, test_suite, config, logger):
-    """
-    Run this step of the test case
+    def setup(self):
+        """
+        Set up the test case in the work directory, including downloading any
+        dependencies
+        """
+        self.add_model_as_input()
 
-    Parameters
-    ----------
-    step : dict
-        A dictionary of properties of this step from the ``collect()``
-        function, with modifications from the ``setup()`` function.
-
-    test_suite : dict
-        A dictionary of properties of the test suite
-
-    config : configparser.ConfigParser
-        Configuration options for this test case, a combination of the defaults
-        for the machine, core and configuration
-
-    logger : logging.Logger
-        A logger for output from the step
-    """
-
-    # again, most runs will just have a namelist.landice and a streams.landice
-    # but the restart_run step of the restart_test runs the model twice, the
-    # second time with namelist.landice.rst and streams.landice.rst
-    for suffix in step['suffixes']:
-        run_model(step, config, logger, namelist='namelist.{}'.format(suffix),
-                  streams='streams.{}'.format(suffix))
+    def run(self):
+        """
+        Run this step of the test case
+        """
+        for suffix in self.suffixes:
+            run_model(step=self, namelist='namelist.{}'.format(suffix),
+                      streams='streams.{}'.format(suffix))
