@@ -81,15 +81,7 @@
 			<argument flag="--nx">120</argument>
 			<argument flag="--ny">120</argument>
 			<argument flag="--dc">600.0</argument>
-			<argument flag="-o">grid.nc</argument>
-		</step>
-		<step executable="MpasCellCuller.x">
-			<argument flag="">grid.nc</argument>
-			<argument flag="">culled_mesh.nc</argument>
-		</step>
-		<step executable="MpasMeshConverter.x">
-			<argument flag="">culled_mesh.nc</argument>
-			<argument flag="">mesh.nc</argument>
+			<argument flag="-o">mesh.nc</argument>
 		</step>
 		<model_run procs="1" threads="1" namelist="namelist.ocean" streams="streams.ocean"/>
 	</run_script>
