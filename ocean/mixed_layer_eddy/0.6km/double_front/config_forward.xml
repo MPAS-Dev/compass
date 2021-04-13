@@ -36,7 +36,7 @@
 			<attribute name="type">output</attribute>
 			<attribute name="filename_interval">0001-00-00_00:00:00</attribute>
 			<attribute name="filename_template">output/output.$Y-$M-$D.nc</attribute>
-			<attribute name="output_interval">0000-00-00_00:10:00</attribute>
+			<attribute name="output_interval">0000-00-01_00:00:00</attribute>
 			<attribute name="clobber_mode">truncate</attribute>
 			<add_contents>
 				<member name="tracers" type="var_struct"/>
@@ -75,8 +75,8 @@
 
 	<run_script name="run.py">
         <step executable="gpmetis">
-            <argument flag="graph.info">4</argument>
+            <argument flag="graph.info">16</argument>
         </step>
-		<model_run procs="4" threads="1" namelist="namelist.ocean" streams="streams.ocean"/>
+		<model_run procs="16" threads="1" namelist="namelist.ocean" streams="streams.ocean"/>
 	</run_script>
 </config>
