@@ -24,8 +24,9 @@ class DecompositionTest(TestCase):
 
         for procs in [1, 8]:
             name = '{}proc_run'.format(procs)
-            RunModel(test_case=self, name=name, subdir=name, cores=procs,
-                     threads=1)
+            self.add_step(
+                RunModel(test_case=self, name=name, subdir=name, cores=procs,
+                         threads=1))
 
     # no configure() method is needed
 

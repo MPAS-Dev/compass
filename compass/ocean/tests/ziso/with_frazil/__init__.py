@@ -44,11 +44,14 @@ class WithFrazil(TestCase):
 
         res_params = res_params[resolution]
 
-        InitialState(test_case=self, resolution=resolution, with_frazil=True)
-        Forward(test_case=self, resolution=resolution,
-                cores=res_params['cores'],
-                min_cores=res_params['min_cores'],
-                with_analysis=False, with_frazil=True)
+        self.add_step(
+            InitialState(test_case=self, resolution=resolution,
+                         with_frazil=True))
+        self.add_step(
+            Forward(test_case=self, resolution=resolution,
+                    cores=res_params['cores'],
+                    min_cores=res_params['min_cores'],
+                    with_analysis=False, with_frazil=True))
 
     def configure(self):
         """

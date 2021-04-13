@@ -57,6 +57,7 @@ class QU240DynamicAdjustment(DynamicAdjustment):
                               template_replacements=stream_replacements)
 
         step.add_output_file(filename='../{}'.format(restart_filenames[0]))
+        self.add_step(step)
 
         # final step
         step_name = 'simulation'
@@ -78,3 +79,4 @@ class QU240DynamicAdjustment(DynamicAdjustment):
 
         step.add_input_file(filename='../{}'.format(restart_filenames[0]))
         step.add_output_file(filename='../{}'.format(restart_filenames[1]))
+        self.add_step(step)

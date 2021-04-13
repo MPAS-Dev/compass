@@ -20,7 +20,8 @@ class SmokeTest(TestCase):
         name = 'smoke_test'
         super().__init__(test_group=test_group, name=name)
 
-        RunModel(test_case=self, cores=4, threads=1)
+        self.add_step(
+            RunModel(test_case=self, cores=4, threads=1))
 
     # no configure() method is needed because we will use the default dome
     # config options

@@ -33,9 +33,12 @@ class SmokeTest(TestCase):
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
 
-        SetupMesh(test_case=self, mesh_type=mesh_type)
-        RunModel(test_case=self, cores=4, threads=1, mesh_type=mesh_type)
-        Visualize(test_case=self, mesh_type=mesh_type, run_by_default=False)
+        self.add_step(
+            SetupMesh(test_case=self, mesh_type=mesh_type))
+        self.add_step(
+            RunModel(test_case=self, cores=4, threads=1, mesh_type=mesh_type))
+        step = Visualize(test_case=self, mesh_type=mesh_type)
+        self.add_step(step, run_by_default=False)
 
     # no configure() method is needed because we will use the default dome
     # config options

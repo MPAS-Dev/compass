@@ -31,6 +31,7 @@ class RestartTest(TestCase):
         step.add_streams_file(
             'compass.landice.tests.greenland.restart_test',
             'streams.full', out_name='streams.landice')
+        self.add_step(step)
 
         name = 'restart_run'
         step = RunModel(test_case=self, name=name, subdir=name, cores=4,
@@ -51,6 +52,7 @@ class RestartTest(TestCase):
         step.add_streams_file(
             'compass.landice.tests.greenland.restart_test',
             'streams.restart', out_name='streams.landice.rst')
+        self.add_step(step)
 
     # no configure() method is needed
 

@@ -35,7 +35,8 @@ class RestartTest(TestCase):
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
 
-        SetupMesh(test_case=self, mesh_type=mesh_type)
+        self.add_step(
+            SetupMesh(test_case=self, mesh_type=mesh_type))
 
         name = 'full_run'
         step = RunModel(test_case=self, name=name, subdir=name, cores=4,
@@ -47,11 +48,13 @@ class RestartTest(TestCase):
         step.add_streams_file(
             'compass.landice.tests.dome.restart_test',
             'streams.full', out_name='streams.landice')
+        self.add_step(step)
 
         input_dir = name
         name = 'visualize_{}'.format(name)
-        Visualize(test_case=self, mesh_type=mesh_type, name=name, subdir=name,
-                  input_dir=input_dir, run_by_default=False)
+        step = Visualize(test_case=self, mesh_type=mesh_type, name=name,
+                         subdir=name, input_dir=input_dir)
+        self.add_step(step, run_by_default=False)
 
         name = 'restart_run'
         step = RunModel(test_case=self, name=name, subdir=name, cores=4,
@@ -72,11 +75,13 @@ class RestartTest(TestCase):
         step.add_streams_file(
             'compass.landice.tests.dome.restart_test',
             'streams.restart.rst', out_name='streams.landice.rst')
+        self.add_step(step)
 
         input_dir = name
         name = 'visualize_{}'.format(name)
-        Visualize(test_case=self, mesh_type=mesh_type, name=name, subdir=name,
-                  input_dir=input_dir, run_by_default=False)
+        step = Visualize(test_case=self, mesh_type=mesh_type, name=name,
+                         subdir=name, input_dir=input_dir)
+        self.add_step(step, run_by_default=False)
 
     # no configure() method is needed
 

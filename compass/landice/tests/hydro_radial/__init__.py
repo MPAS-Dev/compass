@@ -18,7 +18,7 @@ class HydroRadial(TestGroup):
         """
         super().__init__(mpas_core=mpas_core, name='hydro_radial')
 
-        DecompositionTest(test_group=self)
-        RestartTest(test_group=self)
-        SpinupTest(test_group=self)
-        SteadyStateDriftTest(test_group=self)
+        self.add_test_case(DecompositionTest(test_group=self))
+        self.add_test_case(RestartTest(test_group=self))
+        self.add_test_case(SpinupTest(test_group=self))
+        self.add_test_case(SteadyStateDriftTest(test_group=self))

@@ -32,7 +32,8 @@ class RestartTest(TestCase):
                 'Unknown thermal_solver {}'.format(thermal_solver))
         super().__init__(test_group=test_group, name=name)
 
-        SetupMesh(test_case=self)
+        self.add_step(
+            SetupMesh(test_case=self))
 
         experiment = 'f'
 
@@ -50,6 +51,7 @@ class RestartTest(TestCase):
         step.add_streams_file(
             'compass.landice.tests.eismint2.restart_test',
             'streams.full', out_name='streams.landice')
+        self.add_step(step)
 
         name = 'restart_run'
         step = RunExperiment(test_case=self, name=name, subdir=name, cores=4,
@@ -72,6 +74,7 @@ class RestartTest(TestCase):
         step.add_streams_file(
             'compass.landice.tests.eismint2.restart_test',
             'streams.restart.rst', out_name='streams.landice.rst')
+        self.add_step(step)
 
     # no configure() method is needed
 

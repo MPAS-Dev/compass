@@ -109,8 +109,7 @@ class Step:
     """
 
     def __init__(self, test_case, name, subdir=None, cores=1, min_cores=1,
-                 threads=1, max_memory=1000, max_disk=1000,
-                 run_by_default=True):
+                 threads=1, max_memory=1000, max_disk=1000):
         """
         Create a new test case
 
@@ -146,11 +145,6 @@ class Step:
             the amount of disk space that the step is allowed to use in MB.
             This is currently just a placeholder for later use with task
             parallelism
-
-        run_by_default : bool, optional
-            Whether to add this step to the list of steps to run when the
-            test case gets run.  If ``run_by_default=False``, this step is
-            optional and users would need to run it manually.
         """
         self.name = name
         self.test_case = test_case
@@ -160,7 +154,6 @@ class Step:
             self.subdir = subdir
         else:
             self.subdir = name
-        test_case.add_step(self, run_by_default=run_by_default)
 
         self.cores = cores
         self.min_cores = min_cores

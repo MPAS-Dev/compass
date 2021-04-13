@@ -32,9 +32,10 @@ class ThreadsTest(ForwardTestCase):
                          name='threads_test')
         for threads in [1, 2]:
             name = '{}thread'.format(threads)
-            ForwardStep(test_case=self, mesh=mesh, init=init,
-                        time_integrator=time_integrator, name=name,
-                        subdir=name, cores=4, threads=threads)
+            self.add_step(
+                ForwardStep(test_case=self, mesh=mesh, init=init,
+                            time_integrator=time_integrator, name=name,
+                            subdir=name, cores=4, threads=threads))
 
     def run(self):
         """

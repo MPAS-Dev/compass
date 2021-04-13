@@ -17,8 +17,8 @@ class Landice(MpasCore):
         """
         super().__init__(name='landice')
 
-        Dome(mpas_core=self)
-        Eismint2(mpas_core=self)
-        EnthalpyBenchmark(mpas_core=self)
-        Greenland(mpas_core=self)
-        HydroRadial(mpas_core=self)
+        self.add_test_group(Dome(mpas_core=self))
+        self.add_test_group(Eismint2(mpas_core=self))
+        self.add_test_group(EnthalpyBenchmark(mpas_core=self))
+        self.add_test_group(Greenland(mpas_core=self))
+        self.add_test_group(HydroRadial(mpas_core=self))

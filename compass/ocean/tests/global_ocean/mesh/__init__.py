@@ -51,6 +51,8 @@ class Mesh(TestCase):
         else:
             raise ValueError('Unknown mesh name {}'.format(mesh_name))
 
+        self.add_step(self.mesh_step)
+
         self.mesh_name = mesh_name
         self.with_ice_shelf_cavities = self.mesh_step.with_ice_shelf_cavities
 

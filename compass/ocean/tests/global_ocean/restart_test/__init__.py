@@ -51,6 +51,7 @@ class RestartTest(ForwardTestCase):
                 step.add_input_file(filename=input_file[part])
             if part in output_file:
                 step.add_output_file(filename=output_file[part])
+            self.add_step(step)
 
     def run(self):
         """

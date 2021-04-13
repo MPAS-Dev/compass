@@ -16,8 +16,10 @@ class IceShelf2d(TestGroup):
         super().__init__(mpas_core=mpas_core, name='ice_shelf_2d')
 
         for resolution in ['5km']:
-            Default(test_group=self, resolution=resolution)
-            RestartTest(test_group=self, resolution=resolution)
+            self.add_test_case(
+                Default(test_group=self, resolution=resolution))
+            self.add_test_case(
+                RestartTest(test_group=self, resolution=resolution))
 
 
 def configure(name, resolution, config):

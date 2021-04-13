@@ -25,14 +25,17 @@ class StandardExperiments(TestCase):
         name = 'standard_experiments'
         super().__init__(test_group=test_group, name=name)
 
-        SetupMesh(test_case=self)
+        self.add_step(
+            SetupMesh(test_case=self))
 
         for experiment in ['a', 'b', 'c', 'd', 'f', 'g']:
             name = 'experiment_{}'.format(experiment)
-            RunExperiment(test_case=self, name=name, subdir=name, cores=4,
-                          threads=1, experiment=experiment)
+            self.add_step(
+                RunExperiment(test_case=self, name=name, subdir=name, cores=4,
+                              threads=1, experiment=experiment))
 
-        Visualize(test_case=self)
+        self.add_step(
+            Visualize(test_case=self))
 
     def configure(self):
         """

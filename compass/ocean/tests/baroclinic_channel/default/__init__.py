@@ -34,8 +34,10 @@ class Default(TestCase):
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
 
-        InitialState(test_case=self, resolution=resolution)
-        Forward(test_case=self, cores=4, threads=1, resolution=resolution)
+        self.add_step(
+            InitialState(test_case=self, resolution=resolution))
+        self.add_step(
+            Forward(test_case=self, cores=4, threads=1, resolution=resolution))
 
     def configure(self):
         """

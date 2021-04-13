@@ -36,8 +36,10 @@ class RestartTest(TestCase):
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
 
-        InitialState(test_case=self, resolution=resolution)
-        SshAdjustment(test_case=self, cores=4, threads=1)
+        self.add_step(
+            InitialState(test_case=self, resolution=resolution))
+        self.add_step(
+            SshAdjustment(test_case=self, cores=4, threads=1))
 
         for part in ['full', 'restart']:
             name = '{}_run'.format(part)
@@ -50,6 +52,7 @@ class RestartTest(TestCase):
             step.add_streams_file(
                 'compass.ocean.tests.ice_shelf_2d.restart_test',
                 'streams.{}'.format(part))
+            self.add_step(step)
 
     def configure(self):
         """

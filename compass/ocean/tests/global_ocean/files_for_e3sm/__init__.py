@@ -71,23 +71,28 @@ class FilesForE3SM(TestCase):
             dynamic_adjustment.restart_filenames[-1])
         self.restart_filename = restart_filename
 
-        OceanInitialCondition(test_case=self,
-                              restart_filename=restart_filename)
+        self.add_step(
+            OceanInitialCondition(test_case=self,
+                                  restart_filename=restart_filename))
 
-        OceanGraphPartition(test_case=self, mesh=mesh,
-                            restart_filename=restart_filename)
+        self.add_step(
+            OceanGraphPartition(test_case=self, mesh=mesh,
+                                restart_filename=restart_filename))
 
-        SeaiceInitialCondition(
-            test_case=self, restart_filename=restart_filename,
-            with_ice_shelf_cavities=mesh.with_ice_shelf_cavities)
+        self.add_step(
+            SeaiceInitialCondition(
+                test_case=self, restart_filename=restart_filename,
+                with_ice_shelf_cavities=mesh.with_ice_shelf_cavities))
 
-        Scrip(
-            test_case=self, restart_filename=restart_filename,
-            with_ice_shelf_cavities=mesh.with_ice_shelf_cavities)
+        self.add_step(
+            Scrip(
+                test_case=self, restart_filename=restart_filename,
+                with_ice_shelf_cavities=mesh.with_ice_shelf_cavities))
 
-        DiagnosticsFiles(
-            test_case=self, restart_filename=restart_filename,
-            with_ice_shelf_cavities=mesh.with_ice_shelf_cavities)
+        self.add_step(
+            DiagnosticsFiles(
+                test_case=self, restart_filename=restart_filename,
+                with_ice_shelf_cavities=mesh.with_ice_shelf_cavities))
 
     def configure(self):
         """

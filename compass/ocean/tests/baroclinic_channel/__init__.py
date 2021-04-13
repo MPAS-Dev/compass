@@ -18,12 +18,17 @@ class BaroclinicChannel(TestGroup):
         super().__init__(mpas_core=mpas_core, name='baroclinic_channel')
 
         for resolution in ['1km', '4km', '10km']:
-            RpeTest(test_group=self, resolution=resolution)
+            self.add_test_case(
+                RpeTest(test_group=self, resolution=resolution))
         for resolution in ['10km']:
-            DecompTest(test_group=self, resolution=resolution)
-            Default(test_group=self, resolution=resolution)
-            RestartTest(test_group=self, resolution=resolution)
-            ThreadsTest(test_group=self, resolution=resolution)
+            self.add_test_case(
+                DecompTest(test_group=self, resolution=resolution))
+            self.add_test_case(
+                Default(test_group=self, resolution=resolution))
+            self.add_test_case(
+                RestartTest(test_group=self, resolution=resolution))
+            self.add_test_case(
+                ThreadsTest(test_group=self, resolution=resolution))
 
 
 def configure(resolution, config):

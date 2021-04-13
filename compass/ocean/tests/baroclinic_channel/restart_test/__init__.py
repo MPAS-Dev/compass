@@ -35,7 +35,8 @@ class RestartTest(TestCase):
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
 
-        InitialState(test_case=self, resolution=resolution)
+        self.add_step(
+            InitialState(test_case=self, resolution=resolution))
 
         for part in ['full', 'restart']:
             name = '{}_run'.format(part)
@@ -48,6 +49,7 @@ class RestartTest(TestCase):
             step.add_streams_file(
                 'compass.ocean.tests.baroclinic_channel.restart_test',
                 'streams.{}'.format(part))
+            self.add_step(step)
 
     def configure(self):
         """

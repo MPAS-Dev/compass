@@ -29,7 +29,8 @@ class A(TestCase):
         super().__init__(test_group=test_group, name='A')
         module = self.__module__
 
-        SetupMesh(test_case=self)
+        self.add_step(
+            SetupMesh(test_case=self))
 
         restart_filenames = ['../setup_mesh/landice_grid.nc',
                              '../phase1/restart.100000.nc',
@@ -42,8 +43,10 @@ class A(TestCase):
             suffix = 'landice{}'.format(index+1)
             step.add_namelist_file(module, 'namelist.{}'.format(suffix))
             step.add_streams_file(module, 'streams.{}'.format(suffix))
+            self.add_step(step)
 
-        Visualize(test_case=self)
+        self.add_step(
+            Visualize(test_case=self))
 
     def configure(self):
         """

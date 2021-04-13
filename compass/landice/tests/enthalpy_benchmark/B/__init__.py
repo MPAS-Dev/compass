@@ -27,9 +27,12 @@ class B(TestCase):
         """
         super().__init__(test_group=test_group, name='B')
 
-        SetupMesh(test_case=self)
-        RunModel(test_case=self, name='run_model', cores=1, threads=1)
-        Visualize(test_case=self)
+        self.add_step(
+            SetupMesh(test_case=self))
+        self.add_step(
+            RunModel(test_case=self, name='run_model', cores=1, threads=1))
+        self.add_step(
+            Visualize(test_case=self))
 
     def configure(self):
         """

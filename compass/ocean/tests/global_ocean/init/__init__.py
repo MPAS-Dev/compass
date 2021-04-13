@@ -58,12 +58,14 @@ class Init(TestCase):
         self.initial_condition = initial_condition
         self.with_bgc = with_bgc
 
-        InitialState(
-            test_case=self, mesh=mesh,
-            initial_condition=initial_condition, with_bgc=with_bgc)
+        self.add_step(
+            InitialState(
+                test_case=self, mesh=mesh,
+                initial_condition=initial_condition, with_bgc=with_bgc))
 
         if mesh.with_ice_shelf_cavities:
-            SshAdjustment(test_case=self, cores=4)
+            self.add_step(
+                SshAdjustment(test_case=self, cores=4))
 
     def configure(self):
         """

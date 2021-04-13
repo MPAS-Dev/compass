@@ -41,6 +41,7 @@ class AnalysisTest(ForwardTestCase):
         module = self.__module__
         step.add_namelist_file(module, 'namelist.forward')
         step.add_streams_file(module, 'streams.forward')
+        self.add_step(step)
 
     def run(self):
         """

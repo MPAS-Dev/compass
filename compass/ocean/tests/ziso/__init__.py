@@ -16,8 +16,10 @@ class Ziso(TestGroup):
         super().__init__(mpas_core=mpas_core, name='ziso')
 
         for resolution in ['20km']:
-            Default(test_group=self, resolution=resolution)
-            WithFrazil(test_group=self, resolution=resolution)
+            self.add_test_case(
+                Default(test_group=self, resolution=resolution))
+            self.add_test_case(
+                WithFrazil(test_group=self, resolution=resolution))
 
 
 def configure(name, resolution, config):

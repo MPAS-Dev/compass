@@ -34,12 +34,14 @@ class DecompTest(TestCase):
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
 
-        InitialState(test_case=self, resolution=resolution)
+        self.add_step(
+            InitialState(test_case=self, resolution=resolution))
 
         for procs in [4, 8]:
             name = '{}proc'.format(procs)
-            Forward(test_case=self, name=name, subdir=name, cores=procs,
-                    threads=1, resolution=resolution)
+            self.add_step(
+                Forward(test_case=self, name=name, subdir=name, cores=procs,
+                        threads=1, resolution=resolution))
 
     def configure(self):
         """

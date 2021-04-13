@@ -44,7 +44,9 @@ class Default(TestCase):
 
         res_params = res_params[resolution]
 
-        InitialState(test_case=self, resolution=resolution, with_frazil=False)
+        self.add_step(
+            InitialState(test_case=self, resolution=resolution,
+                         with_frazil=False))
         step = Forward(test_case=self, resolution=resolution,
                        cores=res_params['cores'],
                        min_cores=res_params['min_cores'],
@@ -54,6 +56,7 @@ class Default(TestCase):
             # particles are on only for the 20km test case
             step.add_namelist_file('compass.ocean.tests.ziso.default',
                                    'namelist.{}.forward'.format(resolution))
+        self.add_step(step)
 
     def configure(self):
         """

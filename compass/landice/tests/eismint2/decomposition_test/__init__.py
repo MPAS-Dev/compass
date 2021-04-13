@@ -31,7 +31,8 @@ class DecompositionTest(TestCase):
                 'Unknown thermal_solver {}'.format(thermal_solver))
         super().__init__(test_group=test_group, name=name)
 
-        SetupMesh(test_case=self)
+        self.add_step(
+            SetupMesh(test_case=self))
 
         options = {'config_run_duration': "'3000-00-00_00:00:00'",
                    'config_thermal_solver': "'{}'".format(thermal_solver)}
@@ -47,6 +48,7 @@ class DecompositionTest(TestCase):
             step.add_streams_file(
                 'compass.landice.tests.eismint2.decomposition_test',
                 'streams.landice')
+            self.add_step(step)
 
     # no configure() method is needed
 

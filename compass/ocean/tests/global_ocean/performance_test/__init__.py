@@ -39,6 +39,7 @@ class PerformanceTest(ForwardTestCase):
             step.add_namelist_file(module, 'namelist.wisc')
             step.add_streams_file(module, 'streams.wisc')
             step.add_output_file(filename='land_ice_fluxes.nc')
+        self.add_step(step)
 
     def run(self):
         """

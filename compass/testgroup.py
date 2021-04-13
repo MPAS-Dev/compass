@@ -31,7 +31,6 @@ class TestGroup:
         """
         self.name = name
         self.mpas_core = mpas_core
-        mpas_core.add_test_group(self)
 
         # test cases will be added with calls to add_test_case()
         self.test_cases = dict()

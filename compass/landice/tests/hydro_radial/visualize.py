@@ -11,7 +11,7 @@ class Visualize(Step):
     A step for visualizing the output from a dome test case
     """
     def __init__(self, test_case, name='visualize', subdir=None,
-                 input_dir='run_model', run_by_default=False):
+                 input_dir='run_model'):
         """
         Update the dictionary of step properties
 
@@ -29,13 +29,8 @@ class Visualize(Step):
         input_dir : str, optional
             The input directory within the test case with a file ``output.nc``
             to visualize
-
-        run_by_default : bool, optional
-            Whether this step gets run by default.  The default behavior for
-            this step is that it has to be run manually by the user.
         """
-        super().__init__(test_case=test_case, name=name, subdir=subdir,
-                         run_by_default=run_by_default)
+        super().__init__(test_case=test_case, name=name, subdir=subdir)
 
         self.add_input_file(filename='output.nc',
                             target='../{}/output.nc'.format(input_dir))

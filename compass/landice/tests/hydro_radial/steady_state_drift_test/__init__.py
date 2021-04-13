@@ -21,9 +21,12 @@ class SteadyStateDriftTest(TestCase):
         """
         super().__init__(test_group=test_group, name='steady_state_drift_test')
 
-        SetupMesh(test_case=self, initial_condition='exact')
-        RunModel(test_case=self, cores=4, threads=1)
-        Visualize(test_case=self, run_by_default=False)
+        self.add_step(
+            SetupMesh(test_case=self, initial_condition='exact'))
+        self.add_step(
+            RunModel(test_case=self, cores=4, threads=1))
+        step = Visualize(test_case=self)
+        self.add_step(step, run_by_default=False)
 
     # no configure() method is needed
 

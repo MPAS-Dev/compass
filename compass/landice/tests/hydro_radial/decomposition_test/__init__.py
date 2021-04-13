@@ -23,17 +23,20 @@ class DecompositionTest(TestCase):
         """
         super().__init__(test_group=test_group, name='decomposition_test')
 
-        SetupMesh(test_case=self, initial_condition='zero')
+        self.add_step(
+            SetupMesh(test_case=self, initial_condition='zero'))
 
         for procs in [1, 3]:
             name = '{}proc_run'.format(procs)
-            RunModel(test_case=self, name=name, subdir=name, cores=procs,
-                     threads=1)
+            self.add_step(
+                RunModel(test_case=self, name=name, subdir=name, cores=procs,
+                         threads=1))
 
             input_dir = name
             name = 'visualize_{}'.format(name)
-            Visualize(test_case=self, name=name, subdir=name,
-                      input_dir=input_dir, run_by_default=False)
+            step = Visualize(test_case=self, name=name, subdir=name,
+                             input_dir=input_dir)
+            self.add_step(step, run_by_default=False)
 
     # no configure() method is needed
 

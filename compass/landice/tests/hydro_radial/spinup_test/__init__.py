@@ -22,7 +22,8 @@ class SpinupTest(TestCase):
         """
         super().__init__(test_group=test_group, name='spinup_test')
 
-        SetupMesh(test_case=self, initial_condition='zero')
+        self.add_step(
+            SetupMesh(test_case=self, initial_condition='zero'))
         step = RunModel(test_case=self, cores=4, threads=1)
         step.add_namelist_file(
             'compass.landice.tests.hydro_radial.spinup_test',
@@ -31,7 +32,10 @@ class SpinupTest(TestCase):
         step.add_streams_file(
             'compass.landice.tests.hydro_radial.spinup_test',
             'streams.landice')
-        Visualize(test_case=self, run_by_default=False)
+        self.add_step(step)
+
+        step = Visualize(test_case=self)
+        self.add_step(step, run_by_default=False)
 
     # no configure() method is needed
 

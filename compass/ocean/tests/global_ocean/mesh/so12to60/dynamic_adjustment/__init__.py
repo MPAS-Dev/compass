@@ -69,6 +69,7 @@ class SO12to60DynamicAdjustment(DynamicAdjustment):
                               template_replacements=stream_replacements)
 
         step.add_output_file(filename='../{}'.format(restart_filenames[0]))
+        self.add_step(step)
 
         # second step
         step_name = 'damped_adjustment_2'
@@ -94,6 +95,7 @@ class SO12to60DynamicAdjustment(DynamicAdjustment):
 
         step.add_input_file(filename='../{}'.format(restart_filenames[0]))
         step.add_output_file(filename='../{}'.format(restart_filenames[1]))
+        self.add_step(step)
 
         # third step
         step_name = 'damped_adjustment_3'
@@ -119,6 +121,7 @@ class SO12to60DynamicAdjustment(DynamicAdjustment):
 
         step.add_input_file(filename='../{}'.format(restart_filenames[1]))
         step.add_output_file(filename='../{}'.format(restart_filenames[2]))
+        self.add_step(step)
 
         # final step
         step_name = 'simulation'
@@ -140,5 +143,6 @@ class SO12to60DynamicAdjustment(DynamicAdjustment):
 
         step.add_input_file(filename='../{}'.format(restart_filenames[2]))
         step.add_output_file(filename='../{}'.format(restart_filenames[3]))
+        self.add_step(step)
 
         self.restart_filenames = restart_filenames

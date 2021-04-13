@@ -15,6 +15,6 @@ class Greenland(TestGroup):
         """
         super().__init__(mpas_core=mpas_core, name='greenland')
 
-        SmokeTest(test_group=self)
-        DecompositionTest(test_group=self)
-        RestartTest(test_group=self)
+        self.add_test_case(SmokeTest(test_group=self))
+        self.add_test_case(DecompositionTest(test_group=self))
+        self.add_test_case(RestartTest(test_group=self))

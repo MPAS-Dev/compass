@@ -16,8 +16,12 @@ class Eismint2(TestGroup):
         """
         super().__init__(mpas_core=mpas_core, name='eismint2')
 
-        StandardExperiments(test_group=self)
+        self.add_test_case(StandardExperiments(test_group=self))
 
         for thermal_solver in ['temperature', 'enthalpy']:
-            DecompositionTest(test_group=self, thermal_solver=thermal_solver)
-            RestartTest(test_group=self, thermal_solver=thermal_solver)
+            self.add_test_case(
+                DecompositionTest(
+                    test_group=self, thermal_solver=thermal_solver))
+            self.add_test_case(
+                RestartTest(
+                    test_group=self, thermal_solver=thermal_solver))

@@ -49,7 +49,8 @@ class RpeTest(TestCase):
 
         self.resolution = resolution
 
-        InitialState(test_case=self, resolution=resolution)
+        self.add_step(
+            InitialState(test_case=self, resolution=resolution))
 
         for index, nu in enumerate(nus):
             name = 'rpe_test_{}_nu_{}'.format(index + 1, nu)
@@ -64,8 +65,10 @@ class RpeTest(TestCase):
             step.add_streams_file(
                 'compass.ocean.tests.baroclinic_channel.rpe_test',
                 'streams.forward')
+            self.add_step(step)
 
-        Analysis(test_case=self, resolution=resolution, nus=nus)
+        self.add_step(
+            Analysis(test_case=self, resolution=resolution, nus=nus))
 
     def configure(self):
         """

@@ -14,5 +14,5 @@ class EnthalpyBenchmark(TestGroup):
         """
         super().__init__(mpas_core=mpas_core, name='enthalpy_benchmark')
 
-        A(test_group=self)
-        B(test_group=self)
+        self.add_test_case(A(test_group=self))
+        self.add_test_case(B(test_group=self))

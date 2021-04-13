@@ -16,7 +16,7 @@ class Ocean(MpasCore):
         """
         super().__init__(name='ocean')
 
-        BaroclinicChannel(mpas_core=self)
-        GlobalOcean(mpas_core=self)
-        IceShelf2d(mpas_core=self)
-        Ziso(mpas_core=self)
+        self.add_test_group(BaroclinicChannel(mpas_core=self))
+        self.add_test_group(GlobalOcean(mpas_core=self))
+        self.add_test_group(IceShelf2d(mpas_core=self))
+        self.add_test_group(Ziso(mpas_core=self))
