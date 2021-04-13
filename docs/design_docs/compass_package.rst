@@ -25,7 +25,7 @@ in a way that is appropriate for multiple machines.  Fifth and also related,
 COMPASS does not currently have a way to provide machine-specific paths and
 other information that could allow for better automation on supported machines.
 Sixth, the directory structure imposed by COMPASS
-(``core/configuration/resoltuion/testcase/step``) is too rigid for many
+(``mpas_core/test_group/resoltuion/test_case/step``) is too rigid for many
 applications. Finally, COMPASS is not well documented and the documentation that
 does exist is not very helpful either for new users or for new developers
 interested in creating new test cases.
@@ -150,12 +150,12 @@ Date last modified: 2020/11/16
 Contributors: Xylar Asay-Davis
 
 The directory structure currently imposed by COMPASS
-(``core/configuration/resoltuion/testcase/step``) is too rigid for many
+(``mpas_core/test_group/resoltuion/test_case/step``) is too rigid for many
 applications.  Some test cases (e.g. convergence tests) require multiple
-resolutions within the test case.  Some configurations would prefer to sort
+resolutions within the test case.  Some test groups would prefer to sort
 test cases based on another parameter or property besides resolution.  It would
 be convenient if the directory structure could be more flexible, depending on
-the needs of a given configuration and test case.  Even so, it is important that
+the needs of a given test group and test case.  Even so, it is important that
 the subdirectory of each test case and step is unique, they do not overwrite one
 another.
 
@@ -174,7 +174,7 @@ appropriate conda environment; build the appropriate MPAS core; list and setup
 a test case; and run the test case in via a batch queuing system.
 
 Similarly, we need a set of developer-friendly documentation to describe how to
-create a new "configuration" with one or more "test cases", each made up of
+create a new "test group" with one or more "test cases", each made up of
 one or more "steps".
 
 
@@ -207,7 +207,7 @@ Date last modified: 2020/12/04
 Contributors: Xylar Asay-Davis, Mark Petersen
 
 Currently, resolution is hard-coded in the directory structure and in scripts
-for individual configurations like ``build_base_mesh.py``. This works for more
+for individual test groups like ``build_base_mesh.py``. This works for more
 complex meshes but for convergence tests, it is not useful to have a directory
 per resolution.  Instead, it could be helpful to have a list of resolutions that
 can easily be altered (e.g. ``dx = {min, max, step}`` with a linear or log step)
@@ -269,22 +269,26 @@ Algorithm Design
 Algorithm design: Make test cases easy to understand, modify and  and create
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2021/01/14
+Date last modified: 2021/04/13
 
 Contributors: Xylar Asay-Davis
 
 
 The proposed solution would be to write test cases as Python packages made up
-of modules and functions within a larger ``compass`` package.  A test case will
-have separate functions to collect information on the test case (the equivalent
-of parsing ``config_driver.xml`` in the current implementation), configure it
-by adding test-case-specific config options, and run the default steps.  Each
-step of a test case (equivalent to the other ``config_*.xml`` files) will be
-a module (possibly shared between test cases) that implements functions for
-collecting information on the step (equivalent to parsing ``config_*.xml``),
-setting up the step (downloading files, making symlinks, creating namelist and
-streams files), and running the step.  A balance will have to be struck between
-code reusability and readability within each configuration (a set of test cases).
+of modules, functions and classes within a larger ``compass`` package.  A test
+case will descend from a base ``TestCase`` class with a constructor for
+adding steps to the test case (the equivalent of parsing ``config_driver.xml``
+in the current implementation), a ``configure()`` method for adding
+test-case-specific config options, and a ``run()`` method to run the steps
+and perform validation.  Each step of a test case (equivalent to the other
+``config_*.xml`` files) will descend from the ``Step`` base class.  Each
+step class will include a constructor to add input, output, namelist and
+streams files and collect other information on the step (equivalent to parsing
+``config_*.xml``); a ``setup()`` method that downloads files, makes symlinks,
+creates namelist and streams files; and a ``run()`` method that runs the step.
+Steps may be shared between test cases.  A balance will have to be struck
+between code reusability and readability within each test group (a set of test
+cases).
 
 Readability would be improved by using Jinja2 templates for code generation,
 rather than via string manipulation within python scripts as is the case in the
@@ -296,41 +300,41 @@ current COMPASS implementation:
     import pickle
     import configparser
 
-    from {{ testcase.module }} import {{ testcase.run }} as run
     from mpas_tools.logging import LoggingContext
 
 
     def main():
-        with open('testcase_{{ testcase.name }}.pickle', 'rb') as handle:
-            testcase = pickle.load(handle)
-        testcase['steps_to_run'] = ['{{ step.name }}']
-        testcase['new_step_log_file'] = False
+        with open('test_case_{{ test_case.name }}.pickle', 'rb') as handle:
+            test_case = pickle.load(handle)
+        test_case.steps_to_run = ['{{ step.name }}']
+        test_case.new_step_log_file = False
 
         with open('{{ step.name }}.pickle', 'rb') as handle:
             step = pickle.load(handle)
 
         config = configparser.ConfigParser(
             interpolation=configparser.ExtendedInterpolation())
-        config.read('{{ step.config }}')
+        config.read('{{ step.config_filename }}')
+        test_case.config = config
 
         # start logging to stdout/stderr
-        test_name = step['path'].replace('/', '_')
+        test_name = step.path.replace('/', '_')
         with LoggingContext(name=test_name) as logger:
-            test_suite = dict()
-            run(testcase, test_suite, config, logger)
+            test_case.logger = logger
+            test_case.run()
 
 
     if __name__ == '__main__':
         main()
 
 
-A Jinja2 template uses curly braces (e.g. ``{{ testcase.module }}``) to indicate
+A Jinja2 template uses curly braces (e.g. ``{{ test_case.name }}``) to indicate
 where an element of the template will be replaced by a python variable or
-dictionary value.  In this example, ``{{ testcase.module }}`` will be replaced with
-the contents of ``testcase['module']`` in the python code, and similarly for other
-replacements in the template.  Other than the replacements, the code can be read
-as normal, in contrast to the existing approach of python scripts that define
-other python scripts via a series of string formatting statements.
+dictionary value.  In this example, ``{{ test_case.name }}`` will be replaced
+with the contents of ``test_case['name']`` in the python code, and similarly
+for other replacements in the template.  Other than the replacements, the code
+can be read as normal, in contrast to the existing approach of python scripts
+that define other python scripts via a series of string formatting statements.
 
 The only XML files that would be used would be templates for streams files,
 written in the same syntax as the resulting streams files.
@@ -378,7 +382,7 @@ namelist files:
 Regarding the balance between reusability and readability, it is difficult to
 generalize this to the whole redesign.  To some degree this will be a choice
 left to each test case.  It will be difficult to reuse code across test cases
-and steps within a configuration without some degree of increased complexity.
+and steps within a test group without some degree of increased complexity.
 The redesign will attempt to include simpler examples, perhaps with less code
 reuse, that can serve as starting points for the creation of new test cases.
 These "prototype" test cases will include additional documentation and commenting
@@ -397,7 +401,7 @@ COMPASS in a way that learning the existing XML-based approach cannot be.
 Algorithm design: Shared code
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2021/01/14
+Date last modified: 2021/04/13
 
 Contributors: Xylar Asay-Davis
 
@@ -411,70 +415,142 @@ The organization of the package will be as follows:
 .. code-block:: none
 
   - compass/
-    - <core>/
-      - <core>.cfg
-      - <core_framework_module>.py
-      - <core_framework_package>/
+    - <mpas_core>/
+      - <mpas_core>.cfg
+      - <mpas_core_framework_module>.py
+      - <mpas_core_framework_package>/
       - tests/
-        - <configuration>/
-          - <testcase>/
+        - <test_group>/
+          - <test_case>/
             - <step>.py
-            - <testcase>.cfg
+            - <test_case>.cfg
             - namelist.<step>
             - streams.<step>
           - <shared_step>.py
-          - <configuration_shared_module>.py
-          - <configuration>.cfg
+          - <test_group_shared_module>.py
+          - <test_group>.cfg
           - namelist.<step>
           - streams.<step>
     - <framework_module>.py
     - <framework_package>/
 
 The proposed solution would slightly modify the naming conventions currently
-used in COMPASS. A ``core`` would be the same as it now is -- corresponding to
-an MPAS dynamical core such as ``ocean`` or ``landice``.  A ``configuration``
-would also retain its current meaning -- a group of test cases such as
-``global_ocean`` or ``MISMIP3D``.  For at least two reasons described
-in :ref:`req_dir_struct`, we do not include
-``resolution`` as the next level of hierarchy.  Instead, a ``configuration``
-contains ``testcases`` which can be given any convenient name to distinguish it
-from other test cases within that ``configuration``.  Several variants of a
-``testcase`` can define by varying a parameter or other characteristic
-(including resolution) but there need not be defined with separate packages
-or modules.  This is an important aspect of the code reuse provided by this
-approach.  Each ``testcase`` is made up of several steps (e.g. ``base_mesh``,
-``initial_state``, ``test``).  Previously, COMPASS documentation referred to
-a ``testcase`` as a ``test`` and a ``step`` as a ``case``, but users have found
-this naming convention to be confusing so the proposed solution tries to make
-a clearer distinction between a ``testcase`` and a ``step`` within a
-``testcase``.
+used in COMPASS. An MPAS core (descended from the ``MpasCore`` base class)
+would be the same as it now is -- corresponding to an MPAS dynamical core such
+as ``ocean`` or ``landice``.  A test group (descended from ``TestGroup``) would
+would be the equivalent of a "configuration" in legacy COMPASS -- a group of
+test cases such as ``global_ocean`` or ``MISMIP3D``.  For at least two reasons
+described in :ref:`req_dir_struct`, we do not include ``resolution`` as the
+next level of hierarchy.  Instead, a test group contains test cases
+(descended from ``TestCase``), which can be given any convenient name and
+relative path to distinguish it from other test cases within that test group.
+Several variants of a test case can define by varying a parameter or other
+characteristic (including resolution) but there need not be separate packages
+or modules for each.  This is an important aspect of the code reuse provided by
+this approach.  Each test case is made up of several steps (e.g. ``base_mesh``,
+``initial_state``, ``forward``).  Legacy COMPASS' documentation referred to
+a test case as a "test" and a step as a "case", but users have found this
+naming convention to be confusing so the proposed solution tries to make a
+clearer distinction between a test case and a step within a test case.
 
-In addition to defining ``testcases`` and ``steps``, ``cores`` and
-``configurations`` can also include "framework" python code that could be
-more general (e.g. for creating meshes or initial conditions).  The main
-``compass`` package would also include several framework modules and package,
-some for infrastructure related to listing, setting up and cleaning up
-test cases, and others for tasks common to many test cases.  As an example of the
-latter, ``io.py`` defines functions for downloading files and creating symlinks.
-Here's how it would be used in the ``setup()`` function of a step:
+In addition to defining test cases and steps, MPAS cores and test groups
+can also include "framework" python code that could be more general (e.g. for
+creating meshes or initial conditions).  The main ``compass`` package would
+also include several framework modules and package, some for infrastructure
+related to listing, setting up and cleaning up test cases, and others for tasks
+common to many test cases.  The methods of the base classes, particularly of
+the ``Step`` class, are also an important part of the framework that can be
+used to indicate what the input and output files for the step are and how to
+create the namelist and streams files.  Here is an example of a step that
+that is defined using a combination of methods from ``Step`` (e.g.
+``self.add_input_file()``) and framework functions (e.g. ``run_model()``):
 
 .. code-block:: python
 
-    from compass.io import download, symlink
+    from compass.model import run_model
+    from compass.step import Step
 
 
-    def setup(step, config):
+    class Forward(Step):
+        """
+        A step for performing forward MPAS-Ocean runs as part of baroclinic
+        channel test cases.
 
-        initial_condition_database = config.get('paths',
-                                                'initial_condition_database')
+        Attributes
+        ----------
+        resolution : str
+            The resolution of the test case
+        """
+        def __init__(self, test_case, resolution, name='forward', subdir=None,
+                     cores=1, min_cores=None, threads=1, nu=None):
+            """
+            Create a new test case
 
-        filename = download(
-            dest_path=initial_condition_database,
-            file_name='particle_regions.151113.nc',
-            url='https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/'
-                'mpas-ocean/initial_condition_database')
+            Parameters
+            ----------
+            test_case : compass.TestCase
+                The test case this step belongs to
 
-        symlink(filename, os.path.join(step['work_dir'], 'input_file.nc'))
+            resolution : str
+                The resolution of the test case
+
+            name : str
+                the name of the test case
+
+            subdir : str, optional
+                the subdirectory for the step.  The default is ``name``
+
+            cores : int, optional
+                the number of cores the step would ideally use.  If fewer cores
+                are available on the system, the step will run on all available
+                cores as long as this is not below ``min_cores``
+
+            min_cores : int, optional
+                the number of cores the step requires.  If the system has fewer
+                than this number of cores, the step will fail
+
+            threads : int, optional
+                the number of threads the step will use
+
+            nu : float, optional
+                the viscosity (if different from the default for the test group)
+            """
+            self.resolution = resolution
+            if min_cores is None:
+                min_cores = cores
+            super().__init__(test_case=test_case, name=name, subdir=subdir,
+                             cores=cores, min_cores=min_cores, threads=threads)
+            self.add_namelist_file('compass.ocean.tests.baroclinic_channel',
+                                   'namelist.forward')
+            self.add_namelist_file('compass.ocean.tests.baroclinic_channel',
+                                   'namelist.{}.forward'.format(resolution))
+            if nu is not None:
+                # update the viscosity to the requested value
+                options = {'config_mom_del2': '{}'.format(nu)}
+                self.add_namelist_options(options)
+
+            self.add_streams_file('compass.ocean.tests.baroclinic_channel',
+                                  'streams.forward')
+
+            self.add_input_file(filename='init.nc',
+                                target='../initial_state/ocean.nc')
+            self.add_input_file(filename='graph.info',
+                                target='../initial_state/culled_graph.info')
+
+            self.add_output_file(filename='output.nc')
+
+        def setup(self):
+            """
+            Set up the test case in the work directory, including downloading any
+            dependencies
+            """
+            self.add_model_as_input()
+
+        def run(self):
+            """
+            Run this step of the test case
+            """
+            run_model(self)
 
 
 .. _alg_shared_config:
@@ -482,7 +558,7 @@ Here's how it would be used in the ``setup()`` function of a step:
 Algorithm design: Shared configuration options
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2021/01/14
+Date last modified: 2021/04/13
 
 Contributors: Xylar Asay-Davis
 
@@ -501,32 +577,35 @@ from a later config file will override the same option from an earlier config
 file, so the order in which the files are loaded is important.  The proposed
 loading order is:
 
+* A top level default config file related downloading files and partitioning
+  meshes for parallel execution
+
 * machine config file (found in ``compass/machines/<machine>.cfg``, with
   ``default`` being the machine name if none is specified)
 
-* core config file (found in ``compass/<core>/<core>.cfg``)
+* MPAS core config file (found in ``compass/<mpas_core>/<mpas_core>.cfg``)
 
-* configuration config file (found in
-  ``compass/<core>/tests/<configuration>/<configuration>.cfg``)
+* test group config file (found in
+  ``compass/<mpas_core>/tests/<test_group>/<test_group>.cfg``)
 
 * any additions or modifications made within the test case's ``configure()``
-  function.
+  method.
 
 * the config file passed in by the user at the command line (if any).
 
-The ``configure()`` function allows each test case to load one or more config
-files specific to the test case (e.g. ``<testcase>.cfg`` within the test case's
-package) and would also allow calls to ``config.set()`` that define config
-options directly.
+The ``configure()`` method allows each test case to load one or more config
+files specific to the test case (e.g. ``<test_case>.cfg`` within the test
+case's package) and would also allow calls to ``config.set()`` that define
+config options directly.
 
-The resulting config file would be written to ``<testcase>.cfg`` within the
+The resulting config file would be written to ``<test_case>.cfg`` within the
 test case directory and symlinked to each step subdirectory as stated above.
 
 
 Algorithm design: Ability specify/modify core counts
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2021/01/14
+Date last modified: 2021/04/13
 
 Contributors: Xylar Asay-Davis
 
@@ -539,10 +618,10 @@ in :ref:`alg_parallel`.
 
 The total number of available cores will be determined via python or slurm
 commands.  An error will be raised if too few cores are available for a
-particular test.  Otherwise, the test will run on the minimum of the target
+particular step.  Otherwise, the step will run on the minimum of the target
 number of cores or the total available.
 
-Some test cases (e.g. those within the ``global_ocean`` configuration) will
+Some test cases (e.g. those within the ``global_ocean`` test group) will
 allow the user to specify the target and minimum number of cores as config
 options, meaning they can be set to non-default values before running the test
 case.  Config options are common to all steps within a test case, but
@@ -550,12 +629,42 @@ the target and minimum cores are a property of each step that must be known
 before it is run (again for reasons related to a likely strategy for
 future parallelism in :ref:`alg_parallel`).  This means that a test case will
 need to parse the config options and use them to determine the number of cores
-to run with before calling each step.  Parsing config options and updating the
-target and minimum cores in a step will need to happen in each test cases that
-supports this capability.  From there, shared infrastructure will take care of
-determining if sufficient cores are available and how many to run each step
-with if so.  Developers of individual test cases will not need to worry about
-this.
+each step needs to run with as part of its ``run()`` method before calling
+``super().run()`` from the base class to run the steps.
+
+Parsing config options and updating the target and minimum cores in a step will
+need to happen in each test cases that supports this capability.  From there,
+shared infrastructure will take care of determining if sufficient cores are
+available and how many to run each step with if so.  Developers of individual
+test cases will not need to worry about this.  Here is an example from the
+``Init`` test case from the ``GlobalOcean`` test group:
+
+.. code-block:: python
+
+    def run(self):
+        """
+        Run each step of the testcase
+        """
+        config = self.config
+        steps = self.steps_to_run
+        if 'initial_state' in steps:
+            step = self.steps['initial_state']
+            # get the these properties from the config options
+            step.cores = config.getint('global_ocean', 'init_cores')
+            step.min_cores = config.getint('global_ocean', 'init_min_cores')
+            step.threads = config.getint('global_ocean', 'init_threads')
+
+        if 'ssh_adjustment' in steps:
+            step = self.steps['ssh_adjustment']
+            # get the these properties from the config options
+            step.cores = config.getint('global_ocean', 'forward_cores')
+            step.min_cores = config.getint('global_ocean', 'forward_min_cores')
+            step.threads = config.getint('global_ocean', 'forward_threads')
+
+        # run the steps
+        super().run()
+        ...
+
 
 Shared infrastructure can also be used to set the number of PIO tasks to one
 per node, using the number of cores for a given step and the number of cores
@@ -567,7 +676,7 @@ per node from the machine config file (see :ref_`alg_machine_data`).
 Algorithm design: Machine-specific data
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2021/01/14
+Date last modified: 2021/04/13
 
 Contributors: Xylar Asay-Davis
 
@@ -575,20 +684,22 @@ Contributors: Xylar Asay-Davis
 The machine config file mentioned in :ref:`alg_shared_config` would have
 the following config options:
 
-.. code-block:: ini
+.. code-block:: cfg
 
     # The paths section describes paths that are used within the ocean core test
     # cases.
     [paths]
 
-    # The mesh_database and the initial_condition_database are locations where
-    # meshes / initial conditions might be found on a specific machine. They can be
-    # the same directory, or different directory. Additionally, if they are empty
-    # some test cases might download data into them, which will then be reused if
-    # the test case is run again later.
-    mesh_database = /usr/projects/regionalclimate/COMMON_MPAS/ocean/grids/mesh_database
-    initial_condition_database = /usr/projects/regionalclimate/COMMON_MPAS/ocean/grids/initial_condition_database
-    bathymetry_database = /usr/projects/regionalclimate/COMMON_MPAS/ocean/grids/bathymetry_database
+    # The root to a location where the mesh_database, initial_condition_database,
+    # and bathymetry_database for MPAS-Ocean will be cached
+    ocean_database_root = /usr/projects/regionalclimate/COMMON_MPAS/ocean/grids/
+
+    # The root to a location where the mesh_database and initial_condition_database
+    # for MALI will be cached
+    landice_database_root = /usr/projects/regionalclimate/COMMON_MPAS/mpas_standalonedata/mpas-albany-landice
+
+    # the path to the base conda environment where compass environments have
+    # been created
     compass_envs = /usr/projects/climate/SHARED_CLIMATE/anaconda_envs/base
 
 
@@ -611,16 +722,16 @@ the following config options:
     threads = 18
 
 The various ``paths`` would help with finding mesh or initial condition files.
-These paths are currently assumed to be core independent, so would need to be
-renamed or moved to core-specific sections if different cores wish to have their
-own versions of these paths.  The ``compass_envs`` path is not yet used but
-will be part of a future strategy for automatically generating job scripts that
-include loading of the appropriate conda environment.
+The database root paths depend on the MPAS core, so new paths would need to be
+added for new cores.
+
+A strategy for setting environment variables, activating the appropriate conda
+environment, and loading compiler and MPI modules for each machine will be
+explored as a follow-up project and is not part of this design.
 
 The ``parallel`` options are intended to contain all of the machine-specific
-information needed to determine how many cores a given ``step`` would require
-and to create a job script for each ``testcase`` and ``step``.  The use of
-python thread parallelism will not be part of the first version of the
+information needed to determine how many cores a given step would require.  The
+use of python thread parallelism will not be part of the first version of the
 ``compass`` package described in this design document but is expected to be
 incorporated in the coming year.  An appropriate value for ``threads`` for
 each machine will likely need determined as that capability gets more
@@ -632,28 +743,35 @@ exploration but is left as a placeholder for the time being.
 Algorithm design: Looser, more flexible directory structure
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2020/11/18
+Date last modified: 2021/04/13
 
 Contributors: Xylar Asay-Davis
 
 
 Each test case and step will be defined by a unique subdirectory within the
 work directory.  Within the base work directory, the first two levels of
-subdirectories will be the same as in the current implementation:
-``core/configuration``.  However, test cases will be free to determine the
+subdirectories will be conceptually the same as in the current implementation:
+``mpas_core/test_group``.  However, test cases will be free to determine the
 (unique) subdirectory structure beyond this top-most level.  Many existing
-test cases will likely stick with the ``resolution/testcase/step`` organization
-structure imposed in the existing COMPASS framework, but others may choose a
+test cases will likely stick with the ``resolution/test_case/step`` organization
+structure imposed in the legacy COMPASS framework, but others may choose a
 different way of organizing (and, indeed, many test cases already have given the
 ``resolution`` subdirectory a name that is seemingly unrelated to the mesh
 resolution).  A unique subdirectory for each test case and step will be provided
-as a value in ``testcase['subdir']`` or ``step['subdir']`` within the python
-dictionary that describes each test case or step.  The default ``subdir`` will
-be the name of the test case or step, but each test case or step can modify this
-as appropriate in the ``collect()`` function.
+as the ``subdir`` argument to the base class's constructor (i.e.
+``super().__init__()`` or will be taken from the ``name`` argument if
+``subdir`` is not provided.
+
+.. code-block:: python
+
+    name = 'restart_test'
+    self.resolution = resolution
+    subdir = '{}/{}'.format(resolution, name)
+    super().__init__(test_group=test_group, name=name,
+                     subdir=subdir)
 
 COMPASS will list test cases based on their full paths within the work directory,
-since this is they way that they can be uniquely identified.
+since this is the way that they can be uniquely identified.
 
 
 .. _alg_docs:
@@ -661,7 +779,7 @@ since this is they way that they can be uniquely identified.
 Algorithm design: User- and developer-friendly documentation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2020/11/16
+Date last modified: 2020/04/13
 
 Contributors: Xylar Asay-Davis
 
@@ -679,9 +797,50 @@ out in a manner similar to what has already been done for:
 
 The documentation will include:
 
-* A user's guide for listing, setting up, and cleaning up test case
+* A user's guide for
 
-* A user's guide for regression suites
+  * setting up the conda environment
+
+  * listing, setting up, and cleaning up test case
+
+  * regression suites
+
+  * creating and modifying config files
+
+  * more details on each MPAS core, test group, test case and step
+
+  * machine-specific instructions
+
+* A developer's guide:
+
+  * A quick start
+
+  * An overview (e.g. the design philosophy)
+
+  * A section for each MPAS core
+
+    * A subsection describing the test groups
+
+      * A sub-subsection for each test case and its steps
+
+    * A subsection for the MPAS core's framework code
+
+  * A description of the ``compass`` framework code:
+
+    * for use within test cases
+
+    * for listing, setting up and cleaning up test cases
+
+    * for managing regression test suites
+
+  * An automated documentation of the API pulled from docstrings
+
+Eventually, but probably not as part of the current design, the documentation
+will also include:
+
+* A developer's guide for creating new test cases
+
+  * MPAS-core-specific details for developing new test cases
 
 * More detailed tutorials:
 
@@ -689,35 +848,13 @@ The documentation will include:
 
   * Running the regression suite
 
-* A section for each core
-
-  * A subsection describing the configurations
-
-    * A sub-subsection for each test case and its steps
-
-  * A subsection for the core's framework code
-
-* A description of the ``compass`` framework code:
-
-  * for use within test cases
-
-  * for listing, setting up and cleaning up test cases
-
-  * for managing regression test suites
-
-* An automated documentation of the API pulled from docstrings
-
-* A developer's guide for creating new test cases
-
-  * core-specific details for developing new test cases
-
 
 .. _alg_parallel:
 
 Algorithm design: Considerations related to running test cases in parallel
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2021/01/14
+Date last modified: 2021/04/13
 
 Contributors: Xylar Asay-Davis
 
@@ -727,7 +864,7 @@ documentation, running tutorials, and beginning prototyping, it seems that the
 relatively new
 `WorkQueueExecutor <https://parsl.readthedocs.io/en/stable/stubs/parsl.executors.WorkQueueExecutor.html#parsl.executors.WorkQueueExecutor>`_
 is likely to be the approach within Parsl that allows the level of flexibility
-and control that we would likely need.  However, this is a new enough feature
+and control that we would need.  However, this is a new enough feature
 that it is still considered to be "beta" and is not available in the latest
 release (v1.0.0).  So it seems premature to settle on this design choice or to
 begin to incorporate it into code (except perhaps as a separate prototype).
@@ -738,15 +875,16 @@ output files so that, in the future, Parsl can determine dependencies between
 test cases and their steps using these files and control execution accordingly.
 This will be the only method for determining dependencies, so steps will have to
 be accurate in providing their inputs and outputs to avoid errors,
-race conditions, or unnecessary blocking.  Test cases with an testing suite and
+race conditions, or unnecessary blocking.  Test cases with an test suite and
 steps within a test case will also need to be ordered in such a way that outputs
 of a "prerequisite" step are always defined before the inputs of any subsequent
 steps that need them as inputs.  In the future, this should allow ``compass``
 to associate each input file with a so-called Parsl ``DataFuture``, which will
-allow each step of a test case to run only all of its input files are available.
+allow each step of a test case to run only when all of its input files are
+available.
 
-Also with Parsl in mind, each step within a test case includes a specified
-maximum memory and disk usage.  Currently, these are set to an arbitrary
+Also with Parsl in mind, the ``Step`` base class includes a specified maximum
+memory and disk usage.  Currently, these are set to an arbitrary
 reference value of 1GB each but will be calibrated to the actual approximate
 usage of each step once this can be determined using debugging output from
 Parsl.
@@ -760,17 +898,17 @@ later date.
 Algorithm design: Resolution can be a test case parameter
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2021/01/14
+Date last modified: 2021/04/13
 
 Contributors: Xylar Asay-Davis
 
 As mentioned in :ref:`alg_shared_code` and :ref:`alg_dir_struct`, resolution
 will no longer be part of the directory structure for test cases and
 no restrictions will be placed on how individual test cases handle resolution
-or mesh generation.  To facilitate shared code, a configuration can use the
+or mesh generation.  To facilitate shared code, a test group can use the
 same code for a step that generates a mesh and/or initial condition for
 different resolutions, e.g. passing in the resolution or mesh name as an
-argument to the function.
+argument to the step's constructor.
 
 
 .. _alg_alter_code:
@@ -778,17 +916,20 @@ argument to the function.
 Algorithm design: Test case code is easy to alter and rerun
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2020/12/04
+Date last modified: 2021/04/13
 
 Contributors: Xylar Asay-Davis
 
-There is a local link to the ``compass`` and one could edit any files within
-the package either using the link or in the original location and then simply
-rerun the test case or step.  Changes do not require a test build of a conda
-package or anything like that.  After some discussion about adding symlinks to
-individual python files within the ``compass`` package, it was decided that this
-has too many risks of being misunderstood, having unintended consequences, and
-could be difficult to implement.
+When ``python -m compass setup`` or ``python -m compass suite`` is run from a
+local ``compass`` repo as opposed to the conda package, the package creates
+a local symlink within each test case and step's work directory to the
+``compass`` package.  A developer can edit any files within the package either
+using the symlink or in the original local repo and then simply rerun the test
+case or step without having to rerun setup. Changes do not require a test build
+of a conda package or anything like that.  After some discussion about adding
+symlinks to individual python files within the ``compass`` package, it was
+decided that this has too many risks of being misunderstood, having unintended
+consequences, and could be difficult to implement.
 
 
 .. _alg_premade_ic:
@@ -796,12 +937,12 @@ could be difficult to implement.
 Algorithm design: Support for pre-made initial condition files
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2021/01/14
+Date last modified: 2021/04/13
 
 Contributors: Xylar Asay-Davis, Mark Petersen
 
-To some degree, the implementation of this requirement will be left up to
-individual test cases.  It should not be difficult to add a configuration option
+To a large degree, the implementation of this requirement will be left up to
+individual test cases.  It should not be difficult to add a config option
 to a given test case selecting whether to generate an initial condition or
 read it from a file (and skipping initialization steps if the latter).
 
@@ -853,7 +994,7 @@ https://github.com/MPAS-Dev/compass/pull/28
 Implementation: Make test cases easy to understand, modify and  and create
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2021/01/15
+Date last modified: 2021/04/13
 
 Contributors: Xylar Asay-Davis
 
@@ -862,254 +1003,180 @@ As already discussed, this requirement is somewhat in conflict with
 :ref:`req_shared_code`, in that shared code within a test case tends to lead
 to a bit more complexity but considerably less redundancy.
 
-Test cases have 3 required functions: ``collect()``, ``configure()``, and
-``run()``.  Steps of a test case have 3 required functions as well:
-``collect()``, ``setup()`` and ``run()``.  Each of these is described below.
+In addition to the constructor (``__init__()``), the ``TestCase`` base class
+has 2 other methods, ``configure()`` and ``run()``, that child classes are
+expected to override to set config options and perform additional tasks beyond
+just running the steps that belong to the test case. Similarly, in addition to
+the constructor, the ``Step`` base class has 2 other methods, ``setup()`` and
+``run()`` for setting up and running the step.  Each of these is described
+below.
 
-collect
-~~~~~~~
+constructors
+~~~~~~~~~~~~
 
-Test cases and steps are "created" by calling the ``collect()`` function. I
-will not go into the details of how these work under the hood because the idea
+When test cases and steps are instantiated, the constructor method
+``__init__()`` is called. I will not go into the details of what happens in
+the ``TestCase`` and ``Step`` base classes when this happens because the idea
 is that developers of new test cases would not need to know these details.
-These ``collect()`` functions don't need to take any arguments but they can
-have some (such as the resolution or other parameters) if it helps with code
-reuse (see :ref:`imp_shared_code`).  ``collect()`` returns a python dictionary
-that describes properties of the test case or step.  These dictionaries are
-a little bit of a crutch that allows me to avoid using python classes.  It
-isn't clear that they will be a whole lot more intuitive for developers who are
-new to python or object-oriented programming but that was the hope.  Here is
-the dictionary associated with an example test case:
+The constructors always need to take the parent (a ``TestGroup`` or
+``TestCase`` object, respectively) and they can have additional arguments (such
+as the resolution or other parameters). The constructors must always call the
+base class' constructor ``super().__init__()`` with, at a minimum, the parent
+and the name of the test case or step as arguments.
+
+As an example, here is the constructor for the ``Default`` test case in the
+``BaroclinicChannel`` test group in the ``Ocean`` MPAS core:
 
 .. code-block:: python
 
-    testcase = {'module': 'compass.ocean.tests.baroclinic_channel.default',
-                'name': 'default',
-                'path': 'ocean/baroclinic_channel/10km/default',
-                'core': 'ocean',
-                'configuration': 'baroclinic_channel',
-                'subdir': '10km/default',
-                'description': 'baroclinic channel 10km default',
-                'steps': {
-                    'initial_state': {
-                        'module': 'compass.ocean.tests.baroclinic_channel.initial_state',
-                        'name': 'initial_state',
-                        'subdir': 'initial_state',
-                        'setup': 'setup',
-                        'run': 'run',
-                        'inputs': [],
-                        'outputs': [],
-                        'resolution': '10km',
-                        'cores': 1,
-                        'min_cores': 1,
-                        'max_memory': 8000,
-                        'max_disk': 8000,
-                        'testcase': 'default',
-                        'testcase_subdir': '10km/default'},
-                    'forward': {
-                        'module': 'compass.ocean.tests.baroclinic_channel.forward',
-                        'name': 'forward',
-                        'subdir': 'forward',
-                        'setup': 'setup',
-                        'run': 'run',
-                        'inputs': [],
-                        'outputs': [],
-                        'resolution': '10km',
-                        'cores': 4,
-                        'max_memory': 1000,
-                        'max_disk': 1000,
-                        'min_cores': 4,
-                        'threads': 1,
-                        'testcase': 'default',
-                        'testcase_subdir': '10km/default'}},
-                'configure': 'configure',
-                'run': 'run',
-                'new_step_log_file': True,
-                'steps_to_run': ['initial_state', 'forward'],
-                'resolution': '10km'}
+    class Default(TestCase):
+        """
+        The default test case for the baroclinic channel test group simply creates
+        the mesh and initial condition, then performs a short forward run on 4
+        cores.
 
-and here is the same for a step, after the ``setup`` phase described below:
+        Attributes
+        ----------
+        resolution : str
+            The resolution of the test case
+        """
+
+        def __init__(self, test_group, resolution):
+            """
+            Create the test case
+
+            Parameters
+            ----------
+            test_group : compass.ocean.tests.baroclinic_channel.BaroclinicChannel
+                The test group that this test case belongs to
+
+            resolution : str
+                The resolution of the test case
+            """
+            name = 'default'
+            self.resolution = resolution
+            subdir = '{}/{}'.format(resolution, name)
+            super().__init__(test_group=test_group, name=name,
+                             subdir=subdir)
+
+            self.add_step(
+                InitialState(test_case=self, resolution=resolution))
+            self.add_step(
+                Forward(test_case=self, cores=4, threads=1, resolution=resolution))
+
+And here is the constructor of the ``InitialState`` step:
 
 .. code-block:: python
 
+    class InitialState(Step):
+        """
+        A step for creating a mesh and initial condition for baroclinic channel
+        test cases
 
-    step = {'module': 'compass.ocean.tests.baroclinic_channel.initial_state',
-            'name': 'initial_state',
-            'subdir': 'initial_state',
-            'setup': 'setup',
-            'run': 'run',
-            'inputs': [],
-            'outputs': ['/home/xylar/data/mpas/test_baroclinic_channel/ocean/baroclinic_channel/10km/default/initial_state/base_mesh.nc',
-                        '/home/xylar/data/mpas/test_baroclinic_channel/ocean/baroclinic_channel/10km/default/initial_state/culled_mesh.nc',
-                        '/home/xylar/data/mpas/test_baroclinic_channel/ocean/baroclinic_channel/10km/default/initial_state/culled_graph.info',
-                        '/home/xylar/data/mpas/test_baroclinic_channel/ocean/baroclinic_channel/10km/default/initial_state/ocean.nc'],
-            'resolution': '10km',
-            'cores': 1,
-            'min_cores': 1,
-            'max_memory': 8000,
-            'max_disk': 8000,
-            'testcase': 'default',
-            'testcase_subdir': '10km/default',
-            'path': 'ocean/baroclinic_channel/10km/default/initial_state',
-            'work_dir': '/home/xylar/data/mpas/test_baroclinic_channel/ocean/baroclinic_channel/10km/default/initial_state',
-            'base_work_dir': '/home/xylar/data/mpas/test_baroclinic_channel/',
-            'config': 'default.cfg'}
+        Attributes
+        ----------
+        resolution : str
+            The resolution of the test case
+        """
+        def __init__(self, test_case, resolution):
+            """
+            Update the dictionary of step properties
 
-Many of these entries are required for the internal operation of ``compass``.
-In this case, the key ``resolution`` is only used internally to this particular
-test case.  The developer of a test case can add any number of parameters and
-values like this to the test case or step dictionary, for later use in
-configuring, setting up or running the test case or step.
+            Parameters
+            ----------
+            test_case : compass.TestCase
+                The test case this step belongs to
 
-Since ``collect()`` is used as part of listing, setting up, cleaning up and
-running test cases and steps, this function should only perform a minimum of
-work to describe the test case and should not download or even read files or
-perform any complex computations.  It is important to keep in mind that every
-test case's ``collect()`` function gets called to list the test cases.
+            resolution : str
+                The resolution of the test case
+            """
+            super().__init__(test_case=test_case, name='initial_state')
+            self.resolution = resolution
 
-The ``collect()`` function for a test case should always call the ``collect()``
-functions for each of its steps, then call the
-``compass.testcase.get_testcase_default()`` function.  After that, further
-alterations can be made to ``testcase`` such as modifying the ``name`` and
-``subdir`` for the test case:
+            for file in ['base_mesh.nc', 'culled_mesh.nc', 'culled_graph.info',
+                         'ocean.nc']:
+                self.add_output_file(file)
+
+In this case, the argument ``resolution`` is passed in when the test case is
+created, and is passed on to the step when it is created within the test case's
+constructor.  Both the test case and the step save the resolution in an
+attribute ``self.resolution`` of the class.  The developer of a test case can
+add any number of parameters as attributes of each class in this way for later
+use in the test case or step.  For example, the ``Default`` test case later
+uses the resolution to call a shared ``configure()`` function:
 
 .. code-block:: python
 
-    from compass.testcase import get_testcase_default
-    from compass.ocean.tests.global_ocean.mesh import mesh
+    def configure(self):
+        """
+        Modify the configuration options for this test case.
+        """
+        baroclinic_channel.configure(self.resolution, self.config)
 
-
-    def collect(mesh_name, with_ice_shelf_cavities):
-        description = 'global ocean {} - mesh creation'.format(mesh_name)
-        module = __name__
-
-        name = module.split('.')[-1]
-        subdir = '{}/{}'.format(mesh_name, name)
-        steps = dict()
-        step = mesh.collect(mesh_name, cores=4, min_cores=2,
-                            max_memory=1000, max_disk=1000, threads=1,
-                            with_ice_shelf_cavities=with_ice_shelf_cavities)
-        steps[step['name']] = step
-
-        testcase = get_testcase_default(module, description, steps, subdir=subdir)
-        testcase['mesh_name'] = mesh_name
-        testcase['with_ice_shelf_cavities'] = with_ice_shelf_cavities
-
-        return testcase
-
-For a step, the ``collect()`` function needs to call
-``compass.testcase.get_step_default()`` and then make any further changes
-to the ``step`` dictionary, typically based on arguments to the ``collect()``
-function:
+The shared function uses the resolution to determine other config options:
 
 .. code-block:: python
 
-    from compass.testcase import get_step_default
+    def configure(resolution, config):
+        """
+        Modify the configuration options for one of the baroclinic test cases
 
+        Parameters
+        ----------
+        resolution : str
+            The resolution of the test case
 
-    def collect(mesh_name, cores, min_cores=None, max_memory=1000,
-                max_disk=1000, threads=1, with_ice_shelf_cavities=False):
+        config : configparser.ConfigParser
+            Configuration options for this test case
+        """
+        res_params = {'10km': {'nx': 16,
+                               'ny': 50,
+                               'dc': 10e3},
+                      '4km': {'nx': 40,
+                              'ny': 126,
+                              'dc': 4e3},
+                      '1km': {'nx': 160,
+                              'ny': 500,
+                              'dc': 1e3}}
 
-        step = get_step_default(__name__)
-        step['mesh_name'] = mesh_name
-        step['cores'] = cores
-        step['max_memory'] = max_memory
-        step['max_disk'] = max_disk
-        if min_cores is None:
-            min_cores = cores
-        step['min_cores'] = min_cores
-        step['threads'] = threads
-        step['with_ice_shelf_cavities'] = with_ice_shelf_cavities
+        if resolution not in res_params:
+            raise ValueError('Unsupported resolution {}. Supported values are: '
+                             '{}'.format(resolution, list(res_params)))
+        res_params = res_params[resolution]
+        for param in res_params:
+            config.set('baroclinic_channel', param, '{}'.format(res_params[param]))
 
-        return step
+Since all MPAS cores, test groups, test cases and steps are constructed as part
+of listing, setting up, and cleaning up test cases and test suites, it is
+important that these methods only perform a minimum of work to describe the
+test case and should not directly download or read files, or perform any
+complex computations.
 
+Because of these considerations, the ``Step`` base class includes
+infrastructure for identifying input and output files, and creating a "recipe"
+for setting up namelist and streams files within ``__init__()`` without
+actually downloading files, creating symlinks, parsing templates, or writing
+files.  A step is allowed to:
 
-configure
-~~~~~~~~~
+  * call ``self.add_input_file()`` indicate files that should be symlinked from
+    the ``compass`` package or from another step (in this or another test case)
 
-The only customization for a test case that can be performed as part of setup
-is customizing the config file that is shared between all steps in the test
-case.  The ``configure()`` function takes ``config`` options and the
-``testcase`` dictionary as arguments, and can either do nothing (``pass``) or
-add to or modify ``config``.  One way to update ``config`` is by calling
-``compass.config.add_config()`` to add options from  a config file, typically
-found in the package (directory) for the test case:
+  * call ``self.add_input_file()`` indicate files that should be downloaded
+    from the LCRC server (or elsewhere)
 
-.. code-block:: python
+  * call ``self.add_output_file()`` to indicate output files that will be
+    produced by running the step
 
-    from compass.config import add_config
+  * call ``self.add_namelist_file()`` or ``self.add_namelist_options()`` to
+    add to the "recipe" for updating namelist options
 
+  * call ``self.add_streams_file()`` to update the "recipe" for defining
+    streams file during setup
 
-    def configure(testcase, config):
-        add_config(config, 'compass.examples.tests.example_compact.test1',
-                   'test1.cfg')
-
-Another way is to call the ``config.set()`` method:
-
-.. code-block:: python
-
-    config.set('example_compact', 'resolution', testcase['resolution'])
-
-Config options in ``config`` will be written to a config file in the work
-directory called ``<testcase>.cfg``, where ``<testcase>`` is the name of the
-test case.  These config options differ from parameters (such as ``resolution``
-in the example above) that are stored in the ``testcase`` dictionary in that
-these options could be changed by a user before running the test case.
-Parameters in ``testcase`` are not available in a format where users could
-easily alter them and are unchanged between when the test case was set up and
-when it is run.
-
-Typically, config options that are specific to a test case will go into a
-config section with the same name as the configuration (``example_compact`` in
-this example) but this is a convention and developers can use whichever section
-name makes sense.  It is best to avoid putting config options that are specific
-to a configuration, test case or step in the config sections such as
-``[paths]`` and ``[parallel]`` that are meant to be used in the shared
-infrastructure of ``compass``.
-
-It is also possible to create symlinks within ``configure()``, e.g. to a README
-file that applies to all steps in a test case:
-
-.. code-block:: python
-
-    from importlib.resources import path
-
-    from compass.io import symlink
-
-
-    def configure(testcase, config):
-        with path('compass.ocean.tests.global_ocean.files_for_e3sm', 'README') as \
-                target:
-            symlink(str(target), '{}/README'.format(testcase['work_dir']))
-
-Steps do not have a ``configure()`` function because they share the same
-``config`` with the other steps in the test case.  The idea is that it should
-be relatively easy to change config options for all the steps in the test in
-one place.
-
-setup
-~~~~~
-
-Test cases do not have a ``setup()`` function because the only setting up they
-typically include is to update config options in ``configure()``.  The
-``setup()`` function in a step can be used to:
-
-  * add parameters to the ``step`` dictionary
-
-  * download and cache any files from the LCRC server (or elsewhere) that the
-    step requires
-
-  * make symlinks to cached data files from the server, small data files within
-    ``compass`` itself, or output of other steps in this or another test case
-
-  * update namelist options (if the MPAS model will be called)
-
-  * update the streams file (if the MPAS model will be called)
-
-  * add absolute paths of all require input files to the ``step['inputs']`` list
-
-  * add absolute paths of all output files that are available to other test cases
-    and steps to the ``step['outputs']`` list
+These functions can also be called on the step from the test case's
+constructor, e.g. ``step.add_namelist_file()``.  This might be convenient when
+adding namelist options that are specific to the test case when you are using
+the same step class for many test cases.
 
 Namelist options always begin with a template produced when the MPAS model is
 compiled.  Replacements are stored as keys and values in a python dictionary.
@@ -1126,54 +1193,31 @@ namelist files themselves but without sections:
     config_write_output_on_startup = .false.
     config_use_debugTracers = .true.
 
-Such a file can be parsed within ``setup()`` like this:
+Such a file can be added within ``__init__()`` like this:
 
 .. code-block:: python
 
-    from compass import namelist
+    class ForwardStep(Step):
+        def __init__(self, test_case, mesh, init, time_integrator, name='forward',
+                     subdir=None, cores=None, min_cores=None, threads=None):
+            ...
 
+            self.add_namelist_file(
+                'compass.ocean.tests.global_ocean', 'namelist.forward')
+            if mesh.with_ice_shelf_cavities:
+                self.add_namelist_file(
+                    'compass.ocean.tests.global_ocean', 'namelist.wisc')
 
-    def setup(step, config):
-        with_ice_shelf_cavities = step['with_ice_shelf_cavities']
+        self.add_streams_file(
+            'compass.ocean.tests.global_ocean', 'streams.forward')
 
-        replacements = namelist.parse_replacements(
-            'compass.ocean.tests.global_ocean', 'namelist.forward')
-
-        if with_ice_shelf_cavities:
-            replacements.update(namelist.parse_replacements(
-                'compass.ocean.tests.global_ocean', 'namelist.wisc'))
-
-        namelist.generate(config=config, replacements=replacements,
-                          step_work_dir=step_dir, core='ocean', mode='forward')
-
-The ``replacements`` dictionary can be updated with multiple calls to
-``compass.namelist.parse_replacements`` as in this example, or it can be
-altered directly, e.g. ``replacements['config_dt'] = "'02:00:00'"``.
+The namelist recipe can be updated with multiple calls to
+``self.add_namelist_file()`` as in this example, or it can be altered with a
+python dictionary of options by calling ``self.add_namelist_options()``.
 
 Streams files are in XML format and are therefore a little bit trickier to
-define.  A typical workflow might be:
-
-.. code-block:: python
-
-    from compass import streams
-
-
-    def setup(step, config):
-        with_bgc = step['with_bgc']
-        streams_data = streams.read('compass.ocean.tests.global_ocean',
-                                    'streams.forward')
-
-        if with_bgc:
-            streams_data = streams.read('compass.ocean.tests.global_ocean',
-                                        'streams.bgc', tree=streams_data)
-
-        streams.generate(config=config, tree=streams_data, step_work_dir=step_dir,
-                         core='ocean', mode='forward')
-
-In this example, ``streams_data`` is an XML tree.  The initial call to
-``streams.read()`` creates a new XML tree from scratch, and subsequent calls
-update that tree (by passing it as the ``tree`` keyword argument).  Then, a
-streams file is generated from the MPAS-model template using these streams.
+define.  The recipe is always defined by adding a streams file with
+``self.add_streams_file()`` as in the example above.
 
 A typical streams file might look like:
 
@@ -1217,586 +1261,146 @@ currently no mechanism for adding or removing ``vars``, etc. from a stream
 because that seemed to be a feature that was rarely used or found to be useful
 in the legacy COMPASS implementation.
 
-``inputs`` and ``outputs`` are not currently used but are expected to become an
-essential part of the parallelization strategy in the future (see
-:ref:`imp_parallel`).
+configure()
+~~~~~~~~~~~
+
+Test cases do not have very many options for customization.  The main one is
+customizing the config file that is shared between all steps in the test
+case.  The framework sets up a ``self.config`` attribute for each test case,
+and a test case can override the ``configure()`` method to modify these config
+options. One way to update ``config`` is by calling
+``compass.config.add_config()`` to add options from  a config file, typically
+found in the package (directory) for the test case:
+
+.. code-block:: python
+
+    from compass.config import add_config
+    from compass.io import symlink
+
+    ...
+
+    def configure(self):
+        """
+        Modify the configuration options for this test case
+        """
+        add_config(self.config, 'compass.landice.tests.enthalpy_benchmark.A',
+                   'A.cfg', exception=True)
+
+        with path('compass.landice.tests.enthalpy_benchmark', 'README') as \
+                target:
+            symlink(str(target), '{}/README'.format(self.work_dir))
+
+Another way is to call the ``config.set()`` method:
+
+.. code-block:: python
+
+    def configure(self):
+        """
+        Modify the configuration options for this test case
+        """
+        # We want to visualize all test cases by default
+        self.config.set('eismint2_viz', 'experiment', 'a, b, c, d, f, g')
+
+Config options in ``config`` will be written to a config file in the work
+directory called ``<test_case>.cfg``, where ``<test_case>`` is the name of the
+test case.  These config options differ from parameters (such as ``resolution``
+in the example above) that are attributes of test case's class in that config
+options could be changed by a user before running the test case. Attributes of
+the test case are not available in a format where users could easily alter them
+and are unchanged between when the test case was set up and when it is run.
+
+Typically, config options that are specific to a test case will go into a
+config section with the same name as the test group.  In the example above,
+we used a special section for visualization within the ``eismint2`` test group
+called ``eismint2_viz``.  Developers can use whichever section name makes
+sense as long as the section names are different from those used by the
+framework such as ``[paths]`` and ``[parallel]``.
+
+It is also possible to create symlinks within ``configure()``, e.g. to a README
+file that applies to all steps in a test case, as shown above.
+
+Steps do not have a ``configure()`` method because they share the same
+``config`` with the other steps in the test case.  The idea is that it should
+be relatively easy to change config options for all the steps in the test case
+in one place.
+
+setup()
+~~~~~~~
+
+Test cases do not have a ``setup()`` method because the only setting up they
+typically include is to update config options in ``configure()``.  The step
+may call ``self.add_input_file()``, ``self.add_output_file()``,
+`self.add_namelist_file()``, ``self.add_namelist_options()`` or
+``self.add_streams_file()`` to add inputs, outputs, and update the recipes for
+namelist and streams files.  Any operations that require explicit references to
+the work directory (i.e. ``self.work_dir``) or make use of config options
+(``self.config``) have to happen in ``setup()`` rather than ``__init__()``
+because neither of these attributes are defined within ``__init__()``.
+Calls to ``self.add_model_as_input()``, which adds a symlink to the MPAS
+model's executable, must also happen in ``setup()`` because the path to the
+executable is a config option.
 
 run
 ~~~
 
-The ``run()`` function of a test case should, at a minimum, call the
-function ``compass.testcase.run_steps()`` to run the steps of the test case.
+The ``run()`` method of a test case should, at a minimum, call the
+base class' ``super().run()`` to run all the steps in the test case.
 It can also:
 
   * read config options and use them to update the number of cores and threads
     that a step can use
-  * perform validation that variables and timers
+  * perform validation of variables and timers
 
 Here is a relatively complex example:
 
 .. code-block:: python
 
-    from compass.testcase import run_steps
     from compass.validate import compare_variables
-
-
-    def run(testcase, test_suite, config, logger):
-        # get the these properties from the config options
-        for step_name in testcase['steps_to_run']:
-            step = testcase['steps'][step_name]
-            for option in ['cores', 'min_cores', 'max_memory', 'max_disk',
-                           'threads']:
-                step[option] = config.getint('global_ocean',
-                                             'forward_{}'.format(option))
-
-        run_steps(testcase, test_suite, config, logger)
-
-        variables = ['temperature', 'salinity', 'layerThickness', 'normalVelocity']
-
-        compare_variables(variables, config, work_dir=testcase['work_dir'],
-                          filename1='simulation/output.nc')
-
-The ``run()`` function of a step does the main "job" of the step so the
-contents will very much depend on the purpose of the step.  Many steps will
-use Metis to split the domain across processors and then call the MPAS model.
-An example like that is as follows:
-
-.. code-block:: python
-
-    from compass.model import partition, run_model
-    from compass.parallel import update_namelist_pio
-
-    def run(step, test_suite, config, logger):
-        cores = step['cores']
-        threads = step['threads']
-        step_dir = step['work_dir']
-        update_namelist_pio(config, cores, step_dir)
-        partition(cores, logger)
-
-        run_model(config, core='ocean', core_count=cores, logger=logger,
-                  threads=threads)
-
-More examples
-~~~~~~~~~~~~~
-
-Below are some further examples of configurations and test cases to give a
-sense of what the implementation looks like.  Whether it is easy enough to
-understand, modify and use as a starting pont for new test cases is subjective
-and is going to need some discussion.
-
-The implementation includes two example test cases, one "expanded" and one
-"compact"  The expanded one shows how a test case looks without code reuse.
-This version might be especially easy for a new developers to follow, but is
-frustrating to modify because of the redundancy.  Here is what the file
-structure looks like:
-
-.. code-block:: none
-
-  - compass/
-    - example/
-      - examples.cfg
-      - __init__.py
-      - tests/
-        - example_expanded/
-          - res1km/
-            - test1/
-              - __init__.py
-              - step1.py
-              - step2.py
-              - test1.cfg
-            - test2/
-              - __init__.py
-              - step1.py
-              - step2.py
-              - test2.cfg
-            - __init__.py
-          - res2km/
-            - test1/
-              - __init__.py
-              - step1.py
-              - step2.py
-              - test1.cfg
-            - test2/
-              - __init__.py
-              - step1.py
-              - step2.py
-              - test2.cfg
-            - __init__.py
-          - __init__.py
-        - __init__.py
-
-A typical ``__init__.py`` defining a test case looks like this:
-
-.. code-block:: python
-
-    from compass.config import add_config
-    from compass.testcase import get_testcase_default, run_steps
-    from compass.examples.tests.example_expanded.res1km.test1 import step1, step2
-
-
-    def collect():
-        """
-        Get a dictionary of testcase properties
-
-        Returns
-        -------
-        testcase : dict
-            A dict of properties of this test case, including its steps
-        """
-        # fill in a useful description of the test case
-        description = 'Tempate 1km test1'
-        module = __name__
-        resolution = '1km'
-
-        # the name of the testcase is the last part of the Python module (the
-        # folder it's in, so "test1" or "test2" in the "example_expanded"
-        # configuration
-        name = module.split('.')[-1]
-        # A subdirectory for the testcase after setup.  This can be anything that
-        # will ensure that the testcase ends up in a unique directory
-        subdir = '{}/{}'.format(resolution, name)
-        # make a dictionary of steps for this testcase by calling each step's
-        # "collect" function
-        steps = dict()
-        for step_module in [step1, step2]:
-            step = step_module.collect()
-            steps[step['name']] = step
-
-        # get some default information for the testcase
-        testcase = get_testcase_default(module, description, steps, subdir=subdir)
-        # add any parameters or other information you would like to have when you
-        # are setting up or running the testcase or its steps
-        testcase['resolution'] = resolution
-
-        return testcase
-
-
-    # this function can be used to add the contents of a config file as in the
-    # example below or to add or override specific config options, as also shown
-    # here.  The function must take only the "testcase" and "config" arguments, so
-    # any information you need should be added to "testcase" if it is not available
-    # in one of the config files used to build "config"
-    def configure(testcase, config):
-        """
-        Modify the configuration options for this test case.
-
-        Parameters
-        ----------
-        testcase : dict
-            A dictionary of properties of this testcase from the ``collect()``
-            function
-
-        config : configparser.ConfigParser
-            Configuration options for this testcase, a combination of the defaults
-            for the machine, core and configuration
-        """
-        # add (or override) some configuration options that will be used during any
-        # or all of the steps in this testcase
-        add_config(config, 'compass.examples.tests.example_expanded.res1km.test1',
-                   'test1.cfg')
-
-        # add a config option to the config file
-        config.set('example_expanded', 'resolution', testcase['resolution'])
-
-
-    # The function must take only the "testcase" and "config" arguments, so
-    # any information you need in order to run the testcase should be added to
-    # "testcase" if it is not available in "config"
-    def run(testcase, test_suite, config, logger):
-        """
-        Run each step of the testcase
-
-        Parameters
-        ----------
-        testcase : dict
-            A dictionary of properties of this testcase from the ``collect()``
-            function
-
-        test_suite : dict
-            A dictionary of properties of the test suite
-
-        config : configparser.ConfigParser
-            Configuration options for this testcase, a combination of the defaults
-            for the machine, core and configuration
-
-        logger : logging.Logger
-            A logger for output from the testcase
-        """
-        # typically, this involves running all the steps in the testcase in the
-        # desired sequence.  However, it may involve only running a subset of steps
-        # if some are optional and not performed by default.
-        run_steps(testcase, test_suite, config, logger)
-
-And a typical step looks like this:
-
-.. code-block:: python
-
-    import xarray
-    import os
-
-    from mpas_tools.io import write_netcdf
-
-    from compass.testcase import get_step_default
-    from compass.io import download, symlink
-
-
-    def collect():
-        """
-        Get a dictionary of step properties
-
-        Returns
-        -------
-        step : dict
-            A dictionary of properties of this step
-        """
-        # get some default information for the step
-        step = get_step_default(__name__)
-        # add any parameters or other information you would like to have when you
-        # are setting up or running the testcase or its steps
-        step['resolution'] = '2km'
-
-        return step
-
-
-    def setup(step, config):
-        """
-        Set up the test case in the work directory, including downloading any
-        dependencies
-
-        Parameters
-        ----------
-        step : dict
-            A dictionary of properties of this step from the ``collect()`` function
-
-        config : configparser.ConfigParser
-            Configuration options for this step, a combination of the defaults for
-            the machine, core, configuration and testcase
-        """
-        resolution = step['resolution']
-        testcase = step['testcase']
-        step['parameter4'] = 2.0
-        step['parameter5'] = 250
-
-        step['filename'] = 'particle_regions.151113.nc'
-
-        initial_condition_database = config.get('paths',
-                                                'initial_condition_database')
-        step_dir = step['work_dir']
-
-        # one of the required parts of setup is to define any input files from
-        # other steps or testcases that are required by this step, and any output
-        # files that are produced by this step that might be used in other steps
-        # or testcases.  This allows COMPASS to determine dependencies between
-        # testcases and their steps
-        inputs = []
-        outputs = []
-
-        # download an input file if it's not already in the initial condition
-        # database
-        filename = download(
-            file_name=step['filename'],
-            url='https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/'
-                'mpas-ocean/initial_condition_database',
-            config=config, dest_path=initial_condition_database)
-
-        inputs.append(filename)
-
-        symlink(filename, os.path.join(step_dir, 'input_file.nc'))
-
-        # list all the output files that will be produced in the step1 subdirectory
-        for file in ['output_file.nc']:
-            outputs.append(os.path.join(step_dir, file))
-
-        step['inputs'] = inputs
-        step['outputs'] = outputs
-
-
-    def run(step, test_suite, config, logger):
-        """
-        Run this step of the testcase
-
-        Parameters
-        ----------
-        step : dict
-            A dictionary of properties of this step from the ``collect()``
-            function, with modifications from the ``setup()`` function.
-
-        test_suite : dict
-            A dictionary of properties of the test suite
-
-        config : configparser.ConfigParser
-            Configuration options for this testcase, a combination of the defaults
-            for the machine, core and configuration
-
-        logger : logging.Logger
-            A logger for output from the step
-        """
-        test_config = config['example_expanded']
-        parameter1 = test_config.getfloat('parameter1')
-        parameter2 = test_config.getboolean('parameter2')
-        testcase = step['testcase']
-
-        ds = xarray.open_dataset('input_file.nc')
-        write_netcdf(ds, 'output_file.nc')
-
-In these examples, the ``collect()`` function takes no arguments and building
-up all the test cases in the configuration just looks like this:
-
-.. code-block:: python
-
-    from compass.examples.tests.example_expanded.res1km import test1 as \
-        res1km_test1
-    from compass.examples.tests.example_expanded.res1km import test2 as \
-        res1km_test2
-    from compass.examples.tests.example_expanded.res2km import test1 as \
-        res2km_test1
-    from compass.examples.tests.example_expanded.res2km import test2 as \
-        res2km_test2
-
-
-    # "collect" information about each testcase in the "example_expanded"
-    # configuration, including any parameters ("resolution" in this example) that
-    # distinguish different test cases in this configuration
-    def collect():
-        """
-        Get a list of testcases in this configuration
-
-        Returns
-        -------
-        testcases : list
-            A list of tests within this configuration
-        """
-        # Get a list of information about the testcases in this configuration.
-        # In this example, each testcase (test1 and test2) has a version at each
-        # of two resolutions (1km and 2km), so this configuration has 4 testcases
-        # in total.
-        testcases = list()
-        for test in [res1km_test1, res1km_test2, res2km_test1, res2km_test2]:
-            testcases.append(test.collect())
-
-        return testcases
-
-
-The same test case is implemented in a more compact form that results in
-exactly the same test cases with the same steps.  The compact example looks
-like:
-
-.. code-block:: none
-
-  - compass/
-    - example/
-      - examples.cfg
-      - __init__.py
-      - tests/
-        - example_compact
-          - test1
-            - __init__.py
-            - test1.cfg
-          - test2
-            - __init__.py
-            - test2.cfg
-          - __init__.py
-          - example_compact.cfg
-          - step1.py
-          - step2.py
-          - testcase.py
-
-The implementation of the step only differs meaningfully from the "expanded"
-example in that the resolution is a parameter to the ``collect()`` function:
-
-.. code-block:: python
-
-    from compass.examples.tests.example_compact.testcase import collect as \
-        collect_testcase
-
-    from compass.config import add_config
-    from compass.testcase import run_steps
-
-
-    # "resolution" is just an example argument.  The argument can be any parameter
-    # that distinguishes different variants of a test
-    def collect(resolution):
-        """
-        Get a dictionary of testcase properties
-
-        Parameters
-        ----------
-        resolution : {'1km', '2km'}
-            The resolution of the mesh
-
-        Returns
-        -------
-        testcase : dict
-            A dict of properties of this test case, including its steps
-        """
-        # fill in a useful description of the test case
-        description = 'Tempate {} test1'.format(resolution)
-        # This example assumes that it is possible to call a "collect" function
-        # that is generic to all testcases with a different parameter ("resolution"
-        # in this case).
-        testcase = collect_testcase(__name__, description, resolution)
-        return testcase
 
     ...
 
-The modules ``step1.py`` and ``step2.py`` are now at the configuration level
-and are shared between the two test cases and resolutions:
+    def run(self):
+        """
+        Run each step of the testcase
+        """
+        step = self.mesh_step
+        config = self.config
+        # get the these properties from the config options
+        step.cores = config.getint('global_ocean', 'mesh_cores')
+        step.min_cores = config.getint('global_ocean', 'mesh_min_cores')
+
+        # run the step
+        super().run()
+
+        variables = ['xCell', 'yCell', 'zCell']
+        compare_variables(variables, config, self.work_dir,
+                          filename1='mesh/culled_mesh.nc')
+
+The ``run()`` method of a step does the main "job" of the step so the
+contents will very much depend on the purpose of the step.  Many steps will
+use Metis to split the domain across processors and then call the MPAS model,
+which can be done trivially with a call to ``run_model()``:
 
 .. code-block:: python
 
-    import xarray
-    import os
+    from compass.model import run_model
 
-    from mpas_tools.io import write_netcdf
+    ...
 
-    from compass.testcase import get_step_default
-    from compass.io import download, symlink
-
-
-    # "resolution" is just an example argument.  The argument can be any parameter
-    # that distinguishes different variants of a test
-    def collect(resolution):
-        """
-        Get a dictionary of step properties
-
-        Parameters
-        ----------
-        resolution : {'1km', '2km'}
-            The name of the resolution to run at
-
-        Returns
-        -------
-        step : dict
-            A dictionary of properties of this step
-        """
-        # get some default information for the step
-        step = get_step_default(__name__)
-        # add any parameters or other information you would like to have when you
-        # are setting up or running the testcase or its steps
-        step['resolution'] = resolution
-
-        return step
-
-
-    def setup(step, config):
-        """
-        Set up the test case in the work directory, including downloading any
-        dependencies
-
-        Parameters
-        ----------
-        step : dict
-            A dictionary of properties of this step from the ``collect()`` function
-
-        config : configparser.ConfigParser
-            Configuration options for this step, a combination of the defaults for
-            the machine, core, configuration and testcase
-        """
-        resolution = step['resolution']
-        testcase = step['testcase']
-        # This is a way to handle a few parameters that are specific to different
-        # testcases or resolutions, all of which can be handled by this function
-        res_params = {'1km': {'parameter4': 1.0,
-                              'parameter5': 500},
-                      '2km': {'parameter4': 2.0,
-                              'parameter5': 250}}
-
-        test_params = {'test1': {'filename': 'particle_regions.151113.nc'},
-                       'test2': {'filename': 'layer_depth.80Layer.180619.nc'}}
-
-        # copy the appropriate parameters into the step dict for use in run
-        if resolution not in res_params:
-            raise ValueError('Unsupported resolution {}. Supported values are: '
-                             '{}'.format(resolution, list(res_params)))
-        res_params = res_params[resolution]
-
-        # add the parameters for this resolution to the step dictionary so they
-        # are available to the run() function
-        for param in res_params:
-            step[param] = res_params[param]
-
-        if testcase not in test_params:
-            raise ValueError('Unsupported testcase name {}. Supported testcases '
-                             'are: {}'.format(testcase, list(test_params)))
-        test_params = test_params[testcase]
-
-        # add the parameters for this testcase to the step dictionary so they
-        # are available to the run() function
-        for param in test_params:
-            step[param] = test_params[param]
-
-        initial_condition_database = config.get('paths',
-                                                'initial_condition_database')
-        step_dir = step['work_dir']
-
-        # one of the required parts of setup is to define any input files from
-        # other steps or testcases that are required by this step, and any output
-        # files that are produced by this step that might be used in other steps
-        # or testcases.  This allows COMPASS to determine dependencies between
-        # testcases and their steps
-        inputs = []
-        outputs = []
-
-        # download an input file if it's not already in the initial condition
-        # database
-        filename = download(
-            file_name=step['filename'],
-            url='https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/'
-                'mpas-ocean/initial_condition_database',
-            config=config, dest_path=initial_condition_database)
-
-        inputs.append(filename)
-
-        symlink(filename, os.path.join(step_dir, 'input_file.nc'))
-
-        # list all the output files that will be produced in the step1 subdirectory
-        for file in ['output_file.nc']:
-            outputs.append(os.path.join(step_dir, file))
-
-        step['inputs'] = inputs
-        step['outputs'] = outputs
-
-
-    def run(step, test_suite, config, logger):
+    def run(self):
         """
         Run this step of the testcase
-
-        Parameters
-        ----------
-        step : dict
-            A dictionary of properties of this step from the ``collect()``
-            function, with modifications from the ``setup()`` function.
-
-        test_suite : dict
-            A dictionary of properties of the test suite
-
-        config : configparser.ConfigParser
-            Configuration options for this testcase, a combination of the defaults
-            for the machine, core and configuration
-
-        logger : logging.Logger
-            A logger for output from the step
         """
-        test_config = config['example_compact']
-        parameter1 = test_config.getfloat('parameter1')
-        parameter2 = test_config.getboolean('parameter2')
-        testcase = step['testcase']
+        run_model(self)
 
-        ds = xarray.open_dataset('input_file.nc')
-        write_netcdf(ds, 'output_file.nc')
+global ocean test group
+~~~~~~~~~~~~~~~~~~~~~~~
 
-Python dictionaries are used to define different sets of parameters for
-different resolutions in this example.  Alternatively, parameters could be
-analytic functions of the resolution, or they could also be passed in as
-additional arguments to the ``collect()`` function along with the resolution.
+The global ocean test group includes many other test cases and steps, and
+is quite complex compared to idealized test cases, so may need the most
+discussion.
 
-A similar strategy to these examples was employed in the idealized ocean
-configurations: ``baroclinic_channel``, ``ziso`` and ``ice_shelf_2d``.
-
-global ocean configuration
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The ``global_ocean`` configuration works with variable resolution meshes,
+The ``global_ocean`` test group works with variable resolution meshes,
 requiring more significant numbers of parameters and even a function for
 defining the resolution.  For this reason, it turned out to be more practical
 to define each mesh as its own python package:
@@ -1812,14 +1416,14 @@ to define each mesh as its own python package:
           ...
           - mesh
             - ec30to60
-              - spinup
+              - dynamic_adjustment
                 - __init__.py
                 - streams.template
               - __init__.py
               - ec30to60.cfg
               - namelist.split_explicit
             - qu240
-              - spinup
+              - dynamic_adjustment
                 - __init__.py
                 - streams.template
               - __init__.py
@@ -1828,41 +1432,71 @@ to define each mesh as its own python package:
               - qu240.cfg
           ...
 
+The ``mesh`` module includes an intermediate step class ``MeshStep`` for
+defining meshes.  ``MeshStep`` includes a method ``build_cell_width_lat_lon()``
+that child classes must override to define the mesh resolution.
+
 To implement a new global mesh, one would need to define the resolution
 in the ``__init__.py`` file:
 
 .. code-block:: python
 
     import numpy as np
-    import mpas_tools.mesh.creation.mesh_definition_tools as mdt
+
+    from compass.ocean.tests.global_ocean.mesh.mesh import MeshStep
 
 
-    def build_cell_width_lat_lon():
+    class QU240Mesh(MeshStep):
         """
-        Create cell width array for this mesh on a regular latitude-longitude grid
-
-        Returns
-        -------
-        cellWidth : numpy.array
-            m x n array of cell width in km
-
-        lon : numpy.array
-            longitude in degrees (length n and between -180 and 180)
-
-        lat : numpy.array
-            longitude in degrees (length m and between -90 and 90)
+        A step for creating QU240 and QUwISC240 meshes
         """
-        dlon = 10.
-        dlat = 0.1
-        nlon = int(360./dlon) + 1
-        nlat = int(180./dlat) + 1
-        lon = np.linspace(-180., 180., nlon)
-        lat = np.linspace(-90., 90., nlat)
+        def __init__(self, test_case, mesh_name, with_ice_shelf_cavities):
+            """
+            Create a new step
 
-        cellWidthVsLat = mdt.EC_CellWidthVsLat(lat)
-        cellWidth = np.outer(cellWidthVsLat, np.ones([1, lon.size]))
+            Parameters
+            ----------
+            test_case : compass.TestCase
+                The test case this step belongs to
 
-        return cellWidth, lon, lat
+            mesh_name : str
+                The name of the mesh
+
+            with_ice_shelf_cavities : bool
+                Whether the mesh includes ice-shelf cavities
+            """
+
+            super().__init__(test_case, mesh_name, with_ice_shelf_cavities,
+                             package=self.__module__,
+                             mesh_config_filename='qu240.cfg')
+
+        def build_cell_width_lat_lon(self):
+            """
+            Create cell width array for this mesh on a regular latitude-longitude
+            grid
+
+            Returns
+            -------
+            cellWidth : numpy.array
+                m x n array of cell width in km
+
+            lon : numpy.array
+                longitude in degrees (length n and between -180 and 180)
+
+            lat : numpy.array
+                longitude in degrees (length m and between -90 and 90)
+            """
+            dlon = 10.
+            dlat = dlon
+            constantCellWidth = 240.
+
+            nlat = int(180/dlat) + 1
+            nlon = int(360/dlon) + 1
+            lat = np.linspace(-90., 90., nlat)
+            lon = np.linspace(-180., 180., nlon)
+
+            cellWidth = constantCellWidth * np.ones((lat.size, lon.size))
+            return cellWidth, lon, lat
 
 A developer would also need to define any namelist options for forward runs that
 are specific to this mesh (once for RK4 and once for split-explicit if both
@@ -1935,175 +1569,95 @@ metadata to include in the output files:
     # The URL of the pull request documenting the creation of the mesh
     pull_request = <<<Missing>>>
 
-Finally, the developer would implement the ``spinup`` test case, using one of
-the existing spin-up test cases as a kind of a template:
+Finally, the developer would implement the ``dynamical_adjustment`` test case,
+using one of the existing spin-up test cases as a kind of a template.  These
+test cases descend from the ``DynamicalAdjustment`` class, which itself
+descends from ``TestCase``.
 
 .. code-block:: python
 
-    from compass.testcase import run_steps, get_testcase_default
-    from compass.ocean.tests.global_ocean import forward
-    from compass.ocean.tests.global_ocean.description import get_description
-    from compass.ocean.tests.global_ocean.init import get_init_sudbdir
-    from compass.ocean.tests import global_ocean
-    from compass.validate import compare_variables
+    from compass.ocean.tests.global_ocean.dynamic_adjustment import \
+        DynamicAdjustment
+    from compass.ocean.tests.global_ocean.forward import ForwardStep
 
 
-    def collect(mesh_name, with_ice_shelf_cavities, initial_condition, with_bgc,
-                time_integrator):
+    class QU240DynamicAdjustment(DynamicAdjustment):
         """
-        Get a dictionary of testcase properties
-
-        Parameters
-        ----------
-        mesh_name : str
-            The name of the mesh
-
-        with_ice_shelf_cavities : bool
-            Whether the mesh should include ice-shelf cavities
-
-        initial_condition : {'PHC', 'EN4_1900'}
-            The initial condition to build
-
-        with_bgc : bool
-            Whether to include BGC variables in the initial condition
-
-        time_integrator : {'split_explicit', 'RK4'}
-            The time integrator to use for the run
-
-        Returns
-        -------
-        testcase : dict
-            A dict of properties of this test case, including its steps
+        A test case performing dynamic adjustment (dissipating fast-moving waves)
+        from an initial condition on the QU240 MPAS-Ocean mesh
         """
-        if time_integrator != 'split_explicit':
-            raise ValueError('{} spin-up not defined for {}'.format(
-                mesh_name, time_integrator))
 
-        description = get_description(
-            mesh_name, initial_condition, with_bgc, time_integrator,
-            description='spin-up')
-        module = __name__
+        def __init__(self, test_group, mesh, init, time_integrator):
+            """
+            Create the test case
 
-        init_subdir = get_init_sudbdir(mesh_name, initial_condition, with_bgc)
+            Parameters
+            ----------
+            test_group : compass.ocean.test.global_ocean.GlobalOcean
+                The global ocean test group that this test case belongs to
 
-        name = module.split('.')[-1]
-        subdir = '{}/{}/{}'.format(init_subdir, name, time_integrator)
+            mesh : compass.ocean.tests.global_ocean.mesh.Mesh
+                The test case that produces the mesh for this run
 
-        steps = dict()
+            init : compass.ocean.tests.global_ocean.init.Init
+                The test case that produces the initial condition for this run
 
-        restart_times = ['0001-01-11_00:00:00', '0001-01-21_00:00:00']
-        restart_filenames = [
-            'restarts/rst.{}.nc'.format(restart_time.replace(':', '.'))
-            for restart_time in restart_times]
+            time_integrator : {'split_explicit', 'RK4'}
+                The time integrator to use for the forward run
+            """
+            restart_times = ['0001-01-02_00:00:00', '0001-01-03_00:00:00']
+            restart_filenames = [
+                'restarts/rst.{}.nc'.format(restart_time.replace(':', '.'))
+                for restart_time in restart_times]
 
-        step_name = 'damped_spinup_1'
-        inputs = None
-        outputs = ['output.nc', '../{}'.format(restart_filenames[0])]
-        namelist_replacements = {
-            'config_run_duration': "'00-00-10_00:00:00'",
-            'config_dt': "'00:20:00'",
-            'config_Rayleigh_friction': '.true.',
-            'config_Rayleigh_damping_coeff': '1.0e-4'}
-        stream_replacements = {
-            'output_interval': '00-00-10_00:00:00',
-            'restart_interval': '00-00-10_00:00:00'}
-        step = forward.collect(mesh_name, with_ice_shelf_cavities,
-                               with_bgc,  time_integrator,
-                               testcase_module=module,
-                               streams_file='streams.template',
-                               namelist_replacements=namelist_replacements,
-                               stream_replacements=stream_replacements,
-                               inputs=inputs, outputs=outputs)
-        step['name'] = step_name
-        step['subdir'] = step['name']
-        steps[step['name']] = step
+            super().__init__(test_group=test_group, mesh=mesh, init=init,
+                             time_integrator=time_integrator,
+                             restart_filenames=restart_filenames)
 
-        step_name = 'simulation'
-        inputs = ['../{}'.format(restart_filenames[0])]
-        outputs = ['../{}'.format(restart_filenames[1])]
-        namelist_replacements = {
-            'config_run_duration': "'00-00-10_00:00:00'",
-            'config_do_restart': '.true.',
-            'config_start_time': "'{}'".format(restart_times[0])}
-        stream_replacements = {
-            'output_interval': '00-00-10_00:00:00',
-            'restart_interval': '00-00-10_00:00:00'}
-        step = forward.collect(mesh_name, with_ice_shelf_cavities,
-                               with_bgc,  time_integrator,
-                               testcase_module=module,
-                               streams_file='streams.template',
-                               namelist_replacements=namelist_replacements,
-                               stream_replacements=stream_replacements,
-                               inputs=inputs, outputs=outputs)
-        step['name'] = step_name
-        step['subdir'] = step['name']
-        steps[step['name']] = step
+            module = self.__module__
 
-        testcase = get_testcase_default(module, description, steps, subdir=subdir)
-        testcase['mesh_name'] = mesh_name
-        testcase['with_ice_shelf_cavities'] = with_ice_shelf_cavities
-        testcase['initial_condition'] = initial_condition
-        testcase['with_bgc'] = with_bgc
-        testcase['restart_filenames'] = restart_filenames
+            # first step
+            step_name = 'damped_adjustment_1'
+            step = ForwardStep(test_case=self, mesh=mesh, init=init,
+                               time_integrator=time_integrator, name=step_name,
+                               subdir=step_name)
 
-        return testcase
+            namelist_options = {
+                'config_run_duration': "'00-00-01_00:00:00'",
+                'config_Rayleigh_friction': '.true.',
+                'config_Rayleigh_damping_coeff': '1.0e-4'}
+            step.add_namelist_options(namelist_options)
 
+            stream_replacements = {
+                'output_interval': '00-00-01_00:00:00',
+                'restart_interval': '00-00-01_00:00:00'}
+            step.add_streams_file(module, 'streams.template',
+                                  template_replacements=stream_replacements)
 
-    def configure(testcase, config):
-        """
-        Modify the configuration options for this testcase.
+            step.add_output_file(filename='../{}'.format(restart_filenames[0]))
+            self.add_step(step)
 
-        Parameters
-        ----------
-        testcase : dict
-            A dictionary of properties of this testcase from the ``collect()``
-            function
+            # final step
+            step_name = 'simulation'
+            step = ForwardStep(test_case=self, mesh=mesh, init=init,
+                               time_integrator=time_integrator, name=step_name,
+                               subdir=step_name)
 
-        config : configparser.ConfigParser
-            Configuration options for this testcase, a combination of the defaults
-            for the machine, core and configuration
-        """
-        global_ocean.configure(testcase, config)
+            namelist_options = {
+                'config_run_duration': "'00-00-01_00:00:00'",
+                'config_do_restart': '.true.',
+                'config_start_time': "'{}'".format(restart_times[0])}
+            step.add_namelist_options(namelist_options)
 
+            stream_replacements = {
+                'output_interval': '00-00-01_00:00:00',
+                'restart_interval': '00-00-01_00:00:00'}
+            step.add_streams_file(module, 'streams.template',
+                                  template_replacements=stream_replacements)
 
-    def run(testcase, test_suite, config, logger):
-        """
-        Run each step of the testcase
-
-        Parameters
-        ----------
-        testcase : dict
-            A dictionary of properties of this testcase from the ``collect()``
-            function
-
-        test_suite : dict
-            A dictionary of properties of the test suite
-
-        config : configparser.ConfigParser
-            Configuration options for this testcase, a combination of the defaults
-            for the machine, core and configuration
-
-        logger : logging.Logger
-            A logger for output from the testcase
-        """
-        # get the these properties from the config options
-        for step_name in testcase['steps_to_run']:
-            step = testcase['steps'][step_name]
-            for option in ['cores', 'min_cores', 'max_memory', 'max_disk',
-                           'threads']:
-                step[option] = config.getint('global_ocean',
-                                             'forward_{}'.format(option))
-
-        run_steps(testcase, test_suite, config, logger)
-
-        variables = ['temperature', 'salinity', 'layerThickness', 'normalVelocity']
-
-        compare_variables(variables, config, work_dir=testcase['work_dir'],
-                          filename1='simulation/output.nc')
-
-The global ocean configuration includes many other test cases and steps, and
-is quite complex compared to idealized test cases, so may need the most
-discussion.
+            step.add_input_file(filename='../{}'.format(restart_filenames[0]))
+            step.add_output_file(filename='../{}'.format(restart_filenames[1]))
+            self.add_step(step)
 
 Whew! That was a lot, thanks for bearing with me.
 
@@ -2112,7 +1666,7 @@ Whew! That was a lot, thanks for bearing with me.
 Implementation: Shared code
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2021/01/15
+Date last modified: 2021/04/13
 
 Contributors: Xylar Asay-Davis
 
@@ -2121,9 +1675,9 @@ The package includes myriad examples of code sharing so I will highlight a few.
 compass framework
 ~~~~~~~~~~~~~~~~~
 
-The ``compass`` framework (modules and packages not in the core-specific
-packages) has a lot of code that is shared across existing test cases and could
-be very useful for future ones.
+The ``compass`` framework (classes, modules and packages not in the
+MPAS-core-specific packages) has a lot of code that is shared across existing
+test cases and could be very useful for future ones.
 
 Most of the framework currently has roughly the same functionality as legacy
 COMPASS, but it has been broken into more modules that make it clear what
@@ -2138,30 +1692,27 @@ long scripts in legacy COMPASS.
 One example that doesn't have a clear analog in legacy COMPASS is the
 ``compass.parallel`` module.  It contains two functions:
 ``get_available_cores_and_nodes()``, which can find out the number of total
-cores and nodes available for running steps, and
-``update_namelist_pio()``, which updates the number of PIO tasks and the
-stride between tasks based on the number of cores that a step is actually
-running with.
+cores and nodes available for running steps.
 
-within a core
-~~~~~~~~~~~~~
+within an MPAS core
+~~~~~~~~~~~~~~~~~~~
 
-Legacy COMPASS shares functionality with a core by having scripts at the core
+Legacy COMPASS shares functionality with an MPAS core by having scripts at the MPAS core
 level that are linked within test cases and which take command-line arguments
 that function roughly the same way as function arguments.  But these scripts
 are not able to share any code between them unless it is from ``mpas_tools``
 or another external package.
 
-A core in ``compass`` could, theoretically, build out functionality as complex
+Am MPAS core in ``compass`` could, theoretically, build out functionality as complex
 as in MPAS-Model if desired.  Indeed, it is my ambition to gradually replace
 "init mode" in MPAS-Ocean with equivalent python functionality, starting with
 simpler test cases.  This has already been accomplished for the 3 idealized
-test cases included in the proposed design.
+ocean test cases included in the proposed design.
 
-The current shared functionality in the ``ocean`` core includes:
+The current shared functionality in the ``ocean`` MPAS core includes:
 
   * ``compass.ocean.namelists`` and ``compass.ocean.streams``: namelist
-    replacements and streams that are similar to core-level templates in legacy
+    replacements and streams that are similar to MPAS-core-level templates in legacy
     COMPASS.  Current templates are for adjusting sea surface height in
     ice-shelf cavities, and outputting variables related to frazil and
     land-ice fluxes,
@@ -2179,24 +1730,21 @@ The current shared functionality in the ``ocean`` core includes:
   * ``compass.ocean.plot``: plots initial state and 1D vertical grid
 
 
-within a configuration
-~~~~~~~~~~~~~~~~~~~~~~
+within a test group
+~~~~~~~~~~~~~~~~~~~
 
-So far, the most common type of shared code within configurations are modules
+So far, the most common type of shared code within test groups are modules
 defining steps that are used in multiple test cases.  For example, the
-``baroclinic_channel`` configuration uses shared modules to define the
-``initial_state`` and ``forward`` steps of each test case.  Configurations
+``BaroclinicChannel`` test group uses shared modules to define the
+``InitialState`` and ``Forward`` steps of each test case.  Configurations
 also often include namelist and streams files with replacements to use across
 test cases.
 
-In addition to shared steps, the ``global_ocean`` configuration includes
+In addition to shared steps, the ``GlobalOcean`` test group includes
 some additional shared modules:
 
-  * ``compass.ocean.tests.global_ocean.description``: creates a description of
-    a test case (basically the long name of the testcase) given its parameters
-
   * ``compass.ocean.tests.global_ocean.mesh``: defines properties of each
-    global mesh (as well as a ``mesh`` test case)
+    global mesh (as well as a ``Mesh`` test case)
 
   * ``compass.ocean.tests.global_ocean.metadata``: determines the values of a
     set of metadata related to the E3SM mesh name, initial condition, conda
@@ -2206,7 +1754,7 @@ some additional shared modules:
   * ``compass.ocean.tests.global_ocean.subdir``: helps with maintaining the
     slightly complex subdirectory structure within ``global_ocean`` test cases.
 
-The shared code in ``global_ocean`` has made it easy to define 138 different
+The shared code in ``global_ocean`` could easily define hundreds of different
 test cases using the QU240 (or QUwISC240) mesh.  This is possible because
 the same conceptual test (e.g. restart) can be defined:
 
@@ -2218,10 +1766,8 @@ the same conceptual test (e.g. restart) can be defined:
 
   * with the RK4 or split-explicit time integrators
 
-In practice, this is likely overkill and many of these variants will never be
-used.  So we will likely wish to reduce the number of tests back to closer to
-what it was in legacy COMPASS in the near future.  But I wanted to demonstrate
-the capability first.
+In practice, this is overkill and many of these variants will never be used so
+they are not currently made available.
 
 Also, I want to note that it is because of this flexibility that I added an
 RK4 restart test, which failed and showed us that there was a recent problem
@@ -2241,7 +1787,7 @@ the `baroclinic_channel.rpe_test` test case uses the same forward run with
 Implementation: Shared configuration options
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2021/01/16
+Date last modified: 2021/04/13
 
 Contributors: Xylar Asay-Davis
 
@@ -2251,7 +1797,7 @@ are related to setting up the test case (e.g. the locations of cached data
 files) but the majority are related to running the steps of the test case.
 
 During setup of a test case and its steps, The config file is assembled from
-a number of sources.  Before the ``configure()`` function of the test case is
+a number of sources.  Before the ``configure()`` method of the test case is
 called, config options come from:
 
 * the default config file, ``default.cfg``, which sets a few options related to
@@ -2262,59 +1808,100 @@ called, config options come from:
   specified) with information on the parallel system and (typically) the paths
   to cached data files
 
-* the core's config file.  For the ocean core, this sets default paths to
+* the MPAS core's config file.  For the MPAS-Ocean core, this sets default paths to
   the MPAS model build (including the namelist templates).  It uses "extended
   interpolation" in the config file to use config opitons within other config
   options, e.g. ``model = ${paths:mpas_model}/ocean_model``.
 
-* the configuration's config file if one is found.  For idealized
-  configurations, these include config options that were previously init-mode
+* the test group's config file if one is found.  For idealized
+  test groups, these include config options that were previously init-mode
   namelist options.  For ``global_ocean``, these include defaults for mesh
   metadata (again using "extended interpolation"); the default number of cores
   and other resource usage for mesh, init and forward steps; and options
   related to files created for E3SM initial conditions.
 
-Then, the ``configure()`` function is called on the test case itself.  All of
+Then, the ``configure()`` method is called on the test case itself.  All of
 the current ocean test cases first call a shared ``configure()`` function at
-the configuration level, e.g.:
+the test group level, e.g.:
 
 .. code-block:: python
 
-    from compass.ocean.tests import global_ocean
+    from compass.ocean.tests.global_ocean.configure import configure_global_ocean
 
-    def configure(testcase, config):
-        global_ocean.configure(testcase, config)
+    ...
 
-where ``configure()`` in ``global_ocean`` is:
+    def configure(self):
+        """
+        Modify the configuration options for this test case
+        """
+        configure_global_ocean(test_case=self, mesh=self.mesh)
+
+where ``configure_global_ocean()`` is:
 
 .. code-block:: python
 
     from compass.config import add_config
-    from compass.ocean.tests.global_ocean.mesh.mesh import get_mesh_package
-    from compass.ocean.tests.global_ocean.init import add_descriptions_to_config
 
-    def configure(testcase, config):
-        mesh_name = testcase['mesh_name']
-        package, prefix = get_mesh_package(mesh_name)
-        add_config(config, package, '{}.cfg'.format(prefix), exception=True)
-        if testcase['with_ice_shelf_cavities']:
+
+    def configure_global_ocean(test_case, mesh, init=None):
+        """
+        Modify the configuration options for this test case
+
+        Parameters
+        ----------
+        test_case : compass.TestCase
+            The test case to configure
+
+        mesh : compass.ocean.tests.global_ocean.mesh.Mesh
+            The test case that produces the mesh for this run
+
+        init : compass.ocean.tests.global_ocean.init.Init, optional
+            The test case that produces the initial condition for this run
+        """
+        config = test_case.config
+        mesh_step = mesh.mesh_step
+        add_config(config, mesh_step.package, mesh_step.mesh_config_filename,
+                   exception=True)
+
+        if mesh.with_ice_shelf_cavities:
             config.set('global_ocean', 'prefix', '{}wISC'.format(
                 config.get('global_ocean', 'prefix')))
 
-        name = testcase['name']
-        add_config(config, 'compass.ocean.tests.global_ocean.{}'.format(name),
-                   '{}.cfg'.format(name), exception=False)
+        add_config(config, test_case.__module__, '{}.cfg'.format(test_case.name),
+                   exception=False)
 
-        add_descriptions_to_config(testcase, config)
+        # add a description of the initial condition
+        if init is not None:
+            initial_condition = init.initial_condition
+            descriptions = {'PHC': 'Polar science center Hydrographic '
+                                   'Climatology (PHC)',
+                            'EN4_1900':
+                                "Met Office Hadley Centre's EN4 dataset from 1900"}
+            config.set('global_ocean', 'init_description',
+                       descriptions[initial_condition])
+
+        # a description of the bathymetry
+        config.set('global_ocean', 'bathy_description',
+                   'Bathymetry is from GEBCO 2019, combined with BedMachine '
+                   'Antarctica around Antarctica.')
+
+        if init is not None and init.with_bgc:
+            # todo: this needs to be filled in!
+            config.set('global_ocean', 'bgc_description',
+                       '<<<Missing>>>')
+
+        if mesh.with_ice_shelf_cavities:
+            config.set('global_ocean', 'wisc_description',
+                       'Includes cavities under the ice shelves around Antarctica')
 
 In this case, a config options related to the mesh are loaded, then those
 related to ice-shelf cavities (if they are included in the mesh), then those
 specific to the test case itself.
 
 Although none of the existing ocean test cases do so, further changes could be
-made to the config file beyond those at the configuration level.  Indeed,
+made to the config file beyond those at the test group level.  Indeed,
 there is no reason a test case cannot just set its config options or read them
-from a file without calling a configuration-level function, this is just a
+from a file without calling a test-group-level function, this is just a
 convenience.
 
 Finally, config options are taken from the user's config file if one was passed
@@ -2431,52 +2018,69 @@ Date last modified: 2021/01/16
 
 Contributors: Xylar Asay-Davis
 
-Each ``step`` dictionary is expected to include two keys, ``cores`` and
-``min_cores`` by the time the test case call ``compass.testcase.run_steps()``.
+The ``Step`` class includes two attributes, ``cores`` and ``min_cores``,
+which should be set by the time the ``run()`` method gets called.
 ``cores`` is the target number of cores for the step and ``min_cores`` is the
 minimum number of cores, below which the test case would probably fail. Before
 a step is run, ``compass`` finds out how many total cores are available to run
-the test. If the number is below ``step['min_cores']``, an error is raised.
-Otherwise, the test case will run with ``step['cores']`` or the number of
+the test. If the number is below ``self.min_cores``, an error is raised.
+Otherwise, the test case will run with ``self.cores`` or the number of
 available cores, whichever is lower.
 
 The idea is that the same test case could be run efficiently on one or more
 nodes of an HPC machine but could also be run on a laptop or desktop if the
 minimum number of required cores is reasonable.
 
-There are a variety of ways that the ``cores`` and ``min_cores`` entries can be
-added.  The most straightforward is to add them in the step's ``collect()``
-function.  They could be arguments to the function:
+There are a variety of ways that the ``cores`` and ``min_cores`` attributes can
+be set.  The most straightforward is to set them by calling the base class'
+``__init__()``.  They could be passed through from calls to the child class'
+``__init__()``:
 
 .. code-block:: python
 
-    from compass.testcase import get_step_default
+    def __init__(self, test_case, cores=1, min_cores=None):
+        """
+        Create a new test case
 
+        Parameters
+        ----------
+        test_case : compass.TestCase
+            The test case this step belongs to
 
-    def collect(cores, min_cores=None):
+        cores : int, optional
+            the number of cores the step would ideally use.  If fewer cores
+            are available on the system, the step will run on all available
+            cores as long as this is not below ``min_cores``
 
-        step = get_step_default(__name__)
-        step['cores'] = cores
+        min_cores : int, optional
+            the number of cores the step requires.  If the system has fewer
+            than this number of cores, the step will fail
+        """
         if min_cores is None:
             min_cores = cores
-        step['min_cores'] = min_cores
-        return step
+        super().__init__(test_case=test_case, name='forward', cores=cores,
+                         min_cores=min_cores)
 
 or just hard coded:
 
 .. code-block:: python
 
-    from compass.testcase import get_step_default
+    def __init__(self, test_case):
+        """
+        Create a new test case
 
-
-    def collect():
-        step = get_step_default(__name__)
-        step['cores'] = 1
-        step['min_cores'] = 1
-        return step
+        Parameters
+        ----------
+        test_case : compass.TestCase
+            The test case this step belongs to
+        """
+        if min_cores is None:
+            min_cores = cores
+        super().__init__(test_case=test_case, name='forward', cores=4,
+                         min_cores=1)
 
 Or they could be defined later in the process, at setup or in the test
-case's ``run()`` function.  (Defining them in the step's ``run()`` is too late,
+case's ``run()`` method.  (Defining them in the step's ``run()`` is too late,
 since the number of cores to actually use is determined before this call is
 made.)  In ``global_ocean``, the number of cores and minimum cores are set
 using config options.  Since users could modify these before calling the
@@ -2485,45 +2089,56 @@ before ``run_steps()`` is called:
 
 .. code-block:: python
 
-    def run(testcase, test_suite, config, logger):
-        work_dir = testcase['work_dir']
-        steps = testcase['steps_to_run']
-        if 'initial_state' in steps:
-            step = testcase['steps']['initial_state']
+    def run(self):
+        """
+        Run each step of the testcase
+        """
+        config = self.config
+        # get the these properties from the config options
+        for step_name in self.steps_to_run:
+            step = self.steps[step_name]
             # get the these properties from the config options
-            for option in ['cores', 'min_cores', 'max_memory', 'max_disk',
-                           'threads']:
-                step[option] = config.getint('global_ocean',
-                                             'init_{}'.format(option))
+            step.cores = config.getint('global_ocean', 'forward_cores')
+            step.min_cores = config.getint('global_ocean', 'forward_min_cores')
+            step.threads = config.getint('global_ocean', 'forward_threads')
 
-        run_steps(testcase, test_suite, config, logger)
+        # run the steps
+        super().run()
 
-
-The ``steps_to_run`` entry in ``testcase`` is a list of the subset of the
+The ``steps_to_run`` attribute of the test case is a list of the subset of the
 steps that were actually requested to run from the test case.  For example,
 if you run a step on its own, it still actually runs the test case but only
 requesting that one step.  Some test cases include steps that are not run by
-default, so ``step_to_run`` will be assigned to only those steps that should
-run by default:
+default, and this is specified by passing ``run_by_default=False`` as an
+argument to ``self.add_step()`` when adding the step in the test case's
+constructor:
 
 .. code-block:: python
 
-    from compass.testcase import get_testcase_default
+    def __init__(self, test_group, mesh_type):
+        """
+        Create the test case
 
+        Parameters
+        ----------
+        test_group : compass.landice.tests.dome.Dome
+            The test group that this test case belongs to
 
-    def collect(with_ice_shelf_cavities):
-        ...
-        steps_to_run = ['initial_state']
-        if with_ice_shelf_cavities:
-            steps_to_run.append('ssh_adjustment')
+        mesh_type : str
+            The resolution or tye of mesh of the test case
+        """
+        name = 'smoke_test'
+        self.mesh_type = mesh_type
+        subdir = '{}/{}'.format(mesh_type, name)
+        super().__init__(test_group=test_group, name=name,
+                         subdir=subdir)
 
-        testcase = get_testcase_default(module, description, steps, subdir=subdir)
-        testcase['steps_to_run'] = steps_to_run
-
-        return testcase
-
-The number of PIO tasks and the stride between tasks can then be modified
-if needed so that there is one PIO task per node.
+        self.add_step(
+            SetupMesh(test_case=self, mesh_type=mesh_type))
+        self.add_step(
+            RunModel(test_case=self, cores=4, threads=1, mesh_type=mesh_type))
+        step = Visualize(test_case=self, mesh_type=mesh_type)
+        self.add_step(step, run_by_default=False)
 
 
 .. _imp_machine:
@@ -2531,7 +2146,7 @@ if needed so that there is one PIO task per node.
 Implementation: Machine-specific data
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2021/01/16
+Date last modified: 2021/04/13
 
 Contributors: Xylar Asay-Davis
 
@@ -2545,14 +2160,16 @@ Machine-specific configuration options are in a set of config files under
     # cases.
     [paths]
 
-    # The mesh_database and the initial_condition_database are locations where
-    # meshes / initial conditions might be found on a specific machine. They can be
-    # the same directory, or different directory. Additionally, if they are empty
-    # some test cases might download data into them, which will then be reused if
-    # the test case is run again later.
-    mesh_database = /lcrc/group/e3sm/public_html/mpas_standalonedata/mpas-ocean/mesh_database
-    initial_condition_database = /lcrc/group/e3sm/public_html/mpas_standalonedata/mpas-ocean/initial_condition_database
-    bathymetry_database = /lcrc/group/e3sm/public_html/mpas_standalonedata/mpas-ocean/bathymetry_database
+    # The root to a location where the mesh_database, initial_condition_database,
+    # and bathymetry_database for MPAS-Ocean will be cached
+    ocean_database_root = /lcrc/group/e3sm/public_html/mpas_standalonedata/mpas-ocean
+
+    # The root to a location where the mesh_database and initial_condition_database
+    # for MALI will be cached
+    landice_database_root = /lcrc/group/e3sm/public_html/mpas_standalonedata/mpas-albany-landice
+
+    # the path to the base conda environment where compass environments have
+    # been created
     compass_envs = /lcrc/soft/climate/e3sm-unified/base
 
 
@@ -2607,23 +2224,23 @@ is used to specify the machine.
 Implementation: Looser, more flexible directory structure
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2021/01/16
+Date last modified: 2021/04/13
 
 Contributors: Xylar Asay-Davis
 
 Test cases (and steps) in ``compass`` are uniquely defined by their relative
 paths within the work directory.  The first two subdirectories in this path
-must be the name of the core and of the configuration.  The names and
+must be the name of the MPAS core and of the test group.  The names and
 organization beyond that are quite flexible.  Steps are expected to be nested
 somewhere within test cases but there is no restriction on the number of levels
-of subdirectories or their meaning beyond that of the configuration.
+of subdirectories or their meaning beyond that of the test group.
 
-The idealized ocean configurations that have been implemented so far and the
-example configurations use the same organization as in legacy COMPASS:
+The idealized ocean test groups that have been implemented so far and the
+example test groups use the same organization as in legacy COMPASS:
 
 .. code-block:: none
 
-    core/configuration/resolution/testcase/step
+    mpas_core/test_group/resolution/testcase/step
 
 For example:
 
@@ -2631,80 +2248,31 @@ For example:
 
     ocean/baroclinic_channel/10km/default/initial_state
 
-But the ``global_ocean`` configuration takes full advantage of the new
+But the ``global_ocean`` test group takes advantage of the new
 flexibility.  Here are the directories for test cases using the QU240 mesh:
 
 .. code-block:: none
 
-    ocean/global_ocean/QU240/mesh
-    ocean/global_ocean/QU240/PHC/init
-    ocean/global_ocean/QU240/PHC/performance_test/split_explicit
-    ocean/global_ocean/QU240/PHC/performance_test/RK4
-    ocean/global_ocean/QU240/PHC/restart_test/split_explicit
-    ocean/global_ocean/QU240/PHC/restart_test/RK4
-    ocean/global_ocean/QU240/PHC/decomp_test/split_explicit
-    ocean/global_ocean/QU240/PHC/decomp_test/RK4
-    ocean/global_ocean/QU240/PHC/threads_test/split_explicit
-    ocean/global_ocean/QU240/PHC/threads_test/RK4
-    ocean/global_ocean/QU240/PHC/analysis_test/split_explicit
-    ocean/global_ocean/QU240/PHC/analysis_test/RK4
-    ocean/global_ocean/QU240/PHC/daily_output_test/split_explicit
-    ocean/global_ocean/QU240/PHC/daily_output_test/RK4
-    ocean/global_ocean/QU240/PHC/spinup/split_explicit
-    ocean/global_ocean/QU240/PHC/files_for_e3sm/split_explicit
-    ocean/global_ocean/QU240/PHC/spinup/RK4
-    ocean/global_ocean/QU240/PHC/files_for_e3sm/RK4
-    ocean/global_ocean/QU240/PHC_BGC/init
-    ocean/global_ocean/QU240/PHC_BGC/performance_test/split_explicit
-    ocean/global_ocean/QU240/PHC_BGC/performance_test/RK4
-    ocean/global_ocean/QU240/PHC_BGC/restart_test/split_explicit
-    ocean/global_ocean/QU240/PHC_BGC/restart_test/RK4
-    ocean/global_ocean/QU240/PHC_BGC/decomp_test/split_explicit
-    ocean/global_ocean/QU240/PHC_BGC/decomp_test/RK4
-    ocean/global_ocean/QU240/PHC_BGC/threads_test/split_explicit
-    ocean/global_ocean/QU240/PHC_BGC/threads_test/RK4
-    ocean/global_ocean/QU240/PHC_BGC/analysis_test/split_explicit
-    ocean/global_ocean/QU240/PHC_BGC/analysis_test/RK4
-    ocean/global_ocean/QU240/PHC_BGC/daily_output_test/split_explicit
-    ocean/global_ocean/QU240/PHC_BGC/daily_output_test/RK4
-    ocean/global_ocean/QU240/PHC_BGC/spinup/split_explicit
-    ocean/global_ocean/QU240/PHC_BGC/files_for_e3sm/split_explicit
-    ocean/global_ocean/QU240/PHC_BGC/spinup/RK4
-    ocean/global_ocean/QU240/PHC_BGC/files_for_e3sm/RK4
-    ocean/global_ocean/QU240/EN4_1900/init
-    ocean/global_ocean/QU240/EN4_1900/performance_test/split_explicit
-    ocean/global_ocean/QU240/EN4_1900/performance_test/RK4
-    ocean/global_ocean/QU240/EN4_1900/restart_test/split_explicit
-    ocean/global_ocean/QU240/EN4_1900/restart_test/RK4
-    ocean/global_ocean/QU240/EN4_1900/decomp_test/split_explicit
-    ocean/global_ocean/QU240/EN4_1900/decomp_test/RK4
-    ocean/global_ocean/QU240/EN4_1900/threads_test/split_explicit
-    ocean/global_ocean/QU240/EN4_1900/threads_test/RK4
-    ocean/global_ocean/QU240/EN4_1900/analysis_test/split_explicit
-    ocean/global_ocean/QU240/EN4_1900/analysis_test/RK4
-    ocean/global_ocean/QU240/EN4_1900/daily_output_test/split_explicit
-    ocean/global_ocean/QU240/EN4_1900/daily_output_test/RK4
-    ocean/global_ocean/QU240/EN4_1900/spinup/split_explicit
-    ocean/global_ocean/QU240/EN4_1900/files_for_e3sm/split_explicit
-    ocean/global_ocean/QU240/EN4_1900/spinup/RK4
-    ocean/global_ocean/QU240/EN4_1900/files_for_e3sm/RK4
-    ocean/global_ocean/QU240/EN4_1900_BGC/init
-    ocean/global_ocean/QU240/EN4_1900_BGC/performance_test/split_explicit
-    ocean/global_ocean/QU240/EN4_1900_BGC/performance_test/RK4
-    ocean/global_ocean/QU240/EN4_1900_BGC/restart_test/split_explicit
-    ocean/global_ocean/QU240/EN4_1900_BGC/restart_test/RK4
-    ocean/global_ocean/QU240/EN4_1900_BGC/decomp_test/split_explicit
-    ocean/global_ocean/QU240/EN4_1900_BGC/decomp_test/RK4
-    ocean/global_ocean/QU240/EN4_1900_BGC/threads_test/split_explicit
-    ocean/global_ocean/QU240/EN4_1900_BGC/threads_test/RK4
-    ocean/global_ocean/QU240/EN4_1900_BGC/analysis_test/split_explicit
-    ocean/global_ocean/QU240/EN4_1900_BGC/analysis_test/RK4
-    ocean/global_ocean/QU240/EN4_1900_BGC/daily_output_test/split_explicit
-    ocean/global_ocean/QU240/EN4_1900_BGC/daily_output_test/RK4
-    ocean/global_ocean/QU240/EN4_1900_BGC/spinup/split_explicit
-    ocean/global_ocean/QU240/EN4_1900_BGC/files_for_e3sm/split_explicit
-    ocean/global_ocean/QU240/EN4_1900_BGC/spinup/RK4
-    ocean/global_ocean/QU240/EN4_1900_BGC/files_for_e3sm/RK4
+  27: ocean/global_ocean/QU240/mesh
+  28: ocean/global_ocean/QU240/PHC/init
+  29: ocean/global_ocean/QU240/PHC/performance_test
+  30: ocean/global_ocean/QU240/PHC/restart_test
+  31: ocean/global_ocean/QU240/PHC/decomp_test
+  32: ocean/global_ocean/QU240/PHC/threads_test
+  33: ocean/global_ocean/QU240/PHC/analysis_test
+  34: ocean/global_ocean/QU240/PHC/daily_output_test
+  35: ocean/global_ocean/QU240/PHC/dynamic_adjustment
+  36: ocean/global_ocean/QU240/PHC/files_for_e3sm
+  37: ocean/global_ocean/QU240/PHC/RK4/performance_test
+  38: ocean/global_ocean/QU240/PHC/RK4/restart_test
+  39: ocean/global_ocean/QU240/PHC/RK4/decomp_test
+  40: ocean/global_ocean/QU240/PHC/RK4/threads_test
+  41: ocean/global_ocean/QU240/EN4_1900/init
+  42: ocean/global_ocean/QU240/EN4_1900/performance_test
+  43: ocean/global_ocean/QU240/EN4_1900/dynamic_adjustment
+  44: ocean/global_ocean/QU240/EN4_1900/files_for_e3sm
+  45: ocean/global_ocean/QU240/PHC_BGC/init
+  46: ocean/global_ocean/QU240/PHC_BGC/performance_test
 
 As in legacy COMPASS, there is a subdirectory for the mesh.  In the proposed
 design, there is a ``mesh`` test case with a single ``mesh`` step within that
@@ -2719,20 +2287,15 @@ within the subdirectory for that initial condition.
 
 Each remaining test case includes one or more forward model runs, or uses the
 results of such a run.  Since the forward model can be run with either the
-split-explicit or the RK4 time integrator, variants of each test case are
+split-explicit or the RK4 time integrator, variants of many test cases are
 supported with each time integrator.  It is important that these are
 conceptually separate test cases because we use both the split-explicit and
 the RK4 versions of many test cases in our test suites.  Each requires a set of
 corresponding namelist options and modifications to streams, so it is also not
 trivial for a user to switch between the two time integrators simply by
-manually modifying the test case at runtime.
-
-We will likely never use many the 69 test cases defined for the QU240 mesh
-so it will likely be better to drop many of these unused configurations from
-the list of available test cases.  For now, I have provided the full set as
-an indication of how powerful the flexibility and code reuse in the new
-``compass`` can be, and how critical the flexible directory structure is for
-this capability.
+manually modifying the test case at runtime.  We treat the split-explicit
+time integrator as the default and put tests with RK4 in an additional ``RK4``
+subdirectory.
 
 
 .. _imp_docs:
@@ -2740,7 +2303,7 @@ this capability.
 Implementation: User- and developer-friendly documentation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2021/01/16
+Date last modified: 2021/04/13
 
 Contributors: Xylar Asay-Davis
 
@@ -2756,7 +2319,10 @@ The legacy COMPASS documentation will be renamed with "legacy" added to its
 titles (e.g. "Legacy User's Guide") and will be included at the end of the
 table of contents.
 
-More soon...
+The latest version of the test documentation is available in the branch:
+https://github.com/xylar/compass/tree/compass_1.0_docs
+and for browsing at the URL:
+https://mpas-dev.github.io/compass/test/index.html
 
 
 .. _imp_parallel:
@@ -2764,7 +2330,7 @@ More soon...
 Implementation: Considerations related to running test cases in parallel
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2021/01/16
+Date last modified: 2021/04/13
 
 Contributors: Xylar Asay-Davis
 
@@ -2773,30 +2339,23 @@ While an implementation of test-case parallelism will be left to a future
 design document and implementation, several parts of the current ``compass``
 design and implementation were made with this work in mind.
 
-test_suite argument
-~~~~~~~~~~~~~~~~~~~
-
-The ``run()`` functions of test cases and steps includes a ``test_suite``
-dictionary as an argument.  This dictionary currently has little information
-of use to individual test cases (the work directory, the list of test cases
-and the name of the suite) but could be used in the future to hold information
-used to configure Parsl.
 
 cores, max_memory and max_disk
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Each step keeps track of not only the number of cores (and threads) used but
-also the maximum allowed memory and disk.  While the latter two are not
-currently used for anything and the values in most test case are just
-placeholders, they are expected to be useful for Parsl ``WorkerQueues``.
+The ``Step`` base class keeps track of not only the number of cores (and
+threads) used but also the maximum allowed memory and disk.  While the latter
+two are not currently used for anything and the values are just placeholders,
+they are expected to be useful for Parsl ``WorkerQueues``.
 
 inputs and outputs
 ~~~~~~~~~~~~~~~~~~
 
 An effort has been made to be thorough about providing an absolute path to the
-inputs and outputs of each step.  These are not used for very anything at
-present but they would be used by Parsl to determine dependencies between
-steps to figure out which can run in parallel with one another.
+inputs and outputs of each step.  These are currently verified to make sure
+inputs are present before running a step and outputs are present after. We
+expect them to also be useful when we use Parsl to determine dependencies
+between steps and to figure out which can run in parallel with one another.
 
 
 .. _imp_res:
@@ -2804,20 +2363,21 @@ steps to figure out which can run in parallel with one another.
 Implementation: Resolution can be a test case parameter
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2021/01/16
+Date last modified: 2021/04/13
 
 Contributors: Xylar Asay-Davis
 
 
-This was discussed in :ref:`imp_dir_struct`.  For all of the ocean
-configurations, either the resolution or the name of the mesh (which implicitly
-includes the resolution) is an argument to the ``collect()`` function of each
-test case and step.  All test cases use that resolution or mesh name as a
-subdirectory within the relative path of the test case.  So far, no convergence
-tests have been added where resolution is a parameter that varies across steps
-in a test case but the ``rpe_test`` test case of the ``baroclinic_channel``
-includes viscosity as a parameter that varies across steps, and resolution is
-expected to be easy to use in the same way for future test cases.
+This was discussed in :ref:`imp_dir_struct`.  For all of the ocean and many
+of the land-ice test groups, either the resolution or the name of the mesh
+(which implicitly includes the resolution) is an argument to test case's and
+step's constructors. Nearly all test cases use that resolution or mesh name as
+a subdirectory within the relative path of the test case.  So far, no
+convergence tests have been added where resolution is a parameter that varies
+across steps in a test case but the ``rpe_test`` test case of the
+``baroclinic_channel`` includes viscosity as a parameter that varies across
+steps, and resolution is expected to be easy to use in the same way for future
+test cases.
 
 
 .. _imp_alter_code:
@@ -2825,12 +2385,14 @@ expected to be easy to use in the same way for future test cases.
 Implementation: Test case code is easy to alter and rerun
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2021/01/16
+Date last modified: 2021/04/13
 
 Contributors: Xylar Asay-Davis
 
 
-Local symlinks to the ``compass`` directory seem to provide and easy method for
+When test cases and suites are set up from a local repository (and not the
+conda package from a conda environment), local symlinks to the ``compass``
+directory are created.  These links seem to provide and easy method for
 altering code and having it affect test cases and steps immediately without
 the need to build a conda package or a conda environment, or even to rerun
 ``python -m compass setup`` in most cases.
@@ -2874,39 +2436,36 @@ Testing
 .. _test_easy:
 
 Testing: Make test cases easy to understand, modify and create
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2021/01/16
+Date last modified: 2021/04/13
 
 Contributors: Xylar Asay-Davis, Luke Van Roekel
 
 
-Luke Van Roekel has agreed to attempt to implement a configuration
+Given limited time, the reviewers will not attempt to implement any new MPAS
+cores or test groups as part of there reviews.  However, in the near future,
+Luke Van Roekel has agreed to attempt to implement a test group
 ("single-column") and its test cases and steps as a test of the ease of
-understanding, modifying and creating test cases.  Mark Petersen will be asked
-to do the same.  Since the ``landice`` core has not yet been added, we will
-hold off for follow-up work for Matt Hoffman to try adding a test case.
-
-More following those additions...
+understanding, modifying and creating test cases.  Mark Petersen will add a
+new shallow-water MPAS core.  Matt Hoffman will add new test cases as he has
+time and interest down the road.
 
 .. _test_shared_code:
 
 Testing: Shared code
-^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2021/01/16
+Date last modified: 2021/04/13
 
 Contributors: Xylar Asay-Davis
 
 
-All of the test cases (except ``example_expanded``) in the proposed
-implementation use shared code.  Since there are 174 test cases, not all have
-been tested but all test cases in the ocean nightly suite have been tested,
-along with the QUwISC240 equivalents of the QU240 tests in the nightly suite
-and the spin-up and files for E3SM tests of all 4 supported global ocean
-meshes.  The 10 km RPE test for the ``baroclinic_channel`` configuration has
-also been run successfully.  The higher resolution verisons of that test case
-have not yet been tested.
+All of the test cases in the proposed implementation use shared code.  Nearly
+all of the 86 test cases have been tested including those in all ocean and
+land-ice suites except the EC30to60 and ECwISC30to60.  The 10 km RPE test for
+the ``baroclinic_channel`` test group has also been run successfully.
+The higher resolution versions of that test case have not yet been tested.
 
 So far, there is no indication of problems with shared code, but this is
 something of a subjective thing to test, beyond the proof of concept that code
@@ -2916,7 +2475,7 @@ can, indeed, be shared.
 .. _test_shared_options:
 
 Testing: Shared configuration options
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Date last modified: 2021/01/16
 
@@ -2948,7 +2507,7 @@ have the intended effect, so this will not be part of this testing.
 .. _test_core_count:
 
 Testing: Ability specify/modify core counts
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Date last modified: 2021/01/16
 
@@ -2961,7 +2520,7 @@ This was included in :ref:`test_shared_options`.
 .. _test_machine_data:
 
 Testing: Machine-specific data
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Date last modified: 2021/01/14
 
@@ -2978,15 +2537,15 @@ were successfully detected via Slurm commands.
 .. _test_dir_struct:
 
 Testing: Looser, more flexible directory structure
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2021/01/16
+Date last modified: 2021/04/13
 
 Contributors: Xylar Asay-Davis
 
 
 Testing of the ocean nightly suite includes tests of the flexible directory
-structure because it uses the ``global_ocean`` configuration.  More to the
+structure because it uses the ``global_ocean`` test group.  More to the
 point, this capability has been tested by showing that test cases can be
 implemented using the flexible directory structure.
 
@@ -2994,22 +2553,24 @@ implemented using the flexible directory structure.
 .. _test_docs:
 
 Testing: User- and developer-friendly documentation
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Date last modified: 2021/01/16
+Date last modified: 2021/04/13
 
 Contributors: Xylar Asay-Davis
 
 
-Users and developers will be asked to run test cases and suites with the
-documentation and to add new test cases.  This has not yet happened because
-the documentation is still being written.
+Reviewers have been asked to run test cases and suites with the documentation,
+which is still evolving.  Users and developers will be asked to run test cases
+and suites with the documentation and to add new test cases.  In the near
+future, the documentation will be declared "good enough for now" and will be
+merged with the intention to update it on an ongoing basis.
 
 
 .. _test_parallel:
 
 Testing: Considerations related to running test cases in parallel
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Date last modified: 2021/01/16
 
@@ -3022,7 +2583,7 @@ This has not yet been implemented so will be tested as part of a later design.
 .. _test_res:
 
 Testing: Resolution can be a test case parameter
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Date last modified: 2021/01/16
 
@@ -3037,7 +2598,7 @@ no testing of such a test case is possible at this time.
 .. _test_alter_code:
 
 Testing: Test case code is easy to alter and rerun
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Date last modified: 2021/01/16
 
@@ -3052,7 +2613,7 @@ directory.
 .. _test_premade_ic:
 
 Testing: Support for pre-made initial condition files
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Date last modified: 2021/01/16
 
@@ -3065,7 +2626,7 @@ This was not yet implemented so no testing was performed.
 .. _test_batch:
 
 Testing: Easy batch submission
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Date last modified: 2021/01/16
 
