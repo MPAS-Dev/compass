@@ -8,8 +8,8 @@ This page provides an auto-generated summary of the ``compass`` API. For more
 details and examples, refer to the relevant sections in the main part of the
 documentation.
 
-Cores
-=====
+MPAS Cores
+==========
 
 .. toctree::
    :titlesonly:
@@ -76,6 +76,61 @@ suite
    clean_suite
    run_suite
 
+Base Classes
+^^^^^^^^^^^^
+
+mpas_core
+~~~~~~~~~
+
+.. currentmodule:: compass.mpas_core
+
+.. autosummary::
+   :toctree: generated/
+
+   MpasCore
+   MpasCore.add_test_group
+
+testgroup
+~~~~~~~~~
+
+.. currentmodule:: compass.testgroup
+
+.. autosummary::
+   :toctree: generated/
+
+   TestGroup
+   TestGroup.add_test_case
+
+testcase
+^^^^^^^^
+
+.. currentmodule:: compass.testcase
+
+.. autosummary::
+   :toctree: generated/
+
+   TestCase
+   TestCase.configure
+   TestCase.run
+   TestCase.add_step
+
+step
+^^^^
+
+.. currentmodule:: compass.step
+
+.. autosummary::
+   :toctree: generated/
+
+   Step
+   Step.setup
+   Step.run
+   Step.add_input_file
+   Step.add_output_file
+   Step.add_model_as_input
+   Step.add_namelist_file
+   Step.add_namelist_options
+
 config
 ^^^^^^
 
@@ -97,11 +152,8 @@ io
 .. autosummary::
    :toctree: generated/
 
-   add_input_file
-   add_output_file
    download
    symlink
-   process_step_inputs_and_outputs
 
 model
 ^^^^^
@@ -111,24 +163,20 @@ model
 .. autosummary::
    :toctree: generated/
 
-   add_model_as_input
    run_model
    partition
    update_namelist_pio
    make_graph_file
 
-namelist
-^^^^^^^^
+mpas_cores
+^^^^^^^^^^
 
-.. currentmodule:: compass.namelist
+.. currentmodule:: compass.mpas_cores
 
 .. autosummary::
    :toctree: generated/
 
-   add_namelist_file
-   add_namelist_options
-   generate_namelist
-   update
+   get_mpas_cores
 
 parallel
 ^^^^^^^^
@@ -149,43 +197,6 @@ provenance
    :toctree: generated/
 
    write
-
-streams
-^^^^^^^
-
-.. currentmodule:: compass.streams
-
-.. autosummary::
-   :toctree: generated/
-
-   add_streams_file
-   generate_streams
-
-testcase
-^^^^^^^^
-
-.. currentmodule:: compass.testcase
-
-.. autosummary::
-   :toctree: generated/
-
-   add_testcase
-   set_testcase_subdir
-   add_step
-   run_steps
-   run_step
-   generate_run
-
-testcases
-^^^^^^^^^
-
-.. currentmodule:: compass.testcases
-
-.. autosummary::
-   :toctree: generated/
-
-   collect
-   validate
 
 validate
 ^^^^^^^^
