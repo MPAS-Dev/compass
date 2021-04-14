@@ -15,7 +15,6 @@ Cores
    :titlesonly:
    :maxdepth: 1
 
-   examples/api
    landice/api
    ocean/api
 

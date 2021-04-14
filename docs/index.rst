@@ -52,7 +52,6 @@ functionality is added.
    developers_guide/overview
    developers_guide/command_line
    developers_guide/cores
-   developers_guide/examples/index
    developers_guide/landice/index
    developers_guide/ocean/index
    developers_guide/framework

@@ -4,9 +4,8 @@ Cores
 =====
 
 The test cases in compass are organized by "core", corresponding to a dynamical
-core in MPAS, and then into "configurations".  Currently, there are three
-cores, ``examples`` which simply houses some very basic examples (as the name
-implies); ``landice``, which has test cases for MALI; and ``ocean``, which
+core in MPAS, and then into "configurations".  Currently, there are two
+cores, ``landice``, which has test cases for MALI, and ``ocean``, which
 encompasses all the test cases for MPAS-Ocean.
 
 From a developer's perspective, a core is a package within ``compass`` that:

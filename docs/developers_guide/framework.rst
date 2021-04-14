@@ -3,8 +3,8 @@
 Framework
 =========
 
-All of the :ref:`dev_packages` that are not in the three cores (``examples``,
-``landice`` and ``ocean``) belong to the ``compass`` framework.  Some of these
+All of the :ref:`dev_packages` that are not in the two cores (``landice`` and
+``ocean``) belong to the ``compass`` framework.  Some of these
 modules and packages are used by the :ref:`dev_command_line`, while others are
 meant to be called within test cases and steps to simplify tasks like adding
 input and output files, downloading data sets, building up config files,
