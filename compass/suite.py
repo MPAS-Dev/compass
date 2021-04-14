@@ -4,8 +4,6 @@ import os
 from importlib import resources
 import pickle
 import configparser
-import stat
-from jinja2 import Template
 import time
 import numpy
 
@@ -85,17 +83,6 @@ def setup_suite(mpas_core, suite_name, config_file=None, machine=None,
                                '{}.pickle'.format(suite_name))
     with open(pickle_file, 'wb') as handle:
         pickle.dump(test_suite, handle, protocol=pickle.HIGHEST_PROTOCOL)
-
-    template = Template(resources.read_text('compass.suite', 'suite.template'))
-    script = template.render(suite_name=suite_name)
-
-    run_filename = os.path.join(work_dir, '{}.py'.format(suite_name))
-    with open(run_filename, 'w') as handle:
-        handle.write(script)
-
-    # make sure it has execute permission
-    st = os.stat(run_filename)
-    os.chmod(run_filename, st.st_mode | stat.S_IEXEC)
 
     max_cores, max_of_min_cores = _get_required_cores(test_cases)
 

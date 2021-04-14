@@ -1,9 +1,9 @@
 import os
-import stat
-from jinja2 import Template
-from importlib import resources
 from lxml import etree
+import pickle
+import configparser
 
+from mpas_tools.logging import LoggingContext
 from compass.io import download, symlink
 import compass.namelist
 import compass.streams
@@ -367,39 +367,15 @@ class Step:
             dict(package=package, streams=streams,
                  replacements=template_replacements, mode=mode))
 
-    def generate(self):
-        """
-        Generate a ``run.py`` script for the step in the work directory.
-        This is the script that a user can call to run the step on its own.
-        """
-
-        self._process_inputs_and_outputs()
-        self._generate_namelists()
-        self._generate_streams()
-
-        template = Template(
-            resources.read_text('compass.step', 'step.template'))
-        test_case = {'name': self.test_case.name}
-        step = {'name': self.name,
-                'config_filename': self.config_filename}
-        work_dir = self.work_dir
-        script = template.render(test_case=test_case, step=step)
-
-        run_filename = os.path.join(work_dir, 'run.py')
-        with open(run_filename, 'w') as handle:
-            handle.write(script)
-
-        # make sure it has execute permission
-        st = os.stat(run_filename)
-        os.chmod(run_filename, st.st_mode | stat.S_IEXEC)
-
-    def _process_inputs_and_outputs(self):
+    def process_inputs_and_outputs(self):
         """
         Process the inputs to and outputs from a step added with
         :py:meth:`compass.Step.add_input_file` and
         :py:meth:`compass.Step.add_output_file`.  This includes downloading
         files, making symlinks, and converting relative paths to absolute
         paths.
+
+        Also generates namelist and streams files
        """
         mpas_core = self.mpas_core.name
         step_dir = self.work_dir
@@ -461,6 +437,9 @@ class Step:
 
         self.outputs = [os.path.abspath(os.path.join(step_dir, filename)) for
                         filename in self.outputs]
+
+        self._generate_namelists()
+        self._generate_streams()
 
     def _generate_namelists(self):
         """
@@ -548,3 +527,21 @@ class Step:
                     defaults.remove(default)
 
             compass.streams.write(defaults_tree, out_filename)
+
+
+def run_step():
+    with open('step.pickle', 'rb') as handle:
+        test_case, step = pickle.load(handle)
+    test_case.steps_to_run = [step.name]
+    test_case.new_step_log_file = False
+
+    config = configparser.ConfigParser(
+        interpolation=configparser.ExtendedInterpolation())
+    config.read(step.config_filename)
+    test_case.config = config
+
+    # start logging to stdout/stderr
+    test_name = step.path.replace('/', '_')
+    with LoggingContext(name=test_name) as logger:
+        test_case.logger = logger
+        test_case.run()

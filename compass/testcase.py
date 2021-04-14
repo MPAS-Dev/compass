@@ -1,7 +1,6 @@
 import os
-import stat
-from jinja2 import Template
-from importlib import resources
+import pickle
+import configparser
 
 from mpas_tools.logging import LoggingContext
 from compass.parallel import get_available_cores_and_nodes
@@ -172,27 +171,6 @@ class TestCase:
         if run_by_default:
             self.steps_to_run.append(step.name)
 
-    def generate(self):
-        """
-        Generate a ``run.py`` script for the test case in the work directory.
-        This is the script that a user calls to run the test case.
-        """
-
-        template = Template(
-            resources.read_text('compass.testcase', 'testcase.template'))
-        test_case = {'name': self.name,
-                     'config_filename': self.config_filename}
-        work_dir = self.work_dir
-        script = template.render(test_case=test_case)
-
-        run_filename = os.path.join(work_dir, 'run.py')
-        with open(run_filename, 'w') as handle:
-            handle.write(script)
-
-        # make sure it has execute permission
-        st = os.stat(run_filename)
-        os.chmod(run_filename, st.st_mode | stat.S_IEXEC)
-
     def _run_step(self, step, new_log_file):
         """
         Run the requested step
@@ -251,3 +229,20 @@ class TestCase:
                 'output file(s) missing in step {} of {}/{}/{}: {}'.format(
                     step.name, step.mpas_core.name, step.test_group.name,
                     step.test_case.subdir, missing_files))
+
+
+def run_test_case():
+    with open('test_case.pickle', 'rb') as handle:
+        test_case = pickle.load(handle)
+
+    config = configparser.ConfigParser(
+        interpolation=configparser.ExtendedInterpolation())
+    config.read(test_case.config_filename)
+    test_case.config = config
+
+    # start logging to stdout/stderr
+    test_name = test_case.path.replace('/', '_')
+    test_case.new_step_log_file = True
+    with LoggingContext(name=test_name) as logger:
+        test_case.logger = logger
+        test_case.run()
