@@ -174,7 +174,8 @@ class TestCase:
 
     def generate(self):
         """
-        Generate a ``run.py`` script for the test case or step.
+        Generate a ``run.py`` script for the test case in the work directory.
+        This is the script that a user calls to run the test case.
         """
 
         template = Template(

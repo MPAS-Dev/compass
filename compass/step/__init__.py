@@ -369,7 +369,8 @@ class Step:
 
     def generate(self):
         """
-        Generate a ``run.py`` script for the test case or step.
+        Generate a ``run.py`` script for the step in the work directory.
+        This is the script that a user can call to run the step on its own.
         """
 
         self._process_inputs_and_outputs()
