@@ -2,8 +2,7 @@
 <config case="forward">
 	<add_link source="../init/ocean.nc" dest="init.nc"/>
 	<add_link source="../init/init_mode_forcing_data.nc" dest="forcing_data.nc"/>
-	<add_link source="../init/mesh.nc" dest="mesh.nc"/>
-	<add_link source="../init/graph.info" dest="graph.info"/>
+	<add_link source="make_graph_file.py" source_path="utility_scripts" dest="make_graph_file.py"/>
 
 	<add_executable source="model" dest="ocean_model"/>
 
@@ -27,7 +26,7 @@
 
 	<streams name="streams.ocean" keep="immutable" mode="forward">
 		<stream name="mesh">
-			<attribute name="filename_template">mesh.nc</attribute>
+			<attribute name="filename_template">init.nc</attribute>
 		</stream>
 		<stream name="input">
 			<attribute name="filename_template">init.nc</attribute>
@@ -74,9 +73,12 @@
 	</streams>
 
 	<run_script name="run.py">
-        <step executable="gpmetis">
-            <argument flag="graph.info">16</argument>
-        </step>
+		<step executable="./make_graph_file.py">
+			<argument flag="-f">init.nc</argument>
+		</step>
+		<step executable="gpmetis">
+			<argument flag="graph.info">16</argument>
+		</step>
 		<model_run procs="16" threads="1" namelist="namelist.ocean" streams="streams.ocean"/>
 	</run_script>
 </config>
