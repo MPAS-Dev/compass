@@ -32,7 +32,7 @@ def main():
                         help='Output file, containing initial variables'
                         )
     parser.add_argument('-L', '--nVertLevels', dest='nVertLevels',
-                        default=50,
+                        default=100,
                         help='Number of vertical levels'
                         )
     nVertLevels = parser.parse_args().nVertLevels
