@@ -3,7 +3,7 @@
 Machines
 ========
 
-One of the major advantages of compass over :ref:`legacy_compass` is that it
+One of the major advantages of ``compass`` over :ref:`legacy_compass` is that it
 attempts to be aware of the capabilities of the machine it is running on.  This
 is a particular advantage for so-called "supported" machines with a config file
 defined for them in the ``compass`` package.  But even for "unknown" machines,
@@ -18,22 +18,15 @@ The config options typically defined for a machine are:
 
 .. code-block:: cfg
 
-    # The paths section describes paths that are used within the ocean core test
-    # cases.
     [paths]
 
-    # The mesh_database and the initial_condition_database are locations where
-    # meshes / initial conditions might be found on a specific machine. They can be
-    # the same directory, or different directory. Additionally, if they are empty
-    # some test cases might download data into them, which will then be reused if
-    # the test case is run again later.
-    mesh_database = /usr/projects/regionalclimate/COMMON_MPAS/ocean/grids/mesh_database
-    initial_condition_database = /usr/projects/regionalclimate/COMMON_MPAS/ocean/grids/initial_condition_database
-    bathymetry_database = /usr/projects/regionalclimate/COMMON_MPAS/ocean/grids/bathymetry_database
+    # The root to a location where the mesh_database, initial_condition_database,
+    # and bathymetry_database for MPAS-Ocean will be cached
+    ocean_database_root = /usr/projects/regionalclimate/COMMON_MPAS/ocean/grids/
 
-    # the path to the base conda environment where compass environments have
-    # been created
-    compass_envs = /usr/projects/climate/SHARED_CLIMATE/anaconda_envs/base
+    # The root to a location where the mesh_database and initial_condition_database
+    # for MALI will be cached
+    landice_database_root = /usr/projects/regionalclimate/COMMON_MPAS/mpas_standalonedata/mpas-albany-landice
 
 
     # The parallel section describes options related to running tests in parallel
@@ -49,33 +42,19 @@ The config options typically defined for a machine are:
     cores_per_node = 36
 
     # the slurm account
-    account = climateacme
+    account = e3sm
 
-    # the number of multiprocessing or dask threads to use
-    threads = 18
-
-The ``paths`` section provides local paths for 3 "databases" (local caches) of
-data files used in compass test cases.  These are generally in a shared
-location for the project to save space.
-
-the ``compass_envs`` section will be used in the future to include activation
-of the appropriate
-`conda environment <https://docs.conda.io/projects/conda/en/latest/index.html>`_
-for compass in automatically generated job scripts.
+The ``paths`` section provides local paths to the root of the "databases"
+(local caches) of data files for each MPAS core.  These are generally in a
+shared location for the project to save space.
 
 The ``parallel`` section defined properties of the machine, to do with parallel
 runs. Currently, machine files are defined for high-performance computing (HPC)
 machines with multiple nodes.  These machines all use :ref:`slurm` to submit
 parallel jobs.  They also all use the ``srun`` command to run individual
 tasks within a job.  The number of ``cores_per_node`` vary between machines,
-as does the account that typical compass users will have access to on the
+as does the account that typical ``compass`` users will have access to on the
 machine.
-
-.. note::
-
-    The number of ``threads`` to use in python multi-threaded operations is a
-    placeholder option for future work on creating masks and performing other
-    tasks in parallel in python instead of in serial with Fortran codes.
 
 .. _slurm:
 
@@ -123,9 +102,13 @@ in your user config file:
 
     [paths]
 
-    mesh_database = /home/xylar/data/mpas/meshes
-    initial_condition_database = /home/xylar/data/mpas/initial_conditions
-    bathymetry_database = /home/xylar/data/mpas/bathymetry_database
+    # The root to a location where the mesh_database, initial_condition_database,
+    # and bathymetry_database for MPAS-Ocean will be cached
+    ocean_database_root = /home/xylar/data/mpas/mpas_standalonedata/mpas-ocean
+
+    # The root to a location where the mesh_database and initial_condition_database
+    # for MALI will be cached
+    landice_database_root = /home/xylar/data/mpas/mpas_standalonedata/mpas-albany-landice
 
 
     # The parallel section describes options related to running tests in parallel
@@ -143,8 +126,8 @@ in your user config file:
     # the number of multiprocessing or dask threads to use
     threads = 8
 
-The paths for the 3 "databases" can be any emtpy path to being with.  If the
-path doesn't exist, compass will create it.
+The paths for the MPAS core "databases" can be any emtpy path to being with.
+If the path doesn't exist, ``compass`` will create it.
 
 If you're not working on an HPC machine, you will probably not have multiple
 nodes or :ref:`slurm`.  You will probably install

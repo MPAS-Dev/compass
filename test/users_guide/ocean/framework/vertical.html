@@ -93,11 +93,11 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Quick Start for Users</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../test_cases.html">Test Cases</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../configuration_files.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../config_files.html">Config Files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../test_suites.html">Test Suites</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../landice/index.html">Landice core</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">Ocean core</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../configurations/index.html">Configurations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../test_groups/index.html">Test groups</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="index.html">Framework</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ice_shelf.html">Ice shelf-cavities</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Vertical coordinate</a><ul>
@@ -120,13 +120,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/command_line.html">Command-line interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/cores.html">Cores</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/examples/index.html">Examples core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/ocean/index.html">Ocean core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/framework.html">Framework</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/docs.html">Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/building_docs.html">Building the Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design_docs/index.html">Design Documents</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Versions</span></p>
 <ul>
@@ -204,7 +204,7 @@
             
   <div class="section" id="vertical-coordinate">
 <span id="ocean-vertical"></span><h1>Vertical coordinate<a class="headerlink" href="#vertical-coordinate" title="Permalink to this headline">¶</a></h1>
-<p>Most compass configurations and test cases support a z* vertical coordinate
+<p>Most compass test groups and test cases support a z* vertical coordinate
 (<a class="reference external" href="https://doi.org/10.1016/j.ocemod.2003.09.003">Adcroft and Campin, 2004</a>).
 The number and interface locations of the initial (“resting”) z* layers are
 determined by config options in the <code class="docutils literal notranslate"><span class="pre">vertical_grid</span></code> section of the config
@@ -267,7 +267,7 @@ thickness is defined by:</p>
 \[\begin{split}z_0 = 0, \\
 z_{k+1} = z_k - \Delta z\left(z_k\right).\end{split}\]</div>
 <p>We use a root finder to solve for <span class="math notranslate nohighlight">\(\Delta\)</span>, such that
-<span class="math notranslate nohighlight">\(z_{n_z+1} = -H_\mathrm{bot}\)</span>, where <span class="math notranslate nohighlight">\(n_z:\)</span> is <code class="docutils literal notranslate"><span class="pre">nVertLevels</span></code>, the
+<span class="math notranslate nohighlight">\(z_{n_z+1} = -H_\mathrm{bot}\)</span>, where <span class="math notranslate nohighlight">\(n_z\)</span> is <code class="docutils literal notranslate"><span class="pre">nVertLevels</span></code>, the
 number of vertical levels (one less than the number of layer interfaces) and
 <span class="math notranslate nohighlight">\(H_\mathrm{bot}\)</span> is <code class="docutils literal notranslate"><span class="pre">bottom_depth</span></code>, the depth of the seafloor.</p>
 <p>The following config options are all required.  This is an example of a
@@ -322,7 +322,7 @@ seafloor, which is at 6000 m depth.  To get the default grid, use:</p>
 </div>
 <p>If the <code class="docutils literal notranslate"><span class="pre">bottom_depth</span></code> option is also defined, the depths will be renormalized
 so that bottom of the deepest layer is at <code class="docutils literal notranslate"><span class="pre">z</span> <span class="pre">=</span> <span class="pre">-bottom_depth</span></code>.  This is
-the default approach in the <a class="reference internal" href="../configurations/ziso.html#ocean-ziso"><span class="std std-ref">ziso</span></a> configuration:</p>
+the default approach in the <a class="reference internal" href="../test_groups/ziso.html#ocean-ziso"><span class="std std-ref">ziso</span></a> test group:</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span>
 <span class="k">[vertical_grid]</span>
 

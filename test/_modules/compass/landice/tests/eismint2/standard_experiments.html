@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>compass.landice.tests.eismint2.standard_experiments &mdash; compass test documentation</title>
+  <title>compass.landice.tests.eismint2.standard_experiments &mdash; compass 1.0.0 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                test
+                1.0.0
               </div>
             
           
@@ -90,7 +90,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/quick_start.html">Quick Start for Users</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/test_cases.html">Test Cases</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/configuration_files.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/config_files.html">Config Files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/test_suites.html">Test Suites</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/ocean/index.html">Ocean core</a></li>
@@ -102,13 +102,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/command_line.html">Command-line interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/cores.html">Cores</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/examples/index.html">Examples core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/ocean/index.html">Ocean core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/framework.html">Framework</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/docs.html">Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/building_docs.html">Building the Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../design_docs/index.html">Design Documents</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Versions</span></p>
 <ul>
@@ -163,7 +163,7 @@
         
           <li><a href="../../../../index.html">Module code</a> &raquo;</li>
         
-          <li><a href="../../tests.html">compass.landice.tests</a> &raquo;</li>
+          <li><a href="../../../landice.html">compass.landice</a> &raquo;</li>
         
           <li><a href="../eismint2.html">compass.landice.tests.eismint2</a> &raquo;</li>
         
@@ -183,69 +183,54 @@
            <div itemprop="articleBody">
             
   <h1>Source code for compass.landice.tests.eismint2.standard_experiments</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">add_step</span><span class="p">,</span> <span class="n">run_steps</span>
-<span class="kn">from</span> <span class="nn">compass.landice.tests.eismint2</span> <span class="kn">import</span> <span class="n">setup_mesh</span><span class="p">,</span> <span class="n">run_experiment</span>
-<span class="kn">from</span> <span class="nn">compass.landice.tests.eismint2.standard_experiments</span> <span class="kn">import</span> <span class="n">visualize</span>
+<span></span><span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
+<span class="kn">from</span> <span class="nn">compass.landice.tests.eismint2.setup_mesh</span> <span class="kn">import</span> <span class="n">SetupMesh</span>
+<span class="kn">from</span> <span class="nn">compass.landice.tests.eismint2.run_experiment</span> <span class="kn">import</span> <span class="n">RunExperiment</span>
+<span class="kn">from</span> <span class="nn">compass.landice.tests.eismint2.standard_experiments.visualize</span> <span class="kn">import</span> \
+    <span class="n">Visualize</span>
 
 
-<div class="viewcode-block" id="collect"><a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.eismint2.standard_experiments.collect.html#compass.landice.tests.eismint2.standard_experiments.collect">[docs]</a><span class="k">def</span> <span class="nf">collect</span><span class="p">(</span><span class="n">testcase</span><span class="p">):</span>
+<div class="viewcode-block" id="StandardExperiments"><a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.eismint2.standard_experiments.StandardExperiments.html#compass.landice.tests.eismint2.standard_experiments.StandardExperiments">[docs]</a><span class="k">class</span> <span class="nc">StandardExperiments</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Update the dictionary of test case properties and add steps</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    testcase : dict</span>
-<span class="sd">        A dictionary of properties of this test case, which can be updated</span>
+<span class="sd">    A test case for performing the standard EISMINT2 experiments.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;EISMINT2 standard experiments&#39;</span>
 
-    <span class="n">add_step</span><span class="p">(</span><span class="n">testcase</span><span class="p">,</span> <span class="n">setup_mesh</span><span class="p">)</span>
+<div class="viewcode-block" id="StandardExperiments.__init__"><a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.eismint2.standard_experiments.StandardExperiments.html#compass.landice.tests.eismint2.standard_experiments.StandardExperiments.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create the test case</span>
 
-    <span class="k">for</span> <span class="n">experiment</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">]:</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;experiment_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">experiment</span><span class="p">)</span>
-        <span class="n">add_step</span><span class="p">(</span><span class="n">testcase</span><span class="p">,</span> <span class="n">run_experiment</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
-                 <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">experiment</span><span class="o">=</span><span class="n">experiment</span><span class="p">)</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_group : compass.landice.tests.eismint2.Eismint2</span>
+<span class="sd">            The test group that this test case belongs to</span>
 
-    <span class="n">add_step</span><span class="p">(</span><span class="n">testcase</span><span class="p">,</span> <span class="n">visualize</span><span class="p">)</span></div>
+<span class="sd">        mesh_type : str</span>
+<span class="sd">            The resolution or tye of mesh of the test case</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;standard_experiments&#39;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
+            <span class="n">SetupMesh</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
 
-<span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="n">testcase</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Modify the configuration options for this test case</span>
+        <span class="k">for</span> <span class="n">experiment</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">]:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;experiment_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">experiment</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
+                <span class="n">RunExperiment</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                              <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">experiment</span><span class="o">=</span><span class="n">experiment</span><span class="p">))</span>
 
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    testcase : dict</span>
-<span class="sd">        A dictionary of properties of this test case</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
+            <span class="n">Visualize</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span></div>
 
-<span class="sd">    config : configparser.ConfigParser</span>
-<span class="sd">        Configuration options for this test case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># We want to visualize all test cases by default</span>
-    <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;eismint2_viz&#39;</span><span class="p">,</span> <span class="s1">&#39;experiment&#39;</span><span class="p">,</span> <span class="s1">&#39;a, b, c, d, f, g&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Modify the configuration options for this test case</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># We want to visualize all test cases by default</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;eismint2_viz&#39;</span><span class="p">,</span> <span class="s1">&#39;experiment&#39;</span><span class="p">,</span> <span class="s1">&#39;a, b, c, d, f, g&#39;</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="run"><a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.eismint2.standard_experiments.run.html#compass.landice.tests.eismint2.standard_experiments.run">[docs]</a><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">testcase</span><span class="p">,</span> <span class="n">test_suite</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Run each step of the test case</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    testcase : dict</span>
-<span class="sd">        A dictionary of properties of this test case from the ``collect()``</span>
-<span class="sd">        function</span>
-
-<span class="sd">    test_suite : dict</span>
-<span class="sd">        A dictionary of properties of the test suite</span>
-
-<span class="sd">    config : configparser.ConfigParser</span>
-<span class="sd">        Configuration options for this test case, a combination of the defaults</span>
-<span class="sd">        for the machine, core and configuration</span>
-
-<span class="sd">    logger : logging.Logger</span>
-<span class="sd">        A logger for output from the test case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">run_steps</span><span class="p">(</span><span class="n">testcase</span><span class="p">,</span> <span class="n">test_suite</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span></div>
+    <span class="c1"># no run() method is needed because we will just do the default: run all</span>
+    <span class="c1"># the steps</span>
 </pre></div>
 
            </div>

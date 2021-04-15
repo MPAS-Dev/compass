@@ -62,14 +62,13 @@ cases or a test suite:
     # cases.
     [paths]
 
-    # The mesh_database and the initial_condition_database are locations where
-    # meshes / initial conditions might be found on a specific machine. They can be
-    # the same directory, or different directory. Additionally, if they are empty
-    # some test cases might download data into them, which will then be reused if
-    # the test case is run again later.
-    mesh_database = /global/cfs/cdirs/e3sm/mpas_standalonedata/mpas-ocean/mesh_database
-    initial_condition_database = /global/cfs/cdirs/e3sm/mpas_standalonedata/mpas-ocean/initial_condition_database
-    bathymetry_database = /global/cfs/cdirs/e3sm/mpas_standalonedata/mpas-ocean/bathymetry_database
+    # The root to a location where the mesh_database, initial_condition_database,
+    # and bathymetry_database for MPAS-Ocean will be cached
+    ocean_database_root = /global/cfs/cdirs/e3sm/mpas_standalonedata/mpas-ocean
+
+    # The root to a location where the mesh_database and initial_condition_database
+    # for MALI will be cached
+    landice_database_root = /global/cfs/cdirs/e3sm/mpas_standalonedata/mpas-albany-landice
 
     # the path to the base conda environment where compass environments have
     # been created
@@ -99,14 +98,13 @@ And here are the same for ``-m cori-knl``:
     # cases.
     [paths]
 
-    # The mesh_database and the initial_condition_database are locations where
-    # meshes / initial conditions might be found on a specific machine. They can be
-    # the same directory, or different directory. Additionally, if they are empty
-    # some test cases might download data into them, which will then be reused if
-    # the test case is run again later.
-    mesh_database = /global/cfs/cdirs/e3sm/mpas_standalonedata/mpas-ocean/mesh_database
-    initial_condition_database = /global/cfs/cdirs/e3sm/mpas_standalonedata/mpas-ocean/initial_condition_database
-    bathymetry_database = /global/cfs/cdirs/e3sm/mpas_standalonedata/mpas-ocean/bathymetry_database
+    # The root to a location where the mesh_database, initial_condition_database,
+    # and bathymetry_database for MPAS-Ocean will be cached
+    ocean_database_root = /global/cfs/cdirs/e3sm/mpas_standalonedata/mpas-ocean
+
+    # The root to a location where the mesh_database and initial_condition_database
+    # for MALI will be cached
+    landice_database_root = /global/cfs/cdirs/e3sm/mpas_standalonedata/mpas-albany-landice
 
     # the path to the base conda environment where compass environments have
     # been created
@@ -128,114 +126,161 @@ And here are the same for ``-m cori-knl``:
     # the number of multiprocessing or dask threads to use
     threads = 18
 
-cori, gnu
----------
+
+cori-haswell, gnu
+-----------------
 
 .. code-block:: bash
 
-    module switch PrgEnv-intel PrgEnv-gnu
-    module load cray-netcdf-hdf5parallel
-    module load cray-parallel-netcdf
-    module load cmake
-    source /global/project/projectdirs/e3sm/software/anaconda_envs/load_latest_e3sm_unified.sh
-    export PIO=/global/u2/h/hgkang/my_programs/Scorpio
-    git submodule update --init --recursive
-
-    # debug:
-    make gnu-nersc CORE=ocean USE_PIO2=true OPENMP=false DEBUG=true GEN_F90=true
-
-    # optimized:
-    make gnu-nersc CORE=ocean USE_PIO2=true OPENMP=false
-
-cori, intel
------------
-
-.. code-block:: bash
-
-    module rm intel
-    module load intel/18.0.1.163
-    module load cray-mpich/7.7.6
-    module load cray-hdf5-parallel/1.10.2.0
-    module load cray-netcdf-hdf5parallel/4.6.1.3
-    module load cray-parallel-netcdf/1.8.1.4
-    export PIO_VERSION=1.10.1
-    export PIO=/global/homes/m/mpeterse/libraries/pio-${PIO_VERSION}-intel
-    git submodule update --init --recursive
-
-    make intel-nersc CORE=ocean
-
-PIO on cori
------------
-
-We have already compiled PIO on cori, and paths are given in the previous
-instructions. If you need to compile it yourself, you can do that as follows
-(instructions from `xylar <http://github.com/xylar>`_).
-
-.. code-block:: bash
-
-    #!/bin/bash
-
-    export PIO_VERSION=1.10.1
-
-    rm -rf ParallelIO pio-${PIO_VERSION}
-
-    git clone git@github.com:NCAR/ParallelIO.git
-    cd ParallelIO
-    git checkout pio$PIO_VERSION
-
-    cd pio
-
-    export PIOSRC=`pwd`
-    git clone git@github.com:PARALLELIO/genf90.git bin
-    git clone git@github.com:CESM-Development/CMake_Fortran_utils.git cmake
-    cd ../..
-
-    # Purge environment:
+    module rm PrgEnv-intel
     module rm PrgEnv-cray
     module rm PrgEnv-gnu
-    module rm PrgEnv-intel
-
-    module load PrgEnv-intel/6.0.5
     module rm intel
-    module load intel/18.0.1.163
-
-    module rm craype
-    module load craype/2.5.18
-
-    module rm pmi
-    module load pmi/5.0.14
-
-    module rm cray-netcdf
-    module rm cray-netcdf-hdf5parallel
+    module rm cce
+    module rm gcc
     module rm cray-parallel-netcdf
     module rm cray-hdf5-parallel
-    module rm cray-hdf5
-
+    module rm pmi
+    module rm cray-libsci
+    module rm cray-mpich2
     module rm cray-mpich
-    module load cray-mpich/7.7.6
-
-    # Load netcdf and pnetcdf modules
-    module load cray-hdf5-parallel/1.10.2.0
-    module load cray-netcdf-hdf5parallel/4.6.1.3
-    module load cray-parallel-netcdf/1.8.1.4
+    module rm cray-netcdf
+    module rm cray-hdf5
+    module rm cray-netcdf-hdf5parallel
+    module rm craype-sandybridge
+    module rm craype-ivybridge
+    module rm craype
+    module rm papi
+    module rm cmake
+    module rm cray-petsc
+    module rm esmf
+    module rm zlib
+    module rm craype-hugepages2M
+    module rm darshan
+    module load craype
+    module load PrgEnv-intel
+    module load cray-mpich
+    module rm craype-mic-knl
+    module load craype-haswell
+    module swap cray-mpich cray-mpich/7.7.10
+    module swap PrgEnv-intel PrgEnv-gnu/6.0.5
+    module rm gcc
+    module load gcc/8.3.0
+    module rm cray-libsci
+    module load cray-libsci/19.06.1
+    module swap craype craype/2.6.2
+    module rm pmi
+    module load pmi/5.0.14
+    module rm craype-mic-knl
+    module load craype-haswell
+    module rm cray-netcdf-hdf5parallel
+    module load cray-netcdf-hdf5parallel/4.6.3.2
+    module load cray-hdf5-parallel/1.10.5.2
+    module load cray-parallel-netcdf/1.11.1.1
+    module rm git
+    module load git
+    module rm cmake
+    module load cmake/3.14.4
 
     export NETCDF=$NETCDF_DIR
-    export PNETCDF=$PARALLEL_NETCDF_DIR
-    export PHDF5=$HDF5_DIR
-    export MPIROOT=$MPICH_DIR
+    export NETCDFF=$NETCDF_DIR
+    export PNETCDF=$PNETCDF_DIR
 
-    export FC=ftn
-    export CC=cc
-    mkdir pio-${PIO_VERSION}
-    cd pio-${PIO_VERSION}
-    cmake -D NETCDF_C_DIR=$NETCDF -D NETCDF_Fortran_DIR=$NETCDF \
-       -D PNETCDF_DIR=$PNETCDF -D CMAKE_VERBOSE_MAKEFILE=1 $PIOSRC
-    make
+    export PIO=/global/cfs/cdirs/e3sm/software/compass/cori-haswell/compass-1.0.0/scorpio-1.1.6/gnu/mpt
 
-    DEST=$HOME/libraries/pio-${PIO_VERSION}-intel
-    rm -rf $DEST
-    mkdir -p $DEST
-    cp *.a *.h *.mod $DEST
+    export AUTOCLEAN=true
+    export USE_PIO2=true
+    export HDF5_USE_FILE_LOCKING=FALSE
+
+To build the MPAS model with
+
+.. code-block:: bash
+
+    make CORE=landice gnu-nersc
+
+or
+
+.. code-block:: bash
+
+    make CORE=ocean gnu-nersc
+
+
+cori-haswell, intel
+-------------------
+
+.. code-block:: bash
+
+    source /global/cfs/cdirs/e3sm/software/anaconda_envs/load_latest_compass.sh
+
+    module rm PrgEnv-intel
+    module rm PrgEnv-cray
+    module rm PrgEnv-gnu
+    module rm intel
+    module rm cce
+    module rm gcc
+    module rm cray-parallel-netcdf
+    module rm cray-hdf5-parallel
+    module rm pmi
+    module rm cray-libsci
+    module rm cray-mpich2
+    module rm cray-mpich
+    module rm cray-netcdf
+    module rm cray-hdf5
+    module rm cray-netcdf-hdf5parallel
+    module rm craype-sandybridge
+    module rm craype-ivybridge
+    module rm craype
+    module rm papi
+    module rm cmake
+    module rm cray-petsc
+    module rm esmf
+    module rm zlib
+    module rm craype-hugepages2M
+    module rm darshan
+    module load craype
+    module load PrgEnv-intel
+    module load cray-mpich
+    module rm craype-mic-knl
+    module load craype-haswell
+    module swap cray-mpich cray-mpich/7.7.10
+    module load PrgEnv-intel/6.0.5
+    module rm intel
+    module load intel/19.0.3.199
+    module swap craype craype/2.6.2
+    module rm pmi
+    module load pmi/5.0.14
+    module rm craype-mic-knl
+    module load craype-haswell
+    module rm cray-netcdf-hdf5parallel
+    module load cray-netcdf-hdf5parallel/4.6.3.2
+    module load cray-hdf5-parallel/1.10.5.2
+    module load cray-parallel-netcdf/1.11.1.1
+    module rm git
+    module load git
+    module rm cmake
+    module load cmake/3.14.4
+
+    export NETCDF_C_PATH=$NETCDF_DIR
+    export NETCDF_FORTRAN_PATH=$NETCDF_DIR
+    export PNETCDF_PATH=$PNETCDF_DIR
+
+    export PIO=/global/cfs/cdirs/e3sm/software/compass/cori-haswell/compass-1.0.0/scorpio-1.1.6/intel/mpt
+
+    export AUTOCLEAN=true
+    export USE_PIO2=true
+    export HDF5_USE_FILE_LOCKING=FALSE
+
+To build the MPAS model with
+
+.. code-block:: bash
+
+    make CORE=landice intel-nersc
+
+or
+
+.. code-block:: bash
+
+    make CORE=ocean intel-nersc
 
 Jupyter notebook on remote data
 -------------------------------

@@ -92,16 +92,17 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start for Users</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../test_cases.html">Test Cases</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../configuration_files.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config_files.html">Config Files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../test_suites.html">Test Suites</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../landice/index.html">Landice core</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Ocean core</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="configurations/index.html">Configurations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_groups/index.html">Test groups</a></li>
 <li class="toctree-l2"><a class="reference internal" href="framework/index.html">Framework</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Test suites</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#nightly-test-suite">nightly test suite</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#quwisc240-test-suite">quwisc240 test suite</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#qu240-spinups-test-suite">qu240_spinups test suite</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#qu240-for-e3sm-test-suite">qu240_for_e3sm test suite</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#quwisc240-for-e3sm-test-suite">quwisc240_for_e3sm test suite</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#ec30to60-test-suite">ec30to60 test suite</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#ecwisc30to60-test-suite">ecwisc30to60 test suite</a></li>
 </ul>
@@ -116,13 +117,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/command_line.html">Command-line interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/cores.html">Cores</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/examples/index.html">Examples core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/ocean/index.html">Ocean core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/framework.html">Framework</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/docs.html">Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/building_docs.html">Building the Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../design_docs/index.html">Design Documents</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Versions</span></p>
 <ul>
@@ -248,16 +249,16 @@ for a long run or a shorter continuation run from a restart file
 (<code class="docutils literal notranslate"><span class="pre">restart_test</span></code>). Others ensure that the code produces the same result when
 it is run on different numbers of cores (<code class="docutils literal notranslate"><span class="pre">decomp_test</span></code>) or threads
 (<code class="docutils literal notranslate"><span class="pre">threads_test</span></code>). Several tests are run with both the split-explicit and RK4
-time integrators (see <a class="reference internal" href="configurations/global_ocean.html#global-ocean-performance-test"><span class="std std-ref">performance_test test case</span></a>).</p>
-<p>One test (<a class="reference internal" href="configurations/global_ocean.html#global-ocean-analysis-test"><span class="std std-ref">analysis_test test case</span></a>) ensures that the so-called
+time integrators (see <a class="reference internal" href="test_groups/global_ocean.html#global-ocean-performance-test"><span class="std std-ref">performance_test test case</span></a>).</p>
+<p>One test (<a class="reference internal" href="test_groups/global_ocean.html#global-ocean-analysis-test"><span class="std std-ref">analysis_test test case</span></a>) ensures that the so-called
 “analysis members”, which can perform analysis as the model runs, are
 functioning properly and that their results do not change unexpectedly.</p>
-<p>Two tests (<code class="docutils literal notranslate"><span class="pre">restart_test</span></code> from <a class="reference internal" href="configurations/ice_shelf_2d.html#ocean-ice-shelf-2d"><span class="std std-ref">ice_shelf_2d</span></a> and <code class="docutils literal notranslate"><span class="pre">with_frazil</span></code>
-from <a class="reference internal" href="configurations/ziso.html#ocean-ziso"><span class="std std-ref">ziso</span></a>) include checks for proper functioning of frazil ice
+<p>Two tests (<code class="docutils literal notranslate"><span class="pre">restart_test</span></code> from <a class="reference internal" href="test_groups/ice_shelf_2d.html#ocean-ice-shelf-2d"><span class="std std-ref">ice_shelf_2d</span></a> and <code class="docutils literal notranslate"><span class="pre">with_frazil</span></code>
+from <a class="reference internal" href="test_groups/ziso.html#ocean-ziso"><span class="std std-ref">ziso</span></a>) include checks for proper functioning of frazil ice
 formation.</p>
-<p>One test (<code class="docutils literal notranslate"><span class="pre">restart_test</span></code> from <a class="reference internal" href="configurations/ice_shelf_2d.html#ocean-ice-shelf-2d"><span class="std std-ref">ice_shelf_2d</span></a>) checks that
+<p>One test (<code class="docutils literal notranslate"><span class="pre">restart_test</span></code> from <a class="reference internal" href="test_groups/ice_shelf_2d.html#ocean-ice-shelf-2d"><span class="std std-ref">ice_shelf_2d</span></a>) checks that
 freshwater fluxes under ice shelves are working as expected.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">default</span></code> test from <a class="reference internal" href="configurations/ziso.html#ocean-ziso"><span class="std std-ref">ziso</span></a> tests that Lagrangian particles are
+<p>The <code class="docutils literal notranslate"><span class="pre">default</span></code> test from <a class="reference internal" href="test_groups/ziso.html#ocean-ziso"><span class="std std-ref">ziso</span></a> tests that Lagrangian particles are
 working properly.</p>
 </div>
 <div class="section" id="quwisc240-test-suite">
@@ -284,31 +285,39 @@ ocean/global_ocean/QUwISC240/PHC_BGC/performance_test
 </div>
 <p>This test suite performs exactly the same set of tests for the QUwISC240 mesh
 that are performed on the QU240 mesh in the <a class="reference internal" href="#ocean-suite-nightly"><span class="std std-ref">nightly test suite</span></a>.  Since
-the QUwISC initial condition is a bit more time consuming to produce and
+the QUwISC240 initial condition is a bit more time consuming to produce and
 equilibrate (see <a class="reference internal" href="framework/ice_shelf.html#ocean-ssh-adjustment"><span class="std std-ref">Sea surface height adjustment</span></a>), it is not included in the
 <code class="docutils literal notranslate"><span class="pre">nightly</span></code> suite but regression testing on this mesh should also be performed
 on a regular basis to ensure no unexpected changes to MPAS-Ocean and E3SM
 configurations with ice-shelf cavities.</p>
 </div>
-<div class="section" id="qu240-spinups-test-suite">
-<span id="ocean-suite-qu240-spinups"></span><h2>qu240_spinups test suite<a class="headerlink" href="#qu240-spinups-test-suite" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m compass suite -c ocean -t qu240_spinups ...
+<div class="section" id="qu240-for-e3sm-test-suite">
+<span id="ocean-suite-qu240-spinups"></span><h2>qu240_for_e3sm test suite<a class="headerlink" href="#qu240-for-e3sm-test-suite" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m compass suite -c ocean -t qu240_for_e3sm ...
 </pre></div>
 </div>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ocean/global_ocean/QU240/mesh
 ocean/global_ocean/QU240/PHC/init
-ocean/global_ocean/QU240/PHC/spinup
+ocean/global_ocean/QU240/PHC/dynamic_adjustment
 ocean/global_ocean/QU240/PHC/files_for_e3sm
-
-ocean/global_ocean/QUwISC240/mesh
+</pre></div>
+</div>
+<p>This suite includes all the tests needed to spin up an initial condition for
+E3SM on the QU240 mesh.</p>
+</div>
+<div class="section" id="quwisc240-for-e3sm-test-suite">
+<h2>quwisc240_for_e3sm test suite<a class="headerlink" href="#quwisc240-for-e3sm-test-suite" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m compass suite -c ocean -t quwisc240_for_e3sm ...
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ocean/global_ocean/QUwISC240/mesh
 ocean/global_ocean/QUwISC240/PHC/init
-ocean/global_ocean/QUwISC240/PHC/spinup
+ocean/global_ocean/QUwISC240/PHC/dynamic_adjustment
 ocean/global_ocean/QUwISC240/PHC/files_for_e3sm
 </pre></div>
 </div>
 <p>This suite includes all the tests needed to spin up an initial condition for
-E3SM on both the QU240 and QUwISC240 meshes.  They are grouped into a test
-suite simply to make them easier to run with one single command.</p>
+E3SM on the QUwISC240 mesh.</p>
 </div>
 <div class="section" id="ec30to60-test-suite">
 <span id="ocean-suite-ec30to60"></span><h2>ec30to60 test suite<a class="headerlink" href="#ec30to60-test-suite" title="Permalink to this headline">¶</a></h2>
@@ -318,17 +327,13 @@ suite simply to make them easier to run with one single command.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ocean/global_ocean/EC30to60/mesh
 ocean/global_ocean/EC30to60/PHC/init
 ocean/global_ocean/EC30to60/PHC/performance_test
-ocean/global_ocean/EC30to60/PHC/spinup
+ocean/global_ocean/EC30to60/PHC/dynamic_adjustment
 ocean/global_ocean/EC30to60/PHC/files_for_e3sm
-ocean/global_ocean/EC30to60/EN4_1900/init
-ocean/global_ocean/EC30to60/EN4_1900/performance_test
-ocean/global_ocean/EC30to60/EN4_1900/spinup
-ocean/global_ocean/EC30to60/EN4_1900/files_for_e3sm
 </pre></div>
 </div>
 <p>This suite is included for convenience so all the tests needed to spin up an
 initial condition for E3SM on the EC30to60 mesh can be run with a single
-command.</p>
+command.  A short performance test is also included.</p>
 </div>
 <div class="section" id="ecwisc30to60-test-suite">
 <span id="ocean-suite-ecwisc30to60"></span><h2>ecwisc30to60 test suite<a class="headerlink" href="#ecwisc30to60-test-suite" title="Permalink to this headline">¶</a></h2>
@@ -338,17 +343,14 @@ command.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ocean/global_ocean/ECwISC30to60/mesh
 ocean/global_ocean/ECwISC30to60/PHC/init
 ocean/global_ocean/ECwISC30to60/PHC/performance_test
-ocean/global_ocean/ECwISC30to60/PHC/spinup
+ocean/global_ocean/ECwISC30to60/PHC/dynamic_adjustment
 ocean/global_ocean/ECwISC30to60/PHC/files_for_e3sm
-ocean/global_ocean/ECwISC30to60/EN4_1900/init
-ocean/global_ocean/ECwISC30to60/EN4_1900/performance_test
-ocean/global_ocean/ECwISC30to60/EN4_1900/spinup
-ocean/global_ocean/ECwISC30to60/EN4_1900/files_for_e3sm
 </pre></div>
 </div>
-<p>Similarly to the previous two suites, this suite is included for convenience so
+<p>Similarly to the previous 3 suites, this suite is included for convenience so
 all the tests needed to spin up an initial condition for E3SM on the
-ECwISC30to60 mesh can be run with a single command.</p>
+ECwISC30to60 mesh can be run with a single command.   A short performance test
+is also included.</p>
 </div>
 </div>
 

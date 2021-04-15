@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>compass.parallel &mdash; compass test documentation</title>
+  <title>compass.parallel &mdash; compass 1.0.0 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                test
+                1.0.0
               </div>
             
           
@@ -90,7 +90,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../users_guide/quick_start.html">Quick Start for Users</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../users_guide/test_cases.html">Test Cases</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../users_guide/configuration_files.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../users_guide/config_files.html">Config Files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../users_guide/test_suites.html">Test Suites</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../users_guide/landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../users_guide/ocean/index.html">Ocean core</a></li>
@@ -102,13 +102,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/command_line.html">Command-line interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/cores.html">Cores</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/examples/index.html">Examples core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/ocean/index.html">Ocean core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/framework.html">Framework</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/docs.html">Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/building_docs.html">Building the Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../design_docs/index.html">Design Documents</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Versions</span></p>
 <ul>
@@ -210,7 +210,8 @@
         <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;squeue&#39;</span><span class="p">,</span> <span class="s1">&#39;--noheader&#39;</span><span class="p">,</span> <span class="s1">&#39;-j&#39;</span><span class="p">,</span> <span class="n">job_id</span><span class="p">,</span> <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;%D&#39;</span><span class="p">]</span>
         <span class="n">nodes</span> <span class="o">=</span> <span class="n">_get_subprocess_int</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">parallel_system</span> <span class="o">==</span> <span class="s1">&#39;single_node&#39;</span><span class="p">:</span>
-        <span class="n">cores</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
+        <span class="n">cores_per_node</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;parallel&#39;</span><span class="p">,</span> <span class="s1">&#39;cores_per_node&#39;</span><span class="p">)</span>
+        <span class="n">cores</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">(),</span> <span class="n">cores_per_node</span><span class="p">)</span>
         <span class="n">nodes</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unexpected parallel system: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>

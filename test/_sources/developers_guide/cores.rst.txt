@@ -4,9 +4,8 @@ Cores
 =====
 
 The test cases in compass are organized by "core", corresponding to a dynamical
-core in MPAS, and then into "configurations".  Currently, there are three
-cores, ``examples`` which simply houses some very basic examples (as the name
-implies); ``landice``, which has test cases for MALI; and ``ocean``, which
+core in MPAS, and then into "configurations".  Currently, there are two
+cores, ``landice``, which has test cases for MALI, and ``ocean``, which
 encompasses all the test cases for MPAS-Ocean.
 
 From a developer's perspective, a core is a package within ``compass`` that:
@@ -499,7 +498,7 @@ configure()
 The ``configure()`` function is used to set config options or build them up
 from defaults stored in config files within the test case or its configuration.
 The ``config`` object that is modified in this function will be written to a
-config file for the test case (see :ref:`configuration_files`). We already discussed
+config file for the test case (see :ref:`config_files`). We already discussed
 the ``configure()`` function a little bit in :ref:`dev_configs` because
 it is common for test cases to call a shared ``configure()`` function.
 
@@ -589,7 +588,7 @@ run()
    a dictionary of properties of the test suite (not currently used),
 
 ``config``
-   the config options for this testcase (see :ref:`configuration_files`),
+   the config options for this testcase (see :ref:`config_files`),
 
 ``logger``
    a :py:class:`logging.Logger` for output from the testcase.
@@ -1050,7 +1049,7 @@ files to the step by calling any of the following functions:
 
 * :py:func:`compass.streams.add_streams_file()`
 
-You can also add the contents of one or more :ref:`configuration_files` to the
+You can also add the contents of one or more :ref:`config_files` to the
 ``config`` object, or use ``config.set()`` to set config options directly.
 
 If namelists and streams files have been defined, you should call

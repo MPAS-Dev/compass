@@ -98,7 +98,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="test_cases.html">Test Cases</a></li>
-<li class="toctree-l1"><a class="reference internal" href="configuration_files.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config_files.html">Config Files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="test_suites.html">Test Suites</a></li>
 <li class="toctree-l1"><a class="reference internal" href="landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ocean/index.html">Ocean core</a></li>
@@ -110,13 +110,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../developers_guide/overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers_guide/command_line.html">Command-line interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers_guide/cores.html">Cores</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developers_guide/examples/index.html">Examples core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers_guide/landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers_guide/ocean/index.html">Ocean core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers_guide/framework.html">Framework</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers_guide/docs.html">Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers_guide/building_docs.html">Building the Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../design_docs/index.html">Design Documents</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Versions</span></p>
 <ul>
@@ -192,36 +192,38 @@
 <span id="quick-start"></span><h1>Quick Start for Users<a class="headerlink" href="#quick-start-for-users" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="compass-conda-environment">
 <span id="conda-env"></span><h2>compass conda environment<a class="headerlink" href="#compass-conda-environment" title="Permalink to this headline">¶</a></h2>
-<p>The compass conda environment includes all the python libraries needed to run
-compass scripts. It is maintained on our standard machines (Grizzly, Badger,
-Anvil, Compy and Cori).  Here are the commands for each machine:</p>
+<p>For each <code class="docutils literal notranslate"><span class="pre">compass</span></code> release, we maintain a
+<a class="reference external" href="https://docs.conda.io/en/latest/">conda environment</a>. that includes the
+<code class="docutils literal notranslate"><span class="pre">compass</span></code> package as well as all of its dependencies on our standard machines
+(Grizzly, Badger, Anvil, Chrysalis, Compy and Cori).  Here are the commands to
+load the the environment for the latest <code class="docutils literal notranslate"><span class="pre">compass</span></code> release on each machine:</p>
 <ul class="simple">
-<li><p>grizzly and badger:</p></li>
+<li><p>Grizzly and Badger:</p></li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> /usr/projects/climate/SHARED_CLIMATE/anaconda_envs/load_latest_compass.sh
 </pre></div>
 </div>
 <ul class="simple">
-<li><p>anvil (blues) and chrysalis:</p></li>
+<li><p>Anvil (Blues) and Chrysalis:</p></li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> /lcrc/soft/climate/e3sm-unified/load_latest_compass.sh
 </pre></div>
 </div>
 <ul class="simple">
-<li><p>compy:</p></li>
+<li><p>Compy:</p></li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> /share/apps/E3SM/conda_envs/load_latest_compass.sh
 </pre></div>
 </div>
 <ul class="simple">
-<li><p>cori:</p></li>
+<li><p>Cori:</p></li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> /global/cfs/cdirs/e3sm/software/anaconda_envs/load_latest_compass.sh
 </pre></div>
 </div>
-<p>To install your own compass conda environment on other machines, first, install
-<a class="reference external" href="https://docs.conda.io/en/latest/miniconda.html">Miniconda3</a> (if miniconda is
-not already installed), then add the
+<p>To install your own <code class="docutils literal notranslate"><span class="pre">compass</span></code> conda environment on other machines, first,
+install <a class="reference external" href="https://docs.conda.io/en/latest/miniconda.html">Miniconda3</a> (if
+miniconda is not already installed), then add the
 <a class="reference external" href="https://conda-forge.org/#about">conda-forge channel</a>:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda config --add channels conda-forge
 conda config --set channel_priority strict
@@ -229,6 +231,10 @@ conda config --set channel_priority strict
 </div>
 <p>then create a new conda environment (called <code class="docutils literal notranslate"><span class="pre">compass</span></code> in this example) as
 follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda create -n compass python compass
+</pre></div>
+</div>
+<p>To get a specific version of python and <code class="docutils literal notranslate"><span class="pre">compass</span></code>, you can instead run:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda create -n compass <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.8 <span class="nv">compass</span><span class="o">=</span><span class="m">1</span>.0.0
 </pre></div>
 </div>
@@ -239,34 +245,44 @@ follows:</p>
 </div>
 <div class="section" id="setting-up-a-test-case">
 <span id="setup-overview"></span><h2>Setting up a test case<a class="headerlink" href="#setting-up-a-test-case" title="Permalink to this headline">¶</a></h2>
+<p>Before you set up a test case with <code class="docutils literal notranslate"><span class="pre">compass</span></code>, you will need to build the
+MPAS component you wish to test with.  Since the instructions for building
+MPAS are machine specific, they are covered in the <a class="reference internal" href="machines/index.html#machines"><span class="std std-ref">Machines</span></a> part of the
+User’s Guide.</p>
 <p>To see all available test cases you can set up in compass, run:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass list
 </pre></div>
 </div>
 <p>and you get output like this:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>15: ocean/global_ocean/QU240/mesh
-16: ocean/global_ocean/QU240/PHC/init
-17: ocean/global_ocean/QU240/PHC/performance_test/split_explicit
-18: ocean/global_ocean/QU240/PHC/performance_test/RK4
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>0: landice/dome/2000m/smoke_test
+1: landice/dome/2000m/decomposition_test
+2: landice/dome/2000m/restart_test
+3: landice/dome/variable_resolution/smoke_test
+4: landice/dome/variable_resolution/decomposition_test
+5: landice/dome/variable_resolution/restart_test
+6: landice/eismint2/standard_experiments
+7: landice/eismint2/decomposition_test
+8: landice/eismint2/restart_test
 </pre></div>
 </div>
-<p>The list is long, so it will likely be useful to grep for particular content:</p>
+<p>The list is long, so it will likely be useful to <code class="docutils literal notranslate"><span class="pre">grep</span></code> for particular
+content:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass list <span class="p">|</span> grep baroclinic_channel
 </pre></div>
 </div>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span> 8: ocean/baroclinic_channel/1km/rpe_test
- 9: ocean/baroclinic_channel/4km/rpe_test
-10: ocean/baroclinic_channel/10km/rpe_test
-11: ocean/baroclinic_channel/10km/decomp_test
-12: ocean/baroclinic_channel/10km/default
-13: ocean/baroclinic_channel/10km/restart_test
-14: ocean/baroclinic_channel/10km/threads_test
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>20: ocean/baroclinic_channel/1km/rpe_test
+21: ocean/baroclinic_channel/4km/rpe_test
+22: ocean/baroclinic_channel/10km/rpe_test
+23: ocean/baroclinic_channel/10km/decomp_test
+24: ocean/baroclinic_channel/10km/default
+25: ocean/baroclinic_channel/10km/restart_test
+26: ocean/baroclinic_channel/10km/threads_test
 </pre></div>
 </div>
 <p>See <a class="reference internal" href="../developers_guide/command_line.html#dev-compass-list"><span class="std std-ref">compass list</span></a> for more information.</p>
 <p>To set up a particular test case, you can either use the full path of the
 test case:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass setup -t ocean/global_ocean/QU240/mesh -m <span class="nv">$MACHINE</span> -w <span class="nv">$WORKDIR</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass setup -t ocean/global_ocean/QU240/mesh -m <span class="nv">$MACHINE</span> -w <span class="nv">$WORKDIR</span> -p <span class="nv">$MPAS</span>
 </pre></div>
 </div>
 <p>or you can replace the <code class="docutils literal notranslate"><span class="pre">-t</span></code> flag with the simple shortcut: <code class="docutils literal notranslate"><span class="pre">-n</span> <span class="pre">15</span></code>.  You
@@ -282,14 +298,20 @@ working on one of the known machines).  You can run:</p>
 </pre></div>
 </div>
 <p>to see what machines are currently supported.</p>
+<p><code class="docutils literal notranslate"><span class="pre">$MPAS</span></code> is the path where the MPAS component has been built (the directory,
+not the executable itself; see <a class="reference internal" href="machines/index.html#machines"><span class="std std-ref">Machines</span></a>).  By default, <code class="docutils literal notranslate"><span class="pre">compass</span></code> looks
+in <code class="docutils literal notranslate"><span class="pre">MPAS-Model/&lt;mpas_core&gt;/develop</span></code>, where <code class="docutils literal notranslate"><span class="pre">mpas_core</span></code> is the name of the
+MPAS component (e.g. <code class="docutils literal notranslate"><span class="pre">ocean</span></code> or <code class="docutils literal notranslate"><span class="pre">landice</span></code>) that you wish to build.  This
+default path is mostly useful for <code class="docutils literal notranslate"><span class="pre">compass</span></code> developers, who will have code in
+these paths by default in the local compass repo.</p>
 <p>You may name a config file with <code class="docutils literal notranslate"><span class="pre">-f</span></code>:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass setup -t ocean/global_ocean/QU240/mesh -f ocean.cfg -w <span class="nv">$WORKDIR</span>
 </pre></div>
 </div>
-<p>to specify config options that override the defaults from compass as a whole,
-individual testcases, or machines.  If you are working on a supported machine
-and running MPAS-Model out of the default directory for your MPAS component
-(e.g. <code class="docutils literal notranslate"><span class="pre">MPAS-Model/ocean/develop</span></code>), you do not need a config file.</p>
+<p>to specify config options that override the defaults from <code class="docutils literal notranslate"><span class="pre">compass</span></code> as a
+whole, individual testcases, or machines.  If you are working on a supported
+machine and you used <code class="docutils literal notranslate"><span class="pre">-p</span></code> to point to the MPAS build you want to use, you do
+not need a config file.</p>
 <p>If you are not on one of the supported machines, you will need to create a
 config file like in this example for MPAS-Ocean. See also
 <a class="reference external" href="https://github.com/MPAS-Dev/compass/tree/master/example_configs">these examples</a>
@@ -327,30 +349,33 @@ in the repository.</p>
 <span class="na">threads</span> <span class="o">=</span> <span class="s">8</span>
 </pre></div>
 </div>
+<p>In order to run a bit-for-bit test with a previous test case, use
+<code class="docutils literal notranslate"><span class="pre">-b</span> <span class="pre">$PREVIOUS_WORKDIR</span></code> to specify a “baseline”.</p>
 </div>
 <div class="section" id="running-a-test-case">
 <h2>Running a test case<a class="headerlink" href="#running-a-test-case" title="Permalink to this headline">¶</a></h2>
 <p>After compiling the code and setting up a test case, you can log into an
-interactive node (see <a class="reference internal" href="machines/index.html#supported-machines"><span class="std std-ref">Supported Machines</span></a>) and then</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> <span class="nv">$WORKDIR</span>
-./run.py
+interactive node (see <a class="reference internal" href="machines/index.html#supported-machines"><span class="std std-ref">Supported Machines</span></a>), load the required conda
+environment and modules, and then</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> <span class="nv">$WORKDIR</span>/<span class="nv">$TEST_SUBDIR</span>
+compass run
 </pre></div>
 </div>
-<p>Note the sequence of subdirectories is the same as given when you list the
-test cases.</p>
-<p>In order to run a bit-for-bit test with a previous case, use
-<code class="docutils literal notranslate"><span class="pre">-b</span> <span class="pre">$PREVIOUS_WORKDIR</span></code> to specify a “baseline”.</p>
+<p>Note the sequence of subdirectories (<code class="docutils literal notranslate"><span class="pre">$TEST_SUBDIR</span></code>) is the same as given
+when you list the test cases.  If the test case was set up properly, the
+directory should contain a file <code class="docutils literal notranslate"><span class="pre">test_case.pickle</span></code> that contains the
+information <code class="docutils literal notranslate"><span class="pre">compass</span></code> needs to run the test case.</p>
 </div>
 <div class="section" id="test-suites">
 <span id="suite-overview"></span><h2>Test Suites<a class="headerlink" href="#test-suites" title="Permalink to this headline">¶</a></h2>
-<p>compass includes several suites of test cases for code regressions and
+<p><code class="docutils literal notranslate"><span class="pre">compass</span></code> includes several suites of test cases for code regressions and
 bit-for-bit testing, as well as simply to make it easier to run several test
 cases in one call. For the ocean core, they can be listed with:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass list --suites
 </pre></div>
 </div>
 <p>You can set up a suite as follows:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass suite -s -c ocean -t nightly -m <span class="nv">$MACHINE</span> -w <span class="nv">$WORKDIR</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass suite -s -c ocean -t nightly -m <span class="nv">$MACHINE</span> -w <span class="nv">$WORKDIR</span> -p <span class="nv">$MPAS</span>
 </pre></div>
 </div>
 <p>where the details are similar to setting up a case. You can use the same
@@ -361,9 +386,11 @@ on this command.</p>
 <p>To run the regression suite, log into an interactive node, load your modules,
 and</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> <span class="nv">$WORKDIR</span>
-./nightly.py
+compass run nightly
 </pre></div>
 </div>
+<p>In this case, you have to specify the name of the suite to run because you can
+set up multiple suites in the same <code class="docutils literal notranslate"><span class="pre">$WORKDIR</span></code>.</p>
 </div>
 </div>
 

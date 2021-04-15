@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>compass.ocean.tests.global_ocean.init.ssh_adjustment &mdash; compass test documentation</title>
+  <title>compass.ocean.tests.global_ocean.init.ssh_adjustment &mdash; compass 1.0.0 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                test
+                1.0.0
               </div>
             
           
@@ -90,7 +90,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/quick_start.html">Quick Start for Users</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/test_cases.html">Test Cases</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/configuration_files.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/config_files.html">Config Files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/test_suites.html">Test Suites</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/ocean/index.html">Ocean core</a></li>
@@ -102,13 +102,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/command_line.html">Command-line interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/cores.html">Cores</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/examples/index.html">Examples core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/ocean/index.html">Ocean core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/framework.html">Framework</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/docs.html">Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/building_docs.html">Building the Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../design_docs/index.html">Design Documents</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Versions</span></p>
 <ul>
@@ -163,7 +163,7 @@
         
           <li><a href="../../../../../index.html">Module code</a> &raquo;</li>
         
-          <li><a href="../../../tests.html">compass.ocean.tests</a> &raquo;</li>
+          <li><a href="../../../../ocean.html">compass.ocean</a> &raquo;</li>
         
           <li><a href="../../global_ocean.html">compass.ocean.tests.global_ocean</a> &raquo;</li>
         
@@ -185,107 +185,92 @@
            <div itemprop="articleBody">
             
   <h1>Source code for compass.ocean.tests.global_ocean.init.ssh_adjustment</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span>
-
-<span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">symlink</span><span class="p">,</span> <span class="n">add_input_file</span><span class="p">,</span> <span class="n">add_output_file</span>
-<span class="kn">from</span> <span class="nn">compass.namelist</span> <span class="kn">import</span> <span class="n">add_namelist_file</span><span class="p">,</span> <span class="n">add_namelist_options</span><span class="p">,</span> \
-    <span class="n">generate_namelist</span>
-<span class="kn">from</span> <span class="nn">compass.streams</span> <span class="kn">import</span> <span class="n">add_streams_file</span><span class="p">,</span> <span class="n">generate_streams</span>
+<span></span><span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.iceshelf</span> <span class="kn">import</span> <span class="n">adjust_ssh</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.subdir</span> <span class="kn">import</span> <span class="n">get_mesh_relative_path</span><span class="p">,</span> \
-    <span class="n">get_initial_condition_relative_path</span>
-<span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">add_model_as_input</span>
 
 
-<div class="viewcode-block" id="collect"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.init.ssh_adjustment.collect.html#compass.ocean.tests.global_ocean.init.ssh_adjustment.collect">[docs]</a><span class="k">def</span> <span class="nf">collect</span><span class="p">(</span><span class="n">testcase</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+<div class="viewcode-block" id="SshAdjustment"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment.html#compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment">[docs]</a><span class="k">class</span> <span class="nc">SshAdjustment</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Update the dictionary of step properties</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    testcase : dict</span>
-<span class="sd">        A dictionary of properties of this test case, which should not be</span>
-<span class="sd">        modified here</span>
-
-<span class="sd">    step : dict</span>
-<span class="sd">        A dictionary of properties of this step, which can be updated</span>
+<span class="sd">    A step for iteratively adjusting the pressure from the weight of the ice</span>
+<span class="sd">    shelf to match the sea-surface height as part of ice-shelf 2D test cases</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">defaults</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">max_memory</span><span class="o">=</span><span class="mi">8000</span><span class="p">,</span> <span class="n">max_disk</span><span class="o">=</span><span class="mi">8000</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">defaults</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">step</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+<div class="viewcode-block" id="SshAdjustment.__init__"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment.html#compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_cores</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the dictionary of step properties</span>
 
-    <span class="k">if</span> <span class="s1">&#39;cores&#39;</span> <span class="ow">in</span> <span class="n">step</span><span class="p">:</span>
-        <span class="n">step</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;min_cores&#39;</span><span class="p">,</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;cores&#39;</span><span class="p">])</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_case : compass.ocean.tests.global_ocean.init.Init</span>
+<span class="sd">            The test case this step belongs to</span>
 
-    <span class="n">add_namelist_file</span><span class="p">(</span>
-        <span class="n">step</span><span class="p">,</span> <span class="s1">&#39;compass.ocean.tests.global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;namelist.forward&#39;</span><span class="p">)</span>
-    <span class="n">add_namelist_options</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;config_AM_globalStats_enable&#39;</span><span class="p">:</span> <span class="s1">&#39;.false.&#39;</span><span class="p">})</span>
-    <span class="n">add_namelist_file</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="s1">&#39;compass.ocean.namelists&#39;</span><span class="p">,</span> <span class="s1">&#39;namelist.ssh_adjust&#39;</span><span class="p">)</span>
+<span class="sd">        cores : int, optional</span>
+<span class="sd">            the number of cores the step would ideally use.  If fewer cores</span>
+<span class="sd">            are available on the system, the step will run on all available</span>
+<span class="sd">            cores as long as this is not below ``min_cores``</span>
 
-    <span class="n">add_streams_file</span><span class="p">(</span><span class="n">step</span><span class="p">,</span>  <span class="s1">&#39;compass.ocean.streams&#39;</span><span class="p">,</span> <span class="s1">&#39;streams.ssh_adjust&#39;</span><span class="p">)</span>
-    <span class="n">add_streams_file</span><span class="p">(</span><span class="n">step</span><span class="p">,</span>  <span class="s1">&#39;compass.ocean.tests.global_ocean.init&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;streams.ssh_adjust&#39;</span><span class="p">)</span>
+<span class="sd">        min_cores : int, optional</span>
+<span class="sd">            the number of cores the step requires.  If the system has fewer</span>
+<span class="sd">            than this number of cores, the step will fail</span>
 
-    <span class="n">mesh_path</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/mesh/mesh&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">get_mesh_relative_path</span><span class="p">(</span><span class="n">step</span><span class="p">))</span>
-    <span class="n">init_path</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/init/initial_state&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-        <span class="n">get_initial_condition_relative_path</span><span class="p">(</span><span class="n">step</span><span class="p">))</span>
+<span class="sd">        threads : int, optional</span>
+<span class="sd">            the number of threads the step will use</span>
 
-    <span class="n">add_input_file</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;adjusting_init0.nc&#39;</span><span class="p">,</span>
-                   <span class="n">target</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/initial_state.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">init_path</span><span class="p">))</span>
-    <span class="n">add_input_file</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;forcing_data.nc&#39;</span><span class="p">,</span>
-                   <span class="n">target</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/init_mode_forcing_data.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">init_path</span><span class="p">))</span>
-    <span class="n">add_input_file</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span>
-                   <span class="n">target</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/culled_graph.info&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_path</span><span class="p">))</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">min_cores</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">min_cores</span> <span class="o">=</span> <span class="n">cores</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ssh_adjustment&#39;</span><span class="p">,</span>
+                         <span class="n">cores</span><span class="o">=</span><span class="n">cores</span><span class="p">,</span> <span class="n">min_cores</span><span class="o">=</span><span class="n">min_cores</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="n">threads</span><span class="p">)</span>
 
-    <span class="n">add_output_file</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;adjusted_init.nc&#39;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
+            <span class="s1">&#39;compass.ocean.tests.global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;namelist.forward&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">({</span><span class="s1">&#39;config_AM_globalStats_enable&#39;</span><span class="p">:</span> <span class="s1">&#39;.false.&#39;</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.namelists&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;namelist.ssh_adjust&#39;</span><span class="p">)</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.streams&#39;</span><span class="p">,</span> <span class="s1">&#39;streams.ssh_adjust&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.global_ocean.init&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;streams.ssh_adjust&#39;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="setup"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.init.ssh_adjustment.setup.html#compass.ocean.tests.global_ocean.init.ssh_adjustment.setup">[docs]</a><span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Set up the test case in the work directory, including downloading any</span>
-<span class="sd">    dependencies</span>
+        <span class="n">mesh_path</span> <span class="o">=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">mesh_step</span><span class="o">.</span><span class="n">path</span>
+        <span class="n">init_path</span> <span class="o">=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">&#39;initial_state&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">path</span>
 
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    step : dict</span>
-<span class="sd">        A dictionary of properties of this step</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;adjusting_init0.nc&#39;</span><span class="p">,</span>
+            <span class="n">work_dir_target</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/initial_state.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">init_path</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;forcing_data.nc&#39;</span><span class="p">,</span>
+            <span class="n">work_dir_target</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/init_mode_forcing_data.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">init_path</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span>
+            <span class="n">work_dir_target</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/culled_graph.info&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_path</span><span class="p">))</span>
 
-<span class="sd">    config : configparser.ConfigParser</span>
-<span class="sd">        Configuration options for this test case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">generate_namelist</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">)</span>
-    <span class="n">generate_streams</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;adjusted_init.nc&#39;</span><span class="p">)</span></div>
 
-    <span class="n">add_model_as_input</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+<div class="viewcode-block" id="SshAdjustment.setup"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment.setup.html#compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment.setup">[docs]</a>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set up the test case in the work directory, including downloading any</span>
+<span class="sd">        dependencies</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_model_as_input</span><span class="p">()</span>
 
-    <span class="c1"># get the these properties from the config options</span>
-    <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;cores&#39;</span><span class="p">,</span> <span class="s1">&#39;min_cores&#39;</span><span class="p">,</span> <span class="s1">&#39;max_memory&#39;</span><span class="p">,</span> <span class="s1">&#39;max_disk&#39;</span><span class="p">,</span>
-                   <span class="s1">&#39;threads&#39;</span><span class="p">]:</span>
-        <span class="n">step</span><span class="p">[</span><span class="n">option</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span>
-                                     <span class="s1">&#39;forward_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">option</span><span class="p">))</span></div>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cores</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cores</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span>
+                <span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;forward_cores&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_cores</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">min_cores</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span>
+                <span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;forward_min_cores&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">threads</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">threads</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span>
+                <span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;forward_threads&#39;</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="run"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.init.ssh_adjustment.run.html#compass.ocean.tests.global_ocean.init.ssh_adjustment.run">[docs]</a><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">test_suite</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Run this step of the testcase</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    step : dict</span>
-<span class="sd">        A dictionary of properties of this step</span>
-
-<span class="sd">    test_suite : dict</span>
-<span class="sd">        A dictionary of properties of the test suite</span>
-
-<span class="sd">    config : configparser.ConfigParser</span>
-<span class="sd">        Configuration options for this test case</span>
-
-<span class="sd">    logger : logging.Logger</span>
-<span class="sd">        A logger for output from the step</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">iteration_count</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;ssh_adjustment&#39;</span><span class="p">,</span> <span class="s1">&#39;iterations&#39;</span><span class="p">)</span>
-    <span class="n">adjust_ssh</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="s1">&#39;landIcePressure&#39;</span><span class="p">,</span> <span class="n">iteration_count</span><span class="o">=</span><span class="n">iteration_count</span><span class="p">,</span>
-               <span class="n">step</span><span class="o">=</span><span class="n">step</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span></div>
+<div class="viewcode-block" id="SshAdjustment.run"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment.run.html#compass.ocean.tests.global_ocean.init.ssh_adjustment.SshAdjustment.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Run this step of the testcase</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">iteration_count</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;ssh_adjustment&#39;</span><span class="p">,</span> <span class="s1">&#39;iterations&#39;</span><span class="p">)</span>
+        <span class="n">adjust_ssh</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="s1">&#39;landIcePressure&#39;</span><span class="p">,</span> <span class="n">iteration_count</span><span class="o">=</span><span class="n">iteration_count</span><span class="p">,</span>
+                   <span class="n">step</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

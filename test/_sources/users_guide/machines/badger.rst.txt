@@ -20,14 +20,13 @@ setting up test cases or a test suite:
     # cases.
     [paths]
 
-    # The mesh_database and the initial_condition_database are locations where
-    # meshes / initial conditions might be found on a specific machine. They can be
-    # the same directory, or different directory. Additionally, if they are empty
-    # some test cases might download data into them, which will then be reused if
-    # the test case is run again later.
-    mesh_database = /usr/projects/regionalclimate/COMMON_MPAS/ocean/grids/mesh_database
-    initial_condition_database = /usr/projects/regionalclimate/COMMON_MPAS/ocean/grids/initial_condition_database
-    bathymetry_database = /usr/projects/regionalclimate/COMMON_MPAS/ocean/grids/bathymetry_database
+    # The root to a location where the mesh_database, initial_condition_database,
+    # and bathymetry_database for MPAS-Ocean will be cached
+    ocean_database_root = /usr/projects/regionalclimate/COMMON_MPAS/ocean/grids/
+
+    # The root to a location where the mesh_database and initial_condition_database
+    # for MALI will be cached
+    landice_database_root = /usr/projects/regionalclimate/COMMON_MPAS/mpas_standalonedata/mpas-albany-landice
 
     # the path to the base conda environment where compass environments have
     # been created
@@ -46,8 +45,51 @@ setting up test cases or a test suite:
     # cores per node on the machine
     cores_per_node = 36
 
+    # the slurm account
+    account = e3sm
+
     # the number of multiprocessing or dask threads to use
     threads = 18
+
+badger, intel
+-------------
+
+.. code-block:: bash
+
+    source /usr/projects/climate/SHARED_CLIMATE/anaconda_envs/load_latest_compass.sh
+
+    module purge
+    module load cmake/3.16.2
+    module load intel/19.0.4
+    module load intel-mpi/2019.4
+    module load friendly-testing
+    module load hdf5-parallel/1.8.16
+    module load pnetcdf/1.11.2
+    module load netcdf-h5parallel/4.7.3
+    module load mkl/2019.0.4
+
+    export NETCDF=$(dirname $(dirname $(which nc-config)))
+    export NETCDFF=$(dirname $(dirname $(which nf-config)))
+    export PNETCDF=$(dirname $(dirname $(which pnetcdf-config)))
+
+    export PIO=/usr/projects/climate/SHARED_CLIMATE/compass/badger/compass-1.0.0/scorpio-1.1.6/intel/impi
+    export ESMF=/usr/projects/climate/SHARED_CLIMATE/compass/badger/compass-1.0.0/esmf-8.1.0/intel/impi
+
+    export AUTOCLEAN=true
+    export USE_PIO2=true
+    export HDF5_USE_FILE_LOCKING=FALSE
+
+To build the MPAS model with
+
+.. code-block:: bash
+
+    make CORE=landice intel-mpi
+
+or
+
+.. code-block:: bash
+
+    make CORE=ocean intel-mpi
 
 
 badger, gnu
@@ -55,22 +97,40 @@ badger, gnu
 
 .. code-block:: bash
 
-    module use /usr/projects/climate/SHARED_CLIMATE/modulefiles/spack-lmod/linux-rhel7-x86_64
+    source /usr/projects/climate/SHARED_CLIMATE/anaconda_envs/load_latest_compass.sh
 
-    # IC mods
+    module purge
+    module load cmake/3.16.2
     module load gcc/6.4.0
-    module load openmpi/2.1.2
-    module load cmake/3.12.1
-    module load mkl
+    module load mvapich2/2.3
+    module load friendly-testing
+    module load hdf5-parallel/1.8.16
+    module load pnetcdf/1.11.2
+    module load netcdf-h5parallel/4.7.3
+    module load mkl/2019.0.4
 
-    # spack mods
-    module load openmpi/2.1.2-bheb4xe/gcc/6.4.0/netcdf/4.4.1.1-zei2j6r
-    module load openmpi/2.1.2-bheb4xe/gcc/6.4.0/netcdf-fortran/4.4.4-v6vwmxs
-    module load openmpi/2.1.2-bheb4xe/gcc/6.4.0/parallel-netcdf/1.8.0-2qwcdbn
-    module load openmpi/2.1.2-bheb4xe/gcc/6.4.0/pio/1.10.0-ljj73au
+    export NETCDF=$(dirname $(dirname $(which nc-config)))
+    export NETCDFF=$(dirname $(dirname $(which nf-config)))
+    export PNETCDF=$(dirname $(dirname $(which pnetcdf-config)))
 
-    export NETCDF=/usr/projects/climate/SHARED_CLIMATE/software/badger/spack-install/linux-rhel7-x86_64/gcc-6.4.0/netcdf-fortran-4.4.4-v6vwmxsv33t7pmulojlijwdbikrvmwkc
-    export PNETCDF=/usr/projects/climate/SHARED_CLIMATE/software/badger/spack-install/linux-rhel7-x86_64/gcc-6.4.0/parallel-netcdf-1.8.0-2qwcdbnjcq5pnkoqpx2s7um3s7ffo3xd
-    export PIO=/usr/projects/climate/SHARED_CLIMATE/software/badger/spack-install/linux-rhel7-x86_64/gcc-6.4.0/pio-1.10.0-ljj73au6ctgkwmh3gbd4mleljsumijys/
+    export PIO=/usr/projects/climate/SHARED_CLIMATE/compass/badger/compass-1.0.0/scorpio-1.1.6/gnu/mvapich
+    export ESMF=/usr/projects/climate/SHARED_CLIMATE/compass/badger/compass-1.0.0/esmf-8.1.0/gnu/mvapich
 
-    make gfortran CORE=ocean
+    export MV2_ENABLE_AFFINITY=0
+    export MV2_SHOW_CPU_BINDING=1
+
+    export AUTOCLEAN=true
+    export USE_PIO2=true
+    export HDF5_USE_FILE_LOCKING=FALSE
+
+To build the MPAS model with
+
+.. code-block:: bash
+
+    make CORE=landice gfortran
+
+or
+
+.. code-block:: bash
+
+    make CORE=ocean gfortran

@@ -3,8 +3,9 @@
 Personal Linux/OSX Machine
 ==========================
 
-This approach worked for `xylar <http://github.com/xylar>`_ under Ubuntu 18.04
-and `vanroekel <http://github.com/vanroekel>`_ under Max OS X 10.14.6.
+This approach worked for `xylar <http://github.com/xylar>`_ under Ubuntu 20.04
+and a similar approach with an earlier version of SCORPIO was tested by
+`vanroekel <http://github.com/vanroekel>`_ under Max OS X 10.14.6.
 
 Installation of MPAS dependencies including SCORPIO and the compass conda environment
 -------------------------------------------------------------------------------------
@@ -16,15 +17,17 @@ First, run the following script in an empty directory that you can delete later:
     #!/bin/bash
     set -e
 
-    export PNETCDF_VERSION=1.12.0
-    export SCORPIO_VERSION=1.1.1
+    export PNETCDF_VERSION=1.12.2
+    export SCORPIO_VERSION=1.1.6
+    compass=1.0.0
+    python=3.8
 
     # modify this to fit your system
-    export CONDA_PATH=/home/xylar/miniconda3
+    export CONDA_PATH=${HOME}/miniconda3
 
     source ${CONDA_PATH}/etc/profile.d/conda.sh
 
-    conda create -y -n mpas -c e3sm python=3.8 "compass=0.1.6=mpi_mpich*" \
+    conda create -y -n mpas python=${python} "compass=${compass}=mpi_mpich*" \
         netcdf-fortran mpich fortran-compiler cxx-compiler c-compiler m4 git cmake
 
     conda activate mpas
@@ -38,7 +41,7 @@ First, run the following script in an empty directory that you can delete later:
     export MPIF90=mpifort
     export LDFLAGS="-L${PREFIX}/lib"
 
-    rm -rf pnetcdf-${PNETCDF_VERSION}*
+    rm -rf pnetcdf-*
 
     wget https://parallel-netcdf.github.io/Release/pnetcdf-${PNETCDF_VERSION}.tar.gz
 
@@ -74,12 +77,11 @@ Setup before compiling/running
 
 Then, when you want to build or run MPAS-Ocean, source a file containing:
 
-
 .. code-block:: bash
 
     conda activate mpas
     # Modify this path to point to your mpas conda environment
-    export PREFIX="/home/xylar/miniconda3/envs/mpas"
+    export PREFIX="${HOME}/miniconda3/envs/mpas"
     # this step might not be needed
     export MPAS_EXTERNAL_LIBS="-L${PREFIX}/lib -lnetcdff"
     export NETCDF=${PREFIX}

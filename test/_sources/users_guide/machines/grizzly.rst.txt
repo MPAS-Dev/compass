@@ -96,14 +96,13 @@ setting up test cases or a test suite:
     # cases.
     [paths]
 
-    # The mesh_database and the initial_condition_database are locations where
-    # meshes / initial conditions might be found on a specific machine. They can be
-    # the same directory, or different directory. Additionally, if they are empty
-    # some test cases might download data into them, which will then be reused if
-    # the test case is run again later.
-    mesh_database = /usr/projects/regionalclimate/COMMON_MPAS/ocean/grids/mesh_database
-    initial_condition_database = /usr/projects/regionalclimate/COMMON_MPAS/ocean/grids/initial_condition_database
-    bathymetry_database = /usr/projects/regionalclimate/COMMON_MPAS/ocean/grids/bathymetry_database
+    # The root to a location where the mesh_database, initial_condition_database,
+    # and bathymetry_database for MPAS-Ocean will be cached
+    ocean_database_root = /usr/projects/regionalclimate/COMMON_MPAS/ocean/grids/
+
+    # The root to a location where the mesh_database and initial_condition_database
+    # for MALI will be cached
+    landice_database_root = /usr/projects/regionalclimate/COMMON_MPAS/mpas_standalonedata/mpas-albany-landice
 
     # the path to the base conda environment where compass environments have
     # been created
@@ -123,7 +122,7 @@ setting up test cases or a test suite:
     cores_per_node = 36
 
     # the slurm account
-    account = climateacme
+    account = e3sm
 
     # the number of multiprocessing or dask threads to use
     threads = 18
@@ -134,84 +133,78 @@ grizzly, gnu
 
 .. code-block:: bash
 
-    module use /usr/projects/climate/SHARED_CLIMATE/modulefiles/all
-    module load gcc/5.3.0
-    module load openmpi/1.10.5 netcdf/4.4.1 parallel-netcdf/1.5.0 pio/1.7.2
-    make gfortran CORE=ocean
-
-Hint: you can put the following line in your bashrc:
-
-.. code-block:: bash
-
-    alias mlgnu='module purge; module load git; module use /usr/projects/climate/SHARED_CLIMATE/modulefiles/all/; module load gcc/5.3.0 openmpi/1.10.5 netcdf/4.4.1 parallel-netcdf/1.5.0 pio/1.7.2; module unload python; source /usr/projects/climate/SHARED_CLIMATE/anaconda_envs/load_latest_compass.sh; echo "loading modules anaconda, gnu, openmpi, netcdf, pnetcdf, pio for grizzly"'
-
-grizzly, intel 17
------------------
-
-.. code-block:: bash
+    source /usr/projects/climate/SHARED_CLIMATE/anaconda_envs/load_latest_compass.sh
 
     module purge
-    module use /usr/projects/climate/SHARED_CLIMATE/modulefiles/all
-    module load intel/17.0.1
-    module load openmpi/1.10.5 netcdf/4.4.1 parallel-netcdf/1.5.0 pio/1.7.2
-    make ifort CORE=ocean
-
-grizzly, intel 19 with PIO2
----------------------------
-
-*Note: Intel 19 and PIO2 currently not functioning. Compile fails on PIO2 test. -Mark P, Jan 12 2021*
-
-.. code-block:: bash
-
-    module purge
-    module use /usr/projects/climate/SHARED_CLIMATE/modulefiles/all/scorpio
+    module load cmake/3.16.2
+    module load gcc/6.4.0
+    module load mvapich2/2.3
     module load friendly-testing
-    module load intel/19.0.4 intel-mpi/2019.4 hdf5-parallel/1.8.16 pnetcdf/1.11.2 netcdf-h5parallel/4.7.3 mkl/2019.0.4 pio2/1.10.1
-    # note: if you already did this:
-    #  module use /usr/projects/climate/SHARED_CLIMATE/modulefiles/all/
-    # then it will show 'no such file' for hdf5-parallel/1.8.16.
-    # solution: log into a new node and try with only the commands above.
-    export I_MPI_CC=icc
-    export I_MPI_CXX=icpc
-    export I_MPI_F77=ifort
-    export I_MPI_F90=ifort
+    module load hdf5-parallel/1.8.16
+    module load pnetcdf/1.11.2
+    module load netcdf-h5parallel/4.7.3
+    module load mkl/2019.0.4
 
-    make ifort CORE=ocean USE_PIO2=true
+    export NETCDF=$(dirname $(dirname $(which nc-config)))
+    export NETCDFF=$(dirname $(dirname $(which nf-config)))
+    export PNETCDF=$(dirname $(dirname $(which pnetcdf-config)))
 
-Building Scorpio on Grizzly
----------------------------
+    export PIO=/usr/projects/climate/SHARED_CLIMATE/compass/grizzly/compass-1.0.0/scorpio-1.1.6/gnu/mvapich
+    export ESMF=/usr/projects/climate/SHARED_CLIMATE/compass/grizzly/compass-1.0.0/esmf-8.1.0/gnu/mvapich
 
-Installation of PIO follows from the following pre-existing module files:
+    export MV2_ENABLE_AFFINITY=0
+    export MV2_SHOW_CPU_BINDING=1
+
+    export AUTOCLEAN=true
+    export USE_PIO2=true
+    export HDF5_USE_FILE_LOCKING=FALSE
+
+To build the MPAS model with
+
+.. code-block:: bash
+
+    make CORE=landice gfortran
+
+or
+
+.. code-block:: bash
+
+    make CORE=ocean gfortran
+
+grizzly, intel
+--------------
 
 .. code-block:: bash
 
     module purge
+    module load cmake/3.16.2
+    module load intel/19.0.4
+    module load intel-mpi/2019.4
     module load friendly-testing
-    module load intel/19.0.4 intel-mpi/2019.4 hdf5-parallel/1.8.16 pnetcdf/1.11.2 netcdf-h5parallel/4.7.3 mkl/2019.0.4
-    # note the following MPAS-O assumed location variables
-    export NETCDF=/usr/projects/hpcsoft/toss3/grizzly/netcdf/4.7.3_intel-19.0.4_intel-mpi-2019.4_hdf5-1.8.16/
-    export PNETCDF=/usr/projects/hpcsoft/toss3/grizzly/pnetcdf/1.11.2_intel-19.0.4_intel-mpi-2019.4_hdf5-1.8.16/
+    module load hdf5-parallel/1.8.16
+    module load pnetcdf/1.11.2
+    module load netcdf-h5parallel/4.7.3
+    module load mkl/2019.0.4
 
-Note, DO NOT use openmpi/3.1.5 as there is a bug (RMIO
-`Output from MPAS-O unreadable for large 1.8M cell mesh <https://github.com/MPAS-Dev/MPAS-Model/issues/576>`_
-).
+    export NETCDF=$(dirname $(dirname $(which nc-config)))
+    export NETCDFF=$(dirname $(dirname $(which nf-config)))
+    export PNETCDF=$(dirname $(dirname $(which pnetcdf-config)))
 
-PIO2 from `E3SM-Project/scorpio <https://github.com/E3SM-Project/scorpio>`_
-was used, specifically tag ``scorpio-v1.1.0`` with the following build command
-(note use of intel compilers):
+    export PIO=/usr/projects/climate/SHARED_CLIMATE/compass/grizzly/compass-1.0.0/scorpio-1.1.6/intel/impi
+    export ESMF=/usr/projects/climate/SHARED_CLIMATE/compass/grizzly/compass-1.0.0/esmf-8.1.0/intel/impi
 
-.. code-block:: bash
+    export AUTOCLEAN=true
+    export USE_PIO2=true
+    export HDF5_USE_FILE_LOCKING=FALSE
 
-    CC=mpiicc FC=mpiifort cmake \
-        -DCMAKE_INSTALL_PREFIX=/usr/projects/climate/SHARED_CLIMATE/software/grizzly/pio/1.10.1/intel-19.0.4/intel-mpi-2019.4/netcdf-4.7.3-parallel-netcdf-1.11.2/ \
-        -DPIO_ENABLE_TIMING=OFF -DNetCDF_Fortran_PATH=/usr/projects/hpcsoft/toss3/grizzly/netcdf/4.7.3_intel-19.0.4_intel-mpi-2019.4_hdf5-1.8.16 \
-        -DPnetCDF_Fortran_PATH=/usr/projects/hpcsoft/toss3/grizzly/netcdf/4.7.3_intel-19.0.4_intel-mpi-2019.4_hdf5-1.8.16 \
-        -DNetCDF_C_PATH=/usr/projects/hpcsoft/toss3/grizzly/netcdf/4.7.3_intel-19.0.4_intel-mpi-2019.4_hdf5-1.8.16  \
-        -DPnetCDF_C_PATH=/usr/projects/hpcsoft/toss3/grizzly/pnetcdf/1.11.2_intel-19.0.4_intel-mpi-2019.4_hdf5-1.8.16 ..
-
-build with ``make`` and install with ``make install``.  Then, when you want to
-use it for MPAS builds, set the following environment variable:
+To build the MPAS model with
 
 .. code-block:: bash
 
-    export PIO=/usr/projects/climate/SHARED_CLIMATE/software/grizzly/pio/1.10.1/intel-19.0.4/intel-mpi-2019.4/netcdf-4.7.3-parallel-netcdf-1.11.2/
+    make CORE=landice intel-mpi
+
+or
+
+.. code-block:: bash
+
+    make CORE=ocean intel-mpi

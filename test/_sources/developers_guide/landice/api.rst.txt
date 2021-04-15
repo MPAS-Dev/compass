@@ -1,15 +1,15 @@
 landice
 -------
 
-Configurations
-^^^^^^^^^^^^^^
-
-.. currentmodule:: compass.landice.tests
+.. currentmodule:: compass.landice
 
 .. autosummary::
    :toctree: generated/
 
-   collect
+   Landice
+
+Test Groups
+^^^^^^^^^^^
 
 dome
 ~~~~
@@ -19,26 +19,26 @@ dome
 .. autosummary::
    :toctree: generated/
 
-   collect
+   Dome
 
-   decomposition_test.collect
-   decomposition_test.run
+   decomposition_test.DecompositionTest
+   decomposition_test.DecompositionTest.run
 
-   restart_test.collect
-   restart_test.run
+   restart_test.RestartTest
+   restart_test.RestartTest.run
 
-   smoke_test.collect
-   smoke_test.run
+   smoke_test.SmokeTest
+   smoke_test.SmokeTest.run
 
-   run_model.collect
-   run_model.setup
-   run_model.run
+   run_model.RunModel
+   run_model.RunModel.setup
+   run_model.RunModel.run
 
-   setup_mesh.collect
-   setup_mesh.run
+   setup_mesh.SetupMesh
+   setup_mesh.SetupMesh.run
 
-   visualize.collect
-   visualize.run
+   visualize.Visualize
+   visualize.Visualize.run
    visualize.visualize_dome
 
 
@@ -50,26 +50,26 @@ enthalpy_benchmark
 .. autosummary::
    :toctree: generated/
 
-   collect
+   EnthalpyBenchmark
 
-   A.collect
-   A.configure
-   A.run
-   A.visualize.collect
-   A.visualize.run
+   A.A
+   A.A.configure
+   A.A.run
+   A.visualize.Visualize
+   A.visualize.Visualize.run
 
-   B.collect
-   B.configure
-   B.run
-   B.visualize.collect
-   B.visualize.run
+   B.B
+   B.B.configure
+   B.B.run
+   B.visualize.Visualize
+   B.visualize.Visualize.run
 
-   run_model.collect
-   run_model.setup
-   run_model.run
+   run_model.RunModel
+   run_model.RunModel.setup
+   run_model.RunModel.run
 
-   setup_mesh.collect
-   setup_mesh.run
+   setup_mesh.SetupMesh
+   setup_mesh.SetupMesh.run
 
 
 eismint2
@@ -80,26 +80,26 @@ eismint2
 .. autosummary::
    :toctree: generated/
 
-   collect
+   Eismint2
 
-   decomposition_test.collect
-   decomposition_test.run
+   decomposition_test.DecompositionTest
+   decomposition_test.DecompositionTest.run
 
-   restart_test.collect
-   restart_test.run
+   restart_test.RestartTest
+   restart_test.RestartTest.run
 
-   standard_experiments.collect
-   standard_experiments.run
-   standard_experiments.visualize.collect
-   standard_experiments.visualize.run
+   standard_experiments.StandardExperiments
+   standard_experiments.StandardExperiments.run
+   standard_experiments.visualize.Visualize
+   standard_experiments.visualize.Visualize.run
    standard_experiments.visualize.visualize_eismint2
 
-   run_experiment.collect
-   run_experiment.setup
-   run_experiment.run
+   run_experiment.RunExperiment
+   run_experiment.RunExperiment.setup
+   run_experiment.RunExperiment.run
 
-   setup_mesh.collect
-   setup_mesh.run
+   setup_mesh.SetupMesh
+   setup_mesh.SetupMesh.run
 
 
 greenland
@@ -110,20 +110,20 @@ greenland
 .. autosummary::
    :toctree: generated/
 
-   collect
+   Greenland
 
-   decomposition_test.collect
-   decomposition_test.run
+   decomposition_test.DecompositionTest
+   decomposition_test.DecompositionTest.run
 
-   restart_test.collect
-   restart_test.run
+   restart_test.RestartTest
+   restart_test.RestartTest.run
 
-   smoke_test.collect
-   smoke_test.run
+   smoke_test.SmokeTest
+   smoke_test.SmokeTest.run
 
-   run_model.collect
-   run_model.setup
-   run_model.run
+   run_model.RunModel
+   run_model.RunModel.setup
+   run_model.RunModel.run
 
 hydro_radial
 ~~~~~~~~~~~~
@@ -133,28 +133,27 @@ hydro_radial
 .. autosummary::
    :toctree: generated/
 
-   collect
+   HydroRadial
 
-   decomposition_test.collect
-   decomposition_test.run
+   decomposition_test.DecompositionTest
+   decomposition_test.DecompositionTest.run
 
-   restart_test.collect
-   restart_test.run
+   restart_test.RestartTest
+   restart_test.RestartTest.run
 
-   spinup_test.collect
-   spinup_test.run
+   spinup_test.SpinupTest
+   spinup_test.SpinupTest.run
 
-   steady_state_drift_test.collect
-   steady_state_drift_test.run
+   steady_state_drift_test.SteadyStateDriftTest
+   steady_state_drift_test.SteadyStateDriftTest.run
 
-   run_model.collect
-   run_model.setup
-   run_model.run
+   run_model.RunModel
+   run_model.RunModel.setup
+   run_model.RunModel.run
 
-   setup_mesh.collect
-   setup_mesh.run
+   setup_mesh.SetupMesh
+   setup_mesh.SetupMesh.run
 
-   visualize.collect
-   visualize.run
+   visualize.Visualize
+   visualize.Visualize.run
    visualize.visualize_hydro_radial
-

@@ -3,7 +3,7 @@
 Vertical coordinate
 ===================
 
-Most compass configurations and test cases support a z* vertical coordinate
+Most compass test groups and test cases support a z* vertical coordinate
 (`Adcroft and Campin, 2004 <https://doi.org/10.1016/j.ocemod.2003.09.003>`_).
 The number and interface locations of the initial ("resting") z* layers are
 determined by config options in the ``vertical_grid`` section of the config
@@ -79,7 +79,7 @@ where :math:`\Delta z_1` is the value of the layer thickness
     z_{k+1} = z_k - \Delta z\left(z_k\right).
 
 We use a root finder to solve for :math:`\Delta`, such that
-:math:`z_{n_z+1} = -H_\mathrm{bot}`, where :math:`n_z:` is ``nVertLevels``, the
+:math:`z_{n_z+1} = -H_\mathrm{bot}`, where :math:`n_z` is ``nVertLevels``, the
 number of vertical levels (one less than the number of layer interfaces) and
 :math:`H_\mathrm{bot}` is ``bottom_depth``, the depth of the seafloor.
 
@@ -142,7 +142,7 @@ seafloor, which is at 6000 m depth.  To get the default grid, use:
 
 If the ``bottom_depth`` option is also defined, the depths will be renormalized
 so that bottom of the deepest layer is at ``z = -bottom_depth``.  This is
-the default approach in the :ref:`ocean_ziso` configuration:
+the default approach in the :ref:`ocean_ziso` test group:
 
 .. code-block:: cfg
 

@@ -92,7 +92,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start for Users</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../test_cases.html">Test Cases</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../configuration_files.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config_files.html">Config Files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../test_suites.html">Test Suites</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ocean/index.html">Ocean core</a></li>
@@ -102,8 +102,8 @@
 <li class="toctree-l2 current"><a class="reference internal" href="index.html#supported-machines">Supported Machines</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Anvil</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#config-options">config options</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#intel-on-anvil">intel on anvil</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#scorpio-on-anvil">SCORPIO on anvil</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#intel18-on-anvil">intel18 on anvil</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gnu-on-anvil">gnu on anvil</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="badger.html">Badger</a></li>
@@ -123,13 +123,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/command_line.html">Command-line interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/cores.html">Cores</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/examples/index.html">Examples core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/ocean/index.html">Ocean core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/framework.html">Framework</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/docs.html">Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/building_docs.html">Building the Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../design_docs/index.html">Design Documents</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Versions</span></p>
 <ul>
@@ -217,14 +217,13 @@ setting up test cases or a test suite:</p>
 <span class="c1"># cases.</span>
 <span class="k">[paths]</span>
 
-<span class="c1"># The mesh_database and the initial_condition_database are locations where</span>
-<span class="c1"># meshes / initial conditions might be found on a specific machine. They can be</span>
-<span class="c1"># the same directory, or different directory. Additionally, if they are empty</span>
-<span class="c1"># some test cases might download data into them, which will then be reused if</span>
-<span class="c1"># the test case is run again later.</span>
-<span class="na">mesh_database</span> <span class="o">=</span> <span class="s">/lcrc/group/e3sm/public_html/mpas_standalonedata/mpas-ocean/mesh_database</span>
-<span class="na">initial_condition_database</span> <span class="o">=</span> <span class="s">/lcrc/group/e3sm/public_html/mpas_standalonedata/mpas-ocean/initial_condition_database</span>
-<span class="na">bathymetry_database</span> <span class="o">=</span> <span class="s">/lcrc/group/e3sm/public_html/mpas_standalonedata/mpas-ocean/bathymetry_database</span>
+<span class="c1"># The root to a location where the mesh_database, initial_condition_database,</span>
+<span class="c1"># and bathymetry_database for MPAS-Ocean will be cached</span>
+<span class="na">ocean_database_root</span> <span class="o">=</span> <span class="s">/lcrc/group/e3sm/public_html/mpas_standalonedata/mpas-ocean</span>
+
+<span class="c1"># The root to a location where the mesh_database and initial_condition_database</span>
+<span class="c1"># for MALI will be cached</span>
+<span class="na">landice_database_root</span> <span class="o">=</span> <span class="s">/lcrc/group/e3sm/public_html/mpas_standalonedata/mpas-albany-landice</span>
 
 <span class="c1"># the path to the base conda environment where compass environments have</span>
 <span class="c1"># been created</span>
@@ -248,76 +247,85 @@ setting up test cases or a test suite:</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="intel-on-anvil">
-<h2>intel on anvil<a class="headerlink" href="#intel-on-anvil" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="intel18-on-anvil">
+<h2>intel18 on anvil<a class="headerlink" href="#intel18-on-anvil" title="Permalink to this headline">¶</a></h2>
 <p>First, you might want to build SCORPIO (see below), or use the one from
 <a class="reference external" href="http://github.com/xylar">xylar</a> referenced here:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> /lcrc/soft/climate/e3sm-unified/load_latest_compass.sh
 
 module purge
-module load cmake/3.14.2-gvwazz3 intel/17.0.0-pwabdn2 <span class="se">\</span>
-    intel-mkl/2017.1.132-6qy7y5f netcdf/4.4.1-tckdgwl netcdf-cxx/4.2-3qkutvv <span class="se">\</span>
-    netcdf-fortran/4.4.4-urmb6ss mvapich2/2.2-verbs-qwuab3b <span class="se">\</span>
-    parallel-netcdf/1.11.0-6qz7skn
-module load git
+module load cmake/3.14.2-gvwazz3
+module load intel/18.0.4-62uvgmb
+module load intel-mkl/2018.4.274-jwaeshj
+module load netcdf/4.4.1-fijcsqi
+module load netcdf-cxx/4.2-cixenix
+module load netcdf-fortran/4.4.4-mmtrep3
+module load mvapich2/2.2-verbs-m57bia7
+module load parallel-netcdf/1.11.0-ny4vo3o
 
-<span class="nb">export</span> <span class="nv">NETCDF</span><span class="o">=</span>/blues/gpfs/software/centos7/spack-latest/opt/spack/linux-centos7-x86_64/intel-17.0.0/netcdf-4.4.1-tckdgwl
-<span class="nb">export</span> <span class="nv">NETCDFF</span><span class="o">=</span>/blues/gpfs/software/centos7/spack-latest/opt/spack/linux-centos7-x86_64/intel-17.0.0/netcdf-fortran-4.4.4-urmb6ss
-<span class="nb">export</span> <span class="nv">PNETCDF</span><span class="o">=</span>/blues/gpfs/software/centos7/spack-latest/opt/spack/linux-centos7-x86_64/intel-17.0.0/parallel-netcdf-1.11.0-6qz7skn
-<span class="nb">export</span> <span class="nv">PIO</span><span class="o">=</span>/home/ac.xylar/libraries/scorpio-1.1.1-intel
-<span class="nb">export</span> <span class="nv">AUTOCLEAN</span><span class="o">=</span><span class="nb">true</span>
+<span class="nb">export</span> <span class="nv">NETCDF</span><span class="o">=</span><span class="k">$(</span>dirname <span class="k">$(</span>dirname <span class="k">$(</span>which nc-config<span class="k">)))</span>
+<span class="nb">export</span> <span class="nv">NETCDFF</span><span class="o">=</span><span class="k">$(</span>dirname <span class="k">$(</span>dirname <span class="k">$(</span>which nf-config<span class="k">)))</span>
+<span class="nb">export</span> <span class="nv">PNETCDF</span><span class="o">=</span><span class="k">$(</span>dirname <span class="k">$(</span>dirname <span class="k">$(</span>which pnetcdf-config<span class="k">)))</span>
+
+<span class="nb">export</span> <span class="nv">PIO</span><span class="o">=</span>/lcrc/soft/climate/compass/anvil/compass-1.0.0/scorpio-1.1.6/intel18/mvapich
+<span class="nb">export</span> <span class="nv">ESMF</span><span class="o">=</span>/lcrc/soft/climate/compass/anvil/compass-1.0.0/esmf-8.1.0/intel18/mvapich
 
 <span class="nb">export</span> <span class="nv">I_MPI_CC</span><span class="o">=</span>icc
 <span class="nb">export</span> <span class="nv">I_MPI_CXX</span><span class="o">=</span>icpc
 <span class="nb">export</span> <span class="nv">I_MPI_F77</span><span class="o">=</span>ifort
 <span class="nb">export</span> <span class="nv">I_MPI_F90</span><span class="o">=</span>ifort
+<span class="nb">export</span> <span class="nv">MV2_ENABLE_AFFINITY</span><span class="o">=</span><span class="m">0</span>
+<span class="nb">export</span> <span class="nv">MV2_SHOW_CPU_BINDING</span><span class="o">=</span><span class="m">1</span>
+
+<span class="nb">export</span> <span class="nv">AUTOCLEAN</span><span class="o">=</span><span class="nb">true</span>
 <span class="nb">export</span> <span class="nv">USE_PIO2</span><span class="o">=</span><span class="nb">true</span>
+<span class="nb">export</span> <span class="nv">HDF5_USE_FILE_LOCKING</span><span class="o">=</span>FALSE
+</pre></div>
+</div>
+<p>To build the MPAS model with</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make <span class="nv">CORE</span><span class="o">=</span>landice ifort
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make <span class="nv">CORE</span><span class="o">=</span>ocean ifort
+</pre></div>
+</div>
+</div>
+<div class="section" id="gnu-on-anvil">
+<h2>gnu on anvil<a class="headerlink" href="#gnu-on-anvil" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> /lcrc/soft/climate/e3sm-unified/load_latest_compass.sh
+
+module purge
+module load cmake/3.14.2-gvwazz3
+module load gcc/8.2.0-xhxgy33
+module load intel-mkl/2018.4.274-2amycpi
+module load netcdf/4.4.1-ve2zfkw
+module load netcdf-cxx/4.2-2rkopdl
+module load netcdf-fortran/4.4.4-thtylny
+module load mvapich2/2.2-verbs-ppznoge
+module load parallel-netcdf/1.11.0-c22b2bn
+
+<span class="nb">export</span> <span class="nv">NETCDF</span><span class="o">=</span><span class="k">$(</span>dirname <span class="k">$(</span>dirname <span class="k">$(</span>which nc-config<span class="k">)))</span>
+<span class="nb">export</span> <span class="nv">NETCDFF</span><span class="o">=</span><span class="k">$(</span>dirname <span class="k">$(</span>dirname <span class="k">$(</span>which nf-config<span class="k">)))</span>
+<span class="nb">export</span> <span class="nv">PNETCDF</span><span class="o">=</span><span class="k">$(</span>dirname <span class="k">$(</span>dirname <span class="k">$(</span>which pnetcdf-config<span class="k">)))</span>
+
+<span class="nb">export</span> <span class="nv">PIO</span><span class="o">=</span>/lcrc/soft/climate/compass/anvil/compass-1.0.0/scorpio-1.1.6/gnu/mvapich
+<span class="nb">export</span> <span class="nv">ESMF</span><span class="o">=</span>/lcrc/soft/climate/compass/anvil/compass-1.0.0/esmf-8.1.0/gnu/mvapich
 
 <span class="nb">export</span> <span class="nv">MV2_ENABLE_AFFINITY</span><span class="o">=</span><span class="m">0</span>
 <span class="nb">export</span> <span class="nv">MV2_SHOW_CPU_BINDING</span><span class="o">=</span><span class="m">1</span>
 
-<span class="nb">export</span>  <span class="nv">HDF5_USE_FILE_LOCKING</span><span class="o">=</span>FALSE
-
-make ifort <span class="nv">CORE</span><span class="o">=</span>ocean
+<span class="nb">export</span> <span class="nv">AUTOCLEAN</span><span class="o">=</span><span class="nb">true</span>
+<span class="nb">export</span> <span class="nv">USE_PIO2</span><span class="o">=</span><span class="nb">true</span>
+<span class="nb">export</span> <span class="nv">HDF5_USE_FILE_LOCKING</span><span class="o">=</span>FALSE
 </pre></div>
 </div>
+<p>To build the MPAS model with</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make <span class="nv">CORE</span><span class="o">=</span>landice gfortran
+</pre></div>
 </div>
-<div class="section" id="scorpio-on-anvil">
-<h2>SCORPIO on anvil<a class="headerlink" href="#scorpio-on-anvil" title="Permalink to this headline">¶</a></h2>
-<p>If you need to compile it yourself, you can do that as follows (contact
-<a class="reference external" href="http://github.com/xylar">xylar</a> if you run into trouble):</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
-
-<span class="nb">export</span> <span class="nv">SCORPIO_VERSION</span><span class="o">=</span><span class="m">1</span>.1.1
-
-module purge
-module load cmake/3.14.2-gvwazz3 intel/17.0.0-pwabdn2 <span class="se">\</span>
-    intel-mkl/2017.1.132-6qy7y5f netcdf/4.4.1-tckdgwl netcdf-cxx/4.2-3qkutvv <span class="se">\</span>
-    netcdf-fortran/4.4.4-urmb6ss mvapich2/2.2-verbs-qwuab3b <span class="se">\</span>
-    parallel-netcdf/1.11.0-6qz7skn
-
-<span class="nb">export</span> <span class="nv">NETCDF_C_PATH</span><span class="o">=</span>/blues/gpfs/software/centos7/spack-latest/opt/spack/linux-centos7-x86_64/intel-17.0.0/netcdf-4.4.1-tckdgwl
-<span class="nb">export</span> <span class="nv">NETCDF_FORTRAN_PATH</span><span class="o">=</span>/blues/gpfs/software/centos7/spack-latest/opt/spack/linux-centos7-x86_64/intel-17.0.0/netcdf-fortran-4.4.4-urmb6ss
-<span class="nb">export</span> <span class="nv">PNETCDF_PATH</span><span class="o">=</span>/blues/gpfs/software/centos7/spack-latest/opt/spack/linux-centos7-x86_64/intel-17.0.0/parallel-netcdf-1.11.0-6qz7skn
-
-<span class="nb">export</span> <span class="nv">SCORPIO_PATH</span><span class="o">=</span><span class="nv">$HOME</span>/libraries/scorpio-<span class="si">${</span><span class="nv">SCORPIO_VERSION</span><span class="si">}</span>-intel
-<span class="c1"># export MPIROOT=$I_MPI_ROOT</span>
-
-rm -rf scorpio*
-
-git clone git@github.com:E3SM-Project/scorpio.git
-<span class="nb">cd</span> scorpio
-git checkout scorpio-v<span class="nv">$SCORPIO_VERSION</span>
-
-mkdir build
-<span class="nb">cd</span> build
-<span class="nv">FC</span><span class="o">=</span>mpif90 <span class="nv">CC</span><span class="o">=</span>mpicc <span class="nv">CXX</span><span class="o">=</span>mpicxx cmake <span class="se">\</span>
-    -DCMAKE_INSTALL_PREFIX<span class="o">=</span><span class="nv">$SCORPIO_PATH</span> -DPIO_ENABLE_TIMING<span class="o">=</span>OFF <span class="se">\</span>
-    -DNetCDF_C_PATH<span class="o">=</span><span class="nv">$NETCDF_C_PATH</span> -DNetCDF_Fortran_PATH<span class="o">=</span><span class="nv">$NETCDF_FORTRAN_PATH</span> <span class="se">\</span>
-    -DPnetCDF_PATH<span class="o">=</span><span class="nv">$PNETCDF_PATH</span> ..
-
-make
-make install
+<p>or</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make <span class="nv">CORE</span><span class="o">=</span>ocean gfortran
 </pre></div>
 </div>
 </div>

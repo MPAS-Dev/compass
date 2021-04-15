@@ -91,7 +91,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="users_guide/quick_start.html">Quick Start for Users</a></li>
 <li class="toctree-l1"><a class="reference internal" href="users_guide/test_cases.html">Test Cases</a></li>
-<li class="toctree-l1"><a class="reference internal" href="users_guide/configuration_files.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="users_guide/config_files.html">Config Files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="users_guide/test_suites.html">Test Suites</a></li>
 <li class="toctree-l1"><a class="reference internal" href="users_guide/landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="users_guide/ocean/index.html">Ocean core</a></li>
@@ -103,13 +103,13 @@
 <li class="toctree-l1"><a class="reference internal" href="developers_guide/overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="developers_guide/command_line.html">Command-line interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="developers_guide/cores.html">Cores</a></li>
-<li class="toctree-l1"><a class="reference internal" href="developers_guide/examples/index.html">Examples core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="developers_guide/landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="developers_guide/ocean/index.html">Ocean core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="developers_guide/framework.html">Framework</a></li>
 <li class="toctree-l1"><a class="reference internal" href="developers_guide/docs.html">Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="developers_guide/building_docs.html">Building the Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design_docs/index.html">Design Documents</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Versions</span></p>
 <ul>
@@ -183,18 +183,21 @@
             
   <div class="section" id="compass">
 <h1>compass<a class="headerlink" href="#compass" title="Permalink to this headline">¶</a></h1>
-<p>Configuration Of Model for Prediction Across Scales Setups (compass) is an
-automated system to set up test cases that remain synchronized with the
-<a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Model">MPAS-Model repository</a>.</p>
+<p>Configuration Of Model for Prediction Across Scales Setups (<code class="docutils literal notranslate"><span class="pre">compass</span></code>) is
+a python package that provides an automated system to set up test cases for
+Model for Prediction Across Scales (MPAS) components.  The development version
+of <code class="docutils literal notranslate"><span class="pre">compass</span></code> will be kept closely synchronized with
+<a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Model">MPAS-Model repository</a>. Release
+versions will be compatible with specific tags of the MPAS components.</p>
 <p>Many compass test cases are idealized, and are used for things like
 performing convergence tests or regression tests on particular parts of the
 MPAS code.  Many compass test cases, such as those under the
-<a class="reference internal" href="users_guide/ocean/configurations/global_ocean.html#ocean-global-ocean"><span class="std std-ref">global_ocean</span></a> configuration, are “realistic” in the sense that they
+<a class="reference internal" href="users_guide/ocean/test_groups/global_ocean.html#ocean-global-ocean"><span class="std std-ref">global_ocean</span></a> test group, are “realistic” in the sense that they
 use data sets from observations to create create global and regional meshes,
 initial conditions, and boundary conditions.</p>
 <p><code class="docutils literal notranslate"><span class="pre">compass</span></code> will be the tool used to create new land-ice and ocean meshes and
 initial conditions for future versions of <a class="reference external" href="https://e3sm.org/">E3SM</a>, just as
-<a class="reference internal" href="#legacy-compass"><span class="std std-ref">Legacy COMPASS</span></a> has been used to create meshes and initial conditons for
+<a class="reference internal" href="#legacy-compass"><span class="std std-ref">Legacy COMPASS</span></a> has been used to create meshes and initial conditions for
 <a class="reference external" href="https://e3sm.org/model/e3sm-model-description/v1-description/">E3SM v1</a>
 and <a class="reference external" href="https://e3sm.org/research/science-campaigns/v2-planned-campaign/">v2</a>.
 We note that <code class="docutils literal notranslate"><span class="pre">compass</span></code> does <em>not</em> provide the tools for creating many of the
@@ -202,14 +205,14 @@ files needed for full E3SM coupling, a process that requires expert help from
 the E3SM development team.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">compass</span></code> python package defines the test cases along with the commands
 to list and set up both test cases and test suites (groups of test cases).
-compass currently supports the <code class="docutils literal notranslate"><span class="pre">landice</span></code> and <code class="docutils literal notranslate"><span class="pre">ocean</span></code> dynamical cores for
-MPAS.  Nearly all test cases include calls that launch one of these dynamical
-cores.  These runs are configured with namelists and streams files, and one of
-the benefits of using compass over attempting to run one of the MPAS components
-directly is that compass begins with default values for all namelists and
-streams, modifying only those options where the default is not appropriate.
-In this way, compass requires little alteration as MPAS itself evolves and new
-functionality is added.</p>
+<code class="docutils literal notranslate"><span class="pre">compass</span></code> currently supports the <code class="docutils literal notranslate"><span class="pre">landice</span></code> and <code class="docutils literal notranslate"><span class="pre">ocean</span></code> dynamical cores
+for MPAS.  Nearly all test cases include calls that launch one of these
+dynamical cores.  These runs are configured with namelists and streams files,
+and one of the benefits of using <code class="docutils literal notranslate"><span class="pre">compass</span></code> over attempting to run one of the
+MPAS components directly is that <code class="docutils literal notranslate"><span class="pre">compass</span></code> begins with default values for all
+namelists and streams, modifying only those options where the default is not
+appropriate. In this way, compass requires little alteration as the MPAS
+components themselves evolves and new functionality is added.</p>
 <div class="toctree-wrapper compound">
 <p class="caption"><span class="caption-text">User's guide</span></p>
 <ul>
@@ -221,16 +224,20 @@ functionality is added.</p>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="users_guide/test_cases.html">Test Cases</a></li>
-<li class="toctree-l1"><a class="reference internal" href="users_guide/configuration_files.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="users_guide/config_files.html">Config Files</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/config_files.html#a-user-config-file">A “user” config file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/config_files.html#test-case-config-files">Test-case config files</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="users_guide/test_suites.html">Test Suites</a></li>
 <li class="toctree-l1"><a class="reference internal" href="users_guide/landice/index.html">Landice core</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="users_guide/landice/configurations/index.html">Configurations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/landice/test_groups/index.html">Test Groups</a></li>
 <li class="toctree-l2"><a class="reference internal" href="users_guide/landice/framework/index.html">Framework</a></li>
 <li class="toctree-l2"><a class="reference internal" href="users_guide/landice/suites.html">Test suites</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="users_guide/ocean/index.html">Ocean core</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="users_guide/ocean/configurations/index.html">Configurations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/ocean/test_groups/index.html">Test groups</a></li>
 <li class="toctree-l2"><a class="reference internal" href="users_guide/ocean/framework/index.html">Framework</a></li>
 <li class="toctree-l2"><a class="reference internal" href="users_guide/ocean/suites.html">Test suites</a></li>
 </ul>
@@ -274,10 +281,6 @@ functionality is added.</p>
 <li class="toctree-l2"><a class="reference internal" href="developers_guide/cores.html#steps">Steps</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="developers_guide/examples/index.html">Examples core</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="developers_guide/examples/index.html#configurations">Configurations</a></li>
-</ul>
-</li>
 <li class="toctree-l1"><a class="reference internal" href="developers_guide/landice/index.html">Landice core</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="developers_guide/landice/configurations/index.html">Configurations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="developers_guide/landice/framework.html">Land-ice Framework</a></li>
@@ -304,8 +307,13 @@ functionality is added.</p>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="developers_guide/building_docs.html">Building the Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="developers_guide/api.html">API reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="developers_guide/api.html#cores">Cores</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developers_guide/api.html#mpas-cores">MPAS Cores</a></li>
 <li class="toctree-l2"><a class="reference internal" href="developers_guide/api.html#compass-framework">compass framework</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="design_docs/index.html">Design Documents</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="design_docs/compass_package.html">compass python package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="design_docs/template.html">Template</a></li>
 </ul>
 </li>
 </ul>

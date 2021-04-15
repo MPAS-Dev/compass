@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition &mdash; compass test documentation</title>
+  <title>compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition &mdash; compass 1.0.0 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                test
+                1.0.0
               </div>
             
           
@@ -90,7 +90,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/quick_start.html">Quick Start for Users</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/test_cases.html">Test Cases</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/configuration_files.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/config_files.html">Config Files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/test_suites.html">Test Suites</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/ocean/index.html">Ocean core</a></li>
@@ -102,13 +102,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/command_line.html">Command-line interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/cores.html">Cores</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/examples/index.html">Examples core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/ocean/index.html">Ocean core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/framework.html">Framework</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/docs.html">Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/building_docs.html">Building the Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../design_docs/index.html">Design Documents</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Versions</span></p>
 <ul>
@@ -163,7 +163,7 @@
         
           <li><a href="../../../../../index.html">Module code</a> &raquo;</li>
         
-          <li><a href="../../../tests.html">compass.ocean.tests</a> &raquo;</li>
+          <li><a href="../../../../ocean.html">compass.ocean</a> &raquo;</li>
         
           <li><a href="../../global_ocean.html">compass.ocean.tests.global_ocean</a> &raquo;</li>
         
@@ -190,93 +190,91 @@
 
 <span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
 
-<span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">symlink</span><span class="p">,</span> <span class="n">add_input_file</span>
+<span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">symlink</span>
+<span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
 
 
-<div class="viewcode-block" id="collect"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition.collect.html#compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition.collect">[docs]</a><span class="k">def</span> <span class="nf">collect</span><span class="p">(</span><span class="n">testcase</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+<div class="viewcode-block" id="SeaiceInitialCondition"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition.SeaiceInitialCondition.html#compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition.SeaiceInitialCondition">[docs]</a><span class="k">class</span> <span class="nc">SeaiceInitialCondition</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Update the dictionary of step properties</span>
+<span class="sd">    A step for creating an E3SM sea-ice initial condition from variables from</span>
+<span class="sd">    an MPAS-Ocean restart file</span>
 
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    testcase : dict</span>
-<span class="sd">        A dictionary of properties of this test case, which should not be</span>
-<span class="sd">        modified here</span>
-
-<span class="sd">    step : dict</span>
-<span class="sd">        A dictionary of properties of this step, which can be updated</span>
+<span class="sd">    with_ice_shelf_cavities : bool</span>
+<span class="sd">        Whether the mesh includes ice-shelf cavities</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">defaults</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_memory</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">max_disk</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
-                    <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">defaults</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">step</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+<div class="viewcode-block" id="SeaiceInitialCondition.__init__"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition.SeaiceInitialCondition.html#compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition.SeaiceInitialCondition.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">restart_filename</span><span class="p">,</span> <span class="n">with_ice_shelf_cavities</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a new step</span>
 
-    <span class="n">add_input_file</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;README&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../README&#39;</span><span class="p">)</span>
-    <span class="n">add_input_file</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;restart.nc&#39;</span><span class="p">,</span>
-                   <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step</span><span class="p">[</span><span class="s1">&#39;restart_filename&#39;</span><span class="p">]))</span></div>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_case : compass.ocean.tests.global_ocean.files_for_e3sm.FilesForE3SM</span>
+<span class="sd">            The test case this step belongs to</span>
 
-    <span class="c1"># for now, we won&#39;t define any outputs because they include the mesh short</span>
-    <span class="c1"># name, which is not known at setup time.  Currently, this is safe because</span>
-    <span class="c1"># no other steps depend on the outputs of this one.</span>
+<span class="sd">        restart_filename : str</span>
+<span class="sd">            A restart file from the end of the dynamic adjustment test case to</span>
+<span class="sd">            use as the basis for an E3SM initial condition</span>
 
+<span class="sd">        with_ice_shelf_cavities : bool</span>
+<span class="sd">            Whether the mesh includes ice-shelf cavities</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="run"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition.run.html#compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition.run">[docs]</a><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">test_suite</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Run this step of the testcase</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;seaice_initial_condition&#39;</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                         <span class="n">min_cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    step : dict</span>
-<span class="sd">        A dictionary of properties of this step</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;README&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../README&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;restart.nc&#39;</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">restart_filename</span><span class="p">))</span>
 
-<span class="sd">    test_suite : dict</span>
-<span class="sd">        A dictionary of properties of the test suite</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span> <span class="o">=</span> <span class="n">with_ice_shelf_cavities</span></div>
 
-<span class="sd">    config : configparser.ConfigParser</span>
-<span class="sd">        Configuration options for this test case</span>
+        <span class="c1"># for now, we won&#39;t define any outputs because they include the mesh</span>
+        <span class="c1"># short name, which is not known at setup time.  Currently, this is</span>
+        <span class="c1"># safe because no other steps depend on the outputs of this one.</span>
 
-<span class="sd">    logger : logging.Logger</span>
-<span class="sd">        A logger for output from the step</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">with_ice_shelf_cavities</span> <span class="o">=</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;with_ice_shelf_cavities&#39;</span><span class="p">]</span>
+<div class="viewcode-block" id="SeaiceInitialCondition.run"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition.SeaiceInitialCondition.run.html#compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition.SeaiceInitialCondition.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Run this step of the testcase</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        <span class="n">with_ice_shelf_cavities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span>
 
-    <span class="k">with</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;restart.nc&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds</span><span class="p">:</span>
-        <span class="n">mesh_short_name</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;MPAS_Mesh_Short_Name&#39;</span><span class="p">]</span>
+        <span class="k">with</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;restart.nc&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds</span><span class="p">:</span>
+            <span class="n">mesh_short_name</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;MPAS_Mesh_Short_Name&#39;</span><span class="p">]</span>
+            <span class="n">mesh_prefix</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;MPAS_Mesh_Prefix&#39;</span><span class="p">]</span>
+            <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;MPAS_Mesh_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_prefix</span><span class="p">)</span>
+            <span class="n">creation_date</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_Version_Creation_Date&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">)]</span>
 
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s1">&#39;../assembled_files/inputdata/ocn/mpas-cice/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="n">mesh_short_name</span><span class="p">))</span>
-    <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
-        <span class="k">pass</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s1">&#39;../assembled_files/inputdata/ocn/mpas-seaice/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">mesh_short_name</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+            <span class="k">pass</span>
 
-    <span class="n">restart_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;restart_filename&#39;</span><span class="p">]))</span>
-    <span class="n">source_filename</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_short_name</span><span class="p">)</span>
-    <span class="n">dest_filename</span> <span class="o">=</span> <span class="s1">&#39;seaice.</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_short_name</span><span class="p">)</span>
+        <span class="n">dest_filename</span> <span class="o">=</span> <span class="s1">&#39;mpassi.</span><span class="si">{}</span><span class="s1">.</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_short_name</span><span class="p">,</span>
+                                                 <span class="n">creation_date</span><span class="p">)</span>
 
-    <span class="n">keep_vars</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;areaCell&#39;</span><span class="p">,</span> <span class="s1">&#39;cellsOnCell&#39;</span><span class="p">,</span> <span class="s1">&#39;edgesOnCell&#39;</span><span class="p">,</span> <span class="s1">&#39;fCell&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;indexToCellID&#39;</span><span class="p">,</span> <span class="s1">&#39;latCell&#39;</span><span class="p">,</span> <span class="s1">&#39;lonCell&#39;</span><span class="p">,</span> <span class="s1">&#39;meshDensity&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;nEdgesOnCell&#39;</span><span class="p">,</span> <span class="s1">&#39;verticesOnCell&#39;</span><span class="p">,</span> <span class="s1">&#39;xCell&#39;</span><span class="p">,</span> <span class="s1">&#39;yCell&#39;</span><span class="p">,</span> <span class="s1">&#39;zCell&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;angleEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;cellsOnEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;dcEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;dvEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;edgesOnEdge&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;fEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;indexToEdgeID&#39;</span><span class="p">,</span> <span class="s1">&#39;latEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;lonEdge&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;nEdgesOnCell&#39;</span><span class="p">,</span> <span class="s1">&#39;nEdgesOnEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;verticesOnEdge&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;weightsOnEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;xEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;yEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;zEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;areaTriangle&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;cellsOnVertex&#39;</span><span class="p">,</span> <span class="s1">&#39;edgesOnVertex&#39;</span><span class="p">,</span> <span class="s1">&#39;fVertex&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;indexToVertexID&#39;</span><span class="p">,</span> <span class="s1">&#39;kiteAreasOnVertex&#39;</span><span class="p">,</span> <span class="s1">&#39;latVertex&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;lonVertex&#39;</span><span class="p">,</span> <span class="s1">&#39;xVertex&#39;</span><span class="p">,</span> <span class="s1">&#39;yVertex&#39;</span><span class="p">,</span> <span class="s1">&#39;zVertex&#39;</span><span class="p">]</span>
+        <span class="n">keep_vars</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;areaCell&#39;</span><span class="p">,</span> <span class="s1">&#39;cellsOnCell&#39;</span><span class="p">,</span> <span class="s1">&#39;edgesOnCell&#39;</span><span class="p">,</span> <span class="s1">&#39;fCell&#39;</span><span class="p">,</span> <span class="s1">&#39;indexToCellID&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;latCell&#39;</span><span class="p">,</span> <span class="s1">&#39;lonCell&#39;</span><span class="p">,</span> <span class="s1">&#39;meshDensity&#39;</span><span class="p">,</span> <span class="s1">&#39;nEdgesOnCell&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;verticesOnCell&#39;</span><span class="p">,</span> <span class="s1">&#39;xCell&#39;</span><span class="p">,</span> <span class="s1">&#39;yCell&#39;</span><span class="p">,</span> <span class="s1">&#39;zCell&#39;</span><span class="p">,</span> <span class="s1">&#39;angleEdge&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;cellsOnEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;dcEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;dvEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;edgesOnEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;fEdge&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;indexToEdgeID&#39;</span><span class="p">,</span> <span class="s1">&#39;latEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;lonEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;nEdgesOnCell&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;nEdgesOnEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;verticesOnEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;weightsOnEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;xEdge&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;yEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;zEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;areaTriangle&#39;</span><span class="p">,</span> <span class="s1">&#39;cellsOnVertex&#39;</span><span class="p">,</span> <span class="s1">&#39;edgesOnVertex&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;fVertex&#39;</span><span class="p">,</span> <span class="s1">&#39;indexToVertexID&#39;</span><span class="p">,</span> <span class="s1">&#39;kiteAreasOnVertex&#39;</span><span class="p">,</span> <span class="s1">&#39;latVertex&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;lonVertex&#39;</span><span class="p">,</span> <span class="s1">&#39;xVertex&#39;</span><span class="p">,</span> <span class="s1">&#39;yVertex&#39;</span><span class="p">,</span> <span class="s1">&#39;zVertex&#39;</span><span class="p">]</span>
 
-    <span class="k">if</span> <span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
-        <span class="n">keep_vars</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;landIceMask&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
+            <span class="n">keep_vars</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;landIceMask&#39;</span><span class="p">)</span>
 
-    <span class="n">symlink</span><span class="p">(</span><span class="n">restart_filename</span><span class="p">,</span> <span class="n">source_filename</span><span class="p">)</span>
-    <span class="k">with</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">source_filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds</span><span class="p">:</span>
-        <span class="n">ds</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
-        <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">keep_vars</span><span class="p">]</span>
-        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">dest_filename</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;restart.nc&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds</span><span class="p">:</span>
+            <span class="n">ds</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+            <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">keep_vars</span><span class="p">]</span>
+            <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">dest_filename</span><span class="p">)</span>
 
-    <span class="n">symlink</span><span class="p">(</span><span class="s1">&#39;../../../../../seaice_initial_condition/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dest_filename</span><span class="p">),</span>
-            <span class="s1">&#39;../assembled_files/inputdata/ocn/mpas-cice/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">mesh_short_name</span><span class="p">,</span> <span class="n">dest_filename</span><span class="p">))</span></div>
+        <span class="n">symlink</span><span class="p">(</span><span class="s1">&#39;../../../../../seaice_initial_condition/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dest_filename</span><span class="p">),</span>
+                <span class="s1">&#39;../assembled_files/inputdata/ocn/mpas-seaice/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">mesh_short_name</span><span class="p">,</span> <span class="n">dest_filename</span><span class="p">))</span></div></div>
 </pre></div>
 
            </div>

@@ -38,7 +38,7 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Configuration Files" href="configuration_files.html" />
+    <link rel="next" title="Config Files" href="config_files.html" />
     <link rel="prev" title="Quick Start for Users" href="quick_start.html" /> 
 </head>
 
@@ -92,7 +92,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quick Start for Users</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Test Cases</a></li>
-<li class="toctree-l1"><a class="reference internal" href="configuration_files.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config_files.html">Config Files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="test_suites.html">Test Suites</a></li>
 <li class="toctree-l1"><a class="reference internal" href="landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ocean/index.html">Ocean core</a></li>
@@ -104,13 +104,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../developers_guide/overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers_guide/command_line.html">Command-line interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers_guide/cores.html">Cores</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developers_guide/examples/index.html">Examples core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers_guide/landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers_guide/ocean/index.html">Ocean core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers_guide/framework.html">Framework</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers_guide/docs.html">Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers_guide/building_docs.html">Building the Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../design_docs/index.html">Design Documents</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Versions</span></p>
 <ul>
@@ -184,33 +184,35 @@
             
   <div class="section" id="test-cases">
 <span id="id1"></span><h1>Test Cases<a class="headerlink" href="#test-cases" title="Permalink to this headline">¶</a></h1>
-<p>compass supports test cases for two main MPAS dynamical cores, <a class="reference internal" href="ocean/index.html#ocean"><span class="std std-ref">Ocean core</span></a>
+<p><code class="docutils literal notranslate"><span class="pre">compass</span></code> supports test cases for two main MPAS dynamical cores, <a class="reference internal" href="ocean/index.html#ocean"><span class="std std-ref">Ocean core</span></a>
 (<a class="reference external" href="https://mpas-dev.github.io/ocean/ocean.html">MPAS-Ocean</a>) and
 <a class="reference internal" href="landice/index.html#landice"><span class="std std-ref">Landice core</span></a> (<a class="reference external" href="https://mpas-dev.github.io/land_ice/land_ice.html">MALI</a>).
-Test cases are grouped under these two “cores” and then into “configurations”,
-which are groups of test cases that are part of the same framework, serve a
-similar purpose, or are variants on one another.  Example of ocean
-configurations include “idealized” setups like <a class="reference internal" href="ocean/configurations/baroclinic_channel.html#ocean-baroclinic-channel"><span class="std std-ref">baroclinic_channel</span></a>,
-<a class="reference internal" href="ocean/configurations/ziso.html#ocean-ziso"><span class="std std-ref">ziso</span></a> and “realistic” domains like <a class="reference internal" href="ocean/configurations/global_ocean.html#ocean-global-ocean"><span class="std std-ref">global_ocean</span></a>.
-Idealized configurations typically use analytic functions to define their
+Test cases are grouped under these two MPAS cores and then into “test groups”,
+which are groups of test cases that have some common purpose or concept.
+Land-ice test groups include “idealized” setups like <a class="reference internal" href="landice/test_groups/dome.html#landice-dome"><span class="std std-ref">dome</span></a> and
+<a class="reference internal" href="landice/test_groups/hydro_radial.html#landice-hydro-radial"><span class="std std-ref">hydro_radial</span></a> as well as “realistic” domains as in
+<a class="reference internal" href="landice/test_groups/greenland.html#landice-greenland"><span class="std std-ref">greenland</span></a>.  The same is true for the ocean, with “idealized”
+test groups like <a class="reference internal" href="ocean/test_groups/baroclinic_channel.html#ocean-baroclinic-channel"><span class="std std-ref">baroclinic_channel</span></a> and <a class="reference internal" href="ocean/test_groups/ziso.html#ocean-ziso"><span class="std std-ref">ziso</span></a>, and
+a “realistic” test group in <a class="reference internal" href="ocean/test_groups/global_ocean.html#ocean-global-ocean"><span class="std std-ref">global_ocean</span></a>.</p>
+<p>Idealized test groups typically use analytic functions to define their
 topography, initial conditions and forcing data (i.e. boundary conditions),
-whereas realistic configurations most often use data files for all fo these.</p>
-<p>compass test cases are made up of one or more steps.  These are the smallest
-units of work in compass. You can run an individual step on its own if you
-like.  Currently, the steps in a test case run in sequence but there are plans
-to allow steps that don’t depend on one another to run in parallel in the
+whereas realistic test groups most often use data files for all for these.</p>
+<p><code class="docutils literal notranslate"><span class="pre">compass</span></code> test cases are made up of one or more steps.  These are the
+smallest units of work in compass. You can run an individual step on its own if
+you like.  Currently, the steps in a test case run in sequence but there are
+plans to allow steps that don’t depend on one another to run in parallel in the
 future.  Also, there is no requirement that all steps defined in a test case
 must run when that test case is run.  Some steps may be disabled depending on
-configuration options (see <a class="reference internal" href="configuration_files.html#configuration-files"><span class="std std-ref">Configuration Files</span></a>) that you choose.</p>
+config options (see <a class="reference internal" href="config_files.html#config-files"><span class="std std-ref">Config Files</span></a>) that you choose.</p>
 <p>In compass, test cases are identified by their subdirectory relative to a work
 directory that the user chooses.  For example, the default test case from
-the <a class="reference internal" href="ocean/configurations/baroclinic_channel.html#ocean-baroclinic-channel"><span class="std std-ref">baroclinic_channel</span></a> configuration at 10-km resolution is
+the <a class="reference internal" href="ocean/test_groups/baroclinic_channel.html#ocean-baroclinic-channel"><span class="std std-ref">baroclinic_channel</span></a> configuration at 10-km resolution is
 identified as:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ocean/baroclinic_channel/10km/default
 </pre></div>
 </div>
 <p>When you list test cases:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m compass list
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass list
 </pre></div>
 </div>
 <p>you will see these relative paths.</p>
@@ -222,7 +224,7 @@ identified as:</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="configuration_files.html" class="btn btn-neutral float-right" title="Configuration Files" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="config_files.html" class="btn btn-neutral float-right" title="Config Files" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
         <a href="quick_start.html" class="btn btn-neutral float-left" title="Quick Start for Users" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 

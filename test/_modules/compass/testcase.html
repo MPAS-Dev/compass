@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>compass.testcase &mdash; compass test documentation</title>
+  <title>compass.testcase &mdash; compass 1.0.0 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                test
+                1.0.0
               </div>
             
           
@@ -90,7 +90,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../users_guide/quick_start.html">Quick Start for Users</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../users_guide/test_cases.html">Test Cases</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../users_guide/configuration_files.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../users_guide/config_files.html">Config Files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../users_guide/test_suites.html">Test Suites</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../users_guide/landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../users_guide/ocean/index.html">Ocean core</a></li>
@@ -102,13 +102,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/command_line.html">Command-line interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/cores.html">Cores</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/examples/index.html">Examples core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/ocean/index.html">Ocean core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/framework.html">Framework</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/docs.html">Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/building_docs.html">Building the Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../design_docs/index.html">Design Documents</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Versions</span></p>
 <ul>
@@ -180,7 +180,6 @@
             
   <h1>Source code for compass.testcase</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">stat</span>
 <span class="kn">from</span> <span class="nn">jinja2</span> <span class="kn">import</span> <span class="n">Template</span>
 <span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="n">resources</span>
@@ -189,349 +188,249 @@
 <span class="kn">from</span> <span class="nn">compass.parallel</span> <span class="kn">import</span> <span class="n">get_available_cores_and_nodes</span>
 
 
-<div class="viewcode-block" id="add_testcase"><a class="viewcode-back" href="../../developers_guide/generated/compass.testcase.add_testcase.html#compass.testcase.add_testcase">[docs]</a><span class="k">def</span> <span class="nf">add_testcase</span><span class="p">(</span><span class="n">testcases</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="TestCase"><a class="viewcode-back" href="../../developers_guide/generated/compass.testcase.TestCase.html#compass.testcase.TestCase">[docs]</a><span class="k">class</span> <span class="nc">TestCase</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Add a test case to a list of test cases in a configuration.  This should</span>
-<span class="sd">    be called for each test case in a configuration&#39;s ``collect()`` function.</span>
+<span class="sd">    The base class for test cases---such as a decomposition, threading or</span>
+<span class="sd">    restart test---that are made up of one or more steps</span>
 
-<span class="sd">    Any additional keyword arguments passed to this function will be added</span>
-<span class="sd">    as keys and values to the ``testcase`` dictionary</span>
-
-<span class="sd">    Parameters</span>
+<span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    testcases : `list`</span>
-<span class="sd">        A list of test-case dictionaries to which the one for this test case</span>
-<span class="sd">        should be appended</span>
+<span class="sd">    name : str</span>
+<span class="sd">        the name of the test case</span>
 
-<span class="sd">    module : `module`</span>
-<span class="sd">        The python module containing the test case</span>
+<span class="sd">    test_group : compass.TestGroup</span>
+<span class="sd">        The test group the test case belongs to</span>
 
-<span class="sd">    **kwargs</span>
-<span class="sd">        Additional keyword arguments.</span>
+<span class="sd">    mpas_core : compass.MpasCore</span>
+<span class="sd">        The MPAS core the test group belongs to</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    testcase : `dict`</span>
-<span class="sd">        A dictionary of information about the test case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    steps : dict</span>
+<span class="sd">        A dictionary of steps in the test case with step names as keys</span>
 
-    <span class="n">testcase</span> <span class="o">=</span> <span class="n">_get_testcase_default</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
-    <span class="n">testcase</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
-    <span class="n">module</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">testcase</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;No description was added for </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">]))</span>
-    <span class="n">testcases</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">testcase</span><span class="p">)</span>
+<span class="sd">    steps_to_run : list</span>
+<span class="sd">        A list of the steps to run when ``run()`` gets called.  This list</span>
+<span class="sd">        includes all steps by default but can be replaced with a list of only</span>
+<span class="sd">        those tests that should run by default if some steps are optional and</span>
+<span class="sd">        should be run manually by the user.</span>
 
-    <span class="k">return</span> <span class="n">testcase</span></div>
+<span class="sd">    subdir : str</span>
+<span class="sd">        the subdirectory for the test case</span>
 
-
-<div class="viewcode-block" id="set_testcase_subdir"><a class="viewcode-back" href="../../developers_guide/generated/compass.testcase.set_testcase_subdir.html#compass.testcase.set_testcase_subdir">[docs]</a><span class="k">def</span> <span class="nf">set_testcase_subdir</span><span class="p">(</span><span class="n">testcase</span><span class="p">,</span> <span class="n">subdir</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Replaces the default subdirectory and relative path in the test case using</span>
-<span class="sd">    the given subdirectory.  This should be called in the test case&#39;s</span>
-<span class="sd">    ``collect()`` function if the default subdirectory (the name of the test</span>
-<span class="sd">    case) is not used.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    testcase : `dict`</span>
-<span class="sd">        A dictionary of information about the test case</span>
-
-<span class="sd">    subdir : `str`</span>
-<span class="sd">        A subdirectory for the test case within the configuration</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;subdir&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subdir</span>
-    <span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;core&#39;</span><span class="p">],</span>
-                                    <span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;configuration&#39;</span><span class="p">],</span> <span class="n">subdir</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="add_step"><a class="viewcode-back" href="../../developers_guide/generated/compass.testcase.add_step.html#compass.testcase.add_step">[docs]</a><span class="k">def</span> <span class="nf">add_step</span><span class="p">(</span><span class="n">testcase</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Add a step to the dictionary of steps in the test case.  This should</span>
-<span class="sd">    be called for each step in a test case&#39;s ``collect()`` function.</span>
-
-<span class="sd">    Any additional keyword arguments passed to this function will be added</span>
-<span class="sd">    as keys and values to the ``step`` dictionary</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    testcase : `dict`</span>
-<span class="sd">        A dictionary of information about the test case</span>
-
-<span class="sd">    module : `module`</span>
-<span class="sd">        The python module containing the step</span>
-
-<span class="sd">    **kwargs</span>
-<span class="sd">        Additional keyword arguments.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    step : `dict`</span>
-<span class="sd">        A dictionary of information about the step</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">step</span> <span class="o">=</span> <span class="n">_get_step_default</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">testcase</span><span class="p">)</span>
-    <span class="n">step</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
-    <span class="n">module</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">testcase</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
-    <span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;steps&#39;</span><span class="p">][</span><span class="n">step</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">step</span>
-    <span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;steps_to_run&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">step</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
-    <span class="k">return</span> <span class="n">step</span></div>
-
-
-<div class="viewcode-block" id="run_steps"><a class="viewcode-back" href="../../developers_guide/generated/compass.testcase.run_steps.html#compass.testcase.run_steps">[docs]</a><span class="k">def</span> <span class="nf">run_steps</span><span class="p">(</span><span class="n">testcase</span><span class="p">,</span> <span class="n">test_suite</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Run the requested steps of a test case</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    testcase : dict</span>
-<span class="sd">        The dictionary describing the test case with info from</span>
-<span class="sd">        :py:func:`compass.testcase.get_testcase_default()` and any additional</span>
-<span class="sd">        information added when collecting and setting up the test case.</span>
-
-<span class="sd">    test_suite : dict</span>
-<span class="sd">        A dictionary of properties of the test suite</span>
+<span class="sd">    path : str</span>
+<span class="sd">        the path within the base work directory of the test case, made up of</span>
+<span class="sd">        ``mpas_core``, ``test_group``, and the test case&#39;s ``subdir``</span>
 
 <span class="sd">    config : configparser.ConfigParser</span>
-<span class="sd">        Configuration options for this test case</span>
+<span class="sd">        Configuration options for this test case, a combination of the defaults</span>
+<span class="sd">        for the machine, core and configuration</span>
+
+<span class="sd">    config_filename : str</span>
+<span class="sd">        The local name of the config file that ``config`` has been written to</span>
+<span class="sd">        during setup and read from during run</span>
+
+<span class="sd">    work_dir : str</span>
+<span class="sd">        The test case&#39;s work directory, defined during setup as the combination</span>
+<span class="sd">        of ``base_work_dir`` and ``path``</span>
+
+<span class="sd">    base_work_dir : str</span>
+<span class="sd">        The base work directory</span>
 
 <span class="sd">    logger : logging.Logger</span>
 <span class="sd">        A logger for output from the test case</span>
+
+<span class="sd">    log_filename : str</span>
+<span class="sd">        At run time, the name of a log file where output/errors from the test</span>
+<span class="sd">        case are being logged, or ``None`` if output is to stdout/stderr</span>
+
+<span class="sd">    new_step_log_file : bool</span>
+<span class="sd">        Whether to create a new log file for each step or to log output to a</span>
+<span class="sd">        common log file for the whole test case.  The latter is used when</span>
+<span class="sd">        running the test case as part of a test suite</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">step_name</span> <span class="ow">in</span> <span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;steps_to_run&#39;</span><span class="p">]:</span>
-        <span class="n">step</span> <span class="o">=</span> <span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;steps&#39;</span><span class="p">][</span><span class="n">step_name</span><span class="p">]</span>
-        <span class="n">new_log_file</span> <span class="o">=</span> <span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;new_step_log_file&#39;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="s1">&#39;log_filename&#39;</span> <span class="ow">in</span> <span class="n">testcase</span><span class="p">:</span>
-            <span class="n">step</span><span class="p">[</span><span class="s1">&#39;log_filename&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;log_filename&#39;</span><span class="p">]</span>
-            <span class="n">do_local_logging</span> <span class="o">=</span> <span class="kc">True</span>
+
+<div class="viewcode-block" id="TestCase.__init__"><a class="viewcode-back" href="../../developers_guide/generated/compass.testcase.TestCase.html#compass.testcase.TestCase.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a new test case</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_group : compass.TestGroup</span>
+<span class="sd">            the test group that this test case belongs to</span>
+
+<span class="sd">        name : str</span>
+<span class="sd">            the name of the test case</span>
+
+<span class="sd">        subdir : str, optional</span>
+<span class="sd">            the subdirectory for the test case.  The default is ``name``</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mpas_core</span> <span class="o">=</span> <span class="n">test_group</span><span class="o">.</span><span class="n">mpas_core</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_group</span> <span class="o">=</span> <span class="n">test_group</span>
+        <span class="k">if</span> <span class="n">subdir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">subdir</span> <span class="o">=</span> <span class="n">subdir</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># We only want to do local log output if the step output is being</span>
-            <span class="c1"># redirected to a file.  Otherwise, we assume we&#39;re probably just</span>
-            <span class="c1"># running one step and the local logging is redundant and</span>
-            <span class="c1"># unnecessary</span>
-            <span class="n">do_local_logging</span> <span class="o">=</span> <span class="n">new_log_file</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">subdir</span> <span class="o">=</span> <span class="n">name</span>
 
-        <span class="k">if</span> <span class="n">do_local_logging</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39; * Running </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step_name</span><span class="p">))</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">run_step</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">test_suite</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">new_log_file</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">test_group</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                 <span class="bp">self</span><span class="o">.</span><span class="n">subdir</span><span class="p">)</span>
+
+        <span class="c1"># steps will be added by calling add_step()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">steps</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">steps_to_run</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+
+        <span class="c1"># these will be set during setup</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config_filename</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_work_dir</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># these will be set when running the test case</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">new_step_log_file</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log_filename</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="TestCase.configure"><a class="viewcode-back" href="../../developers_guide/generated/compass.testcase.TestCase.configure.html#compass.testcase.TestCase.configure">[docs]</a>    <span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Modify the configuration options for this test case. Test cases should</span>
+<span class="sd">        override this method if they want to add config options specific to</span>
+<span class="sd">        the test case, e.g. from a config file stored in the test case&#39;s python</span>
+<span class="sd">        package</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="TestCase.run"><a class="viewcode-back" href="../../developers_guide/generated/compass.testcase.TestCase.run.html#compass.testcase.TestCase.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Run each step of the test case.  Test cases can override this method</span>
+<span class="sd">        to perform additional operations in addition to running the test case&#39;s</span>
+<span class="sd">        steps</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
+        <span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">step_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps_to_run</span><span class="p">:</span>
+            <span class="n">step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">step_name</span><span class="p">]</span>
+            <span class="n">step</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+            <span class="n">new_log_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_step_log_file</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">step</span><span class="o">.</span><span class="n">log_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_filename</span>
+                <span class="n">do_local_logging</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># We only want to do local log output if the step output is</span>
+                <span class="c1"># being redirected to a file.  Otherwise, we assume we&#39;re</span>
+                <span class="c1"># probably just running one step and the local logging is</span>
+                <span class="c1"># redundant and unnecessary</span>
+                <span class="n">do_local_logging</span> <span class="o">=</span> <span class="n">new_log_file</span>
+
             <span class="k">if</span> <span class="n">do_local_logging</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;     Failed&#39;</span><span class="p">)</span>
-            <span class="k">raise</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39; * Running </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step_name</span><span class="p">))</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_run_step</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">new_log_file</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">do_local_logging</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;     Failed&#39;</span><span class="p">)</span>
+                <span class="k">raise</span>
 
-        <span class="k">if</span> <span class="n">do_local_logging</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;     Complete&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">do_local_logging</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;     Complete&#39;</span><span class="p">)</span>
 
-        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">cwd</span><span class="p">)</span></div>
+            <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">cwd</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="TestCase.add_step"><a class="viewcode-back" href="../../developers_guide/generated/compass.testcase.TestCase.add_step.html#compass.testcase.TestCase.add_step">[docs]</a>    <span class="k">def</span> <span class="nf">add_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">run_by_default</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add a step to the test case</span>
 
-<div class="viewcode-block" id="run_step"><a class="viewcode-back" href="../../developers_guide/generated/compass.testcase.run_step.html#compass.testcase.run_step">[docs]</a><span class="k">def</span> <span class="nf">run_step</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">test_suite</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">new_log_file</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Run the requested step of a test case</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        step : compass.Step</span>
+<span class="sd">            The step to add</span>
 
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    step : dict</span>
-<span class="sd">        The dictionary describing the step with info from</span>
-<span class="sd">        :py:func:`compass.testcase.get_step_default()` and any additional</span>
-<span class="sd">        information added when collecting and setting up the step.</span>
+<span class="sd">        run_by_default : bool, optional</span>
+<span class="sd">            Whether to add this step to the list of steps to run when the</span>
+<span class="sd">            ``run()`` method gets called.  If ``run_by_default=False``, users</span>
+<span class="sd">            would need to run this step manually.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">step</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">step</span>
+        <span class="k">if</span> <span class="n">run_by_default</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">steps_to_run</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">step</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
 
-<span class="sd">    test_suite : dict</span>
-<span class="sd">        A dictionary of properties of the test suite</span>
+    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate a ``run.py`` script for the test case or step.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
-<span class="sd">    config : configparser.ConfigParser</span>
-<span class="sd">        Configuration options for this test case</span>
+        <span class="n">template</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span>
+            <span class="n">resources</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="s1">&#39;compass.testcase&#39;</span><span class="p">,</span> <span class="s1">&#39;testcase.template&#39;</span><span class="p">))</span>
+        <span class="n">test_case</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                     <span class="s1">&#39;config_filename&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_filename</span><span class="p">}</span>
+        <span class="n">work_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span>
+        <span class="n">script</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">)</span>
 
-<span class="sd">    logger : logging.Logger</span>
-<span class="sd">        A logger for output from the test case</span>
+        <span class="n">run_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;run.py&#39;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">run_filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+            <span class="n">handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">script</span><span class="p">)</span>
 
-<span class="sd">    new_log_file : bool</span>
-<span class="sd">        Whether to log to a new log file</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
-    <span class="n">step_name</span> <span class="o">=</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="s1">&#39;cores&#39;</span> <span class="ow">in</span> <span class="n">step</span><span class="p">:</span>
+        <span class="c1"># make sure it has execute permission</span>
+        <span class="n">st</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">run_filename</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chmod</span><span class="p">(</span><span class="n">run_filename</span><span class="p">,</span> <span class="n">st</span><span class="o">.</span><span class="n">st_mode</span> <span class="o">|</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IEXEC</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_run_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">new_log_file</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Run the requested step</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        step : compass.Step</span>
+<span class="sd">            The step to run</span>
+
+<span class="sd">        new_log_file : bool</span>
+<span class="sd">            Whether to log to a new log file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
         <span class="n">available_cores</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_available_cores_and_nodes</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-        <span class="n">step</span><span class="p">[</span><span class="s1">&#39;cores&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">step</span><span class="p">[</span><span class="s1">&#39;cores&#39;</span><span class="p">],</span> <span class="n">available_cores</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Core count not specified for step </span><span class="si">{}</span><span class="s1">. Default is &#39;</span>
-                       <span class="s1">&#39;1 core.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step_name</span><span class="p">))</span>
-        <span class="n">step</span><span class="p">[</span><span class="s1">&#39;cores&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="k">if</span> <span class="s1">&#39;min_cores&#39;</span> <span class="ow">in</span> <span class="n">step</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;cores&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;min_cores&#39;</span><span class="p">]:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s1">&#39;Available cores for </span><span class="si">{}</span><span class="s1"> is below the minimum of </span><span class="si">{}</span><span class="s1">&#39;</span>
-                <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step</span><span class="p">[</span><span class="s1">&#39;cores&#39;</span><span class="p">],</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;min_cores&#39;</span><span class="p">]))</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">cores</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">step</span><span class="o">.</span><span class="n">cores</span><span class="p">,</span> <span class="n">available_cores</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">step</span><span class="o">.</span><span class="n">min_cores</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">step</span><span class="o">.</span><span class="n">cores</span> <span class="o">&lt;</span> <span class="n">step</span><span class="o">.</span><span class="n">min_cores</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s1">&#39;Available cores for </span><span class="si">{}</span><span class="s1"> is below the minimum of </span><span class="si">{}</span><span class="s1">&#39;</span>
+                    <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step</span><span class="o">.</span><span class="n">cores</span><span class="p">,</span> <span class="n">step</span><span class="o">.</span><span class="n">min_cores</span><span class="p">))</span>
 
-    <span class="n">missing_files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">input_file</span> <span class="ow">in</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">]:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">input_file</span><span class="p">):</span>
-            <span class="n">missing_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span>
+        <span class="n">missing_files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">input_file</span> <span class="ow">in</span> <span class="n">step</span><span class="o">.</span><span class="n">inputs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">input_file</span><span class="p">):</span>
+                <span class="n">missing_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">missing_files</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span>
-            <span class="s1">&#39;input file(s) missing in step </span><span class="si">{}</span><span class="s1"> of </span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">step_name</span><span class="p">,</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;core&#39;</span><span class="p">],</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;configuration&#39;</span><span class="p">],</span>
-                <span class="n">step</span><span class="p">[</span><span class="s1">&#39;testcase_subdir&#39;</span><span class="p">],</span> <span class="n">missing_files</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">missing_files</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span>
+                <span class="s1">&#39;input file(s) missing in step </span><span class="si">{}</span><span class="s1"> of </span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">step</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">step</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">step</span><span class="o">.</span><span class="n">test_group</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                    <span class="n">step</span><span class="o">.</span><span class="n">test_case</span><span class="o">.</span><span class="n">subdir</span><span class="p">,</span> <span class="n">missing_files</span><span class="p">))</span>
 
-    <span class="n">test_name</span> <span class="o">=</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">new_log_file</span><span class="p">:</span>
-        <span class="n">log_filename</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.log&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cwd</span><span class="p">,</span> <span class="n">step_name</span><span class="p">)</span>
-        <span class="n">step</span><span class="p">[</span><span class="s1">&#39;log_filename&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">log_filename</span>
-        <span class="n">step_logger</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">step_logger</span> <span class="o">=</span> <span class="n">logger</span>
-        <span class="n">log_filename</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="k">with</span> <span class="n">LoggingContext</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">test_name</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">step_logger</span><span class="p">,</span>
-                        <span class="n">log_filename</span><span class="o">=</span><span class="n">log_filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">step_logger</span><span class="p">:</span>
-        <span class="n">run</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">step</span><span class="p">[</span><span class="s1">&#39;module&#39;</span><span class="p">]],</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;run&#39;</span><span class="p">])</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">step</span><span class="p">[</span><span class="s1">&#39;work_dir&#39;</span><span class="p">])</span>
+        <span class="n">test_name</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">new_log_file</span><span class="p">:</span>
+            <span class="n">log_filename</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.log&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cwd</span><span class="p">,</span> <span class="n">step</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">step</span><span class="o">.</span><span class="n">log_filename</span> <span class="o">=</span> <span class="n">log_filename</span>
+            <span class="n">step_logger</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">step_logger</span> <span class="o">=</span> <span class="n">logger</span>
+            <span class="n">log_filename</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">with</span> <span class="n">LoggingContext</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">test_name</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">step_logger</span><span class="p">,</span>
+                            <span class="n">log_filename</span><span class="o">=</span><span class="n">log_filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">step_logger</span><span class="p">:</span>
+            <span class="n">step</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">step_logger</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">step</span><span class="o">.</span><span class="n">work_dir</span><span class="p">)</span>
+            <span class="n">step</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 
-        <span class="n">run</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">test_suite</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">step_logger</span><span class="p">)</span>
+        <span class="n">missing_files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">output_file</span> <span class="ow">in</span> <span class="n">step</span><span class="o">.</span><span class="n">outputs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_file</span><span class="p">):</span>
+                <span class="n">missing_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output_file</span><span class="p">)</span>
 
-    <span class="n">missing_files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">output_file</span> <span class="ow">in</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;outputs&#39;</span><span class="p">]:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_file</span><span class="p">):</span>
-            <span class="n">missing_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output_file</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">missing_files</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span>
-            <span class="s1">&#39;output file(s) missing in step </span><span class="si">{}</span><span class="s1"> of </span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">step_name</span><span class="p">,</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;core&#39;</span><span class="p">],</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;configuration&#39;</span><span class="p">],</span>
-                <span class="n">step</span><span class="p">[</span><span class="s1">&#39;testcase_subdir&#39;</span><span class="p">],</span> <span class="n">missing_files</span><span class="p">))</span></div>
-
-
-<div class="viewcode-block" id="generate_run"><a class="viewcode-back" href="../../developers_guide/generated/compass.testcase.generate_run.html#compass.testcase.generate_run">[docs]</a><span class="k">def</span> <span class="nf">generate_run</span><span class="p">(</span><span class="n">template_name</span><span class="p">,</span> <span class="n">testcase</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Generate a ``run.py`` script for the given test case or step.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    template_name : str</span>
-<span class="sd">        The name of the template file to use to create the run script</span>
-
-<span class="sd">    testcase : dict</span>
-<span class="sd">        The dictionary of information about the test case, used to fill in the</span>
-<span class="sd">        script template</span>
-
-<span class="sd">    step : dict, optional</span>
-<span class="sd">        The dictionary of information about the step, used to fill in the</span>
-<span class="sd">        script template</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">template</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="n">resources</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="s1">&#39;compass.testcase&#39;</span><span class="p">,</span> <span class="n">template_name</span><span class="p">))</span>
-    <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;testcase&#39;</span><span class="p">:</span> <span class="n">testcase</span><span class="p">}</span>
-    <span class="k">if</span> <span class="n">step</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">work_dir</span> <span class="o">=</span> <span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;work_dir&#39;</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">work_dir</span> <span class="o">=</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;work_dir&#39;</span><span class="p">]</span>
-        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;step&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">step</span>
-    <span class="n">script</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
-    <span class="n">run_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;run.py&#39;</span><span class="p">)</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">run_filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
-        <span class="n">handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">script</span><span class="p">)</span>
-
-    <span class="c1"># make sure it has execute permission</span>
-    <span class="n">st</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">run_filename</span><span class="p">)</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">chmod</span><span class="p">(</span><span class="n">run_filename</span><span class="p">,</span> <span class="n">st</span><span class="o">.</span><span class="n">st_mode</span> <span class="o">|</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IEXEC</span><span class="p">)</span></div>
-
-
-<span class="k">def</span> <span class="nf">_get_step_default</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">testcase</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Set up a default dictionary describing the step in the given module.  The</span>
-<span class="sd">    dictionary contains the full name of the python module for the step, the</span>
-<span class="sd">    name of the step (the name of the python file without the ``.py``</span>
-<span class="sd">    extension), the subdirectory for the step (the same as the ``name``),</span>
-<span class="sd">    the names of the ``setup()`` and ``run()`` functions within the module,</span>
-<span class="sd">    and empty lists of ``inputs`` and ``outputs``, to be filled with the</span>
-<span class="sd">    files required to run the step or produced by the step, respectively.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    module : str</span>
-<span class="sd">        The full name of the python module for the step, usually supplied from</span>
-<span class="sd">        ``__name__``</span>
-
-<span class="sd">    testcase : dict</span>
-<span class="sd">        A dictionary with information about the test case that this step</span>
-<span class="sd">        belongs to</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    step : dict</span>
-<span class="sd">        A dictionary with the default information about the step, most of which</span>
-<span class="sd">        can be modified as appropriate</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-    <span class="c1"># some steps may not need a setup function</span>
-    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">module</span><span class="p">],</span> <span class="s1">&#39;setup&#39;</span><span class="p">):</span>
-        <span class="n">setup</span> <span class="o">=</span> <span class="s1">&#39;setup&#39;</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">setup</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">step</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;module&#39;</span><span class="p">:</span> <span class="n">module</span><span class="p">,</span>
-            <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
-            <span class="s1">&#39;core&#39;</span><span class="p">:</span> <span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;core&#39;</span><span class="p">],</span>
-            <span class="s1">&#39;configuration&#39;</span><span class="p">:</span> <span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;configuration&#39;</span><span class="p">],</span>
-            <span class="s1">&#39;testcase&#39;</span><span class="p">:</span> <span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span>
-            <span class="s1">&#39;testcase_subdir&#39;</span><span class="p">:</span> <span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;subdir&#39;</span><span class="p">],</span>
-            <span class="s1">&#39;subdir&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
-            <span class="s1">&#39;setup&#39;</span><span class="p">:</span> <span class="n">setup</span><span class="p">,</span>
-            <span class="s1">&#39;run&#39;</span><span class="p">:</span> <span class="s1">&#39;run&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;inputs&#39;</span><span class="p">:</span> <span class="p">[],</span>
-            <span class="s1">&#39;outputs&#39;</span><span class="p">:</span> <span class="p">[]}</span>
-    <span class="k">return</span> <span class="n">step</span>
-
-
-<span class="k">def</span> <span class="nf">_get_testcase_default</span><span class="p">(</span><span class="n">module</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Set up a default dictionary describing the test case in the given module.</span>
-<span class="sd">    The dictionary contains the full name of the python module for the</span>
-<span class="sd">    test case, the name of the test case (the final part of the full module</span>
-<span class="sd">    name), the default subdirectory for the test case (the same as the</span>
-<span class="sd">    ``name``), the names of the ``configure()`` and ``run()`` functions within</span>
-<span class="sd">    the module, and the ``core`` and ``configuration`` of the test case (the</span>
-<span class="sd">    parsed from the full module name).</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    module : str</span>
-<span class="sd">        The full name of the python module for the test case, usually supplied</span>
-<span class="sd">        from ``__name__``</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    testcase : dict</span>
-<span class="sd">        A dictionary with the default information about the test case, most of</span>
-<span class="sd">        which can be modified as appropriate</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">core</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">configuration</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">3</span><span class="p">]</span>
-    <span class="n">subdir</span> <span class="o">=</span> <span class="n">name</span>
-    <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">core</span><span class="p">,</span> <span class="n">configuration</span><span class="p">,</span> <span class="n">subdir</span><span class="p">)</span>
-    <span class="c1"># some test cases may not need a configure function</span>
-    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">module</span><span class="p">],</span> <span class="s1">&#39;configure&#39;</span><span class="p">):</span>
-        <span class="n">configure</span> <span class="o">=</span> <span class="s1">&#39;configure&#39;</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">configure</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">testcase</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;module&#39;</span><span class="p">:</span> <span class="n">module</span><span class="p">,</span>
-                <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
-                <span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="n">path</span><span class="p">,</span>
-                <span class="s1">&#39;core&#39;</span><span class="p">:</span> <span class="n">core</span><span class="p">,</span>
-                <span class="s1">&#39;configuration&#39;</span><span class="p">:</span> <span class="n">configuration</span><span class="p">,</span>
-                <span class="s1">&#39;subdir&#39;</span><span class="p">:</span> <span class="n">subdir</span><span class="p">,</span>
-                <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-                <span class="s1">&#39;steps&#39;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(),</span>
-                <span class="s1">&#39;configure&#39;</span><span class="p">:</span> <span class="n">configure</span><span class="p">,</span>
-                <span class="s1">&#39;run&#39;</span><span class="p">:</span> <span class="s1">&#39;run&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;new_step_log_file&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-                <span class="s1">&#39;steps_to_run&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">()}</span>
-    <span class="k">return</span> <span class="n">testcase</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">missing_files</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span>
+                <span class="s1">&#39;output file(s) missing in step </span><span class="si">{}</span><span class="s1"> of </span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">step</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">step</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">step</span><span class="o">.</span><span class="n">test_group</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                    <span class="n">step</span><span class="o">.</span><span class="n">test_case</span><span class="o">.</span><span class="n">subdir</span><span class="p">,</span> <span class="n">missing_files</span><span class="p">))</span></div>
 </pre></div>
 
            </div>

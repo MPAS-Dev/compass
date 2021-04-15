@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>compass.ocean.tests.baroclinic_channel.restart_test &mdash; compass test documentation</title>
+  <title>compass.ocean.tests.baroclinic_channel.restart_test &mdash; compass 1.0.0 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                test
+                1.0.0
               </div>
             
           
@@ -90,7 +90,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/quick_start.html">Quick Start for Users</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/test_cases.html">Test Cases</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/configuration_files.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/config_files.html">Config Files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/test_suites.html">Test Suites</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/ocean/index.html">Ocean core</a></li>
@@ -102,13 +102,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/command_line.html">Command-line interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/cores.html">Cores</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/examples/index.html">Examples core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/ocean/index.html">Ocean core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/framework.html">Framework</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/docs.html">Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/building_docs.html">Building the Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../design_docs/index.html">Design Documents</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Versions</span></p>
 <ul>
@@ -163,7 +163,7 @@
         
           <li><a href="../../../../index.html">Module code</a> &raquo;</li>
         
-          <li><a href="../../tests.html">compass.ocean.tests</a> &raquo;</li>
+          <li><a href="../../../ocean.html">compass.ocean</a> &raquo;</li>
         
           <li><a href="../baroclinic_channel.html">compass.ocean.tests.baroclinic_channel</a> &raquo;</li>
         
@@ -183,90 +183,80 @@
            <div itemprop="articleBody">
             
   <h1>Source code for compass.ocean.tests.baroclinic_channel.restart_test</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">set_testcase_subdir</span><span class="p">,</span> <span class="n">add_step</span><span class="p">,</span> <span class="n">run_steps</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.baroclinic_channel</span> <span class="kn">import</span> <span class="n">initial_state</span><span class="p">,</span> <span class="n">forward</span>
+<span></span><span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.baroclinic_channel.initial_state</span> <span class="kn">import</span> <span class="n">InitialState</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.baroclinic_channel.forward</span> <span class="kn">import</span> <span class="n">Forward</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests</span> <span class="kn">import</span> <span class="n">baroclinic_channel</span>
 <span class="kn">from</span> <span class="nn">compass.validate</span> <span class="kn">import</span> <span class="n">compare_variables</span>
-<span class="kn">from</span> <span class="nn">compass.namelist</span> <span class="kn">import</span> <span class="n">add_namelist_file</span>
-<span class="kn">from</span> <span class="nn">compass.streams</span> <span class="kn">import</span> <span class="n">add_streams_file</span>
 
 
-<div class="viewcode-block" id="collect"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.baroclinic_channel.restart_test.collect.html#compass.ocean.tests.baroclinic_channel.restart_test.collect">[docs]</a><span class="k">def</span> <span class="nf">collect</span><span class="p">(</span><span class="n">testcase</span><span class="p">):</span>
+<div class="viewcode-block" id="RestartTest"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.baroclinic_channel.restart_test.RestartTest.html#compass.ocean.tests.baroclinic_channel.restart_test.RestartTest">[docs]</a><span class="k">class</span> <span class="nc">RestartTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Update the dictionary of test case properties and add steps</span>
+<span class="sd">    A restart test case for the baroclinic channel test group, which makes sure</span>
+<span class="sd">    the model produces identical results with one longer run and two shorter</span>
+<span class="sd">    runs with a restart in between.</span>
 
-<span class="sd">    Parameters</span>
+<span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    testcase : dict</span>
-<span class="sd">        A dictionary of properties of this test case, which can be updated</span>
+<span class="sd">    resolution : str</span>
+<span class="sd">        The resolution of the test case</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">resolution</span> <span class="o">=</span> <span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;resolution&#39;</span><span class="p">]</span>
-    <span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> \
-        <span class="s1">&#39;baroclinic channel </span><span class="si">{}</span><span class="s1"> restart test&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">)</span>
 
-    <span class="n">subdir</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
-    <span class="n">set_testcase_subdir</span><span class="p">(</span><span class="n">testcase</span><span class="p">,</span> <span class="n">subdir</span><span class="p">)</span>
+<div class="viewcode-block" id="RestartTest.__init__"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.baroclinic_channel.restart_test.RestartTest.html#compass.ocean.tests.baroclinic_channel.restart_test.RestartTest.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create the test case</span>
 
-    <span class="n">add_step</span><span class="p">(</span><span class="n">testcase</span><span class="p">,</span> <span class="n">initial_state</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">)</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_group : compass.ocean.tests.baroclinic_channel.BaroclinicChannel</span>
+<span class="sd">            The test group that this test case belongs to</span>
 
-    <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;full&#39;</span><span class="p">,</span> <span class="s1">&#39;restart&#39;</span><span class="p">]:</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_run&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">part</span><span class="p">)</span>
-        <span class="n">step</span> <span class="o">=</span> <span class="n">add_step</span><span class="p">(</span><span class="n">testcase</span><span class="p">,</span> <span class="n">forward</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
-                        <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">)</span>
+<span class="sd">        resolution : str</span>
+<span class="sd">            The resolution of the test case</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;restart_test&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
+        <span class="n">subdir</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                         <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
-        <span class="c1"># add the local namelist and streams file</span>
-        <span class="n">add_namelist_file</span><span class="p">(</span>
-            <span class="n">step</span><span class="p">,</span> <span class="s1">&#39;compass.ocean.tests.baroclinic_channel.restart_test&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;namelist.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">part</span><span class="p">))</span>
-        <span class="n">add_streams_file</span><span class="p">(</span>
-            <span class="n">step</span><span class="p">,</span> <span class="s1">&#39;compass.ocean.tests.baroclinic_channel.restart_test&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;streams.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">part</span><span class="p">))</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
+            <span class="n">InitialState</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">))</span>
 
+        <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;full&#39;</span><span class="p">,</span> <span class="s1">&#39;restart&#39;</span><span class="p">]:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_run&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">part</span><span class="p">)</span>
+            <span class="n">step</span> <span class="o">=</span> <span class="n">Forward</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                           <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">)</span>
 
-<div class="viewcode-block" id="configure"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.baroclinic_channel.restart_test.configure.html#compass.ocean.tests.baroclinic_channel.restart_test.configure">[docs]</a><span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="n">testcase</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Modify the configuration options for this test case.</span>
+            <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
+                <span class="s1">&#39;compass.ocean.tests.baroclinic_channel.restart_test&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;namelist.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">part</span><span class="p">))</span>
+            <span class="n">step</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span>
+                <span class="s1">&#39;compass.ocean.tests.baroclinic_channel.restart_test&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;streams.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">part</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span></div>
 
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    testcase : dict</span>
-<span class="sd">        A dictionary of properties of this test case from the ``collect()``</span>
-<span class="sd">        function</span>
+<div class="viewcode-block" id="RestartTest.configure"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.baroclinic_channel.restart_test.RestartTest.configure.html#compass.ocean.tests.baroclinic_channel.restart_test.RestartTest.configure">[docs]</a>    <span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Modify the configuration options for this test case.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">baroclinic_channel</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span></div>
 
-<span class="sd">    config : configparser.ConfigParser</span>
-<span class="sd">        Configuration options for this test case, a combination of the defaults</span>
-<span class="sd">        for the machine, core and configuration</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">baroclinic_channel</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">testcase</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span></div>
+<div class="viewcode-block" id="RestartTest.run"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.baroclinic_channel.restart_test.RestartTest.run.html#compass.ocean.tests.baroclinic_channel.restart_test.RestartTest.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Run each step of the test case</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># run the steps</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 
-
-<div class="viewcode-block" id="run"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.baroclinic_channel.restart_test.run.html#compass.ocean.tests.baroclinic_channel.restart_test.run">[docs]</a><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">testcase</span><span class="p">,</span> <span class="n">test_suite</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Run each step of the test case</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    testcase : dict</span>
-<span class="sd">        A dictionary of properties of this test case from the ``collect()``</span>
-<span class="sd">        function</span>
-
-<span class="sd">    test_suite : dict</span>
-<span class="sd">        A dictionary of properties of the test suite</span>
-
-<span class="sd">    config : configparser.ConfigParser</span>
-<span class="sd">        Configuration options for this test case, a combination of the defaults</span>
-<span class="sd">        for the machine, core and configuration</span>
-
-<span class="sd">    logger : logging.Logger</span>
-<span class="sd">        A logger for output from the test case</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">run_steps</span><span class="p">(</span><span class="n">testcase</span><span class="p">,</span> <span class="n">test_suite</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
-    <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;salinity&#39;</span><span class="p">,</span> <span class="s1">&#39;layerThickness&#39;</span><span class="p">,</span> <span class="s1">&#39;normalVelocity&#39;</span><span class="p">]</span>
-    <span class="n">steps</span> <span class="o">=</span> <span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;steps_to_run&#39;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="s1">&#39;full_run&#39;</span> <span class="ow">in</span> <span class="n">steps</span> <span class="ow">and</span> <span class="s1">&#39;restart_run&#39;</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">:</span>
-        <span class="n">compare_variables</span><span class="p">(</span><span class="n">variables</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">work_dir</span><span class="o">=</span><span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;work_dir&#39;</span><span class="p">],</span>
-                          <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;full_run/output.nc&#39;</span><span class="p">,</span>
-                          <span class="n">filename2</span><span class="o">=</span><span class="s1">&#39;restart_run/output.nc&#39;</span><span class="p">)</span></div>
+        <span class="c1"># perform validation</span>
+        <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;salinity&#39;</span><span class="p">,</span> <span class="s1">&#39;layerThickness&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;normalVelocity&#39;</span><span class="p">]</span>
+        <span class="n">steps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps_to_run</span>
+        <span class="k">if</span> <span class="s1">&#39;full_run&#39;</span> <span class="ow">in</span> <span class="n">steps</span> <span class="ow">and</span> <span class="s1">&#39;restart_run&#39;</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">:</span>
+            <span class="n">compare_variables</span><span class="p">(</span><span class="n">variables</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">work_dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span>
+                              <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;full_run/output.nc&#39;</span><span class="p">,</span>
+                              <span class="n">filename2</span><span class="o">=</span><span class="s1">&#39;restart_run/output.nc&#39;</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

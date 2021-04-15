@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>compass.ocean.tests.ziso.initial_state &mdash; compass test documentation</title>
+  <title>compass.ocean.tests.ziso.initial_state &mdash; compass 1.0.0 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                test
+                1.0.0
               </div>
             
           
@@ -90,7 +90,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/quick_start.html">Quick Start for Users</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/test_cases.html">Test Cases</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/configuration_files.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/config_files.html">Config Files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/test_suites.html">Test Suites</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/ocean/index.html">Ocean core</a></li>
@@ -102,13 +102,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/command_line.html">Command-line interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/cores.html">Cores</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/examples/index.html">Examples core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/ocean/index.html">Ocean core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/framework.html">Framework</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/docs.html">Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/building_docs.html">Building the Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../design_docs/index.html">Design Documents</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Versions</span></p>
 <ul>
@@ -163,7 +163,7 @@
         
           <li><a href="../../../../index.html">Module code</a> &raquo;</li>
         
-          <li><a href="../../tests.html">compass.ocean.tests</a> &raquo;</li>
+          <li><a href="../../../ocean.html">compass.ocean</a> &raquo;</li>
         
           <li><a href="../ziso.html">compass.ocean.tests.ziso</a> &raquo;</li>
         
@@ -190,72 +190,71 @@
 <span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.mesh.conversion</span> <span class="kn">import</span> <span class="n">convert</span><span class="p">,</span> <span class="n">cull</span>
 
-<span class="kn">from</span> <span class="nn">compass.ocean.vertical</span> <span class="kn">import</span> <span class="n">generate_grid</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.vertical.zstar</span> <span class="kn">import</span> <span class="n">compute_layer_thickness_and_zmid</span>
-<span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">add_output_file</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.vertical</span> <span class="kn">import</span> <span class="n">generate_grid</span>
+<span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
 
 
-<div class="viewcode-block" id="collect"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.ziso.initial_state.collect.html#compass.ocean.tests.ziso.initial_state.collect">[docs]</a><span class="k">def</span> <span class="nf">collect</span><span class="p">(</span><span class="n">testcase</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+<div class="viewcode-block" id="InitialState"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.ziso.initial_state.InitialState.html#compass.ocean.tests.ziso.initial_state.InitialState">[docs]</a><span class="k">class</span> <span class="nc">InitialState</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Update the dictionary of step properties</span>
+<span class="sd">    A step for creating a mesh and initial condition for ZISO test cases</span>
 
-<span class="sd">    Parameters</span>
+<span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    testcase : dict</span>
-<span class="sd">        A dictionary of properties of this test case, which should not be</span>
-<span class="sd">        modified here</span>
+<span class="sd">    resolution : str</span>
+<span class="sd">        The resolution of the test case</span>
 
-<span class="sd">    step : dict</span>
-<span class="sd">        A dictionary of properties of this step, which can be updated</span>
+<span class="sd">    with_frazil : bool</span>
+<span class="sd">        Whether frazil formation is included in the simulation</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">defaults</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_memory</span><span class="o">=</span><span class="mi">8000</span><span class="p">,</span> <span class="n">max_disk</span><span class="o">=</span><span class="mi">8000</span><span class="p">,</span>
-                    <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">defaults</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">step</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;culled_graph.info&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;ocean.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;forcing.nc&#39;</span><span class="p">]:</span>
-        <span class="n">add_output_file</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">file</span><span class="p">)</span></div>
+<div class="viewcode-block" id="InitialState.__init__"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.ziso.initial_state.InitialState.html#compass.ocean.tests.ziso.initial_state.InitialState.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">with_frazil</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the dictionary of step properties</span>
 
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_case : compass.TestCase</span>
+<span class="sd">            The test case this step belongs to</span>
 
-<span class="c1"># no setup() is needed for this step</span>
+<span class="sd">        resolution : str</span>
+<span class="sd">            The resolution of the test case</span>
 
+<span class="sd">        with_frazil : bool</span>
+<span class="sd">            Whether frazil formation is included in the simulation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;initial_state&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">with_frazil</span> <span class="o">=</span> <span class="n">with_frazil</span>
 
-<div class="viewcode-block" id="run"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.ziso.initial_state.run.html#compass.ocean.tests.ziso.initial_state.run">[docs]</a><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">test_suite</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Run this step of the testcase</span>
+        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;culled_graph.info&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;ocean.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;forcing.nc&#39;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">file</span><span class="p">)</span></div>
 
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    step : dict</span>
-<span class="sd">        A dictionary of properties of this step</span>
+<div class="viewcode-block" id="InitialState.run"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.ziso.initial_state.InitialState.run.html#compass.ocean.tests.ziso.initial_state.InitialState.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Run this step of the test case</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
 
-<span class="sd">    test_suite : dict</span>
-<span class="sd">        A dictionary of properties of the test suite</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;ziso&#39;</span><span class="p">]</span>
+        <span class="n">nx</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;nx&#39;</span><span class="p">)</span>
+        <span class="n">ny</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;ny&#39;</span><span class="p">)</span>
+        <span class="n">dc</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;dc&#39;</span><span class="p">)</span>
 
-<span class="sd">    config : configparser.ConfigParser</span>
-<span class="sd">        Configuration options for this test case</span>
+        <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">make_planar_hex_mesh</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="o">=</span><span class="n">ny</span><span class="p">,</span> <span class="n">dc</span><span class="o">=</span><span class="n">dc</span><span class="p">,</span> <span class="n">nonperiodic_x</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                      <span class="n">nonperiodic_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">)</span>
 
-<span class="sd">    logger : logging.Logger</span>
-<span class="sd">        A logger for output from the step</span>
-<span class="sd">   &quot;&quot;&quot;</span>
-    <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;ziso&#39;</span><span class="p">]</span>
-    <span class="n">nx</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;nx&#39;</span><span class="p">)</span>
-    <span class="n">ny</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;ny&#39;</span><span class="p">)</span>
-    <span class="n">dc</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;dc&#39;</span><span class="p">)</span>
+        <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">cull</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+        <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">convert</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">graphInfoFileName</span><span class="o">=</span><span class="s1">&#39;culled_graph.info&#39;</span><span class="p">,</span>
+                         <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">)</span>
 
-    <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">make_planar_hex_mesh</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="o">=</span><span class="n">ny</span><span class="p">,</span> <span class="n">dc</span><span class="o">=</span><span class="n">dc</span><span class="p">,</span> <span class="n">nonperiodic_x</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                                  <span class="n">nonperiodic_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">)</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">_write_initial_state</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">dsMesh</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_frazil</span><span class="p">)</span>
 
-    <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">cull</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
-    <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">convert</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">graphInfoFileName</span><span class="o">=</span><span class="s1">&#39;culled_graph.info&#39;</span><span class="p">,</span>
-                     <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
-    <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">)</span>
-
-    <span class="n">ds</span> <span class="o">=</span> <span class="n">_write_initial_state</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">dsMesh</span><span class="p">,</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;with_frazil&#39;</span><span class="p">])</span>
-
-    <span class="n">_write_forcing</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">yCell</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">zMid</span><span class="p">)</span></div>
+        <span class="n">_write_forcing</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">yCell</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">zMid</span><span class="p">)</span></div></div>
 
 
 <span class="k">def</span> <span class="nf">_write_initial_state</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">dsMesh</span><span class="p">,</span> <span class="n">with_frazil</span><span class="p">):</span>

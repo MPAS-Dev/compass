@@ -20,14 +20,13 @@ setting up test cases or a test suite:
     # cases.
     [paths]
 
-    # The mesh_database and the initial_condition_database are locations where
-    # meshes / initial conditions might be found on a specific machine. They can be
-    # the same directory, or different directory. Additionally, if they are empty
-    # some test cases might download data into them, which will then be reused if
-    # the test case is run again later.
-    mesh_database = /lcrc/group/e3sm/public_html/mpas_standalonedata/mpas-ocean/mesh_database
-    initial_condition_database = /lcrc/group/e3sm/public_html/mpas_standalonedata/mpas-ocean/initial_condition_database
-    bathymetry_database = /lcrc/group/e3sm/public_html/mpas_standalonedata/mpas-ocean/bathymetry_database
+    # The root to a location where the mesh_database, initial_condition_database,
+    # and bathymetry_database for MPAS-Ocean will be cached
+    ocean_database_root = /lcrc/group/e3sm/public_html/mpas_standalonedata/mpas-ocean
+
+    # The root to a location where the mesh_database and initial_condition_database
+    # for MALI will be cached
+    landice_database_root = /lcrc/group/e3sm/public_html/mpas_standalonedata/mpas-albany-landice
 
     # the path to the base conda environment where compass environments have
     # been created
@@ -49,8 +48,8 @@ setting up test cases or a test suite:
     # the number of multiprocessing or dask threads to use
     threads = 18
 
-intel on anvil
---------------
+intel18 on anvil
+----------------
 
 First, you might want to build SCORPIO (see below), or use the one from
 `xylar <http://github.com/xylar>`_ referenced here:
@@ -60,68 +59,85 @@ First, you might want to build SCORPIO (see below), or use the one from
     source /lcrc/soft/climate/e3sm-unified/load_latest_compass.sh
 
     module purge
-    module load cmake/3.14.2-gvwazz3 intel/17.0.0-pwabdn2 \
-        intel-mkl/2017.1.132-6qy7y5f netcdf/4.4.1-tckdgwl netcdf-cxx/4.2-3qkutvv \
-        netcdf-fortran/4.4.4-urmb6ss mvapich2/2.2-verbs-qwuab3b \
-        parallel-netcdf/1.11.0-6qz7skn
-    module load git
+    module load cmake/3.14.2-gvwazz3
+    module load intel/18.0.4-62uvgmb
+    module load intel-mkl/2018.4.274-jwaeshj
+    module load netcdf/4.4.1-fijcsqi
+    module load netcdf-cxx/4.2-cixenix
+    module load netcdf-fortran/4.4.4-mmtrep3
+    module load mvapich2/2.2-verbs-m57bia7
+    module load parallel-netcdf/1.11.0-ny4vo3o
 
-    export NETCDF=/blues/gpfs/software/centos7/spack-latest/opt/spack/linux-centos7-x86_64/intel-17.0.0/netcdf-4.4.1-tckdgwl
-    export NETCDFF=/blues/gpfs/software/centos7/spack-latest/opt/spack/linux-centos7-x86_64/intel-17.0.0/netcdf-fortran-4.4.4-urmb6ss
-    export PNETCDF=/blues/gpfs/software/centos7/spack-latest/opt/spack/linux-centos7-x86_64/intel-17.0.0/parallel-netcdf-1.11.0-6qz7skn
-    export PIO=/home/ac.xylar/libraries/scorpio-1.1.1-intel
-    export AUTOCLEAN=true
+    export NETCDF=$(dirname $(dirname $(which nc-config)))
+    export NETCDFF=$(dirname $(dirname $(which nf-config)))
+    export PNETCDF=$(dirname $(dirname $(which pnetcdf-config)))
+
+    export PIO=/lcrc/soft/climate/compass/anvil/compass-1.0.0/scorpio-1.1.6/intel18/mvapich
+    export ESMF=/lcrc/soft/climate/compass/anvil/compass-1.0.0/esmf-8.1.0/intel18/mvapich
 
     export I_MPI_CC=icc
     export I_MPI_CXX=icpc
     export I_MPI_F77=ifort
     export I_MPI_F90=ifort
+    export MV2_ENABLE_AFFINITY=0
+    export MV2_SHOW_CPU_BINDING=1
+
+    export AUTOCLEAN=true
     export USE_PIO2=true
+    export HDF5_USE_FILE_LOCKING=FALSE
+
+
+To build the MPAS model with
+
+.. code-block:: bash
+
+    make CORE=landice ifort
+
+or
+
+.. code-block:: bash
+
+    make CORE=ocean ifort
+
+gnu on anvil
+------------
+
+.. code-block:: bash
+
+    source /lcrc/soft/climate/e3sm-unified/load_latest_compass.sh
+
+    module purge
+    module load cmake/3.14.2-gvwazz3
+    module load gcc/8.2.0-xhxgy33
+    module load intel-mkl/2018.4.274-2amycpi
+    module load netcdf/4.4.1-ve2zfkw
+    module load netcdf-cxx/4.2-2rkopdl
+    module load netcdf-fortran/4.4.4-thtylny
+    module load mvapich2/2.2-verbs-ppznoge
+    module load parallel-netcdf/1.11.0-c22b2bn
+
+    export NETCDF=$(dirname $(dirname $(which nc-config)))
+    export NETCDFF=$(dirname $(dirname $(which nf-config)))
+    export PNETCDF=$(dirname $(dirname $(which pnetcdf-config)))
+
+    export PIO=/lcrc/soft/climate/compass/anvil/compass-1.0.0/scorpio-1.1.6/gnu/mvapich
+    export ESMF=/lcrc/soft/climate/compass/anvil/compass-1.0.0/esmf-8.1.0/gnu/mvapich
 
     export MV2_ENABLE_AFFINITY=0
     export MV2_SHOW_CPU_BINDING=1
 
-    export  HDF5_USE_FILE_LOCKING=FALSE
+    export AUTOCLEAN=true
+    export USE_PIO2=true
+    export HDF5_USE_FILE_LOCKING=FALSE
 
-    make ifort CORE=ocean
-
-SCORPIO on anvil
-----------------
-
-If you need to compile it yourself, you can do that as follows (contact
-`xylar <http://github.com/xylar>`_ if you run into trouble):
+To build the MPAS model with
 
 .. code-block:: bash
 
-    #!/bin/bash
+    make CORE=landice gfortran
 
-    export SCORPIO_VERSION=1.1.1
+or
 
-    module purge
-    module load cmake/3.14.2-gvwazz3 intel/17.0.0-pwabdn2 \
-        intel-mkl/2017.1.132-6qy7y5f netcdf/4.4.1-tckdgwl netcdf-cxx/4.2-3qkutvv \
-        netcdf-fortran/4.4.4-urmb6ss mvapich2/2.2-verbs-qwuab3b \
-        parallel-netcdf/1.11.0-6qz7skn
+.. code-block:: bash
 
-    export NETCDF_C_PATH=/blues/gpfs/software/centos7/spack-latest/opt/spack/linux-centos7-x86_64/intel-17.0.0/netcdf-4.4.1-tckdgwl
-    export NETCDF_FORTRAN_PATH=/blues/gpfs/software/centos7/spack-latest/opt/spack/linux-centos7-x86_64/intel-17.0.0/netcdf-fortran-4.4.4-urmb6ss
-    export PNETCDF_PATH=/blues/gpfs/software/centos7/spack-latest/opt/spack/linux-centos7-x86_64/intel-17.0.0/parallel-netcdf-1.11.0-6qz7skn
-
-    export SCORPIO_PATH=$HOME/libraries/scorpio-${SCORPIO_VERSION}-intel
-    # export MPIROOT=$I_MPI_ROOT
-
-    rm -rf scorpio*
-
-    git clone git@github.com:E3SM-Project/scorpio.git
-    cd scorpio
-    git checkout scorpio-v$SCORPIO_VERSION
-
-    mkdir build
-    cd build
-    FC=mpif90 CC=mpicc CXX=mpicxx cmake \
-        -DCMAKE_INSTALL_PREFIX=$SCORPIO_PATH -DPIO_ENABLE_TIMING=OFF \
-        -DNetCDF_C_PATH=$NETCDF_C_PATH -DNetCDF_Fortran_PATH=$NETCDF_FORTRAN_PATH \
-        -DPnetCDF_PATH=$PNETCDF_PATH ..
-
-    make
-    make install
+    make CORE=ocean gfortran

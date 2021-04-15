@@ -155,7 +155,7 @@ So why choose one over the other?
 
 The main reason to go with a package over a module is if you need to include
 other files (such as other modules and packages, but also other things like
-:ref:`configuration_files`, :ref:`dev_namelist`, or :ref:`dev_streams` files).  It's
+:ref:`config_files`, :ref:`dev_namelist`, or :ref:`dev_streams` files).  It's
 always pretty easy to make a module into a package (by making a directory with
 the name of the package, moving the module in, an renaming it ``__init__.py``)
 or visa versa (by renaming ``__init__.py`` to the module name, moving it up
@@ -280,5 +280,5 @@ You can take a look at the :ref:`dev_testcase_dict` and :ref:`dev_step_dict`
 for a full listing of the typical entries in these dictionaries. Some entries
 are required for the compass :ref:`dev_framework` to work properly.  Others
 are used to keep track of parameters of a test case or step that the user
-should not alter and therefore that should not be in the :ref:`configuration_files`.
+should not alter and therefore that should not be in the :ref:`config_files`.
 

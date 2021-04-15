@@ -31,9 +31,9 @@ Sea surface height adjustment
 
 Standalone-ocean test cases typically provide the ice draft (which is then used
 as the ``ssh``)  rather than the pressure from the weight of the ice shelf
-(the ``landIcePressure`` variable).  (This is in contrast to coupled
+(the ``landIcePressure`` variable).  This is in contrast to coupled
 ice sheet-ocean configurations that we expect to support in the future, in
-which the weight of the ice is know, rather than the ice draft.)  Ideally, the
+which the weight of the ice is know, rather than the ice draft.  Ideally, the
 initial ice draft and the ice-shelf pressure would be consistent with one
 another, so that the SSH would remain nearly stationary in time once the
 MPAS-Ocean simulation starts.  In practice, this is difficult to achieve.

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>compass.io &mdash; compass test documentation</title>
+  <title>compass.io &mdash; compass 1.0.0 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                test
+                1.0.0
               </div>
             
           
@@ -90,7 +90,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../users_guide/quick_start.html">Quick Start for Users</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../users_guide/test_cases.html">Test Cases</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../users_guide/configuration_files.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../users_guide/config_files.html">Config Files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../users_guide/test_suites.html">Test Suites</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../users_guide/landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../users_guide/ocean/index.html">Ocean core</a></li>
@@ -102,13 +102,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/command_line.html">Command-line interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/cores.html">Cores</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/examples/index.html">Examples core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/ocean/index.html">Ocean core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/framework.html">Framework</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/docs.html">Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/building_docs.html">Building the Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../design_docs/index.html">Design Documents</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Versions</span></p>
 <ul>
@@ -185,70 +185,6 @@
 <span class="kn">import</span> <span class="nn">progressbar</span>
 
 <span class="kn">from</span> <span class="nn">compass.config</span> <span class="kn">import</span> <span class="n">get_source_file</span>
-
-
-<div class="viewcode-block" id="add_input_file"><a class="viewcode-back" href="../../developers_guide/generated/compass.io.add_input_file.html#compass.io.add_input_file">[docs]</a><span class="k">def</span> <span class="nf">add_input_file</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                   <span class="n">url</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Add an input file to the step.  The file can be local, a symlink to</span>
-<span class="sd">    a file that will be created in another step, a symlink to a file in one</span>
-<span class="sd">    of the databases for files cached after download, and/or come from a</span>
-<span class="sd">    specified URL.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    step : dict</span>
-<span class="sd">        A dictionary of properties of this step</span>
-
-<span class="sd">    filename : str, optional</span>
-<span class="sd">        The relative path of the input file within the step&#39;s work directory.</span>
-<span class="sd">        The default is the file name (without the path) of ``target``.</span>
-
-<span class="sd">    target : str, optional</span>
-<span class="sd">        A file that will be the target of a symlink to ``filename``.  If</span>
-<span class="sd">        ``database`` is not specified, this should be an absolute path or a</span>
-<span class="sd">        relative path from the step&#39;s work directory.  If ``database`` is</span>
-<span class="sd">        specified, this is a relative path within the database and the name</span>
-<span class="sd">        of the remote file to download.</span>
-
-<span class="sd">    database : str, optional</span>
-<span class="sd">        The name of a database for caching local files.  This will be a</span>
-<span class="sd">        subdirectory of the local cache directory for this core.  If ``url``</span>
-<span class="sd">        is not provided, the URL for downloading the file will be determined</span>
-<span class="sd">        by combining the base URL of the data server, the relative path for the</span>
-<span class="sd">        core, ``database`` and ``target``.</span>
-
-<span class="sd">    url : str, optional</span>
-<span class="sd">        The base URL for downloading ``target`` (if provided, or ``filename``</span>
-<span class="sd">        if not).  This option should be set if the file is not in a database on</span>
-<span class="sd">        the data server. The file&#39;s URL is determined by combining ``url``</span>
-<span class="sd">        with the filename (without the directory) from ``target`` (or</span>
-<span class="sd">        ``filename`` if ``target`` is not provided).  ``database`` is not</span>
-<span class="sd">        included in the file&#39;s URL even if it is provided.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">target</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;At least one of local_name and target are &#39;</span>
-                             <span class="s1">&#39;required.&#39;</span><span class="p">)</span>
-        <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
-
-    <span class="n">step</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">,</span>
-                               <span class="n">database</span><span class="o">=</span><span class="n">database</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">))</span></div>
-
-
-<div class="viewcode-block" id="add_output_file"><a class="viewcode-back" href="../../developers_guide/generated/compass.io.add_output_file.html#compass.io.add_output_file">[docs]</a><span class="k">def</span> <span class="nf">add_output_file</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Add the output file to the step</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    step : dict</span>
-<span class="sd">        A dictionary of properties of this step</span>
-
-<span class="sd">    filename : str</span>
-<span class="sd">        The relative path of the output file within the step&#39;s work directory</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">step</span><span class="p">[</span><span class="s1">&#39;outputs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="download"><a class="viewcode-back" href="../../developers_guide/generated/compass.io.download.html#compass.io.download">[docs]</a><span class="k">def</span> <span class="nf">download</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">dest_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dest_option</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -440,80 +376,6 @@
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">islink</span><span class="p">(</span><span class="n">temp_link_name</span><span class="p">):</span>
             <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">temp_link_name</span><span class="p">)</span>
         <span class="k">raise</span></div>
-
-
-<div class="viewcode-block" id="process_step_inputs_and_outputs"><a class="viewcode-back" href="../../developers_guide/generated/compass.io.process_step_inputs_and_outputs.html#compass.io.process_step_inputs_and_outputs">[docs]</a><span class="k">def</span> <span class="nf">process_step_inputs_and_outputs</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Process the inputs to and outputs from a step added with</span>
-<span class="sd">    :py:func:`compass.io.add_input_file` and</span>
-<span class="sd">    :py:func:`compass.io.add_output_file`.  This includes downloading files,</span>
-<span class="sd">    making symlinks, and converting relative paths to absolute paths.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    step : dict</span>
-<span class="sd">        A dictionary of properties of this step</span>
-
-<span class="sd">    config : configparser.ConfigParser</span>
-<span class="sd">        Configuration options used to get the server base url, core path on</span>
-<span class="sd">        the server and cache root for databases if any files are to be</span>
-<span class="sd">        downloaded to these locations</span>
-<span class="sd">   &quot;&quot;&quot;</span>
-    <span class="n">core</span> <span class="o">=</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;core&#39;</span><span class="p">]</span>
-    <span class="n">step_dir</span> <span class="o">=</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;work_dir&#39;</span><span class="p">]</span>
-
-    <span class="n">inputs</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">]:</span>
-        <span class="n">filename</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">]</span>
-        <span class="n">target</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span>
-        <span class="n">database</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;database&#39;</span><span class="p">]</span>
-        <span class="n">url</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">]</span>
-
-        <span class="n">download_target</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">download_path</span> <span class="o">=</span> <span class="kc">None</span>
-
-        <span class="k">if</span> <span class="n">database</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="c1"># we&#39;re downloading a file to a cache of a database (if it&#39;s not</span>
-            <span class="c1"># already there.</span>
-            <span class="k">if</span> <span class="n">url</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">base_url</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;download&#39;</span><span class="p">,</span> <span class="s1">&#39;server_base_url&#39;</span><span class="p">)</span>
-                <span class="n">core_path</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;download&#39;</span><span class="p">,</span> <span class="s1">&#39;core_path&#39;</span><span class="p">)</span>
-                <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">base_url</span><span class="p">,</span> <span class="n">core_path</span><span class="p">,</span> <span class="n">database</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="n">target</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">target</span> <span class="o">=</span> <span class="n">filename</span>
-
-            <span class="n">download_target</span> <span class="o">=</span> <span class="n">target</span>
-
-            <span class="n">database_root</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;paths&#39;</span><span class="p">,</span>
-                                       <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_database_root&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">core</span><span class="p">))</span>
-            <span class="n">download_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">database_root</span><span class="p">,</span> <span class="n">database</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">url</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">target</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">download_target</span> <span class="o">=</span> <span class="n">filename</span>
-                <span class="n">download_path</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">download_path</span><span class="p">,</span> <span class="n">download_target</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">url</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">download_target</span> <span class="o">=</span> <span class="n">download</span><span class="p">(</span><span class="n">download_target</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span>
-                                       <span class="n">download_path</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">target</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="c1"># this is the absolute path that we presumably want</span>
-                <span class="n">target</span> <span class="o">=</span> <span class="n">download_target</span>
-
-        <span class="k">if</span> <span class="n">target</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">symlink</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">step_dir</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
-            <span class="n">inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-
-    <span class="c1"># convert inputs and outputs to absolute paths</span>
-    <span class="n">step</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">step_dir</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span> <span class="k">for</span>
-                      <span class="n">filename</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">]</span>
-
-    <span class="n">step</span><span class="p">[</span><span class="s1">&#39;outputs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">step_dir</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span> <span class="k">for</span>
-                       <span class="n">filename</span> <span class="ow">in</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;outputs&#39;</span><span class="p">]]</span></div>
 
 
 <span class="c1"># From https://stackoverflow.com/a/1094933/7728169</span>

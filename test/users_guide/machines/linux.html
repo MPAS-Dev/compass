@@ -92,7 +92,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start for Users</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../test_cases.html">Test Cases</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../configuration_files.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config_files.html">Config Files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../test_suites.html">Test Suites</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ocean/index.html">Ocean core</a></li>
@@ -118,13 +118,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/command_line.html">Command-line interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/cores.html">Cores</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/examples/index.html">Examples core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/ocean/index.html">Ocean core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/framework.html">Framework</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/docs.html">Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/building_docs.html">Building the Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../design_docs/index.html">Design Documents</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Versions</span></p>
 <ul>
@@ -200,23 +200,26 @@
             
   <div class="section" id="personal-linux-osx-machine">
 <span id="machine-linux"></span><h1>Personal Linux/OSX Machine<a class="headerlink" href="#personal-linux-osx-machine" title="Permalink to this headline">¶</a></h1>
-<p>This approach worked for <a class="reference external" href="http://github.com/xylar">xylar</a> under Ubuntu 18.04
-and <a class="reference external" href="http://github.com/vanroekel">vanroekel</a> under Max OS X 10.14.6.</p>
+<p>This approach worked for <a class="reference external" href="http://github.com/xylar">xylar</a> under Ubuntu 20.04
+and a similar approach with an earlier version of SCORPIO was tested by
+<a class="reference external" href="http://github.com/vanroekel">vanroekel</a> under Max OS X 10.14.6.</p>
 <div class="section" id="installation-of-mpas-dependencies-including-scorpio-and-the-compass-conda-environment">
 <h2>Installation of MPAS dependencies including SCORPIO and the compass conda environment<a class="headerlink" href="#installation-of-mpas-dependencies-including-scorpio-and-the-compass-conda-environment" title="Permalink to this headline">¶</a></h2>
 <p>First, run the following script in an empty directory that you can delete later:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
 <span class="nb">set</span> -e
 
-<span class="nb">export</span> <span class="nv">PNETCDF_VERSION</span><span class="o">=</span><span class="m">1</span>.12.0
-<span class="nb">export</span> <span class="nv">SCORPIO_VERSION</span><span class="o">=</span><span class="m">1</span>.1.1
+<span class="nb">export</span> <span class="nv">PNETCDF_VERSION</span><span class="o">=</span><span class="m">1</span>.12.2
+<span class="nb">export</span> <span class="nv">SCORPIO_VERSION</span><span class="o">=</span><span class="m">1</span>.1.6
+<span class="nv">compass</span><span class="o">=</span><span class="m">1</span>.0.0
+<span class="nv">python</span><span class="o">=</span><span class="m">3</span>.8
 
 <span class="c1"># modify this to fit your system</span>
-<span class="nb">export</span> <span class="nv">CONDA_PATH</span><span class="o">=</span>/home/xylar/miniconda3
+<span class="nb">export</span> <span class="nv">CONDA_PATH</span><span class="o">=</span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/miniconda3
 
 <span class="nb">source</span> <span class="si">${</span><span class="nv">CONDA_PATH</span><span class="si">}</span>/etc/profile.d/conda.sh
 
-conda create -y -n mpas -c e3sm <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.8 <span class="s2">&quot;compass=0.1.6=mpi_mpich*&quot;</span> <span class="se">\</span>
+conda create -y -n mpas <span class="nv">python</span><span class="o">=</span><span class="si">${</span><span class="nv">python</span><span class="si">}</span> <span class="s2">&quot;compass=</span><span class="si">${</span><span class="nv">compass</span><span class="si">}</span><span class="s2">=mpi_mpich*&quot;</span> <span class="se">\</span>
     netcdf-fortran mpich fortran-compiler cxx-compiler c-compiler m4 git cmake
 
 conda activate mpas
@@ -230,7 +233,7 @@ conda activate mpas
 <span class="nb">export</span> <span class="nv">MPIF90</span><span class="o">=</span>mpifort
 <span class="nb">export</span> <span class="nv">LDFLAGS</span><span class="o">=</span><span class="s2">&quot;-L</span><span class="si">${</span><span class="nv">PREFIX</span><span class="si">}</span><span class="s2">/lib&quot;</span>
 
-rm -rf pnetcdf-<span class="si">${</span><span class="nv">PNETCDF_VERSION</span><span class="si">}</span>*
+rm -rf pnetcdf-*
 
 wget https://parallel-netcdf.github.io/Release/pnetcdf-<span class="si">${</span><span class="nv">PNETCDF_VERSION</span><span class="si">}</span>.tar.gz
 
@@ -268,7 +271,7 @@ make install
 <p>Then, when you want to build or run MPAS-Ocean, source a file containing:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda activate mpas
 <span class="c1"># Modify this path to point to your mpas conda environment</span>
-<span class="nb">export</span> <span class="nv">PREFIX</span><span class="o">=</span><span class="s2">&quot;/home/xylar/miniconda3/envs/mpas&quot;</span>
+<span class="nb">export</span> <span class="nv">PREFIX</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span><span class="s2">/miniconda3/envs/mpas&quot;</span>
 <span class="c1"># this step might not be needed</span>
 <span class="nb">export</span> <span class="nv">MPAS_EXTERNAL_LIBS</span><span class="o">=</span><span class="s2">&quot;-L</span><span class="si">${</span><span class="nv">PREFIX</span><span class="si">}</span><span class="s2">/lib -lnetcdff&quot;</span>
 <span class="nb">export</span> <span class="nv">NETCDF</span><span class="o">=</span><span class="si">${</span><span class="nv">PREFIX</span><span class="si">}</span>
