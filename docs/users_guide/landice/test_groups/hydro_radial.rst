@@ -3,7 +3,7 @@
 hydro_radial
 ============
 
-The ``landice/hydro_radial`` configuration implements variants of the
+The ``landice/hydro_radial`` test group implements variants of the
 radially symmetric hydrological test case from
 `Bueler et al. (2015) <https://doi.org/10.5194/gmd-8-1613-2015>`_.
 
@@ -13,7 +13,7 @@ at its center.  The mesh has 1-km horizontal resolution and 3 vertical layers.
 
 <<<Exmaple image here>>>
 
-The configuration includes 4 test cases.  All test cases are made up of 3
+The test group includes 4 test cases.  All test cases are made up of 3
 types of steps, ``setup_mesh``, which defines the mesh and initial conditions
 for the model; ``run_model`` (given another name in many test cases to
 distinguish multiple forward runs), which performs time integration of the

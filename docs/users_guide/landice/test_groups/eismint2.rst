@@ -3,7 +3,7 @@
 eismint2
 ========
 
-The ``landice/eismint2`` configuration implements variants of the EISMINT2 test
+The ``landice/eismint2`` test group implements variants of the EISMINT2 test
 cases from `Payne et al. (2000) <https://doi.org/10.3189/172756500781832891>`_.
 
 The domain is approximately rectangular with a circularly symmetric ice sheet
@@ -13,7 +13,7 @@ at its center with a radius of 750 km.  <<<Further description here>>>
 
 The test case has a horizontal resolution of 25 km and 10 vertical layers.
 
-The configuration includes 5 test cases.  The ``standard_experiments`` test
+The test group includes 5 test cases.  The ``standard_experiments`` test
 case implements EISMINT2 experiments A, B, C, D, F and G (but not E).  The
 remaining 4 test cases are for regression testing: decomposition and restart
 tests with either the `temperature` or the `enthalpy` thermal solver.

@@ -3,12 +3,12 @@
 greenland
 =========
 
-The ``landice/greenland`` configuration runs tests with a coarse (20-km)
+The ``landice/greenland`` test group runs tests with a coarse (20-km)
 `Greenland mesh <https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-albany-landice/gis20km.150922.nc>`_.
 
 <<<Exmaple image here>>>
 
-The configuration includes 3 test cases, each of which has one or more steps
+The test group includes 3 test cases, each of which has one or more steps
 that are variants on ``run_model`` (given other names in the decomposition and
 restart test cases to distinguish multiple model runs), which performs time
 integration of the model.
@@ -16,7 +16,7 @@ integration of the model.
 config options
 --------------
 
-There are no config options specific to this configuration.
+There are no config options specific to this test group.
 
 smoke_test
 ----------

@@ -3,7 +3,7 @@
 baroclinic_channel
 ==================
 
-The ``ocean/baroclinic_channel`` configuration implements variants of the
+The ``ocean/baroclinic_channel`` test group implements variants of the
 Baroclinic Eddies test case from
 `Ilicak et al. (2012) <https://doi.org/10.1016/j.ocemod.2011.10.003>`_.
 
@@ -21,7 +21,7 @@ Variants of the test case are available at 1-km, 4-km and 10-km horizontal
 resolution.  By default, the 20 vertical layers each have 50-m uniform
 thickness.
 
-The configuration includes 5 test cases.  All test cases have 2 steps,
+The test group includes 5 test cases.  All test cases have 2 steps,
 ``initial_state``, which defines the mesh and initial conditions for the model,
 and ``forward`` (given another name in many test cases to distinguish multiple
 forward runs), which performs time integration of the model.

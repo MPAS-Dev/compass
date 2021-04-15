@@ -3,7 +3,7 @@
 ziso
 ====
 
-The ``ocean/ziso`` configuration implements variants of the Zonally Idealized
+The ``ocean/ziso`` test group implements variants of the Zonally Idealized
 Southern Ocean (ZISO) test case from
 `Ringler et al. (2016) <https://doi.org/10.1175/JPO-D-16-0096.1>`_.  From that
 paper:

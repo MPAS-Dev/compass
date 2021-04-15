@@ -106,37 +106,49 @@ quwisc240 test suite
 
 This test suite performs exactly the same set of tests for the QUwISC240 mesh
 that are performed on the QU240 mesh in the :ref:`ocean_suite_nightly`.  Since
-the QUwISC initial condition is a bit more time consuming to produce and
+the QUwISC240 initial condition is a bit more time consuming to produce and
 equilibrate (see :ref:`ocean_ssh_adjustment`), it is not included in the
 ``nightly`` suite but regression testing on this mesh should also be performed
 on a regular basis to ensure no unexpected changes to MPAS-Ocean and E3SM
 configurations with ice-shelf cavities.
 
-.. _ocean_suite_qu240_spinups:
+.. _ocean_suite_qu240_for_e3sm:
 
-qu240_spinups test suite
-------------------------
+qu240_for_e3sm test suite
+-------------------------
 
 .. code-block:: bash
 
-    python -m compass suite -c ocean -t qu240_spinups ...
+    python -m compass suite -c ocean -t qu240_for_e3sm ...
 
 .. code-block:: none
 
     ocean/global_ocean/QU240/mesh
     ocean/global_ocean/QU240/PHC/init
-    ocean/global_ocean/QU240/PHC/spinup
+    ocean/global_ocean/QU240/PHC/dynamic_adjustment
     ocean/global_ocean/QU240/PHC/files_for_e3sm
+
+This suite includes all the tests needed to spin up an initial condition for
+E3SM on the QU240 mesh.
+
+.. _ocean_suite_quwisc240_for_e3sm:
+
+quwisc240_for_e3sm test suite
+-----------------------------
+
+.. code-block:: bash
+
+    python -m compass suite -c ocean -t quwisc240_for_e3sm ...
+
+.. code-block:: none
 
     ocean/global_ocean/QUwISC240/mesh
     ocean/global_ocean/QUwISC240/PHC/init
-    ocean/global_ocean/QUwISC240/PHC/spinup
+    ocean/global_ocean/QUwISC240/PHC/dynamic_adjustment
     ocean/global_ocean/QUwISC240/PHC/files_for_e3sm
 
-
 This suite includes all the tests needed to spin up an initial condition for
-E3SM on both the QU240 and QUwISC240 meshes.  They are grouped into a test
-suite simply to make them easier to run with one single command.
+E3SM on the QUwISC240 mesh.
 
 .. _ocean_suite_ec30to60:
 
@@ -152,16 +164,12 @@ ec30to60 test suite
     ocean/global_ocean/EC30to60/mesh
     ocean/global_ocean/EC30to60/PHC/init
     ocean/global_ocean/EC30to60/PHC/performance_test
-    ocean/global_ocean/EC30to60/PHC/spinup
+    ocean/global_ocean/EC30to60/PHC/dynamic_adjustment
     ocean/global_ocean/EC30to60/PHC/files_for_e3sm
-    ocean/global_ocean/EC30to60/EN4_1900/init
-    ocean/global_ocean/EC30to60/EN4_1900/performance_test
-    ocean/global_ocean/EC30to60/EN4_1900/spinup
-    ocean/global_ocean/EC30to60/EN4_1900/files_for_e3sm
 
 This suite is included for convenience so all the tests needed to spin up an
 initial condition for E3SM on the EC30to60 mesh can be run with a single
-command.
+command.  A short performance test is also included.
 
 .. _ocean_suite_ecwisc30to60:
 
@@ -177,13 +185,10 @@ ecwisc30to60 test suite
     ocean/global_ocean/ECwISC30to60/mesh
     ocean/global_ocean/ECwISC30to60/PHC/init
     ocean/global_ocean/ECwISC30to60/PHC/performance_test
-    ocean/global_ocean/ECwISC30to60/PHC/spinup
+    ocean/global_ocean/ECwISC30to60/PHC/dynamic_adjustment
     ocean/global_ocean/ECwISC30to60/PHC/files_for_e3sm
-    ocean/global_ocean/ECwISC30to60/EN4_1900/init
-    ocean/global_ocean/ECwISC30to60/EN4_1900/performance_test
-    ocean/global_ocean/ECwISC30to60/EN4_1900/spinup
-    ocean/global_ocean/ECwISC30to60/EN4_1900/files_for_e3sm
 
-Similarly to the previous two suites, this suite is included for convenience so
+Similarly to the previous 3 suites, this suite is included for convenience so
 all the tests needed to spin up an initial condition for E3SM on the
-ECwISC30to60 mesh can be run with a single command.
+ECwISC30to60 mesh can be run with a single command.   A short performance test
+is also included.

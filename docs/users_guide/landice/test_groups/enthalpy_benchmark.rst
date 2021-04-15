@@ -3,13 +3,13 @@
 enthalpy_benchmark
 ==================
 
-The ``landice/enthalpy_benchmark`` configuration implements variants of the
+The ``landice/enthalpy_benchmark`` test group implements variants of the
 enthalpy benchmark from
 `Kleiner et al (2015) <https://doi.org/10.5194/tc-9-217-2015>`_.
 
 The domain is a 2 by 2 cell column.  <<<Further description here>>>
 
-The configuration includes 2 test cases.  All test cases have 3 steps,
+The test group includes 2 test cases.  All test cases have 3 steps,
 ``setup_mesh``, which defines the mesh and initial conditions for the model;
 ``run_model`` (given another name in many test cases to distinguish multiple
 forward runs), which performs time integration of the model; and ``visualize``,

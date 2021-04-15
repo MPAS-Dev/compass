@@ -126,7 +126,7 @@ source code for that core.
 
 You can also supply a config file with config options pointing to the
 directories for cached data files, the location of MPAS model, and much more
-(see :ref:`configuration_files` and :ref:`setup_overview`).  Point to your config file
+(see :ref:`config_files` and :ref:`setup_overview`).  Point to your config file
 using the ``-f`` or ``--config_file`` flag.
 
 The ``-w`` or ``--work_dir`` flags point to a relative or absolute path that

@@ -3,7 +3,7 @@
 dome
 ====
 
-The ``landice/dome`` configuration implements variants of the dome test case
+The ``landice/dome`` test group implements variants of the dome test case
 from `Halfar (1983) <https://doi.org/10.1029/JC088iC10p06043>`_ and
 `Bueler et al. (2005) <https://doi.org/10.3189/172756505781829449>`_.
 
@@ -15,7 +15,7 @@ at its center.  <<<Further description here>>>
 Variants of the test case are available at 2000-m uniform or variable
 (~1200 m to ~16700 m) horizontal resolution and 10 vertical layers.
 
-The configuration includes 3 test cases.  All test cases have 3 steps,
+The test group includes 3 test cases.  All test cases have 3 steps,
 ``setup_mesh``, which defines the mesh and initial conditions for the model;
 ``run_model`` (given another name in many test cases to distinguish multiple
 forward runs), which performs time integration of the model; and ``visualize``,

@@ -3,6 +3,9 @@
 CompyMcNodeFace
 ===============
 
+So far, we have not got ``compass`` to successfully build and run Compy.  We
+will update this page when we do.
+
 config options
 --------------
 
@@ -15,14 +18,13 @@ setting up test cases or a test suite:
     # cases.
     [paths]
 
-    # The mesh_database and the initial_condition_database are locations where
-    # meshes / initial conditions might be found on a specific machine. They can be
-    # the same directory, or different directory. Additionally, if they are empty
-    # some test cases might download data into them, which will then be reused if
-    # the test case is run again later.
-    mesh_database = /compyfs/mpas_standalonedata/mpas-ocean/mesh_database
-    initial_condition_database = /compyfs/mpas_standalonedata/mpas-ocean/initial_condition_database
-    bathymetry_database = /compyfs/mpas_standalonedata/mpas-ocean/bathymetry_database
+    # The root to a location where the mesh_database, initial_condition_database,
+    # and bathymetry_database for MPAS-Ocean will be cached
+    ocean_database_root = /compyfs/mpas_standalonedata/mpas-ocean
+
+    # The root to a location where the mesh_database and initial_condition_database
+    # for MALI will be cached
+    landice_database_root = /compyfs/mpas_standalonedata/mpas-albany-landice
 
     # the path to the base conda environment where compass environments have
     # been created
@@ -47,21 +49,9 @@ setting up test cases or a test suite:
 intel on CompyMcNodeFace
 ------------------------
 
-First, you might want to build SCORPIO (see below), or use the one from
-`xylar <http://github.com/xylar>`_ referenced here:
+Coming soon...
 
-.. code-block:: bash
+pgi on CompyMcNodeFace
+----------------------
 
-    source /lcrc/soft/climate/e3sm-unified/load_latest_compass.sh
-
-
-SCORPIO on CompyMcNodeFace
---------------------------
-
-If you need to compile it yourself, you can do that as follows (contact
-`xylar <http://github.com/xylar>`_ if you run into trouble):
-
-.. code-block:: bash
-
-    #!/bin/bash
-
+Coming soon...

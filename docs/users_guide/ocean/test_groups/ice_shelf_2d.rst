@@ -3,7 +3,7 @@
 ice_shelf_2d
 ============
 
-The ``ocean/ice_shelf_2d`` configuration describes a
+The ``ocean/ice_shelf_2d`` test group describes a
 series of very simplified ice-shelf test cases where topography and initial
 conditions only vary in the y direction.  The test case currently supports
 only 5-km horizontal resolution and 20 vertical levels, each 50 m thick.
