@@ -122,6 +122,11 @@ class TestCase:
         to perform additional operations in addition to running the test case's
         steps
 
+        Developers need to make sure they call ``super().run()`` at some point
+        in the overridden ``run()`` method to actually call the steps of the
+        run.  The developer will need to decide where in the overridden method
+        to make the call to ``super().run()``, after any updates to steps
+        based on config options but before validation.
         """
         logger = self.logger
         cwd = os.getcwd()
@@ -232,6 +237,10 @@ class TestCase:
 
 
 def run_test_case():
+    """
+    Used by the framework to run a test case when ``compass run`` gets called
+    in the test case's work directory
+    """
     with open('test_case.pickle', 'rb') as handle:
         test_case = pickle.load(handle)
 

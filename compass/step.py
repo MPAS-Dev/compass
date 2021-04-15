@@ -17,6 +17,10 @@ class Step:
     own by a user, though users will typically run full test cases or test
     suites.
 
+    Below, the terms "input" and "output" refer to inputs and outputs to the
+    step itself, not necessarily the MPAS model.  In fact, the MPAS model
+    itself is often an input to the step.
+
     Attributes
     ----------
     name : str
@@ -200,10 +204,10 @@ class Step:
     def add_input_file(self, filename=None, target=None, database=None,
                        url=None, work_dir_target=None):
         """
-        Add an input file to the step.  The file can be local, a symlink to
-        a file that will be created in another step, a symlink to a file in one
-        of the databases for files cached after download, and/or come from a
-        specified URL.
+        Add an input file to the step (but not necessarily to the MPAS model).
+        The file can be local, a symlink to a file that will be created in
+        another step, a symlink to a file in one of the databases for files
+        cached after download, and/or come from a specified URL.
 
         Parameters
         ----------
@@ -252,7 +256,9 @@ class Step:
 
     def add_output_file(self, filename):
         """
-        Add the output file to the step
+        Add the output file that must be produced by this step and may be made
+        available as an input to steps, perhaps in other test cases.  This file
+        must exist after the test has run or an exception will be raised.
 
         Parameters
         ----------
@@ -530,6 +536,10 @@ class Step:
 
 
 def run_step():
+    """
+    Used by the framework to run a step when ``compass run`` gets called in the
+    step's work directory
+    """
     with open('step.pickle', 'rb') as handle:
         test_case, step = pickle.load(handle)
     test_case.steps_to_run = [step.name]
