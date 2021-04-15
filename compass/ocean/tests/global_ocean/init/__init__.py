@@ -71,7 +71,7 @@ class Init(TestCase):
         """
         Modify the configuration options for this test case
         """
-        configure_global_ocean(test_case=self, mesh=self.mesh)
+        configure_global_ocean(test_case=self, mesh=self.mesh, init=self)
 
     def run(self):
         """

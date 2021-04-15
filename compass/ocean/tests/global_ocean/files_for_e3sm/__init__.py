@@ -98,7 +98,7 @@ class FilesForE3SM(TestCase):
         """
         Modify the configuration options for this test case
         """
-        configure_global_ocean(test_case=self, mesh=self.mesh)
+        configure_global_ocean(test_case=self, mesh=self.mesh, init=self.init)
         with path('compass.ocean.tests.global_ocean.files_for_e3sm',
                   'README') as target:
             symlink(str(target), '{}/README'.format(self.work_dir))
