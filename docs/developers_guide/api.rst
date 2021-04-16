@@ -74,7 +74,19 @@ suite
 
    setup_suite
    clean_suite
+
+run
+~~~
+
+.. currentmodule:: compass.run
+
+.. autosummary::
+   :toctree: generated/
+
    run_suite
+   run_test_case
+   run_step
+
 
 Base Classes
 ^^^^^^^^^^^^
