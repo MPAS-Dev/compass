@@ -1,9 +1,7 @@
 import os
 from lxml import etree
-import pickle
 import configparser
 
-from mpas_tools.logging import LoggingContext
 from compass.io import download, symlink
 import compass.namelist
 import compass.streams
@@ -533,25 +531,3 @@ class Step:
                     defaults.remove(default)
 
             compass.streams.write(defaults_tree, out_filename)
-
-
-def run_step():
-    """
-    Used by the framework to run a step when ``compass run`` gets called in the
-    step's work directory
-    """
-    with open('step.pickle', 'rb') as handle:
-        test_case, step = pickle.load(handle)
-    test_case.steps_to_run = [step.name]
-    test_case.new_step_log_file = False
-
-    config = configparser.ConfigParser(
-        interpolation=configparser.ExtendedInterpolation())
-    config.read(step.config_filename)
-    test_case.config = config
-
-    # start logging to stdout/stderr
-    test_name = step.path.replace('/', '_')
-    with LoggingContext(name=test_name) as logger:
-        test_case.logger = logger
-        test_case.run()

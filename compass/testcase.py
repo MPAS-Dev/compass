@@ -1,5 +1,4 @@
 import os
-import pickle
 import configparser
 
 from mpas_tools.logging import LoggingContext
@@ -234,24 +233,3 @@ class TestCase:
                 'output file(s) missing in step {} of {}/{}/{}: {}'.format(
                     step.name, step.mpas_core.name, step.test_group.name,
                     step.test_case.subdir, missing_files))
-
-
-def run_test_case():
-    """
-    Used by the framework to run a test case when ``compass run`` gets called
-    in the test case's work directory
-    """
-    with open('test_case.pickle', 'rb') as handle:
-        test_case = pickle.load(handle)
-
-    config = configparser.ConfigParser(
-        interpolation=configparser.ExtendedInterpolation())
-    config.read(test_case.config_filename)
-    test_case.config = config
-
-    # start logging to stdout/stderr
-    test_name = test_case.path.replace('/', '_')
-    test_case.new_step_log_file = True
-    with LoggingContext(name=test_name) as logger:
-        test_case.logger = logger
-        test_case.run()
