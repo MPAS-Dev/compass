@@ -103,18 +103,13 @@
 <li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quick Start for Developers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="command_line.html">Command-line interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cores.html">Cores</a></li>
+<li class="toctree-l1"><a class="reference internal" href="organization.html">Organization of Tests</a></li>
 <li class="toctree-l1"><a class="reference internal" href="landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ocean/index.html">Ocean core</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Framework</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#config-files">Config files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#logging">Logging</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#io">IO</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#input-files">Input files</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#symlinks-to-input-files">Symlinks to input files</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#input-files-from-compass">Input files from compass</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#downloading-input-files">Downloading input files</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#output-files">Output files</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#symlinks">Symlinks</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#download">Download</a></li>
 </ul>
@@ -127,16 +122,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#namelist">Namelist</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#adding-a-namelist-file-to-a-step">Adding a namelist file to a step</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#adding-namelist-options-to-a-step">Adding namelist options to a step</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#generating-a-namelist-file">Generating a namelist file</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#updating-a-namelist-file">Updating a namelist file</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#streams">Streams</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#adding-a-streams-file-to-a-step">Adding a streams file to a step</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#adding-a-template-streams-file">Adding a template streams file</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#generating-a-streams-file">Generating a streams file</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#validation">Validation</a><ul>
@@ -151,6 +137,10 @@
 <li class="toctree-l1"><a class="reference internal" href="building_docs.html">Building the Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Versions</span></p>
 <ul>
@@ -231,17 +221,22 @@ meant to be called within test cases and steps to simplify tasks like adding
 input and output files, downloading data sets, building up config files,
 namelists and streams files, set up and run the MPAS model, and verify the
 output by comparing steps with one another or against a baseline.</p>
-<div class="section" id="configuration">
-<span id="dev-config"></span><h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
-<p>The <code class="docutils literal notranslate"><span class="pre">compass.config</span></code> includes functions for creating and manipulating config
-options and <a class="reference internal" href="../users_guide/config_files.html#config-files"><span class="std std-ref">Config Files</span></a>.</p>
+<div class="section" id="config-files">
+<span id="dev-config"></span><h2>Config files<a class="headerlink" href="#config-files" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">compass.config</span></code> module includes functions for creating and manipulating
+config options and <a class="reference internal" href="../users_guide/config_files.html#config-files"><span class="std std-ref">Config Files</span></a>.</p>
 <p>The <a class="reference internal" href="generated/compass.config.add_config.html#compass.config.add_config" title="compass.config.add_config"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.config.add_config()</span></code></a> function can be used to add the
 contents of a config file within a package to the current config parser.
 Examples of this can be found in most test cases as well as
 <a class="reference internal" href="generated/compass.setup.setup_case.html#compass.setup.setup_case" title="compass.setup.setup_case"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.setup.setup_case()</span></code></a>. Here is a typical example from
-<code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.tests.enthalpy_benchmark.A.configure()</span></code>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">add_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;compass.landice.tests.enthalpy_benchmark.A&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;A.cfg&#39;</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a class="reference internal" href="landice/generated/compass.landice.tests.enthalpy_benchmark.A.A.configure.html#compass.landice.tests.enthalpy_benchmark.A.A.configure" title="compass.landice.tests.enthalpy_benchmark.A.A.configure"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.tests.enthalpy_benchmark.A.A.configure()</span></code></a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Modify the configuration options for this test case</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">add_config</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;compass.landice.tests.enthalpy_benchmark.A&#39;</span><span class="p">,</span>
+               <span class="s1">&#39;A.cfg&#39;</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="o">...</span>
 </pre></div>
 </div>
 <p>The second and third arguments are the name of a package containing the config
@@ -252,30 +247,28 @@ that the config file should always exist, so we would like the code to raise
 and exception (<code class="docutils literal notranslate"><span class="pre">exception=True</span></code>) if the file is not found.  This is the
 default behavior.  In some cases, you would like the code to add the config
 options if the config file exists and do nothing if it does not.  This can
-be useful if a common <code class="docutils literal notranslate"><span class="pre">configure()</span></code> function is being used for all test
+be useful if a common configure function is being used for all test
 cases in a configuration, as in this example from
-<a class="reference internal" href="ocean/generated/compass.ocean.tests.global_ocean.configure.html#module-compass.ocean.tests.global_ocean.configure" title="compass.ocean.tests.global_ocean.configure"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.configure()</span></code></a>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">name</span> <span class="o">=</span> <span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
-<span class="n">add_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;compass.ocean.tests.global_ocean.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">),</span>
-           <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.cfg&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="n">exception</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<a class="reference internal" href="ocean/generated/compass.ocean.tests.global_ocean.configure.configure_global_ocean.html#compass.ocean.tests.global_ocean.configure.configure_global_ocean" title="compass.ocean.tests.global_ocean.configure.configure_global_ocean"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.configure.configure_global_ocean()</span></code></a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">add_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">test_case</span><span class="o">.</span><span class="vm">__module__</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.cfg&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">test_case</span><span class="o">.</span><span class="n">name</span><span class="p">),</span>
+           <span class="n">exception</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>When this is called within the <code class="docutils literal notranslate"><span class="pre">mesh</span></code> test case, nothing will happend because
 <code class="docutils literal notranslate"><span class="pre">compass/ocean/tests/global_ocean/mesh</span></code> does not contain a <code class="docutils literal notranslate"><span class="pre">mesh.cfg</span></code> file.
 The config files for meshes are handled differently, since they aren’t
 associated with a particular test case:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mesh_name</span> <span class="o">=</span> <span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;mesh_name&#39;</span><span class="p">]</span>
-<span class="n">package</span><span class="p">,</span> <span class="n">prefix</span> <span class="o">=</span> <span class="n">get_mesh_package</span><span class="p">(</span><span class="n">mesh_name</span><span class="p">)</span>
-<span class="n">add_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">package</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.cfg&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">),</span> <span class="n">exception</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mesh_step</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">mesh_step</span>
+<span class="n">add_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">mesh_step</span><span class="o">.</span><span class="n">package</span><span class="p">,</span> <span class="n">mesh_step</span><span class="o">.</span><span class="n">mesh_config_filename</span><span class="p">,</span>
+           <span class="n">exception</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>In this case, we get the package for the mesh using
-<code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.mesh.get_mesh_package()</span></code>,
-(e.g. <code class="docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.qu240</span></code> for the <code class="docutils literal notranslate"><span class="pre">QU240</span></code> and
-<code class="docutils literal notranslate"><span class="pre">QUwISC240</span></code> meshes), then it adds config options from this file.  Since we
-require each mesh to have config options (to define the vertical grid and the
-metadata to be added to the mesh, at the very least), we use <code class="docutils literal notranslate"><span class="pre">exception=True</span></code>
-so an exception will be raised if no config file is found.</p>
+<p>In this case, the mesh step keeps track of the package and config file in its
+attributes (e.g. <code class="docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.qu240</span></code> and
+<code class="docutils literal notranslate"><span class="pre">qu240.cfg</span></code> for the <code class="docutils literal notranslate"><span class="pre">QU240</span></code> and <code class="docutils literal notranslate"><span class="pre">QUwISC240</span></code> meshes).  Since we require
+each mesh to have config options (to define the vertical grid and the metadata
+to be added to the mesh, at the very least), we use <code class="docutils literal notranslate"><span class="pre">exception=True</span></code> so an
+exception will be raised if no config file is found.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">config</span></code> module also contains 3 functions that are intended for internal
 use by the framework itself. Test-case developers will typically not need to
 call these functions directly.</p>
@@ -303,8 +296,8 @@ as well as the APIs for <a class="reference external" href="http://mpas-dev.gith
 <a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.logging.check_call.html#mpas_tools.logging.check_call" title="(in mpas_tools vstable)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_tools.logging.check_call()</span></code></a>.</p>
 <p>For the most part, the <code class="docutils literal notranslate"><span class="pre">compass</span></code> framework handles logging for you, so
 test-case developers won’t have to create your own <code class="docutils literal notranslate"><span class="pre">logger</span></code> objects.  They
-are arguments to the test case’s <a class="reference internal" href="cores.html#dev-testcase-run"><span class="std std-ref">run()</span></a> or step’s
-<a class="reference internal" href="cores.html#dev-step-run"><span class="std std-ref">run()</span></a>.  If you run a step on its own, no log file is created
+are arguments to the test case’s <a class="reference internal" href="organization.html#dev-test-case-run"><span class="std std-ref">run()</span></a> or step’s
+<a class="reference internal" href="organization.html#dev-step-run"><span class="std std-ref">run()</span></a>.  If you run a step on its own, no log file is created
 and logging happens to <code class="docutils literal notranslate"><span class="pre">stdout</span></code>/<code class="docutils literal notranslate"><span class="pre">stderr</span></code>.  If you run the full test case,
 each step gets logged to its own log file within the test case’s work
 directory.  If you run a test suite, each test case and its steps get logged
@@ -321,11 +314,11 @@ log file.  Whereas logging can capture <code class="docutils literal notranslate
 the <code class="docutils literal notranslate"><span class="pre">print</span></code> statements actually go to log files when desired, there is no
 similar trick for automatically capturing the output from direct calls to
 <code class="docutils literal notranslate"><span class="pre">subprocess</span></code> functions.  Here is a code snippet from
-<code class="xref py py-func docutils literal notranslate"><span class="pre">compass.landice.tests.dome.setup_mesh.run()</span></code>:</p>
+<a class="reference internal" href="landice/generated/compass.landice.tests.dome.setup_mesh.SetupMesh.run.html#compass.landice.tests.dome.setup_mesh.SetupMesh.run" title="compass.landice.tests.dome.setup_mesh.SetupMesh.run"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.landice.tests.dome.setup_mesh.SetupMesh.run()</span></code></a>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mpas_tools.logging</span> <span class="kn">import</span> <span class="n">check_call</span>
 
 
-<span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">test_suite</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="o">...</span>
     <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;dome&#39;</span><span class="p">]</span>
     <span class="o">...</span>
@@ -344,131 +337,9 @@ from <code class="docutils literal notranslate"><span class="pre">mpas_tools</sp
 </div>
 <div class="section" id="io">
 <span id="dev-io"></span><h2>IO<a class="headerlink" href="#io" title="Permalink to this headline">¶</a></h2>
-<p>The most common functions for test-case developers to use from the
-<code class="docutils literal notranslate"><span class="pre">compass.io</span></code> module are <code class="xref py py-func docutils literal notranslate"><span class="pre">compass.io.add_input_file()</span></code> and
-<code class="xref py py-func docutils literal notranslate"><span class="pre">compass.io.add_output_file()</span></code>.</p>
-<div class="section" id="input-files">
-<span id="dev-io-input"></span><h3>Input files<a class="headerlink" href="#input-files" title="Permalink to this headline">¶</a></h3>
-<p>Typically, a step will add input files with
-<code class="xref py py-func docutils literal notranslate"><span class="pre">compass.io.add_input_file()</span></code> in its <a class="reference internal" href="cores.html#dev-step-collect"><span class="std std-ref">collect()</span></a>: or
-<a class="reference internal" href="cores.html#dev-step-setup"><span class="std std-ref">setup()</span></a> function.  It is also possible to add inputs in the
-test case’s <a class="reference internal" href="cores.html#dev-testcase-collect"><span class="std std-ref">collect()</span></a> function.</p>
-<p>It is possible to simply supply the path to an input file as <code class="docutils literal notranslate"><span class="pre">filename</span></code>
-without any other arguments to <code class="docutils literal notranslate"><span class="pre">add_input_file()</span></code>.  In this case, the file
-name is either an absolute path or a relative path with respect to the step’s
-work directory:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">add_input_file</span>
-
-<span class="k">def</span> <span class="nf">collect</span><span class="p">(</span><span class="n">testcase</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
-    <span class="o">...</span>
-    <span class="n">add_input_file</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;../setup_mesh/landice_grid.nc&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>This is not typically how <code class="docutils literal notranslate"><span class="pre">add_input_file()</span></code> is used because input files are
-usually not directly in the step’s work directory.</p>
-</div>
-<div class="section" id="symlinks-to-input-files">
-<span id="dev-io-input-symlinks"></span><h3>Symlinks to input files<a class="headerlink" href="#symlinks-to-input-files" title="Permalink to this headline">¶</a></h3>
-<p>The most common type of input file is the output from another step. Rather than
-just giving the file name directly, as in the example above, the preference is
-to place a symbolic link in the work directory.  This makes it much easier to
-see if the file is missing (because symlink will show up as broken) and allows
-you to refer to a short, local name for the file rather than its full path:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">xarray</span>
-
-<span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">add_input_file</span>
-
-
-<span class="k">def</span> <span class="nf">collect</span><span class="p">(</span><span class="n">testcase</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
-    <span class="o">...</span>
-    <span class="n">add_input_file</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;landice_grid.nc&#39;</span><span class="p">,</span>
-                   <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../setup_mesh/landice_grid.nc&#39;</span><span class="p">)</span>
-
-<span class="o">...</span>
-
-<span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">test_suite</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
-   <span class="o">...</span>
-   <span class="k">with</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;landice_grid.nc&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds</span><span class="p">:</span>
-       <span class="o">...</span>
-</pre></div>
-</div>
-<p>A symlink is not actually created when <code class="docutils literal notranslate"><span class="pre">add_input_file()</span></code> is called.  This
-will not happen until the step gets set up, after calling its
-<a class="reference internal" href="cores.html#dev-step-setup"><span class="std std-ref">setup()</span></a> function (if any).</p>
-</div>
-<div class="section" id="input-files-from-compass">
-<span id="dev-io-input-compass"></span><h3>Input files from compass<a class="headerlink" href="#input-files-from-compass" title="Permalink to this headline">¶</a></h3>
-<p>Another common need is to symlink a data file from within the configuration or
-test case:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">importlib.resources</span> <span class="kn">import</span> <span class="n">path</span>
-
-<span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">add_input_file</span>
-
-
-<span class="k">def</span> <span class="nf">collect</span><span class="p">(</span><span class="n">testcase</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
-    <span class="o">...</span>
-    <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;enthA_analy_result.mat&#39;</span>
-    <span class="k">with</span> <span class="n">path</span><span class="p">(</span><span class="s1">&#39;compass.landice.tests.enthalpy_benchmark.A&#39;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span> <span class="k">as</span> \
-            <span class="n">target</span><span class="p">:</span>
-        <span class="n">add_input_file</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">target</span><span class="p">))</span>
-</pre></div>
-</div>
-<p>Here, we use a <code class="xref py py-class docutils literal notranslate"><span class="pre">importlib.resources.path</span></code> object as the target of the
-symlink (converting it to a string: <code class="docutils literal notranslate"><span class="pre">str(target)</span></code>), which lets python take
-care of figuring out where <code class="docutils literal notranslate"><span class="pre">compass</span></code> is installed so it can find the path to
-the resource.</p>
-</div>
-<div class="section" id="downloading-input-files">
-<span id="dev-io-input-download"></span><h3>Downloading input files<a class="headerlink" href="#downloading-input-files" title="Permalink to this headline">¶</a></h3>
-<p>The final type of input file is one that is downloaded and stored locally.
-Typically, to save ourselves the time of downloading large files and to reduce
-potential problems on systems with firewalls, we cache the downloaded files in
-a location where they can be shared between users and reused over time.  These
-“databases” are subdirectories of the core’s database root on the
-<a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/">LCRC server</a>.</p>
-<p>To add an input file from a database, call <code class="docutils literal notranslate"><span class="pre">add_input_file()</span></code> with the
-<code class="docutils literal notranslate"><span class="pre">database</span></code> argument:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">add_input_file</span><span class="p">(</span>
-    <span class="n">step</span><span class="p">,</span>  <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;topography.nc&#39;</span><span class="p">,</span>
-    <span class="n">target</span><span class="o">=</span><span class="s1">&#39;BedMachineAntarctica_and_GEBCO_2019_0.05_degree.200128.nc&#39;</span><span class="p">,</span>
-    <span class="n">database</span><span class="o">=</span><span class="s1">&#39;bathymetry_database&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>In this example from
-<code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.init.initial_state.setup()</span></code>, the
-file <code class="docutils literal notranslate"><span class="pre">BedMachineAntarctica_and_GEBCO_2019_0.05_degree.200128.nc</span></code> slated for
-later downloaded from
-<a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-ocean/bathymetry_database/">MPAS-Ocean’s bathymetry database</a>.
-The file will be stored in the subdirectory <code class="docutils literal notranslate"><span class="pre">bathymetry_database</span></code> of the path
-in the <code class="docutils literal notranslate"><span class="pre">ocean_database_root</span></code> config option in the <code class="docutils literal notranslate"><span class="pre">paths</span></code> section of the
-config file.  The <code class="docutils literal notranslate"><span class="pre">ocean_database_root</span></code> option (or the equivalent for other
-cores) is set either by selecting one of the <a class="reference internal" href="../users_guide/machines/index.html#supported-machines"><span class="std std-ref">Supported Machines</span></a> or in
-the user’s config file.</p>
-<p>It is also possible to download files directly from a URL and store them in
-the step’s working directory:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">add_input_file</span><span class="p">(</span>
-    <span class="n">step</span><span class="p">,</span>  <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;dome_varres_grid.nc&#39;</span><span class="p">,</span>
-    <span class="n">url</span><span class="o">=</span><span class="s1">&#39;https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/&#39;</span>
-        <span class="s1">&#39;mpas-albany-landice/dome_varres_grid.nc&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>We recommend against this practice except for very small files.</p>
-</div>
-<div class="section" id="output-files">
-<span id="dev-io-output"></span><h3>Output files<a class="headerlink" href="#output-files" title="Permalink to this headline">¶</a></h3>
-<p>We require that all steps provide a list of any output files that other steps
-are allowed to use as inputs.  This helps us keep track of dependencies and
-will be used in the future to enable steps to run in parallel as long as they
-don’t depend on each other.  Adding an output files is pretty straightforward:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">add_output_file</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;output_file.nc&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.io.add_output_file()</span></code> can be called in a step’s
-<a class="reference internal" href="cores.html#dev-step-collect"><span class="std std-ref">collect()</span></a>: or <a class="reference internal" href="cores.html#dev-step-setup"><span class="std std-ref">setup()</span></a> function or (less commonly)
-in the test case’s <a class="reference internal" href="cores.html#dev-testcase-collect"><span class="std std-ref">collect()</span></a> function.</p>
-<p>The relative path in <code class="docutils literal notranslate"><span class="pre">filename</span></code> is with respect to the step’s work directory,
-and is converted to an absolute path internally before the step is run.</p>
-</div>
+<p>A lot of I/O related tasks are handled internally in the step class
+<a class="reference internal" href="generated/compass.Step.html#compass.Step" title="compass.Step"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.Step</span></code></a>.  Some of the lower level functions can be called
+directly if need be.</p>
 <div class="section" id="symlinks">
 <span id="dev-io-symlink"></span><h3>Symlinks<a class="headerlink" href="#symlinks" title="Permalink to this headline">¶</a></h3>
 <p>You can also create your own symlinks that aren’t input files (e.g. for a
@@ -498,16 +369,16 @@ know if the test case will be set up at all (or in what work directory) during
 <span id="dev-io-download"></span><h3>Download<a class="headerlink" href="#download" title="Permalink to this headline">¶</a></h3>
 <p>You can download files more directly if you need to using
 <a class="reference internal" href="generated/compass.io.download.html#compass.io.download" title="compass.io.download"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.io.download()</span></code></a>, though we recommend using
-<code class="xref py py-func docutils literal notranslate"><span class="pre">compass.io.add_input_file()</span></code> whenever possible because it is more
+<a class="reference internal" href="generated/compass.Step.add_input_file.html#compass.Step.add_input_file" title="compass.Step.add_input_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.add_input_file()</span></code></a> whenever possible because it is more
 flexible and takes care of more of the details of symlinking the local file
 and adding it as an input to the step.  No current test cases use
 <code class="docutils literal notranslate"><span class="pre">download()</span></code> directly, but an example might look like this:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">symlink</span><span class="p">,</span> <span class="n">download</span>
 
-<span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
-    <span class="n">step_dir</span> <span class="o">=</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;work_dir&#39;</span><span class="p">]</span>
-    <span class="n">database_root</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="s1">&#39;ocean_database_root&#39;</span><span class="p">)</span>
+    <span class="n">step_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span>
+    <span class="n">database_root</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="s1">&#39;ocean_database_root&#39;</span><span class="p">)</span>
     <span class="n">download_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">database_root</span><span class="p">,</span> <span class="s1">&#39;bathymetry_database&#39;</span><span class="p">)</span>
 
     <span class="n">remote_filename</span> <span class="o">=</span> \
@@ -535,21 +406,18 @@ bathymetry database.</p>
 <span id="dev-model"></span><h2>Model<a class="headerlink" href="#model" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="running-mpas">
 <h3>Running MPAS<a class="headerlink" href="#running-mpas" title="Permalink to this headline">¶</a></h3>
-<p>If a step involves running MPAS, the model executable can be linked and added
-as an input by calling <code class="xref py py-func docutils literal notranslate"><span class="pre">compass.model.add_model_as_input()</span></code>.  This
-way, if the user has forgotten to compile the model, this will be obvious by
-the broken symlink and the step will immediately fail because of the missing
-input.  The path to the executable is automatically detected based on the
-work directory for the step and the config options.</p>
+<p>Steps that run the MPAS model should call the
+<a class="reference internal" href="generated/compass.Step.add_model_as_input.html#compass.Step.add_model_as_input" title="compass.Step.add_model_as_input"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.add_model_as_input()</span></code></a> method their <code class="docutils literal notranslate"><span class="pre">setup()</span></code> method.</p>
 <p>To run MPAS, call <a class="reference internal" href="generated/compass.model.run_model.html#compass.model.run_model" title="compass.model.run_model"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.model.run_model()</span></code></a>.  By default, this
 function first updates the namelist options associated with the
 <a class="reference external" href="https://ncar.github.io/ParallelIO/">PIO library</a> and partition the mesh
 across MPI tasks, as we sill discuss in a moment, before running the model.
 You can provide non-default names for the graph, namelist and streams files.
-The number of cores and threads is determined from the <cite>step</cite> dictionary and
-must be set in the step’s <a class="reference internal" href="cores.html#dev-step-collect"><span class="std std-ref">collect()</span></a> or <a class="reference internal" href="cores.html#dev-step-setup"><span class="std std-ref">setup()</span></a>
-(i.e. before calling <a class="reference internal" href="cores.html#dev-step-run"><span class="std std-ref">run()</span></a>) so that the <code class="docutils literal notranslate"><span class="pre">compass</span></code> framework can
-ensure that the required resources are available.</p>
+The number of cores and threads is determined from the <code class="docutils literal notranslate"><span class="pre">cores</span></code>, <code class="docutils literal notranslate"><span class="pre">min_cores</span></code>
+and <code class="docutils literal notranslate"><span class="pre">threads</span></code> attributes of the step object, set in its
+constructor or <a class="reference internal" href="organization.html#dev-step-setup"><span class="std std-ref">setup()</span></a> method (i.e. before calling
+<a class="reference internal" href="organization.html#dev-step-run"><span class="std std-ref">run()</span></a>) so that the <code class="docutils literal notranslate"><span class="pre">compass</span></code> framework can ensure that the
+required resources are available.</p>
 </div>
 <div class="section" id="partitioning-the-mesh">
 <h3>Partitioning the mesh<a class="headerlink" href="#partitioning-the-mesh" title="Permalink to this headline">¶</a></h3>
@@ -598,102 +466,14 @@ cells in the mesh file that gives different weight to different cells
 </div>
 <div class="section" id="namelist">
 <span id="dev-namelist"></span><h2>Namelist<a class="headerlink" href="#namelist" title="Permalink to this headline">¶</a></h2>
-<p>Cores, configurations, and test cases can provide namelist files that are used
-to replace default namelist options before MPAS gets run.  Namelist files
-within the <code class="docutils literal notranslate"><span class="pre">compass</span></code> package must start with the prefix <code class="docutils literal notranslate"><span class="pre">namelist.</span></code> to
-ensure that they are included when we build the package.</p>
-<div class="section" id="adding-a-namelist-file-to-a-step">
-<h3>Adding a namelist file to a step<a class="headerlink" href="#adding-a-namelist-file-to-a-step" title="Permalink to this headline">¶</a></h3>
-<p>Typically, a step that runs MPAS will include one or more calls to
-<code class="xref py py-func docutils literal notranslate"><span class="pre">compass.namelist.add_namelist_file()</span></code> within <a class="reference internal" href="cores.html#dev-step-collect"><span class="std std-ref">collect()</span></a>
-or <a class="reference internal" href="cores.html#dev-step-setup"><span class="std std-ref">setup()</span></a>.  Calling this function simply adds the file to a
-list within the <code class="docutils literal notranslate"><span class="pre">step</span></code> dictionary that will be parsed if an when
-<code class="xref py py-func docutils literal notranslate"><span class="pre">compass.namelist.generate_namelist()</span></code> gets called to create the
-namelist.  (This way, it is safe to add namelist files to a step in
-<code class="docutils literal notranslate"><span class="pre">collect()</span></code> even if that test case will never get set up or run.)</p>
-<p>The format of the namelist file is simply a list of namelist options and
-the replacement values:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>config_write_output_on_startup = .false.
-config_run_duration = &#39;0000_00:15:00&#39;
-config_use_mom_del2 = .true.
-config_implicit_bottom_drag_coeff = 1.0e-2
-config_use_cvmix_background = .true.
-config_cvmix_background_diffusion = 0.0
-config_cvmix_background_viscosity = 1.0e-4
-</pre></div>
-</div>
-<p>Since all MPAS namelist options must have unique names, we do not worry about
-which specific namelist within the file each belongs to.</p>
-<p>A typical namelist file is added by passing the <code class="docutils literal notranslate"><span class="pre">step</span></code> dictionary, along with
-a package where the namelist file is located and the name of the input namelist
-file within that package:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">add_namelist_file</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="s1">&#39;compass.ocean.tests.baroclinic_channel&#39;</span><span class="p">,</span>
-                  <span class="s1">&#39;namelist.forward&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>If the namelist should have a different name than the default
-(<code class="docutils literal notranslate"><span class="pre">namelist.&lt;core&gt;</span></code>), the name can be given via the <code class="docutils literal notranslate"><span class="pre">out_name</span></code> keyword
-argument.</p>
-<p>Namelist values are replaced by the files (or options, see below) in the
-sequence they are given.  This way, you can add the namelist substitutions for
-the configuration first, and then override those with the replacements for
-the test case or step.</p>
-</div>
-<div class="section" id="adding-namelist-options-to-a-step">
-<h3>Adding namelist options to a step<a class="headerlink" href="#adding-namelist-options-to-a-step" title="Permalink to this headline">¶</a></h3>
-<p>Sometimes, it is easier to replace namelist options using a dictionary within
-the code, rather than a namelist file.  This is appropriate when there are only
-1 or 2 options to replace (so creating a file seems like overkill) or when the
-namelist options rely on values that are determined by the code (e.g. different
-values for different resolutions).  Simply create a dictionary of replacements
-and call <code class="xref py py-func docutils literal notranslate"><span class="pre">compass.namelist.add_namelist_options()</span></code> at either the
-<code class="docutils literal notranslate"><span class="pre">collect()</span></code> or <code class="docutils literal notranslate"><span class="pre">setup()</span></code> stage of the test case.  These replacements are
-parsed, along with replacements from files, in the order they are added.  Thus,
-you could add replacements from a namelist file for the configuration, test
-case, or step, then override them with namelist options in a dictionary for the
-test case or step, as in this example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">add_namelist_file</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="s1">&#39;compass.ocean.tests.baroclinic_channel&#39;</span><span class="p">,</span>
-                  <span class="s1">&#39;namelist.forward&#39;</span><span class="p">)</span>
-<span class="n">add_namelist_file</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="s1">&#39;compass.ocean.tests.baroclinic_channel&#39;</span><span class="p">,</span>
-                  <span class="s1">&#39;namelist.</span><span class="si">{}</span><span class="s1">.forward&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step</span><span class="p">[</span><span class="s1">&#39;resolution&#39;</span><span class="p">]))</span>
-<span class="k">if</span> <span class="s1">&#39;nu&#39;</span> <span class="ow">in</span> <span class="n">step</span><span class="p">:</span>
-    <span class="c1"># update the viscosity to the requested value</span>
-    <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_mom_del2&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step</span><span class="p">[</span><span class="s1">&#39;nu&#39;</span><span class="p">])}</span>
-    <span class="n">add_namelist_options</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Here, we get default options for “forward” steps, then for the resolution of
-the test case from namelist files, then update the viscosity <code class="docutils literal notranslate"><span class="pre">nu</span></code>, which is
-an option passed in when creating this step.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Namelist values must be of type <code class="docutils literal notranslate"><span class="pre">str</span></code>, so use <code class="docutils literal notranslate"><span class="pre">'{}'.format(value)</span></code> to
-convert a numerical value to a string.</p>
-</div>
-</div>
-<div class="section" id="generating-a-namelist-file">
-<h3>Generating a namelist file<a class="headerlink" href="#generating-a-namelist-file" title="Permalink to this headline">¶</a></h3>
-<p>Calls to <code class="xref py py-func docutils literal notranslate"><span class="pre">compass.namelist.add_namelist_file()</span></code> and
-<code class="xref py py-func docutils literal notranslate"><span class="pre">compass.namelist.add_namelist_options()</span></code> queue up replacements but
-they are only parsed when you call <code class="xref py py-func docutils literal notranslate"><span class="pre">compass.namelist.generate_namelist()</span></code>.
-If your namelist has the default name (<code class="docutils literal notranslate"><span class="pre">namelist.&lt;core&gt;</span></code>) and the model will
-be run in <code class="docutils literal notranslate"><span class="pre">forward</span></code> mode, you just need to provide the <code class="docutils literal notranslate"><span class="pre">step</span></code> dictionary
-and config options.  You can give the file a different name or select <code class="docutils literal notranslate"><span class="pre">init</span></code>
-mode if you need to.</p>
-<p>The namelist is typically generated in <a class="reference internal" href="cores.html#dev-step-setup"><span class="std std-ref">setup()</span></a>.  It cannot be
-generated during <code class="docutils literal notranslate"><span class="pre">collect()</span></code> because the work directory is not known and
-anyway we do not want to perform any file creation at all during <code class="docutils literal notranslate"><span class="pre">collect()</span></code>.
-It could also be generated during <code class="docutils literal notranslate"><span class="pre">run()</span></code>, but we do not recommend this
-because it would not give the user a chance to modify namelist options
-themselves before running.</p>
-</div>
 <div class="section" id="updating-a-namelist-file">
 <h3>Updating a namelist file<a class="headerlink" href="#updating-a-namelist-file" title="Permalink to this headline">¶</a></h3>
 <p>It is sometimes useful to update namelist options after a namelist has already
-been generated with <code class="xref py py-func docutils literal notranslate"><span class="pre">compass.namelist.generate_namelist()</span></code>.  This
-typically happens during <code class="docutils literal notranslate"><span class="pre">run()</span></code> for options that cannot be known beforehand,
-particularly options related to the number of cores and threads.  In such
-cases, call <code class="xref py py-func docutils literal notranslate"><span class="pre">compass.namelist.update()</span></code>:</p>
+been generated as part of setting up the step it belongs to (see
+<a class="reference internal" href="organization.html#dev-step-namelists-and-streams"><span class="std std-ref">Adding namelist and streams files</span></a>).  This typically happens within a step’s
+<code class="docutils literal notranslate"><span class="pre">run()</span></code> method for options that cannot be known beforehand, particularly
+options related to the number of cores and threads.  In such cases, call
+<a class="reference internal" href="generated/compass.namelist.update.html#compass.namelist.update" title="compass.namelist.update"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.namelist.update()</span></code></a>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.namelist</span> <span class="kn">import</span> <span class="n">update</span>
 
 <span class="o">...</span>
@@ -705,135 +485,6 @@ cases, call <code class="xref py py-func docutils literal notranslate"><span cla
        <span class="n">out_name</span><span class="o">=</span><span class="n">namelist</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="streams">
-<span id="dev-streams"></span><h2>Streams<a class="headerlink" href="#streams" title="Permalink to this headline">¶</a></h2>
-<p>Cores, configurations, and test cases can provide streams files that are used
-to define new streams or update default streams before MPAS runs.  Streams
-files within the <code class="docutils literal notranslate"><span class="pre">compass</span></code> package must start with the prefix <code class="docutils literal notranslate"><span class="pre">streams.</span></code> to
-ensure that they are included when we build the package.</p>
-<p>Streams files are a bit more complicated than <a class="reference internal" href="#dev-namelist"><span class="std std-ref">Namelist</span></a> files because
-streams files are XML documents, requiring some slightly more sophisticated
-parsing.</p>
-<div class="section" id="adding-a-streams-file-to-a-step">
-<h3>Adding a streams file to a step<a class="headerlink" href="#adding-a-streams-file-to-a-step" title="Permalink to this headline">¶</a></h3>
-<p>Typically, a step that runs MPAS will include one or more calls to
-<code class="xref py py-func docutils literal notranslate"><span class="pre">compass.streams.add_streams_file()</span></code> within <a class="reference internal" href="cores.html#dev-step-collect"><span class="std std-ref">collect()</span></a>
-or <a class="reference internal" href="cores.html#dev-step-setup"><span class="std std-ref">setup()</span></a>.  Calling this function simply adds the file to a
-list within the <code class="docutils literal notranslate"><span class="pre">step</span></code> dictionary that will be parsed if an when
-<code class="xref py py-func docutils literal notranslate"><span class="pre">compass.streams.generate_streams()</span></code> gets called to create the
-streams file.  (This way, it is safe to add streams files to a step in
-<code class="docutils literal notranslate"><span class="pre">collect()</span></code> even if that test case will never get set up or run.)</p>
-<p>The format of the streams file is essentially the same as the default and
-generated streams file, e.g.:</p>
-<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;streams&gt;</span>
-
-<span class="nt">&lt;immutable_stream</span> <span class="na">name=</span><span class="s">&quot;mesh&quot;</span>
-                  <span class="na">filename_template=</span><span class="s">&quot;init.nc&quot;</span><span class="nt">/&gt;</span>
-
-<span class="nt">&lt;immutable_stream</span> <span class="na">name=</span><span class="s">&quot;input&quot;</span>
-                  <span class="na">filename_template=</span><span class="s">&quot;init.nc&quot;</span><span class="nt">/&gt;</span>
-
-<span class="nt">&lt;immutable_stream</span> <span class="na">name=</span><span class="s">&quot;restart&quot;</span><span class="nt">/&gt;</span>
-
-<span class="nt">&lt;stream</span> <span class="na">name=</span><span class="s">&quot;output&quot;</span>
-        <span class="na">type=</span><span class="s">&quot;output&quot;</span>
-        <span class="na">filename_template=</span><span class="s">&quot;output.nc&quot;</span>
-        <span class="na">output_interval=</span><span class="s">&quot;0000_00:00:01&quot;</span>
-        <span class="na">clobber_mode=</span><span class="s">&quot;truncate&quot;</span><span class="nt">&gt;</span>
-
-    <span class="nt">&lt;var_struct</span> <span class="na">name=</span><span class="s">&quot;tracers&quot;</span><span class="nt">/&gt;</span>
-    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;xtime&quot;</span><span class="nt">/&gt;</span>
-    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;normalVelocity&quot;</span><span class="nt">/&gt;</span>
-    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;layerThickness&quot;</span><span class="nt">/&gt;</span>
-<span class="nt">&lt;/stream&gt;</span>
-
-<span class="nt">&lt;/streams&gt;</span>
-</pre></div>
-</div>
-<p>These are all streams that are already defined in the default forward streams
-for MPAS-Ocean, so the defaults will be updated.  If only the attributes of
-a stream are given, the contents of the stream (the <code class="docutils literal notranslate"><span class="pre">var</span></code>, <code class="docutils literal notranslate"><span class="pre">var_struct</span></code>
-and <code class="docutils literal notranslate"><span class="pre">var_array</span></code> tags within the stream) are taken from the defaults.  If
-any contents are given, as for the <code class="docutils literal notranslate"><span class="pre">output</span></code> stream in the example above, they
-replace the default contents.  <code class="docutils literal notranslate"><span class="pre">compass</span></code> does not include a way to add or
-remove contents from the defaults, just keep the default contents or replace
-them all.  (Legacy COMPASS had such an option but it was found to be mostly
-confusing and difficult to keep synchronized with the MPAS code.)</p>
-<p>A typical streams file is added by passing the <code class="docutils literal notranslate"><span class="pre">step</span></code> dictionary, along with
-a package where the streams file is located and the name of the input streams
-file within that package:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="s1">&#39;compass.ocean.tests.baroclinic_channel&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;streams.forward&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>If the streams file should have a different name than the default
-(<code class="docutils literal notranslate"><span class="pre">streams.&lt;core&gt;</span></code>), the name can be given via the <code class="docutils literal notranslate"><span class="pre">out_name</span></code> keyword
-argument.</p>
-</div>
-<div class="section" id="adding-a-template-streams-file">
-<h3>Adding a template streams file<a class="headerlink" href="#adding-a-template-streams-file" title="Permalink to this headline">¶</a></h3>
-<p>The main difference between namelists and streams files is that there is no
-direct equivalent for streams of <code class="xref py py-func docutils literal notranslate"><span class="pre">compass.namelist.add_namelist_options()</span></code>.
-It is simply too confusing to try to define streams within the code.</p>
-<p>Instead, <code class="xref py py-func docutils literal notranslate"><span class="pre">compass.streams.add_streams_file()</span></code> includes a keyword
-argument <code class="docutils literal notranslate"><span class="pre">template_replacements</span></code>.  If you provide a dictionary of
-replacements to this argument, the input streams file will be treated as a
-<a class="reference external" href="https://jinja.palletsprojects.com/">Jinja2 template</a> that is rendered
-using the provided replacements.  Here is an example of such a template streams
-file:</p>
-<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;streams&gt;</span>
-
-<span class="nt">&lt;stream</span> <span class="na">name=</span><span class="s">&quot;output&quot;</span>
-        <span class="na">output_interval=</span><span class="s">&quot;{{ output_interval }}&quot;</span><span class="nt">/&gt;</span>
-<span class="nt">&lt;immutable_stream</span> <span class="na">name=</span><span class="s">&quot;restart&quot;</span>
-                  <span class="na">filename_template=</span><span class="s">&quot;../restarts/rst.$Y-$M-$D_$h.$m.$s.nc&quot;</span>
-                  <span class="na">output_interval=</span><span class="s">&quot;{{ restart_interval }}&quot;</span><span class="nt">/&gt;</span>
-
-<span class="nt">&lt;/streams&gt;</span>
-</pre></div>
-</div>
-<p>And here is how it would be added, along with replacements:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">stream_replacements</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;output_interval&#39;</span><span class="p">:</span> <span class="s1">&#39;00-00-01_00:00:00&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;restart_interval&#39;</span><span class="p">:</span> <span class="s1">&#39;00-00-01_00:00:00&#39;</span><span class="p">}</span>
-<span class="n">add_streams_file</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="s1">&#39;streams.template&#39;</span><span class="p">,</span>
-                 <span class="n">template_replacements</span><span class="o">=</span><span class="n">stream_replacements</span><span class="p">)</span>
-
-<span class="o">...</span>
-
-<span class="n">stream_replacements</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;output_interval&#39;</span><span class="p">:</span> <span class="s1">&#39;00-00-01_00:00:00&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;restart_interval&#39;</span><span class="p">:</span> <span class="s1">&#39;00-00-01_00:00:00&#39;</span><span class="p">}</span>
-<span class="n">add_streams_file</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="s1">&#39;streams.template&#39;</span><span class="p">,</span>
-                 <span class="n">template_replacements</span><span class="o">=</span><span class="n">stream_replacements</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>In this example, taken from
-<code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.qu240.spinup.collect()</span></code>, we
-are creating a series of steps that will be used to perform dynamic adjustment
-of the ocean model, each of which might have different durations and restart
-intervals.  Rather than creating a streams file for each step of the spin up,
-we reuse the same template with just a few appropriate replacements.  Thus,
-calls to <code class="xref py py-func docutils literal notranslate"><span class="pre">compass.streams.add_streams_file()</span></code> with
-<code class="docutils literal notranslate"><span class="pre">template_replacements</span></code> are qualitatively similar to namelist calls to
-<code class="xref py py-func docutils literal notranslate"><span class="pre">compass.namelist.add_namelist_options()</span></code>.</p>
-</div>
-<div class="section" id="generating-a-streams-file">
-<h3>Generating a streams file<a class="headerlink" href="#generating-a-streams-file" title="Permalink to this headline">¶</a></h3>
-<p>Calls to <code class="xref py py-func docutils literal notranslate"><span class="pre">compass.streams.add_streams_file()</span></code> queue up streams files
-or templates but they are only parsed when you call
-<code class="xref py py-func docutils literal notranslate"><span class="pre">compass.streams.generate_streams()</span></code>. If your output streams file has
-the default name (<code class="docutils literal notranslate"><span class="pre">streams.&lt;core&gt;</span></code>) and the model will be run in <code class="docutils literal notranslate"><span class="pre">forward</span></code>
-mode, you just need to provide the <code class="docutils literal notranslate"><span class="pre">step</span></code> dictionary and config options.  You
-can give the file a different name or select <code class="docutils literal notranslate"><span class="pre">init</span></code> mode if you need to.</p>
-<p>The streams file is typically generated in <a class="reference internal" href="cores.html#dev-step-setup"><span class="std std-ref">setup()</span></a>.  It cannot be
-generated during <code class="docutils literal notranslate"><span class="pre">collect()</span></code> because the work directory is not known and
-anyway we do not want to perform any file creation at all during <code class="docutils literal notranslate"><span class="pre">collect()</span></code>.
-It could also be generated during <code class="docutils literal notranslate"><span class="pre">run()</span></code>, but we do not recommend this
-because it would not give the user a chance to modify streams file themselves
-before running.</p>
 </div>
 </div>
 <div class="section" id="validation">

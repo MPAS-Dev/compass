@@ -1,0 +1,401 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>compass.Step &mdash; compass 1.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="compass.Step.setup" href="compass.Step.setup.html" />
+    <link rel="prev" title="compass.TestCase.add_step" href="compass.TestCase.add_step.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> compass
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../api.html#mpas-cores">MPAS Cores</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html#compass-framework">compass framework</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../api.html#command-line-interface">Command-line interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#base-classes">Base Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#testcase">testcase</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../api.html#step">step</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">compass.Step</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compass.Step.setup.html">compass.Step.setup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compass.Step.run.html">compass.Step.run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compass.Step.add_input_file.html">compass.Step.add_input_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compass.Step.add_output_file.html">compass.Step.add_output_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compass.Step.add_model_as_input.html">compass.Step.add_model_as_input</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compass.Step.add_namelist_file.html">compass.Step.add_namelist_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compass.Step.add_namelist_options.html">compass.Step.add_namelist_options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compass.Step.add_streams_file.html">compass.Step.add_streams_file</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#config">config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#io">io</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#model">model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#id1">mpas_cores</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#namelist">namelist</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#parallel">parallel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#provenance">provenance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#validate">validate</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">compass</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../api.html">API reference</a> &raquo;</li>
+        
+      <li>compass.Step</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../_sources/developers_guide/generated/compass.Step.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="compass-step">
+<h1>compass.Step<a class="headerlink" href="#compass-step" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="compass.Step">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">compass.</span></code><code class="sig-name descname"><span class="pre">Step</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_case</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cores</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_cores</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_memory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_disk</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compass/step.html#Step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.Step" title="Permalink to this definition">¶</a></dt>
+<dd><p>The base class for a step of a test cases, such as setting up a mesh,
+creating an initial condition, or running the MPAS core forward in time.
+The step is the smallest unit of work in compass that can be run on its
+own by a user, though users will typically run full test cases or test
+suites.</p>
+<p>Below, the terms “input” and “output” refer to inputs and outputs to the
+step itself, not necessarily the MPAS model.  In fact, the MPAS model
+itself is often an input to the step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – the name of the test case</p></li>
+<li><p><strong>test_case</strong> (<a class="reference internal" href="compass.TestCase.html#compass.TestCase" title="compass.TestCase"><em>compass.TestCase</em></a>) – The test case this step belongs to</p></li>
+<li><p><strong>test_group</strong> (<a class="reference internal" href="compass.TestGroup.html#compass.TestGroup" title="compass.TestGroup"><em>compass.TestGroup</em></a>) – The test group the test case belongs to</p></li>
+<li><p><strong>mpas_core</strong> (<a class="reference internal" href="compass.MpasCore.html#compass.MpasCore" title="compass.MpasCore"><em>compass.MpasCore</em></a>) – The MPAS core the test group belongs to</p></li>
+<li><p><strong>subdir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – the subdirectory for the step</p></li>
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – the path within the base work directory of the step, made up of
+<code class="docutils literal notranslate"><span class="pre">mpas_core</span></code>, <code class="docutils literal notranslate"><span class="pre">test_group</span></code>, the test case’s <code class="docutils literal notranslate"><span class="pre">subdir</span></code> and the
+step’s <code class="docutils literal notranslate"><span class="pre">subdir</span></code></p></li>
+<li><p><strong>cores</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – the number of cores the step would ideally use.  If fewer cores
+are available on the system, the step will run on all available
+cores as long as this is not below <code class="docutils literal notranslate"><span class="pre">min_cores</span></code></p></li>
+<li><p><strong>min_cores</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – the number of cores the step requires.  If the system has fewer
+than this number of cores, the step will fail</p></li>
+<li><p><strong>threads</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – the number of threads the step will use</p></li>
+<li><p><strong>max_memory</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – the amount of memory that the step is allowed to use in MB.
+This is currently just a placeholder for later use with task
+parallelism</p></li>
+<li><p><strong>max_disk</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – the amount of disk space that the step is allowed to use in MB.
+This is currently just a placeholder for later use with task
+parallelism</p></li>
+<li><p><strong>input_data</strong> (<em>list of dict</em>) – a list of dict used to define input files typically to be
+downloaded to a database and/or symlinked in the work directory</p></li>
+<li><p><strong>inputs</strong> (<em>list of str</em>) – a list of absolute paths of input files produced from <code class="docutils literal notranslate"><span class="pre">input_data</span></code> as
+part of setting up the step.  These input files must all exist at run
+time or the step will raise an exception</p></li>
+<li><p><strong>outputs</strong> (<em>list of str</em>) – a list of absolute paths of output files produced by this step and
+available as inputs to other test cases and steps.  These files must
+exist after the test has run or an exception will be raised</p></li>
+<li><p><strong>namelist_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – a dictionary used internally to keep track of updates to the default
+namelist options from calls to
+<a class="reference internal" href="compass.Step.add_namelist_file.html#compass.Step.add_namelist_file" title="compass.Step.add_namelist_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.add_namelist_file()</span></code></a>
+and <a class="reference internal" href="compass.Step.add_namelist_options.html#compass.Step.add_namelist_options" title="compass.Step.add_namelist_options"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.add_namelist_options()</span></code></a></p></li>
+<li><p><strong>streams_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – a dictionary used internally to keep track of updates to the default
+streams from calls to <a class="reference internal" href="compass.Step.add_streams_file.html#compass.Step.add_streams_file" title="compass.Step.add_streams_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.add_streams_file()</span></code></a></p></li>
+<li><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/library/configparser.html#configparser.ConfigParser" title="(in Python v3.9)"><em>configparser.ConfigParser</em></a>) – Configuration options for this test case, a combination of the defaults
+for the machine, core and configuration</p></li>
+<li><p><strong>config_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The local name of the config file that <code class="docutils literal notranslate"><span class="pre">config</span></code> has been written to
+during setup and read from during run</p></li>
+<li><p><strong>work_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The step’s work directory, defined during setup as the combination
+of <code class="docutils literal notranslate"><span class="pre">base_work_dir</span></code> and <code class="docutils literal notranslate"><span class="pre">path</span></code></p></li>
+<li><p><strong>base_work_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The base work directory</p></li>
+<li><p><strong>logger</strong> (<a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.9)"><em>logging.Logger</em></a>) – A logger for output from the step</p></li>
+<li><p><strong>log_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – At run time, the name of a log file where output/errors from the step
+are being logged, or <code class="docutils literal notranslate"><span class="pre">None</span></code> if output is to stdout/stderr</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="compass.Step.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_case</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cores</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_cores</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_memory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_disk</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compass/step.html#Step.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.Step.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new test case</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>test_case</strong> (<a class="reference internal" href="compass.TestCase.html#compass.TestCase" title="compass.TestCase"><em>compass.TestCase</em></a>) – The test case this step belongs to</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – the name of the test case</p></li>
+<li><p><strong>subdir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – the subdirectory for the step.  The default is <code class="docutils literal notranslate"><span class="pre">name</span></code></p></li>
+<li><p><strong>cores</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) – the number of cores the step would ideally use.  If fewer cores
+are available on the system, the step will run on all available
+cores as long as this is not below <code class="docutils literal notranslate"><span class="pre">min_cores</span></code></p></li>
+<li><p><strong>min_cores</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) – the number of cores the step requires.  If the system has fewer
+than this number of cores, the step will fail</p></li>
+<li><p><strong>threads</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) – the number of threads the step will use</p></li>
+<li><p><strong>max_memory</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) – the amount of memory that the step is allowed to use in MB.
+This is currently just a placeholder for later use with task
+parallelism</p></li>
+<li><p><strong>max_disk</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) – the amount of disk space that the step is allowed to use in MB.
+This is currently just a placeholder for later use with task
+parallelism</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#compass.Step.__init__" title="compass.Step.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(test_case, name[, subdir, cores, …])</p></td>
+<td><p>Create a new test case</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compass.Step.add_input_file.html#compass.Step.add_input_file" title="compass.Step.add_input_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_input_file</span></code></a>([filename, target, database, …])</p></td>
+<td><p>Add an input file to the step (but not necessarily to the MPAS model).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compass.Step.add_model_as_input.html#compass.Step.add_model_as_input" title="compass.Step.add_model_as_input"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_model_as_input</span></code></a>()</p></td>
+<td><p>make a link to the model executable and add it to the inputs</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compass.Step.add_namelist_file.html#compass.Step.add_namelist_file" title="compass.Step.add_namelist_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_namelist_file</span></code></a>(package, namelist[, …])</p></td>
+<td><p>Add a file with updates to namelist options to the step to be parsed when generating a complete namelist file if and when the step gets set up.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compass.Step.add_namelist_options.html#compass.Step.add_namelist_options" title="compass.Step.add_namelist_options"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_namelist_options</span></code></a>(options[, out_name, mode])</p></td>
+<td><p>Add the namelist replacements to be parsed when generating a namelist file if and when the step gets set up.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compass.Step.add_output_file.html#compass.Step.add_output_file" title="compass.Step.add_output_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_output_file</span></code></a>(filename)</p></td>
+<td><p>Add the output file that must be produced by this step and may be made available as an input to steps, perhaps in other test cases.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compass.Step.add_streams_file.html#compass.Step.add_streams_file" title="compass.Step.add_streams_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_streams_file</span></code></a>(package, streams[, …])</p></td>
+<td><p>Add a streams file to the step to be parsed when generating a complete streams file if and when the step gets set up.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">process_inputs_and_outputs</span></code>()</p></td>
+<td><p>Process the inputs to and outputs from a step added with <a class="reference internal" href="compass.Step.add_input_file.html#compass.Step.add_input_file" title="compass.Step.add_input_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.add_input_file()</span></code></a> and <a class="reference internal" href="compass.Step.add_output_file.html#compass.Step.add_output_file" title="compass.Step.add_output_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.add_output_file()</span></code></a>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compass.Step.run.html#compass.Step.run" title="compass.Step.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code></a>()</p></td>
+<td><p>Run the step.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compass.Step.setup.html#compass.Step.setup" title="compass.Step.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup</span></code></a>()</p></td>
+<td><p>Set up the test case in the work directory, including downloading any dependencies.</p></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="compass.Step.setup.html" class="btn btn-neutral float-right" title="compass.Step.setup" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="compass.TestCase.add_step.html" class="btn btn-neutral float-left" title="compass.TestCase.add_step" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

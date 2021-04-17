@@ -101,7 +101,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/command_line.html">Command-line interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/cores.html">Cores</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/organization.html">Organization of Tests</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/ocean/index.html">Ocean core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/framework.html">Framework</a></li>
@@ -109,6 +109,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/building_docs.html">Building the Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/api.html">API reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../glossary.html">Glossary</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Versions</span></p>
 <ul>
@@ -283,7 +287,7 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Modify the configuration options for this test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">configure_global_ocean</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="p">)</span>
+        <span class="n">configure_global_ocean</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">init</span><span class="p">)</span>
         <span class="k">with</span> <span class="n">path</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.global_ocean.files_for_e3sm&#39;</span><span class="p">,</span>
                   <span class="s1">&#39;README&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">target</span><span class="p">:</span>
             <span class="n">symlink</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">target</span><span class="p">),</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/README&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">))</span></div></div>

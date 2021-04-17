@@ -124,7 +124,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/command_line.html">Command-line interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/cores.html">Cores</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/organization.html">Organization of Tests</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/ocean/index.html">Ocean core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/framework.html">Framework</a></li>
@@ -132,6 +132,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/building_docs.html">Building the Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/api.html">API reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Versions</span></p>
 <ul>
@@ -506,12 +510,13 @@ model in time in “forward” mode.</p>
 options directly in <code class="docutils literal notranslate"><span class="pre">namelist.ocean</span></code> or modifying streams in
 <code class="docutils literal notranslate"><span class="pre">streams.ocean</span></code>.  However, there are a few parameters related to forward runs
 you can change in the config file for a test case.  Since some test cases like
-<a class="reference internal" href="#global-ocean-restart-test"><span class="std std-ref">restart_test test case</span></a> and :ref`global_ocean_spinup` have more than
-one forward run, it is convenient to change options like <code class="docutils literal notranslate"><span class="pre">forward_cores</span></code> once
-in the config file, knowing that this will change the target number of cores
-of all forward model runs in the test case.  The same applies to the other
-<code class="docutils literal notranslate"><span class="pre">forward_*</span></code> config options that change the minimum cores allowed, the number
-of threads, and (in the future) the maximum memory and disk usage.</p>
+<a class="reference internal" href="#global-ocean-restart-test"><span class="std std-ref">restart_test test case</span></a> and :ref`global_ocean_dynamic_adjustment` have
+more than one forward run, it is convenient to change options like
+<code class="docutils literal notranslate"><span class="pre">forward_cores</span></code> once in the config file, knowing that this will change the
+target number of cores of all forward model runs in the test case.  The same
+applies to the other <code class="docutils literal notranslate"><span class="pre">forward_*</span></code> config options that change the minimum cores
+allowed, the number of threads, and (in the future) the maximum memory and disk
+usage.</p>
 </div>
 <div class="section" id="test-cases">
 <span id="global-ocean-test-cases"></span><h2>Test cases<a class="headerlink" href="#test-cases" title="Permalink to this headline">¶</a></h2>
@@ -723,15 +728,15 @@ or more of these versions of the <code class="docutils literal notranslate"><spa
 <li><p><code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/QUwISC240/&lt;ic&gt;/daily_output_test/RK4</span></code></p></li>
 </ul>
 </div>
-<div class="section" id="spinup-test-case">
-<span id="global-ocean-spinup"></span><h3>spinup test case<a class="headerlink" href="#spinup-test-case" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="dynamic-adjustment-test-case">
+<span id="global-ocean-dynamic-adjustment"></span><h3>dynamic_adjustment test case<a class="headerlink" href="#dynamic-adjustment-test-case" title="Permalink to this headline">¶</a></h3>
 <p>One of the main purposes of compass is to provide a way of spinning up
 MPAS-Ocean initial conditions to dissipate transients that result from starting
 the simulation from rest.  Particularly for high resolution meshes, surface
 waves with fast time scales and large amplitude must be damped (by applying
 Rayleigh friction), first aggressively, then more gently, before damping is
 disabled.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">spinup</span></code> test case is implemented differently for each of the
+<p>The <code class="docutils literal notranslate"><span class="pre">dynamic_adjustment</span></code> test case is implemented differently for each of the
 <a class="reference internal" href="#global-ocean-meshes"><span class="std std-ref">Meshes</span></a>.  For example, for the <a class="reference internal" href="#global-ocean-mesh-qu240"><span class="std std-ref">QU240</span></a>
 and ref:<cite>global_ocean_mesh_quwisc240</cite> meshes, we perform only 1 day of damping
 (and even this is likely unnecessary), followed by a 1-day simulation without
@@ -740,25 +745,26 @@ and ref:<cite>global_ocean_mesh_ecwisc30to60</cite> meshes, we perform a 10-day 
 with aggressive damping, followed by 10 more days without damping. Higher
 resolution meshes in <a class="reference internal" href="../../../index.html#legacy-compass"><span class="std std-ref">Legacy COMPASS</span></a> require several stages of damping,
 each over several days before damping can be removed.</p>
-<p>As with the <a class="reference internal" href="#global-ocean-performance-test"><span class="std std-ref">performance_test test case</span></a>, <code class="docutils literal notranslate"><span class="pre">spinup</span></code> can
+<p>As with the <a class="reference internal" href="#global-ocean-performance-test"><span class="std std-ref">performance_test test case</span></a>, <code class="docutils literal notranslate"><span class="pre">dynamic_adjustment</span></code> can
 be run with either or both of the split-explicit or RK4 time integrator.
 Thus, for a given mesh <code class="docutils literal notranslate"><span class="pre">&lt;mesh&gt;</span></code> and initial condition <code class="docutils literal notranslate"><span class="pre">&lt;ic&gt;</span></code>, one or
 more of these versions of the <code class="docutils literal notranslate"><span class="pre">performance_test</span></code> will be available:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/&lt;mesh&gt;/&lt;ic&gt;/spinup/split_explicit</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/&lt;mesh&gt;/&lt;ic&gt;/spinup/RK4</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/&lt;mesh&gt;/&lt;ic&gt;/dynamic_adjustment/split_explicit</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/&lt;mesh&gt;/&lt;ic&gt;/dynamic_adjustment/RK4</span></code></p></li>
 </ul>
 <p>Versions of this test cases is currently available for all meshes, but not
 necessarily for all combinations of initial conditions and time integrators.</p>
-<p>The <a class="reference internal" href="../suites.html#ocean-suite-qu240-spinups"><span class="std std-ref">qu240_for_e3sm test suite</span></a>, <a class="reference internal" href="../suites.html#ocean-suite-ec30to60"><span class="std std-ref">ec30to60 test suite</span></a> and
-<a class="reference internal" href="../suites.html#ocean-suite-ecwisc30to60"><span class="std std-ref">ecwisc30to60 test suite</span></a> are are <a class="reference internal" href="../suites.html#ocean-suites"><span class="std std-ref">Test suites</span></a> designed to make
-it easier to run the standard spin-up test cases for each mesh along with
-the related <a class="reference internal" href="#global-ocean-mesh"><span class="std std-ref">mesh test case</span></a>, <a class="reference internal" href="#global-ocean-init"><span class="std std-ref">init test case</span></a>, and
+<p>The <a class="reference internal" href="../suites.html#ocean-suite-qu240-for-e3sm"><span class="std std-ref">qu240_for_e3sm test suite</span></a>, <a class="reference internal" href="../suites.html#ocean-suite-quwisc240-for-e3sm"><span class="std std-ref">quwisc240_for_e3sm test suite</span></a>,
+<a class="reference internal" href="../suites.html#ocean-suite-ec30to60"><span class="std std-ref">ec30to60 test suite</span></a> and <a class="reference internal" href="../suites.html#ocean-suite-ecwisc30to60"><span class="std std-ref">ecwisc30to60 test suite</span></a> are
+<a class="reference internal" href="../suites.html#ocean-suites"><span class="std std-ref">Test suites</span></a> designed to make it easier to run the standard
+dynamic-adjustment test cases for each mesh along with the related
+<a class="reference internal" href="#global-ocean-mesh"><span class="std std-ref">mesh test case</span></a>, <a class="reference internal" href="#global-ocean-init"><span class="std std-ref">init test case</span></a>, and
 <a class="reference internal" href="#global-ocean-files-for-e3sm"><span class="std std-ref">files_for_e3sm test case</span></a>.</p>
 </div>
 <div class="section" id="files-for-e3sm-test-case">
 <span id="global-ocean-files-for-e3sm"></span><h3>files_for_e3sm test case<a class="headerlink" href="#files-for-e3sm-test-case" title="Permalink to this headline">¶</a></h3>
-<p>After running the <a class="reference internal" href="#global-ocean-spinup"><span class="std std-ref">spinup test case</span></a>, users may be interested in
+<p>After running the <a class="reference internal" href="#global-ocean-dynamic-adjustment"><span class="std std-ref">dynamic_adjustment test case</span></a>, users may be interested in
 preparing a number of files needed for including a new mesh in E3SM.  These
 files include: MPAS-Ocean and MPAS-Seaice initial conditions (including
 <a class="reference internal" href="#global-ocean-metadata"><span class="std std-ref">Metadata</span></a>);

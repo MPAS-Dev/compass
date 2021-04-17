@@ -361,12 +361,13 @@ As a user, your main way of altering forward runs is by changing namelist
 options directly in ``namelist.ocean`` or modifying streams in
 ``streams.ocean``.  However, there are a few parameters related to forward runs
 you can change in the config file for a test case.  Since some test cases like
-:ref:`global_ocean_restart_test` and :ref`global_ocean_spinup` have more than
-one forward run, it is convenient to change options like ``forward_cores`` once
-in the config file, knowing that this will change the target number of cores
-of all forward model runs in the test case.  The same applies to the other
-``forward_*`` config options that change the minimum cores allowed, the number
-of threads, and (in the future) the maximum memory and disk usage.
+:ref:`global_ocean_restart_test` and :ref`global_ocean_dynamic_adjustment` have
+more than one forward run, it is convenient to change options like
+``forward_cores`` once in the config file, knowing that this will change the
+target number of cores of all forward model runs in the test case.  The same
+applies to the other ``forward_*`` config options that change the minimum cores
+allowed, the number of threads, and (in the future) the maximum memory and disk
+usage.
 
 .. _global_ocean_test_cases:
 
@@ -646,10 +647,10 @@ or more of these versions of the ``daily_output_test`` will be available:
 
 * ``ocean/global_ocean/QUwISC240/<ic>/daily_output_test/RK4``
 
-.. _global_ocean_spinup:
+.. _global_ocean_dynamic_adjustment:
 
-spinup test case
-^^^^^^^^^^^^^^^^
+dynamic_adjustment test case
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 One of the main purposes of compass is to provide a way of spinning up
 MPAS-Ocean initial conditions to dissipate transients that result from starting
@@ -658,7 +659,7 @@ waves with fast time scales and large amplitude must be damped (by applying
 Rayleigh friction), first aggressively, then more gently, before damping is
 disabled.
 
-The ``spinup`` test case is implemented differently for each of the
+The ``dynamic_adjustment`` test case is implemented differently for each of the
 :ref:`global_ocean_meshes`.  For example, for the :ref:`global_ocean_mesh_qu240`
 and ref:`global_ocean_mesh_quwisc240` meshes, we perform only 1 day of damping
 (and even this is likely unnecessary), followed by a 1-day simulation without
@@ -668,22 +669,23 @@ with aggressive damping, followed by 10 more days without damping. Higher
 resolution meshes in :ref:`legacy_compass` require several stages of damping,
 each over several days before damping can be removed.
 
-As with the :ref:`global_ocean_performance_test`, ``spinup`` can
+As with the :ref:`global_ocean_performance_test`, ``dynamic_adjustment`` can
 be run with either or both of the split-explicit or RK4 time integrator.
 Thus, for a given mesh ``<mesh>`` and initial condition ``<ic>``, one or
 more of these versions of the ``performance_test`` will be available:
 
-* ``ocean/global_ocean/<mesh>/<ic>/spinup/split_explicit``
+* ``ocean/global_ocean/<mesh>/<ic>/dynamic_adjustment/split_explicit``
 
-* ``ocean/global_ocean/<mesh>/<ic>/spinup/RK4``
+* ``ocean/global_ocean/<mesh>/<ic>/dynamic_adjustment/RK4``
 
 Versions of this test cases is currently available for all meshes, but not
 necessarily for all combinations of initial conditions and time integrators.
 
-The :ref:`ocean_suite_qu240_spinups`, :ref:`ocean_suite_ec30to60` and
-:ref:`ocean_suite_ecwisc30to60` are are :ref:`ocean_suites` designed to make
-it easier to run the standard spin-up test cases for each mesh along with
-the related :ref:`global_ocean_mesh`, :ref:`global_ocean_init`, and
+The :ref:`ocean_suite_qu240_for_e3sm`, :ref:`ocean_suite_quwisc240_for_e3sm`,
+:ref:`ocean_suite_ec30to60` and :ref:`ocean_suite_ecwisc30to60` are
+:ref:`ocean_suites` designed to make it easier to run the standard
+dynamic-adjustment test cases for each mesh along with the related
+:ref:`global_ocean_mesh`, :ref:`global_ocean_init`, and
 :ref:`global_ocean_files_for_e3sm`.
 
 .. _global_ocean_files_for_e3sm:
@@ -691,7 +693,7 @@ the related :ref:`global_ocean_mesh`, :ref:`global_ocean_init`, and
 files_for_e3sm test case
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-After running the :ref:`global_ocean_spinup`, users may be interested in
+After running the :ref:`global_ocean_dynamic_adjustment`, users may be interested in
 preparing a number of files needed for including a new mesh in E3SM.  These
 files include: MPAS-Ocean and MPAS-Seaice initial conditions (including
 :ref:`global_ocean_metadata`);

@@ -101,7 +101,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/command_line.html">Command-line interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/cores.html">Cores</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/organization.html">Organization of Tests</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/ocean/index.html">Ocean core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/framework.html">Framework</a></li>
@@ -109,6 +109,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/building_docs.html">Building the Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/api.html">API reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../glossary.html">Glossary</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Versions</span></p>
 <ul>
@@ -179,7 +183,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for compass.mpas_core</h1><div class="highlight"><pre>
-<div class="viewcode-block" id="MpasCore"><a class="viewcode-back" href="../../developers_guide/generated/compass.mpas_core.MpasCore.html#compass.mpas_core.MpasCore">[docs]</a><span></span><span class="k">class</span> <span class="nc">MpasCore</span><span class="p">:</span>
+<div class="viewcode-block" id="MpasCore"><a class="viewcode-back" href="../../developers_guide/generated/compass.MpasCore.html#compass.MpasCore">[docs]</a><span></span><span class="k">class</span> <span class="nc">MpasCore</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The base class for housing all the tests for a given MPAS core, such as</span>
 <span class="sd">    ocean, landice or sw (shallow water)</span>
@@ -193,7 +197,7 @@
 <span class="sd">        A dictionary of test groups for the MPAS core with their names as keys</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="MpasCore.__init__"><a class="viewcode-back" href="../../developers_guide/generated/compass.mpas_core.MpasCore.html#compass.mpas_core.MpasCore.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<div class="viewcode-block" id="MpasCore.__init__"><a class="viewcode-back" href="../../developers_guide/generated/compass.MpasCore.html#compass.MpasCore.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new container for the test groups for a given MPAS core</span>
 
@@ -207,7 +211,7 @@
         <span class="c1"># test groups are added with add_test_groups()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">test_groups</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="MpasCore.add_test_group"><a class="viewcode-back" href="../../developers_guide/generated/compass.mpas_core.MpasCore.add_test_group.html#compass.mpas_core.MpasCore.add_test_group">[docs]</a>    <span class="k">def</span> <span class="nf">add_test_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">):</span>
+<div class="viewcode-block" id="MpasCore.add_test_group"><a class="viewcode-back" href="../../developers_guide/generated/compass.MpasCore.add_test_group.html#compass.MpasCore.add_test_group">[docs]</a>    <span class="k">def</span> <span class="nf">add_test_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add a test group to the MPAS core</span>
 

@@ -68,6 +68,10 @@ follows:
         progressbar2 pyamg "pyremap>=0.0.7,<0.1.0" rasterio requests scipy \
         xarray
 
+We will do our best to keep this list of dependencies in sync with the
+"official" list, which is found in
+`recipe/meta.yaml <https://github.com/MPAS-Dev/compass/blob/master/recipe/meta.yaml>`_
+
 Each time you want to work with compass, you will need to run:
 
 .. code-block:: bash
@@ -82,8 +86,7 @@ Running compass from the repo
 If you are working with the released ``compass`` package, you can interact with
 it directly with the ``compass`` command-line tool as described in
 :ref:`setup_overview` and :ref:`suite_overview`.  If you are developing the
-code out of a repository, though, you need to call to access the local code
-with:
+code out of a repository, though, you need to call the local code with:
 
 .. code-block:: bash
 
@@ -108,7 +111,7 @@ To set up a test case, you will run something like:
 
 .. code-block:: bash
 
-    python -m compass setup -t ocean/global_ocean/QU240/mesh -m $MACHINE -w $WORKDIR
+    python -m compass setup -t ocean/global_ocean/QU240/mesh -m $MACHINE -w $WORKDIR -p $MPAS
 
 To list available test suites, you would run:
 
@@ -120,14 +123,15 @@ And you would set up a suite as follows:
 
 .. code-block:: bash
 
-    python -m compass suite -s -c ocean -t nightly -m $MACHINE -w $WORKDIR
+    python -m compass suite -s -c ocean -t nightly -m $MACHINE -w $WORKDIR -p $MPAS
 
 Otherwise, things are the same as in :ref:`suite_overview`.
 
-Tou will see symlinks to the ``compass`` package in each test case and step's
-work directory.  These are to make sure that the code from the repository is
-also used when you run test cases and steps.  You can even use the symlinks
-as a convenient way to access and edit the code as you're testing your changes.
+You will see symlinks to the ``compass`` package in the base work directory
+for suites as well as each test case and step's work directory.  These are to
+make sure that the code from the repository is also used when you run test
+cases and steps.  You can even use the symlinks as a convenient way to access
+and edit the code as you're testing your changes.
 
 Set up a compass repository with worktrees: for advanced users
 --------------------------------------------------------------
@@ -177,25 +181,28 @@ unix directory.
 In this example, we branched off ``origin/master``, but you could start from
 any branch, which is specified by the last ``git worktree`` argument.
 
-In each new branch directory that you make, you will need to make a copy of
-``ocean.cfg`` or ``landice.cfg`` and alter the copy to point to the MPAS
-executable. There are two ways to build the MPAS executable:
+There are two ways to build the MPAS executable:
 
 1. Compass submodule (easier): This guarantees that the MPAS commit matches
-   compass.
+   compass.  It is also the default location for finding the MPAS model so you
+   don't need to specify the ``-p`` flag at the command line or put the MPAS
+   model path in your config file (if you even need a config file at all).
 
    .. code-block:: bash
 
      git submodule update --init --recursive
      cd MPAS-Model/ocean/develop/
-     # load modules (see machine-specific instructions below)
+     # load modules
      make gfortran CORE=ocean
 
-2. Other MPAS directory (advanced): Create your own MPAS-Model repository
-   elsewhere on disk, make an ``ocean.cfg`` or ``landice.cfg`` that specifies
-   the absolute path to MPAS-Model repo where the ``ocean_model`` or
-   ``landice_model`` executable is found. You are responsible for knowing if
-   this particular version of MPAS-Model is compatible with the version of
+   For the "load modules" step, see :ref:`machines` for specific instructions.
+
+2. Other MPAS directory (advanced): Create your own clone of the MPAS-Model
+   repository elsewhere on disk.  Either make an ``ocean.cfg`` or
+   ``landice.cfg`` that specifies the absolute path to MPAS-Model repo where
+   the ``ocean_model`` or ``landice_model`` executable is found, or specify
+   this path on the command line with ``-p``.  You are responsible for knowing
+   if this particular version of MPAS-Model is compatible with the version of
    ``compass`` that you are using. The simplest way to set up a new MPAS repo
    in a new directory is:
 

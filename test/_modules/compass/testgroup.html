@@ -101,7 +101,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/command_line.html">Command-line interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/cores.html">Cores</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/organization.html">Organization of Tests</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/ocean/index.html">Ocean core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/framework.html">Framework</a></li>
@@ -109,6 +109,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/building_docs.html">Building the Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/api.html">API reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../glossary.html">Glossary</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Versions</span></p>
 <ul>
@@ -179,7 +183,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for compass.testgroup</h1><div class="highlight"><pre>
-<div class="viewcode-block" id="TestGroup"><a class="viewcode-back" href="../../developers_guide/generated/compass.testgroup.TestGroup.html#compass.testgroup.TestGroup">[docs]</a><span></span><span class="k">class</span> <span class="nc">TestGroup</span><span class="p">:</span>
+<div class="viewcode-block" id="TestGroup"><a class="viewcode-back" href="../../developers_guide/generated/compass.TestGroup.html#compass.TestGroup">[docs]</a><span></span><span class="k">class</span> <span class="nc">TestGroup</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The base class for test groups, which are collections of test cases with</span>
 <span class="sd">    a common purpose (e.g. global ocean, baroclinic channel, Greenland, or</span>
@@ -198,7 +202,7 @@
 <span class="sd">        test cases as keys</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="TestGroup.__init__"><a class="viewcode-back" href="../../developers_guide/generated/compass.testgroup.TestGroup.html#compass.testgroup.TestGroup.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpas_core</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<div class="viewcode-block" id="TestGroup.__init__"><a class="viewcode-back" href="../../developers_guide/generated/compass.TestGroup.html#compass.TestGroup.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpas_core</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new test group</span>
 
@@ -216,7 +220,7 @@
         <span class="c1"># test cases will be added with calls to add_test_case()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">test_cases</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="TestGroup.add_test_case"><a class="viewcode-back" href="../../developers_guide/generated/compass.testgroup.TestGroup.add_test_case.html#compass.testgroup.TestGroup.add_test_case">[docs]</a>    <span class="k">def</span> <span class="nf">add_test_case</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
+<div class="viewcode-block" id="TestGroup.add_test_case"><a class="viewcode-back" href="../../developers_guide/generated/compass.TestGroup.add_test_case.html#compass.TestGroup.add_test_case">[docs]</a>    <span class="k">def</span> <span class="nf">add_test_case</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add a test case to the test group</span>
 
