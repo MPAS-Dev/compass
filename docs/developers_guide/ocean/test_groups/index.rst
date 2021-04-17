@@ -1,7 +1,7 @@
-.. _dev_ocean_configs:
+.. _dev_ocean_test_groups:
 
-Configurations
-==============
+Test groups
+===========
 
 
 .. toctree::

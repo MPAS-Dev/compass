@@ -3,8 +3,9 @@
 Ocean core
 ==========
 
-All test cases in the ``ocean`` core share the following set of default config
-options:
+The ``ocean`` core is defined by the :py:class:`compass.ocean.Ocean`
+class. All test cases in the ``ocean`` core share the following set of
+default config options:
 
 .. code-block:: cfg
 
@@ -79,5 +80,5 @@ for whichever of the :ref:`machines` you are using.
 .. toctree::
    :titlesonly:
 
-   configurations/index
+   test_groups/index
    framework

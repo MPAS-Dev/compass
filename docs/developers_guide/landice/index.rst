@@ -3,8 +3,9 @@
 Landice core
 ============
 
-All test cases in the ``landice`` core share the following set of default
-config options:
+The ``landice`` core is defined by the :py:class:`compass.landice.LandIce`
+class. All test cases in the ``landice`` core share the following set of
+default config options:
 
 .. code-block:: cfg
 
@@ -70,5 +71,5 @@ for whichever of the :ref:`machines` you are using.
 .. toctree::
    :titlesonly:
 
-   configurations/index
+   test_groups/index
    framework

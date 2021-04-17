@@ -3,20 +3,21 @@
 ziso
 ====
 
-The ``ziso`` configuration implements variants of the Zonally Idealized
-Southern Ocean (ZISO) test case (see :ref:`ocean_ziso`) at 20-km resolutions.
-Here, we describe the shared framework for this configuration and the 2 test
-cases.
+The ``ziso`` test group
+(:py:class:`compass.ocean.tests.ziso.Ziso`)
+implements variants of the Zonally Idealized Southern Ocean (ZISO) test case
+(see :ref:`ocean_ziso`) at 20-km resolutions. Here, we describe the shared
+framework for this test group and the 2 test cases.
 
 .. _dev_ocean_ziso_framework:
 
 framework
 ---------
 
-The shared configuration options for the ``ziso`` configuration are described
+The shared config options for the ``ziso`` test group are described
 in :ref:`ocean_ziso` in the User's Guide.
 
-Additionally, the configuration has several shared namelist and streams files,
+Additionally, the test group has several shared namelist and streams files,
 some for shared parameters and streams for forward runs (``namelist.forward``
 and ``streams.forward``), some specific to the resolution of the run and
 with an eye toward including more resolutions in the future
@@ -27,8 +28,8 @@ to enabling analysis members in a run and outputting their results
 initial_state
 ~~~~~~~~~~~~~
 
-The module ``compass.ocean.tests.ziso.initial_state`` defines a
-step for setting up the initial state for each test case.
+The class :py:class:`compass.ocean.tests.ziso.initial_state.InitialState`
+defines a step for setting up the initial state for each test case.
 
 First, a mesh appropriate for the resolution is generated using
 :py:func:`mpas_tools.planar_hex.make_planar_hex_mesh()`.  Then, the mesh is
@@ -42,7 +43,7 @@ for test cases with frazil-ice production compared to those without.
 forward
 ~~~~~~~
 
-The module ``compass.ocean.tests.ziso.forward`` defines a step
+The class :py:class:`compass.ocean.tests.ziso.forward.Forward` defines a step
 for running MPAS-Ocean from the initial condition produced in the
 ``initial_state`` step.  If ``with_frazil = True``, frazil ice production is
 enabled; if ``with_analysis = True``, analysis members are enabled:
@@ -81,8 +82,9 @@ updating PIO namelist options):
 default
 -------
 
-This test performs a 90-second (3-time-step) run on 4 cores, including analysis
-but without frazil-ice formation. If a baseline is provided when calling
+The :py:class:`compass.ocean.tests.ziso.default.Default` test performs a
+90-second (3-time-step) run on 4 cores, including analysis but without
+frazil-ice formation. If a baseline is provided when calling
 :ref:`dev_compass_setup`, the test case ensures that the final values of
 ``temperature`` and ``layerThickness`` as well as a number of particle-related
 variables are identical to the baseline values, and also compares timers
@@ -93,7 +95,8 @@ related to particles with the baseline.
 with_frazil
 -----------
 
-The default config options for this test case are:
+The :py:class:`compass.ocean.tests.ziso.with_frazil.WithFrazil`
+includes default config options:
 
 .. code-block:: cfg
 

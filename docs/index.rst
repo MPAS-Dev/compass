@@ -54,7 +54,7 @@ components themselves evolves and new functionality is added.
    developers_guide/quick_start
    developers_guide/overview
    developers_guide/command_line
-   developers_guide/cores
+   developers_guide/organization
    developers_guide/landice/index
    developers_guide/ocean/index
    developers_guide/framework
@@ -63,6 +63,12 @@ components themselves evolves and new functionality is added.
    developers_guide/api
 
    design_docs/index
+
+.. toctree::
+   :caption: Glossary
+   :maxdepth: 2
+
+   glossary
 
 .. toctree::
    :caption: Versions

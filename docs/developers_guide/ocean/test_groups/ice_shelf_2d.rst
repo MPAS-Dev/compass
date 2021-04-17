@@ -3,18 +3,19 @@
 ice_shelf_2d
 ============
 
-The ``ice_shelf_2d`` configuration implements a very simplified ice-shelf
-cavity that is invariant in the x direction (see :ref:`ocean_ice_shelf_2d`).
-Here, we describe the shared framework for this configuration and the 2 test
-cases.
+The ``ice_shelf_2d`` test group
+(:py:class:`compass.ocean.tests.ice_shelf_2d.IceShelf2d`)
+implements a very simplified ice-shelf cavity that is invariant in the x
+direction (see :ref:`ocean_ice_shelf_2d`). Here, we describe the shared
+framework for this test group and the 2 test cases.
 
 framework
 ---------
 
-The shared configuration options for the ``ice_shelf_2d`` configuration
+The shared config options for the ``ice_shelf_2d`` test group
 are described in :ref:`ocean_ice_shelf_2d` in the User's Guide.
 
-Additionally, the configuration has a shared ``namelist.forward`` file with
+Additionally, the test group has a shared ``namelist.forward`` file with
 a few common namelist options related to run duration, time step, equation of
 state, land-ice fluxes and horizontal viscosity, as well as a shared
 ``streams.forward`` file that defines ``mesh``, ``input``, ``restart``,
@@ -23,8 +24,8 @@ state, land-ice fluxes and horizontal viscosity, as well as a shared
 initial_state
 ~~~~~~~~~~~~~
 
-The module ``compass.ocean.tests.ice_shelf_2d.initial_state`` defines a
-step for setting up the initial state for each test case.
+The class :py:class:`compass.ocean.tests.ice_shelf_2d.initial_state.InitialState`
+defines a step for setting up the initial state for each test case.
 
 First, a mesh appropriate for the resolution is generated using
 :py:func:`mpas_tools.planar_hex.make_planar_hex_mesh()`.  Then, the mesh is
@@ -38,7 +39,8 @@ temperature and zero initial velocity.
 ssh_adjustment
 ~~~~~~~~~~~~~~
 
-This step performs sea-surface height adjustment described
+The class :py:class:`compass.ocean.tests.ice_shelf_2d.ssh_adjustment.SshAdjustment`
+performs sea-surface height adjustment described
 :ref:`dev_ocean_framework_iceshelf`.  Starting from the initial condition
 from ``initial_state``, a number of iterations of forward simulation followed
 by adjustment of the land-ice pressure field are performed.  The number of
@@ -47,11 +49,11 @@ iterations depend on the test case.
 forward
 ~~~~~~~
 
-The module ``compass.ocean.tests.ice_shelf_2d.forward`` defines a step
-for running MPAS-Ocean from the initial condition produced in the
-``initial_state`` step. Namelist and streams files are generate during
-``setup()`` and MPAS-Ocean is run (including updating PIO namelist options and
-generating a graph partition) in ``run()``.
+The class :py:class:`compass.ocean.tests.ice_shelf_2d.forward.Forward`
+defines a step for running MPAS-Ocean from the initial condition produced in
+the ``initial_state`` step. A link to the MPAS-Ocean executable is created
+during ``setup()`` and the MPAS-Ocean is run (including updating PIO namelist
+options and generating a graph partition) in ``run()``.
 
 A few namelist options are set and streams are added when frazil is included:
 
@@ -60,17 +62,17 @@ A few namelist options are set and streams are added when frazil is included:
     if with_frazil:
         options = {'config_use_frazil_ice_formation': '.true.',
                    'config_frazil_maximum_depth': '2000.0'}
-        add_namelist_options(step, options)
-        add_streams_file(step, 'compass.ocean.streams', 'streams.frazil')
-
-
+        self.add_namelist_options(options)
+        self.add_streams_file('compass.ocean.streams', 'streams.frazil')
 
 .. _dev_ocean_ice_shelf_2d_default:
 
 default
 -------
 
-This test case includes the following default config options:
+
+The :py:class:`compass.ocean.tests.ice_shelf_2d.default.Default` test case
+includes the following default config options:
 
 .. code-block:: cfg
 
@@ -93,7 +95,8 @@ related to land-ice fluxes) are checked to make sure they match the baseline.
 restart_test
 ------------
 
-This test case includes the following default config options:
+The :py:class:`compass.ocean.tests.ice_shelf_2d.restart_test.RestartTest`
+includes the following default config options:
 
 .. code-block:: cfg
 

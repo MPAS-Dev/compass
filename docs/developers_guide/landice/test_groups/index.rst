@@ -1,7 +1,7 @@
-.. _dev_landice_configs:
+.. _dev_landice_test_groups:
 
-Configurations
-==============
+Test groups
+===========
 
 
 .. toctree::

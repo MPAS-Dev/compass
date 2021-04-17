@@ -3,12 +3,13 @@
 enthalpy_benchmark
 ==================
 
-The ``enthalpy_benchmark`` configuration implements variants of the  the
-enthalpy benchmark from
+The ``enthalpy_benchmark`` test group
+(:py:class:`compass.landice.tests.enthalpy_benchmark.EnthalpyBenchmark`)
+implements variants of the enthalpy benchmark from
 `Kleiner et al (2015) <https://doi.org/10.5194/tc-9-217-2015>`_ (see
 :ref:`landice_enthalpy_benchmark`).
 
-The configuration includes 2 test cases, ``A`` and ``B``, each with 3 or more
+The test group includes 2 test cases, ``A`` and ``B``, each with 3 or more
 steps, ``setup_mesh``, ``run_model`` (possibly run multiple times), and
 ``visualize``.
 
@@ -20,7 +21,7 @@ framework
 The shared config options are described in :ref:`landice_enthalpy_benchmark` in
 the User's Guide.
 
-Additionally, the configuration has a shared ``namelist.landice`` file with
+Additionally, the test group has a shared ``namelist.landice`` file with
 several common namelist options, such as the time step, run duration, and
 thermal solver; and a shared ``streams.landice`` file that defines the
 ``input``, ``restart``, and ``output`` streams.
@@ -28,8 +29,8 @@ thermal solver; and a shared ``streams.landice`` file that defines the
 setup_mesh
 ~~~~~~~~~~
 
-The module ``compass.landice.tests.enthalpy_benchmark.setup_mesh`` defines a
-step for setting up the mesh for each test case.
+The class :py:class:`compass.landice.tests.enthalpy_benchmark.setup_mesh.SetupMesh`
+defines a step for setting up the mesh for each test case.
 
 The horizontal mesh is constructed at runtime (using
 :py:func:`mpas_tools.planar_hex.make_planar_hex_mesh()`).  Then, a MALI grid is
@@ -42,18 +43,19 @@ Finally, the initial condition is defined in the private function
 run_model
 ~~~~~~~~~
 
-The module ``compass.landice.tests.enthalpy_benchmark.run_model`` defines a
-step for running MALI from the initial condition produced in the ``setup_mesh``
-step or from a restart file produced by a previous ``run_model`` step.  In
-the ``A`` test case, the surface air temperate may be updated before restart
-runs as described below.
+The class :py:class:`compass.landice.tests.enthalpy_benchmark.run_model.RunModel`
+defines a step for running MALI from the initial condition produced in the
+``setup_mesh`` step or from a restart file produced by a previous ``run_model``
+step.  In the ``A`` test case, the surface air temperate may be updated before
+restart runs as described below.
 
 .. _dev_landice_enthalpy_benchmark_A:
 
 A
 -
 
-The config options specific to this test case are:
+The :py:class:`compass.landice.tests.enthalpy_benchmark.A.A` test case includes
+the following config options :
 
 .. code-block:: cfg
 
@@ -92,15 +94,18 @@ temperature back at 243.15 K.
 Each of these phases has its own namelist and streams files within the ``A``
 test case.
 
-``A`` also contains a ``visualize`` step for plotting the results and
-comparing them to analytic results in a ``.mat`` file.
+``A`` also contains a ``visualize`` step
+(:py:class:`compass.landice.tests.enthalpy_benchmark.A.visualize.Visualize`)
+for plotting the results and comparing them to analytic results in a ``.mat``
+file.
 
 .. _dev_landice_enthalpy_benchmark_B:
 
 B
 -
 
-The config options specific to this test case are:
+The :py:class:`compass.landice.tests.enthalpy_benchmark.B.B` test case includes
+the following config options :
 
 .. code-block:: cfg
 
@@ -128,5 +133,7 @@ that ``compass`` can automate.
 
 This test case runs for 10,000 years with 10-year time steps.
 
-This test case also contains a ``visualize`` step for plotting the results and
-comparing them to analytic results in a ``.mat`` file.
+This test case also contains a ``visualize`` step
+(:py:class:`compass.landice.tests.enthalpy_benchmark.B.visualize.Visualize`)
+for plotting the results and comparing them to analytic results in a ``.mat``
+file.

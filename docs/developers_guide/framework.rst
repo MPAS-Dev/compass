@@ -13,23 +13,28 @@ output by comparing steps with one another or against a baseline.
 
 .. _dev_config:
 
-Configuration
--------------
+Config files
+------------
 
-The ``compass.config`` includes functions for creating and manipulating config
-options and :ref:`config_files`.
+The ``compass.config`` module includes functions for creating and manipulating
+config options and :ref:`config_files`.
 
 
 The :py:func:`compass.config.add_config()` function can be used to add the
 contents of a config file within a package to the current config parser.
 Examples of this can be found in most test cases as well as
 :py:func:`compass.setup.setup_case()`. Here is a typical example from
-:py:func:`compass.landice.tests.enthalpy_benchmark.A.configure()`:
+:py:func:`compass.landice.tests.enthalpy_benchmark.A.A.configure()`:
 
 .. code-block:: python
 
-    add_config(config, 'compass.landice.tests.enthalpy_benchmark.A',
-               'A.cfg', exception=True)
+    def configure(self):
+        """
+        Modify the configuration options for this test case
+        """
+        add_config(self.config, 'compass.landice.tests.enthalpy_benchmark.A',
+                   'A.cfg', exception=True)
+        ...
 
 The second and third arguments are the name of a package containing the config
 file and the name of the config file itself, respectively.  You can see that
@@ -39,15 +44,14 @@ that the config file should always exist, so we would like the code to raise
 and exception (``exception=True``) if the file is not found.  This is the
 default behavior.  In some cases, you would like the code to add the config
 options if the config file exists and do nothing if it does not.  This can
-be useful if a common ``configure()`` function is being used for all test
+be useful if a common configure function is being used for all test
 cases in a configuration, as in this example from
-:py:func:`compass.ocean.tests.global_ocean.configure()`:
+:py:func:`compass.ocean.tests.global_ocean.configure.configure_global_ocean()`:
 
 .. code-block:: python
 
-    name = testcase['name']
-    add_config(config, 'compass.ocean.tests.global_ocean.{}'.format(name),
-               '{}.cfg'.format(name), exception=False)
+    add_config(config, test_case.__module__, '{}.cfg'.format(test_case.name),
+               exception=False)
 
 When this is called within the ``mesh`` test case, nothing will happend because
 ``compass/ocean/tests/global_ocean/mesh`` does not contain a ``mesh.cfg`` file.
@@ -56,17 +60,16 @@ associated with a particular test case:
 
 .. code-block:: python
 
-    mesh_name = testcase['mesh_name']
-    package, prefix = get_mesh_package(mesh_name)
-    add_config(config, package, '{}.cfg'.format(prefix), exception=True)
+    mesh_step = mesh.mesh_step
+    add_config(config, mesh_step.package, mesh_step.mesh_config_filename,
+               exception=True)
 
-In this case, we get the package for the mesh using
-:py:func:`compass.ocean.tests.global_ocean.mesh.mesh.get_mesh_package()`,
-(e.g. ``compass.ocean.tests.global_ocean.mesh.qu240`` for the ``QU240`` and
-``QUwISC240`` meshes), then it adds config options from this file.  Since we
-require each mesh to have config options (to define the vertical grid and the
-metadata to be added to the mesh, at the very least), we use ``exception=True``
-so an exception will be raised if no config file is found.
+In this case, the mesh step keeps track of the package and config file in its
+attributes (e.g. ``compass.ocean.tests.global_ocean.mesh.qu240`` and
+``qu240.cfg`` for the ``QU240`` and ``QUwISC240`` meshes).  Since we require
+each mesh to have config options (to define the vertical grid and the metadata
+to be added to the mesh, at the very least), we use ``exception=True`` so an
+exception will be raised if no config file is found.
 
 The ``config`` module also contains 3 functions that are intended for internal
 use by the framework itself. Test-case developers will typically not need to
@@ -102,7 +105,7 @@ as well as the APIs for :py:class:`mpas_tools.logging.LoggingContext` and
 
 For the most part, the ``compass`` framework handles logging for you, so
 test-case developers won't have to create your own ``logger`` objects.  They
-are arguments to the test case's :ref:`dev_testcase_run` or step's
+are arguments to the test case's :ref:`dev_test_case_run` or step's
 :ref:`dev_step_run`.  If you run a step on its own, no log file is created
 and logging happens to ``stdout``/``stderr``.  If you run the full test case,
 each step gets logged to its own log file within the test case's work
@@ -122,14 +125,14 @@ log file.  Whereas logging can capture ``stdout``/``stderr`` to make sure that
 the ``print`` statements actually go to log files when desired, there is no
 similar trick for automatically capturing the output from direct calls to
 ``subprocess`` functions.  Here is a code snippet from
-:py:func:`compass.landice.tests.dome.setup_mesh.run()`:
+:py:meth:`compass.landice.tests.dome.setup_mesh.SetupMesh.run()`:
 
 .. code-block:: python
 
     from mpas_tools.logging import check_call
 
 
-    def run(step, test_suite, config, logger):
+    def run(self):
         ...
         section = config['dome']
         ...
@@ -151,162 +154,9 @@ from ``mpas_tools`` with several arguments, making use of the ``logger``.
 IO
 --
 
-The most common functions for test-case developers to use from the
-``compass.io`` module are :py:func:`compass.io.add_input_file()` and
-:py:func:`compass.io.add_output_file()`.
-
-.. _dev_io_input:
-
-Input files
-^^^^^^^^^^^
-
-Typically, a step will add input files with
-:py:func:`compass.io.add_input_file()` in its :ref:`dev_step_collect`: or
-:ref:`dev_step_setup` function.  It is also possible to add inputs in the
-test case's :ref:`dev_testcase_collect` function.
-
-It is possible to simply supply the path to an input file as ``filename``
-without any other arguments to ``add_input_file()``.  In this case, the file
-name is either an absolute path or a relative path with respect to the step's
-work directory:
-
-.. code-block:: python
-
-    from compass.io import add_input_file
-
-    def collect(testcase, step):
-        ...
-        add_input_file(step, filename='../setup_mesh/landice_grid.nc')
-
-This is not typically how ``add_input_file()`` is used because input files are
-usually not directly in the step's work directory.
-
-.. _dev_io_input_symlinks:
-
-Symlinks to input files
-^^^^^^^^^^^^^^^^^^^^^^^
-The most common type of input file is the output from another step. Rather than
-just giving the file name directly, as in the example above, the preference is
-to place a symbolic link in the work directory.  This makes it much easier to
-see if the file is missing (because symlink will show up as broken) and allows
-you to refer to a short, local name for the file rather than its full path:
-
-.. code-block:: python
-
-    import xarray
-
-    from compass.io import add_input_file
-
-
-    def collect(testcase, step):
-        ...
-        add_input_file(step, filename='landice_grid.nc',
-                       target='../setup_mesh/landice_grid.nc')
-
-    ...
-
-    def run(step, test_suite, config, logger):
-       ...
-       with xarray.open_dataset('landice_grid.nc') as ds:
-           ...
-
-A symlink is not actually created when ``add_input_file()`` is called.  This
-will not happen until the step gets set up, after calling its
-:ref:`dev_step_setup` function (if any).
-
-.. _dev_io_input_compass:
-
-Input files from compass
-^^^^^^^^^^^^^^^^^^^^^^^^
-
-Another common need is to symlink a data file from within the configuration or
-test case:
-
-.. code-block:: python
-
-    from importlib.resources import path
-
-    from compass.io import add_input_file
-
-
-    def collect(testcase, step):
-        ...
-        filename = 'enthA_analy_result.mat'
-        with path('compass.landice.tests.enthalpy_benchmark.A', filename) as \
-                target:
-            add_input_file(step, filename=filename, target=str(target))
-
-Here, we use a :py:class:`importlib.resources.path` object as the target of the
-symlink (converting it to a string: ``str(target)``), which lets python take
-care of figuring out where ``compass`` is installed so it can find the path to
-the resource.
-
-.. _dev_io_input_download:
-
-Downloading input files
-^^^^^^^^^^^^^^^^^^^^^^^
-
-The final type of input file is one that is downloaded and stored locally.
-Typically, to save ourselves the time of downloading large files and to reduce
-potential problems on systems with firewalls, we cache the downloaded files in
-a location where they can be shared between users and reused over time.  These
-"databases" are subdirectories of the core's database root on the
-`LCRC server <https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/>`_.
-
-To add an input file from a database, call ``add_input_file()`` with the
-``database`` argument:
-
-.. code-block:: python
-
-    add_input_file(
-        step,  filename='topography.nc',
-        target='BedMachineAntarctica_and_GEBCO_2019_0.05_degree.200128.nc',
-        database='bathymetry_database')
-
-In this example from
-:py:func:`compass.ocean.tests.global_ocean.init.initial_state.setup()`, the
-file ``BedMachineAntarctica_and_GEBCO_2019_0.05_degree.200128.nc`` slated for
-later downloaded from
-`MPAS-Ocean's bathymetry database <https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-ocean/bathymetry_database/>`_.
-The file will be stored in the subdirectory ``bathymetry_database`` of the path
-in the ``ocean_database_root`` config option in the ``paths`` section of the
-config file.  The ``ocean_database_root`` option (or the equivalent for other
-cores) is set either by selecting one of the :ref:`supported_machines` or in
-the user's config file.
-
-It is also possible to download files directly from a URL and store them in
-the step's working directory:
-
-.. code-block:: python
-
-    add_input_file(
-        step,  filename='dome_varres_grid.nc',
-        url='https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/'
-            'mpas-albany-landice/dome_varres_grid.nc')
-
-We recommend against this practice except for very small files.
-
-.. _dev_io_output:
-
-Output files
-^^^^^^^^^^^^
-
-We require that all steps provide a list of any output files that other steps
-are allowed to use as inputs.  This helps us keep track of dependencies and
-will be used in the future to enable steps to run in parallel as long as they
-don't depend on each other.  Adding an output files is pretty straightforward:
-
-.. code-block:: python
-
-    add_output_file(step, filename='output_file.nc')
-
-:py:func:`compass.io.add_output_file()` can be called in a step's
-:ref:`dev_step_collect`: or :ref:`dev_step_setup` function or (less commonly)
-in the test case's :ref:`dev_testcase_collect` function.
-
-The relative path in ``filename`` is with respect to the step's work directory,
-and is converted to an absolute path internally before the step is run.
-
+A lot of I/O related tasks are handled internally in the step class
+:py:class:`compass.Step`.  Some of the lower level functions can be called
+directly if need be.
 
 .. _dev_io_symlink:
 
@@ -338,7 +188,6 @@ must do this in ``configure()`` rather than ``collect()`` because we do not
 know if the test case will be set up at all (or in what work directory) during
 ``collect()``.
 
-
 .. _dev_io_download:
 
 Download
@@ -346,7 +195,7 @@ Download
 
 You can download files more directly if you need to using
 :py:func:`compass.io.download()`, though we recommend using
-:py:func:`compass.io.add_input_file()` whenever possible because it is more
+:py:meth:`compass.Step.add_input_file()` whenever possible because it is more
 flexible and takes care of more of the details of symlinking the local file
 and adding it as an input to the step.  No current test cases use
 ``download()`` directly, but an example might look like this:
@@ -355,10 +204,10 @@ and adding it as an input to the step.  No current test cases use
 
     from compass.io import symlink, download
 
-    def setup(step, config):
+    def setup(self):
 
-        step_dir = step['work_dir']
-        database_root = config.get('paths', 'ocean_database_root')
+        step_dir = self.work_dir
+        database_root = self.config.get('paths', 'ocean_database_root')
         download_path = os.path.join(database_root, 'bathymetry_database')
 
         remote_filename = \
@@ -388,22 +237,19 @@ Model
 Running MPAS
 ^^^^^^^^^^^^
 
-If a step involves running MPAS, the model executable can be linked and added
-as an input by calling :py:func:`compass.model.add_model_as_input()`.  This
-way, if the user has forgotten to compile the model, this will be obvious by
-the broken symlink and the step will immediately fail because of the missing
-input.  The path to the executable is automatically detected based on the
-work directory for the step and the config options.
+Steps that run the MPAS model should call the
+:py:meth:`compass.Step.add_model_as_input()` method their ``setup()`` method.
 
 To run MPAS, call :py:func:`compass.model.run_model()`.  By default, this
 function first updates the namelist options associated with the
 `PIO library <https://ncar.github.io/ParallelIO/>`_ and partition the mesh
 across MPI tasks, as we sill discuss in a moment, before running the model.
 You can provide non-default names for the graph, namelist and streams files.
-The number of cores and threads is determined from the `step` dictionary and
-must be set in the step's :ref:`dev_step_collect` or :ref:`dev_step_setup`
-(i.e. before calling :ref:`dev_step_run`) so that the ``compass`` framework can
-ensure that the required resources are available.
+The number of cores and threads is determined from the ``cores``, ``min_cores``
+and ``threads`` attributes of the step object, set in its
+constructor or :ref:`dev_step_setup` method (i.e. before calling
+:ref:`dev_step_run`) so that the ``compass`` framework can ensure that the
+required resources are available.
 
 Partitioning the mesh
 ^^^^^^^^^^^^^^^^^^^^^
@@ -461,117 +307,15 @@ cells in the mesh file that gives different weight to different cells
 Namelist
 --------
 
-Cores, configurations, and test cases can provide namelist files that are used
-to replace default namelist options before MPAS gets run.  Namelist files
-within the ``compass`` package must start with the prefix ``namelist.`` to
-ensure that they are included when we build the package.
-
-Adding a namelist file to a step
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Typically, a step that runs MPAS will include one or more calls to
-:py:func:`compass.namelist.add_namelist_file()` within :ref:`dev_step_collect`
-or :ref:`dev_step_setup`.  Calling this function simply adds the file to a
-list within the ``step`` dictionary that will be parsed if an when
-:py:func:`compass.namelist.generate_namelist()` gets called to create the
-namelist.  (This way, it is safe to add namelist files to a step in
-``collect()`` even if that test case will never get set up or run.)
-
-The format of the namelist file is simply a list of namelist options and
-the replacement values:
-
-.. code-block:: none
-
-    config_write_output_on_startup = .false.
-    config_run_duration = '0000_00:15:00'
-    config_use_mom_del2 = .true.
-    config_implicit_bottom_drag_coeff = 1.0e-2
-    config_use_cvmix_background = .true.
-    config_cvmix_background_diffusion = 0.0
-    config_cvmix_background_viscosity = 1.0e-4
-
-Since all MPAS namelist options must have unique names, we do not worry about
-which specific namelist within the file each belongs to.
-
-A typical namelist file is added by passing the ``step`` dictionary, along with
-a package where the namelist file is located and the name of the input namelist
-file within that package:
-
-.. code-block:: python
-
-    add_namelist_file(step, 'compass.ocean.tests.baroclinic_channel',
-                      'namelist.forward')
-
-If the namelist should have a different name than the default
-(``namelist.<core>``), the name can be given via the ``out_name`` keyword
-argument.
-
-Namelist values are replaced by the files (or options, see below) in the
-sequence they are given.  This way, you can add the namelist substitutions for
-the configuration first, and then override those with the replacements for
-the test case or step.
-
-Adding namelist options to a step
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Sometimes, it is easier to replace namelist options using a dictionary within
-the code, rather than a namelist file.  This is appropriate when there are only
-1 or 2 options to replace (so creating a file seems like overkill) or when the
-namelist options rely on values that are determined by the code (e.g. different
-values for different resolutions).  Simply create a dictionary of replacements
-and call :py:func:`compass.namelist.add_namelist_options()` at either the
-``collect()`` or ``setup()`` stage of the test case.  These replacements are
-parsed, along with replacements from files, in the order they are added.  Thus,
-you could add replacements from a namelist file for the configuration, test
-case, or step, then override them with namelist options in a dictionary for the
-test case or step, as in this example:
-
-.. code-block:: python
-
-    add_namelist_file(step, 'compass.ocean.tests.baroclinic_channel',
-                      'namelist.forward')
-    add_namelist_file(step, 'compass.ocean.tests.baroclinic_channel',
-                      'namelist.{}.forward'.format(step['resolution']))
-    if 'nu' in step:
-        # update the viscosity to the requested value
-        options = {'config_mom_del2': '{}'.format(step['nu'])}
-        add_namelist_options(step, options)
-
-Here, we get default options for "forward" steps, then for the resolution of
-the test case from namelist files, then update the viscosity ``nu``, which is
-an option passed in when creating this step.
-
-.. note::
-
-  Namelist values must be of type ``str``, so use ``'{}'.format(value)`` to
-  convert a numerical value to a string.
-
-Generating a namelist file
-^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Calls to :py:func:`compass.namelist.add_namelist_file()` and
-:py:func:`compass.namelist.add_namelist_options()` queue up replacements but
-they are only parsed when you call :py:func:`compass.namelist.generate_namelist()`.
-If your namelist has the default name (``namelist.<core>``) and the model will
-be run in ``forward`` mode, you just need to provide the ``step`` dictionary
-and config options.  You can give the file a different name or select ``init``
-mode if you need to.
-
-The namelist is typically generated in :ref:`dev_step_setup`.  It cannot be
-generated during ``collect()`` because the work directory is not known and
-anyway we do not want to perform any file creation at all during ``collect()``.
-It could also be generated during ``run()``, but we do not recommend this
-because it would not give the user a chance to modify namelist options
-themselves before running.
-
 Updating a namelist file
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
 It is sometimes useful to update namelist options after a namelist has already
-been generated with :py:func:`compass.namelist.generate_namelist()`.  This
-typically happens during ``run()`` for options that cannot be known beforehand,
-particularly options related to the number of cores and threads.  In such
-cases, call :py:func:`compass.namelist.update()`:
+been generated as part of setting up the step it belongs to (see
+:ref:`dev_step_namelists_and_streams`).  This typically happens within a step's
+``run()`` method for options that cannot be known beforehand, particularly
+options related to the number of cores and threads.  In such cases, call
+:py:func:`compass.namelist.update()`:
 
 .. code-block:: python
 
@@ -584,155 +328,6 @@ cases, call :py:func:`compass.namelist.update()`:
 
     update(replacements=replacements, step_work_dir=step_dir,
            out_name=namelist)
-
-.. _dev_streams:
-
-Streams
--------
-
-Cores, configurations, and test cases can provide streams files that are used
-to define new streams or update default streams before MPAS runs.  Streams
-files within the ``compass`` package must start with the prefix ``streams.`` to
-ensure that they are included when we build the package.
-
-Streams files are a bit more complicated than :ref:`dev_namelist` files because
-streams files are XML documents, requiring some slightly more sophisticated
-parsing.
-
-Adding a streams file to a step
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Typically, a step that runs MPAS will include one or more calls to
-:py:func:`compass.streams.add_streams_file()` within :ref:`dev_step_collect`
-or :ref:`dev_step_setup`.  Calling this function simply adds the file to a
-list within the ``step`` dictionary that will be parsed if an when
-:py:func:`compass.streams.generate_streams()` gets called to create the
-streams file.  (This way, it is safe to add streams files to a step in
-``collect()`` even if that test case will never get set up or run.)
-
-The format of the streams file is essentially the same as the default and
-generated streams file, e.g.:
-
-.. code-block:: xml
-
-    <streams>
-
-    <immutable_stream name="mesh"
-                      filename_template="init.nc"/>
-
-    <immutable_stream name="input"
-                      filename_template="init.nc"/>
-
-    <immutable_stream name="restart"/>
-
-    <stream name="output"
-            type="output"
-            filename_template="output.nc"
-            output_interval="0000_00:00:01"
-            clobber_mode="truncate">
-
-        <var_struct name="tracers"/>
-        <var name="xtime"/>
-        <var name="normalVelocity"/>
-        <var name="layerThickness"/>
-    </stream>
-
-    </streams>
-
-These are all streams that are already defined in the default forward streams
-for MPAS-Ocean, so the defaults will be updated.  If only the attributes of
-a stream are given, the contents of the stream (the ``var``, ``var_struct``
-and ``var_array`` tags within the stream) are taken from the defaults.  If
-any contents are given, as for the ``output`` stream in the example above, they
-replace the default contents.  ``compass`` does not include a way to add or
-remove contents from the defaults, just keep the default contents or replace
-them all.  (Legacy COMPASS had such an option but it was found to be mostly
-confusing and difficult to keep synchronized with the MPAS code.)
-
-A typical streams file is added by passing the ``step`` dictionary, along with
-a package where the streams file is located and the name of the input streams
-file within that package:
-
-.. code-block:: python
-
-    add_streams_file(step, 'compass.ocean.tests.baroclinic_channel',
-                     'streams.forward')
-
-If the streams file should have a different name than the default
-(``streams.<core>``), the name can be given via the ``out_name`` keyword
-argument.
-
-Adding a template streams file
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-The main difference between namelists and streams files is that there is no
-direct equivalent for streams of :py:func:`compass.namelist.add_namelist_options()`.
-It is simply too confusing to try to define streams within the code.
-
-Instead, :py:func:`compass.streams.add_streams_file()` includes a keyword
-argument ``template_replacements``.  If you provide a dictionary of
-replacements to this argument, the input streams file will be treated as a
-`Jinja2 template <https://jinja.palletsprojects.com/>`_ that is rendered
-using the provided replacements.  Here is an example of such a template streams
-file:
-
-.. code-block:: xml
-
-    <streams>
-
-    <stream name="output"
-            output_interval="{{ output_interval }}"/>
-    <immutable_stream name="restart"
-                      filename_template="../restarts/rst.$Y-$M-$D_$h.$m.$s.nc"
-                      output_interval="{{ restart_interval }}"/>
-
-    </streams>
-
-And here is how it would be added, along with replacements:
-
-.. code-block:: python
-
-    stream_replacements = {
-        'output_interval': '00-00-01_00:00:00',
-        'restart_interval': '00-00-01_00:00:00'}
-    add_streams_file(step, module, 'streams.template',
-                     template_replacements=stream_replacements)
-
-    ...
-
-    stream_replacements = {
-        'output_interval': '00-00-01_00:00:00',
-        'restart_interval': '00-00-01_00:00:00'}
-    add_streams_file(step, module, 'streams.template',
-                     template_replacements=stream_replacements)
-
-In this example, taken from
-:py:func:`compass.ocean.tests.global_ocean.mesh.qu240.spinup.collect()`, we
-are creating a series of steps that will be used to perform dynamic adjustment
-of the ocean model, each of which might have different durations and restart
-intervals.  Rather than creating a streams file for each step of the spin up,
-we reuse the same template with just a few appropriate replacements.  Thus,
-calls to :py:func:`compass.streams.add_streams_file()` with
-``template_replacements`` are qualitatively similar to namelist calls to
-:py:func:`compass.namelist.add_namelist_options()`.
-
-
-Generating a streams file
-^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Calls to :py:func:`compass.streams.add_streams_file()` queue up streams files
-or templates but they are only parsed when you call
-:py:func:`compass.streams.generate_streams()`. If your output streams file has
-the default name (``streams.<core>``) and the model will be run in ``forward``
-mode, you just need to provide the ``step`` dictionary and config options.  You
-can give the file a different name or select ``init`` mode if you need to.
-
-The streams file is typically generated in :ref:`dev_step_setup`.  It cannot be
-generated during ``collect()`` because the work directory is not known and
-anyway we do not want to perform any file creation at all during ``collect()``.
-It could also be generated during ``run()``, but we do not recommend this
-because it would not give the user a chance to modify streams file themselves
-before running.
 
 .. _dev_validation:
 

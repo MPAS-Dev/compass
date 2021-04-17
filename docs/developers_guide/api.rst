@@ -94,7 +94,7 @@ Base Classes
 mpas_core
 ~~~~~~~~~
 
-.. currentmodule:: compass.mpas_core
+.. currentmodule:: compass
 
 .. autosummary::
    :toctree: generated/
@@ -105,7 +105,7 @@ mpas_core
 testgroup
 ~~~~~~~~~
 
-.. currentmodule:: compass.testgroup
+.. currentmodule:: compass
 
 .. autosummary::
    :toctree: generated/
@@ -116,7 +116,7 @@ testgroup
 testcase
 ^^^^^^^^
 
-.. currentmodule:: compass.testcase
+.. currentmodule:: compass
 
 .. autosummary::
    :toctree: generated/
@@ -129,7 +129,7 @@ testcase
 step
 ^^^^
 
-.. currentmodule:: compass.step
+.. currentmodule:: compass
 
 .. autosummary::
    :toctree: generated/
@@ -142,6 +142,7 @@ step
    Step.add_model_as_input
    Step.add_namelist_file
    Step.add_namelist_options
+   Step.add_streams_file
 
 config
 ^^^^^^
@@ -189,6 +190,16 @@ mpas_cores
    :toctree: generated/
 
    get_mpas_cores
+
+namelist
+^^^^^^^^
+
+.. currentmodule:: compass.namelist
+
+.. autosummary::
+   :toctree: generated/
+
+   update
 
 parallel
 ^^^^^^^^
