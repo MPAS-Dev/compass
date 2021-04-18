@@ -24,7 +24,7 @@ class InitialState(Step):
     """
     def __init__(self, test_case, mesh, initial_condition, with_bgc):
         """
-        Update the dictionary of step properties
+        Create the step
 
         Parameters
         ----------

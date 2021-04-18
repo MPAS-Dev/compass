@@ -9,7 +9,7 @@ class SshAdjustment(Step):
     """
     def __init__(self, test_case, cores=None, min_cores=None, threads=None):
         """
-        Update the dictionary of step properties
+        Create the step
 
         Parameters
         ----------

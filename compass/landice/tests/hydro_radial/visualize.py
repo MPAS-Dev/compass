@@ -13,7 +13,7 @@ class Visualize(Step):
     def __init__(self, test_case, name='visualize', subdir=None,
                  input_dir='run_model'):
         """
-        Update the dictionary of step properties
+        Create the step
 
         Parameters
         ----------

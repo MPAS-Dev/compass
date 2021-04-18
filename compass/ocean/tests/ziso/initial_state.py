@@ -25,7 +25,7 @@ class InitialState(Step):
 
     def __init__(self, test_case, resolution, with_frazil):
         """
-        Update the dictionary of step properties
+        Create the step
 
         Parameters
         ----------

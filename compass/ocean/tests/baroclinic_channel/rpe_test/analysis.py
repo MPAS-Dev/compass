@@ -21,7 +21,7 @@ class Analysis(Step):
     """
     def __init__(self, test_case, resolution, nus):
         """
-        Update the dictionary of step properties
+        Create the step
 
         Parameters
         ----------

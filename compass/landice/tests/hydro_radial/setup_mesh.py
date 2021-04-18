@@ -23,7 +23,7 @@ class SetupMesh(Step):
     """
     def __init__(self, test_case, initial_condition):
         """
-        Update the dictionary of step properties
+        Create the step
 
         Parameters
         ----------
