@@ -3,7 +3,9 @@
 
 	<add_link source="../culled_mesh/mesh.nc" dest="mesh.nc"/>
 	<add_link source="../culled_mesh/culled_graph.info" dest="graph.info"/>
-    <add_link source_path="script_test_dir" source="add_initial_state.py" dest="add_initial_state.py"/>
+        <copy_file source_path="script_test_dir" source="define_vertical_grid_64_layers.py" dest="define_vertical_grid.py"/>
+        <add_link source_path="script_core_dir" source="scripts/vertical_grid/make_vertical_grid.py" dest="make_vertical_grid.py"/>
+        <add_link source_path="script_test_dir" source="add_initial_state.py" dest="add_initial_state.py"/>
 
 	<run_script name="run.py">
 		<step executable="python">

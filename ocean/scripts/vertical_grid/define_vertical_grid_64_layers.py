@@ -5,7 +5,7 @@ from make_vertical_grid import create_vertical_grid
 # Standard 64 layer vertical grid
 create_vertical_grid(
     num_vert_levels=64,
-    bottom_depth=6000,
+    bottom_depth=4000,
     min_layer_thickness=2.,
     max_layer_thickness=210.,
     plot_vertical_grid=True,
