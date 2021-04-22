@@ -97,8 +97,25 @@ Hint: you can put the following line in your bashrc:
 
     alias mlgnu='module purge; module load git; module use /usr/projects/climate/SHARED_CLIMATE/modulefiles/all/; module load gcc/5.3.0 openmpi/1.10.5 netcdf/4.4.1 parallel-netcdf/1.5.0 pio/1.7.2; module unload python; source /usr/projects/climate/SHARED_CLIMATE/anaconda_envs/load_latest_compass.sh; echo "loading modules anaconda, gnu, openmpi, netcdf, pnetcdf, pio for grizzly"'
 
-grizzly, intel 17
------------------
+grizzly, intel 19 with scorpio
+------------------------------
+
+.. code-block:: bash
+
+    module purge
+    module load friendly-testing
+    module load intel/19.0.4 intel-mpi/2019.4 hdf5-parallel/1.8.16 pnetcdf/1.11.2 netcdf-h5parallel/4.7.3 mkl/2019.0.4
+    export NETCDF=/usr/projects/hpcsoft/toss3/grizzly/netcdf/4.7.3_intel-19.0.4_intel-mpi-2019.4_hdf5-1.8.16
+    export PNETCDF=/usr/projects/hpcsoft/toss3/grizzly/pnetcdf/1.11.2_intel-19.0.4_intel-mpi-2019.4_hdf5-1.8.16
+    export PIO=/usr/projects/climate/xylar/libraries/grizzly/scorpio-1.1.6-intel
+
+    make intel-mpi CORE=ocean USE_PIO2=true
+    # may also use: OPENMP=true DEBUG=true GEN_F90=true
+
+grizzly, intel 17 and pio 1
+---------------------------
+
+*Note: Intel 19 above is preferred*
 
 .. code-block:: bash
 
@@ -107,28 +124,6 @@ grizzly, intel 17
     module load intel/17.0.1
     module load openmpi/1.10.5 netcdf/4.4.1 parallel-netcdf/1.5.0 pio/1.7.2
     make ifort CORE=ocean
-
-grizzly, intel 19 with PIO2
----------------------------
-
-*Note: Intel 19 and PIO2 currently not functioning. Compile fails on PIO2 test. -Mark P, Jan 12 2021*
-
-.. code-block:: bash
-
-    module purge
-    module use /usr/projects/climate/SHARED_CLIMATE/modulefiles/all/scorpio
-    module load friendly-testing
-    module load intel/19.0.4 intel-mpi/2019.4 hdf5-parallel/1.8.16 pnetcdf/1.11.2 netcdf-h5parallel/4.7.3 mkl/2019.0.4 pio2/1.10.1
-    # note: if you already did this:
-    #  module use /usr/projects/climate/SHARED_CLIMATE/modulefiles/all/
-    # then it will show 'no such file' for hdf5-parallel/1.8.16.
-    # solution: log into a new node and try with only the commands above.
-    export I_MPI_CC=icc
-    export I_MPI_CXX=icpc
-    export I_MPI_F77=ifort
-    export I_MPI_F90=ifort
-
-    make ifort CORE=ocean USE_PIO2=true
 
 badger, gnu
 -----------
