@@ -1,0 +1,12 @@
+<streams>
+
+<immutable_stream name="restart"
+                  filename_template="rst.$Y.nc"
+                  filename_interval="output_interval"
+                  output_interval="1000-00-00_00:00:00"/>
+
+<stream name="output"
+        output_interval="0100-00-00_00:00:00"
+        clobber_mode="overwrite"/>
+
+</streams>

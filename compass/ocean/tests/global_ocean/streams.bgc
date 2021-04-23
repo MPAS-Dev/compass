@@ -1,0 +1,75 @@
+<streams>
+
+<stream name="shortwave_forcing_data"
+        filename_template="shortwaveData.nc"
+        input_interval="none"
+        type="input">
+
+    <var name="xtime"/>
+    <var name="chlorophyllData"/>
+    <var name="zenithAngle"/>
+    <var name="clearSkyRadiation"/>
+    <var name="xtime"/>
+    <var name="chlorophyllData"/>
+    <var name="zenithAngle"/>
+    <var name="clearSkyRadiation"/>
+</stream>
+
+<stream name="forcing_data"
+        filename_template="forcing_data.nc"
+        input_interval="initial_only"
+        type="input">
+
+    <var_struct name="tracersSurfaceRestoringFields"/>
+    <var_struct name="tracersInteriorRestoringFields"/>
+    <var_struct name="tracersExponentialDecayFields"/>
+    <var_struct name="tracersIdealAgeFields"/>
+    <var_struct name="tracersTTDFields"/>
+    <var_struct name="tracersSurfaceRestoringFields"/>
+    <var_struct name="tracersInteriorRestoringFields"/>
+    <var_struct name="tracersExponentialDecayFields"/>
+    <var_struct name="tracersIdealAgeFields"/>
+    <var_struct name="tracersTTDFields"/>
+    <var name="windStressZonal"/>
+    <var name="windStressMeridional"/>
+    <var name="landIceSurfaceTemperature"/>
+    <var name="atmosphericPressure"/>
+    <var name="latentHeatFlux"/>
+    <var name="sensibleHeatFlux"/>
+    <var name="shortWaveHeatFlux"/>
+    <var name="evaporationFlux"/>
+    <var name="rainFlux"/>
+    <var name="windStressZonal"/>
+    <var name="windStressMeridional"/>
+    <var name="landIceSurfaceTemperature"/>
+    <var name="atmosphericPressure"/>
+    <var name="latentHeatFlux"/>
+    <var name="sensibleHeatFlux"/>
+    <var name="shortWaveHeatFlux"/>
+    <var name="evaporationFlux"/>
+    <var name="rainFlux"/>
+</stream>
+
+<stream name="ecosys_monthly_flux"
+        filename_template="init.nc"
+        input_interval="none"
+        type="input"
+        packages="ecosysTracersPKG">
+
+    <var name="xtime"/>
+    <var name="depositionFluzNO3"/>
+    <var name="depositionFluzNH4"/>
+    <var name="IRON_FLUZ_IN"/>
+    <var name="dust_FLUZ_IN"/>
+    <var name="riverFluzNO3"/>
+    <var name="riverFluzPO4"/>
+    <var name="riverFluzDON"/>
+    <var name="riverFluzDOP"/>
+    <var name="riverFluzSiO3"/>
+    <var name="riverFluzFe"/>
+    <var name="riverFluzDIC"/>
+    <var name="riverFluzALK"/>
+    <var name="riverFluzDOC"/>
+</stream>
+
+</streams>
