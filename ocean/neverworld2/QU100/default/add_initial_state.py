@@ -131,26 +131,26 @@ def main():
     # Compute maxLevelCell and layerThickness for z-level (variation only on top)
     vertCoordMovementWeights[:] = 0.0
     vertCoordMovementWeights[0] = 1.0
-    maxLevelCell[:] = 0
-    bottomDepth[:] = refBottomDepth[0]
+    maxLevelCell[:] = 2
+    bottomDepth[:] = refBottomDepth[2]
     print('bottomDepth range: ', min(bottomDepth), max(bottomDepth))
     for iCell in range(0, nCells):
         for k in range(nVertLevels-1, 0, -1):
             if bottomDepthObserved[iCell] > refBottomDepth[k - 1]:
-                k = max(k, 0) #enforce minimun of 3 layers, i.e. 175m # to be replaced with kmax var
+                k = max(k, 2) #enforce minimun of 3 layers, i.e. 175m
                 maxLevelCell[iCell] = k
                 # Partial bottom cells
-                bottomDepth[iCell] = max(bottomDepthObserved[iCell], refBottomDepth[0]) # still a Q here
+                bottomDepth[iCell] = max(bottomDepthObserved[iCell], refBottomDepth[2])
                 # No partial bottom cells
                 #bottomDepth[iCell] = refBottomDepth[k]
                 layerThickness[0, iCell, k] = bottomDepth[iCell] - refBottomDepth[k - 1]
                 break
         if bottomDepthObserved[iCell] <=  refBottomDepth[0]: 
            print('do you ever get in this loop?')
-           k = 0 #enforce minimun of 3 layers, i.e. 175m
+           k = 2 #enforce minimun of 3 layers, i.e. 175m
            maxLevelCell[iCell] = k
            bottomDepth[iCell] = refBottomDepth[k]
-           layerThickness[0, iCell, k] = bottomDepth[iCell] #- refBottomDepth[k - 1] # this just gets changed below if k=0 - USE?
+           layerThickness[0, iCell, k] = bottomDepth[iCell] - refBottomDepth[k - 1]
         layerThickness[0, iCell, 0:maxLevelCell[iCell] ] = refLayerThickness[0:maxLevelCell[iCell]]
         layerThickness[0, iCell, 0] += ssh[iCell]
         #if bottomDepthObserved[iCell] <  refBottomDepth[2]:
