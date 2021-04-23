@@ -19,7 +19,7 @@ def main():
     timeStart = time.time()
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', '--input_file', dest='input_file',
-                        default='base_mesh.nc',
+                        default='mesh.nc',
                         help='Input file, containing base mesh'
                         )
     parser.add_argument('-o', '--output_file', dest='output_file',
@@ -27,7 +27,7 @@ def main():
                         help='Output file, containing initial variables'
                         )
     parser.add_argument('-L', '--nVertLevels', dest='nVertLevels',
-                        default=15,
+                        default=64,
                         help='Number of vertical levels'
                         )
     parser.add_argument('-H', '--maxDepth', dest='maxDepth',
@@ -90,7 +90,10 @@ def main():
     layerThickness[:] = -1e34
 
     # equally spaced layers
-    refLayerThickness[:] = [25.0, 50.0, 100.0, 125.0, 150.0, 175.0, 200.0, 225.0, 250.0, 300.0, 350.0, 400.0, 500.0, 550.0, 600.0] #maxDepth / nVertLevels
+    #refLayerThickness[:] = [25.0, 50.0, 100.0, 125.0, 150.0, 175.0, 200.0, 225.0, 250.0, 300.0, 350.0, 400.0, 500.0, 550.0, 600.0] #maxDepth / nVertLevels
+    # read in layer thickness from file
+    dsIn = xr.open_dataset('vertical_grid.nc')
+    refLayerThickness[:] = dsIn['refLayerThickness'].values
     refBottomDepth[0] = refLayerThickness[0]
     refZMid[0] = -0.5 * refLayerThickness[0]
     for k in range(1, nVertLevels):
@@ -160,7 +163,7 @@ def main():
     # Compute zMid (same, regardless of vertical coordinate)
     for iCell in range(0, nCells):
         k = maxLevelCell[iCell]
-        zMid[0, iCell, k] = -bottomDepth[iCell] + \
+        zMid[0, iCell, k] = - bottomDepth[iCell] + \
             0.5 * layerThickness[0, iCell, k]
         for k in range(maxLevelCell[iCell] - 1, -1, -1):
             zMid[0, iCell, k] = zMid[0, iCell, k + 1] + 0.5 * \
@@ -177,7 +180,15 @@ def main():
     S0 = 35.0
     # equally spaced layers
     refDensity = np.zeros(nVertLevels)
-    refDensity[:] = [1022.6, 1022.81, 1023.2, 1023.74, 1024.32, 1024.9, 1025.47, 1026.0, 1026.48, 1026.9, 1027.27, 1027.58, 1027.82, 1027.99, 1028.1]
+    obsDensity = np.zeros(15)
+    obsDepth = np.zeros(15)
+    obsDepth[:] = [  25.,   75.,  175.,  300.,  450.,  625.,  825., 1050., 1300.,
+       1600., 1950., 2350., 2850., 3400., 4000.]
+    obsDensity[:] = [1022.6, 1022.81, 1023.2, 1023.74, 1024.32, 1024.9, 1025.47, 1026.0, 1026.48, 1026.9, 1027.27, 1027.58, 1027.82, 1027.99, 1028.1]
+    # interpolate original MOM6 NW2 density profile (15 layers) to the new vertical grid
+    p = np.poly1d(np.polyfit(obsDepth, obsDensity, 4))
+    refDensity[:] = p(refBottomDepth)[:]
+    print(refDensity[0], refDensity[15], refDensity[60])
     config_eos_linear_alpha = 0.2
     config_eos_linear_beta = 0.8
     config_eos_linear_Tref = 15.0

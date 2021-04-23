@@ -59,7 +59,7 @@ def main():
 
 def create_vertical_grid(
         num_vert_levels=64,
-        bottom_depth=5000.0,
+        bottom_depth=4000.0,
         min_layer_thickness=2.0,
         max_layer_thickness=250.0,
         plot_vertical_grid=False,
