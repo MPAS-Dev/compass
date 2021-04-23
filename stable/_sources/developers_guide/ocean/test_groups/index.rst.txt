@@ -1,0 +1,13 @@
+.. _dev_ocean_test_groups:
+
+Test groups
+===========
+
+
+.. toctree::
+   :titlesonly:
+
+   baroclinic_channel
+   global_ocean
+   ice_shelf_2d
+   ziso

@@ -1,0 +1,458 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Config Files &mdash; compass stable documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Test Suites" href="test_suites.html" />
+    <link rel="prev" title="Test Cases" href="test_cases.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> compass
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                stable
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_cases.html">Test Cases</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Config Files</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#a-user-config-file">A “user” config file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#test-case-config-files">Test-case config files</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="machines/index.html">Machines</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">compass</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Config Files</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/users_guide/config_files.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="config-files">
+<span id="id1"></span><h1>Config Files<a class="headerlink" href="#config-files" title="Permalink to this headline">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">compass</span></code> uses config files (with extension <code class="docutils literal notranslate"><span class="pre">.cfg</span></code>) to allow users to
+control how <a class="reference internal" href="test_cases.html#test-cases"><span class="std std-ref">Test Cases</span></a> and <a class="reference internal" href="test_suites.html#test-suites"><span class="std std-ref">Test Suites</span></a> get set up and run.</p>
+<div class="section" id="a-user-config-file">
+<h2>A “user” config file<a class="headerlink" href="#a-user-config-file" title="Permalink to this headline">¶</a></h2>
+<p>If you’re running on one of the supported <a class="reference internal" href="machines/index.html#machines"><span class="std std-ref">Machines</span></a>, and you provide a
+path to where you build the MPAS model (with the <code class="docutils literal notranslate"><span class="pre">-p</span></code> flag to
+<code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">setup</span></code> and <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">suite</span></code>, see <a class="reference internal" href="quick_start.html#setup-overview"><span class="std std-ref">Setting up a test case</span></a> and
+<a class="reference internal" href="quick_start.html#suite-overview"><span class="std std-ref">Test Suites</span></a>), you also won’t need to create a config file to set up
+test cases or suites.</p>
+<p>If you’re running on another machine like your own laptop, you will need to
+provide some basic information for <code class="docutils literal notranslate"><span class="pre">compass</span></code> to work properly.  Even if
+you’re running on one of the supported machines, you might find it convenient
+to make your own changes to config options related to either setting up or
+running test suites and test case.</p>
+<p>Here is an example:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[paths]</span>
+
+<span class="na">mpas_model</span> <span class="o">=</span> <span class="s">.</span>
+
+<span class="c1"># The root to a location where the mesh_database, initial_condition_database,</span>
+<span class="c1"># and bathymetry_database for MPAS-Ocean will be cached</span>
+<span class="na">ocean_database_root</span> <span class="o">=</span> <span class="s">/home/xylar/data/mpas/mpas_standalonedata/mpas-ocean</span>
+
+<span class="c1"># The root to a location where the mesh_database and initial_condition_database</span>
+<span class="c1"># for MALI will be cached</span>
+<span class="na">landice_database_root</span> <span class="o">=</span> <span class="s">/home/xylar/data/mpas/mpas_standalonedata/mpas-albany-landice</span>
+
+
+<span class="c1"># The parallel section describes options related to running tests in parallel</span>
+<span class="k">[parallel]</span>
+
+<span class="c1"># parallel system of execution: slurm or single_node</span>
+<span class="na">system</span> <span class="o">=</span> <span class="s">single_node</span>
+
+<span class="c1"># whether to use mpirun or srun to run the model</span>
+<span class="na">parallel_executable</span> <span class="o">=</span> <span class="s">mpirun</span>
+
+<span class="c1"># cores per node on the machine</span>
+<span class="na">cores_per_node</span> <span class="o">=</span> <span class="s">8</span>
+
+<span class="c1"># the number of multiprocessing or dask threads to use</span>
+<span class="na">threads</span> <span class="o">=</span> <span class="s">8</span>
+</pre></div>
+</div>
+<p>The comments in this example are hopefully pretty self-explanatory. In this
+example, the <code class="docutils literal notranslate"><span class="pre">mpas_model</span></code> path points to the current directory <code class="docutils literal notranslate"><span class="pre">.</span></code>. You can
+replace this with the relative or absolute path where you have built the model
+(i.e. where the <code class="docutils literal notranslate"><span class="pre">ocean_model</span></code> or <code class="docutils literal notranslate"><span class="pre">landice_model</span></code> executables are found).
+Since you are free to run <code class="docutils literal notranslate"><span class="pre">compass</span></code> from wherever you like, the example
+assumes you are running from the directory where the MPAS model was built.
+You may prefer to keep your <code class="docutils literal notranslate"><span class="pre">compass</span></code> config files in another location, in
+which case you could provide an absolute path like:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># The paths section points compass to external paths</span>
+<span class="k">[paths]</span>
+
+<span class="c1"># the relative or absolute path to the root of a branch where MPAS-Ocean</span>
+<span class="c1"># has been built</span>
+<span class="na">mpas_model</span> <span class="o">=</span> <span class="s">/home/xylar/code/MPAS-Model/ocean/develop</span>
+</pre></div>
+</div>
+<p>You provide the config file to <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">setup</span></code> and <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">suite</span></code> with
+the <code class="docutils literal notranslate"><span class="pre">-f</span></code> flag:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass setup -f ocean.cfg ...
+</pre></div>
+</div>
+</div>
+<div class="section" id="test-case-config-files">
+<h2>Test-case config files<a class="headerlink" href="#test-case-config-files" title="Permalink to this headline">¶</a></h2>
+<p>Once a test case has been set up, its work directory will contain a config file
+called <code class="docutils literal notranslate"><span class="pre">&lt;test_case&gt;.cfg</span></code>, where <code class="docutils literal notranslate"><span class="pre">&lt;test_case&gt;</span></code> is the name of the test case.
+As a user, you can typically leave the config options in a test case as they
+are to run the test in its default configuration.  But the config file is meant
+to make it easier to modify the test case to fit your needs without having to
+dig into the <code class="docutils literal notranslate"><span class="pre">compass</span></code> code.</p>
+<p>Config options for a given test case are built up from a number of different
+sources:</p>
+<ul class="simple">
+<li><p>the default config file,
+<a class="reference external" href="https://github.com/MPAS-Dev/compass/blob/master/compass/default.cfg">default.cfg</a>,
+which sets a few options related to downloading files during setup (whether
+to download and whether to check the size of files already downloaded)</p></li>
+<li><p>the <a class="reference external" href="https://github.com/MPAS-Dev/compass/blob/master/compass/machines">machine config file</a>
+(using <a class="reference external" href="https://github.com/MPAS-Dev/compass/blob/master/compass/machines/default.cfg">machines/default.cfg</a>
+if no machine was specified) with information on the parallel system and
+the paths to cached data files</p></li>
+<li><p>the MPAS core’s config file.  For the <a class="reference internal" href="ocean/index.html#ocean"><span class="std std-ref">Ocean core</span></a> core, this sets default
+paths to the MPAS-Ocean model build (including the namelist templates).  It
+uses
+<a class="reference external" href="https://docs.python.org/3/library/configparser.html#configparser.ExtendedInterpolation">extended interpolation</a>
+in the config file to use config options within other config
+options, e.g. <code class="docutils literal notranslate"><span class="pre">model</span> <span class="pre">=</span> <span class="pre">${paths:mpas_model}/ocean_model</span></code>.</p></li>
+<li><p>the test group’s config file if one is defined.  For idealized test groups,
+these often include the size and resolution of the mesh as well as the number
+of vertical levels.  They may include options that were flags to scripts
+or init-mode namelist options in <a class="reference internal" href="../index.html#legacy-compass"><span class="std std-ref">Legacy COMPASS</span></a>.</p></li>
+<li><p>any number of config files from the test case.  There might be different
+config options depending on how the test case is configured (e.g. only if a
+certain feature is enabled.  For example, <a class="reference internal" href="ocean/test_groups/global_ocean.html#ocean-global-ocean"><span class="std std-ref">global_ocean</span></a> loads different
+sets of config options for different meshes.</p></li>
+<li><p>a user’s config file described above.</p></li>
+</ul>
+<p>You are free to add any sections and config options to your config file,
+in which case they will override the values specified in one of the other
+config files listed above. Here is an example of some customization for the
+<a class="reference internal" href="ocean/test_groups/global_ocean.html#ocean-global-ocean"><span class="std std-ref">global_ocean</span></a> test group:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># options for global ocean testcases</span>
+<span class="k">[global_ocean]</span>
+
+<span class="c1"># The following options are detected from .gitconfig if not explicitly entered</span>
+<span class="na">author</span> <span class="o">=</span> <span class="s">Xylar Asay-Davis</span>
+<span class="na">email</span> <span class="o">=</span> <span class="s">xylar@lanl.gov</span>
+<span class="na">pull_request</span> <span class="o">=</span> <span class="s">https://github.com/MPAS-Dev/compass/pull/28</span>
+</pre></div>
+</div>
+<p>In this example, the author’s name and email address, and the path to a pull
+request will be included in the metadata for output files from this test group.</p>
+<p>A typical config file resulting from combining all of the sources listed above
+looks like:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[download]</span>
+<span class="na">server_base_url</span> <span class="o">=</span> <span class="s">https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata</span>
+<span class="na">download</span> <span class="o">=</span> <span class="s">True</span>
+<span class="na">check_size</span> <span class="o">=</span> <span class="s">False</span>
+<span class="na">verify</span> <span class="o">=</span> <span class="s">True</span>
+<span class="na">core_path</span> <span class="o">=</span> <span class="s">mpas-ocean</span>
+
+<span class="k">[parallel]</span>
+<span class="na">partition_executable</span> <span class="o">=</span> <span class="s">gpmetis</span>
+<span class="na">system</span> <span class="o">=</span> <span class="s">single_node</span>
+<span class="na">parallel_executable</span> <span class="o">=</span> <span class="s">mpirun</span>
+<span class="na">cores_per_node</span> <span class="o">=</span> <span class="s">8</span>
+<span class="na">threads</span> <span class="o">=</span> <span class="s">8</span>
+
+<span class="k">[paths]</span>
+<span class="na">mpas_model</span> <span class="o">=</span> <span class="s">/home/xylar/code/mpas-work/compass/compass_1.0/MPAS-Model/ocean/develop</span>
+<span class="na">ocean_database_root</span> <span class="o">=</span> <span class="s">/home/xylar/data/mpas/mpas_standalonedata/mpas-ocean</span>
+<span class="na">landice_database_root</span> <span class="o">=</span> <span class="s">/home/xylar/data/mpas/mpas_standalonedata/mpas-albany-landice</span>
+<span class="na">baseline_dir</span> <span class="o">=</span> <span class="s">/home/xylar/data/mpas/test_20210413/compass_classes/ocean/global_ocean/QU240/PHC/init</span>
+
+<span class="k">[namelists]</span>
+<span class="na">forward</span> <span class="o">=</span> <span class="s">/home/xylar/code/mpas-work/compass/compass_1.0/MPAS-Model/ocean/develop/default_inputs/namelist.ocean.forward</span>
+<span class="na">init</span> <span class="o">=</span> <span class="s">/home/xylar/code/mpas-work/compass/compass_1.0/MPAS-Model/ocean/develop/default_inputs/namelist.ocean.init</span>
+
+<span class="k">[streams]</span>
+<span class="na">forward</span> <span class="o">=</span> <span class="s">/home/xylar/code/mpas-work/compass/compass_1.0/MPAS-Model/ocean/develop/default_inputs/streams.ocean.forward</span>
+<span class="na">init</span> <span class="o">=</span> <span class="s">/home/xylar/code/mpas-work/compass/compass_1.0/MPAS-Model/ocean/develop/default_inputs/streams.ocean.init</span>
+
+<span class="k">[executables]</span>
+<span class="na">model</span> <span class="o">=</span> <span class="s">/home/xylar/code/mpas-work/compass/compass_1.0/MPAS-Model/ocean/develop/ocean_model</span>
+
+<span class="k">[ssh_adjustment]</span>
+<span class="na">iterations</span> <span class="o">=</span> <span class="s">10</span>
+
+<span class="k">[global_ocean]</span>
+<span class="na">mesh_cores</span> <span class="o">=</span> <span class="s">1</span>
+<span class="na">mesh_min_cores</span> <span class="o">=</span> <span class="s">1</span>
+<span class="na">mesh_max_memory</span> <span class="o">=</span> <span class="s">1000</span>
+<span class="na">mesh_max_disk</span> <span class="o">=</span> <span class="s">1000</span>
+<span class="na">init_cores</span> <span class="o">=</span> <span class="s">4</span>
+<span class="na">init_min_cores</span> <span class="o">=</span> <span class="s">1</span>
+<span class="na">init_max_memory</span> <span class="o">=</span> <span class="s">1000</span>
+<span class="na">init_max_disk</span> <span class="o">=</span> <span class="s">1000</span>
+<span class="na">init_threads</span> <span class="o">=</span> <span class="s">1</span>
+<span class="na">forward_cores</span> <span class="o">=</span> <span class="s">4</span>
+<span class="na">forward_min_cores</span> <span class="o">=</span> <span class="s">1</span>
+<span class="na">forward_threads</span> <span class="o">=</span> <span class="s">1</span>
+<span class="na">forward_max_memory</span> <span class="o">=</span> <span class="s">1000</span>
+<span class="na">forward_max_disk</span> <span class="o">=</span> <span class="s">1000</span>
+<span class="na">add_metadata</span> <span class="o">=</span> <span class="s">True</span>
+<span class="na">prefix</span> <span class="o">=</span> <span class="s">QU</span>
+<span class="na">mesh_description</span> <span class="o">=</span> <span class="s">MPAS quasi-uniform mesh for E3SM version ${e3sm_version} at</span>
+    <span class="na">${min_res}-km global resolution with ${levels} vertical</span>
+    <span class="na">level</span>
+<span class="na">bathy_description</span> <span class="o">=</span> <span class="s">Bathymetry is from GEBCO 2019, combined with BedMachine Antarctica around Antarctica.</span>
+<span class="na">init_description</span> <span class="o">=</span> <span class="s">Polar science center Hydrographic Climatology (PHC)</span>
+<span class="na">e3sm_version</span> <span class="o">=</span> <span class="s">2</span>
+<span class="na">mesh_revision</span> <span class="o">=</span> <span class="s">1</span>
+<span class="na">min_res</span> <span class="o">=</span> <span class="s">240</span>
+<span class="na">max_res</span> <span class="o">=</span> <span class="s">240</span>
+<span class="na">max_depth</span> <span class="o">=</span> <span class="s">autodetect</span>
+<span class="na">levels</span> <span class="o">=</span> <span class="s">autodetect</span>
+<span class="na">creation_date</span> <span class="o">=</span> <span class="s">autodetect</span>
+<span class="na">author</span> <span class="o">=</span> <span class="s">Xylar Asay-Davis</span>
+<span class="na">email</span> <span class="o">=</span> <span class="s">xylar@lanl.gov</span>
+<span class="na">pull_request</span> <span class="o">=</span> <span class="s">https://github.com/MPAS-Dev/compass/pull/28</span>
+
+<span class="k">[files_for_e3sm]</span>
+<span class="na">enable_ocean_initial_condition</span> <span class="o">=</span> <span class="s">true</span>
+<span class="na">enable_ocean_graph_partition</span> <span class="o">=</span> <span class="s">true</span>
+<span class="na">enable_seaice_initial_condition</span> <span class="o">=</span> <span class="s">true</span>
+<span class="na">enable_scrip</span> <span class="o">=</span> <span class="s">true</span>
+<span class="na">enable_diagnostics_files</span> <span class="o">=</span> <span class="s">true</span>
+<span class="na">comparisonlatresolution</span> <span class="o">=</span> <span class="s">0.5</span>
+<span class="na">comparisonlonresolution</span> <span class="o">=</span> <span class="s">0.5</span>
+<span class="na">comparisonantarcticstereowidth</span> <span class="o">=</span> <span class="s">6000.</span>
+<span class="na">comparisonantarcticstereoresolution</span> <span class="o">=</span> <span class="s">10.</span>
+<span class="na">comparisonarcticstereowidth</span> <span class="o">=</span> <span class="s">6000.</span>
+<span class="na">comparisonarcticstereoresolution</span> <span class="o">=</span> <span class="s">10.</span>
+
+<span class="k">[vertical_grid]</span>
+<span class="na">grid_type</span> <span class="o">=</span> <span class="s">tanh_dz</span>
+<span class="na">vert_levels</span> <span class="o">=</span> <span class="s">16</span>
+<span class="na">bottom_depth</span> <span class="o">=</span> <span class="s">3000.0</span>
+<span class="na">min_layer_thickness</span> <span class="o">=</span> <span class="s">3.0</span>
+<span class="na">max_layer_thickness</span> <span class="o">=</span> <span class="s">500.0</span>
+</pre></div>
+</div>
+<p>Unfortunately, all comments are lost in the process of combining config
+options.  Comments are not parsed by <code class="docutils literal notranslate"><span class="pre">ConfigParser</span></code>, and there is not a
+standard for which comments are associated with which options.  So users
+will need to search through this documentation (or the code on the
+<a class="reference external" href="https://github.com/MPAS-Dev/compass">compass repo</a>) to know what the config
+options are used for.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="test_suites.html" class="btn btn-neutral float-right" title="Test Suites" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="test_cases.html" class="btn btn-neutral float-left" title="Test Cases" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

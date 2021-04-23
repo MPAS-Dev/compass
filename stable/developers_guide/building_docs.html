@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Building the Documentation &mdash; COMPASS stable documentation</title>
+  <title>Building the Documentation &mdash; compass stable documentation</title>
   
 
   
@@ -38,8 +38,8 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Design Documents" href="../design_docs/index.html" />
-    <link rel="prev" title="run_config" href="run_config.html" /> 
+    <link rel="next" title="API reference" href="api.html" />
+    <link rel="prev" title="Documentation" href="docs.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -53,7 +53,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> COMPASS
+            <a href="../index.html" class="icon icon-home"> compass
           
 
           
@@ -90,32 +90,35 @@
             
               <p class="caption"><span class="caption-text">User's guide</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../users_guide/overview.html">Quick Start</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../users_guide/scripts.html">Scripts</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Ocean</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../ocean/introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ocean/test_cases/index.html">Ocean test cases</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Machine-specific instructions</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../machine_specific_instructions/slurm.html">Slurm job queueing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../machine_specific_instructions/lanl.html">LANL Institutional Computing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../machine_specific_instructions/nersc.html">NERSC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../machine_specific_instructions/anvil.html">Anvil/Blues</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../machine_specific_instructions/linux.html">Personal Linux/OSX Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../machine_specific_instructions/osx.html">Personal OSX Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/machines/index.html">Machines</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Developer's guide</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="config.html">config</a></li>
-<li class="toctree-l1"><a class="reference internal" href="driver_script.html">driver_script</a></li>
-<li class="toctree-l1"><a class="reference internal" href="template.html">template</a></li>
-<li class="toctree-l1"><a class="reference internal" href="regression_suite.html">regression_suite</a></li>
-<li class="toctree-l1"><a class="reference internal" href="run_config.html">run_config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs.html">Documentation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Code and Documentation Versions</a></li>
 </ul>
 
             
@@ -131,7 +134,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">COMPASS</a>
+          <a href="../index.html">compass</a>
         
       </nav>
 
@@ -185,19 +188,51 @@
             
   <div class="section" id="building-the-documentation">
 <span id="dev-building-docs"></span><h1>Building the Documentation<a class="headerlink" href="#building-the-documentation" title="Permalink to this headline">¶</a></h1>
-<p>To make a local test build of the documentation, you need to set up a conda
-environment with some required packages:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ conda create -y -n test_compass_docs <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.8 sphinx mock sphinx_rtd_theme
-$ conda activate test_compass_docs
+<p>To make a local test build of the documentation, you need to make a local
+build of the <code class="docutils literal notranslate"><span class="pre">compass</span></code> conda package and include it in a conda environment
+with some other required packages.</p>
+<p>If you haven’t installed
+<a class="reference external" href="https://docs.conda.io/en/latest/miniconda.html">Miniconda3</a>, do so.  Then,
+<a class="reference external" href="https://conda-forge.org/#about">add conda-forge</a> and install conda-build:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">miniconda</span><span class="o">=</span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/miniconda3
+<span class="nb">source</span> <span class="si">${</span><span class="nv">miniconda</span><span class="si">}</span>/etc/profile.d/conda.sh
+conda activate base
+conda install conda-build
 </pre></div>
 </div>
-<p>Then, to build the documentation, run:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ <span class="nb">export</span> <span class="nv">DOCS_VERSION</span><span class="o">=</span><span class="s2">&quot;test&quot;</span>
-$ <span class="nb">cd</span> docs
-$ make html
+<p>If you installed Miniconda3 somewhere other than the default location, change
+<code class="docutils literal notranslate"><span class="pre">$miniconda</span></code> both above and in the script below.</p>
+<p>Then, run the following script to build the docs:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="nv">miniconda</span><span class="o">=</span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/miniconda3
+
+<span class="nb">source</span> <span class="si">${</span><span class="nv">miniconda</span><span class="si">}</span>/etc/profile.d/conda.sh
+
+<span class="c1"># exit if a subprocess ends in errors</span>
+<span class="nb">set</span> -e
+
+<span class="nv">py</span><span class="o">=</span><span class="m">3</span>.8
+<span class="nv">mpi</span><span class="o">=</span>mpich
+
+<span class="nv">env</span><span class="o">=</span>test_compass_mpi_<span class="si">${</span><span class="nv">mpi</span><span class="si">}</span>
+rm -rf <span class="si">${</span><span class="nv">miniconda</span><span class="si">}</span>/conda-bld
+conda build -m ci/mpi_<span class="si">${</span><span class="nv">mpi</span><span class="si">}</span>.yaml recipe
+
+conda create --yes --quiet --name <span class="si">${</span><span class="nv">env</span><span class="si">}</span> -c <span class="si">${</span><span class="nv">miniconda</span><span class="si">}</span>/conda-bld/ <span class="se">\</span>
+    <span class="nv">python</span><span class="o">=</span><span class="nv">$py</span> compass sphinx mock sphinx_rtd_theme
+
+conda activate <span class="nv">$env</span>
+
+<span class="nv">version</span><span class="o">=</span><span class="k">$(</span>python -c <span class="s2">&quot;import compass; print(compass.__version__)&quot;</span><span class="k">)</span>
+<span class="nb">echo</span> <span class="s2">&quot;version: </span><span class="nv">$version</span><span class="s2">&quot;</span>
+<span class="nb">export</span> <span class="nv">DOCS_VERSION</span><span class="o">=</span><span class="s2">&quot;test&quot;</span>
+<span class="nb">cd</span> docs <span class="o">||</span> <span class="nb">exit</span> <span class="m">1</span>
+rm -rf developers_guide/generated/ developers_guide/*/generated/ _build/
+make html
 </pre></div>
 </div>
-<p>Then, you can view the documentation by opening <code class="docutils literal notranslate"><span class="pre">_build/html/index.html</span></code>.</p>
+<p>Finally, you can view the documentation by opening <code class="docutils literal notranslate"><span class="pre">_build/html/index.html</span></code>.</p>
 </div>
 
 
@@ -206,15 +241,15 @@ $ make html
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="../design_docs/index.html" class="btn btn-neutral float-right" title="Design Documents" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="run_config.html" class="btn btn-neutral float-left" title="run_config" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api.html" class="btn btn-neutral float-right" title="API reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="docs.html" class="btn btn-neutral float-left" title="Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright Copyright (c) 2013-2020,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..
+        &#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..
 
     </p>
   </div>

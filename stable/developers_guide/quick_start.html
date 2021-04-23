@@ -1,0 +1,412 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Quick Start for Developers &mdash; compass stable documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Overview" href="overview.html" />
+    <link rel="prev" title="Personal OSX Machine" href="../users_guide/machines/osx.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> compass
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                stable
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer's guide</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quick Start for Developers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#set-up-a-compass-repository-for-beginners">Set up a compass repository: for beginners</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#compass-conda-environment">compass conda environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-compass-from-the-repo">Running compass from the repo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#set-up-a-compass-repository-with-worktrees-for-advanced-users">Set up a compass repository with worktrees: for advanced users</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">compass</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Quick Start for Developers</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/developers_guide/quick_start.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="quick-start-for-developers">
+<span id="dev-quick-start"></span><h1>Quick Start for Developers<a class="headerlink" href="#quick-start-for-developers" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="set-up-a-compass-repository-for-beginners">
+<span id="dev-compass-repo"></span><h2>Set up a compass repository: for beginners<a class="headerlink" href="#set-up-a-compass-repository-for-beginners" title="Permalink to this headline">¶</a></h2>
+<p>To begin, obtain the master branch of the
+<a class="reference external" href="https://github.com/MPAS-Dev/compass">compass repository</a> with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone git@github.com:MPAS-Dev/compass.git
+<span class="nb">cd</span> compass
+git submodule update --init --recursive
+</pre></div>
+</div>
+<p>The MPAS repository is a submodule of compass repository.  For example, to
+compile MPAS-Ocean:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> MPAS-Model/ocean/develop/
+<span class="c1"># load modules (see machine-specific instructions below)</span>
+make gfortran <span class="nv">CORE</span><span class="o">=</span>ocean
+</pre></div>
+</div>
+<p>For MALI:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> MPAS-Model/landice/develop/
+<span class="c1"># load modules (see machine-specific instructions below)</span>
+make gfortran <span class="nv">CORE</span><span class="o">=</span>landice
+</pre></div>
+</div>
+</div>
+<div class="section" id="compass-conda-environment">
+<span id="dev-conda-env"></span><h2>compass conda environment<a class="headerlink" href="#compass-conda-environment" title="Permalink to this headline">¶</a></h2>
+<p>As a developer, you will nearly always want to set up your own conda
+environment with the latest dependencies for compass.  You can try using the
+latest compass environment on a supported machine or making one from the latest
+release (see <a class="reference internal" href="../users_guide/quick_start.html#conda-env"><span class="std std-ref">compass conda environment</span></a>) but there is a risk that the dependencies will
+not be correct and things will not work as expected as a result.</p>
+<p>To install your own compass conda environment on other machines, first, install
+<a class="reference external" href="https://docs.conda.io/en/latest/miniconda.html">Miniconda3</a> (if miniconda is
+not already installed), then add the
+<a class="reference external" href="https://conda-forge.org/#about">conda-forge channel</a>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda config --add channels conda-forge
+conda config --set channel_priority strict
+</pre></div>
+</div>
+<p>then create a new conda environment (called <code class="docutils literal notranslate"><span class="pre">dev_compass</span></code> in this example) as
+follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda create -n dev_compass <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.8 affine cartopy cartopy_offlinedata <span class="se">\</span>
+    cmocean <span class="s2">&quot;esmf=*=mpi_mpich*&quot;</span> ffmpeg <span class="s2">&quot;geometric_features=0.3.0&quot;</span> git <span class="se">\</span>
+    ipython <span class="s2">&quot;jigsaw=0.9.14&quot;</span> <span class="s2">&quot;jigsawpy=0.3.3&quot;</span> jupyter lxml matplotlib <span class="se">\</span>
+    metis <span class="s2">&quot;mpas_tools=0.2.0&quot;</span> mpich nco <span class="s2">&quot;netcdf4=*=nompi_*&quot;</span> numpy <span class="se">\</span>
+    progressbar2 pyamg <span class="s2">&quot;pyremap&gt;=0.0.7,&lt;0.1.0&quot;</span> rasterio requests scipy <span class="se">\</span>
+    xarray
+</pre></div>
+</div>
+<p>We will do our best to keep this list of dependencies in sync with the
+“official” list, which is found in
+<a class="reference external" href="https://github.com/MPAS-Dev/compass/blob/master/recipe/meta.yaml">recipe/meta.yaml</a></p>
+<p>Each time you want to work with compass, you will need to run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda activate dev_compass
+</pre></div>
+</div>
+</div>
+<div class="section" id="running-compass-from-the-repo">
+<span id="dev-working-with-compass"></span><h2>Running compass from the repo<a class="headerlink" href="#running-compass-from-the-repo" title="Permalink to this headline">¶</a></h2>
+<p>If you are working with the released <code class="docutils literal notranslate"><span class="pre">compass</span></code> package, you can interact with
+it directly with the <code class="docutils literal notranslate"><span class="pre">compass</span></code> command-line tool as described in
+<a class="reference internal" href="../users_guide/quick_start.html#setup-overview"><span class="std std-ref">Setting up a test case</span></a> and <a class="reference internal" href="../users_guide/quick_start.html#suite-overview"><span class="std std-ref">Test Suites</span></a>.  If you are developing the
+code out of a repository, though, you need to call the local code with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m compass ...
+</pre></div>
+</div>
+<p>This way, you will use the code in the local <code class="docutils literal notranslate"><span class="pre">compass</span></code> directory.  If you
+are running out of a <code class="docutils literal notranslate"><span class="pre">dev_compass</span></code> environment like described above, you
+won’t have a <code class="docutils literal notranslate"><span class="pre">compass</span></code> command-line tool to run.  If you are using one of
+the release environments (e.g. because dependencies haven’t changed since the
+last release), you want to be careful not to run the <code class="docutils literal notranslate"><span class="pre">compass</span></code> command-line
+tool directly because you won’t be accessing the code you’re working on.</p>
+<p>To list test cases you need to run:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>python -m compass list</p>
+</div></blockquote>
+<p>The results will be the same as described in <a class="reference internal" href="../users_guide/quick_start.html#setup-overview"><span class="std std-ref">Setting up a test case</span></a>, but the
+test cases will come from the local <code class="docutils literal notranslate"><span class="pre">compass</span></code> directory.</p>
+<p>To set up a test case, you will run something like:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m compass setup -t ocean/global_ocean/QU240/mesh -m <span class="nv">$MACHINE</span> -w <span class="nv">$WORKDIR</span> -p <span class="nv">$MPAS</span>
+</pre></div>
+</div>
+<p>To list available test suites, you would run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m compass list --suites
+</pre></div>
+</div>
+<p>And you would set up a suite as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m compass suite -s -c ocean -t nightly -m <span class="nv">$MACHINE</span> -w <span class="nv">$WORKDIR</span> -p <span class="nv">$MPAS</span>
+</pre></div>
+</div>
+<p>Otherwise, things are the same as in <a class="reference internal" href="../users_guide/quick_start.html#suite-overview"><span class="std std-ref">Test Suites</span></a>.</p>
+<p>You will see symlinks to the <code class="docutils literal notranslate"><span class="pre">compass</span></code> package in the base work directory
+for suites as well as each test case and step’s work directory.  These are to
+make sure that the code from the repository is also used when you run test
+cases and steps.  You can even use the symlinks as a convenient way to access
+and edit the code as you’re testing your changes.</p>
+</div>
+<div class="section" id="set-up-a-compass-repository-with-worktrees-for-advanced-users">
+<h2>Set up a compass repository with worktrees: for advanced users<a class="headerlink" href="#set-up-a-compass-repository-with-worktrees-for-advanced-users" title="Permalink to this headline">¶</a></h2>
+<p>This section uses <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">worktree</span></code>, which provides more flexibility but is more
+complicated. See the beginner section above for the simpler version. In the
+worktree version, you will have many unix directories, and each corresponds to
+a git branch. It is easier to keep track of, and easier to work with many
+branches at once. Begin where you keep your repositories:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir compass
+<span class="nb">cd</span> compass
+git clone git@github.com:MPAS-Dev/compass.git master
+<span class="nb">cd</span> master
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">MPAS-Dev/compass</span></code> repo is now <code class="docutils literal notranslate"><span class="pre">origin</span></code>. You can add more remotes. For
+example</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git remote add mark-petersen git@github.com:mark-petersen/compass.git
+git fetch mark-petersen
+</pre></div>
+</div>
+<p>To view all your remotes:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git remote -v
+</pre></div>
+</div>
+<p>To view all available branches, both local and remote:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git branch -a
+</pre></div>
+</div>
+<p>We will use the git worktree command to create a new local branch in its own
+unix directory.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> compass/master
+git worktree add -b new_branch_name ../new_branch_name origin/master
+<span class="nb">cd</span> ../new_branch_name
+</pre></div>
+</div>
+<p>In this example, we branched off <code class="docutils literal notranslate"><span class="pre">origin/master</span></code>, but you could start from
+any branch, which is specified by the last <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">worktree</span></code> argument.</p>
+<p>There are two ways to build the MPAS executable:</p>
+<ol class="arabic">
+<li><p>Compass submodule (easier): This guarantees that the MPAS commit matches
+compass.  It is also the default location for finding the MPAS model so you
+don’t need to specify the <code class="docutils literal notranslate"><span class="pre">-p</span></code> flag at the command line or put the MPAS
+model path in your config file (if you even need a config file at all).</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git submodule update --init --recursive
+<span class="nb">cd</span> MPAS-Model/ocean/develop/
+<span class="c1"># load modules</span>
+make gfortran <span class="nv">CORE</span><span class="o">=</span>ocean
+</pre></div>
+</div>
+<p>For the “load modules” step, see <a class="reference internal" href="../users_guide/machines/index.html#machines"><span class="std std-ref">Machines</span></a> for specific instructions.</p>
+</li>
+<li><p>Other MPAS directory (advanced): Create your own clone of the MPAS-Model
+repository elsewhere on disk.  Either make an <code class="docutils literal notranslate"><span class="pre">ocean.cfg</span></code> or
+<code class="docutils literal notranslate"><span class="pre">landice.cfg</span></code> that specifies the absolute path to MPAS-Model repo where
+the <code class="docutils literal notranslate"><span class="pre">ocean_model</span></code> or <code class="docutils literal notranslate"><span class="pre">landice_model</span></code> executable is found, or specify
+this path on the command line with <code class="docutils literal notranslate"><span class="pre">-p</span></code>.  You are responsible for knowing
+if this particular version of MPAS-Model is compatible with the version of
+<code class="docutils literal notranslate"><span class="pre">compass</span></code> that you are using. The simplest way to set up a new MPAS repo
+in a new directory is:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone git@github.com:MPAS-Dev/MPAS.git your_new_branch
+<span class="nb">cd</span> your_new_branch
+git checkout -b your_new_branch origin/ocean/develop
+</pre></div>
+</div>
+</li>
+</ol>
+<p>Note that for ocean development, it is best to branch from <code class="docutils literal notranslate"><span class="pre">ocean/develop</span></code>
+and for MALI development, start with <code class="docutils literal notranslate"><span class="pre">landice/develop</span></code>.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="overview.html" class="btn btn-neutral float-right" title="Overview" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../users_guide/machines/osx.html" class="btn btn-neutral float-left" title="Personal OSX Machine" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
