@@ -174,8 +174,7 @@ def _get_conda_package_version(package):
     lines = conda.split('\n')
     for line in lines:
         parts = line.split()
-        if parts[0] == package:
+        if len(parts) > 0 and parts[0] == package:
             return parts[1]
 
-    raise ValueError('Package {} not found in the conda environment'.format(
-        package))
+    return 'not found'
