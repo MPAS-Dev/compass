@@ -62,9 +62,9 @@ follows:
 .. code-block:: bash
 
     conda create -n dev_compass python=3.8 affine cartopy cartopy_offlinedata \
-        cmocean "esmf=*=mpi_mpich*" ffmpeg "geometric_features=0.3.0" git \
+        cmocean "esmf=*=mpi_mpich*" ffmpeg "geometric_features=0.4.0" git \
         ipython "jigsaw=0.9.14" "jigsawpy=0.3.3" jupyter lxml matplotlib \
-        metis "mpas_tools=0.2.0" mpich nco "netcdf4=*=nompi_*" numpy \
+        metis "mpas_tools=0.5.1" mpich nco "netcdf4=*=nompi_*" numpy \
         progressbar2 pyamg "pyremap>=0.0.7,<0.1.0" rasterio requests scipy \
         xarray
 
