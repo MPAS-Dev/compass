@@ -1,74 +1,19 @@
 #!/usr/bin/env python
+
 import subprocess
 import os
-import socket
 import glob
 import stat
 import grp
 import requests
 import progressbar
+import argparse
+import sys
+import re
+import configparser
 
 
-def get_envs():
-    # Modify the following list of dictionaries to choose which compass
-    # version, python version, and which mpi variant (nompi, mpich or openmpi)
-    # to use.
-
-    envs = [{'suffix': '_nompi',
-             'version': '1.0',
-             'python': '3.8',
-             'mpi': 'nompi'},
-            {'suffix': '',
-             'version': '1.0',
-             'python': '3.8',
-             'mpi': 'mpich'}]
-
-    # whether to delete and rebuild each environment if it already exists
-    force_recreate = True
-
-    # whether these are to be test environments
-    is_test = True
-
-    return envs, force_recreate, is_test
-
-
-def get_host_info():
-    hostname = socket.gethostname()
-    system_mpich_version = None
-    if hostname.startswith('cori') or hostname.startswith('dtn'):
-        base_path = "/global/cfs/cdirs/e3sm/software/anaconda_envs/base"
-        activ_path = "/global/cfs/cdirs/e3sm/software/anaconda_envs"
-        group = "e3sm"
-    elif hostname.startswith('blueslogin') or hostname.startswith('chrysalis'):
-        base_path = "/lcrc/soft/climate/e3sm-unified/base"
-        activ_path = "/lcrc/soft/climate/e3sm-unified"
-        group = "cels"
-        system_mpich_version = "3.3.*"
-    elif hostname.startswith('cooley'):
-        base_path = "/lus/theta-fs0/projects/ccsm/acme/tools/e3sm-unified/base"
-        activ_path = "/lus/theta-fs0/projects/ccsm/acme/tools/e3sm-unified"
-        group = "ccsm"
-    elif hostname.startswith('compy'):
-        base_path = "/share/apps/E3SM/conda_envs/base"
-        activ_path = "/share/apps/E3SM/conda_envs"
-        group = "users"
-    elif hostname.startswith('gr-fe') or hostname.startswith('ba-fe'):
-        base_path = "/usr/projects/climate/SHARED_CLIMATE/anaconda_envs/base"
-        activ_path = "/usr/projects/climate/SHARED_CLIMATE/anaconda_envs"
-        group = "climate"
-    elif hostname.startswith('burnham'):
-        base_path = "/home/xylar/Desktop/test_compass/base"
-        activ_path = "/home/xylar/Desktop/test_compass"
-        group = "xylar"
-    else:
-        raise ValueError(
-            "Unknown host name {}.  Add env_path and group for "
-            "this machine to the script.".format(hostname))
-
-    return base_path, activ_path, group, system_mpich_version
-
-
-def check_env(base_path, env_name, env):
+def check_env(base_path, env_name):
     print("Checking the environment {}".format(env_name))
 
     activate = 'source {}/etc/profile.d/conda.sh; conda activate {}'.format(
@@ -103,9 +48,92 @@ def test_command(command, env, package):
 
 
 def main():
-    envs, force_recreate, is_test = get_envs()
+    parser = argparse.ArgumentParser(
+        description='Deploy a compass conda environment', prog='compass-deploy')
+    parser.add_argument("-m", "--machine", dest="machine",
+                        help="The name of the machine for loading machine-"
+                             "related config options", metavar="MACH")
+    parser.add_argument("-f", "--config_file", dest="config_file",
+                        help="Config file to override deployment config "
+                             "options")
+    parser.add_argument("-t", "--test", dest="test", type=bool,
+                        help="Whether to deploy a test environment")
+    parser.add_argument("-b", "--build", dest="build", type=bool,
+                        help="Whether to build the test package")
+    parser.add_argument("-r", "--recreate", dest="recreate", type=bool,
+                        help="Whether to recreate the environment if it "
+                             "exists")
+    parser.add_argument("-s", "--suffix", dest="suffix", type=str,
+                        help="A suffix to append to the environment name")
+    parser.add_argument("-p", "--python", dest="python", type=str,
+                        help="The python version to deploy")
+    parser.add_argument("-i", "--mpi", dest="mpi", type=str,
+                        help="The MPI flavor (nompi, mpich, openmpi) to "
+                             "deploy")
+    parser.add_argument("-g", "--group", dest="group", type=str,
+                        help="The unix group that should own the environment")
 
-    base_path, activ_path, group, system_mpich_version = get_host_info()
+    args = parser.parse_args(sys.argv[1:])
+
+    # we can't import compass because we probably don't have the necessary
+    # dependencies, so we get the version by parsing as in the root setup.py
+    here = os.path.abspath(os.path.dirname(__file__))
+    with open(os.path.join(here, '..', 'compass', '__init__.py')) as f:
+        init_file = f.read()
+
+    version = re.search(r'{}\s*=\s*[(]([^)]*)[)]'.format('__version_info__'),
+                        init_file).group(1).replace(', ', '.')
+
+    # again, we can't load compass so we find the config files
+    default_config = os.path.join(here, '..', 'compass', 'default.cfg')
+    config = configparser.ConfigParser(
+        interpolation=configparser.ExtendedInterpolation())
+    config.read(default_config)
+    if args.machine is not None:
+        machine_config = os.path.join(here, '..', 'compass', 'machines',
+                                      '{}.cfg'.format(args.machine))
+        config.read(machine_config)
+
+    if args.config_file is not None:
+        config.read(args.config_file)
+
+    if args.group is not None:
+        group = args.group
+    else:
+        group = config.get('deploy', 'group')
+
+    if args.suffix is not None:
+        suffix = args.suffix
+    else:
+        suffix = config.get('deploy', 'suffix')
+
+    if args.python is not None:
+        python = args.python
+    else:
+        python = config.get('deploy', 'python')
+
+    if args.mpi is not None:
+        mpi = args.mpi
+    else:
+        mpi = config.get('deploy', 'mpi')
+
+    if args.test is not None:
+        is_test = args.test
+    else:
+        is_test = config.getboolean('deploy', 'test')
+
+    if args.build is not None:
+        build = args.build
+    else:
+        build = config.getboolean('deploy', 'build')
+
+    if args.test is not None:
+        force_recreate = args.recreate
+    else:
+        force_recreate = config.getboolean('deploy', 'recreate')
+
+    base_path = config.get('paths', 'compass_envs')
+    activ_path = os.path.abspath(os.path.join(base_path, '..'))
 
     if not os.path.exists(base_path):
         miniconda = 'Miniconda3-latest-Linux-x86_64.sh'
@@ -118,79 +146,79 @@ def main():
         subprocess.check_call(command, executable='/bin/bash', shell=True)
         os.remove(miniconda)
 
-    print('Doing initial setup')
     activate = 'source {}/etc/profile.d/conda.sh; conda activate'.format(
         base_path)
 
-    commands = '{}; conda config --add channels conda-forge; ' \
+    print('Doing initial setup')
+    commands = '{}; ' \
+               'conda config --add channels conda-forge; ' \
                'conda config --set channel_priority strict; ' \
-               'conda update -y --all'.format(activate)
+               'conda install -y conda-build; ' \
+               'conda update -y --all'.format(activate, base_path)
 
     subprocess.check_call(commands, executable='/bin/bash', shell=True)
     print('done')
 
-    for env in envs:
-        version = env['version']
-        suffix = env['suffix']
-        python = env['python']
-        mpi = env['mpi']
-        if mpi == 'nompi':
-            mpi_prefix = 'nompi'
-        else:
-            mpi_prefix = 'mpi_{}'.format(mpi)
+    if is_test and build:
+        print('Building the conda package')
+        commands = '{}; ' \
+                   'conda build -m ci/mpi_{}.yaml recipe'.format(activate, mpi)
 
-        channels = '--override-channels -c conda-forge -c defaults'
+        subprocess.check_call(commands, executable='/bin/bash', shell=True)
+
+    if mpi == 'nompi':
+        mpi_prefix = 'nompi'
+    else:
+        mpi_prefix = 'mpi_{}'.format(mpi)
+
+    channels = '--override-channels -c conda-forge -c defaults'
+    if is_test:
+        channels = '--use-local {}'.format(channels)
+    else:
+        channels = '{} -c e3sm'.format(channels)
+    packages = 'python={} "compass={}={}_*"'.format(
+        python, version, mpi_prefix)
+
+    if is_test:
+        env_name = 'test_compass_{}{}'.format(version, suffix)
+    else:
+        env_name = 'compass_{}{}'.format(version, suffix)
+    if not os.path.exists('{}/envs/{}'.format(base_path, env_name)) \
+            or force_recreate:
+        print('creating {}'.format(env_name))
+        commands = '{}; conda create -y -n {} {} {}'.format(
+            activate, env_name, channels, packages)
+        subprocess.check_call(commands, executable='/bin/bash', shell=True)
+    else:
+        print('{} already exists'.format(env_name))
+
+    check_env(base_path, env_name)
+
+    try:
+        os.makedirs(activ_path)
+    except FileExistsError:
+        pass
+
+    for ext in ['sh', 'csh']:
+        script = []
+        if ext == 'sh':
+            script.extend(['if [ -x "$(command -v module)" ] ; then\n',
+                           '  module unload python\n',
+                           'fi\n'])
+        script.append('source {}/etc/profile.d/conda.{}\n'.format(
+            base_path, ext))
+        script.append('conda activate {}\n'.format(env_name))
+
         if is_test:
-            channels = '{} -c e3sm/label/test'.format(channels)
+            file_name = '{}/load_test_compass{}.{}'.format(
+                activ_path, suffix, ext)
         else:
-            channels = '{} -c e3sm'.format(channels)
-        packages = 'python={} "compass={}={}_*"'.format(
-            python, version, mpi_prefix)
-
-        if mpi == 'mpich' and system_mpich_version is not None:
-            packages = '{} "mpich={}=external*"'.format(
-                packages, system_mpich_version)
-
-        if is_test:
-            env_name = 'test_compass_{}{}'.format(version, suffix)
-        else:
-            env_name = 'compass_{}{}'.format(version, suffix)
-        if not os.path.exists('{}/envs/{}'.format(base_path, env_name)) \
-                or force_recreate:
-            print('creating {}'.format(env_name))
-            commands = '{}; conda create -y -n {} {} {}'.format(
-                activate, env_name, channels, packages)
-            subprocess.check_call(commands, executable='/bin/bash', shell=True)
-        else:
-            print('{} already exists'.format(env_name))
-
-        check_env(base_path, env_name, env)
-
-        try:
-            os.makedirs(activ_path)
-        except FileExistsError:
-            pass
-
-        for ext in ['sh', 'csh']:
-            script = []
-            if ext == 'sh':
-                script.extend(['if [ -x "$(command -v module)" ] ; then\n',
-                               '  module unload python\n',
-                               'fi\n'])
-            script.append('source {}/etc/profile.d/conda.{}\n'.format(
-                base_path, ext))
-            script.append('conda activate {}\n'.format(env_name))
-
-            if is_test:
-                file_name = '{}/load_test_compass{}.{}'.format(
-                    activ_path, suffix, ext)
-            else:
-                file_name = '{}/load_latest_compass{}.{}'.format(
-                    activ_path, suffix, ext)
-            if os.path.exists(file_name):
-                os.remove(file_name)
-            with open(file_name, 'w') as f:
-                f.writelines(script)
+            file_name = '{}/load_latest_compass{}.{}'.format(
+                activ_path, suffix, ext)
+        if os.path.exists(file_name):
+            os.remove(file_name)
+        with open(file_name, 'w') as f:
+            f.writelines(script)
 
     commands = '{}; conda clean -y -p -t'.format(activate)
     subprocess.check_call(commands, executable='/bin/bash', shell=True)
