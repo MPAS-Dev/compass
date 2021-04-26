@@ -47,6 +47,8 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
         A dictionary of test cases, with the relative path in the work
         directory as keys
     """
+    if machine is None and 'COMPASS_MACHINE' in os.environ:
+        machine = os.environ['COMPASS_MACHINE']
 
     if config_file is None and machine is None:
         raise ValueError('At least one of config_file and machine is needed.')

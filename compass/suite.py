@@ -43,6 +43,8 @@ def setup_suite(mpas_core, suite_name, config_file=None, machine=None,
         The relative or absolute path to the root of a branch where the MPAS
         model has been built
     """
+    if machine is None and 'COMPASS_MACHINE' in os.environ:
+        machine = os.environ['COMPASS_MACHINE']
 
     if config_file is None and machine is None:
         raise ValueError('At least one of config_file and machine is needed.')

@@ -214,7 +214,7 @@ def build_system_libraries(source_path, scorpio, esmf, scorpio_path, esmf_path,
 
 
 def write_load_compass(source_path, conda_base, script_filename, compass_env,
-                       sys_info):
+                       machine, sys_info):
 
     with open('{}/deploy/load_compass.template'.format(source_path), 'r') as f:
         template = Template(f.read())
@@ -223,7 +223,7 @@ def write_load_compass(source_path, conda_base, script_filename, compass_env,
                              modules='\n'.join(sys_info['modules']),
                              env_vars='\n'.join(sys_info['env_vars']),
                              netcdf_paths=sys_info['mpas_netcdf_paths'],
-                             script_filename=script_filename)
+                             script_filename=script_filename, machine=machine)
 
     print('Writing {}'.format(script_filename))
     with open(script_filename, 'w') as handle:
@@ -501,7 +501,7 @@ def main():
     script_filename = '{}/{}_compass{}{}.sh'.format(
         activ_path, prefix, version, suffix)
     write_load_compass(source_path, base_path, script_filename, env_name,
-                       sys_info)
+                       machine, sys_info)
 
     os.chdir(source_path)
     check_env(script_filename, env_name, is_test)
