@@ -194,7 +194,10 @@ def get_e3sm_compiler_and_mpi(machine, compiler, mpilib):
 def build_system_libraries(source_path, scorpio, esmf, scorpio_path, esmf_path,
                            sys_info):
 
-    esmf_branch = 'ESMF_{}'.format(esmf.replace('.', '_'))
+    if esmf == 'None':
+        esmf_branch = 'None'
+    else:
+        esmf_branch = 'ESMF_{}'.format(esmf.replace('.', '_'))
 
     script_filename = 'build.bash'
 
@@ -297,6 +300,10 @@ def main():
                         help="Recreate the environment if it exists")
     parser.add_argument("--no-recreate", dest="recreate", action='store_false',
                         help="Don't recreate the environment if it exists")
+    parser.add_argument("--no-clean", dest="clean", action='store_false',
+                        default=True,
+                        help="Don't delete existing package builds if building"
+                             " a new package")
     parser.add_argument("-p", "--python", dest="python", type=str,
                         help="The python version to deploy")
     parser.add_argument("-i", "--mpi", dest="mpi", type=str,
@@ -395,14 +402,17 @@ def main():
         sys_info = get_e3sm_compiler_and_mpi(machine, compiler, mpi)
         conda_mpi = 'nompi'
         system_libs = config.get('deploy', 'system_libs')
-        scorpio_path = os.path.join(system_libs, 'compass_{}', compiler,
-                                    mpi, 'scorpio_{}'.format(scorpio))
-        esmf_path = os.path.join(system_libs, 'compass_{}', compiler,
-                                 mpi, 'esmf_{}'.format(esmf))
-        sys_info['env_vars'].append('export PATH="{}:$PATH"'.format(
-            os.path.join(esmf_path, 'bin')))
+        compiler_path = os.path.join(system_libs, 'compass_{}'.format(version),
+                                     compiler, mpi)
+        scorpio_path = os.path.join(compiler_path,
+                                    'scorpio_{}'.format(scorpio))
+        esmf_path = os.path.join(compiler_path, 'esmf_{}'.format(esmf))
+        if esmf != 'None':
+            sys_info['env_vars'].append('export PATH="{}:$PATH"'.format(
+                os.path.join(esmf_path, 'bin')))
 
-        sys_info['env_vars'].append('export PIO={}'.format(scorpio_path))
+        if scorpio != 'None':
+            sys_info['env_vars'].append('export PIO={}'.format(scorpio_path))
     else:
         sys_info = dict(modules=[], env_vars=[], mpas_netcdf_paths='')
         conda_mpi = mpi
@@ -432,12 +442,15 @@ def main():
                'conda config --add channels conda-forge; ' \
                'conda config --set channel_priority strict; ' \
                'conda install -y conda-build; ' \
-               'conda update -y --all'.format(activate, base_path)
+               'conda update -y --all'.format(activate)
 
     check_call(commands)
     print('done')
 
     if is_test and build:
+        if args.clean:
+            commands = 'rm -rf {}/conda-bld'.format(base_path)
+            check_call(commands)
         print('Building the conda package')
         commands = '{}; ' \
                    'conda build -m {}/ci/mpi_{}.yaml {}/recipe'.format(
@@ -469,7 +482,7 @@ def main():
             activate, env_name, channels, packages)
         check_call(commands)
 
-        if compiler is not None:
+        if compiler is not None and esmf != 'None':
             # remove conda-forge esmf because we will use the system build
             commands = '{}; conda remove -y --force -n {} esmf'.format(
                 activate, env_name)
