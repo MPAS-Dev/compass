@@ -368,6 +368,15 @@ documentation.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.run.run_suite.html#compass.run.run_suite" title="compass.run.run_suite"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_suite</span></code></a>(suite_name)</p></td>
+<td><p>Run the given test suite</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.run.run_test_case.html#compass.run.run_test_case" title="compass.run.run_test_case"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_test_case</span></code></a>()</p></td>
+<td><p>Used by the framework to run a test case when <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span></code> gets called in the test case’s work directory</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.run.run_step.html#compass.run.run_step" title="compass.run.run_step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_step</span></code></a>()</p></td>
+<td><p>Used by the framework to run a step when <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span></code> gets called in the step’s work directory</p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -450,10 +459,10 @@ documentation.</p>
 <td><p>Run the step.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.Step.add_input_file.html#compass.Step.add_input_file" title="compass.Step.add_input_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step.add_input_file</span></code></a>([filename, target, …])</p></td>
-<td><p>Add an input file to the step.</p></td>
+<td><p>Add an input file to the step (but not necessarily to the MPAS model).</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.Step.add_output_file.html#compass.Step.add_output_file" title="compass.Step.add_output_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step.add_output_file</span></code></a>(filename)</p></td>
-<td><p>Add the output file to the step</p></td>
+<td><p>Add the output file that must be produced by this step and may be made available as an input to steps, perhaps in other test cases.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.Step.add_model_as_input.html#compass.Step.add_model_as_input" title="compass.Step.add_model_as_input"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step.add_model_as_input</span></code></a>()</p></td>
 <td><p>make a link to the model executable and add it to the inputs</p></td>

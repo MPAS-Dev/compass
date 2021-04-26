@@ -184,10 +184,8 @@
             
   <h1>Source code for compass.step</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">stat</span>
-<span class="kn">from</span> <span class="nn">jinja2</span> <span class="kn">import</span> <span class="n">Template</span>
-<span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="n">resources</span>
 <span class="kn">from</span> <span class="nn">lxml</span> <span class="kn">import</span> <span class="n">etree</span>
+<span class="kn">import</span> <span class="nn">configparser</span>
 
 <span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">download</span><span class="p">,</span> <span class="n">symlink</span>
 <span class="kn">import</span> <span class="nn">compass.namelist</span>
@@ -201,6 +199,10 @@
 <span class="sd">    The step is the smallest unit of work in compass that can be run on its</span>
 <span class="sd">    own by a user, though users will typically run full test cases or test</span>
 <span class="sd">    suites.</span>
+
+<span class="sd">    Below, the terms &quot;input&quot; and &quot;output&quot; refer to inputs and outputs to the</span>
+<span class="sd">    step itself, not necessarily the MPAS model.  In fact, the MPAS model</span>
+<span class="sd">    itself is often an input to the step.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -385,10 +387,10 @@
 <div class="viewcode-block" id="Step.add_input_file"><a class="viewcode-back" href="../../developers_guide/generated/compass.Step.add_input_file.html#compass.Step.add_input_file">[docs]</a>    <span class="k">def</span> <span class="nf">add_input_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                        <span class="n">url</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">work_dir_target</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Add an input file to the step.  The file can be local, a symlink to</span>
-<span class="sd">        a file that will be created in another step, a symlink to a file in one</span>
-<span class="sd">        of the databases for files cached after download, and/or come from a</span>
-<span class="sd">        specified URL.</span>
+<span class="sd">        Add an input file to the step (but not necessarily to the MPAS model).</span>
+<span class="sd">        The file can be local, a symlink to a file that will be created in</span>
+<span class="sd">        another step, a symlink to a file in one of the databases for files</span>
+<span class="sd">        cached after download, and/or come from a specified URL.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -437,7 +439,9 @@
 
 <div class="viewcode-block" id="Step.add_output_file"><a class="viewcode-back" href="../../developers_guide/generated/compass.Step.add_output_file.html#compass.Step.add_output_file">[docs]</a>    <span class="k">def</span> <span class="nf">add_output_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Add the output file to the step</span>
+<span class="sd">        Add the output file that must be produced by this step and may be made</span>
+<span class="sd">        available as an input to steps, perhaps in other test cases.  This file</span>
+<span class="sd">        must exist after the test has run or an exception will be raised.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -552,39 +556,15 @@
             <span class="nb">dict</span><span class="p">(</span><span class="n">package</span><span class="o">=</span><span class="n">package</span><span class="p">,</span> <span class="n">streams</span><span class="o">=</span><span class="n">streams</span><span class="p">,</span>
                  <span class="n">replacements</span><span class="o">=</span><span class="n">template_replacements</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">))</span></div>
 
-    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generate a ``run.py`` script for the step in the work directory.</span>
-<span class="sd">        This is the script that a user can call to run the step on its own.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">_process_inputs_and_outputs</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_generate_namelists</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_generate_streams</span><span class="p">()</span>
-
-        <span class="n">template</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span>
-            <span class="n">resources</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="s1">&#39;compass.step&#39;</span><span class="p">,</span> <span class="s1">&#39;step.template&#39;</span><span class="p">))</span>
-        <span class="n">test_case</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_case</span><span class="o">.</span><span class="n">name</span><span class="p">}</span>
-        <span class="n">step</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-                <span class="s1">&#39;config_filename&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_filename</span><span class="p">}</span>
-        <span class="n">work_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span>
-        <span class="n">script</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="n">step</span><span class="p">)</span>
-
-        <span class="n">run_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;run.py&#39;</span><span class="p">)</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">run_filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
-            <span class="n">handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">script</span><span class="p">)</span>
-
-        <span class="c1"># make sure it has execute permission</span>
-        <span class="n">st</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">run_filename</span><span class="p">)</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">chmod</span><span class="p">(</span><span class="n">run_filename</span><span class="p">,</span> <span class="n">st</span><span class="o">.</span><span class="n">st_mode</span> <span class="o">|</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IEXEC</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">_process_inputs_and_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">process_inputs_and_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Process the inputs to and outputs from a step added with</span>
 <span class="sd">        :py:meth:`compass.Step.add_input_file` and</span>
 <span class="sd">        :py:meth:`compass.Step.add_output_file`.  This includes downloading</span>
 <span class="sd">        files, making symlinks, and converting relative paths to absolute</span>
 <span class="sd">        paths.</span>
+
+<span class="sd">        Also generates namelist and streams files</span>
 <span class="sd">       &quot;&quot;&quot;</span>
         <span class="n">mpas_core</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span>
         <span class="n">step_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span>
@@ -646,6 +626,9 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">step_dir</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span> <span class="k">for</span>
                         <span class="n">filename</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_generate_namelists</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_generate_streams</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_generate_namelists</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>

@@ -379,11 +379,6 @@
         <span class="n">symlink</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="n">test_case_config</span><span class="p">),</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">step_dir</span><span class="p">,</span> <span class="n">test_case_config</span><span class="p">))</span>
 
-        <span class="n">test_case_pickle</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.pickle&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">test_case</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-        <span class="n">symlink</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="n">test_case_pickle</span><span class="p">),</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">step_dir</span><span class="p">,</span>
-                             <span class="s1">&#39;test_case_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">test_case_pickle</span><span class="p">)))</span>
-
         <span class="n">step</span><span class="o">.</span><span class="n">work_dir</span> <span class="o">=</span> <span class="n">step_dir</span>
         <span class="n">step</span><span class="o">.</span><span class="n">base_work_dir</span> <span class="o">=</span> <span class="n">work_dir</span>
         <span class="n">step</span><span class="o">.</span><span class="n">config_filename</span> <span class="o">=</span> <span class="n">test_case_config</span>
@@ -392,11 +387,25 @@
         <span class="c1"># set up the step</span>
         <span class="n">step</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
 
-        <span class="c1"># write a run script for each step</span>
-        <span class="n">_write_run</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
+        <span class="c1"># process input, output, namelist and streams files</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">process_inputs_and_outputs</span><span class="p">()</span>
 
-    <span class="c1"># write a run script for each test case</span>
-    <span class="n">_write_run</span><span class="p">(</span><span class="n">test_case</span><span class="p">)</span></div>
+        <span class="c1"># write a run script for each step</span>
+        <span class="n">_link_compass</span><span class="p">(</span><span class="n">step</span><span class="o">.</span><span class="n">work_dir</span><span class="p">)</span>
+
+        <span class="c1"># pickle the test case and step for use at runtime</span>
+        <span class="n">pickle_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">step</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;step.pickle&#39;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">pickle_filename</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+            <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">((</span><span class="n">test_case</span><span class="p">,</span> <span class="n">step</span><span class="p">),</span> <span class="n">handle</span><span class="p">,</span>
+                        <span class="n">protocol</span><span class="o">=</span><span class="n">pickle</span><span class="o">.</span><span class="n">HIGHEST_PROTOCOL</span><span class="p">)</span>
+
+    <span class="c1"># write a run script for each step</span>
+    <span class="n">_link_compass</span><span class="p">(</span><span class="n">test_case</span><span class="o">.</span><span class="n">work_dir</span><span class="p">)</span>
+
+    <span class="c1"># pickle the test case and step for use at runtime</span>
+    <span class="n">pickle_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">test_case</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;test_case.pickle&#39;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">pickle_filename</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">handle</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">pickle</span><span class="o">.</span><span class="n">HIGHEST_PROTOCOL</span><span class="p">)</span></div>
 
 
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
@@ -439,23 +448,12 @@
                 <span class="n">mpas_model_path</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">mpas_model</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_write_run</span><span class="p">(</span><span class="n">test</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;pickle the test/step info and write the run script&quot;&quot;&quot;</span>
-
+<span class="k">def</span> <span class="nf">_link_compass</span><span class="p">(</span><span class="n">work_dir</span><span class="p">):</span>
     <span class="c1"># if compass/__init__.py exists, we&#39;re using a local version of the compass</span>
     <span class="c1"># package and we&#39;ll want to link to that in the tests and steps</span>
     <span class="n">compass_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s1">&#39;compass&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">compass_path</span><span class="p">,</span> <span class="s1">&#39;__init__.py&#39;</span><span class="p">)):</span>
-        <span class="n">symlink</span><span class="p">(</span><span class="n">compass_path</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">test</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;compass&#39;</span><span class="p">))</span>
-
-    <span class="c1"># pickle the test or step dictionary for use at runtime</span>
-    <span class="n">pickle_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">test</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span>
-                               <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.pickle&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">test</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">pickle_file</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
-        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">handle</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">pickle</span><span class="o">.</span><span class="n">HIGHEST_PROTOCOL</span><span class="p">)</span>
-
-    <span class="c1"># write a run script</span>
-    <span class="n">test</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+        <span class="n">symlink</span><span class="p">(</span><span class="n">compass_path</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;compass&#39;</span><span class="p">))</span>
 </pre></div>
 
            </div>

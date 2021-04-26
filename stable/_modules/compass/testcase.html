@@ -184,9 +184,7 @@
             
   <h1>Source code for compass.testcase</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">stat</span>
-<span class="kn">from</span> <span class="nn">jinja2</span> <span class="kn">import</span> <span class="n">Template</span>
-<span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="n">resources</span>
+<span class="kn">import</span> <span class="nn">configparser</span>
 
 <span class="kn">from</span> <span class="nn">mpas_tools.logging</span> <span class="kn">import</span> <span class="n">LoggingContext</span>
 <span class="kn">from</span> <span class="nn">compass.parallel</span> <span class="kn">import</span> <span class="n">get_available_cores_and_nodes</span>
@@ -308,6 +306,11 @@
 <span class="sd">        to perform additional operations in addition to running the test case&#39;s</span>
 <span class="sd">        steps</span>
 
+<span class="sd">        Developers need to make sure they call ``super().run()`` at some point</span>
+<span class="sd">        in the overridden ``run()`` method to actually call the steps of the</span>
+<span class="sd">        run.  The developer will need to decide where in the overridden method</span>
+<span class="sd">        to make the call to ``super().run()``, after any updates to steps</span>
+<span class="sd">        based on config options but before validation.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
         <span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
@@ -356,27 +359,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">step</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">step</span>
         <span class="k">if</span> <span class="n">run_by_default</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">steps_to_run</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">step</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
-
-    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generate a ``run.py`` script for the test case in the work directory.</span>
-<span class="sd">        This is the script that a user calls to run the test case.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="n">template</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span>
-            <span class="n">resources</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="s1">&#39;compass.testcase&#39;</span><span class="p">,</span> <span class="s1">&#39;testcase.template&#39;</span><span class="p">))</span>
-        <span class="n">test_case</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-                     <span class="s1">&#39;config_filename&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_filename</span><span class="p">}</span>
-        <span class="n">work_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span>
-        <span class="n">script</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">)</span>
-
-        <span class="n">run_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;run.py&#39;</span><span class="p">)</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">run_filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
-            <span class="n">handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">script</span><span class="p">)</span>
-
-        <span class="c1"># make sure it has execute permission</span>
-        <span class="n">st</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">run_filename</span><span class="p">)</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">chmod</span><span class="p">(</span><span class="n">run_filename</span><span class="p">,</span> <span class="n">st</span><span class="o">.</span><span class="n">st_mode</span> <span class="o">|</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IEXEC</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_run_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">new_log_file</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
