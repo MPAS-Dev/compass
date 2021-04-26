@@ -115,15 +115,13 @@ def clean_suite(mpas_core, suite_name, work_dir=None):
 
     clean_cases(tests=tests, work_dir=work_dir)
 
-    # delete the pickle file and run script
+    # delete the pickle file
     pickle_file = os.path.join(work_dir, '{}.pickle'.format(suite_name))
-    run_filename = os.path.join(work_dir, '{}.py'.format(suite_name))
 
-    for filename in [pickle_file, run_filename]:
-        try:
-            os.remove(filename)
-        except OSError:
-            pass
+    try:
+        os.remove(pickle_file)
+    except OSError:
+        pass
 
 
 def main():

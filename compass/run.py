@@ -18,6 +18,9 @@ def run_suite(suite_name):
     suite_name : str
         The name of the test suite
     """
+    if not os.path.exists('{}.pickle'.format(suite_name)):
+        raise ValueError('The suite "{}" doesn\'t appear to have been set up '
+                         'here.'.format(suite_name))
     with open('{}.pickle'.format(suite_name), 'rb') as handle:
         test_suite = pickle.load(handle)
 
