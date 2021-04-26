@@ -3,13 +3,6 @@ import sys
 import os
 from importlib import resources
 import pickle
-import configparser
-import stat
-from jinja2 import Template
-import time
-import numpy
-
-from mpas_tools.logging import LoggingContext
 
 from compass.setup import setup_cases
 from compass.io import symlink
@@ -86,17 +79,6 @@ def setup_suite(mpas_core, suite_name, config_file=None, machine=None,
     with open(pickle_file, 'wb') as handle:
         pickle.dump(test_suite, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
-    template = Template(resources.read_text('compass.suite', 'suite.template'))
-    script = template.render(suite_name=suite_name)
-
-    run_filename = os.path.join(work_dir, '{}.py'.format(suite_name))
-    with open(run_filename, 'w') as handle:
-        handle.write(script)
-
-    # make sure it has execute permission
-    st = os.stat(run_filename)
-    os.chmod(run_filename, st.st_mode | stat.S_IEXEC)
-
     max_cores, max_of_min_cores = _get_required_cores(test_cases)
 
     print('target cores: {}'.format(max_cores))
@@ -133,100 +115,13 @@ def clean_suite(mpas_core, suite_name, work_dir=None):
 
     clean_cases(tests=tests, work_dir=work_dir)
 
-    # delete the pickle file and run script
+    # delete the pickle file
     pickle_file = os.path.join(work_dir, '{}.pickle'.format(suite_name))
-    run_filename = os.path.join(work_dir, '{}.py'.format(suite_name))
 
-    for filename in [pickle_file, run_filename]:
-        try:
-            os.remove(filename)
-        except OSError:
-            pass
-
-
-def run_suite(suite_name):
-    """
-    Run the given test suite
-
-    Parameters
-    ----------
-    suite_name : str
-        The name of the test suite
-    """
-    with open('{}.pickle'.format(suite_name), 'rb') as handle:
-        test_suite = pickle.load(handle)
-
-    # start logging to stdout/stderr
-    with LoggingContext(suite_name) as logger:
-
-        os.environ['PYTHONUNBUFFERED'] = '1'
-
-        try:
-            os.makedirs('case_outputs')
-        except OSError:
-            pass
-
-        failures = 0
-        cwd = os.getcwd()
-        suite_start = time.time()
-        test_times = dict()
-        success = dict()
-        for test_name in test_suite['test_cases']:
-            test_case = test_suite['test_cases'][test_name]
-
-            logger.info('{}'.format(test_name))
-
-            test_name = test_case.path.replace('/', '_')
-            log_filename = '{}/case_outputs/{}.log'.format(cwd, test_name)
-            with LoggingContext(test_name, log_filename=log_filename) as \
-                    test_logger:
-                test_case.logger = test_logger
-                test_case.log_filename = log_filename
-                test_case.new_step_log_file = False
-
-                os.chdir(test_case.work_dir)
-
-                config = configparser.ConfigParser(
-                    interpolation=configparser.ExtendedInterpolation())
-                config.read(test_case.config_filename)
-                test_case.config = config
-
-                test_start = time.time()
-                try:
-                    test_case.run()
-                    logger.info('  PASS')
-                    success[test_name] = 'PASS'
-                except BaseException:
-                    test_logger.exception('Exception raised')
-                    logger.error(
-                        '  FAIL see: case_outputs/{}.log'.format(test_name))
-                    success[test_name] = 'FAIL'
-                    failures += 1
-                test_times[test_name] = time.time() - test_start
-
-        suite_time = time.time() - suite_start
-
-        os.chdir(cwd)
-
-        logger.info('Test Runtimes:')
-        for test_name, test_time in test_times.items():
-            mins = int(numpy.floor(test_time / 60.0))
-            secs = int(numpy.ceil(test_time - mins * 60))
-            logger.info('{:02d}:{:02d} {} {}'.format(
-                mins, secs, success[test_name], test_name))
-        mins = int(numpy.floor(suite_time / 60.0))
-        secs = int(numpy.ceil(suite_time - mins * 60))
-        logger.info('Total runtime {:02d}:{:02d}'.format(mins, secs))
-
-        if failures == 0:
-            logger.info('PASS: All passed successfully!')
-        else:
-            if failures == 1:
-                message = '1 test'
-            else:
-                message = '{} tests'.format(failures)
-            logger.error('FAIL: {} failed, see above.'.format(message))
-            sys.exit(1)
+    try:
+        os.remove(pickle_file)
+    except OSError:
+        pass
 
 
 def main():

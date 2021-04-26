@@ -1,7 +1,5 @@
 import os
-import stat
-from jinja2 import Template
-from importlib import resources
+import configparser
 
 from mpas_tools.logging import LoggingContext
 from compass.parallel import get_available_cores_and_nodes
@@ -123,6 +121,11 @@ class TestCase:
         to perform additional operations in addition to running the test case's
         steps
 
+        Developers need to make sure they call ``super().run()`` at some point
+        in the overridden ``run()`` method to actually call the steps of the
+        run.  The developer will need to decide where in the overridden method
+        to make the call to ``super().run()``, after any updates to steps
+        based on config options but before validation.
         """
         logger = self.logger
         cwd = os.getcwd()
@@ -171,27 +174,6 @@ class TestCase:
         self.steps[step.name] = step
         if run_by_default:
             self.steps_to_run.append(step.name)
-
-    def generate(self):
-        """
-        Generate a ``run.py`` script for the test case in the work directory.
-        This is the script that a user calls to run the test case.
-        """
-
-        template = Template(
-            resources.read_text('compass.testcase', 'testcase.template'))
-        test_case = {'name': self.name,
-                     'config_filename': self.config_filename}
-        work_dir = self.work_dir
-        script = template.render(test_case=test_case)
-
-        run_filename = os.path.join(work_dir, 'run.py')
-        with open(run_filename, 'w') as handle:
-            handle.write(script)
-
-        # make sure it has execute permission
-        st = os.stat(run_filename)
-        os.chmod(run_filename, st.st_mode | stat.S_IEXEC)
 
     def _run_step(self, step, new_log_file):
         """

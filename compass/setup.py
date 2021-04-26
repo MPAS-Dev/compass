@@ -194,11 +194,6 @@ def setup_case(path, test_case, config_file, machine, work_dir, baseline_dir,
         symlink(os.path.join('..', test_case_config),
                 os.path.join(step_dir, test_case_config))
 
-        test_case_pickle = '{}.pickle'.format(test_case.name)
-        symlink(os.path.join('..', test_case_pickle),
-                os.path.join(step_dir,
-                             'test_case_{}'.format(test_case_pickle)))
-
         step.work_dir = step_dir
         step.base_work_dir = work_dir
         step.config_filename = test_case_config
@@ -207,11 +202,25 @@ def setup_case(path, test_case, config_file, machine, work_dir, baseline_dir,
         # set up the step
         step.setup()
 
-        # write a run script for each step
-        _write_run(step)
+        # process input, output, namelist and streams files
+        step.process_inputs_and_outputs()
 
-    # write a run script for each test case
-    _write_run(test_case)
+        # write a run script for each step
+        _link_compass(step.work_dir)
+
+        # pickle the test case and step for use at runtime
+        pickle_filename = os.path.join(step.work_dir, 'step.pickle')
+        with open(pickle_filename, 'wb') as handle:
+            pickle.dump((test_case, step), handle,
+                        protocol=pickle.HIGHEST_PROTOCOL)
+
+    # write a run script for each step
+    _link_compass(test_case.work_dir)
+
+    # pickle the test case and step for use at runtime
+    pickle_filename = os.path.join(test_case.work_dir, 'test_case.pickle')
+    with open(pickle_filename, 'wb') as handle:
+        pickle.dump(test_case, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 
 def main():
@@ -254,20 +263,9 @@ def main():
                 mpas_model_path=args.mpas_model)
 
 
-def _write_run(test):
-    """pickle the test/step info and write the run script"""
-
+def _link_compass(work_dir):
     # if compass/__init__.py exists, we're using a local version of the compass
     # package and we'll want to link to that in the tests and steps
     compass_path = os.path.join(os.getcwd(), 'compass')
     if os.path.exists(os.path.join(compass_path, '__init__.py')):
-        symlink(compass_path, os.path.join(test.work_dir, 'compass'))
-
-    # pickle the test or step dictionary for use at runtime
-    pickle_file = os.path.join(test.work_dir,
-                               '{}.pickle'.format(test.name))
-    with open(pickle_file, 'wb') as handle:
-        pickle.dump(test, handle, protocol=pickle.HIGHEST_PROTOCOL)
-
-    # write a run script
-    test.generate()
+        symlink(compass_path, os.path.join(work_dir, 'compass'))

@@ -4,7 +4,7 @@ import sys
 import argparse
 
 import compass
-from compass import list, setup, clean, suite
+from compass import list, setup, clean, suite, run
 
 
 def main():
@@ -22,6 +22,7 @@ The available compass commands are:
     setup   Set up a test case
     clean   Clean up a test case
     suite   Manage a regression test suite
+    run     Run a suite, test case or step
 
  To get help on an individual command, run:
 
@@ -42,7 +43,8 @@ The available compass commands are:
     commands = {'list': list.main,
                 'setup': setup.main,
                 'clean': clean.main,
-                'suite': suite.main}
+                'suite': suite.main,
+                'run': run.main}
     if args.command not in commands:
         print('Unrecognized command {}'.format(args.command))
         parser.print_help()
