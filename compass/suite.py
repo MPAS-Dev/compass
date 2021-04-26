@@ -79,6 +79,11 @@ def setup_suite(mpas_core, suite_name, config_file=None, machine=None,
     with open(pickle_file, 'wb') as handle:
         pickle.dump(test_suite, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
+    if 'LOAD_COMPASS_ENV' in os.environ:
+        script_filename = os.environ['LOAD_COMPASS_ENV']
+        # make a symlink to the script for loading the compass conda env.
+        symlink(script_filename, os.path.join(work_dir, 'load_compass_env.sh'))
+
     max_cores, max_of_min_cores = _get_required_cores(test_cases)
 
     print('target cores: {}'.format(max_cores))

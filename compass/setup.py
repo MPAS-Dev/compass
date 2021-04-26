@@ -222,6 +222,11 @@ def setup_case(path, test_case, config_file, machine, work_dir, baseline_dir,
     with open(pickle_filename, 'wb') as handle:
         pickle.dump(test_case, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
+    if 'LOAD_COMPASS_ENV' in os.environ:
+        script_filename = os.environ['LOAD_COMPASS_ENV']
+        # make a symlink to the script for loading the compass conda env.
+        symlink(script_filename, os.path.join(work_dir, 'load_compass_env.sh'))
+
 
 def main():
     parser = argparse.ArgumentParser(
