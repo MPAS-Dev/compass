@@ -54,7 +54,7 @@ if __name__ == '__main__':
             machine = 'cori-haswell'
         elif hostname.startswith('blueslogin'):
             machine = 'anvil'
-        elif hostname.startswith('chrysalis'):
+        elif hostname.startswith('chrlogin'):
             machine = 'chrysalis'
         elif hostname.startswith('compy'):
             machine = 'compy'
