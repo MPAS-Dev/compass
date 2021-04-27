@@ -5,12 +5,14 @@ import argparse
 import sys
 import re
 import configparser
+import socket
+import warnings
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description='Deploy a compass conda environment')
-    parser.add_argument("-m", "--machine", dest="machine", required=True,
+    parser.add_argument("-m", "--machine", dest="machine",
                         help="The name of the machine")
     parser.add_argument("-c", "--compiler", dest="compiler", type=str,
                         help="The name of the compiler")
@@ -30,9 +32,36 @@ if __name__ == '__main__':
     config = configparser.ConfigParser(
         interpolation=configparser.ExtendedInterpolation())
     config.read(default_config)
-    machine = args.machine
+
+    if args.machine is not None:
+        machine = args.machine
+    else:
+        hostname = socket.gethostname()
+        if hostname.startswith('cori'):
+            warnings.warn('defaulting to cori-haswell.  Use -m cori-knl if you'
+                          ' wish to run on KNL.')
+            machine = 'cori-haswell'
+        elif hostname.startswith('blueslogin'):
+            machine = 'anvil'
+        elif hostname.startswith('chrysalis'):
+            machine = 'chrysalis'
+        elif hostname.startswith('compy'):
+            machine = 'compy'
+        elif hostname.startswith('gr-fe'):
+            machine = 'grizzly'
+        elif hostname.startswith('ba-fe'):
+            machine = 'badger'
+        else:
+            raise ValueError('No machine name was supplied and hostname {} was'
+                             ' not recognized.'.format(hostname))
+
     machine_config = os.path.join(here, '..', 'compass', 'machines',
                                   '{}.cfg'.format(machine))
+
+    if not os.path.exists(machine_config):
+        raise ValueError('machine {} doesn\'t have a config file in '
+                         'compass/machines.'.format(machine))
+
     config.read(machine_config)
 
     if args.compiler is not None:
