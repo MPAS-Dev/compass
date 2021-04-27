@@ -69,7 +69,7 @@ git and compass environment, for all LANL IC machines:
     module load git
     module use /usr/projects/climate/SHARED_CLIMATE/modulefiles/all/
     module unload python
-    source /usr/projects/climate/SHARED_CLIMATE/anaconda_envs/load_latest_compass.sh
+    source /usr/projects/climate/SHARED_CLIMATE/anaconda_envs/load_legacy_compass.sh
 
 Example compass config file for LANL IC: ``general.config.ocean_turq``
 
@@ -95,7 +95,7 @@ Hint: you can put the following line in your bashrc:
 
 .. code-block:: bash
 
-    alias mlgnu='module purge; module load git; module use /usr/projects/climate/SHARED_CLIMATE/modulefiles/all/; module load gcc/5.3.0 openmpi/1.10.5 netcdf/4.4.1 parallel-netcdf/1.5.0 pio/1.7.2; module unload python; source /usr/projects/climate/SHARED_CLIMATE/anaconda_envs/load_latest_compass.sh; echo "loading modules anaconda, gnu, openmpi, netcdf, pnetcdf, pio for grizzly"'
+    alias mlgnu='module purge; module load git; module use /usr/projects/climate/SHARED_CLIMATE/modulefiles/all/; module load gcc/5.3.0 openmpi/1.10.5 netcdf/4.4.1 parallel-netcdf/1.5.0 pio/1.7.2; module unload python; source /usr/projects/climate/SHARED_CLIMATE/anaconda_envs/load_legacy_compass.sh; echo "loading modules anaconda, gnu, openmpi, netcdf, pnetcdf, pio for grizzly"'
 
 grizzly, intel 19 with scorpio
 ------------------------------

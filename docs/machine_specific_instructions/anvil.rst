@@ -9,7 +9,7 @@ First, you might want to build SCORPIO (see below), or use the one from
 
 .. code-block:: bash
 
-    source /lcrc/soft/climate/e3sm-unified/load_latest_compass.sh
+    source /lcrc/soft/climate/e3sm-unified/load_legacy_compass.sh
 
     module purge
     module load cmake/3.14.2-gvwazz3 intel/17.0.0-pwabdn2 \
