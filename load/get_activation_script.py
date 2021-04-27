@@ -1,12 +1,24 @@
 #!/usr/bin/env python
 
+from __future__ import print_function
+
 import os
 import argparse
 import sys
 import re
-import configparser
 import socket
 import warnings
+
+try:
+    from configparser import ConfigParser
+except ImportError:
+    from six.moves import configparser
+    import six
+
+    if six.PY2:
+        ConfigParser = configparser.SafeConfigParser
+    else:
+        ConfigParser = configparser.ConfigParser
 
 
 if __name__ == '__main__':
@@ -29,8 +41,7 @@ if __name__ == '__main__':
                         init_file).group(1).replace(', ', '.')
 
     default_config = os.path.join(here, '..', 'compass', 'default.cfg')
-    config = configparser.ConfigParser(
-        interpolation=configparser.ExtendedInterpolation())
+    config = ConfigParser()
     config.read(default_config)
 
     if args.machine is not None:
