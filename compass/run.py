@@ -91,8 +91,8 @@ def run_suite(suite_name):
                 if baseline_status is None:
                     status = '  {}'.format(internal_status)
                 else:
-                    status = '  {}  compare: {}'.format(internal_status,
-                                                        baseline_status)
+                    status = '  test: {}  baseline comparison: {}'.format(
+                        internal_status, baseline_status)
 
                 if test_pass:
                     logger.info(status)
