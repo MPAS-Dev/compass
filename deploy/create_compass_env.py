@@ -522,6 +522,9 @@ def main():
     commands = '{}; conda clean -y -p -t'.format(activate)
     check_call(commands)
 
+    new_uid = os.getuid()
+    new_gid = grp.getgrnam(group).gr_gid
+
     print('changing permissions on activation scripts')
     activation_files = glob.glob('{}/*_compass*.sh'.format(
         activ_path))
@@ -535,11 +538,28 @@ def main():
 
     for file_name in activation_files:
         os.chmod(file_name, read_perm)
+        os.chown(file_name, new_uid, new_gid)
 
     print('changing permissions on environments')
 
-    new_uid = os.getuid()
-    new_gid = grp.getgrnam(group).gr_gid
+    # first the base directories that don't seem to be included in os.walk()
+    for directory in [base_path, system_libs]:
+        try:
+            dir_stat = os.stat(directory)
+        except OSError:
+            continue
+
+        perm = dir_stat.st_mode & mask
+
+        if perm == exec_perm and dir_stat.st_uid == new_uid and \
+                dir_stat.st_gid == new_gid:
+            continue
+
+        try:
+            os.chown(directory, new_uid, new_gid)
+            os.chmod(directory, exec_perm)
+        except OSError:
+            continue
 
     files_and_dirs = []
     for base in [base_path, system_libs]:
