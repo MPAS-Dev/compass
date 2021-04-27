@@ -131,33 +131,12 @@ setting up test cases or a test suite:
 grizzly, gnu
 ------------
 
+To load the compass environment and modules, and set appropriate environment
+variables:
+
 .. code-block:: bash
 
-    source /usr/projects/climate/SHARED_CLIMATE/anaconda_envs/load_latest_compass.sh
-
-    module purge
-    module load cmake/3.16.2
-    module load gcc/6.4.0
-    module load mvapich2/2.3
-    module load friendly-testing
-    module load hdf5-parallel/1.8.16
-    module load pnetcdf/1.11.2
-    module load netcdf-h5parallel/4.7.3
-    module load mkl/2019.0.4
-
-    export NETCDF=$(dirname $(dirname $(which nc-config)))
-    export NETCDFF=$(dirname $(dirname $(which nf-config)))
-    export PNETCDF=$(dirname $(dirname $(which pnetcdf-config)))
-
-    export PIO=/usr/projects/climate/SHARED_CLIMATE/compass/grizzly/compass-1.0.0/scorpio-1.1.6/gnu/mvapich
-    export ESMF=/usr/projects/climate/SHARED_CLIMATE/compass/grizzly/compass-1.0.0/esmf-8.1.0/gnu/mvapich
-
-    export MV2_ENABLE_AFFINITY=0
-    export MV2_SHOW_CPU_BINDING=1
-
-    export AUTOCLEAN=true
-    export USE_PIO2=true
-    export HDF5_USE_FILE_LOCKING=FALSE
+    source /usr/projects/climate/SHARED_CLIMATE/compass/badger/load_compass1.0.0_gnu_mvapich.sh
 
 To build the MPAS model with
 
@@ -174,28 +153,12 @@ or
 grizzly, intel
 --------------
 
+To load the compass environment and modules, and set appropriate environment
+variables:
+
 .. code-block:: bash
 
-    module purge
-    module load cmake/3.16.2
-    module load intel/19.0.4
-    module load intel-mpi/2019.4
-    module load friendly-testing
-    module load hdf5-parallel/1.8.16
-    module load pnetcdf/1.11.2
-    module load netcdf-h5parallel/4.7.3
-    module load mkl/2019.0.4
-
-    export NETCDF=$(dirname $(dirname $(which nc-config)))
-    export NETCDFF=$(dirname $(dirname $(which nf-config)))
-    export PNETCDF=$(dirname $(dirname $(which pnetcdf-config)))
-
-    export PIO=/usr/projects/climate/SHARED_CLIMATE/compass/grizzly/compass-1.0.0/scorpio-1.1.6/intel/impi
-    export ESMF=/usr/projects/climate/SHARED_CLIMATE/compass/grizzly/compass-1.0.0/esmf-8.1.0/intel/impi
-
-    export AUTOCLEAN=true
-    export USE_PIO2=true
-    export HDF5_USE_FILE_LOCKING=FALSE
+    source /usr/projects/climate/SHARED_CLIMATE/compass/badger/load_compass1.0.0_intel_impi.sh
 
 To build the MPAS model with
 
