@@ -103,8 +103,8 @@
 <li class="toctree-l1"><a class="reference internal" href="slurm.html">Slurm job queueing</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">LANL Institutional Computing</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#grizzly-gnu">grizzly, gnu</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#grizzly-intel-17">grizzly, intel 17</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#grizzly-intel-19-with-pio2">grizzly, intel 19 with PIO2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#grizzly-intel-19-with-scorpio">grizzly, intel 19 with scorpio</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#grizzly-intel-17-and-pio-1">grizzly, intel 17 and pio 1</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#badger-gnu">badger, gnu</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#building-scorpio-on-grizzly">Building Scorpio on Grizzly</a></li>
 </ul>
@@ -241,7 +241,7 @@
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>module load git
 module use /usr/projects/climate/SHARED_CLIMATE/modulefiles/all/
 module unload python
-<span class="nb">source</span> /usr/projects/climate/SHARED_CLIMATE/anaconda_envs/load_latest_compass.sh
+<span class="nb">source</span> /usr/projects/climate/SHARED_CLIMATE/anaconda_envs/load_legacy_compass.sh
 </pre></div>
 </div>
 <p>Example compass config file for LANL IC: <code class="docutils literal notranslate"><span class="pre">general.config.ocean_turq</span></code></p>
@@ -259,37 +259,32 @@ make gfortran <span class="nv">CORE</span><span class="o">=</span>ocean
 </pre></div>
 </div>
 <p>Hint: you can put the following line in your bashrc:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">alias</span> <span class="nv">mlgnu</span><span class="o">=</span><span class="s1">&#39;module purge; module load git; module use /usr/projects/climate/SHARED_CLIMATE/modulefiles/all/; module load gcc/5.3.0 openmpi/1.10.5 netcdf/4.4.1 parallel-netcdf/1.5.0 pio/1.7.2; module unload python; source /usr/projects/climate/SHARED_CLIMATE/anaconda_envs/load_latest_compass.sh; echo &quot;loading modules anaconda, gnu, openmpi, netcdf, pnetcdf, pio for grizzly&quot;&#39;</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">alias</span> <span class="nv">mlgnu</span><span class="o">=</span><span class="s1">&#39;module purge; module load git; module use /usr/projects/climate/SHARED_CLIMATE/modulefiles/all/; module load gcc/5.3.0 openmpi/1.10.5 netcdf/4.4.1 parallel-netcdf/1.5.0 pio/1.7.2; module unload python; source /usr/projects/climate/SHARED_CLIMATE/anaconda_envs/load_legacy_compass.sh; echo &quot;loading modules anaconda, gnu, openmpi, netcdf, pnetcdf, pio for grizzly&quot;&#39;</span>
 </pre></div>
 </div>
 </div>
-<div class="section" id="grizzly-intel-17">
-<h2>grizzly, intel 17<a class="headerlink" href="#grizzly-intel-17" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="grizzly-intel-19-with-scorpio">
+<h2>grizzly, intel 19 with scorpio<a class="headerlink" href="#grizzly-intel-19-with-scorpio" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>module purge
+module load friendly-testing
+module load intel/19.0.4 intel-mpi/2019.4 hdf5-parallel/1.8.16 pnetcdf/1.11.2 netcdf-h5parallel/4.7.3 mkl/2019.0.4
+<span class="nb">export</span> <span class="nv">NETCDF</span><span class="o">=</span>/usr/projects/hpcsoft/toss3/grizzly/netcdf/4.7.3_intel-19.0.4_intel-mpi-2019.4_hdf5-1.8.16
+<span class="nb">export</span> <span class="nv">PNETCDF</span><span class="o">=</span>/usr/projects/hpcsoft/toss3/grizzly/pnetcdf/1.11.2_intel-19.0.4_intel-mpi-2019.4_hdf5-1.8.16
+<span class="nb">export</span> <span class="nv">PIO</span><span class="o">=</span>/usr/projects/climate/xylar/libraries/grizzly/scorpio-1.1.6-intel
+
+make intel-mpi <span class="nv">CORE</span><span class="o">=</span>ocean <span class="nv">USE_PIO2</span><span class="o">=</span><span class="nb">true</span>
+<span class="c1"># may also use: OPENMP=true DEBUG=true GEN_F90=true</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="grizzly-intel-17-and-pio-1">
+<h2>grizzly, intel 17 and pio 1<a class="headerlink" href="#grizzly-intel-17-and-pio-1" title="Permalink to this headline">¶</a></h2>
+<p><em>Note: Intel 19 above is preferred</em></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>module purge
 module use /usr/projects/climate/SHARED_CLIMATE/modulefiles/all
 module load intel/17.0.1
 module load openmpi/1.10.5 netcdf/4.4.1 parallel-netcdf/1.5.0 pio/1.7.2
 make ifort <span class="nv">CORE</span><span class="o">=</span>ocean
-</pre></div>
-</div>
-</div>
-<div class="section" id="grizzly-intel-19-with-pio2">
-<h2>grizzly, intel 19 with PIO2<a class="headerlink" href="#grizzly-intel-19-with-pio2" title="Permalink to this headline">¶</a></h2>
-<p><em>Note: Intel 19 and PIO2 currently not functioning. Compile fails on PIO2 test. -Mark P, Jan 12 2021</em></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>module purge
-module use /usr/projects/climate/SHARED_CLIMATE/modulefiles/all/scorpio
-module load friendly-testing
-module load intel/19.0.4 intel-mpi/2019.4 hdf5-parallel/1.8.16 pnetcdf/1.11.2 netcdf-h5parallel/4.7.3 mkl/2019.0.4 pio2/1.10.1
-<span class="c1"># note: if you already did this:</span>
-<span class="c1">#  module use /usr/projects/climate/SHARED_CLIMATE/modulefiles/all/</span>
-<span class="c1"># then it will show &#39;no such file&#39; for hdf5-parallel/1.8.16.</span>
-<span class="c1"># solution: log into a new node and try with only the commands above.</span>
-<span class="nb">export</span> <span class="nv">I_MPI_CC</span><span class="o">=</span>icc
-<span class="nb">export</span> <span class="nv">I_MPI_CXX</span><span class="o">=</span>icpc
-<span class="nb">export</span> <span class="nv">I_MPI_F77</span><span class="o">=</span>ifort
-<span class="nb">export</span> <span class="nv">I_MPI_F90</span><span class="o">=</span>ifort
-
-make ifort <span class="nv">CORE</span><span class="o">=</span>ocean <span class="nv">USE_PIO2</span><span class="o">=</span><span class="nb">true</span>
 </pre></div>
 </div>
 </div>
