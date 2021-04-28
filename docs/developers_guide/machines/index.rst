@@ -34,9 +34,27 @@ you run into trouble with the automatic recognition (e.g. if you're setting
 up test cases on a compute node).
 
 If you do not supply a compiler set with ``-c``, you will get the default
-compiler for each machine.  Currently, we only support one MPI flavor per
+compiler for each machine.  Typically, we only support one MPI flavor per
 compiler, so you should not need to specify which MPI version to use.  This
 follows automatically from the choice of compilers.
+
+To list the available compilers and MPI libraries on a machine, run:
+
+.. code-block:: bash
+
+    source ./load/load_compass_env.sh --list
+
+You will see something like:
+
+.. code-block:: none
+
+    Default compiler and MPI library:
+      -c intel -i impi
+
+    Available compilers and MPI libraries:
+      -c intel -i impi
+      -c gnu -i mvapich
+      -c intel -i mvapich
 
 After loading this environment, you can set up test cases or test suites, and
 a link ``load_compass_env.sh`` will be included in each suite or test case
