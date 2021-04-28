@@ -52,5 +52,3 @@ if __name__ == "__main__":
     plt.ylabel('Depth (m)')
     plt.legend()
     plt.savefig('viscosity_profile.png')
-
-
