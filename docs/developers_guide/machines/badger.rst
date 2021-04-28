@@ -3,6 +3,22 @@
 Badger
 ======
 
+.. note::
+
+  It is important that you not point to custom module files for the compiler,
+  MPI, and netcdf modules on Grizzly to work properly.  If you have:
+
+  .. code-block:: bash
+
+    module use /usr/projects/climate/SHARED_CLIMATE/modulefiles/all
+
+  or similar commands in your ``.bashrc``, please either comment them out or
+  make sure to run
+
+  .. code-block:: bash
+
+    module unuse /usr/projects/climate/SHARED_CLIMATE/modulefiles/all
+
 intel
 -----
 
