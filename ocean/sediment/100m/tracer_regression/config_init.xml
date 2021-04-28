@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<config case="init">
+	<add_executable source="model" dest="ocean_model"/>
+	<namelist name="namelist.ocean" mode="init">
+		<option name="config_ocean_run_mode">'init'</option>
+		<option name="config_init_configuration">'lock_exchange'</option>
+		<option name="config_vert_levels">-1</option>
+		<option name="config_write_cull_cell_mask">.true.</option>
+		<option name="config_use_debugTracers">.true.</option>
+		<option name="config_use_sedimentTracers">.true.</option>
+		<option name="config_lock_exchange_direction">'y'</option>
+		<option name="config_lock_exchange_vert_levels">50</option>
+		<option name="config_lock_exchange_bottom_depth">10.0</option>
+		<option name="config_lock_exchange_warm_temperature">30.0</option>
+		<option name="config_lock_exchange_cold_temperature">10.0</option>
+		<option name="config_lock_exchange_high_sedConcen">10.0</option>
+		<option name="config_lock_exchange_low_sedConcen">0.0</option>
+		<option name="config_lock_exchange_high_tracer">10.0</option>
+		<option name="config_lock_exchange_low_tracer">0.0</option>
+	</namelist>
+
+	<streams name="streams.ocean" keep="immutable" mode="init">
+		<stream name="input_init">
+			<attribute name="filename_template">mesh.nc</attribute>
+		</stream>
+		<stream name="output_init">
+			<attribute name="type">output</attribute>
+			<attribute name="output_interval">0000-00-00_00:00:01</attribute>
+			<attribute name="clobber_mode">truncate</attribute>
+			<attribute name="filename_template">ocean.nc</attribute>
+			<add_contents>
+				<member name="input_init" type="stream"/>
+				<member name="tracers" type="var_struct"/>
+				<member name="refZMid" type="var"/>
+				<member name="normalVelocity" type="var"/>
+				<member name="layerThickness" type="var"/>
+				<member name="restingThickness" type="var"/>
+				<member name="refBottomDepth" type="var"/>
+				<member name="bottomDepth" type="var"/>
+				<member name="minLevelCell" type="var"/>
+				<member name="maxLevelCell" type="var"/>
+				<member name="vertCoordMovementWeights" type="var"/>
+				<member name="edgeMask" type="var"/>
+				<member name="cullCell" type="var"/>
+			</add_contents>
+		</stream>
+	</streams>
+
+	<run_script name="run.py">
+		<step executable="planar_hex">
+			<argument flag="--nx">4</argument>
+			<argument flag="--ny">50</argument>
+			<argument flag="--dc">100.0</argument>
+			<argument flag="--npy"></argument>
+			<argument flag="-o">grid.nc</argument>
+		</step>
+		<step executable="MpasCellCuller.x">
+			<argument flag="">grid.nc</argument>
+			<argument flag="">culled_mesh.nc</argument>
+		</step>
+		<step executable="MpasMeshConverter.x">
+			<argument flag="">culled_mesh.nc</argument>
+			<argument flag="">mesh.nc</argument>
+		</step>
+		<model_run procs="1" threads="1" namelist="namelist.ocean" streams="streams.ocean"/>
+	</run_script>
+
+</config>
