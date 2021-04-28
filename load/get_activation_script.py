@@ -8,6 +8,7 @@ import sys
 import re
 import socket
 import warnings
+import glob
 
 try:
     from configparser import ConfigParser
@@ -30,6 +31,8 @@ if __name__ == '__main__':
                         help="The name of the compiler")
     parser.add_argument("-i", "--mpi", dest="mpi", type=str,
                         help="The MPI library")
+    parser.add_argument("--list", dest="list", action="store_true",
+                        help="list the available compilers and MPI libraries")
 
     args = parser.parse_args(sys.argv[1:])
 
@@ -75,22 +78,38 @@ if __name__ == '__main__':
 
     config.read(machine_config)
 
-    if args.compiler is not None:
-        compiler = args.compiler
-    else:
-        compiler = config.get('deploy', 'compiler')
-
-    if args.mpi is not None:
-        mpi = args.mpi
-    else:
-        mpi = config.get('deploy', 'mpi_{}'.format(compiler))
-
-    suffix = '_{}_{}'.format(compiler, mpi)
-
     base_path = config.get('paths', 'compass_envs')
     activ_path = os.path.abspath(os.path.join(base_path, '..'))
 
-    script_filename = '{}/test_compass{}{}.sh'.format(
-        activ_path, version, suffix)
+    if args.list:
+        files = glob.glob('{}/test_compass{}*.sh'.format(
+            activ_path, version))
+        compiler = config.get('deploy', 'compiler')
+        mpi = config.get('deploy', 'mpi_{}'.format(compiler))
+        print('Default compiler and MPI library:')
+        print('  -c {} -i {}'.format(compiler, mpi))
+        print('')
+        print('Available compilers and MPI libraries:')
+        for filename in files:
+            basename = os.path.splitext(filename)[0].split('_')
+            compiler = basename[-2]
+            mpi = basename[-1]
+            print('  -c {} -i {}'.format(compiler, mpi))
+    else:    
+        if args.compiler is not None:
+            compiler = args.compiler
+        else:
+            compiler = config.get('deploy', 'compiler')
 
-    print(script_filename)
+        if args.mpi is not None:
+            mpi = args.mpi
+        else:
+            mpi = config.get('deploy', 'mpi_{}'.format(compiler))
+
+        suffix = '_{}_{}'.format(compiler, mpi)
+
+        script_filename = '{}/test_compass{}{}.sh'.format(
+            activ_path, version, suffix)
+
+        with open('./load/tmp_script_name', 'w') as f:
+            f.write(script_filename)
