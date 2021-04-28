@@ -6,12 +6,13 @@ Anvil
 intel18
 -------
 
-To load the compass environment and modules, and set appropriate environment
-variables run this in the ``compass`` repo root:
+This is the default ``compass`` compiler on Anvil.  To activate the compass
+environment, load modules, and set appropriate environment variables, run this
+in the ``compass`` repo root:
 
 .. code-block:: bash
 
-    source ./load/load_compass_env.sh -m anvil -c intel18
+    source ./load/load_compass_env.sh
 
 To build the MPAS model with
 
@@ -28,12 +29,12 @@ or
 gnu
 ---
 
-To load the compass environment and modules, and set appropriate environment
-variables run this in the ``compass`` repo root:
+To activate the compass environment, load modules, and set appropriate
+environment variables, run this in the ``compass`` repo root:
 
 .. code-block:: bash
 
-    source ./load/load_compass_env.sh -m anvil -c gnu
+    source ./load/load_compass_env.sh -c gnu
 
 To build the MPAS model with
 

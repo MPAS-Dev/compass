@@ -1,15 +1,44 @@
 Cori
 ====
 
+cori-haswell, intel
+-------------------
+
+This is the default ``compass`` architecture and compiler on Cori.  To activate
+the compass environment, load modules, and set appropriate environment
+variables, run this in the ``compass`` repo root:
+
+.. code-block:: bash
+
+    source ./load/load_compass_env.sh -m cori-haswell
+
+You don't have to supply ``-m cori-haswell`` but it will prevent you from
+getting a warning that you might want ``cori-knl``.
+
+To build the MPAS model with
+
+.. code-block:: bash
+
+    make CORE=landice intel-nersc
+
+or
+
+.. code-block:: bash
+
+    make CORE=ocean intel-nersc
+
 cori-haswell, gnu
 -----------------
 
-To load the compass environment and modules, and set appropriate environment
-variables run this in the ``compass`` repo root:
+To activate the compass environment, load modules, and set appropriate
+environment variables, run this in the ``compass`` repo root:
 
 .. code-block:: bash
 
     source ./load/load_compass_env.sh -m cori-haswell -c gnu
+
+As above, you don't have to supply ``-m cori-haswell`` but it will prevent you
+from getting a warning that you might want ``cori-knl``.
 
 To build the MPAS model with
 
@@ -23,17 +52,16 @@ or
 
     make CORE=ocean gnu-nersc
 
+cori-knl, intel
+---------------
 
-cori-haswell, intel
--------------------
-
-To load the compass environment and modules, and set appropriate environment
-variables run this in the ``compass`` repo root:
+This is the default ``compass`` compiler on Cori-KNL.  To activate the compass
+environment, load modules, and set appropriate environment variables, run this
+in the ``compass`` repo root:
 
 .. code-block:: bash
 
-    source ./load/load_compass_env.sh -m cori-haswell -c intel
-
+    source ./load/load_compass_env.sh -m cori-knl
 
 To build the MPAS model with
 
@@ -50,8 +78,8 @@ or
 cori-knl, gnu
 -------------
 
-To load the compass environment and modules, and set appropriate environment
-variables run this in the ``compass`` repo root:
+To activate the compass environment, load modules, and set appropriate
+environment variables, run this in the ``compass`` repo root:
 
 .. code-block:: bash
 
@@ -70,25 +98,3 @@ or
 
     make CORE=ocean gnu-nersc
 
-
-cori-knl, intel
----------------
-
-To load the compass environment and modules, and set appropriate environment
-variables run this in the ``compass`` repo root:
-
-.. code-block:: bash
-
-    source ./load/load_compass_env.sh -m cori-knl -c intel
-
-To build the MPAS model with
-
-.. code-block:: bash
-
-    make CORE=landice intel-nersc
-
-or
-
-.. code-block:: bash
-
-    make CORE=ocean intel-nersc

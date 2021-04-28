@@ -22,16 +22,29 @@ the following in the root of the local clone of the compass repo:
 
 .. code-block:: bash
 
-    source ./load/load_compass_env.sh -m <machine> -c <compiler>
+    source ./load/load_compass_env.sh [-m <machine>] [-c <compiler>]
 
-This will then source an appropriate script that will load the compass
-conda environment and the compiler and MPI modules, and set environment
+This will then source an appropriate script that will activate the compass
+conda environment, load the compiler and MPI modules, and set environment
 variables needed compile MPAS.
+
+If you are on a login node, the script should automatically recognize what
+machine you are on.  You can supply the machine name with ``-m <machine>`` if
+you run into trouble with the automatic recognition (e.g. if you're setting
+up test cases on a compute node).
+
+If you do not supply a compiler set with ``-c``, you will get the default
+compiler for each machine.  Currently, we only support one MPI flavor per
+compiler, so you should not need to specify which MPI version to use.  This
+follows automatically from the choice of compilers.
 
 After loading this environment, you can set up test cases or test suites, and
 a link ``load_compass_env.sh`` will be included in each suite or test case
-work directory that can be sourced on a compute node (e.g. in a job script).
-to load the same conda environment and compiler and MPI modules.
+work directory.  This is a link to a specific activation script for that
+machine and compiler (so not a link to ``load/load_compass_env.sh``, it just
+happens to be given the same name).  You can can source this file on a
+compute node (e.g. in a job script) to get the right compass conda environment,
+compilers, MPI libraries and environment variables for running MPAS.
 
 Below are specifics for each supported machine
 .. toctree::
