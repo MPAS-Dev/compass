@@ -7,7 +7,7 @@ compass environment:
 
 .. code-block:: bash
 
-    source /global/cfs/cdirs/e3sm/software/anaconda_envs/load_latest_compass.sh
+    source /global/cfs/cdirs/e3sm/software/anaconda_envs/load_legacy_compass.sh
 
 example compass config file:
 `general.config.ocean_cori <https://gist.github.com/mark-petersen/c61095d65216415ee0bb62a76da3c6cb>`_
@@ -56,7 +56,7 @@ cori, gnu
     module load cray-netcdf-hdf5parallel
     module load cray-parallel-netcdf
     module load cmake
-    source /global/project/projectdirs/e3sm/software/anaconda_envs/load_latest_e3sm_unified.sh
+    source /global/project/projectdirs/e3sm/software/anaconda_envs/load_legacy_compass.sh
     export PIO=/global/u2/h/hgkang/my_programs/Scorpio
     git submodule update --init --recursive
 
