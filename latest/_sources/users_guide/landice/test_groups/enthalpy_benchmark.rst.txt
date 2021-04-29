@@ -92,7 +92,7 @@ integration.
 B
 -
 
-``landice/enthalpy_benchmark/A/`` implements Benchmark B from
+``landice/enthalpy_benchmark/B/`` implements Benchmark B from
 `Kleiner et al (2015) <https://doi.org/10.5194/tc-9-217-2015>`_.  Config
 options for this test case are:
 

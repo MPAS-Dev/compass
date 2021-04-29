@@ -1,4 +1,4 @@
-.. _machine_compy:
+.. _dev_machine_compy:
 
 CompyMcNodeFace
 ===============

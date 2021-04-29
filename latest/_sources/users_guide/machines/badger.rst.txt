@@ -54,6 +54,11 @@ setting up test cases or a test suite:
 badger, intel
 -------------
 
+.. note::
+
+    Compass 1.0.0 has not yet been released.  The following will apply after
+    the release.
+
 To load the compass environment and modules, and set appropriate environment
 variables:
 
@@ -77,6 +82,11 @@ or
 
 badger, gnu
 -----------
+
+.. note::
+
+    Compass 1.0.0 has not yet been released.  The following will apply after
+    the release.
 
 To load the compass environment and modules, and set appropriate environment
 variables:
