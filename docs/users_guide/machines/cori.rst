@@ -130,6 +130,11 @@ And here are the same for ``-m cori-knl``:
 cori-haswell, gnu
 -----------------
 
+.. note::
+
+    Compass 1.0.0 has not yet been released.  The following will apply after
+    the release.
+
 To load the compass environment and modules, and set appropriate environment
 variables:
 
@@ -153,6 +158,11 @@ or
 cori-haswell, intel
 -------------------
 
+.. note::
+
+    Compass 1.0.0 has not yet been released.  The following will apply after
+    the release.
+
 To load the compass environment and modules, and set appropriate environment
 variables:
 
@@ -174,6 +184,11 @@ or
 
 cori-knl, gnu
 -------------
+
+.. note::
+
+    Compass 1.0.0 has not yet been released.  The following will apply after
+    the release.
 
 To load the compass environment and modules, and set appropriate environment
 variables:
@@ -197,6 +212,11 @@ or
 
 cori-knl, intel
 ---------------
+
+.. note::
+
+    Compass 1.0.0 has not yet been released.  The following will apply after
+    the release.
 
 To load the compass environment and modules, and set appropriate environment
 variables:

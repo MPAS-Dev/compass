@@ -78,16 +78,18 @@ Here are some basic commands:
 Supported Machines
 ------------------
 
-Compass 1.0.0 has not yet been released.  The documentation for supported
-machines is what we anticipate once the release has occurred.  Developers or
-users working off of the `master <https://github.com/MPAS-Dev/compass/tree/master>`_
-branch (as opposed to a ``compass`` release), you should look at the
-developer's guide on :ref:`dev_supported_machines`.
+.. note::
 
-the approach that will be used to activate a conda
-environment with the ``compass`` package
-load modules We have activation scripts, typically for two compiler flavors, on each
-supported machine.  These scripts will first load the conda environment for
+    Compass 1.0.0 has not yet been released.  The documentation for supported
+    machines is what we anticipate once the release has occurred.  Developers
+    or users working off of the `master <https://github.com/MPAS-Dev/compass/tree/master>`_
+    branch (as opposed to a ``compass`` release), you should look at the
+    developer's guide on :ref:`dev_supported_machines`.
+
+On each supported machine, users will be able to source a script to activate
+the appropriate compass environment and compilers.  Most machines support 2
+compilers, each with one "flavor" of MPI and the required NetCDF, pNetCDF and
+SCORPIO libraries.  These scripts will first load the conda environment for
 ``compass``, then it will load modules and set environment variables that will
 allow you to build and run the MPAS model.
 

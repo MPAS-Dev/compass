@@ -51,6 +51,11 @@ setting up test cases or a test suite:
 intel18 on anvil
 ----------------
 
+.. note::
+
+    Compass 1.0.0 has not yet been released.  The following will apply after
+    the release.
+
 To load the compass environment and modules, and set appropriate environment
 variables:
 
@@ -72,6 +77,11 @@ or
 
 gnu on anvil
 ------------
+
+.. note::
+
+    Compass 1.0.0 has not yet been released.  The following will apply after
+    the release.
 
 To load the compass environment and modules, and set appropriate environment
 variables:
