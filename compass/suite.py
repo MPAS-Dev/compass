@@ -69,7 +69,10 @@ def setup_suite(mpas_core, suite_name, config_file=None, machine=None,
     # package and we'll want to link to that in the tests and steps
     compass_path = os.path.join(os.getcwd(), 'compass')
     if os.path.exists(os.path.join(compass_path, '__init__.py')):
-        symlink(compass_path, os.path.join(work_dir, 'compass'))
+        link_name = os.path.join(work_dir, 'compass')
+        if os.path.abspath(compass_path) != os.path.abspath(link_name):
+            # make sure we're not trying to overwrite compass with a symlink
+            symlink(compass_path, os.path.join(work_dir, 'compass'))
 
     test_suite = {'name': suite_name,
                   'test_cases': test_cases,
