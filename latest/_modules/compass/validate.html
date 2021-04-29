@@ -191,22 +191,22 @@
 <span class="kn">import</span> <span class="nn">fnmatch</span>
 
 
-<div class="viewcode-block" id="compare_variables"><a class="viewcode-back" href="../../developers_guide/generated/compass.validate.compare_variables.html#compass.validate.compare_variables">[docs]</a><span class="k">def</span> <span class="nf">compare_variables</span><span class="p">(</span><span class="n">variables</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">work_dir</span><span class="p">,</span> <span class="n">filename1</span><span class="p">,</span> <span class="n">filename2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="compare_variables"><a class="viewcode-back" href="../../developers_guide/generated/compass.validate.compare_variables.html#compass.validate.compare_variables">[docs]</a><span class="k">def</span> <span class="nf">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">variables</span><span class="p">,</span> <span class="n">filename1</span><span class="p">,</span> <span class="n">filename2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                       <span class="n">l1_norm</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">l2_norm</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">linf_norm</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compare variables between files in the current test case and/or with the</span>
-<span class="sd">    baseline results.</span>
+<span class="sd">    baseline results.  The results of the comparison are added to the</span>
+<span class="sd">    test case&#39;s &quot;validation&quot; dictionary, which the framework can use later to</span>
+<span class="sd">    log the test case results and/or to raise an exception to indicate that</span>
+<span class="sd">    the test case has failed.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
+<span class="sd">    test_case : compass.TestCase</span>
+<span class="sd">        An object describing a test case to validate</span>
+
 <span class="sd">    variables : list</span>
 <span class="sd">        A list of variable names to compare</span>
-
-<span class="sd">    config : configparser.ConfigParser</span>
-<span class="sd">        Configuration options for the test case</span>
-
-<span class="sd">    work_dir : str</span>
-<span class="sd">        The work directory for the test case</span>
 
 <span class="sd">    filename1 : str</span>
 <span class="sd">        The relative path to a file within the ``work_dir``.  If ``filename2``</span>
@@ -235,40 +235,51 @@
 
 <span class="sd">    quiet : bool, optional</span>
 <span class="sd">        Whether to print</span>
-
-<span class="sd">    Raises</span>
-<span class="sd">    ------</span>
-<span class="sd">    ValueError</span>
-<span class="sd">        If one or more of the norms is outside the required bounds</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">work_dir</span> <span class="o">=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">work_dir</span>
 
-    <span class="n">all_pass</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="n">test_case</span><span class="o">.</span><span class="n">validation</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">validation</span> <span class="o">=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">validation</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">validation</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;internal_pass&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                      <span class="s1">&#39;baseline_pass&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+
     <span class="k">if</span> <span class="n">filename2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">_compare_variables</span><span class="p">(</span>
+        <span class="n">internal_pass</span> <span class="o">=</span> <span class="n">_compare_variables</span><span class="p">(</span>
             <span class="n">variables</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">filename1</span><span class="p">),</span>
             <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">filename2</span><span class="p">),</span> <span class="n">l1_norm</span><span class="p">,</span> <span class="n">l2_norm</span><span class="p">,</span> <span class="n">linf_norm</span><span class="p">,</span>
             <span class="n">quiet</span><span class="p">)</span>
-        <span class="n">all_pass</span> <span class="o">=</span> <span class="n">all_pass</span> <span class="ow">and</span> <span class="n">result</span>
 
-    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="s1">&#39;baseline_dir&#39;</span><span class="p">):</span>
-        <span class="n">baseline_root</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="s1">&#39;baseline_dir&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">validation</span><span class="p">[</span><span class="s1">&#39;internal_pass&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">validation</span><span class="p">[</span><span class="s1">&#39;internal_pass&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">internal_pass</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">validation</span><span class="p">[</span><span class="s1">&#39;internal_pass&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="n">validation</span><span class="p">[</span><span class="s1">&#39;internal_pass&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">internal_pass</span>
+
+    <span class="k">if</span> <span class="n">test_case</span><span class="o">.</span><span class="n">baseline_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">baseline_root</span> <span class="o">=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">baseline_dir</span>
+        <span class="n">baseline_pass</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="n">result</span> <span class="o">=</span> <span class="n">_compare_variables</span><span class="p">(</span>
             <span class="n">variables</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">filename1</span><span class="p">),</span>
             <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">baseline_root</span><span class="p">,</span> <span class="n">filename1</span><span class="p">),</span> <span class="n">l1_norm</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">l2_norm</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
             <span class="n">linf_norm</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="n">quiet</span><span class="p">)</span>
-        <span class="n">all_pass</span> <span class="o">=</span> <span class="n">all_pass</span> <span class="ow">and</span> <span class="n">result</span>
+        <span class="n">baseline_pass</span> <span class="o">=</span> <span class="n">baseline_pass</span> <span class="ow">and</span> <span class="n">result</span>
 
         <span class="k">if</span> <span class="n">filename2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">result</span> <span class="o">=</span> <span class="n">_compare_variables</span><span class="p">(</span>
                 <span class="n">variables</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">filename2</span><span class="p">),</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">baseline_root</span><span class="p">,</span> <span class="n">filename2</span><span class="p">),</span> <span class="n">l1_norm</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
                 <span class="n">l2_norm</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">linf_norm</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="n">quiet</span><span class="p">)</span>
-            <span class="n">all_pass</span> <span class="o">=</span> <span class="n">all_pass</span> <span class="ow">and</span> <span class="n">result</span>
+            <span class="n">baseline_pass</span> <span class="o">=</span> <span class="n">baseline_pass</span> <span class="ow">and</span> <span class="n">result</span>
 
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">all_pass</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Comparison failed, see above.&#39;</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="n">validation</span><span class="p">[</span><span class="s1">&#39;baseline_pass&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">validation</span><span class="p">[</span><span class="s1">&#39;baseline_pass&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">baseline_pass</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">validation</span><span class="p">[</span><span class="s1">&#39;baseline_pass&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="n">validation</span><span class="p">[</span><span class="s1">&#39;baseline_pass&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">baseline_pass</span>
+
+    <span class="n">test_case</span><span class="o">.</span><span class="n">validation</span> <span class="o">=</span> <span class="n">validation</span></div>
 
 
 <div class="viewcode-block" id="compare_timers"><a class="viewcode-back" href="../../developers_guide/generated/compass.validate.compare_timers.html#compass.validate.compare_timers">[docs]</a><span class="k">def</span> <span class="nf">compare_timers</span><span class="p">(</span><span class="n">timers</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">work_dir</span><span class="p">,</span> <span class="n">rundir1</span><span class="p">,</span> <span class="n">rundir2</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>

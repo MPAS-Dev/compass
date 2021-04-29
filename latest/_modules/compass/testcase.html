@@ -238,6 +238,10 @@
 <span class="sd">    base_work_dir : str</span>
 <span class="sd">        The base work directory</span>
 
+<span class="sd">    baseline_dir : str, optional</span>
+<span class="sd">        Location of the same test case within the basesline work directory,</span>
+<span class="sd">        for use in comparing variables and timers</span>
+
 <span class="sd">    logger : logging.Logger</span>
 <span class="sd">        A logger for output from the test case</span>
 
@@ -249,6 +253,11 @@
 <span class="sd">        Whether to create a new log file for each step or to log output to a</span>
 <span class="sd">        common log file for the whole test case.  The latter is used when</span>
 <span class="sd">        running the test case as part of a test suite</span>
+
+<span class="sd">    validation : dict</span>
+<span class="sd">        A dictionary with the status of internal and baseline comparisons, used</span>
+<span class="sd">        by the ``compass`` framework to determine whether the test case passed</span>
+<span class="sd">        or failed internal and baseline validation.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="TestCase.__init__"><a class="viewcode-back" href="../../developers_guide/generated/compass.TestCase.html#compass.TestCase.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -286,11 +295,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">config_filename</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">base_work_dir</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># may be set during setup if there is a baseline for comparison</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">baseline_dir</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="c1"># these will be set when running the test case</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">new_step_log_file</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">log_filename</span> <span class="o">=</span> <span class="kc">None</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log_filename</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validation</span> <span class="o">=</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="TestCase.configure"><a class="viewcode-back" href="../../developers_guide/generated/compass.TestCase.configure.html#compass.TestCase.configure">[docs]</a>    <span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -360,6 +372,31 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">step</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">step</span>
         <span class="k">if</span> <span class="n">run_by_default</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">steps_to_run</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">step</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">check_validation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check the test case&#39;s &quot;validation&quot; dictionary to see if validation</span>
+<span class="sd">        failed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">validation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">validation</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
+        <span class="k">if</span> <span class="n">validation</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">internal_pass</span> <span class="o">=</span> <span class="n">validation</span><span class="p">[</span><span class="s1">&#39;internal_pass&#39;</span><span class="p">]</span>
+            <span class="n">baseline_pass</span> <span class="o">=</span> <span class="n">validation</span><span class="p">[</span><span class="s1">&#39;baseline_pass&#39;</span><span class="p">]</span>
+
+            <span class="n">both_pass</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="n">internal_pass</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">internal_pass</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Comparison failed between files within the test &#39;</span>
+                             <span class="s1">&#39;case.&#39;</span><span class="p">)</span>
+                <span class="n">both_pass</span> <span class="o">=</span> <span class="kc">False</span>
+
+            <span class="k">if</span> <span class="n">baseline_pass</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">baseline_pass</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Comparison failed between the test case and the &#39;</span>
+                             <span class="s1">&#39;baseline.&#39;</span><span class="p">)</span>
+                <span class="n">both_pass</span> <span class="o">=</span> <span class="kc">False</span>
+
+            <span class="k">if</span> <span class="n">both_pass</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Comparison failed, see above.&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_run_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">new_log_file</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
