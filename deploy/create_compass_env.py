@@ -410,6 +410,9 @@ def main():
         if esmf != 'None':
             sys_info['env_vars'].append('export PATH="{}:$PATH"'.format(
                 os.path.join(esmf_path, 'bin')))
+            sys_info['env_vars'].append(
+                'export LD_LIBRARY_PATH={}:$LD_LIBRARY_PATH'.format(
+                    os.path.join(esmf_path, 'lib')))
 
         if scorpio != 'None':
             sys_info['env_vars'].append('export PIO={}'.format(scorpio_path))
