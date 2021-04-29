@@ -126,6 +126,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/ocean/index.html">Ocean core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/machines/index.html">Machines</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/docs.html">Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/building_docs.html">Building the Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/api.html">API reference</a></li>
@@ -253,37 +254,9 @@ setting up test cases or a test suite:</p>
 </div>
 <div class="section" id="intel18-on-anvil">
 <h2>intel18 on anvil<a class="headerlink" href="#intel18-on-anvil" title="Permalink to this headline">¶</a></h2>
-<p>First, you might want to build SCORPIO (see below), or use the one from
-<a class="reference external" href="http://github.com/xylar">xylar</a> referenced here:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> /lcrc/soft/climate/e3sm-unified/load_latest_compass.sh
-
-module purge
-module load cmake/3.14.2-gvwazz3
-module load intel/18.0.4-62uvgmb
-module load intel-mkl/2018.4.274-jwaeshj
-module load netcdf/4.4.1-fijcsqi
-module load netcdf-cxx/4.2-cixenix
-module load netcdf-fortran/4.4.4-mmtrep3
-module load mvapich2/2.2-verbs-m57bia7
-module load parallel-netcdf/1.11.0-ny4vo3o
-
-<span class="nb">export</span> <span class="nv">NETCDF</span><span class="o">=</span><span class="k">$(</span>dirname <span class="k">$(</span>dirname <span class="k">$(</span>which nc-config<span class="k">)))</span>
-<span class="nb">export</span> <span class="nv">NETCDFF</span><span class="o">=</span><span class="k">$(</span>dirname <span class="k">$(</span>dirname <span class="k">$(</span>which nf-config<span class="k">)))</span>
-<span class="nb">export</span> <span class="nv">PNETCDF</span><span class="o">=</span><span class="k">$(</span>dirname <span class="k">$(</span>dirname <span class="k">$(</span>which pnetcdf-config<span class="k">)))</span>
-
-<span class="nb">export</span> <span class="nv">PIO</span><span class="o">=</span>/lcrc/soft/climate/compass/anvil/compass-1.0.0/scorpio-1.1.6/intel18/mvapich
-<span class="nb">export</span> <span class="nv">ESMF</span><span class="o">=</span>/lcrc/soft/climate/compass/anvil/compass-1.0.0/esmf-8.1.0/intel18/mvapich
-
-<span class="nb">export</span> <span class="nv">I_MPI_CC</span><span class="o">=</span>icc
-<span class="nb">export</span> <span class="nv">I_MPI_CXX</span><span class="o">=</span>icpc
-<span class="nb">export</span> <span class="nv">I_MPI_F77</span><span class="o">=</span>ifort
-<span class="nb">export</span> <span class="nv">I_MPI_F90</span><span class="o">=</span>ifort
-<span class="nb">export</span> <span class="nv">MV2_ENABLE_AFFINITY</span><span class="o">=</span><span class="m">0</span>
-<span class="nb">export</span> <span class="nv">MV2_SHOW_CPU_BINDING</span><span class="o">=</span><span class="m">1</span>
-
-<span class="nb">export</span> <span class="nv">AUTOCLEAN</span><span class="o">=</span><span class="nb">true</span>
-<span class="nb">export</span> <span class="nv">USE_PIO2</span><span class="o">=</span><span class="nb">true</span>
-<span class="nb">export</span> <span class="nv">HDF5_USE_FILE_LOCKING</span><span class="o">=</span>FALSE
+<p>To load the compass environment and modules, and set appropriate environment
+variables:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> /lcrc/soft/climate/compass/anvil/load_compass1.0.0_intel18_mvapich.sh
 </pre></div>
 </div>
 <p>To build the MPAS model with</p>
@@ -297,31 +270,9 @@ module load parallel-netcdf/1.11.0-ny4vo3o
 </div>
 <div class="section" id="gnu-on-anvil">
 <h2>gnu on anvil<a class="headerlink" href="#gnu-on-anvil" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> /lcrc/soft/climate/e3sm-unified/load_latest_compass.sh
-
-module purge
-module load cmake/3.14.2-gvwazz3
-module load gcc/8.2.0-xhxgy33
-module load intel-mkl/2018.4.274-2amycpi
-module load netcdf/4.4.1-ve2zfkw
-module load netcdf-cxx/4.2-2rkopdl
-module load netcdf-fortran/4.4.4-thtylny
-module load mvapich2/2.2-verbs-ppznoge
-module load parallel-netcdf/1.11.0-c22b2bn
-
-<span class="nb">export</span> <span class="nv">NETCDF</span><span class="o">=</span><span class="k">$(</span>dirname <span class="k">$(</span>dirname <span class="k">$(</span>which nc-config<span class="k">)))</span>
-<span class="nb">export</span> <span class="nv">NETCDFF</span><span class="o">=</span><span class="k">$(</span>dirname <span class="k">$(</span>dirname <span class="k">$(</span>which nf-config<span class="k">)))</span>
-<span class="nb">export</span> <span class="nv">PNETCDF</span><span class="o">=</span><span class="k">$(</span>dirname <span class="k">$(</span>dirname <span class="k">$(</span>which pnetcdf-config<span class="k">)))</span>
-
-<span class="nb">export</span> <span class="nv">PIO</span><span class="o">=</span>/lcrc/soft/climate/compass/anvil/compass-1.0.0/scorpio-1.1.6/gnu/mvapich
-<span class="nb">export</span> <span class="nv">ESMF</span><span class="o">=</span>/lcrc/soft/climate/compass/anvil/compass-1.0.0/esmf-8.1.0/gnu/mvapich
-
-<span class="nb">export</span> <span class="nv">MV2_ENABLE_AFFINITY</span><span class="o">=</span><span class="m">0</span>
-<span class="nb">export</span> <span class="nv">MV2_SHOW_CPU_BINDING</span><span class="o">=</span><span class="m">1</span>
-
-<span class="nb">export</span> <span class="nv">AUTOCLEAN</span><span class="o">=</span><span class="nb">true</span>
-<span class="nb">export</span> <span class="nv">USE_PIO2</span><span class="o">=</span><span class="nb">true</span>
-<span class="nb">export</span> <span class="nv">HDF5_USE_FILE_LOCKING</span><span class="o">=</span>FALSE
+<p>To load the compass environment and modules, and set appropriate environment
+variables:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> /lcrc/soft/climate/compass/anvil/load_compass1.0.0_gnu_mvapich.sh
 </pre></div>
 </div>
 <p>To build the MPAS model with</p>

@@ -126,6 +126,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/ocean/index.html">Ocean core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/machines/index.html">Machines</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/docs.html">Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/building_docs.html">Building the Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/api.html">API reference</a></li>
@@ -249,30 +250,9 @@ setting up test cases or a test suite:</p>
 </div>
 <div class="section" id="intel-on-chrysalis">
 <h2>intel on Chrysalis<a class="headerlink" href="#intel-on-chrysalis" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> /lcrc/soft/climate/e3sm-unified/load_latest_compass.sh
-
-module purge
-module load subversion/1.14.0-e4smcy3
-module load perl/5.32.0-bsnc6lt
-module load intel/20.0.4-kodw73g
-module load intel-mkl/2020.4.304-g2qaxzf
-module load intel-mpi/2019.9.304-tkzvizk
-module load hdf5/1.8.16-se4xyo7
-module load netcdf-c/4.4.1-qvxyzq2
-module load netcdf-cxx/4.2-binixgj
-module load netcdf-fortran/4.4.4-rdxohvp
-module load parallel-netcdf/1.11.0-b74wv4m
-
-<span class="nb">export</span> <span class="nv">NETCDF</span><span class="o">=</span><span class="k">$(</span>dirname <span class="k">$(</span>dirname <span class="k">$(</span>which nc-config<span class="k">)))</span>
-<span class="nb">export</span> <span class="nv">NETCDFF</span><span class="o">=</span><span class="k">$(</span>dirname <span class="k">$(</span>dirname <span class="k">$(</span>which nf-config<span class="k">)))</span>
-<span class="nb">export</span> <span class="nv">PNETCDF</span><span class="o">=</span><span class="k">$(</span>dirname <span class="k">$(</span>dirname <span class="k">$(</span>which pnetcdf-config<span class="k">)))</span>
-
-<span class="nb">export</span> <span class="nv">PIO</span><span class="o">=</span>/lcrc/soft/climate/compass/chrysalis/compass-1.0.0/scorpio-1.1.6/intel/impi
-<span class="nb">export</span> <span class="nv">ESMF</span><span class="o">=</span>/lcrc/soft/climate/compass/chrysalis/compass-1.0.0/esmf-8.1.0/intel/impi
-
-<span class="nb">export</span> <span class="nv">AUTOCLEAN</span><span class="o">=</span><span class="nb">true</span>
-<span class="nb">export</span> <span class="nv">USE_PIO2</span><span class="o">=</span><span class="nb">true</span>
-<span class="nb">export</span> <span class="nv">HDF5_USE_FILE_LOCKING</span><span class="o">=</span>FALSE
+<p>To load the compass environment and modules, and set appropriate environment
+variables:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> /lcrc/soft/climate/compass/chrysalis/load_compass1.0.0_intel_impi.sh
 </pre></div>
 </div>
 <p>To build the MPAS model with</p>
@@ -286,30 +266,9 @@ module load parallel-netcdf/1.11.0-b74wv4m
 </div>
 <div class="section" id="gnu-on-chrysalis">
 <h2>gnu on Chrysalis<a class="headerlink" href="#gnu-on-chrysalis" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> /lcrc/soft/climate/e3sm-unified/load_latest_compass.sh
-
-module purge
-module load subversion/1.14.0-e4smcy3
-module load perl/5.32.0-bsnc6lt
-module load gcc/9.2.0-ugetvbp
-module load intel-mkl/2020.4.304-n3b5fye
-module load openmpi/4.0.4-hpcx-hghvhj5
-module load hdf5/1.10.7-sbsigon
-module load netcdf-c/4.7.4-a4uk6zy
-module load netcdf-cxx/4.2-fz347dw
-module load netcdf-fortran/4.5.3-i5ah7u2
-module load parallel-netcdf/1.12.1-e7w4x32
-
-<span class="nb">export</span> <span class="nv">NETCDF</span><span class="o">=</span><span class="k">$(</span>dirname <span class="k">$(</span>dirname <span class="k">$(</span>which nc-config<span class="k">)))</span>
-<span class="nb">export</span> <span class="nv">NETCDFF</span><span class="o">=</span><span class="k">$(</span>dirname <span class="k">$(</span>dirname <span class="k">$(</span>which nf-config<span class="k">)))</span>
-<span class="nb">export</span> <span class="nv">PNETCDF</span><span class="o">=</span><span class="k">$(</span>dirname <span class="k">$(</span>dirname <span class="k">$(</span>which pnetcdf-config<span class="k">)))</span>
-
-<span class="nb">export</span> <span class="nv">PIO</span><span class="o">=</span>/lcrc/soft/climate/compass/chrysalis/compass-1.0.0/scorpio-1.1.6/gnu/openmpi
-<span class="nb">export</span> <span class="nv">ESMF</span><span class="o">=</span>/lcrc/soft/climate/compass/chrysalis/compass-1.0.0/esmf-8.0.1/gnu/openmpi
-
-<span class="nb">export</span> <span class="nv">AUTOCLEAN</span><span class="o">=</span><span class="nb">true</span>
-<span class="nb">export</span> <span class="nv">USE_PIO2</span><span class="o">=</span><span class="nb">true</span>
-<span class="nb">export</span> <span class="nv">HDF5_USE_FILE_LOCKING</span><span class="o">=</span>FALSE
+<p>To load the compass environment and modules, and set appropriate environment
+variables:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> /lcrc/soft/climate/compass/chrysalis/load_compass1.0.0_gnu_openmpi.sh
 </pre></div>
 </div>
 <p>To build the MPAS model with</p>

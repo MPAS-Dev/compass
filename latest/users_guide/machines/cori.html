@@ -108,6 +108,8 @@
 <li class="toctree-l4"><a class="reference internal" href="#config-options">config options</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#cori-haswell-gnu">cori-haswell, gnu</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#cori-haswell-intel">cori-haswell, intel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cori-knl-gnu">cori-knl, gnu</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cori-knl-intel">cori-knl, intel</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#jupyter-notebook-on-remote-data">Jupyter notebook on remote data</a></li>
 </ul>
 </li>
@@ -127,6 +129,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/landice/index.html">Landice core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/ocean/index.html">Ocean core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/machines/index.html">Machines</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/docs.html">Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/building_docs.html">Building the Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/api.html">API reference</a></li>
@@ -320,65 +323,9 @@ cases or a test suite:</p>
 </div>
 <div class="section" id="cori-haswell-gnu">
 <h2>cori-haswell, gnu<a class="headerlink" href="#cori-haswell-gnu" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>module rm PrgEnv-intel
-module rm PrgEnv-cray
-module rm PrgEnv-gnu
-module rm intel
-module rm cce
-module rm gcc
-module rm cray-parallel-netcdf
-module rm cray-hdf5-parallel
-module rm pmi
-module rm cray-libsci
-module rm cray-mpich2
-module rm cray-mpich
-module rm cray-netcdf
-module rm cray-hdf5
-module rm cray-netcdf-hdf5parallel
-module rm craype-sandybridge
-module rm craype-ivybridge
-module rm craype
-module rm papi
-module rm cmake
-module rm cray-petsc
-module rm esmf
-module rm zlib
-module rm craype-hugepages2M
-module rm darshan
-module load craype
-module load PrgEnv-intel
-module load cray-mpich
-module rm craype-mic-knl
-module load craype-haswell
-module swap cray-mpich cray-mpich/7.7.10
-module swap PrgEnv-intel PrgEnv-gnu/6.0.5
-module rm gcc
-module load gcc/8.3.0
-module rm cray-libsci
-module load cray-libsci/19.06.1
-module swap craype craype/2.6.2
-module rm pmi
-module load pmi/5.0.14
-module rm craype-mic-knl
-module load craype-haswell
-module rm cray-netcdf-hdf5parallel
-module load cray-netcdf-hdf5parallel/4.6.3.2
-module load cray-hdf5-parallel/1.10.5.2
-module load cray-parallel-netcdf/1.11.1.1
-module rm git
-module load git
-module rm cmake
-module load cmake/3.14.4
-
-<span class="nb">export</span> <span class="nv">NETCDF</span><span class="o">=</span><span class="nv">$NETCDF_DIR</span>
-<span class="nb">export</span> <span class="nv">NETCDFF</span><span class="o">=</span><span class="nv">$NETCDF_DIR</span>
-<span class="nb">export</span> <span class="nv">PNETCDF</span><span class="o">=</span><span class="nv">$PNETCDF_DIR</span>
-
-<span class="nb">export</span> <span class="nv">PIO</span><span class="o">=</span>/global/cfs/cdirs/e3sm/software/compass/cori-haswell/compass-1.0.0/scorpio-1.1.6/gnu/mpt
-
-<span class="nb">export</span> <span class="nv">AUTOCLEAN</span><span class="o">=</span><span class="nb">true</span>
-<span class="nb">export</span> <span class="nv">USE_PIO2</span><span class="o">=</span><span class="nb">true</span>
-<span class="nb">export</span> <span class="nv">HDF5_USE_FILE_LOCKING</span><span class="o">=</span>FALSE
+<p>To load the compass environment and modules, and set appropriate environment
+variables:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> /global/cfs/cdirs/e3sm/software/compass/cori-haswell/load_compass1.0.0_gnu_mpt.sh
 </pre></div>
 </div>
 <p>To build the MPAS model with</p>
@@ -392,65 +339,41 @@ module load cmake/3.14.4
 </div>
 <div class="section" id="cori-haswell-intel">
 <h2>cori-haswell, intel<a class="headerlink" href="#cori-haswell-intel" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> /global/cfs/cdirs/e3sm/software/anaconda_envs/load_latest_compass.sh
-
-module rm PrgEnv-intel
-module rm PrgEnv-cray
-module rm PrgEnv-gnu
-module rm intel
-module rm cce
-module rm gcc
-module rm cray-parallel-netcdf
-module rm cray-hdf5-parallel
-module rm pmi
-module rm cray-libsci
-module rm cray-mpich2
-module rm cray-mpich
-module rm cray-netcdf
-module rm cray-hdf5
-module rm cray-netcdf-hdf5parallel
-module rm craype-sandybridge
-module rm craype-ivybridge
-module rm craype
-module rm papi
-module rm cmake
-module rm cray-petsc
-module rm esmf
-module rm zlib
-module rm craype-hugepages2M
-module rm darshan
-module load craype
-module load PrgEnv-intel
-module load cray-mpich
-module rm craype-mic-knl
-module load craype-haswell
-module swap cray-mpich cray-mpich/7.7.10
-module load PrgEnv-intel/6.0.5
-module rm intel
-module load intel/19.0.3.199
-module swap craype craype/2.6.2
-module rm pmi
-module load pmi/5.0.14
-module rm craype-mic-knl
-module load craype-haswell
-module rm cray-netcdf-hdf5parallel
-module load cray-netcdf-hdf5parallel/4.6.3.2
-module load cray-hdf5-parallel/1.10.5.2
-module load cray-parallel-netcdf/1.11.1.1
-module rm git
-module load git
-module rm cmake
-module load cmake/3.14.4
-
-<span class="nb">export</span> <span class="nv">NETCDF_C_PATH</span><span class="o">=</span><span class="nv">$NETCDF_DIR</span>
-<span class="nb">export</span> <span class="nv">NETCDF_FORTRAN_PATH</span><span class="o">=</span><span class="nv">$NETCDF_DIR</span>
-<span class="nb">export</span> <span class="nv">PNETCDF_PATH</span><span class="o">=</span><span class="nv">$PNETCDF_DIR</span>
-
-<span class="nb">export</span> <span class="nv">PIO</span><span class="o">=</span>/global/cfs/cdirs/e3sm/software/compass/cori-haswell/compass-1.0.0/scorpio-1.1.6/intel/mpt
-
-<span class="nb">export</span> <span class="nv">AUTOCLEAN</span><span class="o">=</span><span class="nb">true</span>
-<span class="nb">export</span> <span class="nv">USE_PIO2</span><span class="o">=</span><span class="nb">true</span>
-<span class="nb">export</span> <span class="nv">HDF5_USE_FILE_LOCKING</span><span class="o">=</span>FALSE
+<p>To load the compass environment and modules, and set appropriate environment
+variables:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> /global/cfs/cdirs/e3sm/software/compass/cori-haswell/load_compass1.0.0_intel_mpt.sh
+</pre></div>
+</div>
+<p>To build the MPAS model with</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make <span class="nv">CORE</span><span class="o">=</span>landice intel-nersc
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make <span class="nv">CORE</span><span class="o">=</span>ocean intel-nersc
+</pre></div>
+</div>
+</div>
+<div class="section" id="cori-knl-gnu">
+<h2>cori-knl, gnu<a class="headerlink" href="#cori-knl-gnu" title="Permalink to this headline">¶</a></h2>
+<p>To load the compass environment and modules, and set appropriate environment
+variables:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> /global/cfs/cdirs/e3sm/software/compass/cori-knl/load_compass1.0.0_gnu_mpt.sh
+</pre></div>
+</div>
+<p>To build the MPAS model with</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make <span class="nv">CORE</span><span class="o">=</span>landice gnu-nersc
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make <span class="nv">CORE</span><span class="o">=</span>ocean gnu-nersc
+</pre></div>
+</div>
+</div>
+<div class="section" id="cori-knl-intel">
+<h2>cori-knl, intel<a class="headerlink" href="#cori-knl-intel" title="Permalink to this headline">¶</a></h2>
+<p>To load the compass environment and modules, and set appropriate environment
+variables:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> /global/cfs/cdirs/e3sm/software/compass/cori-knl/load_compass1.0.0_intel_impi.sh
 </pre></div>
 </div>
 <p>To build the MPAS model with</p>

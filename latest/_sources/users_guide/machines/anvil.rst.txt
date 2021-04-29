@@ -51,41 +51,12 @@ setting up test cases or a test suite:
 intel18 on anvil
 ----------------
 
-First, you might want to build SCORPIO (see below), or use the one from
-`xylar <http://github.com/xylar>`_ referenced here:
+To load the compass environment and modules, and set appropriate environment
+variables:
 
 .. code-block:: bash
 
-    source /lcrc/soft/climate/e3sm-unified/load_latest_compass.sh
-
-    module purge
-    module load cmake/3.14.2-gvwazz3
-    module load intel/18.0.4-62uvgmb
-    module load intel-mkl/2018.4.274-jwaeshj
-    module load netcdf/4.4.1-fijcsqi
-    module load netcdf-cxx/4.2-cixenix
-    module load netcdf-fortran/4.4.4-mmtrep3
-    module load mvapich2/2.2-verbs-m57bia7
-    module load parallel-netcdf/1.11.0-ny4vo3o
-
-    export NETCDF=$(dirname $(dirname $(which nc-config)))
-    export NETCDFF=$(dirname $(dirname $(which nf-config)))
-    export PNETCDF=$(dirname $(dirname $(which pnetcdf-config)))
-
-    export PIO=/lcrc/soft/climate/compass/anvil/compass-1.0.0/scorpio-1.1.6/intel18/mvapich
-    export ESMF=/lcrc/soft/climate/compass/anvil/compass-1.0.0/esmf-8.1.0/intel18/mvapich
-
-    export I_MPI_CC=icc
-    export I_MPI_CXX=icpc
-    export I_MPI_F77=ifort
-    export I_MPI_F90=ifort
-    export MV2_ENABLE_AFFINITY=0
-    export MV2_SHOW_CPU_BINDING=1
-
-    export AUTOCLEAN=true
-    export USE_PIO2=true
-    export HDF5_USE_FILE_LOCKING=FALSE
-
+    source /lcrc/soft/climate/compass/anvil/load_compass1.0.0_intel18_mvapich.sh
 
 To build the MPAS model with
 
@@ -102,33 +73,12 @@ or
 gnu on anvil
 ------------
 
+To load the compass environment and modules, and set appropriate environment
+variables:
+
 .. code-block:: bash
 
-    source /lcrc/soft/climate/e3sm-unified/load_latest_compass.sh
-
-    module purge
-    module load cmake/3.14.2-gvwazz3
-    module load gcc/8.2.0-xhxgy33
-    module load intel-mkl/2018.4.274-2amycpi
-    module load netcdf/4.4.1-ve2zfkw
-    module load netcdf-cxx/4.2-2rkopdl
-    module load netcdf-fortran/4.4.4-thtylny
-    module load mvapich2/2.2-verbs-ppznoge
-    module load parallel-netcdf/1.11.0-c22b2bn
-
-    export NETCDF=$(dirname $(dirname $(which nc-config)))
-    export NETCDFF=$(dirname $(dirname $(which nf-config)))
-    export PNETCDF=$(dirname $(dirname $(which pnetcdf-config)))
-
-    export PIO=/lcrc/soft/climate/compass/anvil/compass-1.0.0/scorpio-1.1.6/gnu/mvapich
-    export ESMF=/lcrc/soft/climate/compass/anvil/compass-1.0.0/esmf-8.1.0/gnu/mvapich
-
-    export MV2_ENABLE_AFFINITY=0
-    export MV2_SHOW_CPU_BINDING=1
-
-    export AUTOCLEAN=true
-    export USE_PIO2=true
-    export HDF5_USE_FILE_LOCKING=FALSE
+    source /lcrc/soft/climate/compass/anvil/load_compass1.0.0_gnu_mvapich.sh
 
 To build the MPAS model with
 

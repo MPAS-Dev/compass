@@ -47,32 +47,12 @@ setting up test cases or a test suite:
 intel on Chrysalis
 ------------------
 
+To load the compass environment and modules, and set appropriate environment
+variables:
+
 .. code-block:: bash
 
-    source /lcrc/soft/climate/e3sm-unified/load_latest_compass.sh
-
-    module purge
-    module load subversion/1.14.0-e4smcy3
-    module load perl/5.32.0-bsnc6lt
-    module load intel/20.0.4-kodw73g
-    module load intel-mkl/2020.4.304-g2qaxzf
-    module load intel-mpi/2019.9.304-tkzvizk
-    module load hdf5/1.8.16-se4xyo7
-    module load netcdf-c/4.4.1-qvxyzq2
-    module load netcdf-cxx/4.2-binixgj
-    module load netcdf-fortran/4.4.4-rdxohvp
-    module load parallel-netcdf/1.11.0-b74wv4m
-
-    export NETCDF=$(dirname $(dirname $(which nc-config)))
-    export NETCDFF=$(dirname $(dirname $(which nf-config)))
-    export PNETCDF=$(dirname $(dirname $(which pnetcdf-config)))
-
-    export PIO=/lcrc/soft/climate/compass/chrysalis/compass-1.0.0/scorpio-1.1.6/intel/impi
-    export ESMF=/lcrc/soft/climate/compass/chrysalis/compass-1.0.0/esmf-8.1.0/intel/impi
-
-    export AUTOCLEAN=true
-    export USE_PIO2=true
-    export HDF5_USE_FILE_LOCKING=FALSE
+    source /lcrc/soft/climate/compass/chrysalis/load_compass1.0.0_intel_impi.sh
 
 To build the MPAS model with
 
@@ -90,32 +70,12 @@ or
 gnu on Chrysalis
 ----------------
 
+To load the compass environment and modules, and set appropriate environment
+variables:
+
 .. code-block:: bash
 
-    source /lcrc/soft/climate/e3sm-unified/load_latest_compass.sh
-
-    module purge
-    module load subversion/1.14.0-e4smcy3
-    module load perl/5.32.0-bsnc6lt
-    module load gcc/9.2.0-ugetvbp
-    module load intel-mkl/2020.4.304-n3b5fye
-    module load openmpi/4.0.4-hpcx-hghvhj5
-    module load hdf5/1.10.7-sbsigon
-    module load netcdf-c/4.7.4-a4uk6zy
-    module load netcdf-cxx/4.2-fz347dw
-    module load netcdf-fortran/4.5.3-i5ah7u2
-    module load parallel-netcdf/1.12.1-e7w4x32
-
-    export NETCDF=$(dirname $(dirname $(which nc-config)))
-    export NETCDFF=$(dirname $(dirname $(which nf-config)))
-    export PNETCDF=$(dirname $(dirname $(which pnetcdf-config)))
-
-    export PIO=/lcrc/soft/climate/compass/chrysalis/compass-1.0.0/scorpio-1.1.6/gnu/openmpi
-    export ESMF=/lcrc/soft/climate/compass/chrysalis/compass-1.0.0/esmf-8.0.1/gnu/openmpi
-
-    export AUTOCLEAN=true
-    export USE_PIO2=true
-    export HDF5_USE_FILE_LOCKING=FALSE
+    source /lcrc/soft/climate/compass/chrysalis/load_compass1.0.0_gnu_openmpi.sh
 
 To build the MPAS model with
 

@@ -58,6 +58,7 @@ components themselves evolves and new functionality is added.
    developers_guide/landice/index
    developers_guide/ocean/index
    developers_guide/framework
+   developers_guide/machines/index
    developers_guide/docs
    developers_guide/building_docs
    developers_guide/api
