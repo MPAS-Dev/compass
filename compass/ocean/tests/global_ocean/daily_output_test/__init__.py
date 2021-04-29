@@ -58,6 +58,6 @@ class DailyOutputTest(ForwardTestCase):
             'timeDaily_avg_ssh']
 
         compare_variables(
-            variables, config, work_dir=work_dir,
+            test_case=self, variables=variables,
             filename1='forward/analysis_members/'
                       'mpaso.hist.am.timeSeriesStatsDaily.0001-01-01.nc')

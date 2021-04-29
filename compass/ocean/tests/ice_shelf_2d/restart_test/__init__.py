@@ -72,7 +72,7 @@ class RestartTest(TestCase):
         if 'full_run' in steps and 'restart_run' in steps:
             variables = ['temperature', 'salinity', 'layerThickness',
                          'normalVelocity']
-            compare_variables(variables, self.config, work_dir=self.work_dir,
+            compare_variables(test_case=self, variables=variables,
                               filename1='full_run/output.nc',
                               filename2='restart_run/output.nc')
 
@@ -88,7 +88,7 @@ class RestartTest(TestCase):
                          'landIceInterfaceTemperature',
                          'landIceInterfaceSalinity', 'accumulatedLandIceMass',
                          'accumulatedLandIceHeat']
-            compare_variables(variables, self.config, work_dir=self.work_dir,
+            compare_variables(test_case=self, variables=variables,
                               filename1='full_run/land_ice_fluxes.nc',
                               filename2='restart_run/land_ice_fluxes.nc')
 
@@ -98,6 +98,6 @@ class RestartTest(TestCase):
                          'frazilTemperatureTendency', 'frazilSalinityTendency',
                          'frazilSurfacePressure',
                          'accumulatedLandIceFrazilMass']
-            compare_variables(variables, self.config, work_dir=self.work_dir,
+            compare_variables(test_case=self, variables=variables,
                               filename1='full_run/frazil.nc',
                               filename2='restart_run/frazil.nc')

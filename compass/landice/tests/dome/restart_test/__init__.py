@@ -95,6 +95,6 @@ class RestartTest(TestCase):
         variables = ['thickness', 'normalVelocity']
         steps = self.steps_to_run
         if 'full_run' in steps and 'restart_run' in steps:
-            compare_variables(variables, self.config, work_dir=self.work_dir,
+            compare_variables(test_case=self, variables=variables,
                               filename1='full_run/output.nc',
                               filename2='restart_run/output.nc')

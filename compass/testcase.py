@@ -52,6 +52,10 @@ class TestCase:
     base_work_dir : str
         The base work directory
 
+    baseline_dir : str, optional
+        Location of the same test case within the basesline work directory,
+        for use in comparing variables and timers
+
     logger : logging.Logger
         A logger for output from the test case
 
@@ -63,6 +67,11 @@ class TestCase:
         Whether to create a new log file for each step or to log output to a
         common log file for the whole test case.  The latter is used when
         running the test case as part of a test suite
+
+    validation : dict
+        A dictionary with the status of internal and baseline comparisons, used
+        by the ``compass`` framework to determine whether the test case passed
+        or failed internal and baseline validation.
     """
 
     def __init__(self, test_group, name, subdir=None):
@@ -100,11 +109,14 @@ class TestCase:
         self.config_filename = None
         self.work_dir = None
         self.base_work_dir = None
+        # may be set during setup if there is a baseline for comparison
+        self.baseline_dir = None
 
         # these will be set when running the test case
         self.new_step_log_file = True
         self.logger = None
         self.log_filename = None
+        self.validation = None
 
     def configure(self):
         """
@@ -174,6 +186,31 @@ class TestCase:
         self.steps[step.name] = step
         if run_by_default:
             self.steps_to_run.append(step.name)
+
+    def check_validation(self):
+        """
+        Check the test case's "validation" dictionary to see if validation
+        failed.
+        """
+        validation = self.validation
+        logger = self.logger
+        if validation is not None:
+            internal_pass = validation['internal_pass']
+            baseline_pass = validation['baseline_pass']
+
+            both_pass = True
+            if internal_pass is not None and not internal_pass:
+                logger.error('Comparison failed between files within the test '
+                             'case.')
+                both_pass = False
+
+            if baseline_pass is not None and not baseline_pass:
+                logger.error('Comparison failed between the test case and the '
+                             'baseline.')
+                both_pass = False
+
+            if both_pass:
+                raise ValueError('Comparison failed, see above.')
 
     def _run_step(self, step, new_log_file):
         """

@@ -60,7 +60,7 @@ class Default(TestCase):
         # perform validation
         variables = ['temperature', 'salinity', 'layerThickness',
                      'normalVelocity']
-        compare_variables(variables, self.config, work_dir=self.work_dir,
+        compare_variables(test_case=self, variables=variables,
                           filename1='forward/output.nc')
 
         variables = \
@@ -72,5 +72,5 @@ class Default(TestCase):
              'landIceHeatTransferVelocity', 'landIceSaltTransferVelocity',
              'landIceInterfaceTemperature', 'landIceInterfaceSalinity',
              'accumulatedLandIceMass', 'accumulatedLandIceHeat']
-        compare_variables(variables, self.config, work_dir=self.work_dir,
+        compare_variables(test_case=self, variables=variables,
                           filename1='forward/land_ice_fluxes.nc')

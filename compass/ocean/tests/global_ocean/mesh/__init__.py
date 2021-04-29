@@ -76,5 +76,5 @@ class Mesh(TestCase):
         super().run()
 
         variables = ['xCell', 'yCell', 'zCell']
-        compare_variables(variables, config, self.work_dir,
+        compare_variables(test_case=self, variables=variables,
                           filename1='mesh/culled_mesh.nc')

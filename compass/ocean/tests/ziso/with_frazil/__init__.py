@@ -74,7 +74,7 @@ class WithFrazil(TestCase):
         if 'forward' in steps:
             variables = ['temperature', 'layerThickness']
             compare_variables(
-                variables, config, work_dir,
+                test_case=self, variables=variables,
                 filename1='forward/output/output.0001-01-01_00.00.00.nc')
 
             variables = ['accumulatedFrazilIceMass',
@@ -83,5 +83,5 @@ class WithFrazil(TestCase):
                          'frazilTemperatureTendency', 'frazilSalinityTendency',
                          'frazilSurfacePressure',
                          'accumulatedLandIceFrazilMass']
-            compare_variables(variables, config, work_dir,
+            compare_variables(test_case=self, variables=variables,
                               filename1='forward/frazil.nc')

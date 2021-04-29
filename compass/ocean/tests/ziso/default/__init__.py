@@ -79,14 +79,14 @@ class Default(TestCase):
         if 'forward' in steps:
             variables = ['temperature', 'layerThickness']
             compare_variables(
-                variables, config, work_dir,
+                test_case=self, variables=variables,
                 filename1='forward/output/output.0001-01-01_00.00.00.nc')
 
             variables = [
                 'xParticle', 'yParticle', 'zParticle', 'zLevelParticle',
                 'buoyancyParticle', 'indexToParticleID', 'currentCell',
                 'transfered', 'numTimesReset']
-            compare_variables(variables, config, work_dir,
+            compare_variables(test_case=self, variables=variables,
                               filename1='forward/analysis_members/'
                                         'lagrPartTrack.0001-01-01_00.00.00.nc')
 

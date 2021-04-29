@@ -55,5 +55,5 @@ class DynamicAdjustment(ForwardTestCase):
         variables = ['temperature', 'salinity', 'layerThickness',
                      'normalVelocity']
 
-        compare_variables(variables, self.config, work_dir=self.work_dir,
+        compare_variables(test_case=self, variables=variables,
                           filename1='simulation/output.nc')

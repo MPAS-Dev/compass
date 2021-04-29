@@ -167,8 +167,7 @@ def setup_case(path, test_case, config_file, machine, work_dir, baseline_dir,
 
     # add the baseline directory for this test case
     if baseline_dir is not None:
-        baseline_root = os.path.join(baseline_dir, path)
-        config.set('paths', 'baseline_dir', baseline_root)
+        test_case.baseline_dir = os.path.join(baseline_dir, path)
 
     # set the mpas_model path from the command line if provided
     if mpas_model_path is not None:

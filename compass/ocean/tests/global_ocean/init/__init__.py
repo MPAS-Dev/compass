@@ -99,7 +99,7 @@ class Init(TestCase):
 
         if 'initial_state' in steps:
             variables = ['temperature', 'salinity', 'layerThickness']
-            compare_variables(variables, config, work_dir,
+            compare_variables(test_case=self, variables=variables,
                               filename1='initial_state/initial_state.nc')
 
             if self.with_bgc:
@@ -111,10 +111,10 @@ class Init(TestCase):
                     'diatFe', 'diatSi', 'diazChl', 'diazC', 'diazFe',
                     'phaeoChl', 'phaeoC', 'phaeoFe', 'DMS', 'DMSP', 'PROT',
                     'POLY', 'LIP']
-                compare_variables(variables, config, work_dir,
+                compare_variables(test_case=self, variables=variables,
                                   filename1='initial_state/initial_state.nc')
 
         if 'ssh_adjustment' in steps:
             variables = ['ssh', 'landIcePressure']
-            compare_variables(variables, config, work_dir,
+            compare_variables(test_case=self, variables=variables,
                               filename1='ssh_adjustment/adjusted_init.nc')

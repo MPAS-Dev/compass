@@ -67,5 +67,5 @@ class A(TestCase):
         super().run()
         variables = ['temperature', 'basalWaterThickness',
                      'groundedBasalMassBal']
-        compare_variables(variables, self.config, work_dir=self.work_dir,
+        compare_variables(test_case=self, variables=variables,
                           filename1='phase3/output.nc')

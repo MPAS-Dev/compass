@@ -97,7 +97,7 @@ class AnalysisTest(ForwardTestCase):
         failed = list()
         for filename, variables in variables.items():
             try:
-                compare_variables(variables, config, work_dir=work_dir,
+                compare_variables(test_case=self, variables=variables,
                                   filename1=filename)
             except ValueError:
                 traceback.print_exc()
@@ -136,7 +136,7 @@ class AnalysisTest(ForwardTestCase):
                  'diatFe', 'diatSi', 'diazChl', 'diazC', 'diazFe', 'phaeoChl',
                  'phaeoC', 'phaeoFe'])
 
-        compare_variables(variables, self.config, work_dir=self.work_dir,
+        compare_variables(test_case=self, variables=variables,
                           filename1='forward/output.nc')
 
         timers = ['time integration']
