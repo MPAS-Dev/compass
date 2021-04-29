@@ -343,12 +343,8 @@
                                            <span class="n">dLat</span><span class="o">=</span><span class="n">comparisonLonResolution</span><span class="p">)</span>
     <span class="n">outGridName</span> <span class="o">=</span> <span class="n">outDescriptor</span><span class="o">.</span><span class="n">meshName</span>
 
-    <span class="n">mappingFileName</span> <span class="o">=</span> <span class="s1">&#39;map_</span><span class="si">{}</span><span class="s1">_to_</span><span class="si">{}</span><span class="s1">_bilinear.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_name</span><span class="p">,</span> <span class="n">outGridName</span><span class="p">)</span>
-
-    <span class="n">remapper</span> <span class="o">=</span> <span class="n">Remapper</span><span class="p">(</span><span class="n">inDescriptor</span><span class="p">,</span> <span class="n">outDescriptor</span><span class="p">,</span> <span class="n">mappingFileName</span><span class="p">)</span>
-
-    <span class="n">remapper</span><span class="o">.</span><span class="n">build_mapping_file</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;bilinear&#39;</span><span class="p">,</span> <span class="n">mpiTasks</span><span class="o">=</span><span class="n">cores</span><span class="p">,</span> <span class="n">tempdir</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span>
-                                <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+    <span class="n">_make_mapping_file</span><span class="p">(</span><span class="n">mesh_name</span><span class="p">,</span> <span class="n">outGridName</span><span class="p">,</span> <span class="n">inDescriptor</span><span class="p">,</span> <span class="n">outDescriptor</span><span class="p">,</span>
+                       <span class="n">cores</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_make_analysis_polar_map</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span> <span class="n">projection</span><span class="p">,</span> <span class="n">cores</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
@@ -373,12 +369,22 @@
         <span class="n">comparisonStereoWidth</span><span class="p">,</span>  <span class="n">comparisonStereoWidth</span><span class="p">,</span>
         <span class="n">comparisonStereoResolution</span><span class="p">,</span> <span class="n">upperProj</span><span class="p">)</span>
 
+    <span class="n">_make_mapping_file</span><span class="p">(</span><span class="n">mesh_name</span><span class="p">,</span> <span class="n">outGridName</span><span class="p">,</span> <span class="n">inDescriptor</span><span class="p">,</span> <span class="n">outDescriptor</span><span class="p">,</span>
+                       <span class="n">cores</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_make_mapping_file</span><span class="p">(</span><span class="n">mesh_name</span><span class="p">,</span> <span class="n">outGridName</span><span class="p">,</span> <span class="n">inDescriptor</span><span class="p">,</span> <span class="n">outDescriptor</span><span class="p">,</span>
+                       <span class="n">cores</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
+
+    <span class="n">parallel_executable</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parallel&#39;</span><span class="p">,</span> <span class="s1">&#39;parallel_executable&#39;</span><span class="p">)</span>
+
     <span class="n">mappingFileName</span> <span class="o">=</span> <span class="s1">&#39;map_</span><span class="si">{}</span><span class="s1">_to_</span><span class="si">{}</span><span class="s1">_bilinear.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_name</span><span class="p">,</span> <span class="n">outGridName</span><span class="p">)</span>
 
     <span class="n">remapper</span> <span class="o">=</span> <span class="n">Remapper</span><span class="p">(</span><span class="n">inDescriptor</span><span class="p">,</span> <span class="n">outDescriptor</span><span class="p">,</span> <span class="n">mappingFileName</span><span class="p">)</span>
 
     <span class="n">remapper</span><span class="o">.</span><span class="n">build_mapping_file</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;bilinear&#39;</span><span class="p">,</span> <span class="n">mpiTasks</span><span class="o">=</span><span class="n">cores</span><span class="p">,</span> <span class="n">tempdir</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span>
-                                <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+                                <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
+                                <span class="n">esmf_parallel_exec</span><span class="o">=</span><span class="n">parallel_executable</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_make_moc_masks</span><span class="p">(</span><span class="n">mesh_short_name</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
