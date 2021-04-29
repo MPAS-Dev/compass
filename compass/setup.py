@@ -47,6 +47,8 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
         A dictionary of test cases, with the relative path in the work
         directory as keys
     """
+    if machine is None and 'COMPASS_MACHINE' in os.environ:
+        machine = os.environ['COMPASS_MACHINE']
 
     if config_file is None and machine is None:
         raise ValueError('At least one of config_file and machine is needed.')
@@ -221,6 +223,11 @@ def setup_case(path, test_case, config_file, machine, work_dir, baseline_dir,
     pickle_filename = os.path.join(test_case.work_dir, 'test_case.pickle')
     with open(pickle_filename, 'wb') as handle:
         pickle.dump(test_case, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+    if 'LOAD_COMPASS_ENV' in os.environ:
+        script_filename = os.environ['LOAD_COMPASS_ENV']
+        # make a symlink to the script for loading the compass conda env.
+        symlink(script_filename, os.path.join(work_dir, 'load_compass_env.sh'))
 
 
 def main():

@@ -1,0 +1,63 @@
+#!/bin/bash
+
+build_dir=$(pwd)
+
+{{ modules }}
+
+set -e
+
+{{ sys_info.netcdf_paths }}
+
+export SCORPIO_VERSION="{{ scorpio }}"
+export SCORPIO_PATH="{{ scorpio_path }}"
+
+if [ "${SCORPIO_VERSION}" != "None" ] && [ ! -d "${SCORPIO_PATH}" ]; then
+    rm -rf scorpio*
+
+    git clone git@github.com:E3SM-Project/scorpio.git
+    cd scorpio
+    git checkout scorpio-v$SCORPIO_VERSION
+
+    mkdir build
+    cd build
+    FC={{ sys_info.mpifc }} CC={{ sys_info.mpicc }} CXX={{ sys_info.mpicxx }} cmake \
+        -DCMAKE_INSTALL_PREFIX=$SCORPIO_PATH -DPIO_ENABLE_TIMING=OFF \
+        -DNetCDF_C_PATH=$NETCDF_C_PATH \
+        -DNetCDF_Fortran_PATH=$NETCDF_FORTRAN_PATH \
+        -DPnetCDF_PATH=$PNETCDF_PATH ..
+
+    make
+    make install
+
+    cd $build_dir
+fi
+
+export ESMF_PATH="{{ esmf_path }}"
+export ESMF_BRANCH="{{ esmf_branch }}"
+
+if [ "${ESMF_BRANCH}" != "None" ] && [ ! -d "${ESMF_PATH}" ]; then
+    rm -rf esmf*
+    git clone git@github.com:esmf-org/esmf.git
+    cd esmf
+    git checkout "${ESMF_BRANCH}"
+
+    export ESMF_DIR=$(pwd)
+
+    export ESMF_INSTALL_PREFIX=${ESMF_PATH}
+    export ESMF_INSTALL_BINDIR=${ESMF_PATH}/bin
+    export ESMF_INSTALL_DOCDIR=${ESMF_PATH}/doc
+    export ESMF_INSTALL_HEADERDIR=${ESMF_PATH}/include
+    export ESMF_INSTALL_LIBDIR=${ESMF_PATH}/lib
+    export ESMF_INSTALL_MODDIR=${ESMF_PATH}/mod
+
+    {{ sys_info.esmf_netcdf }}
+    export ESMF_PNETCDF="pnetcdf-config"
+
+    {{ sys_info.esmf_compilers }}
+    export ESMF_COMM={{ sys_info.esmf_comm }}
+
+    make -j 8
+    make install
+
+    cd $build_dir
+fi

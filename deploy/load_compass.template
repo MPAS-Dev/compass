@@ -1,0 +1,15 @@
+source {{ conda_base }}/etc/profile.d/conda.sh
+conda activate {{ compass_env }}
+
+{{ modules }}
+
+{{ netcdf_paths }}
+
+{{ env_vars }}
+
+export USE_PIO2=true
+export HDF5_USE_FILE_LOCKING=FALSE
+
+export LOAD_COMPASS_ENV={{ script_filename }}
+
+export COMPASS_MACHINE={{ machine }}

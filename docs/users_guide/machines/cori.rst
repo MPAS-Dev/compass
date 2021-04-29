@@ -130,67 +130,12 @@ And here are the same for ``-m cori-knl``:
 cori-haswell, gnu
 -----------------
 
+To load the compass environment and modules, and set appropriate environment
+variables:
+
 .. code-block:: bash
 
-    module rm PrgEnv-intel
-    module rm PrgEnv-cray
-    module rm PrgEnv-gnu
-    module rm intel
-    module rm cce
-    module rm gcc
-    module rm cray-parallel-netcdf
-    module rm cray-hdf5-parallel
-    module rm pmi
-    module rm cray-libsci
-    module rm cray-mpich2
-    module rm cray-mpich
-    module rm cray-netcdf
-    module rm cray-hdf5
-    module rm cray-netcdf-hdf5parallel
-    module rm craype-sandybridge
-    module rm craype-ivybridge
-    module rm craype
-    module rm papi
-    module rm cmake
-    module rm cray-petsc
-    module rm esmf
-    module rm zlib
-    module rm craype-hugepages2M
-    module rm darshan
-    module load craype
-    module load PrgEnv-intel
-    module load cray-mpich
-    module rm craype-mic-knl
-    module load craype-haswell
-    module swap cray-mpich cray-mpich/7.7.10
-    module swap PrgEnv-intel PrgEnv-gnu/6.0.5
-    module rm gcc
-    module load gcc/8.3.0
-    module rm cray-libsci
-    module load cray-libsci/19.06.1
-    module swap craype craype/2.6.2
-    module rm pmi
-    module load pmi/5.0.14
-    module rm craype-mic-knl
-    module load craype-haswell
-    module rm cray-netcdf-hdf5parallel
-    module load cray-netcdf-hdf5parallel/4.6.3.2
-    module load cray-hdf5-parallel/1.10.5.2
-    module load cray-parallel-netcdf/1.11.1.1
-    module rm git
-    module load git
-    module rm cmake
-    module load cmake/3.14.4
-
-    export NETCDF=$NETCDF_DIR
-    export NETCDFF=$NETCDF_DIR
-    export PNETCDF=$PNETCDF_DIR
-
-    export PIO=/global/cfs/cdirs/e3sm/software/compass/cori-haswell/compass-1.0.0/scorpio-1.1.6/gnu/mpt
-
-    export AUTOCLEAN=true
-    export USE_PIO2=true
-    export HDF5_USE_FILE_LOCKING=FALSE
+    source /global/cfs/cdirs/e3sm/software/compass/cori-haswell/load_compass1.0.0_gnu_mpt.sh
 
 To build the MPAS model with
 
@@ -208,67 +153,12 @@ or
 cori-haswell, intel
 -------------------
 
+To load the compass environment and modules, and set appropriate environment
+variables:
+
 .. code-block:: bash
 
-    source /global/cfs/cdirs/e3sm/software/anaconda_envs/load_latest_compass.sh
-
-    module rm PrgEnv-intel
-    module rm PrgEnv-cray
-    module rm PrgEnv-gnu
-    module rm intel
-    module rm cce
-    module rm gcc
-    module rm cray-parallel-netcdf
-    module rm cray-hdf5-parallel
-    module rm pmi
-    module rm cray-libsci
-    module rm cray-mpich2
-    module rm cray-mpich
-    module rm cray-netcdf
-    module rm cray-hdf5
-    module rm cray-netcdf-hdf5parallel
-    module rm craype-sandybridge
-    module rm craype-ivybridge
-    module rm craype
-    module rm papi
-    module rm cmake
-    module rm cray-petsc
-    module rm esmf
-    module rm zlib
-    module rm craype-hugepages2M
-    module rm darshan
-    module load craype
-    module load PrgEnv-intel
-    module load cray-mpich
-    module rm craype-mic-knl
-    module load craype-haswell
-    module swap cray-mpich cray-mpich/7.7.10
-    module load PrgEnv-intel/6.0.5
-    module rm intel
-    module load intel/19.0.3.199
-    module swap craype craype/2.6.2
-    module rm pmi
-    module load pmi/5.0.14
-    module rm craype-mic-knl
-    module load craype-haswell
-    module rm cray-netcdf-hdf5parallel
-    module load cray-netcdf-hdf5parallel/4.6.3.2
-    module load cray-hdf5-parallel/1.10.5.2
-    module load cray-parallel-netcdf/1.11.1.1
-    module rm git
-    module load git
-    module rm cmake
-    module load cmake/3.14.4
-
-    export NETCDF_C_PATH=$NETCDF_DIR
-    export NETCDF_FORTRAN_PATH=$NETCDF_DIR
-    export PNETCDF_PATH=$PNETCDF_DIR
-
-    export PIO=/global/cfs/cdirs/e3sm/software/compass/cori-haswell/compass-1.0.0/scorpio-1.1.6/intel/mpt
-
-    export AUTOCLEAN=true
-    export USE_PIO2=true
-    export HDF5_USE_FILE_LOCKING=FALSE
+    source /global/cfs/cdirs/e3sm/software/compass/cori-haswell/load_compass1.0.0_intel_mpt.sh
 
 To build the MPAS model with
 
@@ -281,6 +171,53 @@ or
 .. code-block:: bash
 
     make CORE=ocean intel-nersc
+
+cori-knl, gnu
+-------------
+
+To load the compass environment and modules, and set appropriate environment
+variables:
+
+.. code-block:: bash
+
+    source /global/cfs/cdirs/e3sm/software/compass/cori-knl/load_compass1.0.0_gnu_mpt.sh
+
+To build the MPAS model with
+
+.. code-block:: bash
+
+    make CORE=landice gnu-nersc
+
+or
+
+.. code-block:: bash
+
+    make CORE=ocean gnu-nersc
+
+
+cori-knl, intel
+---------------
+
+To load the compass environment and modules, and set appropriate environment
+variables:
+
+.. code-block:: bash
+
+    source /global/cfs/cdirs/e3sm/software/compass/cori-knl/load_compass1.0.0_intel_impi.sh
+
+To build the MPAS model with
+
+.. code-block:: bash
+
+    make CORE=landice intel-nersc
+
+or
+
+.. code-block:: bash
+
+    make CORE=ocean intel-nersc
+
+
 
 Jupyter notebook on remote data
 -------------------------------

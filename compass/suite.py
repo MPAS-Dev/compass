@@ -43,6 +43,8 @@ def setup_suite(mpas_core, suite_name, config_file=None, machine=None,
         The relative or absolute path to the root of a branch where the MPAS
         model has been built
     """
+    if machine is None and 'COMPASS_MACHINE' in os.environ:
+        machine = os.environ['COMPASS_MACHINE']
 
     if config_file is None and machine is None:
         raise ValueError('At least one of config_file and machine is needed.')
@@ -78,6 +80,11 @@ def setup_suite(mpas_core, suite_name, config_file=None, machine=None,
                                '{}.pickle'.format(suite_name))
     with open(pickle_file, 'wb') as handle:
         pickle.dump(test_suite, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+    if 'LOAD_COMPASS_ENV' in os.environ:
+        script_filename = os.environ['LOAD_COMPASS_ENV']
+        # make a symlink to the script for loading the compass conda env.
+        symlink(script_filename, os.path.join(work_dir, 'load_compass_env.sh'))
 
     max_cores, max_of_min_cores = _get_required_cores(test_cases)
 
