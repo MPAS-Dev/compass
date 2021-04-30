@@ -41,13 +41,13 @@ class PerformanceTest(ForwardTestCase):
             step.add_output_file(filename='land_ice_fluxes.nc')
         self.add_step(step)
 
-    def run(self):
-        """
-        Run each step of the testcase
-        """
-        # get cores, threads from config options and run the steps
-        super().run()
+    # no run() method is needed
 
+    def validate(self):
+        """
+        Test cases can override this method to perform validation of variables
+        and timers
+        """
         variables = ['temperature', 'salinity', 'layerThickness',
                      'normalVelocity']
         if self.init.with_bgc:

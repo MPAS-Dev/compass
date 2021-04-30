@@ -64,14 +64,13 @@ class Default(TestCase):
         """
         ziso.configure(self.name, self.resolution, self.config)
 
-    def run(self):
-        """
-        Run each step of the test case
-        """
-        # run the steps
-        super().run()
+    # no run() method is needed
 
-        # perform validation
+    def validate(self):
+        """
+        Test cases can override this method to perform validation of variables
+        and timers
+        """
         config = self.config
         work_dir = self.work_dir
 

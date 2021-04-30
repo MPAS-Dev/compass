@@ -79,7 +79,6 @@ class Init(TestCase):
         """
         config = self.config
         steps = self.steps_to_run
-        work_dir = self.work_dir
         if 'initial_state' in steps:
             step = self.steps['initial_state']
             # get the these properties from the config options
@@ -96,6 +95,13 @@ class Init(TestCase):
 
         # run the steps
         super().run()
+
+    def validate(self):
+        """
+        Test cases can override this method to perform validation of variables
+        and timers
+        """
+        steps = self.steps_to_run
 
         if 'initial_state' in steps:
             variables = ['temperature', 'salinity', 'layerThickness']

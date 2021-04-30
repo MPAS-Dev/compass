@@ -75,6 +75,11 @@ class Mesh(TestCase):
         # run the step
         super().run()
 
+    def validate(self):
+        """
+        Test cases can override this method to perform validation of variables
+        and timers
+        """
         variables = ['xCell', 'yCell', 'zCell']
         compare_variables(test_case=self, variables=variables,
                           filename1='mesh/culled_mesh.nc')
