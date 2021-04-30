@@ -155,10 +155,20 @@ def run_suite(suite_name):
             sys.exit(1)
 
 
-def run_test_case():
+def run_test_case(steps_to_run=None, steps_not_to_run=None):
     """
     Used by the framework to run a test case when ``compass run`` gets called
     in the test case's work directory
+
+    Parameters
+    ----------
+    steps_to_run : list of str, optional
+        A list of the steps to run.  The default behavior is to run the default
+        steps unless they are in ``steps_not_to_run``
+
+    steps_not_to_run : list of str, optional
+        A list of steps not to run.  Typically, these are steps to remove from
+        the defaults
     """
     with open('test_case.pickle', 'rb') as handle:
         test_case = pickle.load(handle)
@@ -168,15 +178,22 @@ def run_test_case():
     config.read(test_case.config_filename)
     test_case.config = config
 
-    steps = config.get('test_case', 'steps_to_run').replace(',', ' ').split()
-    test_case.steps_to_run = steps
+    if steps_to_run is None:
+        steps_to_run = config.get('test_case',
+                                  'steps_to_run').replace(',', ' ').split()
+
+    if steps_not_to_run is not None:
+        steps_to_run = [step for step in steps_to_run if step not in
+                        steps_not_to_run]
+
+    test_case.steps_to_run = steps_to_run
 
     # start logging to stdout/stderr
     test_name = test_case.path.replace('/', '_')
     test_case.new_step_log_file = True
     with LoggingContext(name=test_name) as logger:
         test_case.logger = logger
-        logger.info('Running steps: {}'.format(', '.join(steps)))
+        logger.info('Running steps: {}'.format(', '.join(steps_to_run)))
         test_case.run()
         test_case.validate()
 
@@ -210,11 +227,16 @@ def main():
         prog='compass run')
     parser.add_argument("suite", nargs='?', default=None,
                         help="The name of a test suite to run")
+    parser.add_argument("--steps", dest="steps", nargs='+', default=None,
+                        help="The steps of a test case to run")
+    parser.add_argument("--no-steps", dest="no_steps", nargs='+', default=None,
+                        help="The steps of a test case not to run, see "
+                             "steps_to_run in the config file for defaults.")
     args = parser.parse_args(sys.argv[2:])
     if args.suite is not None:
         run_suite(args.suite)
     elif os.path.exists('test_case.pickle'):
-        run_test_case()
+        run_test_case(args.steps, args.no_steps)
     elif os.path.exists('step.pickle'):
         run_step()
     else:
