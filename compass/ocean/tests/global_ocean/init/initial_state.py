@@ -131,6 +131,8 @@ class InitialState(Step):
                 filename='land_ice_mask.nc',
                 work_dir_target='{}/land_ice_mask.nc'.format(mesh_path))
 
+        self.add_model_as_input()
+
         for file in ['initial_state.nc', 'init_mode_forcing_data.nc']:
             self.add_output_file(filename=file)
 
@@ -144,8 +146,6 @@ class InitialState(Step):
         self.cores = config.getint('global_ocean', 'init_cores')
         self.min_cores = config.getint('global_ocean', 'init_min_cores')
         self.threads = config.getint('global_ocean', 'init_threads')
-
-        self.add_model_as_input()
 
     def run(self):
         """

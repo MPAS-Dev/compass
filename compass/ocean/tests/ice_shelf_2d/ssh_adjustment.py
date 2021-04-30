@@ -54,14 +54,11 @@ class SshAdjustment(Step):
         self.add_input_file(filename='graph.info',
                             target='../initial_state/culled_graph.info')
 
+        self.add_model_as_input()
+
         self.add_output_file(filename='adjusted_init.nc')
 
-    def setup(self):
-        """
-        Set up the test case in the work directory, including downloading any
-        dependencies
-        """
-        self.add_model_as_input()
+    # no setup() is needed
 
     def run(self):
         """

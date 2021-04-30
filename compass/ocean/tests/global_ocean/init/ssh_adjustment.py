@@ -57,6 +57,8 @@ class SshAdjustment(Step):
             filename='graph.info',
             work_dir_target='{}/culled_graph.info'.format(mesh_path))
 
+        self.add_model_as_input()
+
         self.add_output_file(filename='adjusted_init.nc')
 
     def setup(self):
@@ -64,8 +66,6 @@ class SshAdjustment(Step):
         Set up the test case in the work directory, including downloading any
         dependencies
         """
-        self.add_model_as_input()
-
         if self.cores is None:
             self.cores = self.config.getint(
                 'global_ocean', 'forward_cores')
