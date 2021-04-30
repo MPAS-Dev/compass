@@ -150,10 +150,14 @@ def setup_case(path, test_case, config_file, machine, work_dir, baseline_dir,
     add_config(config, 'compass.{}'.format(mpas_core),
                '{}.cfg'.format(mpas_core))
 
-    # add the config options for the configuration (if defined)
+    # add the config options for the test group (if defined)
     test_group = test_case.test_group.name
     add_config(config, 'compass.{}.tests.{}'.format(mpas_core, test_group),
                '{}.cfg'.format(test_group), exception=False)
+
+    # add the config options for the test case (if defined)
+    add_config(config, test_case.__module__,
+               '{}.cfg'.format(test_case.name), exception=False)
 
     test_case_dir = os.path.join(work_dir, path)
     try:

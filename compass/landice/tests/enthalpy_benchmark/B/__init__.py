@@ -38,9 +38,6 @@ class B(TestCase):
         """
         Modify the configuration options for this test case
         """
-        add_config(self.config, 'compass.landice.tests.enthalpy_benchmark.B',
-                   'B.cfg', exception=True)
-
         with path('compass.landice.tests.enthalpy_benchmark', 'README') as \
                 target:
             symlink(str(target), '{}/README'.format(self.work_dir))

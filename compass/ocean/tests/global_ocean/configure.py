@@ -25,9 +25,6 @@ def configure_global_ocean(test_case, mesh, init=None):
         config.set('global_ocean', 'prefix', '{}wISC'.format(
             config.get('global_ocean', 'prefix')))
 
-    add_config(config, test_case.__module__, '{}.cfg'.format(test_case.name),
-               exception=False)
-
     # add a description of the initial condition
     if init is not None:
         initial_condition = init.initial_condition

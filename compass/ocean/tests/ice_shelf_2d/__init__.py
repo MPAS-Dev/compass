@@ -45,6 +45,3 @@ def configure(name, resolution, config):
     res_params = res_params[resolution]
     for param in res_params:
         config.set('ice_shelf_2d', param, '{}'.format(res_params[param]))
-
-    add_config(config, 'compass.ocean.tests.ice_shelf_2d.{}'.format(name),
-               '{}.cfg'.format(name), exception=False)

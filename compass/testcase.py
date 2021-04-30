@@ -123,7 +123,9 @@ class TestCase:
         Modify the configuration options for this test case. Test cases should
         override this method if they want to add config options specific to
         the test case, e.g. from a config file stored in the test case's python
-        package
+        package.  If a test case overrides this method, it should assume that
+        the ``<self.name>.cfg`` file in its package has already been added
+        to the config options prior to calling ``configure()``.
         """
         pass
 
