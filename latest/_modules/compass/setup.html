@@ -336,10 +336,14 @@
     <span class="n">add_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;compass.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mpas_core</span><span class="p">),</span>
                <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.cfg&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mpas_core</span><span class="p">))</span>
 
-    <span class="c1"># add the config options for the configuration (if defined)</span>
+    <span class="c1"># add the config options for the test group (if defined)</span>
     <span class="n">test_group</span> <span class="o">=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">test_group</span><span class="o">.</span><span class="n">name</span>
     <span class="n">add_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;compass.</span><span class="si">{}</span><span class="s1">.tests.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mpas_core</span><span class="p">,</span> <span class="n">test_group</span><span class="p">),</span>
                <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.cfg&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">test_group</span><span class="p">),</span> <span class="n">exception</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># add the config options for the test case (if defined)</span>
+    <span class="n">add_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">test_case</span><span class="o">.</span><span class="vm">__module__</span><span class="p">,</span>
+               <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.cfg&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">test_case</span><span class="o">.</span><span class="n">name</span><span class="p">),</span> <span class="n">exception</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="n">test_case_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>

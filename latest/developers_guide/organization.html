@@ -729,10 +729,14 @@ but these could be any unique names.</p>
 child class to set config options or build them up from defaults stored in
 config files within the test case or its test group. The <code class="docutils literal notranslate"><span class="pre">self.config</span></code>
 attribute that is modified in this function will be written to a config file
-for the test case (see <a class="reference internal" href="../users_guide/config_files.html#config-files"><span class="std std-ref">Config Files</span></a>). Since many test groups need
-similar behavior in the <code class="docutils literal notranslate"><span class="pre">configure()</span></code> method for each test case, it is common
-to have a shared function (sometimes also called <code class="docutils literal notranslate"><span class="pre">configure()</span></code>) in the
-test group, as we discussed in <a class="reference internal" href="#dev-test-groups"><span class="std std-ref">Test Groups</span></a>.</p>
+for the test case (see <a class="reference internal" href="../users_guide/config_files.html#config-files"><span class="std std-ref">Config Files</span></a>).</p>
+<p>If you override this method in a test case, you should assume that the
+<code class="docutils literal notranslate"><span class="pre">&lt;test_case.name&gt;.cfg</span></code> file in its package has already been added to the
+config options prior to calling <code class="docutils literal notranslate"><span class="pre">configure()</span></code>.  This happens automatically
+during test-case setup.</p>
+<p>Since many test groups need similar behavior in the <code class="docutils literal notranslate"><span class="pre">configure()</span></code> method for
+each test case, it is common to have a shared function (sometimes also called
+<code class="docutils literal notranslate"><span class="pre">configure()</span></code>) in the test group, as we discussed in <a class="reference internal" href="#dev-test-groups"><span class="std std-ref">Test Groups</span></a>.</p>
 <p><a class="reference internal" href="ocean/generated/compass.ocean.tests.baroclinic_channel.rpe_test.RpeTest.configure.html#compass.ocean.tests.baroclinic_channel.rpe_test.RpeTest.configure" title="compass.ocean.tests.baroclinic_channel.rpe_test.RpeTest.configure"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.ocean.tests.baroclinic_channel.rpe_test.RpeTest.configure()</span></code></a>
 simply calls the shared function in its test group,
 <a class="reference internal" href="ocean/generated/compass.ocean.tests.baroclinic_channel.configure.html#compass.ocean.tests.baroclinic_channel.configure" title="compass.ocean.tests.baroclinic_channel.configure"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.tests.baroclinic_channel.configure()</span></code></a>:</p>

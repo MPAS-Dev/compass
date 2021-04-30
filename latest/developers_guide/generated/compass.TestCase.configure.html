@@ -221,7 +221,9 @@
 <dd><p>Modify the configuration options for this test case. Test cases should
 override this method if they want to add config options specific to
 the test case, e.g. from a config file stored in the test case’s python
-package</p>
+package.  If a test case overrides this method, it should assume that
+the <code class="docutils literal notranslate"><span class="pre">&lt;self.name&gt;.cfg</span></code> file in its package has already been added
+to the config options prior to calling <code class="docutils literal notranslate"><span class="pre">configure()</span></code>.</p>
 </dd></dl>
 
 </div>
