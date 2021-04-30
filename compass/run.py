@@ -62,12 +62,22 @@ def run_suite(suite_name):
                 test_start = time.time()
                 try:
                     test_case.run()
-                    internal_status = 'PASS'
+                    run_status = 'PASS'
                     test_pass = True
                 except BaseException:
-                    internal_status = 'FAIL'
+                    run_status = 'FAIL'
                     test_pass = False
                     test_logger.exception('Exception raised')
+
+                internal_status = None
+                if test_pass:
+                    try:
+                        test_case.validate()
+                        internal_status = 'PASS'
+                    except BaseException:
+                        internal_status = 'FAIL'
+                        test_pass = False
+                        test_logger.exception('Exception raised')
 
                 baseline_status = None
                 if test_case.validation is not None:
@@ -88,11 +98,17 @@ def run_suite(suite_name):
                             test_logger.exception('Baseline validation failed')
                             test_pass = False
 
-                if baseline_status is None:
-                    status = '  {}'.format(internal_status)
+                if internal_status is None:
+                    status = '  {}'.format(run_status)
+                elif baseline_status is None:
+                    status = '  test:                {}\n' \
+                             '  internal validation: {}'.format(
+                                  run_status, internal_status)
                 else:
-                    status = '  test: {}  baseline comparison: {}'.format(
-                        internal_status, baseline_status)
+                    status = '  test:                {}\n' \
+                             '  internal validation: {}\n' \
+                             '  baseline comparison: {}'.format(
+                                  run_status, internal_status, baseline_status)
 
                 if test_pass:
                     logger.info(status)
@@ -150,6 +166,7 @@ def run_test_case():
     with LoggingContext(name=test_name) as logger:
         test_case.logger = logger
         test_case.run()
+        test_case.validate()
 
 
 def run_step():
@@ -172,6 +189,7 @@ def run_step():
     with LoggingContext(name=test_name) as logger:
         test_case.logger = logger
         test_case.run()
+        test_case.validate()
 
 
 def main():

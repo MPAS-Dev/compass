@@ -137,7 +137,7 @@ class TestCase:
         in the overridden ``run()`` method to actually call the steps of the
         run.  The developer will need to decide where in the overridden method
         to make the call to ``super().run()``, after any updates to steps
-        based on config options but before validation.
+        based on config options, typically at the end of the new method.
         """
         logger = self.logger
         cwd = os.getcwd()
@@ -168,6 +168,13 @@ class TestCase:
                 logger.info('     Complete')
 
             os.chdir(cwd)
+
+    def validate(self):
+        """
+        Test cases can override this method to perform validation of variables
+        and timers
+        """
+        pass
 
     def add_step(self, step, run_by_default=True):
         """
