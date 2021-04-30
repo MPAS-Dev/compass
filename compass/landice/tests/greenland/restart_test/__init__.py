@@ -56,13 +56,13 @@ class RestartTest(TestCase):
 
     # no configure() method is needed
 
-    def run(self):
-        """
-        Run each step of the test case
-        """
-        # run the steps
-        super().run()
+    # no run() method is needed
 
+    def validate(self):
+        """
+        Test cases can override this method to perform validation of variables
+        and timers
+        """
         variables = ['thickness', 'normalVelocity']
         steps = self.steps_to_run
         if 'full_run' in steps and 'restart_run' in steps:

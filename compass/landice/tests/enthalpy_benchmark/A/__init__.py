@@ -59,12 +59,13 @@ class A(TestCase):
                 target:
             symlink(str(target), '{}/README'.format(self.work_dir))
 
-    def run(self):
+    # no run() method is needed
+
+    def validate(self):
         """
-        Run each step of the test case
+        Test cases can override this method to perform validation of variables
+        and timers
         """
-        # run the steps
-        super().run()
         variables = ['temperature', 'basalWaterThickness',
                      'groundedBasalMassBal']
         compare_variables(test_case=self, variables=variables,
