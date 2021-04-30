@@ -168,11 +168,15 @@ def run_test_case():
     config.read(test_case.config_filename)
     test_case.config = config
 
+    steps = config.get('test_case', 'steps_to_run').replace(',', ' ').split()
+    test_case.steps_to_run = steps
+
     # start logging to stdout/stderr
     test_name = test_case.path.replace('/', '_')
     test_case.new_step_log_file = True
     with LoggingContext(name=test_name) as logger:
         test_case.logger = logger
+        logger.info('Running steps: {}'.format(', '.join(steps)))
         test_case.run()
         test_case.validate()
 
