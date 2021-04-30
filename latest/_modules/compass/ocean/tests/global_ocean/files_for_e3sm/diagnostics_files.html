@@ -248,65 +248,86 @@
 <div class="viewcode-block" id="DiagnosticsFiles.run"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.files_for_e3sm.diagnostics_files.DiagnosticsFiles.run.html#compass.ocean.tests.global_ocean.files_for_e3sm.diagnostics_files.DiagnosticsFiles.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run this step of the testcase</span>
-<span class="sd">            &quot;&quot;&quot;</span>
-        <span class="n">with_ice_shelf_cavities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span>
-        <span class="n">cores</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cores</span>
-        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
-
-        <span class="n">restart_filename</span> <span class="o">=</span> <span class="s1">&#39;restart.nc&#39;</span>
-        <span class="k">with</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">restart_filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds</span><span class="p">:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;restart.nc&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds</span><span class="p">:</span>
             <span class="n">mesh_short_name</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;MPAS_Mesh_Short_Name&#39;</span><span class="p">]</span>
 
-        <span class="k">for</span> <span class="n">directory</span> <span class="ow">in</span> <span class="p">[</span>
-                <span class="s1">&#39;../assembled_files/inputdata/ocn/mpas-o/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="n">mesh_short_name</span><span class="p">),</span>
-                <span class="s1">&#39;../assembled_files/diagnostics/mpas_analysis/region_masks&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;../assembled_files/diagnostics/mpas_analysis/maps&#39;</span><span class="p">]:</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
-            <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
-                <span class="k">pass</span>
-        <span class="n">_make_moc_masks</span><span class="p">(</span><span class="n">mesh_short_name</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">cores</span><span class="p">)</span>
+        <span class="n">make_diagnostics_files</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span> <span class="n">mesh_short_name</span><span class="p">,</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cores</span><span class="p">)</span></div></div>
 
-        <span class="n">gf</span> <span class="o">=</span> <span class="n">GeometricFeatures</span><span class="p">()</span>
-        <span class="n">region_groups</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Antarctic Regions&#39;</span><span class="p">,</span> <span class="s1">&#39;Arctic Ocean Regions&#39;</span><span class="p">,</span>
-                         <span class="s1">&#39;Arctic Sea Ice Regions&#39;</span><span class="p">,</span> <span class="s1">&#39;Ocean Basins&#39;</span><span class="p">,</span>
-                         <span class="s1">&#39;Ocean Subbasins&#39;</span><span class="p">,</span> <span class="s1">&#39;ISMIP6 Regions&#39;</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
-            <span class="n">region_groups</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Ice Shelves&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">make_diagnostics_files</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">mesh_short_name</span><span class="p">,</span>
+                           <span class="n">with_ice_shelf_cavities</span><span class="p">,</span> <span class="n">cores</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Run this step of the testcase</span>
 
-        <span class="k">for</span> <span class="n">region_group</span> <span class="ow">in</span> <span class="n">region_groups</span><span class="p">:</span>
-            <span class="n">function</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">date</span> <span class="o">=</span> <span class="n">get_aggregator_by_name</span><span class="p">(</span><span class="n">region_group</span><span class="p">)</span>
-            <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">date</span><span class="p">)</span>
-            <span class="n">fcMask</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="n">gf</span><span class="p">)</span>
-            <span class="n">_make_region_masks</span><span class="p">(</span><span class="n">mesh_short_name</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">,</span> <span class="n">fcMask</span><span class="o">=</span><span class="n">fcMask</span><span class="p">,</span>
-                               <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="n">cores</span><span class="p">)</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : configparser.ConfigParser</span>
+<span class="sd">        Configuration options for this test case</span>
 
-        <span class="n">transect_groups</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Transport Transects&#39;</span><span class="p">]</span>
-        <span class="k">for</span> <span class="n">transect_group</span> <span class="ow">in</span> <span class="n">transect_groups</span><span class="p">:</span>
-            <span class="n">function</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">date</span> <span class="o">=</span> <span class="n">get_aggregator_by_name</span><span class="p">(</span><span class="n">transect_group</span><span class="p">)</span>
-            <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">date</span><span class="p">)</span>
-            <span class="n">fcMask</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="n">gf</span><span class="p">)</span>
-            <span class="n">_make_transect_masks</span><span class="p">(</span><span class="n">mesh_short_name</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">,</span> <span class="n">fcMask</span><span class="o">=</span><span class="n">fcMask</span><span class="p">,</span>
-                                 <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="n">cores</span><span class="p">)</span>
+<span class="sd">    logger : logging.Logger</span>
+<span class="sd">        A logger for output from the step</span>
 
-        <span class="n">_make_analysis_lat_lon_map</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">mesh_short_name</span><span class="p">,</span> <span class="n">cores</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
-        <span class="n">_make_analysis_polar_map</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">mesh_short_name</span><span class="p">,</span>
-                                 <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;antarctic&#39;</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="n">cores</span><span class="p">,</span>
-                                 <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
-        <span class="n">_make_analysis_polar_map</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">mesh_short_name</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;arctic&#39;</span><span class="p">,</span>
-                                 <span class="n">cores</span><span class="o">=</span><span class="n">cores</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+<span class="sd">    mesh_short_name : str</span>
+<span class="sd">        The E3SM short name of the mesh</span>
 
-        <span class="c1"># make links in output directory</span>
-        <span class="n">files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;map_*&#39;</span><span class="p">)</span>
+<span class="sd">    with_ice_shelf_cavities : bool</span>
+<span class="sd">        Whether the mesh has ice-shelf cavities</span>
 
-        <span class="c1"># make links in output directory</span>
-        <span class="n">output_dir</span> <span class="o">=</span> <span class="s1">&#39;../assembled_files/diagnostics/mpas_analysis/maps&#39;</span>
-        <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
-            <span class="n">symlink</span><span class="p">(</span><span class="s1">&#39;../../../../diagnostics_files/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span>
-                    <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span></div></div>
+<span class="sd">    cores : int</span>
+<span class="sd">        The number of cores to use to build mapping files</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">for</span> <span class="n">directory</span> <span class="ow">in</span> <span class="p">[</span>
+            <span class="s1">&#39;../assembled_files/inputdata/ocn/mpas-o/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">mesh_short_name</span><span class="p">),</span>
+            <span class="s1">&#39;../assembled_files/diagnostics/mpas_analysis/region_masks&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;../assembled_files/diagnostics/mpas_analysis/maps&#39;</span><span class="p">]:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+            <span class="k">pass</span>
+    <span class="n">_make_moc_masks</span><span class="p">(</span><span class="n">mesh_short_name</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">cores</span><span class="p">)</span>
+
+    <span class="n">gf</span> <span class="o">=</span> <span class="n">GeometricFeatures</span><span class="p">()</span>
+    <span class="n">region_groups</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Antarctic Regions&#39;</span><span class="p">,</span> <span class="s1">&#39;Arctic Ocean Regions&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;Arctic Sea Ice Regions&#39;</span><span class="p">,</span> <span class="s1">&#39;Ocean Basins&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;Ocean Subbasins&#39;</span><span class="p">,</span> <span class="s1">&#39;ISMIP6 Regions&#39;</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
+        <span class="n">region_groups</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Ice Shelves&#39;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">region_group</span> <span class="ow">in</span> <span class="n">region_groups</span><span class="p">:</span>
+        <span class="n">function</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">date</span> <span class="o">=</span> <span class="n">get_aggregator_by_name</span><span class="p">(</span><span class="n">region_group</span><span class="p">)</span>
+        <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">date</span><span class="p">)</span>
+        <span class="n">fcMask</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="n">gf</span><span class="p">)</span>
+        <span class="n">_make_region_masks</span><span class="p">(</span><span class="n">mesh_short_name</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">,</span> <span class="n">fcMask</span><span class="o">=</span><span class="n">fcMask</span><span class="p">,</span>
+                           <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="n">cores</span><span class="p">)</span>
+
+    <span class="n">transect_groups</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Transport Transects&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">transect_group</span> <span class="ow">in</span> <span class="n">transect_groups</span><span class="p">:</span>
+        <span class="n">function</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">date</span> <span class="o">=</span> <span class="n">get_aggregator_by_name</span><span class="p">(</span><span class="n">transect_group</span><span class="p">)</span>
+        <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">date</span><span class="p">)</span>
+        <span class="n">fcMask</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="n">gf</span><span class="p">)</span>
+        <span class="n">_make_transect_masks</span><span class="p">(</span><span class="n">mesh_short_name</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">,</span> <span class="n">fcMask</span><span class="o">=</span><span class="n">fcMask</span><span class="p">,</span>
+                             <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="n">cores</span><span class="p">)</span>
+
+    <span class="n">_make_analysis_lat_lon_map</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">mesh_short_name</span><span class="p">,</span> <span class="n">cores</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+    <span class="n">_make_analysis_polar_map</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">mesh_short_name</span><span class="p">,</span>
+                             <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;antarctic&#39;</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="n">cores</span><span class="p">,</span>
+                             <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+    <span class="n">_make_analysis_polar_map</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">mesh_short_name</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;arctic&#39;</span><span class="p">,</span>
+                             <span class="n">cores</span><span class="o">=</span><span class="n">cores</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+
+    <span class="c1"># make links in output directory</span>
+    <span class="n">files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;map_*&#39;</span><span class="p">)</span>
+
+    <span class="c1"># make links in output directory</span>
+    <span class="n">output_dir</span> <span class="o">=</span> <span class="s1">&#39;../assembled_files/diagnostics/mpas_analysis/maps&#39;</span>
+    <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+        <span class="n">symlink</span><span class="p">(</span><span class="s1">&#39;../../../../diagnostics_files/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span>
+                <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
 
 
 <span class="k">def</span> <span class="nf">_make_region_masks</span><span class="p">(</span><span class="n">mesh_name</span><span class="p">,</span> <span class="n">suffix</span><span class="p">,</span> <span class="n">fcMask</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">cores</span><span class="p">):</span>
