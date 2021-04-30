@@ -700,11 +700,9 @@ files include: MPAS-Ocean and MPAS-Seaice initial conditions (including
 `SCRIP files <https://earthsystemmodeling.org/docs/release/ESMF_8_0_1/ESMF_refdoc/node3.html#SECTION03028100000000000000>`_;
 partition files, created with
 `gpmetis <http://glaros.dtc.umn.edu/gkhome/metis/metis/overview>`_, for
-splitting the mesh across a number of possible core counts; and
-a mask file for MPAS-Ocean's ``mocStreamfunction`` analysis member.  In the
-near future, mask and mapping files for
-`MPAS-Analysis <https://mpas-dev.github.io/MPAS-Analysis/stable/>`_ will also
-be added.
+splitting the mesh across a number of possible core counts; a mask file for
+MPAS-Ocean's ``mocStreamfunction`` analysis member; and mask and mapping files
+for `MPAS-Analysis <https://mpas-dev.github.io/MPAS-Analysis/stable/>`_.
 
 The resulting files are symlinked in a subdirectory of the test case called
 ``assembled_files``.  This directory contains subdirectories with the same
@@ -713,3 +711,37 @@ For new meshes, these files can be uploaded by an expert from the E3SM team
 along with additional files required for full E3SM integration.  Currently,
 there is not a way to use new meshes in E3SM without help from an expert from
 the E3SM team.
+
+.. _global_ocean_make_diagnostic_files:
+
+make_diagnostic_files test case
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Sometimes, we already have an E3SM initial condition but the diagnostics files
+for `MPAS-Analysis <https://mpas-dev.github.io/MPAS-Analysis/stable/>`_
+either weren't created with the initial condition or they are out of date.
+
+The user should create a local symlink to an E3SM initial condition for
+MPAS-Ocean ofr the desired mesh.  Then, the config options in
+`make_diagnostics_files.cfg` should be edited.  In this example, we have
+created a local link to the `ocean.WCAtl12to45E2r4.210318.nc` initial condition
+in the test case directory.  The mesh name has also been set to the E3SM short
+name for this mesh `WCAtl12to45E2r4`.  We use all 36 cores on a node (this
+test case can't use multiple nodes for most steps).  We indicate that the mesh
+does not include ice-shelf cavities, which means we don't compute masks for
+ice-shelf melt rates.
+
+.. code-block:: cfg
+
+    [make_diagnostics_files]
+    mesh_name = WCAtl12to45E2r4
+    mesh_filename = ocean.WCAtl12to45E2r4.210318.nc
+    cores = 36
+    with_ice_shelf_cavities = False
+
+The resulting files are symlinked in a subdirectory of the test case called
+``assembled_files``.  This directory contains subdirectories with the same
+structure as the `E3SM data server <https://web.lcrc.anl.gov/public/e3sm/>`_.
+These files can be uploaded by an expert from the E3SM team.  We ask that
+users not try to upload the files themselves without consulting an expert from
+the team.
