@@ -190,7 +190,6 @@
   <h1>Source code for compass.landice.tests.hydro_radial.setup_mesh</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">netCDF4</span> <span class="kn">import</span> <span class="n">Dataset</span> <span class="k">as</span> <span class="n">NetCDFFile</span>
-<span class="kn">from</span> <span class="nn">importlib.resources</span> <span class="kn">import</span> <span class="n">path</span>
 
 <span class="kn">from</span> <span class="nn">mpas_tools.planar_hex</span> <span class="kn">import</span> <span class="n">make_planar_hex_mesh</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
@@ -230,9 +229,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">initial_condition</span> <span class="o">=</span> <span class="n">initial_condition</span>
 
         <span class="k">if</span> <span class="n">initial_condition</span> <span class="o">==</span> <span class="s1">&#39;exact&#39;</span><span class="p">:</span>
-            <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;near_exact_solution_r_P_W.txt&#39;</span>
-            <span class="k">with</span> <span class="n">path</span><span class="p">(</span><span class="s1">&#39;compass.landice.tests.hydro_radial&#39;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">target</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">target</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;near_exact_solution_r_P_W.txt&#39;</span><span class="p">,</span>
+                                <span class="n">package</span><span class="o">=</span><span class="s1">&#39;compass.landice.tests.hydro_radial&#39;</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">initial_condition</span> <span class="o">!=</span> <span class="s1">&#39;zero&#39;</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown initial condition type specified &quot;</span>
                              <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">initial_condition</span><span class="p">))</span>

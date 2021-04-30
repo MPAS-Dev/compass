@@ -1427,23 +1427,18 @@ Here is an example taken from
 <span id="dev-step-input-compass"></span><h4>Input files from compass<a class="headerlink" href="#input-files-from-compass" title="Permalink to this headline">¶</a></h4>
 <p>Another common need is to symlink a data file from within the test group or
 test case:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">importlib.resources</span> <span class="kn">import</span> <span class="n">path</span>
-
-<span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">add_input_file</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">add_input_file</span>
 
 
 <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
     <span class="o">...</span>
-    <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;enthA_analy_result.mat&#39;</span>
-    <span class="k">with</span> <span class="n">path</span><span class="p">(</span><span class="s1">&#39;compass.landice.tests.enthalpy_benchmark.A&#39;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span> <span class="k">as</span> \
-            <span class="n">target</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">target</span><span class="p">))</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+        <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;enthA_analy_result.mat&#39;</span><span class="p">,</span>
+        <span class="n">package</span><span class="o">=</span><span class="s1">&#39;compass.landice.tests.enthalpy_benchmark.A&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Here, we use a <code class="xref py py-class docutils literal notranslate"><span class="pre">importlib.resources.path</span></code> object as the target of the
-symlink (converting it to a string: <code class="docutils literal notranslate"><span class="pre">str(target)</span></code>), which lets python take
-care of figuring out where <code class="docutils literal notranslate"><span class="pre">compass</span></code> is installed so it can find the path to
-the resource.</p>
+<p>Here, we supply the name of the package that the file is in.  The <code class="docutils literal notranslate"><span class="pre">compass</span></code>
+framework will take care of figuring out where the package is located.</p>
 </div>
 <div class="section" id="downloading-input-files">
 <span id="dev-step-input-download"></span><h4>Downloading input files<a class="headerlink" href="#downloading-input-files" title="Permalink to this headline">¶</a></h4>

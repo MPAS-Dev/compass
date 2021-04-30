@@ -1383,22 +1383,17 @@ test case:
 
 .. code-block:: python
 
-    from importlib.resources import path
-
     from compass.io import add_input_file
 
 
     def __init__(self, test_case):
         ...
-        filename = 'enthA_analy_result.mat'
-        with path('compass.landice.tests.enthalpy_benchmark.A', filename) as \
-                target:
-            self.add_input_file(filename=filename, target=str(target))
+        self.add_input_file(
+            filename='enthA_analy_result.mat',
+            package='compass.landice.tests.enthalpy_benchmark.A')
 
-Here, we use a :py:class:`importlib.resources.path` object as the target of the
-symlink (converting it to a string: ``str(target)``), which lets python take
-care of figuring out where ``compass`` is installed so it can find the path to
-the resource.
+Here, we supply the name of the package that the file is in.  The ``compass``
+framework will take care of figuring out where the package is located.
 
 .. _dev_step_input_download:
 

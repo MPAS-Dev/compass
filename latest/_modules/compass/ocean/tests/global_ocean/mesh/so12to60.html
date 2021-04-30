@@ -191,7 +191,6 @@
             
   <h1>Source code for compass.ocean.tests.global_ocean.mesh.so12to60</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="n">resources</span>
 
 <span class="kn">import</span> <span class="nn">mpas_tools.mesh.creation.mesh_definition_tools</span> <span class="k">as</span> <span class="nn">mdt</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.mesh.creation.signed_distance</span> <span class="kn">import</span> \
@@ -224,7 +223,13 @@
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span> <span class="n">with_ice_shelf_cavities</span><span class="p">,</span>
                          <span class="n">package</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span><span class="p">,</span>
-                         <span class="n">mesh_config_filename</span><span class="o">=</span><span class="s1">&#39;so12to60.cfg&#39;</span><span class="p">)</span></div>
+                         <span class="n">mesh_config_filename</span><span class="o">=</span><span class="s1">&#39;so12to60.cfg&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;atlantic.geojson&#39;</span><span class="p">,</span>
+                            <span class="n">package</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;high_res_region.geojson&#39;</span><span class="p">,</span>
+                            <span class="n">package</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SO12to60Mesh.build_cell_width_lat_lon"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.mesh.so12to60.SO12to60Mesh.build_cell_width_lat_lon.html#compass.ocean.tests.global_ocean.mesh.so12to60.SO12to60Mesh.build_cell_width_lat_lon">[docs]</a>    <span class="k">def</span> <span class="nf">build_cell_width_lat_lon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -287,8 +292,7 @@
 
         <span class="n">_</span><span class="p">,</span> <span class="n">cellWidthAtlantic</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">lon</span><span class="p">,</span> <span class="n">cellWidthAtlantic</span><span class="p">)</span>
 
-        <span class="k">with</span> <span class="n">resources</span><span class="o">.</span><span class="n">path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">package</span><span class="p">,</span> <span class="s1">&#39;atlantic.geojson&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">path</span><span class="p">:</span>
-            <span class="n">fc</span> <span class="o">=</span> <span class="n">read_feature_collection</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+        <span class="n">fc</span> <span class="o">=</span> <span class="n">read_feature_collection</span><span class="p">(</span><span class="s1">&#39;atlantic.geojson&#39;</span><span class="p">)</span>
 
         <span class="n">atlantic_signed_distance</span> <span class="o">=</span> <span class="n">signed_distance_from_geojson</span><span class="p">(</span>
             <span class="n">fc</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">earth_radius</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
@@ -300,8 +304,7 @@
 
         <span class="n">cellWidth</span> <span class="o">=</span> <span class="n">cellWidthAtlantic</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">weights</span><span class="p">)</span> <span class="o">+</span> <span class="n">cellWidth</span> <span class="o">*</span> <span class="n">weights</span>
 
-        <span class="k">with</span> <span class="n">resources</span><span class="o">.</span><span class="n">path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">package</span><span class="p">,</span> <span class="s1">&#39;high_res_region.geojson&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">path</span><span class="p">:</span>
-            <span class="n">fc</span> <span class="o">=</span> <span class="n">read_feature_collection</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+        <span class="n">fc</span> <span class="o">=</span> <span class="n">read_feature_collection</span><span class="p">(</span><span class="s1">&#39;high_res_region.geojson&#39;</span><span class="p">)</span>
 
         <span class="n">so_signed_distance</span> <span class="o">=</span> <span class="n">signed_distance_from_geojson</span><span class="p">(</span><span class="n">fc</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span>
                                                           <span class="n">earth_radius</span><span class="p">,</span>

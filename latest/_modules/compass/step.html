@@ -187,6 +187,7 @@
 <span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">lxml</span> <span class="kn">import</span> <span class="n">etree</span>
 <span class="kn">import</span> <span class="nn">configparser</span>
+<span class="kn">from</span> <span class="nn">importlib.resources</span> <span class="kn">import</span> <span class="n">path</span>
 
 <span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">download</span><span class="p">,</span> <span class="n">symlink</span>
 <span class="kn">import</span> <span class="nn">compass.namelist</span>
@@ -386,7 +387,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Step.add_input_file"><a class="viewcode-back" href="../../developers_guide/generated/compass.Step.add_input_file.html#compass.Step.add_input_file">[docs]</a>    <span class="k">def</span> <span class="nf">add_input_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                       <span class="n">url</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">work_dir_target</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                       <span class="n">url</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">work_dir_target</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">package</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add an input file to the step (but not necessarily to the MPAS model).</span>
 <span class="sd">        The file can be local, a symlink to a file that will be created in</span>
@@ -427,6 +428,9 @@
 <span class="sd">            Same as ``target`` but with a path relative to the base work</span>
 <span class="sd">            directory.  This is useful if it is not easy to determine the</span>
 <span class="sd">            relative path between the step&#39;s work directory and the target.</span>
+
+<span class="sd">        package : str or package, optional</span>
+<span class="sd">            A package within ``compass`` from which the file should be linked</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">target</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -436,7 +440,8 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">input_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">,</span>
                                     <span class="n">database</span><span class="o">=</span><span class="n">database</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
-                                    <span class="n">work_dir_target</span><span class="o">=</span><span class="n">work_dir_target</span><span class="p">))</span></div>
+                                    <span class="n">work_dir_target</span><span class="o">=</span><span class="n">work_dir_target</span><span class="p">,</span>
+                                    <span class="n">package</span><span class="o">=</span><span class="n">package</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="Step.add_output_file"><a class="viewcode-back" href="../../developers_guide/generated/compass.Step.add_output_file.html#compass.Step.add_output_file">[docs]</a>    <span class="k">def</span> <span class="nf">add_output_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -575,11 +580,18 @@
             <span class="n">database</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;database&#39;</span><span class="p">]</span>
             <span class="n">url</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">]</span>
             <span class="n">work_dir_target</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;work_dir_target&#39;</span><span class="p">]</span>
+            <span class="n">package</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;package&#39;</span><span class="p">]</span>
 
             <span class="k">if</span> <span class="n">filename</span> <span class="o">==</span> <span class="s1">&#39;&lt;&lt;&lt;model&gt;&gt;&gt;&#39;</span><span class="p">:</span>
                 <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;executables&#39;</span><span class="p">,</span> <span class="s1">&#39;model&#39;</span><span class="p">)</span>
                 <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
                 <span class="n">target</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">package</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">target</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">target</span> <span class="o">=</span> <span class="n">filename</span>
+                <span class="k">with</span> <span class="n">path</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span> <span class="k">as</span> <span class="n">package_path</span><span class="p">:</span>
+                    <span class="n">target</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">package_path</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">work_dir_target</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">target</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_work_dir</span><span class="p">,</span> <span class="n">work_dir_target</span><span class="p">)</span>
