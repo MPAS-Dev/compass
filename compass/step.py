@@ -270,10 +270,7 @@ class Step:
         """
         make a link to the model executable and add it to the inputs
         """
-        model = self.config.get('executables', 'model')
-        model_basename = os.path.basename(model)
-        self.add_input_file(filename=model_basename,
-                            target=os.path.abspath(model))
+        self.add_input_file(filename='<<<model>>>')
 
     def add_namelist_file(self, package, namelist, out_name=None,
                           mode='forward'):
@@ -392,6 +389,11 @@ class Step:
             database = entry['database']
             url = entry['url']
             work_dir_target = entry['work_dir_target']
+
+            if filename == '<<<model>>>':
+                model = self.config.get('executables', 'model')
+                filename = os.path.basename(model)
+                target = os.path.abspath(model)
 
             if work_dir_target is not None:
                 target = os.path.join(self.base_work_dir, work_dir_target)

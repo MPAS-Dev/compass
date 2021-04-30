@@ -1029,25 +1029,27 @@ files to the step by calling any of the following methods:
 
 If you are running the MPAS model, you should call
 :py:func:`compass.Step.add_model_as_input()` to create a symlink to the
-MPAS model's executable.  This must be done in ``setup()``, not in the
-constructor, because it requires config options that have not been set during
-init.
+MPAS model's executable.  This can be done in the constructor or the
+``setup()`` method.
 
 Set up should not do any major computations or any time-consuming operations
 other than downloading files.  Time-consuming work should be saved for
 ``run()`` whenever possible.
 
 As an example, here is
-:py:func:`compass.ocean.tests.baroclinic_channel.forward.Forward.setup()`:
+:py:func:`compass.ocean.tests.global_ocean.mesh.mesh.MeshStep.setup()`:
 
 .. code-block:: python
 
     def setup(self):
         """
         Set up the test case in the work directory, including downloading any
-        dependencies
+        dependencies.
         """
-        self.add_model_as_input()
+        # get the these properties from the config options
+        config = self.config
+        self.cores = config.getint('global_ocean', 'mesh_cores')
+        self.min_cores = config.getint('global_ocean', 'mesh_min_cores')
 
 The model's executable is linked (and included among the ``inputs``).
 
@@ -1691,7 +1693,8 @@ Adding MPAS model as an input
 
 If a step involves running MPAS, the model executable can be linked and added
 as an input to the step by calling :py:func:`compass.model.add_model_as_input()`
-in the ``setup()`` method.  This way, if the user has forgotten to compile the
-model, this will be obvious by the broken symlink and the step will immediately
-fail because of the missing input.  The path to the executable is automatically
-detected based on the work directory for the step and the config options.
+in ``__init__()`` or the ``setup()`` method.  This way, if the user has
+forgotten to compile the model, this will be obvious by the broken symlink and
+the step will immediately fail because of the missing input.  The path to the
+executable is automatically detected based on the work directory for the step
+and the config options.

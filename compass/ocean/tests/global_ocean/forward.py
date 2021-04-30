@@ -117,6 +117,8 @@ class ForwardStep(Step):
             filename='graph.info',
             work_dir_target='{}/culled_graph.info'.format(mesh_path))
 
+        self.add_model_as_input()
+
         self.add_output_file(filename='output.nc')
 
     def setup(self):
@@ -124,8 +126,6 @@ class ForwardStep(Step):
         Set up the test case in the work directory, including downloading any
         dependencies
         """
-        self.add_model_as_input()
-
         if self.cores is None:
             self.cores = self.config.getint(
                 'global_ocean', 'forward_cores')

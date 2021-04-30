@@ -90,18 +90,15 @@ class Forward(Step):
         self.add_input_file(filename='graph.info',
                             target='../initial_state/culled_graph.info')
 
+        self.add_model_as_input()
+
         self.add_output_file(filename='output/output.0001-01-01_00.00.00.nc')
 
         if with_analysis:
             self.add_output_file(
                 filename='analysis_members/lagrPartTrack.0001-01-01_00.00.00.nc')
 
-    def setup(self):
-        """
-        Set up the test case in the work directory, including downloading any
-        dependencies
-        """
-        self.add_model_as_input()
+    # no setup() is needed
 
     def run(self):
         """

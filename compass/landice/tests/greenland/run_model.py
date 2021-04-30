@@ -73,14 +73,11 @@ class RunModel(Step):
                 'compass.landice.tests.greenland', 'streams.landice',
                 out_name='streams.{}'.format(suffix))
 
+        self.add_model_as_input()
+
         self.add_output_file(filename='output.nc')
 
-    def setup(self):
-        """
-        Set up the test case in the work directory, including downloading any
-        dependencies
-        """
-        self.add_model_as_input()
+    # no setup() is needed
 
     def run(self):
         """

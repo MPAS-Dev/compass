@@ -238,7 +238,8 @@ Running MPAS
 ^^^^^^^^^^^^
 
 Steps that run the MPAS model should call the
-:py:meth:`compass.Step.add_model_as_input()` method their ``setup()`` method.
+:py:meth:`compass.Step.add_model_as_input()` method their ``__init__()``
+method.
 
 To run MPAS, call :py:func:`compass.model.run_model()`.  By default, this
 function first updates the namelist options associated with the

@@ -72,15 +72,11 @@ class RunModel(Step):
                             target='../setup_mesh/landice_grid.nc')
         self.add_input_file(filename='graph.info',
                             target='../setup_mesh/graph.info')
+        self.add_model_as_input()
 
         self.add_output_file(filename='output.nc')
 
-    def setup(self):
-        """
-        Set up the test case in the work directory, including downloading any
-        dependencies
-        """
-        self.add_model_as_input()
+    # no setup() is needed
 
     def run(self):
         """
