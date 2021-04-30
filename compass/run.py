@@ -62,10 +62,10 @@ def run_suite(suite_name):
                 test_start = time.time()
                 try:
                     test_case.run()
-                    run_status = 'PASS'
+                    run_status = 'SUCCESS'
                     test_pass = True
                 except BaseException:
-                    run_status = 'FAIL'
+                    run_status = 'ERROR'
                     test_pass = False
                     test_logger.exception('Exception raised')
 
@@ -101,12 +101,12 @@ def run_suite(suite_name):
                 if internal_status is None:
                     status = '  {}'.format(run_status)
                 elif baseline_status is None:
-                    status = '  test:                {}\n' \
-                             '  internal validation: {}'.format(
+                    status = '  test execution:  {}\n' \
+                             '  test validation: {}'.format(
                                   run_status, internal_status)
                 else:
-                    status = '  test:                {}\n' \
-                             '  internal validation: {}\n' \
+                    status = '  test execution:      {}\n' \
+                             '  test validation:     {}\n' \
                              '  baseline comparison: {}'.format(
                                   run_status, internal_status, baseline_status)
 
