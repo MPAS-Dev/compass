@@ -1119,20 +1119,22 @@ files to the step by calling any of the following methods:</p>
 </ul>
 <p>If you are running the MPAS model, you should call
 <a class="reference internal" href="generated/compass.Step.add_model_as_input.html#compass.Step.add_model_as_input" title="compass.Step.add_model_as_input"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.Step.add_model_as_input()</span></code></a> to create a symlink to the
-MPAS model’s executable.  This must be done in <code class="docutils literal notranslate"><span class="pre">setup()</span></code>, not in the
-constructor, because it requires config options that have not been set during
-init.</p>
+MPAS model’s executable.  This can be done in the constructor or the
+<code class="docutils literal notranslate"><span class="pre">setup()</span></code> method.</p>
 <p>Set up should not do any major computations or any time-consuming operations
 other than downloading files.  Time-consuming work should be saved for
 <code class="docutils literal notranslate"><span class="pre">run()</span></code> whenever possible.</p>
 <p>As an example, here is
-<a class="reference internal" href="ocean/generated/compass.ocean.tests.baroclinic_channel.forward.Forward.setup.html#compass.ocean.tests.baroclinic_channel.forward.Forward.setup" title="compass.ocean.tests.baroclinic_channel.forward.Forward.setup"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.tests.baroclinic_channel.forward.Forward.setup()</span></code></a>:</p>
+<a class="reference internal" href="ocean/generated/compass.ocean.tests.global_ocean.mesh.mesh.MeshStep.setup.html#compass.ocean.tests.global_ocean.mesh.mesh.MeshStep.setup" title="compass.ocean.tests.global_ocean.mesh.mesh.MeshStep.setup"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.mesh.MeshStep.setup()</span></code></a>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Set up the test case in the work directory, including downloading any</span>
-<span class="sd">    dependencies</span>
+<span class="sd">    dependencies.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">add_model_as_input</span><span class="p">()</span>
+    <span class="c1"># get the these properties from the config options</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">cores</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;mesh_cores&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">min_cores</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;mesh_min_cores&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The model’s executable is linked (and included among the <code class="docutils literal notranslate"><span class="pre">inputs</span></code>).</p>
@@ -1685,10 +1687,11 @@ Thus, calls to <a class="reference internal" href="generated/compass.Step.add_st
 <h3>Adding MPAS model as an input<a class="headerlink" href="#adding-mpas-model-as-an-input" title="Permalink to this headline">¶</a></h3>
 <p>If a step involves running MPAS, the model executable can be linked and added
 as an input to the step by calling <code class="xref py py-func docutils literal notranslate"><span class="pre">compass.model.add_model_as_input()</span></code>
-in the <code class="docutils literal notranslate"><span class="pre">setup()</span></code> method.  This way, if the user has forgotten to compile the
-model, this will be obvious by the broken symlink and the step will immediately
-fail because of the missing input.  The path to the executable is automatically
-detected based on the work directory for the step and the config options.</p>
+in <code class="docutils literal notranslate"><span class="pre">__init__()</span></code> or the <code class="docutils literal notranslate"><span class="pre">setup()</span></code> method.  This way, if the user has
+forgotten to compile the model, this will be obvious by the broken symlink and
+the step will immediately fail because of the missing input.  The path to the
+executable is automatically detected based on the work directory for the step
+and the config options.</p>
 </div>
 </div>
 </div>
