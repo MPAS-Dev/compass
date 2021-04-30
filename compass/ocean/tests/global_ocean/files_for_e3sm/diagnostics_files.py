@@ -56,65 +56,86 @@ class DiagnosticsFiles(Step):
     def run(self):
         """
         Run this step of the testcase
-            """
-        with_ice_shelf_cavities = self.with_ice_shelf_cavities
-        cores = self.cores
-        config = self.config
-        logger = self.logger
-
-        restart_filename = 'restart.nc'
-        with xarray.open_dataset(restart_filename) as ds:
+        """
+        with xarray.open_dataset('restart.nc') as ds:
             mesh_short_name = ds.attrs['MPAS_Mesh_Short_Name']
 
-        for directory in [
-                '../assembled_files/inputdata/ocn/mpas-o/{}'.format(
-                    mesh_short_name),
-                '../assembled_files/diagnostics/mpas_analysis/region_masks',
-                '../assembled_files/diagnostics/mpas_analysis/maps']:
-            try:
-                os.makedirs(directory)
-            except OSError:
-                pass
-        _make_moc_masks(mesh_short_name, logger, cores)
+        make_diagnostics_files(self.config, self.logger, mesh_short_name,
+                               self.with_ice_shelf_cavities, self.cores)
 
-        gf = GeometricFeatures()
-        region_groups = ['Antarctic Regions', 'Arctic Ocean Regions',
-                         'Arctic Sea Ice Regions', 'Ocean Basins',
-                         'Ocean Subbasins', 'ISMIP6 Regions']
 
-        if with_ice_shelf_cavities:
-            region_groups.append('Ice Shelves')
+def make_diagnostics_files(config, logger, mesh_short_name,
+                           with_ice_shelf_cavities, cores):
+    """
+    Run this step of the testcase
 
-        for region_group in region_groups:
-            function, prefix, date = get_aggregator_by_name(region_group)
-            suffix = '{}{}'.format(prefix, date)
-            fcMask = function(gf)
-            _make_region_masks(mesh_short_name, suffix=suffix, fcMask=fcMask,
-                               logger=logger, cores=cores)
+    Parameters
+    ----------
+    config : configparser.ConfigParser
+        Configuration options for this test case
 
-        transect_groups = ['Transport Transects']
-        for transect_group in transect_groups:
-            function, prefix, date = get_aggregator_by_name(transect_group)
-            suffix = '{}{}'.format(prefix, date)
-            fcMask = function(gf)
-            _make_transect_masks(mesh_short_name, suffix=suffix, fcMask=fcMask,
-                                 logger=logger, cores=cores)
+    logger : logging.Logger
+        A logger for output from the step
 
-        _make_analysis_lat_lon_map(config, mesh_short_name, cores, logger)
-        _make_analysis_polar_map(config, mesh_short_name,
-                                 projection='antarctic', cores=cores,
-                                 logger=logger)
-        _make_analysis_polar_map(config, mesh_short_name, projection='arctic',
-                                 cores=cores, logger=logger)
+    mesh_short_name : str
+        The E3SM short name of the mesh
 
-        # make links in output directory
-        files = glob.glob('map_*')
+    with_ice_shelf_cavities : bool
+        Whether the mesh has ice-shelf cavities
 
-        # make links in output directory
-        output_dir = '../assembled_files/diagnostics/mpas_analysis/maps'
-        for filename in files:
-            symlink('../../../../diagnostics_files/{}'.format(filename),
-                    '{}/{}'.format(output_dir, filename))
+    cores : int
+        The number of cores to use to build mapping files
+    """
+
+    for directory in [
+            '../assembled_files/inputdata/ocn/mpas-o/{}'.format(
+                mesh_short_name),
+            '../assembled_files/diagnostics/mpas_analysis/region_masks',
+            '../assembled_files/diagnostics/mpas_analysis/maps']:
+        try:
+            os.makedirs(directory)
+        except OSError:
+            pass
+    _make_moc_masks(mesh_short_name, logger, cores)
+
+    gf = GeometricFeatures()
+    region_groups = ['Antarctic Regions', 'Arctic Ocean Regions',
+                     'Arctic Sea Ice Regions', 'Ocean Basins',
+                     'Ocean Subbasins', 'ISMIP6 Regions']
+
+    if with_ice_shelf_cavities:
+        region_groups.append('Ice Shelves')
+
+    for region_group in region_groups:
+        function, prefix, date = get_aggregator_by_name(region_group)
+        suffix = '{}{}'.format(prefix, date)
+        fcMask = function(gf)
+        _make_region_masks(mesh_short_name, suffix=suffix, fcMask=fcMask,
+                           logger=logger, cores=cores)
+
+    transect_groups = ['Transport Transects']
+    for transect_group in transect_groups:
+        function, prefix, date = get_aggregator_by_name(transect_group)
+        suffix = '{}{}'.format(prefix, date)
+        fcMask = function(gf)
+        _make_transect_masks(mesh_short_name, suffix=suffix, fcMask=fcMask,
+                             logger=logger, cores=cores)
+
+    _make_analysis_lat_lon_map(config, mesh_short_name, cores, logger)
+    _make_analysis_polar_map(config, mesh_short_name,
+                             projection='antarctic', cores=cores,
+                             logger=logger)
+    _make_analysis_polar_map(config, mesh_short_name, projection='arctic',
+                             cores=cores, logger=logger)
+
+    # make links in output directory
+    files = glob.glob('map_*')
+
+    # make links in output directory
+    output_dir = '../assembled_files/diagnostics/mpas_analysis/maps'
+    for filename in files:
+        symlink('../../../../diagnostics_files/{}'.format(filename),
+                '{}/{}'.format(output_dir, filename))
 
 
 def _make_region_masks(mesh_name, suffix, fcMask, logger, cores):

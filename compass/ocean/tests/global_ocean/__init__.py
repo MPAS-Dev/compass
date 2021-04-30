@@ -15,6 +15,8 @@ from compass.ocean.tests.global_ocean.threads_test import ThreadsTest
 from compass.ocean.tests.global_ocean.analysis_test import AnalysisTest
 from compass.ocean.tests.global_ocean.daily_output_test import DailyOutputTest
 from compass.ocean.tests.global_ocean.files_for_e3sm import FilesForE3SM
+from compass.ocean.tests.global_ocean.make_diagnostics_files import \
+    MakeDiagnosticsFiles
 
 
 class GlobalOcean(TestGroup):
@@ -167,3 +169,5 @@ class GlobalOcean(TestGroup):
                 FilesForE3SM(
                     test_group=self, mesh=mesh, init=init,
                     dynamic_adjustment=dynamic_adjustment))
+
+        self.add_test_case(MakeDiagnosticsFiles(test_group=self))
