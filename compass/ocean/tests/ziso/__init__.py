@@ -47,6 +47,3 @@ def configure(name, resolution, config):
     res_params = res_params[resolution]
     for param in res_params:
         config.set('ziso', param, '{}'.format(res_params[param]))
-
-    add_config(config, 'compass.ocean.tests.ziso.{}'.format(name),
-               '{}.cfg'.format(name), exception=False)
