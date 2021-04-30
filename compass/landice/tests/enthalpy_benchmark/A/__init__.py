@@ -1,7 +1,6 @@
 from importlib.resources import path
 
 from compass.io import symlink
-from compass.config import add_config
 from compass.validate import compare_variables
 from compass.landice.tests.enthalpy_benchmark.setup_mesh import SetupMesh
 from compass.landice.tests.enthalpy_benchmark.run_model import RunModel
