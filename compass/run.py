@@ -18,6 +18,15 @@ def run_suite(suite_name):
     suite_name : str
         The name of the test suite
     """
+    # ANSI fail text: https://stackoverflow.com/a/287944/7728169
+    start_fail = '\033[91m'
+    start_pass = '\033[92m'
+    end = '\033[0m'
+    pass_str = '{}PASS{}'.format(start_pass, end)
+    success_str = '{}SUCCESS{}'.format(start_pass, end)
+    fail_str = '{}FAIL{}'.format(start_fail, end)
+    error_str = '{}ERROR{}'.format(start_fail, end)
+
     if not os.path.exists('{}.pickle'.format(suite_name)):
         raise ValueError('The suite "{}" doesn\'t appear to have been set up '
                          'here.'.format(suite_name))
@@ -62,10 +71,10 @@ def run_suite(suite_name):
                 test_start = time.time()
                 try:
                     test_case.run()
-                    run_status = 'SUCCESS'
+                    run_status = success_str
                     test_pass = True
                 except BaseException:
-                    run_status = 'ERROR'
+                    run_status = error_str
                     test_pass = False
                     test_logger.exception('Exception raised')
 
@@ -73,9 +82,9 @@ def run_suite(suite_name):
                 if test_pass:
                     try:
                         test_case.validate()
-                        internal_status = 'PASS'
+                        internal_status = pass_str
                     except BaseException:
-                        internal_status = 'FAIL'
+                        internal_status = fail_str
                         test_pass = False
                         test_logger.exception('Exception raised')
 
@@ -85,24 +94,24 @@ def run_suite(suite_name):
                     baseline_pass = test_case.validation['baseline_pass']
 
                     if internal_pass is not None and not internal_pass:
-                        internal_status = 'FAIL'
+                        internal_status = fail_str
                         test_logger.exception(
                             'Internal test case validation failed')
                         test_pass = False
 
                     if baseline_pass is not None:
                         if baseline_pass:
-                            baseline_status = 'PASS'
+                            baseline_status = pass_str
                         else:
-                            baseline_status = 'FAIL'
+                            baseline_status = fail_str
                             test_logger.exception('Baseline validation failed')
                             test_pass = False
 
                 if internal_status is None:
                     status = '  {}'.format(run_status)
                 elif baseline_status is None:
-                    status = '  test execution:  {}\n' \
-                             '  test validation: {}'.format(
+                    status = '  test execution:      {}\n' \
+                             '  test validation:     {}'.format(
                                   run_status, internal_status)
                 else:
                     status = '  test execution:      {}\n' \
@@ -112,12 +121,12 @@ def run_suite(suite_name):
 
                 if test_pass:
                     logger.info(status)
-                    success[test_name] = 'PASS'
+                    success[test_name] = pass_str
                 else:
                     logger.error(status)
                     logger.error('  see: case_outputs/{}.log'.format(
                         test_name))
-                    success[test_name] = 'FAIL'
+                    success[test_name] = fail_str
                     failures += 1
 
                 test_times[test_name] = time.time() - test_start
