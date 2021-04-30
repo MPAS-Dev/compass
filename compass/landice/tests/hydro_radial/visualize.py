@@ -1,7 +1,6 @@
 import numpy as np
 import netCDF4
 import matplotlib.pyplot as plt
-from importlib.resources import path
 
 from compass.step import Step
 
@@ -38,9 +37,8 @@ class Visualize(Step):
         self.add_input_file(filename='landice_grid.nc',
                             target='../{}/landice_grid.nc'.format(input_dir))
 
-        filename = 'near_exact_solution_r_P_W.txt'
-        with path('compass.landice.tests.hydro_radial', filename) as target:
-            self.add_input_file(filename=filename, target=str(target))
+        self.add_input_file(filename='near_exact_solution_r_P_W.txt',
+                            package='compass.landice.tests.hydro_radial')
 
     # depending on settings, this will produce no outputs, so we won't add any
 

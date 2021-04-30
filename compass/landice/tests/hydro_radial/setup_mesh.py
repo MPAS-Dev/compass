@@ -1,6 +1,5 @@
 import numpy as np
 from netCDF4 import Dataset as NetCDFFile
-from importlib.resources import path
 
 from mpas_tools.planar_hex import make_planar_hex_mesh
 from mpas_tools.io import write_netcdf
@@ -40,9 +39,8 @@ class SetupMesh(Step):
         self.initial_condition = initial_condition
 
         if initial_condition == 'exact':
-            filename = 'near_exact_solution_r_P_W.txt'
-            with path('compass.landice.tests.hydro_radial', filename) as target:
-                self.add_input_file(filename=filename, target=str(target))
+            self.add_input_file(filename='near_exact_solution_r_P_W.txt',
+                                package='compass.landice.tests.hydro_radial')
         elif initial_condition != 'zero':
             raise ValueError("Unknown initial condition type specified "
                              "{}.".format(initial_condition))

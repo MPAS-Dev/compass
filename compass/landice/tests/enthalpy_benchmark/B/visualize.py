@@ -2,7 +2,6 @@ import numpy as np
 from netCDF4 import Dataset
 import matplotlib.pyplot as plt
 from scipy.io import loadmat
-from importlib.resources import path
 
 from compass.step import Step
 
@@ -25,10 +24,9 @@ class Visualize(Step):
         self.add_input_file(filename='output.nc',
                             target='../run_model/output.nc')
 
-        filename = 'enthB_analy_result.mat'
-        with path('compass.landice.tests.enthalpy_benchmark.B', filename) as \
-                target:
-            self.add_input_file(filename=filename, target=str(target))
+        self.add_input_file(
+            filename='enthB_analy_result.mat',
+            package='compass.landice.tests.enthalpy_benchmark.B')
 
     # no setup function is needed
 

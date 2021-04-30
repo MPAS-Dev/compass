@@ -1,5 +1,4 @@
 import numpy as np
-from importlib import resources
 
 import mpas_tools.mesh.creation.mesh_definition_tools as mdt
 from mpas_tools.mesh.creation.signed_distance import \
@@ -33,6 +32,12 @@ class SO12to60Mesh(MeshStep):
         super().__init__(test_case, mesh_name, with_ice_shelf_cavities,
                          package=self.__module__,
                          mesh_config_filename='so12to60.cfg')
+
+        self.add_input_file(filename='atlantic.geojson',
+                            package=self.__module__)
+
+        self.add_input_file(filename='high_res_region.geojson',
+                            package=self.__module__)
 
     def build_cell_width_lat_lon(self):
         """
@@ -95,8 +100,7 @@ class SO12to60Mesh(MeshStep):
 
         _, cellWidthAtlantic = np.meshgrid(lon, cellWidthAtlantic)
 
-        with resources.path(self.package, 'atlantic.geojson') as path:
-            fc = read_feature_collection(str(path))
+        fc = read_feature_collection('atlantic.geojson')
 
         atlantic_signed_distance = signed_distance_from_geojson(
             fc, lon, lat, earth_radius, max_length=0.25)
@@ -108,8 +112,7 @@ class SO12to60Mesh(MeshStep):
 
         cellWidth = cellWidthAtlantic * (1 - weights) + cellWidth * weights
 
-        with resources.path(self.package, 'high_res_region.geojson') as path:
-            fc = read_feature_collection(str(path))
+        fc = read_feature_collection('high_res_region.geojson')
 
         so_signed_distance = signed_distance_from_geojson(fc, lon, lat,
                                                           earth_radius,
