@@ -1,6 +1,7 @@
 import os
 from lxml import etree
 import configparser
+from importlib.resources import path
 
 from compass.io import download, symlink
 import compass.namelist
@@ -200,7 +201,7 @@ class Step:
         pass
 
     def add_input_file(self, filename=None, target=None, database=None,
-                       url=None, work_dir_target=None):
+                       url=None, work_dir_target=None, package=None):
         """
         Add an input file to the step (but not necessarily to the MPAS model).
         The file can be local, a symlink to a file that will be created in
@@ -241,6 +242,9 @@ class Step:
             Same as ``target`` but with a path relative to the base work
             directory.  This is useful if it is not easy to determine the
             relative path between the step's work directory and the target.
+
+        package : str or package, optional
+            A package within ``compass`` from which the file should be linked
         """
         if filename is None:
             if target is None:
@@ -250,7 +254,8 @@ class Step:
 
         self.input_data.append(dict(filename=filename, target=target,
                                     database=database, url=url,
-                                    work_dir_target=work_dir_target))
+                                    work_dir_target=work_dir_target,
+                                    package=package))
 
     def add_output_file(self, filename):
         """
@@ -389,11 +394,18 @@ class Step:
             database = entry['database']
             url = entry['url']
             work_dir_target = entry['work_dir_target']
+            package = entry['package']
 
             if filename == '<<<model>>>':
                 model = self.config.get('executables', 'model')
                 filename = os.path.basename(model)
                 target = os.path.abspath(model)
+
+            if package is not None:
+                if target is None:
+                    target = filename
+                with path(package, target) as package_path:
+                    target = str(package_path)
 
             if work_dir_target is not None:
                 target = os.path.join(self.base_work_dir, work_dir_target)
