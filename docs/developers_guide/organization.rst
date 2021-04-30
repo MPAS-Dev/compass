@@ -575,10 +575,16 @@ The :py:meth:`compass.TestCase.configure()` method can be overridden by a
 child class to set config options or build them up from defaults stored in
 config files within the test case or its test group. The ``self.config``
 attribute that is modified in this function will be written to a config file
-for the test case (see :ref:`config_files`). Since many test groups need
-similar behavior in the ``configure()`` method for each test case, it is common
-to have a shared function (sometimes also called ``configure()``) in the
-test group, as we discussed in :ref:`dev_test_groups`.
+for the test case (see :ref:`config_files`).
+
+If you override this method in a test case, you should assume that the
+``<test_case.name>.cfg`` file in its package has already been added to the
+config options prior to calling ``configure()``.  This happens automatically
+during test-case setup.
+
+Since many test groups need similar behavior in the ``configure()`` method for
+each test case, it is common to have a shared function (sometimes also called
+``configure()``) in the test group, as we discussed in :ref:`dev_test_groups`.
 
 :py:meth:`compass.ocean.tests.baroclinic_channel.rpe_test.RpeTest.configure()`
 simply calls the shared function in its test group,
