@@ -5,15 +5,34 @@ import os
 import glob
 import stat
 import grp
-import requests
-import progressbar
 import argparse
 import sys
 import re
 import configparser
-from lxml import etree
-from jinja2 import Template
 import shutil
+import platform
+
+bootstrap=False
+try:
+    import requests
+except ImportError:
+    bootstrap = True
+    import urllib.request
+
+try:
+    import progressbar
+except ImportError:
+    bootstrap = True
+
+try:
+    from lxml import etree
+except ImportError:
+    bootstrap = True
+
+try:
+    from jinja2 import Template
+except:
+    bootstrap = True
 
 
 def get_e3sm_compiler_and_mpi(machine, compiler, mpilib):
@@ -124,6 +143,14 @@ def get_e3sm_compiler_and_mpi(machine, compiler, mpilib):
             elif child.tag == 'MPIFC':
                 mpifc = child.text.strip()
 
+    return mpicc, mpicxx, mpifc, commands
+
+
+def get_sys_info(machine, compiler, mpilib, mpicc, mpicxx, mpifc, commands):
+
+    if machine is None:
+        machine = 'None'
+
     env_vars = []
 
     if 'intel' in compiler:
@@ -153,12 +180,7 @@ def get_e3sm_compiler_and_mpi(machine, compiler, mpilib):
     else:
         esmf_comm = mpilib
 
-    if machine == 'grizzly':
-        esmf_netcdf = \
-            '    export ESMF_NETCDF="split"\n' \
-            '    export ESMF_NETCDF_INCLUDE=$NETCDF_C_PATH/include\n' \
-            '    export ESMF_NETCDF_LIBPATH=$NETCDF_C_PATH/lib64'
-    elif machine == 'badger':
+    if machine == 'grizzly' or machine == 'badger':
         esmf_netcdf = \
             '    export ESMF_NETCDF="split"\n' \
             '    export ESMF_NETCDF_INCLUDE=$NETCDF_C_PATH/include\n' \
@@ -192,12 +214,19 @@ def get_e3sm_compiler_and_mpi(machine, compiler, mpilib):
 
 
 def build_system_libraries(source_path, scorpio, esmf, scorpio_path, esmf_path,
-                           sys_info):
+                           sys_info, force_build):
 
+    build_esmf = 'False'
     if esmf == 'None':
         esmf_branch = 'None'
     else:
         esmf_branch = 'ESMF_{}'.format(esmf.replace('.', '_'))
+        if not os.path.exists(esmf_path) or force_build:
+            build_esmf = 'True'
+
+    build_scorpio = 'False'
+    if scorpio != 'None' and (not os.path.exists(scorpio_path) or force_build):
+        build_scorpio = 'True'
 
     script_filename = 'build.bash'
 
@@ -206,8 +235,9 @@ def build_system_libraries(source_path, scorpio, esmf, scorpio_path, esmf_path,
 
     script = template.render(
         sys_info=sys_info, modules='\n'.join(sys_info['modules']),
-        scorpio=scorpio, scorpio_path=scorpio_path,  esmf_path=esmf_path,
-        esmf_branch=esmf_branch)
+        scorpio=scorpio, scorpio_path=scorpio_path,
+        build_scorpio=build_scorpio, esmf_path=esmf_path,
+        esmf_branch=esmf_branch, build_esmf=build_esmf)
     print('Writing {}'.format(script_filename))
     with open(script_filename, 'w') as handle:
         handle.write(script)
@@ -219,40 +249,52 @@ def build_system_libraries(source_path, scorpio, esmf, scorpio_path, esmf_path,
 def write_load_compass(source_path, conda_base, script_filename, compass_env,
                        machine, sys_info):
 
+    sys_info['env_vars'].append('export USE_PIO2=true')
+    sys_info['env_vars'].append('export HDF5_USE_FILE_LOCKING=FALSE')
+    sys_info['env_vars'].append('export LOAD_COMPASS_ENV={}'.format(
+        script_filename))
+    if machine is not None:
+        sys_info['env_vars'].append('export COMPASS_MACHINE={}'.format(
+            machine))
+
     with open('{}/deploy/load_compass.template'.format(source_path), 'r') as f:
         template = Template(f.read())
 
     script = template.render(conda_base=conda_base, compass_env=compass_env,
                              modules='\n'.join(sys_info['modules']),
                              env_vars='\n'.join(sys_info['env_vars']),
-                             netcdf_paths=sys_info['mpas_netcdf_paths'],
-                             script_filename=script_filename, machine=machine)
+                             netcdf_paths=sys_info['mpas_netcdf_paths'])
+
+    # strip out redundant blank lines
+    lines = list()
+    prev_line = ''
+    for line in script.split('\n'):
+        line = line.strip()
+        if line != '' or prev_line != '':
+            lines.append(line)
+        prev_line = line
+
+    lines.append('')
+
+    script = '\n'.join(lines)
 
     print('Writing {}'.format(script_filename))
     with open(script_filename, 'w') as handle:
         handle.write(script)
 
 
-def check_env(script_filename, env_name, is_test):
+def check_env(script_filename, env_name):
     print("Checking the environment {}".format(env_name))
 
     activate = 'source {}'.format(script_filename)
 
     imports = ['geometric_features', 'mpas_tools', 'jigsawpy', 'compass']
     commands = [['gpmetis', '--help'],
-                ['ffmpeg', '--help']]
-    if not is_test:
-        commands.extend(
-            [['compass', 'list'],
-             ['compass', 'setup', '--help'],
-             ['compass', 'suite', '--help'],
-             ['compass', 'clean', '--help']])
-    else:
-        commands.extend(
-            [['python', '-m', 'compass', 'list'],
-             ['python', '-m', 'compass', 'setup', '--help'],
-             ['python', '-m', 'compass', 'suite', '--help'],
-             ['python', '-m', 'compass', 'clean', '--help']])
+                ['ffmpeg', '--help'],
+                ['compass', 'list'],
+                ['compass', 'setup', '--help'],
+                ['compass', 'suite', '--help'],
+                ['compass', 'clean', '--help']]
 
     for import_name in imports:
         command = '{}; python -c "import {}"'.format(activate, import_name)
@@ -274,9 +316,50 @@ def test_command(command, env, package):
 
 
 def check_call(commands, env=None):
-    print('runnning: {}'.format(commands))
+    print('running: {}'.format(commands))
     subprocess.run(commands, env=env, executable='/bin/bash', shell=True,
                    check=True)
+
+
+def install_miniconda(base_path):
+    if not os.path.exists(base_path):
+        print('Installing Miniconda3')
+        if platform.system() == 'Linux':
+            system = 'Linux'
+        elif platform.system() == 'Darwin':
+            system = 'MacOSX'
+        else:
+            system = 'Linux'
+        miniconda = 'Miniconda3-latest-{}-x86_64.sh'.format(system)
+        url = 'https://repo.continuum.io/miniconda/{}'.format(miniconda)
+        if bootstrap:
+            print(url)
+            req = urllib.request.Request(
+                url, headers={'User-Agent': 'Mozilla/5.0'})
+            with urllib.request.urlopen(req) as f:
+                html = f.read()
+                with open(miniconda, 'wb') as outfile:
+                    outfile.write(html)
+        else:
+            r = requests.get(url)
+            with open(miniconda, 'wb') as outfile:
+                outfile.write(r.content)
+
+        command = '/bin/bash {} -b -p {}'.format(miniconda, base_path)
+        check_call(command)
+        os.remove(miniconda)
+
+    activate = 'source {}/etc/profile.d/conda.sh; conda activate'.format(
+        base_path)
+
+    print('Doing initial setup')
+    commands = '{}; ' \
+               'conda config --add channels conda-forge; ' \
+               'conda config --set channel_priority strict; ' \
+               'conda install -y requests lxml progressbar2 jinja2; ' \
+               'conda update -y --all'.format(activate)
+
+    check_call(commands)
 
 
 def main():
@@ -292,10 +375,6 @@ def main():
                         help="Deploy a test environment")
     parser.add_argument("--no-test", dest="test", action='store_false',
                         help="Deploy a production environment")
-    parser.add_argument("--build", dest="build", action='store_true',
-                        help="Build the test package")
-    parser.add_argument("--no-build", dest="build", action='store_false',
-                        help="Don't build the test package")
     parser.add_argument("--recreate", dest="recreate", action='store_true',
                         help="Recreate the environment if it exists")
     parser.add_argument("--no-recreate", dest="recreate", action='store_false',
@@ -313,6 +392,8 @@ def main():
                         help="The name of the compiler")
     parser.add_argument("-g", "--group", dest="group", type=str,
                         help="The unix group that should own the environment")
+    parser.add_argument("--conda", dest="conda_base",
+                        help="Path to the conda base")
 
     args = parser.parse_args(sys.argv[1:])
 
@@ -339,6 +420,35 @@ def main():
     if args.config_file is not None:
         config.read(args.config_file)
 
+    if args.test is not None:
+        is_test = args.test
+    else:
+        is_test = config.getboolean('deploy', 'test')
+
+    if args.conda_base is not None:
+        base_path = args.conda_base
+    elif is_test:
+        # if this is a test, assume we're the same base as the environment
+        # currently active
+        conda_exe = os.environ['CONDA_EXE']
+        base_path = os.path.abspath(os.path.join(conda_exe, '..', '..'))
+    else:
+        base_path = config.get('paths', 'compass_envs')
+
+    activate = 'source {}/etc/profile.d/conda.sh; conda activate'.format(
+        base_path)
+
+    if bootstrap:
+        # we don't have all the packages we need, so we need to add them
+        # to the base environment, activate it and rerun
+        install_miniconda(base_path)
+
+        print('Rerunning the command from new conda environment')
+        command = '{}; ' \
+                  '{}'.format(activate, ' '.join(sys.argv))
+        check_call(command)
+        sys.exit(0)
+
     if args.group is not None:
         group = args.group
     else:
@@ -348,16 +458,6 @@ def main():
         python = args.python
     else:
         python = config.get('deploy', 'python')
-
-    if args.test is not None:
-        is_test = args.test
-    else:
-        is_test = config.getboolean('deploy', 'test')
-
-    if args.build is not None:
-        build = args.build
-    else:
-        build = config.getboolean('deploy', 'build')
 
     if args.test is not None:
         force_recreate = args.recreate
@@ -376,17 +476,36 @@ def main():
     else:
         mpi = config.get('deploy', 'mpi_{}'.format(compiler))
 
-    esmf = config.get('deploy', 'esmf')
+    if machine is not None:
+        conda_mpi = 'nompi'
+    else:
+        conda_mpi = mpi
+
+    if machine is not None:
+        esmf = config.get('deploy', 'esmf')
+    else:
+        # stick with the conda-forge ESMF
+        esmf = 'None'
+
     scorpio = config.get('deploy', 'scorpio')
 
-    if compiler is not None:
-        suffix = '_{}_{}'.format(compiler, mpi)
+    if machine is not None:
+        activ_suffix = '_{}_{}'.format(compiler, mpi)
+        env_suffix = ''
+    elif conda_mpi != 'nompi':
+        activ_suffix = '_{}'.format(mpi)
+        env_suffix = activ_suffix
     else:
-        suffix = ''
+        activ_suffix = ''
+        env_suffix = ''
 
     source_path = os.getcwd()
-    if machine is not None:
-        build_dir = 'deploy/build_{}{}'.format(machine, suffix)
+    if compiler is not None:
+        if machine is not None:
+            build_dir = 'deploy/build_{}{}'.format(machine, activ_suffix)
+        else:
+            build_dir = 'deploy/build{}'.format(activ_suffix)
+
         try:
             shutil.rmtree(build_dir)
         except OSError:
@@ -398,15 +517,38 @@ def main():
 
         os.chdir(build_dir)
 
+    if is_test:
+        env_name = 'test_compass_{}{}'.format(version, env_suffix)
+    else:
+        env_name = 'compass_{}{}'.format(version, env_suffix)
+    env_path = os.path.join(base_path, 'envs', env_name)
+
+    force_build = False
     if compiler is not None:
-        sys_info = get_e3sm_compiler_and_mpi(machine, compiler, mpi)
-        conda_mpi = 'nompi'
-        system_libs = config.get('deploy', 'system_libs')
-        compiler_path = os.path.join(system_libs, 'compass_{}'.format(version),
-                                     compiler, mpi)
-        scorpio_path = os.path.join(compiler_path,
-                                    'scorpio_{}'.format(scorpio))
-        esmf_path = os.path.join(compiler_path, 'esmf_{}'.format(esmf))
+        if machine is not None:
+            mpicc, mpicxx, mpifc, commands = get_e3sm_compiler_and_mpi(
+                machine, compiler, mpi)
+            system_libs = config.get('deploy', 'system_libs')
+            compiler_path = os.path.join(
+                system_libs, 'compass_{}'.format(version), compiler, mpi)
+            scorpio_path = os.path.join(compiler_path,
+                                        'scorpio_{}'.format(scorpio))
+            esmf_path = os.path.join(compiler_path, 'esmf_{}'.format(esmf))
+        else:
+            # using conda-forge compilers
+            mpicc = 'mpicc'
+            mpicxx = 'mpicxx'
+            mpifc = 'mpifort'
+            commands = ['source {}/etc/profile.d/conda.sh'.format(base_path),
+                        'conda activate {}'.format(env_name)]
+            system_libs = None
+            scorpio_path = env_path
+            esmf_path = env_path
+            force_build = True
+
+        sys_info = get_sys_info(machine, compiler, mpi, mpicc, mpicxx,
+                                mpifc, commands)
+
         if esmf != 'None':
             sys_info['env_vars'].append('export PATH="{}:$PATH"'.format(
                 os.path.join(esmf_path, 'bin')))
@@ -418,48 +560,16 @@ def main():
             sys_info['env_vars'].append('export PIO={}'.format(scorpio_path))
     else:
         sys_info = dict(modules=[], env_vars=[], mpas_netcdf_paths='')
-        conda_mpi = mpi
         system_libs = None
         scorpio_path = None
         esmf_path = None
 
-    base_path = config.get('paths', 'compass_envs')
-    activ_path = os.path.abspath(os.path.join(base_path, '..'))
+    if is_test:
+        activ_path = source_path
+    else:
+        activ_path = os.path.abspath(os.path.join(base_path, '..'))
 
-    if not os.path.exists(base_path):
-        miniconda = 'Miniconda3-latest-Linux-x86_64.sh'
-        url = 'https://repo.continuum.io/miniconda/{}'.format(miniconda)
-        r = requests.get(url)
-        with open(miniconda, 'wb') as outfile:
-            outfile.write(r.content)
-
-        command = '/bin/bash {} -b -p {}'.format(miniconda, base_path)
-        check_call(command)
-        os.remove(miniconda)
-
-    activate = 'source {}/etc/profile.d/conda.sh; conda activate'.format(
-        base_path)
-
-    print('Doing initial setup')
-    commands = '{}; ' \
-               'conda config --add channels conda-forge; ' \
-               'conda config --set channel_priority strict; ' \
-               'conda install -y conda-build; ' \
-               'conda update -y --all'.format(activate)
-
-    check_call(commands)
-    print('done')
-
-    if is_test and build:
-        if args.clean:
-            commands = 'rm -rf {}/conda-bld'.format(base_path)
-            check_call(commands)
-        print('Building the conda package')
-        commands = '{}; ' \
-                   'conda build -m {}/ci/mpi_{}.yaml {}/recipe'.format(
-                       activate, source_path, conda_mpi, source_path)
-
-        check_call(commands)
+    install_miniconda(base_path)
 
     if conda_mpi == 'nompi':
         mpi_prefix = 'nompi'
@@ -467,42 +577,48 @@ def main():
         mpi_prefix = 'mpi_{}'.format(mpi)
 
     channels = '--override-channels -c conda-forge -c defaults'
-    if is_test:
-        channels = '--use-local {}'.format(channels)
-    else:
-        channels = '{} -c e3sm'.format(channels)
-    packages = 'python={} "compass={}={}_*"'.format(
-        python, version, mpi_prefix)
+    packages = 'python={}'.format(python)
 
-    if is_test:
-        env_name = 'test_compass_{}'.format(version)
-    else:
-        env_name = 'compass_{}'.format(version)
-    env_path = os.path.join(base_path, 'envs', env_name)
+    activate_env = \
+        'source {}/etc/profile.d/conda.sh; ' \
+        'conda activate {}'.format(base_path, env_name)
+
     if not os.path.exists(env_path) or force_recreate:
         print('creating {}'.format(env_name))
-        commands = '{}; conda create -y -n {} {} {}'.format(
-            activate, env_name, channels, packages)
-        check_call(commands)
+        if is_test:
+            # install dev dependencies and compass itself
+            commands = \
+                '{}; ' \
+                'conda create -y -n {} {} --file {}/deploy/spec-file-{}.txt {}' \
+                .format(activate, env_name, channels, source_path, conda_mpi,
+                        packages)
+            check_call(commands)
+
+            commands = \
+                '{}; ' \
+                'cd {}; ' \
+                'python -m pip install -e .'.format(activate_env, source_path)
+            check_call(commands)
+
+        else:
+            channels = '{} -c e3sm'.format(channels)
+            packages = '{} "compass={}={}_*"'.format(
+                packages, version, mpi_prefix)
+            commands = '{}; conda create -y -n {} {} {}'.format(
+                activate, env_name, channels, packages)
+            check_call(commands)
 
         if compiler is not None and esmf != 'None':
             # remove conda-forge esmf because we will use the system build
             commands = '{}; conda remove -y --force -n {} esmf'.format(
                 activate, env_name)
             check_call(commands)
-
-        if is_test:
-            # remove compass itself because this is a development environment
-            commands = '{}; conda remove -y --force -n {} compass'.format(
-                activate, env_name)
-            check_call(commands)
-
     else:
         print('{} already exists'.format(env_name))
 
     if compiler is not None:
         build_system_libraries(source_path, scorpio, esmf, scorpio_path,
-                               esmf_path, sys_info)
+                               esmf_path, sys_info, force_build)
 
     try:
         os.makedirs(activ_path)
@@ -514,13 +630,13 @@ def main():
     else:
         prefix = 'load'
 
-    script_filename = '{}/{}_compass{}{}.sh'.format(
-        activ_path, prefix, version, suffix)
+    script_filename = '{}/{}_compass_{}{}.sh'.format(
+        activ_path, prefix, version, activ_suffix)
     write_load_compass(source_path, base_path, script_filename, env_name,
                        machine, sys_info)
 
     os.chdir(source_path)
-    check_env(script_filename, env_name, is_test)
+    check_env(script_filename, env_name)
 
     commands = '{}; conda clean -y -p -t'.format(activate)
     check_call(commands)
@@ -546,7 +662,10 @@ def main():
     print('changing permissions on environments')
 
     # first the base directories that don't seem to be included in os.walk()
-    for directory in [base_path, system_libs]:
+    directories = [base_path]
+    if system_libs is not None:
+        directories.append(system_libs)
+    for directory in directories:
         try:
             dir_stat = os.stat(directory)
         except OSError:
@@ -565,7 +684,7 @@ def main():
             continue
 
     files_and_dirs = []
-    for base in [base_path, system_libs]:
+    for base in directories:
         for root, dirs, files in os.walk(base):
             files_and_dirs.extend(dirs)
             files_and_dirs.extend(files)
@@ -575,7 +694,7 @@ def main():
     bar = progressbar.ProgressBar(widgets=widgets,
                                   maxval=len(files_and_dirs)).start()
     progress = 0
-    for base in [base_path, system_libs]:
+    for base in directories:
         for root, dirs, files in os.walk(base):
             for directory in dirs:
                 progress += 1
