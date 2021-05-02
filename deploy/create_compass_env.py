@@ -371,10 +371,8 @@ def main():
     parser.add_argument("-f", "--config_file", dest="config_file",
                         help="Config file to override deployment config "
                              "options")
-    parser.add_argument("--test", dest="test", action='store_true',
-                        help="Deploy a test environment")
-    parser.add_argument("--no-test", dest="test", action='store_false',
-                        help="Deploy a production environment")
+    parser.add_argument("--release", dest="release", action='store_true',
+                        help="Deploy a shared production environment")
     parser.add_argument("--recreate", dest="recreate", action='store_true',
                         help="Recreate the environment if it exists")
     parser.add_argument("--no-recreate", dest="recreate", action='store_false',
@@ -420,10 +418,10 @@ def main():
     if args.config_file is not None:
         config.read(args.config_file)
 
-    if args.test is not None:
-        is_test = args.test
+    if args.release is not None:
+        is_test = not args.release
     else:
-        is_test = config.getboolean('deploy', 'test')
+        is_test = not config.getboolean('deploy', 'release')
 
     if args.conda_base is not None:
         base_path = args.conda_base
@@ -449,17 +447,12 @@ def main():
         check_call(command)
         sys.exit(0)
 
-    if args.group is not None:
-        group = args.group
-    else:
-        group = config.get('deploy', 'group')
-
     if args.python is not None:
         python = args.python
     else:
         python = config.get('deploy', 'python')
 
-    if args.test is not None:
+    if args.recreate is not None:
         force_recreate = args.recreate
     else:
         force_recreate = config.getboolean('deploy', 'recreate')
@@ -641,113 +634,120 @@ def main():
     commands = '{}; conda clean -y -p -t'.format(activate)
     check_call(commands)
 
-    new_uid = os.getuid()
-    new_gid = grp.getgrnam(group).gr_gid
+    if not is_test:
 
-    print('changing permissions on activation scripts')
-    activation_files = glob.glob('{}/*_compass*.sh'.format(
-        activ_path))
+        if args.group is not None:
+            group = args.group
+        else:
+            group = config.get('deploy', 'group')
 
-    read_perm = stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH
-    exec_perm = (stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR |
-                 stat.S_IRGRP | stat.S_IXGRP |
-                 stat.S_IROTH | stat.S_IXOTH)
+        new_uid = os.getuid()
+        new_gid = grp.getgrnam(group).gr_gid
 
-    mask = stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO
+        print('changing permissions on activation scripts')
+        activation_files = glob.glob('{}/*_compass*.sh'.format(
+            activ_path))
 
-    for file_name in activation_files:
-        os.chmod(file_name, read_perm)
-        os.chown(file_name, new_uid, new_gid)
+        read_perm = stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH
+        exec_perm = (stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR |
+                     stat.S_IRGRP | stat.S_IXGRP |
+                     stat.S_IROTH | stat.S_IXOTH)
 
-    print('changing permissions on environments')
+        mask = stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO
 
-    # first the base directories that don't seem to be included in os.walk()
-    directories = [base_path]
-    if system_libs is not None:
-        directories.append(system_libs)
-    for directory in directories:
-        try:
-            dir_stat = os.stat(directory)
-        except OSError:
-            continue
+        for file_name in activation_files:
+            os.chmod(file_name, read_perm)
+            os.chown(file_name, new_uid, new_gid)
 
-        perm = dir_stat.st_mode & mask
+        print('changing permissions on environments')
 
-        if perm == exec_perm and dir_stat.st_uid == new_uid and \
-                dir_stat.st_gid == new_gid:
-            continue
+        # first the base directories that don't seem to be included in os.walk()
+        directories = [base_path]
+        if system_libs is not None:
+            directories.append(system_libs)
+        for directory in directories:
+            try:
+                dir_stat = os.stat(directory)
+            except OSError:
+                continue
 
-        try:
-            os.chown(directory, new_uid, new_gid)
-            os.chmod(directory, exec_perm)
-        except OSError:
-            continue
+            perm = dir_stat.st_mode & mask
 
-    files_and_dirs = []
-    for base in directories:
-        for root, dirs, files in os.walk(base):
-            files_and_dirs.extend(dirs)
-            files_and_dirs.extend(files)
+            if perm == exec_perm and dir_stat.st_uid == new_uid and \
+                    dir_stat.st_gid == new_gid:
+                continue
 
-    widgets = [progressbar.Percentage(), ' ', progressbar.Bar(),
-               ' ', progressbar.ETA()]
-    bar = progressbar.ProgressBar(widgets=widgets,
-                                  maxval=len(files_and_dirs)).start()
-    progress = 0
-    for base in directories:
-        for root, dirs, files in os.walk(base):
-            for directory in dirs:
-                progress += 1
-                bar.update(progress)
+            try:
+                os.chown(directory, new_uid, new_gid)
+                os.chmod(directory, exec_perm)
+            except OSError:
+                continue
 
-                directory = os.path.join(root, directory)
+        files_and_dirs = []
+        for base in directories:
+            for root, dirs, files in os.walk(base):
+                files_and_dirs.extend(dirs)
+                files_and_dirs.extend(files)
 
-                try:
-                    dir_stat = os.stat(directory)
-                except OSError:
-                    continue
+        widgets = [progressbar.Percentage(), ' ', progressbar.Bar(),
+                   ' ', progressbar.ETA()]
+        bar = progressbar.ProgressBar(widgets=widgets,
+                                      maxval=len(files_and_dirs)).start()
+        progress = 0
+        for base in directories:
+            for root, dirs, files in os.walk(base):
+                for directory in dirs:
+                    progress += 1
+                    bar.update(progress)
 
-                perm = dir_stat.st_mode & mask
+                    directory = os.path.join(root, directory)
 
-                if perm == exec_perm and dir_stat.st_uid == new_uid and \
-                        dir_stat.st_gid == new_gid:
-                    continue
+                    try:
+                        dir_stat = os.stat(directory)
+                    except OSError:
+                        continue
 
-                try:
-                    os.chown(directory, new_uid, new_gid)
-                    os.chmod(directory, exec_perm)
-                except OSError:
-                    continue
+                    perm = dir_stat.st_mode & mask
 
-            for file_name in files:
-                progress += 1
-                bar.update(progress)
-                file_name = os.path.join(root, file_name)
-                try:
-                    file_stat = os.stat(file_name)
-                except OSError:
-                    continue
+                    if perm == exec_perm and dir_stat.st_uid == new_uid and \
+                            dir_stat.st_gid == new_gid:
+                        continue
 
-                perm = file_stat.st_mode & mask
+                    try:
+                        os.chown(directory, new_uid, new_gid)
+                        os.chmod(directory, exec_perm)
+                    except OSError:
+                        continue
 
-                if perm & stat.S_IXUSR:
-                    # executable, so make sure others can execute it
-                    new_perm = exec_perm
-                else:
-                    new_perm = read_perm
+                for file_name in files:
+                    progress += 1
+                    bar.update(progress)
+                    file_name = os.path.join(root, file_name)
+                    try:
+                        file_stat = os.stat(file_name)
+                    except OSError:
+                        continue
 
-                if perm == new_perm and file_stat.st_uid == new_uid and \
-                        file_stat.st_gid == new_gid:
-                    continue
+                    perm = file_stat.st_mode & mask
 
-                try:
-                    os.chown(file_name, new_uid, new_gid)
-                    os.chmod(file_name, perm)
-                except OSError:
-                    continue
+                    if perm & stat.S_IXUSR:
+                        # executable, so make sure others can execute it
+                        new_perm = exec_perm
+                    else:
+                        new_perm = read_perm
 
-    bar.finish()
-    print('  done.')
+                    if perm == new_perm and file_stat.st_uid == new_uid and \
+                            file_stat.st_gid == new_gid:
+                        continue
+
+                    try:
+                        os.chown(file_name, new_uid, new_gid)
+                        os.chmod(file_name, perm)
+                    except OSError:
+                        continue
+
+        bar.finish()
+        print('  done.')
 
 
 if __name__ == '__main__':
