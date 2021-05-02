@@ -76,28 +76,30 @@ def run_suite(suite_name):
                 except BaseException:
                     run_status = error_str
                     test_pass = False
-                    test_logger.exception('Exception raised')
+                    test_logger.exception('Exception raised in run()')
 
-                internal_status = None
                 if test_pass:
                     try:
                         test_case.validate()
-                        internal_status = pass_str
                     except BaseException:
-                        internal_status = fail_str
+                        run_status = error_str
                         test_pass = False
-                        test_logger.exception('Exception raised')
+                        test_logger.exception('Exception raised in validate()')
 
                 baseline_status = None
+                internal_status = None
                 if test_case.validation is not None:
                     internal_pass = test_case.validation['internal_pass']
                     baseline_pass = test_case.validation['baseline_pass']
 
-                    if internal_pass is not None and not internal_pass:
-                        internal_status = fail_str
-                        test_logger.exception(
-                            'Internal test case validation failed')
-                        test_pass = False
+                    if internal_pass is not None:
+                        if internal_pass:
+                            internal_status = pass_str
+                        else:
+                            internal_status = fail_str
+                            test_logger.exception(
+                                'Internal test case validation failed')
+                            test_pass = False
 
                     if baseline_pass is not None:
                         if baseline_pass:
@@ -107,17 +109,13 @@ def run_suite(suite_name):
                             test_logger.exception('Baseline validation failed')
                             test_pass = False
 
-                if internal_status is None:
-                    status = '  {}'.format(run_status)
-                elif baseline_status is None:
-                    status = '  test execution:      {}\n' \
-                             '  test validation:     {}'.format(
-                                  run_status, internal_status)
-                else:
-                    status = '  test execution:      {}\n' \
-                             '  test validation:     {}\n' \
-                             '  baseline comparison: {}'.format(
-                                  run_status, internal_status, baseline_status)
+                status = '  test execution:      {}'.format(run_status)
+                if internal_status is not None:
+                    status = '{}\n  test validation:     {}'.format(
+                        status, internal_status)
+                if baseline_status is not None:
+                    status = '{}\n  baseline comparison: {}'.format(
+                        status, baseline_status)
 
                 if test_pass:
                     logger.info(status)
