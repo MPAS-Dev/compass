@@ -2,6 +2,7 @@ from compass.testcase import TestCase
 from compass.ocean.tests.global_ocean.mesh.qu240 import QU240Mesh
 from compass.ocean.tests.global_ocean.mesh.ec30to60 import EC30to60Mesh
 from compass.ocean.tests.global_ocean.mesh.so12to60 import SO12to60Mesh
+from compass.ocean.tests.global_ocean.mesh.wc14 import WC14Mesh
 from compass.ocean.tests.global_ocean.configure import configure_global_ocean
 from compass.validate import compare_variables
 
@@ -48,6 +49,9 @@ class Mesh(TestCase):
         elif mesh_name in 'SOwISC12to60':
             self.mesh_step = SO12to60Mesh(self, mesh_name,
                                           with_ice_shelf_cavities=True)
+        elif mesh_name in 'WC14':
+            self.mesh_step = WC14Mesh(self, mesh_name,
+                                      with_ice_shelf_cavities=False)
         else:
             raise ValueError('Unknown mesh name {}'.format(mesh_name))
 
