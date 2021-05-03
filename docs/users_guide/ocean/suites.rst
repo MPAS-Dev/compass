@@ -14,7 +14,7 @@ nightly test suite
 
 .. code-block:: bash
 
-    python -m compass suite -c ocean -t nightly ...
+    compass suite -c ocean -t nightly ...
 
 The ``nightly`` test suite includes the following test cases:
 
@@ -84,7 +84,7 @@ quwisc240 test suite
 
 .. code-block:: bash
 
-    python -m compass suite -c ocean -t quwisc240 ...
+    compass suite -c ocean -t quwisc240 ...
 
 .. code-block:: none
 
@@ -119,7 +119,7 @@ qu240_for_e3sm test suite
 
 .. code-block:: bash
 
-    python -m compass suite -c ocean -t qu240_for_e3sm ...
+    compass suite -c ocean -t qu240_for_e3sm ...
 
 .. code-block:: none
 
@@ -138,7 +138,7 @@ quwisc240_for_e3sm test suite
 
 .. code-block:: bash
 
-    python -m compass suite -c ocean -t quwisc240_for_e3sm ...
+    compass suite -c ocean -t quwisc240_for_e3sm ...
 
 .. code-block:: none
 
@@ -157,7 +157,7 @@ ec30to60 test suite
 
 .. code-block:: bash
 
-    python -m compass suite -c ocean -t ec30to60 ...
+    compass suite -c ocean -t ec30to60 ...
 
 .. code-block:: none
 
@@ -178,7 +178,7 @@ ecwisc30to60 test suite
 
 .. code-block:: bash
 
-    python -m compass suite -c ocean -t ec30to60 ...
+    compass suite -c ocean -t ec30to60 ...
 
 .. code-block:: none
 

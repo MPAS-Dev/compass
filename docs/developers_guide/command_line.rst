@@ -10,17 +10,11 @@ to the package, as described below.
 
 When the ``compass`` package is installed into your conda environment, you can
 run these commands as above.  If you are developing ``compass`` from a local
-branch off of https://github.com/MPAS-Dev/compass, you will need to use a
-conda environment appropriate for development (see :ref:`dev_conda_env`) and
-you will have to tell python to use the local ``compass``, for example:
-
-.. code-block:: bash
-
-    python -m compass list
-
-The `-m flag <https://docs.python.org/3/using/cmdline.html#cmdoption-m>`_ tells
-python to first look for the ``compass`` package in the local ``compass``
-directory before looking in the conda environment.
+branch off of https://github.com/MPAS-Dev/compass, you will need to create a
+conda environment appropriate for development (see :ref:`dev_conda_env`).
+If you do, ``compass`` will be installed in the environment in "development"
+mode, meaning you can make changes to the branch and they will be reflected
+when you call the ``compass`` command-line tool.
 
 .. _dev_compass_list:
 
@@ -32,7 +26,7 @@ supported machines.  The command-line options are:
 
 .. code-block:: none
 
-    [python -m] compass list [-h] [-t TEST] [-n NUMBER] [--machines] [--suites] [-v]
+    compass list [-h] [-t TEST] [-n NUMBER] [--machines] [--suites] [-v]
 
 By default, all test cases are listed:
 
@@ -98,8 +92,8 @@ The command-line options are:
 
 .. code-block:: none
 
-    [python -m] compass setup [-h] [-t PATH] [-n NUM [NUM ...]] [-f FILE] [-m MACH]
-                              [-w PATH] [-b PATH] [-p PATH]
+    compass setup [-h] [-t PATH] [-n NUM [NUM ...]] [-f FILE] [-m MACH]
+                  [-w PATH] [-b PATH] [-p PATH]
 
 The ``-h`` or ``--help`` options will display the help message describing the
 command-line options.
@@ -159,7 +153,7 @@ options are:
 
 .. code-block:: none
 
-    [python -m] compass clean [-h] [-t PATH] [-n NUM [NUM ...]] [-w PATH]
+    compass clean [-h] [-t PATH] [-n NUM [NUM ...]] [-w PATH]
 
 The ``-h`` or ``--help`` options will display the help message describing the
 command-line options.
@@ -179,8 +173,8 @@ options are:
 
 .. code-block:: none
 
-    [python -m] compass suite [-h] -c CORE -t SUITE [-f FILE] [-s] [--clean] [-v]
-                              [-m MACH] [-b PATH] [-w PATH] [-p PATH]
+    compass suite [-h] -c CORE -t SUITE [-f FILE] [-s] [--clean] [-v]
+                  [-m MACH] [-b PATH] [-w PATH] [-p PATH]
 
 The ``-h`` or ``--help`` options will display the help message describing the
 command-line options.
@@ -218,7 +212,7 @@ that has been set up in the current directory:
 
 .. code-block:: none
 
-    [python -m] compass run [-h] [suite]
+    compass run [-h] [suite]
 
 Whereas other ``compass`` commands are typically run in the local clone of the
 compass repo, ``compass run`` needs to be run in the appropriate work

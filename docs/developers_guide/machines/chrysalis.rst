@@ -6,15 +6,14 @@ Chrysalis
 intel
 -----
 
-This is the default ``compass`` compiler on Chrysalis.  To activate the compass
-environment, load modules, and set appropriate environment variables, run this
-in the ``compass`` repo root:
+This is the default ``compass`` compiler on Chrysalis.  If the environment has
+been set up properly (see :ref:`dev_conda_env`), you should be able to source:
 
 .. code-block:: bash
 
-    source ./load/load_compass_env.sh
+    source test_compass_1.0.0_chrysalis_intel_impi.sh
 
-To build the MPAS model with
+Then, you can build the MPAS model with
 
 .. code-block:: bash
 
@@ -29,14 +28,13 @@ or
 gnu
 ---
 
-To activate the compass environment, load modules, and set appropriate
-environment variables, run this in the ``compass`` repo root:
+If you've set things up for this compiler, you should be able to:
 
 .. code-block:: bash
 
-    source ./load/load_compass_env.sh -c gnu
+    source test_compass_1.0.0_chrysalis_gnu_openmpi.sh
 
-To build the MPAS model with
+Then, you can build the MPAS model with
 
 .. code-block:: bash
 

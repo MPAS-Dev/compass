@@ -4,18 +4,15 @@ Cori
 cori-haswell, intel
 -------------------
 
-This is the default ``compass`` architecture and compiler on Cori.  To activate
-the compass environment, load modules, and set appropriate environment
-variables, run this in the ``compass`` repo root:
+This is the default ``compass`` architecture and compiler on Cori.  If the
+environment has been set up properly (see :ref:`dev_conda_env`), you should be
+able to source:
 
 .. code-block:: bash
 
-    source ./load/load_compass_env.sh -m cori-haswell
+    source test_compass_1.0.0_cori-haswell_intel_mpt.sh
 
-You don't have to supply ``-m cori-haswell`` but it will prevent you from
-getting a warning that you might want ``cori-knl``.
-
-To build the MPAS model with
+Then, you can build the MPAS model with
 
 .. code-block:: bash
 
@@ -30,17 +27,13 @@ or
 cori-haswell, gnu
 -----------------
 
-To activate the compass environment, load modules, and set appropriate
-environment variables, run this in the ``compass`` repo root:
+If you've set things up for this compiler, you should be able to:
 
 .. code-block:: bash
 
-    source ./load/load_compass_env.sh -m cori-haswell -c gnu
+    source test_compass_1.0.0_cori-haswell_gnu_mpt.sh
 
-As above, you don't have to supply ``-m cori-haswell`` but it will prevent you
-from getting a warning that you might want ``cori-knl``.
-
-To build the MPAS model with
+Then, you can build the MPAS model with
 
 .. code-block:: bash
 
@@ -55,15 +48,15 @@ or
 cori-knl, intel
 ---------------
 
-This is the default ``compass`` compiler on Cori-KNL.  To activate the compass
-environment, load modules, and set appropriate environment variables, run this
-in the ``compass`` repo root:
+This is the default ``compass`` compiler on Cori-KNL.  If the environment has
+been set up properly (see :ref:`dev_conda_env`), you should be able to source:
 
 .. code-block:: bash
 
-    source ./load/load_compass_env.sh -m cori-knl
+    source test_compass_1.0.0_cori-knl_intel_mpt.sh
 
-To build the MPAS model with
+Then, you can build the MPAS model with
+
 
 .. code-block:: bash
 
@@ -78,15 +71,13 @@ or
 cori-knl, gnu
 -------------
 
-To activate the compass environment, load modules, and set appropriate
-environment variables, run this in the ``compass`` repo root:
+If you've set things up for this compiler, you should be able to:
 
 .. code-block:: bash
 
-    source ./load/load_compass_env.sh -m cori-knl -c gnu
+    source test_compass_1.0.0_cori-knl_gnu_mpt.sh
 
-
-To build the MPAS model with
+Then, you can build the MPAS model with
 
 .. code-block:: bash
 
@@ -97,4 +88,3 @@ or
 .. code-block:: bash
 
     make CORE=ocean gnu-nersc
-
