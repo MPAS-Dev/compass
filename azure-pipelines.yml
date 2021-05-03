@@ -44,7 +44,7 @@ jobs:
   - bash: |
       eval "$(conda shell.bash hook)"
       conda activate build
-      conda build -m ci/mpi_$(mpi).yaml recipe
+      conda build -m ci/mpi_$(mpi).yaml conda/recipe
     displayName: Build COMPASS metapackage
 
   - bash: |
@@ -188,7 +188,7 @@ jobs:
   - bash: |
       eval "$(conda shell.bash hook)"
       conda activate build
-      conda build -m ci/mpi_$(mpi).yaml recipe
+      conda build -m ci/mpi_$(mpi).yaml conda/recipe
     displayName: Build COMPASS metapackage
 
   - bash: |
