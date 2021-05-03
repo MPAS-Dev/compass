@@ -222,17 +222,11 @@ def setup_case(path, test_case, config_file, machine, work_dir, baseline_dir,
         # process input, output, namelist and streams files
         step.process_inputs_and_outputs()
 
-        # write a run script for each step
-        _link_compass(step.work_dir)
-
         # pickle the test case and step for use at runtime
         pickle_filename = os.path.join(step.work_dir, 'step.pickle')
         with open(pickle_filename, 'wb') as handle:
             pickle.dump((test_case, step), handle,
                         protocol=pickle.HIGHEST_PROTOCOL)
-
-    # write a run script for each step
-    _link_compass(test_case.work_dir)
 
     # pickle the test case and step for use at runtime
     pickle_filename = os.path.join(test_case.work_dir, 'test_case.pickle')
@@ -284,11 +278,3 @@ def main():
                 config_file=args.config_file, machine=args.machine,
                 work_dir=args.work_dir, baseline_dir=args.baseline_dir,
                 mpas_model_path=args.mpas_model)
-
-
-def _link_compass(work_dir):
-    # if compass/__init__.py exists, we're using a local version of the compass
-    # package and we'll want to link to that in the tests and steps
-    compass_path = os.path.join(os.getcwd(), 'compass')
-    if os.path.exists(os.path.join(compass_path, '__init__.py')):
-        symlink(compass_path, os.path.join(work_dir, 'compass'))
