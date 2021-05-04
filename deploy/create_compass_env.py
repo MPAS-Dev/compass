@@ -14,17 +14,13 @@ def get_envs():
     # version, python version, and which mpi variant (nompi, mpich or openmpi)
     # to use.
 
-    envs = [{'suffix': '_nompi',
-             'version': '0.1.12',
+    envs = [{'suffix': '',
+             'version': '0.2.0',
              'python': '3.8',
-             'mpi': 'nompi'},
-            {'suffix': '',
-             'version': '0.1.12',
-             'python': '3.8',
-             'mpi': 'mpich'}]
+             'mpi': 'nompi'}]
 
     # whether to delete and rebuild each environment if it already exists
-    force_recreate = False
+    force_recreate = True
 
     # whether these are to be test environments
     is_test = False
