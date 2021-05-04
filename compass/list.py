@@ -94,7 +94,7 @@ def list_suites(cores=None):
             suites = contents('compass.{}.suites'.format(core))
         except FileNotFoundError:
             continue
-        for suite in suites:
+        for suite in sorted(suites):
             if suite.endswith('.txt'):
                 print('  -c {} -t {}'.format(core, os.path.splitext(suite)[0]))
 
