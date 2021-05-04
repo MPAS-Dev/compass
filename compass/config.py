@@ -52,7 +52,7 @@ def add_config(config, package, config_file, exception=True):
     try:
         with resources.path(package, config_file) as path:
             config.read(path)
-    except (ModuleNotFoundError, FileNotFoundError):
+    except (ModuleNotFoundError, FileNotFoundError, TypeError):
         if exception:
             raise
 
