@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<config case="forward">
+	<add_link source="../init/ocean.nc" dest="init.nc"/>
+	<add_link source="../init/mesh.nc" dest="mesh.nc"/>
+	<add_link source="../init/graph.info" dest="graph.info"/>
+	<copy_file source_path="script_test_dir" source="gotmturb.nml" dest="gotmturb.nml"/>
+
+	<add_executable source="model" dest="ocean_model"/>
+
+	<namelist name="namelist.ocean" mode="forward">
+		<option name="config_ocean_run_mode">'forward'</option>
+		<option name="config_dt">'00:00:10'</option>
+		<option name="config_time_integrator">'RK4'</option>
+		<option name="config_run_duration">'0006_00:00:00'</option>
+		<option name="config_disable_tr_adv">.true.</option>
+		<option name="config_use_debugTracers">.true.</option>
+		<option name="config_use_sedimentTracers">.true.</option>
+		<option name="config_use_mom_del2">.true.</option>
+		<option name="config_mom_del2">1.0e-2</option>
+		<option name="config_use_tracer_del2">.true.</option>
+		<option name="config_tracer_del2">10.0</option>
+		<option name="config_use_cvmix">.false.</option>
+		<option name="config_use_gotm">.true.</option>
+		<option name="config_gotm_namelist_file">'gotmturb.nml'</option>
+		<option name="config_gotm_constant_bottom_roughness_length">5.0e-3</option>
+		<option name="config_gotm_constant_bottom_drag_coeff">1.73e-2</option>
+		<option name="config_use_implicit_bottom_drag">.true.</option>
+		<option name="config_implicit_bottom_drag_coeff">1.73e-2</option>
+	</namelist>
+
+	<streams name="streams.ocean" keep="immutable" mode="forward">
+		<stream name="mesh">
+			<attribute name="filename_template">mesh.nc</attribute>
+		</stream>
+		<stream name="input">
+			<attribute name="filename_template">init.nc</attribute>
+		</stream>
+		<stream name="output">
+			<attribute name="type">output</attribute>
+			<attribute name="filename_template">output.nc</attribute>
+			<attribute name="output_interval">0000-00-00_01:00:00</attribute>
+			<attribute name="clobber_mode">truncate</attribute>
+			<add_contents>
+				<member name="tracers" type="var_struct"/>
+				<member name="velocityZonal" type="var"/>
+				<member name="velocityMeridional" type="var"/>
+				<member name="normalVelocity" type="var"/>
+				<member name="mesh" type="stream"/>
+				<member name="xtime" type="var"/>
+				<member name="layerThickness" type="var"/>
+			</add_contents>
+		</stream>
+	</streams>
+
+	<run_script name="run.py">
+		<step executable="gpmetis">
+			<argument flag="graph.info">2</argument>
+		</step>
+		<model_run procs="2" threads="1" namelist="namelist.ocean" streams="streams.ocean"/>
+	</run_script>
+</config>
