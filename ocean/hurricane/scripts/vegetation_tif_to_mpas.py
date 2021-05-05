@@ -112,7 +112,7 @@ def plot_interp_data(lon_data,lat_data,data,lon_grid,lat_grid,interp_data,tri):
 #########################################  MAIN CODE  ##############################################
 if __name__ == '__main__':
   import yaml
-  import gdal,osr
+  from osgeo import gdal
   import os
   import sys
   import pprint
