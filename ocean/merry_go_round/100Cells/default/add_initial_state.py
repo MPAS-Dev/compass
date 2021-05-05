@@ -3,10 +3,13 @@
 '''
 This script creates an initial condition file for MPAS-Ocean.
 
-Steady state ETD test case
+Merry-go-round Test Case: steady state test case for horizontal 
+and vertical advection. 
 see:
-Demange, J., Debreu, L., Marchesiello, P., Lemarié, F., Blayo, E., Eldred, C., 2019. Stability analysis of split-explicit free surface ocean models: Implication of the depth-independent barotropic mode approximation. 
-Journal of Computational Physics 398, 108875. https://doi.org/10.1016/j.jcp.2019.108875
+Calandrini, S., Pieper, K. and Gunzburger, M.D., 2020. Exponential time 
+differencing for the tracer equations appearing in primitive equation 
+ocean models. Computer Methods in Applied Mechanics and Engineering, 
+365, p.113002.
 '''
 
 import os
@@ -58,8 +61,6 @@ def main():
     cellsOnEdge = ds['cellsOnEdge']
     edgesOnCell = ds['edgesOnCell']
 
-    #print(cellsOnEdge.shape)   
-
     # Adjust coordinates so first edge is at zero in x and y
     xOffset = xEdge.min()
     xCell -= xOffset
@@ -75,12 +76,7 @@ def main():
     xCellMin = min(xCell)
     xCellMid = 0.5 * (xCellMax + xCellMin)
     xEdgeMax = max(xEdge)
-    print(xCellMax)
-    print(xCellMin)
-    print(xEdgeMax)
-    print(min(xEdge))
-    #print(min(yEdge))
-
+   
     # initialize velocity field 
     u = np.zeros([1, nEdges, nVertLevels])
 
@@ -91,14 +87,12 @@ def main():
     for var in varsZ:
         globals()[var] = np.nan * np.ones(nVertLevels)
 
-    vars2D = ['ssh', 'bottomDepth', #'bottomDepthObserved',
-        'surfaceStress', 'atmosphericPressure', 'boundaryLayerDepth']
+    vars2D = ['ssh', 'bottomDepth', 'surfaceStress',
+	'atmosphericPressure', 'boundaryLayerDepth']
     for var in vars2D:
         globals()[var] = np.nan * np.ones(nCells)
     maxLevelCell = np.ones(nCells, dtype=np.int32)
 
-    #vars3D = [ 'layerThickness','temperature', 'salinity',
-    #     'zMid', 'density']
     vars3D = [ 'layerThickness','temperature', 'salinity',
          'zMid', 'density', 'tracer1', 'tracer2', 'tracer3']
     for var in vars3D:
@@ -118,11 +112,7 @@ def main():
         refBottomDepth[k] = refBottomDepth[k - 1] + refLayerThickness[k]
         refZMid[k] = -refBottomDepth[k - 1] - 0.5 * refLayerThickness[k]
 
-    # Marsaleix et al 2008 page 81
-    # Gaussian function in depth for deep sea ridge 
-    #bottomDepthObserved[:] = maxDepth - 1000.0 * np.exp(-((xCell[:] - xMid) / 15e3)**2)
-    # SSH varies from -1.0 to 1.0m across the domain
-    #ssh[:] = (xCell[:] - xMid)/ xMid
+    # See surface height
     ssh[:] = 0.0
 
     # Compute maxLevelCell and layerThickness for z-level (variation only on top)
@@ -130,31 +120,11 @@ def main():
         vertCoordMovementWeights[:] = 0.0
         vertCoordMovementWeights[0] = 1.0
         for iCell in range(0, nCells):
-            #for k in range(nVertLevels - 1, 0, -1):
-            #    if bottomDepthObserved[iCell] > refBottomDepth[k - 1]:
-
-            #        # z-level (and z-star) vertical coordinates
-            #        maxLevelCell[iCell] = k
-            #        # Partial bottom cells
-            #        bottomDepth[iCell] = bottomDepthObserved[iCell]
-            #        # No partial bottom cells
-            #        #bottomDepth[iCell] = refBottomDepth[k]
-
-            #        layerThickness[0, iCell, k] = bottomDepth[iCell] - refBottomDepth[k - 1]
-            #        break
-
-            #for k in range(nVertLevels - 1, 0, -1):
-            #    # z-level (and z-star) vertical coordinates
-            #    maxLevelCell[iCell] = k
-            #    # No partial bottom cells
-            #    bottomDepth[iCell] = refBottomDepth[k]    
-            maxLevelCell[iCell] = nVertLevels - 1 
+            maxLevelCell[iCell] = nVertLevels - 1
             bottomDepth[iCell] = refBottomDepth[nVertLevels - 1]
-            #layerThickness[0, iCell, 0:maxLevelCell[iCell] ] = refLayerThickness[0:maxLevelCell[iCell]]
             layerThickness[0, iCell, :] = refLayerThickness[:]
             layerThickness[0, iCell, 0] += ssh[iCell]
         restingThickness[:, :] = layerThickness[0, :, :]
-       
 
     # Compute maxLevelCell and layerThickness for sigma
     #elif (vertical_coordinate=='sigma'):
@@ -172,8 +142,7 @@ def main():
             0.5 * layerThickness[0, iCell, k]
         for k in range(maxLevelCell[iCell] - 1, -1, -1):
             zMid[0, iCell, k] = zMid[0, iCell, k + 1] + 0.5 * \
-                (layerThickness[0, iCell, k + 1] + layerThickness[0, iCell, k]) 
-    #print(zMid[0, 1, :])
+                (layerThickness[0, iCell, k + 1] + layerThickness[0, iCell, k])
 
     # initialize tracers
     rho0 = 1000.0  # kg/m^3
@@ -214,35 +183,21 @@ def main():
 
     # initial velocity on edges
     ds['normalVelocity'] = (('Time', 'nEdges', 'nVertLevels',), np.zeros([1, nEdges, nVertLevels]))
-    normalVelocity = ds['normalVelocity']      
+    normalVelocity = ds['normalVelocity']
     for iEdge in range(0, nEdges):
-        cell1 = cellsOnEdge[iEdge,0] - 1 
+        cell1 = cellsOnEdge[iEdge,0] - 1
         cell2 = cellsOnEdge[iEdge,1] - 1
         for k in range(0, nVertLevels):
             zMidEdge = 0.5*(zMid[0, cell1, k] + zMid[0, cell2, k])
             dPsi = - (2.0*zMidEdge + maxDepth) / (0.5*maxDepth)**2
-            u[0, iEdge, k] = (1.0 - ((xEdge[iEdge] - 0.5*xCellMax)**4)/((0.5*(xCellMax-xCellMin))**4)) * dPsi  
+            u[0, iEdge, k] = (1.0 - ((xEdge[iEdge] - 0.5*xCellMax)**4)/((0.5*(xCellMax-xCellMin))**4)) * dPsi
             if ((cell1<0.5*nCells and cell1>0.25*nCells-1) and (cell2<0.5*nCells and cell2>0.25*nCells-1)):
-               u[0, iEdge, k] = (1.0 - (((xEdge[iEdge]-xCellMin) - 0.5*(xCellMax+xCellMin))**4)/((0.5*(xCellMax-xCellMin))**4)) * dPsi 
+               u[0, iEdge, k] = (1.0 - (((xEdge[iEdge]-xCellMin) - 0.5*(xCellMax+xCellMin))**4)/((0.5*(xCellMax-xCellMin))**4)) * dPsi
             if (cell1>0.75*nCells-1 and cell2>0.75*nCells-1):
                u[0, iEdge, k] = (1.0 - (((xEdge[iEdge]-xCellMin) - 0.5*(xCellMax+xCellMin))**4)/((0.5*(xCellMax-xCellMin))**4)) * dPsi
         normalVelocity[0, iEdge, :] = u[0, iEdge, :] * math.cos(angleEdge[iEdge])
-        if (xEdge[iEdge]<=xCellMin or xEdge[iEdge]>=xCellMax): 
+        if (xEdge[iEdge]<=xCellMin or xEdge[iEdge]>=xCellMax):
             normalVelocity[0, iEdge, :] = 0.0
-
-    # initial velocity on cell centers
-    ds['velocityCell'] = (('Time', 'nCells', 'nVertLevels',), np.zeros([1, nCells, nVertLevels]))
-    velocityCell = ds['velocityCell']
-    for iCell in range(0, nCells):
-        for k in range(0, nVertLevels):
-            dPsi = - (2.0*zMid[0, iCell, k] + maxDepth) / (0.5*maxDepth)**2
-            velocityCell[0, iCell, k] = (1.0 - ((xCell[iCell] - 0.5*xCellMax)**4)/((0.5*xCellMax)**4)) * dPsi   
-    for iCell in range(0, nCells):
-        sumVert = 0.0
-        for k in range(0, nVertLevels):    
-            sumVert = sumVert + velocityCell[0, iCell, k] * layerThickness[0, iCell, k]
-        #print(sumVert)
-    #print(velocityCell[0,0:100,1]) 
 
     # Coriolis parameter
     ds['fCell'] = (('nCells', 'nVertLevels',), np.zeros([nCells, nVertLevels]))

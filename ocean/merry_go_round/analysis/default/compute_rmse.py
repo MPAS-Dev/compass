@@ -3,7 +3,7 @@
 This script plots results from MPAS-Ocean convergence test.
 '''
 import numpy as np
-import math 
+import math
 from netCDF4 import Dataset
 import matplotlib.pyplot as plt
 import matplotlib
@@ -28,15 +28,15 @@ for i in range(nTests):
     for k in range(nOperators): 
         ncfile12 = Dataset('/lustre/scratch4/turquoise/scalandrini/runs/steadyStateOcean/' + test + '/100Cells/forward/output' + '/output.0001-01-01_00.00.00.nc', 'r')
         ncfile6 = Dataset('/lustre/scratch4/turquoise/scalandrini/runs/steadyStateOcean/' + test + '/200Cells/forward/output' + '/output.0001-01-01_00.00.00.nc', 'r')
-        ncfile3 = Dataset('/lustre/scratch4/turquoise/scalandrini/runs/steadyStateOcean/' + test + '/400Cells/forward/output' + '/output.0001-01-01_00.00.00.nc', 'r')     
-        # 
+        ncfile3 = Dataset('/lustre/scratch4/turquoise/scalandrini/runs/steadyStateOcean/' + test + '/400Cells/forward/output' + '/output.0001-01-01_00.00.00.nc', 'r')
+        #
         operator = operators[k]
         areas12 = ncfile12.variables['areaCell'][:]
         areas6 = ncfile6.variables['areaCell'][:]
         areas3 = ncfile3.variables['areaCell'][:]
         sol12 = ncfile12.variables[operator][1, :, 0]
         sol6 = ncfile6.variables[operator][1, :, 0]
-        sol3 = ncfile3.variables[operator][1, :, 0]     
+        sol3 = ncfile3.variables[operator][1, :, 0]
         ref12 = ncfile12.variables[operator][0, :, 0]
         ref6 = ncfile6.variables[operator][0, :, 0]
         ref3 = ncfile3.variables[operator][0, :, 0]
@@ -59,16 +59,16 @@ for i in range(nTests):
         #
         L2[0] = np.sqrt(numL2_12)/np.sqrt(denL2_12)
         L2[1] = np.sqrt(numL2_6)/np.sqrt(denL2_6)
-        L2[2] = np.sqrt(numL2_3)/np.sqrt(denL2_3) 
-        # 
+        L2[2] = np.sqrt(numL2_3)/np.sqrt(denL2_3)
+        #
         order = math.log2(L2[0]/L2[1])
         print(order)
         order = math.log2(L2[1]/L2[2])
-        print(order)   
+        print(order)
         #
         ncfile12.close()
         ncfile6.close()
-        ncfile3.close()     
+        ncfile3.close()
 
 for i in range(nTests):
     test = tests[i]
