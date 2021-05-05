@@ -53,6 +53,46 @@ baroclinic_channel
    initial_state.InitialState.setup
    initial_state.InitialState.run
 
+
+global_convergence
+~~~~~~~~~~~~~~~~~~
+
+.. currentmodule:: compass.ocean.tests.global_convergence
+
+.. autosummary::
+   :toctree: generated/
+
+   GlobalConvergence
+
+cosine_bell
+'''''''''''
+
+.. currentmodule:: compass.ocean.tests.global_convergence.cosine_bell
+
+.. autosummary::
+   :toctree: generated/
+
+   CosineBell
+   CosineBell.configure
+   CosineBell.run
+
+   mesh.Mesh
+   mesh.Mesh.run
+   mesh.Mesh.build_cell_width_lat_lon
+
+   init.Init
+   init.Init.run
+
+   forward.Forward
+   forward.Forward.setup
+   forward.Forward.run
+   forward.Forward.get_dt
+
+   analysis.Analysis
+   analysis.Analysis.run
+   analysis.Analysis.rmse
+
+
 global_ocean
 ~~~~~~~~~~~~
 
