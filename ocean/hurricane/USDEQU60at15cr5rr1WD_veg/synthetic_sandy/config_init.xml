@@ -1,5 +1,22 @@
 <?xml version="1.0"?>
 <config case="init">
+
+	<get_file dest_path="initial_condition_database" file_name="Chesapeake_and_Delaware_Bay_LambMap_DietrichN.tif"> 
+		<mirror protocol="wget" url="https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-ocean/initial_condition_database/"/> 
+	</get_file>
+	<get_file dest_path="initial_condition_database" file_name="DelawareSM.tif"> 
+		<mirror protocol="wget" url="https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-ocean/initial_condition_database/"/> 
+	</get_file>
+	<get_file dest_path="initial_condition_database" file_name="Delaware.Size.2000-08.tif"> 
+		<mirror protocol="wget" url="https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-ocean/initial_condition_database/"/> 
+	</get_file>
+	<get_file dest_path="initial_condition_database" file_name="Delaware.Height.2000-08.tif"> 
+		<mirror protocol="wget" url="https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-ocean/initial_condition_database/"/> 
+	</get_file>
+	<get_file dest_path="initial_condition_database" file_name="Delaware.Density.2000-08.tif"> 
+		<mirror protocol="wget" url="https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-ocean/initial_condition_database/"/> 
+	</get_file>
+
 	<add_link source="../../build_mesh/culled_mesh/culled_mesh.nc" dest="mesh.nc"/>
 	<add_link source="../../build_mesh/culled_mesh/culled_graph.info" dest="graph.info"/>
 	<add_link source_path="script_configuration_dir" source="scripts/create_pointstats_file.py" dest="create_pointstats_file.py"/>
@@ -14,7 +31,7 @@
 	<add_link source_path="initial_condition_database" source="Chesapeake_and_Delaware_Bay_LambMap_DietrichN.tif" dest="manning.tif"/>
 	<add_link source_path="initial_condition_database" source="DelawareSM.tif" dest="vegetation_mask.tif"/>
 	<add_link source_path="initial_condition_database" source="Delaware.Size.2000-08.tif" dest="vegetation_size.tif"/>
-	<add_link source_path="initial_condition_database" source="Delaware.Height.2000-08.tif" dest="vegetaton_height.tif"/>
+	<add_link source_path="initial_condition_database" source="Delaware.Height.2000-08.tif" dest="vegetation_height.tif"/>
 	<add_link source_path="initial_condition_database" source="Delaware.Density.2000-08.tif" dest="vegetation_density.tif"/>
 
 	<namelist name="namelist.ocean" mode="init">
