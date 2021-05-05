@@ -208,7 +208,7 @@ def setup_case(path, test_case, config_file, machine, work_dir, baseline_dir,
         except OSError:
             pass
 
-        symlink(os.path.join('..', test_case_config),
+        symlink(os.path.join(test_case_dir, test_case_config),
                 os.path.join(step_dir, test_case_config))
 
         step.work_dir = step_dir
