@@ -242,20 +242,20 @@
 
     <span class="c1"># no configure() method is needed</span>
 
-<div class="viewcode-block" id="DecompositionTest.run"><a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.eismint2.decomposition_test.DecompositionTest.run.html#compass.landice.tests.eismint2.decomposition_test.DecompositionTest.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Run each step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># run the steps</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+    <span class="c1"># no run() method is needed</span>
 
+    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Test cases can override this method to perform validation of variables</span>
+<span class="sd">        and timers</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;thickness&#39;</span><span class="p">,</span> <span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;basalTemperature&#39;</span><span class="p">,</span>
                      <span class="s1">&#39;heatDissipation&#39;</span><span class="p">]</span>
         <span class="n">steps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps_to_run</span>
         <span class="k">if</span> <span class="s1">&#39;1proc_run&#39;</span> <span class="ow">in</span> <span class="n">steps</span> <span class="ow">and</span> <span class="s1">&#39;4proc_run&#39;</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">:</span>
             <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
                               <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;1proc_run/output.nc&#39;</span><span class="p">,</span>
-                              <span class="n">filename2</span><span class="o">=</span><span class="s1">&#39;4proc_run/output.nc&#39;</span><span class="p">)</span></div></div>
+                              <span class="n">filename2</span><span class="o">=</span><span class="s1">&#39;4proc_run/output.nc&#39;</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

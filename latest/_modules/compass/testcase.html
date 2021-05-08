@@ -325,7 +325,7 @@
 <span class="sd">        in the overridden ``run()`` method to actually call the steps of the</span>
 <span class="sd">        run.  The developer will need to decide where in the overridden method</span>
 <span class="sd">        to make the call to ``super().run()``, after any updates to steps</span>
-<span class="sd">        based on config options but before validation.</span>
+<span class="sd">        based on config options, typically at the end of the new method.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
         <span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
@@ -356,6 +356,13 @@
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;     Complete&#39;</span><span class="p">)</span>
 
             <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">cwd</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestCase.validate"><a class="viewcode-back" href="../../developers_guide/generated/compass.TestCase.validate.html#compass.TestCase.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Test cases can override this method to perform validation of variables</span>
+<span class="sd">        and timers</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="TestCase.add_step"><a class="viewcode-back" href="../../developers_guide/generated/compass.TestCase.add_step.html#compass.TestCase.add_step">[docs]</a>    <span class="k">def</span> <span class="nf">add_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">run_by_default</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>

@@ -240,14 +240,13 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ice_shelf_2d</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Default.run"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.ice_shelf_2d.default.Default.run.html#compass.ocean.tests.ice_shelf_2d.default.Default.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Run each step of the test case</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># run the steps</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+    <span class="c1"># no run() method is needed</span>
 
-        <span class="c1"># perform validation</span>
+    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Test cases can override this method to perform validation of variables</span>
+<span class="sd">        and timers</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;salinity&#39;</span><span class="p">,</span> <span class="s1">&#39;layerThickness&#39;</span><span class="p">,</span>
                      <span class="s1">&#39;normalVelocity&#39;</span><span class="p">]</span>
         <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
@@ -263,7 +262,7 @@
              <span class="s1">&#39;landIceInterfaceTemperature&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceInterfaceSalinity&#39;</span><span class="p">,</span>
              <span class="s1">&#39;accumulatedLandIceMass&#39;</span><span class="p">,</span> <span class="s1">&#39;accumulatedLandIceHeat&#39;</span><span class="p">]</span>
         <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
-                          <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;forward/land_ice_fluxes.nc&#39;</span><span class="p">)</span></div></div>
+                          <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;forward/land_ice_fluxes.nc&#39;</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

@@ -204,6 +204,15 @@
 <span class="sd">    suite_name : str</span>
 <span class="sd">        The name of the test suite</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># ANSI fail text: https://stackoverflow.com/a/287944/7728169</span>
+    <span class="n">start_fail</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[91m&#39;</span>
+    <span class="n">start_pass</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[92m&#39;</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[0m&#39;</span>
+    <span class="n">pass_str</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">PASS</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">start_pass</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
+    <span class="n">success_str</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">SUCCESS</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">start_pass</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
+    <span class="n">fail_str</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">FAIL</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">start_fail</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
+    <span class="n">error_str</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">ERROR</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">start_fail</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.pickle&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suite_name</span><span class="p">)):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The suite &quot;</span><span class="si">{}</span><span class="s1">&quot; doesn</span><span class="se">\&#39;</span><span class="s1">t appear to have been set up &#39;</span>
                          <span class="s1">&#39;here.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suite_name</span><span class="p">))</span>
@@ -248,46 +257,60 @@
                 <span class="n">test_start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">test_case</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
-                    <span class="n">internal_status</span> <span class="o">=</span> <span class="s1">&#39;PASS&#39;</span>
+                    <span class="n">run_status</span> <span class="o">=</span> <span class="n">success_str</span>
                     <span class="n">test_pass</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
-                    <span class="n">internal_status</span> <span class="o">=</span> <span class="s1">&#39;FAIL&#39;</span>
+                    <span class="n">run_status</span> <span class="o">=</span> <span class="n">error_str</span>
                     <span class="n">test_pass</span> <span class="o">=</span> <span class="kc">False</span>
-                    <span class="n">test_logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Exception raised&#39;</span><span class="p">)</span>
+                    <span class="n">test_logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Exception raised in run()&#39;</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">test_pass</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">test_case</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+                    <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
+                        <span class="n">run_status</span> <span class="o">=</span> <span class="n">error_str</span>
+                        <span class="n">test_pass</span> <span class="o">=</span> <span class="kc">False</span>
+                        <span class="n">test_logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Exception raised in validate()&#39;</span><span class="p">)</span>
 
                 <span class="n">baseline_status</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="n">internal_status</span> <span class="o">=</span> <span class="kc">None</span>
                 <span class="k">if</span> <span class="n">test_case</span><span class="o">.</span><span class="n">validation</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">internal_pass</span> <span class="o">=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">validation</span><span class="p">[</span><span class="s1">&#39;internal_pass&#39;</span><span class="p">]</span>
                     <span class="n">baseline_pass</span> <span class="o">=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">validation</span><span class="p">[</span><span class="s1">&#39;baseline_pass&#39;</span><span class="p">]</span>
 
-                    <span class="k">if</span> <span class="n">internal_pass</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">internal_pass</span><span class="p">:</span>
-                        <span class="n">internal_status</span> <span class="o">=</span> <span class="s1">&#39;FAIL&#39;</span>
-                        <span class="n">test_logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span>
-                            <span class="s1">&#39;Internal test case validation failed&#39;</span><span class="p">)</span>
-                        <span class="n">test_pass</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="k">if</span> <span class="n">internal_pass</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">internal_pass</span><span class="p">:</span>
+                            <span class="n">internal_status</span> <span class="o">=</span> <span class="n">pass_str</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">internal_status</span> <span class="o">=</span> <span class="n">fail_str</span>
+                            <span class="n">test_logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span>
+                                <span class="s1">&#39;Internal test case validation failed&#39;</span><span class="p">)</span>
+                            <span class="n">test_pass</span> <span class="o">=</span> <span class="kc">False</span>
 
                     <span class="k">if</span> <span class="n">baseline_pass</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                         <span class="k">if</span> <span class="n">baseline_pass</span><span class="p">:</span>
-                            <span class="n">baseline_status</span> <span class="o">=</span> <span class="s1">&#39;PASS&#39;</span>
+                            <span class="n">baseline_status</span> <span class="o">=</span> <span class="n">pass_str</span>
                         <span class="k">else</span><span class="p">:</span>
-                            <span class="n">baseline_status</span> <span class="o">=</span> <span class="s1">&#39;FAIL&#39;</span>
+                            <span class="n">baseline_status</span> <span class="o">=</span> <span class="n">fail_str</span>
                             <span class="n">test_logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Baseline validation failed&#39;</span><span class="p">)</span>
                             <span class="n">test_pass</span> <span class="o">=</span> <span class="kc">False</span>
 
-                <span class="k">if</span> <span class="n">baseline_status</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">status</span> <span class="o">=</span> <span class="s1">&#39;  </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">internal_status</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">status</span> <span class="o">=</span> <span class="s1">&#39;  test: </span><span class="si">{}</span><span class="s1">  baseline comparison: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                        <span class="n">internal_status</span><span class="p">,</span> <span class="n">baseline_status</span><span class="p">)</span>
+                <span class="n">status</span> <span class="o">=</span> <span class="s1">&#39;  test execution:      </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">run_status</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">internal_status</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">status</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="se">\n</span><span class="s1">  test validation:     </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">status</span><span class="p">,</span> <span class="n">internal_status</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">baseline_status</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">status</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="se">\n</span><span class="s1">  baseline comparison: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">status</span><span class="p">,</span> <span class="n">baseline_status</span><span class="p">)</span>
 
                 <span class="k">if</span> <span class="n">test_pass</span><span class="p">:</span>
                     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
-                    <span class="n">success</span><span class="p">[</span><span class="n">test_name</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;PASS&#39;</span>
+                    <span class="n">success</span><span class="p">[</span><span class="n">test_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">pass_str</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
                     <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;  see: case_outputs/</span><span class="si">{}</span><span class="s1">.log&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                         <span class="n">test_name</span><span class="p">))</span>
-                    <span class="n">success</span><span class="p">[</span><span class="n">test_name</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;FAIL&#39;</span>
+                    <span class="n">success</span><span class="p">[</span><span class="n">test_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">fail_str</span>
                     <span class="n">failures</span> <span class="o">+=</span> <span class="mi">1</span>
 
                 <span class="n">test_times</span><span class="p">[</span><span class="n">test_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">test_start</span>
@@ -335,7 +358,8 @@
     <span class="n">test_case</span><span class="o">.</span><span class="n">new_step_log_file</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="k">with</span> <span class="n">LoggingContext</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">test_name</span><span class="p">)</span> <span class="k">as</span> <span class="n">logger</span><span class="p">:</span>
         <span class="n">test_case</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
-        <span class="n">test_case</span><span class="o">.</span><span class="n">run</span><span class="p">()</span></div>
+        <span class="n">test_case</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+        <span class="n">test_case</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="run_step"><a class="viewcode-back" href="../../developers_guide/generated/compass.run.run_step.html#compass.run.run_step">[docs]</a><span class="k">def</span> <span class="nf">run_step</span><span class="p">():</span>
@@ -357,7 +381,8 @@
     <span class="n">test_name</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
     <span class="k">with</span> <span class="n">LoggingContext</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">test_name</span><span class="p">)</span> <span class="k">as</span> <span class="n">logger</span><span class="p">:</span>
         <span class="n">test_case</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
-        <span class="n">test_case</span><span class="o">.</span><span class="n">run</span><span class="p">()</span></div>
+        <span class="n">test_case</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+        <span class="n">test_case</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span></div>
 
 
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>

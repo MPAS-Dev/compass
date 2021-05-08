@@ -245,16 +245,17 @@
                 <span class="n">target</span><span class="p">:</span>
             <span class="n">symlink</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">target</span><span class="p">),</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/README&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="A.run"><a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.enthalpy_benchmark.A.A.run.html#compass.landice.tests.enthalpy_benchmark.A.A.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="c1"># no run() method is needed</span>
+
+    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Run each step of the test case</span>
+<span class="sd">        Test cases can override this method to perform validation of variables</span>
+<span class="sd">        and timers</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># run the steps</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
         <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;basalWaterThickness&#39;</span><span class="p">,</span>
                      <span class="s1">&#39;groundedBasalMassBal&#39;</span><span class="p">]</span>
         <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
-                          <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;phase3/output.nc&#39;</span><span class="p">)</span></div></div>
+                          <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;phase3/output.nc&#39;</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

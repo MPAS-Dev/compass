@@ -233,13 +233,13 @@
         <span class="n">step</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s1">&#39;streams.forward&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AnalysisTest.run"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.analysis_test.AnalysisTest.run.html#compass.ocean.tests.global_ocean.analysis_test.AnalysisTest.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Run each step of the testcase</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># get cores, threads from config options and run the steps</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+    <span class="c1"># no run() method is needed</span>
 
+    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Test cases can override this method to perform validation of variables</span>
+<span class="sd">        and timers</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">work_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span>
 
@@ -330,7 +330,7 @@
                           <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;forward/output.nc&#39;</span><span class="p">)</span>
 
         <span class="n">timers</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;time integration&#39;</span><span class="p">]</span>
-        <span class="n">compare_timers</span><span class="p">(</span><span class="n">timers</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">rundir1</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">)</span></div></div>
+        <span class="n">compare_timers</span><span class="p">(</span><span class="n">timers</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">rundir1</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

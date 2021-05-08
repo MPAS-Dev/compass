@@ -208,8 +208,15 @@
 <h1>compass.ocean.tests.ice_shelf_2d.restart_test.RestartTest.run<a class="headerlink" href="#compass-ocean-tests-ice-shelf-2d-restart-test-restarttest-run" title="Permalink to this headline">¶</a></h1>
 <dl class="py method">
 <dt id="compass.ocean.tests.ice_shelf_2d.restart_test.RestartTest.run">
-<code class="sig-prename descclassname"><span class="pre">RestartTest.</span></code><code class="sig-name descname"><span class="pre">run</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/ocean/tests/ice_shelf_2d/restart_test.html#RestartTest.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.ocean.tests.ice_shelf_2d.restart_test.RestartTest.run" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run each step of the test case</p>
+<code class="sig-prename descclassname"><span class="pre">RestartTest.</span></code><code class="sig-name descname"><span class="pre">run</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#compass.ocean.tests.ice_shelf_2d.restart_test.RestartTest.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run each step of the test case.  Test cases can override this method
+to perform additional operations in addition to running the test case’s
+steps</p>
+<p>Developers need to make sure they call <code class="docutils literal notranslate"><span class="pre">super().run()</span></code> at some point
+in the overridden <code class="docutils literal notranslate"><span class="pre">run()</span></code> method to actually call the steps of the
+run.  The developer will need to decide where in the overridden method
+to make the call to <code class="docutils literal notranslate"><span class="pre">super().run()</span></code>, after any updates to steps
+based on config options, typically at the end of the new method.</p>
 </dd></dl>
 
 </div>

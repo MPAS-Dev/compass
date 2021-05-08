@@ -227,20 +227,20 @@
                             <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                             <span class="n">subdir</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="n">threads</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="ThreadsTest.run"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.threads_test.ThreadsTest.run.html#compass.ocean.tests.global_ocean.threads_test.ThreadsTest.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Run each step of the testcase</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># get cores, threads from config options and run the steps</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+    <span class="c1"># no run() method is needed</span>
 
+    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Test cases can override this method to perform validation of variables</span>
+<span class="sd">        and timers</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;salinity&#39;</span><span class="p">,</span> <span class="s1">&#39;layerThickness&#39;</span><span class="p">,</span>
                      <span class="s1">&#39;normalVelocity&#39;</span><span class="p">]</span>
         <span class="n">steps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps_to_run</span>
         <span class="k">if</span> <span class="s1">&#39;1thread&#39;</span> <span class="ow">in</span> <span class="n">steps</span> <span class="ow">and</span> <span class="s1">&#39;2thread&#39;</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">:</span>
             <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
                               <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;1thread/output.nc&#39;</span><span class="p">,</span>
-                              <span class="n">filename2</span><span class="o">=</span><span class="s1">&#39;2thread/output.nc&#39;</span><span class="p">)</span></div></div>
+                              <span class="n">filename2</span><span class="o">=</span><span class="s1">&#39;2thread/output.nc&#39;</span><span class="p">)</span></div>
 </pre></div>
 
            </div>
