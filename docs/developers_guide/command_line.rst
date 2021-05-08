@@ -213,7 +213,9 @@ that has been set up in the current directory:
 
 .. code-block:: none
 
-    [python -m] compass run [-h] [suite]
+    [python -m] compass run [-h] [--steps STEPS [STEPS ...]]
+                            [--no-steps NO_STEPS [NO_STEPS ...]]
+                            [suite]
 
 Whereas other ``compass`` commands are typically run in the local clone of the
 compass repo, ``compass run`` needs to be run in the appropriate work
@@ -221,3 +223,29 @@ directory. If you are running a test suite, you need to provide the name of the
 test suite because more than one suite can be set up in the same work
 directory.  If you are in the work directory for a test case or step, you do
 not need to provide any arguments.
+
+If you want to explicitly select which steps in a test case you want to run,
+you have two options.  You can either edit the ``steps_to_run`` config options
+in the config file:
+
+.. code-block:: cfg
+
+    [test_case]
+    steps_to_run = initial_state full_run restart_run
+
+Or you can use ``--steps`` to supply a list of steps to run, or ``--no-steps``
+to supply a list of steps you do not want to run (from the defaults given in
+the config file).  For example,
+
+.. code-block:: none
+
+    python -m compass run --steps initial_state full_run
+
+or
+
+.. code-block:: none
+
+    python -m compass run --no-steps restart_run
+
+Would both accomplish the same thing in this example -- skipping the
+``restart_run`` step of the test case.
