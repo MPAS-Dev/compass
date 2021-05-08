@@ -131,6 +131,12 @@ test cases and steps
    mesh.so12to60.dynamic_adjustment.SO12to60DynamicAdjustment.configure
    mesh.so12to60.dynamic_adjustment.SO12to60DynamicAdjustment.run
 
+   mesh.wc14.WC14Mesh
+   mesh.wc14.WC14Mesh.build_cell_width_lat_lon
+   mesh.wc14.dynamic_adjustment.WC14DynamicAdjustment
+   mesh.wc14.dynamic_adjustment.WC14DynamicAdjustment.configure
+   mesh.wc14.dynamic_adjustment.WC14DynamicAdjustment.run
+
    performance_test.PerformanceTest
    performance_test.PerformanceTest.configure
    performance_test.PerformanceTest.run
