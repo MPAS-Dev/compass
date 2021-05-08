@@ -167,11 +167,17 @@ def setup_case(path, test_case, config_file, machine, work_dir, baseline_dir,
     test_case.work_dir = test_case_dir
     test_case.base_work_dir = work_dir
 
+    # add the custom config file once before calling configure() in case we
+    # need to use the config options from there
+    if config_file is not None:
+        config.read(config_file)
+
     # add config options specific to the test case
     test_case.config = config
     test_case.configure()
 
-    # add the custom config file last, so these options are the defaults
+    # add the custom config file (again) last, so these options are the
+    # defaults
     if config_file is not None:
         config.read(config_file)
 
@@ -202,7 +208,7 @@ def setup_case(path, test_case, config_file, machine, work_dir, baseline_dir,
         except OSError:
             pass
 
-        symlink(os.path.join('..', test_case_config),
+        symlink(os.path.join(test_case_dir, test_case_config),
                 os.path.join(step_dir, test_case_config))
 
         step.work_dir = step_dir
