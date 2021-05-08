@@ -312,8 +312,8 @@ A test case can be a module but is usually a python package so it can
 incorporate modules for its steps and/or config files, namelists, and streams
 files.  The test case must include a class that descends from
 :py:class:`compass.TestCase`.  In addition to a constructor (``__init__()``),
-the class will often override the``run()`` and ``configure()`` methods of the
-base class, as described below.
+the class will often override the ``configure()``, ``run()`` and ``validate()``
+methods of the base class, as described below.
 
 .. _dev_test_case_class:
 
@@ -650,23 +650,16 @@ method with ``super().run()`` as part of overriding the ``run()`` method.
 Test case that just need to run their steps don't need to override the
 ``run()`` method at all.
 
-The most common reason that test cases will need to override ``run()`` is to
-perform :ref:`dev_validation` of variables in output files from a step and/or
-timers from the MPAS model.
+In some circumstances, it will be appropriate to update properties of the steps
+in the test case based on config options that the user may have changed.  This
+should only be necessary for config options related to the resources used by
+the step: the target number of cores, the minimum number of cores, and the
+number of threads.  Other config options can simply be read in from within the
+step's ``run()`` function as needed, but these performance-related config
+options affect how the step runs and must be set *before* the step can run.
 
-In some circumstances, it will also be appropriate to update properties of
-the steps in the test case based on config options that the user may have
-changed.  This should only be necessary for config options related to the
-resources used by the step: the target number of cores, the minimum number of
-cores, the number of threads.  Other config options can simply be read in from
-within the step's ``run()`` function as needed, but these performance-related
-config options affect how the step runs and must be set *before* the step can
-run.
-
-In this complex example,
-:py:meth:`compass.ocean.tests.global_ocean.init.Init.run()`, we see examples of
-both updating the steps' attributes based on config options and of validation
-of variables in the output:
+In :py:meth:`compass.ocean.tests.global_ocean.init.Init.run()`, we see examples
+of updating the steps' attributes based on config options:
 
 .. code-block:: python
 
@@ -694,9 +687,38 @@ of variables in the output:
         # run the steps
         super().run()
 
+As mentioned in :ref:`dev_test_case_class`, the ``self.steps_to_run`` attribute
+may either be the full list of steps that would typically be run to complete
+the test case (the value given to it at init) or it may be a single test case
+because the user is running the steps manually, one at a time.  For this
+reason, it is always a good idea to check if a given step is being run before
+altering the entries any of its attributes based on config options, as shown
+in the example.
+
+.. _dev_test_case_validate:
+
+validate()
+^^^^^^^^^^
+
+The base class's :py:meth:`compass.TestCase.validate()` can be overridden to
+perform :ref:`dev_validation` of variables in output files from a step and/or
+timers from the MPAS model.
+
+In  :py:meth:`compass.ocean.tests.global_ocean.init.Init.validate()`, we see
+examples of validation of variables from output files:
+
+.. code-block:: python
+
+    def validate(self):
+        """
+        Test cases can override this method to perform validation of variables
+        and timers
+        """
+        steps = self.steps_to_run
+
         if 'initial_state' in steps:
             variables = ['temperature', 'salinity', 'layerThickness']
-            compare_variables(variables, config, work_dir,
+            compare_variables(test_case=self, variables=variables,
                               filename1='initial_state/initial_state.nc')
 
             if self.with_bgc:
@@ -708,23 +730,21 @@ of variables in the output:
                     'diatFe', 'diatSi', 'diazChl', 'diazC', 'diazFe',
                     'phaeoChl', 'phaeoC', 'phaeoFe', 'DMS', 'DMSP', 'PROT',
                     'POLY', 'LIP']
-                compare_variables(variables, config, work_dir,
+                compare_variables(test_case=self, variables=variables,
                                   filename1='initial_state/initial_state.nc')
 
         if 'ssh_adjustment' in steps:
             variables = ['ssh', 'landIcePressure']
-            compare_variables(variables, config, work_dir,
+            compare_variables(test_case=self, variables=variables,
                               filename1='ssh_adjustment/adjusted_init.nc')
 
-As mentioned in :ref:`dev_test_case_class`, the ``self.steps_to_run`` attribute
-may either be the full list of steps that would typically be run to complete
-the test case (the value given to it at init) or it may be a single test case
-because the user is running the steps manually, one at a time.  For this
-reason, it is always a good idea to check if a given step is being run before
-altering the entries any of its attributes based on config options, as shown
-in the example.  Similarly, it is important to check if the step was run before
-running validation.  Otherwise, the validation may fail merely because the user
-didn't ask for that particular step.
+Again, as mentioned in :ref:`dev_test_case_class`, the ``self.steps_to_run``
+attribute may either be the full list of steps that would typically be run to
+complete the test case (the value given to it at init) or it may be a single
+test case because the user is running the steps manually, one at a time.  For
+this reason, it is important to check if the step was run before running
+validation on its outputs.  Otherwise, the validation may fail merely because
+the user didn't ask for that particular step.
 
 .. _dev_steps:
 

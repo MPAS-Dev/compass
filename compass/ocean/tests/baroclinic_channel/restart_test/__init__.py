@@ -57,14 +57,13 @@ class RestartTest(TestCase):
         """
         baroclinic_channel.configure(self.resolution, self.config)
 
-    def run(self):
-        """
-        Run each step of the test case
-        """
-        # run the steps
-        super().run()
+    # no run() method is needed
 
-        # perform validation
+    def validate(self):
+        """
+        Test cases can override this method to perform validation of variables
+        and timers
+        """
         variables = ['temperature', 'salinity', 'layerThickness',
                      'normalVelocity']
         steps = self.steps_to_run

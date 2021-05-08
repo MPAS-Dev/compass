@@ -41,16 +41,13 @@ class DailyOutputTest(ForwardTestCase):
         step.add_streams_file(module, 'streams.forward')
         self.add_step(step)
 
-    def run(self):
-        """
-        Run each step of the testcase
-        """
-        # get cores, threads from config options and run the steps
-        super().run()
+    # no run() method is needed
 
-        config = self.config
-        work_dir = self.work_dir
-
+    def validate(self):
+        """
+        Test cases can override this method to perform validation of variables
+        and timers
+        """
         variables = [
             'timeDaily_avg_activeTracers_temperature',
             'timeDaily_avg_activeTracers_salinity',

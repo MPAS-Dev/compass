@@ -30,13 +30,13 @@ class DecompositionTest(TestCase):
 
     # no configure() method is needed
 
-    def run(self):
-        """
-        Run each step of the test case
-        """
-        # run the steps
-        super().run()
+    # no run() method is needed
 
+    def validate(self):
+        """
+        Test cases can override this method to perform validation of variables
+        and timers
+        """
         variables = ['thickness', 'normalVelocity']
         steps = self.steps_to_run
         if '1proc_run' in steps and '8proc_run' in steps:

@@ -124,6 +124,7 @@ testcase
    TestCase
    TestCase.configure
    TestCase.run
+   TestCase.validate
    TestCase.add_step
 
 step

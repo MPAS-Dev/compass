@@ -18,6 +18,15 @@ def run_suite(suite_name):
     suite_name : str
         The name of the test suite
     """
+    # ANSI fail text: https://stackoverflow.com/a/287944/7728169
+    start_fail = '\033[91m'
+    start_pass = '\033[92m'
+    end = '\033[0m'
+    pass_str = '{}PASS{}'.format(start_pass, end)
+    success_str = '{}SUCCESS{}'.format(start_pass, end)
+    fail_str = '{}FAIL{}'.format(start_fail, end)
+    error_str = '{}ERROR{}'.format(start_fail, end)
+
     if not os.path.exists('{}.pickle'.format(suite_name)):
         raise ValueError('The suite "{}" doesn\'t appear to have been set up '
                          'here.'.format(suite_name))
@@ -62,46 +71,60 @@ def run_suite(suite_name):
                 test_start = time.time()
                 try:
                     test_case.run()
-                    internal_status = 'PASS'
+                    run_status = success_str
                     test_pass = True
                 except BaseException:
-                    internal_status = 'FAIL'
+                    run_status = error_str
                     test_pass = False
-                    test_logger.exception('Exception raised')
+                    test_logger.exception('Exception raised in run()')
+
+                if test_pass:
+                    try:
+                        test_case.validate()
+                    except BaseException:
+                        run_status = error_str
+                        test_pass = False
+                        test_logger.exception('Exception raised in validate()')
 
                 baseline_status = None
+                internal_status = None
                 if test_case.validation is not None:
                     internal_pass = test_case.validation['internal_pass']
                     baseline_pass = test_case.validation['baseline_pass']
 
-                    if internal_pass is not None and not internal_pass:
-                        internal_status = 'FAIL'
-                        test_logger.exception(
-                            'Internal test case validation failed')
-                        test_pass = False
+                    if internal_pass is not None:
+                        if internal_pass:
+                            internal_status = pass_str
+                        else:
+                            internal_status = fail_str
+                            test_logger.exception(
+                                'Internal test case validation failed')
+                            test_pass = False
 
                     if baseline_pass is not None:
                         if baseline_pass:
-                            baseline_status = 'PASS'
+                            baseline_status = pass_str
                         else:
-                            baseline_status = 'FAIL'
+                            baseline_status = fail_str
                             test_logger.exception('Baseline validation failed')
                             test_pass = False
 
-                if baseline_status is None:
-                    status = '  {}'.format(internal_status)
-                else:
-                    status = '  test: {}  baseline comparison: {}'.format(
-                        internal_status, baseline_status)
+                status = '  test execution:      {}'.format(run_status)
+                if internal_status is not None:
+                    status = '{}\n  test validation:     {}'.format(
+                        status, internal_status)
+                if baseline_status is not None:
+                    status = '{}\n  baseline comparison: {}'.format(
+                        status, baseline_status)
 
                 if test_pass:
                     logger.info(status)
-                    success[test_name] = 'PASS'
+                    success[test_name] = pass_str
                 else:
                     logger.error(status)
                     logger.error('  see: case_outputs/{}.log'.format(
                         test_name))
-                    success[test_name] = 'FAIL'
+                    success[test_name] = fail_str
                     failures += 1
 
                 test_times[test_name] = time.time() - test_start
@@ -150,6 +173,7 @@ def run_test_case():
     with LoggingContext(name=test_name) as logger:
         test_case.logger = logger
         test_case.run()
+        test_case.validate()
 
 
 def run_step():
@@ -172,6 +196,7 @@ def run_step():
     with LoggingContext(name=test_name) as logger:
         test_case.logger = logger
         test_case.run()
+        test_case.validate()
 
 
 def main():
