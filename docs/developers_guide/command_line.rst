@@ -217,7 +217,7 @@ that has been set up in the current directory:
 
 Whereas other ``compass`` commands are typically run in the local clone of the
 compass repo, ``compass run`` needs to be run in the appropriate work
-directory. If you are running a test suite, you need to provide the name of the
-test suite because more than one suite can be set up in the same work
+directory. If you are running a test suite, you may need to provide the name
+of the test suite if more than one suite has been set up in the same work
 directory.  If you are in the work directory for a test case or step, you do
 not need to provide any arguments.

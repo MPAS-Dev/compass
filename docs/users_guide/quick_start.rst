@@ -251,7 +251,7 @@ and
 .. code-block:: bash
 
     cd $WORKDIR
-    compass run nightly
+    compass run [nightly]
 
-In this case, you have to specify the name of the suite to run because you can
-set up multiple suites in the same ``$WORKDIR``.
+In this case, you can specify the name of the suite to run.  This is required
+if there are multiple suites in the same ``$WORKDIR``.

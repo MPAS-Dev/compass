@@ -5,6 +5,7 @@ import pickle
 import configparser
 import time
 import numpy
+import glob
 
 from mpas_tools.logging import LoggingContext
 
@@ -213,5 +214,13 @@ def main():
     elif os.path.exists('step.pickle'):
         run_step()
     else:
-        raise OSError('A suite name was not given but the current directory '
-                      'does not contain a test case or step.')
+        pickles = glob.glob('*.pickle')
+        if len(pickles) == 1:
+            suite = os.path.splitext(os.path.basename(pickles[0]))[0]
+            run_suite(suite)
+        elif len(pickles) == 0:
+            raise OSError('No pickle files were found. Are you sure this is '
+                          'a compass suite, test-case or step work directory?')
+        else:
+            raise ValueError('More than one suite was found. Please specify '
+                             'which to run: compass run <suite>')
