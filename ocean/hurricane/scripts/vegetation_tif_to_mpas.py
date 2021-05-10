@@ -112,7 +112,7 @@ def plot_interp_data(lon_data,lat_data,data,lon_grid,lat_grid,interp_data,tri):
 #########################################  MAIN CODE  ##############################################
 if __name__ == '__main__':
   import yaml
-  import gdal,osr
+  from osgeo import gdal
   import os
   import sys
   import pprint
@@ -137,6 +137,13 @@ if __name__ == '__main__':
   bottomDrag_file = cfg['bottomDrag_file']
   figplot = cfg['figplot']
   output_file = cfg['output_file']
+  veg_factor = cfg['veg_factor']
+  manning_factor = cfg['manning_factor']
+  if 'use_mask' in cfg:
+    use_mask = cfg['use_mask']
+  else:
+    use_mask = True
+
 
   tri = mesh_tri(grid_file)
 ############################### data interpolation and plot ########################################
@@ -211,11 +218,16 @@ if __name__ == '__main__':
   Delaware_manning.units ='s/m^{1/3}'
 
   # assign variable values
-  veg_mask[:] = interp_vegMask[:]
-  veg_diam[:] = interp_vegDiam[:]
-  veg_hght[:] = interp_vegHght[:]
-  veg_dens[:] = interp_vegDens[:]
-  Delaware_manning[:] = interp_manning[:]
+  if use_mask:
+    veg_mask[:] = interp_vegMask[:]
+  else:
+    veg_mask[:] = 0
+  veg_diam[:] = interp_vegDiam[:] + interp_vegDiam[:]*veg_factor
+  veg_hght[:] = interp_vegHght[:] + interp_vegHght[:]*veg_factor
+  veg_dens[:] = interp_vegDens[:] - interp_vegDens[:]*veg_factor
+  interp_manning[interp_manning > 0.026] = interp_manning[interp_manning > 0.026]+ interp_manning[interp_manning > 0.026]*manning_factor
+  Delaware_manning[:] = interp_manning[:] 
+
 
   # close file
   newfile.close()
