@@ -69,6 +69,8 @@ def setup_suite(mpas_core, suite_name, config_file=None, machine=None,
     filename = os.path.join(work_dir, '{}.txt'.format(suite_name))
 
     with open(filename, 'w') as f:
+        f.write('# A list of tests in the suite.  Remove or comment out tests '
+                'to skip them.\n')
         f.write('\n'.join(tests))
 
     test_cases = setup_cases(tests, config_file=config_file, machine=machine,
