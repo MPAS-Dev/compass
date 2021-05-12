@@ -6,6 +6,7 @@ import configparser
 import time
 import numpy
 import glob
+import warnings
 
 from mpas_tools.logging import LoggingContext
 
@@ -34,6 +35,24 @@ def run_suite(suite_name):
     with open('{}.pickle'.format(suite_name), 'rb') as handle:
         test_suite = pickle.load(handle)
 
+    filename = '{}.txt'.format(suite_name)
+    if not os.path.exists(filename):
+        warnings.warn('List of tests {} not found. Running all tests in the '
+                      'suite.'.format(filename))
+        tests = list(test_suite['test_cases'].keys())
+    else:
+        with open(filename, 'r') as f:
+            text = f.read()
+
+        tests = list()
+        for test in text.split('\n'):
+            test = test.strip()
+            if len(test) > 0 and test[0] != '#' and test not in tests:
+                if test not in test_suite['test_cases']:
+                    raise ValueError('Test not found in the test suite: '
+                                     '{}'.format(test))
+                tests.append(test)
+
     # start logging to stdout/stderr
     with LoggingContext(suite_name) as logger:
 
@@ -49,7 +68,7 @@ def run_suite(suite_name):
         suite_start = time.time()
         test_times = dict()
         success = dict()
-        for test_name in test_suite['test_cases']:
+        for test_name in tests:
             test_case = test_suite['test_cases'][test_name]
 
             logger.info('{}'.format(test_name))

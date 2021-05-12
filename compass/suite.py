@@ -54,12 +54,22 @@ def setup_suite(mpas_core, suite_name, config_file=None, machine=None,
     tests = list()
     for test in text.split('\n'):
         test = test.strip()
-        if len(test) > 0 and test not in tests:
+        if len(test) > 0 and test[0] != '#' and test not in tests:
             tests.append(test)
 
     if work_dir is None:
         work_dir = os.getcwd()
     work_dir = os.path.abspath(work_dir)
+
+    try:
+        os.makedirs(work_dir)
+    except OSError:
+        pass
+
+    filename = os.path.join(work_dir, '{}.txt'.format(suite_name))
+
+    with open(filename, 'w') as f:
+        f.write('\n'.join(tests))
 
     test_cases = setup_cases(tests, config_file=config_file, machine=machine,
                              work_dir=work_dir, baseline_dir=baseline_dir,
