@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
@@ -631,7 +634,7 @@ mid-latitudes, 30-km at the equator and in the North Atlantic, 60-km resolution
 in the North Pacific, and 35-km resolution in the Arctic.</p>
 <p>The class
 <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.mesh.so12to60.SO12to60Mesh.html#compass.ocean.tests.global_ocean.mesh.so12to60.SO12to60Mesh" title="compass.ocean.tests.global_ocean.mesh.so12to60.SO12to60Mesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.so12to60.SO12to60Mesh</span></code></a> defines
-the resolution for both meshes. The <code class="docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.so12to60</span></code>
+the resolution for the mesh. The <code class="docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.so12to60</span></code>
 module includes namelist options appropriate for forward simulations with
 split-explicit (but not RK4) time integration on this mesh.  These set the time
 step and default run duration for short runs with this mesh.</p>
@@ -689,6 +692,74 @@ step and default run duration for short runs with this mesh.</p>
 <span class="na">max_res</span> <span class="o">=</span> <span class="s">60</span>
 <span class="c1"># The URL of the pull request documenting the creation of the mesh</span>
 <span class="na">pull_request</span> <span class="o">=</span> <span class="s">https://github.com/MPAS-Dev/compass/pull/37</span>
+</pre></div>
+</div>
+<p>The vertical grid is a <code class="docutils literal notranslate"><span class="pre">60layerPHC</span></code> profile (see <a class="reference internal" href="../framework.html#dev-ocean-framework-vertical"><span class="std std-ref">Vertical coordinate</span></a>)
+with 60 vertical levels ranging in thickness from 10 to 250 m.</p>
+</div>
+<div class="section" id="wc14">
+<span id="dev-ocean-global-ocean-wc14"></span><h5>WC14<a class="headerlink" href="#wc14" title="Permalink to this headline">¶</a></h5>
+<p>The <code class="docutils literal notranslate"><span class="pre">WC14</span></code> mesh is the Water Cycle regionally refined mesh for E3SM v2.  It
+has higher resolution (~14-km) around the continental US, the Arctic Ocean,
+and a section of the North Atlantic containing the Gulf Stream. The resolution
+elsewhere varies between 35 km at the South Pole to 60 km at mid latitudes,
+with a band of 30-km resolution around the equator.</p>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.mesh.wc14.WC14Mesh.html#compass.ocean.tests.global_ocean.mesh.wc14.WC14Mesh" title="compass.ocean.tests.global_ocean.mesh.wc14.WC14Mesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.wc14.WC14Mesh</span></code></a>
+defines the resolution for the mesh. The
+<code class="docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.wc14</span></code> module includes namelist options
+appropriate for forward simulations with split-explicit (but not RK4) time
+integration on this mesh.  These set the time step and default run duration for
+short runs with this mesh.</p>
+<p>The default config options for this mesh are:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span>
+<span class="k">[vertical_grid]</span>
+
+<span class="c1"># the type of vertical grid</span>
+<span class="na">grid_type</span> <span class="o">=</span> <span class="s">60layerPHC</span>
+
+
+<span class="c1"># options for global ocean testcases</span>
+<span class="k">[global_ocean]</span>
+
+<span class="c1">## config options related to the initial_state step</span>
+<span class="c1"># number of cores to use</span>
+<span class="na">init_cores</span> <span class="o">=</span> <span class="s">36</span>
+<span class="c1"># minimum of cores, below which the step fails</span>
+<span class="na">init_min_cores</span> <span class="o">=</span> <span class="s">8</span>
+<span class="c1"># maximum memory usage allowed (in MB)</span>
+<span class="na">init_max_memory</span> <span class="o">=</span> <span class="s">1000</span>
+<span class="c1"># maximum disk usage allowed (in MB)</span>
+<span class="na">init_max_disk</span> <span class="o">=</span> <span class="s">1000</span>
+
+<span class="c1">## config options related to the forward steps</span>
+<span class="c1"># number of cores to use</span>
+<span class="na">forward_cores</span> <span class="o">=</span> <span class="s">720</span>
+<span class="c1"># minimum of cores, below which the step fails</span>
+<span class="na">forward_min_cores</span> <span class="o">=</span> <span class="s">144</span>
+<span class="c1"># maximum memory usage allowed (in MB)</span>
+<span class="na">forward_max_memory</span> <span class="o">=</span> <span class="s">1000</span>
+<span class="c1"># maximum disk usage allowed (in MB)</span>
+<span class="na">forward_max_disk</span> <span class="o">=</span> <span class="s">1000</span>
+
+<span class="c1">## metadata related to the mesh</span>
+<span class="c1"># the prefix (e.g. QU, EC, WC, SO)</span>
+<span class="na">prefix</span> <span class="o">=</span> <span class="s">WC</span>
+<span class="c1"># a description of the mesh and initial condition</span>
+<span class="na">mesh_description</span> <span class="o">=</span> <span class="s">MPAS North America and Arctic Focused Water Cycle mesh for E3SM version</span>
+                   <span class="na">${e3sm_version}, with a focused ${min_res}-km resolution</span>
+                   <span class="na">around North America and ${levels} vertical levels</span>
+
+<span class="c1"># E3SM version that the mesh is intended for</span>
+<span class="na">e3sm_version</span> <span class="o">=</span> <span class="s">2</span>
+<span class="c1"># The revision number of the mesh, which should be incremented each time the</span>
+<span class="c1"># mesh is revised</span>
+<span class="na">mesh_revision</span> <span class="o">=</span> <span class="s">3</span>
+<span class="c1"># the minimum (finest) resolution in the mesh</span>
+<span class="na">min_res</span> <span class="o">=</span> <span class="s">14</span>
+<span class="c1"># the maximum (coarsest) resolution in the mesh, can be the same as min_res</span>
+<span class="na">max_res</span> <span class="o">=</span> <span class="s">60</span>
+<span class="c1"># The URL of the pull request documenting the creation of the mesh</span>
+<span class="na">pull_request</span> <span class="o">=</span> <span class="s">https://github.com/MPAS-Dev/MPAS-Model/pull/628</span>
 </pre></div>
 </div>
 <p>The vertical grid is a <code class="docutils literal notranslate"><span class="pre">60layerPHC</span></code> profile (see <a class="reference internal" href="../framework.html#dev-ocean-framework-vertical"><span class="std std-ref">Vertical coordinate</span></a>)
@@ -881,6 +952,19 @@ and <code class="docutils literal notranslate"><span class="pre">1e-5</span></co
 model runs for an additional 10 days without Rayleigh friction.  The
 dynamic adjustment test case takes advantage of Jinja templating for streams
 files to use the same streams template for each step in the test case, see
+<a class="reference internal" href="../../organization.html#dev-step-add-streams-file-template"><span class="std std-ref">Adding a template streams file</span></a>.</p>
+</div>
+<div class="section" id="id4">
+<h4>WC14<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h4>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.mesh.wc14.dynamic_adjustment.WC14DynamicAdjustment.html#compass.ocean.tests.global_ocean.mesh.wc14.dynamic_adjustment.WC14DynamicAdjustment" title="compass.ocean.tests.global_ocean.mesh.wc14.dynamic_adjustment.WC14DynamicAdjustment"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.wc14.dynamic_adjustment.WC14DynamicAdjustment</span></code></a>
+defines a test case for performing dynamical adjustment on the mesh.  In the
+<code class="docutils literal notranslate"><span class="pre">damped_adjustment_1</span></code> through <code class="docutils literal notranslate"><span class="pre">damped_adjustment_6</span></code> steps, the model is run
+for durations ranging from 6 hours to 3 days with gradually increasing time
+step and gradually weakening Rayleigh friction (from <code class="docutils literal notranslate"><span class="pre">1e-3</span></code> 1/s to <code class="docutils literal notranslate"><span class="pre">0</span></code>) to
+damp the velocity field.  In the <code class="docutils literal notranslate"><span class="pre">simulation</span></code> step, the model runs for an
+additional 24 days without Rayleigh friction.  The dynamic adjustment test case
+takes advantage of Jinja templating for streams files to use the same streams
+template for each step in the test case, see
 <a class="reference internal" href="../../organization.html#dev-step-add-streams-file-template"><span class="std std-ref">Adding a template streams file</span></a>.</p>
 </div>
 </div>

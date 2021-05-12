@@ -506,7 +506,7 @@ in the North Pacific, and 35-km resolution in the Arctic.
 
 The class
 :py:class:`compass.ocean.tests.global_ocean.mesh.so12to60.SO12to60Mesh` defines
-the resolution for both meshes. The ``compass.ocean.tests.global_ocean.mesh.so12to60``
+the resolution for the mesh. The ``compass.ocean.tests.global_ocean.mesh.so12to60``
 module includes namelist options appropriate for forward simulations with
 split-explicit (but not RK4) time integration on this mesh.  These set the time
 step and default run duration for short runs with this mesh.
@@ -568,6 +568,81 @@ The default config options for this mesh are:
     max_res = 60
     # The URL of the pull request documenting the creation of the mesh
     pull_request = https://github.com/MPAS-Dev/compass/pull/37
+
+The vertical grid is a ``60layerPHC`` profile (see :ref:`dev_ocean_framework_vertical`)
+with 60 vertical levels ranging in thickness from 10 to 250 m.
+
+.. _dev_ocean_global_ocean_wc14:
+
+WC14
+++++
+
+The ``WC14`` mesh is the Water Cycle regionally refined mesh for E3SM v2.  It
+has higher resolution (~14-km) around the continental US, the Arctic Ocean,
+and a section of the North Atlantic containing the Gulf Stream. The resolution
+elsewhere varies between 35 km at the South Pole to 60 km at mid latitudes,
+with a band of 30-km resolution around the equator.
+
+The class :py:class:`compass.ocean.tests.global_ocean.mesh.wc14.WC14Mesh`
+defines the resolution for the mesh. The
+``compass.ocean.tests.global_ocean.mesh.wc14`` module includes namelist options
+appropriate for forward simulations with split-explicit (but not RK4) time
+integration on this mesh.  These set the time step and default run duration for
+short runs with this mesh.
+
+The default config options for this mesh are:
+
+.. code-block:: cfg
+
+    # Options related to the vertical grid
+    [vertical_grid]
+
+    # the type of vertical grid
+    grid_type = 60layerPHC
+
+
+    # options for global ocean testcases
+    [global_ocean]
+
+    ## config options related to the initial_state step
+    # number of cores to use
+    init_cores = 36
+    # minimum of cores, below which the step fails
+    init_min_cores = 8
+    # maximum memory usage allowed (in MB)
+    init_max_memory = 1000
+    # maximum disk usage allowed (in MB)
+    init_max_disk = 1000
+
+    ## config options related to the forward steps
+    # number of cores to use
+    forward_cores = 720
+    # minimum of cores, below which the step fails
+    forward_min_cores = 144
+    # maximum memory usage allowed (in MB)
+    forward_max_memory = 1000
+    # maximum disk usage allowed (in MB)
+    forward_max_disk = 1000
+
+    ## metadata related to the mesh
+    # the prefix (e.g. QU, EC, WC, SO)
+    prefix = WC
+    # a description of the mesh and initial condition
+    mesh_description = MPAS North America and Arctic Focused Water Cycle mesh for E3SM version
+                       ${e3sm_version}, with a focused ${min_res}-km resolution
+                       around North America and ${levels} vertical levels
+
+    # E3SM version that the mesh is intended for
+    e3sm_version = 2
+    # The revision number of the mesh, which should be incremented each time the
+    # mesh is revised
+    mesh_revision = 3
+    # the minimum (finest) resolution in the mesh
+    min_res = 14
+    # the maximum (coarsest) resolution in the mesh, can be the same as min_res
+    max_res = 60
+    # The URL of the pull request documenting the creation of the mesh
+    pull_request = https://github.com/MPAS-Dev/MPAS-Model/pull/628
 
 The vertical grid is a ``60layerPHC`` profile (see :ref:`dev_ocean_framework_vertical`)
 with 60 vertical levels ranging in thickness from 10 to 250 m.
@@ -801,6 +876,20 @@ and ``1e-5`` 1/s) to damp the velocity field.  In the ``simulation`` step, the
 model runs for an additional 10 days without Rayleigh friction.  The
 dynamic adjustment test case takes advantage of Jinja templating for streams
 files to use the same streams template for each step in the test case, see
+:ref:`dev_step_add_streams_file_template`.
+
+WC14
+^^^^
+
+The class :py:class:`compass.ocean.tests.global_ocean.mesh.wc14.dynamic_adjustment.WC14DynamicAdjustment`
+defines a test case for performing dynamical adjustment on the mesh.  In the
+``damped_adjustment_1`` through ``damped_adjustment_6`` steps, the model is run
+for durations ranging from 6 hours to 3 days with gradually increasing time
+step and gradually weakening Rayleigh friction (from ``1e-3`` 1/s to ``0``) to
+damp the velocity field.  In the ``simulation`` step, the model runs for an
+additional 24 days without Rayleigh friction.  The dynamic adjustment test case
+takes advantage of Jinja templating for streams files to use the same streams
+template for each step in the test case, see
 :ref:`dev_step_add_streams_file_template`.
 
 .. _dev_ocean_global_ocean_files_for_e3sm:

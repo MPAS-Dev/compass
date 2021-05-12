@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/doctools.js"></script>
@@ -195,6 +198,8 @@
     <span class="n">EC30to60DynamicAdjustment</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.so12to60.dynamic_adjustment</span> <span class="kn">import</span> \
     <span class="n">SO12to60DynamicAdjustment</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.wc14.dynamic_adjustment</span> <span class="kn">import</span> \
+    <span class="n">WC14DynamicAdjustment</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.init</span> <span class="kn">import</span> <span class="n">Init</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.performance_test</span> <span class="kn">import</span> <span class="n">PerformanceTest</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.restart_test</span> <span class="kn">import</span> <span class="n">RestartTest</span>
@@ -358,6 +363,30 @@
                     <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
                     <span class="n">dynamic_adjustment</span><span class="o">=</span><span class="n">dynamic_adjustment</span><span class="p">))</span>
 
+        <span class="c1"># WC14: just the version without cavities</span>
+        <span class="k">for</span> <span class="n">mesh_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;WC14&#39;</span><span class="p">]:</span>
+            <span class="n">mesh</span> <span class="o">=</span> <span class="n">Mesh</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_name</span><span class="o">=</span><span class="n">mesh_name</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+
+            <span class="n">init</span> <span class="o">=</span> <span class="n">Init</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span>
+                        <span class="n">initial_condition</span><span class="o">=</span><span class="s1">&#39;PHC&#39;</span><span class="p">,</span>
+                        <span class="n">with_bgc</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">init</span><span class="p">)</span>
+            <span class="n">time_integrator</span> <span class="o">=</span> <span class="s1">&#39;split_explicit&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
+                <span class="n">PerformanceTest</span><span class="p">(</span>
+                    <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
+                    <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">))</span>
+            <span class="n">dynamic_adjustment</span> <span class="o">=</span> <span class="n">WC14DynamicAdjustment</span><span class="p">(</span>
+                <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
+                <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">dynamic_adjustment</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
+                <span class="n">FilesForE3SM</span><span class="p">(</span>
+                    <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
+                    <span class="n">dynamic_adjustment</span><span class="o">=</span><span class="n">dynamic_adjustment</span><span class="p">))</span>
+
+        <span class="c1"># A test case for making diagnostics files from an existing mesh</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">MakeDiagnosticsFiles</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span></div></div>
 </pre></div>
 

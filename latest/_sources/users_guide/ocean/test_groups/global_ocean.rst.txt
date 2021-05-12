@@ -316,6 +316,21 @@ in the North Pacific, and 35 km in the Arctic.  The mesh includes the
    :width: 500 px
    :align: center
 
+WC14
+^^^^
+
+The Water Cycle 14- to 60-km mesh (WC14) is intended to be the main regionally
+refined simulation mesh for the
+`E3SM v2 Water Cycle Science Campaign <https://e3sm.org/research/water-cycle/v2-water-cycle-research//>`_.
+
+The mesh has 14 km resolution around the continental US, Arctic Ocean and parts
+of the North Atlantic, tapering to 60 km in mid latitudes, 30 km at the
+equator, and 35 km around Antarctica.
+
+.. image:: images/wc14.png
+   :width: 500 px
+   :align: center
+
 .. _global_ocean_ice_shelf_cavities:
 
 Ice-shelf cavities

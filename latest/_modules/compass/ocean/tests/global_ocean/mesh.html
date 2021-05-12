@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
         <script src="../../../../../_static/jquery.js"></script>
         <script src="../../../../../_static/underscore.js"></script>
         <script src="../../../../../_static/doctools.js"></script>
@@ -192,6 +195,7 @@
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.qu240</span> <span class="kn">import</span> <span class="n">QU240Mesh</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.ec30to60</span> <span class="kn">import</span> <span class="n">EC30to60Mesh</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.so12to60</span> <span class="kn">import</span> <span class="n">SO12to60Mesh</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.wc14</span> <span class="kn">import</span> <span class="n">WC14Mesh</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.configure</span> <span class="kn">import</span> <span class="n">configure_global_ocean</span>
 <span class="kn">from</span> <span class="nn">compass.validate</span> <span class="kn">import</span> <span class="n">compare_variables</span>
 
@@ -238,6 +242,9 @@
         <span class="k">elif</span> <span class="n">mesh_name</span> <span class="ow">in</span> <span class="s1">&#39;SOwISC12to60&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mesh_step</span> <span class="o">=</span> <span class="n">SO12to60Mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span>
                                           <span class="n">with_ice_shelf_cavities</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">mesh_name</span> <span class="ow">in</span> <span class="s1">&#39;WC14&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mesh_step</span> <span class="o">=</span> <span class="n">WC14Mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span>
+                                      <span class="n">with_ice_shelf_cavities</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown mesh name </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_name</span><span class="p">))</span>
 
