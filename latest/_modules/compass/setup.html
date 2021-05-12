@@ -356,11 +356,17 @@
     <span class="n">test_case</span><span class="o">.</span><span class="n">work_dir</span> <span class="o">=</span> <span class="n">test_case_dir</span>
     <span class="n">test_case</span><span class="o">.</span><span class="n">base_work_dir</span> <span class="o">=</span> <span class="n">work_dir</span>
 
+    <span class="c1"># add the custom config file once before calling configure() in case we</span>
+    <span class="c1"># need to use the config options from there</span>
+    <span class="k">if</span> <span class="n">config_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">config_file</span><span class="p">)</span>
+
     <span class="c1"># add config options specific to the test case</span>
     <span class="n">test_case</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
     <span class="n">test_case</span><span class="o">.</span><span class="n">configure</span><span class="p">()</span>
 
-    <span class="c1"># add the custom config file last, so these options are the defaults</span>
+    <span class="c1"># add the custom config file (again) last, so these options are the</span>
+    <span class="c1"># defaults</span>
     <span class="k">if</span> <span class="n">config_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">config_file</span><span class="p">)</span>
 
@@ -391,7 +397,7 @@
         <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
             <span class="k">pass</span>
 
-        <span class="n">symlink</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="n">test_case_config</span><span class="p">),</span>
+        <span class="n">symlink</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">test_case_dir</span><span class="p">,</span> <span class="n">test_case_config</span><span class="p">),</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">step_dir</span><span class="p">,</span> <span class="n">test_case_config</span><span class="p">))</span>
 
         <span class="n">step</span><span class="o">.</span><span class="n">work_dir</span> <span class="o">=</span> <span class="n">step_dir</span>
