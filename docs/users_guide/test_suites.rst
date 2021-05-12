@@ -59,3 +59,21 @@ for regression testing of MPAS-Ocean.  Here are the tests included:
     ocean/ice_shelf_2d/5km/restart_test
     ocean/ziso/20km/default
     ocean/ziso/20km/with_frazil
+
+After setting up a test case, you can see the tests in the case you opening
+the file ``<suite>.txt`` in the work directory.  You can remove or comment out
+(with ``#``) any tests you don't want to run before running the suite.
+
+To run the suite, call:
+
+.. code-block:: bash
+
+    compass run
+
+If you have set up multiple suites in the same directory, run:
+
+.. code-block:: bash
+
+    compass run <suite>
+
+to select a specific suite to run.
