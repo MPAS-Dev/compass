@@ -69,6 +69,9 @@ def run_suite(suite_name):
                 config.read(test_case.config_filename)
                 test_case.config = config
 
+                test_case.steps_to_run = config.get(
+                    'test_case', 'steps_to_run').replace(',', ' ').split()
+
                 test_start = time.time()
                 try:
                     test_case.run()
