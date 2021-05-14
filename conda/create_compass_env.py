@@ -125,7 +125,7 @@ def do_bootstrap(prevent_bootstrap, conda_base, activate_base):
     if bootstrap:
         # we don't have all the packages we need, so we need to add them
         # to the base environment, activate it and rerun
-        install_miniconda(conda_base)
+        install_miniconda(conda_base, activate_base)
 
         print('Rerunning the command from new conda environment')
         command = '{}; ' \
@@ -210,7 +210,7 @@ def build_env(is_test, recreate, machine, compiler, mpi, conda_mpi, version,
         env_name = 'compass_{}{}'.format(version, env_suffix)
     env_path = os.path.join(conda_base, 'envs', env_name)
 
-    install_miniconda(conda_base)
+    install_miniconda(conda_base, activate_base)
 
     if conda_mpi == 'nompi':
         mpi_prefix = 'nompi'
@@ -218,11 +218,16 @@ def build_env(is_test, recreate, machine, compiler, mpi, conda_mpi, version,
         mpi_prefix = 'mpi_{}'.format(mpi)
 
     channels = '--override-channels -c conda-forge -c defaults'
+    if machine is None:
+        # we need libpnetcdf from the e3sm channel for now
+        channels = '{} -c e3sm'.format(channels)
     packages = 'python={}'.format(python)
 
+    base_activation_script = os.path.abspath(
+        '{}/etc/profile.d/conda.sh'.format(conda_base))
+
     activate_env = \
-        'source {}/etc/profile.d/conda.sh; ' \
-        'conda activate {}'.format(conda_base, env_name)
+        'source {}; conda activate {}'.format(base_activation_script, env_name)
 
     if not os.path.exists(env_path) or recreate:
         print('creating {}'.format(env_name))
@@ -268,7 +273,7 @@ def build_env(is_test, recreate, machine, compiler, mpi, conda_mpi, version,
         else:
             print('{} already exists'.format(env_name))
 
-    return env_path, env_name
+    return env_path, env_name, activate_env
 
 
 def get_e3sm_compiler_and_mpi(machine, compiler, mpilib, template_path):
@@ -312,7 +317,7 @@ def get_e3sm_compiler_and_mpi(machine, compiler, mpilib, template_path):
             machine_os = child.text
             break
 
-    commands = []
+    mod_commands = []
     modules = next(mach.iter('module_system'))
     for module in modules:
         if module.tag == 'modules':
@@ -330,7 +335,7 @@ def get_e3sm_compiler_and_mpi(machine, compiler, mpilib, template_path):
                         text = 'module {}'.format(command.attrib['name'])
                         if command.text is not None:
                             text = '{} {}'.format(text, command.text)
-                        commands.append(text)
+                        mod_commands.append(text)
 
     root = etree.parse('{}/config_compilers.xml'.format(template_path))
 
@@ -372,10 +377,10 @@ def get_e3sm_compiler_and_mpi(machine, compiler, mpilib, template_path):
             elif child.tag == 'MPIFC':
                 mpifc = child.text.strip()
 
-    return mpicc, mpicxx, mpifc, commands
+    return mpicc, mpicxx, mpifc, mod_commands
 
 
-def get_sys_info(machine, compiler, mpilib, mpicc, mpicxx, mpifc, commands):
+def get_sys_info(machine, compiler, mpilib, mpicc, mpicxx, mpifc, mod_commands):
 
     if machine is None:
         machine = 'None'
@@ -434,16 +439,17 @@ def get_sys_info(machine, compiler, mpilib, mpicc, mpicxx, mpifc, commands):
             'export NETCDFF=$(dirname $(dirname $(which nf-config)))\n' \
             'export PNETCDF=$(dirname $(dirname $(which pnetcdf-config)))'
 
-    sys_info = dict(modules=commands, mpicc=mpicc, mpicxx=mpicxx, mpifc=mpifc,
-                    esmf_comm=esmf_comm, esmf_netcdf=esmf_netcdf,
+    sys_info = dict(modules=mod_commands, mpicc=mpicc, mpicxx=mpicxx,
+                    mpifc=mpifc, esmf_comm=esmf_comm, esmf_netcdf=esmf_netcdf,
                     esmf_compilers=esmf_compilers, netcdf_paths=netcdf_paths,
                     mpas_netcdf_paths=mpas_netcdf_paths, env_vars=env_vars)
 
     return sys_info
 
 
-def build_system_libraries(config, machine, compiler, mpi, version, conda_base,
-                           template_path, env_path, env_name, activate_base):
+def build_system_libraries(config, machine, compiler, mpi, version,
+                           template_path, env_path, env_name, activate_base,
+                           activate_env):
 
     if machine is not None:
         esmf = config.get('deploy', 'esmf')
@@ -461,7 +467,7 @@ def build_system_libraries(config, machine, compiler, mpi, version, conda_base,
 
     force_build = False
     if machine is not None:
-        mpicc, mpicxx, mpifc, commands = get_e3sm_compiler_and_mpi(
+        mpicc, mpicxx, mpifc, mod_commands = get_e3sm_compiler_and_mpi(
             machine, compiler, mpi, template_path)
         system_libs = config.get('deploy', 'system_libs')
         compiler_path = os.path.join(
@@ -474,15 +480,14 @@ def build_system_libraries(config, machine, compiler, mpi, version, conda_base,
         mpicc = 'mpicc'
         mpicxx = 'mpicxx'
         mpifc = 'mpifort'
-        commands = ['source {}/etc/profile.d/conda.sh'.format(conda_base),
-                    'conda activate {}'.format(env_name)]
+        mod_commands = []
         system_libs = None
         scorpio_path = env_path
         esmf_path = env_path
         force_build = True
 
     sys_info = get_sys_info(machine, compiler, mpi, mpicc, mpicxx,
-                            mpifc, commands)
+                            mpifc, mod_commands)
 
     if esmf != 'None':
         sys_info['env_vars'].append('export PATH="{}:$PATH"'.format(
@@ -511,8 +516,15 @@ def build_system_libraries(config, machine, compiler, mpi, version, conda_base,
     with open('{}/build.template'.format(template_path), 'r') as f:
         template = Template(f.read())
 
+    modules = '\n'.join(sys_info['modules'])
+
+    if machine is None:
+        # need to activate the conda environment because that's where the
+        # libraries are
+        modules = '{}\n{}'.format(activate_env.replace('; ', '\n'), modules)
+
     script = template.render(
-        sys_info=sys_info, modules='\n'.join(sys_info['modules']),
+        sys_info=sys_info, modules=modules,
         scorpio=scorpio, scorpio_path=scorpio_path,
         build_scorpio=build_scorpio, esmf_path=esmf_path,
         esmf_branch=esmf_branch, build_esmf=build_esmf)
@@ -620,7 +632,7 @@ def check_call(commands, env=None):
         raise subprocess.CalledProcessError(proc.returncode, commands)
 
 
-def install_miniconda(conda_base):
+def install_miniconda(conda_base, activate_base):
     if not os.path.exists(conda_base):
         print('Installing Miniconda3')
         if platform.system() == 'Linux':
@@ -648,15 +660,12 @@ def install_miniconda(conda_base):
         check_call(command)
         os.remove(miniconda)
 
-    activate = 'source {}/etc/profile.d/conda.sh; conda activate'.format(
-        conda_base)
-
     print('Doing initial setup')
     commands = '{}; ' \
                'conda config --add channels conda-forge; ' \
                'conda config --set channel_priority strict; ' \
                'conda install -y requests lxml progressbar2 jinja2; ' \
-               'conda update -y --all'.format(activate)
+               'conda update -y --all'.format(activate_base)
 
     check_call(commands)
 
@@ -802,6 +811,9 @@ def main():
                         action='store_true',
                         help="Prevent installing Miniconda3 and rerunning "
                              "this script")
+    parser.add_argument("--check", dest="check", action='store_true',
+                        help="Check the resulting environment for expected "
+                             "packages")
 
     args = parser.parse_args(sys.argv[1:])
 
@@ -818,8 +830,10 @@ def main():
 
     conda_base = get_conda_base(args.conda_base, is_test, config)
 
-    activate_base = 'source {}/etc/profile.d/conda.sh; conda activate'.format(
-        conda_base)
+    base_activation_script = os.path.abspath(
+        '{}/etc/profile.d/conda.sh'.format(conda_base))
+
+    activate_base = 'source {}; conda activate'.format(base_activation_script)
 
     do_bootstrap(args.no_bootstrap, conda_base, activate_base)
 
@@ -827,15 +841,23 @@ def main():
         activ_path = get_env_setup(args, config, machine, is_test, source_path,
                                    conda_base)
 
-    env_path, env_name = build_env(
+    if machine is None:
+        if platform.system() == 'Linux':
+            compiler = 'gnu'
+        elif platform.system() == 'Darwin':
+            compiler = 'clang'
+        else:
+            compiler = 'gnu'
+
+    env_path, env_name, activate_env = build_env(
         is_test, recreate, machine, compiler, mpi, conda_mpi, version, python,
         source_path, template_path, conda_base, activ_suffix, args.env_name,
         env_suffix, activate_base)
 
     if compiler is not None:
         sys_info, system_libs = build_system_libraries(
-            config, machine, compiler, mpi, version, conda_base, template_path,
-            env_path, env_name, activate_base)
+            config, machine, compiler, mpi, version, template_path, env_path,
+            env_name, activate_base, activate_env)
     else:
         sys_info = dict(modules=[], env_vars=[], mpas_netcdf_paths='')
         system_libs = None
@@ -845,7 +867,8 @@ def main():
         template_path, activ_path, conda_base, is_test, version, activ_suffix,
         prefix, env_name, machine, sys_info)
 
-    check_env(script_filename, env_name)
+    if args.check:
+        check_env(script_filename, env_name)
 
     commands = '{}; conda clean -y -p -t'.format(activate_base)
     check_call(commands)
