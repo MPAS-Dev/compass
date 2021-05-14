@@ -104,17 +104,33 @@ set environment variables needed for MPAS or ``compass``.
 
 If you switch to another branch, you need to rerun
 
-  ./conda/create_compass_env.py --conda <conda_path> -c <compiler>
+.. code-block:: bash
+
+    ./conda/create_compass_env.py --conda <conda_path> -c <compiler>
 
 to make sure dependencies are up to date and the ``compass`` package points
 to the current directory.
 
-The same applies if you want to work with another compiler.  Simply rerun the
-script with a new compiler name and a new activation script will be produced.
-You can then source either activation script to get the same conda environment
-but with different compilers and related modules.  Make sure you are careful
-to set up compass by pointing to a version of the MPAS model that was compiled
-with the correct compilers.
+.. note::
+
+    With the conda environment activated, you can switch branches and update
+    just the ``compass`` package with:
+
+    .. code-block:: bash
+
+        python -m pip install -e .
+
+    This will be substantially faster than rerunning
+    ``./conda/create_compass_env.py ...`` but at the risk that dependencies are
+    not up-to-date.  Since dependencies change fairly rarely, this will usually
+    be safe.
+
+If you wish to work with another compiler, simply rerun the script with a new
+compiler name and an activation script will be produced. You can then source
+either activation script to get the same conda environment but with different
+compilers and related modules.  Make sure you are careful to set up compass by
+pointing to a version of the MPAS model that was compiled with the correct
+compiler.
 
 If you run into trouble with the environment or just want a clean start, you
 can run:
@@ -125,6 +141,16 @@ can run:
 
 The ``--recreate`` flag will delete the conda environment and create it from
 scratch.  This takes just a little extra time.
+
+You can check to make sure expected commands are present with ``--check``, you
+can select a particular python version with ``--python``, you can set the name
+of the environment (and the prefix for the activation script) something other
+than the default (``test_compass<version>``) with ``--env-name``.
+
+If you are not on a supported machine, you need to choose your MPI type
+(``mpich`` or ``openmpi``) with the ``--mpi`` flag.  The compilers are
+automatically ``gnu`` for Linux and ``clang`` (with ``gfortran``) for OSX, so
+you do not need to specify those.
 
 .. _dev_working_with_compass:
 
