@@ -99,8 +99,8 @@ def get_conda_base(conda_base, is_test, config):
     if conda_base is None:
         if is_test:
             if 'CONDA_EXE' in os.environ:
-                # if this is a test, assume we're the same base as the environment
-                # currently active
+                # if this is a test, assume we're the same base as the
+                # environment currently active
                 conda_exe = os.environ['CONDA_EXE']
                 conda_base = os.path.abspath(
                     os.path.join(conda_exe, '..', '..'))
@@ -380,7 +380,8 @@ def get_e3sm_compiler_and_mpi(machine, compiler, mpilib, template_path):
     return mpicc, mpicxx, mpifc, mod_commands
 
 
-def get_sys_info(machine, compiler, mpilib, mpicc, mpicxx, mpifc, mod_commands):
+def get_sys_info(machine, compiler, mpilib, mpicc, mpicxx, mpifc,
+                 mod_commands):
 
     if machine is None:
         machine = 'None'
@@ -695,7 +696,8 @@ def update_permissions(config, is_test, activ_path, conda_base, system_libs):
 
         print('changing permissions on environments')
 
-        # first the base directories that don't seem to be included in os.walk()
+        # first the base directories that don't seem to be included in
+        # os.walk()
         directories = [conda_base]
         if system_libs is not None:
             directories.append(system_libs)
