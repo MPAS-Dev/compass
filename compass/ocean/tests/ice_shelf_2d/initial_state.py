@@ -6,9 +6,8 @@ from mpas_tools.mesh.conversion import convert, cull
 from mpas_tools.cime.constants import constants
 
 from compass.step import Step
-from compass.ocean.vertical import generate_grid
+from compass.ocean.vertical import init_vertical_coord
 from compass.ocean.iceshelf import compute_land_ice_pressure_and_draft
-from compass.ocean.vertical.zstar import compute_layer_thickness_and_zmid
 
 
 class InitialState(Step):
@@ -61,15 +60,12 @@ class InitialState(Step):
                          logger=logger)
         write_netcdf(dsMesh, 'culled_mesh.nc')
 
+        bottom_depth = config.getfloat('vertical_grid', 'bottom_depth')
+
         section = config['ice_shelf_2d']
         temperature = section.getfloat('temperature')
         surface_salinity = section.getfloat('surface_salinity')
         bottom_salinity = section.getfloat('bottom_salinity')
-
-        interfaces = generate_grid(config=config)
-
-        bottom_depth = interfaces[-1]
-        vert_levels = len(interfaces) - 1
 
         # points 1 and 2 are where angles on ice shelf are located.
         # point 3 is at the surface.
@@ -83,14 +79,9 @@ class InitialState(Step):
 
         ds = dsMesh.copy()
 
-        ds['refBottomDepth'] = ('nVertLevels', interfaces[1:])
-        ds['refZMid'] = ('nVertLevels',
-                         -0.5 * (interfaces[1:] + interfaces[0:-1]))
-        ds['vertCoordMovementWeights'] = xarray.ones_like(ds.refBottomDepth)
+        ds['bottomDepth'] = bottom_depth * xarray.ones_like(ds.xCell)
 
         yCell = ds.yCell
-        ds['bottomDepth'] = bottom_depth * xarray.ones_like(yCell)
-        ds['maxLevelCell'] = vert_levels * xarray.ones_like(yCell, dtype=int)
 
         column_thickness = xarray.where(
             yCell < y1, d1, d1 + (d2 - d1) * (yCell - y1) / (y2 - y1))
@@ -99,19 +90,11 @@ class InitialState(Step):
             d2 + (d3 - d2) * (yCell - y2) / (y3 - y2))
         column_thickness = xarray.where(yCell < y3, column_thickness, d3)
 
-        ssh = -bottom_depth + column_thickness
+        ds['ssh'] = -bottom_depth + column_thickness
 
-        cellMask = xarray.ones_like(yCell)
-        cellMask, _ = xarray.broadcast(cellMask, ds.refBottomDepth)
-        cellMask = cellMask.transpose('nCells', 'nVertLevels')
+        # set up the vertical coordinate
+        init_vertical_coord(config, ds)
 
-        restingThickness, layerThickness, zMid = \
-            compute_layer_thickness_and_zmid(
-                cellMask, ds.refBottomDepth, ds.bottomDepth, ds.maxLevelCell-1,
-                ssh=ssh)
-
-        layerThickness = layerThickness.expand_dims(dim='Time', axis=0)
-        ssh = ssh.expand_dims(dim='Time', axis=0)
         modify_mask = xarray.where(yCell < y3, 1, 0).expand_dims(
             dim='Time', axis=0)
         landIceFraction = modify_mask.astype(float)
@@ -119,11 +102,11 @@ class InitialState(Step):
 
         ref_density = constants['SHR_CONST_RHOSW']
         landIcePressure, landIceDraft = compute_land_ice_pressure_and_draft(
-            ssh=ssh, modify_mask=modify_mask, ref_density=ref_density)
+            ssh=ds.ssh, modify_mask=modify_mask, ref_density=ref_density)
 
         salinity = surface_salinity + ((bottom_salinity - surface_salinity) *
-                                       (zMid / (-bottom_depth)))
-        salinity, _ = xarray.broadcast(salinity, layerThickness)
+                                       (ds.zMid / (-bottom_depth)))
+        salinity, _ = xarray.broadcast(salinity, ds.layerThickness)
         salinity = salinity.transpose('Time', 'nCells', 'nVertLevels')
 
         normalVelocity = xarray.zeros_like(ds.xEdge)
@@ -131,12 +114,9 @@ class InitialState(Step):
         normalVelocity = normalVelocity.transpose('nEdges', 'nVertLevels')
         normalVelocity = normalVelocity.expand_dims(dim='Time', axis=0)
 
-        ds['temperature'] = temperature * xarray.ones_like(layerThickness)
+        ds['temperature'] = temperature * xarray.ones_like(ds.layerThickness)
         ds['salinity'] = salinity
         ds['normalVelocity'] = normalVelocity
-        ds['layerThickness'] = layerThickness
-        ds['ssh'] = ssh
-        ds['restingThickness'] = restingThickness
         ds['fCell'] = xarray.zeros_like(ds.xCell)
         ds['fEdge'] = xarray.zeros_like(ds.xEdge)
         ds['fVertex'] = xarray.zeros_like(ds.xVertex)

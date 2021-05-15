@@ -68,6 +68,14 @@ class RestartTest(TestCase):
         and timers
         """
         steps = self.steps_to_run
+
+        if 'initial_state' in steps:
+            variables = ['bottomDepth', 'ssh', 'layerThickness', 'zMid',
+                         'maxLevelCell', 'temperature', 'salinity']
+            compare_variables(
+                test_case=self, variables=variables,
+                filename1='initial_state/initial_state.nc')
+
         if 'full_run' in steps and 'restart_run' in steps:
             variables = ['temperature', 'salinity', 'layerThickness',
                          'normalVelocity']

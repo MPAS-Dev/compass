@@ -5,8 +5,7 @@ from mpas_tools.planar_hex import make_planar_hex_mesh
 from mpas_tools.io import write_netcdf
 from mpas_tools.mesh.conversion import convert, cull
 
-from compass.ocean.vertical.zstar import compute_layer_thickness_and_zmid
-from compass.ocean.vertical import generate_grid
+from compass.ocean.vertical import init_vertical_coord
 from compass.step import Step
 
 
@@ -79,12 +78,7 @@ def _write_initial_state(config, dsMesh, with_frazil):
 
     ds = dsMesh.copy()
 
-    interfaces = generate_grid(config=config)
     bottom_depth = config.getfloat('vertical_grid', 'bottom_depth')
-
-    ds['refBottomDepth'] = ('nVertLevels', interfaces[1:])
-    ds['refZMid'] = ('nVertLevels', -0.5 * (interfaces[1:] + interfaces[0:-1]))
-    ds['vertCoordMovementWeights'] = xarray.ones_like(ds.refBottomDepth)
 
     xCell = ds.xCell
     yCell = ds.yCell
@@ -93,26 +87,15 @@ def _write_initial_state(config, dsMesh, with_frazil):
     slope_center_position = section.getfloat('slope_center_position')
     slope_half_width = section.getfloat('slope_half_width')
 
-    bottomDepth = (shelf_depth + 0.5 * (bottom_depth - shelf_depth) *
-                   (1.0 + numpy.tanh((yCell - slope_center_position) /
-                                     slope_half_width)))
+    ds['bottomDepth'] = (shelf_depth + 0.5 * (bottom_depth - shelf_depth) *
+                         (1.0 + numpy.tanh((yCell - slope_center_position) /
+                                           slope_half_width)))
 
-    refTopDepth = xarray.DataArray(data=interfaces[0:-1],
-                                   dims=('nVertLevels',))
+    ds['ssh'] = xarray.zeros_like(xCell)
 
-    cellMask = (refTopDepth < bottomDepth).transpose('nCells', 'nVertLevels')
+    init_vertical_coord(config, ds)
 
-    maxLevelCell = cellMask.sum(dim='nVertLevels') - 1
-
-    # We want full cells, so deepen bottomDepth to be the bottom of the last
-    # valid layer
-    bottomDepth = ds.refBottomDepth.isel(nVertLevels=maxLevelCell)
-
-    restingThickness, layerThickness, zMid = compute_layer_thickness_and_zmid(
-        cellMask, ds.refBottomDepth, bottomDepth, maxLevelCell)
-
-    layerThickness = layerThickness.expand_dims(dim='Time', axis=0)
-    zMid = zMid.expand_dims(dim='Time', axis=0)
+    zMid = ds.zMid
 
     initial_temp_t1 = section.getfloat('initial_temp_t1')
     initial_temp_t2 = section.getfloat('initial_temp_t2')
@@ -155,12 +138,6 @@ def _write_initial_state(config, dsMesh, with_frazil):
     ds['temperature'] = temperature
     ds['salinity'] = salinity
     ds['normalVelocity'] = normalVelocity
-    ds['layerThickness'] = layerThickness
-    ds['restingThickness'] = layerThickness
-    ds['zMid'] = zMid
-    ds['bottomDepth'] = bottomDepth
-    # fortran 1-based indexing
-    ds['maxLevelCell'] = maxLevelCell+1
     ds['fCell'] = reference_coriolis + yCell * coriolis_gradient
     ds['fEdge'] = reference_coriolis + ds.yEdge * coriolis_gradient
     ds['fVertex'] = reference_coriolis + ds.yVertex * coriolis_gradient
