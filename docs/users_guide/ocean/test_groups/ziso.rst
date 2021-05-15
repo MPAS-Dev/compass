@@ -54,6 +54,15 @@ Both ``ziso`` test cases share the following config options:
     # Depth of the bottom of the ocean
     bottom_depth = 2500.0
 
+    # The type of vertical coordinate (e.g. z-level, z-star)
+    coord_type = z-star
+
+    # Whether to use "partial" or "full", or "None" to not alter the topography
+    partial_cell_type = full
+
+    # The minimum fraction of a layer for partial cells
+    min_pc_fraction = 0.1
+
 
     # namelist options for Zonally periodic Idealized Southern Ocean (ZISO)
     # testcases

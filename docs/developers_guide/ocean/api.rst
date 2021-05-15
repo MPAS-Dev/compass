@@ -318,6 +318,13 @@ ocean framework
    plot.plot_initial_state
    plot.plot_vertical_grid
 
-   vertical.generate_grid
-   vertical.write_grid
-   vertical.zstar.compute_layer_thickness_and_zmid
+   vertical.init_vertical_coord
+   vertical.grid_1d.generate_1d_grid
+   vertical.grid_1d.write_1d_grid
+   vertical.partial_cells.alter_bottom_depth
+   vertical.partial_cells.alter_ssh
+   vertical.zlevel.init_z_level_vertical_coord
+   vertical.zlevel.compute_min_max_level_cell
+   vertical.zlevel.compute_z_level_layer_thickness
+   vertical.zlevel.compute_z_level_resting_thickness
+   vertical.zstar.init_z_star_vertical_coord
