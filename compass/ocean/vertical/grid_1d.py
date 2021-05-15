@@ -86,6 +86,39 @@ def write_1d_grid(interfaces, out_filename):
     ncfile.close()
 
 
+def add_1d_grid(config, ds):
+    """
+    Add a 1D vertical grid based on the config options in the ``vertical_grid``
+    section to a mesh data set
+
+    The following variables are added to the mesh:
+    * ``refTopDepth`` - the positive-down depth of the top of each ref. level
+    * ``refZMid`` - the positive-down depth of the middle of each ref. level
+    * ``refBottomDepth`` - the positive-down depth of the bottom of each ref.
+      level
+    * ``refInterfaces`` - the positive-down depth of the interfaces between
+      ref. levels (with ``nVertLevels`` + 1 elements).
+    There is considerable redundancy between these variables but each is
+    sometimes convenient.
+
+    Parameters
+    ----------
+    config : configparser.ConfigParser
+        Configuration options with parameters used to construct the vertical
+        grid
+
+    ds : xarray.Dataset
+        A data set to add the grid variables to
+    """
+
+    interfaces = generate_1d_grid(config=config)
+
+    ds['refTopDepth'] = ('nVertLevels', interfaces[0:-1])
+    ds['refZMid'] = ('nVertLevels', -0.5 * (interfaces[1:] + interfaces[0:-1]))
+    ds['refBottomDepth'] = ('nVertLevels', interfaces[1:])
+    ds['refInterfaces'] = ('nVertLevelsP1', interfaces)
+
+
 def _generate_uniform(vert_levels):
     """ Generate uniform layer interfaces between 0 and 1 """
     interfaces = numpy.linspace(0., 1., vert_levels+1)
