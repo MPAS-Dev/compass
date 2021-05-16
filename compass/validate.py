@@ -202,10 +202,17 @@ def _compare_variables(variables, filename1, filename2, l1_norm, l2_norm,
                                     linf_norm)
             variable_pass = variable_pass and result
 
+        # ANSI fail text: https://stackoverflow.com/a/287944/7728169
+        start_fail = '\033[91m'
+        start_pass = '\033[92m'
+        end = '\033[0m'
+        pass_str = '{}PASS{}'.format(start_pass, end)
+        fail_str = '{}FAIL{}'.format(start_fail, end)
+
         if variable_pass:
-            print('  PASS {}\n'.format(filename1))
+            print('  {} {}\n'.format(pass_str, filename1))
         else:
-            print('  FAIL {}\n'.format(filename1))
+            print('  {} {}\n'.format(fail_str, filename1))
         print('       {}\n'.format(filename2))
         all_pass = all_pass and variable_pass
 
