@@ -391,10 +391,17 @@
                                     <span class="n">linf_norm</span><span class="p">)</span>
             <span class="n">variable_pass</span> <span class="o">=</span> <span class="n">variable_pass</span> <span class="ow">and</span> <span class="n">result</span>
 
+        <span class="c1"># ANSI fail text: https://stackoverflow.com/a/287944/7728169</span>
+        <span class="n">start_fail</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[91m&#39;</span>
+        <span class="n">start_pass</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[92m&#39;</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[0m&#39;</span>
+        <span class="n">pass_str</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">PASS</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">start_pass</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
+        <span class="n">fail_str</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">FAIL</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">start_fail</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">variable_pass</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  PASS </span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename1</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pass_str</span><span class="p">,</span> <span class="n">filename1</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  FAIL </span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename1</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fail_str</span><span class="p">,</span> <span class="n">filename1</span><span class="p">))</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;       </span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename2</span><span class="p">))</span>
         <span class="n">all_pass</span> <span class="o">=</span> <span class="n">all_pass</span> <span class="ow">and</span> <span class="n">variable_pass</span>
 
