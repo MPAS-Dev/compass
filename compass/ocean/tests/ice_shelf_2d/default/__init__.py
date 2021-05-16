@@ -16,9 +16,12 @@ class Default(TestCase):
     ----------
     resolution : str
         The horizontal resolution of the test case
+
+    coord_type : str
+        The type of vertical coordinate (``z-star``, ``z-level``, etc.)
     """
 
-    def __init__(self, test_group, resolution):
+    def __init__(self, test_group, resolution, coord_type):
         """
         Create the test case
 
@@ -29,10 +32,14 @@ class Default(TestCase):
 
         resolution : str
             The resolution of the test case
+
+        coord_type : str
+            The type of vertical coordinate (``z-star``, ``z-level``, etc.)
         """
         name = 'default'
         self.resolution = resolution
-        subdir = '{}/{}'.format(resolution, name)
+        self.coord_type = coord_type
+        subdir = '{}/{}/{}'.format(resolution, coord_type, name)
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
 
@@ -48,7 +55,7 @@ class Default(TestCase):
         """
         Modify the configuration options for this test case.
         """
-        ice_shelf_2d.configure(self.name, self.resolution, self.config)
+        ice_shelf_2d.configure(self.resolution, self.coord_type, self.config)
 
     # no run() method is needed
 
