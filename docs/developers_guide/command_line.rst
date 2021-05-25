@@ -248,3 +248,9 @@ or
 
 Would both accomplish the same thing in this example -- skipping the
 ``restart_run`` step of the test case.
+
+.. note::
+
+    If changes are made to ``steps_to_run`` in the config file and ``--steps``
+    is provided on the command line, the command-line flags take precedence
+    over the config option.
