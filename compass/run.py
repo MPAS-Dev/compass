@@ -185,7 +185,20 @@ def run_test_case(steps_to_run=None, steps_not_to_run=None):
         steps_to_run = config.get('test_case',
                                   'steps_to_run').replace(',', ' ').split()
 
+    for step in steps_to_run:
+        if step not in test_case.steps:
+            raise ValueError(
+                'A step "{}" was requested but is not one of the steps in '
+                'this test case:\n{}'.format(step, list(test_case.steps)))
+
     if steps_not_to_run is not None:
+        for step in steps_not_to_run:
+            if step not in test_case.steps:
+                raise ValueError(
+                    'A step "{}" was flagged not to run but is not one of the '
+                    'steps in this test case:'
+                    '\n{}'.format(step, list(test_case.steps)))
+
         steps_to_run = [step for step in steps_to_run if step not in
                         steps_not_to_run]
 
