@@ -8,6 +8,7 @@ Test groups
    :titlesonly:
 
    baroclinic_channel
+   global_convergence
    global_ocean
    ice_shelf_2d
    ziso
