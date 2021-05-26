@@ -4,14 +4,14 @@ global_convergence
 ==================
 
 The ``global_convergence`` test group implements convergence studies on the
-full globe.  Currently, the only test case is the cosine bell.
+full globe.  Currently, the only test case is the advection of a cosine bell.
 
 .. _ocean_global_convergence_cosine_bell:
 
 cosine_bell
 -----------
 
-The ``cosine_bell`` test case implements the Cosine Bells test case as first
+The ``cosine_bell`` test case implements the Cosine Bell test case as first
 described in `Williamson et al. 1992 <https://doi.org/10.1016/S0021-9991(05)80016-6>`_
 but using the variant from Sec. 3a of
 `Skamarock and Gassmann <https://doi.org/10.1175/MWR-D-10-05056.1>`_.  A flow
@@ -117,4 +117,3 @@ control the maximum number of cells that are allowed to be placed on a single
 core (before the test case will fail) with ``max_cells_per_core``.  If there
 aren't enough processors to handle the finest resolution, you will see that
 the step (and therefore the test case) has failed.
-

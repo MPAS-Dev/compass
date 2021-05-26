@@ -6,7 +6,7 @@ global_convergence
 The ``global_convergence`` test group
 (:py:class:`compass.ocean.tests.global_convergence.GlobalConvergence`)
 implements convergence studies on the full globe. Currently, the only test case
-is the cosine bell.
+is the advection of a cosine bell.
 
 .. _dev_ocean_global_convergence_cosine_bell:
 
