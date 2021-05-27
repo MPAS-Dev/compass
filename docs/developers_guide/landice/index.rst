@@ -16,7 +16,7 @@ default config options:
 
     # the relative or absolute path to the root of a branch where MPAS-Ocean
     # has been built
-    mpas_model = MPAS-Model/landice/develop
+    mpas_model = MALI-Dev/components/mpas-albany-landice
 
     # The namelists section defines paths to example_compact namelists that will be used
     # to generate specific namelists. By default, these point to the forward and
@@ -49,12 +49,14 @@ default config options:
     # the path on the server for MALI
     core_path = mpas-albany-landice
 
-The default location for MALI is the `git submodule <https://git-scm.com/book/en/v2/Git-Tools-Submodules>`_
-at ``MPAS-Model/landice/develop``.  This submodule may not point to the latest
-update of the `landice/develop <https://github.com/MPAS-Dev/MPAS-Model/tree/landice/develop>`_
-branch but the plan is to update the submodule frequently.  The current version
-of the submodule should always be guaranteed to be compatible with the
-corresponding version of ``compass``.
+The default location for MALI is in the
+`git submodule <https://git-scm.com/book/en/v2/Git-Tools-Submodules>`_
+``MALI-Dev`` in the directory ``components/mpas-albany-landice``.  The
+``MALI-Dev`` submodule may not point to the latest update of the
+`develop <https://github.com/MALI-Dev/E3SM/tree/develop>`_ branch but the plan
+is to update the submodule frequently.  The current version of the submodule
+should always be guaranteed to be compatible with the corresponding version of
+``compass``.
 
 To make sure the code in the submodule has been cloned and is up-to-date, you
 should run
@@ -64,8 +66,8 @@ should run
     git submodule update --init --recursive
 
 in the base directory of your local clone of the compass repo.  Then, you can
-``cd`` into ``MPAS-Model/landice/develop`` and build the code as appropriate
-for whichever of the :ref:`machines` you are using.
+``cd`` into ``MALI-Dev/components/mpas-albany-landice`` and build the code as
+appropriate for whichever of the :ref:`machines` you are using.
 
 
 .. toctree::

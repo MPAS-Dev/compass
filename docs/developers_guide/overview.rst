@@ -241,8 +241,8 @@ arguments.  But these scripts were not able to share any code between them
 unless it is from ``mpas_tools`` or another external python package.
 
 An MPAS core in ``compass`` could, theoretically, build out functionality as
-complex as in MPAS-Model.  This has already been accomplished for the 3
-idealized test cases included in ``compass``.
+complex as in the MPAS components themselves.  This has already been
+accomplished for several of the idealized test cases included in ``compass``.
 
 The shared functionality in the :ref:`dev_ocean` is described in
 :ref:`dev_ocean_framework`.

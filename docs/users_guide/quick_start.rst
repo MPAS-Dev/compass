@@ -144,12 +144,13 @@ to see what machines are currently supported.
 
 ``$MPAS`` is the path where the MPAS component has been built (the directory,
 not the executable itself; see :ref:`machines`).  By default, ``compass`` looks
-in ``MPAS-Model/<mpas_core>/develop``, where ``mpas_core`` is the name of the
-MPAS component (e.g. ``ocean`` or ``landice``) that you wish to build.  This
-default path is mostly useful for ``compass`` developers, who will have code in
-these paths by default in the local compass repo.
+in either ``MALI-Dev/components/mpas-albany-landice`` or
+``E3SM-Project/components/mpas-ocean``, for the ``landice`` and ``ocean``
+cores, respectively.  This default path is mostly useful for ``compass``
+developers, who will check out the ``compass`` repo and will therefore have
+these directories available to them from the repo.
 
-You may name a config file with ``-f``:
+You may point to a config file with ``-f``:
 
 .. code-block:: bash
 
@@ -172,7 +173,7 @@ in the repository.
 
     # the relative or absolute path to the root of a branch where MPAS-Ocean
     # has been built
-    mpas_model = MPAS-Model/ocean/develop
+    mpas_model = E3SM-Project/components/mpas-ocean
 
     # The mesh_database and the initial_condition_database are locations where
     # meshes / initial conditions might be found on a specific machine. They can be
