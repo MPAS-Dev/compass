@@ -178,6 +178,8 @@ def get_env_setup(args, config, machine, is_test, source_path, conda_base):
     else:
         activ_path = os.path.abspath(os.path.join(conda_base, '..'))
 
+    check_unsupported(machine, compiler, mpi, source_path)
+
     return python, recreate, compiler, mpi, conda_mpi,  activ_suffix, \
         env_suffix, activ_path
 
@@ -800,6 +802,22 @@ def update_permissions(config, is_test, activ_path, conda_base, system_libs):
 
     bar.finish()
     print('  done.')
+
+
+def check_unsupported(machine, compiler, mpi, source_path):
+    with open(os.path.join(source_path, 'conda', 'unsupported.txt'), 'r') as f:
+        content = f.readlines()
+    content = [line.strip() for line in content if not line.startswith('#')]
+    for line in content:
+        if line.strip() == '':
+            continue
+        unsupported = [part.strip() for part in line.split(',')]
+        if len(unsupported) != 3:
+            raise ValueError('Bad line in "unsupported.txt" {}'.format(line))
+        if machine == unsupported[0] and compiler == unsupported[1] and \
+                mpi == unsupported[2]:
+            raise ValueError('{} with {} is not supported on {}'.format(
+                compiler, mpi, machine))
 
 
 def main():
