@@ -672,118 +672,134 @@ def install_miniconda(conda_base, activate_base):
 
 
 def update_permissions(config, is_test, activ_path, conda_base, system_libs):
+
+    directories = []
+    if not is_test:
+        directories.append(conda_base)
+    if system_libs is not None:
+        # even if this is not a release, we need to update permissions on
+        # shared system libraries
+        directories.append(system_libs)
+
+    group = config.get('deploy', 'group')
+
+    new_uid = os.getuid()
+    new_gid = grp.getgrnam(group).gr_gid
+
+    print('changing permissions on activation scripts')
+
+    read_perm = (stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP |
+                 stat.S_IWGRP | stat.S_IROTH)
+    exec_perm = (stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR |
+                 stat.S_IRGRP | stat.S_IWGRP | stat.S_IXGRP |
+                 stat.S_IROTH | stat.S_IXOTH)
+
+    mask = stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO
+
     if not is_test:
 
-        group = config.get('deploy', 'group')
-
-        new_uid = os.getuid()
-        new_gid = grp.getgrnam(group).gr_gid
-
-        print('changing permissions on activation scripts')
         activation_files = glob.glob('{}/*_compass*.sh'.format(
             activ_path))
-
-        read_perm = stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH
-        exec_perm = (stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR |
-                     stat.S_IRGRP | stat.S_IXGRP |
-                     stat.S_IROTH | stat.S_IXOTH)
-
-        mask = stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO
-
         for file_name in activation_files:
             os.chmod(file_name, read_perm)
             os.chown(file_name, new_uid, new_gid)
 
-        print('changing permissions on environments')
+    print('changing permissions on environments')
 
-        # first the base directories that don't seem to be included in
-        # os.walk()
-        directories = [conda_base]
-        if system_libs is not None:
-            directories.append(system_libs)
-        for directory in directories:
-            try:
-                dir_stat = os.stat(directory)
-            except OSError:
-                continue
+    # first the base directories that don't seem to be included in
+    # os.walk()
+    for directory in directories:
+        try:
+            dir_stat = os.stat(directory)
+        except OSError:
+            continue
 
-            perm = dir_stat.st_mode & mask
+        perm = dir_stat.st_mode & mask
 
-            if perm == exec_perm and dir_stat.st_uid == new_uid and \
-                    dir_stat.st_gid == new_gid:
-                continue
+        if dir_stat.st_uid != new_uid:
+            # current user doesn't own this dir so let's move on
+            continue
 
-            try:
-                os.chown(directory, new_uid, new_gid)
-                os.chmod(directory, exec_perm)
-            except OSError:
-                continue
+        if perm == exec_perm and dir_stat.st_gid == new_gid:
+            continue
 
-        files_and_dirs = []
-        for base in directories:
-            for root, dirs, files in os.walk(base):
-                files_and_dirs.extend(dirs)
-                files_and_dirs.extend(files)
+        try:
+            os.chown(directory, new_uid, new_gid)
+            os.chmod(directory, exec_perm)
+        except OSError:
+            continue
 
-        widgets = [progressbar.Percentage(), ' ', progressbar.Bar(),
-                   ' ', progressbar.ETA()]
-        bar = progressbar.ProgressBar(widgets=widgets,
-                                      maxval=len(files_and_dirs)).start()
-        progress = 0
-        for base in directories:
-            for root, dirs, files in os.walk(base):
-                for directory in dirs:
-                    progress += 1
-                    bar.update(progress)
+    files_and_dirs = []
+    for base in directories:
+        for root, dirs, files in os.walk(base):
+            files_and_dirs.extend(dirs)
+            files_and_dirs.extend(files)
 
-                    directory = os.path.join(root, directory)
+    widgets = [progressbar.Percentage(), ' ', progressbar.Bar(),
+               ' ', progressbar.ETA()]
+    bar = progressbar.ProgressBar(widgets=widgets,
+                                  maxval=len(files_and_dirs)).start()
+    progress = 0
+    for base in directories:
+        for root, dirs, files in os.walk(base):
+            for directory in dirs:
+                progress += 1
+                bar.update(progress)
 
-                    try:
-                        dir_stat = os.stat(directory)
-                    except OSError:
-                        continue
+                directory = os.path.join(root, directory)
 
-                    perm = dir_stat.st_mode & mask
+                try:
+                    dir_stat = os.stat(directory)
+                except OSError:
+                    continue
 
-                    if perm == exec_perm and dir_stat.st_uid == new_uid and \
-                            dir_stat.st_gid == new_gid:
-                        continue
+                if dir_stat.st_uid != new_uid:
+                    # current user doesn't own this dir so let's move on
+                    continue
 
-                    try:
-                        os.chown(directory, new_uid, new_gid)
-                        os.chmod(directory, exec_perm)
-                    except OSError:
-                        continue
+                perm = dir_stat.st_mode & mask
 
-                for file_name in files:
-                    progress += 1
-                    bar.update(progress)
-                    file_name = os.path.join(root, file_name)
-                    try:
-                        file_stat = os.stat(file_name)
-                    except OSError:
-                        continue
+                if perm == exec_perm and dir_stat.st_gid == new_gid:
+                    continue
 
-                    perm = file_stat.st_mode & mask
+                try:
+                    os.chown(directory, new_uid, new_gid)
+                    os.chmod(directory, exec_perm)
+                except OSError:
+                    continue
 
-                    if perm & stat.S_IXUSR:
-                        # executable, so make sure others can execute it
-                        new_perm = exec_perm
-                    else:
-                        new_perm = read_perm
+            for file_name in files:
+                progress += 1
+                bar.update(progress)
+                file_name = os.path.join(root, file_name)
+                try:
+                    file_stat = os.stat(file_name)
+                except OSError:
+                    continue
 
-                    if perm == new_perm and file_stat.st_uid == new_uid and \
-                            file_stat.st_gid == new_gid:
-                        continue
+                if file_stat.st_uid != new_uid:
+                    # current user doesn't own this file so let's move on
+                    continue
 
-                    try:
-                        os.chown(file_name, new_uid, new_gid)
-                        os.chmod(file_name, perm)
-                    except OSError:
-                        continue
+                perm = file_stat.st_mode & mask
 
-        bar.finish()
-        print('  done.')
+                if perm & stat.S_IXUSR:
+                    # executable, so make sure others can execute it
+                    new_perm = exec_perm
+                else:
+                    new_perm = read_perm
+
+                if perm == new_perm and file_stat.st_gid == new_gid:
+                    continue
+
+                try:
+                    os.chown(file_name, new_uid, new_gid)
+                    os.chmod(file_name, perm)
+                except OSError:
+                    continue
+
+    bar.finish()
+    print('  done.')
 
 
 def main():
