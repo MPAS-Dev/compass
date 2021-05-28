@@ -77,10 +77,9 @@ step in the work directory.
 
 The config file for the MPAS core should, at the very least, define the
 default value for the ``mpas_model`` path in the ``[paths]`` section.  This
-path should point to the submodule within the MPAS-Model directory in the
-compass repo for appropriate MPAS dynamical core.  This is the path to the
-directory where the MPAS model's executable will be built, not to the
-executable itself.
+path should point to the path within the appropriate E3SM submodule where the
+standalone component can be built.  This is the path to the directory where the
+MPAS component's executable will be built, not to the executable itself.
 
 Typically, the config file will also define the paths to the model executable
 and the default namelist and streams files for "forward mode" (and, for the
@@ -100,7 +99,7 @@ section:
 
     # the relative or absolute path to the root of a branch where MALI has been
     # built
-    mpas_model = MPAS-Model/landice/develop
+    mpas_model = MALI-Dev/components/mpas-albany-landice
 
     # The namelists section defines paths to example_compact namelists that will be used
     # to generate specific namelists. By default, these point to the forward and

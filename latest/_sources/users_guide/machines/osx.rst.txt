@@ -52,8 +52,8 @@ MPAS-O installation
 
 .. code-block:: bash
 
-    git clone https://github.com/MPAS-Dev/MPAS-Model.git
-    cd MPAS-Model
+    git clone git@github.com/E3SM-Project/E3SM.git
+    cd E3SM/components/mpas-ocean
 
     # Set shell environmental variables (for BASH)
     export PIO="PATH_TO_PIO_INSTALL"

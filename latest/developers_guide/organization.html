@@ -289,10 +289,9 @@ for example, in order to create the path for each test group, test case and
 step in the work directory.</p>
 <p>The config file for the MPAS core should, at the very least, define the
 default value for the <code class="docutils literal notranslate"><span class="pre">mpas_model</span></code> path in the <code class="docutils literal notranslate"><span class="pre">[paths]</span></code> section.  This
-path should point to the submodule within the MPAS-Model directory in the
-compass repo for appropriate MPAS dynamical core.  This is the path to the
-directory where the MPAS model’s executable will be built, not to the
-executable itself.</p>
+path should point to the path within the appropriate E3SM submodule where the
+standalone component can be built.  This is the path to the directory where the
+MPAS component’s executable will be built, not to the executable itself.</p>
 <p>Typically, the config file will also define the paths to the model executable
 and the default namelist and streams files for “forward mode” (and, for the
 ocean core, “init mode”).</p>
@@ -307,7 +306,7 @@ section:</p>
 
 <span class="c1"># the relative or absolute path to the root of a branch where MALI has been</span>
 <span class="c1"># built</span>
-<span class="na">mpas_model</span> <span class="o">=</span> <span class="s">MPAS-Model/landice/develop</span>
+<span class="na">mpas_model</span> <span class="o">=</span> <span class="s">MALI-Dev/components/mpas-albany-landice</span>
 
 <span class="c1"># The namelists section defines paths to example_compact namelists that will be used</span>
 <span class="c1"># to generate specific namelists. By default, these point to the forward and</span>

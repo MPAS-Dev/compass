@@ -16,7 +16,7 @@ default config options:
 
     # the relative or absolute path to the root of a branch where MPAS-Ocean
     # has been built
-    mpas_model = MPAS-Model/ocean/develop
+    mpas_model = E3SM-Project/components/mpas-ocean
 
     # The namelists section defines paths to example_compact namelists that will be used
     # to generate specific namelists. By default, these point to the forward and
@@ -59,9 +59,11 @@ default config options:
     # the number of iterations of ssh adjustment to perform
     iterations = 10
 
-The default location for MPAS-Ocean is the `git submodule <https://git-scm.com/book/en/v2/Git-Tools-Submodules>`_
-at ``MPAS-Model/ocean/develop``.  This submodule may not point to the latest
-update of the `ocean/develop <https://github.com/MPAS-Dev/MPAS-Model/tree/ocean/develop>`_
+The default location for MPAS-Ocean is in the
+`git submodule <https://git-scm.com/book/en/v2/Git-Tools-Submodules>`_
+``E3SM-Project`` in the directory ``components/mpas-ocean``.  The submodule
+may not point to the latest MPAS-Ocean code in on the E3SM
+`master <https://github.com/E3SM-Project/E3SM/tree/master>`_
 branch but the plan is to update the submodule frequently.  The current version
 of the submodule should always be guaranteed to be compatible with the
 corresponding version of ``compass``.
@@ -74,8 +76,8 @@ should run
     git submodule update --init --recursive
 
 in the base directory of your local clone of the compass repo.  Then, you can
-``cd`` into ``MPAS-Model/ocean/develop`` and build the code as appropriate
-for whichever of the :ref:`machines` you are using.
+``cd`` into ``E3SM-Project/components/mpas-ocean`` and build the code as
+appropriate for whichever of the :ref:`machines` you are using.
 
 .. toctree::
    :titlesonly:

@@ -69,7 +69,7 @@ which case you could provide an absolute path like:
 
     # the relative or absolute path to the root of a branch where MPAS-Ocean
     # has been built
-    mpas_model = /home/xylar/code/MPAS-Model/ocean/develop
+    mpas_model = /home/xylar/code/E3SM-Project/components/mpas-ocean
 
 You provide the config file to ``compass setup`` and ``compass suite`` with
 the ``-f`` flag:
@@ -158,21 +158,21 @@ looks like:
     threads = 8
 
     [paths]
-    mpas_model = /home/xylar/code/mpas-work/compass/compass_1.0/MPAS-Model/ocean/develop
+    mpas_model = /home/xylar/code/mpas-work/compass/compass_1.0/E3SM-Project/components/mpas-ocean
     ocean_database_root = /home/xylar/data/mpas/mpas_standalonedata/mpas-ocean
     landice_database_root = /home/xylar/data/mpas/mpas_standalonedata/mpas-albany-landice
     baseline_dir = /home/xylar/data/mpas/test_20210413/compass_classes/ocean/global_ocean/QU240/PHC/init
 
     [namelists]
-    forward = /home/xylar/code/mpas-work/compass/compass_1.0/MPAS-Model/ocean/develop/default_inputs/namelist.ocean.forward
-    init = /home/xylar/code/mpas-work/compass/compass_1.0/MPAS-Model/ocean/develop/default_inputs/namelist.ocean.init
+    forward = /home/xylar/code/mpas-work/compass/compass_1.0/E3SM-Project/components/mpas-ocean/default_inputs/namelist.ocean.forward
+    init = /home/xylar/code/mpas-work/compass/compass_1.0/E3SM-Project/components/mpas-ocean/default_inputs/namelist.ocean.init
 
     [streams]
-    forward = /home/xylar/code/mpas-work/compass/compass_1.0/MPAS-Model/ocean/develop/default_inputs/streams.ocean.forward
-    init = /home/xylar/code/mpas-work/compass/compass_1.0/MPAS-Model/ocean/develop/default_inputs/streams.ocean.init
+    forward = /home/xylar/code/mpas-work/compass/compass_1.0/E3SM-Project/components/mpas-ocean/default_inputs/streams.ocean.forward
+    init = /home/xylar/code/mpas-work/compass/compass_1.0/E3SM-Project/components/mpas-ocean/default_inputs/streams.ocean.init
 
     [executables]
-    model = /home/xylar/code/mpas-work/compass/compass_1.0/MPAS-Model/ocean/develop/ocean_model
+    model = /home/xylar/code/mpas-work/compass/compass_1.0/E3SM-Project/components/mpas-ocean/ocean_model
 
     [ssh_adjustment]
     iterations = 10
