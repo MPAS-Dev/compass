@@ -20,7 +20,7 @@ Some helpful external links:
 * `MPAS-Albany Land Ice Model User's Guide v6.0 <https://doi.org/10.5281/zenodo.1227426>`_
   includes a quick start guide and description of all flags and variables.
 
-* Test cases (not requiring ``compass``) for latest MPAS-Ocean release:
+* Test cases (not requiring ``compass``) for latest MALI release:
 
   * https://mpas-dev.github.io/land_ice/download.html
 

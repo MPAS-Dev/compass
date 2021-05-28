@@ -87,8 +87,14 @@ the configuration and the names of its steps:
 compass setup
 -------------
 
-The ``compass setup`` command is used to set up one or more test cases. The
-command-line options are:
+The ``compass setup`` command is used to set up one or more test cases.
+
+.. note::
+
+    You must have built the executable for the standalone MPAS component you
+    want to run before setting up a compass test case.
+
+The command-line options are:
 
 .. code-block:: none
 
@@ -117,17 +123,16 @@ to tell ``compass setup`` which supported machine you're running on (leave this
 off if you're working on an "unknown" machine).  See :ref:`dev_compass_list`
 above for how to list the supported machines.
 
-You can supply the path to the MPAS model you built with the ``-p`` or
-``--mpas_model`` flag.  This can be a relative or absolute path.  The default
-depends on the core for the test case and is the relative path
-``MPAS-Model/<core>/develop`` to the
-`git submodule <https://git-scm.com/book/en/v2/Git-Tools-Submodules>`_ for the
-source code for that core.
+You can supply the directory where you have built the MPAS component with the
+``-p`` or ``--mpas_model`` flag.  This can be a relative or absolute path.  The
+default for the ``landice`` core is ``MALI-Dev/components/mpas-albany-landice``
+and the default for the ``ocean`` core is
+``E3SM-Project/components/mpas-ocean``.
 
 You can also supply a config file with config options pointing to the
-directories for cached data files, the location of MPAS model, and much more
-(see :ref:`config_files` and :ref:`setup_overview`).  Point to your config file
-using the ``-f`` or ``--config_file`` flag.
+directories for cached data files, the location of the MPAS component, and much
+more (see :ref:`config_files` and :ref:`setup_overview`).  Point to your config
+file using the ``-f`` or ``--config_file`` flag.
 
 The ``-w`` or ``--work_dir`` flags point to a relative or absolute path that
 is the base path where the test case(s) should be set up.  The default is the

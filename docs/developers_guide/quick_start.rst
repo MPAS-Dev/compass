@@ -17,22 +17,22 @@ To begin, obtain the master branch of the
     cd compass
     git submodule update --init --recursive
 
-The MPAS repository is a submodule of compass repository.  For example, to
-compile MPAS-Ocean:
+The E3SM repository and a clone of E3SM for MALI development are submodules of
+the compass repository.  For example, to compile MPAS-Ocean:
 
 .. code-block:: bash
 
-    cd MPAS-Model/ocean/develop/
+    cd E3SM-Project/components/mpas-ocean/
     # load modules (see machine-specific instructions below)
-    make gfortran CORE=ocean
+    make gfortran
 
 For MALI:
 
 .. code-block:: bash
 
-    cd MPAS-Model/landice/develop/
+    cd MALI-Dev/components/mpas-albany-landice
     # load modules (see machine-specific instructions below)
-    make gfortran CORE=landice
+    make gfortran
 
 
 .. _dev_conda_env:
@@ -191,26 +191,33 @@ There are two ways to build the MPAS executable:
    .. code-block:: bash
 
      git submodule update --init --recursive
-     cd MPAS-Model/ocean/develop/
+     cd E3SM-Project/components/mpas-ocean/
      # load modules
-     make gfortran CORE=ocean
+     make gfortran
 
    For the "load modules" step, see :ref:`machines` for specific instructions.
 
-2. Other MPAS directory (advanced): Create your own clone of the MPAS-Model
-   repository elsewhere on disk.  Either make an ``ocean.cfg`` or
-   ``landice.cfg`` that specifies the absolute path to MPAS-Model repo where
-   the ``ocean_model`` or ``landice_model`` executable is found, or specify
-   this path on the command line with ``-p``.  You are responsible for knowing
-   if this particular version of MPAS-Model is compatible with the version of
-   ``compass`` that you are using. The simplest way to set up a new MPAS repo
-   in a new directory is:
+2. Other E3SM directory (advanced): Create your own clone of the
+   ``E3SM-Project/E3SM`` or ``MALI-Dev/E3SM`` repository elsewhere on disk.
+   Either make an ``ocean.cfg`` or ``landice.cfg`` that specifies the absolute
+   path to the path where the ``ocean_model`` or ``landice_model`` executable
+   is found, or specify this path on the command line with ``-p``.  You are
+   responsible for knowing if this particular version of MPAS component's code
+   is compatible with the version of ``compass`` that you are using. The
+   simplest way to set up a new repo for MALI development in a new directory
+   is:
 
    .. code-block:: bash
 
-     git clone git@github.com:MPAS-Dev/MPAS.git your_new_branch
+     git clone git@github.com:MALI-Dev/E3SM.git your_new_branch
      cd your_new_branch
-     git checkout -b your_new_branch origin/ocean/develop
+     git checkout -b your_new_branch origin/develop
 
-Note that for ocean development, it is best to branch from ``ocean/develop``
-and for MALI development, start with ``landice/develop``.
+
+   The equivalent for MPAS-Ocean development would be:
+
+   .. code-block:: bash
+
+     git clone git@github.com:E3SM-Project/E3SM.git your_new_branch
+     cd your_new_branch
+     git checkout -b your_new_branch origin/master
