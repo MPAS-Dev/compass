@@ -60,13 +60,13 @@ Then, you can build the MPAS model with
 
 .. code-block:: bash
 
-    make CORE=landice intel-nersc
+    make CORE=landice intel-mpi
 
 or
 
 .. code-block:: bash
 
-    make CORE=ocean intel-nersc
+    make CORE=ocean intel-mpi
 
 cori-knl, gnu
 -------------
