@@ -452,7 +452,7 @@ def get_sys_info(machine, compiler, mpilib, mpicc, mpicxx, mpifc,
 
 def build_system_libraries(config, machine, compiler, mpi, version,
                            template_path, env_path, env_name, activate_base,
-                           activate_env):
+                           activate_env, mpicc, mpicxx, mpifc, mod_commands):
 
     if machine is not None:
         esmf = config.get('deploy', 'esmf')
@@ -470,8 +470,6 @@ def build_system_libraries(config, machine, compiler, mpi, version,
 
     force_build = False
     if machine is not None:
-        mpicc, mpicxx, mpifc, mod_commands = get_e3sm_compiler_and_mpi(
-            machine, compiler, mpi, template_path)
         system_libs = config.get('deploy', 'system_libs')
         compiler_path = os.path.join(
             system_libs, 'compass_{}'.format(version), compiler, mpi)
@@ -480,10 +478,6 @@ def build_system_libraries(config, machine, compiler, mpi, version,
         esmf_path = os.path.join(compiler_path, 'esmf_{}'.format(esmf))
     else:
         # using conda-forge compilers
-        mpicc = 'mpicc'
-        mpicxx = 'mpicxx'
-        mpifc = 'mpifort'
-        mod_commands = []
         system_libs = None
         scorpio_path = env_path
         esmf_path = env_path
@@ -885,6 +879,16 @@ def main():
         else:
             compiler = 'gnu'
 
+    if machine is not None:
+        mpicc, mpicxx, mpifc, mod_commands = get_e3sm_compiler_and_mpi(
+            machine, compiler, mpi, template_path)
+    else:
+        # using conda-forge compilers
+        mpicc = 'mpicc'
+        mpicxx = 'mpicxx'
+        mpifc = 'mpifort'
+        mod_commands = []
+
     env_path, env_name, activate_env = build_env(
         is_test, recreate, machine, compiler, mpi, conda_mpi, version, python,
         source_path, template_path, conda_base, activ_suffix, args.env_name,
@@ -893,7 +897,8 @@ def main():
     if compiler is not None:
         sys_info, system_libs = build_system_libraries(
             config, machine, compiler, mpi, version, template_path, env_path,
-            env_name, activate_base, activate_env)
+            env_name, activate_base, activate_env, mpicc, mpicxx, mpifc,
+            mod_commands)
     else:
         sys_info = dict(modules=[], env_vars=[], mpas_netcdf_paths='')
         system_libs = None
