@@ -16,13 +16,7 @@ Then, you can build the MPAS model with
 
 .. code-block:: bash
 
-    make CORE=landice intel-nersc
-
-or
-
-.. code-block:: bash
-
-    make CORE=ocean intel-nersc
+    make intel-nersc
 
 cori-haswell, gnu
 -----------------
@@ -37,13 +31,7 @@ Then, you can build the MPAS model with
 
 .. code-block:: bash
 
-    make CORE=landice gnu-nersc
-
-or
-
-.. code-block:: bash
-
-    make CORE=ocean gnu-nersc
+    make gnu-nersc
 
 cori-knl, intel
 ---------------
@@ -60,13 +48,7 @@ Then, you can build the MPAS model with
 
 .. code-block:: bash
 
-    make CORE=landice intel-mpi
-
-or
-
-.. code-block:: bash
-
-    make CORE=ocean intel-mpi
+    make  intel-mpi
 
 cori-knl, gnu
 -------------
@@ -81,10 +63,4 @@ Then, you can build the MPAS model with
 
 .. code-block:: bash
 
-    make CORE=landice gnu-nersc
-
-or
-
-.. code-block:: bash
-
-    make CORE=ocean gnu-nersc
+    make gnu-nersc

@@ -18,26 +18,12 @@ To begin, obtain the master branch of the
     git submodule update --init --recursive
 
 The E3SM repository and a clone of E3SM for MALI development are submodules of
-the compass repository.  For example, to compile MPAS-Ocean:
-
-.. code-block:: bash
-
-    cd E3SM-Project/components/mpas-ocean/
-    # load modules (see machine-specific instructions below)
-    make gfortran
-
-For MALI:
-
-.. code-block:: bash
-
-    cd MALI-Dev/components/mpas-albany-landice
-    # load modules (see machine-specific instructions below)
-    make gfortran
+the compass repository.
 
 .. _dev_conda_env:
 
-compass conda environment
--------------------------
+compass conda environment, compilers and system modules
+-------------------------------------------------------
 
 As a developer, you will need your own environment with the latest dependencies
 for compass and a development installation of ``compass`` from the branch
@@ -100,7 +86,10 @@ Each time you want to work with compass, you will need to run:
 
 This will load the appropriate conda environment, load system modules for
 compilers, MPI and libraries needed to build and run MPAS components, and
-set environment variables needed for MPAS or ``compass``.
+set environment variables needed for MPAS or ``compass``.  It will also set an
+environment variable ``LOAD_COMPASS_ENV`` that points to the activation script.
+``compass`` uses this to make an symlink to the activation script called
+``load_compass_env.sh`` in the work directory.
 
 If you switch to another branch, you need to rerun
 
@@ -162,6 +151,7 @@ command-line tool exactly like described in the User's Guide :ref:`quick_start`
 and as detailed in :ref:`dev_command_line`.
 
 To list test cases you need to run:
+
 .. code-block:: bash
 
     compass list
@@ -187,6 +177,19 @@ And you would set up a suite as follows:
 
     compass suite -s -c ocean -t nightly -m $MACHINE -w $WORKDIR -p $MPAS
 
+When you want to run the code, go to the work directory (for the suite or test
+case), log onto a compute node (if on an HPC machine) and run:
+
+.. code-block:: bash
+
+    source load_compass_env.sh
+    compass run
+
+The first command will source the same activation script
+(``test_compass_<version>_<machine>_<compiler>_<mpi>.sh``) that you used to set
+up the suite or test case (``load_compass_env.sh`` is just a symlink to that
+activation script you sourced before setting up the suite or test case).
+
 Building MPAS components
 ------------------------
 
@@ -195,17 +198,20 @@ compile MPAS-Ocean:
 
 .. code-block:: bash
 
-    cd MPAS-Model/ocean/develop/
-    # load modules (see machine-specific instructions below)
-    make gfortran CORE=ocean
+    source ./test_compass_<version>_<machine>_<compiler>_<mpi>.sh
+    cd E3SM-Project/components/mpas-ocean/
+    make <mpas_compiler>
 
 For MALI:
 
 .. code-block:: bash
 
-    cd MPAS-Model/landice/develop/
-    # load modules (see machine-specific instructions below)
-    make gfortran CORE=landice
+    source ./test_compass_<version>_<machine>_<compiler>_<mpi>.sh
+    cd MALI-Dev/components/mpas-albany-landice
+    make <mpas_compiler>
+
+See :ref:`dev_supported_machines` for the right ``<mpas_compiler>`` command for
+each machine and compiler.
 
 
 Set up a compass repository with worktrees: for advanced users

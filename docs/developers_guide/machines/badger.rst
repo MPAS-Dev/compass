@@ -33,13 +33,7 @@ Then, you can build the MPAS model with
 
 .. code-block:: bash
 
-    make CORE=landice intel-mpi
-
-or
-
-.. code-block:: bash
-
-    make CORE=ocean intel-mpi
+    make intel-mpi
 
 gnu
 ---
@@ -54,10 +48,4 @@ Then, you can build the MPAS model with
 
 .. code-block:: bash
 
-    make CORE=landice gfortran
-
-or
-
-.. code-block:: bash
-
-    make CORE=ocean gfortran
+    make gfortran

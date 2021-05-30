@@ -79,22 +79,10 @@ Under Linux, you can build the MPAS model with
 
 .. code-block:: bash
 
-    make CORE=landice gfortran
-
-or
-
-.. code-block:: bash
-
-    make CORE=ocean gfortran
+    make gfortran
 
 Under OSX, you can build the MPAS model with
 
 .. code-block:: bash
 
-    make CORE=landice gfortran-clang
-
-or
-
-.. code-block:: bash
-
-    make CORE=ocean gfortran-clang
+    make gfortran-clang
