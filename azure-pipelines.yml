@@ -16,7 +16,7 @@ jobs:
 - job:
   displayName: linux
   pool:
-    vmImage: 'ubuntu-16.04'
+    vmImage: 'ubuntu-latest'
   strategy:
     matrix:
       nompi:
@@ -160,7 +160,7 @@ jobs:
 - job:
   displayName: osx
   pool:
-    vmImage: 'macOS-10.14'
+    vmImage: 'macOS-latest'
   strategy:
     matrix:
       nompi:
@@ -176,6 +176,9 @@ jobs:
   steps:
   - bash: echo "##vso[task.prependpath]$CONDA/bin"
     displayName: Add conda to PATH
+
+  - bash: sudo chown -R 501:20 /usr/local/miniconda/pkgs
+    displayName: Fix permissions
 
   - bash: |
       set -e
