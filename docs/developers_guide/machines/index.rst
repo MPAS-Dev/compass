@@ -34,6 +34,40 @@ you were setting things up.  You can can source this file on a compute node
 MPI libraries and environment variables for running``compass`` tests and
 the MPAS model.
 
++--------------+------------+-----------+-------------------+
+| Machine      | Compiler   | MPI lib.  |  MPAS make target |
++==============+============+===========+===================+
+| anvil        | intel18    | mvapich   | ifort             |
+|              +------------+-----------+-------------------+
+|              | gnu        | mvapich   | gfortran          |
++--------------+------------+-----------+-------------------+
+| badger       | intel      | impi      | intel-mpi         |
+|              +------------+-----------+-------------------+
+|              | gnu        | mvapich   | gfortran          |
++--------------+------------+-----------+-------------------+
+| chrysalis    | intel      | openmpi   | ifort             |
+|              |            +-----------+-------------------+
+|              |            | impi      | intel-mpi         |
+|              +------------+-----------+-------------------+
+|              | gnu        | openmpi   | gfortran          |
++--------------+------------+-----------+-------------------+
+| compy        | intel      | impi      | intel-mpi         |
+| (fix coming  +------------+-----------+-------------------+
+| soon)        | pgi        | mvapich2  | pgi               |
++--------------+------------+-----------+-------------------+
+| cori-haswell | intel      | mpt       | intel-nersc       |
+|              +------------+-----------+-------------------+
+|              | gnu        | mpt       | gnu-nersc         |
++--------------+------------+-----------+-------------------+
+| cori-knl     | intel      | impi      | intel-mpi         |
+|              +------------+-----------+-------------------+
+|              | gnu        | mpt       | gnu-nersc         |
++--------------+------------+-----------+-------------------+
+| grizzly      | intel      | impi      | intel-mpi         |
+|              +------------+-----------+-------------------+
+|              | gnu        | mvapich   | gfortran          |
++--------------+------------+-----------+-------------------+
+
 Below are specifics for each supported machine
 
 .. toctree::
