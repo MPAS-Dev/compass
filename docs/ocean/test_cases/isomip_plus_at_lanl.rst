@@ -130,15 +130,15 @@ Make a directory for the code, e.g.:
 
    mkdir /usr/projects/climate/username
    cd /usr/projects/climate/username
-   mkdir -p mpas/model
-   cd mpas/model/
+   mkdir -p e3sm
+   cd e3sm
 
 Clone the repo:
 
 .. code-block:: bash
 
-   git clone git@github.com:username/E3SM.git repo
-   cd repo
+   git clone git@github.com:username/E3SM.git E3SM
+   cd E3SM
 
 Rename your remote so it’s easier to not confuse it with other forks:
 
@@ -201,20 +201,18 @@ In this file, put:
    export AUTOCLEAN=true
    export  HDF5_USE_FILE_LOCKING=FALSE
 
-4. Checking out an MPAS branch and building the model
+4. Checking out an E3SM branch and building the model
 -----------------------------------------------------
 
 **Note: this is a good place to come back to when you need to start over on
 a new branch.**
 
 Add a "worktree", a copy of the repo that we can point to a different branch.
-We will work with the main ocean development branch, ``ocean/develop``. In
-general, ``ocean/develop`` is the place to start, since the ``master`` branch is
-updated only rarely when we make releases:
+We will work with the main branch, ``master``:
 
 .. code-block:: bash
 
-   cd /usr/projects/climate/username/mpas/model/reop
+   cd /usr/projects/climate/username/e3sm/E3SM
 
 Let's make sure we have the latest version of all the branches on all of the
 remotes
@@ -227,8 +225,8 @@ Okay, now we're ready to make a new folder to work from.
 
 .. code-block:: bash
 
-   git worktree add ../ocean/develop -b ocean/develop
-   cd ../ocean/develop
+   git worktree add ../ocean/my_branch -b ocean/my_branch
+   cd ../ocean/my_branch
 
 Take a look at which branch were on:
 
@@ -236,20 +234,19 @@ Take a look at which branch were on:
 
    git logg
 
-We don't start off on ``E3SM-Project/E3SM/ocean/develop`` (even though the
-name of the local branch might trick you into thinking you're there), so we need
-to do a hard reset to put us there:
+We start off on ``E3SM-Project/E3SM/master``.  If you want to point to a different branch,
+you need to do a hard reset to put yourself there.  Here's an example:
 
 .. code-block:: bash
 
-   git reset --hard E3SM-Project/E3SM/ocean/develop
+   git reset --hard xylar/E3SM/ocean/fancy_new_branch
    git logg
 
 Now source the file with modules and settings for building MPAS on grizzly:
 
 .. code-block:: bash
 
-   source /usr/projects/climate/username/mpas/model/setup_gr.bash
+   source /usr/projects/climate/username/e3sm/setup_gr.bash
 
 If all goes well, you should see ``comapss_py3.7`` as part of your command prompt and you should be read to build MPAS.
 
@@ -291,8 +288,8 @@ thing on Grizzly.  Open a file ``config.ocean`` and put the following in it:
    # init namelists in the default_inputs directory after a successful build of
    # the ocean model.
    [namelists]
-   forward = /usr/projects/climate/username/mpas/model/ocean/develop/namelist.ocean.forward
-   init = /usr/projects/climate/username/mpas/model/ocean/develop/namelist.ocean.init
+   forward = /usr/projects/climate/username/e3sm/E3SM/components/mpas-ocean/namelist.ocean.forward
+   init = /usr/projects/climate/username/e3sm/E3SM/components/mpas-ocean/namelist.ocean.init
 
 
    # The streams section defines paths to template streams files that will be used
@@ -300,8 +297,8 @@ thing on Grizzly.  Open a file ``config.ocean`` and put the following in it:
    # init streams files in the default_inputs directory after a successful build of
    # the ocean model.
    [streams]
-   forward = /usr/projects/climate/username/mpas/model/ocean/develop/streams.ocean.forward
-   init = /usr/projects/climate/username/mpas/model/ocean/develop/streams.ocean.init
+   forward = /usr/projects/climate/username/e3sm/E3SM/components/mpas-ocean/streams.ocean.forward
+   init = /usr/projects/climate/username/e3sm/E3SM/components/mpas-ocean/streams.ocean.init
 
 
    # The executables section defines paths to required executables. These
@@ -309,7 +306,7 @@ thing on Grizzly.  Open a file ``config.ocean`` and put the following in it:
    # Full paths should be provided in order to access the executables from
    # anywhere on the machine.
    [executables]
-   model = /usr/projects/climate/username/mpas/model/ocean/develop/ocean_model
+   model = /usr/projects/climate/username/e3sm/E3SM/components/mpas-ocean/ocean_model
 
 
    # The paths section describes paths that are used within the ocean core test
@@ -321,7 +318,7 @@ thing on Grizzly.  Open a file ``config.ocean`` and put the following in it:
    # the same directory, or different directory. Additionally, if they are empty
    # some test cases might download data into them, which will then be reused if
    # the test case is run again later.
-   mpas_model = /usr/projects/climate/username/mpas/model/ocean/develop
+   mpas_model = /usr/projects/climate/username/e3sm/E3SM/components/mpas-ocean
    mesh_database = /usr/projects/regionalclimate/COMMON_MPAS/ocean/grids/mesh_database
    initial_condition_database = /usr/projects/regionalclimate/COMMON_MPAS/ocean/grids/initial_condition_database
    bathymetry_database = /usr/projects/regionalclimate/COMMON_MPAS/ocean/grids/bathymetry_database
@@ -333,7 +330,7 @@ redundant references to
 
 .. code-block:: none
 
-   /usr/projects/climate/username/mpas/model/ocean/develop
+   /usr/projects/climate/username/e3sm/E3SM/components/mpas-ocean
 
 If you want to set up a worktree for a different branch, the ``config.ocean``
 looks the same except that you would need to replace the above path with the
@@ -378,7 +375,7 @@ than jumping into a 2-year simulation.
    cd /lustre/scratch4/turquoise/username/isomip_plus_Ocean0/ocean/isomip_plus/2km/Ocean0/
    salloc --nodes=1 --time=0:20:00 --account=e3sm
 
-   source /usr/projects/climate/username/mpas/model/setup_gr.bash
+   source /usr/projects/climate/username/e3sm/setup_gr.bash
 
    ./run_test.py
 
@@ -412,7 +409,7 @@ Put this in the job script:
    # exit if there are any errors
    set -e
 
-   source /usr/projects/climate/username/mpas/model/setup_gr.bash
+   source /usr/projects/climate/username/e3sm/setup_gr.bash
 
    months_per_job=24
    end_date="0003-01-01_00:00:00"
