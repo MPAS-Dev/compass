@@ -50,8 +50,8 @@ MPAS-O installation
 
 .. code-block:: bash
 
-    git clone https://github.com/MPAS-Dev/MPAS-Model.git
-    cd MPAS-Model
+    git clone https://github.com/E3SM-Project/E3SM.git
+    cd E3SM/components/mpas-ocean
 
     # Set shell environmental variables (for BASH)
     export PIO="PATH_TO_PIO_INSTALL"
@@ -62,6 +62,6 @@ MPAS-O installation
     # example:  export NETCDFF="/usr/local/Cellar/netcdf/4.6.3_1"
     export PNETCDF="PATH_TO_PNETCDF_INSTALL"
     # example:  export PNETCDF="/usr/local/Cellar/parallel-netcdf/1.7.0_2"
-    make gfortran CORE=ocean
+    make gfortran
     # or
-    make gfortran-clang CORE=ocean
+    make gfortran-clang

@@ -21,17 +21,17 @@ compile MPAS-Ocean:
 
 .. code-block:: bash
 
-    cd MPAS-Model/ocean/develop/
+    cd E3SM-Project/components/mpas-ocean
     # load modules (see machine-specific instructions below)
-    make gfortran CORE=ocean
+    make gfortran
 
 For MALI:
 
 .. code-block:: bash
 
-    cd MPAS-Model/landice/develop/
+    cd E3SM-Project/components/mpas-albany-landice
     # load modules (see machine-specific instructions below)
-    make gfortran CORE=landice
+    make gfortran
 
 
 .. _conda_env:
@@ -244,21 +244,27 @@ executable:
    .. code-block:: bash
 
      git submodule update --init --recursive
-     cd MPAS-Model/ocean/develop/
+     cd E3SM-Project/components/mpas-ocean
      # load modules (see machine-specific instructions below)
-     make gfortran CORE=ocean
+     make gfortran
 
-2. Other MPAS directory (advanced): Create your own MPAS-Model repository
-   elsewhere on disk, make a copy of ``general.config.ocean`` or
-   ``general.config.landice``, and point the copy to the MPAS-Model paths.
+2. Other E3SM directory (advanced): Create your own E3SM-Project/E3SM or
+   MALI-Dev/E3SM repository elsewhere on disk, make a copy of
+   ``general.config.ocean`` or ``general.config.landice``, and point the copy
+   to the MPAS standalone code path in your repo.
    The user must ensure that flag names and test cases match appropriately.
-   The simplest way to set up a new MPAS repo in a new directory is:
+   The simplest way to set up a new repo in a new directory is:
 
    .. code-block:: bash
 
-     git clone git@github.com:MPAS-Dev/MPAS.git your_new_branch
+     git clone git@github.com:E3SM-Project/E3SM.git your_new_branch
      cd your_new_branch
-     git checkout -b your_new_branch origin/ocean/develop
+     git checkout -b your_new_branch origin/master
+     cd components/mpas-ocean
 
-Note that for ocean development, it is best to branch from ``ocean/develop`` and
-for MALI development, start with ``landice/develop``.
+.. note::
+
+    For ocean development, you will clone ``E3SM-Project/E3SM`` and build in
+    ``components/mpas-ocean``; for MALI development, the repo is
+    ``MALI-Dev/E3SM`` and the build directory is
+    ``componets/mpas-albany-landice``.

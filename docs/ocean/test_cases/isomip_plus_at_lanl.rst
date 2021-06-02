@@ -102,13 +102,13 @@ Add this to your .bashrc
    module load git
    source git-completion.bash
 
-3. Forking and Cloning MPAS-Model
----------------------------------
+3. Forking and Cloning E3SM
+---------------------------
 
 
-* Go to: `https://github.com/MPAS-Dev/MPAS-Model <https://github.com/MPAS-Dev/MPAS-Model>`_
+* Go to: `https://github.com/E3SM-Project/E3SM <https://github.com/E3SM-Project/E3SM>`_
 * Make your own fork by clicking “Fork” at the top right:
-* Go to your new fork (e.g. `https://github.com/username/MPAS-Model <https://github.com/username/MPAS-Model>`_ )
+* Go to your new fork (e.g. `https://github.com/username/E3SM <https://github.com/username/E3SM>`_ )
 * Whenever you ever need to know the link to clone your fork
 
   * Click on “Clone or download”
@@ -137,26 +137,26 @@ Clone the repo:
 
 .. code-block:: bash
 
-   git clone git@github.com:username/MPAS-Model.git repo
+   git clone git@github.com:username/E3SM.git repo
    cd repo
 
 Rename your remote so it’s easier to not confuse it with other forks:
 
 .. code-block:: bash
 
-   git remote rename origin username/MPAS-Model
+   git remote rename origin username/E3SM
 
 Add the main repo:
 
 .. code-block:: bash
 
-   git remote add MPAS-Dev/MPAS-Model git@github.com:MPAS-Dev/MPAS-Model.git
+   git remote add E3SM-Project/E3SM git@github.com:E3SM-Project/E3SM.git
 
 Add my fork (you can add other people’s forks in the same way):
 
 .. code-block:: bash
 
-   git remote add xylar/MPAS-Model git@github.com:xylar/MPAS-Model.git
+   git remote add xylar/E3SM git@github.com:xylar/E3SM.git
 
 Get the latest version of all the remotes (pruning anything that has been
 deleted):
@@ -197,7 +197,7 @@ In this file, put:
    export I_MPI_CXX=icpc
    export I_MPI_F77=ifort
    export I_MPI_F90=ifort
-   export CORE=ocean
+   export
    export USE_PIO2=true
    export AUTOCLEAN=true
    export  HDF5_USE_FILE_LOCKING=FALSE
@@ -237,13 +237,13 @@ Take a look at which branch were on:
 
    git logg
 
-We don't start off on ``MPAS-Dev/MPAS-Model/ocean/develop`` (even though the
+We don't start off on ``E3SM-Project/E3SM/ocean/develop`` (even though the
 name of the local branch might trick you into thinking you're there), so we need
 to do a hard reset to put us there:
 
 .. code-block:: bash
 
-   git reset --hard MPAS-Dev/MPAS-Model/ocean/develop
+   git reset --hard E3SM-Project/E3SM/ocean/develop
    git logg
 
 Now source the file with modules and settings for building MPAS on grizzly:

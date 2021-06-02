@@ -89,7 +89,7 @@ grizzly, gnu
     module use /usr/projects/climate/SHARED_CLIMATE/modulefiles/all
     module load gcc/5.3.0
     module load openmpi/1.10.5 netcdf/4.4.1 parallel-netcdf/1.5.0 pio/1.7.2
-    make gfortran CORE=ocean
+    make gfortran
 
 Hint: you can put the following line in your bashrc:
 
@@ -109,7 +109,7 @@ grizzly, intel 19 with scorpio
     export PNETCDF=/usr/projects/hpcsoft/toss3/grizzly/pnetcdf/1.11.2_intel-19.0.4_intel-mpi-2019.4_hdf5-1.8.16
     export PIO=/usr/projects/climate/xylar/libraries/grizzly/scorpio-1.1.6-intel
 
-    make intel-mpi CORE=ocean USE_PIO2=true
+    make intel-mpi USE_PIO2=true
     # may also use: OPENMP=true DEBUG=true GEN_F90=true
 
 grizzly, intel 17 and pio 1
@@ -123,7 +123,7 @@ grizzly, intel 17 and pio 1
     module use /usr/projects/climate/SHARED_CLIMATE/modulefiles/all
     module load intel/17.0.1
     module load openmpi/1.10.5 netcdf/4.4.1 parallel-netcdf/1.5.0 pio/1.7.2
-    make ifort CORE=ocean
+    make ifort
 
 badger, gnu
 -----------
@@ -148,7 +148,7 @@ badger, gnu
     export PNETCDF=/usr/projects/climate/SHARED_CLIMATE/software/badger/spack-install/linux-rhel7-x86_64/gcc-6.4.0/parallel-netcdf-1.8.0-2qwcdbnjcq5pnkoqpx2s7um3s7ffo3xd
     export PIO=/usr/projects/climate/SHARED_CLIMATE/software/badger/spack-install/linux-rhel7-x86_64/gcc-6.4.0/pio-1.10.0-ljj73au6ctgkwmh3gbd4mleljsumijys/
 
-    make gfortran CORE=ocean
+    make gfortran
 
 
 Building Scorpio on Grizzly
@@ -165,9 +165,10 @@ Installation of PIO follows from the following pre-existing module files:
     export NETCDF=/usr/projects/hpcsoft/toss3/grizzly/netcdf/4.7.3_intel-19.0.4_intel-mpi-2019.4_hdf5-1.8.16/
     export PNETCDF=/usr/projects/hpcsoft/toss3/grizzly/pnetcdf/1.11.2_intel-19.0.4_intel-mpi-2019.4_hdf5-1.8.16/
 
-Note, DO NOT use openmpi/3.1.5 as there is a bug (RMIO
-`Output from MPAS-O unreadable for large 1.8M cell mesh <https://github.com/MPAS-Dev/MPAS-Model/issues/576>`_
-).
+.. note::
+
+    DO NOT use openmpi/3.1.5 as there is a bug (RMIO
+    `Output from MPAS-O unreadable for large 1.8M cell mesh <https://github.com/MPAS-Dev/MPAS-Model/issues/576>`_).
 
 PIO2 from `E3SM-Project/scorpio <https://github.com/E3SM-Project/scorpio>`_
 was used, specifically tag ``scorpio-v1.1.0`` with the following build command
