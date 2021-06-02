@@ -76,7 +76,8 @@ this script will also:
   machines), ``<compiler>`` is the compiler name (e.g. ``intel`` or ``gnu``),
   and ``mpi`` is the MPI flavor (e.g. ``impi``, ``mvapich``, ``openmpi``).
 
-* run some tests to make sure some of the expected packages are available.
+* optionally (with the ``--check`` flag), run some tests to make sure some of
+  the expected packages are available.
 
 Each time you want to work with compass, you will need to run:
 
@@ -140,6 +141,54 @@ If you are not on a supported machine, you need to choose your MPI type
 (``mpich`` or ``openmpi``) with the ``--mpi`` flag.  The compilers are
 automatically ``gnu`` for Linux and ``clang`` (with ``gfortran``) for OSX, so
 you do not need to specify those.
+
+.. _dev_creating_only_env:
+
+Creating only the compass environment
+-------------------------------------
+
+For some workflows (e.g. for MALI development wih the Albany library), you may
+only want to create the conda environment and not build SCORPIO, ESMF or
+include any system modules or environment variables in your activation script.
+In such cases, run with the ``--env_only`` flag.
+
+.. code-block:: bash
+
+    ./conda/create_compass_env.py --conda <conda_path> --env_only
+
+Each time you want to work with compass, you will need to run:
+
+.. code-block:: bash
+
+    source ./test_compass_<version>.sh
+
+This will load the appropriate conda environment for ``compass``.  It will also
+set an environment variable ``LOAD_COMPASS_ENV`` that points to the activation
+script. ``compass`` uses this to make an symlink to the activation script
+called ``load_compass_env.sh`` in the work directory.
+
+If you switch to another branch, you need to rerun
+
+.. code-block:: bash
+
+    ./conda/create_compass_env.py --conda <conda_path> --env_only
+
+to make sure dependencies are up to date and the ``compass`` package points
+to the current directory.
+
+.. note::
+
+    With the conda environment activated, you can switch branches and update
+    just the ``compass`` package with:
+
+    .. code-block:: bash
+
+        python -m pip install -e .
+
+    This will be substantially faster than rerunning
+    ``./conda/create_compass_env.py ...`` but at the risk that dependencies are
+    not up-to-date.  Since dependencies change fairly rarely, this will usually
+    be safe.
 
 .. _dev_working_with_compass:
 
