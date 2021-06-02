@@ -197,7 +197,6 @@ In this file, put:
    export I_MPI_CXX=icpc
    export I_MPI_F77=ifort
    export I_MPI_F90=ifort
-   export
    export USE_PIO2=true
    export AUTOCLEAN=true
    export  HDF5_USE_FILE_LOCKING=FALSE
@@ -698,4 +697,3 @@ to manipulate than default python ``NetCDF4`` data sets.  But there's a bit of a
 learning curve involving a lot of Googling the documentation and StackOverflow.
 
 Hopefully that's a start...
-

@@ -84,5 +84,4 @@ Then, when you want to build or run MPAS-Ocean, source a file containing:
     export PNETCDF=${PREFIX}
     export PIO=${PREFIX}
     # change to one of the other cores as needed
-    export
     export AUTOCLEAN=true

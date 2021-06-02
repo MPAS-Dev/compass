@@ -29,7 +29,7 @@ For MALI:
 
 .. code-block:: bash
 
-    cd E3SM-Project/components/mpas-albany-landice
+    cd MALI-Dev/components/mpas-albany-landice
     # load modules (see machine-specific instructions below)
     make gfortran
 
@@ -267,4 +267,4 @@ executable:
     For ocean development, you will clone ``E3SM-Project/E3SM`` and build in
     ``components/mpas-ocean``; for MALI development, the repo is
     ``MALI-Dev/E3SM`` and the build directory is
-    ``componets/mpas-albany-landice``.
+    ``components/mpas-albany-landice``.
