@@ -155,6 +155,8 @@ def get_env_setup(args, config, machine, is_test, source_path, conda_base):
 
     if args.mpi is not None:
         mpi = args.mpi
+    elif compiler is None:
+        mpi = 'nompi'
     else:
         mpi = config.get('deploy', 'mpi_{}'.format(compiler))
 
@@ -536,7 +538,8 @@ def build_system_libraries(config, machine, compiler, mpi, version,
 
 
 def write_load_compass(template_path, activ_path, conda_base, is_test, version,
-                       activ_suffix, prefix, env_name, machine, sys_info):
+                       activ_suffix, prefix, env_name, machine, sys_info,
+                       env_only):
 
     try:
         os.makedirs(activ_path)
@@ -551,7 +554,8 @@ def write_load_compass(template_path, activ_path, conda_base, is_test, version,
 
     script_filename = '{}/{}{}.sh'.format(activ_path, prefix, activ_suffix)
 
-    sys_info['env_vars'].append('export USE_PIO2=true')
+    if not env_only:
+        sys_info['env_vars'].append('export USE_PIO2=true')
     sys_info['env_vars'].append('export HDF5_USE_FILE_LOCKING=FALSE')
     sys_info['env_vars'].append('export LOAD_COMPASS_ENV={}'.format(
         script_filename))
@@ -832,6 +836,9 @@ def main():
                              "system flavor) to deploy")
     parser.add_argument("-c", "--compiler", dest="compiler", type=str,
                         help="The name of the compiler")
+    parser.add_argument("--env_only", dest="env_only", action='store_true',
+                        help="Create only the compass environment, don't "
+                             "install compilers or build SCORPIO")
     parser.add_argument("--recreate", dest="recreate", action='store_true',
                         help="Recreate the environment if it exists")
     parser.add_argument("-f", "--config_file", dest="config_file",
@@ -852,7 +859,10 @@ def main():
 
     version = get_version()
 
-    machine = get_machine(args.machine)
+    if args.env_only:
+        machine = None
+    else:
+        machine = get_machine(args.machine)
 
     config = get_config(machine, args.config_file)
 
@@ -872,7 +882,9 @@ def main():
                                    conda_base)
 
     if machine is None:
-        if platform.system() == 'Linux':
+        if args.env_only:
+            compiler = None
+        elif platform.system() == 'Linux':
             compiler = 'gnu'
         elif platform.system() == 'Darwin':
             compiler = 'clang'
@@ -906,7 +918,7 @@ def main():
     prefix = args.env_name
     script_filename = write_load_compass(
         template_path, activ_path, conda_base, is_test, version, activ_suffix,
-        prefix, env_name, machine, sys_info)
+        prefix, env_name, machine, sys_info, args.env_only)
 
     if args.check:
         check_env(script_filename, env_name)
@@ -914,7 +926,9 @@ def main():
     commands = '{}; conda clean -y -p -t'.format(activate_base)
     check_call(commands)
 
-    update_permissions(config, is_test, activ_path, conda_base, system_libs)
+    if machine is not None:
+        update_permissions(config, is_test, activ_path, conda_base,
+                           system_libs)
 
 
 if __name__ == '__main__':
