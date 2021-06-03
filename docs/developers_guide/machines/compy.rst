@@ -3,13 +3,6 @@
 CompyMcNodeFace
 ===============
 
-.. note::
-
-    So far, we have not got ``compass`` to successfully build and run Compy.
-    We will update this page when we do. See
-    `this issue <https://github.com/MPAS-Dev/compass/issues/57>`_ for more
-    discussion.
-
 intel
 -----
 
