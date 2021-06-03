@@ -67,6 +67,12 @@ components themselves evolves and new functionality is added.
    design_docs/index
 
 .. toctree::
+   :caption: Tutorials
+   :maxdepth: 1
+
+   tutorials/dev_porting_legacy
+
+.. toctree::
    :caption: Glossary
    :maxdepth: 2
 
