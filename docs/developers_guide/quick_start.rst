@@ -29,13 +29,13 @@ As a developer, you will need your own environment with the latest dependencies
 for compass and a development installation of ``compass`` from the branch
 you're working on.
 
-The ``conda`` directory in the repository has a tool ``create_compass_env.py``
+The ``conda`` directory in the repository has a tool ``configure_compass_env.py``
 that can get you started.  If you are on one of the :ref:`dev_supported_machines`,
 run:
 
 .. code-block:: bash
 
-  ./conda/create_compass_env.py --conda <conda_path> -c <compiler>
+  ./conda/configure_compass_env.py --conda <conda_path> -c <compiler>
 
 If you don't have `Miniconda3 <https://docs.conda.io/en/latest/miniconda.html>`_
 installed in ``<conda_path>``, it will be downloaded and installed for you in
@@ -96,7 +96,7 @@ If you switch to another branch, you need to rerun
 
 .. code-block:: bash
 
-    ./conda/create_compass_env.py --conda <conda_path> -c <compiler>
+    ./conda/configure_compass_env.py --conda <conda_path> -c <compiler>
 
 to make sure dependencies are up to date and the ``compass`` package points
 to the current directory.
@@ -111,7 +111,7 @@ to the current directory.
         python -m pip install -e .
 
     This will be substantially faster than rerunning
-    ``./conda/create_compass_env.py ...`` but at the risk that dependencies are
+    ``./conda/configure_compass_env.py ...`` but at the risk that dependencies are
     not up-to-date.  Since dependencies change fairly rarely, this will usually
     be safe.
 
@@ -127,7 +127,7 @@ can run:
 
 .. code-block:: bash
 
-  ./conda/create_compass_env.py --conda <conda_path> -c <compiler> --recreate
+  ./conda/configure_compass_env.py --conda <conda_path> -c <compiler> --recreate
 
 The ``--recreate`` flag will delete the conda environment and create it from
 scratch.  This takes just a little extra time.
@@ -144,8 +144,8 @@ you do not need to specify those.
 
 .. _dev_creating_only_env:
 
-Creating only the compass environment
--------------------------------------
+Creating/updating only the compass environment
+----------------------------------------------
 
 For some workflows (e.g. for MALI development wih the Albany library), you may
 only want to create the conda environment and not build SCORPIO, ESMF or
@@ -154,7 +154,7 @@ In such cases, run with the ``--env_only`` flag.
 
 .. code-block:: bash
 
-    ./conda/create_compass_env.py --conda <conda_path> --env_only
+    ./conda/configure_compass_env.py --conda <conda_path> --env_only
 
 Each time you want to work with compass, you will need to run:
 
@@ -171,7 +171,7 @@ If you switch to another branch, you need to rerun
 
 .. code-block:: bash
 
-    ./conda/create_compass_env.py --conda <conda_path> --env_only
+    ./conda/configure_compass_env.py --conda <conda_path> --env_only
 
 to make sure dependencies are up to date and the ``compass`` package points
 to the current directory.
@@ -186,7 +186,7 @@ to the current directory.
         python -m pip install -e .
 
     This will be substantially faster than rerunning
-    ``./conda/create_compass_env.py ...`` but at the risk that dependencies are
+    ``./conda/configure_compass_env.py ...`` but at the risk that dependencies are
     not up-to-date.  Since dependencies change fairly rarely, this will usually
     be safe.
 

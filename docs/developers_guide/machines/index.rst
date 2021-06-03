@@ -94,13 +94,13 @@ an activation script for it, on Linux, run:
 
 .. code-block:: bash
 
-  ./conda/create_compass_env.py --conda <conda_path> -c gnu -i mpich
+  ./conda/configure_compass_env.py --conda <conda_path> -c gnu -i mpich
 
 and on OSX run:
 
 .. code-block:: bash
 
-  ./conda/create_compass_env.py --conda <conda_path> -c clang -i mpich
+  ./conda/configure_compass_env.py --conda <conda_path> -c clang -i mpich
 
 You may use ``openmpi`` instead of ``mpich`` but we have had better experiences
 with the latter.
