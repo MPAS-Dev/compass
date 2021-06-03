@@ -567,10 +567,21 @@ def write_load_compass(template_path, activ_path, conda_base, is_test, version,
     with open(filename, 'r') as f:
         template = Template(f.read())
 
+    if is_test:
+        update_compass = \
+            'if [[ -f "./setup.py" && -d "compass" ]]; then\n' \
+            '   # safe to assume we\'re in the compass repo\n' \
+            '   # update the compass installation to point here\n' \
+            '   python -m pip install -e .\n' \
+            'fi'
+    else:
+        update_compass = ''
+
     script = template.render(conda_base=conda_base, compass_env=env_name,
                              modules='\n'.join(sys_info['modules']),
                              env_vars='\n'.join(sys_info['env_vars']),
-                             netcdf_paths=sys_info['mpas_netcdf_paths'])
+                             netcdf_paths=sys_info['mpas_netcdf_paths'],
+                             update_compass=update_compass)
 
     # strip out redundant blank lines
     lines = list()
