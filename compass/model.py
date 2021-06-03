@@ -61,11 +61,12 @@ def run_model(step, update_pio=True, partition_graph=True,
     model = config.get('executables', 'model')
     model_basename = os.path.basename(model)
 
-    args = [parallel_executable,
-            '-n', '{}'.format(cores),
-            './{}'.format(model_basename),
-            '-n', namelist,
-            '-s', streams]
+    # split the parallel executable into constituents in case it includes flags
+    args = parallel_executable.split(' ')
+    args.extend(['-n', '{}'.format(cores),
+                 './{}'.format(model_basename),
+                 '-n', namelist,
+                 '-s', streams])
 
     check_call(args, logger)
 
