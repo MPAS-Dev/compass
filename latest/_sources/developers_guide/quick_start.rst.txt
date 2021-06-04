@@ -18,91 +18,192 @@ To begin, obtain the master branch of the
     git submodule update --init --recursive
 
 The E3SM repository and a clone of E3SM for MALI development are submodules of
-the compass repository.  For example, to compile MPAS-Ocean:
-
-.. code-block:: bash
-
-    cd E3SM-Project/components/mpas-ocean/
-    # load modules (see machine-specific instructions below)
-    make gfortran
-
-For MALI:
-
-.. code-block:: bash
-
-    cd MALI-Dev/components/mpas-albany-landice
-    # load modules (see machine-specific instructions below)
-    make gfortran
-
+the compass repository.
 
 .. _dev_conda_env:
 
-compass conda environment
--------------------------
+compass conda environment, compilers and system modules
+-------------------------------------------------------
 
-As a developer, you will nearly always want to set up your own conda
-environment with the latest dependencies for compass.  You can try using the
-latest compass environment on a supported machine or making one from the latest
-release (see :ref:`conda_env`) but there is a risk that the dependencies will
-not be correct and things will not work as expected as a result.
+As a developer, you will need your own environment with the latest dependencies
+for compass and a development installation of ``compass`` from the branch
+you're working on.
 
-To install your own compass conda environment on other machines, first, install
-`Miniconda3 <https://docs.conda.io/en/latest/miniconda.html>`_ (if miniconda is
-not already installed), then add the
-`conda-forge channel <https://conda-forge.org/#about>`_:
+The ``conda`` directory in the repository has a tool ``configure_compass_env.py``
+that can get you started.  If you are on one of the :ref:`dev_supported_machines`,
+run:
 
 .. code-block:: bash
 
-    conda config --add channels conda-forge
-    conda config --set channel_priority strict
+  ./conda/configure_compass_env.py --conda <conda_path> -c <compiler>
 
-then create a new conda environment (called ``dev_compass`` in this example) as
-follows:
+If you don't have `Miniconda3 <https://docs.conda.io/en/latest/miniconda.html>`_
+installed in ``<conda_path>``, it will be downloaded and installed for you in
+this location. If you already have it installed, that path will be used to add
+(or update) the compass test environment.
 
-.. code-block:: bash
+See the machine under :ref:`dev_supported_machines` for a list of available
+compilers to pass to ``-c``.  If you don't supply a compiler, you will get
+the default one for that machine (usually Intel). Typically, you will want the
+default MPI flavor that compass has defined for each compiler, so you should
+not need to specify which MPI version to use but you may do so with ``-i`` if
+you need to.
 
-    conda create -n dev_compass python=3.8 affine cartopy cartopy_offlinedata \
-        cmocean "esmf=*=mpi_mpich*" ffmpeg "geometric_features=0.4.0" git \
-        ipython "jigsaw=0.9.14" "jigsawpy=0.3.3" jupyter lxml matplotlib \
-        metis "mpas_tools=0.5.1" mpich nco "netcdf4=*=nompi_*" numpy \
-        progressbar2 pyamg "pyremap>=0.0.7,<0.1.0" rasterio requests scipy \
-        xarray
+If you are on a login node, the script should automatically recognize what
+machine you are on.  You can supply the machine name with ``-m <machine>`` if
+you run into trouble with the automatic recognition (e.g. if you're setting
+up the environment on a compute node, which is not recommended).
 
-We will do our best to keep this list of dependencies in sync with the
-"official" list, which is found in
-`recipe/meta.yaml <https://github.com/MPAS-Dev/compass/blob/master/recipe/meta.yaml>`_
+In addition to installing Miniconda and creating the conda environment for you,
+this script will also:
+
+* install the ``compass`` package from the local branch in "development" mode
+  so changes you make to the repo are immediately reflected in the conda
+  environment.
+
+* build the `SCORPIO <https://github.com/E3SM-Project/scorpio>`_ library if it
+  hasn't already been built.  SCORPIO is needed building and running MPAS
+  components.
+
+* build the `ESMF <https://earthsystemmodeling.org/>`_ library if it hasn't
+  already been built.  ESMF with the system's version of MPI is needed for
+  making mapping files.
+
+* make an activation script called
+  ``test_compass_<version>_<machine>_<compiler>_<mpi>.sh``,
+  where ``<version>`` is the compass version, ``<machine>`` is the name of the
+  machine (to prevent confusion when running from the same branch on multiple
+  machines), ``<compiler>`` is the compiler name (e.g. ``intel`` or ``gnu``),
+  and ``mpi`` is the MPI flavor (e.g. ``impi``, ``mvapich``, ``openmpi``).
+
+* optionally (with the ``--check`` flag), run some tests to make sure some of
+  the expected packages are available.
 
 Each time you want to work with compass, you will need to run:
 
 .. code-block:: bash
 
-    conda activate dev_compass
+    source ./test_compass_<version>_<machine>_<compiler>_<mpi>.sh
+
+This will load the appropriate conda environment, load system modules for
+compilers, MPI and libraries needed to build and run MPAS components, and
+set environment variables needed for MPAS or ``compass``.  It will also set an
+environment variable ``LOAD_COMPASS_ENV`` that points to the activation script.
+``compass`` uses this to make an symlink to the activation script called
+``load_compass_env.sh`` in the work directory.
+
+If you switch to another branch, you need to rerun
+
+.. code-block:: bash
+
+    ./conda/configure_compass_env.py --conda <conda_path> -c <compiler>
+
+to make sure dependencies are up to date and the ``compass`` package points
+to the current directory.
+
+.. note::
+
+    With the conda environment activated, you can switch branches and update
+    just the ``compass`` package with:
+
+    .. code-block:: bash
+
+        python -m pip install -e .
+
+    This will be substantially faster than rerunning
+    ``./conda/configure_compass_env.py ...`` but at the risk that dependencies are
+    not up-to-date.  Since dependencies change fairly rarely, this will usually
+    be safe.
+
+If you wish to work with another compiler, simply rerun the script with a new
+compiler name and an activation script will be produced. You can then source
+either activation script to get the same conda environment but with different
+compilers and related modules.  Make sure you are careful to set up compass by
+pointing to a version of the MPAS model that was compiled with the correct
+compiler.
+
+If you run into trouble with the environment or just want a clean start, you
+can run:
+
+.. code-block:: bash
+
+  ./conda/configure_compass_env.py --conda <conda_path> -c <compiler> --recreate
+
+The ``--recreate`` flag will delete the conda environment and create it from
+scratch.  This takes just a little extra time.
+
+You can check to make sure expected commands are present with ``--check``, you
+can select a particular python version with ``--python``, you can set the name
+of the environment (and the prefix for the activation script) something other
+than the default (``test_compass<version>``) with ``--env-name``.
+
+If you are not on a supported machine, you need to choose your MPI type
+(``mpich`` or ``openmpi``) with the ``--mpi`` flag.  The compilers are
+automatically ``gnu`` for Linux and ``clang`` (with ``gfortran``) for OSX, so
+you do not need to specify those.
+
+.. _dev_creating_only_env:
+
+Creating/updating only the compass environment
+----------------------------------------------
+
+For some workflows (e.g. for MALI development wih the Albany library), you may
+only want to create the conda environment and not build SCORPIO, ESMF or
+include any system modules or environment variables in your activation script.
+In such cases, run with the ``--env_only`` flag.
+
+.. code-block:: bash
+
+    ./conda/configure_compass_env.py --conda <conda_path> --env_only
+
+Each time you want to work with compass, you will need to run:
+
+.. code-block:: bash
+
+    source ./test_compass_<version>.sh
+
+This will load the appropriate conda environment for ``compass``.  It will also
+set an environment variable ``LOAD_COMPASS_ENV`` that points to the activation
+script. ``compass`` uses this to make an symlink to the activation script
+called ``load_compass_env.sh`` in the work directory.
+
+If you switch to another branch, you need to rerun
+
+.. code-block:: bash
+
+    ./conda/configure_compass_env.py --conda <conda_path> --env_only
+
+to make sure dependencies are up to date and the ``compass`` package points
+to the current directory.
+
+.. note::
+
+    With the conda environment activated, you can switch branches and update
+    just the ``compass`` package with:
+
+    .. code-block:: bash
+
+        python -m pip install -e .
+
+    This will be substantially faster than rerunning
+    ``./conda/configure_compass_env.py ...`` but at the risk that dependencies are
+    not up-to-date.  Since dependencies change fairly rarely, this will usually
+    be safe.
 
 .. _dev_working_with_compass:
 
 Running compass from the repo
 -----------------------------
 
-If you are working with the released ``compass`` package, you can interact with
-it directly with the ``compass`` command-line tool as described in
-:ref:`setup_overview` and :ref:`suite_overview`.  If you are developing the
-code out of a repository, though, you need to call the local code with:
-
-.. code-block:: bash
-
-    python -m compass ...
-
-This way, you will use the code in the local ``compass`` directory.  If you
-are running out of a ``dev_compass`` environment like described above, you
-won't have a ``compass`` command-line tool to run.  If you are using one of
-the release environments (e.g. because dependencies haven't changed since the
-last release), you want to be careful not to run the ``compass`` command-line
-tool directly because you won't be accessing the code you're working on.
+If you follow the procedure above, you can run compass with the ``compass``
+command-line tool exactly like described in the User's Guide :ref:`quick_start`
+and as detailed in :ref:`dev_command_line`.
 
 To list test cases you need to run:
+
 .. code-block:: bash
 
-    python -m compass list
+    compass list
 
 The results will be the same as described in :ref:`setup_overview`, but the
 test cases will come from the local ``compass`` directory.
@@ -111,27 +212,56 @@ To set up a test case, you will run something like:
 
 .. code-block:: bash
 
-    python -m compass setup -t ocean/global_ocean/QU240/mesh -m $MACHINE -w $WORKDIR -p $MPAS
+    compass setup -t ocean/global_ocean/QU240/mesh -m $MACHINE -w $WORKDIR -p $MPAS
 
 To list available test suites, you would run:
 
 .. code-block:: bash
 
-    python -m compass list --suites
+    compass list --suites
 
 And you would set up a suite as follows:
 
 .. code-block:: bash
 
-    python -m compass suite -s -c ocean -t nightly -m $MACHINE -w $WORKDIR -p $MPAS
+    compass suite -s -c ocean -t nightly -m $MACHINE -w $WORKDIR -p $MPAS
 
-Otherwise, things are the same as in :ref:`suite_overview`.
+When you want to run the code, go to the work directory (for the suite or test
+case), log onto a compute node (if on an HPC machine) and run:
 
-You will see symlinks to the ``compass`` package in the base work directory
-for suites as well as each test case and step's work directory.  These are to
-make sure that the code from the repository is also used when you run test
-cases and steps.  You can even use the symlinks as a convenient way to access
-and edit the code as you're testing your changes.
+.. code-block:: bash
+
+    source load_compass_env.sh
+    compass run
+
+The first command will source the same activation script
+(``test_compass_<version>_<machine>_<compiler>_<mpi>.sh``) that you used to set
+up the suite or test case (``load_compass_env.sh`` is just a symlink to that
+activation script you sourced before setting up the suite or test case).
+
+Building MPAS components
+------------------------
+
+The MPAS repository is a submodule of compass repository.  For example, to
+compile MPAS-Ocean:
+
+.. code-block:: bash
+
+    source ./test_compass_<version>_<machine>_<compiler>_<mpi>.sh
+    cd E3SM-Project/components/mpas-ocean/
+    make <mpas_compiler>
+
+For MALI:
+
+.. code-block:: bash
+
+    source ./test_compass_<version>_<machine>_<compiler>_<mpi>.sh
+    cd MALI-Dev/components/mpas-albany-landice
+    make <mpas_compiler>
+
+See :ref:`dev_supported_machines` for the right ``<mpas_compiler>`` command for
+each machine and compiler.
+
 
 Set up a compass repository with worktrees: for advanced users
 --------------------------------------------------------------

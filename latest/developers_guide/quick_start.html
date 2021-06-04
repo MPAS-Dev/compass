@@ -105,8 +105,10 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Quick Start for Developers</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#set-up-a-compass-repository-for-beginners">Set up a compass repository: for beginners</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#compass-conda-environment">compass conda environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#compass-conda-environment-compilers-and-system-modules">compass conda environment, compilers and system modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#creating-updating-only-the-compass-environment">Creating/updating only the compass environment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#running-compass-from-the-repo">Running compass from the repo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#building-mpas-components">Building MPAS components</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#set-up-a-compass-repository-with-worktrees-for-advanced-users">Set up a compass repository with worktrees: for advanced users</a></li>
 </ul>
 </li>
@@ -208,92 +210,191 @@ git submodule update --init --recursive
 </pre></div>
 </div>
 <p>The E3SM repository and a clone of E3SM for MALI development are submodules of
-the compass repository.  For example, to compile MPAS-Ocean:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> E3SM-Project/components/mpas-ocean/
-<span class="c1"># load modules (see machine-specific instructions below)</span>
-make gfortran
+the compass repository.</p>
+</div>
+<div class="section" id="compass-conda-environment-compilers-and-system-modules">
+<span id="dev-conda-env"></span><h2>compass conda environment, compilers and system modules<a class="headerlink" href="#compass-conda-environment-compilers-and-system-modules" title="Permalink to this headline">¶</a></h2>
+<p>As a developer, you will need your own environment with the latest dependencies
+for compass and a development installation of <code class="docutils literal notranslate"><span class="pre">compass</span></code> from the branch
+you’re working on.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">conda</span></code> directory in the repository has a tool <code class="docutils literal notranslate"><span class="pre">configure_compass_env.py</span></code>
+that can get you started.  If you are on one of the <a class="reference internal" href="machines/index.html#dev-supported-machines"><span class="std std-ref">Supported Machines</span></a>,
+run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./conda/configure_compass_env.py --conda &lt;conda_path&gt; -c &lt;compiler&gt;
 </pre></div>
 </div>
-<p>For MALI:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> MALI-Dev/components/mpas-albany-landice
-<span class="c1"># load modules (see machine-specific instructions below)</span>
-make gfortran
-</pre></div>
-</div>
-</div>
-<div class="section" id="compass-conda-environment">
-<span id="dev-conda-env"></span><h2>compass conda environment<a class="headerlink" href="#compass-conda-environment" title="Permalink to this headline">¶</a></h2>
-<p>As a developer, you will nearly always want to set up your own conda
-environment with the latest dependencies for compass.  You can try using the
-latest compass environment on a supported machine or making one from the latest
-release (see <a class="reference internal" href="../users_guide/quick_start.html#conda-env"><span class="std std-ref">compass conda environment</span></a>) but there is a risk that the dependencies will
-not be correct and things will not work as expected as a result.</p>
-<p>To install your own compass conda environment on other machines, first, install
-<a class="reference external" href="https://docs.conda.io/en/latest/miniconda.html">Miniconda3</a> (if miniconda is
-not already installed), then add the
-<a class="reference external" href="https://conda-forge.org/#about">conda-forge channel</a>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda config --add channels conda-forge
-conda config --set channel_priority strict
-</pre></div>
-</div>
-<p>then create a new conda environment (called <code class="docutils literal notranslate"><span class="pre">dev_compass</span></code> in this example) as
-follows:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda create -n dev_compass <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.8 affine cartopy cartopy_offlinedata <span class="se">\</span>
-    cmocean <span class="s2">&quot;esmf=*=mpi_mpich*&quot;</span> ffmpeg <span class="s2">&quot;geometric_features=0.4.0&quot;</span> git <span class="se">\</span>
-    ipython <span class="s2">&quot;jigsaw=0.9.14&quot;</span> <span class="s2">&quot;jigsawpy=0.3.3&quot;</span> jupyter lxml matplotlib <span class="se">\</span>
-    metis <span class="s2">&quot;mpas_tools=0.5.1&quot;</span> mpich nco <span class="s2">&quot;netcdf4=*=nompi_*&quot;</span> numpy <span class="se">\</span>
-    progressbar2 pyamg <span class="s2">&quot;pyremap&gt;=0.0.7,&lt;0.1.0&quot;</span> rasterio requests scipy <span class="se">\</span>
-    xarray
-</pre></div>
-</div>
-<p>We will do our best to keep this list of dependencies in sync with the
-“official” list, which is found in
-<a class="reference external" href="https://github.com/MPAS-Dev/compass/blob/master/recipe/meta.yaml">recipe/meta.yaml</a></p>
+<p>If you don’t have <a class="reference external" href="https://docs.conda.io/en/latest/miniconda.html">Miniconda3</a>
+installed in <code class="docutils literal notranslate"><span class="pre">&lt;conda_path&gt;</span></code>, it will be downloaded and installed for you in
+this location. If you already have it installed, that path will be used to add
+(or update) the compass test environment.</p>
+<p>See the machine under <a class="reference internal" href="machines/index.html#dev-supported-machines"><span class="std std-ref">Supported Machines</span></a> for a list of available
+compilers to pass to <code class="docutils literal notranslate"><span class="pre">-c</span></code>.  If you don’t supply a compiler, you will get
+the default one for that machine (usually Intel). Typically, you will want the
+default MPI flavor that compass has defined for each compiler, so you should
+not need to specify which MPI version to use but you may do so with <code class="docutils literal notranslate"><span class="pre">-i</span></code> if
+you need to.</p>
+<p>If you are on a login node, the script should automatically recognize what
+machine you are on.  You can supply the machine name with <code class="docutils literal notranslate"><span class="pre">-m</span> <span class="pre">&lt;machine&gt;</span></code> if
+you run into trouble with the automatic recognition (e.g. if you’re setting
+up the environment on a compute node, which is not recommended).</p>
+<p>In addition to installing Miniconda and creating the conda environment for you,
+this script will also:</p>
+<ul class="simple">
+<li><p>install the <code class="docutils literal notranslate"><span class="pre">compass</span></code> package from the local branch in “development” mode
+so changes you make to the repo are immediately reflected in the conda
+environment.</p></li>
+<li><p>build the <a class="reference external" href="https://github.com/E3SM-Project/scorpio">SCORPIO</a> library if it
+hasn’t already been built.  SCORPIO is needed building and running MPAS
+components.</p></li>
+<li><p>build the <a class="reference external" href="https://earthsystemmodeling.org/">ESMF</a> library if it hasn’t
+already been built.  ESMF with the system’s version of MPI is needed for
+making mapping files.</p></li>
+<li><p>make an activation script called
+<code class="docutils literal notranslate"><span class="pre">test_compass_&lt;version&gt;_&lt;machine&gt;_&lt;compiler&gt;_&lt;mpi&gt;.sh</span></code>,
+where <code class="docutils literal notranslate"><span class="pre">&lt;version&gt;</span></code> is the compass version, <code class="docutils literal notranslate"><span class="pre">&lt;machine&gt;</span></code> is the name of the
+machine (to prevent confusion when running from the same branch on multiple
+machines), <code class="docutils literal notranslate"><span class="pre">&lt;compiler&gt;</span></code> is the compiler name (e.g. <code class="docutils literal notranslate"><span class="pre">intel</span></code> or <code class="docutils literal notranslate"><span class="pre">gnu</span></code>),
+and <code class="docutils literal notranslate"><span class="pre">mpi</span></code> is the MPI flavor (e.g. <code class="docutils literal notranslate"><span class="pre">impi</span></code>, <code class="docutils literal notranslate"><span class="pre">mvapich</span></code>, <code class="docutils literal notranslate"><span class="pre">openmpi</span></code>).</p></li>
+<li><p>optionally (with the <code class="docutils literal notranslate"><span class="pre">--check</span></code> flag), run some tests to make sure some of
+the expected packages are available.</p></li>
+</ul>
 <p>Each time you want to work with compass, you will need to run:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda activate dev_compass
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> ./test_compass_&lt;version&gt;_&lt;machine&gt;_&lt;compiler&gt;_&lt;mpi&gt;.sh
 </pre></div>
+</div>
+<p>This will load the appropriate conda environment, load system modules for
+compilers, MPI and libraries needed to build and run MPAS components, and
+set environment variables needed for MPAS or <code class="docutils literal notranslate"><span class="pre">compass</span></code>.  It will also set an
+environment variable <code class="docutils literal notranslate"><span class="pre">LOAD_COMPASS_ENV</span></code> that points to the activation script.
+<code class="docutils literal notranslate"><span class="pre">compass</span></code> uses this to make an symlink to the activation script called
+<code class="docutils literal notranslate"><span class="pre">load_compass_env.sh</span></code> in the work directory.</p>
+<p>If you switch to another branch, you need to rerun</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./conda/configure_compass_env.py --conda &lt;conda_path&gt; -c &lt;compiler&gt;
+</pre></div>
+</div>
+<p>to make sure dependencies are up to date and the <code class="docutils literal notranslate"><span class="pre">compass</span></code> package points
+to the current directory.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>With the conda environment activated, you can switch branches and update
+just the <code class="docutils literal notranslate"><span class="pre">compass</span></code> package with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m pip install -e .
+</pre></div>
+</div>
+<p>This will be substantially faster than rerunning
+<code class="docutils literal notranslate"><span class="pre">./conda/configure_compass_env.py</span> <span class="pre">...</span></code> but at the risk that dependencies are
+not up-to-date.  Since dependencies change fairly rarely, this will usually
+be safe.</p>
+</div>
+<p>If you wish to work with another compiler, simply rerun the script with a new
+compiler name and an activation script will be produced. You can then source
+either activation script to get the same conda environment but with different
+compilers and related modules.  Make sure you are careful to set up compass by
+pointing to a version of the MPAS model that was compiled with the correct
+compiler.</p>
+<p>If you run into trouble with the environment or just want a clean start, you
+can run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./conda/configure_compass_env.py --conda &lt;conda_path&gt; -c &lt;compiler&gt; --recreate
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">--recreate</span></code> flag will delete the conda environment and create it from
+scratch.  This takes just a little extra time.</p>
+<p>You can check to make sure expected commands are present with <code class="docutils literal notranslate"><span class="pre">--check</span></code>, you
+can select a particular python version with <code class="docutils literal notranslate"><span class="pre">--python</span></code>, you can set the name
+of the environment (and the prefix for the activation script) something other
+than the default (<code class="docutils literal notranslate"><span class="pre">test_compass&lt;version&gt;</span></code>) with <code class="docutils literal notranslate"><span class="pre">--env-name</span></code>.</p>
+<p>If you are not on a supported machine, you need to choose your MPI type
+(<code class="docutils literal notranslate"><span class="pre">mpich</span></code> or <code class="docutils literal notranslate"><span class="pre">openmpi</span></code>) with the <code class="docutils literal notranslate"><span class="pre">--mpi</span></code> flag.  The compilers are
+automatically <code class="docutils literal notranslate"><span class="pre">gnu</span></code> for Linux and <code class="docutils literal notranslate"><span class="pre">clang</span></code> (with <code class="docutils literal notranslate"><span class="pre">gfortran</span></code>) for OSX, so
+you do not need to specify those.</p>
+</div>
+<div class="section" id="creating-updating-only-the-compass-environment">
+<span id="dev-creating-only-env"></span><h2>Creating/updating only the compass environment<a class="headerlink" href="#creating-updating-only-the-compass-environment" title="Permalink to this headline">¶</a></h2>
+<p>For some workflows (e.g. for MALI development wih the Albany library), you may
+only want to create the conda environment and not build SCORPIO, ESMF or
+include any system modules or environment variables in your activation script.
+In such cases, run with the <code class="docutils literal notranslate"><span class="pre">--env_only</span></code> flag.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./conda/configure_compass_env.py --conda &lt;conda_path&gt; --env_only
+</pre></div>
+</div>
+<p>Each time you want to work with compass, you will need to run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> ./test_compass_&lt;version&gt;.sh
+</pre></div>
+</div>
+<p>This will load the appropriate conda environment for <code class="docutils literal notranslate"><span class="pre">compass</span></code>.  It will also
+set an environment variable <code class="docutils literal notranslate"><span class="pre">LOAD_COMPASS_ENV</span></code> that points to the activation
+script. <code class="docutils literal notranslate"><span class="pre">compass</span></code> uses this to make an symlink to the activation script
+called <code class="docutils literal notranslate"><span class="pre">load_compass_env.sh</span></code> in the work directory.</p>
+<p>If you switch to another branch, you need to rerun</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./conda/configure_compass_env.py --conda &lt;conda_path&gt; --env_only
+</pre></div>
+</div>
+<p>to make sure dependencies are up to date and the <code class="docutils literal notranslate"><span class="pre">compass</span></code> package points
+to the current directory.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>With the conda environment activated, you can switch branches and update
+just the <code class="docutils literal notranslate"><span class="pre">compass</span></code> package with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m pip install -e .
+</pre></div>
+</div>
+<p>This will be substantially faster than rerunning
+<code class="docutils literal notranslate"><span class="pre">./conda/configure_compass_env.py</span> <span class="pre">...</span></code> but at the risk that dependencies are
+not up-to-date.  Since dependencies change fairly rarely, this will usually
+be safe.</p>
 </div>
 </div>
 <div class="section" id="running-compass-from-the-repo">
 <span id="dev-working-with-compass"></span><h2>Running compass from the repo<a class="headerlink" href="#running-compass-from-the-repo" title="Permalink to this headline">¶</a></h2>
-<p>If you are working with the released <code class="docutils literal notranslate"><span class="pre">compass</span></code> package, you can interact with
-it directly with the <code class="docutils literal notranslate"><span class="pre">compass</span></code> command-line tool as described in
-<a class="reference internal" href="../users_guide/quick_start.html#setup-overview"><span class="std std-ref">Setting up a test case</span></a> and <a class="reference internal" href="../users_guide/quick_start.html#suite-overview"><span class="std std-ref">Test Suites</span></a>.  If you are developing the
-code out of a repository, though, you need to call the local code with:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m compass ...
+<p>If you follow the procedure above, you can run compass with the <code class="docutils literal notranslate"><span class="pre">compass</span></code>
+command-line tool exactly like described in the User’s Guide <a class="reference internal" href="../users_guide/quick_start.html#quick-start"><span class="std std-ref">Quick Start for Users</span></a>
+and as detailed in <a class="reference internal" href="command_line.html#dev-command-line"><span class="std std-ref">Command-line interface</span></a>.</p>
+<p>To list test cases you need to run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass list
 </pre></div>
 </div>
-<p>This way, you will use the code in the local <code class="docutils literal notranslate"><span class="pre">compass</span></code> directory.  If you
-are running out of a <code class="docutils literal notranslate"><span class="pre">dev_compass</span></code> environment like described above, you
-won’t have a <code class="docutils literal notranslate"><span class="pre">compass</span></code> command-line tool to run.  If you are using one of
-the release environments (e.g. because dependencies haven’t changed since the
-last release), you want to be careful not to run the <code class="docutils literal notranslate"><span class="pre">compass</span></code> command-line
-tool directly because you won’t be accessing the code you’re working on.</p>
-<p>To list test cases you need to run:
-.. code-block:: bash</p>
-<blockquote>
-<div><p>python -m compass list</p>
-</div></blockquote>
 <p>The results will be the same as described in <a class="reference internal" href="../users_guide/quick_start.html#setup-overview"><span class="std std-ref">Setting up a test case</span></a>, but the
 test cases will come from the local <code class="docutils literal notranslate"><span class="pre">compass</span></code> directory.</p>
 <p>To set up a test case, you will run something like:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m compass setup -t ocean/global_ocean/QU240/mesh -m <span class="nv">$MACHINE</span> -w <span class="nv">$WORKDIR</span> -p <span class="nv">$MPAS</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass setup -t ocean/global_ocean/QU240/mesh -m <span class="nv">$MACHINE</span> -w <span class="nv">$WORKDIR</span> -p <span class="nv">$MPAS</span>
 </pre></div>
 </div>
 <p>To list available test suites, you would run:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m compass list --suites
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass list --suites
 </pre></div>
 </div>
 <p>And you would set up a suite as follows:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m compass suite -s -c ocean -t nightly -m <span class="nv">$MACHINE</span> -w <span class="nv">$WORKDIR</span> -p <span class="nv">$MPAS</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass suite -s -c ocean -t nightly -m <span class="nv">$MACHINE</span> -w <span class="nv">$WORKDIR</span> -p <span class="nv">$MPAS</span>
 </pre></div>
 </div>
-<p>Otherwise, things are the same as in <a class="reference internal" href="../users_guide/quick_start.html#suite-overview"><span class="std std-ref">Test Suites</span></a>.</p>
-<p>You will see symlinks to the <code class="docutils literal notranslate"><span class="pre">compass</span></code> package in the base work directory
-for suites as well as each test case and step’s work directory.  These are to
-make sure that the code from the repository is also used when you run test
-cases and steps.  You can even use the symlinks as a convenient way to access
-and edit the code as you’re testing your changes.</p>
+<p>When you want to run the code, go to the work directory (for the suite or test
+case), log onto a compute node (if on an HPC machine) and run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> load_compass_env.sh
+compass run
+</pre></div>
+</div>
+<p>The first command will source the same activation script
+(<code class="docutils literal notranslate"><span class="pre">test_compass_&lt;version&gt;_&lt;machine&gt;_&lt;compiler&gt;_&lt;mpi&gt;.sh</span></code>) that you used to set
+up the suite or test case (<code class="docutils literal notranslate"><span class="pre">load_compass_env.sh</span></code> is just a symlink to that
+activation script you sourced before setting up the suite or test case).</p>
+</div>
+<div class="section" id="building-mpas-components">
+<h2>Building MPAS components<a class="headerlink" href="#building-mpas-components" title="Permalink to this headline">¶</a></h2>
+<p>The MPAS repository is a submodule of compass repository.  For example, to
+compile MPAS-Ocean:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> ./test_compass_&lt;version&gt;_&lt;machine&gt;_&lt;compiler&gt;_&lt;mpi&gt;.sh
+<span class="nb">cd</span> E3SM-Project/components/mpas-ocean/
+make &lt;mpas_compiler&gt;
+</pre></div>
+</div>
+<p>For MALI:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> ./test_compass_&lt;version&gt;_&lt;machine&gt;_&lt;compiler&gt;_&lt;mpi&gt;.sh
+<span class="nb">cd</span> MALI-Dev/components/mpas-albany-landice
+make &lt;mpas_compiler&gt;
+</pre></div>
+</div>
+<p>See <a class="reference internal" href="machines/index.html#dev-supported-machines"><span class="std std-ref">Supported Machines</span></a> for the right <code class="docutils literal notranslate"><span class="pre">&lt;mpas_compiler&gt;</span></code> command for
+each machine and compiler.</p>
 </div>
 <div class="section" id="set-up-a-compass-repository-with-worktrees-for-advanced-users">
 <h2>Set up a compass repository with worktrees: for advanced users<a class="headerlink" href="#set-up-a-compass-repository-with-worktrees-for-advanced-users" title="Permalink to this headline">¶</a></h2>

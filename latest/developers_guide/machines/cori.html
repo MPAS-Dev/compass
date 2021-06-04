@@ -214,71 +214,48 @@
 <h1>Cori<a class="headerlink" href="#cori" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="cori-haswell-intel">
 <h2>cori-haswell, intel<a class="headerlink" href="#cori-haswell-intel" title="Permalink to this headline">¶</a></h2>
-<p>This is the default <code class="docutils literal notranslate"><span class="pre">compass</span></code> architecture and compiler on Cori.  To activate
-the compass environment, load modules, and set appropriate environment
-variables, run this in the <code class="docutils literal notranslate"><span class="pre">compass</span></code> repo root:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> ./load/load_compass_env.sh -m cori-haswell
+<p>This is the default <code class="docutils literal notranslate"><span class="pre">compass</span></code> architecture and compiler on Cori.  If the
+environment has been set up properly (see <a class="reference internal" href="../quick_start.html#dev-conda-env"><span class="std std-ref">compass conda environment, compilers and system modules</span></a>), you should be
+able to source:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> test_compass_1.0.0_cori-haswell_intel_mpt.sh
 </pre></div>
 </div>
-<p>You don’t have to supply <code class="docutils literal notranslate"><span class="pre">-m</span> <span class="pre">cori-haswell</span></code> but it will prevent you from
-getting a warning that you might want <code class="docutils literal notranslate"><span class="pre">cori-knl</span></code>.</p>
-<p>To build the MPAS model with</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make <span class="nv">CORE</span><span class="o">=</span>landice intel-nersc
-</pre></div>
-</div>
-<p>or</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make <span class="nv">CORE</span><span class="o">=</span>ocean intel-nersc
+<p>Then, you can build the MPAS model with</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make intel-nersc
 </pre></div>
 </div>
 </div>
 <div class="section" id="cori-haswell-gnu">
 <h2>cori-haswell, gnu<a class="headerlink" href="#cori-haswell-gnu" title="Permalink to this headline">¶</a></h2>
-<p>To activate the compass environment, load modules, and set appropriate
-environment variables, run this in the <code class="docutils literal notranslate"><span class="pre">compass</span></code> repo root:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> ./load/load_compass_env.sh -m cori-haswell -c gnu
+<p>If you’ve set things up for this compiler, you should be able to:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> test_compass_1.0.0_cori-haswell_gnu_mpt.sh
 </pre></div>
 </div>
-<p>As above, you don’t have to supply <code class="docutils literal notranslate"><span class="pre">-m</span> <span class="pre">cori-haswell</span></code> but it will prevent you
-from getting a warning that you might want <code class="docutils literal notranslate"><span class="pre">cori-knl</span></code>.</p>
-<p>To build the MPAS model with</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make <span class="nv">CORE</span><span class="o">=</span>landice gnu-nersc
-</pre></div>
-</div>
-<p>or</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make <span class="nv">CORE</span><span class="o">=</span>ocean gnu-nersc
+<p>Then, you can build the MPAS model with</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make gnu-nersc
 </pre></div>
 </div>
 </div>
 <div class="section" id="cori-knl-intel">
 <h2>cori-knl, intel<a class="headerlink" href="#cori-knl-intel" title="Permalink to this headline">¶</a></h2>
-<p>This is the default <code class="docutils literal notranslate"><span class="pre">compass</span></code> compiler on Cori-KNL.  To activate the compass
-environment, load modules, and set appropriate environment variables, run this
-in the <code class="docutils literal notranslate"><span class="pre">compass</span></code> repo root:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> ./load/load_compass_env.sh -m cori-knl
+<p>This is the default <code class="docutils literal notranslate"><span class="pre">compass</span></code> compiler on Cori-KNL.  If the environment has
+been set up properly (see <a class="reference internal" href="../quick_start.html#dev-conda-env"><span class="std std-ref">compass conda environment, compilers and system modules</span></a>), you should be able to source:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> test_compass_1.0.0_cori-knl_intel_mpt.sh
 </pre></div>
 </div>
-<p>To build the MPAS model with</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make <span class="nv">CORE</span><span class="o">=</span>landice intel-nersc
-</pre></div>
-</div>
-<p>or</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make <span class="nv">CORE</span><span class="o">=</span>ocean intel-nersc
+<p>Then, you can build the MPAS model with</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make  intel-mpi
 </pre></div>
 </div>
 </div>
 <div class="section" id="cori-knl-gnu">
 <h2>cori-knl, gnu<a class="headerlink" href="#cori-knl-gnu" title="Permalink to this headline">¶</a></h2>
-<p>To activate the compass environment, load modules, and set appropriate
-environment variables, run this in the <code class="docutils literal notranslate"><span class="pre">compass</span></code> repo root:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> ./load/load_compass_env.sh -m cori-knl -c gnu
+<p>If you’ve set things up for this compiler, you should be able to:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> test_compass_1.0.0_cori-knl_gnu_mpt.sh
 </pre></div>
 </div>
-<p>To build the MPAS model with</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make <span class="nv">CORE</span><span class="o">=</span>landice gnu-nersc
-</pre></div>
-</div>
-<p>or</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make <span class="nv">CORE</span><span class="o">=</span>ocean gnu-nersc
+<p>Then, you can build the MPAS model with</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make gnu-nersc
 </pre></div>
 </div>
 </div>
