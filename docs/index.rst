@@ -5,8 +5,8 @@ Configuration Of Model for Prediction Across Scales Setups (``compass``) is
 a python package that provides an automated system to set up test cases for
 Model for Prediction Across Scales (MPAS) components.  The development version
 of ``compass`` will be kept closely synchronized with the
-`E3SM <https://github.com/E3SM-Project/E3SM>`_ and
-`MALI-Dev <https://github.com/MALI-Dev/E3SM>`_ repositories. Release
+`E3SM repo <https://github.com/E3SM-Project/E3SM>`_ and
+`MALI-Dev repo <https://github.com/MALI-Dev/E3SM>`_. Release
 versions will be compatible with specific tags of the MPAS components.
 
 Many compass test cases are idealized, and are used for things like

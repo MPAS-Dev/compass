@@ -3,9 +3,6 @@
 CompyMcNodeFace
 ===============
 
-So far, we have not got ``compass`` to successfully build and run Compy.  We
-will update this page when we do.
-
 config options
 --------------
 
@@ -49,9 +46,20 @@ setting up test cases or a test suite:
 intel on CompyMcNodeFace
 ------------------------
 
-Coming soon...
+.. note::
 
-pgi on CompyMcNodeFace
-----------------------
+    Compass 1.0.0 has not yet been released.  The following will apply after
+    the release.
 
-Coming soon...
+To load the compass environment and modules, and set appropriate environment
+variables:
+
+.. code-block:: bash
+
+    source source /share/apps/E3SM/conda_envs/compass/load_compass1.0.0_intel_impi.sh
+
+To build the MPAS model with
+
+.. code-block:: bash
+
+    make intel-mpi
