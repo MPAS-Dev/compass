@@ -1,0 +1,79 @@
+{% set version = "1.1.6" %}
+{% set build = 0 %}
+
+# recipe-lint fails if mpi is undefined
+{% set mpi = mpi or 'mpich' %}
+{% if mpi == "mpich" %}
+# prioritize mpich via build number
+{% set build = build + 100 %}
+{% endif %}
+
+package:
+  name: scorpio
+  version: {{ version }}
+
+source:
+  url: https://github.com/E3SM-Project/scorpio/archive/refs/tags/scorpio-v{{ version }}.tar.gz
+  sha256: 31bb75d30ce05deba952470f0132ed89d13d198c2c5d66b1921c6468f57390d4
+
+build:
+  number: {{ build }}
+  skip: True  # [win]
+  {% set mpi_prefix = "mpi_" + mpi %}
+  # add build string so packages can depend on
+  # mpi variants
+  # dependencies:
+  # `PKG_NAME * mpi_mpich_*` for mpich
+  # `PKG_NAME * mpi_*` for any mpi
+  string: "{{ mpi_prefix }}_h{{ PKG_HASH }}_{{ build }}"
+
+  # mpi builds require the right mpi
+  {% set build_pin = mpi_prefix + '_*' %}
+
+  run_exports:
+    - {{ pin_subpackage('scorpio', max_pin='x.x.x.x') }} {{ build_pin }}
+
+requirements:
+  build:
+    - cmake
+    - make
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - {{ compiler('fortran') }}
+  host:
+    - {{ mpi }}
+    # these need to be listed twice so conda build picks up the pins
+    - hdf5
+    - hdf5 * {{ mpi_prefix }}_*
+    - libnetcdf
+    - libnetcdf * {{ mpi_prefix }}_*
+    - netcdf-fortran
+    - netcdf-fortran * {{ mpi_prefix }}_*
+    - libpnetcdf
+    - libpnetcdf * {{ mpi_prefix }}_*
+  run:
+    - {{ mpi }}
+    - hdf5 * {{ mpi_prefix }}_*
+    - libnetcdf * {{ mpi_prefix }}_*
+    - netcdf-fortran * {{ mpi_prefix }}_*
+    - libpnetcdf * {{ mpi_prefix }}_*
+
+test:
+  commands:
+    - test -f ${PREFIX}/lib/libpioc.a
+    - test -f ${PREFIX}/lib/libpiof.a
+
+about:
+  home: https://github.com/E3SM-Project/scorpio
+  license: GPL
+  license_file: COPYRIGHT
+  summary: |
+    Software for Caching Output and Reads for Parallel I/O (SCORPIO)
+    A high-level Parallel I/O Library for structured grid applications.
+    This library was derived from the Parallel I/O library
+    https://github.com/NCAR/ParallelIO.
+  dev_url: https://github.com/E3SM-Project/scorpio
+
+extra:
+  recipe-maintainers:
+    - xylar
