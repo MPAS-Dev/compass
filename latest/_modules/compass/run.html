@@ -258,6 +258,9 @@
                 <span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">test_case</span><span class="o">.</span><span class="n">config_filename</span><span class="p">)</span>
                 <span class="n">test_case</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
 
+                <span class="n">test_case</span><span class="o">.</span><span class="n">steps_to_run</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                    <span class="s1">&#39;test_case&#39;</span><span class="p">,</span> <span class="s1">&#39;steps_to_run&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+
                 <span class="n">test_start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">test_case</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
@@ -344,10 +347,20 @@
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="run_test_case"><a class="viewcode-back" href="../../developers_guide/generated/compass.run.run_test_case.html#compass.run.run_test_case">[docs]</a><span class="k">def</span> <span class="nf">run_test_case</span><span class="p">():</span>
+<div class="viewcode-block" id="run_test_case"><a class="viewcode-back" href="../../developers_guide/generated/compass.run.run_test_case.html#compass.run.run_test_case">[docs]</a><span class="k">def</span> <span class="nf">run_test_case</span><span class="p">(</span><span class="n">steps_to_run</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">steps_not_to_run</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Used by the framework to run a test case when ``compass run`` gets called</span>
 <span class="sd">    in the test case&#39;s work directory</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    steps_to_run : list of str, optional</span>
+<span class="sd">        A list of the steps to run.  The default behavior is to run the default</span>
+<span class="sd">        steps unless they are in ``steps_not_to_run``</span>
+
+<span class="sd">    steps_not_to_run : list of str, optional</span>
+<span class="sd">        A list of steps not to run.  Typically, these are steps to remove from</span>
+<span class="sd">        the defaults</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;test_case.pickle&#39;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
         <span class="n">test_case</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
@@ -357,11 +370,35 @@
     <span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">test_case</span><span class="o">.</span><span class="n">config_filename</span><span class="p">)</span>
     <span class="n">test_case</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
 
+    <span class="k">if</span> <span class="n">steps_to_run</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">steps_to_run</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;test_case&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;steps_to_run&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">steps_to_run</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">step</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">test_case</span><span class="o">.</span><span class="n">steps</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s1">&#39;A step &quot;</span><span class="si">{}</span><span class="s1">&quot; was requested but is not one of the steps in &#39;</span>
+                <span class="s1">&#39;this test case:</span><span class="se">\n</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">test_case</span><span class="o">.</span><span class="n">steps</span><span class="p">)))</span>
+
+    <span class="k">if</span> <span class="n">steps_not_to_run</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">steps_not_to_run</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">step</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">test_case</span><span class="o">.</span><span class="n">steps</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s1">&#39;A step &quot;</span><span class="si">{}</span><span class="s1">&quot; was flagged not to run but is not one of the &#39;</span>
+                    <span class="s1">&#39;steps in this test case:&#39;</span>
+                    <span class="s1">&#39;</span><span class="se">\n</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">test_case</span><span class="o">.</span><span class="n">steps</span><span class="p">)))</span>
+
+        <span class="n">steps_to_run</span> <span class="o">=</span> <span class="p">[</span><span class="n">step</span> <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">steps_to_run</span> <span class="k">if</span> <span class="n">step</span> <span class="ow">not</span> <span class="ow">in</span>
+                        <span class="n">steps_not_to_run</span><span class="p">]</span>
+
+    <span class="n">test_case</span><span class="o">.</span><span class="n">steps_to_run</span> <span class="o">=</span> <span class="n">steps_to_run</span>
+
     <span class="c1"># start logging to stdout/stderr</span>
     <span class="n">test_name</span> <span class="o">=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
     <span class="n">test_case</span><span class="o">.</span><span class="n">new_step_log_file</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="k">with</span> <span class="n">LoggingContext</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">test_name</span><span class="p">)</span> <span class="k">as</span> <span class="n">logger</span><span class="p">:</span>
         <span class="n">test_case</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Running steps: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">steps_to_run</span><span class="p">)))</span>
         <span class="n">test_case</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
         <span class="n">test_case</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span></div>
 
@@ -395,11 +432,16 @@
         <span class="n">prog</span><span class="o">=</span><span class="s1">&#39;compass run&#39;</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;suite&quot;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;?&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The name of a test suite to run&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--steps&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;steps&quot;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The steps of a test case to run&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--no-steps&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;no_steps&quot;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The steps of a test case not to run, see &quot;</span>
+                             <span class="s2">&quot;steps_to_run in the config file for defaults.&quot;</span><span class="p">)</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">suite</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">run_suite</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">suite</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;test_case.pickle&#39;</span><span class="p">):</span>
-        <span class="n">run_test_case</span><span class="p">()</span>
+        <span class="n">run_test_case</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">steps</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">no_steps</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;step.pickle&#39;</span><span class="p">):</span>
         <span class="n">run_step</span><span class="p">()</span>
     <span class="k">else</span><span class="p">:</span>
