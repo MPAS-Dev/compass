@@ -109,7 +109,6 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">CompyMcNodeFace</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#config-options">config options</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#intel-on-compymcnodeface">intel on CompyMcNodeFace</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pgi-on-compymcnodeface">pgi on CompyMcNodeFace</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="cori.html">Cori</a></li>
@@ -213,8 +212,6 @@
             
   <div class="section" id="compymcnodeface">
 <span id="machine-compy"></span><h1>CompyMcNodeFace<a class="headerlink" href="#compymcnodeface" title="Permalink to this headline">¶</a></h1>
-<p>So far, we have not got <code class="docutils literal notranslate"><span class="pre">compass</span></code> to successfully build and run Compy.  We
-will update this page when we do.</p>
 <div class="section" id="config-options">
 <h2>config options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
 <p>Here are the default config options added when you choose <code class="docutils literal notranslate"><span class="pre">-m</span> <span class="pre">compy</span></code> when
@@ -255,11 +252,20 @@ setting up test cases or a test suite:</p>
 </div>
 <div class="section" id="intel-on-compymcnodeface">
 <h2>intel on CompyMcNodeFace<a class="headerlink" href="#intel-on-compymcnodeface" title="Permalink to this headline">¶</a></h2>
-<p>Coming soon…</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Compass 1.0.0 has not yet been released.  The following will apply after
+the release.</p>
 </div>
-<div class="section" id="pgi-on-compymcnodeface">
-<h2>pgi on CompyMcNodeFace<a class="headerlink" href="#pgi-on-compymcnodeface" title="Permalink to this headline">¶</a></h2>
-<p>Coming soon…</p>
+<p>To load the compass environment and modules, and set appropriate environment
+variables:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> <span class="nb">source</span> /share/apps/E3SM/conda_envs/compass/load_compass1.0.0_intel_impi.sh
+</pre></div>
+</div>
+<p>To build the MPAS model with</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make intel-mpi
+</pre></div>
+</div>
 </div>
 </div>
 
