@@ -189,6 +189,8 @@ def setup_case(path, test_case, config_file, machine, work_dir, baseline_dir,
     if mpas_model_path is not None:
         config.set('paths', 'mpas_model', mpas_model_path)
 
+    config.set('test_case', 'steps_to_run', ' '.join(test_case.steps_to_run))
+
     # make sure all paths in the paths, namelists and streams sections are
     # absolute paths
     ensure_absolute_paths(config)
