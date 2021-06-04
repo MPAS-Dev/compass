@@ -65,15 +65,6 @@ def setup_suite(mpas_core, suite_name, config_file=None, machine=None,
                              work_dir=work_dir, baseline_dir=baseline_dir,
                              mpas_model_path=mpas_model_path)
 
-    # if compass/__init__.py exists, we're using a local version of the compass
-    # package and we'll want to link to that in the tests and steps
-    compass_path = os.path.join(os.getcwd(), 'compass')
-    if os.path.exists(os.path.join(compass_path, '__init__.py')):
-        link_name = os.path.join(work_dir, 'compass')
-        if os.path.abspath(compass_path) != os.path.abspath(link_name):
-            # make sure we're not trying to overwrite compass with a symlink
-            symlink(compass_path, os.path.join(work_dir, 'compass'))
-
     test_suite = {'name': suite_name,
                   'test_cases': test_cases,
                   'work_dir': work_dir}

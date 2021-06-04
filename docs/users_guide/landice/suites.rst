@@ -14,7 +14,7 @@ sia_integration test suite
 
 .. code-block:: bash
 
-    python -m compass suite -c landice -t sia_integration ...
+    compass suite -c landice -t sia_integration ...
 
 The ``sia_integration`` test suite includes the following test cases:
 

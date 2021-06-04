@@ -11,7 +11,7 @@ set -e
 export SCORPIO_VERSION="{{ scorpio }}"
 export SCORPIO_PATH="{{ scorpio_path }}"
 
-if [ "${SCORPIO_VERSION}" != "None" ] && [ ! -d "${SCORPIO_PATH}" ]; then
+if [ "{{ build_scorpio }}" == "True" ]; then
     rm -rf scorpio*
 
     git clone git@github.com:E3SM-Project/scorpio.git
@@ -35,7 +35,7 @@ fi
 export ESMF_PATH="{{ esmf_path }}"
 export ESMF_BRANCH="{{ esmf_branch }}"
 
-if [ "${ESMF_BRANCH}" != "None" ] && [ ! -d "${ESMF_PATH}" ]; then
+if [ "{{ build_esmf }}" == "True" ]; then
     rm -rf esmf*
     git clone git@github.com:esmf-org/esmf.git
     cd esmf
@@ -50,10 +50,10 @@ if [ "${ESMF_BRANCH}" != "None" ] && [ ! -d "${ESMF_PATH}" ]; then
     export ESMF_INSTALL_LIBDIR=${ESMF_PATH}/lib
     export ESMF_INSTALL_MODDIR=${ESMF_PATH}/mod
 
-    {{ sys_info.esmf_netcdf }}
+{{ sys_info.esmf_netcdf }}
     export ESMF_PNETCDF="pnetcdf-config"
 
-    {{ sys_info.esmf_compilers }}
+{{ sys_info.esmf_compilers }}
     export ESMF_COMM={{ sys_info.esmf_comm }}
 
     make -j 8

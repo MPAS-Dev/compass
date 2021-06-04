@@ -17,7 +17,7 @@ running:
 
 .. code-block:: bash
 
-    python -m compass list --suites
+    compass list --suites
 
 the current set of available test suites is:
 

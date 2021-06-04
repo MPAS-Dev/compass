@@ -16,53 +16,57 @@ cases are configured in a way that is appropriate for your machine.
 Supported Machines
 ------------------
 
-We have activation scripts, typically for two compiler flavors, on each
-supported machine.  The easiest way to load these for a developer is to run
-the following in the root of the local clone of the compass repo:
+If you follow the procedure in :ref:`dev_conda_env`, you will have an
+activation script for activating the development conda environment, setting
+loading system modules and setting environment variables so you can build
+MPAS and work with ``compass``.  Just source the script that should appear in
+the base of your compass branch, e.g.:
 
 .. code-block:: bash
 
-    source ./load/load_compass_env.sh [-m <machine>] [-c <compiler>]
-
-This will then source an appropriate script that will activate the compass
-conda environment, load the compiler and MPI modules, and set environment
-variables needed compile MPAS.
-
-If you are on a login node, the script should automatically recognize what
-machine you are on.  You can supply the machine name with ``-m <machine>`` if
-you run into trouble with the automatic recognition (e.g. if you're setting
-up test cases on a compute node).
-
-If you do not supply a compiler set with ``-c``, you will get the default
-compiler for each machine.  Typically, we only support one MPI flavor per
-compiler, so you should not need to specify which MPI version to use.  This
-follows automatically from the choice of compilers.
-
-To list the available compilers and MPI libraries on a machine, run:
-
-.. code-block:: bash
-
-    source ./load/load_compass_env.sh --list
-
-You will see something like:
-
-.. code-block:: none
-
-    Default compiler and MPI library:
-      -c intel -i impi
-
-    Available compilers and MPI libraries:
-      -c intel -i impi
-      -c gnu -i mvapich
-      -c intel -i mvapich
+    source test_compass_1.0.0_anvil_intel18_mvapich.sh
 
 After loading this environment, you can set up test cases or test suites, and
 a link ``load_compass_env.sh`` will be included in each suite or test case
-work directory.  This is a link to a specific activation script for that
-machine and compiler (so not a link to ``load/load_compass_env.sh``, it just
-happens to be given the same name).  You can can source this file on a
-compute node (e.g. in a job script) to get the right compass conda environment,
-compilers, MPI libraries and environment variables for running MPAS.
+work directory.  This is a link to the activation script that you sourced when
+you were setting things up.  You can can source this file on a compute node
+(e.g. in a job script) to get the right compass conda environment, compilers,
+MPI libraries and environment variables for running``compass`` tests and
+the MPAS model.
+
++--------------+------------+-----------+-------------------+
+| Machine      | Compiler   | MPI lib.  |  MPAS make target |
++==============+============+===========+===================+
+| anvil        | intel18    | mvapich   | ifort             |
+|              +------------+-----------+-------------------+
+|              | gnu        | mvapich   | gfortran          |
++--------------+------------+-----------+-------------------+
+| badger       | intel      | impi      | intel-mpi         |
+|              +------------+-----------+-------------------+
+|              | gnu        | mvapich   | gfortran          |
++--------------+------------+-----------+-------------------+
+| chrysalis    | intel      | openmpi   | ifort             |
+|              |            +-----------+-------------------+
+|              |            | impi      | intel-mpi         |
+|              +------------+-----------+-------------------+
+|              | gnu        | openmpi   | gfortran          |
++--------------+------------+-----------+-------------------+
+| compy        | intel      | impi      | intel-mpi         |
+| (fix coming  +------------+-----------+-------------------+
+| soon)        | pgi        | mvapich2  | pgi               |
++--------------+------------+-----------+-------------------+
+| cori-haswell | intel      | mpt       | intel-nersc       |
+|              +------------+-----------+-------------------+
+|              | gnu        | mpt       | gnu-nersc         |
++--------------+------------+-----------+-------------------+
+| cori-knl     | intel      | impi      | intel-mpi         |
+|              +------------+-----------+-------------------+
+|              | gnu        | mpt       | gnu-nersc         |
++--------------+------------+-----------+-------------------+
+| grizzly      | intel      | impi      | intel-mpi         |
+|              +------------+-----------+-------------------+
+|              | gnu        | mvapich   | gfortran          |
++--------------+------------+-----------+-------------------+
 
 Below are specifics for each supported machine
 
@@ -82,5 +86,37 @@ Below are specifics for each supported machine
 Other Machines
 --------------
 
-For a discussion on this, see the user's guid one :ref:`other_machines`.
+If you are working on an "unknown" machine, the procedure is pretty similar
+to what was described in :ref:`dev_conda_env`.  The main difference is that
+we will use ``mpich`` or ``openmpi`` and the gnu compilers from conda-forge
+rather than system compilers.  To create a development conda environment and
+an activation script for it, on Linux, run:
 
+.. code-block:: bash
+
+  ./conda/configure_compass_env.py --conda <conda_path> -c gnu -i mpich
+
+and on OSX run:
+
+.. code-block:: bash
+
+  ./conda/configure_compass_env.py --conda <conda_path> -c clang -i mpich
+
+You may use ``openmpi`` instead of ``mpich`` but we have had better experiences
+with the latter.
+
+The result should be an activation script ``test_compass_1.0.0_<compiler>.sh``.
+Source this script to get the appropriate conda environment and environment
+variables.
+
+Under Linux, you can build the MPAS model with
+
+.. code-block:: bash
+
+    make gfortran
+
+Under OSX, you can build the MPAS model with
+
+.. code-block:: bash
+
+    make gfortran-clang
