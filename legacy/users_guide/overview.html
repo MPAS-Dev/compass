@@ -211,15 +211,15 @@ git submodule update --init --recursive
 </div>
 <p>The MPAS repository is a submodule of COMPASS repository.  For example, to
 compile MPAS-Ocean:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> MPAS-Model/ocean/develop/
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> E3SM-Project/components/mpas-ocean
 <span class="c1"># load modules (see machine-specific instructions below)</span>
-make gfortran <span class="nv">CORE</span><span class="o">=</span>ocean
+make gfortran
 </pre></div>
 </div>
 <p>For MALI:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> MPAS-Model/landice/develop/
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> MALI-Dev/components/mpas-albany-landice
 <span class="c1"># load modules (see machine-specific instructions below)</span>
-make gfortran <span class="nv">CORE</span><span class="o">=</span>landice
+make gfortran
 </pre></div>
 </div>
 </div>
@@ -384,26 +384,33 @@ executable:</p>
 <li><p>Compass submodule (easier): This guarantees that the MPAS commit matches
 compass.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git submodule update --init --recursive
-<span class="nb">cd</span> MPAS-Model/ocean/develop/
+<span class="nb">cd</span> E3SM-Project/components/mpas-ocean
 <span class="c1"># load modules (see machine-specific instructions below)</span>
-make gfortran <span class="nv">CORE</span><span class="o">=</span>ocean
+make gfortran
 </pre></div>
 </div>
 </li>
-<li><p>Other MPAS directory (advanced): Create your own MPAS-Model repository
-elsewhere on disk, make a copy of <code class="docutils literal notranslate"><span class="pre">general.config.ocean</span></code> or
-<code class="docutils literal notranslate"><span class="pre">general.config.landice</span></code>, and point the copy to the MPAS-Model paths.
+<li><p>Other E3SM directory (advanced): Create your own E3SM-Project/E3SM or
+MALI-Dev/E3SM repository elsewhere on disk, make a copy of
+<code class="docutils literal notranslate"><span class="pre">general.config.ocean</span></code> or <code class="docutils literal notranslate"><span class="pre">general.config.landice</span></code>, and point the copy
+to the MPAS standalone code path in your repo.
 The user must ensure that flag names and test cases match appropriately.
-The simplest way to set up a new MPAS repo in a new directory is:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone git@github.com:MPAS-Dev/MPAS.git your_new_branch
+The simplest way to set up a new repo in a new directory is:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone git@github.com:E3SM-Project/E3SM.git your_new_branch
 <span class="nb">cd</span> your_new_branch
-git checkout -b your_new_branch origin/ocean/develop
+git checkout -b your_new_branch origin/master
+<span class="nb">cd</span> components/mpas-ocean
 </pre></div>
 </div>
 </li>
 </ol>
-<p>Note that for ocean development, it is best to branch from <code class="docutils literal notranslate"><span class="pre">ocean/develop</span></code> and
-for MALI development, start with <code class="docutils literal notranslate"><span class="pre">landice/develop</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For ocean development, you will clone <code class="docutils literal notranslate"><span class="pre">E3SM-Project/E3SM</span></code> and build in
+<code class="docutils literal notranslate"><span class="pre">components/mpas-ocean</span></code>; for MALI development, the repo is
+<code class="docutils literal notranslate"><span class="pre">MALI-Dev/E3SM</span></code> and the build directory is
+<code class="docutils literal notranslate"><span class="pre">components/mpas-albany-landice</span></code>.</p>
+</div>
 </div>
 </div>
 

@@ -36,19 +36,23 @@ which give the paths `mark-petersen's <https://github.com/mark-petersen>`_ uses:
 
 * NERSC: `general.config.ocean_cori <https://gist.github.com/mark-petersen/c61095d65216415ee0bb62a76da3c6cb>`_
 
-You should change the MPAS repo to your directories to test your own code.
+You should change the directories
+``/turquoise/usr/projects/climate/mpeterse/repos/compass/branchName/MPAS-Model/ocean/develop``
+or ``/global/homes/m/mpeterse/repos/model/pr_intel`` to the directory for your
+own code wherever it appears in the file.
 
-Alternatively, you can make a copy of this file (e.g. ``config.ocean``) and set
-the options as follows. In six places, replace ``FULL_PATH_TO_MPAS_MODEL_REPO``
-with the path where you have checked out (and built) the branch of MPAS-Model
-you are planning to use.
+Alternatively, you can make a copy of ``general.config.ocean`` (e.g. to
+``config.ocean``) and set the options as follows. In six places, replace
+``FULL_PATH_TO_MPAS_MODEL_REPO`` with the path where you have checked out (and
+built) the branch of E3SM-Project/E3SM or MALI-Dev/E3SM you are planning to
+use.
 
 Three other paths are required, ``mesh_database``,
 ``initial_condition_database`` and ``bathymetry_database``, are used for
 storing pre-generated mesh files, data sets for creating initial conditions,
 and bathymetry data. These can be empty directories, in which case meshes and
 other data sets will be downloaded as required during test-case setup.  (If a
-test case appears to hang during setup, it is most likely downloading mesh, 
+test case appears to hang during setup, it is most likely downloading mesh,
 initial-condition or bathymetry data.)
 
 On LANL IC, the shared data bases can be found at:

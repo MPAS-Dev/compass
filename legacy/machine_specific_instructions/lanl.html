@@ -258,7 +258,7 @@ module unload python
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>module use /usr/projects/climate/SHARED_CLIMATE/modulefiles/all
 module load gcc/5.3.0
 module load openmpi/1.10.5 netcdf/4.4.1 parallel-netcdf/1.5.0 pio/1.7.2
-make gfortran <span class="nv">CORE</span><span class="o">=</span>ocean
+make gfortran
 </pre></div>
 </div>
 <p>Hint: you can put the following line in your bashrc:</p>
@@ -275,7 +275,7 @@ module load intel/19.0.4 intel-mpi/2019.4 hdf5-parallel/1.8.16 pnetcdf/1.11.2 ne
 <span class="nb">export</span> <span class="nv">PNETCDF</span><span class="o">=</span>/usr/projects/hpcsoft/toss3/grizzly/pnetcdf/1.11.2_intel-19.0.4_intel-mpi-2019.4_hdf5-1.8.16
 <span class="nb">export</span> <span class="nv">PIO</span><span class="o">=</span>/usr/projects/climate/xylar/libraries/grizzly/scorpio-1.1.6-intel
 
-make intel-mpi <span class="nv">CORE</span><span class="o">=</span>ocean <span class="nv">USE_PIO2</span><span class="o">=</span><span class="nb">true</span>
+make intel-mpi <span class="nv">USE_PIO2</span><span class="o">=</span><span class="nb">true</span>
 <span class="c1"># may also use: OPENMP=true DEBUG=true GEN_F90=true</span>
 </pre></div>
 </div>
@@ -287,7 +287,7 @@ make intel-mpi <span class="nv">CORE</span><span class="o">=</span>ocean <span c
 module use /usr/projects/climate/SHARED_CLIMATE/modulefiles/all
 module load intel/17.0.1
 module load openmpi/1.10.5 netcdf/4.4.1 parallel-netcdf/1.5.0 pio/1.7.2
-make ifort <span class="nv">CORE</span><span class="o">=</span>ocean
+make ifort
 </pre></div>
 </div>
 </div>
@@ -311,7 +311,7 @@ module load openmpi/2.1.2-bheb4xe/gcc/6.4.0/pio/1.10.0-ljj73au
 <span class="nb">export</span> <span class="nv">PNETCDF</span><span class="o">=</span>/usr/projects/climate/SHARED_CLIMATE/software/badger/spack-install/linux-rhel7-x86_64/gcc-6.4.0/parallel-netcdf-1.8.0-2qwcdbnjcq5pnkoqpx2s7um3s7ffo3xd
 <span class="nb">export</span> <span class="nv">PIO</span><span class="o">=</span>/usr/projects/climate/SHARED_CLIMATE/software/badger/spack-install/linux-rhel7-x86_64/gcc-6.4.0/pio-1.10.0-ljj73au6ctgkwmh3gbd4mleljsumijys/
 
-make gfortran <span class="nv">CORE</span><span class="o">=</span>ocean
+make gfortran
 </pre></div>
 </div>
 </div>
@@ -326,9 +326,11 @@ module load intel/19.0.4 intel-mpi/2019.4 hdf5-parallel/1.8.16 pnetcdf/1.11.2 ne
 <span class="nb">export</span> <span class="nv">PNETCDF</span><span class="o">=</span>/usr/projects/hpcsoft/toss3/grizzly/pnetcdf/1.11.2_intel-19.0.4_intel-mpi-2019.4_hdf5-1.8.16/
 </pre></div>
 </div>
-<p>Note, DO NOT use openmpi/3.1.5 as there is a bug (RMIO
-<a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Model/issues/576">Output from MPAS-O unreadable for large 1.8M cell mesh</a>
-).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>DO NOT use openmpi/3.1.5 as there is a bug (RMIO
+<a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Model/issues/576">Output from MPAS-O unreadable for large 1.8M cell mesh</a>).</p>
+</div>
 <p>PIO2 from <a class="reference external" href="https://github.com/E3SM-Project/scorpio">E3SM-Project/scorpio</a>
 was used, specifically tag <code class="docutils literal notranslate"><span class="pre">scorpio-v1.1.0</span></code> with the following build command
 (note use of intel compilers):</p>

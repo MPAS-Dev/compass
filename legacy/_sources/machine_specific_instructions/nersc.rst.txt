@@ -61,10 +61,10 @@ cori, gnu
     git submodule update --init --recursive
 
     # debug:
-    make gnu-nersc CORE=ocean USE_PIO2=true OPENMP=false DEBUG=true GEN_F90=true
+    make gnu-nersc USE_PIO2=true OPENMP=false DEBUG=true GEN_F90=true
 
     # optimized:
-    make gnu-nersc CORE=ocean USE_PIO2=true OPENMP=false
+    make gnu-nersc USE_PIO2=true OPENMP=false
 
 cori, intel
 -----------
@@ -81,7 +81,7 @@ cori, intel
     export PIO=/global/homes/m/mpeterse/libraries/pio-${PIO_VERSION}-intel
     git submodule update --init --recursive
 
-    make intel-nersc CORE=ocean
+    make intel-nersc
 
 PIO on cori
 -----------

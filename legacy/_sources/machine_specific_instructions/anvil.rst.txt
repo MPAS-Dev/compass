@@ -35,7 +35,7 @@ First, you might want to build SCORPIO (see below), or use the one from
 
     export  HDF5_USE_FILE_LOCKING=FALSE
 
-    make ifort CORE=ocean
+    make ifort
 
 SCORPIO on anvil
 ----------------

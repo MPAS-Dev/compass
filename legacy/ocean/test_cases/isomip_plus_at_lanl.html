@@ -294,12 +294,12 @@ source git-completion.bash
 </div>
 </div>
 </div>
-<div class="section" id="forking-and-cloning-mpas-model">
-<h2>3. Forking and Cloning MPAS-Model<a class="headerlink" href="#forking-and-cloning-mpas-model" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="forking-and-cloning-e3sm">
+<h2>3. Forking and Cloning E3SM<a class="headerlink" href="#forking-and-cloning-e3sm" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><p>Go to: <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Model">https://github.com/MPAS-Dev/MPAS-Model</a></p></li>
+<li><p>Go to: <a class="reference external" href="https://github.com/E3SM-Project/E3SM">https://github.com/E3SM-Project/E3SM</a></p></li>
 <li><p>Make your own fork by clicking “Fork” at the top right:</p></li>
-<li><p>Go to your new fork (e.g. <a class="reference external" href="https://github.com/username/MPAS-Model">https://github.com/username/MPAS-Model</a> )</p></li>
+<li><p>Go to your new fork (e.g. <a class="reference external" href="https://github.com/username/E3SM">https://github.com/username/E3SM</a> )</p></li>
 <li><p>Whenever you ever need to know the link to clone your fork</p>
 <ul>
 <li><p>Click on “Clone or download”</p></li>
@@ -318,25 +318,25 @@ except where stated):</p>
 <p>Make a directory for the code, e.g.:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir /usr/projects/climate/username
 <span class="nb">cd</span> /usr/projects/climate/username
-mkdir -p mpas/model
-<span class="nb">cd</span> mpas/model/
+mkdir -p e3sm
+<span class="nb">cd</span> e3sm
 </pre></div>
 </div>
 <p>Clone the repo:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone git@github.com:username/MPAS-Model.git repo
-<span class="nb">cd</span> repo
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone git@github.com:username/E3SM.git E3SM
+<span class="nb">cd</span> E3SM
 </pre></div>
 </div>
 <p>Rename your remote so it’s easier to not confuse it with other forks:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git remote rename origin username/MPAS-Model
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git remote rename origin username/E3SM
 </pre></div>
 </div>
 <p>Add the main repo:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git remote add MPAS-Dev/MPAS-Model git@github.com:MPAS-Dev/MPAS-Model.git
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git remote add E3SM-Project/E3SM git@github.com:E3SM-Project/E3SM.git
 </pre></div>
 </div>
 <p>Add my fork (you can add other people’s forks in the same way):</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git remote add xylar/MPAS-Model git@github.com:xylar/MPAS-Model.git
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git remote add xylar/E3SM git@github.com:xylar/E3SM.git
 </pre></div>
 </div>
 <p>Get the latest version of all the remotes (pruning anything that has been
@@ -371,22 +371,19 @@ module load intel/19.0.4 intel-mpi/2019.4 hdf5-parallel/1.8.16 pnetcdf/1.11.2 ne
 <span class="nb">export</span> <span class="nv">I_MPI_CXX</span><span class="o">=</span>icpc
 <span class="nb">export</span> <span class="nv">I_MPI_F77</span><span class="o">=</span>ifort
 <span class="nb">export</span> <span class="nv">I_MPI_F90</span><span class="o">=</span>ifort
-<span class="nb">export</span> <span class="nv">CORE</span><span class="o">=</span>ocean
 <span class="nb">export</span> <span class="nv">USE_PIO2</span><span class="o">=</span><span class="nb">true</span>
 <span class="nb">export</span> <span class="nv">AUTOCLEAN</span><span class="o">=</span><span class="nb">true</span>
 <span class="nb">export</span>  <span class="nv">HDF5_USE_FILE_LOCKING</span><span class="o">=</span>FALSE
 </pre></div>
 </div>
 </div>
-<div class="section" id="checking-out-an-mpas-branch-and-building-the-model">
-<h2>4. Checking out an MPAS branch and building the model<a class="headerlink" href="#checking-out-an-mpas-branch-and-building-the-model" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="checking-out-an-e3sm-branch-and-building-the-model">
+<h2>4. Checking out an E3SM branch and building the model<a class="headerlink" href="#checking-out-an-e3sm-branch-and-building-the-model" title="Permalink to this headline">¶</a></h2>
 <p><strong>Note: this is a good place to come back to when you need to start over on
 a new branch.</strong></p>
 <p>Add a “worktree”, a copy of the repo that we can point to a different branch.
-We will work with the main ocean development branch, <code class="docutils literal notranslate"><span class="pre">ocean/develop</span></code>. In
-general, <code class="docutils literal notranslate"><span class="pre">ocean/develop</span></code> is the place to start, since the <code class="docutils literal notranslate"><span class="pre">master</span></code> branch is
-updated only rarely when we make releases:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> /usr/projects/climate/username/mpas/model/reop
+We will work with the main branch, <code class="docutils literal notranslate"><span class="pre">master</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> /usr/projects/climate/username/e3sm/E3SM
 </pre></div>
 </div>
 <p>Let’s make sure we have the latest version of all the branches on all of the
@@ -395,23 +392,22 @@ remotes</p>
 </pre></div>
 </div>
 <p>Okay, now we’re ready to make a new folder to work from.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git worktree add ../ocean/develop -b ocean/develop
-<span class="nb">cd</span> ../ocean/develop
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git worktree add ../ocean/my_branch -b ocean/my_branch
+<span class="nb">cd</span> ../ocean/my_branch
 </pre></div>
 </div>
 <p>Take a look at which branch were on:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>git logg
 </pre></div>
 </div>
-<p>We don’t start off on <code class="docutils literal notranslate"><span class="pre">MPAS-Dev/MPAS-Model/ocean/develop</span></code> (even though the
-name of the local branch might trick you into thinking you’re there), so we need
-to do a hard reset to put us there:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git reset --hard MPAS-Dev/MPAS-Model/ocean/develop
+<p>We start off on <code class="docutils literal notranslate"><span class="pre">E3SM-Project/E3SM/master</span></code>.  If you want to point to a different branch,
+you need to do a hard reset to put yourself there.  Here’s an example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git reset --hard xylar/E3SM/ocean/fancy_new_branch
 git logg
 </pre></div>
 </div>
 <p>Now source the file with modules and settings for building MPAS on grizzly:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> /usr/projects/climate/username/mpas/model/setup_gr.bash
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> /usr/projects/climate/username/e3sm/setup_gr.bash
 </pre></div>
 </div>
 <p>If all goes well, you should see <code class="docutils literal notranslate"><span class="pre">comapss_py3.7</span></code> as part of your command prompt and you should be read to build MPAS.</p>
@@ -445,8 +441,8 @@ thing on Grizzly.  Open a file <code class="docutils literal notranslate"><span 
 <span class="c1"># init namelists in the default_inputs directory after a successful build of</span>
 <span class="c1"># the ocean model.</span>
 <span class="k">[namelists]</span>
-<span class="na">forward</span> <span class="o">=</span> <span class="s">/usr/projects/climate/username/mpas/model/ocean/develop/namelist.ocean.forward</span>
-<span class="na">init</span> <span class="o">=</span> <span class="s">/usr/projects/climate/username/mpas/model/ocean/develop/namelist.ocean.init</span>
+<span class="na">forward</span> <span class="o">=</span> <span class="s">/usr/projects/climate/username/e3sm/E3SM/components/mpas-ocean/namelist.ocean.forward</span>
+<span class="na">init</span> <span class="o">=</span> <span class="s">/usr/projects/climate/username/e3sm/E3SM/components/mpas-ocean/namelist.ocean.init</span>
 
 
 <span class="c1"># The streams section defines paths to template streams files that will be used</span>
@@ -454,8 +450,8 @@ thing on Grizzly.  Open a file <code class="docutils literal notranslate"><span 
 <span class="c1"># init streams files in the default_inputs directory after a successful build of</span>
 <span class="c1"># the ocean model.</span>
 <span class="k">[streams]</span>
-<span class="na">forward</span> <span class="o">=</span> <span class="s">/usr/projects/climate/username/mpas/model/ocean/develop/streams.ocean.forward</span>
-<span class="na">init</span> <span class="o">=</span> <span class="s">/usr/projects/climate/username/mpas/model/ocean/develop/streams.ocean.init</span>
+<span class="na">forward</span> <span class="o">=</span> <span class="s">/usr/projects/climate/username/e3sm/E3SM/components/mpas-ocean/streams.ocean.forward</span>
+<span class="na">init</span> <span class="o">=</span> <span class="s">/usr/projects/climate/username/e3sm/E3SM/components/mpas-ocean/streams.ocean.init</span>
 
 
 <span class="c1"># The executables section defines paths to required executables. These</span>
@@ -463,7 +459,7 @@ thing on Grizzly.  Open a file <code class="docutils literal notranslate"><span 
 <span class="c1"># Full paths should be provided in order to access the executables from</span>
 <span class="c1"># anywhere on the machine.</span>
 <span class="k">[executables]</span>
-<span class="na">model</span> <span class="o">=</span> <span class="s">/usr/projects/climate/username/mpas/model/ocean/develop/ocean_model</span>
+<span class="na">model</span> <span class="o">=</span> <span class="s">/usr/projects/climate/username/e3sm/E3SM/components/mpas-ocean/ocean_model</span>
 
 
 <span class="c1"># The paths section describes paths that are used within the ocean core test</span>
@@ -475,7 +471,7 @@ thing on Grizzly.  Open a file <code class="docutils literal notranslate"><span 
 <span class="c1"># the same directory, or different directory. Additionally, if they are empty</span>
 <span class="c1"># some test cases might download data into them, which will then be reused if</span>
 <span class="c1"># the test case is run again later.</span>
-<span class="na">mpas_model</span> <span class="o">=</span> <span class="s">/usr/projects/climate/username/mpas/model/ocean/develop</span>
+<span class="na">mpas_model</span> <span class="o">=</span> <span class="s">/usr/projects/climate/username/e3sm/E3SM/components/mpas-ocean</span>
 <span class="na">mesh_database</span> <span class="o">=</span> <span class="s">/usr/projects/regionalclimate/COMMON_MPAS/ocean/grids/mesh_database</span>
 <span class="na">initial_condition_database</span> <span class="o">=</span> <span class="s">/usr/projects/regionalclimate/COMMON_MPAS/ocean/grids/initial_condition_database</span>
 <span class="na">bathymetry_database</span> <span class="o">=</span> <span class="s">/usr/projects/regionalclimate/COMMON_MPAS/ocean/grids/bathymetry_database</span>
@@ -485,7 +481,7 @@ thing on Grizzly.  Open a file <code class="docutils literal notranslate"><span 
 for other branches than the one you’re currently on but that’s very rarely (if
 ever) going to be useful to you so you’ll just have to bear with all these
 redundant references to</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>/usr/projects/climate/username/mpas/model/ocean/develop
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>/usr/projects/climate/username/e3sm/E3SM/components/mpas-ocean
 </pre></div>
 </div>
 <p>If you want to set up a worktree for a different branch, the <code class="docutils literal notranslate"><span class="pre">config.ocean</span></code>
@@ -520,7 +516,7 @@ than jumping into a 2-year simulation.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> /lustre/scratch4/turquoise/username/isomip_plus_Ocean0/ocean/isomip_plus/2km/Ocean0/
 salloc --nodes<span class="o">=</span><span class="m">1</span> --time<span class="o">=</span><span class="m">0</span>:20:00 --account<span class="o">=</span>e3sm
 
-<span class="nb">source</span> /usr/projects/climate/username/mpas/model/setup_gr.bash
+<span class="nb">source</span> /usr/projects/climate/username/e3sm/setup_gr.bash
 
 ./run_test.py
 </pre></div>
@@ -549,7 +545,7 @@ vim job_script.bash
 <span class="c1"># exit if there are any errors</span>
 <span class="nb">set</span> -e
 
-<span class="nb">source</span> /usr/projects/climate/username/mpas/model/setup_gr.bash
+<span class="nb">source</span> /usr/projects/climate/username/e3sm/setup_gr.bash
 
 <span class="nv">months_per_job</span><span class="o">=</span><span class="m">24</span>
 <span class="nv">end_date</span><span class="o">=</span><span class="s2">&quot;0003-01-01_00:00:00&quot;</span>
