@@ -213,6 +213,38 @@ global_ocean framework
    metadata.get_e3sm_mesh_names
    metadata.add_mesh_and_init_metadata
 
+
+gotm
+~~~~
+
+.. currentmodule:: compass.ocean.tests.gotm
+
+.. autosummary::
+   :toctree: generated/
+
+   Gotm
+
+default
+'''''''
+
+.. currentmodule:: compass.ocean.tests.gotm.default
+
+.. autosummary::
+   :toctree: generated/
+
+   Default
+   Default.validate
+
+   init.Init
+   init.Init.run
+
+   forward.Forward
+   forward.Forward.run
+
+   analysis.Analysis
+   analysis.Analysis.run
+
+
 ice_shelf_2d
 ~~~~~~~~~~~~
 
