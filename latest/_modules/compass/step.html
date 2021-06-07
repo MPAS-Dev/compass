@@ -419,13 +419,10 @@
 <span class="sd">            relative path for the core, ``database`` and ``target``.</span>
 
 <span class="sd">        url : str, optional</span>
-<span class="sd">            The base URL for downloading ``target`` (if provided, or</span>
-<span class="sd">            ``filename`` if not).  This option should be set if the file is not</span>
-<span class="sd">            in a database on the data server. The file&#39;s URL is determined by</span>
-<span class="sd">            combining ``url`` with the filename (without the directory) from</span>
-<span class="sd">            ``target`` (or ``filename`` if ``target`` is not provided).</span>
-<span class="sd">            ``database`` is not included in the file&#39;s URL even if it is</span>
-<span class="sd">            provided.</span>
+<span class="sd">            The URL (including file name) for downloading the file.  This</span>
+<span class="sd">            option should be set if the file is not in a database on the data</span>
+<span class="sd">            server. The ``filename``, ``target`` and ``database`` are not</span>
+<span class="sd">            added to URL even if they are provided.</span>
 
 <span class="sd">        work_dir_target : str, optional</span>
 <span class="sd">            Same as ``target`` but with a path relative to the base work</span>
@@ -599,7 +596,11 @@
             <span class="k">if</span> <span class="n">work_dir_target</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">target</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_work_dir</span><span class="p">,</span> <span class="n">work_dir_target</span><span class="p">)</span>
 
-            <span class="n">download_target</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">target</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">download_target</span> <span class="o">=</span> <span class="n">target</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">download_target</span> <span class="o">=</span> <span class="n">filename</span>
+
             <span class="n">download_path</span> <span class="o">=</span> <span class="kc">None</span>
 
             <span class="k">if</span> <span class="n">database</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -610,24 +611,17 @@
                     <span class="n">core_path</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;download&#39;</span><span class="p">,</span> <span class="s1">&#39;core_path&#39;</span><span class="p">)</span>
                     <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">base_url</span><span class="p">,</span> <span class="n">core_path</span><span class="p">,</span> <span class="n">database</span><span class="p">)</span>
 
-                <span class="k">if</span> <span class="n">target</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">target</span> <span class="o">=</span> <span class="n">filename</span>
-
-                <span class="n">download_target</span> <span class="o">=</span> <span class="n">target</span>
+                    <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
 
                 <span class="n">database_root</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
                     <span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_database_root&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mpas_core</span><span class="p">))</span>
-                <span class="n">download_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">database_root</span><span class="p">,</span> <span class="n">database</span><span class="p">)</span>
+                <span class="n">download_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">database_root</span><span class="p">,</span> <span class="n">database</span><span class="p">,</span>
+                                             <span class="n">download_target</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">url</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">target</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">download_target</span> <span class="o">=</span> <span class="n">filename</span>
-                    <span class="n">download_path</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">download_path</span><span class="p">,</span> <span class="n">download_target</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+                <span class="n">download_path</span> <span class="o">=</span> <span class="n">download_target</span>
 
             <span class="k">if</span> <span class="n">url</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">download_target</span> <span class="o">=</span> <span class="n">download</span><span class="p">(</span><span class="n">download_target</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span>
-                                           <span class="n">download_path</span><span class="p">)</span>
+                <span class="n">download_target</span> <span class="o">=</span> <span class="n">download</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">download_path</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">target</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="c1"># this is the absolute path that we presumably want</span>
                     <span class="n">target</span> <span class="o">=</span> <span class="n">download_target</span>

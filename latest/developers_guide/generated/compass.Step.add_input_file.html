@@ -246,13 +246,10 @@ subdirectory of the local cache directory for this core.  If
 <code class="docutils literal notranslate"><span class="pre">url</span></code> is not provided, the URL for downloading the file will be
 determined by combining the base URL of the data server, the
 relative path for the core, <code class="docutils literal notranslate"><span class="pre">database</span></code> and <code class="docutils literal notranslate"><span class="pre">target</span></code>.</p></li>
-<li><p><strong>url</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – The base URL for downloading <code class="docutils literal notranslate"><span class="pre">target</span></code> (if provided, or
-<code class="docutils literal notranslate"><span class="pre">filename</span></code> if not).  This option should be set if the file is not
-in a database on the data server. The file’s URL is determined by
-combining <code class="docutils literal notranslate"><span class="pre">url</span></code> with the filename (without the directory) from
-<code class="docutils literal notranslate"><span class="pre">target</span></code> (or <code class="docutils literal notranslate"><span class="pre">filename</span></code> if <code class="docutils literal notranslate"><span class="pre">target</span></code> is not provided).
-<code class="docutils literal notranslate"><span class="pre">database</span></code> is not included in the file’s URL even if it is
-provided.</p></li>
+<li><p><strong>url</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – The URL (including file name) for downloading the file.  This
+option should be set if the file is not in a database on the data
+server. The <code class="docutils literal notranslate"><span class="pre">filename</span></code>, <code class="docutils literal notranslate"><span class="pre">target</span></code> and <code class="docutils literal notranslate"><span class="pre">database</span></code> are not
+added to URL even if they are provided.</p></li>
 <li><p><strong>work_dir_target</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Same as <code class="docutils literal notranslate"><span class="pre">target</span></code> but with a path relative to the base work
 directory.  This is useful if it is not easy to determine the
 relative path between the step’s work directory and the target.</p></li>

@@ -218,26 +218,21 @@
 <h1>compass.io.download<a class="headerlink" href="#compass-io-download" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="compass.io.download">
-<span class="sig-prename descclassname"><span class="pre">compass.io.</span></span><span class="sig-name descname"><span class="pre">download</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest_option</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exceptions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compass/io.html#download"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.io.download" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">compass.io.</span></span><span class="sig-name descname"><span class="pre">download</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exceptions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compass/io.html#download"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.io.download" title="Permalink to this definition">¶</a></dt>
 <dd><p>Download a file from a URL to the given path or path name</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>file_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The relative path of the source file relative to <code class="docutils literal notranslate"><span class="pre">url</span></code> and the
-destination path relative to <code class="docutils literal notranslate"><span class="pre">dest_path</span></code> (or the associated config
-option)</p></li>
-<li><p><strong>url</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The URL where <code class="docutils literal notranslate"><span class="pre">file_name</span></code> can be found</p></li>
+<li><p><strong>url</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The URL (including file name) to download</p></li>
+<li><p><strong>dest_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The path (including file name) where the downloaded file should be
+saved</p></li>
 <li><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/library/configparser.html#configparser.ConfigParser" title="(in Python v3.9)"><em>configparser.ConfigParser</em></a>) – Configuration options used to find custom paths if <code class="docutils literal notranslate"><span class="pre">dest_path</span></code> is
 a config option</p></li>
-<li><p><strong>dest_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – The output path; either <code class="docutils literal notranslate"><span class="pre">dest_path</span></code> or <code class="docutils literal notranslate"><span class="pre">dest_option</span></code> should be
-specified</p></li>
-<li><p><strong>dest_option</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – An option in the <code class="docutils literal notranslate"><span class="pre">paths</span></code> config section  defining an output path;
-either <code class="docutils literal notranslate"><span class="pre">dest_path</span></code> or <code class="docutils literal notranslate"><span class="pre">dest_option</span></code> should be specified</p></li>
 <li><p><strong>exceptions</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to raise exceptions when the download fails</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>out_file_name</strong> (<em>str</em>) – The resulting file name if the download was successful</p>
+<dd class="field-even"><p><strong>dest_path</strong> (<em>str</em>) – The resulting file name if the download was successful, or None if not</p>
 </dd>
 </dl>
 </dd></dl>
