@@ -209,7 +209,7 @@ def build_env(is_test, recreate, machine, compiler, mpi, conda_mpi, version,
 
     if is_test:
         if env_name is None:
-            env_name = 'test_compass_{}{}'.format(version, env_suffix)
+            env_name = 'dev_compass_{}{}'.format(version, env_suffix)
     else:
         env_name = 'compass_{}{}'.format(version, env_suffix)
     env_path = os.path.join(conda_base, 'envs', env_name)
@@ -548,7 +548,7 @@ def write_load_compass(template_path, activ_path, conda_base, is_test, version,
 
     if is_test:
         if prefix is None:
-            prefix = 'test_compass_{}'.format(version)
+            prefix = 'load_dev_compass_{}'.format(version)
     else:
         prefix = 'load_compass_{}'.format(version)
 

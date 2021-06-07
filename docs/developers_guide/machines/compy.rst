@@ -15,7 +15,7 @@ able to source:
 
 .. code-block:: bash
 
-    source test_compass_1.0.0_compy_intel_impi.sh
+    source load_dev_compass_1.0.0_compy_intel_impi.sh
 
 Then, you can build the MPAS model with
 

@@ -24,7 +24,7 @@ the base of your compass branch, e.g.:
 
 .. code-block:: bash
 
-    source test_compass_1.0.0_anvil_intel18_mvapich.sh
+    source load_dev_compass_1.0.0_anvil_intel18_mvapich.sh
 
 After loading this environment, you can set up test cases or test suites, and
 a link ``load_compass_env.sh`` will be included in each suite or test case
@@ -103,7 +103,7 @@ and on OSX run:
 You may use ``openmpi`` instead of ``mpich`` but we have had better experiences
 with the latter.
 
-The result should be an activation script ``test_compass_1.0.0_<compiler>.sh``.
+The result should be an activation script ``load_dev_compass_1.0.0_<compiler>.sh``.
 Source this script to get the appropriate conda environment and environment
 variables.
 
