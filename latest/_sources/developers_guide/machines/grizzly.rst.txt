@@ -28,7 +28,7 @@ been set up properly (see :ref:`dev_conda_env`), you should be able to source:
 
 .. code-block:: bash
 
-    source test_compass_1.0.0_brizzly_intel_impi.sh
+    source load_dev_compass_1.0.0_brizzly_intel_impi.sh
 
 Then, you can build the MPAS model with
 
@@ -43,7 +43,7 @@ If you've set things up for this compiler, you should be able to:
 
 .. code-block:: bash
 
-    source test_compass_1.0.0_grizzly_gnu_mvapich.sh
+    source load_dev_compass_1.0.0_grizzly_gnu_mvapich.sh
 
 Then, you can build the MPAS model with
 

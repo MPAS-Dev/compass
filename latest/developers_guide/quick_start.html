@@ -250,7 +250,7 @@ components.</p></li>
 already been built.  ESMF with the system’s version of MPI is needed for
 making mapping files.</p></li>
 <li><p>make an activation script called
-<code class="docutils literal notranslate"><span class="pre">test_compass_&lt;version&gt;_&lt;machine&gt;_&lt;compiler&gt;_&lt;mpi&gt;.sh</span></code>,
+<code class="docutils literal notranslate"><span class="pre">load_dev_compass_&lt;version&gt;_&lt;machine&gt;_&lt;compiler&gt;_&lt;mpi&gt;.sh</span></code>,
 where <code class="docutils literal notranslate"><span class="pre">&lt;version&gt;</span></code> is the compass version, <code class="docutils literal notranslate"><span class="pre">&lt;machine&gt;</span></code> is the name of the
 machine (to prevent confusion when running from the same branch on multiple
 machines), <code class="docutils literal notranslate"><span class="pre">&lt;compiler&gt;</span></code> is the compiler name (e.g. <code class="docutils literal notranslate"><span class="pre">intel</span></code> or <code class="docutils literal notranslate"><span class="pre">gnu</span></code>),
@@ -259,7 +259,7 @@ and <code class="docutils literal notranslate"><span class="pre">mpi</span></cod
 the expected packages are available.</p></li>
 </ul>
 <p>Each time you want to work with compass, you will need to run:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> ./test_compass_&lt;version&gt;_&lt;machine&gt;_&lt;compiler&gt;_&lt;mpi&gt;.sh
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> ./load_dev_compass_&lt;version&gt;_&lt;machine&gt;_&lt;compiler&gt;_&lt;mpi&gt;.sh
 </pre></div>
 </div>
 <p>This will load the appropriate conda environment, load system modules for
@@ -302,7 +302,7 @@ scratch.  This takes just a little extra time.</p>
 <p>You can check to make sure expected commands are present with <code class="docutils literal notranslate"><span class="pre">--check</span></code>, you
 can select a particular python version with <code class="docutils literal notranslate"><span class="pre">--python</span></code>, you can set the name
 of the environment (and the prefix for the activation script) something other
-than the default (<code class="docutils literal notranslate"><span class="pre">test_compass&lt;version&gt;</span></code>) with <code class="docutils literal notranslate"><span class="pre">--env-name</span></code>.</p>
+than the default (<code class="docutils literal notranslate"><span class="pre">load_dev_compass_&lt;version&gt;</span></code>) with <code class="docutils literal notranslate"><span class="pre">--env-name</span></code>.</p>
 <p>If you are not on a supported machine, you need to choose your MPI type
 (<code class="docutils literal notranslate"><span class="pre">mpich</span></code> or <code class="docutils literal notranslate"><span class="pre">openmpi</span></code>) with the <code class="docutils literal notranslate"><span class="pre">--mpi</span></code> flag.  The compilers are
 automatically <code class="docutils literal notranslate"><span class="pre">gnu</span></code> for Linux and <code class="docutils literal notranslate"><span class="pre">clang</span></code> (with <code class="docutils literal notranslate"><span class="pre">gfortran</span></code>) for OSX, so
@@ -318,7 +318,7 @@ In such cases, run with the <code class="docutils literal notranslate"><span cla
 </pre></div>
 </div>
 <p>Each time you want to work with compass, you will need to run:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> ./test_compass_&lt;version&gt;.sh
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> ./load_dev_compass_&lt;version&gt;.sh
 </pre></div>
 </div>
 <p>This will load the appropriate conda environment for <code class="docutils literal notranslate"><span class="pre">compass</span></code>.  It will also
@@ -374,7 +374,7 @@ compass run
 </pre></div>
 </div>
 <p>The first command will source the same activation script
-(<code class="docutils literal notranslate"><span class="pre">test_compass_&lt;version&gt;_&lt;machine&gt;_&lt;compiler&gt;_&lt;mpi&gt;.sh</span></code>) that you used to set
+(<code class="docutils literal notranslate"><span class="pre">load_dev_compass_&lt;version&gt;_&lt;machine&gt;_&lt;compiler&gt;_&lt;mpi&gt;.sh</span></code>) that you used to set
 up the suite or test case (<code class="docutils literal notranslate"><span class="pre">load_compass_env.sh</span></code> is just a symlink to that
 activation script you sourced before setting up the suite or test case).</p>
 </div>
@@ -382,13 +382,13 @@ activation script you sourced before setting up the suite or test case).</p>
 <h2>Building MPAS components<a class="headerlink" href="#building-mpas-components" title="Permalink to this headline">¶</a></h2>
 <p>The MPAS repository is a submodule of compass repository.  For example, to
 compile MPAS-Ocean:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> ./test_compass_&lt;version&gt;_&lt;machine&gt;_&lt;compiler&gt;_&lt;mpi&gt;.sh
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> ./load_dev_compass_&lt;version&gt;_&lt;machine&gt;_&lt;compiler&gt;_&lt;mpi&gt;.sh
 <span class="nb">cd</span> E3SM-Project/components/mpas-ocean/
 make &lt;mpas_compiler&gt;
 </pre></div>
 </div>
 <p>For MALI:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> ./test_compass_&lt;version&gt;_&lt;machine&gt;_&lt;compiler&gt;_&lt;mpi&gt;.sh
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> ./load_dev_compass_&lt;version&gt;_&lt;machine&gt;_&lt;compiler&gt;_&lt;mpi&gt;.sh
 <span class="nb">cd</span> MALI-Dev/components/mpas-albany-landice
 make &lt;mpas_compiler&gt;
 </pre></div>

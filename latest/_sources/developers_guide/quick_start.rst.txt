@@ -70,7 +70,7 @@ this script will also:
   making mapping files.
 
 * make an activation script called
-  ``test_compass_<version>_<machine>_<compiler>_<mpi>.sh``,
+  ``load_dev_compass_<version>_<machine>_<compiler>_<mpi>.sh``,
   where ``<version>`` is the compass version, ``<machine>`` is the name of the
   machine (to prevent confusion when running from the same branch on multiple
   machines), ``<compiler>`` is the compiler name (e.g. ``intel`` or ``gnu``),
@@ -83,7 +83,7 @@ Each time you want to work with compass, you will need to run:
 
 .. code-block:: bash
 
-    source ./test_compass_<version>_<machine>_<compiler>_<mpi>.sh
+    source ./load_dev_compass_<version>_<machine>_<compiler>_<mpi>.sh
 
 This will load the appropriate conda environment, load system modules for
 compilers, MPI and libraries needed to build and run MPAS components, and
@@ -135,7 +135,7 @@ scratch.  This takes just a little extra time.
 You can check to make sure expected commands are present with ``--check``, you
 can select a particular python version with ``--python``, you can set the name
 of the environment (and the prefix for the activation script) something other
-than the default (``test_compass<version>``) with ``--env-name``.
+than the default (``load_dev_compass_<version>``) with ``--env-name``.
 
 If you are not on a supported machine, you need to choose your MPI type
 (``mpich`` or ``openmpi``) with the ``--mpi`` flag.  The compilers are
@@ -160,7 +160,7 @@ Each time you want to work with compass, you will need to run:
 
 .. code-block:: bash
 
-    source ./test_compass_<version>.sh
+    source ./load_dev_compass_<version>.sh
 
 This will load the appropriate conda environment for ``compass``.  It will also
 set an environment variable ``LOAD_COMPASS_ENV`` that points to the activation
@@ -235,7 +235,7 @@ case), log onto a compute node (if on an HPC machine) and run:
     compass run
 
 The first command will source the same activation script
-(``test_compass_<version>_<machine>_<compiler>_<mpi>.sh``) that you used to set
+(``load_dev_compass_<version>_<machine>_<compiler>_<mpi>.sh``) that you used to set
 up the suite or test case (``load_compass_env.sh`` is just a symlink to that
 activation script you sourced before setting up the suite or test case).
 
@@ -247,7 +247,7 @@ compile MPAS-Ocean:
 
 .. code-block:: bash
 
-    source ./test_compass_<version>_<machine>_<compiler>_<mpi>.sh
+    source ./load_dev_compass_<version>_<machine>_<compiler>_<mpi>.sh
     cd E3SM-Project/components/mpas-ocean/
     make <mpas_compiler>
 
@@ -255,7 +255,7 @@ For MALI:
 
 .. code-block:: bash
 
-    source ./test_compass_<version>_<machine>_<compiler>_<mpi>.sh
+    source ./load_dev_compass_<version>_<machine>_<compiler>_<mpi>.sh
     cd MALI-Dev/components/mpas-albany-landice
     make <mpas_compiler>
 
