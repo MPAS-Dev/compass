@@ -22,6 +22,7 @@ install_requires = \
     ['cartopy',
      'cmocean',
      'gsw',
+     'h5py',
      'ipython',
      'jigsawpy==0.3.3',
      'jupyter',
