@@ -2,80 +2,64 @@ import os
 import tempfile
 import requests
 import progressbar
+from urllib.parse import urlparse
 
-from compass.config import get_source_file
 
-
-def download(file_name, url, config, dest_path=None, dest_option=None,
-             exceptions=True):
+def download(url, dest_path, config, exceptions=True):
     """
     Download a file from a URL to the given path or path name
 
     Parameters
     ----------
-    file_name : str
-        The relative path of the source file relative to ``url`` and the
-        destination path relative to ``dest_path`` (or the associated config
-        option)
-
     url : str
-        The URL where ``file_name`` can be found
+        The URL (including file name) to download
+
+    dest_path : str
+        The path (including file name) where the downloaded file should be
+        saved
 
     config : configparser.ConfigParser
         Configuration options used to find custom paths if ``dest_path`` is
         a config option
-
-    dest_path : str, optional
-        The output path; either ``dest_path`` or ``dest_option`` should be
-        specified
-
-    dest_option : str, optional
-        An option in the ``paths`` config section  defining an output path;
-        either ``dest_path`` or ``dest_option`` should be specified
 
     exceptions : bool, optional
         Whether to raise exceptions when the download fails
 
     Returns
     -------
-    out_file_name : str
-        The resulting file name if the download was successful
+    dest_path : str
+        The resulting file name if the download was successful, or None if not
     """
 
-    if dest_option is not None:
-        out_file_name = get_source_file(dest_option, file_name, config)
-    elif dest_path is not None:
-        out_file_name = '{}/{}'.format(dest_path, file_name)
-    else:
-        raise ValueError('One of "dest_option" and "dest_path" must be '
-                         'specified.')
+    in_file_name = os.path.basename(urlparse(url).path)
+    dest_path = os.path.abspath(dest_path)
+    out_file_name = os.path.basename(dest_path)
 
     do_download = config.getboolean('download', 'download')
     check_size = config.getboolean('download', 'check_size')
     verify = config.getboolean('download', 'verify')
 
     if not do_download:
-        if not os.path.exists(out_file_name):
+        if not os.path.exists(dest_path):
             raise OSError('File not found and downloading is disabled: '
-                          '{}'.format(out_file_name))
-        return out_file_name
+                          '{}'.format(dest_path))
+        return dest_path
 
-    if not check_size and os.path.exists(out_file_name):
-        return out_file_name
+    if not check_size and os.path.exists(dest_path):
+        return dest_path
 
     session = requests.Session()
     if not verify:
         session.verify = False
 
-    # out_file_name contains full path, so we need to make the relevant
+    # dest_path contains full path, so we need to make the relevant
     # subdirectories if they do not exist already
-    directory = os.path.dirname(out_file_name)
+    directory = os.path.dirname(dest_path)
     try:
         os.makedirs(directory)
     except OSError:
         pass
 
-    url = '{}/{}'.format(url, file_name)
     try:
         response = session.get(url, stream=True)
         totalSize = response.headers.get('content-length')
@@ -92,42 +76,46 @@ def download(file_name, url, config, dest_path=None, dest_option=None,
         if exceptions:
             raise
         else:
-            print('ERROR while downloading {}:'.format(file_name))
+            print('ERROR while downloading {}:'.format(in_file_name))
             print(e)
             return None
 
     if totalSize is None:
         # no content length header
-        if not os.path.exists(out_file_name):
-            with open(out_file_name, 'wb') as f:
-                print('Downloading {}...'.format(file_name))
+        if not os.path.exists(dest_path):
+            with open(dest_path, 'wb') as f:
+                print('Downloading {}...'.format(in_file_name))
                 try:
                     f.write(response.content)
                 except requests.exceptions.RequestException:
                     if exceptions:
                         raise
                     else:
-                        print('  {} failed!'.format(file_name))
+                        print('  {} failed!'.format(in_file_name))
                         return None
                 else:
-                    print('  {} done.'.format(file_name))
+                    print('  {} done.'.format(in_file_name))
     else:
         # we can do the download in chunks and use a progress bar, yay!
 
         totalSize = int(totalSize)
-        if os.path.exists(out_file_name) and \
-                totalSize == os.path.getsize(out_file_name):
+        if os.path.exists(dest_path) and \
+                totalSize == os.path.getsize(dest_path):
             # we already have the file, so just return
-            return out_file_name
+            return dest_path
 
-        print('Downloading {} ({})...'.format(file_name,
+        if out_file_name == in_file_name:
+            file_names = in_file_name
+        else:
+            file_names = '{} as {}'.format(in_file_name, out_file_name)
+        print('Downloading {} ({})...'.format(file_names,
                                               _sizeof_fmt(totalSize)))
         widgets = [progressbar.Percentage(), ' ', progressbar.Bar(),
                    ' ', progressbar.ETA()]
         bar = progressbar.ProgressBar(widgets=widgets,
                                       max_value=totalSize).start()
         size = 0
-        with open(out_file_name, 'wb') as f:
+        with open(dest_path, 'wb') as f:
             try:
                 for data in response.iter_content(chunk_size=4096):
                     size += len(data)
@@ -138,11 +126,11 @@ def download(file_name, url, config, dest_path=None, dest_option=None,
                 if exceptions:
                     raise
                 else:
-                    print('  {} failed!'.format(file_name))
+                    print('  {} failed!'.format(in_file_name))
                     return None
             else:
-                print('  {} done.'.format(file_name))
-    return out_file_name
+                print('  {} done.'.format(in_file_name))
+    return dest_path
 
 
 def symlink(target, link_name, overwrite=True):

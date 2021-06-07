@@ -230,13 +230,10 @@ class Step:
             relative path for the core, ``database`` and ``target``.
 
         url : str, optional
-            The base URL for downloading ``target`` (if provided, or
-            ``filename`` if not).  This option should be set if the file is not
-            in a database on the data server. The file's URL is determined by
-            combining ``url`` with the filename (without the directory) from
-            ``target`` (or ``filename`` if ``target`` is not provided).
-            ``database`` is not included in the file's URL even if it is
-            provided.
+            The URL (including file name) for downloading the file.  This
+            option should be set if the file is not in a database on the data
+            server. The ``filename``, ``target`` and ``database`` are not
+            added to URL even if they are provided.
 
         work_dir_target : str, optional
             Same as ``target`` but with a path relative to the base work
@@ -410,7 +407,11 @@ class Step:
             if work_dir_target is not None:
                 target = os.path.join(self.base_work_dir, work_dir_target)
 
-            download_target = None
+            if target is not None:
+                download_target = target
+            else:
+                download_target = filename
+
             download_path = None
 
             if database is not None:
@@ -421,24 +422,17 @@ class Step:
                     core_path = config.get('download', 'core_path')
                     url = '{}/{}/{}'.format(base_url, core_path, database)
 
-                if target is None:
-                    target = filename
-
-                download_target = target
+                    url = '{}/{}'.format(url, target)
 
                 database_root = config.get(
                     'paths', '{}_database_root'.format(mpas_core))
-                download_path = os.path.join(database_root, database)
+                download_path = os.path.join(database_root, database,
+                                             download_target)
             elif url is not None:
-                if target is None:
-                    download_target = filename
-                    download_path = '.'
-                else:
-                    download_path, download_target = os.path.split(target)
+                download_path = download_target
 
             if url is not None:
-                download_target = download(download_target, url, config,
-                                           download_path)
+                download_target = download(url, download_path, config)
                 if target is not None:
                     # this is the absolute path that we presumably want
                     target = download_target
