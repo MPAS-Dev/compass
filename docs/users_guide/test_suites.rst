@@ -59,3 +59,6 @@ for regression testing of MPAS-Ocean.  Here are the tests included:
     ocean/ice_shelf_2d/5km/restart_test
     ocean/ziso/20km/default
     ocean/ziso/20km/with_frazil
+
+Including the ``-v`` verbose argument to ``compass list --suites`` will
+print the tests belonging to each given suite.

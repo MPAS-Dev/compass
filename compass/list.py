@@ -2,6 +2,7 @@ import argparse
 import re
 import sys
 import os
+from importlib import resources
 from importlib.resources import contents
 
 from compass.mpas_cores import get_mpas_cores
@@ -21,6 +22,7 @@ def list_cases(test_expr=None, number=None, verbose=False):
 
     verbose : bool, optional
         Whether to print details of each test or just the subdirectories
+        When applied to suites, verbose will list the tests in the suite
     """
     mpas_cores = get_mpas_cores()
 
@@ -85,7 +87,7 @@ def list_machines():
             print('   {}'.format(os.path.splitext(config)[0]))
 
 
-def list_suites(cores=None):
+def list_suites(cores=None, verbose=False):
     if cores is None:
         cores = [mpas_core.name for mpas_core in get_mpas_cores()]
     print('Suites:')
@@ -97,7 +99,13 @@ def list_suites(cores=None):
         for suite in sorted(suites):
             if suite.endswith('.txt'):
                 print('  -c {} -t {}'.format(core, os.path.splitext(suite)[0]))
-
+                if verbose:
+                   text = resources.read_text('compass.{}.suites'.format(core), suite)
+                   tests = list()
+                   for test in text.split('\n'):
+                      test = test.strip()
+                      if len(test) > 0 and test not in tests and not test.startswith('#'):
+                         print("\t* {}".format(test))
 
 def main():
     parser = argparse.ArgumentParser(
@@ -120,7 +128,7 @@ def main():
     if args.machines:
         list_machines()
     elif args.suites:
-        list_suites()
+        list_suites(verbose=args.verbose)
     else:
         list_cases(test_expr=args.test_expr, number=args.number,
                    verbose=args.verbose)

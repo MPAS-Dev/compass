@@ -1718,3 +1718,16 @@ forgotten to compile the model, this will be obvious by the broken symlink and
 the step will immediately fail because of the missing input.  The path to the
 executable is automatically detected based on the work directory for the step
 and the config options.
+
+.. _dev_suites:
+
+Test Suites
+-----------
+
+As described in the :ref:`user_testsuites` section of the User's Guide, COMPASS
+test cases can be organized into test suites.  Each core has separate regression
+suites, and a core can have multiple independent regression suites.  A developer
+defines a test suite by creating a `.txt` file within the `compass/CORE/suites`
+directory.  The format of the `.txt` file is a list of the paths to the tests
+desired to be part of the suite.  A line starting with `#` will be treated as a
+comment line.
