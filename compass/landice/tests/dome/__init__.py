@@ -16,9 +16,10 @@ class Dome(TestGroup):
         super().__init__(mpas_core=mpas_core, name='dome')
 
         for mesh_type in ['2000m', 'variable_resolution']:
+          for velo_solver in ['sia', 'FO']:
             self.add_test_case(
-                SmokeTest(test_group=self, mesh_type=mesh_type))
+                SmokeTest(test_group=self, velo_solver=velo_solver, mesh_type=mesh_type))
             self.add_test_case(
-                DecompositionTest(test_group=self, mesh_type=mesh_type))
+                DecompositionTest(test_group=self, velo_solver=velo_solver, mesh_type=mesh_type))
             self.add_test_case(
-                RestartTest(test_group=self, mesh_type=mesh_type))
+                RestartTest(test_group=self, velo_solver=velo_solver, mesh_type=mesh_type))

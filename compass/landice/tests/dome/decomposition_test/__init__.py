@@ -17,7 +17,7 @@ class DecompositionTest(TestCase):
         The resolution or tye of mesh of the test case
     """
 
-    def __init__(self, test_group, mesh_type):
+    def __init__(self, test_group, velo_solver, mesh_type):
         """
         Create the test case
 
@@ -26,12 +26,16 @@ class DecompositionTest(TestCase):
         test_group : compass.landice.tests.dome.Dome
             The test group that this test case belongs to
 
+        velo_solver : str
+            The velocity solver to use for the test case
+
         mesh_type : str
             The resolution or tye of mesh of the test case
         """
         name = 'decomposition_test'
         self.mesh_type = mesh_type
-        subdir = '{}/{}'.format(mesh_type, name)
+        self.velo_solver = velo_solver
+        subdir = '{}/{}/{}'.format(velo_solver, mesh_type, name)
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
 
@@ -42,7 +46,7 @@ class DecompositionTest(TestCase):
             name = '{}proc_run'.format(procs)
             self.add_step(
                 RunModel(test_case=self, name=name, subdir=name, cores=procs,
-                         threads=1, mesh_type=mesh_type))
+                         threads=1, velo_solver=velo_solver, mesh_type=mesh_type))
 
             input_dir = name
             name = 'visualize_{}'.format(name)

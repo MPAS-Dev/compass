@@ -1,5 +1,6 @@
 from compass.model import run_model
 from compass.step import Step
+from compass.namelist import update
 
 
 class RunModel(Step):
@@ -19,7 +20,7 @@ class RunModel(Step):
         twice, the second time with ``namelist.landice.rst`` and
         ``streams.landice.rst``
     """
-    def __init__(self, test_case, mesh_type, name='run_model', subdir=None,
+    def __init__(self, test_case, velo_solver, mesh_type, name='run_model', subdir=None,
                  cores=1, min_cores=None, threads=1, suffixes=None):
         """
         Create a new test case
@@ -28,6 +29,9 @@ class RunModel(Step):
         ----------
         test_case : compass.TestCase
             The test case this step belongs to
+
+        velo_solver : str
+            The velocity solver setting to use for this test case
 
         mesh_type : str
             The resolution or mesh type of the test case
@@ -59,6 +63,7 @@ class RunModel(Step):
             ``streams.landice.rst``
         """
         self.mesh_type = mesh_type
+        self.velo_solver = velo_solver
         if suffixes is None:
             suffixes = ['landice']
         self.suffixes = suffixes
@@ -71,6 +76,11 @@ class RunModel(Step):
             self.add_namelist_file(
                 'compass.landice.tests.dome', 'namelist.landice',
                 out_name='namelist.{}'.format(suffix))
+
+            replacements = {'config_velocity_solver': '{}'.format(velo_solver)}
+
+#            update(replacements=replacements, step_work_dir=self.path,
+#                                   out_name='namelist.{}'.format(suffix))
 
             self.add_streams_file(
                 'compass.landice.tests.dome', 'streams.landice',
