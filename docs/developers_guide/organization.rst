@@ -1728,6 +1728,6 @@ As described in the :ref:`user_testsuites` section of the User's Guide, COMPASS
 test cases can be organized into test suites.  Each core has separate regression
 suites, and a core can have multiple independent regression suites.  A developer
 defines a test suite by creating a `.txt` file within the `compass/CORE/suites`
-directory.  The format of the `.txt` file is a list of the paths to the tests
-desired to be part of the suite.  A line starting with `#` will be treated as a
-comment line.
+directory.  The format of the `.txt` file is a list of the work directories to
+the tests desired to be part of the suite.  A line starting with `#` will be
+treated as a comment line.

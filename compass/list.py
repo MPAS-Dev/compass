@@ -21,8 +21,8 @@ def list_cases(test_expr=None, number=None, verbose=False):
         The number of the test to list
 
     verbose : bool, optional
-        Whether to print details of each test or just the subdirectories
-        When applied to suites, verbose will list the tests in the suite
+        Whether to print details of each test or just the subdirectories.
+        When applied to suites, verbose will list the tests in the suite.
     """
     mpas_cores = get_mpas_cores()
 
@@ -126,7 +126,8 @@ def main():
                         help="List test suites (instead of test cases)")
     parser.add_argument("-v", "--verbose", dest="verbose", action="store_true",
                         help="List details of each test case, not just the "
-                             "path")
+                             "path.  When applied to suites, verbose lists "
+                             "the tests contained in each suite.")
     args = parser.parse_args(sys.argv[2:])
     if args.machines:
         list_machines()
