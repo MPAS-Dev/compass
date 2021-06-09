@@ -33,15 +33,20 @@ class SmokeTest(TestCase):
         name = 'smoke_test'
         self.mesh_type = mesh_type
         self.velo_solver = velo_solver
-        subdir = '{}/{}/{}'.format(velo_solver, mesh_type, name)
+        subdir = '{}/{}_{}'.format(mesh_type, velo_solver.lower(), name)
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
 
         self.add_step(
             SetupMesh(test_case=self, mesh_type=mesh_type))
-        self.add_step(
-            RunModel(test_case=self, cores=4, threads=1,
-                     velo_solver=velo_solver, mesh_type=mesh_type))
+
+        step = RunModel(test_case=self, cores=4, threads=1, name='restart_run',
+                        velo_solver=velo_solver, mesh_type=mesh_type)
+        if velo_solver == 'sia':
+            step.add_namelist_options(
+                {'config_run_duration': "'0200-00-00_00:00:00'"})
+        self.add_step(step)
+
         step = Visualize(test_case=self, mesh_type=mesh_type)
         self.add_step(step, run_by_default=False)
 

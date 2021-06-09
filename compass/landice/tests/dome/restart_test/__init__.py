@@ -35,7 +35,7 @@ class RestartTest(TestCase):
         name = 'restart_test'
         self.mesh_type = mesh_type
         self.velo_solver = velo_solver
-        subdir = '{}/{}/{}'.format(velo_solver, mesh_type, name)
+        subdir = '{}/{}_{}'.format(mesh_type, velo_solver.lower(), name)
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
 
