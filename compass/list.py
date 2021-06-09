@@ -100,12 +100,15 @@ def list_suites(cores=None, verbose=False):
             if suite.endswith('.txt'):
                 print('  -c {} -t {}'.format(core, os.path.splitext(suite)[0]))
                 if verbose:
-                   text = resources.read_text('compass.{}.suites'.format(core), suite)
-                   tests = list()
-                   for test in text.split('\n'):
-                      test = test.strip()
-                      if len(test) > 0 and test not in tests and not test.startswith('#'):
-                         print("\t* {}".format(test))
+                    text = resources.read_text(
+                        'compass.{}.suites'.format(core), suite)
+                    tests = list()
+                    for test in text.split('\n'):
+                        test = test.strip()
+                        if (len(test) > 0 and test not in tests
+                                and not test.startswith('#')):
+                            print("\t* {}".format(test))
+
 
 def main():
     parser = argparse.ArgumentParser(
