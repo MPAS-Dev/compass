@@ -79,11 +79,9 @@ class RunModel(Step):
             self.add_namelist_file(
                 'compass.landice.tests.dome', 'namelist.landice',
                 out_name='namelist.{}'.format(suffix))
-
-            replacements = {'config_velocity_solver': '{}'.format(velo_solver)}
-
-#            update(replacements=replacements, step_work_dir=self.path,
-#                                   out_name='namelist.{}'.format(suffix))
+            options = {'config_velocity_solver': "'{}'".format(velo_solver)}
+            self.add_namelist_options(options=options,
+                                   out_name='namelist.{}'.format(suffix))
 
             self.add_streams_file(
                 'compass.landice.tests.dome', 'streams.landice',
