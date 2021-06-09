@@ -91,6 +91,9 @@ class RunModel(Step):
                             target='../setup_mesh/landice_grid.nc')
         self.add_input_file(filename='graph.info',
                             target='../setup_mesh/graph.info')
+        if velo_solver == 'FO':
+            self.add_input_file(filename='albany_input.yaml',
+                package='compass.landice.tests.dome')
         self.add_model_as_input()
 
         self.add_output_file(filename='output.nc')
