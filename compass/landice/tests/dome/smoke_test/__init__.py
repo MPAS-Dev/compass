@@ -40,7 +40,7 @@ class SmokeTest(TestCase):
         self.add_step(
             SetupMesh(test_case=self, mesh_type=mesh_type))
 
-        step = RunModel(test_case=self, cores=4, threads=1, name='restart_run',
+        step = RunModel(test_case=self, cores=4, threads=1, name='run_step',
                         velo_solver=velo_solver, mesh_type=mesh_type)
         if velo_solver == 'sia':
             step.add_namelist_options(
