@@ -24,7 +24,7 @@ class SmokeTest(TestCase):
         test_group : compass.landice.tests.dome.Dome
             The test group that this test case belongs to
 
-        velo_solver : str
+        velo_solver : {'sia', 'FO'}
             The velocity solver to use for the test case
 
         mesh_type : str

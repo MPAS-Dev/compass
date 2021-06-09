@@ -31,7 +31,7 @@ class RunModel(Step):
         test_case : compass.TestCase
             The test case this step belongs to
 
-        velo_solver : str
+        velo_solver : {'sia', 'FO'}
             The velocity solver setting to use for this test case
 
         mesh_type : str
@@ -65,6 +65,8 @@ class RunModel(Step):
         """
         self.mesh_type = mesh_type
         self.velo_solver = velo_solver
+        assert self.velo_solver in {'sia','FO'}, \
+            "Value of velo_solver must be one of {'sia','FO'}"
         if suffixes is None:
             suffixes = ['landice']
         self.suffixes = suffixes
