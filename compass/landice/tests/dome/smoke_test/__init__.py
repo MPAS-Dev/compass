@@ -40,7 +40,8 @@ class SmokeTest(TestCase):
         self.add_step(
             SetupMesh(test_case=self, mesh_type=mesh_type))
         self.add_step(
-            RunModel(test_case=self, cores=4, threads=1, velo_solver=velo_solver, mesh_type=mesh_type))
+            RunModel(test_case=self, cores=4, threads=1,
+                     velo_solver=velo_solver, mesh_type=mesh_type))
         step = Visualize(test_case=self, mesh_type=mesh_type)
         self.add_step(step, run_by_default=False)
 

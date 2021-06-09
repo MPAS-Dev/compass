@@ -20,8 +20,9 @@ class RunModel(Step):
         twice, the second time with ``namelist.landice.rst`` and
         ``streams.landice.rst``
     """
-    def __init__(self, test_case, velo_solver, mesh_type, name='run_model', subdir=None,
-                 cores=1, min_cores=None, threads=1, suffixes=None):
+    def __init__(self, test_case, velo_solver, mesh_type, name='run_model',
+                 subdir=None, cores=1, min_cores=None, threads=1,
+                 suffixes=None):
         """
         Create a new test case
 
