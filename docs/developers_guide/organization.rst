@@ -1515,7 +1515,7 @@ respectively, to ensure that they are included when we build the package.
 
 You can make calls to :py:meth:`compass.Step.add_namelist_file()`,
 :py:meth:`compass.Step.add_namelist_options()`  and
-py:meth:`compass.Step.add_namelist_file()` as described below to indicate how
+:py:meth:`compass.Step.add_namelist_file()` as described below to indicate how
 name list and streams file should be built up by modifying the defaults for the
 MPAS model.  The namelists and streams files themselves are generated
 automatically as part of setting up the test case.
