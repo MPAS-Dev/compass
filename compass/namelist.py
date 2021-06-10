@@ -1,36 +1,6 @@
 from importlib import resources
 
 
-def update(replacements, step_work_dir, out_name):
-    """
-    Update an existing namelist file with additional ``replacements``.  This
-    would typically be used for namelist options that are only known at
-    runtime, not during setup.  For example, the number of PIO tasks and the
-    stride between tasks, which are related to the number of nodes and cores.
-
-    Parameters
-    ----------
-    replacements : dict
-        A dictionary of options and value to replace namelist options with new
-        values
-
-    step_work_dir : str
-        The path for the work directory for the step that this namelist is
-        being generated for
-
-    out_name : str
-        The name of the namelist file (without a path)
-    """
-
-    filename = '{}/{}'.format(step_work_dir, out_name)
-
-    namelist = ingest(filename)
-
-    namelist = replace(namelist, replacements)
-
-    write(namelist, filename)
-
-
 def parse_replacements(package, namelist):
     """
     Parse the replacement namelist options from the given file

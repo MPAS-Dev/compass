@@ -143,6 +143,8 @@ step
    Step.add_model_as_input
    Step.add_namelist_file
    Step.add_namelist_options
+   Step.update_namelist_at_runtime
+   Step.update_namelist_pio
    Step.add_streams_file
 
 config
@@ -179,7 +181,6 @@ model
 
    run_model
    partition
-   update_namelist_pio
    make_graph_file
 
 mpas_cores
@@ -191,16 +192,6 @@ mpas_cores
    :toctree: generated/
 
    get_mpas_cores
-
-namelist
-^^^^^^^^
-
-.. currentmodule:: compass.namelist
-
-.. autosummary::
-   :toctree: generated/
-
-   update
 
 parallel
 ^^^^^^^^
