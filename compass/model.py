@@ -1,10 +1,7 @@
 import os
-import numpy
 import xarray
 
 from mpas_tools.logging import check_call
-
-from compass.namelist import update
 
 
 def run_model(step, update_pio=True, partition_graph=True,
@@ -39,7 +36,6 @@ def run_model(step, update_pio=True, partition_graph=True,
     mpas_core = step.mpas_core.name
     cores = step.cores
     threads = step.threads
-    step_dir = step.work_dir
     config = step.config
     logger = step.logger
 
@@ -50,7 +46,7 @@ def run_model(step, update_pio=True, partition_graph=True,
         streams = 'streams.{}'.format(mpas_core)
 
     if update_pio:
-        update_namelist_pio(namelist, config, cores, step_dir)
+        step.update_namelist_pio(namelist)
 
     if partition_graph:
         partition(cores, config, logger, graph_file=graph_file)
@@ -95,44 +91,6 @@ def partition(cores, config, logger, graph_file='graph.info'):
         executable = config.get('parallel', 'partition_executable')
         args = [executable, graph_file, '{}'.format(cores)]
         check_call(args, logger)
-
-
-def update_namelist_pio(namelist, config, cores, step_dir):
-    """
-    Modify the namelist so the number of PIO tasks and the stride between them
-    is consistent with the number of nodes and cores (one PIO task per node).
-
-    Parameters
-    ----------
-    namelist : str
-        The name of the namelist file
-
-    config : configparser.ConfigParser
-        Configuration options for this test case
-
-    cores : int
-        The number of cores
-
-    step_dir : str
-        The work directory for this step of the test case
-    """
-
-    cores_per_node = config.getint('parallel', 'cores_per_node')
-
-    # update PIO tasks based on the machine settings and the available number
-    # or cores
-    pio_num_iotasks = int(numpy.ceil(cores/cores_per_node))
-    pio_stride = cores//pio_num_iotasks
-    if pio_stride > cores_per_node:
-        raise ValueError('Not enough nodes for the number of cores.  cores: '
-                         '{}, cores per node: {}'.format(cores,
-                                                         cores_per_node))
-
-    replacements = {'config_pio_num_iotasks': '{}'.format(pio_num_iotasks),
-                    'config_pio_stride': '{}'.format(pio_stride)}
-
-    update(replacements=replacements, step_work_dir=step_dir,
-           out_name=namelist)
 
 
 def make_graph_file(mesh_filename, graph_filename='graph.info',

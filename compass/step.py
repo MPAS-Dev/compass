@@ -3,6 +3,7 @@ from lxml import etree
 import configparser
 from importlib.resources import path
 import shutil
+import numpy
 
 from compass.io import download, symlink
 import compass.namelist
@@ -321,7 +322,7 @@ class Step:
         ----------
         options : dict
             A dictionary of options and value to replace namelist options with
-            new values.
+            new values
 
         out_name : str, optional
             The name of the namelist file to write out, ``namelist.<core>`` by
@@ -339,6 +340,70 @@ class Step:
         namelist_list = self.namelist_data[out_name]
 
         namelist_list.append(dict(options=options, mode=mode))
+
+    def update_namelist_at_runtime(self, options, out_name=None):
+        """
+        Update an existing namelist file with additional options.  This would
+        typically be used for namelist options that are only known at runtime,
+        not during setup.  For example, the number of PIO tasks and the stride
+        between tasks, which are related to the number of nodes and cores.
+
+        Parameters
+        ----------
+        options : dict
+            A dictionary of options and value to replace namelist options with
+            new values
+
+        out_name : str, optional
+            The name of the namelist file to write out, ``namelist.<core>`` by
+            default
+        """
+
+        if out_name is None:
+            out_name = 'namelist.{}'.format(self.mpas_core.name)
+
+        filename = '{}/{}'.format(self.work_dir, out_name)
+
+        namelist = compass.namelist.ingest(filename)
+
+        namelist = compass.namelist.replace(namelist, options)
+
+        compass.namelist.write(namelist, filename)
+
+    def update_namelist_pio(self, out_name=None):
+        """
+        Modify the namelist so the number of PIO tasks and the stride between
+        them consistent with the number of nodes and cores (one PIO task per
+        node).
+
+        Parameters
+        ----------
+        out_name : str, optional
+            The name of the namelist file to write out, ``namelist.<core>`` by
+            default
+        """
+        config = self.config
+        cores = self.cores
+
+        if out_name is None:
+            out_name = 'namelist.{}'.format(self.mpas_core.name)
+
+        cores_per_node = config.getint('parallel', 'cores_per_node')
+
+        # update PIO tasks based on the machine settings and the available
+        # number or cores
+        pio_num_iotasks = int(numpy.ceil(cores / cores_per_node))
+        pio_stride = cores // pio_num_iotasks
+        if pio_stride > cores_per_node:
+            raise ValueError('Not enough nodes for the number of cores.  '
+                             'cores: {}, cores per node: {}'.format(
+                                 cores, cores_per_node))
+
+        replacements = {'config_pio_num_iotasks': '{}'.format(pio_num_iotasks),
+                        'config_pio_stride': '{}'.format(pio_stride)}
+
+        self.update_namelist_at_runtime(options=replacements,
+                                        out_name=out_name)
 
     def add_streams_file(self, package, streams, template_replacements=None,
                          out_name=None, mode='forward'):
