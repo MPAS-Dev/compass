@@ -139,12 +139,14 @@ def run_suite(suite_name):
 
         logger.info('Test Runtimes:')
         for test_name, test_time in test_times.items():
-            mins = int(numpy.floor(test_time / 60.0))
-            secs = int(numpy.ceil(test_time - mins * 60))
+            secs = round(test_time)
+            mins = secs // 60
+            secs -= 60 * mins
             logger.info('{:02d}:{:02d} {} {}'.format(
                 mins, secs, success[test_name], test_name))
-        mins = int(numpy.floor(suite_time / 60.0))
-        secs = int(numpy.ceil(suite_time - mins * 60))
+        secs = round(suite_time)
+        mins = secs // 60
+        secs -= 60 * mins
         logger.info('Total runtime {:02d}:{:02d}'.format(mins, secs))
 
         if failures == 0:
