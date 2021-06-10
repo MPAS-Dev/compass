@@ -141,6 +141,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#adding-mpas-model-as-an-input">Adding MPAS model as an input</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#test-suites">Test Suites</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="landice/index.html">Landice core</a></li>
@@ -1727,6 +1728,16 @@ the step will immediately fail because of the missing input.  The path to the
 executable is automatically detected based on the work directory for the step
 and the config options.</p>
 </div>
+</div>
+<div class="section" id="test-suites">
+<span id="dev-suites"></span><h2>Test Suites<a class="headerlink" href="#test-suites" title="Permalink to this headline">¶</a></h2>
+<p>As described in the <span class="xref std std-ref">user_testsuites</span> section of the User’s Guide, COMPASS
+test cases can be organized into test suites.  Each core has separate regression
+suites, and a core can have multiple independent regression suites.  A developer
+defines a test suite by creating a <cite>.txt</cite> file within the <cite>compass/CORE/suites</cite>
+directory.  The format of the <cite>.txt</cite> file is a list of the work directories to
+the tests desired to be part of the suite.  A line starting with <cite>#</cite> will be
+treated as a comment line.</p>
 </div>
 </div>
 
