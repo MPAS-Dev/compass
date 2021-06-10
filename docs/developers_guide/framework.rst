@@ -437,7 +437,18 @@ with non-zero differences between variables, you can supply keyword arguments
 values for these norms, above which the comparison will fail, raising a
 ``ValueError``.  These norms only affect the comparison between ``filename1``
 and ``filename2``, not with the baseline (which always uses 0.0 for these
-norms).
+norms).  If you do want certain norms checked, you can pass their value as
+``None``.
+
+If you want different nonzero norm values for different variables,
+the easiest solution is to call :py:func:`compass.validate.compare_variables()`
+separately for each variable and  with different norm values specified.
+:py:func:`compass.validate.compare_variables()` can safely be called multiple
+times without clobbering a previous result.  When you specify a nonzero norm,
+you may want compass to print the norm values it is using for comparison
+when the results are printed.  To do so, use the optional ``quiet=False``
+argument.
+
 
 Validating timers
 ^^^^^^^^^^^^^^^^^
