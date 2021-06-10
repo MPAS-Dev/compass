@@ -102,6 +102,8 @@
 <li class="toctree-l2"><a class="reference internal" href="framework/index.html">Framework</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Test suites</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#sia-integration-test-suite">sia_integration test suite</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fo-integration-test-suite">fo_integration test suite</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#full-integration-test-suite">full_integration test suite</a></li>
 </ul>
 </li>
 </ul>
@@ -202,7 +204,7 @@
             
   <div class="section" id="test-suites">
 <span id="landice-suites"></span><h1>Test suites<a class="headerlink" href="#test-suites" title="Permalink to this headline">¶</a></h1>
-<p>The <code class="docutils literal notranslate"><span class="pre">landice</span></code> core currently includes 1 <a class="reference internal" href="../test_suites.html#test-suites"><span class="std std-ref">Test Suites</span></a> that can be used
+<p>The <code class="docutils literal notranslate"><span class="pre">landice</span></code> core currently includes 3 <a class="reference internal" href="../test_suites.html#test-suites"><span class="std std-ref">Test Suites</span></a> that can be used
 to run a series of land-ice test cases and optionally compare them against a
 baseline run of the same tests.</p>
 <div class="section" id="sia-integration-test-suite">
@@ -211,21 +213,25 @@ baseline run of the same tests.</p>
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">sia_integration</span></code> test suite includes the following test cases:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>landice/dome/2000m/smoke_test
-landice/dome/2000m/restart_test
-landice/dome/2000m/decomposition_test
-landice/dome/variable_resolution/smoke_test
-landice/dome/variable_resolution/restart_test
-landice/dome/variable_resolution/decomposition_test
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>landice/dome/2000m/sia_restart_test
+landice/dome/2000m/sia_decomposition_test
+landice/dome/variable_resolution/sia_restart_test
+landice/dome/variable_resolution/sia_decomposition_test
 landice/enthalpy_benchmark/A
-landice/enthalpy_benchmark/B
+landice/eismint2/decomposition_test
+landice/eismint2/enthalpy_decomposition_test
+landice/eismint2/restart_test
+landice/eismint2/enthalpy_restart_test
+landice/greenland/restart_test
+landice/greenland/decomposition_test
+landice/hydro_radial/restart_test
+landice/hydro_radial/decomposition_test
 </pre></div>
 </div>
 <p>These are all meant to be short tests that are appropriate for regression
 testing with the part of the MALI code that uses the shallow ice approximation
-(SIA) and therefore does not require the Albany library.  These tests cover
-only some of MALI’s SIA features, and the remainder of the test suite will be
-ported soon. These tests should expose problems with the tools for creating
+(SIA) and therefore does not require the Albany library.
+These tests should expose problems with the tools for creating
 meshes and initial conditions as well as unexpected changes in any operations,
 such as advection and diffusion, that affect the 2 main prognostic variables,
 ice thickness and velocity, as well as other fields related to ice
@@ -234,6 +240,26 @@ thermodynamics.</p>
 for a long run or a shorter continuation run from a restart file
 (<code class="docutils literal notranslate"><span class="pre">restart_test</span></code>). Others ensure that the code produces the same result when
 it is run on different numbers of cores (<code class="docutils literal notranslate"><span class="pre">decomposition_test</span></code>).</p>
+</div>
+<div class="section" id="fo-integration-test-suite">
+<h2>fo_integration test suite<a class="headerlink" href="#fo-integration-test-suite" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass suite -c landice -t fo_integration ...
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">fo_integration</span></code> test suite includes the following test cases:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>landice/dome/2000m/fo_decomposition_test
+landice/dome/2000m/fo_restart_test
+landice/dome/variable_resolution/fo_restart_test
+landice/dome/variable_resolution/fo_decomposition_test
+</pre></div>
+</div>
+<p>All of these tests use the FO velocity solver and require that MALI be compiled
+with the Albany library.</p>
+</div>
+<div class="section" id="full-integration-test-suite">
+<h2>full_integration test suite<a class="headerlink" href="#full-integration-test-suite" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">full_integration</span></code> test suite is a combination of the <code class="docutils literal notranslate"><span class="pre">sia_integration</span></code>
+and <code class="docutils literal notranslate"><span class="pre">fo_integration</span></code> test suites.</p>
 </div>
 </div>
 

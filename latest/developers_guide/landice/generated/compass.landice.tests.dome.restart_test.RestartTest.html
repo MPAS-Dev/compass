@@ -210,7 +210,7 @@
 <h1>compass.landice.tests.dome.restart_test.RestartTest<a class="headerlink" href="#compass-landice-tests-dome-restart-test-restarttest" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="compass.landice.tests.dome.restart_test.RestartTest">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">compass.landice.tests.dome.restart_test.</span></span><span class="sig-name descname"><span class="pre">RestartTest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/landice/tests/dome/restart_test.html#RestartTest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.landice.tests.dome.restart_test.RestartTest" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">compass.landice.tests.dome.restart_test.</span></span><span class="sig-name descname"><span class="pre">RestartTest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">velo_solver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/landice/tests/dome/restart_test.html#RestartTest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.landice.tests.dome.restart_test.RestartTest" title="Permalink to this definition">¶</a></dt>
 <dd><p>A test case for performing two MALI runs of a dome setup, one full run and
 one run broken into two segments with a restart.  The test case verifies
 that the results of the two runs are identical.</p>
@@ -221,12 +221,13 @@ that the results of the two runs are identical.</p>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="compass.landice.tests.dome.restart_test.RestartTest.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/landice/tests/dome/restart_test.html#RestartTest.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.landice.tests.dome.restart_test.RestartTest.__init__" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">velo_solver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/landice/tests/dome/restart_test.html#RestartTest.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.landice.tests.dome.restart_test.RestartTest.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the test case</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>test_group</strong> (<a class="reference internal" href="compass.landice.tests.dome.Dome.html#compass.landice.tests.dome.Dome" title="compass.landice.tests.dome.Dome"><em>compass.landice.tests.dome.Dome</em></a>) – The test group that this test case belongs to</p></li>
+<li><p><strong>velo_solver</strong> (<em>{'sia'</em><em>, </em><em>'FO'}</em>) – The velocity solver to use for the test case</p></li>
 <li><p><strong>mesh_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The resolution or tye of mesh of the test case</p></li>
 </ul>
 </dd>
@@ -240,7 +241,7 @@ that the results of the two runs are identical.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#compass.landice.tests.dome.restart_test.RestartTest.__init__" title="compass.landice.tests.dome.restart_test.RestartTest.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(test_group, mesh_type)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#compass.landice.tests.dome.restart_test.RestartTest.__init__" title="compass.landice.tests.dome.restart_test.RestartTest.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(test_group, velo_solver, mesh_type)</p></td>
 <td><p>Create the test case</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_step</span></code>(step[, run_by_default])</p></td>
