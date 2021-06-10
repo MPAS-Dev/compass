@@ -36,12 +36,12 @@ automatically flags PEP8 violations during code development, such as
 reformatting your code (e.g. with `autopep8 <https://github.com/hhatto/autopep8>`_)
 because this can often produce undesirable and confusing results.
 
-The `flake8 <https://flake8.pycqa.org/en/latest/>` utility for linting python
+The `flake8 <https://flake8.pycqa.org/en/latest/>`_ utility for linting python
 files to the PEP8 standard is included in the COMPASS conda environment. To use
 flake8, just run ``flake8`` from any directory and it will return lint results
 for all files recursively through all subdirectories.  You can also run it for a
 single file or using wildcards (e.g., ``flake8 *.py``).  There also is a
-`vim plugin <https://github.com/nvie/vim-flake8>` that runs the flake8 linter 
+`vim plugin <https://github.com/nvie/vim-flake8>`_ that runs the flake8 linter 
 from within vim.  If you are not using an IDE that lints automatically, it is
 recommended you run flake8 from the command line or the vim plugin before
 committing your code changes.
@@ -290,4 +290,3 @@ The main way code is currently reused with a test case is when the same module
 for a step gets used multiple times within a test case.  For example,
 the :ref:`dev_ocean_baroclinic_channel_rpe_test` test case uses the same
 forward run with 5 different values of the viscosity.
-
