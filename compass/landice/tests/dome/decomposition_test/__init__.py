@@ -46,7 +46,8 @@ class DecompositionTest(TestCase):
             name = '{}proc_run'.format(procs)
             self.add_step(
                 RunModel(test_case=self, name=name, subdir=name, cores=procs,
-                    threads=1, velo_solver=velo_solver, mesh_type=mesh_type))
+                         threads=1, velo_solver=velo_solver,
+                         mesh_type=mesh_type))
 
             input_dir = name
             name = 'visualize_{}'.format(name)
@@ -66,7 +67,7 @@ class DecompositionTest(TestCase):
         steps = self.steps_to_run
         if '1proc_run' in steps and '4proc_run' in steps:
             # validate thickness
-            variable = ['thickness',]
+            variable = ['thickness', ]
             if (self.velo_solver == 'FO' and
                     self.mesh_type == 'variable_resolution'):
                 l1_norm = 1.0e-11
@@ -87,7 +88,7 @@ class DecompositionTest(TestCase):
                               linf_norm=linf_norm)
 
             # validate normalVelocity
-            variable = ['normalVelocity',]
+            variable = ['normalVelocity', ]
             if (self.velo_solver == 'FO' and
                     self.mesh_type == 'variable_resolution'):
                 l1_norm = 1.0e-17

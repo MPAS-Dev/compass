@@ -44,7 +44,8 @@ class RestartTest(TestCase):
 
         name = 'full_run'
         step = RunModel(test_case=self, name=name, subdir=name, cores=4,
-            threads=1, velo_solver=velo_solver, mesh_type=mesh_type)
+                        threads=1, velo_solver=velo_solver,
+                        mesh_type=mesh_type)
         # modify the namelist options and streams file
         step.add_namelist_file(
             'compass.landice.tests.dome.restart_test',

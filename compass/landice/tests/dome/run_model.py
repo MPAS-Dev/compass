@@ -1,6 +1,5 @@
 from compass.model import run_model
 from compass.step import Step
-from compass.namelist import update
 
 
 class RunModel(Step):
@@ -65,8 +64,8 @@ class RunModel(Step):
         """
         self.mesh_type = mesh_type
         self.velo_solver = velo_solver
-        assert self.velo_solver in {'sia','FO'}, \
-            "Value of velo_solver must be one of {'sia','FO'}"
+        assert self.velo_solver in {'sia', 'FO'}, \
+            "Value of velo_solver must be one of {'sia', 'FO'}"
         if suffixes is None:
             suffixes = ['landice']
         self.suffixes = suffixes
@@ -81,7 +80,7 @@ class RunModel(Step):
                 out_name='namelist.{}'.format(suffix))
             options = {'config_velocity_solver': "'{}'".format(velo_solver)}
             self.add_namelist_options(options=options,
-                                   out_name='namelist.{}'.format(suffix))
+                                      out_name='namelist.{}'.format(suffix))
 
             self.add_streams_file(
                 'compass.landice.tests.dome', 'streams.landice',
@@ -93,7 +92,8 @@ class RunModel(Step):
                             target='../setup_mesh/graph.info')
         if velo_solver == 'FO':
             self.add_input_file(filename='albany_input.yaml',
-                package='compass.landice.tests.dome')
+                                package='compass.landice.tests.dome')
+
         self.add_model_as_input()
 
         self.add_output_file(filename='output.nc')
