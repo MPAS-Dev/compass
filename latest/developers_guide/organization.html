@@ -125,8 +125,9 @@
 <li class="toctree-l3"><a class="reference internal" href="#inputs-and-outputs">inputs and outputs</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#input-files">Input files</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#symlinks-to-input-files">Symlinks to input files</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#input-files-from-compass">Input files from compass</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#downloading-input-files">Downloading input files</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#symlink-to-input-files-from-compass">Symlink to input files from compass</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#downloading-and-symlinking-input-files">Downloading and symlinking input files</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#copying-input-files">Copying input files</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#output-files">Output files</a></li>
 </ul>
 </li>
@@ -1441,8 +1442,8 @@ Here is an example taken from
 </pre></div>
 </div>
 </div>
-<div class="section" id="input-files-from-compass">
-<span id="dev-step-input-compass"></span><h4>Input files from compass<a class="headerlink" href="#input-files-from-compass" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="symlink-to-input-files-from-compass">
+<span id="dev-step-input-compass"></span><h4>Symlink to input files from compass<a class="headerlink" href="#symlink-to-input-files-from-compass" title="Permalink to this headline">¶</a></h4>
 <p>Another common need is to symlink a data file from within the test group or
 test case:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">add_input_file</span>
@@ -1458,8 +1459,8 @@ test case:</p>
 <p>Here, we supply the name of the package that the file is in.  The <code class="docutils literal notranslate"><span class="pre">compass</span></code>
 framework will take care of figuring out where the package is located.</p>
 </div>
-<div class="section" id="downloading-input-files">
-<span id="dev-step-input-download"></span><h4>Downloading input files<a class="headerlink" href="#downloading-input-files" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="downloading-and-symlinking-input-files">
+<span id="dev-step-input-download"></span><h4>Downloading and symlinking input files<a class="headerlink" href="#downloading-and-symlinking-input-files" title="Permalink to this headline">¶</a></h4>
 <p>Another type of input file is one that is downloaded and stored locally.
 Typically, to save ourselves the time of downloading large files and to reduce
 potential problems on systems with firewalls, we cache the downloaded files in
@@ -1493,6 +1494,22 @@ the step’s working directory:</p>
 </pre></div>
 </div>
 <p>We recommend against this practice except for very small files.</p>
+</div>
+<div class="section" id="copying-input-files">
+<span id="dev-step-input-copy"></span><h4>Copying input files<a class="headerlink" href="#copying-input-files" title="Permalink to this headline">¶</a></h4>
+<p>In nearly all the cases discussed above, a symlink is created to the input
+file, usually either from the <code class="docutils literal notranslate"><span class="pre">compass</span></code> package or from one of the databases.
+If you wish to copy the file instead of symlinking it (e.g. so a user can make
+local modifications), simply add the keyword argument <code class="docutils literal notranslate"><span class="pre">copy=True</span></code> to any call
+to <code class="docutils literal notranslate"><span class="pre">self.add_input_file()</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
+    <span class="o">...</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;landice_grid.nc&#39;</span><span class="p">,</span>
+                        <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../setup_mesh/landice_grid.nc&#39;</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In this case, a copy of <code class="docutils literal notranslate"><span class="pre">landice_grid.nc</span></code> will be made in the step’s work
+directory.</p>
 </div>
 <div class="section" id="output-files">
 <span id="dev-step-output"></span><h4>Output files<a class="headerlink" href="#output-files" title="Permalink to this headline">¶</a></h4>

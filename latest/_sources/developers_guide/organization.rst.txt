@@ -1334,6 +1334,7 @@ usually not directly in the step's work directory.
 
 Symlinks to input files
 ~~~~~~~~~~~~~~~~~~~~~~~
+
 The most common type of input file is the output from another step. Rather than
 just giving the file name directly, as in the example above, the preference is
 to place a symbolic link in the work directory.  This makes it much easier to
@@ -1394,8 +1395,8 @@ Here is an example taken from
 
 .. _dev_step_input_compass:
 
-Input files from compass
-~~~~~~~~~~~~~~~~~~~~~~~~
+Symlink to input files from compass
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Another common need is to symlink a data file from within the test group or
 test case:
@@ -1416,8 +1417,8 @@ framework will take care of figuring out where the package is located.
 
 .. _dev_step_input_download:
 
-Downloading input files
-~~~~~~~~~~~~~~~~~~~~~~~
+Downloading and symlinking input files
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Another type of input file is one that is downloaded and stored locally.
 Typically, to save ourselves the time of downloading large files and to reduce
@@ -1458,6 +1459,27 @@ the step's working directory:
             'mpas-albany-landice/dome_varres_grid.nc')
 
 We recommend against this practice except for very small files.
+
+.. _dev_step_input_copy:
+
+Copying input files
+~~~~~~~~~~~~~~~~~~~
+
+In nearly all the cases discussed above, a symlink is created to the input
+file, usually either from the ``compass`` package or from one of the databases.
+If you wish to copy the file instead of symlinking it (e.g. so a user can make
+local modifications), simply add the keyword argument ``copy=True`` to any call
+to ``self.add_input_file()``:
+
+.. code-block:: python
+
+    def __init__(self, test_case):
+        ...
+        self.add_input_file(filename='landice_grid.nc',
+                            target='../setup_mesh/landice_grid.nc', copy=True)
+
+In this case, a copy of ``landice_grid.nc`` will be made in the step's work
+directory.
 
 .. _dev_step_output:
 

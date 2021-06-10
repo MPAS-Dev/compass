@@ -163,7 +163,7 @@ directly if need be.
 Symlinks
 ^^^^^^^^
 
-You can also create your own symlinks that aren't input files (e.g. for a
+You can create your own symlinks that aren't input files (e.g. for a
 README file that the user might want to have available) using
 :py:func:`compass.io.symlink()`:
 
