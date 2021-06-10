@@ -583,7 +583,16 @@ with non-zero differences between variables, you can supply keyword arguments
 values for these norms, above which the comparison will fail, raising a
 <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>.  These norms only affect the comparison between <code class="docutils literal notranslate"><span class="pre">filename1</span></code>
 and <code class="docutils literal notranslate"><span class="pre">filename2</span></code>, not with the baseline (which always uses 0.0 for these
-norms).</p>
+norms).  If you do want certain norms checked, you can pass their value as
+<code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<p>If you want different nonzero norm values for different variables,
+the easiest solution is to call <a class="reference internal" href="generated/compass.validate.compare_variables.html#compass.validate.compare_variables" title="compass.validate.compare_variables"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.validate.compare_variables()</span></code></a>
+separately for each variable and  with different norm values specified.
+<a class="reference internal" href="generated/compass.validate.compare_variables.html#compass.validate.compare_variables" title="compass.validate.compare_variables"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.validate.compare_variables()</span></code></a> can safely be called multiple
+times without clobbering a previous result.  When you specify a nonzero norm,
+you may want compass to print the norm values it is using for comparison
+when the results are printed.  To do so, use the optional <code class="docutils literal notranslate"><span class="pre">quiet=False</span></code>
+argument.</p>
 </div>
 <div class="section" id="validating-timers">
 <h3>Validating timers<a class="headerlink" href="#validating-timers" title="Permalink to this headline">¶</a></h3>

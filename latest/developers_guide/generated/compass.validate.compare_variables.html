@@ -239,12 +239,15 @@ between files within the current test case.  If a baseline directory
 was provided, the <code class="docutils literal notranslate"><span class="pre">variables</span></code> from this file will also be compared
 with those in the corresponding baseline file.</p></li>
 <li><p><strong>l1_norm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a><em>, </em><em>optional</em>) – The maximum allowed L1 norm difference between the variables in
-<code class="docutils literal notranslate"><span class="pre">filename1</span></code> and <code class="docutils literal notranslate"><span class="pre">filename2</span></code>.</p></li>
+<code class="docutils literal notranslate"><span class="pre">filename1</span></code> and <code class="docutils literal notranslate"><span class="pre">filename2</span></code>.  To skip L1 norm check, pass None.</p></li>
 <li><p><strong>l2_norm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a><em>, </em><em>optional</em>) – The maximum allowed L2 norm difference between the variables in
-<code class="docutils literal notranslate"><span class="pre">filename1</span></code> and <code class="docutils literal notranslate"><span class="pre">filename2</span></code>.</p></li>
+<code class="docutils literal notranslate"><span class="pre">filename1</span></code> and <code class="docutils literal notranslate"><span class="pre">filename2</span></code>.  To skip L2 norm check, pass None.</p></li>
 <li><p><strong>linf_norm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a><em>, </em><em>optional</em>) – The maximum allowed L-Infinity norm difference between the variables in
-<code class="docutils literal notranslate"><span class="pre">filename1</span></code> and <code class="docutils literal notranslate"><span class="pre">filename2</span></code>.</p></li>
-<li><p><strong>quiet</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to print</p></li>
+<code class="docutils literal notranslate"><span class="pre">filename1</span></code> and <code class="docutils literal notranslate"><span class="pre">filename2</span></code>.  To skip Linf norm check, pass None.</p></li>
+<li><p><strong>quiet</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to print detailed information.  If quiet is False, the norm
+tolerance values being compared against will be printed when the
+comparison is made.  This is generally desirable when using nonzero
+norm tolerance values.</p></li>
 </ul>
 </dd>
 </dl>
