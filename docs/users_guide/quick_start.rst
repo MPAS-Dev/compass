@@ -265,4 +265,6 @@ and
     compass run [nightly]
 
 In this case, you can specify the name of the suite to run.  This is required
-if there are multiple suites in the same ``$WORKDIR``.
+if there are multiple suites in the same ``$WORKDIR``.  You can optionally
+specify a suite like ``compass run [suitename].pickle``, which is convenient
+for tab completion on the command line.
