@@ -220,8 +220,9 @@ Whereas other ``compass`` commands are typically run in the local clone of the
 compass repo, ``compass run`` needs to be run in the appropriate work
 directory. If you are running a test suite, you may need to provide the name
 of the test suite if more than one suite has been set up in the same work
-directory.  If you are in the work directory for a test case or step, you do
-not need to provide any arguments.
+directory (with or without the ``.pickle`` suffix that exists on the suite's
+file in the working directory).  If you are in the work directory for a test
+case or step, you do not need to provide any arguments.
 
 If you want to explicitly select which steps in a test case you want to run,
 you have two options.  You can either edit the ``steps_to_run`` config options
