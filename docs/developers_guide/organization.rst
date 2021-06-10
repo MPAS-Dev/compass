@@ -1604,12 +1604,34 @@ an option passed in when creating this step.
   Namelist values must be of type ``str``, so use ``'{}'.format(value)`` to
   convert a numerical value to a string.
 
+
+.. _dev_step_update_namelist_options:
+
+Updating namelist options at runtime
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+It is sometimes useful to update namelist options after a namelist has already
+been generated as part of setting up.  This typically happens within a step's
+``run()`` method for options that cannot be known beforehand, particularly
+options related to the number of cores and threads.  In such cases, call
+:py:meth:`compass.Step.update_namelist_at_runtime()`:
+
+.. code-block:: python
+
+    ...
+
+    replacements = {'config_pio_num_iotasks': '{}'.format(pio_num_iotasks),
+                    'config_pio_stride': '{}'.format(pio_stride)}
+
+    self.update_namelist_at_runtime(options=replacements, out_name=namelist)
+
+
 .. _dev_step_add_streams_file:
 
 Adding a streams file
 ~~~~~~~~~~~~~~~~~~~~~
 
-Streams files are a bit more complicated than :ref:`dev_namelist` files because
+Streams files are a bit more complicated than namelist files because
 streams files are XML documents, requiring some slightly more sophisticated
 parsing.
 

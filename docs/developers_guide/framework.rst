@@ -303,33 +303,6 @@ an MPAS mesh file.  Optionally, you can provide the name of an MPAS field on
 cells in the mesh file that gives different weight to different cells
 (``weight_field``) in the partitioning process.
 
-.. _dev_namelist:
-
-Namelist
---------
-
-Updating a namelist file
-^^^^^^^^^^^^^^^^^^^^^^^^
-
-It is sometimes useful to update namelist options after a namelist has already
-been generated as part of setting up the step it belongs to (see
-:ref:`dev_step_namelists_and_streams`).  This typically happens within a step's
-``run()`` method for options that cannot be known beforehand, particularly
-options related to the number of cores and threads.  In such cases, call
-:py:func:`compass.namelist.update()`:
-
-.. code-block:: python
-
-    from compass.namelist import update
-
-    ...
-
-    replacements = {'config_pio_num_iotasks': '{}'.format(pio_num_iotasks),
-                    'config_pio_stride': '{}'.format(pio_stride)}
-
-    update(replacements=replacements, step_work_dir=step_dir,
-           out_name=namelist)
-
 .. _dev_validation:
 
 Validation
