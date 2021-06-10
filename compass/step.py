@@ -2,6 +2,7 @@ import os
 from lxml import etree
 import configparser
 from importlib.resources import path
+import shutil
 
 from compass.io import download, symlink
 import compass.namelist
@@ -201,7 +202,8 @@ class Step:
         pass
 
     def add_input_file(self, filename=None, target=None, database=None,
-                       url=None, work_dir_target=None, package=None):
+                       url=None, work_dir_target=None, package=None,
+                       copy=False):
         """
         Add an input file to the step (but not necessarily to the MPAS model).
         The file can be local, a symlink to a file that will be created in
@@ -242,6 +244,9 @@ class Step:
 
         package : str or package, optional
             A package within ``compass`` from which the file should be linked
+
+        copy : bool, optional
+            Whether to make a copy of the file, rather than a symlink
         """
         if filename is None:
             if target is None:
@@ -252,7 +257,7 @@ class Step:
         self.input_data.append(dict(filename=filename, target=target,
                                     database=database, url=url,
                                     work_dir_target=work_dir_target,
-                                    package=package))
+                                    package=package, copy=copy))
 
     def add_output_file(self, filename):
         """
@@ -392,6 +397,7 @@ class Step:
             url = entry['url']
             work_dir_target = entry['work_dir_target']
             package = entry['package']
+            copy = entry['copy']
 
             if filename == '<<<model>>>':
                 model = self.config.get('executables', 'model')
@@ -438,7 +444,11 @@ class Step:
                     target = download_target
 
             if target is not None:
-                symlink(target, os.path.join(step_dir, filename))
+                filepath = os.path.join(step_dir, filename)
+                if copy:
+                    shutil.copy(target, filepath)
+                else:
+                    symlink(target, filepath)
                 inputs.append(target)
             else:
                 inputs.append(filename)
