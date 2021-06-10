@@ -195,7 +195,7 @@
 
 <span class="kn">from</span> <span class="nn">mpas_tools.cime.constants</span> <span class="kn">import</span> <span class="n">constants</span>
 <span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">symlink</span>
-<span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">update_namelist_pio</span><span class="p">,</span> <span class="n">partition</span><span class="p">,</span> <span class="n">run_model</span>
+<span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">partition</span><span class="p">,</span> <span class="n">run_model</span>
 
 
 <div class="viewcode-block" id="compute_land_ice_pressure_and_draft"><a class="viewcode-back" href="../../../developers_guide/ocean/generated/compass.ocean.iceshelf.compute_land_ice_pressure_and_draft.html#compass.ocean.iceshelf.compute_land_ice_pressure_and_draft">[docs]</a><span class="k">def</span> <span class="nf">compute_land_ice_pressure_and_draft</span><span class="p">(</span><span class="n">ssh</span><span class="p">,</span> <span class="n">modify_mask</span><span class="p">,</span> <span class="n">ref_density</span><span class="p">):</span>
@@ -246,14 +246,13 @@
 <span class="sd">        the step for performing SSH or land-ice pressure adjustment</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">cores</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">cores</span>
-    <span class="n">step_dir</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">work_dir</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">config</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">logger</span>
 
     <span class="k">if</span> <span class="n">variable</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">,</span> <span class="s1">&#39;landIcePressure&#39;</span><span class="p">]:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown variable to modify: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">variable</span><span class="p">))</span>
 
-    <span class="n">update_namelist_pio</span><span class="p">(</span><span class="s1">&#39;namelist.ocean&#39;</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">cores</span><span class="p">,</span> <span class="n">step_dir</span><span class="p">)</span>
+    <span class="n">step</span><span class="o">.</span><span class="n">update_namelist_pio</span><span class="p">(</span><span class="s1">&#39;namelist.ocean&#39;</span><span class="p">)</span>
     <span class="n">partition</span><span class="p">(</span><span class="n">cores</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">iterIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">iteration_count</span><span class="p">):</span>
@@ -282,7 +281,8 @@
             <span class="n">nVertLevels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">])</span>
             <span class="n">initSSH</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
             <span class="n">bottomDepth</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;bottomDepth&#39;</span><span class="p">][:]</span>
-            <span class="n">modifyLandIcePressureMask</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;modifyLandIcePressureMask&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="n">modifyLandIcePressureMask</span> <span class="o">=</span> \
+                <span class="n">ds</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;modifyLandIcePressureMask&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
             <span class="n">landIcePressure</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;landIcePressure&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
             <span class="n">lonCell</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;lonCell&#39;</span><span class="p">][:]</span>
             <span class="n">latCell</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;latCell&#39;</span><span class="p">][:]</span>

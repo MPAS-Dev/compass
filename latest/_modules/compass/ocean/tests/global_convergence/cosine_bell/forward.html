@@ -197,7 +197,6 @@
 
 <span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">run_model</span>
 <span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
-<span class="kn">from</span> <span class="nn">compass.namelist</span> <span class="kn">import</span> <span class="n">update</span>
 
 
 <div class="viewcode-block" id="Forward"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_convergence.cosine_bell.forward.Forward.html#compass.ocean.tests.global_convergence.cosine_bell.forward.Forward">[docs]</a><span class="k">class</span> <span class="nc">Forward</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
@@ -259,8 +258,8 @@
 
         <span class="c1"># update dt in case the user has changed dt_per_km</span>
         <span class="n">dt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_dt</span><span class="p">()</span>
-        <span class="n">update</span><span class="p">(</span><span class="n">replacements</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;config_dt&#39;</span><span class="p">:</span> <span class="n">dt</span><span class="p">},</span> <span class="n">step_work_dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span>
-               <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.ocean&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_namelist_at_runtime</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;config_dt&#39;</span><span class="p">:</span> <span class="n">dt</span><span class="p">},</span>
+                                        <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;namelist.ocean&#39;</span><span class="p">)</span>
 
         <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 

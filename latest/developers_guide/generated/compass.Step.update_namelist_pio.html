@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>compass.namelist.update &mdash; compass latest documentation</title>
+  <title>compass.Step.update_namelist_pio &mdash; compass latest documentation</title>
   
 
   
@@ -41,8 +41,8 @@
     
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="compass.parallel.get_available_cores_and_nodes" href="compass.parallel.get_available_cores_and_nodes.html" />
-    <link rel="prev" title="compass.mpas_cores.get_mpas_cores" href="compass.mpas_cores.get_mpas_cores.html" /> 
+    <link rel="next" title="compass.Step.add_streams_file" href="compass.Step.add_streams_file.html" />
+    <link rel="prev" title="compass.Step.update_namelist_at_runtime" href="compass.Step.update_namelist_at_runtime.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -119,15 +119,24 @@
 <li class="toctree-l3"><a class="reference internal" href="../api.html#command-line-interface">Command-line interface</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#base-classes">Base Classes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#testcase">testcase</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api.html#step">step</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../api.html#step">step</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="compass.Step.html">compass.Step</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compass.Step.setup.html">compass.Step.setup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compass.Step.run.html">compass.Step.run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compass.Step.add_input_file.html">compass.Step.add_input_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compass.Step.add_output_file.html">compass.Step.add_output_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compass.Step.add_model_as_input.html">compass.Step.add_model_as_input</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compass.Step.add_namelist_file.html">compass.Step.add_namelist_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compass.Step.add_namelist_options.html">compass.Step.add_namelist_options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compass.Step.update_namelist_at_runtime.html">compass.Step.update_namelist_at_runtime</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">compass.Step.update_namelist_pio</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compass.Step.add_streams_file.html">compass.Step.add_streams_file</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#config">config</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#io">io</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#model">model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#id1">mpas_cores</a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="../api.html#namelist">namelist</a><ul class="current">
-<li class="toctree-l4 current"><a class="current reference internal" href="#">compass.namelist.update</a></li>
-</ul>
-</li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#parallel">parallel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#provenance">provenance</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#validate">validate</a></li>
@@ -194,13 +203,13 @@
         
           <li><a href="../api.html">API reference</a> &raquo;</li>
         
-      <li>compass.namelist.update</li>
+      <li>compass.Step.update_namelist_pio</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../../_sources/developers_guide/generated/compass.namelist.update.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/developers_guide/generated/compass.Step.update_namelist_pio.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -213,24 +222,18 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="compass-namelist-update">
-<h1>compass.namelist.update<a class="headerlink" href="#compass-namelist-update" title="Permalink to this headline">¶</a></h1>
-<dl class="py function">
-<dt class="sig sig-object py" id="compass.namelist.update">
-<span class="sig-prename descclassname"><span class="pre">compass.namelist.</span></span><span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">replacements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_work_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compass/namelist.html#update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.namelist.update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update an existing namelist file with additional <code class="docutils literal notranslate"><span class="pre">replacements</span></code>.  This
-would typically be used for namelist options that are only known at
-runtime, not during setup.  For example, the number of PIO tasks and the
-stride between tasks, which are related to the number of nodes and cores.</p>
+  <div class="section" id="compass-step-update-namelist-pio">
+<h1>compass.Step.update_namelist_pio<a class="headerlink" href="#compass-step-update-namelist-pio" title="Permalink to this headline">¶</a></h1>
+<dl class="py method">
+<dt class="sig sig-object py" id="compass.Step.update_namelist_pio">
+<span class="sig-prename descclassname"><span class="pre">Step.</span></span><span class="sig-name descname"><span class="pre">update_namelist_pio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">out_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compass/step.html#Step.update_namelist_pio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.Step.update_namelist_pio" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modify the namelist so the number of PIO tasks and the stride between
+them consistent with the number of nodes and cores (one PIO task per
+node).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>replacements</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – A dictionary of options and value to replace namelist options with new
-values</p></li>
-<li><p><strong>step_work_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The path for the work directory for the step that this namelist is
-being generated for</p></li>
-<li><p><strong>out_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of the namelist file (without a path)</p></li>
-</ul>
+<dd class="field-odd"><p><strong>out_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – The name of the namelist file to write out, <code class="docutils literal notranslate"><span class="pre">namelist.&lt;core&gt;</span></code> by
+default</p>
 </dd>
 </dl>
 </dd></dl>
@@ -243,8 +246,8 @@ being generated for</p></li>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="compass.parallel.get_available_cores_and_nodes.html" class="btn btn-neutral float-right" title="compass.parallel.get_available_cores_and_nodes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="compass.mpas_cores.get_mpas_cores.html" class="btn btn-neutral float-left" title="compass.mpas_cores.get_mpas_cores" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="compass.Step.add_streams_file.html" class="btn btn-neutral float-right" title="compass.Step.add_streams_file" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="compass.Step.update_namelist_at_runtime.html" class="btn btn-neutral float-left" title="compass.Step.update_namelist_at_runtime" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>
