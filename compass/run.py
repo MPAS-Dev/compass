@@ -31,7 +31,7 @@ def run_suite(suite_name):
     # Allow a suite name to either include or not the .pickle suffix
     if suite_name.endswith('.pickle'):
         # code below assumes no suffix, so remove it
-        suite_name = suite_name.replace('.pickle', '')
+        suite_name = suite_name[:-len('.pickle')]
     # Now open the the suite's pickle file
     if not os.path.exists('{}.pickle'.format(suite_name)):
         raise ValueError('The suite "{}" doesn\'t appear to have been set up '
