@@ -92,7 +92,8 @@ class RunModel(Step):
                             target='../setup_mesh/graph.info')
         if velo_solver == 'FO':
             self.add_input_file(filename='albany_input.yaml',
-                                package='compass.landice.tests.dome')
+                                package='compass.landice.tests.dome',
+                                copy=True)
 
         self.add_model_as_input()
 
