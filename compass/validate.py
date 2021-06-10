@@ -37,18 +37,21 @@ def compare_variables(test_case, variables, filename1, filename2=None,
 
     l1_norm : float, optional
         The maximum allowed L1 norm difference between the variables in
-        ``filename1`` and ``filename2``.
+        ``filename1`` and ``filename2``.  To skip L1 norm check, pass None.
 
     l2_norm : float, optional
         The maximum allowed L2 norm difference between the variables in
-        ``filename1`` and ``filename2``.
+        ``filename1`` and ``filename2``.  To skip L2 norm check, pass None.
 
     linf_norm : float, optional
         The maximum allowed L-Infinity norm difference between the variables in
-        ``filename1`` and ``filename2``.
+        ``filename1`` and ``filename2``.  To skip Linf norm check, pass None.
 
     quiet : bool, optional
-        Whether to print
+        Whether to print detailed information.  If quiet is False, the norm
+        tolerance values being compared against will be printed when the
+        comparison is made.  This is generally desirable when using nonzero
+        norm tolerance values.
     """
     work_dir = test_case.work_dir
 
