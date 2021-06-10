@@ -73,19 +73,22 @@ class DecompositionTest(TestCase):
                 l1_norm = 1.0e-11
                 l2_norm = 1.0e-12
                 linf_norm = 1.0e-12
+                quiet = False
             elif self.velo_solver == 'FO' and self.mesh_type == '2000m':
                 l1_norm = 1.0e-9
                 l2_norm = 1.0e-11
                 linf_norm = 1.0e-11
+                quiet = False
             else:
                 l1_norm = 0.0
                 l2_norm = 0.0
                 linf_norm = 0.0
+                quiet = True
             compare_variables(test_case=self, variables=variable,
                               filename1='1proc_run/output.nc',
                               filename2='4proc_run/output.nc',
                               l1_norm=l1_norm, l2_norm=l2_norm,
-                              linf_norm=linf_norm)
+                              linf_norm=linf_norm, quiet=quiet)
 
             # validate normalVelocity
             variable = ['normalVelocity', ]
@@ -94,16 +97,19 @@ class DecompositionTest(TestCase):
                 l1_norm = 1.0e-17
                 l2_norm = 1.0e-18
                 linf_norm = 1.0e-19
+                quiet = False
             elif self.velo_solver == 'FO' and self.mesh_type == '2000m':
                 l1_norm = 1.0e-15
                 l2_norm = 1.0e-16
                 linf_norm = 1.0e-18
+                quiet = False
             else:
                 l1_norm = 0.0
                 l2_norm = 0.0
                 linf_norm = 0.0
+                quiet = True
             compare_variables(test_case=self, variables=variable,
                               filename1='1proc_run/output.nc',
                               filename2='4proc_run/output.nc',
                               l1_norm=l1_norm, l2_norm=l2_norm,
-                              linf_norm=linf_norm)
+                              linf_norm=linf_norm, quiet=quiet)
