@@ -2,7 +2,6 @@ import time
 
 from compass.model import run_model
 from compass.step import Step
-from compass.namelist import update
 
 
 class Forward(Step):
@@ -64,8 +63,8 @@ class Forward(Step):
 
         # update dt in case the user has changed dt_per_km
         dt = self.get_dt()
-        update(replacements={'config_dt': dt}, step_work_dir=self.work_dir,
-               out_name='namelist.ocean')
+        self.update_namelist_at_runtime(options={'config_dt': dt},
+                                        out_name='namelist.ocean')
 
         run_model(self)
 

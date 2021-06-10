@@ -4,7 +4,7 @@ import shutil
 
 from mpas_tools.cime.constants import constants
 from compass.io import symlink
-from compass.model import update_namelist_pio, partition, run_model
+from compass.model import partition, run_model
 
 
 def compute_land_ice_pressure_and_draft(ssh, modify_mask, ref_density):
@@ -55,14 +55,13 @@ def adjust_ssh(variable, iteration_count, step):
         the step for performing SSH or land-ice pressure adjustment
     """
     cores = step.cores
-    step_dir = step.work_dir
     config = step.config
     logger = step.logger
 
     if variable not in ['ssh', 'landIcePressure']:
         raise ValueError("Unknown variable to modify: {}".format(variable))
 
-    update_namelist_pio('namelist.ocean', config, cores, step_dir)
+    step.update_namelist_pio('namelist.ocean')
     partition(cores, config, logger)
 
     for iterIndex in range(iteration_count):
@@ -91,7 +90,8 @@ def adjust_ssh(variable, iteration_count, step):
             nVertLevels = len(ds.dimensions['nVertLevels'])
             initSSH = ds.variables['ssh'][0, :]
             bottomDepth = ds.variables['bottomDepth'][:]
-            modifyLandIcePressureMask = ds.variables['modifyLandIcePressureMask'][0, :]
+            modifyLandIcePressureMask = \
+                ds.variables['modifyLandIcePressureMask'][0, :]
             landIcePressure = ds.variables['landIcePressure'][0, :]
             lonCell = ds.variables['lonCell'][:]
             latCell = ds.variables['latCell'][:]
