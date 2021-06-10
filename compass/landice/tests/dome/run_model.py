@@ -19,8 +19,9 @@ class RunModel(Step):
         twice, the second time with ``namelist.landice.rst`` and
         ``streams.landice.rst``
     """
-    def __init__(self, test_case, mesh_type, name='run_model', subdir=None,
-                 cores=1, min_cores=None, threads=1, suffixes=None):
+    def __init__(self, test_case, velo_solver, mesh_type, name='run_model',
+                 subdir=None, cores=1, min_cores=None, threads=1,
+                 suffixes=None):
         """
         Create a new test case
 
@@ -28,6 +29,9 @@ class RunModel(Step):
         ----------
         test_case : compass.TestCase
             The test case this step belongs to
+
+        velo_solver : {'sia', 'FO'}
+            The velocity solver setting to use for this test case
 
         mesh_type : str
             The resolution or mesh type of the test case
@@ -59,6 +63,9 @@ class RunModel(Step):
             ``streams.landice.rst``
         """
         self.mesh_type = mesh_type
+        self.velo_solver = velo_solver
+        assert self.velo_solver in {'sia', 'FO'}, \
+            "Value of velo_solver must be one of {'sia', 'FO'}"
         if suffixes is None:
             suffixes = ['landice']
         self.suffixes = suffixes
@@ -71,6 +78,9 @@ class RunModel(Step):
             self.add_namelist_file(
                 'compass.landice.tests.dome', 'namelist.landice',
                 out_name='namelist.{}'.format(suffix))
+            options = {'config_velocity_solver': "'{}'".format(velo_solver)}
+            self.add_namelist_options(options=options,
+                                      out_name='namelist.{}'.format(suffix))
 
             self.add_streams_file(
                 'compass.landice.tests.dome', 'streams.landice',
@@ -80,6 +90,11 @@ class RunModel(Step):
                             target='../setup_mesh/landice_grid.nc')
         self.add_input_file(filename='graph.info',
                             target='../setup_mesh/graph.info')
+        if velo_solver == 'FO':
+            self.add_input_file(filename='albany_input.yaml',
+                                package='compass.landice.tests.dome',
+                                copy=True)
+
         self.add_model_as_input()
 
         self.add_output_file(filename='output.nc')

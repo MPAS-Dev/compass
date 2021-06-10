@@ -15,7 +15,7 @@ class SmokeTest(TestCase):
         The resolution or tye of mesh of the test case
     """
 
-    def __init__(self, test_group, mesh_type):
+    def __init__(self, test_group, velo_solver, mesh_type):
         """
         Create the test case
 
@@ -24,19 +24,29 @@ class SmokeTest(TestCase):
         test_group : compass.landice.tests.dome.Dome
             The test group that this test case belongs to
 
+        velo_solver : {'sia', 'FO'}
+            The velocity solver to use for the test case
+
         mesh_type : str
             The resolution or tye of mesh of the test case
         """
         name = 'smoke_test'
         self.mesh_type = mesh_type
-        subdir = '{}/{}'.format(mesh_type, name)
+        self.velo_solver = velo_solver
+        subdir = '{}/{}_{}'.format(mesh_type, velo_solver.lower(), name)
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
 
         self.add_step(
             SetupMesh(test_case=self, mesh_type=mesh_type))
-        self.add_step(
-            RunModel(test_case=self, cores=4, threads=1, mesh_type=mesh_type))
+
+        step = RunModel(test_case=self, cores=4, threads=1, name='run_step',
+                        velo_solver=velo_solver, mesh_type=mesh_type)
+        if velo_solver == 'sia':
+            step.add_namelist_options(
+                {'config_run_duration': "'0200-00-00_00:00:00'"})
+        self.add_step(step)
+
         step = Visualize(test_case=self, mesh_type=mesh_type)
         self.add_step(step, run_by_default=False)
 

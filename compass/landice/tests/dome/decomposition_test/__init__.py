@@ -17,7 +17,7 @@ class DecompositionTest(TestCase):
         The resolution or tye of mesh of the test case
     """
 
-    def __init__(self, test_group, mesh_type):
+    def __init__(self, test_group, velo_solver, mesh_type):
         """
         Create the test case
 
@@ -26,12 +26,16 @@ class DecompositionTest(TestCase):
         test_group : compass.landice.tests.dome.Dome
             The test group that this test case belongs to
 
+        velo_solver : {'sia', 'FO'}
+            The velocity solver to use for the test case
+
         mesh_type : str
             The resolution or tye of mesh of the test case
         """
         name = 'decomposition_test'
         self.mesh_type = mesh_type
-        subdir = '{}/{}'.format(mesh_type, name)
+        self.velo_solver = velo_solver
+        subdir = '{}/{}_{}'.format(mesh_type, velo_solver.lower(), name)
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
 
@@ -42,7 +46,8 @@ class DecompositionTest(TestCase):
             name = '{}proc_run'.format(procs)
             self.add_step(
                 RunModel(test_case=self, name=name, subdir=name, cores=procs,
-                         threads=1, mesh_type=mesh_type))
+                         threads=1, velo_solver=velo_solver,
+                         mesh_type=mesh_type))
 
             input_dir = name
             name = 'visualize_{}'.format(name)
@@ -59,9 +64,52 @@ class DecompositionTest(TestCase):
         Test cases can override this method to perform validation of variables
         and timers
         """
-        variables = ['thickness', 'normalVelocity']
         steps = self.steps_to_run
         if '1proc_run' in steps and '4proc_run' in steps:
-            compare_variables(test_case=self, variables=variables,
+            # validate thickness
+            variable = ['thickness', ]
+            if (self.velo_solver == 'FO' and
+                    self.mesh_type == 'variable_resolution'):
+                l1_norm = 1.0e-11
+                l2_norm = 1.0e-12
+                linf_norm = 1.0e-12
+                quiet = False
+            elif self.velo_solver == 'FO' and self.mesh_type == '2000m':
+                l1_norm = 1.0e-9
+                l2_norm = 1.0e-11
+                linf_norm = 1.0e-11
+                quiet = False
+            else:
+                l1_norm = 0.0
+                l2_norm = 0.0
+                linf_norm = 0.0
+                quiet = True
+            compare_variables(test_case=self, variables=variable,
                               filename1='1proc_run/output.nc',
-                              filename2='4proc_run/output.nc')
+                              filename2='4proc_run/output.nc',
+                              l1_norm=l1_norm, l2_norm=l2_norm,
+                              linf_norm=linf_norm, quiet=quiet)
+
+            # validate normalVelocity
+            variable = ['normalVelocity', ]
+            if (self.velo_solver == 'FO' and
+                    self.mesh_type == 'variable_resolution'):
+                l1_norm = 1.0e-17
+                l2_norm = 1.0e-18
+                linf_norm = 1.0e-19
+                quiet = False
+            elif self.velo_solver == 'FO' and self.mesh_type == '2000m':
+                l1_norm = 1.0e-15
+                l2_norm = 1.0e-16
+                linf_norm = 1.0e-18
+                quiet = False
+            else:
+                l1_norm = 0.0
+                l2_norm = 0.0
+                linf_norm = 0.0
+                quiet = True
+            compare_variables(test_case=self, variables=variable,
+                              filename1='1proc_run/output.nc',
+                              filename2='4proc_run/output.nc',
+                              l1_norm=l1_norm, l2_norm=l2_norm,
+                              linf_norm=linf_norm, quiet=quiet)
