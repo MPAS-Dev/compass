@@ -345,7 +345,8 @@ class Step:
         """
         Update an existing namelist file with additional options.  This would
         typically be used for namelist options that are only known at runtime,
-        not during setup, typically those related to the number of nodes and cores.
+        not during setup, typically those related to the number of nodes and
+        cores.
 
         Parameters
         ----------
