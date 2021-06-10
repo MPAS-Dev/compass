@@ -28,6 +28,11 @@ def run_suite(suite_name):
     fail_str = '{}FAIL{}'.format(start_fail, end)
     error_str = '{}ERROR{}'.format(start_fail, end)
 
+    # Allow a suite name to either include or not the .pickle suffix
+    if suite_name.endswith('.pickle'):
+        # code below assumes no suffix, so remove it
+        suite_name = suite_name.replace('.pickle', '')
+    # Now open the the suite's pickle file
     if not os.path.exists('{}.pickle'.format(suite_name)):
         raise ValueError('The suite "{}" doesn\'t appear to have been set up '
                          'here.'.format(suite_name))
