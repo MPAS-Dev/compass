@@ -69,7 +69,7 @@ class RunModel(Step):
 
         # download and link the mesh
         self.add_input_file(filename='landice_grid.nc',
-                            target='gis20km.150922.nc', database='')
+                            target='gis20km.210608.nc', database='')
 
         for suffix in suffixes:
             self.add_namelist_file(
