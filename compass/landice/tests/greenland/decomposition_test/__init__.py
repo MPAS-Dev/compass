@@ -10,7 +10,7 @@ class DecompositionTest(TestCase):
     results of the two runs are identical.
     """
 
-    def __init__(self, test_group):
+    def __init__(self, test_group, velo_solver):
         """
         Create the test case
 
@@ -18,14 +18,24 @@ class DecompositionTest(TestCase):
         ----------
         test_group : compass.landice.tests.greenland.Greenland
             The test group that this test case belongs to
+
+        velo_solver : {'sia', 'FO'}
+            The velocity solver to use for the test case
         """
         name = 'decomposition_test'
-        super().__init__(test_group=test_group, name=name)
+        subdir = '{}_{}'.format(velo_solver.lower(), name)
+        super().__init__(test_group=test_group, name=name, subdir=subdir)
 
-        for procs in [1, 8]:
+        if velo_solver == 'sia':
+            cores_set = [1, 8]
+        elif velo_solver == 'FO':
+            cores_set = [16, 32]
+
+        for procs in cores_set:
             name = '{}proc_run'.format(procs)
             self.add_step(
-                RunModel(test_case=self, name=name, subdir=name, cores=procs,
+                RunModel(test_case=self, velo_solver=velo_solver, name=name,
+                         subdir=name, cores=procs, min_cores=procs,
                          threads=1))
 
     # no configure() method is needed

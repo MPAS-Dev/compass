@@ -10,7 +10,7 @@ class RestartTest(TestCase):
     test case verifies that the results of the two runs are identical.
     """
 
-    def __init__(self, test_group):
+    def __init__(self, test_group, velo_solver):
         """
         Create the test case
 
@@ -18,11 +18,23 @@ class RestartTest(TestCase):
         ----------
         test_group : compass.landice.tests.greenland.Greenland
             The test group that this test case belongs to
+
+        velo_solver : {'sia', 'FO'}
+            The velocity solver to use for the test case
         """
-        super().__init__(test_group=test_group, name='restart_test')
+        name = 'restart_test'
+        subdir = '{}_{}'.format(velo_solver.lower(), name)
+        super().__init__(test_group=test_group, name=name, subdir=subdir)
+
+        cores = 36
+        if velo_solver == 'sia':
+            min_cores = 1
+        elif velo_solver == 'FO':
+            min_cores = 4
 
         name = 'full_run'
-        step = RunModel(test_case=self, name=name, subdir=name, cores=4,
+        step = RunModel(test_case=self, velo_solver=velo_solver, name=name,
+                        subdir=name, cores=cores, min_cores=min_cores,
                         threads=1)
         # modify the namelist options and streams file
         step.add_namelist_file(
@@ -34,7 +46,8 @@ class RestartTest(TestCase):
         self.add_step(step)
 
         name = 'restart_run'
-        step = RunModel(test_case=self, name=name, subdir=name, cores=4,
+        step = RunModel(test_case=self, velo_solver=velo_solver, name=name,
+                        subdir=name, cores=cores, min_cores=min_cores,
                         threads=1, suffixes=['landice', 'landice.rst'])
 
         # modify the namelist options and streams file

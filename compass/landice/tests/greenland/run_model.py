@@ -16,8 +16,8 @@ class RunModel(Step):
         twice, the second time with ``namelist.landice.rst`` and
         ``streams.landice.rst``
     """
-    def __init__(self, test_case, name='run_model', subdir=None, cores=1,
-                 min_cores=None, threads=1, suffixes=None):
+    def __init__(self, test_case, velo_solver, name='run_model', subdir=None,
+                 cores=1, min_cores=None, threads=1, suffixes=None):
         """
         Create a new test case
 
@@ -25,6 +25,9 @@ class RunModel(Step):
         ----------
         test_case : compass.TestCase
             The test case this step belongs to
+
+        velo_solver : {'sia', 'FO'}
+            The velocity solver to use for the test case
 
         name : str, optional
             the name of the test case
@@ -52,6 +55,10 @@ class RunModel(Step):
             twice, the second time with ``namelist.landice.rst`` and
             ``streams.landice.rst``
         """
+        self.velo_solver = velo_solver
+        assert velo_solver in {'sia', 'FO'}, \
+            "Value of velo_solver must be one of {'sia', 'FO'}"
+
         if suffixes is None:
             suffixes = ['landice']
         self.suffixes = suffixes
@@ -68,10 +75,18 @@ class RunModel(Step):
             self.add_namelist_file(
                 'compass.landice.tests.greenland', 'namelist.landice',
                 out_name='namelist.{}'.format(suffix))
+            options = {'config_velocity_solver': "'{}'".format(velo_solver)}
+            self.add_namelist_options(options=options,
+                                      out_name='namelist.{}'.format(suffix))
 
             self.add_streams_file(
                 'compass.landice.tests.greenland', 'streams.landice',
                 out_name='streams.{}'.format(suffix))
+
+        if velo_solver == 'FO':
+            self.add_input_file(filename='albany_input.yaml',
+                                package='compass.landice.tests.dome',
+                                copy=True)
 
         self.add_model_as_input()
 
