@@ -19,8 +19,7 @@ def package_files(directory, prefixes, extensions):
 
 
 install_requires = \
-    ['affine',
-     'cartopy',
+    ['cartopy',
      'cmocean',
      'ipython',
      'jigsawpy==0.3.3',
@@ -31,7 +30,6 @@ install_requires = \
      'numpy',
      'progressbar2',
      'pyamg',
-     'rasterio',
      'requests',
      'scipy',
      'xarray']
