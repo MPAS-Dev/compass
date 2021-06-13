@@ -1,0 +1,22 @@
+<streams>
+
+<immutable_stream name="input_init"
+                  filename_template="mesh.nc"/>
+
+<stream name="output_init"
+        type="output"
+        output_interval="0000_00:00:01"
+        clobber_mode="truncate"
+        filename_template="ocean.nc">
+
+    <stream name="input_init"/>
+    <var name="layerThickness"/>
+    <var name="restingThickness"/>
+    <var name="refBottomDepth"/>
+    <var name="bottomDepth"/>
+    <var name="maxLevelCell"/>
+    <var name="vertCoordMovementWeights"/>
+    <var name="edgeMask"/>
+</stream>
+
+</streams>

@@ -14,5 +14,6 @@ coming months.
    baroclinic_channel
    global_convergence
    global_ocean
+   gotm
    ice_shelf_2d
    ziso
