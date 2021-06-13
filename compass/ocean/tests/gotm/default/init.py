@@ -3,7 +3,6 @@ from mpas_tools.io import write_netcdf
 from mpas_tools.mesh.conversion import convert, cull
 
 from compass.step import Step
-from compass.namelist import update
 from compass.model import run_model
 
 
@@ -61,7 +60,6 @@ class Init(Step):
             config.get('gotm', 'vert_levels')
         replacements['config_periodic_planar_bottom_depth'] = \
             config.get('gotm', 'bottom_depth')
-        update(replacements=replacements, step_work_dir=self.work_dir,
-               out_name='namelist.ocean')
+        self.update_namelist_at_runtime(options=replacements)
 
         run_model(self)
