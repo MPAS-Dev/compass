@@ -31,6 +31,8 @@ class RestartTest(TestCase):
             min_cores = 1
         elif velo_solver == 'FO':
             min_cores = 4
+        else:
+            raise ValueError('Unexpected velo_solver {}'.format(velo_solver))
 
         name = 'full_run'
         step = RunModel(test_case=self, velo_solver=velo_solver, name=name,

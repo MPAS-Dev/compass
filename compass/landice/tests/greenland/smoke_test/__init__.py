@@ -30,6 +30,8 @@ class SmokeTest(TestCase):
             min_cores = 1
         elif velo_solver == 'FO':
             min_cores = 1
+        else:
+            raise ValueError('Unexpected velo_solver {}'.format(velo_solver))
 
         self.add_step(
             RunModel(test_case=self, velo_solver=velo_solver, cores=cores,

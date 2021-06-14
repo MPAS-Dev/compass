@@ -31,6 +31,8 @@ class DecompositionTest(TestCase):
             self.cores_set = [1, 8]
         elif velo_solver == 'FO':
             self.cores_set = [16, 32]
+        else:
+            raise ValueError('Unexpected velo_solver {}'.format(velo_solver))
 
         for procs in self.cores_set:
             name = '{}proc_run'.format(procs)
