@@ -113,3 +113,5 @@ class DecompositionTest(TestCase):
                               filename2='4proc_run/output.nc',
                               l1_norm=l1_norm, l2_norm=l2_norm,
                               linf_norm=linf_norm, quiet=quiet)
+        else:
+            assert False, "Error in decomposition test directory structure"
