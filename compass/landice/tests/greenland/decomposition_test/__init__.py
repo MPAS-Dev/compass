@@ -27,11 +27,11 @@ class DecompositionTest(TestCase):
         super().__init__(test_group=test_group, name=name, subdir=subdir)
 
         if velo_solver == 'sia':
-            cores_set = [1, 8]
+            self.cores_set = [1, 8]
         elif velo_solver == 'FO':
-            cores_set = [16, 32]
+            self.cores_set = [16, 32]
 
-        for procs in cores_set:
+        for procs in self.cores_set:
             name = '{}proc_run'.format(procs)
             self.add_step(
                 RunModel(test_case=self, velo_solver=velo_solver, name=name,
@@ -49,7 +49,11 @@ class DecompositionTest(TestCase):
         """
         variables = ['thickness', 'normalVelocity']
         steps = self.steps_to_run
-        if '1proc_run' in steps and '8proc_run' in steps:
+        name1 = '{}proc_run'.format(self.cores_set[0])
+        name2 = '{}proc_run'.format(self.cores_set[1])
+        if name1 in steps and name2 in steps:
             compare_variables(test_case=self, variables=variables,
-                              filename1='1proc_run/output.nc',
-                              filename2='8proc_run/output.nc')
+                              filename1='{}/output.nc'.format(name1),
+                              filename2='{}/output.nc'.format(name2))
+        else:
+            assert False, "Error in decomposition test directory structure"
