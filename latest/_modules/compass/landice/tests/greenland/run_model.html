@@ -197,7 +197,8 @@
 
 <div class="viewcode-block" id="RunModel"><a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.greenland.run_model.RunModel.html#compass.landice.tests.greenland.run_model.RunModel">[docs]</a><span class="k">class</span> <span class="nc">RunModel</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A step for performing forward MALI runs as part of dome test cases.</span>
+<span class="sd">    A step for performing forward MALI runs as part of low-res 20km Greenland</span>
+<span class="sd">    test cases.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -278,7 +279,10 @@
 
         <span class="k">if</span> <span class="n">velo_solver</span> <span class="o">==</span> <span class="s1">&#39;FO&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;albany_input.yaml&#39;</span><span class="p">,</span>
-                                <span class="n">package</span><span class="o">=</span><span class="s1">&#39;compass.landice.tests.dome&#39;</span><span class="p">,</span>
+                                <span class="n">package</span><span class="o">=</span><span class="s1">&#39;compass.landice.tests.greenland&#39;</span><span class="p">,</span>
+                                <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;albany_schoof_input.yaml&#39;</span><span class="p">,</span>
+                                <span class="n">package</span><span class="o">=</span><span class="s1">&#39;compass.landice.tests.greenland&#39;</span><span class="p">,</span>
                                 <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_model_as_input</span><span class="p">()</span>
