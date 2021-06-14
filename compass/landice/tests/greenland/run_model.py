@@ -4,7 +4,8 @@ from compass.step import Step
 
 class RunModel(Step):
     """
-    A step for performing forward MALI runs as part of dome test cases.
+    A step for performing forward MALI runs as part of low-res 20km Greenland
+    test cases.
 
     Attributes
     ----------
@@ -85,7 +86,10 @@ class RunModel(Step):
 
         if velo_solver == 'FO':
             self.add_input_file(filename='albany_input.yaml',
-                                package='compass.landice.tests.dome',
+                                package='compass.landice.tests.greenland',
+                                copy=True)
+            self.add_input_file(filename='albany_schoof_input.yaml',
+                                package='compass.landice.tests.greenland',
                                 copy=True)
 
         self.add_model_as_input()
