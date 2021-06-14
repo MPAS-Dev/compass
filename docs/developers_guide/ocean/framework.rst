@@ -20,17 +20,22 @@ frazil ice and land-ice fluxes.
 Vertical coordinate
 -------------------
 
-The ``compass.ocean.vertical`` module provides support for 1D vertical
-coordinates and the 3D `z* coordinate <https://doi.org/10.1016/j.ocemod.2003.09.003>`_.
+The ``compass.ocean.vertical`` module provides support for computing general
+vertical coordinates for MPAS-Ocean test cases.
 
-To create 1D vertical grids, test cases should call
-:py:func:`compass.ocean.vertical.generate_grid()` with the desired config
-options set in the ``vertical_grid`` section (as described in :ref:`ocean_vertical`).
+The ``compass.ocean.vertical.grid_1d`` module provides 1D vertical
+coordinates.  To create 1D vertical grids, test cases should call
+:py:func:`compass.ocean.vertical.grid_1d.generate_1d_grid()` with the desired
+config options set in the ``vertical_grid`` section (as described in
+:ref:`ocean_vertical`).
 
-The function :py:func:`compass.ocean.vertical.zstar.compute_layer_thickness_and_zmid()`
-can be used to compute ``layerThickness``, ``zMid`` and ``restingThickness``
-variables for a z* vertical coordinate based on a 1D vertical grid and
-bathymetry.
+The z-level and z-star coordinates are also controlled by config options from
+this section of the config file. The function
+:py:func:`compass.ocean.vertical.init_vertical_coord()` can be used to compute
+``minLevelCell``, ``maxLevelCell``, ``cellMask``, ``layerThickness``, ``zMid``,
+and ``restingThickness`` variables for :ref:`ocean_z_level` and
+:ref:`ocean_z_star` coordinates using the ``ssh`` and ``bottomDepth`` as well
+as config options from ``vertical_grid``.
 
 .. _dev_ocean_framework_iceshelf:
 

@@ -1,7 +1,7 @@
 from compass.ocean.tests.global_ocean.metadata import \
     add_mesh_and_init_metadata
 from compass.model import run_model
-from compass.ocean.vertical import generate_grid, write_grid
+from compass.ocean.vertical.grid_1d import generate_1d_grid, write_1d_grid
 from compass.ocean.plot import plot_vertical_grid, plot_initial_state
 from compass.step import Step
 
@@ -152,9 +152,9 @@ class InitialState(Step):
         Run this step of the testcase
         """
         config = self.config
-        interfaces = generate_grid(config=config)
+        interfaces = generate_1d_grid(config=config)
 
-        write_grid(interfaces=interfaces, out_filename='vertical_grid.nc')
+        write_1d_grid(interfaces=interfaces, out_filename='vertical_grid.nc')
         plot_vertical_grid(grid_filename='vertical_grid.nc', config=config,
                            out_filename='vertical_grid.png')
 

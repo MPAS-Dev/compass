@@ -1,8 +1,10 @@
 import numpy
-from netCDF4 import Dataset
+import xarray
 import shutil
 
 from mpas_tools.cime.constants import constants
+from mpas_tools.io import write_netcdf
+
 from compass.io import symlink
 from compass.model import partition, run_model
 
@@ -57,6 +59,7 @@ def adjust_ssh(variable, iteration_count, step):
     cores = step.cores
     config = step.config
     logger = step.logger
+    out_filename = None
 
     if variable not in ['ssh', 'landIcePressure']:
         raise ValueError("Unknown variable to modify: {}".format(variable))
@@ -68,7 +71,9 @@ def adjust_ssh(variable, iteration_count, step):
         logger.info(" * Iteration {}/{}".format(iterIndex + 1,
                                                 iteration_count))
 
-        symlink('adjusting_init{}.nc'.format(iterIndex), 'adjusting_init.nc')
+        in_filename = 'adjusting_init{}.nc'.format(iterIndex)
+        out_filename = 'adjusting_init{}.nc'.format(iterIndex+1)
+        symlink(in_filename, 'adjusting_init.nc')
 
         logger.info("   * Running forward model")
         run_model(step, update_pio=False, partition_graph=False)
@@ -76,52 +81,46 @@ def adjust_ssh(variable, iteration_count, step):
 
         logger.info("   * Updating SSH or land-ice pressure")
 
-        # copy the init file first
-        shutil.copy('adjusting_init{}.nc'.format(iterIndex),
-                    'adjusting_init{}.nc'.format(iterIndex+1))
+        with xarray.open_dataset(in_filename) as ds:
 
-        symlink('adjusting_init{}.nc'.format(iterIndex+1),
-                'adjusting_init.nc')
+            # keep the data set with Time for output
+            ds_out = ds
 
-        with Dataset('adjusting_init.nc', 'r+') as ds:
+            ds = ds.isel(Time=0)
 
-            on_a_sphere = ds.on_a_sphere.lower() == 'yes'
+            on_a_sphere = ds.attrs['on_a_sphere'].lower() == 'yes'
 
-            nVertLevels = len(ds.dimensions['nVertLevels'])
-            initSSH = ds.variables['ssh'][0, :]
-            bottomDepth = ds.variables['bottomDepth'][:]
-            modifyLandIcePressureMask = \
-                ds.variables['modifyLandIcePressureMask'][0, :]
-            landIcePressure = ds.variables['landIcePressure'][0, :]
-            lonCell = ds.variables['lonCell'][:]
-            latCell = ds.variables['latCell'][:]
-            xCell = ds.variables['xCell'][:]
-            yCell = ds.variables['yCell'][:]
-            maxLevelCell = ds.variables['maxLevelCell'][:]
+            initSSH = ds.ssh
+            if 'minLevelCell' in ds:
+                minLevelCell = ds.minLevelCell-1
+            else:
+                minLevelCell = xarray.zeros_like(ds.maxLevelCell)
 
-            with Dataset('output_ssh.nc', 'r') as ds_ssh:
-                nTime = len(ds_ssh.dimensions['Time'])
-                finalSSH = ds_ssh.variables['ssh'][nTime - 1, :]
-                topDensity = ds_ssh.variables['density'][nTime - 1, :, 0]
+            with xarray.open_dataset('output_ssh.nc') as ds_ssh:
+                # get the last time entry
+                ds_ssh = ds_ssh.isel(Time=ds_ssh.sizes['Time'] - 1)
+                finalSSH = ds_ssh.ssh
+                topDensity = ds_ssh.density.isel(nVertLevels=minLevelCell)
 
-            mask = numpy.logical_and(maxLevelCell > 0,
-                                     modifyLandIcePressureMask == 1)
+            mask = numpy.logical_and(ds.maxLevelCell > 0,
+                                     ds.modifyLandIcePressureMask == 1)
 
             deltaSSH = mask * (finalSSH - initSSH)
 
             # then, modify the SSH or land-ice pressure
             if variable == 'ssh':
-                ds.variables['ssh'][0, :] = finalSSH
+                ssh = finalSSH.expand_dims(dim='Time', axis=0)
+                ds_out['ssh'] = ssh
                 # also update the landIceDraft variable, which will be used to
                 # compensate for the SSH due to land-ice pressure when
                 # computing sea-surface tilt
-                ds.variables['landIceDraft'][0, :] = finalSSH
+                ds_out['landIceDraft'] = ssh
                 # we also need to stretch layerThickness to be compatible with
                 # the new SSH
-                stretch = (finalSSH + bottomDepth) / (initSSH + bottomDepth)
-                layerThickness = ds.variables['layerThickness']
-                for k in range(nVertLevels):
-                    layerThickness[0, :, k] *= stretch
+                stretch = ((finalSSH + ds.bottomDepth) /
+                           (initSSH + ds.bottomDepth))
+                ds_out['layerThickness'] = ds_out.layerThickness * stretch
+                landIcePressure = ds.landIcePressure.values
             else:
                 # Moving the SSH up or down by deltaSSH would change the
                 # land-ice pressure by density(SSH)*g*deltaSSH. If deltaSSH is
@@ -133,34 +132,43 @@ def adjust_ssh(variable, iteration_count, step):
                 deltaLandIcePressure = topDensity * gravity * deltaSSH
 
                 landIcePressure = numpy.maximum(
-                    0.0, landIcePressure + deltaLandIcePressure)
+                    0.0, ds.landIcePressure + deltaLandIcePressure)
 
-                ds.variables['landIcePressure'][0, :] = landIcePressure
+                ds_out['landIcePressure'] = \
+                    landIcePressure.expand_dims(dim='Time', axis=0)
 
                 finalSSH = initSSH
 
-        # Write the largest change in SSH and its lon/lat to a file
-        with open('maxDeltaSSH_{:03d}.log'.format(iterIndex), 'w') as log_file:
+            write_netcdf(ds_out, out_filename)
 
-            indices = numpy.nonzero(landIcePressure)[0]
-            index = numpy.argmax(numpy.abs(deltaSSH[indices]))
-            iCell = indices[index]
-            if on_a_sphere:
-                coords = 'lon/lat: {:f} {:f}'.format(
-                    numpy.rad2deg(lonCell[iCell]),
-                    numpy.rad2deg(latCell[iCell]))
-            else:
-                coords = 'x/y: {:f} {:f}'.format(1e-3 * xCell[iCell],
-                                                 1e-3 * yCell[iCell])
-            string = 'deltaSSHMax: {:g}, {}'.format(
-                deltaSSH[iCell], coords)
-            logger.info('     {}'.format(string))
-            log_file.write('{}\n'.format(string))
-            string = 'ssh: {:g}, landIcePressure: {:g}'.format(
-                finalSSH[iCell], landIcePressure[iCell])
-            logger.info('     {}'.format(string))
-            log_file.write('{}\n'.format(string))
+            # Write the largest change in SSH and its lon/lat to a file
+            with open('maxDeltaSSH_{:03d}.log'.format(iterIndex), 'w') as \
+                    log_file:
+
+                mask = landIcePressure > 0.
+                iCell = numpy.abs(deltaSSH.where(mask)).argmax().values
+
+                ds_cell = ds.isel(nCells=iCell)
+
+                if on_a_sphere:
+                    coords = 'lon/lat: {:f} {:f}'.format(
+                        numpy.rad2deg(ds_cell.lonCell.values),
+                        numpy.rad2deg(ds_cell.latCell.values))
+                else:
+                    coords = 'x/y: {:f} {:f}'.format(
+                        1e-3 * ds_cell.xCell.values,
+                        1e-3 * ds_cell.yCell.values)
+                string = 'deltaSSHMax: {:g}, {}'.format(
+                    deltaSSH.isel(nCells=iCell).values, coords)
+                logger.info('     {}'.format(string))
+                log_file.write('{}\n'.format(string))
+                string = 'ssh: {:g}, landIcePressure: {:g}'.format(
+                    finalSSH.isel(nCells=iCell).values,
+                    landIcePressure.isel(nCells=iCell).values)
+                logger.info('     {}'.format(string))
+                log_file.write('{}\n'.format(string))
 
         logger.info("   - Complete\n")
 
-    shutil.copy('adjusting_init.nc', 'adjusted_init.nc')
+    if out_filename is not None:
+        shutil.copy(out_filename, 'adjusted_init.nc')

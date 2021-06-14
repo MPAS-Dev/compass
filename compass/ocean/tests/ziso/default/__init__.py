@@ -75,6 +75,12 @@ class Default(TestCase):
         work_dir = self.work_dir
 
         steps = self.steps_to_run
+        if 'initial_state' in steps:
+            variables = ['bottomDepth', 'layerThickness', 'maxLevelCell',
+                         'temperature', 'salinity']
+            compare_variables(
+                test_case=self, variables=variables,
+                filename1='initial_state/ocean.nc')
         if 'forward' in steps:
             variables = ['temperature', 'layerThickness']
             compare_variables(

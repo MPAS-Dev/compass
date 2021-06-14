@@ -5,7 +5,7 @@ from mpas_tools.planar_hex import make_planar_hex_mesh
 from mpas_tools.io import write_netcdf
 from mpas_tools.mesh.conversion import convert, cull
 
-from compass.ocean.vertical import generate_grid
+from compass.ocean.vertical import init_vertical_coord
 from compass.step import Step
 
 
@@ -70,18 +70,15 @@ class InitialState(Step):
         coriolis_parameter = section.getfloat('coriolis_parameter')
 
         ds = dsMesh.copy()
-
-        interfaces = generate_grid(config=config)
-
-        bottom_depth = interfaces[-1]
-        vert_levels = len(interfaces) - 1
-
-        ds['refBottomDepth'] = ('nVertLevels', interfaces[1:])
-        ds['refZMid'] = ('nVertLevels', -0.5 * (interfaces[1:] + interfaces[0:-1]))
-        ds['vertCoordMovementWeights'] = xarray.ones_like(ds.refBottomDepth)
-
         xCell = ds.xCell
         yCell = ds.yCell
+
+        bottom_depth = config.getfloat('vertical_grid', 'bottom_depth')
+
+        ds['bottomDepth'] = bottom_depth * xarray.ones_like(xCell)
+        ds['ssh'] = xarray.zeros_like(xCell)
+
+        init_vertical_coord(config, ds)
 
         xMin = xCell.min().values
         xMax = xCell.max().values
@@ -131,12 +128,6 @@ class InitialState(Step):
 
         temperature = temperature.expand_dims(dim='Time', axis=0)
 
-        layerThickness = xarray.DataArray(data=interfaces[1:] - interfaces[0:-1],
-                                          dims='nVertLevels')
-        _, layerThickness = xarray.broadcast(xCell, layerThickness)
-        layerThickness = layerThickness.transpose('nCells', 'nVertLevels')
-        layerThickness = layerThickness.expand_dims(dim='Time', axis=0)
-
         normalVelocity = xarray.zeros_like(ds.xEdge)
         normalVelocity, _ = xarray.broadcast(normalVelocity, ds.refBottomDepth)
         normalVelocity = normalVelocity.transpose('nEdges', 'nVertLevels')
@@ -145,10 +136,6 @@ class InitialState(Step):
         ds['temperature'] = temperature
         ds['salinity'] = salinity * xarray.ones_like(temperature)
         ds['normalVelocity'] = normalVelocity
-        ds['layerThickness'] = layerThickness
-        ds['restingThickness'] = layerThickness
-        ds['bottomDepth'] = bottom_depth * xarray.ones_like(xCell)
-        ds['maxLevelCell'] = vert_levels * xarray.ones_like(xCell, dtype=int)
         ds['fCell'] = coriolis_parameter * xarray.ones_like(xCell)
         ds['fEdge'] = coriolis_parameter * xarray.ones_like(ds.xEdge)
         ds['fVertex'] = coriolis_parameter * xarray.ones_like(ds.xVertex)
