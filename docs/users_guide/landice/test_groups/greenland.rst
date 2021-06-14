@@ -6,12 +6,21 @@ greenland
 The ``landice/greenland`` test group runs tests with a coarse (20-km)
 `Greenland mesh <https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-albany-landice/gis20km.150922.nc>`_.
 
-<<<Exmaple image here>>>
+.. figure:: images/gis_speed.png
+   :width: 742 px
+   :align: center
+
+   FO velocity solution visualized in Paraview.
 
 The test group includes 3 test cases, each of which has one or more steps
 that are variants on ``run_model`` (given other names in the decomposition and
 restart test cases to distinguish multiple model runs), which performs time
 integration of the model.
+
+The test cases in this test group can run with either the SIA or FO velocity
+solvers. Running with the FO solver requires a build of MALI that includes
+Albany, but the SIA variant of the test can be run without Albany.  The FO
+version uses no-slip basal boundary condition.
 
 config options
 --------------
