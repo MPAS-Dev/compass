@@ -48,45 +48,32 @@ class DecompositionTest(TestCase):
         Test cases can override this method to perform validation of variables
         and timers
         """
-        variables = ['thickness', 'normalVelocity']
-        steps = self.steps_to_run
         name1 = '{}proc_run'.format(self.cores_set[0])
         name2 = '{}proc_run'.format(self.cores_set[1])
-        if name1 in steps and name2 in steps:
-            # validate thickness
-            variable = ['thickness', ]
-            if self.velo_solver == 'FO':
-                l1_norm = 1.0e-11
-                l2_norm = 1.0e-11
-                linf_norm = 1.0e-11
-                quiet = False
-            else:
-                l1_norm = 0.0
-                l2_norm = 0.0
-                linf_norm = 0.0
-                quiet = True
-            compare_variables(test_case=self, variables=variable,
-                              filename1='{}/output.nc'.format(name1),
-                              filename2='{}/output.nc'.format(name2),
-                              l1_norm=l1_norm, l2_norm=l2_norm,
-                              linf_norm=linf_norm, quiet=quiet)
+        if name1 in self.steps_to_run and name2 in self.steps_to_run:
+            if self.velo_solver == 'sia':
+                compare_variables(test_case=self,
+                                  variables=['thickness', 'normalVelocity'],
+                                  filename1='{}/output.nc'.format(name1),
+                                  filename2='{}/output.nc'.format(name2))
 
-            # validate normalVelocity
-            variable = ['normalVelocity', ]
-            if self.velo_solver == 'FO':
-                l1_norm = 1.0e-13
-                l2_norm = 1.0e-15
-                linf_norm = 1.0e-16
-                quiet = False
-            else:
-                l1_norm = 0.0
-                l2_norm = 0.0
-                linf_norm = 0.0
-                quiet = True
-            compare_variables(test_case=self, variables=variable,
-                              filename1='{}/output.nc'.format(name1),
-                              filename2='{}/output.nc'.format(name2),
-                              l1_norm=l1_norm, l2_norm=l2_norm,
-                              linf_norm=linf_norm, quiet=quiet)
-        else:
-            assert False, "Error in decomposition test directory structure"
+            elif self.velo_solver == 'FO':
+                # validate thickness
+                compare_variables(test_case=self,
+                                  variables=['thickness', ],
+                                  filename1='{}/output.nc'.format(name1),
+                                  filename2='{}/output.nc'.format(name2),
+                                  l1_norm=1.0e-11,
+                                  l2_norm=1.0e-11,
+                                  linf_norm=1.0e-11,
+                                  quiet=False)
+
+                # validate normalVelocity
+                compare_variables(test_case=self,
+                                  variables=['normalVelocity', ],
+                                  filename1='{}/output.nc'.format(name1),
+                                  filename2='{}/output.nc'.format(name2),
+                                  l1_norm=1.0e-13,
+                                  l2_norm=1.0e-15,
+                                  linf_norm=1.0e-16,
+                                  quiet=False)
