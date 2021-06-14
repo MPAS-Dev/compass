@@ -10,7 +10,7 @@ class DecompositionTest(TestCase):
     results of the two runs are identical.
     """
 
-    def __init__(self, test_group):
+    def __init__(self, test_group, velo_solver):
         """
         Create the test case
 
@@ -18,14 +18,27 @@ class DecompositionTest(TestCase):
         ----------
         test_group : compass.landice.tests.greenland.Greenland
             The test group that this test case belongs to
+
+        velo_solver : {'sia', 'FO'}
+            The velocity solver to use for the test case
         """
         name = 'decomposition_test'
-        super().__init__(test_group=test_group, name=name)
+        self.velo_solver = velo_solver
+        subdir = '{}_{}'.format(velo_solver.lower(), name)
+        super().__init__(test_group=test_group, name=name, subdir=subdir)
 
-        for procs in [1, 8]:
+        if velo_solver == 'sia':
+            self.cores_set = [1, 8]
+        elif velo_solver == 'FO':
+            self.cores_set = [16, 32]
+        else:
+            raise ValueError('Unexpected velo_solver {}'.format(velo_solver))
+
+        for procs in self.cores_set:
             name = '{}proc_run'.format(procs)
             self.add_step(
-                RunModel(test_case=self, name=name, subdir=name, cores=procs,
+                RunModel(test_case=self, velo_solver=velo_solver, name=name,
+                         subdir=name, cores=procs, min_cores=procs,
                          threads=1))
 
     # no configure() method is needed
@@ -37,9 +50,32 @@ class DecompositionTest(TestCase):
         Test cases can override this method to perform validation of variables
         and timers
         """
-        variables = ['thickness', 'normalVelocity']
-        steps = self.steps_to_run
-        if '1proc_run' in steps and '8proc_run' in steps:
-            compare_variables(test_case=self, variables=variables,
-                              filename1='1proc_run/output.nc',
-                              filename2='8proc_run/output.nc')
+        name1 = '{}proc_run'.format(self.cores_set[0])
+        name2 = '{}proc_run'.format(self.cores_set[1])
+        if name1 in self.steps_to_run and name2 in self.steps_to_run:
+            if self.velo_solver == 'sia':
+                compare_variables(test_case=self,
+                                  variables=['thickness', 'normalVelocity'],
+                                  filename1='{}/output.nc'.format(name1),
+                                  filename2='{}/output.nc'.format(name2))
+
+            elif self.velo_solver == 'FO':
+                # validate thickness
+                compare_variables(test_case=self,
+                                  variables=['thickness', ],
+                                  filename1='{}/output.nc'.format(name1),
+                                  filename2='{}/output.nc'.format(name2),
+                                  l1_norm=1.0e-11,
+                                  l2_norm=1.0e-11,
+                                  linf_norm=1.0e-11,
+                                  quiet=False)
+
+                # validate normalVelocity
+                compare_variables(test_case=self,
+                                  variables=['normalVelocity', ],
+                                  filename1='{}/output.nc'.format(name1),
+                                  filename2='{}/output.nc'.format(name2),
+                                  l1_norm=1.0e-13,
+                                  l2_norm=1.0e-15,
+                                  linf_norm=1.0e-16,
+                                  quiet=False)
