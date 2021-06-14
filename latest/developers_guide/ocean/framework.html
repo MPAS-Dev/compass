@@ -217,15 +217,20 @@ frazil ice and land-ice fluxes.</p>
 </div>
 <div class="section" id="vertical-coordinate">
 <span id="dev-ocean-framework-vertical"></span><h2>Vertical coordinate<a class="headerlink" href="#vertical-coordinate" title="Permalink to this headline">¶</a></h2>
-<p>The <code class="docutils literal notranslate"><span class="pre">compass.ocean.vertical</span></code> module provides support for 1D vertical
-coordinates and the 3D <a class="reference external" href="https://doi.org/10.1016/j.ocemod.2003.09.003">z* coordinate</a>.</p>
-<p>To create 1D vertical grids, test cases should call
-<a class="reference internal" href="generated/compass.ocean.vertical.generate_grid.html#compass.ocean.vertical.generate_grid" title="compass.ocean.vertical.generate_grid"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.vertical.generate_grid()</span></code></a> with the desired config
-options set in the <code class="docutils literal notranslate"><span class="pre">vertical_grid</span></code> section (as described in <a class="reference internal" href="../../users_guide/ocean/framework/vertical.html#ocean-vertical"><span class="std std-ref">Vertical coordinate</span></a>).</p>
-<p>The function <a class="reference internal" href="generated/compass.ocean.vertical.zstar.compute_layer_thickness_and_zmid.html#compass.ocean.vertical.zstar.compute_layer_thickness_and_zmid" title="compass.ocean.vertical.zstar.compute_layer_thickness_and_zmid"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.vertical.zstar.compute_layer_thickness_and_zmid()</span></code></a>
-can be used to compute <code class="docutils literal notranslate"><span class="pre">layerThickness</span></code>, <code class="docutils literal notranslate"><span class="pre">zMid</span></code> and <code class="docutils literal notranslate"><span class="pre">restingThickness</span></code>
-variables for a z* vertical coordinate based on a 1D vertical grid and
-bathymetry.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">compass.ocean.vertical</span></code> module provides support for computing general
+vertical coordinates for MPAS-Ocean test cases.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">compass.ocean.vertical.grid_1d</span></code> module provides 1D vertical
+coordinates.  To create 1D vertical grids, test cases should call
+<a class="reference internal" href="generated/compass.ocean.vertical.grid_1d.generate_1d_grid.html#compass.ocean.vertical.grid_1d.generate_1d_grid" title="compass.ocean.vertical.grid_1d.generate_1d_grid"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.vertical.grid_1d.generate_1d_grid()</span></code></a> with the desired
+config options set in the <code class="docutils literal notranslate"><span class="pre">vertical_grid</span></code> section (as described in
+<a class="reference internal" href="../../users_guide/ocean/framework/vertical.html#ocean-vertical"><span class="std std-ref">Vertical coordinate</span></a>).</p>
+<p>The z-level and z-star coordinates are also controlled by config options from
+this section of the config file. The function
+<a class="reference internal" href="generated/compass.ocean.vertical.init_vertical_coord.html#compass.ocean.vertical.init_vertical_coord" title="compass.ocean.vertical.init_vertical_coord"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.vertical.init_vertical_coord()</span></code></a> can be used to compute
+<code class="docutils literal notranslate"><span class="pre">minLevelCell</span></code>, <code class="docutils literal notranslate"><span class="pre">maxLevelCell</span></code>, <code class="docutils literal notranslate"><span class="pre">cellMask</span></code>, <code class="docutils literal notranslate"><span class="pre">layerThickness</span></code>, <code class="docutils literal notranslate"><span class="pre">zMid</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">restingThickness</span></code> variables for <a class="reference internal" href="../../users_guide/ocean/framework/vertical.html#ocean-z-level"><span class="std std-ref">z-level</span></a> and
+<a class="reference internal" href="../../users_guide/ocean/framework/vertical.html#ocean-z-star"><span class="std std-ref">z-star</span></a> coordinates using the <code class="docutils literal notranslate"><span class="pre">ssh</span></code> and <code class="docutils literal notranslate"><span class="pre">bottomDepth</span></code> as well
+as config options from <code class="docutils literal notranslate"><span class="pre">vertical_grid</span></code>.</p>
 </div>
 <div class="section" id="ice-shelf-cavities">
 <span id="dev-ocean-framework-iceshelf"></span><h2>Ice-shelf cavities<a class="headerlink" href="#ice-shelf-cavities" title="Permalink to this headline">¶</a></h2>

@@ -104,10 +104,8 @@
 <li class="toctree-l2 current"><a class="reference internal" href="index.html">Framework</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ice_shelf.html">Ice shelf-cavities</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Vertical coordinate</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#uniform">uniform</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#tanh-dz">tanh_dz</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#layerphc">60layerPHC</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#layere3smv1">100layerE3SMv1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#d-grid-type">1D Grid type</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#d-vertical-coordinates">3D vertical coordinates</a></li>
 </ul>
 </li>
 </ul>
@@ -212,11 +210,8 @@
             
   <div class="section" id="vertical-coordinate">
 <span id="ocean-vertical"></span><h1>Vertical coordinate<a class="headerlink" href="#vertical-coordinate" title="Permalink to this headline">¶</a></h1>
-<p>Most compass test groups and test cases support a z* vertical coordinate
-(<a class="reference external" href="https://doi.org/10.1016/j.ocemod.2003.09.003">Adcroft and Campin, 2004</a>).
-The number and interface locations of the initial (“resting”) z* layers are
-determined by config options in the <code class="docutils literal notranslate"><span class="pre">vertical_grid</span></code> section of the config
-file:</p>
+<p>The vertical coordinate used in most MPAS-Ocean test cases is determined by
+config options in the <code class="docutils literal notranslate"><span class="pre">vertical_grid</span></code> section of the config file:</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span>
 <span class="k">[vertical_grid]</span>
 
@@ -234,13 +229,29 @@ file:</p>
 
 <span class="c1"># The maximum layer thickness</span>
 <span class="na">max_layer_thickness</span> <span class="o">=</span> <span class="s">500.0</span>
+
+<span class="c1"># The type of vertical coordinate (e.g. z-level, z-star)</span>
+<span class="na">coord_type</span> <span class="o">=</span> <span class="s">z-star</span>
+
+<span class="c1"># Whether to use &quot;partial&quot; or &quot;full&quot;, or &quot;None&quot; to not alter the topography</span>
+<span class="na">partial_cell_type</span> <span class="o">=</span> <span class="s">full</span>
+
+<span class="c1"># The minimum fraction of a layer for partial cells</span>
+<span class="na">min_pc_fraction</span> <span class="o">=</span> <span class="s">0.1</span>
 </pre></div>
 </div>
-<p>Possible grid types are: <code class="docutils literal notranslate"><span class="pre">uniform</span></code>, <code class="docutils literal notranslate"><span class="pre">tanh_dz</span></code>, <code class="docutils literal notranslate"><span class="pre">60layerPHC</span></code>, and
+<p>The vertical coordinate is typically defined based on a 1D reference grid.
+Possible 1D grid types are: <code class="docutils literal notranslate"><span class="pre">uniform</span></code>, <code class="docutils literal notranslate"><span class="pre">tanh_dz</span></code>, <code class="docutils literal notranslate"><span class="pre">60layerPHC</span></code>, and
 <code class="docutils literal notranslate"><span class="pre">100layerE3SMv1</span></code>.</p>
-<p>The meaning of the other config options depends grid type.</p>
+<p>The meaning of the config options <code class="docutils literal notranslate"><span class="pre">vert_levels</span></code>, <code class="docutils literal notranslate"><span class="pre">bottom_depth</span></code>,
+<code class="docutils literal notranslate"><span class="pre">min_layer_thickness</span></code> and <code class="docutils literal notranslate"><span class="pre">max_layer_thickness</span></code> depends grid type and is
+described below.</p>
+<p>The options <code class="docutils literal notranslate"><span class="pre">coord_type</span></code>, <code class="docutils literal notranslate"><span class="pre">partial_cell_type</span></code> and <code class="docutils literal notranslate"><span class="pre">min_pc_fraction</span></code>
+relate to <a class="reference internal" href="#ocean-vert-3d"><span class="std std-ref">3D vertical coordinates</span></a>, described below.</p>
+<div class="section" id="d-grid-type">
+<h2>1D Grid type<a class="headerlink" href="#d-grid-type" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="uniform">
-<h2>uniform<a class="headerlink" href="#uniform" title="Permalink to this headline">¶</a></h2>
+<h3>uniform<a class="headerlink" href="#uniform" title="Permalink to this headline">¶</a></h3>
 <p>Uniform vertical grids have vertical layers all of the same thickness. The
 layer thickness is simply <code class="docutils literal notranslate"><span class="pre">bottom_depth</span></code> (the positive depth of the bottom
 interface of the deepest layer) divided by the number of layers
@@ -261,7 +272,7 @@ layers, each 100 m thick.</p>
 </div>
 </div>
 <div class="section" id="tanh-dz">
-<h2>tanh_dz<a class="headerlink" href="#tanh-dz" title="Permalink to this headline">¶</a></h2>
+<h3>tanh_dz<a class="headerlink" href="#tanh-dz" title="Permalink to this headline">¶</a></h3>
 <p>This vertical coordinate is a variant on
 <a class="reference external" href="https://doi.org/10.1016/j.ocemod.2017.03.012">Stewart et al. (2017)</a>.  Layer
 thickness is defined by:</p>
@@ -301,7 +312,7 @@ number of vertical levels (one less than the number of layer interfaces) and
 </div>
 </div>
 <div class="section" id="layerphc">
-<h2>60layerPHC<a class="headerlink" href="#layerphc" title="Permalink to this headline">¶</a></h2>
+<h3>60layerPHC<a class="headerlink" href="#layerphc" title="Permalink to this headline">¶</a></h3>
 <p>This is the vertical grid used by the Polar science center Hydrographic Climatology
 (<a class="reference external" href="http://psc.apl.washington.edu/nonwp_projects/PHC/Climatology.html">PHC</a>).
 Layer thicknesses vary over 60 layers from 10 m at the surface to 250 m at the
@@ -317,7 +328,7 @@ seafloor, which is at 5500 m depth.  To get the default grid, use:</p>
 so that bottom of the deepest layer is at <code class="docutils literal notranslate"><span class="pre">z</span> <span class="pre">=</span> <span class="pre">-bottom_depth</span></code></p>
 </div>
 <div class="section" id="layere3smv1">
-<h2>100layerE3SMv1<a class="headerlink" href="#layere3smv1" title="Permalink to this headline">¶</a></h2>
+<h3>100layerE3SMv1<a class="headerlink" href="#layere3smv1" title="Permalink to this headline">¶</a></h3>
 <p>This is the vertical grid was used in some E3SM v1 experiments. Layer
 thicknesses vary over 100 layers from 1.51 m at the surface to 221 m at the
 seafloor, which is at 6000 m depth.  To get the default grid, use:</p>
@@ -343,6 +354,46 @@ the default approach in the <a class="reference internal" href="../test_groups/z
 </div>
 <p>In this case, the thickness of the 100 layers vary between ~0.63 m and 92.1 m,
 with the sea floor at 2500 m.</p>
+</div>
+</div>
+<div class="section" id="d-vertical-coordinates">
+<span id="ocean-vert-3d"></span><h2>3D vertical coordinates<a class="headerlink" href="#d-vertical-coordinates" title="Permalink to this headline">¶</a></h2>
+<p>Currently, <code class="docutils literal notranslate"><span class="pre">z-star</span></code> and <code class="docutils literal notranslate"><span class="pre">z-level</span></code> vertical coordinates are supported
+(<code class="docutils literal notranslate"><span class="pre">coord_type</span></code>).  Each supports 3 options for <code class="docutils literal notranslate"><span class="pre">partial_cell_type</span></code>: <code class="docutils literal notranslate"><span class="pre">full</span></code>
+meaning the topography (bottom depth and sea-surface height) are expanded so
+that all layers have their full thickness; <code class="docutils literal notranslate"><span class="pre">partial</span></code> meaning that cells
+adjacent to the topography are allowed to be a small fraction of a full layer
+thickness; or <code class="docutils literal notranslate"><span class="pre">None</span></code> to indicate that no alteration is needed for full or
+partial cells (typically only in cases where the topography is already flat).</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">partial_cell_type</span> <span class="pre">=</span> <span class="pre">partial</span></code>, the option <code class="docutils literal notranslate"><span class="pre">min_pc_fraction</span></code> indicates
+the smallest fraction of a layer that a partial cell is allowed to have before
+it must either be expanded to the minimum or collapsed to the next adjacent
+valid layer (whichever would cause the smallest change).</p>
+<div class="section" id="z-star">
+<span id="ocean-z-star"></span><h3>z-star<a class="headerlink" href="#z-star" title="Permalink to this headline">¶</a></h3>
+<p>Most MPAS-Ocean test cases currently use the z* vertical coordinate
+(<a class="reference external" href="https://doi.org/10.1016/j.ocemod.2003.09.003">Adcroft and Campin, 2004</a>)
+by default.  Typically (in the absence of ice-shelf cavities), the initial
+“resting” grid uses a <a class="reference internal" href="#ocean-z-level"><span class="std std-ref">z-level</span></a> coordinate.  As the sea-surface
+height evolves, the coordinate stretches and squashes in proportion to changes
+in the local watercolumn thickness.</p>
+<p>In configurations with <a class="reference internal" href="ice_shelf.html#ocean-ice-shelf-cavities"><span class="std std-ref">Ice shelf-cavities</span></a>, the ice draft
+(elevation of the ice shelf-ocean interface) also acts the sea-surface height
+for a z-star coordinate.  This means that the initial layers are squashed
+significantly from their “resting” thickness under ice shelves as if they were
+being pressed down by the weight of the ice.</p>
+</div>
+<div class="section" id="z-level">
+<span id="ocean-z-level"></span><h3>z-level<a class="headerlink" href="#z-level" title="Permalink to this headline">¶</a></h3>
+<p>In the absence of <a class="reference internal" href="ice_shelf.html#ocean-ice-shelf-cavities"><span class="std std-ref">Ice shelf-cavities</span></a>, the z-level coordinate in
+MPAS-Ocean is the same as the <a class="reference internal" href="#ocean-z-star"><span class="std std-ref">z-star</span></a> coordinate.</p>
+<p>When ice-shelf cavities are included, rather than depressing the vertical grid
+under the weight of the ice, the z-level coordinate used top cells to mask out
+parts of the mesh as “land” in the same way that cells below the batymetry are
+masked as land.  The topography at the top of the ocean is represented by
+“stair steps”, using either “full” or “partial” cells to represent these steps
+in exactly the same way as at the seafloor.</p>
+</div>
 </div>
 </div>
 

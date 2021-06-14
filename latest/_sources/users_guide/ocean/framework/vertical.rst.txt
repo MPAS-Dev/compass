@@ -3,11 +3,8 @@
 Vertical coordinate
 ===================
 
-Most compass test groups and test cases support a z* vertical coordinate
-(`Adcroft and Campin, 2004 <https://doi.org/10.1016/j.ocemod.2003.09.003>`_).
-The number and interface locations of the initial ("resting") z* layers are
-determined by config options in the ``vertical_grid`` section of the config
-file:
+The vertical coordinate used in most MPAS-Ocean test cases is determined by
+config options in the ``vertical_grid`` section of the config file:
 
 .. code-block:: cfg
 
@@ -29,13 +26,31 @@ file:
     # The maximum layer thickness
     max_layer_thickness = 500.0
 
-Possible grid types are: ``uniform``, ``tanh_dz``, ``60layerPHC``, and
+    # The type of vertical coordinate (e.g. z-level, z-star)
+    coord_type = z-star
+
+    # Whether to use "partial" or "full", or "None" to not alter the topography
+    partial_cell_type = full
+
+    # The minimum fraction of a layer for partial cells
+    min_pc_fraction = 0.1
+
+The vertical coordinate is typically defined based on a 1D reference grid.
+Possible 1D grid types are: ``uniform``, ``tanh_dz``, ``60layerPHC``, and
 ``100layerE3SMv1``.
 
-The meaning of the other config options depends grid type.
+The meaning of the config options ``vert_levels``, ``bottom_depth``,
+``min_layer_thickness`` and ``max_layer_thickness`` depends grid type and is
+described below.
+
+The options ``coord_type``, ``partial_cell_type`` and ``min_pc_fraction``
+relate to :ref:`ocean_vert_3d`, described below.
+
+1D Grid type
+------------
 
 uniform
--------
+~~~~~~~
 
 Uniform vertical grids have vertical layers all of the same thickness. The
 layer thickness is simply ``bottom_depth`` (the positive depth of the bottom
@@ -58,7 +73,7 @@ layers, each 100 m thick.
     bottom_depth = 1000.0
 
 tanh_dz
--------
+~~~~~~~
 
 This vertical coordinate is a variant on
 `Stewart et al. (2017) <https://doi.org/10.1016/j.ocemod.2017.03.012>`_.  Layer
@@ -107,7 +122,7 @@ The following config options are all required.  This is an example of a
     max_layer_thickness = 210.0
 
 60layerPHC
-----------
+~~~~~~~~~~
 
 This is the vertical grid used by the Polar science center Hydrographic Climatology
 (`PHC <http://psc.apl.washington.edu/nonwp_projects/PHC/Climatology.html>`_).
@@ -126,7 +141,7 @@ If the ``bottom_depth`` option is also defined, the depths will be renormalized
 so that bottom of the deepest layer is at ``z = -bottom_depth``
 
 100layerE3SMv1
---------------
+~~~~~~~~~~~~~~
 
 This is the vertical grid was used in some E3SM v1 experiments. Layer
 thicknesses vary over 100 layers from 1.51 m at the surface to 221 m at the
@@ -157,3 +172,55 @@ the default approach in the :ref:`ocean_ziso` test group:
 
 In this case, the thickness of the 100 layers vary between ~0.63 m and 92.1 m,
 with the sea floor at 2500 m.
+
+
+.. _ocean_vert_3d:
+
+3D vertical coordinates
+-----------------------
+
+Currently, ``z-star`` and ``z-level`` vertical coordinates are supported
+(``coord_type``).  Each supports 3 options for ``partial_cell_type``: ``full``
+meaning the topography (bottom depth and sea-surface height) are expanded so
+that all layers have their full thickness; ``partial`` meaning that cells
+adjacent to the topography are allowed to be a small fraction of a full layer
+thickness; or ``None`` to indicate that no alteration is needed for full or
+partial cells (typically only in cases where the topography is already flat).
+
+If ``partial_cell_type = partial``, the option ``min_pc_fraction`` indicates
+the smallest fraction of a layer that a partial cell is allowed to have before
+it must either be expanded to the minimum or collapsed to the next adjacent
+valid layer (whichever would cause the smallest change).
+
+.. _ocean_z_star:
+
+z-star
+~~~~~~
+
+Most MPAS-Ocean test cases currently use the z* vertical coordinate
+(`Adcroft and Campin, 2004 <https://doi.org/10.1016/j.ocemod.2003.09.003>`_)
+by default.  Typically (in the absence of ice-shelf cavities), the initial
+"resting" grid uses a :ref:`ocean_z_level` coordinate.  As the sea-surface
+height evolves, the coordinate stretches and squashes in proportion to changes
+in the local watercolumn thickness.
+
+In configurations with :ref:`ocean_ice_shelf_cavities`, the ice draft
+(elevation of the ice shelf-ocean interface) also acts the sea-surface height
+for a z-star coordinate.  This means that the initial layers are squashed
+significantly from their "resting" thickness under ice shelves as if they were
+being pressed down by the weight of the ice.
+
+.. _ocean_z_level:
+
+z-level
+~~~~~~~
+
+In the absence of :ref:`ocean_ice_shelf_cavities`, the z-level coordinate in
+MPAS-Ocean is the same as the :ref:`ocean_z_star` coordinate.
+
+When ice-shelf cavities are included, rather than depressing the vertical grid
+under the weight of the ice, the z-level coordinate used top cells to mask out
+parts of the mesh as "land" in the same way that cells below the batymetry are
+masked as land.  The topography at the top of the ocean is represented by
+"stair steps", using either "full" or "partial" cells to represent these steps
+in exactly the same way as at the seafloor.

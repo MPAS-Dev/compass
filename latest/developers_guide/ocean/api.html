@@ -832,14 +832,40 @@
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.plot.plot_vertical_grid.html#compass.ocean.plot.plot_vertical_grid" title="compass.ocean.plot.plot_vertical_grid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot.plot_vertical_grid</span></code></a>(grid_filename, config)</p></td>
 <td><p>Plot the vertical grid</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.vertical.generate_grid.html#compass.ocean.vertical.generate_grid" title="compass.ocean.vertical.generate_grid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertical.generate_grid</span></code></a>(config)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.vertical.init_vertical_coord.html#compass.ocean.vertical.init_vertical_coord" title="compass.ocean.vertical.init_vertical_coord"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertical.init_vertical_coord</span></code></a>(config, ds)</p></td>
+<td><p>Create a vertical coordinate based on the config options in the <code class="docutils literal notranslate"><span class="pre">vertical_grid</span></code> section and the <code class="docutils literal notranslate"><span class="pre">bottomDepth</span></code> and <code class="docutils literal notranslate"><span class="pre">ssh</span></code> variables of the mesh data set.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.vertical.grid_1d.generate_1d_grid.html#compass.ocean.vertical.grid_1d.generate_1d_grid" title="compass.ocean.vertical.grid_1d.generate_1d_grid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertical.grid_1d.generate_1d_grid</span></code></a>(config)</p></td>
 <td><p>Generate a vertical grid for a test case, using the config options in the <code class="docutils literal notranslate"><span class="pre">vertical_grid</span></code> section</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.vertical.write_grid.html#compass.ocean.vertical.write_grid" title="compass.ocean.vertical.write_grid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertical.write_grid</span></code></a>(interfaces, out_filename)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.vertical.grid_1d.write_1d_grid.html#compass.ocean.vertical.grid_1d.write_1d_grid" title="compass.ocean.vertical.grid_1d.write_1d_grid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertical.grid_1d.write_1d_grid</span></code></a>(interfaces, …)</p></td>
 <td><p>write the vertical grid to a file</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.vertical.zstar.compute_layer_thickness_and_zmid.html#compass.ocean.vertical.zstar.compute_layer_thickness_and_zmid" title="compass.ocean.vertical.zstar.compute_layer_thickness_and_zmid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertical.zstar.compute_layer_thickness_and_zmid</span></code></a>(…)</p></td>
-<td><p>Initialize the vertical coordinate to a z-star coordinate</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.vertical.partial_cells.alter_bottom_depth.html#compass.ocean.vertical.partial_cells.alter_bottom_depth" title="compass.ocean.vertical.partial_cells.alter_bottom_depth"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertical.partial_cells.alter_bottom_depth</span></code></a>(…)</p></td>
+<td><p>Alter <code class="docutils literal notranslate"><span class="pre">bottomDepth</span></code> and <code class="docutils literal notranslate"><span class="pre">maxLevelCell</span></code> for full or partial top cells, if requested</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.vertical.partial_cells.alter_ssh.html#compass.ocean.vertical.partial_cells.alter_ssh" title="compass.ocean.vertical.partial_cells.alter_ssh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertical.partial_cells.alter_ssh</span></code></a>(config, …)</p></td>
+<td><p>Alter <code class="docutils literal notranslate"><span class="pre">ssh</span></code> and <code class="docutils literal notranslate"><span class="pre">maxLevelCell</span></code> for full or partial top cells, if requested</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.vertical.zlevel.init_z_level_vertical_coord.html#compass.ocean.vertical.zlevel.init_z_level_vertical_coord" title="compass.ocean.vertical.zlevel.init_z_level_vertical_coord"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertical.zlevel.init_z_level_vertical_coord</span></code></a>(…)</p></td>
+<td><p>Create a z-level vertical coordinate based on the config options in the <code class="docutils literal notranslate"><span class="pre">vertical_grid</span></code> section and the <code class="docutils literal notranslate"><span class="pre">bottomDepth</span></code> and <code class="docutils literal notranslate"><span class="pre">ssh</span></code> variables of the mesh data set.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.vertical.zlevel.compute_min_max_level_cell.html#compass.ocean.vertical.zlevel.compute_min_max_level_cell" title="compass.ocean.vertical.zlevel.compute_min_max_level_cell"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertical.zlevel.compute_min_max_level_cell</span></code></a>(…)</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">param refTopDepth</dt>
+<dd class="field-odd"><p>A 1D array of positive-down depths of the top of each z level</p>
+</dd>
+</dl>
+</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.vertical.zlevel.compute_z_level_layer_thickness.html#compass.ocean.vertical.zlevel.compute_z_level_layer_thickness" title="compass.ocean.vertical.zlevel.compute_z_level_layer_thickness"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertical.zlevel.compute_z_level_layer_thickness</span></code></a>(…)</p></td>
+<td><p>Compute z-level layer thickness from ssh and bottomDepth</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.ocean.vertical.zlevel.compute_z_level_resting_thickness.html#compass.ocean.vertical.zlevel.compute_z_level_resting_thickness" title="compass.ocean.vertical.zlevel.compute_z_level_resting_thickness"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertical.zlevel.compute_z_level_resting_thickness</span></code></a>(…)</p></td>
+<td><p>Compute z-level resting thickness by “unstretching” layerThickness based on ssh and bottomDepth</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.ocean.vertical.zstar.init_z_star_vertical_coord.html#compass.ocean.vertical.zstar.init_z_star_vertical_coord" title="compass.ocean.vertical.zstar.init_z_star_vertical_coord"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertical.zstar.init_z_star_vertical_coord</span></code></a>(…)</p></td>
+<td><p>Create a z-star vertical coordinate based on the config options in the <code class="docutils literal notranslate"><span class="pre">vertical_grid</span></code> section and the <code class="docutils literal notranslate"><span class="pre">bottomDepth</span></code> and <code class="docutils literal notranslate"><span class="pre">ssh</span></code> variables of the mesh data set.</p></td>
 </tr>
 </tbody>
 </table>

@@ -198,8 +198,7 @@
 <span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.mesh.conversion</span> <span class="kn">import</span> <span class="n">convert</span><span class="p">,</span> <span class="n">cull</span>
 
-<span class="kn">from</span> <span class="nn">compass.ocean.vertical.zstar</span> <span class="kn">import</span> <span class="n">compute_layer_thickness_and_zmid</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.vertical</span> <span class="kn">import</span> <span class="n">generate_grid</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.vertical</span> <span class="kn">import</span> <span class="n">init_vertical_coord</span>
 <span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
 
 
@@ -272,12 +271,7 @@
 
     <span class="n">ds</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
-    <span class="n">interfaces</span> <span class="o">=</span> <span class="n">generate_grid</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
     <span class="n">bottom_depth</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;vertical_grid&#39;</span><span class="p">,</span> <span class="s1">&#39;bottom_depth&#39;</span><span class="p">)</span>
-
-    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;refBottomDepth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,</span> <span class="n">interfaces</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
-    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;refZMid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">interfaces</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="n">interfaces</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
-    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;vertCoordMovementWeights&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">refBottomDepth</span><span class="p">)</span>
 
     <span class="n">xCell</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">xCell</span>
     <span class="n">yCell</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">yCell</span>
@@ -286,26 +280,15 @@
     <span class="n">slope_center_position</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;slope_center_position&#39;</span><span class="p">)</span>
     <span class="n">slope_half_width</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;slope_half_width&#39;</span><span class="p">)</span>
 
-    <span class="n">bottomDepth</span> <span class="o">=</span> <span class="p">(</span><span class="n">shelf_depth</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">bottom_depth</span> <span class="o">-</span> <span class="n">shelf_depth</span><span class="p">)</span> <span class="o">*</span>
-                   <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">numpy</span><span class="o">.</span><span class="n">tanh</span><span class="p">((</span><span class="n">yCell</span> <span class="o">-</span> <span class="n">slope_center_position</span><span class="p">)</span> <span class="o">/</span>
-                                     <span class="n">slope_half_width</span><span class="p">)))</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;bottomDepth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">shelf_depth</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">bottom_depth</span> <span class="o">-</span> <span class="n">shelf_depth</span><span class="p">)</span> <span class="o">*</span>
+                         <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">numpy</span><span class="o">.</span><span class="n">tanh</span><span class="p">((</span><span class="n">yCell</span> <span class="o">-</span> <span class="n">slope_center_position</span><span class="p">)</span> <span class="o">/</span>
+                                           <span class="n">slope_half_width</span><span class="p">)))</span>
 
-    <span class="n">refTopDepth</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">interfaces</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-                                   <span class="n">dims</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,))</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">xCell</span><span class="p">)</span>
 
-    <span class="n">cellMask</span> <span class="o">=</span> <span class="p">(</span><span class="n">refTopDepth</span> <span class="o">&lt;</span> <span class="n">bottomDepth</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="s1">&#39;nCells&#39;</span><span class="p">,</span> <span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span>
+    <span class="n">init_vertical_coord</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>
 
-    <span class="n">maxLevelCell</span> <span class="o">=</span> <span class="n">cellMask</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
-
-    <span class="c1"># We want full cells, so deepen bottomDepth to be the bottom of the last</span>
-    <span class="c1"># valid layer</span>
-    <span class="n">bottomDepth</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">refBottomDepth</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nVertLevels</span><span class="o">=</span><span class="n">maxLevelCell</span><span class="p">)</span>
-
-    <span class="n">restingThickness</span><span class="p">,</span> <span class="n">layerThickness</span><span class="p">,</span> <span class="n">zMid</span> <span class="o">=</span> <span class="n">compute_layer_thickness_and_zmid</span><span class="p">(</span>
-        <span class="n">cellMask</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">refBottomDepth</span><span class="p">,</span> <span class="n">bottomDepth</span><span class="p">,</span> <span class="n">maxLevelCell</span><span class="p">)</span>
-
-    <span class="n">layerThickness</span> <span class="o">=</span> <span class="n">layerThickness</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-    <span class="n">zMid</span> <span class="o">=</span> <span class="n">zMid</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">zMid</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">zMid</span>
 
     <span class="n">initial_temp_t1</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;initial_temp_t1&#39;</span><span class="p">)</span>
     <span class="n">initial_temp_t2</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;initial_temp_t2&#39;</span><span class="p">)</span>
@@ -348,12 +331,6 @@
     <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temperature</span>
     <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;salinity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">salinity</span>
     <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;normalVelocity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">normalVelocity</span>
-    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;layerThickness&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">layerThickness</span>
-    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;restingThickness&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">layerThickness</span>
-    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;zMid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">zMid</span>
-    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;bottomDepth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bottomDepth</span>
-    <span class="c1"># fortran 1-based indexing</span>
-    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;maxLevelCell&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">maxLevelCell</span><span class="o">+</span><span class="mi">1</span>
     <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;fCell&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">reference_coriolis</span> <span class="o">+</span> <span class="n">yCell</span> <span class="o">*</span> <span class="n">coriolis_gradient</span>
     <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;fEdge&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">reference_coriolis</span> <span class="o">+</span> <span class="n">ds</span><span class="o">.</span><span class="n">yEdge</span> <span class="o">*</span> <span class="n">coriolis_gradient</span>
     <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;fVertex&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">reference_coriolis</span> <span class="o">+</span> <span class="n">ds</span><span class="o">.</span><span class="n">yVertex</span> <span class="o">*</span> <span class="n">coriolis_gradient</span>

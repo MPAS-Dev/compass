@@ -190,17 +190,40 @@
             
   <h1>Source code for compass.ocean.vertical</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="n">resources</span>
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">from</span> <span class="nn">netCDF4</span> <span class="kn">import</span> <span class="n">Dataset</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">root_scalar</span>
+<span class="kn">import</span> <span class="nn">xarray</span>
+
+<span class="kn">from</span> <span class="nn">compass.ocean.vertical.zlevel</span> <span class="kn">import</span> <span class="n">init_z_level_vertical_coord</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.vertical.zstar</span> <span class="kn">import</span> <span class="n">init_z_star_vertical_coord</span>
 
 
-<div class="viewcode-block" id="generate_grid"><a class="viewcode-back" href="../../../developers_guide/ocean/generated/compass.ocean.vertical.generate_grid.html#compass.ocean.vertical.generate_grid">[docs]</a><span class="k">def</span> <span class="nf">generate_grid</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+<div class="viewcode-block" id="init_vertical_coord"><a class="viewcode-back" href="../../../developers_guide/ocean/generated/compass.ocean.vertical.init_vertical_coord.html#compass.ocean.vertical.init_vertical_coord">[docs]</a><span class="k">def</span> <span class="nf">init_vertical_coord</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Generate a vertical grid for a test case, using the config options in the</span>
-<span class="sd">    ``vertical_grid`` section</span>
+<span class="sd">    Create a vertical coordinate based on the config options in the</span>
+<span class="sd">    ``vertical_grid`` section and the ``bottomDepth`` and ``ssh`` variables of</span>
+<span class="sd">    the mesh data set.</span>
+
+<span class="sd">    The following new variables will be added to the data set:</span>
+<span class="sd">    * ``minLevelCell`` - the index of the top valid layer</span>
+<span class="sd">    * ``maxLevelCell`` - the index of the bottom valid layer</span>
+<span class="sd">    * ``cellMask`` - a mask of where cells are valid</span>
+<span class="sd">    * ``layerThickness`` - the thickness of each layer</span>
+<span class="sd">    * ``restingThickness`` - the thickness of each layer stretched as if</span>
+<span class="sd">      ``ssh = 0``</span>
+<span class="sd">    * ``zMid`` - the elevation of the midpoint of each layer</span>
+
+<span class="sd">    So far, all supported coordinates make use of a 1D reference vertical grid.</span>
+<span class="sd">    The following variables associated with that field are also added to the</span>
+<span class="sd">    mesh:</span>
+<span class="sd">    * ``refTopDepth`` - the positive-down depth of the top of each ref. level</span>
+<span class="sd">    * ``refZMid`` - the positive-down depth of the middle of each ref. level</span>
+<span class="sd">    * ``refBottomDepth`` - the positive-down depth of the bottom of each ref.</span>
+<span class="sd">      level</span>
+<span class="sd">    * ``refInterfaces`` - the positive-down depth of the interfaces between</span>
+<span class="sd">      ref. levels (with ``nVertLevels`` + 1 elements).</span>
+<span class="sd">    * ``vertCoordMovementWeights`` - the weights (all ones) for coordinate</span>
+<span class="sd">      movement</span>
+<span class="sd">    There is considerable redundancy between these variables but each is</span>
+<span class="sd">    sometimes convenient.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -208,236 +231,97 @@
 <span class="sd">        Configuration options with parameters used to construct the vertical</span>
 <span class="sd">        grid</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    interfaces : numpy.ndarray</span>
-<span class="sd">        A 1D array of positive depths for layer interfaces in meters</span>
+<span class="sd">    ds : xarray.Dataset</span>
+<span class="sd">        A data set containing ``bottomDepth`` and ``ssh`` variables used to</span>
+<span class="sd">        construct the vertical coordinate</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;vertical_grid&#39;</span><span class="p">]</span>
-    <span class="n">grid_type</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;grid_type&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">grid_type</span> <span class="o">==</span> <span class="s1">&#39;uniform&#39;</span><span class="p">:</span>
-        <span class="n">vert_levels</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;vert_levels&#39;</span><span class="p">)</span>
-        <span class="n">interfaces</span> <span class="o">=</span> <span class="n">_generate_uniform</span><span class="p">(</span><span class="n">vert_levels</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">grid_type</span> <span class="o">==</span> <span class="s1">&#39;tanh_dz&#39;</span><span class="p">:</span>
-        <span class="n">vert_levels</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;vert_levels&#39;</span><span class="p">)</span>
-        <span class="n">min_layer_thickness</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;min_layer_thickness&#39;</span><span class="p">)</span>
-        <span class="n">max_layer_thickness</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;max_layer_thickness&#39;</span><span class="p">)</span>
-        <span class="n">bottom_depth</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;bottom_depth&#39;</span><span class="p">)</span>
-        <span class="n">interfaces</span> <span class="o">=</span> <span class="n">_create_tanh_dz_grid</span><span class="p">(</span><span class="n">vert_levels</span><span class="p">,</span> <span class="n">bottom_depth</span><span class="p">,</span>
-                                          <span class="n">min_layer_thickness</span><span class="p">,</span>
-                                          <span class="n">max_layer_thickness</span><span class="p">)</span>
 
-    <span class="k">elif</span> <span class="n">grid_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;60layerPHC&#39;</span><span class="p">,</span> <span class="s1">&#39;100layerE3SMv1&#39;</span><span class="p">]:</span>
-        <span class="n">interfaces</span> <span class="o">=</span> <span class="n">_read_json</span><span class="p">(</span><span class="n">grid_type</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;bottomDepth&#39;</span><span class="p">,</span> <span class="s1">&#39;ssh&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> must be added to ds before this call.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">var</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="s1">&#39;Time&#39;</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">ssh</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+        <span class="c1"># drop it for now, we&#39;ll add it back at the end</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">ssh</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">coord_type</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;vertical_grid&#39;</span><span class="p">,</span> <span class="s1">&#39;coord_type&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">coord_type</span> <span class="o">==</span> <span class="s1">&#39;z-level&#39;</span><span class="p">:</span>
+        <span class="n">init_z_level_vertical_coord</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">coord_type</span> <span class="o">==</span> <span class="s1">&#39;z-star&#39;</span><span class="p">:</span>
+        <span class="n">init_z_star_vertical_coord</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">coord_type</span> <span class="o">==</span> <span class="s1">&#39;haney-number&#39;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Haney Number coordinate not yet supported.&#39;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unexpected grid type: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">grid_type</span><span class="p">))</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown coordinate type </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">coord_type</span><span class="p">))</span>
 
-    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="s1">&#39;vertical_grid&#39;</span><span class="p">,</span> <span class="s1">&#39;bottom_depth&#39;</span><span class="p">)</span> <span class="ow">and</span> \
-            <span class="n">grid_type</span> <span class="o">!=</span> <span class="s1">&#39;tanh_dz&#39;</span><span class="p">:</span>
-        <span class="n">bottom_depth</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;bottom_depth&#39;</span><span class="p">)</span>
-        <span class="c1"># renormalize to the requested range</span>
-        <span class="n">interfaces</span> <span class="o">=</span> <span class="p">(</span><span class="n">bottom_depth</span><span class="o">/</span><span class="n">interfaces</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">interfaces</span>
+    <span class="c1"># recompute the cell mask since min/max indices may have changed</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;cellMask&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_compute_cell_mask</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">minLevelCell</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">maxLevelCell</span><span class="p">,</span>
+                                        <span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">])</span>
 
-    <span class="k">return</span> <span class="n">interfaces</span></div>
+    <span class="c1"># mask layerThickness and restingThickness</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;layerThickness&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">layerThickness</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">cellMask</span><span class="p">)</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;restingThickness&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">restingThickness</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">cellMask</span><span class="p">)</span>
+
+    <span class="c1"># add (back) Time dimension</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">ssh</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;layerThickness&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">layerThickness</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;restingThickness&#39;</span><span class="p">]</span> <span class="o">=</span> \
+        <span class="n">ds</span><span class="o">.</span><span class="n">restingThickness</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;zMid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_compute_zmid_from_layer_thickness</span><span class="p">(</span>
+        <span class="n">ds</span><span class="o">.</span><span class="n">layerThickness</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">ssh</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">cellMask</span><span class="p">)</span>
+
+    <span class="c1"># fortran 1-based indexing</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;minLevelCell&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">minLevelCell</span><span class="o">+</span><span class="mi">1</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;maxLevelCell&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">maxLevelCell</span><span class="o">+</span><span class="mi">1</span></div>
 
 
-<div class="viewcode-block" id="write_grid"><a class="viewcode-back" href="../../../developers_guide/ocean/generated/compass.ocean.vertical.write_grid.html#compass.ocean.vertical.write_grid">[docs]</a><span class="k">def</span> <span class="nf">write_grid</span><span class="p">(</span><span class="n">interfaces</span><span class="p">,</span> <span class="n">out_filename</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_compute_cell_mask</span><span class="p">(</span><span class="n">minLevelCell</span><span class="p">,</span> <span class="n">maxLevelCell</span><span class="p">,</span> <span class="n">nVertLevels</span><span class="p">):</span>
+    <span class="n">cellMask</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">zIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nVertLevels</span><span class="p">):</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">zIndex</span> <span class="o">&gt;=</span> <span class="n">minLevelCell</span><span class="p">,</span>
+                                 <span class="n">zIndex</span> <span class="o">&lt;=</span> <span class="n">maxLevelCell</span><span class="p">)</span>
+        <span class="n">cellMask</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
+    <span class="n">cellMask</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">cellMask</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span>
+    <span class="n">cellMask</span> <span class="o">=</span> <span class="n">cellMask</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="s1">&#39;nCells&#39;</span><span class="p">,</span> <span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cellMask</span>
+
+
+<span class="k">def</span> <span class="nf">_compute_zmid_from_layer_thickness</span><span class="p">(</span><span class="n">layerThickness</span><span class="p">,</span> <span class="n">ssh</span><span class="p">,</span> <span class="n">cellMask</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    write the vertical grid to a file</span>
+<span class="sd">    Compute zMid from ssh and layerThickness for any vertical coordinate</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    interfaces : numpy.ndarray</span>
-<span class="sd">        A 1D array of positive depths for layer interfaces in meters</span>
+<span class="sd">    layerThickness : xarray.DataArray</span>
+<span class="sd">        The thickness of each layer</span>
 
-<span class="sd">    out_filename : str</span>
-<span class="sd">        MPAS file name for output of vertical grid</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    ssh : xarray.DataArray</span>
+<span class="sd">        The sea surface height</span>
 
-    <span class="n">nz</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">interfaces</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
-
-    <span class="c1"># open a new netCDF file for writing.</span>
-    <span class="n">ncfile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">out_filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
-    <span class="c1"># create the depth_t dimension.</span>
-    <span class="n">ncfile</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,</span> <span class="n">nz</span><span class="p">)</span>
-
-    <span class="n">refBottomDepth</span> <span class="o">=</span> <span class="n">ncfile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span>
-        <span class="s1">&#39;refBottomDepth&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">char</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,))</span>
-    <span class="n">refMidDepth</span> <span class="o">=</span> <span class="n">ncfile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span>
-        <span class="s1">&#39;refMidDepth&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">char</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,))</span>
-    <span class="n">refLayerThickness</span> <span class="o">=</span> <span class="n">ncfile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span>
-        <span class="s1">&#39;refLayerThickness&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">char</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,))</span>
-
-    <span class="n">botDepth</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
-    <span class="n">midDepth</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">interfaces</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">interfaces</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
-
-    <span class="n">refBottomDepth</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">botDepth</span>
-    <span class="n">refMidDepth</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">midDepth</span>
-    <span class="n">refLayerThickness</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="n">interfaces</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">ncfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
-
-
-<span class="k">def</span> <span class="nf">_generate_uniform</span><span class="p">(</span><span class="n">vert_levels</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Generate uniform layer interfaces between 0 and 1 &quot;&quot;&quot;</span>
-    <span class="n">interfaces</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="n">vert_levels</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">interfaces</span>
-
-
-<span class="k">def</span> <span class="nf">_read_json</span><span class="p">(</span><span class="n">grid_type</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Read the grid interfaces from a json file &quot;&quot;&quot;</span>
-
-    <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.json&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">grid_type</span><span class="p">)</span>
-    <span class="k">with</span> <span class="n">resources</span><span class="o">.</span><span class="n">open_text</span><span class="p">(</span><span class="s2">&quot;compass.ocean.vertical&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">data_file</span><span class="p">:</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">data_file</span><span class="p">)</span>
-        <span class="n">interfaces</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">interfaces</span>
-
-
-<span class="k">def</span> <span class="nf">_create_tanh_dz_grid</span><span class="p">(</span><span class="n">num_vert_levels</span><span class="p">,</span> <span class="n">bottom_depth</span><span class="p">,</span> <span class="n">min_layer_thickness</span><span class="p">,</span>
-                         <span class="n">max_layer_thickness</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Creates the vertical grid for MPAS-Ocean and writes it to a NetCDF file</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    num_vert_levels : int</span>
-<span class="sd">        Number of vertical levels for the grid</span>
-
-<span class="sd">    bottom_depth : float</span>
-<span class="sd">        bottom depth for the chosen vertical coordinate [m]</span>
-
-<span class="sd">    min_layer_thickness : float</span>
-<span class="sd">        Target thickness of the first layer [m]</span>
-
-<span class="sd">    max_layer_thickness : float</span>
-<span class="sd">        Target maximum thickness in column [m]</span>
+<span class="sd">    cellMask : xarray.DataArray</span>
+<span class="sd">        A boolean mask of where there are valid cells</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    interfaces : numpy.ndarray</span>
-<span class="sd">        A 1D array of positive depths for layer interfaces in meters</span>
+<span class="sd">    zMid : xarray.DataArray</span>
+<span class="sd">        The elevation of layer centers</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">nz</span> <span class="o">=</span> <span class="n">num_vert_levels</span>
-    <span class="n">dz1</span> <span class="o">=</span> <span class="n">min_layer_thickness</span>
-    <span class="n">dz2</span> <span class="o">=</span> <span class="n">max_layer_thickness</span>
-
-    <span class="c1"># the bracket here is large enough that it should hopefully encompass any</span>
-    <span class="c1"># reasonable value of delta, the characteristic length scale over which</span>
-    <span class="c1"># dz varies.  The args are passed on to the match_bottom function below,</span>
-    <span class="c1"># and the root finder will determine a value of delta (sol.root) such that</span>
-    <span class="c1"># match_bottom is within a tolerance of zero, meaning the bottom of the</span>
-    <span class="c1"># coordinate computed by cumsum_z hits bottom_depth almost exactly</span>
-    <span class="n">sol</span> <span class="o">=</span> <span class="n">root_scalar</span><span class="p">(</span><span class="n">_match_bottom</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;brentq&#39;</span><span class="p">,</span>
-                      <span class="n">bracket</span><span class="o">=</span><span class="p">[</span><span class="n">dz1</span><span class="p">,</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">bottom_depth</span><span class="p">],</span>
-                      <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">nz</span><span class="p">,</span> <span class="n">dz1</span><span class="p">,</span> <span class="n">dz2</span><span class="p">,</span> <span class="n">bottom_depth</span><span class="p">))</span>
-
-    <span class="n">delta</span> <span class="o">=</span> <span class="n">sol</span><span class="o">.</span><span class="n">root</span>
-    <span class="n">layerThickness</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">_cumsum_z</span><span class="p">(</span><span class="n">delta</span><span class="p">,</span> <span class="n">nz</span><span class="p">,</span> <span class="n">dz1</span><span class="p">,</span> <span class="n">dz2</span><span class="p">)</span>
-    <span class="n">interfaces</span> <span class="o">=</span> <span class="o">-</span><span class="n">z</span>
-
-    <span class="k">return</span> <span class="n">interfaces</span>
-
-
-<span class="k">def</span> <span class="nf">_match_bottom</span><span class="p">(</span><span class="n">delta</span><span class="p">,</span> <span class="n">nz</span><span class="p">,</span> <span class="n">dz1</span><span class="p">,</span> <span class="n">dz2</span><span class="p">,</span> <span class="n">bottom_depth</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Compute the difference between the bottom depth computed with the given</span>
-<span class="sd">    parameters and the target ``bottom_depth``, used in the root finding</span>
-<span class="sd">    algorithm to determine which value of ``delta`` to use.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    delta : float</span>
-<span class="sd">        The characteristic length scale over which dz varies (this parameter</span>
-<span class="sd">        will be optimized to hit a target depth in a target number of layers)</span>
-
-<span class="sd">    nz : int</span>
-<span class="sd">        The number of layers</span>
-
-<span class="sd">    dz1 : float</span>
-<span class="sd">        The layer thickness at the top of the ocean (z = 0)</span>
-
-<span class="sd">    dz2 : float</span>
-<span class="sd">        The layer thickness at z --&gt; -infinity</span>
-
-<span class="sd">    bottom_depth: float</span>
-<span class="sd">        depth of the bottom of the ocean that should match the bottom layer</span>
-<span class="sd">        interface.  Note: the bottom_depth is positive, whereas the layer</span>
-<span class="sd">        interfaces are negative.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    diff : float</span>
-<span class="sd">        The computed bottom depth minus the target ``bottom_depth``.  ``diff``</span>
-<span class="sd">        should be zero when we have found the desired ``delta``.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">_</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">_cumsum_z</span><span class="p">(</span><span class="n">delta</span><span class="p">,</span> <span class="n">nz</span><span class="p">,</span> <span class="n">dz1</span><span class="p">,</span> <span class="n">dz2</span><span class="p">)</span>
-    <span class="n">diff</span> <span class="o">=</span> <span class="o">-</span><span class="n">bottom_depth</span> <span class="o">-</span> <span class="n">z</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">diff</span>
-
-
-<span class="k">def</span> <span class="nf">_cumsum_z</span><span class="p">(</span><span class="n">delta</span><span class="p">,</span> <span class="n">nz</span><span class="p">,</span> <span class="n">dz1</span><span class="p">,</span> <span class="n">dz2</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Compute layer interface depths and layer thicknesses over ``nz`` layers</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    delta : float</span>
-<span class="sd">        The characteristic length scale over which dz varies (this parameter</span>
-<span class="sd">        will be optimized to hit a target depth in a target number of layers)</span>
-
-<span class="sd">    nz : int</span>
-<span class="sd">        The number of layers</span>
-
-<span class="sd">    dz1 : float</span>
-<span class="sd">        The layer thickness at the top of the ocean (z = 0)</span>
-
-<span class="sd">    dz2 : float</span>
-<span class="sd">        The layer thickness at z --&gt; -infinity</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    dz : numpy.ndarray</span>
-<span class="sd">        The layer thicknesses for each layer</span>
-
-<span class="sd">    z : numpy.ndarray</span>
-<span class="sd">        The depth (positive up) of each layer interface (``nz + 1`` total</span>
-<span class="sd">        elements)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">dz</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nz</span><span class="p">)</span>
-    <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nz</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">zindex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nz</span><span class="p">):</span>
-        <span class="n">dz</span><span class="p">[</span><span class="n">zindex</span><span class="p">]</span> <span class="o">=</span> <span class="n">_dz_z</span><span class="p">(</span><span class="n">z</span><span class="p">[</span><span class="n">zindex</span><span class="p">],</span> <span class="n">dz1</span><span class="p">,</span> <span class="n">dz2</span><span class="p">,</span> <span class="n">delta</span><span class="p">)</span>
-        <span class="n">z</span><span class="p">[</span><span class="n">zindex</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="n">zindex</span><span class="p">]</span> <span class="o">-</span> <span class="n">dz</span><span class="p">[</span><span class="n">zindex</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">dz</span><span class="p">,</span> <span class="n">z</span>
-
-
-<span class="k">def</span> <span class="nf">_dz_z</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">dz1</span><span class="p">,</span> <span class="n">dz2</span><span class="p">,</span> <span class="n">delta</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    layer thickness as a function of depth</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    z : float</span>
-<span class="sd">        Depth coordinate (positive up) at which to find the layer thickness</span>
-
-<span class="sd">    dz1 : float</span>
-<span class="sd">        The layer thickness at the top of the ocean (z = 0)</span>
-
-<span class="sd">    dz2 : float</span>
-<span class="sd">        The layer thickness at z --&gt; -infinity</span>
-
-<span class="sd">    delta : float</span>
-<span class="sd">        The characteristic length scale over which dz varies (this parameter</span>
-<span class="sd">        will be optimized to hit a target depth in a target numer of layers)</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    dz : float</span>
-<span class="sd">        The layer thickness</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">dz2</span> <span class="o">-</span> <span class="n">dz1</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span><span class="o">-</span><span class="n">z</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">delta</span><span class="p">)</span> <span class="o">+</span> <span class="n">dz1</span>
+    <span class="n">zTop</span> <span class="o">=</span> <span class="n">ssh</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">nVertLevels</span> <span class="o">=</span> <span class="n">layerThickness</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">]</span>
+    <span class="n">zMid</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">zIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nVertLevels</span><span class="p">):</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">cellMask</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nVertLevels</span><span class="o">=</span><span class="n">zIndex</span><span class="p">)</span>
+        <span class="n">thickness</span> <span class="o">=</span> <span class="n">layerThickness</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nVertLevels</span><span class="o">=</span><span class="n">zIndex</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="n">zTop</span> <span class="o">-</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">thickness</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
+        <span class="n">zMid</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+        <span class="n">zTop</span> <span class="o">-=</span> <span class="n">thickness</span>
+    <span class="n">zMid</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">zMid</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="s1">&#39;nCells&#39;</span><span class="p">,</span>
+                                                            <span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">zMid</span>
 </pre></div>
 
            </div>

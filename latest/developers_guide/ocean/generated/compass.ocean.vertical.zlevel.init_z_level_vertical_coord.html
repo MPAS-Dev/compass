@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>compass.ocean.plot.plot_vertical_grid &mdash; compass latest documentation</title>
+  <title>compass.ocean.vertical.zlevel.init_z_level_vertical_coord &mdash; compass latest documentation</title>
   
 
   
@@ -41,8 +41,8 @@
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="compass.ocean.vertical.init_vertical_coord" href="compass.ocean.vertical.init_vertical_coord.html" />
-    <link rel="prev" title="compass.ocean.plot.plot_initial_state" href="compass.ocean.plot.plot_initial_state.html" /> 
+    <link rel="next" title="compass.ocean.vertical.zlevel.compute_min_max_level_cell" href="compass.ocean.vertical.zlevel.compute_min_max_level_cell.html" />
+    <link rel="prev" title="compass.ocean.vertical.partial_cells.alter_ssh" href="compass.ocean.vertical.partial_cells.alter_ssh.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -188,13 +188,13 @@
         
           <li><a href="../api.html">ocean</a> &raquo;</li>
         
-      <li>compass.ocean.plot.plot_vertical_grid</li>
+      <li>compass.ocean.vertical.zlevel.init_z_level_vertical_coord</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../../../_sources/developers_guide/ocean/generated/compass.ocean.plot.plot_vertical_grid.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/developers_guide/ocean/generated/compass.ocean.vertical.zlevel.init_z_level_vertical_coord.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -207,18 +207,50 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="compass-ocean-plot-plot-vertical-grid">
-<h1>compass.ocean.plot.plot_vertical_grid<a class="headerlink" href="#compass-ocean-plot-plot-vertical-grid" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="compass-ocean-vertical-zlevel-init-z-level-vertical-coord">
+<h1>compass.ocean.vertical.zlevel.init_z_level_vertical_coord<a class="headerlink" href="#compass-ocean-vertical-zlevel-init-z-level-vertical-coord" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="compass.ocean.plot.plot_vertical_grid">
-<span class="sig-prename descclassname"><span class="pre">compass.ocean.plot.</span></span><span class="sig-name descname"><span class="pre">plot_vertical_grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grid_filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'vertical_grid.png'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/ocean/plot.html#plot_vertical_grid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.ocean.plot.plot_vertical_grid" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plot the vertical grid</p>
+<dt class="sig sig-object py" id="compass.ocean.vertical.zlevel.init_z_level_vertical_coord">
+<span class="sig-prename descclassname"><span class="pre">compass.ocean.vertical.zlevel.</span></span><span class="sig-name descname"><span class="pre">init_z_level_vertical_coord</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/ocean/vertical/zlevel.html#init_z_level_vertical_coord"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.ocean.vertical.zlevel.init_z_level_vertical_coord" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a z-level vertical coordinate based on the config options in the
+<code class="docutils literal notranslate"><span class="pre">vertical_grid</span></code> section and the <code class="docutils literal notranslate"><span class="pre">bottomDepth</span></code> and <code class="docutils literal notranslate"><span class="pre">ssh</span></code> variables of
+the mesh data set.</p>
+<p>The following new variables will be added to the data set:
+* <code class="docutils literal notranslate"><span class="pre">minLevelCell</span></code> - the index of the top valid layer
+* <code class="docutils literal notranslate"><span class="pre">maxLevelCell</span></code> - the index of the bottom valid layer
+* <code class="docutils literal notranslate"><span class="pre">cellMask</span></code> - a mask of where cells are valid
+* <code class="docutils literal notranslate"><span class="pre">layerThickness</span></code> - the thickness of each layer
+* <code class="docutils literal notranslate"><span class="pre">restingThickness</span></code> - the thickness of each layer stretched as if</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">ssh</span> <span class="pre">=</span> <span class="pre">0</span></code></p>
+</div></blockquote>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">zMid</span></code> - the elevation of the midpoint of each layer</p></li>
+</ul>
+<p>So far, all supported coordinates make use of a 1D reference vertical grid.
+The following variables associated with that field are also added to the
+mesh:
+* <code class="docutils literal notranslate"><span class="pre">refTopDepth</span></code> - the positive-down depth of the top of each ref. level
+* <code class="docutils literal notranslate"><span class="pre">refZMid</span></code> - the positive-down depth of the middle of each ref. level
+* <code class="docutils literal notranslate"><span class="pre">refBottomDepth</span></code> - the positive-down depth of the bottom of each ref.</p>
+<blockquote>
+<div><p>level</p>
+</div></blockquote>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">refInterfaces</span></code> - the positive-down depth of the interfaces between
+ref. levels (with <code class="docutils literal notranslate"><span class="pre">nVertLevels</span></code> + 1 elements).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vertCoordMovementWeights</span></code> - the weights (all ones) for coordinate
+movement</p></li>
+</ul>
+<p>There is considerable redundancy between these variables but each is
+sometimes convenient.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>grid_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of the NetCDF file containing the vertical grid</p></li>
-<li><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/library/configparser.html#configparser.ConfigParser" title="(in Python v3.9)"><em>configparser.ConfigParser</em></a>) – Configuration options for the vertical grid</p></li>
-<li><p><strong>out_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – The name of the image file to write to</p></li>
+<li><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/library/configparser.html#configparser.ConfigParser" title="(in Python v3.9)"><em>configparser.ConfigParser</em></a>) – Configuration options with parameters used to construct the vertical
+grid</p></li>
+<li><p><strong>ds</strong> (<a class="reference external" href="http://xarray.pydata.org/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v0.18.3.dev0)"><em>xarray.Dataset</em></a>) – A data set containing <code class="docutils literal notranslate"><span class="pre">bottomDepth</span></code> and <code class="docutils literal notranslate"><span class="pre">ssh</span></code> variables used to
+construct the vertical coordinate</p></li>
 </ul>
 </dd>
 </dl>
@@ -232,8 +264,8 @@
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="compass.ocean.vertical.init_vertical_coord.html" class="btn btn-neutral float-right" title="compass.ocean.vertical.init_vertical_coord" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="compass.ocean.plot.plot_initial_state.html" class="btn btn-neutral float-left" title="compass.ocean.plot.plot_initial_state" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="compass.ocean.vertical.zlevel.compute_min_max_level_cell.html" class="btn btn-neutral float-right" title="compass.ocean.vertical.zlevel.compute_min_max_level_cell" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="compass.ocean.vertical.partial_cells.alter_ssh.html" class="btn btn-neutral float-left" title="compass.ocean.vertical.partial_cells.alter_ssh" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

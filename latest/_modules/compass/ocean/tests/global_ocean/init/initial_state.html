@@ -196,7 +196,7 @@
 <span></span><span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.metadata</span> <span class="kn">import</span> \
     <span class="n">add_mesh_and_init_metadata</span>
 <span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">run_model</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.vertical</span> <span class="kn">import</span> <span class="n">generate_grid</span><span class="p">,</span> <span class="n">write_grid</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.vertical.grid_1d</span> <span class="kn">import</span> <span class="n">generate_1d_grid</span><span class="p">,</span> <span class="n">write_1d_grid</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.plot</span> <span class="kn">import</span> <span class="n">plot_vertical_grid</span><span class="p">,</span> <span class="n">plot_initial_state</span>
 <span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
 
@@ -347,9 +347,9 @@
 <span class="sd">        Run this step of the testcase</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="n">interfaces</span> <span class="o">=</span> <span class="n">generate_grid</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
+        <span class="n">interfaces</span> <span class="o">=</span> <span class="n">generate_1d_grid</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
 
-        <span class="n">write_grid</span><span class="p">(</span><span class="n">interfaces</span><span class="o">=</span><span class="n">interfaces</span><span class="p">,</span> <span class="n">out_filename</span><span class="o">=</span><span class="s1">&#39;vertical_grid.nc&#39;</span><span class="p">)</span>
+        <span class="n">write_1d_grid</span><span class="p">(</span><span class="n">interfaces</span><span class="o">=</span><span class="n">interfaces</span><span class="p">,</span> <span class="n">out_filename</span><span class="o">=</span><span class="s1">&#39;vertical_grid.nc&#39;</span><span class="p">)</span>
         <span class="n">plot_vertical_grid</span><span class="p">(</span><span class="n">grid_filename</span><span class="o">=</span><span class="s1">&#39;vertical_grid.nc&#39;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
                            <span class="n">out_filename</span><span class="o">=</span><span class="s1">&#39;vertical_grid.png&#39;</span><span class="p">)</span>
 

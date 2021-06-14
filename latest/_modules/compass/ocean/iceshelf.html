@@ -190,10 +190,12 @@
             
   <h1>Source code for compass.ocean.iceshelf</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">from</span> <span class="nn">netCDF4</span> <span class="kn">import</span> <span class="n">Dataset</span>
+<span class="kn">import</span> <span class="nn">xarray</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 
 <span class="kn">from</span> <span class="nn">mpas_tools.cime.constants</span> <span class="kn">import</span> <span class="n">constants</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
+
 <span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">symlink</span>
 <span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">partition</span><span class="p">,</span> <span class="n">run_model</span>
 
@@ -248,6 +250,7 @@
     <span class="n">cores</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">cores</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">config</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">logger</span>
+    <span class="n">out_filename</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">if</span> <span class="n">variable</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">,</span> <span class="s1">&#39;landIcePressure&#39;</span><span class="p">]:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown variable to modify: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">variable</span><span class="p">))</span>
@@ -259,7 +262,9 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot; * Iteration </span><span class="si">{}</span><span class="s2">/</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iterIndex</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
                                                 <span class="n">iteration_count</span><span class="p">))</span>
 
-        <span class="n">symlink</span><span class="p">(</span><span class="s1">&#39;adjusting_init</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iterIndex</span><span class="p">),</span> <span class="s1">&#39;adjusting_init.nc&#39;</span><span class="p">)</span>
+        <span class="n">in_filename</span> <span class="o">=</span> <span class="s1">&#39;adjusting_init</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iterIndex</span><span class="p">)</span>
+        <span class="n">out_filename</span> <span class="o">=</span> <span class="s1">&#39;adjusting_init</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iterIndex</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">symlink</span><span class="p">(</span><span class="n">in_filename</span><span class="p">,</span> <span class="s1">&#39;adjusting_init.nc&#39;</span><span class="p">)</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;   * Running forward model&quot;</span><span class="p">)</span>
         <span class="n">run_model</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">update_pio</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">partition_graph</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -267,52 +272,46 @@
 
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;   * Updating SSH or land-ice pressure&quot;</span><span class="p">)</span>
 
-        <span class="c1"># copy the init file first</span>
-        <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="s1">&#39;adjusting_init</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iterIndex</span><span class="p">),</span>
-                    <span class="s1">&#39;adjusting_init</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iterIndex</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+        <span class="k">with</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">in_filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds</span><span class="p">:</span>
 
-        <span class="n">symlink</span><span class="p">(</span><span class="s1">&#39;adjusting_init</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iterIndex</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span>
-                <span class="s1">&#39;adjusting_init.nc&#39;</span><span class="p">)</span>
+            <span class="c1"># keep the data set with Time for output</span>
+            <span class="n">ds_out</span> <span class="o">=</span> <span class="n">ds</span>
 
-        <span class="k">with</span> <span class="n">Dataset</span><span class="p">(</span><span class="s1">&#39;adjusting_init.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;r+&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds</span><span class="p">:</span>
+            <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-            <span class="n">on_a_sphere</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">on_a_sphere</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;yes&#39;</span>
+            <span class="n">on_a_sphere</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;on_a_sphere&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;yes&#39;</span>
 
-            <span class="n">nVertLevels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">])</span>
-            <span class="n">initSSH</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
-            <span class="n">bottomDepth</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;bottomDepth&#39;</span><span class="p">][:]</span>
-            <span class="n">modifyLandIcePressureMask</span> <span class="o">=</span> \
-                <span class="n">ds</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;modifyLandIcePressureMask&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
-            <span class="n">landIcePressure</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;landIcePressure&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
-            <span class="n">lonCell</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;lonCell&#39;</span><span class="p">][:]</span>
-            <span class="n">latCell</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;latCell&#39;</span><span class="p">][:]</span>
-            <span class="n">xCell</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;xCell&#39;</span><span class="p">][:]</span>
-            <span class="n">yCell</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;yCell&#39;</span><span class="p">][:]</span>
-            <span class="n">maxLevelCell</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;maxLevelCell&#39;</span><span class="p">][:]</span>
+            <span class="n">initSSH</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">ssh</span>
+            <span class="k">if</span> <span class="s1">&#39;minLevelCell&#39;</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">:</span>
+                <span class="n">minLevelCell</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">minLevelCell</span><span class="o">-</span><span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">minLevelCell</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">maxLevelCell</span><span class="p">)</span>
 
-            <span class="k">with</span> <span class="n">Dataset</span><span class="p">(</span><span class="s1">&#39;output_ssh.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds_ssh</span><span class="p">:</span>
-                <span class="n">nTime</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ds_ssh</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">])</span>
-                <span class="n">finalSSH</span> <span class="o">=</span> <span class="n">ds_ssh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">][</span><span class="n">nTime</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
-                <span class="n">topDensity</span> <span class="o">=</span> <span class="n">ds_ssh</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;density&#39;</span><span class="p">][</span><span class="n">nTime</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span>
+            <span class="k">with</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;output_ssh.nc&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds_ssh</span><span class="p">:</span>
+                <span class="c1"># get the last time entry</span>
+                <span class="n">ds_ssh</span> <span class="o">=</span> <span class="n">ds_ssh</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="n">ds_ssh</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="n">finalSSH</span> <span class="o">=</span> <span class="n">ds_ssh</span><span class="o">.</span><span class="n">ssh</span>
+                <span class="n">topDensity</span> <span class="o">=</span> <span class="n">ds_ssh</span><span class="o">.</span><span class="n">density</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nVertLevels</span><span class="o">=</span><span class="n">minLevelCell</span><span class="p">)</span>
 
-            <span class="n">mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">maxLevelCell</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span>
-                                     <span class="n">modifyLandIcePressureMask</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">maxLevelCell</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span>
+                                     <span class="n">ds</span><span class="o">.</span><span class="n">modifyLandIcePressureMask</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
 
             <span class="n">deltaSSH</span> <span class="o">=</span> <span class="n">mask</span> <span class="o">*</span> <span class="p">(</span><span class="n">finalSSH</span> <span class="o">-</span> <span class="n">initSSH</span><span class="p">)</span>
 
             <span class="c1"># then, modify the SSH or land-ice pressure</span>
             <span class="k">if</span> <span class="n">variable</span> <span class="o">==</span> <span class="s1">&#39;ssh&#39;</span><span class="p">:</span>
-                <span class="n">ds</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">finalSSH</span>
+                <span class="n">ssh</span> <span class="o">=</span> <span class="n">finalSSH</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ssh</span>
                 <span class="c1"># also update the landIceDraft variable, which will be used to</span>
                 <span class="c1"># compensate for the SSH due to land-ice pressure when</span>
                 <span class="c1"># computing sea-surface tilt</span>
-                <span class="n">ds</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;landIceDraft&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">finalSSH</span>
+                <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;landIceDraft&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ssh</span>
                 <span class="c1"># we also need to stretch layerThickness to be compatible with</span>
                 <span class="c1"># the new SSH</span>
-                <span class="n">stretch</span> <span class="o">=</span> <span class="p">(</span><span class="n">finalSSH</span> <span class="o">+</span> <span class="n">bottomDepth</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">initSSH</span> <span class="o">+</span> <span class="n">bottomDepth</span><span class="p">)</span>
-                <span class="n">layerThickness</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;layerThickness&#39;</span><span class="p">]</span>
-                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nVertLevels</span><span class="p">):</span>
-                    <span class="n">layerThickness</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="n">k</span><span class="p">]</span> <span class="o">*=</span> <span class="n">stretch</span>
+                <span class="n">stretch</span> <span class="o">=</span> <span class="p">((</span><span class="n">finalSSH</span> <span class="o">+</span> <span class="n">ds</span><span class="o">.</span><span class="n">bottomDepth</span><span class="p">)</span> <span class="o">/</span>
+                           <span class="p">(</span><span class="n">initSSH</span> <span class="o">+</span> <span class="n">ds</span><span class="o">.</span><span class="n">bottomDepth</span><span class="p">))</span>
+                <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;layerThickness&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_out</span><span class="o">.</span><span class="n">layerThickness</span> <span class="o">*</span> <span class="n">stretch</span>
+                <span class="n">landIcePressure</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">landIcePressure</span><span class="o">.</span><span class="n">values</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># Moving the SSH up or down by deltaSSH would change the</span>
                 <span class="c1"># land-ice pressure by density(SSH)*g*deltaSSH. If deltaSSH is</span>
@@ -324,37 +323,46 @@
                 <span class="n">deltaLandIcePressure</span> <span class="o">=</span> <span class="n">topDensity</span> <span class="o">*</span> <span class="n">gravity</span> <span class="o">*</span> <span class="n">deltaSSH</span>
 
                 <span class="n">landIcePressure</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span>
-                    <span class="mf">0.0</span><span class="p">,</span> <span class="n">landIcePressure</span> <span class="o">+</span> <span class="n">deltaLandIcePressure</span><span class="p">)</span>
+                    <span class="mf">0.0</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">landIcePressure</span> <span class="o">+</span> <span class="n">deltaLandIcePressure</span><span class="p">)</span>
 
-                <span class="n">ds</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;landIcePressure&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">landIcePressure</span>
+                <span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;landIcePressure&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="n">landIcePressure</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
                 <span class="n">finalSSH</span> <span class="o">=</span> <span class="n">initSSH</span>
 
-        <span class="c1"># Write the largest change in SSH and its lon/lat to a file</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;maxDeltaSSH_</span><span class="si">{:03d}</span><span class="s1">.log&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iterIndex</span><span class="p">),</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">log_file</span><span class="p">:</span>
+            <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_out</span><span class="p">,</span> <span class="n">out_filename</span><span class="p">)</span>
 
-            <span class="n">indices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">landIcePressure</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">index</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">deltaSSH</span><span class="p">[</span><span class="n">indices</span><span class="p">]))</span>
-            <span class="n">iCell</span> <span class="o">=</span> <span class="n">indices</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
-            <span class="k">if</span> <span class="n">on_a_sphere</span><span class="p">:</span>
-                <span class="n">coords</span> <span class="o">=</span> <span class="s1">&#39;lon/lat: </span><span class="si">{:f}</span><span class="s1"> </span><span class="si">{:f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="n">numpy</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">lonCell</span><span class="p">[</span><span class="n">iCell</span><span class="p">]),</span>
-                    <span class="n">numpy</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">latCell</span><span class="p">[</span><span class="n">iCell</span><span class="p">]))</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">coords</span> <span class="o">=</span> <span class="s1">&#39;x/y: </span><span class="si">{:f}</span><span class="s1"> </span><span class="si">{:f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mf">1e-3</span> <span class="o">*</span> <span class="n">xCell</span><span class="p">[</span><span class="n">iCell</span><span class="p">],</span>
-                                                 <span class="mf">1e-3</span> <span class="o">*</span> <span class="n">yCell</span><span class="p">[</span><span class="n">iCell</span><span class="p">])</span>
-            <span class="n">string</span> <span class="o">=</span> <span class="s1">&#39;deltaSSHMax: </span><span class="si">{:g}</span><span class="s1">, </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">deltaSSH</span><span class="p">[</span><span class="n">iCell</span><span class="p">],</span> <span class="n">coords</span><span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;     </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">string</span><span class="p">))</span>
-            <span class="n">log_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">string</span><span class="p">))</span>
-            <span class="n">string</span> <span class="o">=</span> <span class="s1">&#39;ssh: </span><span class="si">{:g}</span><span class="s1">, landIcePressure: </span><span class="si">{:g}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">finalSSH</span><span class="p">[</span><span class="n">iCell</span><span class="p">],</span> <span class="n">landIcePressure</span><span class="p">[</span><span class="n">iCell</span><span class="p">])</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;     </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">string</span><span class="p">))</span>
-            <span class="n">log_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">string</span><span class="p">))</span>
+            <span class="c1"># Write the largest change in SSH and its lon/lat to a file</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;maxDeltaSSH_</span><span class="si">{:03d}</span><span class="s1">.log&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iterIndex</span><span class="p">),</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> \
+                    <span class="n">log_file</span><span class="p">:</span>
+
+                <span class="n">mask</span> <span class="o">=</span> <span class="n">landIcePressure</span> <span class="o">&gt;</span> <span class="mf">0.</span>
+                <span class="n">iCell</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">deltaSSH</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">))</span><span class="o">.</span><span class="n">argmax</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>
+
+                <span class="n">ds_cell</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nCells</span><span class="o">=</span><span class="n">iCell</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">on_a_sphere</span><span class="p">:</span>
+                    <span class="n">coords</span> <span class="o">=</span> <span class="s1">&#39;lon/lat: </span><span class="si">{:f}</span><span class="s1"> </span><span class="si">{:f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">numpy</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">ds_cell</span><span class="o">.</span><span class="n">lonCell</span><span class="o">.</span><span class="n">values</span><span class="p">),</span>
+                        <span class="n">numpy</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">ds_cell</span><span class="o">.</span><span class="n">latCell</span><span class="o">.</span><span class="n">values</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">coords</span> <span class="o">=</span> <span class="s1">&#39;x/y: </span><span class="si">{:f}</span><span class="s1"> </span><span class="si">{:f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="mf">1e-3</span> <span class="o">*</span> <span class="n">ds_cell</span><span class="o">.</span><span class="n">xCell</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+                        <span class="mf">1e-3</span> <span class="o">*</span> <span class="n">ds_cell</span><span class="o">.</span><span class="n">yCell</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+                <span class="n">string</span> <span class="o">=</span> <span class="s1">&#39;deltaSSHMax: </span><span class="si">{:g}</span><span class="s1">, </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">deltaSSH</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nCells</span><span class="o">=</span><span class="n">iCell</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">coords</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;     </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">string</span><span class="p">))</span>
+                <span class="n">log_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">string</span><span class="p">))</span>
+                <span class="n">string</span> <span class="o">=</span> <span class="s1">&#39;ssh: </span><span class="si">{:g}</span><span class="s1">, landIcePressure: </span><span class="si">{:g}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">finalSSH</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nCells</span><span class="o">=</span><span class="n">iCell</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+                    <span class="n">landIcePressure</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nCells</span><span class="o">=</span><span class="n">iCell</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;     </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">string</span><span class="p">))</span>
+                <span class="n">log_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">string</span><span class="p">))</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;   - Complete</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="s1">&#39;adjusting_init.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;adjusted_init.nc&#39;</span><span class="p">)</span></div>
+    <span class="k">if</span> <span class="n">out_filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">out_filename</span><span class="p">,</span> <span class="s1">&#39;adjusted_init.nc&#39;</span><span class="p">)</span></div>
 </pre></div>
 
            </div>
