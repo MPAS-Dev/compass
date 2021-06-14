@@ -33,7 +33,7 @@ class SmokeTest(TestCase):
 
         self.add_step(
             RunModel(test_case=self, velo_solver=velo_solver, cores=cores,
-                    min_cores=min_cores, threads=1))
+                     min_cores=min_cores, threads=1))
 
     # no configure() method is needed because we will use the default dome
     # config options
