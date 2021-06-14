@@ -216,11 +216,18 @@
 <span id="landice-greenland"></span><h1>greenland<a class="headerlink" href="#greenland" title="Permalink to this headline">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">landice/greenland</span></code> test group runs tests with a coarse (20-km)
 <a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-albany-landice/gis20km.150922.nc">Greenland mesh</a>.</p>
-<p>&lt;&lt;&lt;Exmaple image here&gt;&gt;&gt;</p>
+<div class="figure align-center" id="id1">
+<a class="reference internal image-reference" href="../../../_images/gis_speed.png"><img alt="../../../_images/gis_speed.png" src="../../../_images/gis_speed.png" style="width: 742px;" /></a>
+<p class="caption"><span class="caption-text">FO velocity solution visualized in Paraview.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
 <p>The test group includes 3 test cases, each of which has one or more steps
 that are variants on <code class="docutils literal notranslate"><span class="pre">run_model</span></code> (given other names in the decomposition and
 restart test cases to distinguish multiple model runs), which performs time
 integration of the model.</p>
+<p>The test cases in this test group can run with either the SIA or FO velocity
+solvers. Running with the FO solver requires a build of MALI that includes
+Albany, but the SIA variant of the test can be run without Albany.  The FO
+version uses no-slip basal boundary condition.</p>
 <div class="section" id="config-options">
 <h2>config options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
 <p>There are no config options specific to this test group.</p>
