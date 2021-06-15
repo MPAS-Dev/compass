@@ -192,6 +192,8 @@
             
   <h1>Source code for compass.ocean.tests.global_ocean.analysis_test</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">traceback</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
 <span class="kn">from</span> <span class="nn">compass.validate</span> <span class="kn">import</span> <span class="n">compare_variables</span><span class="p">,</span> <span class="n">compare_timers</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.forward</span> <span class="kn">import</span> <span class="n">ForwardTestCase</span><span class="p">,</span> \
     <span class="n">ForwardStep</span>
@@ -203,6 +205,11 @@
 <span class="sd">    initial condition and check nearly all MPAS-Ocean analysis members to make</span>
 <span class="sd">    sure they run successfully and output is identical to a baseline (if one</span>
 <span class="sd">    is provided).</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    variables : dict</span>
+<span class="sd">        A dictionary of output files and the variables in each to validate</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="AnalysisTest.__init__"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.analysis_test.AnalysisTest.html#compass.ocean.tests.global_ocean.analysis_test.AnalysisTest.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">time_integrator</span><span class="p">):</span>
@@ -231,6 +238,50 @@
                            <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
                            <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">variables</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;output.nc&#39;</span><span class="p">:</span>
+                <span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;salinity&#39;</span><span class="p">,</span> <span class="s1">&#39;layerThickness&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;normalVelocity&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;analysis_members/globalStats.0001-01-01_00.00.00.nc&#39;</span><span class="p">:</span>
+                <span class="p">[</span><span class="s1">&#39;kineticEnergyCellMax&#39;</span><span class="p">,</span> <span class="s1">&#39;kineticEnergyCellMin&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;kineticEnergyCellAvg&#39;</span><span class="p">,</span> <span class="s1">&#39;temperatureAvg&#39;</span><span class="p">,</span> <span class="s1">&#39;salinityAvg&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;analysis_members/debugDiagnostics.0001-01-01.nc&#39;</span><span class="p">:</span>
+                <span class="p">[</span><span class="s1">&#39;rx1MaxCell&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;analysis_members/highFrequencyOutput.0001-01-01.nc&#39;</span><span class="p">:</span>
+                <span class="p">[</span><span class="s1">&#39;temperatureAt250m&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;analysis_members/mixedLayerDepths.0001-01-01.nc&#39;</span><span class="p">:</span>
+                <span class="p">[</span><span class="s1">&#39;dThreshMLD&#39;</span><span class="p">,</span> <span class="s1">&#39;tThreshMLD&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;analysis_members/waterMassCensus.0001-01-01_00.00.00.nc&#39;</span><span class="p">:</span>
+                <span class="p">[</span><span class="s1">&#39;waterMassCensusTemperatureValues&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;analysis_members/eliassenPalm.0001-01-01.nc&#39;</span><span class="p">:</span>
+                <span class="p">[</span><span class="s1">&#39;EPFT&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;analysis_members/&#39;</span>
+            <span class="s1">&#39;layerVolumeWeightedAverage.0001-01-01_00.00.00.nc&#39;</span><span class="p">:</span>
+                <span class="p">[</span><span class="s1">&#39;avgVolumeTemperature&#39;</span><span class="p">,</span> <span class="s1">&#39;avgVolumeRelativeVorticityCell&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;analysis_members/okuboWeiss.0001-01-01_00.00.00.nc&#39;</span><span class="p">:</span>
+                <span class="p">[</span><span class="s1">&#39;okuboWeiss&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;analysis_members/zonalMeans.0001-01-01_00.00.00.nc&#39;</span><span class="p">:</span>
+                <span class="p">[</span><span class="s1">&#39;velocityZonalZonalMean&#39;</span><span class="p">,</span> <span class="s1">&#39;temperatureZonalMean&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;analysis_members/&#39;</span>
+            <span class="s1">&#39;meridionalHeatTransport.0001-01-01_00.00.00.nc&#39;</span><span class="p">:</span>
+                <span class="p">[</span><span class="s1">&#39;meridionalHeatTransportLat&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;analysis_members/&#39;</span>
+            <span class="s1">&#39;surfaceAreaWeightedAverages.0001-01-01_00.00.00.nc&#39;</span><span class="p">:</span>
+                <span class="p">[</span><span class="s1">&#39;avgSurfaceSalinity&#39;</span><span class="p">,</span> <span class="s1">&#39;avgSeaSurfacePressure&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;analysis_members/&#39;</span>
+            <span class="s1">&#39;eddyProductVariables.0001-01-01.nc&#39;</span><span class="p">:</span>
+                <span class="p">[</span><span class="s1">&#39;SSHSquared&#39;</span><span class="p">,</span> <span class="s1">&#39;velocityZonalSquared&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;velocityZonalTimesTemperature&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;analysis_members/oceanHeatContent.0001-01-01.nc&#39;</span><span class="p">:</span>
+                <span class="p">[</span><span class="s1">&#39;oceanHeatContentSfcToBot&#39;</span><span class="p">,</span> <span class="s1">&#39;oceanHeatContentSfcTo700m&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;oceanHeatContent700mTo2000m&#39;</span><span class="p">,</span> <span class="s1">&#39;oceanHeatContent2000mToBot&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;analysis_members/mixedLayerHeatBudget.0001-01-01.nc&#39;</span><span class="p">:</span>
+                <span class="p">[</span><span class="s1">&#39;temperatureHorAdvectionMLTend&#39;</span><span class="p">,</span> <span class="s1">&#39;salinityHorAdvectionMLTend&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;temperatureML&#39;</span><span class="p">,</span> <span class="s1">&#39;salinityML&#39;</span><span class="p">,</span> <span class="s1">&#39;bruntVaisalaFreqML&#39;</span><span class="p">]}</span>
+
+        <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="p">:</span>
+            <span class="n">step</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+
         <span class="n">module</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span>
         <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s1">&#39;namelist.forward&#39;</span><span class="p">)</span>
         <span class="n">step</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s1">&#39;streams.forward&#39;</span><span class="p">)</span>
@@ -246,52 +297,11 @@
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">work_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span>
 
-        <span class="n">variables</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;forward/output.nc&#39;</span><span class="p">:</span>
-                <span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;salinity&#39;</span><span class="p">,</span> <span class="s1">&#39;layerThickness&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;normalVelocity&#39;</span><span class="p">],</span>
-            <span class="s1">&#39;forward/analysis_members/globalStats.0001-01-01_00.00.00.nc&#39;</span><span class="p">:</span>
-                <span class="p">[</span><span class="s1">&#39;kineticEnergyCellMax&#39;</span><span class="p">,</span> <span class="s1">&#39;kineticEnergyCellMin&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;kineticEnergyCellAvg&#39;</span><span class="p">,</span> <span class="s1">&#39;temperatureAvg&#39;</span><span class="p">,</span> <span class="s1">&#39;salinityAvg&#39;</span><span class="p">],</span>
-            <span class="s1">&#39;forward/analysis_members/debugDiagnostics.0001-01-01.nc&#39;</span><span class="p">:</span>
-                <span class="p">[</span><span class="s1">&#39;rx1MaxCell&#39;</span><span class="p">],</span>
-            <span class="s1">&#39;forward/analysis_members/highFrequencyOutput.0001-01-01.nc&#39;</span><span class="p">:</span>
-                <span class="p">[</span><span class="s1">&#39;temperatureAt250m&#39;</span><span class="p">],</span>
-            <span class="s1">&#39;forward/analysis_members/mixedLayerDepths.0001-01-01.nc&#39;</span><span class="p">:</span>
-                <span class="p">[</span><span class="s1">&#39;dThreshMLD&#39;</span><span class="p">,</span> <span class="s1">&#39;tThreshMLD&#39;</span><span class="p">],</span>
-            <span class="s1">&#39;forward/analysis_members/waterMassCensus.0001-01-01_00.00.00.nc&#39;</span><span class="p">:</span>
-                <span class="p">[</span><span class="s1">&#39;waterMassCensusTemperatureValues&#39;</span><span class="p">],</span>
-            <span class="s1">&#39;forward/analysis_members/eliassenPalm.0001-01-01.nc&#39;</span><span class="p">:</span>
-                <span class="p">[</span><span class="s1">&#39;EPFT&#39;</span><span class="p">],</span>
-            <span class="s1">&#39;forward/analysis_members/&#39;</span>
-            <span class="s1">&#39;layerVolumeWeightedAverage.0001-01-01_00.00.00.nc&#39;</span><span class="p">:</span>
-                <span class="p">[</span><span class="s1">&#39;avgVolumeTemperature&#39;</span><span class="p">,</span> <span class="s1">&#39;avgVolumeRelativeVorticityCell&#39;</span><span class="p">],</span>
-            <span class="s1">&#39;forward/analysis_members/okuboWeiss.0001-01-01_00.00.00.nc&#39;</span><span class="p">:</span>
-                <span class="p">[</span><span class="s1">&#39;okuboWeiss&#39;</span><span class="p">],</span>
-            <span class="s1">&#39;forward/analysis_members/zonalMeans.0001-01-01_00.00.00.nc&#39;</span><span class="p">:</span>
-                <span class="p">[</span><span class="s1">&#39;velocityZonalZonalMean&#39;</span><span class="p">,</span> <span class="s1">&#39;temperatureZonalMean&#39;</span><span class="p">],</span>
-            <span class="s1">&#39;forward/analysis_members/&#39;</span>
-            <span class="s1">&#39;meridionalHeatTransport.0001-01-01_00.00.00.nc&#39;</span><span class="p">:</span>
-                <span class="p">[</span><span class="s1">&#39;meridionalHeatTransportLat&#39;</span><span class="p">],</span>
-            <span class="s1">&#39;forward/analysis_members/&#39;</span>
-            <span class="s1">&#39;surfaceAreaWeightedAverages.0001-01-01_00.00.00.nc&#39;</span><span class="p">:</span>
-                <span class="p">[</span><span class="s1">&#39;avgSurfaceSalinity&#39;</span><span class="p">,</span> <span class="s1">&#39;avgSeaSurfacePressure&#39;</span><span class="p">],</span>
-            <span class="s1">&#39;forward/analysis_members/&#39;</span>
-            <span class="s1">&#39;eddyProductVariables.0001-01-01.nc&#39;</span><span class="p">:</span>
-                <span class="p">[</span><span class="s1">&#39;SSHSquared&#39;</span><span class="p">,</span> <span class="s1">&#39;velocityZonalSquared&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;velocityZonalTimesTemperature&#39;</span><span class="p">],</span>
-            <span class="s1">&#39;forward/analysis_members/oceanHeatContent.0001-01-01.nc&#39;</span><span class="p">:</span>
-                <span class="p">[</span><span class="s1">&#39;oceanHeatContentSfcToBot&#39;</span><span class="p">,</span> <span class="s1">&#39;oceanHeatContentSfcTo700m&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;oceanHeatContent700mTo2000m&#39;</span><span class="p">,</span> <span class="s1">&#39;oceanHeatContent2000mToBot&#39;</span><span class="p">],</span>
-            <span class="s1">&#39;forward/analysis_members/mixedLayerHeatBudget.0001-01-01.nc&#39;</span><span class="p">:</span>
-                <span class="p">[</span><span class="s1">&#39;temperatureHorAdvectionMLTend&#39;</span><span class="p">,</span> <span class="s1">&#39;salinityHorAdvectionMLTend&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;temperatureML&#39;</span><span class="p">,</span> <span class="s1">&#39;salinityML&#39;</span><span class="p">,</span> <span class="s1">&#39;bruntVaisalaFreqML&#39;</span><span class="p">]}</span>
-
         <span class="n">failed</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">filename</span><span class="p">,</span> <span class="n">variables</span> <span class="ow">in</span> <span class="n">variables</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">filename</span><span class="p">,</span> <span class="n">variables</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
-                                  <span class="n">filename1</span><span class="o">=</span><span class="n">filename</span><span class="p">)</span>
+                                  <span class="n">filename1</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;forward&#39;</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
             <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
                 <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
                 <span class="n">failed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
