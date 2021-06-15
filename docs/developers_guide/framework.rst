@@ -355,7 +355,7 @@ compared with those in the corresponding files in the baseline.
 In any of these cases, if comparison fails, a ``ValueError`` is raised and
 execution of the test case is terminated.
 
-Typical output will look like this:
+If ``quiet=False``, typical output will look like this:
 
 .. code-block:: none
 
@@ -400,6 +400,14 @@ Typical output will look like this:
      ** PASS Comparison of normalVelocity between /home/xylar/data/mpas/test_nightly_latest/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc and
         /home/xylar/data/mpas/test_nightly_latest/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
 
+If ``quiet=True`` (the default), there is only an indication that the
+comparison passed for each variable.
+
+By default, the function checks to make sure ``filename1`` and, if provided,
+``filename2`` are output of one of the steps in the test case.  In general,
+validation should be performed on outputs of the steps this test case that are
+explicitly added with :py:meth:`compass.Step.add_output_file()`.  This check
+can be disabled by setting ``check_outputs=False``.
 
 Norms
 ^^^^^
