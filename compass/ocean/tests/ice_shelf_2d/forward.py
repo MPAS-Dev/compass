@@ -59,6 +59,7 @@ class Forward(Step):
                        'config_frazil_maximum_depth': '2000.0'}
             self.add_namelist_options(options)
             self.add_streams_file('compass.ocean.streams', 'streams.frazil')
+            self.add_output_file('frazil.nc')
 
         self.add_streams_file('compass.ocean.streams',
                               'streams.land_ice_fluxes')
@@ -74,6 +75,7 @@ class Forward(Step):
         self.add_model_as_input()
 
         self.add_output_file('output.nc')
+        self.add_output_file('land_ice_fluxes.nc')
 
     # no setup() is needed
 

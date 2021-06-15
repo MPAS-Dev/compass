@@ -1,4 +1,3 @@
-from compass.config import add_config
 from compass.testgroup import TestGroup
 from compass.ocean.tests.ice_shelf_2d.default import Default
 from compass.ocean.tests.ice_shelf_2d.restart_test import RestartTest
