@@ -81,6 +81,8 @@ def init_z_level_vertical_coord(config, ds):
 
 def compute_min_max_level_cell(refTopDepth, refBottomDepth, ssh, bottomDepth):
     """
+    Compute ``minLevelCell`` and ``maxLevelCell`` indices as well as a cell
+    mask for the given reference grid and top and bottom topography.
 
     Parameters
     ----------
