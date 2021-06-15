@@ -224,6 +224,10 @@ def setup_case(path, test_case, config_file, machine, work_dir, baseline_dir,
         # process input, output, namelist and streams files
         step.process_inputs_and_outputs()
 
+    # wait until we've set up all the steps before pickling because steps may
+    # need other steps to be set up
+    for step in test_case.steps.values():
+
         # pickle the test case and step for use at runtime
         pickle_filename = os.path.join(step.work_dir, 'step.pickle')
         with open(pickle_filename, 'wb') as handle:
