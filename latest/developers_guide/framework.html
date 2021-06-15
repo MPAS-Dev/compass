@@ -504,7 +504,7 @@ a baseline directory was provided, these 4 variables in each file will also be
 compared with those in the corresponding files in the baseline.</p>
 <p>In any of these cases, if comparison fails, a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> is raised and
 execution of the test case is terminated.</p>
-<p>Typical output will look like this:</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">quiet=False</span></code>, typical output will look like this:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Beginning variable comparisons for all time levels of field &#39;temperature&#39;. Note any time levels reported are 0-based.
     Pass thresholds are:
        L1: 0.00000000000000e+00
@@ -547,6 +547,13 @@ Beginning variable comparisons for all time levels of field &#39;normalVelocity&
     /home/xylar/data/mpas/test_nightly_latest/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
 </pre></div>
 </div>
+<p>If <code class="docutils literal notranslate"><span class="pre">quiet=True</span></code> (the default), there is only an indication that the
+comparison passed for each variable.</p>
+<p>By default, the function checks to make sure <code class="docutils literal notranslate"><span class="pre">filename1</span></code> and, if provided,
+<code class="docutils literal notranslate"><span class="pre">filename2</span></code> are output of one of the steps in the test case.  In general,
+validation should be performed on outputs of the steps this test case that are
+explicitly added with <a class="reference internal" href="generated/compass.Step.add_output_file.html#compass.Step.add_output_file" title="compass.Step.add_output_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.add_output_file()</span></code></a>.  This check
+can be disabled by setting <code class="docutils literal notranslate"><span class="pre">check_outputs=False</span></code>.</p>
 </div>
 <div class="section" id="norms">
 <h3>Norms<a class="headerlink" href="#norms" title="Permalink to this headline">¶</a></h3>

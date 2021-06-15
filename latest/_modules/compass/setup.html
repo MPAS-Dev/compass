@@ -413,6 +413,10 @@
         <span class="c1"># process input, output, namelist and streams files</span>
         <span class="n">step</span><span class="o">.</span><span class="n">process_inputs_and_outputs</span><span class="p">()</span>
 
+    <span class="c1"># wait until we&#39;ve set up all the steps before pickling because steps may</span>
+    <span class="c1"># need other steps to be set up</span>
+    <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">test_case</span><span class="o">.</span><span class="n">steps</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+
         <span class="c1"># pickle the test case and step for use at runtime</span>
         <span class="n">pickle_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">step</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;step.pickle&#39;</span><span class="p">)</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">pickle_filename</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>

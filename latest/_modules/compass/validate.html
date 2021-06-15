@@ -195,7 +195,8 @@
 
 
 <div class="viewcode-block" id="compare_variables"><a class="viewcode-back" href="../../developers_guide/generated/compass.validate.compare_variables.html#compass.validate.compare_variables">[docs]</a><span class="k">def</span> <span class="nf">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">variables</span><span class="p">,</span> <span class="n">filename1</span><span class="p">,</span> <span class="n">filename2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                      <span class="n">l1_norm</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">l2_norm</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">linf_norm</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+                      <span class="n">l1_norm</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">l2_norm</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">linf_norm</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                      <span class="n">check_outputs</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compare variables between files in the current test case and/or with the</span>
 <span class="sd">    baseline results.  The results of the comparison are added to the</span>
@@ -241,6 +242,11 @@
 <span class="sd">        tolerance values being compared against will be printed when the</span>
 <span class="sd">        comparison is made.  This is generally desirable when using nonzero</span>
 <span class="sd">        norm tolerance values.</span>
+
+<span class="sd">    check_outputs : bool, optional</span>
+<span class="sd">        Whether to check to make sure files are valid outputs of steps in</span>
+<span class="sd">        the test case.  This should be set to ``False`` if comparing with an</span>
+<span class="sd">        output of a step in another test case.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">work_dir</span> <span class="o">=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">work_dir</span>
 
@@ -250,11 +256,32 @@
         <span class="n">validation</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;internal_pass&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
                       <span class="s1">&#39;baseline_pass&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
 
+    <span class="n">path1</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">filename1</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">filename2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">path2</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">filename2</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">path2</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">check_outputs</span><span class="p">:</span>
+        <span class="n">file1_found</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">file2_found</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">step_name</span><span class="p">,</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">test_case</span><span class="o">.</span><span class="n">steps</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="n">step</span><span class="o">.</span><span class="n">outputs</span><span class="p">:</span>
+                <span class="c1"># outputs are already absolute paths combined with the step dir</span>
+                <span class="k">if</span> <span class="n">output</span> <span class="o">==</span> <span class="n">path1</span><span class="p">:</span>
+                    <span class="n">file1_found</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">if</span> <span class="n">output</span> <span class="o">==</span> <span class="n">path2</span><span class="p">:</span>
+                    <span class="n">file2_found</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">file1_found</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> does not appear to be an output of any step &#39;</span>
+                             <span class="s1">&#39;in this test case.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename1</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">filename2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">file2_found</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> does not appear to be an output of any step &#39;</span>
+                             <span class="s1">&#39;in this test case.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename2</span><span class="p">))</span>
+
     <span class="k">if</span> <span class="n">filename2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">internal_pass</span> <span class="o">=</span> <span class="n">_compare_variables</span><span class="p">(</span>
-            <span class="n">variables</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">filename1</span><span class="p">),</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">filename2</span><span class="p">),</span> <span class="n">l1_norm</span><span class="p">,</span> <span class="n">l2_norm</span><span class="p">,</span> <span class="n">linf_norm</span><span class="p">,</span>
-            <span class="n">quiet</span><span class="p">)</span>
+            <span class="n">variables</span><span class="p">,</span> <span class="n">path1</span><span class="p">,</span> <span class="n">path2</span><span class="p">,</span> <span class="n">l1_norm</span><span class="p">,</span> <span class="n">l2_norm</span><span class="p">,</span> <span class="n">linf_norm</span><span class="p">,</span> <span class="n">quiet</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">validation</span><span class="p">[</span><span class="s1">&#39;internal_pass&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">validation</span><span class="p">[</span><span class="s1">&#39;internal_pass&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">internal_pass</span>
