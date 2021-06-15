@@ -1768,7 +1768,7 @@ and the config options.
 Test Suites
 -----------
 
-As described in the :ref:`user_testsuites` section of the User's Guide, COMPASS
+As described in the :ref:`test_suites` section of the User's Guide, COMPASS
 test cases can be organized into test suites.  Each core has separate regression
 suites, and a core can have multiple independent regression suites.  A developer
 defines a test suite by creating a `.txt` file within the `compass/CORE/suites`

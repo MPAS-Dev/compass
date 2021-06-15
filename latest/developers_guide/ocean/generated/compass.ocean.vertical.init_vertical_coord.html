@@ -215,33 +215,33 @@
 <dd><p>Create a vertical coordinate based on the config options in the
 <code class="docutils literal notranslate"><span class="pre">vertical_grid</span></code> section and the <code class="docutils literal notranslate"><span class="pre">bottomDepth</span></code> and <code class="docutils literal notranslate"><span class="pre">ssh</span></code> variables of
 the mesh data set.</p>
-<p>The following new variables will be added to the data set:
-* <code class="docutils literal notranslate"><span class="pre">minLevelCell</span></code> - the index of the top valid layer
-* <code class="docutils literal notranslate"><span class="pre">maxLevelCell</span></code> - the index of the bottom valid layer
-* <code class="docutils literal notranslate"><span class="pre">cellMask</span></code> - a mask of where cells are valid
-* <code class="docutils literal notranslate"><span class="pre">layerThickness</span></code> - the thickness of each layer
-* <code class="docutils literal notranslate"><span class="pre">restingThickness</span></code> - the thickness of each layer stretched as if</p>
+<p>The following new variables will be added to the data set:</p>
 <blockquote>
-<div><p><code class="docutils literal notranslate"><span class="pre">ssh</span> <span class="pre">=</span> <span class="pre">0</span></code></p>
-</div></blockquote>
-<ul class="simple">
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">minLevelCell</span></code> - the index of the top valid layer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">maxLevelCell</span></code> - the index of the bottom valid layer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cellMask</span></code> - a mask of where cells are valid</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">layerThickness</span></code> - the thickness of each layer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">restingThickness</span></code> - the thickness of each layer stretched as if
+<code class="docutils literal notranslate"><span class="pre">ssh</span> <span class="pre">=</span> <span class="pre">0</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">zMid</span></code> - the elevation of the midpoint of each layer</p></li>
 </ul>
+</div></blockquote>
 <p>So far, all supported coordinates make use of a 1D reference vertical grid.
 The following variables associated with that field are also added to the
-mesh:
-* <code class="docutils literal notranslate"><span class="pre">refTopDepth</span></code> - the positive-down depth of the top of each ref. level
-* <code class="docutils literal notranslate"><span class="pre">refZMid</span></code> - the positive-down depth of the middle of each ref. level
-* <code class="docutils literal notranslate"><span class="pre">refBottomDepth</span></code> - the positive-down depth of the bottom of each ref.</p>
+mesh:</p>
 <blockquote>
-<div><p>level</p>
-</div></blockquote>
-<ul class="simple">
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">refTopDepth</span></code> - the positive-down depth of the top of each ref. level</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">refZMid</span></code> - the positive-down depth of the middle of each ref. level</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">refBottomDepth</span></code> - the positive-down depth of the bottom of each ref.
+level</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">refInterfaces</span></code> - the positive-down depth of the interfaces between
 ref. levels (with <code class="docutils literal notranslate"><span class="pre">nVertLevels</span></code> + 1 elements).</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">vertCoordMovementWeights</span></code> - the weights (all ones) for coordinate
 movement</p></li>
 </ul>
+</div></blockquote>
 <p>There is considerable redundancy between these variables but each is
 sometimes convenient.</p>
 <dl class="field-list simple">
