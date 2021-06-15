@@ -12,25 +12,37 @@ def init_z_level_vertical_coord(config, ds):
     the mesh data set.
 
     The following new variables will be added to the data set:
-    * ``minLevelCell`` - the index of the top valid layer
-    * ``maxLevelCell`` - the index of the bottom valid layer
-    * ``cellMask`` - a mask of where cells are valid
-    * ``layerThickness`` - the thickness of each layer
-    * ``restingThickness`` - the thickness of each layer stretched as if
-      ``ssh = 0``
-    * ``zMid`` - the elevation of the midpoint of each layer
+
+      * ``minLevelCell`` - the index of the top valid layer
+
+      * ``maxLevelCell`` - the index of the bottom valid layer
+
+      * ``cellMask`` - a mask of where cells are valid
+
+      * ``layerThickness`` - the thickness of each layer
+
+      * ``restingThickness`` - the thickness of each layer stretched as if
+        ``ssh = 0``
+
+      * ``zMid`` - the elevation of the midpoint of each layer
 
     So far, all supported coordinates make use of a 1D reference vertical grid.
     The following variables associated with that field are also added to the
     mesh:
-    * ``refTopDepth`` - the positive-down depth of the top of each ref. level
-    * ``refZMid`` - the positive-down depth of the middle of each ref. level
-    * ``refBottomDepth`` - the positive-down depth of the bottom of each ref.
-      level
-    * ``refInterfaces`` - the positive-down depth of the interfaces between
-      ref. levels (with ``nVertLevels`` + 1 elements).
-    * ``vertCoordMovementWeights`` - the weights (all ones) for coordinate
-      movement
+
+      * ``refTopDepth`` - the positive-down depth of the top of each ref. level
+
+      * ``refZMid`` - the positive-down depth of the middle of each ref. level
+
+      * ``refBottomDepth`` - the positive-down depth of the bottom of each ref.
+        level
+
+      * ``refInterfaces`` - the positive-down depth of the interfaces between
+        ref. levels (with ``nVertLevels`` + 1 elements).
+
+      * ``vertCoordMovementWeights`` - the weights (all ones) for coordinate
+        movement
+
     There is considerable redundancy between these variables but each is
     sometimes convenient.
 
@@ -69,6 +81,8 @@ def init_z_level_vertical_coord(config, ds):
 
 def compute_min_max_level_cell(refTopDepth, refBottomDepth, ssh, bottomDepth):
     """
+    Compute ``minLevelCell`` and ``maxLevelCell`` indices as well as a cell
+    mask for the given reference grid and top and bottom topography.
 
     Parameters
     ----------
