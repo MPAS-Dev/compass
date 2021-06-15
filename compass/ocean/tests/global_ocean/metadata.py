@@ -73,7 +73,7 @@ def add_mesh_and_init_metadata(output_filenames, config, init_filename):
 
         for filename in output_filenames:
             if filename.endswith('.nc'):
-                args = ['ncra']
+                args = ['ncks']
                 for key, value in metadata.items():
                     args.extend(['--glb_att_add', '{}={}'.format(key, value)])
                 name, ext = os.path.splitext(filename)
