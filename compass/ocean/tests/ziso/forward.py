@@ -77,6 +77,7 @@ class Forward(Step):
             self.add_namelist_options(
                 {'config_use_frazil_ice_formation': '.true.'})
             self.add_streams_file('compass.ocean.streams', 'streams.frazil')
+            self.add_output_file('frazil.nc')
 
         self.add_namelist_file('compass.ocean.tests.ziso',
                                'namelist.{}.forward'.format(resolution))
