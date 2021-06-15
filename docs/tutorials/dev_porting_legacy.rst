@@ -43,7 +43,7 @@ your needs.
   # this one will take a while the first time
   ./conda/create_compass_env.py --conda $HOME/miniconda3
 
-If all goes well, you will have a file named ``test_compass_1.0.0*.sh``, where
+If all goes well, you will have a file named ``load_dev_compass_1.0.0*.sh``, where
 the details of the ``*`` depend on your specific machine and compilers.  For
 example, on Chrysalis, you will have ``test_compass_1.0.0_chrysalis_intel_impi.sh``,
 which will be the example used here:
@@ -174,7 +174,7 @@ Making a new test group
 Okay, with those details as a reference point from legacy COMPASS, let's jump
 into developing the new test group in ``compass``.  Use any method you like
 for editing code.  If you haven't settled on a method and are working on your
-own laptop or desktop, you may want to try and integrated development
+own laptop or desktop, you may want to try an integrated development
 environment (`PyCharm <https://www.jetbrains.com/pycharm/>`_ is a really nice
 one).  They have features to make sure your code adheres to the style required
 for compass (see :ref:`dev_style`).  ``vim`` or a similar tool will work fine
@@ -198,7 +198,7 @@ Next, let's make a new class for the ``gotm`` test group in ``__init__.py``:
 
     class Gotm(TestGroup):
         """
-        A test group for baroclinic channel test cases
+        A test group for General Ocean Turbulence Model (GOTM) test cases
         """
         def __init__(self, mpas_core):
             """
@@ -214,7 +214,9 @@ to know what MPAS Core it belongs to so that is passed in as the ``mpas_core``
 argument.  The only thing that happens so far is that the constructor for the
 base class ``TestGroup`` gets called.  In the process, we give the test group
 the name ``gotm``.  You can take a look at the base class ``TestGroup`` in
-``compass/testgroup`` if you want to but that's not necessary for the tutorial.
+``compass/testgroup`` if you want.  That's not necessary for the tutorial,
+but some new developers have found reading the base class code to be
+highly instructive.
 
 Naming conventions in python are that we use
 `CamelCase <https://en.wikipedia.org/wiki/Camel_case>`_ for classes, which
@@ -631,7 +633,7 @@ Defining config options
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 The remainder of the ``init`` step will consist of defining the ``run()``
-method that does the refal work of the step.  To make it easier for users to
+method that does the real work of the step.  To make it easier for users to
 modify the test case a little bit to suit their needs, we may want to include
 parameters in the config file for the test case.  To do this, we can make a
 config file with the test group's package, the test case's package, or both.
@@ -662,7 +664,7 @@ change any of these parameters before running the ``init`` step to modify
 the initial condition (and therefore the rest of the test case).
 
 Since the config file has the same name (``default``) as the test case, it will
-be included automatically when the config file produced when test case gets
+be included automatically when the config file is produced when the test case gets
 set up.
 
 Defining the run method
@@ -1043,7 +1045,7 @@ The legacy ``analysis`` step is defined like this:
 Symlinks are created to a plotting script and the output from the ``forward``
 step, and then the plot script is run.
 
-An identical approach could be used in ``compass`` but it is not the perferred
+An identical approach could be used in ``compass`` but it is not the preferred
 approach.  Instead, we prefer to use function calls in place of calling
 python scripts via subprocesses whenever possible.  One major reason for this
 is that having python scripts within a python package is confusing -- there is
@@ -1273,7 +1275,7 @@ developer's guide describing the test group and its test cases and steps.
 
 For the user's guide, create a file
 ``docs/users_guide/<core>/test_groups/<test_group>.rst``.  In that file, you
-should describe what the test group and its test cases do in a way that would
+should describe what the test group and what its test cases do in a way that would
 be relevant for a user wanting to run the test case and look at the output.
 This file should include a section giving the config options for the test case
 and describing what they are used for, so that users know how to modify them
