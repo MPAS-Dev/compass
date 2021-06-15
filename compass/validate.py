@@ -6,7 +6,8 @@ import fnmatch
 
 
 def compare_variables(test_case, variables, filename1, filename2=None,
-                      l1_norm=0.0, l2_norm=0.0, linf_norm=0.0, quiet=True):
+                      l1_norm=0.0, l2_norm=0.0, linf_norm=0.0, quiet=True,
+                      check_outputs=True):
     """
     Compare variables between files in the current test case and/or with the
     baseline results.  The results of the comparison are added to the
@@ -52,6 +53,11 @@ def compare_variables(test_case, variables, filename1, filename2=None,
         tolerance values being compared against will be printed when the
         comparison is made.  This is generally desirable when using nonzero
         norm tolerance values.
+
+    check_outputs : bool, optional
+        Whether to check to make sure files are valid outputs of steps in
+        the test case.  This should be set to ``False`` if comparing with an
+        output of a step in another test case.
     """
     work_dir = test_case.work_dir
 
@@ -61,11 +67,32 @@ def compare_variables(test_case, variables, filename1, filename2=None,
         validation = {'internal_pass': None,
                       'baseline_pass': None}
 
+    path1 = os.path.abspath(os.path.join(work_dir, filename1))
+    if filename2 is not None:
+        path2 = os.path.abspath(os.path.join(work_dir, filename2))
+    else:
+        path2 = None
+    if check_outputs:
+        file1_found = False
+        file2_found = False
+        for step_name, step in test_case.steps.items():
+            for output in step.outputs:
+                # outputs are already absolute paths combined with the step dir
+                if output == path1:
+                    file1_found = True
+                if output == path2:
+                    file2_found = True
+
+        if not file1_found:
+            raise ValueError('{} does not appear to be an output of any step '
+                             'in this test case.'.format(filename1))
+        if filename2 is not None and not file2_found:
+            raise ValueError('{} does not appear to be an output of any step '
+                             'in this test case.'.format(filename2))
+
     if filename2 is not None:
         internal_pass = _compare_variables(
-            variables, os.path.join(work_dir, filename1),
-            os.path.join(work_dir, filename2), l1_norm, l2_norm, linf_norm,
-            quiet)
+            variables, path1, path2, l1_norm, l2_norm, linf_norm, quiet)
 
         if validation['internal_pass'] is None:
             validation['internal_pass'] = internal_pass
