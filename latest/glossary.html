@@ -42,7 +42,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Code and Documentation Versions" href="versions.html" />
-    <link rel="prev" title="Template" href="design_docs/template.html" /> 
+    <link rel="prev" title="Developer Tutorial: Porting a legacy COMPASS test group" href="tutorials/dev_porting_legacy.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -115,6 +115,10 @@
 <li class="toctree-l1"><a class="reference internal" href="developers_guide/building_docs.html">Building the Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="developers_guide/api.html">API reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Glossary</span></p>
 <ul class="current">
@@ -191,8 +195,14 @@
            <div itemprop="articleBody">
             
   <div class="section" id="glossary">
-<h1>Glossary<a class="headerlink" href="#glossary" title="Permalink to this headline">¶</a></h1>
+<span id="id1"></span><h1>Glossary<a class="headerlink" href="#glossary" title="Permalink to this headline">¶</a></h1>
 <dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">compass</span></code></dt><dd><p>The python package containing framework for listing, setting up and running
+test cases, as well as the cores, test groups, test cases and steps.</p>
+</dd>
+<dt>Legacy COMPASS</dt><dd><p>The old version of COMPASS that used XML files and python scripts to define
+cores, test groups, test cases and steps.</p>
+</dd>
 <dt>MPAS core</dt><dd><p>This term refers to the collection of tests cases associated with an
 MPAS dynamical core, <code class="docutils literal notranslate"><span class="pre">ocean</span></code> for MPAS-Ocean and <code class="docutils literal notranslate"><span class="pre">landice</span></code> for MALI.</p>
 </dd>
@@ -237,6 +247,17 @@ to <a class="reference internal" href="developers_guide/command_line.html#dev-co
 directory for a test case or step its location within base work directory
 (the base work directory plus its relative path)</p>
 </dd>
+<dt>Package</dt><dd><p>A python package is a directory that has a file called <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code>.
+That file can be empty or it can have code in it.  If there is code in
+<code class="docutils literal notranslate"><span class="pre">__init__.py</span></code>, it gets imported as if it were directly in the package
+(you never include <code class="docutils literal notranslate"><span class="pre">__init__</span></code> in an <code class="docutils literal notranslate"><span class="pre">import</span></code> statement).</p>
+</dd>
+<dt>Module</dt><dd><p>Python modules are python files that can be imported by other python files
+(so they’re not just scripts).  Nearly every single file ending in <code class="docutils literal notranslate"><span class="pre">.py</span></code>
+in the <code class="docutils literal notranslate"><span class="pre">compass</span></code> package is a module.  The <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> files are a
+special case, that may define a module with the name of the package
+(directory) that <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> is in.</p>
+</dd>
 </dl>
 </div>
 
@@ -247,7 +268,7 @@ directory for a test case or step its location within base work directory
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
         <a href="versions.html" class="btn btn-neutral float-right" title="Code and Documentation Versions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="design_docs/template.html" class="btn btn-neutral float-left" title="Template" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tutorials/dev_porting_legacy.html" class="btn btn-neutral float-left" title="Developer Tutorial: Porting a legacy COMPASS test group" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

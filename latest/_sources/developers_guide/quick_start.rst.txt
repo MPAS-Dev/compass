@@ -263,6 +263,8 @@ See :ref:`dev_supported_machines` for the right ``<mpas_compiler>`` command for
 each machine and compiler.
 
 
+.. _dev_compass_repo_advanced:
+
 Set up a compass repository with worktrees: for advanced users
 --------------------------------------------------------------
 
