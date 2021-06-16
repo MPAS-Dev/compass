@@ -1,0 +1,35 @@
+<streams>
+
+<immutable_stream name="input"
+                  filename_template="thwaites.4km.210608.nc"/>
+
+<immutable_stream name="restart"
+                  type="input;output"
+                  filename_template="restart.$Y-$M-$D.nc"
+                  filename_interval="output_interval"
+                  output_interval="0000-00-01_00:00:00"
+                  clobber_mode="truncate"
+                  precision="double"
+                  input_interval="initial_only"/>
+
+<stream name="output"
+        type="output"
+        filename_template="output.nc"
+        output_interval="0000-00-01_00:00:00"
+        clobber_mode="truncate">
+
+    <stream name="basicmesh"/>
+    <var name="xtime"/>
+    <var name="thickness"/>
+    <var name="bedTopography"/>
+    <var name="upperSurface"/>
+    <var name="cellMask"/>
+    <var name="edgeMask"/>
+    <var name="surfaceSpeed"/>
+    <var name="basalSpeed"/>
+    <var name="daysSinceStart"/>
+
+</stream>
+
+
+</streams>
