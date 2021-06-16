@@ -16,7 +16,7 @@ class DecompositionTest(TestCase):
 
         Parameters
         ----------
-        test_group : compass.landice.tests.thwaites
+        test_group : compass.landice.tests.thwaites.Thwaites
             The test group that this test case belongs to
 
         """
@@ -42,23 +42,22 @@ class DecompositionTest(TestCase):
         """
         name1 = '{}proc_run'.format(self.cores_set[0])
         name2 = '{}proc_run'.format(self.cores_set[1])
-        if name1 in self.steps_to_run and name2 in self.steps_to_run:
-            # validate thickness
-            compare_variables(test_case=self,
-                              variables=['thickness', ],
-                              filename1='{}/output.nc'.format(name1),
-                              filename2='{}/output.nc'.format(name2),
-                              l1_norm=1.0e-11,
-                              l2_norm=1.0e-11,
-                              linf_norm=1.0e-12,
-                              quiet=False)
+        # validate thickness
+        compare_variables(test_case=self,
+                          variables=['thickness', ],
+                          filename1='{}/output.nc'.format(name1),
+                          filename2='{}/output.nc'.format(name2),
+                          l1_norm=1.0e-11,
+                          l2_norm=1.0e-11,
+                          linf_norm=1.0e-12,
+                          quiet=False)
 
-            # validate surfaceSpeed
-            compare_variables(test_case=self,
-                              variables=['surfaceSpeed', ],
-                              filename1='{}/output.nc'.format(name1),
-                              filename2='{}/output.nc'.format(name2),
-                              l1_norm=1.0e-13,
-                              l2_norm=1.0e-14,
-                              linf_norm=1.0e-15,
-                              quiet=False)
+        # validate surfaceSpeed
+        compare_variables(test_case=self,
+                          variables=['surfaceSpeed', ],
+                          filename1='{}/output.nc'.format(name1),
+                          filename2='{}/output.nc'.format(name2),
+                          l1_norm=1.0e-13,
+                          l2_norm=1.0e-14,
+                          linf_norm=1.0e-15,
+                          quiet=False)
