@@ -715,35 +715,30 @@ examples of validation of variables from output files:
         """
         steps = self.steps_to_run
 
-        if 'initial_state' in steps:
-            variables = ['temperature', 'salinity', 'layerThickness']
+        variables = ['temperature', 'salinity', 'layerThickness']
+        compare_variables(test_case=self, variables=variables,
+                          filename1='initial_state/initial_state.nc')
+
+        if self.with_bgc:
+            variables = [
+                'temperature', 'salinity', 'layerThickness', 'PO4', 'NO3',
+                'SiO3', 'NH4', 'Fe', 'O2', 'DIC', 'DIC_ALT_CO2', 'ALK',
+                'DOC', 'DON', 'DOFe', 'DOP', 'DOPr', 'DONr', 'zooC',
+                'spChl', 'spC', 'spFe', 'spCaCO3', 'diatChl', 'diatC',
+                'diatFe', 'diatSi', 'diazChl', 'diazC', 'diazFe',
+                'phaeoChl', 'phaeoC', 'phaeoFe', 'DMS', 'DMSP', 'PROT',
+                'POLY', 'LIP']
             compare_variables(test_case=self, variables=variables,
                               filename1='initial_state/initial_state.nc')
 
-            if self.with_bgc:
-                variables = [
-                    'temperature', 'salinity', 'layerThickness', 'PO4', 'NO3',
-                    'SiO3', 'NH4', 'Fe', 'O2', 'DIC', 'DIC_ALT_CO2', 'ALK',
-                    'DOC', 'DON', 'DOFe', 'DOP', 'DOPr', 'DONr', 'zooC',
-                    'spChl', 'spC', 'spFe', 'spCaCO3', 'diatChl', 'diatC',
-                    'diatFe', 'diatSi', 'diazChl', 'diazC', 'diazFe',
-                    'phaeoChl', 'phaeoC', 'phaeoFe', 'DMS', 'DMSP', 'PROT',
-                    'POLY', 'LIP']
-                compare_variables(test_case=self, variables=variables,
-                                  filename1='initial_state/initial_state.nc')
-
-        if 'ssh_adjustment' in steps:
+        if self.mesh.with_ice_shelf_cavities:
             variables = ['ssh', 'landIcePressure']
             compare_variables(test_case=self, variables=variables,
                               filename1='ssh_adjustment/adjusted_init.nc')
 
-Again, as mentioned in :ref:`dev_test_case_class`, the ``self.steps_to_run``
-attribute may either be the full list of steps that would typically be run to
-complete the test case (the value given to it at init) or it may be a single
-test case because the user is running the steps manually, one at a time.  For
-this reason, it is important to check if the step was run before running
-validation on its outputs.  Otherwise, the validation may fail merely because
-the user didn't ask for that particular step.
+If you leave the default keyword argument ``skip_if_step_not_run=True``,
+comparison will be skipped (logging a message) if one or more of the steps
+involved in the comparison was not run.
 
 .. _dev_steps:
 

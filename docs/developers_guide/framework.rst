@@ -339,21 +339,28 @@ Here is a slightly more complex example:
 .. code-block:: python
 
     variables = ['temperature', 'salinity', 'layerThickness', 'normalVelocity']
-    steps = testcase['steps_to_run']
-    if '4proc' in steps and '8proc' in steps:
-        compare_variables(variables, config, work_dir=testcase['work_dir'],
-                          filename1='4proc/output.nc',
-                          filename2='8proc/output.nc')
+    compare_variables(variables, config, work_dir=testcase['work_dir'],
+                      filename1='4proc/output.nc',
+                      filename2='8proc/output.nc')
 
-In this case, we only perform the comparison if both ``4proc`` and ``8proc``
-steps have been run (otherwise, we cannot be sure the data we want will be
-available).  If so, we compare the 4 prognostic variable in ``4proc/output.nc``
+In this case, we compare the 4 prognostic variable in ``4proc/output.nc``
 with the same in ``8proc/output.nc`` to make sure they are identical.  If
 a baseline directory was provided, these 4 variables in each file will also be
 compared with those in the corresponding files in the baseline.
 
-In any of these cases, if comparison fails, a ``ValueError`` is raised and
-execution of the test case is terminated.
+By default, the comparison will only be performed if both the ``4proc`` and
+``8proc`` steps have been run (otherwise, we cannot be sure the data we want
+will be available).  If one of the steps was not run (if the user is running
+steps one at a time or has altered the ``steps_to_run`` config option to remove
+some steps), the function will skip validation, logging a message that
+validation was not performed because of the missing step(s).  You can pass
+the keyword argument ``skip_if_step_not_run=False`` to force validation to run
+(and possibly to fail because the output is not available) even if the user did
+not run the step involved in the validation.
+
+In any of these cases, if comparison fails, the failure is stored in the
+``validation`` attribute of the test case, and a ``ValueError`` will be raised
+later by the framework, terminating execution of the test case.
 
 If ``quiet=False``, typical output will look like this:
 
@@ -401,7 +408,69 @@ If ``quiet=False``, typical output will look like this:
         /home/xylar/data/mpas/test_nightly_latest/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
 
 If ``quiet=True`` (the default), there is only an indication that the
-comparison passed for each variable.
+comparison passed for each variable:
+
+.. code-block:: none
+
+    temperature          Time index: 0, 1, 2
+      PASS /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc
+
+           /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
+
+    salinity             Time index: 0, 1, 2
+      PASS /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc
+
+           /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
+
+    layerThickness       Time index: 0, 1, 2
+      PASS /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc
+
+           /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
+
+    normalVelocity       Time index: 0, 1, 2
+      PASS /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc
+
+           /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
+
+    temperature          Time index: 0, 1, 2
+      PASS /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc
+
+           /home/xylar/data/mpas/test_20210616/baseline/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc
+
+    salinity             Time index: 0, 1, 2
+      PASS /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc
+
+           /home/xylar/data/mpas/test_20210616/baseline/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc
+
+    layerThickness       Time index: 0, 1, 2
+      PASS /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc
+
+           /home/xylar/data/mpas/test_20210616/baseline/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc
+
+    normalVelocity       Time index: 0, 1, 2
+      PASS /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc
+
+           /home/xylar/data/mpas/test_20210616/baseline/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc
+
+    temperature          Time index: 0, 1, 2
+      PASS /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
+
+           /home/xylar/data/mpas/test_20210616/baseline/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
+
+    salinity             Time index: 0, 1, 2
+      PASS /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
+
+           /home/xylar/data/mpas/test_20210616/baseline/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
+
+    layerThickness       Time index: 0, 1, 2
+      PASS /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
+
+           /home/xylar/data/mpas/test_20210616/baseline/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
+
+    normalVelocity       Time index: 0, 1, 2
+      PASS /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
+
+           /home/xylar/data/mpas/test_20210616/baseline/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
 
 By default, the function checks to make sure ``filename1`` and, if provided,
 ``filename2`` are output of one of the steps in the test case.  In general,
