@@ -38,13 +38,13 @@ jobs:
       eval "$(conda shell.bash hook)"
       conda config --add channels conda-forge
       conda config --set channel_priority strict
-      conda create --yes --quiet --name build python=$PYTHON_VERSION conda conda-build
+      conda create --yes --quiet --name build python=$PYTHON_VERSION conda conda-build mamba boa
     displayName: Create Anaconda build environment
 
   - bash: |
       eval "$(conda shell.bash hook)"
       conda activate build
-      conda build -m ci/mpi_$(mpi).yaml conda/recipe
+      conda mambabuild -m ci/mpi_$(mpi).yaml conda/recipe
     displayName: Build COMPASS metapackage
 
   - bash: |
@@ -185,13 +185,13 @@ jobs:
       eval "$(conda shell.bash hook)"
       conda config --add channels conda-forge
       conda config --set channel_priority strict
-      conda create --yes --quiet --name build python=$PYTHON_VERSION conda conda-build
+      conda create --yes --quiet --name build python=$PYTHON_VERSION conda conda-build mamba boa
     displayName: Create Anaconda build environment
 
   - bash: |
       eval "$(conda shell.bash hook)"
       conda activate build
-      conda build -m ci/mpi_$(mpi).yaml conda/recipe
+      conda mambabuild -m ci/mpi_$(mpi).yaml conda/recipe
     displayName: Build COMPASS metapackage
 
   - bash: |
