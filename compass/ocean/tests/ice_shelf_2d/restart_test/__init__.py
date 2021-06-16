@@ -67,44 +67,40 @@ class RestartTest(TestCase):
         Test cases can override this method to perform validation of variables
         and timers
         """
-        steps = self.steps_to_run
+        variables = ['bottomDepth', 'ssh', 'layerThickness', 'zMid',
+                     'maxLevelCell', 'temperature', 'salinity']
+        compare_variables(
+            test_case=self, variables=variables,
+            filename1='initial_state/initial_state.nc')
 
-        if 'initial_state' in steps:
-            variables = ['bottomDepth', 'ssh', 'layerThickness', 'zMid',
-                         'maxLevelCell', 'temperature', 'salinity']
-            compare_variables(
-                test_case=self, variables=variables,
-                filename1='initial_state/initial_state.nc')
+        variables = ['temperature', 'salinity', 'layerThickness',
+                     'normalVelocity']
+        compare_variables(test_case=self, variables=variables,
+                          filename1='full_run/output.nc',
+                          filename2='restart_run/output.nc')
 
-        if 'full_run' in steps and 'restart_run' in steps:
-            variables = ['temperature', 'salinity', 'layerThickness',
-                         'normalVelocity']
-            compare_variables(test_case=self, variables=variables,
-                              filename1='full_run/output.nc',
-                              filename2='restart_run/output.nc')
+        variables = ['ssh', 'landIcePressure', 'landIceDraft',
+                     'landIceFraction',
+                     'landIceMask', 'landIceFrictionVelocity', 'topDrag',
+                     'topDragMagnitude', 'landIceFreshwaterFlux',
+                     'landIceHeatFlux', 'heatFluxToLandIce',
+                     'landIceBoundaryLayerTemperature',
+                     'landIceBoundaryLayerSalinity',
+                     'landIceHeatTransferVelocity',
+                     'landIceSaltTransferVelocity',
+                     'landIceInterfaceTemperature',
+                     'landIceInterfaceSalinity', 'accumulatedLandIceMass',
+                     'accumulatedLandIceHeat']
+        compare_variables(test_case=self, variables=variables,
+                          filename1='full_run/land_ice_fluxes.nc',
+                          filename2='restart_run/land_ice_fluxes.nc')
 
-            variables = ['ssh', 'landIcePressure', 'landIceDraft',
-                         'landIceFraction',
-                         'landIceMask', 'landIceFrictionVelocity', 'topDrag',
-                         'topDragMagnitude', 'landIceFreshwaterFlux',
-                         'landIceHeatFlux', 'heatFluxToLandIce',
-                         'landIceBoundaryLayerTemperature',
-                         'landIceBoundaryLayerSalinity',
-                         'landIceHeatTransferVelocity',
-                         'landIceSaltTransferVelocity',
-                         'landIceInterfaceTemperature',
-                         'landIceInterfaceSalinity', 'accumulatedLandIceMass',
-                         'accumulatedLandIceHeat']
-            compare_variables(test_case=self, variables=variables,
-                              filename1='full_run/land_ice_fluxes.nc',
-                              filename2='restart_run/land_ice_fluxes.nc')
-
-            variables = ['accumulatedFrazilIceMass',
-                         'accumulatedFrazilIceSalinity',
-                         'seaIceEnergy', 'frazilLayerThicknessTendency',
-                         'frazilTemperatureTendency', 'frazilSalinityTendency',
-                         'frazilSurfacePressure',
-                         'accumulatedLandIceFrazilMass']
-            compare_variables(test_case=self, variables=variables,
-                              filename1='full_run/frazil.nc',
-                              filename2='restart_run/frazil.nc')
+        variables = ['accumulatedFrazilIceMass',
+                     'accumulatedFrazilIceSalinity',
+                     'seaIceEnergy', 'frazilLayerThicknessTendency',
+                     'frazilTemperatureTendency', 'frazilSalinityTendency',
+                     'frazilSurfacePressure',
+                     'accumulatedLandIceFrazilMass']
+        compare_variables(test_case=self, variables=variables,
+                          filename1='full_run/frazil.nc',
+                          filename2='restart_run/frazil.nc')
