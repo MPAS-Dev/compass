@@ -58,8 +58,6 @@ class ThreadsTest(TestCase):
         """
         variables = ['temperature', 'salinity', 'layerThickness',
                      'normalVelocity']
-        steps = self.steps_to_run
-        if '1thread' in steps and '2thread' in steps:
-            compare_variables(test_case=self, variables=variables,
-                              filename1='1thread/output.nc',
-                              filename2='2thread/output.nc')
+        compare_variables(test_case=self, variables=variables,
+                          filename1='1thread/output.nc',
+                          filename2='2thread/output.nc')

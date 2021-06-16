@@ -32,7 +32,6 @@ class Default(TestCase):
         """
         Validate variables against a baseline
         """
-        if 'forward' in self.steps_to_run:
-            compare_variables(test_case=self,
-                              variables=['layerThickness', 'normalVelocity'],
-                              filename1='forward/output.nc')
+        compare_variables(test_case=self,
+                          variables=['layerThickness', 'normalVelocity'],
+                          filename1='forward/output.nc')

@@ -46,8 +46,6 @@ class DecompTest(ForwardTestCase):
         """
         variables = ['temperature', 'salinity', 'layerThickness',
                      'normalVelocity']
-        steps = self.steps_to_run
-        if '4proc' in steps and '8proc' in steps:
-            compare_variables(test_case=self, variables=variables,
-                              filename1='4proc/output.nc',
-                              filename2='8proc/output.nc')
+        compare_variables(test_case=self, variables=variables,
+                          filename1='4proc/output.nc',
+                          filename2='8proc/output.nc')

@@ -61,8 +61,6 @@ class DecompositionTest(TestCase):
         """
         variables = ['thickness', 'temperature', 'basalTemperature',
                      'heatDissipation']
-        steps = self.steps_to_run
-        if '1proc_run' in steps and '4proc_run' in steps:
-            compare_variables(test_case=self, variables=variables,
-                              filename1='1proc_run/output.nc',
-                              filename2='4proc_run/output.nc')
+        compare_variables(test_case=self, variables=variables,
+                          filename1='1proc_run/output.nc',
+                          filename2='4proc_run/output.nc')

@@ -64,43 +64,41 @@ class DecompositionTest(TestCase):
         Test cases can override this method to perform validation of variables
         and timers
         """
-        steps = self.steps_to_run
-        if '1proc_run' in steps and '4proc_run' in steps:
-            if self.velo_solver == 'sia':
-                compare_variables(test_case=self,
-                                  variables=['thickness', 'normalVelocity'],
-                                  filename1='1proc_run/output.nc',
-                                  filename2='4proc_run/output.nc')
+        if self.velo_solver == 'sia':
+            compare_variables(test_case=self,
+                              variables=['thickness', 'normalVelocity'],
+                              filename1='1proc_run/output.nc',
+                              filename2='4proc_run/output.nc')
 
-            elif self.velo_solver == 'FO':
-                # validate thickness
-                variable = ['thickness', ]
-                if self.mesh_type == 'variable_resolution':
-                    l1_norm = 1.0e-11
-                    l2_norm = 1.0e-12
-                    linf_norm = 1.0e-12
-                elif self.mesh_type == '2000m':
-                    l1_norm = 1.0e-9
-                    l2_norm = 1.0e-11
-                    linf_norm = 1.0e-11
-                compare_variables(test_case=self, variables=variable,
-                                  filename1='1proc_run/output.nc',
-                                  filename2='4proc_run/output.nc',
-                                  l1_norm=l1_norm, l2_norm=l2_norm,
-                                  linf_norm=linf_norm, quiet=False)
+        elif self.velo_solver == 'FO':
+            # validate thickness
+            variable = ['thickness', ]
+            if self.mesh_type == 'variable_resolution':
+                l1_norm = 1.0e-11
+                l2_norm = 1.0e-12
+                linf_norm = 1.0e-12
+            elif self.mesh_type == '2000m':
+                l1_norm = 1.0e-9
+                l2_norm = 1.0e-11
+                linf_norm = 1.0e-11
+            compare_variables(test_case=self, variables=variable,
+                              filename1='1proc_run/output.nc',
+                              filename2='4proc_run/output.nc',
+                              l1_norm=l1_norm, l2_norm=l2_norm,
+                              linf_norm=linf_norm, quiet=False)
 
-                # validate normalVelocity
-                variable = ['normalVelocity', ]
-                if self.mesh_type == 'variable_resolution':
-                    l1_norm = 1.0e-17
-                    l2_norm = 1.0e-18
-                    linf_norm = 1.0e-19
-                elif self.mesh_type == '2000m':
-                    l1_norm = 1.0e-15
-                    l2_norm = 1.0e-16
-                    linf_norm = 1.0e-18
-                compare_variables(test_case=self, variables=variable,
-                                  filename1='1proc_run/output.nc',
-                                  filename2='4proc_run/output.nc',
-                                  l1_norm=l1_norm, l2_norm=l2_norm,
-                                  linf_norm=linf_norm, quiet=False)
+            # validate normalVelocity
+            variable = ['normalVelocity', ]
+            if self.mesh_type == 'variable_resolution':
+                l1_norm = 1.0e-17
+                l2_norm = 1.0e-18
+                linf_norm = 1.0e-19
+            elif self.mesh_type == '2000m':
+                l1_norm = 1.0e-15
+                l2_norm = 1.0e-16
+                linf_norm = 1.0e-18
+            compare_variables(test_case=self, variables=variable,
+                              filename1='1proc_run/output.nc',
+                              filename2='4proc_run/output.nc',
+                              l1_norm=l1_norm, l2_norm=l2_norm,
+                              linf_norm=linf_norm, quiet=False)

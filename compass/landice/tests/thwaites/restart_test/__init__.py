@@ -16,7 +16,7 @@ class RestartTest(TestCase):
 
         Parameters
         ----------
-        test_group : compass.landice.tests.thwaites
+        test_group : compass.landice.tests.thwaites.Thwaites
             The test group that this test case belongs to
 
         """
@@ -70,8 +70,6 @@ class RestartTest(TestCase):
         and timers
         """
         variables = ['thickness', 'surfaceSpeed']
-        steps = self.steps_to_run
-        if 'full_run' in steps and 'restart_run' in steps:
-            compare_variables(test_case=self, variables=variables,
-                              filename1='full_run/output.nc',
-                              filename2='restart_run/output.nc')
+        compare_variables(test_case=self, variables=variables,
+                          filename1='full_run/output.nc',
+                          filename2='restart_run/output.nc')

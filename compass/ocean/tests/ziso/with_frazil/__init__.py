@@ -66,18 +66,16 @@ class WithFrazil(TestCase):
         Test cases can override this method to perform validation of variables
         and timers
         """
-        steps = self.steps_to_run
-        if 'forward' in steps:
-            variables = ['temperature', 'layerThickness']
-            compare_variables(
-                test_case=self, variables=variables,
-                filename1='forward/output/output.0001-01-01_00.00.00.nc')
+        variables = ['temperature', 'layerThickness']
+        compare_variables(
+            test_case=self, variables=variables,
+            filename1='forward/output/output.0001-01-01_00.00.00.nc')
 
-            variables = ['accumulatedFrazilIceMass',
-                         'accumulatedFrazilIceSalinity',
-                         'seaIceEnergy', 'frazilLayerThicknessTendency',
-                         'frazilTemperatureTendency', 'frazilSalinityTendency',
-                         'frazilSurfacePressure',
-                         'accumulatedLandIceFrazilMass']
-            compare_variables(test_case=self, variables=variables,
-                              filename1='forward/frazil.nc')
+        variables = ['accumulatedFrazilIceMass',
+                     'accumulatedFrazilIceSalinity',
+                     'seaIceEnergy', 'frazilLayerThicknessTendency',
+                     'frazilTemperatureTendency', 'frazilSalinityTendency',
+                     'frazilSurfacePressure',
+                     'accumulatedLandIceFrazilMass']
+        compare_variables(test_case=self, variables=variables,
+                          filename1='forward/frazil.nc')

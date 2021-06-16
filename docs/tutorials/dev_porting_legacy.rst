@@ -1244,13 +1244,12 @@ class in ``Default`` as follows:
         """
         Validate variables against a baseline
         """
-        if 'forward' in self.steps_to_run:
-            compare_variables(test_case=self,
-                              variables=['layerThickness', 'normalVelocity'],
-                              filename1='forward/output.nc')
+        compare_variables(test_case=self,
+                          variables=['layerThickness', 'normalVelocity'],
+                          filename1='forward/output.nc')
 
-We will only perform validation if the ``forward`` step was part of the current
-test-case run (otherwise the data might not be available). The call to
+If the user ran the ``forward`` step as part of this test case (sometimes they
+might run only some of the steps), the call to
 :py:func:`from compass.validate.compare_variables()` will check whether
 variables ``layerThickness`` and ``normalVelocity`` are exactly the same in
 this run as they were in a previous run if a baseline run was provided when the

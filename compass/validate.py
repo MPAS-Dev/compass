@@ -7,7 +7,7 @@ import fnmatch
 
 def compare_variables(test_case, variables, filename1, filename2=None,
                       l1_norm=0.0, l2_norm=0.0, linf_norm=0.0, quiet=True,
-                      check_outputs=True):
+                      check_outputs=True, skip_if_step_not_run=True):
     """
     Compare variables between files in the current test case and/or with the
     baseline results.  The results of the comparison are added to the
@@ -58,37 +58,67 @@ def compare_variables(test_case, variables, filename1, filename2=None,
         Whether to check to make sure files are valid outputs of steps in
         the test case.  This should be set to ``False`` if comparing with an
         output of a step in another test case.
+
+    skip_if_step_not_run : bool, optional
+        Whether to skip the variable comparison if a user did not run one (or
+        both) of the steps involved in the comparison.  This would happen if
+        users are running steps individually or has edited ``steps_to_run``
+        in the config file to exclude one of the steps.
     """
     work_dir = test_case.work_dir
-
-    if test_case.validation is not None:
-        validation = test_case.validation
-    else:
-        validation = {'internal_pass': None,
-                      'baseline_pass': None}
 
     path1 = os.path.abspath(os.path.join(work_dir, filename1))
     if filename2 is not None:
         path2 = os.path.abspath(os.path.join(work_dir, filename2))
     else:
         path2 = None
-    if check_outputs:
-        file1_found = False
-        file2_found = False
-        for step_name, step in test_case.steps.items():
-            for output in step.outputs:
-                # outputs are already absolute paths combined with the step dir
-                if output == path1:
-                    file1_found = True
-                if output == path2:
-                    file2_found = True
 
+    file1_found = False
+    file2_found = False
+    step_name1 = None
+    step_name2 = None
+    for step_name, step in test_case.steps.items():
+        for output in step.outputs:
+            # outputs are already absolute paths combined with the step dir
+            if output == path1:
+                file1_found = True
+                step_name1 = step_name
+            if output == path2:
+                file2_found = True
+                step_name2 = step_name
+
+    if check_outputs:
         if not file1_found:
             raise ValueError('{} does not appear to be an output of any step '
                              'in this test case.'.format(filename1))
         if filename2 is not None and not file2_found:
             raise ValueError('{} does not appear to be an output of any step '
                              'in this test case.'.format(filename2))
+
+    if skip_if_step_not_run:
+        step1_not_run = (file1_found and
+                         step_name1 not in test_case.steps_to_run)
+        step2_not_run = (file2_found and
+                         step_name2 not in test_case.steps_to_run)
+
+        if step1_not_run and step2_not_run:
+            test_case.logger.info(
+                'Skipping validation because {} and {} weren\'t  run'.format(
+                    step_name1, step_name2))
+        elif step1_not_run:
+            test_case.logger.info('Skipping validation because {} wasn\'t '
+                                  'run'.format(step_name1))
+        elif step2_not_run:
+            test_case.logger.info('Skipping validation because {} wasn\'t '
+                                  'run'.format(step_name2))
+        if step1_not_run or step2_not_run:
+            return
+
+    if test_case.validation is not None:
+        validation = test_case.validation
+    else:
+        validation = {'internal_pass': None,
+                      'baseline_pass': None}
 
     if filename2 is not None:
         internal_pass = _compare_variables(
