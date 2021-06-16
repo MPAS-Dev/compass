@@ -3,7 +3,7 @@
 thwaites
 =========
 
-The ``thwaites`` test group (:py:class:`compass.landice.tests.thwaites.thwaites`)
+The ``thwaites`` test group (:py:class:`compass.landice.tests.thwaites.Thwaites`)
 performs short (5-day) forward runs on a coarse (4-14 km) thwaites mesh
 (see :ref:`landice_thwaites`).  Here, we describe the shared framework for
 this test group and the 2 test cases.
