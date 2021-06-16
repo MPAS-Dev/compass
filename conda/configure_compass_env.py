@@ -239,7 +239,7 @@ def build_env(is_test, recreate, machine, compiler, mpi, conda_mpi, version,
             # install dev dependencies and compass itself
             commands = \
                 '{}; ' \
-                'conda create -y -n {} {} --file {}/spec-file-{}.txt ' \
+                'mamba create -y -n {} {} --file {}/spec-file-{}.txt ' \
                 '{}'.format(activate_base, env_name, channels, template_path,
                             conda_mpi, packages)
             check_call(commands)
@@ -254,7 +254,7 @@ def build_env(is_test, recreate, machine, compiler, mpi, conda_mpi, version,
             channels = '{} -c e3sm'.format(channels)
             packages = '{} "compass={}={}_*"'.format(
                 packages, version, mpi_prefix)
-            commands = '{}; conda create -y -n {} {} {}'.format(
+            commands = '{}; mamba create -y -n {} {} {}'.format(
                 activate_base, env_name, channels, packages)
             check_call(commands)
     else:
@@ -263,7 +263,7 @@ def build_env(is_test, recreate, machine, compiler, mpi, conda_mpi, version,
             # install dev dependencies and compass itself
             commands = \
                 '{}; ' \
-                'conda install -y -n {} {} ' \
+                'mamba install -y -n {} {} ' \
                 '--file {}/spec-file-{}.txt ' \
                 '{}'.format(activate_base, env_name, channels, template_path,
                             conda_mpi, packages)
@@ -676,7 +676,7 @@ def install_miniconda(conda_base, activate_base):
     commands = '{}; ' \
                'conda config --add channels conda-forge; ' \
                'conda config --set channel_priority strict; ' \
-               'conda install -y requests lxml progressbar2 jinja2; ' \
+               'conda install -y requests lxml progressbar2 jinja2 mamba boa; ' \
                'conda update -y --all'.format(activate_base)
 
     check_call(commands)
