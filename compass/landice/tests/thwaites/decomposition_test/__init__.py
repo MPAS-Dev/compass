@@ -21,15 +21,14 @@ class DecompositionTest(TestCase):
 
         """
         name = 'decomposition_test'
-        subdir = '{}'.format(name)
-        super().__init__(test_group=test_group, name=name, subdir=subdir)
+        super().__init__(test_group=test_group, name=name)
 
         self.cores_set = [16, 32]
 
         for procs in self.cores_set:
             name = '{}proc_run'.format(procs)
             self.add_step(
-                RunModel(test_case=self, name=name, subdir=name, cores=procs,
+                RunModel(test_case=self, name=name, cores=procs,
                          min_cores=procs, threads=1))
 
     # no configure() method is needed

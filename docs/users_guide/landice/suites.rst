@@ -48,6 +48,8 @@ for a long run or a shorter continuation run from a restart file
 (``restart_test``). Others ensure that the code produces the same result when
 it is run on different numbers of cores (``decomposition_test``).
 
+.. _landice_suite_fo_integration:
+
 fo_integration test suite
 -------------------------
 
@@ -66,6 +68,8 @@ The ``fo_integration`` test suite includes the following test cases:
 
 All of these tests use the FO velocity solver and require that MALI be compiled
 with the Albany library.
+
+.. _landice_suite_full_integration:
 
 full_integration test suite
 ---------------------------

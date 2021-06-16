@@ -21,26 +21,25 @@ class RestartTest(TestCase):
 
         """
         name = 'restart_test'
-        subdir = '{}'.format(name)
-        super().__init__(test_group=test_group, name=name, subdir=subdir)
+        super().__init__(test_group=test_group, name=name)
 
         cores = 36
         min_cores = 4
 
         name = 'full_run'
-        step = RunModel(test_case=self, name=name, subdir=name, cores=cores,
+        step = RunModel(test_case=self, name=name, cores=cores,
                         min_cores=min_cores, threads=1)
         # modify the namelist options and streams file
         step.add_namelist_file(
-            'compass.landice.tests.greenland.restart_test',
+            'compass.landice.tests.thwaites.restart_test',
             'namelist.full', out_name='namelist.landice')
         step.add_streams_file(
-            'compass.landice.tests.greenland.restart_test',
+            'compass.landice.tests.thwaites.restart_test',
             'streams.full', out_name='streams.landice')
         self.add_step(step)
 
         name = 'restart_run'
-        step = RunModel(test_case=self, name=name, subdir=name, cores=cores,
+        step = RunModel(test_case=self, name=name, cores=cores,
                         min_cores=min_cores, threads=1,
                         suffixes=['landice', 'landice.rst'])
 

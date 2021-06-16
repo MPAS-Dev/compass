@@ -46,7 +46,7 @@ class RunModel(Step):
 
         suffixes : list of str, optional
             a list of suffixes for namelist and streams files produced
-            for this step.  Most steps most runs will just have a
+            for this step.  Most run steps will just have a
             ``namelist.landice`` and a ``streams.landice`` (the default) but
             the ``restart_run`` step of the ``restart_test`` runs the model
             twice, the second time with ``namelist.landice.rst`` and
