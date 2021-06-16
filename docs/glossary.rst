@@ -1,5 +1,15 @@
+.. _glossary:
+
 Glossary
 ========
+
+``compass``
+    The python package containing framework for listing, setting up and running
+    test cases, as well as the cores, test groups, test cases and steps.
+
+Legacy COMPASS
+    The old version of COMPASS that used XML files and python scripts to define
+    cores, test groups, test cases and steps.
 
 MPAS core
     This term refers to the collection of tests cases associated with an
@@ -52,3 +62,17 @@ Work directory
    to :ref:`dev_compass_setup` and :ref:`dev_compass_suite`.  The work
    directory for a test case or step its location within base work directory
    (the base work directory plus its relative path)
+
+
+Package
+    A python package is a directory that has a file called ``__init__.py``.
+    That file can be empty or it can have code in it.  If there is code in
+    ``__init__.py``, it gets imported as if it were directly in the package
+    (you never include ``__init__`` in an ``import`` statement).
+
+Module
+    Python modules are python files that can be imported by other python files
+    (so they're not just scripts).  Nearly every single file ending in ``.py``
+    in the ``compass`` package is a module.  The ``__init__.py`` files are a
+    special case, that may define a module with the name of the package
+    (directory) that ``__init__.py`` is in.
