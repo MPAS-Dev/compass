@@ -213,7 +213,7 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        test_group : compass.landice.tests.thwaites</span>
+<span class="sd">        test_group : compass.landice.tests.thwaites.Thwaites</span>
 <span class="sd">            The test group that this test case belongs to</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -239,26 +239,25 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">name1</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">proc_run&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cores_set</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="n">name2</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">proc_run&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cores_set</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-        <span class="k">if</span> <span class="n">name1</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps_to_run</span> <span class="ow">and</span> <span class="n">name2</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps_to_run</span><span class="p">:</span>
-            <span class="c1"># validate thickness</span>
-            <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-                              <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;thickness&#39;</span><span class="p">,</span> <span class="p">],</span>
-                              <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/output.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name1</span><span class="p">),</span>
-                              <span class="n">filename2</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/output.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name2</span><span class="p">),</span>
-                              <span class="n">l1_norm</span><span class="o">=</span><span class="mf">1.0e-11</span><span class="p">,</span>
-                              <span class="n">l2_norm</span><span class="o">=</span><span class="mf">1.0e-11</span><span class="p">,</span>
-                              <span class="n">linf_norm</span><span class="o">=</span><span class="mf">1.0e-12</span><span class="p">,</span>
-                              <span class="n">quiet</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="c1"># validate thickness</span>
+        <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                          <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;thickness&#39;</span><span class="p">,</span> <span class="p">],</span>
+                          <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/output.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name1</span><span class="p">),</span>
+                          <span class="n">filename2</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/output.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name2</span><span class="p">),</span>
+                          <span class="n">l1_norm</span><span class="o">=</span><span class="mf">1.0e-11</span><span class="p">,</span>
+                          <span class="n">l2_norm</span><span class="o">=</span><span class="mf">1.0e-11</span><span class="p">,</span>
+                          <span class="n">linf_norm</span><span class="o">=</span><span class="mf">1.0e-12</span><span class="p">,</span>
+                          <span class="n">quiet</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-            <span class="c1"># validate surfaceSpeed</span>
-            <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-                              <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;surfaceSpeed&#39;</span><span class="p">,</span> <span class="p">],</span>
-                              <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/output.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name1</span><span class="p">),</span>
-                              <span class="n">filename2</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/output.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name2</span><span class="p">),</span>
-                              <span class="n">l1_norm</span><span class="o">=</span><span class="mf">1.0e-13</span><span class="p">,</span>
-                              <span class="n">l2_norm</span><span class="o">=</span><span class="mf">1.0e-14</span><span class="p">,</span>
-                              <span class="n">linf_norm</span><span class="o">=</span><span class="mf">1.0e-15</span><span class="p">,</span>
-                              <span class="n">quiet</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+        <span class="c1"># validate surfaceSpeed</span>
+        <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                          <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;surfaceSpeed&#39;</span><span class="p">,</span> <span class="p">],</span>
+                          <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/output.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name1</span><span class="p">),</span>
+                          <span class="n">filename2</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/output.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name2</span><span class="p">),</span>
+                          <span class="n">l1_norm</span><span class="o">=</span><span class="mf">1.0e-13</span><span class="p">,</span>
+                          <span class="n">l2_norm</span><span class="o">=</span><span class="mf">1.0e-14</span><span class="p">,</span>
+                          <span class="n">linf_norm</span><span class="o">=</span><span class="mf">1.0e-15</span><span class="p">,</span>
+                          <span class="n">quiet</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

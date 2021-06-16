@@ -261,46 +261,44 @@
 <span class="sd">        Test cases can override this method to perform validation of variables</span>
 <span class="sd">        and timers</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">steps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps_to_run</span>
-        <span class="k">if</span> <span class="s1">&#39;1proc_run&#39;</span> <span class="ow">in</span> <span class="n">steps</span> <span class="ow">and</span> <span class="s1">&#39;4proc_run&#39;</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">velo_solver</span> <span class="o">==</span> <span class="s1">&#39;sia&#39;</span><span class="p">:</span>
-                <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-                                  <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;thickness&#39;</span><span class="p">,</span> <span class="s1">&#39;normalVelocity&#39;</span><span class="p">],</span>
-                                  <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;1proc_run/output.nc&#39;</span><span class="p">,</span>
-                                  <span class="n">filename2</span><span class="o">=</span><span class="s1">&#39;4proc_run/output.nc&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">velo_solver</span> <span class="o">==</span> <span class="s1">&#39;sia&#39;</span><span class="p">:</span>
+            <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                              <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;thickness&#39;</span><span class="p">,</span> <span class="s1">&#39;normalVelocity&#39;</span><span class="p">],</span>
+                              <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;1proc_run/output.nc&#39;</span><span class="p">,</span>
+                              <span class="n">filename2</span><span class="o">=</span><span class="s1">&#39;4proc_run/output.nc&#39;</span><span class="p">)</span>
 
-            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">velo_solver</span> <span class="o">==</span> <span class="s1">&#39;FO&#39;</span><span class="p">:</span>
-                <span class="c1"># validate thickness</span>
-                <span class="n">variable</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;thickness&#39;</span><span class="p">,</span> <span class="p">]</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_type</span> <span class="o">==</span> <span class="s1">&#39;variable_resolution&#39;</span><span class="p">:</span>
-                    <span class="n">l1_norm</span> <span class="o">=</span> <span class="mf">1.0e-11</span>
-                    <span class="n">l2_norm</span> <span class="o">=</span> <span class="mf">1.0e-12</span>
-                    <span class="n">linf_norm</span> <span class="o">=</span> <span class="mf">1.0e-12</span>
-                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_type</span> <span class="o">==</span> <span class="s1">&#39;2000m&#39;</span><span class="p">:</span>
-                    <span class="n">l1_norm</span> <span class="o">=</span> <span class="mf">1.0e-9</span>
-                    <span class="n">l2_norm</span> <span class="o">=</span> <span class="mf">1.0e-11</span>
-                    <span class="n">linf_norm</span> <span class="o">=</span> <span class="mf">1.0e-11</span>
-                <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variable</span><span class="p">,</span>
-                                  <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;1proc_run/output.nc&#39;</span><span class="p">,</span>
-                                  <span class="n">filename2</span><span class="o">=</span><span class="s1">&#39;4proc_run/output.nc&#39;</span><span class="p">,</span>
-                                  <span class="n">l1_norm</span><span class="o">=</span><span class="n">l1_norm</span><span class="p">,</span> <span class="n">l2_norm</span><span class="o">=</span><span class="n">l2_norm</span><span class="p">,</span>
-                                  <span class="n">linf_norm</span><span class="o">=</span><span class="n">linf_norm</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">velo_solver</span> <span class="o">==</span> <span class="s1">&#39;FO&#39;</span><span class="p">:</span>
+            <span class="c1"># validate thickness</span>
+            <span class="n">variable</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;thickness&#39;</span><span class="p">,</span> <span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_type</span> <span class="o">==</span> <span class="s1">&#39;variable_resolution&#39;</span><span class="p">:</span>
+                <span class="n">l1_norm</span> <span class="o">=</span> <span class="mf">1.0e-11</span>
+                <span class="n">l2_norm</span> <span class="o">=</span> <span class="mf">1.0e-12</span>
+                <span class="n">linf_norm</span> <span class="o">=</span> <span class="mf">1.0e-12</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_type</span> <span class="o">==</span> <span class="s1">&#39;2000m&#39;</span><span class="p">:</span>
+                <span class="n">l1_norm</span> <span class="o">=</span> <span class="mf">1.0e-9</span>
+                <span class="n">l2_norm</span> <span class="o">=</span> <span class="mf">1.0e-11</span>
+                <span class="n">linf_norm</span> <span class="o">=</span> <span class="mf">1.0e-11</span>
+            <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variable</span><span class="p">,</span>
+                              <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;1proc_run/output.nc&#39;</span><span class="p">,</span>
+                              <span class="n">filename2</span><span class="o">=</span><span class="s1">&#39;4proc_run/output.nc&#39;</span><span class="p">,</span>
+                              <span class="n">l1_norm</span><span class="o">=</span><span class="n">l1_norm</span><span class="p">,</span> <span class="n">l2_norm</span><span class="o">=</span><span class="n">l2_norm</span><span class="p">,</span>
+                              <span class="n">linf_norm</span><span class="o">=</span><span class="n">linf_norm</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-                <span class="c1"># validate normalVelocity</span>
-                <span class="n">variable</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;normalVelocity&#39;</span><span class="p">,</span> <span class="p">]</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_type</span> <span class="o">==</span> <span class="s1">&#39;variable_resolution&#39;</span><span class="p">:</span>
-                    <span class="n">l1_norm</span> <span class="o">=</span> <span class="mf">1.0e-17</span>
-                    <span class="n">l2_norm</span> <span class="o">=</span> <span class="mf">1.0e-18</span>
-                    <span class="n">linf_norm</span> <span class="o">=</span> <span class="mf">1.0e-19</span>
-                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_type</span> <span class="o">==</span> <span class="s1">&#39;2000m&#39;</span><span class="p">:</span>
-                    <span class="n">l1_norm</span> <span class="o">=</span> <span class="mf">1.0e-15</span>
-                    <span class="n">l2_norm</span> <span class="o">=</span> <span class="mf">1.0e-16</span>
-                    <span class="n">linf_norm</span> <span class="o">=</span> <span class="mf">1.0e-18</span>
-                <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variable</span><span class="p">,</span>
-                                  <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;1proc_run/output.nc&#39;</span><span class="p">,</span>
-                                  <span class="n">filename2</span><span class="o">=</span><span class="s1">&#39;4proc_run/output.nc&#39;</span><span class="p">,</span>
-                                  <span class="n">l1_norm</span><span class="o">=</span><span class="n">l1_norm</span><span class="p">,</span> <span class="n">l2_norm</span><span class="o">=</span><span class="n">l2_norm</span><span class="p">,</span>
-                                  <span class="n">linf_norm</span><span class="o">=</span><span class="n">linf_norm</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+            <span class="c1"># validate normalVelocity</span>
+            <span class="n">variable</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;normalVelocity&#39;</span><span class="p">,</span> <span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_type</span> <span class="o">==</span> <span class="s1">&#39;variable_resolution&#39;</span><span class="p">:</span>
+                <span class="n">l1_norm</span> <span class="o">=</span> <span class="mf">1.0e-17</span>
+                <span class="n">l2_norm</span> <span class="o">=</span> <span class="mf">1.0e-18</span>
+                <span class="n">linf_norm</span> <span class="o">=</span> <span class="mf">1.0e-19</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_type</span> <span class="o">==</span> <span class="s1">&#39;2000m&#39;</span><span class="p">:</span>
+                <span class="n">l1_norm</span> <span class="o">=</span> <span class="mf">1.0e-15</span>
+                <span class="n">l2_norm</span> <span class="o">=</span> <span class="mf">1.0e-16</span>
+                <span class="n">linf_norm</span> <span class="o">=</span> <span class="mf">1.0e-18</span>
+            <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variable</span><span class="p">,</span>
+                              <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;1proc_run/output.nc&#39;</span><span class="p">,</span>
+                              <span class="n">filename2</span><span class="o">=</span><span class="s1">&#39;4proc_run/output.nc&#39;</span><span class="p">,</span>
+                              <span class="n">l1_norm</span><span class="o">=</span><span class="n">l1_norm</span><span class="p">,</span> <span class="n">l2_norm</span><span class="o">=</span><span class="n">l2_norm</span><span class="p">,</span>
+                              <span class="n">linf_norm</span><span class="o">=</span><span class="n">linf_norm</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

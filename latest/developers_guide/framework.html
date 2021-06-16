@@ -493,21 +493,27 @@ between the file <code class="docutils literal notranslate"><span class="pre">fo
 location within the baseline.</p>
 <p>Here is a slightly more complex example:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;salinity&#39;</span><span class="p">,</span> <span class="s1">&#39;layerThickness&#39;</span><span class="p">,</span> <span class="s1">&#39;normalVelocity&#39;</span><span class="p">]</span>
-<span class="n">steps</span> <span class="o">=</span> <span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;steps_to_run&#39;</span><span class="p">]</span>
-<span class="k">if</span> <span class="s1">&#39;4proc&#39;</span> <span class="ow">in</span> <span class="n">steps</span> <span class="ow">and</span> <span class="s1">&#39;8proc&#39;</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">:</span>
-    <span class="n">compare_variables</span><span class="p">(</span><span class="n">variables</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">work_dir</span><span class="o">=</span><span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;work_dir&#39;</span><span class="p">],</span>
-                      <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;4proc/output.nc&#39;</span><span class="p">,</span>
-                      <span class="n">filename2</span><span class="o">=</span><span class="s1">&#39;8proc/output.nc&#39;</span><span class="p">)</span>
+<span class="n">compare_variables</span><span class="p">(</span><span class="n">variables</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">work_dir</span><span class="o">=</span><span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;work_dir&#39;</span><span class="p">],</span>
+                  <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;4proc/output.nc&#39;</span><span class="p">,</span>
+                  <span class="n">filename2</span><span class="o">=</span><span class="s1">&#39;8proc/output.nc&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>In this case, we only perform the comparison if both <code class="docutils literal notranslate"><span class="pre">4proc</span></code> and <code class="docutils literal notranslate"><span class="pre">8proc</span></code>
-steps have been run (otherwise, we cannot be sure the data we want will be
-available).  If so, we compare the 4 prognostic variable in <code class="docutils literal notranslate"><span class="pre">4proc/output.nc</span></code>
+<p>In this case, we compare the 4 prognostic variable in <code class="docutils literal notranslate"><span class="pre">4proc/output.nc</span></code>
 with the same in <code class="docutils literal notranslate"><span class="pre">8proc/output.nc</span></code> to make sure they are identical.  If
 a baseline directory was provided, these 4 variables in each file will also be
 compared with those in the corresponding files in the baseline.</p>
-<p>In any of these cases, if comparison fails, a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> is raised and
-execution of the test case is terminated.</p>
+<p>By default, the comparison will only be performed if both the <code class="docutils literal notranslate"><span class="pre">4proc</span></code> and
+<code class="docutils literal notranslate"><span class="pre">8proc</span></code> steps have been run (otherwise, we cannot be sure the data we want
+will be available).  If one of the steps was not run (if the user is running
+steps one at a time or has altered the <code class="docutils literal notranslate"><span class="pre">steps_to_run</span></code> config option to remove
+some steps), the function will skip validation, logging a message that
+validation was not performed because of the missing step(s).  You can pass
+the keyword argument <code class="docutils literal notranslate"><span class="pre">skip_if_step_not_run=False</span></code> to force validation to run
+(and possibly to fail because the output is not available) even if the user did
+not run the step involved in the validation.</p>
+<p>In any of these cases, if comparison fails, the failure is stored in the
+<code class="docutils literal notranslate"><span class="pre">validation</span></code> attribute of the test case, and a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> will be raised
+later by the framework, terminating execution of the test case.</p>
 <p>If <code class="docutils literal notranslate"><span class="pre">quiet=False</span></code>, typical output will look like this:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Beginning variable comparisons for all time levels of field &#39;temperature&#39;. Note any time levels reported are 0-based.
     Pass thresholds are:
@@ -552,7 +558,68 @@ Beginning variable comparisons for all time levels of field &#39;normalVelocity&
 </pre></div>
 </div>
 <p>If <code class="docutils literal notranslate"><span class="pre">quiet=True</span></code> (the default), there is only an indication that the
-comparison passed for each variable.</p>
+comparison passed for each variable:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>temperature          Time index: 0, 1, 2
+  PASS /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc
+
+       /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
+
+salinity             Time index: 0, 1, 2
+  PASS /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc
+
+       /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
+
+layerThickness       Time index: 0, 1, 2
+  PASS /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc
+
+       /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
+
+normalVelocity       Time index: 0, 1, 2
+  PASS /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc
+
+       /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
+
+temperature          Time index: 0, 1, 2
+  PASS /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc
+
+       /home/xylar/data/mpas/test_20210616/baseline/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc
+
+salinity             Time index: 0, 1, 2
+  PASS /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc
+
+       /home/xylar/data/mpas/test_20210616/baseline/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc
+
+layerThickness       Time index: 0, 1, 2
+  PASS /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc
+
+       /home/xylar/data/mpas/test_20210616/baseline/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc
+
+normalVelocity       Time index: 0, 1, 2
+  PASS /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc
+
+       /home/xylar/data/mpas/test_20210616/baseline/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc
+
+temperature          Time index: 0, 1, 2
+  PASS /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
+
+       /home/xylar/data/mpas/test_20210616/baseline/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
+
+salinity             Time index: 0, 1, 2
+  PASS /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
+
+       /home/xylar/data/mpas/test_20210616/baseline/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
+
+layerThickness       Time index: 0, 1, 2
+  PASS /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
+
+       /home/xylar/data/mpas/test_20210616/baseline/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
+
+normalVelocity       Time index: 0, 1, 2
+  PASS /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
+
+       /home/xylar/data/mpas/test_20210616/baseline/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
+</pre></div>
+</div>
 <p>By default, the function checks to make sure <code class="docutils literal notranslate"><span class="pre">filename1</span></code> and, if provided,
 <code class="docutils literal notranslate"><span class="pre">filename2</span></code> are output of one of the steps in the test case.  In general,
 validation should be performed on outputs of the steps this test case that are

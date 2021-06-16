@@ -1318,14 +1318,13 @@ class in <code class="docutils literal notranslate"><span class="pre">Default</s
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Validate variables against a baseline</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="s1">&#39;forward&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps_to_run</span><span class="p">:</span>
-        <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-                          <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;layerThickness&#39;</span><span class="p">,</span> <span class="s1">&#39;normalVelocity&#39;</span><span class="p">],</span>
-                          <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;forward/output.nc&#39;</span><span class="p">)</span>
+    <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                      <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;layerThickness&#39;</span><span class="p">,</span> <span class="s1">&#39;normalVelocity&#39;</span><span class="p">],</span>
+                      <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;forward/output.nc&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>We will only perform validation if the <code class="docutils literal notranslate"><span class="pre">forward</span></code> step was part of the current
-test-case run (otherwise the data might not be available). The call to
+<p>If the user ran the <code class="docutils literal notranslate"><span class="pre">forward</span></code> step as part of this test case (sometimes they
+might run only some of the steps), the call to
 <code class="xref py py-func docutils literal notranslate"><span class="pre">from</span> <span class="pre">compass.validate.compare_variables()</span></code> will check whether
 variables <code class="docutils literal notranslate"><span class="pre">layerThickness</span></code> and <code class="docutils literal notranslate"><span class="pre">normalVelocity</span></code> are exactly the same in
 this run as they were in a previous run if a baseline run was provided when the

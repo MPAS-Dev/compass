@@ -263,21 +263,19 @@
 <span class="sd">        Test cases can override this method to perform validation of variables</span>
 <span class="sd">        and timers</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">steps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps_to_run</span>
-        <span class="k">if</span> <span class="s1">&#39;forward&#39;</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">:</span>
-            <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;layerThickness&#39;</span><span class="p">]</span>
-            <span class="n">compare_variables</span><span class="p">(</span>
-                <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
-                <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;forward/output/output.0001-01-01_00.00.00.nc&#39;</span><span class="p">)</span>
+        <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;layerThickness&#39;</span><span class="p">]</span>
+        <span class="n">compare_variables</span><span class="p">(</span>
+            <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
+            <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;forward/output/output.0001-01-01_00.00.00.nc&#39;</span><span class="p">)</span>
 
-            <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;accumulatedFrazilIceMass&#39;</span><span class="p">,</span>
-                         <span class="s1">&#39;accumulatedFrazilIceSalinity&#39;</span><span class="p">,</span>
-                         <span class="s1">&#39;seaIceEnergy&#39;</span><span class="p">,</span> <span class="s1">&#39;frazilLayerThicknessTendency&#39;</span><span class="p">,</span>
-                         <span class="s1">&#39;frazilTemperatureTendency&#39;</span><span class="p">,</span> <span class="s1">&#39;frazilSalinityTendency&#39;</span><span class="p">,</span>
-                         <span class="s1">&#39;frazilSurfacePressure&#39;</span><span class="p">,</span>
-                         <span class="s1">&#39;accumulatedLandIceFrazilMass&#39;</span><span class="p">]</span>
-            <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
-                              <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;forward/frazil.nc&#39;</span><span class="p">)</span></div>
+        <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;accumulatedFrazilIceMass&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;accumulatedFrazilIceSalinity&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;seaIceEnergy&#39;</span><span class="p">,</span> <span class="s1">&#39;frazilLayerThicknessTendency&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;frazilTemperatureTendency&#39;</span><span class="p">,</span> <span class="s1">&#39;frazilSalinityTendency&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;frazilSurfacePressure&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;accumulatedLandIceFrazilMass&#39;</span><span class="p">]</span>
+        <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
+                          <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;forward/frazil.nc&#39;</span><span class="p">)</span></div>
 </pre></div>
 
            </div>
