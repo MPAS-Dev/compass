@@ -157,3 +157,25 @@ hydro_radial
    visualize.Visualize
    visualize.Visualize.run
    visualize.visualize_hydro_radial
+
+thwaites
+~~~~~~~~
+
+.. currentmodule:: compass.landice.tests.thwaites
+
+.. autosummary::
+   :toctree: generated/
+
+   Thwaites
+
+   decomposition_test.DecompositionTest
+   decomposition_test.DecompositionTest.run
+
+   restart_test.RestartTest
+   restart_test.RestartTest.run
+
+   run_model.RunModel
+   run_model.RunModel.setup
+   run_model.RunModel.run
+
+
