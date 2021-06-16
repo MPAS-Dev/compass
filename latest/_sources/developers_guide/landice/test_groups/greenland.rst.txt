@@ -15,6 +15,13 @@ framework
 
 There are no shared config options for the ``greenland`` test group.
 
+Each of the tests and the ``RunModel`` step require an argument for
+``velo_solver`` that can be one of ``['sia', 'FO']``.  When a test is set
+up to use the 'FO' solver, COMPASS will adjust the namelist accordingly
+and add a copy of the ``albany_input.yaml`` input file required by the FO
+solver.  Running with the FO solver requires building MALI with the Albany
+library.
+
 The test group has a shared ``namelist.landice`` file with
 a few common namelist options related to time step, run duration and calving,
 and a shared ``streams.landice`` file that defines ``input``, ``restart``, and
@@ -25,7 +32,7 @@ run_model
 
 The class :py:class:`compass.landice.tests.greenland.run_model.RunModel`
 defines a step for running MALI an initial condition downloaded from
-`gis20km.150922.nc <https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-albany-landice/gis20km.150922.nc>`_.
+`gis20km.210608.nc <https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-albany-landice/gis20km.210608.nc>`_.
 For the ``restart_test`` test cases, the model will run multiple times with
 different namelist and streams files.  To support this functionality, this step
 has an attribute ``suffixes``, which is a list of suffixes for the these

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>greenland &mdash; compass latest documentation</title>
+  <title>thwaites &mdash; compass latest documentation</title>
   
 
   
@@ -41,8 +41,8 @@
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="hydro_radial" href="hydro_radial.html" />
-    <link rel="prev" title="eismint2" href="eismint2.html" /> 
+    <link rel="next" title="Land-ice Framework" href="../framework.html" />
+    <link rel="prev" title="hydro_radial" href="hydro_radial.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -112,15 +112,14 @@
 <li class="toctree-l3"><a class="reference internal" href="dome.html">dome</a></li>
 <li class="toctree-l3"><a class="reference internal" href="enthalpy_benchmark.html">enthalpy_benchmark</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eismint2.html">eismint2</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">greenland</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="greenland.html">greenland</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hydro_radial.html">hydro_radial</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">thwaites</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#framework">framework</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#smoke-test">smoke_test</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#decomposition-test">decomposition_test</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#restart-test">restart_test</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="hydro_radial.html">hydro_radial</a></li>
-<li class="toctree-l3"><a class="reference internal" href="thwaites.html">thwaites</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../framework.html">Land-ice Framework</a></li>
@@ -197,13 +196,13 @@
         
           <li><a href="index.html">Test groups</a> &raquo;</li>
         
-      <li>greenland</li>
+      <li>thwaites</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../../../_sources/developers_guide/landice/test_groups/greenland.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/developers_guide/landice/test_groups/thwaites.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -216,20 +215,17 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="greenland">
-<span id="dev-landice-greenland"></span><h1>greenland<a class="headerlink" href="#greenland" title="Permalink to this headline">¶</a></h1>
-<p>The <code class="docutils literal notranslate"><span class="pre">greenland</span></code> test group (<a class="reference internal" href="../generated/compass.landice.tests.greenland.Greenland.html#compass.landice.tests.greenland.Greenland" title="compass.landice.tests.greenland.Greenland"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.greenland.Greenland</span></code></a>)
-performs short (5-day) forward runs on a coarse (20-km) Greenland mesh
-(see <a class="reference internal" href="../../../users_guide/landice/test_groups/greenland.html#landice-greenland"><span class="std std-ref">greenland</span></a>).  Here, we describe the shared framework for
-this test group and the 3 test cases.</p>
+  <div class="section" id="thwaites">
+<span id="dev-landice-thwaites"></span><h1>thwaites<a class="headerlink" href="#thwaites" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">thwaites</span></code> test group (<a class="reference internal" href="../generated/compass.landice.tests.thwaites.Thwaites.html#compass.landice.tests.thwaites.Thwaites" title="compass.landice.tests.thwaites.Thwaites"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.thwaites.Thwaites</span></code></a>)
+performs short (5-day) forward runs on a coarse (4-14 km) thwaites mesh
+(see <a class="reference internal" href="../../../users_guide/landice/test_groups/thwaites.html#landice-thwaites"><span class="std std-ref">thwaites</span></a>).  Here, we describe the shared framework for
+this test group and the 2 test cases.</p>
 <div class="section" id="framework">
-<span id="dev-landice-greenland-framework"></span><h2>framework<a class="headerlink" href="#framework" title="Permalink to this headline">¶</a></h2>
-<p>There are no shared config options for the <code class="docutils literal notranslate"><span class="pre">greenland</span></code> test group.</p>
-<p>Each of the tests and the <code class="docutils literal notranslate"><span class="pre">RunModel</span></code> step require an argument for
-<code class="docutils literal notranslate"><span class="pre">velo_solver</span></code> that can be one of <code class="docutils literal notranslate"><span class="pre">['sia',</span> <span class="pre">'FO']</span></code>.  When a test is set
-up to use the ‘FO’ solver, COMPASS will adjust the namelist accordingly
-and add a copy of the <code class="docutils literal notranslate"><span class="pre">albany_input.yaml</span></code> input file required by the FO
-solver.  Running with the FO solver requires building MALI with the Albany
+<span id="dev-landice-thwaites-framework"></span><h2>framework<a class="headerlink" href="#framework" title="Permalink to this headline">¶</a></h2>
+<p>There are no shared config options for the <code class="docutils literal notranslate"><span class="pre">thwaites</span></code> test group.</p>
+<p>The Thwaites test can only be run with the FO velocity solver.
+Running with the FO solver requires building MALI with the Albany
 library.</p>
 <p>The test group has a shared <code class="docutils literal notranslate"><span class="pre">namelist.landice</span></code> file with
 a few common namelist options related to time step, run duration and calving,
@@ -237,9 +233,9 @@ and a shared <code class="docutils literal notranslate"><span class="pre">stream
 <code class="docutils literal notranslate"><span class="pre">output</span></code> streams.</p>
 <div class="section" id="run-model">
 <h3>run_model<a class="headerlink" href="#run-model" title="Permalink to this headline">¶</a></h3>
-<p>The class <a class="reference internal" href="../generated/compass.landice.tests.greenland.run_model.RunModel.html#compass.landice.tests.greenland.run_model.RunModel" title="compass.landice.tests.greenland.run_model.RunModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.greenland.run_model.RunModel</span></code></a>
+<p>The class <a class="reference internal" href="../generated/compass.landice.tests.thwaites.run_model.RunModel.html#compass.landice.tests.thwaites.run_model.RunModel" title="compass.landice.tests.thwaites.run_model.RunModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.thwaites.run_model.RunModel</span></code></a>
 defines a step for running MALI an initial condition downloaded from
-<a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-albany-landice/gis20km.210608.nc">gis20km.210608.nc</a>.
+<a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-albany-landice/thwaites.4km.210608.nc">thwaites.4km.210608.nc</a>.
 For the <code class="docutils literal notranslate"><span class="pre">restart_test</span></code> test cases, the model will run multiple times with
 different namelist and streams files.  To support this functionality, this step
 has an attribute <code class="docutils literal notranslate"><span class="pre">suffixes</span></code>, which is a list of suffixes for the these
@@ -247,24 +243,19 @@ namelist and streams files.  The model runs once for each suffix.  The default
 is just <code class="docutils literal notranslate"><span class="pre">landice</span></code>.</p>
 </div>
 </div>
-<div class="section" id="smoke-test">
-<span id="dev-landice-greenland-smoke-test"></span><h2>smoke_test<a class="headerlink" href="#smoke-test" title="Permalink to this headline">¶</a></h2>
-<p>The <a class="reference internal" href="../generated/compass.landice.tests.greenland.smoke_test.SmokeTest.html#compass.landice.tests.greenland.smoke_test.SmokeTest" title="compass.landice.tests.greenland.smoke_test.SmokeTest"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.greenland.smoke_test.SmokeTest</span></code></a> performs a
-5-day run on 4 cores.  It doesn’t contain any <a class="reference internal" href="../../framework.html#dev-validation"><span class="std std-ref">Validation</span></a>.</p>
-</div>
 <div class="section" id="decomposition-test">
-<span id="dev-landice-greenland-decomposition-test"></span><h2>decomposition_test<a class="headerlink" href="#decomposition-test" title="Permalink to this headline">¶</a></h2>
-<p>The <a class="reference internal" href="../generated/compass.landice.tests.greenland.decomposition_test.DecompositionTest.html#compass.landice.tests.greenland.decomposition_test.DecompositionTest" title="compass.landice.tests.greenland.decomposition_test.DecompositionTest"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.greenland.decomposition_test.DecompositionTest</span></code></a>
+<span id="dev-landice-thwaites-decomposition-test"></span><h2>decomposition_test<a class="headerlink" href="#decomposition-test" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="../generated/compass.landice.tests.thwaites.decomposition_test.DecompositionTest.html#compass.landice.tests.thwaites.decomposition_test.DecompositionTest" title="compass.landice.tests.thwaites.decomposition_test.DecompositionTest"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.thwaites.decomposition_test.DecompositionTest</span></code></a>
 performs a 5-day run once on 1 core and once on 4 cores.  It ensures that
-<code class="docutils literal notranslate"><span class="pre">thickness</span></code> and <code class="docutils literal notranslate"><span class="pre">normalVelocity</span></code> are identical at the end of the two runs
+<code class="docutils literal notranslate"><span class="pre">thickness</span></code> and <code class="docutils literal notranslate"><span class="pre">surfaceSpeed</span></code> are identical at the end of the two runs
 (as well as with a baseline if one is provided when calling
 <a class="reference internal" href="../../command_line.html#dev-compass-setup"><span class="std std-ref">compass setup</span></a>).</p>
 </div>
 <div class="section" id="restart-test">
-<span id="dev-landice-greenland-restart-test"></span><h2>restart_test<a class="headerlink" href="#restart-test" title="Permalink to this headline">¶</a></h2>
-<p>The <a class="reference internal" href="../generated/compass.landice.tests.greenland.restart_test.RestartTest.html#compass.landice.tests.greenland.restart_test.RestartTest" title="compass.landice.tests.greenland.restart_test.RestartTest"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.greenland.restart_test.RestartTest</span></code></a>
+<span id="dev-landice-thwaites-restart-test"></span><h2>restart_test<a class="headerlink" href="#restart-test" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="../generated/compass.landice.tests.thwaites.restart_test.RestartTest.html#compass.landice.tests.thwaites.restart_test.RestartTest" title="compass.landice.tests.thwaites.restart_test.RestartTest"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.thwaites.restart_test.RestartTest</span></code></a>
 performs a 5-day run once on 4 cores, then a sequence of a 3-day and a 2-day
-run on 4 cores.  It ensures that <code class="docutils literal notranslate"><span class="pre">thickness</span></code> and <code class="docutils literal notranslate"><span class="pre">normalVelocity</span></code> are
+run on 4 cores.  It ensures that <code class="docutils literal notranslate"><span class="pre">thickness</span></code> and <code class="docutils literal notranslate"><span class="pre">surfaceSpeed</span></code> are
 identical at the end of the two runs (as well as with a baseline if one is
 provided when calling <a class="reference internal" href="../../command_line.html#dev-compass-setup"><span class="std std-ref">compass setup</span></a>).</p>
 <p>The restart step works by creating two different namelist and streams files,
@@ -280,8 +271,8 @@ the latter perform a 2-day restart run beginning with the end of the first.</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="hydro_radial.html" class="btn btn-neutral float-right" title="hydro_radial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="eismint2.html" class="btn btn-neutral float-left" title="eismint2" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../framework.html" class="btn btn-neutral float-right" title="Land-ice Framework" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="hydro_radial.html" class="btn btn-neutral float-left" title="hydro_radial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

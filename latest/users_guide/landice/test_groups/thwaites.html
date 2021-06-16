@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>hydro_radial &mdash; compass latest documentation</title>
+  <title>thwaites &mdash; compass latest documentation</title>
   
 
   
@@ -41,8 +41,8 @@
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Framework" href="../framework/index.html" />
-    <link rel="prev" title="thwaites" href="thwaites.html" /> 
+    <link rel="next" title="hydro_radial" href="hydro_radial.html" />
+    <link rel="prev" title="greenland" href="greenland.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -103,15 +103,13 @@
 <li class="toctree-l3"><a class="reference internal" href="enthalpy_benchmark.html">enthalpy_benchmark</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eismint2.html">eismint2</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenland.html">greenland</a></li>
-<li class="toctree-l3"><a class="reference internal" href="thwaites.html">thwaites</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">hydro_radial</a><ul>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">thwaites</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#config-options">config options</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#spinup-test">spinup_test</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#steady-state-drift-test">steady_state_drift_test</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#decomposition-test">decomposition_test</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#restart-test">restart_test</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="hydro_radial.html">hydro_radial</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../framework/index.html">Framework</a></li>
@@ -199,13 +197,13 @@
         
           <li><a href="index.html">Test Groups</a> &raquo;</li>
         
-      <li>hydro_radial</li>
+      <li>thwaites</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../../../_sources/users_guide/landice/test_groups/hydro_radial.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/users_guide/landice/test_groups/thwaites.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -218,78 +216,47 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="hydro-radial">
-<span id="landice-hydro-radial"></span><h1>hydro_radial<a class="headerlink" href="#hydro-radial" title="Permalink to this headline">¶</a></h1>
-<p>The <code class="docutils literal notranslate"><span class="pre">landice/hydro_radial</span></code> test group implements variants of the
-radially symmetric hydrological test case from
-<a class="reference external" href="https://doi.org/10.5194/gmd-8-1613-2015">Bueler et al. (2015)</a>.</p>
-<p>The domain is approximately rectangular with a radially symmetric ice sheet
-at its center.  The mesh has 1-km horizontal resolution and 3 vertical layers.
-&lt;&lt;&lt;Further description here&gt;&gt;&gt;</p>
-<p>&lt;&lt;&lt;Exmaple image here&gt;&gt;&gt;</p>
-<p>The test group includes 4 test cases.  All test cases are made up of 3
-types of steps, <code class="docutils literal notranslate"><span class="pre">setup_mesh</span></code>, which defines the mesh and initial conditions
-for the model; <code class="docutils literal notranslate"><span class="pre">run_model</span></code> (given another name in many test cases to
-distinguish multiple forward runs), which performs time integration of the
-model; and <code class="docutils literal notranslate"><span class="pre">visualize</span></code>, which optionally plots the results of the test case
-(PNG files, plot windows, or both).</p>
+  <div class="section" id="thwaites">
+<span id="landice-thwaites"></span><h1>thwaites<a class="headerlink" href="#thwaites" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">landice/thwaites</span></code> test group runs tests with a coarse (4-14-km)
+<a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-albany-landice/thwaites.4km.210608.nc">Thwaites Glacier mesh</a>.
+The purpose of this test group is to provide a realistic glacier that
+includess an ice shelf.
+The mesh and initial condition are already generated.  In the future,
+additional test cases may be added for generating a new version of the
+Thwaites mesh at different resolutions and using different data sources.</p>
+<div class="figure align-center" id="id1">
+<a class="reference internal image-reference" href="../../../_images/thwaites_speed.png"><img alt="../../../_images/thwaites_speed.png" src="../../../_images/thwaites_speed.png" style="width: 777px;" /></a>
+<p class="caption"><span class="caption-text">FO velocity solution visualized in Paraview.  Grounding line position
+shown with a white line.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+<p>The test group includes 2 test cases, each of which has one or more steps
+that are variants on <code class="docutils literal notranslate"><span class="pre">run_model</span></code> (given other names in the decomposition and
+restart test cases to distinguish multiple model runs), which performs time
+integration of the model.  There is a not an explicit smoke test, but the
+<code class="docutils literal notranslate"><span class="pre">full_run</span></code> step of the <code class="docutils literal notranslate"><span class="pre">restart_test</span></code> can be used as a smoke test.</p>
+<p>The test cases in this test group can only be run with the FO velocity
+solvers. Running with the FO solver requires a build of MALI that includes
+Albany.</p>
 <div class="section" id="config-options">
 <h2>config options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
-<p>All 4 test cases share the same set of default config options:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># config options for hydro_radial test cases</span>
-<span class="k">[hydro_radial]</span>
-
-<span class="c1"># sizes (in cells) for the 1000m uniform mesh</span>
-<span class="na">nx</span> <span class="o">=</span> <span class="s">50</span>
-<span class="na">ny</span> <span class="o">=</span> <span class="s">58</span>
-
-<span class="c1"># resolution (in m) for the 1000m uniform mesh</span>
-<span class="na">dc</span> <span class="o">=</span> <span class="s">1000.0</span>
-
-<span class="c1"># number of levels in the mesh</span>
-<span class="na">levels</span> <span class="o">=</span> <span class="s">3</span>
-
-
-<span class="c1"># config options related to visualization for hydro_radial test cases</span>
-<span class="k">[hydro_radial_viz]</span>
-
-<span class="c1"># which time index to visualize</span>
-<span class="na">time_slice</span> <span class="o">=</span> <span class="s">-1</span>
-
-<span class="c1"># whether to save image files</span>
-<span class="na">save_images</span> <span class="o">=</span> <span class="s">True</span>
-
-<span class="c1"># whether to hide figures (typically when save_images = True)</span>
-<span class="na">hide_figs</span> <span class="o">=</span> <span class="s">True</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="spinup-test">
-<h2>spinup_test<a class="headerlink" href="#spinup-test" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">landice/hydro_radial/spinup_test</span></code> performs a 10,000-year spin-up run from
-“zero” (a very thin ice sheet) to quasi-steady state.</p>
-</div>
-<div class="section" id="steady-state-drift-test">
-<h2>steady_state_drift_test<a class="headerlink" href="#steady-state-drift-test" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">landice/hydro_radial/steady_state_drift_test</span></code> performs a 1-month run,
-starting from the “exact” (that is, a nearly exact steady-state solution) as
-the initial condition.</p>
+<p>There are no config options specific to this test group.</p>
 </div>
 <div class="section" id="decomposition-test">
 <h2>decomposition_test<a class="headerlink" href="#decomposition-test" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">landice/hydro_radial/decomposition_test</span></code> runs short (1-month) integrations
-of the model forward in time on 1 (<code class="docutils literal notranslate"><span class="pre">1proc_run</span></code> step) and then on 3 cores
-(<code class="docutils literal notranslate"><span class="pre">3proc_run</span></code> step) to make sure the resulting prognostic variables are
+<p><code class="docutils literal notranslate"><span class="pre">landice/thwaites/decomposition_test</span></code> runs short (2-day) integrations of the
+model forward in time on 16 (<code class="docutils literal notranslate"><span class="pre">16proc_run</span></code> step) and then on 32 cores
+(<code class="docutils literal notranslate"><span class="pre">32proc_run</span></code> step) to make sure the resulting prognostic variables are
 bit-for-bit identical between the two runs.</p>
 </div>
 <div class="section" id="restart-test">
 <h2>restart_test<a class="headerlink" href="#restart-test" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">landice/hydro_radial/restart_test</span></code> first run a 2-year integration of the
-model forward in time (<code class="docutils literal notranslate"><span class="pre">full_run</span></code> step).  Then, a second step
-(<code class="docutils literal notranslate"><span class="pre">restart_run</span></code>) performs 2 1-year runs, where the second begins from a
-restart file saved by the first. Prognostic variables are compared between the
-“full” and “restart” runs at year 2 to make sure they are bit-for-bit
-identical.</p>
+<p><code class="docutils literal notranslate"><span class="pre">landice/thwaites/restart_test</span></code> first runs a short (5-day) integration
+of the model forward in time (<code class="docutils literal notranslate"><span class="pre">full_run</span></code> step).  Then, a second step
+(<code class="docutils literal notranslate"><span class="pre">restart_run</span></code>) performs two subsequent 2 and 3 day integrations, where the
+second begins from a restart file saved by the first. Prognostic variables
+are compared between the “full” and “restart” runs to make sure they are
+bit-for-bit identical.</p>
 </div>
 </div>
 
@@ -299,8 +266,8 @@ identical.</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="../framework/index.html" class="btn btn-neutral float-right" title="Framework" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="thwaites.html" class="btn btn-neutral float-left" title="thwaites" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="hydro_radial.html" class="btn btn-neutral float-right" title="hydro_radial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="greenland.html" class="btn btn-neutral float-left" title="greenland" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

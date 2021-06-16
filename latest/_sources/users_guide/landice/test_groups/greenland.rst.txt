@@ -4,7 +4,7 @@ greenland
 =========
 
 The ``landice/greenland`` test group runs tests with a coarse (20-km)
-`Greenland mesh <https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-albany-landice/gis20km.150922.nc>`_.
+`Greenland mesh <https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-albany-landice/gis20km.210608.nc>`_.
 
 .. figure:: images/gis_speed.png
    :width: 742 px

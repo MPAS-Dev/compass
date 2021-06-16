@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>compass.landice.tests.hydro_radial.visualize.visualize_hydro_radial &mdash; compass latest documentation</title>
+  <title>compass.landice.tests.thwaites.restart_test.RestartTest &mdash; compass latest documentation</title>
   
 
   
@@ -41,8 +41,8 @@
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="compass.landice.tests.thwaites.Thwaites" href="compass.landice.tests.thwaites.Thwaites.html" />
-    <link rel="prev" title="compass.landice.tests.hydro_radial.visualize.Visualize.run" href="compass.landice.tests.hydro_radial.visualize.Visualize.run.html" /> 
+    <link rel="next" title="compass.landice.tests.thwaites.restart_test.RestartTest.run" href="compass.landice.tests.thwaites.restart_test.RestartTest.run.html" />
+    <link rel="prev" title="compass.landice.tests.thwaites.decomposition_test.DecompositionTest.run" href="compass.landice.tests.thwaites.decomposition_test.DecompositionTest.run.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -191,13 +191,13 @@
         
           <li><a href="../api.html">landice</a> &raquo;</li>
         
-      <li>compass.landice.tests.hydro_radial.visualize.visualize_hydro_radial</li>
+      <li>compass.landice.tests.thwaites.restart_test.RestartTest</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../../../_sources/developers_guide/landice/generated/compass.landice.tests.hydro_radial.visualize.visualize_hydro_radial.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/developers_guide/landice/generated/compass.landice.tests.thwaites.restart_test.RestartTest.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -210,21 +210,52 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="compass-landice-tests-hydro-radial-visualize-visualize-hydro-radial">
-<h1>compass.landice.tests.hydro_radial.visualize.visualize_hydro_radial<a class="headerlink" href="#compass-landice-tests-hydro-radial-visualize-visualize-hydro-radial" title="Permalink to this headline">¶</a></h1>
-<dl class="py function">
-<dt class="sig sig-object py" id="compass.landice.tests.hydro_radial.visualize.visualize_hydro_radial">
-<span class="sig-prename descclassname"><span class="pre">compass.landice.tests.hydro_radial.visualize.</span></span><span class="sig-name descname"><span class="pre">visualize_hydro_radial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/landice/tests/hydro_radial/visualize.html#visualize_hydro_radial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.landice.tests.hydro_radial.visualize.visualize_hydro_radial" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plot the output from a hydro_radial test case</p>
+  <div class="section" id="compass-landice-tests-thwaites-restart-test-restarttest">
+<h1>compass.landice.tests.thwaites.restart_test.RestartTest<a class="headerlink" href="#compass-landice-tests-thwaites-restart-test-restarttest" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="compass.landice.tests.thwaites.restart_test.RestartTest">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">compass.landice.tests.thwaites.restart_test.</span></span><span class="sig-name descname"><span class="pre">RestartTest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_group</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/landice/tests/thwaites/restart_test.html#RestartTest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.landice.tests.thwaites.restart_test.RestartTest" title="Permalink to this definition">¶</a></dt>
+<dd><p>A test case for performing two MALI runs of the Thwaites setup,
+one full run and one run broken into two segments with a restart.  The
+test case verifies that the results of the two runs are identical.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="compass.landice.tests.thwaites.restart_test.RestartTest.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_group</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/landice/tests/thwaites/restart_test.html#RestartTest.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.landice.tests.thwaites.restart_test.RestartTest.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the test case</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/library/configparser.html#configparser.ConfigParser" title="(in Python v3.9)"><em>configparser.ConfigParser</em></a>) – Configuration options for this test case, a combination of the defaults
-for the machine, core and configuration</p></li>
-<li><p><strong>logger</strong> (<a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.9)"><em>logging.Logger</em></a>) – A logger for output from the step</p></li>
-</ul>
+<dd class="field-odd"><p><strong>test_group</strong> (<em>compass.landice.tests.thwaites</em>) – The test group that this test case belongs to</p>
 </dd>
 </dl>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#compass.landice.tests.thwaites.restart_test.RestartTest.__init__" title="compass.landice.tests.thwaites.restart_test.RestartTest.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(test_group)</p></td>
+<td><p>Create the test case</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_step</span></code>(step[, run_by_default])</p></td>
+<td><p>Add a step to the test case</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_validation</span></code>()</p></td>
+<td><p>Check the test case’s “validation” dictionary to see if validation failed.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure</span></code>()</p></td>
+<td><p>Modify the configuration options for this test case.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compass.landice.tests.thwaites.restart_test.RestartTest.run.html#compass.landice.tests.thwaites.restart_test.RestartTest.run" title="compass.landice.tests.thwaites.restart_test.RestartTest.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code></a>()</p></td>
+<td><p>Run each step of the test case.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate</span></code>()</p></td>
+<td><p>Test cases can override this method to perform validation of variables and timers</p></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
@@ -235,8 +266,8 @@ for the machine, core and configuration</p></li>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="compass.landice.tests.thwaites.Thwaites.html" class="btn btn-neutral float-right" title="compass.landice.tests.thwaites.Thwaites" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="compass.landice.tests.hydro_radial.visualize.Visualize.run.html" class="btn btn-neutral float-left" title="compass.landice.tests.hydro_radial.visualize.Visualize.run" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="compass.landice.tests.thwaites.restart_test.RestartTest.run.html" class="btn btn-neutral float-right" title="compass.landice.tests.thwaites.restart_test.RestartTest.run" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="compass.landice.tests.thwaites.decomposition_test.DecompositionTest.run.html" class="btn btn-neutral float-left" title="compass.landice.tests.thwaites.decomposition_test.DecompositionTest.run" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

@@ -12,3 +12,4 @@ Test groups
    eismint2
    greenland
    hydro_radial
+   thwaites
