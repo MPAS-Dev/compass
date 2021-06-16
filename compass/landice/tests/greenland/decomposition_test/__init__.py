@@ -52,30 +52,29 @@ class DecompositionTest(TestCase):
         """
         name1 = '{}proc_run'.format(self.cores_set[0])
         name2 = '{}proc_run'.format(self.cores_set[1])
-        if name1 in self.steps_to_run and name2 in self.steps_to_run:
-            if self.velo_solver == 'sia':
-                compare_variables(test_case=self,
-                                  variables=['thickness', 'normalVelocity'],
-                                  filename1='{}/output.nc'.format(name1),
-                                  filename2='{}/output.nc'.format(name2))
+        if self.velo_solver == 'sia':
+            compare_variables(test_case=self,
+                              variables=['thickness', 'normalVelocity'],
+                              filename1='{}/output.nc'.format(name1),
+                              filename2='{}/output.nc'.format(name2))
 
-            elif self.velo_solver == 'FO':
-                # validate thickness
-                compare_variables(test_case=self,
-                                  variables=['thickness', ],
-                                  filename1='{}/output.nc'.format(name1),
-                                  filename2='{}/output.nc'.format(name2),
-                                  l1_norm=1.0e-11,
-                                  l2_norm=1.0e-11,
-                                  linf_norm=1.0e-11,
-                                  quiet=False)
+        elif self.velo_solver == 'FO':
+            # validate thickness
+            compare_variables(test_case=self,
+                              variables=['thickness', ],
+                              filename1='{}/output.nc'.format(name1),
+                              filename2='{}/output.nc'.format(name2),
+                              l1_norm=1.0e-11,
+                              l2_norm=1.0e-11,
+                              linf_norm=1.0e-11,
+                              quiet=False)
 
-                # validate normalVelocity
-                compare_variables(test_case=self,
-                                  variables=['normalVelocity', ],
-                                  filename1='{}/output.nc'.format(name1),
-                                  filename2='{}/output.nc'.format(name2),
-                                  l1_norm=1.0e-13,
-                                  l2_norm=1.0e-15,
-                                  linf_norm=1.0e-16,
-                                  quiet=False)
+            # validate normalVelocity
+            compare_variables(test_case=self,
+                              variables=['normalVelocity', ],
+                              filename1='{}/output.nc'.format(name1),
+                              filename2='{}/output.nc'.format(name2),
+                              l1_norm=1.0e-13,
+                              l2_norm=1.0e-15,
+                              linf_norm=1.0e-16,
+                              quiet=False)
