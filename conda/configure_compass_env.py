@@ -494,8 +494,7 @@ def build_system_libraries(config, machine, compiler, mpi, version,
             'export LD_LIBRARY_PATH={}:$LD_LIBRARY_PATH'.format(
                 os.path.join(esmf_path, 'lib')))
 
-    if scorpio != 'None':
-        sys_info['env_vars'].append('export PIO={}'.format(scorpio_path))
+    sys_info['env_vars'].append('export PIO={}'.format(scorpio_path))
 
     build_esmf = 'False'
     if esmf == 'None':
