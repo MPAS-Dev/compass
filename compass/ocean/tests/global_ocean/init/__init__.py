@@ -25,7 +25,7 @@ class Init(TestCase):
         The subdirectory within the test group for all test cases with this
         initial condition
     """
-    def __init__(self, test_group, mesh, initial_condition):
+    def __init__(self, test_group, mesh, initial_condition, with_inactive_top_cells):
         """
         Create the test case
 
@@ -53,7 +53,8 @@ class Init(TestCase):
         self.add_step(
             InitialState(
                 test_case=self, mesh=mesh,
-                initial_condition=initial_condition))
+                initial_condition=initial_condition, 
+                with_inactive_top_cells=with_inactive_top_cells))
 
         if mesh.with_ice_shelf_cavities:
             self.add_step(RemapIceShelfMelt(test_case=self, mesh=mesh))

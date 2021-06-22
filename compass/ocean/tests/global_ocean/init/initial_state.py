@@ -1,5 +1,6 @@
 import os
 from importlib.resources import contents
+import xarray
 
 from compass.model import run_model
 from compass.ocean.plot import plot_initial_state, plot_vertical_grid
@@ -8,6 +9,8 @@ from compass.ocean.tests.global_ocean.metadata import (
 )
 from compass.ocean.vertical.grid_1d import generate_1d_grid, write_1d_grid
 from compass.step import Step
+
+from mpas_tools.io import write_netcdf
 
 
 class InitialState(Step):
@@ -23,7 +26,8 @@ class InitialState(Step):
     initial_condition : {'WOA23', 'PHC', 'EN4_1900'}
         The initial condition dataset to use
     """
-    def __init__(self, test_case, mesh, initial_condition):
+    def __init__(self, test_case, mesh, initial_condition, 
+                 with_inactive_top_cells):
         """
         Create the step
 
@@ -44,6 +48,7 @@ class InitialState(Step):
         super().__init__(test_case=test_case, name='initial_state')
         self.mesh = mesh
         self.initial_condition = initial_condition
+        self.with_inactive_top_cells = with_inactive_top_cells
 
         package = 'compass.ocean.tests.global_ocean.init'
 
@@ -170,6 +175,32 @@ class InitialState(Step):
 
         update_pio = config.getboolean('global_ocean', 'init_update_pio')
         run_model(self, update_pio=update_pio)
+ 
+        if self.with_inactive_top_cells:
+
+            logger = self.logger
+            logger.info("   * Updating min,maxLevelCell for inactive top cells")
+
+            in_filename = 'initial_state.nc'
+            out_filename = in_filename
+
+            with xarray.open_dataset(in_filename) as ds:
+
+                # keep the data set with Time for output
+                ds_out = ds
+
+                ds = ds.isel(Time=0)
+
+                if ('maxLevelCell' in ds) and ('minLevelCell' in ds):
+                    minLevelCell = ds.minLevelCell+1
+                    maxLevelCell = ds.maxLevelCell+1
+                    ds_out['minLevelCell'] = minLevelCell
+                    ds_out['maxLevelCell'] = maxLevelCell
+                else:
+                    logger.info("   - Streams missing for inactive top cells")
+
+            write_netcdf(ds_out, out_filename)
+            logger.info("   - Complete")
 
         add_mesh_and_init_metadata(self.outputs, config,
                                    init_filename='initial_state.nc')
