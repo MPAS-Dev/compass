@@ -2,6 +2,7 @@ from compass.testcase import TestCase
 from compass.ocean.tests.ice_shelf_2d.initial_state import InitialState
 from compass.ocean.tests.ice_shelf_2d.ssh_adjustment import SshAdjustment
 from compass.ocean.tests.ice_shelf_2d.forward import Forward
+from compass.ocean.tests.ice_shelf_2d.viz import Viz
 from compass.ocean.tests import ice_shelf_2d
 from compass.validate import compare_variables
 
@@ -60,6 +61,8 @@ class RestartTest(TestCase):
                 'compass.ocean.tests.ice_shelf_2d.restart_test',
                 'streams.{}'.format(part))
             self.add_step(step)
+
+        self.add_step(Viz(test_case=self), run_by_default=False)
 
     def configure(self):
         """
