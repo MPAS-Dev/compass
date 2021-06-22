@@ -309,6 +309,8 @@ ocean framework
 .. autosummary::
    :toctree: generated/
 
+   haney.compute_haney_number
+
    iceshelf.compute_land_ice_pressure_and_draft
    iceshelf.adjust_ssh
 

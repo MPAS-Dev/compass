@@ -37,6 +37,39 @@ and ``restingThickness`` variables for :ref:`ocean_z_level` and
 :ref:`ocean_z_star` coordinates using the ``ssh`` and ``bottomDepth`` as well
 as config options from ``vertical_grid``.
 
+
+.. _dev_ocean_framework_haney:
+
+Haney number
+------------
+
+The module ``compass.ocean.haney`` defines a function
+:py:func:`compass.ocean.haney.compute_haney_number()` for computing the Haney
+number (`Haney 1991 <https://doi.org/10.1175/1520-0485(1991)021%3C0610:OTPGFO%3E2.0.CO;2>`_).
+The Haney number is a measure of how large pressure-gradient errors are likely
+to be based on how thin and tilted the model layers have become.
+
+.. math::
+
+    r_{x1}(e,k+1/2) =
+        \frac{\left|z_\textrm{mid}(c_2, k) − z_\textrm{mid}(c_1 , k)
+                    + z_\textrm{mid}(c_2, k+1) − z_\textrm{mid}(c_1, k+1)\right|}
+             {z_\textrm{mid}(c_2, k) − z_\textrm{mid}(c_2 , k+1)
+              + z_\textrm{mid}(c_1, k) − z_\textrm{mid}(c_1, k+1)},
+
+where the computation is centered at edge :math:`e` and at the interface
+between layers :math:`k` and :math:`k+1`, adjacent to cells :math:`c_1` and
+:math:`c_2`.  The elevation of the middle of layer :math:`k` at the center of
+cell :math:`c` is :math:`z_\textrm{mid}(c, k)`.
+
+.. figure:: images/haney.png
+    :alt: Haney number
+    :width: 403 px
+    :align: center
+
+    The locations of four adjacent cell centers used in the computation of the
+    Haney number (and the horizontal pressure-gradient force).
+
 .. _dev_ocean_framework_iceshelf:
 
 Ice-shelf cavities
