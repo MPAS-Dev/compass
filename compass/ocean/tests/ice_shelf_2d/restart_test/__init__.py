@@ -2,6 +2,7 @@ from compass.testcase import TestCase
 from compass.ocean.tests.ice_shelf_2d.initial_state import InitialState
 from compass.ocean.tests.ice_shelf_2d.ssh_adjustment import SshAdjustment
 from compass.ocean.tests.ice_shelf_2d.forward import Forward
+from compass.ocean.tests.ice_shelf_2d.viz import Viz
 from compass.ocean.tests import ice_shelf_2d
 from compass.validate import compare_variables
 
@@ -16,9 +17,12 @@ class RestartTest(TestCase):
     ----------
     resolution : str
         The resolution of the test case
+
+    coord_type : str
+        The type of vertical coordinate (``z-star``, ``z-level``, etc.)
     """
 
-    def __init__(self, test_group, resolution):
+    def __init__(self, test_group, resolution, coord_type):
         """
         Create the test case
 
@@ -29,10 +33,14 @@ class RestartTest(TestCase):
 
         resolution : str
             The resolution of the test case
+
+        coord_type : str
+            The type of vertical coordinate (``z-star``, ``z-level``, etc.)
         """
         name = 'restart_test'
         self.resolution = resolution
-        subdir = '{}/{}'.format(resolution, name)
+        self.coord_type = coord_type
+        subdir = '{}/{}/{}'.format(resolution, coord_type, name)
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
 
@@ -54,11 +62,13 @@ class RestartTest(TestCase):
                 'streams.{}'.format(part))
             self.add_step(step)
 
+        self.add_step(Viz(test_case=self), run_by_default=False)
+
     def configure(self):
         """
         Modify the configuration options for this test case.
         """
-        ice_shelf_2d.configure(self.name, self.resolution, self.config)
+        ice_shelf_2d.configure(self.resolution, self.coord_type, self.config)
 
     # no run() method is needed
 
