@@ -32,6 +32,7 @@ install_requires = \
      'pyamg',
      'requests',
      'scipy',
+     'shapely',
      'xarray']
 
 here = os.path.abspath(os.path.dirname(__file__))
