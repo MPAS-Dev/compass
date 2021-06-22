@@ -30,11 +30,12 @@ The geometry does not represent a particularly realistic ice-shelf cavity but
 it is a quick and useful test of the parameterization of land-ice melt fluxes
 and of frazil formation below ice shelves.
 
-Both of the ``ice_shelf_2d`` test cases are composed of 3 types of steps:
+Both of the ``ice_shelf_2d`` test cases are composed of 4 types of steps:
 ``initial_state``, which defines the mesh and initial conditions for the model;
 ``ssh_adjustment``, which modifies the ``landIcePressure`` field to balance
 the ``ssh`` field, see :ref:`ocean_ssh_adjustment`; and ``forward``, which
-performs time integration of the model.
+performs time integration of the model.  The ``viz`` step can be used to plot
+the vertical coordinate, interpolated between adjacent cell centers.
 
 shared config options
 ---------------------

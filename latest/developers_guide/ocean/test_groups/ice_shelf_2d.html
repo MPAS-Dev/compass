@@ -238,11 +238,12 @@ defines a step for setting up the initial state for each test case.</p>
 <p>First, a mesh appropriate for the resolution is generated using
 <a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.planar_hex.make_planar_hex_mesh.html#mpas_tools.planar_hex.make_planar_hex_mesh" title="(in mpas_tools vstable)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_tools.planar_hex.make_planar_hex_mesh()</span></code></a>.  Then, the mesh is
 culled to remove periodicity in the y direction.  A vertical grid is generated,
-with 20 layers of 100-m thickness each by default.  Then, the 1D grid is
+with 20 layers of 100-m thickness each by default.  Then, the 1D grid is either
 “squashed” down so the sea-surface height corresponds to the location of the
-ice-ocean interface (ice draft) using a z-star <a class="reference internal" href="../framework.html#dev-ocean-framework-vertical"><span class="std std-ref">Vertical coordinate</span></a>.
-Finally, the initial salinity profile is computed along with uniform
-temperature and zero initial velocity.</p>
+ice-ocean interface (ice draft) using a z-star <a class="reference internal" href="../framework.html#dev-ocean-framework-vertical"><span class="std std-ref">Vertical coordinate</span></a>
+or top layers are removed where there is an ice shelf using a z-level
+coordinate. Finally, the initial salinity profile is computed along with
+uniform temperature and zero initial velocity.</p>
 </div>
 <div class="section" id="ssh-adjustment">
 <h3>ssh_adjustment<a class="headerlink" href="#ssh-adjustment" title="Permalink to this headline">¶</a></h3>
@@ -268,6 +269,11 @@ options and generating a graph partition) in <code class="docutils literal notra
     <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.streams&#39;</span><span class="p">,</span> <span class="s1">&#39;streams.frazil&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="section" id="viz">
+<h3>viz<a class="headerlink" href="#viz" title="Permalink to this headline">¶</a></h3>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.ice_shelf_2d.viz.Viz.html#compass.ocean.tests.ice_shelf_2d.viz.Viz" title="compass.ocean.tests.ice_shelf_2d.viz.Viz"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.ice_shelf_2d.viz.Viz</span></code></a> does a
+quick-and-dirty visualization of the vertical coordinate (z-star or z-level).</p>
 </div>
 </div>
 <div class="section" id="default">

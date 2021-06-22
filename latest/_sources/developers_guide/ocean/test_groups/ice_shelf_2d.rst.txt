@@ -30,11 +30,12 @@ defines a step for setting up the initial state for each test case.
 First, a mesh appropriate for the resolution is generated using
 :py:func:`mpas_tools.planar_hex.make_planar_hex_mesh()`.  Then, the mesh is
 culled to remove periodicity in the y direction.  A vertical grid is generated,
-with 20 layers of 100-m thickness each by default.  Then, the 1D grid is
+with 20 layers of 100-m thickness each by default.  Then, the 1D grid is either
 "squashed" down so the sea-surface height corresponds to the location of the
-ice-ocean interface (ice draft) using a z-star :ref:`dev_ocean_framework_vertical`.
-Finally, the initial salinity profile is computed along with uniform
-temperature and zero initial velocity.
+ice-ocean interface (ice draft) using a z-star :ref:`dev_ocean_framework_vertical`
+or top layers are removed where there is an ice shelf using a z-level
+coordinate. Finally, the initial salinity profile is computed along with
+uniform temperature and zero initial velocity.
 
 ssh_adjustment
 ~~~~~~~~~~~~~~
@@ -65,11 +66,16 @@ A few namelist options are set and streams are added when frazil is included:
         self.add_namelist_options(options)
         self.add_streams_file('compass.ocean.streams', 'streams.frazil')
 
+viz
+~~~
+
+The class :py:class:`compass.ocean.tests.ice_shelf_2d.viz.Viz` does a
+quick-and-dirty visualization of the vertical coordinate (z-star or z-level).
+
 .. _dev_ocean_ice_shelf_2d_default:
 
 default
 -------
-
 
 The :py:class:`compass.ocean.tests.ice_shelf_2d.default.Default` test case
 includes the following default config options:

@@ -210,23 +210,26 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="n">mpas_core</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ice_shelf_2d&#39;</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">resolution</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;5km&#39;</span><span class="p">]:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
-                <span class="n">Default</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
-                <span class="n">RestartTest</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">))</span></div></div>
+            <span class="k">for</span> <span class="n">coord_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;z-star&#39;</span><span class="p">,</span> <span class="s1">&#39;z-level&#39;</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
+                    <span class="n">Default</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
+                            <span class="n">coord_type</span><span class="o">=</span><span class="n">coord_type</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
+                    <span class="n">RestartTest</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
+                                <span class="n">coord_type</span><span class="o">=</span><span class="n">coord_type</span><span class="p">))</span></div></div>
 
 
-<div class="viewcode-block" id="configure"><a class="viewcode-back" href="../../../../developers_guide/ocean/generated/compass.ocean.tests.ice_shelf_2d.configure.html#compass.ocean.tests.ice_shelf_2d.configure">[docs]</a><span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+<div class="viewcode-block" id="configure"><a class="viewcode-back" href="../../../../developers_guide/ocean/generated/compass.ocean.tests.ice_shelf_2d.configure.html#compass.ocean.tests.ice_shelf_2d.configure">[docs]</a><span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="n">coord_type</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Modify the configuration options for this test case</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    name : str</span>
-<span class="sd">        the name of the test case</span>
-
 <span class="sd">    resolution : str</span>
 <span class="sd">        The resolution of the test case</span>
+
+<span class="sd">    coord_type : str</span>
+<span class="sd">        The type of vertical coordinate (``z-star``, ``z-level``, etc.)</span>
 
 <span class="sd">    config : configparser.ConfigParser</span>
 <span class="sd">        Configuration options for this test case</span>
@@ -238,7 +241,12 @@
                          <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">res_params</span><span class="p">)))</span>
     <span class="n">res_params</span> <span class="o">=</span> <span class="n">res_params</span><span class="p">[</span><span class="n">resolution</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">res_params</span><span class="p">:</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;ice_shelf_2d&#39;</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">res_params</span><span class="p">[</span><span class="n">param</span><span class="p">]))</span></div>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;ice_shelf_2d&#39;</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">res_params</span><span class="p">[</span><span class="n">param</span><span class="p">]))</span>
+
+    <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;vertical_grid&#39;</span><span class="p">,</span> <span class="s1">&#39;coord_type&#39;</span><span class="p">,</span> <span class="n">coord_type</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">coord_type</span> <span class="o">==</span> <span class="s1">&#39;z-level&#39;</span><span class="p">:</span>
+        <span class="c1"># we need more vertical resolution</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;vertical_grid&#39;</span><span class="p">,</span> <span class="s1">&#39;vert_levels&#39;</span><span class="p">,</span> <span class="s1">&#39;100&#39;</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

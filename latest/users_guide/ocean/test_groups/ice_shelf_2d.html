@@ -240,11 +240,12 @@ in this region.</p>
 <p>The geometry does not represent a particularly realistic ice-shelf cavity but
 it is a quick and useful test of the parameterization of land-ice melt fluxes
 and of frazil formation below ice shelves.</p>
-<p>Both of the <code class="docutils literal notranslate"><span class="pre">ice_shelf_2d</span></code> test cases are composed of 3 types of steps:
+<p>Both of the <code class="docutils literal notranslate"><span class="pre">ice_shelf_2d</span></code> test cases are composed of 4 types of steps:
 <code class="docutils literal notranslate"><span class="pre">initial_state</span></code>, which defines the mesh and initial conditions for the model;
 <code class="docutils literal notranslate"><span class="pre">ssh_adjustment</span></code>, which modifies the <code class="docutils literal notranslate"><span class="pre">landIcePressure</span></code> field to balance
 the <code class="docutils literal notranslate"><span class="pre">ssh</span></code> field, see <a class="reference internal" href="../framework/ice_shelf.html#ocean-ssh-adjustment"><span class="std std-ref">Sea surface height adjustment</span></a>; and <code class="docutils literal notranslate"><span class="pre">forward</span></code>, which
-performs time integration of the model.</p>
+performs time integration of the model.  The <code class="docutils literal notranslate"><span class="pre">viz</span></code> step can be used to plot
+the vertical coordinate, interpolated between adjacent cell centers.</p>
 <div class="section" id="shared-config-options">
 <h2>shared config options<a class="headerlink" href="#shared-config-options" title="Permalink to this headline">¶</a></h2>
 <p>Both <code class="docutils literal notranslate"><span class="pre">ice_shelf_2d</span></code> test cases share the following config options:</p>
