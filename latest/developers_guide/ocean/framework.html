@@ -35,6 +35,7 @@
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -113,6 +114,7 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Ocean framework</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#namelist-replacements-and-streams-files">Namelist replacements and streams files</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#vertical-coordinate">Vertical coordinate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#haney-number">Haney number</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#ice-shelf-cavities">Ice-shelf cavities</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#particles">Particles</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#plotting">Plotting</a></li>
@@ -235,6 +237,29 @@ this section of the config file. The function
 and <code class="docutils literal notranslate"><span class="pre">restingThickness</span></code> variables for <a class="reference internal" href="../../users_guide/ocean/framework/vertical.html#ocean-z-level"><span class="std std-ref">z-level</span></a> and
 <a class="reference internal" href="../../users_guide/ocean/framework/vertical.html#ocean-z-star"><span class="std std-ref">z-star</span></a> coordinates using the <code class="docutils literal notranslate"><span class="pre">ssh</span></code> and <code class="docutils literal notranslate"><span class="pre">bottomDepth</span></code> as well
 as config options from <code class="docutils literal notranslate"><span class="pre">vertical_grid</span></code>.</p>
+</div>
+<div class="section" id="haney-number">
+<span id="dev-ocean-framework-haney"></span><h2>Haney number<a class="headerlink" href="#haney-number" title="Permalink to this headline">¶</a></h2>
+<p>The module <code class="docutils literal notranslate"><span class="pre">compass.ocean.haney</span></code> defines a function
+<a class="reference internal" href="generated/compass.ocean.haney.compute_haney_number.html#compass.ocean.haney.compute_haney_number" title="compass.ocean.haney.compute_haney_number"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.haney.compute_haney_number()</span></code></a> for computing the Haney
+number (<a class="reference external" href="https://doi.org/10.1175/1520-0485(1991)021%3C0610:OTPGFO%3E2.0.CO;2">Haney 1991</a>).
+The Haney number is a measure of how large pressure-gradient errors are likely
+to be based on how thin and tilted the model layers have become.</p>
+<div class="math notranslate nohighlight">
+\[r_{x1}(e,k+1/2) =
+    \frac{\left|z_\textrm{mid}(c_2, k) − z_\textrm{mid}(c_1 , k)
+                + z_\textrm{mid}(c_2, k+1) − z_\textrm{mid}(c_1, k+1)\right|}
+         {z_\textrm{mid}(c_2, k) − z_\textrm{mid}(c_2 , k+1)
+          + z_\textrm{mid}(c_1, k) − z_\textrm{mid}(c_1, k+1)},\]</div>
+<p>where the computation is centered at edge <span class="math notranslate nohighlight">\(e\)</span> and at the interface
+between layers <span class="math notranslate nohighlight">\(k\)</span> and <span class="math notranslate nohighlight">\(k+1\)</span>, adjacent to cells <span class="math notranslate nohighlight">\(c_1\)</span> and
+<span class="math notranslate nohighlight">\(c_2\)</span>.  The elevation of the middle of layer <span class="math notranslate nohighlight">\(k\)</span> at the center of
+cell <span class="math notranslate nohighlight">\(c\)</span> is <span class="math notranslate nohighlight">\(z_\textrm{mid}(c, k)\)</span>.</p>
+<div class="figure align-center" id="id1">
+<a class="reference internal image-reference" href="../../_images/haney.png"><img alt="Haney number" src="../../_images/haney.png" style="width: 403px;" /></a>
+<p class="caption"><span class="caption-text">The locations of four adjacent cell centers used in the computation of the
+Haney number (and the horizontal pressure-gradient force).</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
 </div>
 <div class="section" id="ice-shelf-cavities">
 <span id="dev-ocean-framework-iceshelf"></span><h2>Ice-shelf cavities<a class="headerlink" href="#ice-shelf-cavities" title="Permalink to this headline">¶</a></h2>
