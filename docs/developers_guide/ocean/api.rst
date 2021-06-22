@@ -275,6 +275,9 @@ ice_shelf_2d
    ssh_adjustment.SshAdjustment.setup
    ssh_adjustment.SshAdjustment.run
 
+   viz.Viz
+   viz.Viz.run
+
 ziso
 ~~~~
 
