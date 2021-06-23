@@ -25,7 +25,8 @@ class Init(TestCase):
         The subdirectory within the test group for all test cases with this
         initial condition
     """
-    def __init__(self, test_group, mesh, initial_condition, with_inactive_top_cells):
+    def __init__(self, test_group, mesh, initial_condition,
+                 with_inactive_top_cells=False):
         """
         Create the test case
 
@@ -43,12 +44,16 @@ class Init(TestCase):
         name = 'init'
         mesh_name = mesh.mesh_name
         ic_dir = initial_condition
-        self.init_subdir = os.path.join(mesh_name, ic_dir)
+        init_subdir = os.path.join(mesh_name, ic_dir)
+        if with_inactive_top_cells:
+            init_subdir = os.path.join(init_subdir, inactive_top)
+        self.init_subdir = init_subdir
         subdir = os.path.join(self.init_subdir, name)
         super().__init__(test_group=test_group, name=name, subdir=subdir)
 
         self.mesh = mesh
         self.initial_condition = initial_condition
+        self.with_inactive_top_cells = with_inactive_top_cells
 
         self.add_step(
             InitialState(
