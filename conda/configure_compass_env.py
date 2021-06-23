@@ -546,12 +546,6 @@ def write_load_compass(template_path, activ_path, conda_base, is_test, version,
     except FileExistsError:
         pass
 
-    if is_test:
-        if prefix is None:
-            prefix = 'load_dev_compass_{}'.format(version)
-    else:
-        prefix = 'load_compass_{}'.format(version)
-
     script_filename = '{}/{}{}.sh'.format(activ_path, prefix, activ_suffix)
 
     if not env_only:
@@ -926,7 +920,14 @@ def main():
         sys_info = dict(modules=[], env_vars=[], mpas_netcdf_paths='')
         system_libs = None
 
-    prefix = args.env_name
+    if is_test:
+        if args.env_name is not None:
+            prefix = 'load_{}'.format(args.env_name)
+        else:
+            prefix = 'load_dev_compass_{}'.format(version)
+    else:
+        prefix = 'load_compass_{}'.format(version)
+
     script_filename = write_load_compass(
         template_path, activ_path, conda_base, is_test, version, activ_suffix,
         prefix, env_name, machine, sys_info, args.env_only)
