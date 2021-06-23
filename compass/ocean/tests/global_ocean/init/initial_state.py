@@ -174,6 +174,7 @@ class InitialState(Step):
             vert_levels = config.getint('vertical_grid', 'vert_levels')
             config.set('vertical_grid', 'vert_levels', f'{vert_levels + 1}',
                        comment='the number of vertical levels + 1')
+            config.set('vertical_grid', 'inactive_top_cells', '1')
         interfaces = generate_1d_grid(config=config)
 
         write_1d_grid(interfaces=interfaces, out_filename='vertical_grid.nc')
@@ -190,7 +191,7 @@ class InitialState(Step):
 
             in_filename = 'initial_state.nc'
             out_filename = in_filename
-            
+
             with xarray.open_dataset(in_filename) as ds:
 
                 # keep the data set with Time for output
