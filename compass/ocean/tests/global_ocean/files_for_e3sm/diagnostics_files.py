@@ -17,8 +17,10 @@ from compass.step import Step
 class DiagnosticsFiles(Step):
     """
     A step for creating files needed for the Meridional Overturning Circulation
-     analysis member and diagnostics from MPAS-Analysis
+    analysis member and diagnostics from MPAS-Analysis
 
+    Attributes
+    ----------
     with_ice_shelf_cavities : bool
         Whether the mesh includes ice-shelf cavities
     """
