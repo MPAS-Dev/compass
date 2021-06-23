@@ -491,17 +491,17 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">diff_str</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:d}</span><span class="s1">: &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time_index</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">l1_norm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">max_l1_norm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">max_l1_norm</span> <span class="o">&lt;</span> <span class="n">l1_norm</span><span class="p">:</span>
             <span class="n">result</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">diff_str</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> l1: </span><span class="si">{:16.14e}</span><span class="s1"> &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">diff_str</span><span class="p">,</span> <span class="n">l1_norm</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">l2_norm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">max_l2_norm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">max_l2_norm</span> <span class="o">&lt;</span> <span class="n">l2_norm</span><span class="p">:</span>
             <span class="n">result</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">diff_str</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> l2: </span><span class="si">{:16.14e}</span><span class="s1"> &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">diff_str</span><span class="p">,</span> <span class="n">l2_norm</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">linf_norm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">max_linf_norm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">max_linf_norm</span> <span class="o">&lt;</span> <span class="n">linf_norm</span><span class="p">:</span>
             <span class="n">result</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">diff_str</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> linf: </span><span class="si">{:16.14e}</span><span class="s1"> &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">diff_str</span><span class="p">,</span> <span class="n">linf_norm</span><span class="p">)</span>
