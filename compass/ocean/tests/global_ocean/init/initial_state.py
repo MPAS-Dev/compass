@@ -167,6 +167,13 @@ class InitialState(Step):
         Run this step of the testcase
         """
         config = self.config
+        if self.with_inactive_top_cells:
+            # Since we start at minLevelCell = 2, we need to increase the
+            # number of vertical levels in the cfg file to end up with the
+            # intended number in the initial state
+            vert_levels = config.getint('vertical_grid', 'vert_levels')
+            config.set('vertical_grid', 'vert_levels', f'{vert_levels + 1}',
+                       comment='the number of vertical levels + 1')
         interfaces = generate_1d_grid(config=config)
 
         write_1d_grid(interfaces=interfaces, out_filename='vertical_grid.nc')
