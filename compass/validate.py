@@ -298,17 +298,17 @@ def _compute_norms(da1, da2, quiet, max_l1_norm, max_l2_norm, max_linf_norm,
     else:
         diff_str = '{:d}: '.format(time_index)
 
-    if l1_norm is not None:
+    if max_l1_norm is not None:
         if max_l1_norm < l1_norm:
             result = False
     diff_str = '{} l1: {:16.14e} '.format(diff_str, l1_norm)
 
-    if l2_norm is not None:
+    if max_l2_norm is not None:
         if max_l2_norm < l2_norm:
             result = False
     diff_str = '{} l2: {:16.14e} '.format(diff_str, l2_norm)
 
-    if linf_norm is not None:
+    if max_linf_norm is not None:
         if max_linf_norm < linf_norm:
             result = False
     diff_str = '{} linf: {:16.14e} '.format(diff_str, linf_norm)
