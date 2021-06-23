@@ -190,7 +190,7 @@ class InitialState(Step):
 
             in_filename = 'initial_state.nc'
             out_filename = in_filename
-
+            
             with xarray.open_dataset(in_filename) as ds:
 
                 # keep the data set with Time for output
