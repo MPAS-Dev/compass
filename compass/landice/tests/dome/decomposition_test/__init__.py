@@ -14,7 +14,7 @@ class DecompositionTest(TestCase):
     Attributes
     ----------
     mesh_type : str
-        The resolution or tye of mesh of the test case
+        The resolution or type of mesh of the test case
     """
 
     def __init__(self, test_group, velo_solver, mesh_type):
@@ -30,7 +30,7 @@ class DecompositionTest(TestCase):
             The velocity solver to use for the test case
 
         mesh_type : str
-            The resolution or tye of mesh of the test case
+            The resolution or type of mesh of the test case
         """
         name = 'decomposition_test'
         self.mesh_type = mesh_type

@@ -20,7 +20,7 @@ class StandardExperiments(TestCase):
             The test group that this test case belongs to
 
         mesh_type : str
-            The resolution or tye of mesh of the test case
+            The resolution or type of mesh of the test case
         """
         name = 'standard_experiments'
         super().__init__(test_group=test_group, name=name)
