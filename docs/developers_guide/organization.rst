@@ -41,7 +41,7 @@ and packages within the core, not by other cores or the main compass
 
 The constructor (``__init__()`` method) for a child class of
 :py:class:`compass.MpasCore` simply calls the parent class' version
-of the constructor with ``super().__init__()``, passing the name fo the MPAS
+of the constructor with ``super().__init__()``, passing the name of the MPAS
 core.  Then, it creates objects for each test group and adds them to itself, as
 in this example from :py:class:`compass.ocean.Ocean`:
 
@@ -398,7 +398,7 @@ mesh type as an attribute:
         Attributes
         ----------
         mesh_type : str
-            The resolution or tye of mesh of the test case
+            The resolution or type of mesh of the test case
         """
 
         def __init__(self, test_group, mesh_type):
@@ -411,7 +411,7 @@ mesh type as an attribute:
                 The test group that this test case belongs to
 
             mesh_type : str
-                The resolution or tye of mesh of the test case
+                The resolution or type of mesh of the test case
             """
             name = 'smoke_test'
             self.mesh_type = mesh_type
@@ -545,7 +545,7 @@ The test case imports the classes for its steps --
 :py:func:`compass.TestCase.add_step()`.  After this, the :py:class:`dict` of
 steps will be available in ``self.steps``.
 
-By default, the test ase will go into a subdirectory with the same name as the
+By default, the test case will go into a subdirectory with the same name as the
 test case (``rpe_test`` in this case).  However, ``compass`` is flexible
 about the subdirectory structure and the names of the subdirectories.  This
 flexibility was an important requirement in moving away from
@@ -764,7 +764,7 @@ the :py:meth:`compass.Step.setup()` method, described below.
 Step attributes
 ^^^^^^^^^^^^^^^
 
-As was teh case for test cases, the base class :py:class:`compass.Step` has a
+As was the case for test cases, the base class :py:class:`compass.Step` has a
 large number of attributes that are useful at different stages (init, setup and
 run) of the step.
 
@@ -1289,7 +1289,7 @@ within :ref:`dev_step_setup` and determine the resulting input or output file
 name.
 
 Both of these issues have arisen for the
-:ref:`dev_ocean_global_ocean_files_for_e3sm` test case from the
+:ref:`dev_ocean_global_ocean_files_for_e3sm` from the
 :ref:`dev_ocean_global_ocean` test group.  Output files are named using the
 "short name" of the mesh in E3SM, which depends both on config options and on
 the number of vertical levels, which is read in from a mesh file created in a
@@ -1356,13 +1356,13 @@ A symlink is not actually created when :py:meth:`compass.Step.add_input_file()`
 is called.  This will not happen until the step gets set up, after calling its
 :ref:`dev_step_setup` method.
 
-Sometimes you want to create a symlink to in input file in the work directory,
+Sometimes you want to create a symlink to an input file in the work directory,
 but the relative path between the target and the step's work directory
 isn't very convenient to determine.  This may be because the name of the
-subdirectory this step and/or the target's step depend on parameters.  For such
-cases, there is a ``work_dir_target`` argument that allows you to give the path
-with respect to the base work directory (which is not yet know at init).
-Here is an example taken from
+subdirectory for this step or the target's step (or both) depends on
+parameters.  For such cases, there is a ``work_dir_target`` argument that
+allows you to give the path with respect to the base work directory (which is
+not yet know at init). Here is an example taken from
 :py:class:`compass.ocean.tests.global_ocean.forward.ForwardStep`:
 
 .. code-block:: python
@@ -1484,7 +1484,7 @@ Output files
 We require that all steps provide a list of any output files that other steps
 are allowed to use as inputs.  This helps us keep track of dependencies and
 will be used in the future to enable steps to run in parallel as long as they
-don't depend on each other.  Adding an output files is pretty straightforward:
+don't depend on each other.  Adding an output file is pretty straightforward:
 
 .. code-block:: python
 
@@ -1523,7 +1523,7 @@ Adding a namelist file
 Typically, a step that runs the MPAS model will include one or more calls to
 :py:meth:`compass.Step.add_namelist_file()` within the :ref:`dev_step_init`
 or :ref:`dev_step_setup` method.  Calling this method simply adds the file to
-a list that will be parsed if an when the step gets set up.  (This way, it is
+a list that will be parsed if and when the step gets set up.  (This way, it is
 safe to add namelist files to a step in init even if that test case will never
 get set up or run.)
 
