@@ -7,6 +7,7 @@ Test groups
 .. toctree::
    :titlesonly:
 
+   circular_shelf
    dome
    enthalpy_benchmark
    eismint2

@@ -6,11 +6,10 @@ Landice core
 The ``landice`` core in ``compass`` contains test groups and test cases for the
 MPAS-Albany Land Ice (`MALI <https://mpas-dev.github.io/land_ice/land_ice.html>`_)
 model. For more information on MALI, see
-`Hoffman et al. (2018) <https://doi.org/10.5194/gmd-11-3747-2018>`_.
-Currently, there are 5 test groups---:ref:`landice_dome`,
-:ref:`landice_enthalpy_benchmark`, :ref:`landice_eismint2`,
-:ref:`landice_greenland`, and :ref:`landice_hydro_radial`---each with several
-:ref:`test_cases`.  Many more ``landice`` test cases are available through
+`Hoffman et al. (2018) <https://doi.org/10.5194/gmd-11-3747-2018>`_ and the
+`MALI User's Guide <https://zenodo.org/record/1227426#.YNSy1R1MGAY>`_.
+There are a number of test groups, listed below.
+Some additional ``landice`` test cases are available through
 :ref:`legacy_compass`.
 
 Some helpful external links:
