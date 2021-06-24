@@ -187,7 +187,7 @@ class InitialState(Step):
         if self.with_inactive_top_cells:
 
             logger = self.logger
-            logger.info("   * Updating min,maxLevelCell for inactive top cells")
+            logger.info("   * Updating minLevelCell for inactive top cells")
 
             in_filename = 'initial_state.nc'
             out_filename = in_filename
@@ -199,11 +199,9 @@ class InitialState(Step):
 
                 ds = ds.isel(Time=0)
 
-                if ('maxLevelCell' in ds) and ('minLevelCell' in ds):
+                if ('minLevelCell' in ds):
                     minLevelCell = ds.minLevelCell+1
-                    maxLevelCell = ds.maxLevelCell+1
                     ds_out['minLevelCell'] = minLevelCell
-                    ds_out['maxLevelCell'] = maxLevelCell
                 else:
                     logger.info("   - Streams missing for inactive top cells")
 
