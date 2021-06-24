@@ -7,9 +7,9 @@ from compass.landice.tests.circular_shelf.visualize import Visualize
 
 class DecompositionTest(TestCase):
     """
-    A test case for performing two MALI runs of a circular shelf setup, one with
-    one core and one with four.  The test case verifies that the results of the
-    two runs are identical.
+    A test case for performing two MALI runs of a circular shelf setup, one
+    with one core and one with four.  The test case verifies that the results
+    of the two runs are identical.
 
     Attributes
     ----------
