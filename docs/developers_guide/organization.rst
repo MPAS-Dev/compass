@@ -1362,7 +1362,7 @@ isn't very convenient to determine.  This may be because the name of the
 subdirectory for this step or the target's step (or both) depends on
 parameters.  For such cases, there is a ``work_dir_target`` argument that
 allows you to give the path with respect to the base work directory (which is
-not yet know at init). Here is an example taken from
+not yet known at init). Here is an example taken from
 :py:class:`compass.ocean.tests.global_ocean.forward.ForwardStep`:
 
 .. code-block:: python
