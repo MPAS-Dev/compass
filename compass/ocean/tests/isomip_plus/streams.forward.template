@@ -1,0 +1,129 @@
+<streams>
+
+<immutable_stream name="mesh"
+                  filename_template="init.nc"/>
+
+<immutable_stream name="input"
+                  filename_template="init.nc"/>
+
+<immutable_stream name="restart"
+                  output_interval="0000-01-00_00:00:00"/>
+
+<stream name="forcing_data"
+        filename_template="forcing_data.nc"
+        input_interval="initial_only"
+        type="input">
+
+    <var_struct name="tracersInteriorRestoringFields"/>
+    <var name="evaporationFlux"/>
+    <var name="seaIceHeatFlux"/>
+    <var name="seaIceSalinityFlux"/>
+    <var name="landIceSurfaceTemperature"/>
+    <var name="seaIcePressure"/>
+    <var name="atmosphericPressure"/>
+</stream>
+
+<stream name="timeSeriesStatsMonthlyOutput"
+        type="output"
+        filename_template="timeSeriesStatsMonthly.$Y-$M-$D.nc"
+        filename_interval="00-01-00_00:00:00"
+        reference_time="0001-01-01_00:00:00"
+        clobber_mode="truncate"
+        io_type="pnetcdf"
+        packages="timeSeriesStatsMonthlyAMPKG"
+        output_interval="00-01-00_00:00:00">
+
+    <var_struct name="tracers"/>
+    <var_array name="landIceBoundaryLayerTracers"/>
+    <var_array name="landIceInterfaceTracers"/>
+    <var name="daysSinceStartOfSim"/>
+    <var name="layerThickness"/>
+    <var name="density"/>
+    <var name="potentialDensity"/>
+    <var name="ssh"/>
+    <var name="normalVelocity"/>
+    <var name="velocityX"/>
+    <var name="velocityY"/>
+    <var name="vertVelocityTop"/>
+    <var name="landIceFreshwaterFlux"/>
+    <var name="landIceHeatFlux"/>
+    <var name="heatFluxToLandIce"/>
+    <var name="areaCellGlobal"/>
+    <var name="CFLNumberGlobal"/>
+    <var name="atmosphericPressure"/>
+    <var name="landIcePressure"/>
+    <var name="landIceDraft"/>
+    <var name="landIceFraction"/>
+    <var name="landIceMask"/>
+    <var name="landIceFrictionVelocity"/>
+    <var name="topDrag"/>
+    <var name="topDragMagnitude"/>
+    <var name="accumulatedLandIceMass"/>
+    <var name="accumulatedLandIceHeat"/>
+</stream>
+
+<stream name="output"
+        type="output"
+        filename_template="output.nc"
+        output_interval="{{ output_interval }}"
+        clobber_mode="overwrite">
+
+    <stream name="mesh"/>
+    <var_struct name="tracers"/>
+    <var_struct name="tracersSurfaceFlux"/>
+    <var_array name="tracersSurfaceValue"/>
+    <var_array name="surfaceVelocity"/>
+    <var name="xtime"/>
+    <var name="daysSinceStartOfSim"/>
+    <var name="normalVelocity"/>
+    <var name="kineticEnergyCell"/>
+    <var name="vertVelocityTop"/>
+    <var name="layerThickness"/>
+    <var name="zMid"/>
+    <var name="ssh"/>
+    <var name="seaIcePressure"/>
+    <var name="atmosphericPressure"/>
+    <var name="surfaceStressMagnitude"/>
+    <var name="surfaceThicknessFlux"/>
+    <var name="velocityX"/>
+    <var name="velocityY"/>
+</stream>
+
+
+<stream name="globalStatsOutput"
+        output_interval="0001_00:00:00">
+
+</stream>
+
+
+<stream name="land_ice_fluxes"
+        type="output"
+        filename_template="land_ice_fluxes.nc"
+        output_interval="{{ output_interval }}"
+        clobber_mode="overwrite"
+        reference_time="0001-01-01_00:00:00">
+
+    <stream name="mesh"/>
+    <var_array name="landIceBoundaryLayerTracers"/>
+    <var_array name="landIceTracerTransferVelocities"/>
+    <var_array name="landIceInterfaceTracers"/>
+    <var name="xtime"/>
+    <var name="daysSinceStartOfSim"/>
+    <var name="ssh"/>
+    <var name="atmosphericPressure"/>
+    <var name="landIcePressure"/>
+    <var name="landIceDraft"/>
+    <var name="landIceFraction"/>
+    <var name="landIceMask"/>
+    <var name="landIceFrictionVelocity"/>
+    <var name="topDrag"/>
+    <var name="topDragMagnitude"/>
+    <var name="landIceFreshwaterFlux"/>
+    <var name="landIceHeatFlux"/>
+    <var name="heatFluxToLandIce"/>
+    <var name="effectiveDensityInLandIce"/>
+    <var name="accumulatedLandIceMass"/>
+    <var name="accumulatedLandIceHeat"/>
+</stream>
+
+</streams>

@@ -278,6 +278,64 @@ ice_shelf_2d
    viz.Viz
    viz.Viz.run
 
+isomip_plus
+~~~~~~~~~~~
+
+.. currentmodule:: compass.ocean.tests.isomip_plus
+
+.. autosummary::
+   :toctree: generated/
+
+   IsomipPlus
+
+   ocean_test.OceanTest
+   ocean_test.OceanTest.configure
+   ocean_test.OceanTest.run
+
+   viz.Viz
+   viz.Viz.run
+   viz.file_complete
+
+   viz.plot.TimeSeriesPlotter
+   viz.plot.TimeSeriesPlotter.plot_melt_time_series
+   viz.plot.TimeSeriesPlotter.plot_time_series
+
+   viz.plot.MoviePlotter
+   viz.plot.MoviePlotter.plot_barotropic_streamfunction
+   viz.plot.MoviePlotter.plot_overturning_streamfunction
+   viz.plot.MoviePlotter.plot_melt_rates
+   viz.plot.MoviePlotter.plot_ice_shelf_boundary_variables
+   viz.plot.MoviePlotter.plot_temperature
+   viz.plot.MoviePlotter.plot_salinity
+   viz.plot.MoviePlotter.plot_potential_density
+   viz.plot.MoviePlotter.plot_horiz_series
+   viz.plot.MoviePlotter.plot_3d_field_top_bot_section
+   viz.plot.MoviePlotter.plot_layer_interfaces
+   viz.plot.MoviePlotter.images_to_movies
+
+   evap.update_evaporation_flux
+
+   forward.Forward
+   forward.Forward.setup
+   forward.Forward.run
+
+   geom.process_input_geometry
+   geom.interpolate_ocean_mask
+
+   initial_state.InitialState
+   initial_state.InitialState.run
+
+   misomip.Misomip
+   misomip.Misomip.run
+
+   ssh_adjustment.SshAdjustment
+   ssh_adjustment.SshAdjustment.setup
+   ssh_adjustment.SshAdjustment.run
+
+   streamfunction.Streamfunction
+   streamfunction.Streamfunction.run
+
+
 ziso
 ~~~~
 

@@ -16,4 +16,5 @@ coming months.
    global_ocean
    gotm
    ice_shelf_2d
+   isomip_plus
    ziso
