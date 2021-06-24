@@ -192,6 +192,7 @@
             
   <h1>Source code for compass.landice</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">compass.mpas_core</span> <span class="kn">import</span> <span class="n">MpasCore</span>
+<span class="kn">from</span> <span class="nn">compass.landice.tests.circular_shelf</span> <span class="kn">import</span> <span class="n">CircularShelf</span>
 <span class="kn">from</span> <span class="nn">compass.landice.tests.dome</span> <span class="kn">import</span> <span class="n">Dome</span>
 <span class="kn">from</span> <span class="nn">compass.landice.tests.eismint2</span> <span class="kn">import</span> <span class="n">Eismint2</span>
 <span class="kn">from</span> <span class="nn">compass.landice.tests.enthalpy_benchmark</span> <span class="kn">import</span> <span class="n">EnthalpyBenchmark</span>
@@ -211,6 +212,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;landice&#39;</span><span class="p">)</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_group</span><span class="p">(</span><span class="n">CircularShelf</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_test_group</span><span class="p">(</span><span class="n">Dome</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_test_group</span><span class="p">(</span><span class="n">Eismint2</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_test_group</span><span class="p">(</span><span class="n">EnthalpyBenchmark</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>

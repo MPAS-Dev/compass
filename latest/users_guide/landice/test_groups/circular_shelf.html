@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>greenland &mdash; compass latest documentation</title>
+  <title>circular_shelf &mdash; compass latest documentation</title>
   
 
   
@@ -41,8 +41,8 @@
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="thwaites" href="thwaites.html" />
-    <link rel="prev" title="eismint2" href="eismint2.html" /> 
+    <link rel="next" title="dome" href="dome.html" />
+    <link rel="prev" title="Test Groups" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -99,17 +99,15 @@
 <li class="toctree-l1"><a class="reference internal" href="../../test_suites.html">Test Suites</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">Landice core</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="index.html">Test Groups</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="circular_shelf.html">circular_shelf</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">circular_shelf</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#config-options">config options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#decomposition-test">decomposition_test</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="dome.html">dome</a></li>
 <li class="toctree-l3"><a class="reference internal" href="enthalpy_benchmark.html">enthalpy_benchmark</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eismint2.html">eismint2</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">greenland</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#config-options">config options</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#smoke-test">smoke_test</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#decomposition-test">decomposition_test</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#restart-test">restart_test</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="greenland.html">greenland</a></li>
 <li class="toctree-l3"><a class="reference internal" href="thwaites.html">thwaites</a></li>
 <li class="toctree-l3"><a class="reference internal" href="hydro_radial.html">hydro_radial</a></li>
 </ul>
@@ -199,13 +197,13 @@
         
           <li><a href="index.html">Test Groups</a> &raquo;</li>
         
-      <li>greenland</li>
+      <li>circular_shelf</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../../../_sources/users_guide/landice/test_groups/greenland.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/users_guide/landice/test_groups/circular_shelf.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -218,46 +216,74 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="greenland">
-<span id="landice-greenland"></span><h1>greenland<a class="headerlink" href="#greenland" title="Permalink to this headline">¶</a></h1>
-<p>The <code class="docutils literal notranslate"><span class="pre">landice/greenland</span></code> test group runs tests with a coarse (20-km)
-<a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-albany-landice/gis20km.210608.nc">Greenland mesh</a>.</p>
+  <div class="section" id="circular-shelf">
+<span id="landice-circular-shelf"></span><h1>circular_shelf<a class="headerlink" href="#circular-shelf" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">landice/circular_shelf</span></code> test group implements a circular and radially
+symmetric ice shelf with a constant thickness that is grounded at its center.
+The purpose is to provide a regression test for ice shelf velocity.  There is
+not an analytic solution, and the test case is not meant to be run forward in
+time beyond the initial diagnostic solve, because the ice shelf would quickly
+unground and become an iceberg.  Because of the presence of floating ice,
+this test group is only appropriate to use with the FO velocity solver.</p>
+<p>As defined, the test uses a grid resolution of 1250 m and 5 vertical layers.</p>
+<p>The test group includes a single test cases, a decomposition test.  The test
+has 3 steps,
+<code class="docutils literal notranslate"><span class="pre">setup_mesh</span></code>, which defines the mesh and initial conditions for the model;
+<code class="docutils literal notranslate"><span class="pre">run_model</span></code>, which runs the model; and <code class="docutils literal notranslate"><span class="pre">visualize</span></code>,
+which optionally plots the results of the test case (PNG files, plot windows,
+or both).</p>
 <div class="figure align-center" id="id1">
-<a class="reference internal image-reference" href="../../../_images/gis_speed.png"><img alt="../../../_images/gis_speed.png" src="../../../_images/gis_speed.png" style="width: 742px;" /></a>
-<p class="caption"><span class="caption-text">FO velocity solution visualized in Paraview.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+<a class="reference internal image-reference" href="../../../_images/circ_shelf_velos.png"><img alt="../../../_images/circ_shelf_velos.png" src="../../../_images/circ_shelf_velos.png" style="width: 640px;" /></a>
+<p class="caption"><span class="caption-text">Plot of modeled velocity generated by the visualization step.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
 </div>
-<p>The test group includes 3 test cases, each of which has one or more steps
-that are variants on <code class="docutils literal notranslate"><span class="pre">run_model</span></code> (given other names in the decomposition and
-restart test cases to distinguish multiple model runs), which performs time
-integration of the model.</p>
-<p>The test cases in this test group can run with either the SIA or FO velocity
-solvers. Running with the FO solver requires a build of MALI that includes
-Albany, but the SIA variant of the test can be run without Albany.  The FO
-version uses no-slip basal boundary condition.</p>
+<div class="figure align-center" id="id2">
+<a class="reference internal image-reference" href="../../../_images/circ_shelf_xsect.png"><img alt="../../../_images/circ_shelf_xsect.png" src="../../../_images/circ_shelf_xsect.png" style="width: 640px;" /></a>
+<p class="caption"><span class="caption-text">Cross section plot of modeled velocity generated by the visualization
+step.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
 <div class="section" id="config-options">
 <h2>config options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
-<p>There are no config options specific to this test group.</p>
+<p>The test group uses the following default config options:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># config options for circular_shelf test cases</span>
+<span class="k">[circular_shelf]</span>
+
+<span class="c1"># sizes (in cells) for the uniform mesh</span>
+<span class="na">nx</span> <span class="o">=</span> <span class="s">40</span>
+<span class="na">ny</span> <span class="o">=</span> <span class="s">46</span>
+
+<span class="c1"># resolution (in m) for the uniform mesh</span>
+<span class="na">dc</span> <span class="o">=</span> <span class="s">1250.0</span>
+
+<span class="c1"># number of levels in the mesh</span>
+<span class="na">levels</span> <span class="o">=</span> <span class="s">5</span>
+
+<span class="c1"># whether to use large basal friction or Dirichlet conditions at bed</span>
+<span class="na">use_mu</span> <span class="o">=</span> <span class="s">False</span>
+
+<span class="c1"># option to make the grounded area 7 cells instead of 1</span>
+<span class="na">use_7cells</span> <span class="o">=</span> <span class="s">False</span>
+
+<span class="c1"># config options related to visualization for circular_shelf test cases</span>
+<span class="k">[circular_shelf_viz]</span>
+
+<span class="c1"># which time index to visualize</span>
+<span class="na">time_slice</span> <span class="o">=</span> <span class="s">0</span>
+
+<span class="c1"># whether to save image files</span>
+<span class="na">save_images</span> <span class="o">=</span> <span class="s">True</span>
+
+<span class="c1"># whether to hide figures (typically when save_images = True)</span>
+<span class="na">hide_figs</span> <span class="o">=</span> <span class="s">True</span>
+</pre></div>
 </div>
-<div class="section" id="smoke-test">
-<h2>smoke_test<a class="headerlink" href="#smoke-test" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">landice/greenland/smoke_test</span></code> is the default version of the greenland test
-case for a short (5-day) test run.</p>
 </div>
 <div class="section" id="decomposition-test">
 <h2>decomposition_test<a class="headerlink" href="#decomposition-test" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">landice/greenland/decomposition_test</span></code> runs short (5-day) integrations of the
-model forward in time on 1 (<code class="docutils literal notranslate"><span class="pre">1proc_run</span></code> step) and then on 4 cores
-(<code class="docutils literal notranslate"><span class="pre">4proc_run</span></code> step) to make sure the resulting prognostic variables are
-bit-for-bit identical between the two runs.</p>
-</div>
-<div class="section" id="restart-test">
-<h2>restart_test<a class="headerlink" href="#restart-test" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">landice/greenland/2000m/restart_test</span></code> first run a short (5-day) integration
-of the model forward in time (<code class="docutils literal notranslate"><span class="pre">full_run</span></code> step).  Then, a second step
-(<code class="docutils literal notranslate"><span class="pre">restart_run</span></code>) performs a 3-day, then a 2-day run, where the second begins
-from a restart file saved by the first. Prognostic variables are compared
-between the “full” and “restart” runs at year 2 to make sure they are
-bit-for-bit identical.</p>
+<p><code class="docutils literal notranslate"><span class="pre">landice/circular_shelf/decomposition_test</span></code> runs a single velocity solve
+on 1 (<code class="docutils literal notranslate"><span class="pre">1proc_run</span></code> step) and then on 4 processors
+(<code class="docutils literal notranslate"><span class="pre">4proc_run</span></code> step) to make sure the resulting velocity solution has small
+errors consistent with known non-bit-for-bit decomposition differences of the
+Albany FO velocity solver.</p>
 </div>
 </div>
 
@@ -267,8 +293,8 @@ bit-for-bit identical.</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="thwaites.html" class="btn btn-neutral float-right" title="thwaites" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="eismint2.html" class="btn btn-neutral float-left" title="eismint2" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="dome.html" class="btn btn-neutral float-right" title="dome" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Test Groups" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

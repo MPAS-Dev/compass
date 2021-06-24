@@ -61,10 +61,15 @@ The ``fo_integration`` test suite includes the following test cases:
 
 .. code-block:: none
 
+    landice/circular_shelf/decomposition_test
     landice/dome/2000m/fo_decomposition_test
     landice/dome/2000m/fo_restart_test
     landice/dome/variable_resolution/fo_restart_test
     landice/dome/variable_resolution/fo_decomposition_test
+    landice/greenland/fo_decomposition_test
+    landice/greenland/fo_restart_test
+    landice/thwaites/decomposition_test
+    landice/thwaites/restart_test
 
 All of these tests use the FO velocity solver and require that MALI be compiled
 with the Albany library.

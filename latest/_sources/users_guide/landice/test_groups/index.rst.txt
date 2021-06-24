@@ -11,6 +11,7 @@ COMPASS to the ``compass`` package are those with test cases in the
 .. toctree::
    :titlesonly:
 
+   circular_shelf
    dome
    enthalpy_benchmark
    eismint2

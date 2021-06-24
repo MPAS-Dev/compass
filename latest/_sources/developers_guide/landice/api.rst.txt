@@ -11,6 +11,30 @@ landice
 Test Groups
 ^^^^^^^^^^^
 
+circular_shelf
+~~~~~~~~~~~~~~
+
+.. currentmodule:: compass.landice.tests.circular_shelf
+
+.. autosummary::
+   :toctree: generated/
+
+   CircularShelf
+
+   decomposition_test.DecompositionTest
+   decomposition_test.DecompositionTest.run
+
+   run_model.RunModel
+   run_model.RunModel.run
+
+   setup_mesh.SetupMesh
+   setup_mesh.SetupMesh.run
+
+   visualize.Visualize
+   visualize.Visualize.run
+   visualize.visualize_circular_shelf
+
+
 dome
 ~~~~
 
