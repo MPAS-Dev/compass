@@ -16,6 +16,7 @@ from compass.ocean.tests.global_ocean.decomp_test import DecompTest
 from compass.ocean.tests.global_ocean.threads_test import ThreadsTest
 from compass.ocean.tests.global_ocean.analysis_test import AnalysisTest
 from compass.ocean.tests.global_ocean.daily_output_test import DailyOutputTest
+from compass.ocean.tests.global_ocean.lagrangian_particles import LagrangianParticles
 from compass.ocean.tests.global_ocean.files_for_e3sm import FilesForE3SM
 from compass.ocean.tests.global_ocean.make_diagnostics_files import \
     MakeDiagnosticsFiles
@@ -68,6 +69,10 @@ class GlobalOcean(TestGroup):
                 DailyOutputTest(
                     test_group=self, mesh=mesh, init=init,
                     time_integrator=time_integrator))
+            self.add_test_case(
+                LagrangianParticles(
+                    test_group=self, mesh=mesh, init=init,
+                    time_integrator=time_integrator))
 
             dynamic_adjustment = QU240DynamicAdjustment(
                 test_group=self, mesh=mesh, init=init,
@@ -95,6 +100,10 @@ class GlobalOcean(TestGroup):
                 ThreadsTest(
                     test_group=self, mesh=mesh, init=init,
                     time_integrator=time_integrator))
+            #self.add_test_case(
+            #    LagrangianParticles(
+            #        test_group=self, mesh=mesh, init=init,
+            #        time_integrator=time_integrator))
 
             # EN4_1900 tests
             time_integrator = 'split_explicit'
@@ -171,6 +180,10 @@ class GlobalOcean(TestGroup):
                 FilesForE3SM(
                     test_group=self, mesh=mesh, init=init,
                     dynamic_adjustment=dynamic_adjustment))
+            #self.add_test_case(
+            #    LagrangianParticles(
+            #        test_group=self, mesh=mesh, init=init,
+            #        time_integrator=time_integrator))
 
         # WC14: just the version without cavities
         for mesh_name in ['WC14']:
@@ -194,6 +207,10 @@ class GlobalOcean(TestGroup):
                 FilesForE3SM(
                     test_group=self, mesh=mesh, init=init,
                     dynamic_adjustment=dynamic_adjustment))
+            #self.add_test_case(
+            #    LagrangianParticles(
+            #        test_group=self, mesh=mesh, init=init,
+            #        time_integrator=time_integrator))
 
         # A test case for making diagnostics files from an existing mesh
         self.add_test_case(MakeDiagnosticsFiles(test_group=self))

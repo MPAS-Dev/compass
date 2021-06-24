@@ -1,8 +1,9 @@
 from compass.ocean.tests.global_ocean.metadata import \
     add_mesh_and_init_metadata
-from compass.model import run_model
+from compass.model import partition, run_model
 from compass.ocean.vertical.grid_1d import generate_1d_grid, write_1d_grid
 from compass.ocean.plot import plot_vertical_grid, plot_initial_state
+from compass.ocean import particles
 from compass.step import Step
 
 
@@ -162,6 +163,12 @@ class InitialState(Step):
 
         add_mesh_and_init_metadata(self.outputs, config,
                                    init_filename='initial_state.nc')
+
+        cores = self.cores
+        partition(cores, self.config, self.logger)
+        particles.write(init_filename='initial_state.nc', particle_filename='particles.nc',
+                        graph_filename='graph.info.part.{}'.format(cores),
+                        types='buoyancy')
 
         plot_initial_state(input_file_name='initial_state.nc',
                            output_file_name='initial_state.png')

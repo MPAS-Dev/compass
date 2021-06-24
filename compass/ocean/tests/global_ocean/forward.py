@@ -116,6 +116,10 @@ class ForwardStep(Step):
         self.add_input_file(
             filename='graph.info',
             work_dir_target='{}/culled_graph.info'.format(mesh_path))
+        self.add_input_file(
+            filename='particles.nc',
+            work_dir_target='{}/initial_state/particles.nc'
+                            ''.format(init.path))
 
         self.add_model_as_input()
 
