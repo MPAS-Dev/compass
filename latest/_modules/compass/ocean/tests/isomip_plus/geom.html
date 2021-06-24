@@ -1,0 +1,534 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>compass.ocean.tests.isomip_plus.geom &mdash; compass latest documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../_static/jquery.js"></script>
+        <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../../index.html" class="icon icon-home"> compass
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                latest
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">compass</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../../ocean.html">compass.ocean</a> &raquo;</li>
+        
+          <li><a href="../isomip_plus.html">compass.ocean.tests.isomip_plus</a> &raquo;</li>
+        
+      <li>compass.ocean.tests.isomip_plus.geom</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for compass.ocean.tests.isomip_plus.geom</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">from</span> <span class="nn">netCDF4</span> <span class="kn">import</span> <span class="n">Dataset</span>
+<span class="kn">import</span> <span class="nn">scipy.ndimage.filters</span> <span class="k">as</span> <span class="nn">filters</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.mesh.interpolation</span> <span class="kn">import</span> <span class="n">interp_bilin</span>
+<span class="kn">import</span> <span class="nn">xarray</span>
+
+
+<div class="viewcode-block" id="process_input_geometry"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.geom.process_input_geometry.html#compass.ocean.tests.isomip_plus.geom.process_input_geometry">[docs]</a><span class="k">def</span> <span class="nf">process_input_geometry</span><span class="p">(</span><span class="n">inFileName</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">,</span> <span class="n">filterSigma</span><span class="p">,</span>
+                           <span class="n">minIceThickness</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Process the BISICLES input geometry from ISOMIP+.  This includes:</span>
+
+<span class="sd">    * reading in the bathymetry and ice topography</span>
+
+<span class="sd">    * scaling the ice draft</span>
+
+<span class="sd">    * implementing a simple calving scheme based on a thickness threshold</span>
+
+<span class="sd">    * smoothing the topography</span>
+
+<span class="sd">    * writing the processed topography out to a file</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    inFileName : str</span>
+<span class="sd">        The file name of the original BISICLES geometry</span>
+
+<span class="sd">    outFileName : str</span>
+<span class="sd">        The file name of the processed geometry</span>
+
+<span class="sd">    filterSigma : float</span>
+<span class="sd">        The distance over which to smooth the geometry (in km)</span>
+
+<span class="sd">    minIceThickness : float</span>
+<span class="sd">        The minimum ice thickness, below which it is calved (removed and</span>
+<span class="sd">        replaced with open ocean)</span>
+
+<span class="sd">    scale : float</span>
+<span class="sd">        A fraction by which to scale the ice draft (as a very simple way of</span>
+<span class="sd">        testing dynamic topography)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">readVar</span><span class="p">(</span><span class="n">varName</span><span class="p">,</span> <span class="n">defaultValue</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+        <span class="n">field</span> <span class="o">=</span> <span class="n">defaultValue</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">ny</span><span class="p">,</span> <span class="n">nx</span><span class="p">),</span> <span class="nb">float</span><span class="p">)</span>
+        <span class="n">field</span><span class="p">[</span><span class="n">buffer</span><span class="p">:</span><span class="o">-</span><span class="n">buffer</span><span class="p">,</span> <span class="n">buffer</span><span class="p">:</span><span class="o">-</span><span class="n">buffer</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="n">inFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="n">varName</span><span class="p">])[:,</span> <span class="n">minIndex</span><span class="p">:]</span>
+        <span class="k">return</span> <span class="n">field</span>
+
+    <span class="k">def</span> <span class="nf">writeVar</span><span class="p">(</span><span class="n">outVarName</span><span class="p">,</span> <span class="n">inVarName</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
+        <span class="n">outVar</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="n">outVarName</span><span class="p">,</span> <span class="s1">&#39;f8&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">))</span>
+        <span class="n">inVar</span> <span class="o">=</span> <span class="n">inFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="n">inVarName</span><span class="p">]</span>
+        <span class="n">outVar</span><span class="p">[:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">field</span>
+        <span class="n">outVar</span><span class="o">.</span><span class="n">setncatts</span><span class="p">({</span><span class="n">k</span><span class="p">:</span> <span class="n">inVar</span><span class="o">.</span><span class="n">getncattr</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">inVar</span><span class="o">.</span><span class="n">ncattrs</span><span class="p">()})</span>
+
+    <span class="n">buffer</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="n">x0</span> <span class="o">=</span> <span class="mf">320e3</span>  <span class="c1"># km</span>
+
+    <span class="n">inFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">inFileName</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">inFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">])[:]</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">inFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">])[:]</span>
+
+    <span class="n">deltaX</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">deltaY</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">minIndex</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">x</span> <span class="o">&gt;=</span> <span class="n">x0</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">nx</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">minIndex</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">buffer</span>
+    <span class="n">ny</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">buffer</span>
+
+    <span class="n">outX</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">minIndex</span><span class="p">]</span> <span class="o">+</span> <span class="n">deltaX</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="n">buffer</span> <span class="o">+</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nx</span><span class="p">))</span>
+    <span class="n">outY</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">deltaY</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="n">buffer</span> <span class="o">+</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">ny</span><span class="p">))</span>
+
+    <span class="n">surf</span> <span class="o">=</span> <span class="n">readVar</span><span class="p">(</span><span class="s1">&#39;upperSurface&#39;</span><span class="p">)</span>
+    <span class="n">draft</span> <span class="o">=</span> <span class="n">readVar</span><span class="p">(</span><span class="s1">&#39;lowerSurface&#39;</span><span class="p">)</span>
+    <span class="n">bed</span> <span class="o">=</span> <span class="n">readVar</span><span class="p">(</span><span class="s1">&#39;bedrockTopography&#39;</span><span class="p">)</span>
+    <span class="n">floatingMask</span> <span class="o">=</span> <span class="n">readVar</span><span class="p">(</span><span class="s1">&#39;floatingMask&#39;</span><span class="p">)</span>
+    <span class="n">groundedMask</span> <span class="o">=</span> <span class="n">readVar</span><span class="p">(</span><span class="s1">&#39;groundedMask&#39;</span><span class="p">,</span> <span class="n">defaultValue</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">openOceanMask</span> <span class="o">=</span> <span class="n">readVar</span><span class="p">(</span><span class="s1">&#39;openOceanMask&#39;</span><span class="p">)</span>
+
+    <span class="n">iceThickness</span> <span class="o">=</span> <span class="n">surf</span> <span class="o">-</span> <span class="n">draft</span>
+
+    <span class="n">draft</span> <span class="o">*=</span> <span class="n">scale</span>
+
+    <span class="c1"># take care of calving criterion</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">floatingMask</span> <span class="o">&gt;</span> <span class="mf">0.1</span><span class="p">,</span>
+                             <span class="n">iceThickness</span> <span class="o">&lt;</span> <span class="n">minIceThickness</span><span class="p">)</span>
+    <span class="n">surf</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
+    <span class="n">draft</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
+    <span class="n">floatingMask</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
+    <span class="n">openOceanMask</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">-</span> <span class="n">groundedMask</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+
+    <span class="n">bed</span><span class="p">,</span> <span class="n">draft</span><span class="p">,</span> <span class="n">smoothedDraftMask</span> <span class="o">=</span> <span class="n">_smooth_geometry</span><span class="p">(</span>
+        <span class="n">groundedMask</span><span class="p">,</span> <span class="n">floatingMask</span><span class="p">,</span> <span class="n">bed</span><span class="p">,</span> <span class="n">draft</span><span class="p">,</span> <span class="n">filterSigma</span><span class="p">)</span>
+
+    <span class="n">outFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">outFileName</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;NETCDF4&#39;</span><span class="p">)</span>
+    <span class="n">outFile</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">nx</span><span class="p">)</span>
+    <span class="n">outFile</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">ny</span><span class="p">)</span>
+
+    <span class="n">outVar</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;f8&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">))</span>
+    <span class="n">inVar</span> <span class="o">=</span> <span class="n">inFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span>
+    <span class="n">outVar</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">outX</span>
+    <span class="n">outVar</span><span class="o">.</span><span class="n">setncatts</span><span class="p">({</span><span class="n">k</span><span class="p">:</span> <span class="n">inVar</span><span class="o">.</span><span class="n">getncattr</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">inVar</span><span class="o">.</span><span class="n">ncattrs</span><span class="p">()})</span>
+    <span class="n">outVar</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;f8&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">))</span>
+    <span class="n">inVar</span> <span class="o">=</span> <span class="n">inFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span>
+    <span class="n">outVar</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">outY</span>
+    <span class="n">outVar</span><span class="o">.</span><span class="n">setncatts</span><span class="p">({</span><span class="n">k</span><span class="p">:</span> <span class="n">inVar</span><span class="o">.</span><span class="n">getncattr</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">inVar</span><span class="o">.</span><span class="n">ncattrs</span><span class="p">()})</span>
+    <span class="n">writeVar</span><span class="p">(</span><span class="s1">&#39;Z_ice_surface&#39;</span><span class="p">,</span> <span class="s1">&#39;upperSurface&#39;</span><span class="p">,</span> <span class="n">surf</span><span class="p">)</span>
+    <span class="n">writeVar</span><span class="p">(</span><span class="s1">&#39;Z_ice_draft&#39;</span><span class="p">,</span> <span class="s1">&#39;lowerSurface&#39;</span><span class="p">,</span> <span class="n">draft</span><span class="p">)</span>
+    <span class="n">writeVar</span><span class="p">(</span><span class="s1">&#39;Z_bed&#39;</span><span class="p">,</span> <span class="s1">&#39;bedrockTopography&#39;</span><span class="p">,</span> <span class="n">bed</span><span class="p">)</span>
+    <span class="n">writeVar</span><span class="p">(</span><span class="s1">&#39;floatingIceFraction&#39;</span><span class="p">,</span> <span class="s1">&#39;floatingMask&#39;</span><span class="p">,</span> <span class="n">floatingMask</span><span class="p">)</span>
+    <span class="n">writeVar</span><span class="p">(</span><span class="s1">&#39;landFraction&#39;</span><span class="p">,</span> <span class="s1">&#39;groundedMask&#39;</span><span class="p">,</span> <span class="n">groundedMask</span><span class="p">)</span>
+    <span class="n">writeVar</span><span class="p">(</span><span class="s1">&#39;openOceanFraction&#39;</span><span class="p">,</span> <span class="s1">&#39;openOceanMask&#39;</span><span class="p">,</span> <span class="n">openOceanMask</span><span class="p">)</span>
+    <span class="n">writeVar</span><span class="p">(</span><span class="s1">&#39;smoothedDraftMask&#39;</span><span class="p">,</span> <span class="s1">&#39;openOceanMask&#39;</span><span class="p">,</span> <span class="n">smoothedDraftMask</span><span class="p">)</span>
+
+    <span class="n">outFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">inFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="interpolate_ocean_mask"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.geom.interpolate_ocean_mask.html#compass.ocean.tests.isomip_plus.geom.interpolate_ocean_mask">[docs]</a><span class="k">def</span> <span class="nf">interpolate_ocean_mask</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">dsGeom</span><span class="p">,</span> <span class="n">min_ocean_fraction</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Interpolate the ocean mask from the original BISICLES grid to the MPAS</span>
+<span class="sd">    mesh.  This is handled separately from other fields because the ocean mask</span>
+<span class="sd">    is needed to cull land cells from the MPAS mesh before interpolating the</span>
+<span class="sd">    remaining fields.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dsMesh : xarray.Dataset</span>
+<span class="sd">        An MPAS-Ocean mesh</span>
+
+<span class="sd">    dsGeom : xarray.Dataset</span>
+<span class="sd">        Ice-sheet topography produced by</span>
+<span class="sd">        :py:func:`compass.ocean.tests.isomip_plus.geom.process_input_geometry()`</span>
+
+<span class="sd">    min_ocean_fraction : float</span>
+<span class="sd">        The minimum ocean fraction after interpolation, below which the cell</span>
+<span class="sd">        is masked as land (which is not distinguished from grounded ice)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dsMask : xarray.Dataset</span>
+<span class="sd">        A dataset containing ``regionCellMasks``, a field with the ocean mask</span>
+<span class="sd">        that can be used to cull land cells from the mesh</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">xCell</span><span class="p">,</span> <span class="n">yCell</span><span class="p">,</span> <span class="n">oceanFraction</span> <span class="o">=</span> <span class="n">_get_geom_fields</span><span class="p">(</span><span class="n">dsGeom</span><span class="p">,</span> <span class="n">dsMesh</span><span class="p">)</span>
+
+    <span class="n">dsMask</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
+
+    <span class="n">valid</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span>
+        <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">xCell</span> <span class="o">&gt;=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">xCell</span> <span class="o">&lt;=</span> <span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span>
+        <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">yCell</span> <span class="o">&gt;=</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">yCell</span> <span class="o">&lt;=</span> <span class="n">y</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+
+    <span class="n">xCell</span> <span class="o">=</span> <span class="n">xCell</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span>
+    <span class="n">yCell</span> <span class="o">=</span> <span class="n">yCell</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span>
+    <span class="n">oceanFracObserved</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">dsMesh</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nCells&#39;</span><span class="p">])</span>
+    <span class="n">oceanFracObserved</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span> <span class="o">=</span> <span class="n">interp_bilin</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">oceanFraction</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+                                            <span class="n">xCell</span><span class="p">,</span> <span class="n">yCell</span><span class="p">)</span>
+
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">oceanFracObserved</span> <span class="o">&gt;</span> <span class="n">min_ocean_fraction</span>
+
+    <span class="n">nCells</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">dsMask</span><span class="p">[</span><span class="s1">&#39;regionCellMasks&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;nCells&#39;</span><span class="p">,</span> <span class="s1">&#39;nRegions&#39;</span><span class="p">),</span>
+                                 <span class="n">mask</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nCells</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">dsMask</span></div>
+
+
+<span class="k">def</span> <span class="nf">interpolate_geom</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">dsGeom</span><span class="p">,</span> <span class="n">min_ocean_fraction</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Interpolate the ice geometry from the original BISICLES grid to the MPAS</span>
+<span class="sd">    mesh.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dsMesh : xarray.Dataset</span>
+<span class="sd">        An MPAS-Ocean mesh</span>
+
+<span class="sd">    dsGeom : xarray.Dataset</span>
+<span class="sd">        Ice-sheet topography produced by</span>
+<span class="sd">        :py:func:`compass.ocean.tests.isomip_plus.geom.process_input_geometry()`</span>
+
+<span class="sd">    min_ocean_fraction : float</span>
+<span class="sd">        The minimum ocean fraction after interpolation, below which the cell</span>
+<span class="sd">        is masked as land (which is not distinguished from grounded ice)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dsOut : xarray.Dataset</span>
+<span class="sd">        A dataset containing :</span>
+
+<span class="sd">        * ``bottomDepthObserved`` -- the bedrock elevation (positive up)</span>
+
+<span class="sd">        * ``ssh`` -- the sea surface height</span>
+
+<span class="sd">        * ``oceanFracObserved`` -- the fraction of the mesh cell that is ocean</span>
+
+<span class="sd">        * ``landIceFraction`` -- the fraction of the mesh cell that is covered</span>
+<span class="sd">          by an ice shelf</span>
+
+<span class="sd">        * ``smoothedDraftMask`` -- a smoothed version of the floating mask that</span>
+<span class="sd">          may be useful for determining where to alter the vertical coordinate</span>
+<span class="sd">          to accommodate ice-shelf cavities</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">xCell</span><span class="p">,</span> <span class="n">yCell</span><span class="p">,</span> <span class="n">oceanFraction</span> <span class="o">=</span> <span class="n">_get_geom_fields</span><span class="p">(</span><span class="n">dsGeom</span><span class="p">,</span> <span class="n">dsMesh</span><span class="p">)</span>
+
+    <span class="n">dsOut</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">)</span>
+    <span class="n">dsOut</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">attrs</span>
+
+    <span class="n">dsGeom</span><span class="p">[</span><span class="s1">&#39;oceanFraction&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">oceanFraction</span>
+
+    <span class="c1"># mash the topography to the ocean region before interpolation</span>
+    <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Z_bed&#39;</span><span class="p">,</span> <span class="s1">&#39;Z_ice_draft&#39;</span><span class="p">,</span> <span class="s1">&#39;floatingIceFraction&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;smoothedDraftMask&#39;</span><span class="p">]:</span>
+        <span class="n">dsGeom</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsGeom</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">*</span> <span class="n">dsGeom</span><span class="p">[</span><span class="s1">&#39;oceanFraction&#39;</span><span class="p">]</span>
+
+    <span class="n">fields</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;bottomDepthObserved&#39;</span><span class="p">:</span> <span class="s1">&#39;Z_bed&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;ssh&#39;</span><span class="p">:</span> <span class="s1">&#39;Z_ice_draft&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;oceanFracObserved&#39;</span><span class="p">:</span> <span class="s1">&#39;oceanFraction&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;landIceFraction&#39;</span><span class="p">:</span> <span class="s1">&#39;floatingIceFraction&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;smoothedDraftMask&#39;</span><span class="p">:</span> <span class="s1">&#39;smoothedDraftMask&#39;</span><span class="p">}</span>
+
+    <span class="n">valid</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span>
+        <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">xCell</span> <span class="o">&gt;=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">xCell</span> <span class="o">&lt;=</span> <span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span>
+        <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">yCell</span> <span class="o">&gt;=</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">yCell</span> <span class="o">&lt;=</span> <span class="n">y</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">valid</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Something went wrong with culling.  There are still &#39;</span>
+                         <span class="s1">&#39;out-of-range cells in the culled mesh.&#39;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">outfield</span><span class="p">,</span> <span class="n">infield</span> <span class="ow">in</span> <span class="n">fields</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">field</span> <span class="o">=</span> <span class="n">interp_bilin</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">dsGeom</span><span class="p">[</span><span class="n">infield</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">xCell</span><span class="p">,</span> <span class="n">yCell</span><span class="p">)</span>
+        <span class="n">dsOut</span><span class="p">[</span><span class="n">outfield</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;nCells&#39;</span><span class="p">,),</span> <span class="n">field</span><span class="p">)</span>
+
+    <span class="n">oceanFracObserved</span> <span class="o">=</span> <span class="n">dsOut</span><span class="p">[</span><span class="s1">&#39;oceanFracObserved&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">oceanFracObserved</span> <span class="o">&gt;</span> <span class="n">min_ocean_fraction</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Something went wrong with culling.  There are still &#39;</span>
+                         <span class="s1">&#39;non-ocean cells in the culled mesh.&#39;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;bottomDepthObserved&#39;</span><span class="p">,</span> <span class="s1">&#39;ssh&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceFraction&#39;</span><span class="p">,</span>
+                  <span class="s1">&#39;smoothedDraftMask&#39;</span><span class="p">]:</span>
+        <span class="n">dsOut</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsOut</span><span class="p">[</span><span class="n">field</span><span class="p">]</span><span class="o">/</span><span class="n">oceanFracObserved</span>
+
+    <span class="k">return</span> <span class="n">dsOut</span>
+
+
+<span class="k">def</span> <span class="nf">_get_geom_fields</span><span class="p">(</span><span class="n">dsGeom</span><span class="p">,</span> <span class="n">dsMesh</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">dsGeom</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">dsGeom</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">xCell</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">xCell</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">yCell</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">yCell</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="n">oceanFraction</span> <span class="o">=</span> <span class="o">-</span> <span class="n">dsGeom</span><span class="p">[</span><span class="s1">&#39;landFraction&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mf">1.0</span>
+
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">xCell</span><span class="p">,</span> <span class="n">yCell</span><span class="p">,</span> <span class="n">oceanFraction</span>
+
+
+<span class="k">def</span> <span class="nf">_smooth_geometry</span><span class="p">(</span><span class="n">landFraction</span><span class="p">,</span> <span class="n">floatingFraction</span><span class="p">,</span> <span class="n">bed</span><span class="p">,</span> <span class="n">draft</span><span class="p">,</span> <span class="n">filterSigma</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Smoothing is performed using only the topography in the portion of the grid</span>
+<span class="sd">    that is ocean. This prevents the kink in the ice draft across the grounding</span>
+<span class="sd">    line or regions of bare bedrock from influencing the smoothed topography.</span>
+<span class="sd">    (Parts of the Ross ice shelf near the Trans-Antarctic Mountains are</span>
+<span class="sd">    particularly troublesome if topogrpahy is smoothed across the grounding</span>
+<span class="sd">    line.)</span>
+
+<span class="sd">    Unlike in POP, the calving front is smoothed as well because MPAS-O does</span>
+<span class="sd">    not support a sheer calving face</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># we won&#39;t normalize bed topography or ice draft where the mask is below</span>
+    <span class="c1"># this threshold</span>
+    <span class="n">threshold</span> <span class="o">=</span> <span class="mf">0.01</span>
+
+    <span class="n">oceanFraction</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">-</span> <span class="n">landFraction</span>
+    <span class="n">smoothedMask</span> <span class="o">=</span> <span class="n">filters</span><span class="o">.</span><span class="n">gaussian_filter</span><span class="p">(</span><span class="n">oceanFraction</span><span class="p">,</span> <span class="n">filterSigma</span><span class="p">,</span>
+                                           <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">,</span> <span class="n">cval</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">smoothedMask</span> <span class="o">&gt;</span> <span class="n">threshold</span>
+
+    <span class="n">draft</span> <span class="o">=</span> <span class="n">filters</span><span class="o">.</span><span class="n">gaussian_filter</span><span class="p">(</span><span class="n">draft</span> <span class="o">*</span> <span class="n">oceanFraction</span><span class="p">,</span> <span class="n">filterSigma</span><span class="p">,</span>
+                                    <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">,</span> <span class="n">cval</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
+    <span class="n">draft</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">/=</span> <span class="n">smoothedMask</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+    <span class="n">bed</span> <span class="o">=</span> <span class="n">filters</span><span class="o">.</span><span class="n">gaussian_filter</span><span class="p">(</span><span class="n">bed</span> <span class="o">*</span> <span class="n">oceanFraction</span><span class="p">,</span> <span class="n">filterSigma</span><span class="p">,</span>
+                                  <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">,</span> <span class="n">cval</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
+    <span class="n">bed</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">/=</span> <span class="n">smoothedMask</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+
+    <span class="n">smoothedDraftMask</span> <span class="o">=</span> <span class="n">filters</span><span class="o">.</span><span class="n">gaussian_filter</span><span class="p">(</span><span class="n">floatingFraction</span><span class="p">,</span> <span class="n">filterSigma</span><span class="p">,</span>
+                                                <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">,</span> <span class="n">cval</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
+    <span class="n">smoothedDraftMask</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">/=</span> <span class="n">smoothedMask</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">bed</span><span class="p">,</span> <span class="n">draft</span><span class="p">,</span> <span class="n">smoothedDraftMask</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
