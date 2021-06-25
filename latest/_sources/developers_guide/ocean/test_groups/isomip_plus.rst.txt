@@ -6,8 +6,8 @@ isomip_plus
 The ``isomip_plus`` test group
 (:py:class:`compass.ocean.tests.isomip_plus.IsomipPlus`) implements variants
 of the ISOMIP+ experiments (see :ref:`ocean_isomip_plus` in the User's Guide).
-Here, we describe the shared framework for this test group and 1 test case
-(Ocean0) that has currently been implemented.
+Here, we describe the shared framework for this test group and 3 test case
+(Ocean0, Ocean1 and Ocean2) that have currently been implemented.
 
 framework
 ---------
@@ -146,19 +146,22 @@ out the results in the format expected by MISOMIP.
     There is currently an issue with fill values not being handled correctly
     that needs to be resolved before this step is fully useful.
 
-.. _dev_ocean_isomip_plus_default:
+.. _dev_ocean_isomip_plus_ocean_test:
 
 ocean_test
 ----------
 
-By default the variants of the
-:py:class:`compass.ocean.tests.isomip_plus.ocean_test.OceanTest` test case
-create and mesh and initial condition, perform 10 iterations of
-SSH adjustment to make sure the SSH is as close as possible to being in
-dynamic balance with the land-ice pressure.  Then, they perform a 1-hour
-(15-time-step) forward simulation. If a baseline is provided when calling
-:ref:`dev_compass_setup`, a large number of variables (both prognostic and
-related to land-ice fluxes) are checked to make sure they match the baseline.
+The same class,
+:py:class:`compass.ocean.tests.isomip_plus.ocean_test.OceanTest`, defines
+the Ocean0, Ocean1 and Ocean2 test cases at various resolutions and with
+various vertical coordinates.  By default, these test cases only run 3 of the
+7 available steps: ``initial_state`` to create and mesh and initial condition,
+``ssh_adjustment`` to perform 10 1-hour simulations used to balance the
+land-ice pressure with the sea surface height, and ``performance`` to run a
+final 1-hour (15-time-step) forward simulation. If a baseline is provided when
+calling :ref:`dev_compass_setup`, a large number of variables (both prognostic
+and related to land-ice fluxes) are checked to make sure they match the
+baseline.
 
 The optional ``simulation``, ``streamfunction``, ``viz`` and ``misomip`` steps,
 described above, are used to perform longer simulations and perform analysis

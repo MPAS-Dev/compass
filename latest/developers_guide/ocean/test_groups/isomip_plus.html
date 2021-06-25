@@ -220,8 +220,8 @@
 <p>The <code class="docutils literal notranslate"><span class="pre">isomip_plus</span></code> test group
 (<a class="reference internal" href="../generated/compass.ocean.tests.isomip_plus.IsomipPlus.html#compass.ocean.tests.isomip_plus.IsomipPlus" title="compass.ocean.tests.isomip_plus.IsomipPlus"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.isomip_plus.IsomipPlus</span></code></a>) implements variants
 of the ISOMIP+ experiments (see <a class="reference internal" href="../../../users_guide/ocean/test_groups/isomip_plus.html#ocean-isomip-plus"><span class="std std-ref">isomip_plus</span></a> in the User’s Guide).
-Here, we describe the shared framework for this test group and 1 test case
-(Ocean0) that has currently been implemented.</p>
+Here, we describe the shared framework for this test group and 3 test case
+(Ocean0, Ocean1 and Ocean2) that have currently been implemented.</p>
 <div class="section" id="framework">
 <h2>framework<a class="headerlink" href="#framework" title="Permalink to this headline">¶</a></h2>
 <p>The shared config options for the <code class="docutils literal notranslate"><span class="pre">isomip_plus</span></code> test group
@@ -340,15 +340,18 @@ that needs to be resolved before this step is fully useful.</p>
 </div>
 </div>
 <div class="section" id="ocean-test">
-<span id="dev-ocean-isomip-plus-default"></span><h2>ocean_test<a class="headerlink" href="#ocean-test" title="Permalink to this headline">¶</a></h2>
-<p>By default the variants of the
-<a class="reference internal" href="../generated/compass.ocean.tests.isomip_plus.ocean_test.OceanTest.html#compass.ocean.tests.isomip_plus.ocean_test.OceanTest" title="compass.ocean.tests.isomip_plus.ocean_test.OceanTest"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.isomip_plus.ocean_test.OceanTest</span></code></a> test case
-create and mesh and initial condition, perform 10 iterations of
-SSH adjustment to make sure the SSH is as close as possible to being in
-dynamic balance with the land-ice pressure.  Then, they perform a 1-hour
-(15-time-step) forward simulation. If a baseline is provided when calling
-<a class="reference internal" href="../../command_line.html#dev-compass-setup"><span class="std std-ref">compass setup</span></a>, a large number of variables (both prognostic and
-related to land-ice fluxes) are checked to make sure they match the baseline.</p>
+<span id="dev-ocean-isomip-plus-ocean-test"></span><h2>ocean_test<a class="headerlink" href="#ocean-test" title="Permalink to this headline">¶</a></h2>
+<p>The same class,
+<a class="reference internal" href="../generated/compass.ocean.tests.isomip_plus.ocean_test.OceanTest.html#compass.ocean.tests.isomip_plus.ocean_test.OceanTest" title="compass.ocean.tests.isomip_plus.ocean_test.OceanTest"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.isomip_plus.ocean_test.OceanTest</span></code></a>, defines
+the Ocean0, Ocean1 and Ocean2 test cases at various resolutions and with
+various vertical coordinates.  By default, these test cases only run 3 of the
+7 available steps: <code class="docutils literal notranslate"><span class="pre">initial_state</span></code> to create and mesh and initial condition,
+<code class="docutils literal notranslate"><span class="pre">ssh_adjustment</span></code> to perform 10 1-hour simulations used to balance the
+land-ice pressure with the sea surface height, and <code class="docutils literal notranslate"><span class="pre">performance</span></code> to run a
+final 1-hour (15-time-step) forward simulation. If a baseline is provided when
+calling <a class="reference internal" href="../../command_line.html#dev-compass-setup"><span class="std std-ref">compass setup</span></a>, a large number of variables (both prognostic
+and related to land-ice fluxes) are checked to make sure they match the
+baseline.</p>
 <p>The optional <code class="docutils literal notranslate"><span class="pre">simulation</span></code>, <code class="docutils literal notranslate"><span class="pre">streamfunction</span></code>, <code class="docutils literal notranslate"><span class="pre">viz</span></code> and <code class="docutils literal notranslate"><span class="pre">misomip</span></code> steps,
 described above, are used to perform longer simulations and perform analysis
 and visualization.</p>

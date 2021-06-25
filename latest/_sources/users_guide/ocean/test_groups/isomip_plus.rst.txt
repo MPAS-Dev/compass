@@ -198,7 +198,43 @@ continental shelf in the Amundsen and Bellingshausen Seas.  At the northern
 boundary, the temperature is restored to the same warm profile, leading to a
 vigorous circulation under the ice shelf that continually supplies heat and
 produces relatively high melt rates.  Because of the rigorous flow, the
-simulation reaches a quasi-steady state in 1-2 years.
+simulation reaches a quasi-steady state in 2-3 years.
+
+Ocean1
+------
+
+``ocean/isomip_plus/2km/z-star/Ocean1`` and
+``ocean/isomip_plus/5km/z-star/Ocean1``
+
+This test case is initialized with "cold" ocean conditions: -1.9 degree C
+throughout the water column.  These conditions are similar to cold-shelf
+regions such as the Antarctic continental shelf in the Weddell and Ross Seas.
+At the northern boundary, the temperature is restored to the same warm profile
+as in Ocean0.  The initially cold cavity has low melt rates and a weak flow, so
+that warm water from the northern boundary may take about a decade to reach the
+ice-shelf base.  At this point, the melting and flow rapidly increase,
+eventually (in the coarse of ~20 years) leading to the same quasi-steady-state
+as in Ocean0.  The ISOMIP+ protocol suggests running this simulation for 20
+years.
+
+Ocean2
+------
+
+``ocean/isomip_plus/2km/z-star/Ocean2`` and
+``ocean/isomip_plus/5km/z-star/Ocean2``
+
+This test case is initialized with "warm" ocean conditions as in Ocean0.  At
+the northern boundary, the temperature is restored to the cold profile used for
+the initial condition in Ocean1: -1.9 degree C throughout the water column.
+Thus, where Ocean1 transitions from cold to warm cavity conditions, Ocean2
+makes the opposite transition from warm to cold.  The geometry is also taken
+from a different stage of the BISICLES MISIMP+ run than Ocean0 and Ocean1 in
+which the ice shelf has undergone significant thinning and retreat.  The
+initially warm cavity has high melt rates and a strong flow, so that cold water
+water from the northern boundary will reach the ice-shelf base within a few
+years.  At this point, the melting and flow exponentially decrease, approaching
+a new quasi-steady state.  The ISOMIP+ protocol suggests running this
+simulation for 20 years, which is not long enough to reach quasi-steady state.
 
 Performance run
 ---------------
