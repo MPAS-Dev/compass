@@ -96,10 +96,37 @@ class OceanTest(TestCase):
         resolution = self.resolution
         vertical_coordinate = self.vertical_coordinate
         config = self.config
+        experiment = self.experiment
 
         nx = round(800 / resolution)
         ny = round(100 / resolution)
         dc = 1e3 * resolution
+
+        if experiment in ['Ocean0', 'Ocean2', 'Ocean3']:
+            # warm initial conditions
+            config.set('isomip_plus', 'init_top_temp', '-1.9')
+            config.set('isomip_plus', 'init_bot_temp', '1.0')
+            config.set('isomip_plus', 'init_top_sal', '33.8')
+            config.set('isomip_plus', 'init_bot_sal', '34.7')
+        else:
+            # cold initial conditions
+            config.set('isomip_plus', 'init_top_temp', '-1.9')
+            config.set('isomip_plus', 'init_bot_temp', '-1.9')
+            config.set('isomip_plus', 'init_top_sal', '33.8')
+            config.set('isomip_plus', 'init_bot_sal', '34.55')
+
+        if experiment in ['Ocean0', 'Ocean1', 'Ocean3']:
+            # warm restoring
+            config.set('isomip_plus', 'restore_top_temp', '-1.9')
+            config.set('isomip_plus', 'restore_bot_temp', '1.0')
+            config.set('isomip_plus', 'restore_top_sal', '33.8')
+            config.set('isomip_plus', 'restore_bot_sal', '34.7')
+        else:
+            # cold restoring
+            config.set('isomip_plus', 'restore_top_temp', '-1.9')
+            config.set('isomip_plus', 'restore_bot_temp', '-1.9')
+            config.set('isomip_plus', 'restore_top_sal', '33.8')
+            config.set('isomip_plus', 'restore_bot_sal', '34.55')
 
         config.set('isomip_plus', 'nx', '{}'.format(nx))
         config.set('isomip_plus', 'ny', '{}'.format(ny))
