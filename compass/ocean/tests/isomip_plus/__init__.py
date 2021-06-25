@@ -15,7 +15,7 @@ class IsomipPlus(TestGroup):
         super().__init__(mpas_core=mpas_core, name='isomip_plus')
 
         for resolution in [2., 5.]:
-            for experiment in ['Ocean0']:
+            for experiment in ['Ocean0', 'Ocean1', 'Ocean2']:
                 for vertical_coordinate in ['z-star']:
                     self.add_test_case(
                         OceanTest(test_group=self, resolution=resolution,
