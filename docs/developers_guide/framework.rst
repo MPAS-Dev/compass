@@ -8,8 +8,8 @@ All of the :ref:`dev_packages` that are not in the two cores (``landice`` and
 modules and packages are used by the :ref:`dev_command_line`, while others are
 meant to be called within test cases and steps to simplify tasks like adding
 input and output files, downloading data sets, building up config files,
-namelists and streams files, set up and run the MPAS model, and verify the
-output by comparing steps with one another or against a baseline.
+namelists and streams files, setting up and running the MPAS model, and
+verifying the output by comparing steps with one another or against a baseline.
 
 .. _dev_config:
 
@@ -41,7 +41,7 @@ file and the name of the config file itself, respectively.  You can see that
 the file is in the path ``compass/landice/tests/enthalpy_benchmark/A``
 (replacing the ``.`` in the module name with ``/``).  In this case, we know
 that the config file should always exist, so we would like the code to raise
-and exception (``exception=True``) if the file is not found.  This is the
+an exception (``exception=True``) if the file is not found.  This is the
 default behavior.  In some cases, you would like the code to add the config
 options if the config file exists and do nothing if it does not.  This can
 be useful if a common configure function is being used for all test
@@ -53,7 +53,7 @@ cases in a configuration, as in this example from
     add_config(config, test_case.__module__, '{}.cfg'.format(test_case.name),
                exception=False)
 
-When this is called within the ``mesh`` test case, nothing will happend because
+When this is called within the ``mesh`` test case, nothing will happen because
 ``compass/ocean/tests/global_ocean/mesh`` does not contain a ``mesh.cfg`` file.
 The config files for meshes are handled differently, since they aren't
 associated with a particular test case:
@@ -76,14 +76,15 @@ use by the framework itself. Test-case developers will typically not need to
 call these functions directly.
 
 The :py:func:`compass.config.duplicate_config()` function can be used to make a
-deep copy of a ``config`` object to changes can be made without affecting the
+deep copy of a ``config`` object so changes can be made without affecting the
 original.
 
 The :py:func:`compass.config.ensure_absolute_paths()` function is used
-internally by the framework to check update config options in the ``paths``,
-``namelists``, ``streams``, and ``executables`` sections of the config file
-have absolute paths, using the location one of the commands from the
-:ref:`dev_command_line` were called.
+internally by the framework to check and update config options in the
+``paths``, ``namelists``, ``streams``, and ``executables`` sections of the
+config file to make sure they have absolute paths. The absolute paths are
+determined from the location where one of the :ref:`compass` command-line
+tools was called.
 
 The :py:func:`compass.config.get_source_file()` function is used to get an
 absolute path for a file using one of the config options defined in the
@@ -104,7 +105,7 @@ as well as the APIs for :py:class:`mpas_tools.logging.LoggingContext` and
 :py:func:`mpas_tools.logging.check_call`.
 
 For the most part, the ``compass`` framework handles logging for you, so
-test-case developers won't have to create your own ``logger`` objects.  They
+test-case developers won't have to create their own ``logger`` objects.  They
 are arguments to the test case's :ref:`dev_test_case_run` or step's
 :ref:`dev_step_run`.  If you run a step on its own, no log file is created
 and logging happens to ``stdout``/``stderr``.  If you run the full test case,
@@ -238,13 +239,13 @@ Running MPAS
 ^^^^^^^^^^^^
 
 Steps that run the MPAS model should call the
-:py:meth:`compass.Step.add_model_as_input()` method their ``__init__()``
-method.
+:py:meth:`compass.Step.add_model_as_input()` method from
+their ``__init__()`` method.
 
 To run MPAS, call :py:func:`compass.model.run_model()`.  By default, this
 function first updates the namelist options associated with the
-`PIO library <https://ncar.github.io/ParallelIO/>`_ and partition the mesh
-across MPI tasks, as we sill discuss in a moment, before running the model.
+`PIO library <https://ncar.github.io/ParallelIO/>`_ and partitions the mesh
+across MPI tasks, as we will discuss in a moment, before running the model.
 You can provide non-default names for the graph, namelist and streams files.
 The number of cores and threads is determined from the ``cores``, ``min_cores``
 and ``threads`` attributes of the step object, set in its
@@ -283,7 +284,7 @@ is a safe default.
 By default, this function is called within :py:func:`compass.model.run_model()`.
 If the same namelist file is used for multiple model runs, it may be useful to
 update the number of PIO tasks only once.  In this case, use
-``update_pio=False`` when calling ``run_model()`` after call
+``update_pio=False`` when calling ``run_model()``, then call
 :py:func:`compass.model.update_namelist_pio()` yourself.
 
 If you wish to use the MPAS default behavior of 1 PIO task per core, or wish to
@@ -317,7 +318,7 @@ Validating variables
 
 The function :py:func:`compass.validate.compare_variables()` can be used to
 compare variables in a file with a given relative path (``filename1``) with
-a the same variables in another file (``filename2``) and/or against a baseline.
+the same variables in another file (``filename2``) and/or against a baseline.
 
 As a simple example:
 
@@ -343,7 +344,7 @@ Here is a slightly more complex example:
                       filename1='4proc/output.nc',
                       filename2='8proc/output.nc')
 
-In this case, we compare the 4 prognostic variable in ``4proc/output.nc``
+In this case, we compare the 4 prognostic variables in ``4proc/output.nc``
 with the same in ``8proc/output.nc`` to make sure they are identical.  If
 a baseline directory was provided, these 4 variables in each file will also be
 compared with those in the corresponding files in the baseline.
@@ -473,10 +474,10 @@ comparison passed for each variable:
            /home/xylar/data/mpas/test_20210616/baseline/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
 
 By default, the function checks to make sure ``filename1`` and, if provided,
-``filename2`` are output of one of the steps in the test case.  In general,
-validation should be performed on outputs of the steps this test case that are
-explicitly added with :py:meth:`compass.Step.add_output_file()`.  This check
-can be disabled by setting ``check_outputs=False``.
+``filename2`` are output from one of the steps in the test case.  In general,
+validation should be performed on outputs of the steps in this test case that
+are explicitly added with :py:meth:`compass.Step.add_output_file()`.  This
+check can be disabled by setting ``check_outputs=False``.
 
 Norms
 ^^^^^
@@ -504,7 +505,7 @@ Validating timers
 ^^^^^^^^^^^^^^^^^
 
 Timer validation is qualitatively similar to variable validation except that
-no error are raised, meaning that the user must manually look at the
+no errors are raised, meaning that the user must manually look at the
 comparison and make a judgment call about whether any changes in timing are
 large enough to indicate performance problems.
 
