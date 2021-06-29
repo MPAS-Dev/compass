@@ -263,7 +263,7 @@ and packages within the core, not by other cores or the main compass
 <a class="reference internal" href="framework.html#dev-framework"><span class="std std-ref">Framework</span></a>.</p>
 <p>The constructor (<code class="docutils literal notranslate"><span class="pre">__init__()</span></code> method) for a child class of
 <a class="reference internal" href="generated/compass.MpasCore.html#compass.MpasCore" title="compass.MpasCore"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.MpasCore</span></code></a> simply calls the parent class’ version
-of the constructor with <code class="docutils literal notranslate"><span class="pre">super().__init__()</span></code>, passing the name fo the MPAS
+of the constructor with <code class="docutils literal notranslate"><span class="pre">super().__init__()</span></code>, passing the name of the MPAS
 core.  Then, it creates objects for each test group and adds them to itself, as
 in this example from <a class="reference internal" href="ocean/generated/compass.ocean.Ocean.html#compass.ocean.Ocean" title="compass.ocean.Ocean"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.Ocean</span></code></a>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.mpas_core</span> <span class="kn">import</span> <span class="n">MpasCore</span>
@@ -578,7 +578,7 @@ mesh type as an attribute:</p>
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    mesh_type : str</span>
-<span class="sd">        The resolution or tye of mesh of the test case</span>
+<span class="sd">        The resolution or type of mesh of the test case</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh_type</span><span class="p">):</span>
@@ -591,7 +591,7 @@ mesh type as an attribute:</p>
 <span class="sd">            The test group that this test case belongs to</span>
 
 <span class="sd">        mesh_type : str</span>
-<span class="sd">            The resolution or tye of mesh of the test case</span>
+<span class="sd">            The resolution or type of mesh of the test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;smoke_test&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh_type</span> <span class="o">=</span> <span class="n">mesh_type</span>
@@ -714,7 +714,7 @@ full use of <a class="reference internal" href="overview.html#dev-code-sharing">
 – so it can create objects for each and add them to itself with
 <a class="reference internal" href="generated/compass.TestCase.add_step.html#compass.TestCase.add_step" title="compass.TestCase.add_step"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.TestCase.add_step()</span></code></a>.  After this, the <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a> of
 steps will be available in <code class="docutils literal notranslate"><span class="pre">self.steps</span></code>.</p>
-<p>By default, the test ase will go into a subdirectory with the same name as the
+<p>By default, the test case will go into a subdirectory with the same name as the
 test case (<code class="docutils literal notranslate"><span class="pre">rpe_test</span></code> in this case).  However, <code class="docutils literal notranslate"><span class="pre">compass</span></code> is flexible
 about the subdirectory structure and the names of the subdirectories.  This
 flexibility was an important requirement in moving away from
@@ -897,7 +897,7 @@ The child class must override the constructor and the
 the <a class="reference internal" href="generated/compass.Step.setup.html#compass.Step.setup" title="compass.Step.setup"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.setup()</span></code></a> method, described below.</p>
 <div class="section" id="step-attributes">
 <span id="dev-step-attributes"></span><h3>Step attributes<a class="headerlink" href="#step-attributes" title="Permalink to this headline">¶</a></h3>
-<p>As was teh case for test cases, the base class <a class="reference internal" href="generated/compass.Step.html#compass.Step" title="compass.Step"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.Step</span></code></a> has a
+<p>As was the case for test cases, the base class <a class="reference internal" href="generated/compass.Step.html#compass.Step" title="compass.Step"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.Step</span></code></a> has a
 large number of attributes that are useful at different stages (init, setup and
 run) of the step.</p>
 <blockquote>
@@ -1361,7 +1361,7 @@ file does not exist, there is no way to read the file with the dependency
 within <a class="reference internal" href="#dev-step-setup"><span class="std std-ref">setup()</span></a> and determine the resulting input or output file
 name.</p>
 <p>Both of these issues have arisen for the
-<a class="reference internal" href="ocean/test_groups/global_ocean.html#dev-ocean-global-ocean-files-for-e3sm"><span class="std std-ref">files_for_e3sm test case</span></a> test case from the
+<a class="reference internal" href="ocean/test_groups/global_ocean.html#dev-ocean-global-ocean-files-for-e3sm"><span class="std std-ref">files_for_e3sm test case</span></a> from the
 <a class="reference internal" href="ocean/test_groups/global_ocean.html#dev-ocean-global-ocean"><span class="std std-ref">global_ocean</span></a> test group.  Output files are named using the
 “short name” of the mesh in E3SM, which depends both on config options and on
 the number of vertical levels, which is read in from a mesh file created in a
@@ -1414,13 +1414,13 @@ you to refer to a short, local name for the file rather than its full path:</p>
 <p>A symlink is not actually created when <a class="reference internal" href="generated/compass.Step.add_input_file.html#compass.Step.add_input_file" title="compass.Step.add_input_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.add_input_file()</span></code></a>
 is called.  This will not happen until the step gets set up, after calling its
 <a class="reference internal" href="#dev-step-setup"><span class="std std-ref">setup()</span></a> method.</p>
-<p>Sometimes you want to create a symlink to in input file in the work directory,
+<p>Sometimes you want to create a symlink to an input file in the work directory,
 but the relative path between the target and the step’s work directory
 isn’t very convenient to determine.  This may be because the name of the
-subdirectory this step and/or the target’s step depend on parameters.  For such
-cases, there is a <code class="docutils literal notranslate"><span class="pre">work_dir_target</span></code> argument that allows you to give the path
-with respect to the base work directory (which is not yet know at init).
-Here is an example taken from
+subdirectory for this step or the target’s step (or both) depends on
+parameters.  For such cases, there is a <code class="docutils literal notranslate"><span class="pre">work_dir_target</span></code> argument that
+allows you to give the path with respect to the base work directory (which is
+not yet known at init). Here is an example taken from
 <a class="reference internal" href="ocean/generated/compass.ocean.tests.global_ocean.forward.ForwardStep.html#compass.ocean.tests.global_ocean.forward.ForwardStep" title="compass.ocean.tests.global_ocean.forward.ForwardStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.forward.ForwardStep</span></code></a>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="o">...</span><span class="p">):</span>
     <span class="n">mesh_path</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">mesh_step</span><span class="o">.</span><span class="n">path</span>
@@ -1517,7 +1517,7 @@ directory.</p>
 <p>We require that all steps provide a list of any output files that other steps
 are allowed to use as inputs.  This helps us keep track of dependencies and
 will be used in the future to enable steps to run in parallel as long as they
-don’t depend on each other.  Adding an output files is pretty straightforward:</p>
+don’t depend on each other.  Adding an output file is pretty straightforward:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;output_file.nc&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1546,7 +1546,7 @@ automatically as part of setting up the test case.</p>
 <p>Typically, a step that runs the MPAS model will include one or more calls to
 <a class="reference internal" href="generated/compass.Step.add_namelist_file.html#compass.Step.add_namelist_file" title="compass.Step.add_namelist_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.add_namelist_file()</span></code></a> within the <a class="reference internal" href="#dev-step-init"><span class="std std-ref">constructor</span></a>
 or <a class="reference internal" href="#dev-step-setup"><span class="std std-ref">setup()</span></a> method.  Calling this method simply adds the file to
-a list that will be parsed if an when the step gets set up.  (This way, it is
+a list that will be parsed if and when the step gets set up.  (This way, it is
 safe to add namelist files to a step in init even if that test case will never
 get set up or run.)</p>
 <p>The format of the namelist file is simply a list of namelist options and

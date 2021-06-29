@@ -148,7 +148,7 @@ the package example above:
     list_machines()
 
 So a module named ``foo.py`` and a package in a directory named ``foo`` with
-and ``__init__.py`` file look exactly the same when you import them.
+an ``__init__.py`` file look exactly the same when you import them.
 
 So why choose one over the other?
 
