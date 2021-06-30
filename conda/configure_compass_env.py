@@ -415,6 +415,9 @@ def get_sys_info(machine, compiler, mpilib, mpicc, mpicxx, mpifc,
                          'export I_MPI_F77=ifort',
                          'export I_MPI_F90=ifort'])
 
+    if platform.system() == 'Linux' and machine == 'None':
+        env_vars.append('export MPAS_EXTERNAL_LIBS="-lgomp"')
+
     if mpilib == 'mvapich':
         esmf_comm = 'mvapich2'
         env_vars.extend(['export MV2_ENABLE_AFFINITY=0',
