@@ -222,9 +222,9 @@ def build_env(is_test, recreate, machine, compiler, mpi, conda_mpi, version,
         mpi_prefix = 'mpi_{}'.format(mpi)
 
     channels = '--override-channels -c conda-forge -c defaults'
-    if machine is None:
-        # we need libpnetcdf from the e3sm channel for now
-        channels = '{} -c e3sm'.format(channels)
+    if machine is None or not is_test:
+        # we need libpnetcdf and scorpio from the e3sm channel, compass label
+        channels = '{} -c e3sm/label/compass'.format(channels)
     packages = 'python={}'.format(python)
 
     base_activation_script = os.path.abspath(
@@ -251,7 +251,6 @@ def build_env(is_test, recreate, machine, compiler, mpi, conda_mpi, version,
             check_call(commands)
 
         else:
-            channels = '{} -c e3sm'.format(channels)
             packages = '{} "compass={}={}_*"'.format(
                 packages, version, mpi_prefix)
             commands = '{}; mamba create -y -n {} {} {}'.format(
@@ -458,11 +457,11 @@ def build_system_libraries(config, machine, compiler, mpi, version,
 
     if machine is not None:
         esmf = config.get('deploy', 'esmf')
+        scorpio = config.get('deploy', 'scorpio')
     else:
-        # stick with the conda-forge ESMF
+        # stick with the conda-forge ESMF and e3sm/label/compass SCORPIO
         esmf = 'None'
-
-    scorpio = config.get('deploy', 'scorpio')
+        scorpio = 'None'
 
     if esmf != 'None':
         # remove conda-forge esmf because we will use the system build
@@ -495,8 +494,7 @@ def build_system_libraries(config, machine, compiler, mpi, version,
             'export LD_LIBRARY_PATH={}:$LD_LIBRARY_PATH'.format(
                 os.path.join(esmf_path, 'lib')))
 
-    if scorpio != 'None':
-        sys_info['env_vars'].append('export PIO={}'.format(scorpio_path))
+    sys_info['env_vars'].append('export PIO={}'.format(scorpio_path))
 
     build_esmf = 'False'
     if esmf == 'None':
