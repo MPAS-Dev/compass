@@ -50,17 +50,3 @@ Then, you can build the MPAS model with
 
     make  intel-mpi
 
-cori-knl, gnu
--------------
-
-If you've set things up for this compiler, you should be able to:
-
-.. code-block:: bash
-
-    source load_dev_compass_1.0.0_cori-knl_gnu_mpt.sh
-
-Then, you can build the MPAS model with
-
-.. code-block:: bash
-
-    make gnu-nersc
