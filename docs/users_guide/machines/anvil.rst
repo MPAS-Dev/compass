@@ -48,7 +48,7 @@ setting up test cases or a test suite:
     # the number of multiprocessing or dask threads to use
     threads = 18
 
-intel18 on anvil
+intel on anvil
 ----------------
 
 .. note::
@@ -61,19 +61,13 @@ variables:
 
 .. code-block:: bash
 
-    source /lcrc/soft/climate/compass/anvil/load_compass1.0.0_intel18_mvapich.sh
+    source /lcrc/soft/climate/compass/anvil/load_compass1.0.0_intel_impi.sh
 
 To build the MPAS model with
 
 .. code-block:: bash
 
-    make CORE=landice ifort
-
-or
-
-.. code-block:: bash
-
-    make CORE=ocean ifort
+    make intel-mpi
 
 gnu on anvil
 ------------
@@ -94,10 +88,4 @@ To build the MPAS model with
 
 .. code-block:: bash
 
-    make CORE=landice gfortran
-
-or
-
-.. code-block:: bash
-
-    make CORE=ocean gfortran
+    make gfortran
