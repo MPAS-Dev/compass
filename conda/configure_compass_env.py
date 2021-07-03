@@ -193,10 +193,7 @@ def build_env(is_test, recreate, machine, compiler, mpi, conda_mpi, version,
               env_name, env_suffix, activate_base):
 
     if compiler is not None:
-        if machine is not None:
-            build_dir = 'conda/build_{}{}'.format(machine, activ_suffix)
-        else:
-            build_dir = 'conda/build{}'.format(activ_suffix)
+        build_dir = 'conda/build{}'.format(activ_suffix)
 
         try:
             shutil.rmtree(build_dir)
