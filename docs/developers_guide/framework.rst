@@ -83,8 +83,8 @@ The :py:func:`compass.config.ensure_absolute_paths()` function is used
 internally by the framework to check and update config options in the
 ``paths``, ``namelists``, ``streams``, and ``executables`` sections of the
 config file to make sure they have absolute paths. The absolute paths are
-determined from the location where one of the :ref:`compass` command-line
-tools was called.
+determined from the location where one of the tools from the compass
+:ref:`dev_command_line` was called.
 
 The :py:func:`compass.config.get_source_file()` function is used to get an
 absolute path for a file using one of the config options defined in the
