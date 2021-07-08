@@ -28,7 +28,7 @@ you may run into an error like:
 
     subprocess.CalledProcessError: ...
 
-Details of teh error may vary but the message indicates in some way that there
+Details of the error may vary but the message indicates in some way that there
 was a problem solving for the requested combination of packages.  This likely
 indicates that you have an existing compass development environment
 (``dev_compass_*``) that can't be updated to be compatible with the new
@@ -44,3 +44,7 @@ update it:
 .. code-block:: bash
 
     ./conda/configure_compass_env.sh --recreate ...
+
+The ``--recreate`` flag will first delete the existing ``dev_compass_*`` conda
+environment before creating it again with the new set of packages required for
+developing with the requested compiler and MPI type.
