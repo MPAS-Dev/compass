@@ -1013,6 +1013,11 @@ If a baseline is provided, prognostic variables and ice-shelf melt fluxes (if
 ice-shelf cavities are included in the mesh) are compared with a baseline, and
 the ``time integration`` timer is compared with that of the baseline.
 
+This test case can also serve as a verification of the inactive top cell
+implementation. If ``inactive_top_cells`` is given in the config file with
+values greater than zero, the vertical domain is shifted downward by the given
+number of layers.
+
 .. _dev_ocean_global_ocean_restart_test:
 
 restart_test test case
