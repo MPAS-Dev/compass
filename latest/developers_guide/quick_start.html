@@ -228,6 +228,14 @@ run:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./conda/configure_compass_env.py --conda &lt;conda_path&gt; -c &lt;compiler&gt;
 </pre></div>
 </div>
+<p>If your are on an “unknown” machine, typically a Mac or Linux laptop or
+workstation, you will need to specify which flavor of MPI you want to use
+(<code class="docutils literal notranslate"><span class="pre">mpich</span></code> or <code class="docutils literal notranslate"><span class="pre">openmpi</span></code>):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./conda/configure_compass_env.py --conda &lt;conda_path&gt; --mpi &lt;mpi&gt;
+</pre></div>
+</div>
+<p>We only support one set of compilers for Mac and Linux, so there is no need to
+specify them.  See <a class="reference internal" href="machines/index.html#dev-other-machines"><span class="std std-ref">Other Machines</span></a> for more details.</p>
 <p>If you don’t have <a class="reference external" href="https://docs.conda.io/en/latest/miniconda.html">Miniconda3</a>
 installed in <code class="docutils literal notranslate"><span class="pre">&lt;conda_path&gt;</span></code>, it will be downloaded and installed for you in
 this location. If you already have it installed, that path will be used to add

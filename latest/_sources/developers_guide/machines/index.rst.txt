@@ -101,7 +101,7 @@ and on OSX run:
 You may use ``openmpi`` instead of ``mpich`` but we have had better experiences
 with the latter.
 
-The result should be an activation script ``load_dev_compass_1.0.0_<compiler>.sh``.
+The result should be an activation script ``load_dev_compass_1.0.0_<mpi>.sh``.
 Source this script to get the appropriate conda environment and environment
 variables.
 
