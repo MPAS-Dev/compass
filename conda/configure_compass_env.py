@@ -883,6 +883,11 @@ def main():
         activ_path = get_env_setup(args, config, machine, is_test, source_path,
                                    conda_base)
 
+    if machine is None and not args.env_only and args.mpi is None:
+        raise ValueError('Your machine wasn\'t recognized by compass but you '
+                         'didn\'t specify the MPI version. Please provide '
+                         'either the --mpi or --env_only flag.')
+
     if machine is None:
         if args.env_only:
             compiler = None
