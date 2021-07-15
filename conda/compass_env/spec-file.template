@@ -6,7 +6,7 @@ python>=3.6
 cartopy
 cartopy_offlinedata
 cmocean
-esmf=*=mpi_mpich_*
+esmf=*={{ mpi_prefix }}_*
 ffmpeg
 geometric_features=0.5.0
 git
@@ -30,19 +30,21 @@ shapely
 xarray
 
 # Development
+pip
+flake8
+{% if mpi != "nompi" %}
 c-compiler
 cmake
 cxx-compiler
-flake8
 fortran-compiler
-libnetcdf=4.8.0=mpi_mpich_*
-libpnetcdf=1.12.2=mpi_mpich_*
-scorpio=1.1.6=mpi_mpich_*
+libnetcdf=4.8.0={{ mpi_prefix }}_*
+libpnetcdf=1.12.2={{ mpi_prefix }}_*
+scorpio=1.1.6={{ mpi_prefix }}_*
 m4
 make
-mpich
+{{ mpi }}
 netcdf-fortran
-pip
+{% endif %}
 
 # Documentation
 m2r
