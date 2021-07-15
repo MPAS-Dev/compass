@@ -32,11 +32,11 @@ Details of the error may vary but the message indicates in some way that there
 was a problem solving for the requested combination of packages.  This likely
 indicates that you have an existing compass development environment
 (``dev_compass_*``) that can't be updated to be compatible with the new
-set of development packages given in one of:
+set of development packages given in:
 
 .. code-block:: none
 
-    conda/compass_env/spec-file*.txt
+    conda/build*/spec-file*.txt
 
 The solution should be to recreate the environment rather than trying to
 update it:
