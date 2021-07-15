@@ -192,7 +192,7 @@ def build_env(is_test, recreate, machine, compiler, mpi, conda_mpi, version,
               python, source_path, template_path, conda_base, activ_suffix,
               env_name, env_suffix, activate_base):
 
-    if compiler is not None:
+    if compiler is not None or is_test:
         build_dir = 'conda/build{}'.format(activ_suffix)
 
         try:
@@ -232,15 +232,26 @@ def build_env(is_test, recreate, machine, compiler, mpi, conda_mpi, version,
     activate_env = \
         'source {}; conda activate {}'.format(base_activation_script, env_name)
 
+    with open('{}/spec-file.template'.format(template_path), 'r') as f:
+        template = Template(f.read())
+
+    if is_test:
+        spec_file = template.render(mpi=conda_mpi, mpi_prefix=mpi_prefix)
+
+        spec_filename = f'spec-file-{conda_mpi}.txt'
+        with open(spec_filename, 'w') as handle:
+            handle.write(spec_file)
+    else:
+        spec_filename = None
+
     if not os.path.exists(env_path) or recreate:
         print('creating {}'.format(env_name))
         if is_test:
             # install dev dependencies and compass itself
             commands = \
-                '{}; ' \
-                'mamba create -y -n {} {} --file {}/spec-file-{}.txt ' \
-                '{}'.format(activate_base, env_name, channels, template_path,
-                            conda_mpi, packages)
+                f'{activate_base}; ' \
+                f'mamba create -y -n {env_name} {channels} ' \
+                f'--file {spec_filename} {packages}'
             check_call(commands)
 
             commands = \
@@ -260,11 +271,9 @@ def build_env(is_test, recreate, machine, compiler, mpi, conda_mpi, version,
             print('updating {}'.format(env_name))
             # install dev dependencies and compass itself
             commands = \
-                '{}; ' \
-                'mamba install -y -n {} {} ' \
-                '--file {}/spec-file-{}.txt ' \
-                '{}'.format(activate_base, env_name, channels, template_path,
-                            conda_mpi, packages)
+                f'{activate_base}; ' \
+                f'mamba install -y -n {env_name} {channels} ' \
+                f'--file {spec_filename} {packages}'
             check_call(commands)
 
             commands = \
