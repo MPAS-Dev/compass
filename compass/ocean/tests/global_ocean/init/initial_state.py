@@ -7,6 +7,7 @@ from compass.ocean.plot import plot_initial_state, plot_vertical_grid
 from compass.ocean.tests.global_ocean.metadata import (
     add_mesh_and_init_metadata,
 )
+from compass.ocean.inactive_top_cells import remove_inactive_top_cells_output
 from compass.ocean.vertical.grid_1d import generate_1d_grid, write_1d_grid
 from compass.step import Step
 
@@ -139,6 +140,9 @@ class InitialState(Step):
                      'graph.info']:
             self.add_output_file(filename=file)
 
+        if with_inactive_top_cells:
+            self.add_output_file(filename='initial_state_crop.nc')
+
     def setup(self):
         """
         Get resources at setup from config options
@@ -175,6 +179,7 @@ class InitialState(Step):
             config.set('vertical_grid', 'vert_levels', f'{vert_levels + 1}',
                        comment='the number of vertical levels + 1')
             config.set('vertical_grid', 'inactive_top_cells', '1')
+        logger = self.logger
         interfaces = generate_1d_grid(config=config)
 
         write_1d_grid(interfaces=interfaces, out_filename='vertical_grid.nc')
@@ -186,7 +191,6 @@ class InitialState(Step):
  
         if self.with_inactive_top_cells:
 
-            logger = self.logger
             logger.info("   * Updating minLevelCell for inactive top cells")
 
             in_filename = 'initial_state.nc'
@@ -200,10 +204,17 @@ class InitialState(Step):
                 ds = ds.isel(Time=0)
 
                 if ('minLevelCell' in ds):
-                    minLevelCell = ds.minLevelCell+1
+                    if config.has_option('vertical_grid', 
+                                         'inactive_top_cells'):
+                        offset = config.getint('vertical_grid', 
+                                               'inactive_top_cells')
+                    minLevelCell = ds.minLevelCell+offset
                     ds_out['minLevelCell'] = minLevelCell
                 else:
                     logger.info("   - Streams missing for inactive top cells")
+
+            remove_inactive_top_cells_output(in_filename, 
+                                             inactive_top_cells=offset)
 
             write_netcdf(ds_out, out_filename)
             logger.info("   - Complete")

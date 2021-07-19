@@ -1,8 +1,10 @@
+import os
 from compass.ocean.tests.global_ocean.forward import (
     ForwardStep,
     ForwardTestCase,
 )
 from compass.validate import compare_timers, compare_variables
+from compass.ocean.inactive_top_cells import remove_inactive_top_cells_output
 
 
 class PerformanceTest(ForwardTestCase):
@@ -70,6 +72,18 @@ class PerformanceTest(ForwardTestCase):
 
             compare_variables(test_case=self, variables=variables,
                               filename1=f'{step_subdir}/output.nc')
+
+            if self.config.has_option('vertical_grid', 'inactive_top_cells'):
+                offset = self.config.getint('vertical_grid', 'inactive_top_cells')
+                if offset > 0:
+                    remove_inactive_top_cells_output('forward/output.nc',
+                                                     inactive_top_cells=offset)
+                    filename2=None
+                    if os.path.exists('forward/output_comp.nc'):
+                        filename2='forward/output_comp.nc'
+                    compare_variables(test_case=self, variables=variables,
+                                      filename1='forward/output_crop.nc',
+                                      filename2=filename2)
 
             if self.mesh.with_ice_shelf_cavities:
                 variables = [

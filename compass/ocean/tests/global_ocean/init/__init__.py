@@ -99,6 +99,14 @@ class Init(TestCase):
         compare_variables(test_case=self, variables=variables,
                           filename1='initial_state/initial_state.nc')
 
+        if self.with_inactive_top_cells:
+            variables = [
+                'temperature', 'salinity', 'layerThickness', 'normalVelocity']
+            compare_variables(test_case=self, variables=variables,
+                              filename1='initial_state/initial_state_crop.nc',
+                              filename2='initial_state/initial_state_comp.nc',
+                              quiet=False, check_outputs=False)
+
         if self.mesh.with_ice_shelf_cavities:
             variables = ['ssh', 'landIcePressure']
             compare_variables(test_case=self, variables=variables,
