@@ -190,6 +190,31 @@ to the current directory.
     not up-to-date.  Since dependencies change fairly rarely, this will usually
     be safe.
 
+
+Building MPAS components
+------------------------
+
+The MPAS repository is a submodule of compass repository.  For example, to
+compile MPAS-Ocean:
+
+.. code-block:: bash
+
+    source ./load_dev_compass_<version>_<machine>_<compiler>_<mpi>.sh
+    cd E3SM-Project/components/mpas-ocean/
+    make <mpas_compiler>
+
+For MALI:
+
+.. code-block:: bash
+
+    source ./load_dev_compass_<version>_<machine>_<compiler>_<mpi>.sh
+    cd MALI-Dev/components/mpas-albany-landice
+    make <mpas_compiler>
+
+See :ref:`dev_supported_machines` for the right ``<mpas_compiler>`` command for
+each machine and compiler.
+
+
 .. _dev_working_with_compass:
 
 Running compass from the repo
@@ -238,30 +263,6 @@ The first command will source the same activation script
 (``load_dev_compass_<version>_<machine>_<compiler>_<mpi>.sh``) that you used to set
 up the suite or test case (``load_compass_env.sh`` is just a symlink to that
 activation script you sourced before setting up the suite or test case).
-
-Building MPAS components
-------------------------
-
-The MPAS repository is a submodule of compass repository.  For example, to
-compile MPAS-Ocean:
-
-.. code-block:: bash
-
-    source ./load_dev_compass_<version>_<machine>_<compiler>_<mpi>.sh
-    cd E3SM-Project/components/mpas-ocean/
-    make <mpas_compiler>
-
-For MALI:
-
-.. code-block:: bash
-
-    source ./load_dev_compass_<version>_<machine>_<compiler>_<mpi>.sh
-    cd MALI-Dev/components/mpas-albany-landice
-    make <mpas_compiler>
-
-See :ref:`dev_supported_machines` for the right ``<mpas_compiler>`` command for
-each machine and compiler.
-
 
 .. _dev_compass_repo_advanced:
 
