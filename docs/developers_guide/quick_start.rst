@@ -48,6 +48,11 @@ workstation, you will need to specify which flavor of MPI you want to use
 We only support one set of compilers for Mac and Linux, so there is no need to
 specify them.  See :ref:`dev_other_machines` for more details.
 
+In addition, unknown machines require a config file to be specified when setting
+up the compass test environment.  A config file can be specified using
+``-f <filename>``.  More information, including example config files, can be found
+in :ref:`config_files`.
+
 If you don't have `Miniconda3 <https://docs.conda.io/en/latest/miniconda.html>`_
 installed in ``<conda_path>``, it will be downloaded and installed for you in
 this location. If you already have it installed, that path will be used to add
@@ -103,7 +108,7 @@ environment variable ``LOAD_COMPASS_ENV`` that points to the activation script.
 ``compass`` uses this to make an symlink to the activation script called
 ``load_compass_env.sh`` in the work directory.
 
-If you switch to another branch, you need to rerun
+If you switch to another branch, you will need to rerun:
 
 .. code-block:: bash
 
@@ -127,7 +132,7 @@ to the current directory.
     be safe.
 
 If you wish to work with another compiler, simply rerun the script with a new
-compiler name and an activation script will be produced. You can then source
+compiler name and an activation script will be produced.  You can then source
 either activation script to get the same conda environment but with different
 compilers and related modules.  Make sure you are careful to set up compass by
 pointing to a version of the MPAS model that was compiled with the correct
@@ -161,7 +166,7 @@ Creating/updating only the compass environment
 For some workflows (e.g. for MALI development wih the Albany library), you may
 only want to create the conda environment and not build SCORPIO, ESMF or
 include any system modules or environment variables in your activation script.
-In such cases, run with the ``--env_only`` flag.
+In such cases, run with the ``--env_only`` flag:
 
 .. code-block:: bash
 
@@ -175,10 +180,10 @@ Each time you want to work with compass, you will need to run:
 
 This will load the appropriate conda environment for ``compass``.  It will also
 set an environment variable ``LOAD_COMPASS_ENV`` that points to the activation
-script. ``compass`` uses this to make an symlink to the activation script
+script. ``compass`` uses this to make a symlink to the activation script
 called ``load_compass_env.sh`` in the work directory.
 
-If you switch to another branch, you need to rerun
+If you switch to another branch, you will need to rerun:
 
 .. code-block:: bash
 
@@ -205,7 +210,7 @@ to the current directory.
 Building MPAS components
 ------------------------
 
-The MPAS repository is a submodule of compass repository.  For example, to
+The MPAS repository is a submodule of the compass repository.  For example, to
 compile MPAS-Ocean:
 
 .. code-block:: bash
@@ -294,7 +299,7 @@ branches at once. Begin where you keep your repositories:
     cd master
 
 The ``MPAS-Dev/compass`` repo is now ``origin``. You can add more remotes. For
-example
+example:
 
 .. code-block:: bash
 
@@ -314,7 +319,7 @@ To view all available branches, both local and remote:
     git branch -a
 
 We will use the git worktree command to create a new local branch in its own
-unix directory.
+unix directory:
 
 .. code-block:: bash
 
@@ -330,7 +335,7 @@ There are two ways to build the MPAS executable:
 1. Compass submodule (easier): This guarantees that the MPAS commit matches
    compass.  It is also the default location for finding the MPAS model so you
    don't need to specify the ``-p`` flag at the command line or put the MPAS
-   model path in your config file (if you even need a config file at all).
+   model path in your config file (if you even need a config file at all):
 
    .. code-block:: bash
 
@@ -347,7 +352,7 @@ There are two ways to build the MPAS executable:
    path to the path where the ``ocean_model`` or ``landice_model`` executable
    is found, or specify this path on the command line with ``-p``.  You are
    responsible for knowing if this particular version of MPAS component's code
-   is compatible with the version of ``compass`` that you are using. The
+   is compatible with the version of ``compass`` that you are using.  The
    simplest way to set up a new repo for MALI development in a new directory
    is:
 
