@@ -1,5 +1,7 @@
 from compass.testcase import TestCase
 from compass.ocean.tests.internal_wave.default.init import Init
+from compass.ocean.tests.internal_wave.default.forward import Forward
+from compass.validate import compare_variables
 
 
 class Default(TestCase):
@@ -18,3 +20,12 @@ class Default(TestCase):
         """
         super().__init__(test_group=test_group, name='default')
         self.add_step(Init(test_case=self))
+        self.add_step(Forward(test_case=self))
+
+    def validate(self):
+        """
+        Validate variables against a baseline
+        """
+        compare_variables(test_case=self,
+                          variables=['layerThickness', 'normalVelocity'],
+                          filename1='forward/output.nc')

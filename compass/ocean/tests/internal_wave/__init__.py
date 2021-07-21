@@ -15,3 +15,4 @@ class InternalWave(TestGroup):
         super().__init__(mpas_core=mpas_core, name='internal_wave')
 
         self.add_test_case(Default(test_group=self))
+        self.add_test_case(RpeTest(test_group=self))

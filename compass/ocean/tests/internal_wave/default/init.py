@@ -46,13 +46,18 @@ class Init(Step):
         ny = section.getint('ny')
         dc = section.getfloat('dc')
 
+        logger.info(' * Make planar hex mesh')
         dsMesh = make_planar_hex_mesh(nx=nx, ny=ny, dc=dc, nonperiodic_x=False,
                                       nonperiodic_y=False)
+        logger.info(' * Completed Make planar hex mesh')
         write_netcdf(dsMesh, 'grid.nc')
 
+        logger.info(' * Cull mesh')
         dsMesh = cull(dsMesh, logger=logger)
+        logger.info(' * Convert mesh')
         dsMesh = convert(dsMesh, graphInfoFileName='graph.info',
                          logger=logger)
+        logger.info(' * Completed Convert mesh')
         write_netcdf(dsMesh, 'mesh.nc')
 
         replacements = dict()
@@ -62,4 +67,6 @@ class Init(Step):
             config.get('internal_wave', 'bottom_depth')
         self.update_namelist_at_runtime(options=replacements)
 
+        logger.info(' * Run model')
         run_model(self)
+        logger.info(' * Completed Run model')
