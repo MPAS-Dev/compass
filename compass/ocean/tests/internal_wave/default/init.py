@@ -1,15 +1,19 @@
+import xarray
+import numpy
+
 from mpas_tools.planar_hex import make_planar_hex_mesh
 from mpas_tools.io import write_netcdf
 from mpas_tools.mesh.conversion import convert, cull
 
+from compass.ocean.vertical import init_vertical_coord
 from compass.step import Step
 from compass.model import run_model
 
 
 class Init(Step):
     """
-    A step for creating a mesh and initial condition for General Ocean
-    Turbulence Model (GOTM) test cases
+    A step for creating a mesh and initial condition for internal wave test
+    cases
     """
     def __init__(self, test_case):
         """
@@ -17,7 +21,7 @@ class Init(Step):
 
         Parameters
         ----------
-        test_case : compass.ocean.tests.gotm.default.Default
+        test_case : compass.ocean.tests.internal_wave.default.Default
             The test case this step belongs to
         """
         super().__init__(test_case=test_case, name='init', cores=1,
@@ -41,10 +45,21 @@ class Init(Step):
         config = self.config
         logger = self.logger
 
+        section = config['vertical_grid']
+        vert_levels = section.getint('vert_levels')
+        bottom_depth = section.getfloat('bottom_depth')
+
         section = config['internal_wave']
         nx = section.getint('nx')
         ny = section.getint('ny')
         dc = section.getfloat('dc')
+        use_distances = section.getboolean('use_distances')
+        amplitude_width_dist = section.getfloat('amplitude_width_dist')
+        amplitude_width_frac = section.getfloat('amplitude_width_frac')
+        bottom_temperature = section.getfloat('bottom_temperature')
+        surface_temperature = section.getfloat('surface_temperature')
+        temperature_difference = section.getfloat('temperature_difference')
+        salinity = section.getfloat('salinity')
 
         logger.info(' * Make planar hex mesh')
         dsMesh = make_planar_hex_mesh(nx=nx, ny=ny, dc=dc, nonperiodic_x=False,
@@ -62,10 +77,70 @@ class Init(Step):
 
         replacements = dict()
         replacements['config_periodic_planar_vert_levels'] = \
-            config.get('internal_wave', 'vert_levels')
+            config.get('vertical_grid', 'vert_levels')
         replacements['config_periodic_planar_bottom_depth'] = \
-            config.get('internal_wave', 'bottom_depth')
+            config.get('vertical_grid', 'bottom_depth')
         self.update_namelist_at_runtime(options=replacements)
+
+        ds = dsMesh.copy()
+        xCell = ds.xCell
+        yCell = ds.yCell
+
+        print(numpy.max(yCell) - numpy.min(yCell))
+        print(vert_levels)
+
+        ds['bottomDepth'] = bottom_depth * xarray.ones_like(xCell)
+        ds['ssh'] = xarray.zeros_like(xCell)
+
+        init_vertical_coord(config, ds)
+
+        yMin = yCell.min().values
+        yMax = yCell.max().values
+
+        yMid = 0.5*(yMin + yMax)
+
+        if use_distances:
+            perturbation_width = amplitude_width_dist
+        else:
+            perturbation_width =  ny * dc * amplitude_width_frac
+
+        # Set stratified temperature
+        temp_vert = (bottom_temperature +
+                     (surface_temperature - bottom_temperature) *
+                     ((ds.refZMid + bottom_depth) / bottom_depth))
+        print(ds['refZMid'])
+        print(temp_vert)
+
+        depth_frac = xarray.zeros_like(temp_vert)
+        refBottomDepth = ds['refBottomDepth']
+        for k in range(1, vert_levels):
+            depth_frac[k] = refBottomDepth[k-1] / refBottomDepth[vert_levels-1]
+
+        # If cell is in the southern half, outside the sin width, subtract 
+        # temperature difference
+        frac = xarray.where(yCell < yMid - perturbation_width,
+                            numpy.cos(0.5 * numpy.pi * (yCell - yMid)
+                                      / perturbation_width)
+                            * numpy.sin(numpy.pi * depth_frac), 
+                            0.)
+
+        temperature = temp_vert - temperature_difference * frac
+
+        temperature = temperature.transpose('nCells', 'nVertLevels')
+
+        temperature = temperature.expand_dims(dim='Time', axis=0)
+
+        normalVelocity = xarray.zeros_like(ds.xEdge)
+        normalVelocity, _ = xarray.broadcast(normalVelocity, ds.refBottomDepth)
+        normalVelocity = normalVelocity.transpose('nEdges', 'nVertLevels')
+        normalVelocity = normalVelocity.expand_dims(dim='Time', axis=0)
+
+        ds['temperature'] = temperature
+        ds['salinity'] = salinity * xarray.ones_like(temperature)
+        ds['normalVelocity'] = normalVelocity
+        print(ds['temperature'])
+
+        write_netcdf(ds, 'ocean.nc')
 
         logger.info(' * Run model')
         run_model(self)
