@@ -9,6 +9,7 @@ from geometric_features.aggregation import get_aggregator_by_name
 from mpas_tools.logging import check_call
 from mpas_tools.ocean.moc import add_moc_southern_boundary_transects
 from mpas_tools.io import write_netcdf
+import mpas_tools.io
 
 from compass.io import symlink
 from compass.step import Step
@@ -148,12 +149,19 @@ def _make_region_masks(mesh_name, suffix, fcMask, logger, cores):
 
     fcMask.to_geojson(geojson_filename)
 
+    # these defaults may have been updated from config options -- pass them
+    # along to the subprocess
+    netcdf_format = mpas_tools.io.default_format
+    netcdf_engine = mpas_tools.io.default_engine
+
     args = ['compute_mpas_region_masks',
             '-m', mesh_filename,
             '-g', geojson_filename,
             '-o', mask_filename,
             '-t', 'cell',
-            '--process_count', '{}'.format(cores)]
+            '--process_count', '{}'.format(cores),
+            '--format', netcdf_format,
+            '--engine', netcdf_engine]
     check_call(args, logger=logger)
 
     # make links in output directory
@@ -172,6 +180,11 @@ def _make_transect_masks(mesh_name, suffix, fcMask, logger, cores,
 
     fcMask.to_geojson(geojson_filename)
 
+    # these defaults may have been updated from config options -- pass them
+    # along to the subprocess
+    netcdf_format = mpas_tools.io.default_format
+    netcdf_engine = mpas_tools.io.default_engine
+
     args = ['compute_mpas_transect_masks',
             '-m', mesh_filename,
             '-g', geojson_filename,
@@ -179,7 +192,9 @@ def _make_transect_masks(mesh_name, suffix, fcMask, logger, cores,
             '-t', 'edge',
             '-s', '{}'.format(subdivision_threshold),
             '--process_count', '{}'.format(cores),
-            '--add_edge_sign']
+            '--add_edge_sign',
+            '--format', netcdf_format,
+            '--engine', netcdf_engine]
     check_call(args, logger=logger)
 
     # make links in output directory
@@ -263,12 +278,19 @@ def _make_moc_masks(mesh_short_name, logger, cores):
 
     fcMask.to_geojson(geojson_filename)
 
+    # these defaults may have been updated from config options -- pass them
+    # along to the subprocess
+    netcdf_format = mpas_tools.io.default_format
+    netcdf_engine = mpas_tools.io.default_engine
+
     args = ['compute_mpas_region_masks',
             '-m', mesh_filename,
             '-g', geojson_filename,
             '-o', mask_filename,
             '-t', 'cell',
-            '--process_count', '{}'.format(cores)]
+            '--process_count', '{}'.format(cores),
+            '--format', netcdf_format,
+            '--engine', netcdf_engine]
     check_call(args, logger=logger)
 
     mask_and_transect_filename = '{}_mocBasinsAndTransects{}.nc'.format(
