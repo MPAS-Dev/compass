@@ -236,6 +236,10 @@ workstation, you will need to specify which flavor of MPI you want to use
 </div>
 <p>We only support one set of compilers for Mac and Linux, so there is no need to
 specify them.  See <a class="reference internal" href="machines/index.html#dev-other-machines"><span class="std std-ref">Other Machines</span></a> for more details.</p>
+<p>In addition, unknown machines require a config file to be specified when setting
+up the compass test environment.  A config file can be specified using
+<code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">&lt;filename&gt;</span></code>.  More information, including example config files, can be found
+in <a class="reference internal" href="../users_guide/config_files.html#config-files"><span class="std std-ref">Config Files</span></a>.</p>
 <p>If you don’t have <a class="reference external" href="https://docs.conda.io/en/latest/miniconda.html">Miniconda3</a>
 installed in <code class="docutils literal notranslate"><span class="pre">&lt;conda_path&gt;</span></code>, it will be downloaded and installed for you in
 this location. If you already have it installed, that path will be used to add
@@ -281,7 +285,7 @@ set environment variables needed for MPAS or <code class="docutils literal notra
 environment variable <code class="docutils literal notranslate"><span class="pre">LOAD_COMPASS_ENV</span></code> that points to the activation script.
 <code class="docutils literal notranslate"><span class="pre">compass</span></code> uses this to make an symlink to the activation script called
 <code class="docutils literal notranslate"><span class="pre">load_compass_env.sh</span></code> in the work directory.</p>
-<p>If you switch to another branch, you need to rerun</p>
+<p>If you switch to another branch, you will need to rerun:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./conda/configure_compass_env.py --conda &lt;conda_path&gt; -c &lt;compiler&gt;
 </pre></div>
 </div>
@@ -300,7 +304,7 @@ not up-to-date.  Since dependencies change fairly rarely, this will usually
 be safe.</p>
 </div>
 <p>If you wish to work with another compiler, simply rerun the script with a new
-compiler name and an activation script will be produced. You can then source
+compiler name and an activation script will be produced.  You can then source
 either activation script to get the same conda environment but with different
 compilers and related modules.  Make sure you are careful to set up compass by
 pointing to a version of the MPAS model that was compiled with the correct
@@ -326,7 +330,7 @@ you do not need to specify those.</p>
 <p>For some workflows (e.g. for MALI development wih the Albany library), you may
 only want to create the conda environment and not build SCORPIO, ESMF or
 include any system modules or environment variables in your activation script.
-In such cases, run with the <code class="docutils literal notranslate"><span class="pre">--env_only</span></code> flag.</p>
+In such cases, run with the <code class="docutils literal notranslate"><span class="pre">--env_only</span></code> flag:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./conda/configure_compass_env.py --conda &lt;conda_path&gt; --env_only
 </pre></div>
 </div>
@@ -336,9 +340,9 @@ In such cases, run with the <code class="docutils literal notranslate"><span cla
 </div>
 <p>This will load the appropriate conda environment for <code class="docutils literal notranslate"><span class="pre">compass</span></code>.  It will also
 set an environment variable <code class="docutils literal notranslate"><span class="pre">LOAD_COMPASS_ENV</span></code> that points to the activation
-script. <code class="docutils literal notranslate"><span class="pre">compass</span></code> uses this to make an symlink to the activation script
+script. <code class="docutils literal notranslate"><span class="pre">compass</span></code> uses this to make a symlink to the activation script
 called <code class="docutils literal notranslate"><span class="pre">load_compass_env.sh</span></code> in the work directory.</p>
-<p>If you switch to another branch, you need to rerun</p>
+<p>If you switch to another branch, you will need to rerun:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./conda/configure_compass_env.py --conda &lt;conda_path&gt; --env_only
 </pre></div>
 </div>
@@ -359,7 +363,7 @@ be safe.</p>
 </div>
 <div class="section" id="building-mpas-components">
 <h2>Building MPAS components<a class="headerlink" href="#building-mpas-components" title="Permalink to this headline">¶</a></h2>
-<p>The MPAS repository is a submodule of compass repository.  For example, to
+<p>The MPAS repository is a submodule of the compass repository.  For example, to
 compile MPAS-Ocean:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> ./load_dev_compass_&lt;version&gt;_&lt;machine&gt;_&lt;compiler&gt;_&lt;mpi&gt;.sh
 <span class="nb">cd</span> E3SM-Project/components/mpas-ocean/
@@ -423,7 +427,7 @@ git clone git@github.com:MPAS-Dev/compass.git master
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">MPAS-Dev/compass</span></code> repo is now <code class="docutils literal notranslate"><span class="pre">origin</span></code>. You can add more remotes. For
-example</p>
+example:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git remote add mark-petersen git@github.com:mark-petersen/compass.git
 git fetch mark-petersen
 </pre></div>
@@ -437,7 +441,7 @@ git fetch mark-petersen
 </pre></div>
 </div>
 <p>We will use the git worktree command to create a new local branch in its own
-unix directory.</p>
+unix directory:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> compass/master
 git worktree add -b new_branch_name ../new_branch_name origin/master
 <span class="nb">cd</span> ../new_branch_name
@@ -450,7 +454,7 @@ any branch, which is specified by the last <code class="docutils literal notrans
 <li><p>Compass submodule (easier): This guarantees that the MPAS commit matches
 compass.  It is also the default location for finding the MPAS model so you
 don’t need to specify the <code class="docutils literal notranslate"><span class="pre">-p</span></code> flag at the command line or put the MPAS
-model path in your config file (if you even need a config file at all).</p>
+model path in your config file (if you even need a config file at all):</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git submodule update --init --recursive
 <span class="nb">cd</span> E3SM-Project/components/mpas-ocean/
 <span class="c1"># load modules</span>
@@ -465,7 +469,7 @@ Either make an <code class="docutils literal notranslate"><span class="pre">ocea
 path to the path where the <code class="docutils literal notranslate"><span class="pre">ocean_model</span></code> or <code class="docutils literal notranslate"><span class="pre">landice_model</span></code> executable
 is found, or specify this path on the command line with <code class="docutils literal notranslate"><span class="pre">-p</span></code>.  You are
 responsible for knowing if this particular version of MPAS component’s code
-is compatible with the version of <code class="docutils literal notranslate"><span class="pre">compass</span></code> that you are using. The
+is compatible with the version of <code class="docutils literal notranslate"><span class="pre">compass</span></code> that you are using.  The
 simplest way to set up a new repo for MALI development in a new directory
 is:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone git@github.com:MALI-Dev/E3SM.git your_new_branch
