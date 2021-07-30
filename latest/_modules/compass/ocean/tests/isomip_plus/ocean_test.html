@@ -339,7 +339,14 @@
         <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;isomip_plus&#39;</span><span class="p">,</span> <span class="s1">&#39;forward_min_cores&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">min_cores</span><span class="p">))</span>
         <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;isomip_plus&#39;</span><span class="p">,</span> <span class="s1">&#39;forward_threads&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">)</span>
 
-        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;vertical_grid&#39;</span><span class="p">,</span> <span class="s1">&#39;coord_type&#39;</span><span class="p">,</span> <span class="n">vertical_coordinate</span><span class="p">)</span></div>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;vertical_grid&#39;</span><span class="p">,</span> <span class="s1">&#39;coord_type&#39;</span><span class="p">,</span> <span class="n">vertical_coordinate</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">step_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">step_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;ssh_adjustment&#39;</span><span class="p">,</span> <span class="s1">&#39;performance&#39;</span><span class="p">,</span> <span class="s1">&#39;simulation&#39;</span><span class="p">]:</span>
+                <span class="n">step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">step_name</span><span class="p">]</span>
+                <span class="n">step</span><span class="o">.</span><span class="n">cores</span> <span class="o">=</span> <span class="n">cores</span>
+                <span class="n">step</span><span class="o">.</span><span class="n">min_cores</span> <span class="o">=</span> <span class="n">min_cores</span>
+                <span class="n">step</span><span class="o">.</span><span class="n">threads</span> <span class="o">=</span> <span class="mi">1</span></div>
 
 <div class="viewcode-block" id="OceanTest.run"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.ocean_test.OceanTest.run.html#compass.ocean.tests.isomip_plus.ocean_test.OceanTest.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
