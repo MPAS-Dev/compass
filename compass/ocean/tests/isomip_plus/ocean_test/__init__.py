@@ -143,6 +143,13 @@ class OceanTest(TestCase):
 
         config.set('vertical_grid', 'coord_type', vertical_coordinate)
 
+        for step_name in self.steps:
+            if step_name in ['ssh_adjustment', 'performance', 'simulation']:
+                step = self.steps[step_name]
+                step.cores = cores
+                step.min_cores = min_cores
+                step.threads = 1
+
     def run(self):
         """
         Run each step of the test case
