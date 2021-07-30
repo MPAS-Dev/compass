@@ -4,6 +4,7 @@ from geometric_features import GeometricFeatures, FeatureCollection, \
     read_feature_collection
 from mpas_tools.mesh.conversion import cull
 from mpas_tools.mesh.mask import compute_mpas_flood_fill_mask
+import mpas_tools.io
 from mpas_tools.io import write_netcdf
 from mpas_tools.ocean.coastline_alteration import widen_transect_edge_masks, \
     add_critical_land_blockages, add_land_locked_cells_to_mask
@@ -89,9 +90,6 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
                             process_count):
     """ Cull the mesh once the logger is defined for sure """
 
-    # required for compatibility with MPAS
-    netcdf_format = 'NETCDF3_64BIT'
-
     critical_passages = with_critical_passages or \
         (custom_critical_passages is not None)
 
@@ -128,13 +126,20 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
     # save the feature collection to a geojson file
     fcLandCoverage.to_geojson('land_coverage.geojson')
 
+    # these defaults may have been updated from config options -- pass them
+    # along to the subprocess
+    netcdf_format = mpas_tools.io.default_format
+    netcdf_engine = mpas_tools.io.default_engine
+
     # Create the land mask based on the land coverage, i.e. coastline data
     args = ['compute_mpas_region_masks',
             '-m', 'base_mesh.nc',
             '-g', 'land_coverage.geojson',
             '-o', 'land_mask.nc',
             '-t', 'cell',
-            '--process_count', '{}'.format(process_count)]
+            '--process_count', '{}'.format(process_count),
+            '--format', netcdf_format,
+            '--engine', netcdf_engine]
     check_call(args, logger=logger)
 
     dsBaseMesh = xarray.open_dataset('base_mesh.nc')
@@ -171,7 +176,9 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
                 '-o', 'critical_blockages.nc',
                 '-t', 'cell',
                 '-s', '10e3',
-                '--process_count', '{}'.format(process_count)]
+                '--process_count', '{}'.format(process_count),
+                '--format', netcdf_format,
+                '--engine', netcdf_engine]
         check_call(args, logger=logger)
         dsCritBlockMask = xarray.open_dataset('critical_blockages.nc')
 
@@ -199,7 +206,9 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
                 '-o', 'critical_passages.nc',
                 '-t', 'cell', 'edge',
                 '-s', '10e3',
-                '--process_count', '{}'.format(process_count)]
+                '--process_count', '{}'.format(process_count),
+                '--format', netcdf_format,
+                '--engine', netcdf_engine]
         check_call(args, logger=logger)
         dsCritPassMask = xarray.open_dataset('critical_passages.nc')
 
@@ -225,7 +234,7 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
     # cull the mesh a second time using a flood fill from the seed points
     dsCulledMesh = cull(dsCulledMesh, dsInverse=dsSeedMask,
                         graphInfoFileName='culled_graph.info', logger=logger)
-    write_netcdf(dsCulledMesh, 'culled_mesh.nc', format=netcdf_format)
+    write_netcdf(dsCulledMesh, 'culled_mesh.nc')
 
     if critical_passages:
         # make a new version of the critical passages mask on the culled mesh
@@ -236,7 +245,9 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
                 '-o', 'critical_passages_mask_final.nc',
                 '-t', 'cell',
                 '-s', '10e3',
-                '--process_count', '{}'.format(process_count)]
+                '--process_count', '{}'.format(process_count),
+                '--format', netcdf_format,
+                '--engine', netcdf_engine]
         check_call(args, logger=logger)
 
     if with_cavities:
@@ -250,7 +261,9 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
                 '-g', 'ice_coverage.geojson',
                 '-o', 'ice_coverage.nc',
                 '-t', 'cell',
-                '--process_count', '{}'.format(process_count)]
+                '--process_count', '{}'.format(process_count),
+                '--format', netcdf_format,
+                '--engine', netcdf_engine]
         check_call(args, logger=logger)
         dsMask = xarray.open_dataset('ice_coverage.nc')
 
@@ -258,11 +271,10 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
         dsLandIceMask = xarray.Dataset()
         dsLandIceMask['landIceMask'] = landIceMask
 
-        write_netcdf(dsLandIceMask, 'land_ice_mask.nc', format=netcdf_format)
+        write_netcdf(dsLandIceMask, 'land_ice_mask.nc')
 
         dsLandIceCulledMesh = cull(dsCulledMesh, dsMask=dsMask, logger=logger)
-        write_netcdf(dsLandIceCulledMesh, 'no_ISC_culled_mesh.nc',
-                     format=netcdf_format)
+        write_netcdf(dsLandIceCulledMesh, 'no_ISC_culled_mesh.nc')
 
     extract_vtk(ignore_time=True, dimension_list=['maxEdges='],
                 variable_list=['allOnCells'],
