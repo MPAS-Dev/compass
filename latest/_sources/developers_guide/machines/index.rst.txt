@@ -24,20 +24,22 @@ the base of your compass branch, e.g.:
 
 .. code-block:: bash
 
-    source load_dev_compass_1.0.0_anvil_intel18_mvapich.sh
+    source load_dev_compass_1.0.0_anvil_intel_impi.sh
 
 After loading this environment, you can set up test cases or test suites, and
 a link ``load_compass_env.sh`` will be included in each suite or test case
 work directory.  This is a link to the activation script that you sourced when
 you were setting things up.  You can can source this file on a compute node
 (e.g. in a job script) to get the right compass conda environment, compilers,
-MPI libraries and environment variables for running``compass`` tests and
+MPI libraries and environment variables for running ``compass`` tests and
 the MPAS model.
 
 +--------------+------------+-----------+-------------------+
 | Machine      | Compiler   | MPI lib.  |  MPAS make target |
 +==============+============+===========+===================+
-| anvil        | intel18    | mvapich   | ifort             |
+| anvil        | intel      | impi      | intel-mpi         |
+|              |            +-----------+-------------------+
+|              |            | mvapich   | ifort             |
 |              +------------+-----------+-------------------+
 |              | gnu        | mvapich   | gfortran          |
 +--------------+------------+-----------+-------------------+
@@ -45,9 +47,9 @@ the MPAS model.
 |              +------------+-----------+-------------------+
 |              | gnu        | mvapich   | gfortran          |
 +--------------+------------+-----------+-------------------+
-| chrysalis    | intel      | openmpi   | ifort             |
+| chrysalis    | intel      | impi      | intel-mpi         |
 |              |            +-----------+-------------------+
-|              |            | impi      | intel-mpi         |
+|              |            | openmpi   | ifort             |
 |              +------------+-----------+-------------------+
 |              | gnu        | openmpi   | gfortran          |
 +--------------+------------+-----------+-------------------+

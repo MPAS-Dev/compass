@@ -223,7 +223,7 @@ activation script for activating the development conda environment, setting
 loading system modules and setting environment variables so you can build
 MPAS and work with <code class="docutils literal notranslate"><span class="pre">compass</span></code>.  Just source the script that should appear in
 the base of your compass branch, e.g.:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> load_dev_compass_1.0.0_anvil_intel18_mvapich.sh
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> load_dev_compass_1.0.0_anvil_intel_impi.sh
 </pre></div>
 </div>
 <p>After loading this environment, you can set up test cases or test suites, and
@@ -231,7 +231,7 @@ a link <code class="docutils literal notranslate"><span class="pre">load_compass
 work directory.  This is a link to the activation script that you sourced when
 you were setting things up.  You can can source this file on a compute node
 (e.g. in a job script) to get the right compass conda environment, compilers,
-MPI libraries and environment variables for running``compass`` tests and
+MPI libraries and environment variables for running <code class="docutils literal notranslate"><span class="pre">compass</span></code> tests and
 the MPAS model.</p>
 <table class="docutils align-default">
 <colgroup>
@@ -248,61 +248,64 @@ the MPAS model.</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td rowspan="2"><p>anvil</p></td>
-<td><p>intel18</p></td>
-<td><p>mvapich</p></td>
-<td><p>ifort</p></td>
-</tr>
-<tr class="row-odd"><td><p>gnu</p></td>
-<td><p>mvapich</p></td>
-<td><p>gfortran</p></td>
-</tr>
-<tr class="row-even"><td rowspan="2"><p>badger</p></td>
-<td><p>intel</p></td>
+<tr class="row-even"><td rowspan="3"><p>anvil</p></td>
+<td rowspan="2"><p>intel</p></td>
 <td><p>impi</p></td>
 <td><p>intel-mpi</p></td>
 </tr>
-<tr class="row-odd"><td><p>gnu</p></td>
+<tr class="row-odd"><td><p>mvapich</p></td>
+<td><p>ifort</p></td>
+</tr>
+<tr class="row-even"><td><p>gnu</p></td>
 <td><p>mvapich</p></td>
 <td><p>gfortran</p></td>
 </tr>
-<tr class="row-even"><td rowspan="3"><p>chrysalis</p></td>
-<td rowspan="2"><p>intel</p></td>
-<td><p>openmpi</p></td>
-<td><p>ifort</p></td>
-</tr>
-<tr class="row-odd"><td><p>impi</p></td>
+<tr class="row-odd"><td rowspan="2"><p>badger</p></td>
+<td><p>intel</p></td>
+<td><p>impi</p></td>
 <td><p>intel-mpi</p></td>
 </tr>
 <tr class="row-even"><td><p>gnu</p></td>
+<td><p>mvapich</p></td>
+<td><p>gfortran</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="3"><p>chrysalis</p></td>
+<td rowspan="2"><p>intel</p></td>
+<td><p>impi</p></td>
+<td><p>intel-mpi</p></td>
+</tr>
+<tr class="row-even"><td><p>openmpi</p></td>
+<td><p>ifort</p></td>
+</tr>
+<tr class="row-odd"><td><p>gnu</p></td>
 <td><p>openmpi</p></td>
 <td><p>gfortran</p></td>
 </tr>
-<tr class="row-odd"><td><p>compy</p></td>
+<tr class="row-even"><td><p>compy</p></td>
 <td><p>intel</p></td>
 <td><p>impi</p></td>
 <td><p>intel-mpi</p></td>
 </tr>
-<tr class="row-even"><td rowspan="2"><p>cori-haswell</p></td>
+<tr class="row-odd"><td rowspan="2"><p>cori-haswell</p></td>
 <td><p>intel</p></td>
 <td><p>mpt</p></td>
 <td><p>intel-nersc</p></td>
 </tr>
-<tr class="row-odd"><td><p>gnu</p></td>
+<tr class="row-even"><td><p>gnu</p></td>
 <td><p>mpt</p></td>
 <td><p>gnu-nersc</p></td>
 </tr>
-<tr class="row-even"><td><p>cori-knl</p></td>
+<tr class="row-odd"><td><p>cori-knl</p></td>
 <td><p>intel</p></td>
 <td><p>impi</p></td>
 <td><p>intel-mpi</p></td>
 </tr>
-<tr class="row-odd"><td rowspan="2"><p>grizzly</p></td>
+<tr class="row-even"><td rowspan="2"><p>grizzly</p></td>
 <td><p>intel</p></td>
 <td><p>impi</p></td>
 <td><p>intel-mpi</p></td>
 </tr>
-<tr class="row-even"><td><p>gnu</p></td>
+<tr class="row-odd"><td><p>gnu</p></td>
 <td><p>mvapich</p></td>
 <td><p>gfortran</p></td>
 </tr>
