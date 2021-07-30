@@ -209,6 +209,7 @@
 <span class="kn">from</span> <span class="nn">mpas_tools.logging</span> <span class="kn">import</span> <span class="n">check_call</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.ocean.moc</span> <span class="kn">import</span> <span class="n">add_moc_southern_boundary_transects</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
+<span class="kn">import</span> <span class="nn">mpas_tools.io</span>
 
 <span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">symlink</span>
 <span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
@@ -348,12 +349,19 @@
 
     <span class="n">fcMask</span><span class="o">.</span><span class="n">to_geojson</span><span class="p">(</span><span class="n">geojson_filename</span><span class="p">)</span>
 
+    <span class="c1"># these defaults may have been updated from config options -- pass them</span>
+    <span class="c1"># along to the subprocess</span>
+    <span class="n">netcdf_format</span> <span class="o">=</span> <span class="n">mpas_tools</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">default_format</span>
+    <span class="n">netcdf_engine</span> <span class="o">=</span> <span class="n">mpas_tools</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">default_engine</span>
+
     <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;compute_mpas_region_masks&#39;</span><span class="p">,</span>
             <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="n">mesh_filename</span><span class="p">,</span>
             <span class="s1">&#39;-g&#39;</span><span class="p">,</span> <span class="n">geojson_filename</span><span class="p">,</span>
             <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="n">mask_filename</span><span class="p">,</span>
             <span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;cell&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cores</span><span class="p">)]</span>
+            <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cores</span><span class="p">),</span>
+            <span class="s1">&#39;--format&#39;</span><span class="p">,</span> <span class="n">netcdf_format</span><span class="p">,</span>
+            <span class="s1">&#39;--engine&#39;</span><span class="p">,</span> <span class="n">netcdf_engine</span><span class="p">]</span>
     <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
     <span class="c1"># make links in output directory</span>
@@ -372,6 +380,11 @@
 
     <span class="n">fcMask</span><span class="o">.</span><span class="n">to_geojson</span><span class="p">(</span><span class="n">geojson_filename</span><span class="p">)</span>
 
+    <span class="c1"># these defaults may have been updated from config options -- pass them</span>
+    <span class="c1"># along to the subprocess</span>
+    <span class="n">netcdf_format</span> <span class="o">=</span> <span class="n">mpas_tools</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">default_format</span>
+    <span class="n">netcdf_engine</span> <span class="o">=</span> <span class="n">mpas_tools</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">default_engine</span>
+
     <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;compute_mpas_transect_masks&#39;</span><span class="p">,</span>
             <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="n">mesh_filename</span><span class="p">,</span>
             <span class="s1">&#39;-g&#39;</span><span class="p">,</span> <span class="n">geojson_filename</span><span class="p">,</span>
@@ -379,7 +392,9 @@
             <span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;edge&#39;</span><span class="p">,</span>
             <span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">subdivision_threshold</span><span class="p">),</span>
             <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cores</span><span class="p">),</span>
-            <span class="s1">&#39;--add_edge_sign&#39;</span><span class="p">]</span>
+            <span class="s1">&#39;--add_edge_sign&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;--format&#39;</span><span class="p">,</span> <span class="n">netcdf_format</span><span class="p">,</span>
+            <span class="s1">&#39;--engine&#39;</span><span class="p">,</span> <span class="n">netcdf_engine</span><span class="p">]</span>
     <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
     <span class="c1"># make links in output directory</span>
@@ -463,12 +478,19 @@
 
     <span class="n">fcMask</span><span class="o">.</span><span class="n">to_geojson</span><span class="p">(</span><span class="n">geojson_filename</span><span class="p">)</span>
 
+    <span class="c1"># these defaults may have been updated from config options -- pass them</span>
+    <span class="c1"># along to the subprocess</span>
+    <span class="n">netcdf_format</span> <span class="o">=</span> <span class="n">mpas_tools</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">default_format</span>
+    <span class="n">netcdf_engine</span> <span class="o">=</span> <span class="n">mpas_tools</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">default_engine</span>
+
     <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;compute_mpas_region_masks&#39;</span><span class="p">,</span>
             <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="n">mesh_filename</span><span class="p">,</span>
             <span class="s1">&#39;-g&#39;</span><span class="p">,</span> <span class="n">geojson_filename</span><span class="p">,</span>
             <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="n">mask_filename</span><span class="p">,</span>
             <span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;cell&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cores</span><span class="p">)]</span>
+            <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cores</span><span class="p">),</span>
+            <span class="s1">&#39;--format&#39;</span><span class="p">,</span> <span class="n">netcdf_format</span><span class="p">,</span>
+            <span class="s1">&#39;--engine&#39;</span><span class="p">,</span> <span class="n">netcdf_engine</span><span class="p">]</span>
     <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
     <span class="n">mask_and_transect_filename</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_mocBasinsAndTransects</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>

@@ -204,6 +204,7 @@
     <span class="n">read_feature_collection</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.mesh.conversion</span> <span class="kn">import</span> <span class="n">cull</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.mesh.mask</span> <span class="kn">import</span> <span class="n">compute_mpas_flood_fill_mask</span>
+<span class="kn">import</span> <span class="nn">mpas_tools.io</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.ocean.coastline_alteration</span> <span class="kn">import</span> <span class="n">widen_transect_edge_masks</span><span class="p">,</span> \
     <span class="n">add_critical_land_blockages</span><span class="p">,</span> <span class="n">add_land_locked_cells_to_mask</span>
@@ -289,9 +290,6 @@
                             <span class="n">process_count</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Cull the mesh once the logger is defined for sure &quot;&quot;&quot;</span>
 
-    <span class="c1"># required for compatibility with MPAS</span>
-    <span class="n">netcdf_format</span> <span class="o">=</span> <span class="s1">&#39;NETCDF3_64BIT&#39;</span>
-
     <span class="n">critical_passages</span> <span class="o">=</span> <span class="n">with_critical_passages</span> <span class="ow">or</span> \
         <span class="p">(</span><span class="n">custom_critical_passages</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span>
 
@@ -328,13 +326,20 @@
     <span class="c1"># save the feature collection to a geojson file</span>
     <span class="n">fcLandCoverage</span><span class="o">.</span><span class="n">to_geojson</span><span class="p">(</span><span class="s1">&#39;land_coverage.geojson&#39;</span><span class="p">)</span>
 
+    <span class="c1"># these defaults may have been updated from config options -- pass them</span>
+    <span class="c1"># along to the subprocess</span>
+    <span class="n">netcdf_format</span> <span class="o">=</span> <span class="n">mpas_tools</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">default_format</span>
+    <span class="n">netcdf_engine</span> <span class="o">=</span> <span class="n">mpas_tools</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">default_engine</span>
+
     <span class="c1"># Create the land mask based on the land coverage, i.e. coastline data</span>
     <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;compute_mpas_region_masks&#39;</span><span class="p">,</span>
             <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">,</span>
             <span class="s1">&#39;-g&#39;</span><span class="p">,</span> <span class="s1">&#39;land_coverage.geojson&#39;</span><span class="p">,</span>
             <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;land_mask.nc&#39;</span><span class="p">,</span>
             <span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;cell&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">process_count</span><span class="p">)]</span>
+            <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">process_count</span><span class="p">),</span>
+            <span class="s1">&#39;--format&#39;</span><span class="p">,</span> <span class="n">netcdf_format</span><span class="p">,</span>
+            <span class="s1">&#39;--engine&#39;</span><span class="p">,</span> <span class="n">netcdf_engine</span><span class="p">]</span>
     <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
     <span class="n">dsBaseMesh</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">)</span>
@@ -371,7 +376,9 @@
                 <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;critical_blockages.nc&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;cell&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="s1">&#39;10e3&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">process_count</span><span class="p">)]</span>
+                <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">process_count</span><span class="p">),</span>
+                <span class="s1">&#39;--format&#39;</span><span class="p">,</span> <span class="n">netcdf_format</span><span class="p">,</span>
+                <span class="s1">&#39;--engine&#39;</span><span class="p">,</span> <span class="n">netcdf_engine</span><span class="p">]</span>
         <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
         <span class="n">dsCritBlockMask</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;critical_blockages.nc&#39;</span><span class="p">)</span>
 
@@ -399,7 +406,9 @@
                 <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;critical_passages.nc&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;cell&#39;</span><span class="p">,</span> <span class="s1">&#39;edge&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="s1">&#39;10e3&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">process_count</span><span class="p">)]</span>
+                <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">process_count</span><span class="p">),</span>
+                <span class="s1">&#39;--format&#39;</span><span class="p">,</span> <span class="n">netcdf_format</span><span class="p">,</span>
+                <span class="s1">&#39;--engine&#39;</span><span class="p">,</span> <span class="n">netcdf_engine</span><span class="p">]</span>
         <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
         <span class="n">dsCritPassMask</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;critical_passages.nc&#39;</span><span class="p">)</span>
 
@@ -425,7 +434,7 @@
     <span class="c1"># cull the mesh a second time using a flood fill from the seed points</span>
     <span class="n">dsCulledMesh</span> <span class="o">=</span> <span class="n">cull</span><span class="p">(</span><span class="n">dsCulledMesh</span><span class="p">,</span> <span class="n">dsInverse</span><span class="o">=</span><span class="n">dsSeedMask</span><span class="p">,</span>
                         <span class="n">graphInfoFileName</span><span class="o">=</span><span class="s1">&#39;culled_graph.info&#39;</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
-    <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsCulledMesh</span><span class="p">,</span> <span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="n">netcdf_format</span><span class="p">)</span>
+    <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsCulledMesh</span><span class="p">,</span> <span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">critical_passages</span><span class="p">:</span>
         <span class="c1"># make a new version of the critical passages mask on the culled mesh</span>
@@ -436,7 +445,9 @@
                 <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;critical_passages_mask_final.nc&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;cell&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="s1">&#39;10e3&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">process_count</span><span class="p">)]</span>
+                <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">process_count</span><span class="p">),</span>
+                <span class="s1">&#39;--format&#39;</span><span class="p">,</span> <span class="n">netcdf_format</span><span class="p">,</span>
+                <span class="s1">&#39;--engine&#39;</span><span class="p">,</span> <span class="n">netcdf_engine</span><span class="p">]</span>
         <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">with_cavities</span><span class="p">:</span>
@@ -450,7 +461,9 @@
                 <span class="s1">&#39;-g&#39;</span><span class="p">,</span> <span class="s1">&#39;ice_coverage.geojson&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;ice_coverage.nc&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;cell&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">process_count</span><span class="p">)]</span>
+                <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">process_count</span><span class="p">),</span>
+                <span class="s1">&#39;--format&#39;</span><span class="p">,</span> <span class="n">netcdf_format</span><span class="p">,</span>
+                <span class="s1">&#39;--engine&#39;</span><span class="p">,</span> <span class="n">netcdf_engine</span><span class="p">]</span>
         <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
         <span class="n">dsMask</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;ice_coverage.nc&#39;</span><span class="p">)</span>
 
@@ -458,11 +471,10 @@
         <span class="n">dsLandIceMask</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
         <span class="n">dsLandIceMask</span><span class="p">[</span><span class="s1">&#39;landIceMask&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">landIceMask</span>
 
-        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsLandIceMask</span><span class="p">,</span> <span class="s1">&#39;land_ice_mask.nc&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="n">netcdf_format</span><span class="p">)</span>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsLandIceMask</span><span class="p">,</span> <span class="s1">&#39;land_ice_mask.nc&#39;</span><span class="p">)</span>
 
         <span class="n">dsLandIceCulledMesh</span> <span class="o">=</span> <span class="n">cull</span><span class="p">(</span><span class="n">dsCulledMesh</span><span class="p">,</span> <span class="n">dsMask</span><span class="o">=</span><span class="n">dsMask</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
-        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsLandIceCulledMesh</span><span class="p">,</span> <span class="s1">&#39;no_ISC_culled_mesh.nc&#39;</span><span class="p">,</span>
-                     <span class="nb">format</span><span class="o">=</span><span class="n">netcdf_format</span><span class="p">)</span>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsLandIceCulledMesh</span><span class="p">,</span> <span class="s1">&#39;no_ISC_culled_mesh.nc&#39;</span><span class="p">)</span>
 
     <span class="n">extract_vtk</span><span class="p">(</span><span class="n">ignore_time</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dimension_list</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;maxEdges=&#39;</span><span class="p">],</span>
                 <span class="n">variable_list</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;allOnCells&#39;</span><span class="p">],</span>
