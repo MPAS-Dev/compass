@@ -73,17 +73,21 @@ class PerformanceTest(ForwardTestCase):
             compare_variables(test_case=self, variables=variables,
                               filename1=f'{step_subdir}/output.nc')
 
-            if self.config.has_option('vertical_grid', 'inactive_top_cells'):
-                offset = self.config.getint('vertical_grid', 'inactive_top_cells')
-                if offset > 0:
-                    remove_inactive_top_cells_output('forward/output.nc',
-                                                     inactive_top_cells=offset)
-                    filename2=None
-                    if os.path.exists('forward/output_comp.nc'):
-                        filename2='forward/output_comp.nc'
+            if self.init.with_inactive_top_cells:
+                # construct the work directory for the other test
+                subdir = get_forward_subdir(self.init.inactive_top_comp_subdir,
+                                            self.time_integrator, self.name)
+                filename2 = os.path.join(self.base_work_dir, self.mpas_core.name,
+                                         self.test_group.name, subdir,
+                                         'forward/output.nc')
+                if os.path.exists(filename2):
                     compare_variables(test_case=self, variables=variables,
                                       filename1='forward/output_crop.nc',
                                       filename2=filename2)
+                else:
+                    self.logger.warn('The version of "performance_test" without '
+                                     'inactive top cells was not run.\n'
+                                     'Skipping validation.')
 
             if self.mesh.with_ice_shelf_cavities:
                 variables = [

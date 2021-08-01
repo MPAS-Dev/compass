@@ -100,12 +100,24 @@ class Init(TestCase):
                           filename1='initial_state/initial_state.nc')
 
         if self.with_inactive_top_cells:
-            variables = [
-                'temperature', 'salinity', 'layerThickness', 'normalVelocity']
-            compare_variables(test_case=self, variables=variables,
-                              filename1='initial_state/initial_state_crop.nc',
-                              filename2='initial_state/initial_state_comp.nc',
-                              quiet=False, check_outputs=False)
+            # construct the work directory for the other test
+            filename2 = os.path.join(self.base_work_dir, self.mpas_core.name,
+                                     self.test_group.name,
+                                     self.inactive_top_comp_subdir,
+                                     'init/initial_state/initial_state.nc')
+            if os.path.exists(filename2):
+                variables = ['temperature', 'salinity', 'layerThickness',
+                             'normalVelocity']
+                compare_variables(test_case=self, variables=variables,
+                                  filename1='initial_state/initial_state_crop.nc'
+                                  filename2=filename2,
+                                  quiet=False, check_outputs=False,
+                                  skip_if_step_not_run=False)
+
+            else:
+                self.logger.warn('The version of "init" without inactive top '
+                                 'cells was not run.  Skipping\n'
+                                 'validation.')
 
         if self.mesh.with_ice_shelf_cavities:
             variables = ['ssh', 'landIcePressure']
