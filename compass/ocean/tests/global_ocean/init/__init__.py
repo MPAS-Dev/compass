@@ -24,6 +24,11 @@ class Init(TestCase):
     init_subdir : str
         The subdirectory within the test group for all test cases with this
         initial condition
+
+    inactive_top_comp_subdir : str
+        If ``with_inactive_top_cells == True``, the subdirectory equivalent to
+        ``init_subdir`` for test cases without inactive top cells for use for
+        validation between tests with and without inactive top cells
     """
     def __init__(self, test_group, mesh, initial_condition,
                  with_inactive_top_cells=False):
@@ -46,6 +51,9 @@ class Init(TestCase):
         ic_dir = initial_condition
         init_subdir = os.path.join(mesh_name, ic_dir)
         if with_inactive_top_cells:
+            # Add the name of the subdir without inactive top cells whether or
+            # not is has or will be run
+            self.inactive_top_comp_subdir = init_subdir
             init_subdir = os.path.join(init_subdir, inactive_top)
         self.init_subdir = init_subdir
         subdir = os.path.join(self.init_subdir, name)

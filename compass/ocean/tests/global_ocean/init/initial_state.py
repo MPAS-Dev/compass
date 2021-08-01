@@ -1,17 +1,17 @@
 import os
 from importlib.resources import contents
+
 import xarray
+from mpas_tools.io import write_netcdf
 
 from compass.model import run_model
+from compass.ocean.inactive_top_cells import remove_inactive_top_cells_output
 from compass.ocean.plot import plot_initial_state, plot_vertical_grid
 from compass.ocean.tests.global_ocean.metadata import (
     add_mesh_and_init_metadata,
 )
-from compass.ocean.inactive_top_cells import remove_inactive_top_cells_output
 from compass.ocean.vertical.grid_1d import generate_1d_grid, write_1d_grid
 from compass.step import Step
-
-from mpas_tools.io import write_netcdf
 
 
 class InitialState(Step):
@@ -27,7 +27,7 @@ class InitialState(Step):
     initial_condition : {'WOA23', 'PHC', 'EN4_1900'}
         The initial condition dataset to use
     """
-    def __init__(self, test_case, mesh, initial_condition, 
+    def __init__(self, test_case, mesh, initial_condition,
                  with_inactive_top_cells):
         """
         Create the step
@@ -188,7 +188,7 @@ class InitialState(Step):
 
         update_pio = config.getboolean('global_ocean', 'init_update_pio')
         run_model(self, update_pio=update_pio)
- 
+
         if self.with_inactive_top_cells:
 
             logger.info("   * Updating minLevelCell for inactive top cells")
@@ -197,26 +197,32 @@ class InitialState(Step):
             out_filename = in_filename
 
             with xarray.open_dataset(in_filename) as ds:
+                ds.load()
 
                 # keep the data set with Time for output
                 ds_out = ds
 
                 ds = ds.isel(Time=0)
 
-                if ('minLevelCell' in ds):
-                    if config.has_option('vertical_grid', 
-                                         'inactive_top_cells'):
-                        offset = config.getint('vertical_grid', 
-                                               'inactive_top_cells')
-                    minLevelCell = ds.minLevelCell+offset
+                if config.has_option('vertical_grid', 'inactive_top_cells'):
+                    offset = config.getint('vertical_grid',
+                                           'inactive_top_cells')
+                else:
+                    offset = 0
+
+                if 'minLevelCell' in ds:
+                    minLevelCell = ds.minLevelCell + offset
                     ds_out['minLevelCell'] = minLevelCell
                 else:
-                    logger.info("   - Streams missing for inactive top cells")
-
-            remove_inactive_top_cells_output(in_filename, 
-                                             inactive_top_cells=offset)
+                    logger.info("   - Variable minLevelCell, needed for "
+                                "inactive top cells, is missing from the "
+                                "initial condition")
 
             write_netcdf(ds_out, out_filename)
+
+            remove_inactive_top_cells_output(
+                in_filename=in_filename, out_filename='initial_state_crop.nc')
+
             logger.info("   - Complete")
 
         add_mesh_and_init_metadata(self.outputs, config,
