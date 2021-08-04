@@ -99,6 +99,19 @@ from individual steps are stored in log files ``<step>.log`` in the test case's
 work directory.  The results of validation (if any) are displayed in the final
 stage of running the test case.
 
+.. _dev_cache:
+
+cache module
+~~~~~~~~~~~~
+
+The :py:func:`compass.cache.update_cache()` function is used by
+``compass cache`` to copy step outputs to the ``compass_cache`` database on
+the LCRC server and to update ``<mpas_core>_cached_files.json`` files that
+contain a mapping between these cached files and the original outputs.  This
+functionality enables running steps with :ref:`dev_step_cached_output`, which
+can be used to skip time-consuming initialization steps for faster development
+and debugging.
+
 .. _dev_config:
 
 Config files

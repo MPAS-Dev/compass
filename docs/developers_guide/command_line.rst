@@ -276,3 +276,57 @@ Would both accomplish the same thing in this example -- skipping the
     over the config option.
 
 See :ref:`dev_run` for more about the underlying framework.
+
+.. _dev_compass_cache:
+
+compass cache
+-------------
+
+``compass`` supports caching outputs from any step in a special database
+called ``compass_cache`` (see :ref:`dev_step_input_download`). Files in this
+database have a directory structure similar to the work directory (but without
+the MPAS core subdirectory, which is redundant). The files include a date stamp
+so that new revisions can be added without removing older ones (supported by
+older compass versions).  See :ref:`dev_step_cached_output` for more details.
+
+A new command, ``compass cache`` has been added to aid in updating the file
+``cached_files.json`` within an MPAS core.  This command is only available on
+Anvil and Chrysalis, since developers can only copy files from a compass work
+directory onto the LCRC server from these two machines.  Developers run
+``compass cache`` from the base work directory, giving the relative paths of
+the step whose outputs should be cached:
+
+.. code-block:: bash
+
+    compass cache -i ocean/global_ocean/QU240/mesh/mesh \
+        ocean/global_ocean/QU240/PHC/init/initial_state
+
+This will:
+
+1. copy the output files from the steps directories into the appropriate
+   ``compass_cache`` location on the LCRC server and
+
+2. add these files to a local ``ocean_cached_files.json`` that can then be
+   copied to ``compass/ocean`` as part of a PR to add a cached version of a
+   step.
+
+The resulting ``ocean_cached_files.json`` will look something like:
+
+.. code-block:: json
+
+    {
+        "ocean/global_ocean/QU240/mesh/mesh/culled_mesh.nc": "global_ocean/QU240/mesh/mesh/culled_mesh.210803.nc",
+        "ocean/global_ocean/QU240/mesh/mesh/culled_graph.info": "global_ocean/QU240/mesh/mesh/culled_graph.210803.info",
+        "ocean/global_ocean/QU240/mesh/mesh/critical_passages_mask_final.nc": "global_ocean/QU240/mesh/mesh/critical_passages_mask_final.210803.nc",
+        "ocean/global_ocean/QU240/PHC/init/initial_state/initial_state.nc": "global_ocean/QU240/PHC/init/initial_state/initial_state.210803.nc",
+        "ocean/global_ocean/QU240/PHC/init/initial_state/init_mode_forcing_data.nc": "global_ocean/QU240/PHC/init/initial_state/init_mode_forcing_data.210803.nc"
+    }
+
+An optional flag ``--date_string`` lets the developer set the date string to
+a date they choose.  The default is today's date.
+
+The flag ``--dry_run`` can be used to sanity check the resulting ``json`` file
+and the list of files printed to stdout without actually copying the files to
+the LCRC server.
+
+See :ref:`dev_cache` for more about the underlying framework.
