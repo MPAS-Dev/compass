@@ -105,7 +105,14 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Quick Start for Developers</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#set-up-a-compass-repository-for-beginners">Set up a compass repository: for beginners</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#compass-conda-environment-compilers-and-system-modules">compass conda environment, compilers and system modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#compass-conda-environment-compilers-and-system-modules">compass conda environment, compilers and system modules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#supported-machines">Supported machines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#unknown-machines">Unknown machines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#what-the-script-does">What the script does</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#activating-the-environment">Activating the environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#creating-updating-only-the-compass-environment">Creating/updating only the compass environment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#building-mpas-components">Building MPAS components</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#running-compass-from-the-repo">Running compass from the repo</a></li>
@@ -223,26 +230,23 @@ the compass repository.</p>
 for compass and a development installation of <code class="docutils literal notranslate"><span class="pre">compass</span></code> from the branch
 you’re working on.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">conda</span></code> directory in the repository has a tool <code class="docutils literal notranslate"><span class="pre">configure_compass_env.py</span></code>
-that can get you started.  If you are on one of the <a class="reference internal" href="machines/index.html#dev-supported-machines"><span class="std std-ref">Supported Machines</span></a>,
-run:</p>
+that can get you started.</p>
+<p>Whether you are on one of the <a class="reference internal" href="machines/index.html#dev-supported-machines"><span class="std std-ref">Supported Machines</span></a> or an “unknown”
+machine, you will need to specify a path where
+<a class="reference external" href="https://docs.conda.io/en/latest/miniconda.html">Miniconda3</a> either has
+already been installed or where the script can install it.  You must have write
+permission in the base environment, so do not use a shared conda environment
+as the base environment.</p>
+<div class="section" id="supported-machines">
+<h3>Supported machines<a class="headerlink" href="#supported-machines" title="Permalink to this headline">¶</a></h3>
+<p>If you are on one of the <a class="reference internal" href="machines/index.html#dev-supported-machines"><span class="std std-ref">Supported Machines</span></a>, run:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./conda/configure_compass_env.py --conda &lt;conda_path&gt; -c &lt;compiler&gt;
 </pre></div>
 </div>
-<p>If your are on an “unknown” machine, typically a Mac or Linux laptop or
-workstation, you will need to specify which flavor of MPI you want to use
-(<code class="docutils literal notranslate"><span class="pre">mpich</span></code> or <code class="docutils literal notranslate"><span class="pre">openmpi</span></code>):</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./conda/configure_compass_env.py --conda &lt;conda_path&gt; --mpi &lt;mpi&gt;
-</pre></div>
-</div>
-<p>We only support one set of compilers for Mac and Linux, so there is no need to
-specify them.  See <a class="reference internal" href="machines/index.html#dev-other-machines"><span class="std std-ref">Other Machines</span></a> for more details.</p>
-<p>In addition, unknown machines require a config file to be specified when setting
-up the compass test environment.  A config file can be specified using
-<code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">&lt;filename&gt;</span></code>.  More information, including example config files, can be found
-in <a class="reference internal" href="../users_guide/config_files.html#config-files"><span class="std std-ref">Config Files</span></a>.</p>
-<p>If you don’t have <a class="reference external" href="https://docs.conda.io/en/latest/miniconda.html">Miniconda3</a>
-installed in <code class="docutils literal notranslate"><span class="pre">&lt;conda_path&gt;</span></code>, it will be downloaded and installed for you in
-this location. If you already have it installed, that path will be used to add
+<p>The <code class="docutils literal notranslate"><span class="pre">&lt;conda_path&gt;</span></code> is typically <code class="docutils literal notranslate"><span class="pre">~/miniconda3</span></code>.  This is the location
+where you would like to install Miniconda3 or where it is already installed.
+If you have limited space in your home directory, you may want to give another
+path.  If you already have it installed, that path will be used to add
 (or update) the compass test environment.</p>
 <p>See the machine under <a class="reference internal" href="machines/index.html#dev-supported-machines"><span class="std std-ref">Supported Machines</span></a> for a list of available
 compilers to pass to <code class="docutils literal notranslate"><span class="pre">-c</span></code>.  If you don’t supply a compiler, you will get
@@ -254,6 +258,28 @@ you need to.</p>
 machine you are on.  You can supply the machine name with <code class="docutils literal notranslate"><span class="pre">-m</span> <span class="pre">&lt;machine&gt;</span></code> if
 you run into trouble with the automatic recognition (e.g. if you’re setting
 up the environment on a compute node, which is not recommended).</p>
+</div>
+<div class="section" id="unknown-machines">
+<h3>Unknown machines<a class="headerlink" href="#unknown-machines" title="Permalink to this headline">¶</a></h3>
+<p>If your are on an “unknown” machine, typically a Mac or Linux laptop or
+workstation, you will need to specify which flavor of MPI you want to use
+(<code class="docutils literal notranslate"><span class="pre">mpich</span></code> or <code class="docutils literal notranslate"><span class="pre">openmpi</span></code>):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./conda/configure_compass_env.py --conda &lt;conda_path&gt; --mpi &lt;mpi&gt;
+</pre></div>
+</div>
+<p>Again, the <code class="docutils literal notranslate"><span class="pre">&lt;conda_path&gt;</span></code> is typically <code class="docutils literal notranslate"><span class="pre">~/miniconda3</span></code>, and is the location
+where you would like to install Miniconda3 or where it is already installed.
+If you already have it installed, that path will be used to add (or update) the
+compass test environment.</p>
+<p>We only support one set of compilers for Mac and Linux, so there is no need to
+specify them.  See <a class="reference internal" href="machines/index.html#dev-other-machines"><span class="std std-ref">Other Machines</span></a> for more details.</p>
+<p>In addition, unknown machines require a config file to be specified when setting
+up the compass test environment.  A config file can be specified using
+<code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">&lt;filename&gt;</span></code>.  More information, including example config files, can be found
+in <a class="reference internal" href="../users_guide/config_files.html#config-files"><span class="std std-ref">Config Files</span></a>.</p>
+</div>
+<div class="section" id="what-the-script-does">
+<h3>What the script does<a class="headerlink" href="#what-the-script-does" title="Permalink to this headline">¶</a></h3>
 <p>In addition to installing Miniconda and creating the conda environment for you,
 this script will also:</p>
 <ul class="simple">
@@ -275,6 +301,9 @@ and <code class="docutils literal notranslate"><span class="pre">mpi</span></cod
 <li><p>optionally (with the <code class="docutils literal notranslate"><span class="pre">--check</span></code> flag), run some tests to make sure some of
 the expected packages are available.</p></li>
 </ul>
+</div>
+<div class="section" id="activating-the-environment">
+<h3>Activating the environment<a class="headerlink" href="#activating-the-environment" title="Permalink to this headline">¶</a></h3>
 <p>Each time you want to work with compass, you will need to run:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> ./load_dev_compass_&lt;version&gt;_&lt;machine&gt;_&lt;compiler&gt;_&lt;mpi&gt;.sh
 </pre></div>
@@ -285,12 +314,10 @@ set environment variables needed for MPAS or <code class="docutils literal notra
 environment variable <code class="docutils literal notranslate"><span class="pre">LOAD_COMPASS_ENV</span></code> that points to the activation script.
 <code class="docutils literal notranslate"><span class="pre">compass</span></code> uses this to make an symlink to the activation script called
 <code class="docutils literal notranslate"><span class="pre">load_compass_env.sh</span></code> in the work directory.</p>
-<p>If you switch to another branch, you will need to rerun:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./conda/configure_compass_env.py --conda &lt;conda_path&gt; -c &lt;compiler&gt;
-</pre></div>
-</div>
-<p>to make sure dependencies are up to date and the <code class="docutils literal notranslate"><span class="pre">compass</span></code> package points
-to the current directory.</p>
+<p>If you switch to another branch, you will need to rerun
+<code class="docutils literal notranslate"><span class="pre">./conda/configure_compass_env.py</span></code> with the same arguments as above to make
+sure dependencies are up to date and the <code class="docutils literal notranslate"><span class="pre">compass</span></code> package points to the
+current directory.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>With the conda environment activated, you can switch branches and update
@@ -298,10 +325,11 @@ just the <code class="docutils literal notranslate"><span class="pre">compass</s
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m pip install -e .
 </pre></div>
 </div>
-<p>This will be substantially faster than rerunning
-<code class="docutils literal notranslate"><span class="pre">./conda/configure_compass_env.py</span> <span class="pre">...</span></code> but at the risk that dependencies are
-not up-to-date.  Since dependencies change fairly rarely, this will usually
-be safe.</p>
+<p>The activation script will do this automatically when you source it in
+the root directory of your compass branch.  This is substantially faster
+than rerunning <code class="docutils literal notranslate"><span class="pre">./conda/configure_compass_env.py</span> <span class="pre">...</span></code> but risks
+dependencies being out of date.  Since dependencies change fairly rarely,
+this will usually be safe.</p>
 </div>
 <p>If you wish to work with another compiler, simply rerun the script with a new
 compiler name and an activation script will be produced.  You can then source
@@ -309,6 +337,9 @@ either activation script to get the same conda environment but with different
 compilers and related modules.  Make sure you are careful to set up compass by
 pointing to a version of the MPAS model that was compiled with the correct
 compiler.</p>
+</div>
+<div class="section" id="troubleshooting">
+<h3>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h3>
 <p>If you run into trouble with the environment or just want a clean start, you
 can run:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./conda/configure_compass_env.py --conda &lt;conda_path&gt; -c &lt;compiler&gt; --recreate
@@ -324,6 +355,7 @@ than the default (<code class="docutils literal notranslate"><span class="pre">l
 (<code class="docutils literal notranslate"><span class="pre">mpich</span></code> or <code class="docutils literal notranslate"><span class="pre">openmpi</span></code>) with the <code class="docutils literal notranslate"><span class="pre">--mpi</span></code> flag.  The compilers are
 automatically <code class="docutils literal notranslate"><span class="pre">gnu</span></code> for Linux and <code class="docutils literal notranslate"><span class="pre">clang</span></code> (with <code class="docutils literal notranslate"><span class="pre">gfortran</span></code>) for OSX, so
 you do not need to specify those.</p>
+</div>
 </div>
 <div class="section" id="creating-updating-only-the-compass-environment">
 <span id="dev-creating-only-env"></span><h2>Creating/updating only the compass environment<a class="headerlink" href="#creating-updating-only-the-compass-environment" title="Permalink to this headline">¶</a></h2>

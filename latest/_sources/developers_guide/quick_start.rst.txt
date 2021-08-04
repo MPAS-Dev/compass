@@ -30,32 +30,28 @@ for compass and a development installation of ``compass`` from the branch
 you're working on.
 
 The ``conda`` directory in the repository has a tool ``configure_compass_env.py``
-that can get you started.  If you are on one of the :ref:`dev_supported_machines`,
-run:
+that can get you started.
+
+Whether you are on one of the :ref:`dev_supported_machines` or an "unknown"
+machine, you will need to specify a path where
+`Miniconda3 <https://docs.conda.io/en/latest/miniconda.html>`_ either has
+already been installed or where the script can install it.  You must have write
+permission in the base environment, so do not use a shared conda environment
+as the base environment.
+
+Supported machines
+~~~~~~~~~~~~~~~~~~
+
+If you are on one of the :ref:`dev_supported_machines`, run:
 
 .. code-block:: bash
 
   ./conda/configure_compass_env.py --conda <conda_path> -c <compiler>
 
-If your are on an "unknown" machine, typically a Mac or Linux laptop or
-workstation, you will need to specify which flavor of MPI you want to use
-(``mpich`` or ``openmpi``):
-
-.. code-block:: bash
-
-  ./conda/configure_compass_env.py --conda <conda_path> --mpi <mpi>
-
-We only support one set of compilers for Mac and Linux, so there is no need to
-specify them.  See :ref:`dev_other_machines` for more details.
-
-In addition, unknown machines require a config file to be specified when setting
-up the compass test environment.  A config file can be specified using
-``-f <filename>``.  More information, including example config files, can be found
-in :ref:`config_files`.
-
-If you don't have `Miniconda3 <https://docs.conda.io/en/latest/miniconda.html>`_
-installed in ``<conda_path>``, it will be downloaded and installed for you in
-this location. If you already have it installed, that path will be used to add
+The ``<conda_path>`` is typically ``~/miniconda3``.  This is the location
+where you would like to install Miniconda3 or where it is already installed.
+If you have limited space in your home directory, you may want to give another
+path.  If you already have it installed, that path will be used to add
 (or update) the compass test environment.
 
 See the machine under :ref:`dev_supported_machines` for a list of available
@@ -69,6 +65,33 @@ If you are on a login node, the script should automatically recognize what
 machine you are on.  You can supply the machine name with ``-m <machine>`` if
 you run into trouble with the automatic recognition (e.g. if you're setting
 up the environment on a compute node, which is not recommended).
+
+Unknown machines
+~~~~~~~~~~~~~~~~
+
+If your are on an "unknown" machine, typically a Mac or Linux laptop or
+workstation, you will need to specify which flavor of MPI you want to use
+(``mpich`` or ``openmpi``):
+
+.. code-block:: bash
+
+  ./conda/configure_compass_env.py --conda <conda_path> --mpi <mpi>
+
+Again, the ``<conda_path>`` is typically ``~/miniconda3``, and is the location
+where you would like to install Miniconda3 or where it is already installed.
+If you already have it installed, that path will be used to add (or update) the
+compass test environment.
+
+We only support one set of compilers for Mac and Linux, so there is no need to
+specify them.  See :ref:`dev_other_machines` for more details.
+
+In addition, unknown machines require a config file to be specified when setting
+up the compass test environment.  A config file can be specified using
+``-f <filename>``.  More information, including example config files, can be found
+in :ref:`config_files`.
+
+What the script does
+~~~~~~~~~~~~~~~~~~~~
 
 In addition to installing Miniconda and creating the conda environment for you,
 this script will also:
@@ -95,6 +118,9 @@ this script will also:
 * optionally (with the ``--check`` flag), run some tests to make sure some of
   the expected packages are available.
 
+Activating the environment
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 Each time you want to work with compass, you will need to run:
 
 .. code-block:: bash
@@ -108,14 +134,10 @@ environment variable ``LOAD_COMPASS_ENV`` that points to the activation script.
 ``compass`` uses this to make an symlink to the activation script called
 ``load_compass_env.sh`` in the work directory.
 
-If you switch to another branch, you will need to rerun:
-
-.. code-block:: bash
-
-    ./conda/configure_compass_env.py --conda <conda_path> -c <compiler>
-
-to make sure dependencies are up to date and the ``compass`` package points
-to the current directory.
+If you switch to another branch, you will need to rerun
+``./conda/configure_compass_env.py`` with the same arguments as above to make
+sure dependencies are up to date and the ``compass`` package points to the
+current directory.
 
 .. note::
 
@@ -126,10 +148,11 @@ to the current directory.
 
         python -m pip install -e .
 
-    This will be substantially faster than rerunning
-    ``./conda/configure_compass_env.py ...`` but at the risk that dependencies are
-    not up-to-date.  Since dependencies change fairly rarely, this will usually
-    be safe.
+    The activation script will do this automatically when you source it in
+    the root directory of your compass branch.  This is substantially faster
+    than rerunning ``./conda/configure_compass_env.py ...`` but risks
+    dependencies being out of date.  Since dependencies change fairly rarely,
+    this will usually be safe.
 
 If you wish to work with another compiler, simply rerun the script with a new
 compiler name and an activation script will be produced.  You can then source
@@ -137,6 +160,9 @@ either activation script to get the same conda environment but with different
 compilers and related modules.  Make sure you are careful to set up compass by
 pointing to a version of the MPAS model that was compiled with the correct
 compiler.
+
+Troubleshooting
+~~~~~~~~~~~~~~~
 
 If you run into trouble with the environment or just want a clean start, you
 can run:
