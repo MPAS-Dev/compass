@@ -82,8 +82,9 @@ where you would like to install Miniconda3 or where it is already installed.
 If you already have it installed, that path will be used to add (or update) the
 compass test environment.
 
-We only support one set of compilers for Mac and Linux, so there is no need to
-specify them.  See :ref:`dev_other_machines` for more details.
+We only support one set of compilers for Mac and Linux (``gnu`` for Linux and
+``clang`` with ``gfortran`` for Mac), so there is no need to specify them.
+See :ref:`dev_other_machines` for more details.
 
 In addition, unknown machines require a config file to be specified when setting
 up the compass test environment.  A config file can be specified using
@@ -117,6 +118,20 @@ this script will also:
 
 * optionally (with the ``--check`` flag), run some tests to make sure some of
   the expected packages are available.
+
+Optional flags
+~~~~~~~~~~~~~~
+
+``--check``
+    Check to make sure expected commands are present
+
+``--python``
+    Select a particular python version (the default is currently 3.8)
+
+``--env-name``
+    Set the name of the environment (and the prefix for the activation script)
+    to something other than the default (``dev_compass_<version>`` or
+    ``dev_compass_<version>_<mpi>``).
 
 Activating the environment
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -173,16 +188,6 @@ can run:
 
 The ``--recreate`` flag will delete the conda environment and create it from
 scratch.  This takes just a little extra time.
-
-You can check to make sure expected commands are present with ``--check``, you
-can select a particular python version with ``--python``, you can set the name
-of the environment (and the prefix for the activation script) something other
-than the default (``load_dev_compass_<version>``) with ``--env-name``.
-
-If you are not on a supported machine, you need to choose your MPI type
-(``mpich`` or ``openmpi``) with the ``--mpi`` flag.  The compilers are
-automatically ``gnu`` for Linux and ``clang`` (with ``gfortran``) for OSX, so
-you do not need to specify those.
 
 .. _dev_creating_only_env:
 
