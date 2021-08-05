@@ -7,10 +7,9 @@ from mpas_tools.mesh.conversion import convert, cull
 
 from compass.ocean.vertical import init_vertical_coord
 from compass.step import Step
-from compass.model import run_model
 
 
-class Init(Step):
+class InitialState(Step):
     """
     A step for creating a mesh and initial condition for internal wave test
     cases
@@ -24,18 +23,17 @@ class Init(Step):
         test_case : compass.ocean.tests.internal_wave.default.Default
             The test case this step belongs to
         """
-        super().__init__(test_case=test_case, name='init', cores=1,
+        super().__init__(test_case=test_case, name='initial_state', cores=1,
                          min_cores=1, threads=1)
 
-        self.add_namelist_file('compass.ocean.tests.internal_wave.default',
-                               'namelist.init', mode='init')
+        self.add_namelist_file('compass.ocean.tests.internal_wave',
+                               'namelist.init')
 
-        self.add_streams_file('compass.ocean.tests.internal_wave.default',
-                              'streams.init', mode='init')
+        self.add_streams_file('compass.ocean.tests.internal_wave',
+                              'streams.init')
 
-        self.add_model_as_input()
-
-        for file in ['mesh.nc', 'graph.info', 'ocean.nc']:
+        for file in ['base_mesh.nc', 'culled_mesh.nc', 'culled_graph.info',
+                     'ocean.nc']:
             self.add_output_file(file)
 
     def run(self):
@@ -44,6 +42,13 @@ class Init(Step):
         """
         config = self.config
         logger = self.logger
+
+        replacements = dict()
+        replacements['config_periodic_planar_vert_levels'] = \
+            config.getfloat('vertical_grid', 'vert_levels')
+        replacements['config_periodic_planar_bottom_depth'] = \
+            config.getfloat('vertical_grid', 'bottom_depth')
+        self.update_namelist_at_runtime(options=replacements)
 
         section = config['vertical_grid']
         vert_levels = section.getint('vert_levels')
@@ -63,34 +68,23 @@ class Init(Step):
 
         logger.info(' * Make planar hex mesh')
         dsMesh = make_planar_hex_mesh(nx=nx, ny=ny, dc=dc, nonperiodic_x=False,
-                                      nonperiodic_y=False)
+                                      nonperiodic_y=True)
         logger.info(' * Completed Make planar hex mesh')
-        write_netcdf(dsMesh, 'grid.nc')
+        write_netcdf(dsMesh, 'base_mesh.nc')
 
         logger.info(' * Cull mesh')
         dsMesh = cull(dsMesh, logger=logger)
         logger.info(' * Convert mesh')
-        dsMesh = convert(dsMesh, graphInfoFileName='graph.info',
+        dsMesh = convert(dsMesh, graphInfoFileName='culled_graph.info',
                          logger=logger)
         logger.info(' * Completed Convert mesh')
-        write_netcdf(dsMesh, 'mesh.nc')
-
-        replacements = dict()
-        replacements['config_periodic_planar_vert_levels'] = \
-            config.get('vertical_grid', 'vert_levels')
-        replacements['config_periodic_planar_bottom_depth'] = \
-            config.get('vertical_grid', 'bottom_depth')
-        self.update_namelist_at_runtime(options=replacements)
+        write_netcdf(dsMesh, 'culled_mesh.nc')
 
         ds = dsMesh.copy()
-        xCell = ds.xCell
         yCell = ds.yCell
 
-        print(numpy.max(yCell) - numpy.min(yCell))
-        print(vert_levels)
-
-        ds['bottomDepth'] = bottom_depth * xarray.ones_like(xCell)
-        ds['ssh'] = xarray.zeros_like(xCell)
+        ds['bottomDepth'] = bottom_depth * xarray.ones_like(yCell)
+        ds['ssh'] = xarray.zeros_like(yCell)
 
         init_vertical_coord(config, ds)
 
@@ -102,14 +96,12 @@ class Init(Step):
         if use_distances:
             perturbation_width = amplitude_width_dist
         else:
-            perturbation_width =  ny * dc * amplitude_width_frac
+            perturbation_width =  (yMax - yMin) * amplitude_width_frac
 
         # Set stratified temperature
         temp_vert = (bottom_temperature +
                      (surface_temperature - bottom_temperature) *
                      ((ds.refZMid + bottom_depth) / bottom_depth))
-        print(ds['refZMid'])
-        print(temp_vert)
 
         depth_frac = xarray.zeros_like(temp_vert)
         refBottomDepth = ds['refBottomDepth']
@@ -118,16 +110,14 @@ class Init(Step):
 
         # If cell is in the southern half, outside the sin width, subtract 
         # temperature difference
-        frac = xarray.where(yCell < yMid - perturbation_width,
+        frac = xarray.where( numpy.abs(yCell - yMid) < perturbation_width,
                             numpy.cos(0.5 * numpy.pi * (yCell - yMid)
                                       / perturbation_width)
                             * numpy.sin(numpy.pi * depth_frac), 
                             0.)
 
         temperature = temp_vert - temperature_difference * frac
-
         temperature = temperature.transpose('nCells', 'nVertLevels')
-
         temperature = temperature.expand_dims(dim='Time', axis=0)
 
         normalVelocity = xarray.zeros_like(ds.xEdge)
@@ -138,10 +128,5 @@ class Init(Step):
         ds['temperature'] = temperature
         ds['salinity'] = salinity * xarray.ones_like(temperature)
         ds['normalVelocity'] = normalVelocity
-        print(ds['temperature'])
 
         write_netcdf(ds, 'ocean.nc')
-
-        logger.info(' * Run model')
-        run_model(self)
-        logger.info(' * Completed Run model')

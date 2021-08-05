@@ -1,6 +1,6 @@
 from compass.testcase import TestCase
-from compass.ocean.tests.internal_wave.default.init import Init
-from compass.ocean.tests.internal_wave.default.forward import Forward
+from compass.ocean.tests.internal_wave.initial_state import InitialState
+from compass.ocean.tests.internal_wave.forward import Forward
 from compass.ocean.tests.internal_wave.viz import Viz
 from compass.validate import compare_variables
 
@@ -20,9 +20,9 @@ class Default(TestCase):
             The test group that this test case belongs to
         """
         super().__init__(test_group=test_group, name='default')
-        self.add_step(Init(test_case=self))
-        self.add_step(Viz(test_case=self), run_by_default=False)
+        self.add_step(InitialState(test_case=self))
         self.add_step(Forward(test_case=self))
+        self.add_step(Viz(test_case=self), run_by_default=False)
 
     def validate(self):
         """
