@@ -107,7 +107,6 @@
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="command_line.html">Command-line interface</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Organization of Tests</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#directory-structure">Directory structure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#mpas-cores">MPAS Cores</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#test-groups">Test Groups</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#test-cases">Test cases</a><ul>
@@ -234,48 +233,13 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="figure align-right" id="id5" style="width: 50%">
-<a class="reference internal image-reference" href="../_images/org_in_package.png"><img alt="../_images/org_in_package.png" src="../_images/org_in_package.png" style="width: 311px;" /></a>
-<p class="caption"><span class="caption-text">Figure 1: The organization of MPAS cores (green), test groups (blue), test
-cases (orange) and steps (red) in the <code class="docutils literal notranslate"><span class="pre">compass</span></code> package.</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
-</div>
-<div class="section" id="organization-of-tests">
+  <div class="section" id="organization-of-tests">
 <span id="dev-organization"></span><h1>Organization of Tests<a class="headerlink" href="#organization-of-tests" title="Permalink to this headline">¶</a></h1>
 <p>Here, we describe how tests in <code class="docutils literal notranslate"><span class="pre">compass</span></code> are organized, both in the package
 itself and in the work directories where they get set up and run.  At the base
 level are MPAS Cores (<a class="reference internal" href="landice/index.html#dev-landice"><span class="std std-ref">Landice core</span></a> or <a class="reference internal" href="ocean/index.html#dev-ocean"><span class="std std-ref">Ocean core</span></a>).  Each MPAS core
 has collection of test groups, which has a collection of test cases, each of
 which contains a sequence of steps.</p>
-<div class="section" id="directory-structure">
-<h2>Directory structure<a class="headerlink" href="#directory-structure" title="Permalink to this headline">¶</a></h2>
-<p>In the <code class="docutils literal notranslate"><span class="pre">compass</span></code> package within a local clone of the compass repository,
-MPAS cores, test groups, test cases and steps are laid out like shown in Fig 1.</p>
-<p>Each MPAS core has its directory with the <code class="docutils literal notranslate"><span class="pre">compass</span></code> package directory. Among
-other contents of the MPAS core’s directory is a <code class="docutils literal notranslate"><span class="pre">tests</span></code> directory that
-contains all of the test groups.  Each test group contains directories for
-the test cases and typically also python modules that define the shared steps.
-Any steps that are specific to a test case would have a module within that
-test case’s directory.</p>
-<p>More details on each of these organizational concepts – <a class="reference internal" href="#dev-cores"><span class="std std-ref">MPAS Cores</span></a>,
-<a class="reference internal" href="#dev-test-groups"><span class="std std-ref">Test Groups</span></a>, <a class="reference internal" href="#dev-test-cases"><span class="std std-ref">Test cases</span></a>, and <a class="reference internal" href="#dev-steps"><span class="std std-ref">Steps</span></a> – are
-provided below.</p>
-<p>The organization of the work directory similar but not quite the same as in the
-<code class="docutils literal notranslate"><span class="pre">compass</span></code> package, as shown in Fig. 2.</p>
-<div class="figure align-right" id="id6" style="width: 50%">
-<a class="reference internal image-reference" href="../_images/org_in_work_dir.png"><img alt="../_images/org_in_work_dir.png" src="../_images/org_in_work_dir.png" style="width: 283px;" /></a>
-<p class="caption"><span class="caption-text">Figure 2: The organization of MPAS cores (green), test groups (blue), test
-cases (orange) and steps (red) in an example work directory.</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
-</div>
-<p>At the top level are directories for the MPAS cores.  There is no <code class="docutils literal notranslate"><span class="pre">tests</span></code>
-subdirectory in this case – the test groups are directly within the MPAS
-core’s directory.  The organization of test cases within a test group can
-include many additional subdirectories that help sort different versions of
-the test cases.  In the examples shown above, each test case is in a
-subdirectory indicating the resolution of the mesh used in the test case.
-Finally, steps are in subdirectories of each test case.  In some cases,
-additional subdirectories are used to sort steps within a test case (e.g. if
-the same step will be run at different mesh resolutions in a convergence test).</p>
-</div>
 <div class="section" id="mpas-cores">
 <span id="dev-cores"></span><h2>MPAS Cores<a class="headerlink" href="#mpas-cores" title="Permalink to this headline">¶</a></h2>
 <p>Currently, there are two MPAS cores, <code class="docutils literal notranslate"><span class="pre">landice</span></code>, which has test cases for

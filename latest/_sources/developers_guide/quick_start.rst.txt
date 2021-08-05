@@ -36,23 +36,8 @@ Whether you are on one of the :ref:`dev_supported_machines` or an "unknown"
 machine, you will need to specify a path where
 `Miniconda3 <https://docs.conda.io/en/latest/miniconda.html>`_ either has
 already been installed or where the script can install it.  You must have write
-permission in the base environment.
-
-.. note::
-
-    It is *very* important that you not use a shared installation of Miniconda3
-    such as the base environment for E3SM-Unified for ``compass`` development.
-    Most developers will not have write access to shared environments, meaning
-    that you will get write-permission errors when you try to update the base
-    environment or create the compass development environment.
-
-    For anyone who does have write permission to a shared environment, you
-    would be creating your compass development environment in a shared space,
-    which could cause confusion.
-
-    Please use your own personal installation of Miniconda3 for development,
-    letting ``configure_compass_env.py`` download and install Miniconda3 for
-    you if you don't already have it installed.
+permission in the base environment, so do not use a shared conda environment
+as the base environment.
 
 Supported machines
 ~~~~~~~~~~~~~~~~~~

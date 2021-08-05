@@ -1,11 +1,3 @@
-.. figure:: images/org_in_package.png
-   :width: 311 px
-   :align: right
-   :figwidth: 50 %
-
-   Figure 1: The organization of MPAS cores (green), test groups (blue), test
-   cases (orange) and steps (red) in the ``compass`` package.
-
 .. _dev_organization:
 
 Organization of Tests
@@ -16,45 +8,6 @@ itself and in the work directories where they get set up and run.  At the base
 level are MPAS Cores (:ref:`dev_landice` or :ref:`dev_ocean`).  Each MPAS core
 has collection of test groups, which has a collection of test cases, each of
 which contains a sequence of steps.
-
-Directory structure
--------------------
-
-In the ``compass`` package within a local clone of the compass repository,
-MPAS cores, test groups, test cases and steps are laid out like shown in Fig 1.
-
-Each MPAS core has its directory with the ``compass`` package directory. Among
-other contents of the MPAS core's directory is a ``tests`` directory that
-contains all of the test groups.  Each test group contains directories for
-the test cases and typically also python modules that define the shared steps.
-Any steps that are specific to a test case would have a module within that
-test case's directory.
-
-
-More details on each of these organizational concepts -- :ref:`dev_cores`,
-:ref:`dev_test_groups`, :ref:`dev_test_cases`, and :ref:`dev_steps` -- are
-provided below.
-
-The organization of the work directory similar but not quite the same as in the
-``compass`` package, as shown in Fig. 2.
-
-.. figure:: images/org_in_work_dir.png
-   :width: 283 px
-   :align: right
-   :figwidth: 50 %
-
-   Figure 2: The organization of MPAS cores (green), test groups (blue), test
-   cases (orange) and steps (red) in an example work directory.
-
-At the top level are directories for the MPAS cores.  There is no ``tests``
-subdirectory in this case -- the test groups are directly within the MPAS
-core's directory.  The organization of test cases within a test group can
-include many additional subdirectories that help sort different versions of
-the test cases.  In the examples shown above, each test case is in a
-subdirectory indicating the resolution of the mesh used in the test case.
-Finally, steps are in subdirectories of each test case.  In some cases,
-additional subdirectories are used to sort steps within a test case (e.g. if
-the same step will be run at different mesh resolutions in a convergence test).
 
 .. _dev_cores:
 
