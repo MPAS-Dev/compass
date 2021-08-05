@@ -238,7 +238,7 @@ def build_env(is_test, recreate, machine, compiler, mpi, conda_mpi, version,
     if is_test:
         spec_file = template.render(mpi=conda_mpi, mpi_prefix=mpi_prefix)
 
-        spec_filename = f'spec-file-{conda_mpi}.txt'
+        spec_filename = 'spec-file-{}.txt'.format(conda_mpi)
         with open(spec_filename, 'w') as handle:
             handle.write(spec_file)
     else:
@@ -249,9 +249,10 @@ def build_env(is_test, recreate, machine, compiler, mpi, conda_mpi, version,
         if is_test:
             # install dev dependencies and compass itself
             commands = \
-                f'{activate_base}; ' \
-                f'mamba create -y -n {env_name} {channels} ' \
-                f'--file {spec_filename} {packages}'
+                '{}; ' \
+                'mamba create -y -n {} {} ' \
+                '--file {} {}'.format(activate_base, env_name, channels,
+                                      spec_filename, packages)
             check_call(commands)
 
             commands = \
@@ -271,9 +272,10 @@ def build_env(is_test, recreate, machine, compiler, mpi, conda_mpi, version,
             print('updating {}'.format(env_name))
             # install dev dependencies and compass itself
             commands = \
-                f'{activate_base}; ' \
-                f'mamba install -y -n {env_name} {channels} ' \
-                f'--file {spec_filename} {packages}'
+                '{}; ' \
+                'mamba install -y -n {} {} ' \
+                '--file {} {}'.format(activate_base, env_name, channels,
+                                      spec_filename, packages)
             check_call(commands)
 
             commands = \
