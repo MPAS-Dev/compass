@@ -8,5 +8,6 @@ Design Documents
    :titlesonly:
 
    compass_package
+   cached_outputs
 
    template
