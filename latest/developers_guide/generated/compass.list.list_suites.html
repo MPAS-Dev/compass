@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>compass.setup.setup_cases &mdash; compass latest documentation</title>
+  <title>compass.list.list_suites &mdash; compass latest documentation</title>
   
 
   
@@ -41,8 +41,8 @@
     
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="compass.setup.setup_case" href="compass.setup.setup_case.html" />
-    <link rel="prev" title="compass.list.list_suites" href="compass.list.list_suites.html" /> 
+    <link rel="next" title="compass.setup.setup_cases" href="compass.setup.setup_cases.html" />
+    <link rel="prev" title="compass.list.list_machines" href="compass.list.list_machines.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -119,8 +119,8 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../api.html#compass-framework">compass framework</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="../api.html#command-line-interface">Command-line interface</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="compass.__main__.main.html">compass.__main__.main</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api.html#list">list</a></li>
-<li class="toctree-l4 current"><a class="reference internal" href="../api.html#setup">setup</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../api.html#list">list</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api.html#setup">setup</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api.html#clean">clean</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api.html#suite">suite</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api.html#run">run</a></li>
@@ -203,13 +203,13 @@
         
           <li><a href="../api.html">API reference</a> &raquo;</li>
         
-      <li>compass.setup.setup_cases</li>
+      <li>compass.list.list_suites</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../../_sources/developers_guide/generated/compass.setup.setup_cases.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/developers_guide/generated/compass.list.list_suites.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -222,33 +222,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="compass-setup-setup-cases">
-<h1>compass.setup.setup_cases<a class="headerlink" href="#compass-setup-setup-cases" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="compass-list-list-suites">
+<h1>compass.list.list_suites<a class="headerlink" href="#compass-list-list-suites" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="compass.setup.setup_cases">
-<span class="sig-prename descclassname"><span class="pre">compass.setup.</span></span><span class="sig-name descname"><span class="pre">setup_cases</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tests</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numbers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">machine</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">work_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">baseline_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpas_model_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compass/setup.html#setup_cases"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.setup.setup_cases" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set up one or more test cases</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>tests</strong> (<em>list of str</em><em>, </em><em>optional</em>) – Relative paths for a test cases to set up</p></li>
-<li><p><strong>numbers</strong> (<em>list of int</em><em>, </em><em>optional</em>) – Case numbers to setup, as listed from <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">list</span></code></p></li>
-<li><p><strong>config_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Configuration file with custom options for setting up and running test
-cases</p></li>
-<li><p><strong>machine</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – The name of one of the machines with defined config options, which can
-be listed with <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">list</span> <span class="pre">--machines</span></code></p></li>
-<li><p><strong>work_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – A directory that will serve as the base for creating case directories</p></li>
-<li><p><strong>baseline_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – Location of baseslines that can be compared to</p></li>
-<li><p><strong>mpas_model_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – The relative or absolute path to the root of a branch where the MPAS
-model has been built</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>test_cases</strong> (<em>dict of compass.TestCase</em>) – A dictionary of test cases, with the relative path in the work
-directory as keys</p>
-</dd>
-</dl>
-</dd></dl>
+<dt class="sig sig-object py" id="compass.list.list_suites">
+<span class="sig-prename descclassname"><span class="pre">compass.list.</span></span><span class="sig-name descname"><span class="pre">list_suites</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cores</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compass/list.html#list_suites"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.list.list_suites" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </div>
 
@@ -258,8 +237,8 @@ directory as keys</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="compass.setup.setup_case.html" class="btn btn-neutral float-right" title="compass.setup.setup_case" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="compass.list.list_suites.html" class="btn btn-neutral float-left" title="compass.list.list_suites" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="compass.setup.setup_cases.html" class="btn btn-neutral float-right" title="compass.setup.setup_cases" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="compass.list.list_machines.html" class="btn btn-neutral float-left" title="compass.list.list_machines" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

@@ -1,0 +1,712 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Caching outputs from compass steps &mdash; compass latest documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Template" href="template.html" />
+    <link rel="prev" title="compass python package" href="compass_package.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> compass
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                latest
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Design Documents</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="compass_package.html">compass python package</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Caching outputs from compass steps</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#requirements">Requirements</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#requirement-cached-outputs">Requirement: cached outputs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#requirement-selecting-whether-to-use-cached-outputs">Requirement: selecting whether to use cached outputs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#requirement-updating-cached-outputs">Requirement: updating cached outputs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#requirement-unique-identifier-for-cached-outputs">Requirement: unique identifier for cached outputs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#requirement-either-normal-or-cached-versions-of-a-step">Requirement: either “normal” or “cached” versions of a step</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#design">Design</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#design-cached-outputs">Design: cached outputs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#design-selecting-whether-to-use-cached-outputs">Design: selecting whether to use cached outputs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#design-updating-cached-outputs">Design: updating cached outputs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#design-unique-identifier-for-cached-outputs">Design: unique identifier for cached outputs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#design-either-normal-or-cached-versions-of-a-step">Design: either “normal” or “cached” versions of a step</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#implementation">Implementation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#implementation-cached-outputs">Implementation: cached outputs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation-selecting-whether-to-use-cached-outputs">Implementation: selecting whether to use cached outputs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation-updating-cached-outputs">Implementation: updating cached outputs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation-unique-identifier-for-cached-outputs">Implementation: unique identifier for cached outputs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation-either-normal-or-cached-versions-of-a-step">Implementation: either “normal” or “cached” versions of a step</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#testing">Testing</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#testing-cached-outputs">Testing: cached outputs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#testing-selecting-whether-to-use-cached-outputs">Testing: selecting whether to use cached outputs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#testing-updating-cached-outputs">Testing: updating cached outputs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#testing-unique-identifier-for-cached-outputs">Testing: unique identifier for cached outputs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#testing-either-normal-or-cached-versions-of-a-step">Testing: either “normal” or “cached” versions of a step</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="template.html">Template</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">compass</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Design Documents</a> &raquo;</li>
+        
+      <li>Caching outputs from compass steps</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/design_docs/cached_outputs.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="caching-outputs-from-compass-steps">
+<span id="design-doc-cached-outputs"></span><h1>Caching outputs from compass steps<a class="headerlink" href="#caching-outputs-from-compass-steps" title="Permalink to this headline">¶</a></h1>
+<p>Date: 2021/07/30</p>
+<p>Contributors: Xylar Asay-Davis</p>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>We would like to have a way to download output files for <code class="docutils literal notranslate"><span class="pre">compass</span></code> steps from
+an online cache instead of generating them each time the step runs.  The
+primary motivation for this is to optionally avoid time-consuming steps for
+generating meshes and initial conditions for faster regression testing with
+MPAS components in “forward” mode.  Potential other uses could include cached
+results as baselines for validation.  A challenge for this capability is
+providing an easy way for both developers and users to control which steps in a
+test case or suite are cached and which are run as normal.</p>
+</div>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="requirement-cached-outputs">
+<span id="req-cached"></span><h3>Requirement: cached outputs<a class="headerlink" href="#requirement-cached-outputs" title="Permalink to this headline">¶</a></h3>
+<p>Date last modified: 2021/07/30</p>
+<p>Contributors: Xylar Asay-Davis</p>
+<p>Each <code class="docutils literal notranslate"><span class="pre">compass</span></code> step defines its output files in the <code class="docutils literal notranslate"><span class="pre">compass.Step.outputs</span></code>
+attribute. For selected steps (see <a class="reference internal" href="#req-select"><span class="std std-ref">Requirement: selecting whether to use cached outputs</span></a>), we require a mechanism
+to download cached files for each of these outputs and to use these cached
+files for the outputs of the step instead of computing them.</p>
+</div>
+<div class="section" id="requirement-selecting-whether-to-use-cached-outputs">
+<span id="req-select"></span><h3>Requirement: selecting whether to use cached outputs<a class="headerlink" href="#requirement-selecting-whether-to-use-cached-outputs" title="Permalink to this headline">¶</a></h3>
+<p>Date last modified: 2021/07/30</p>
+<p>Contributors: Xylar Asay-Davis</p>
+<p>There needs to be a mechanism for developers and users to select which steps
+are run as normal and which use cached outputs.  For this mechanism to be
+practical, it should not be overly tedious or manual (e.g. manually setting a
+flag for each step).</p>
+</div>
+<div class="section" id="requirement-updating-cached-outputs">
+<span id="req-update"></span><h3>Requirement: updating cached outputs<a class="headerlink" href="#requirement-updating-cached-outputs" title="Permalink to this headline">¶</a></h3>
+<p>Date last modified: 2021/07/30</p>
+<p>Contributors: Xylar Asay-Davis</p>
+<p>There should be a documented process for creating cached outputs for steps and
+uploading them.</p>
+</div>
+<div class="section" id="requirement-unique-identifier-for-cached-outputs">
+<span id="req-unique"></span><h3>Requirement: unique identifier for cached outputs<a class="headerlink" href="#requirement-unique-identifier-for-cached-outputs" title="Permalink to this headline">¶</a></h3>
+<p>Date last modified: 2021/07/30</p>
+<p>Contributors: Xylar Asay-Davis</p>
+<p>There should be a mechanism for giving each cached output file a unique
+identifier (such as a date stamp).  A given version (git hash or release) of
+<code class="docutils literal notranslate"><span class="pre">compass</span></code> should know which cached files to download.  Older cached files
+should be retained so that older versions of <code class="docutils literal notranslate"><span class="pre">compass</span></code> can still be used
+with these cached files.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It may be worthwhile to include a process for deprecating and then deleting
+old cache files.</p>
+</div>
+</div>
+<div class="section" id="requirement-either-normal-or-cached-versions-of-a-step">
+<span id="req-normal-or-cached"></span><h3>Requirement: either “normal” or “cached” versions of a step<a class="headerlink" href="#requirement-either-normal-or-cached-versions-of-a-step" title="Permalink to this headline">¶</a></h3>
+<p>Date last modified: 2021/07/30</p>
+<p>Contributors: Xylar Asay-Davis</p>
+<p>We <strong>do not</strong> require the ability to set up a “normal” and a “cached” version
+of the same step within a <code class="docutils literal notranslate"><span class="pre">compass</span></code> test case or suite.  (If this is not the
+case, it would place important constraints on the design solution.)</p>
+</div>
+</div>
+<div class="section" id="design">
+<h2>Design<a class="headerlink" href="#design" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="design-cached-outputs">
+<span id="des-cached"></span><h3>Design: cached outputs<a class="headerlink" href="#design-cached-outputs" title="Permalink to this headline">¶</a></h3>
+<p>Date last modified: 2021/07/30</p>
+<p>Contributors: Xylar Asay-Davis</p>
+<p><code class="docutils literal notranslate"><span class="pre">compass</span></code> supports “databases” of input data files on the E3SM
+<a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/">LCRC server</a>.
+Files will be stored in a new <code class="docutils literal notranslate"><span class="pre">compass_cache</span></code> database within each MPAS
+core’s space on that server.  If the “cached” version of a step is selected
+(see <a class="reference internal" href="#des-select"><span class="std std-ref">Design: selecting whether to use cached outputs</span></a>), an appropriate “input” file will be added to the test
+case where the “target” is the file on the LCRC server to be cached locally for
+future use and the “filename” is the output file.  <code class="docutils literal notranslate"><span class="pre">compass</span></code> will know which
+files on the server correspond to which output files via a python dictionary,
+as described in <a class="reference internal" href="#des-unique"><span class="std std-ref">Design: unique identifier for cached outputs</span></a>.</p>
+</div>
+<div class="section" id="design-selecting-whether-to-use-cached-outputs">
+<span id="des-select"></span><h3>Design: selecting whether to use cached outputs<a class="headerlink" href="#design-selecting-whether-to-use-cached-outputs" title="Permalink to this headline">¶</a></h3>
+<p>Date last modified: 2021/08/03</p>
+<p>Contributors: Xylar Asay-Davis</p>
+<p>A <code class="docutils literal notranslate"><span class="pre">compass</span></code> suite can indicate cached steps in two ways.  If all steps in a
+test case should have cached output, the following notation is used:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ocean/global_ocean/QU240/mesh
+    cached
+ocean/global_ocean/QU240/PHC/init
+    cached
+</pre></div>
+</div>
+<p>If only some steps in a test case should have cached output, they need to be
+listed explicitly, as follows:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ocean/global_ocean/QU240/mesh
+    cached: mesh
+ocean/global_ocean/QU240/PHC/init
+    cached: initial_state
+</pre></div>
+</div>
+<p>Similarly, a user setting up test cases has two mechanisms for specifying which
+test cases and steps should have cached outputs.  If all steps in a test case
+should have cached outputs, the suffix <code class="docutils literal notranslate"><span class="pre">c</span></code> can be added to the test number:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>compass setup -n 90c 91c 92 ...
+</pre></div>
+</div>
+<p>This approach is efficient but does not provide any control of which steps use
+cached outputs and which do not.</p>
+<p>A much more verbose approach is required if some steps use cached outputs and
+others do not within a given test case.  Each test case must be set up on its
+own with the <code class="docutils literal notranslate"><span class="pre">-t</span></code> and <code class="docutils literal notranslate"><span class="pre">--cached</span></code> flags as follows:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>compass setup -t ocean/global_ocean/QU240/mesh --cached mesh ...
+compass setup -t ocean/global_ocean/QU240/PHC/init --cached initial_state ...
+...
+</pre></div>
+</div>
+<p>These approaches assume that we always have either the “normal” or the “cached”
+version of a step within a test case or test suite (see
+<a class="reference internal" href="#des-normal-or-cached"><span class="std std-ref">Design: either “normal” or “cached” versions of a step</span></a>) and developers or users are free to choose between
+them, as long as cache files have been stored on the LCRC server and added to
+the <code class="docutils literal notranslate"><span class="pre">cached_files.json</span></code> database.</p>
+</div>
+<div class="section" id="design-updating-cached-outputs">
+<span id="des-update"></span><h3>Design: updating cached outputs<a class="headerlink" href="#design-updating-cached-outputs" title="Permalink to this headline">¶</a></h3>
+<p>Date last modified: 2021/08/03</p>
+<p>Contributors: Xylar Asay-Davis</p>
+<p>A new <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">cache</span></code> command-line tool will be added.  This will only be
+available on Chrysalis and Anvil, the machines where files can be placed on the
+LCRC server.  This command can be run on a work directory to copy the outputs
+from selected steps into the appropriate directory on the LCRC server, and to
+create or update a python dictionary in a file <code class="docutils literal notranslate"><span class="pre">cached_files.json</span></code> (see
+<a class="reference internal" href="#des-unique"><span class="std std-ref">Design: unique identifier for cached outputs</span></a>) that maps between output files in the work directory and
+those on the LCRC server.  For example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass cache -i <span class="se">\</span>
+    ocean/global_ocean/QU240/mesh/mesh <span class="se">\</span>
+    ocean/global_ocean/QU240/PHC/init/initial_state
+</pre></div>
+</div>
+</div>
+<div class="section" id="design-unique-identifier-for-cached-outputs">
+<span id="des-unique"></span><h3>Design: unique identifier for cached outputs<a class="headerlink" href="#design-unique-identifier-for-cached-outputs" title="Permalink to this headline">¶</a></h3>
+<p>Date last modified: 2021/08/03</p>
+<p>Contributors: Xylar Asay-Davis</p>
+<p>Each cached file on the LCRC server will include a date stamp in the file name.
+For example, <code class="docutils literal notranslate"><span class="pre">culled_mesh.nc</span></code> will become <code class="docutils literal notranslate"><span class="pre">culled_mesh.20210730.nc</span></code> on the
+server.  When <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">cache</span></code> is called (see <a class="reference internal" href="#des-update"><span class="std std-ref">Design: updating cached outputs</span></a>), the date
+stamp will default to the date that the call is being made but can be
+overridden with a flag (e.g. <code class="docutils literal notranslate"><span class="pre">--date</span> <span class="pre">20210730</span></code>).</p>
+<p>Each MPAS core in <code class="docutils literal notranslate"><span class="pre">compass</span></code> will optionally include a file
+<code class="docutils literal notranslate"><span class="pre">cached_files.json</span></code> that contains a python dictionary mapping between the
+names of output files in the work directory and those in the <code class="docutils literal notranslate"><span class="pre">compass_cache</span></code>
+database for that MPAS core on the LCRC server.  For example:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;ocean/global_ocean/QU240/mesh/mesh/culled_mesh.nc&quot;</span><span class="p">:</span> <span class="s2">&quot;global_ocean/QU240/mesh/mesh/culled_mesh.210803.nc&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;ocean/global_ocean/QU240/mesh/mesh/culled_graph.info&quot;</span><span class="p">:</span> <span class="s2">&quot;global_ocean/QU240/mesh/mesh/culled_graph.210803.info&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;ocean/global_ocean/QU240/mesh/mesh/critical_passages_mask_final.nc&quot;</span><span class="p">:</span> <span class="s2">&quot;global_ocean/QU240/mesh/mesh/critical_passages_mask_final.210803.nc&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;ocean/global_ocean/QU240/PHC/init/initial_state/initial_state.nc&quot;</span><span class="p">:</span> <span class="s2">&quot;global_ocean/QU240/PHC/init/initial_state/initial_state.210803.nc&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;ocean/global_ocean/QU240/PHC/init/initial_state/init_mode_forcing_data.nc&quot;</span><span class="p">:</span> <span class="s2">&quot;global_ocean/QU240/PHC/init/initial_state/init_mode_forcing_data.210803.nc&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="design-either-normal-or-cached-versions-of-a-step">
+<span id="des-normal-or-cached"></span><h3>Design: either “normal” or “cached” versions of a step<a class="headerlink" href="#design-either-normal-or-cached-versions-of-a-step" title="Permalink to this headline">¶</a></h3>
+<p>Date last modified: 2021/07/30</p>
+<p>Contributors: Xylar Asay-Davis</p>
+<p>A prototype implementation of output caching had separate versions of test
+cases that included cached outputs or depended on earlier test cases with
+cached outputs.  This approach turned out to be very cumbersome.  It added
+many “new” test cases with unique subdirectories in the work directory and
+required predetermining which steps should allow caching.  But this approach
+<em>did</em> allow a test suite to include a “normal” version of a step and a “cached”
+version of that same step in the same work directory (and therefore in the same
+test suite).</p>
+<p>The proposed design, described in the previous sections, would allow far more
+flexibility about which steps are cached and which are not.  It is not clear
+to me how we achieve this flexibility without requiring that a given step
+either be set up as “normal” or “cached”, and not both in the same work
+directory.</p>
+</div>
+</div>
+<div class="section" id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<p>The implementation is on
+<a class="reference external" href="https://github.com/xylar/compass/tree/cached_init">this branch</a>.</p>
+<div class="section" id="implementation-cached-outputs">
+<span id="imp-cached"></span><h3>Implementation: cached outputs<a class="headerlink" href="#implementation-cached-outputs" title="Permalink to this headline">¶</a></h3>
+<p>Date last modified: 2021/08/04</p>
+<p>Contributors: Xylar Asay-Davis</p>
+<p>Each step has a boolean attribute <code class="docutils literal notranslate"><span class="pre">cached</span></code> that defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code> but
+which can be set to <code class="docutils literal notranslate"><span class="pre">True</span></code> by a process described in <a class="reference internal" href="#imp-select"><span class="std std-ref">Implementation: selecting whether to use cached outputs</span></a>.  If
+<code class="docutils literal notranslate"><span class="pre">cached</span> <span class="pre">==</span> <span class="pre">True</span></code>, when inputs and outputs are being processes, the usual
+inputs are ignored and instead the outputs are added as inputs.  Targets in the
+<code class="docutils literal notranslate"><span class="pre">compass_cache</span></code> database are selected using the dictionary stored in the
+MPAS core’s <code class="docutils literal notranslate"><span class="pre">cached_files.json</span></code>.  Namelists and steams files are also not
+generated.</p>
+</div>
+<div class="section" id="implementation-selecting-whether-to-use-cached-outputs">
+<span id="imp-select"></span><h3>Implementation: selecting whether to use cached outputs<a class="headerlink" href="#implementation-selecting-whether-to-use-cached-outputs" title="Permalink to this headline">¶</a></h3>
+<p>Date last modified: 2021/08/04</p>
+<p>Contributors: Xylar Asay-Davis</p>
+<p>The implementation includes the two mechanisms for selecting cached outputs
+described in <a class="reference internal" href="#des-select"><span class="std std-ref">Design: selecting whether to use cached outputs</span></a>.</p>
+<p>When setting up a test suites, a new list of lists called <code class="docutils literal notranslate"><span class="pre">cached</span></code> is created
+along with the list of test-case paths.  By default, all test cases have an
+empty list of steps with cached outputs.  Any line in a test suite file that is
+<code class="docutils literal notranslate"><span class="pre">cached</span></code> (once white space is stripped away) will indicate that all steps in
+that test case should use cached outputs.  This is accomplished by adding a
+special “step” named <code class="docutils literal notranslate"><span class="pre">_all</span></code> as the first step in the list for the given test
+case.  If a line of the test suite file starts with <code class="docutils literal notranslate"><span class="pre">cached:</span></code> (after
+stripping away white space), the remainder of the line is a space-separated
+list of step names that should be set up with cached outputs.  These steps
+are appended to the list of cached steps for the test case.  If a test case has
+many steps with cached outputs, it may be convenient to have multiple lines
+starting with <code class="docutils literal notranslate"><span class="pre">cached:</span></code>, as in this example.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ocean/global_convergence/cosine_bell
+  cached: QU60_mesh QU60_init QU90_mesh QU90_init QU120_mesh QU120_init
+  cached: QU150_mesh QU150_init QU180_mesh QU180_init QU210_mesh QU210_init
+  cached: QU240_mesh QU240_init
+</pre></div>
+</div>
+<p>If a user is setting up individual test cases, they can indicate that all the
+steps in a test case should have cached inputs with the suffix <code class="docutils literal notranslate"><span class="pre">c</span></code> after the
+test number.  While there is also a flag <code class="docutils literal notranslate"><span class="pre">--cached</span></code> that can be used to list
+steps of a single test case to use from cached outputs, this feature is likely
+to be too cumbersome to be broadly useful.  Instead, developers should probably
+create a test suite for test cases where users are likely to want some steps
+with and others without cached outputs, as in the Cosine Bell example above.</p>
+</div>
+<div class="section" id="implementation-updating-cached-outputs">
+<span id="imp-update"></span><h3>Implementation: updating cached outputs<a class="headerlink" href="#implementation-updating-cached-outputs" title="Permalink to this headline">¶</a></h3>
+<p>Date last modified: 2021/08/04</p>
+<p>Contributors: Xylar Asay-Davis</p>
+<p>The new <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">cache</span></code> command has been added and is defined in the
+<code class="docutils literal notranslate"><span class="pre">compass.cache</span></code> module.  It takes a list of step paths as input and optional
+flags <code class="docutils literal notranslate"><span class="pre">--dry_run</span></code> (which doesn’t copy the files to the directory on the LCRC
+server) and <code class="docutils literal notranslate"><span class="pre">--date_string</span></code>, which lets a user supply a date stamp (YYMMDD)
+other than today’s date.</p>
+<p>As stated in the design, the command is only available on Chrysalis and Anvil
+and should be run on a work directory.  To support caching files from multiple
+MPAS cores at the same time, <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">cache</span></code> produces an updated database
+file <code class="docutils literal notranslate"><span class="pre">&lt;mpas_core&gt;_cached_files.json</span></code> in the base of the work directory where
+the command is run.  If this file already exists before <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">cache</span></code> is
+run, the information for the specified steps will be added if it is not yet
+in the database or will be updated, e.g. with new date stamps, if it does
+exist.  If no <code class="docutils literal notranslate"><span class="pre">&lt;mpas_core&gt;_cached_files.json</span></code> exists, the file
+<code class="docutils literal notranslate"><span class="pre">cached_files.json</span></code> from the python module <code class="docutils literal notranslate"><span class="pre">compass.&lt;mpas_core&gt;</span></code> is used as
+the starting point instead.  If this file also doesn’t exist, we start with an
+empty dictionary.</p>
+<p>As an example, yesterday (8/3/2021) when I made the following call:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> mesh <span class="k">in</span> QU60 QU90 QU120 QU150 QU180 QU210 QU240
+<span class="k">do</span>
+  <span class="k">for</span> step <span class="k">in</span> mesh init
+  <span class="k">do</span>
+    compass cache -i ocean/global_convergence/cosine_bell/<span class="si">${</span><span class="nv">mesh</span><span class="si">}</span>/<span class="si">${</span><span class="nv">step</span><span class="si">}</span>
+  <span class="k">done</span>
+<span class="k">done</span>
+</pre></div>
+</div>
+<p>the result was a cache file <code class="docutils literal notranslate"><span class="pre">ocean_cached_files.json</span></code> like this:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span>{
+    &quot;ocean/global_convergence/cosine_bell/QU60/mesh/mesh.nc&quot;: &quot;global_convergence/cosine_bell/QU60/mesh/mesh.210803.nc&quot;,
+    &quot;ocean/global_convergence/cosine_bell/QU60/mesh/graph.info&quot;: &quot;global_convergence/cosine_bell/QU60/mesh/graph.210803.info&quot;,
+    &quot;ocean/global_convergence/cosine_bell/QU60/init/namelist.ocean&quot;: &quot;global_convergence/cosine_bell/QU60/init/namelist.210803.ocean&quot;,
+    &quot;ocean/global_convergence/cosine_bell/QU60/init/initial_state.nc&quot;: &quot;global_convergence/cosine_bell/QU60/init/initial_state.210803.nc&quot;,
+    &quot;ocean/global_convergence/cosine_bell/QU90/mesh/mesh.nc&quot;: &quot;global_convergence/cosine_bell/QU90/mesh/mesh.210803.nc&quot;,
+    &quot;ocean/global_convergence/cosine_bell/QU90/mesh/graph.info&quot;: &quot;global_convergence/cosine_bell/QU90/mesh/graph.210803.info&quot;,
+    &quot;ocean/global_convergence/cosine_bell/QU90/init/namelist.ocean&quot;: &quot;global_convergence/cosine_bell/QU90/init/namelist.210803.ocean&quot;,
+    &quot;ocean/global_convergence/cosine_bell/QU90/init/initial_state.nc&quot;: &quot;global_convergence/cosine_bell/QU90/init/initial_state.210803.nc&quot;,
+    ...
+}
+</pre></div>
+</div>
+<p>This file should be copied back to <code class="docutils literal notranslate"><span class="pre">compass/ocean/cached_files.json</span></code> in
+a branch of the compass repo, committed to the branch, and updated on
+<code class="docutils literal notranslate"><span class="pre">master</span></code> with a pull request as normal.</p>
+</div>
+<div class="section" id="implementation-unique-identifier-for-cached-outputs">
+<span id="imp-unique"></span><h3>Implementation: unique identifier for cached outputs<a class="headerlink" href="#implementation-unique-identifier-for-cached-outputs" title="Permalink to this headline">¶</a></h3>
+<p>Date last modified: 2021/08/04</p>
+<p>Contributors: Xylar Asay-Davis</p>
+<p>A date string is appended to the end of files in the <code class="docutils literal notranslate"><span class="pre">compass_cache</span></code> database
+on LCRC and stored in <code class="docutils literal notranslate"><span class="pre">cached_files.json</span></code>.  The date string defaults to the
+date the <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">cache</span></code> command is run but can be specified manually with
+the <code class="docutils literal notranslate"><span class="pre">--date_string</span></code> flag if desired.</p>
+</div>
+<div class="section" id="implementation-either-normal-or-cached-versions-of-a-step">
+<span id="imp-normal-or-cached"></span><h3>Implementation: either “normal” or “cached” versions of a step<a class="headerlink" href="#implementation-either-normal-or-cached-versions-of-a-step" title="Permalink to this headline">¶</a></h3>
+<p>Date last modified: 2021/08/04</p>
+<p>Contributors: Xylar Asay-Davis</p>
+<p>The implementation leans heavily on the assumption that a given step will
+either be run with cached outputs or as normal, so that both versions are not
+available in the same work directory or as part of the same test suite.</p>
+<p>Nevertheless, if a separate “cached” version of a step were desired, it would
+be necessary to make symlinks from the cached files in the location of the
+“uncached” version of the step to the location of the “cached” version.  For
+example, if the “uncached” step is</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ocean/global_ocean/QU240/mesh/mesh
+</pre></div>
+</div>
+<p>and the “cached” version of the step is</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ocean/global_ocean/QU240/cached/mesh/mesh
+</pre></div>
+</div>
+<p>symlinks could be created on the LCRC server, e.g.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>/lcrc/group/e3sm/public_html/mpas_standalonedata/mpas-ocean/compass_cache/global_ocean/QU240/cached/mesh/mesh/culled_mesh.210803.nc
+  -&gt; /lcrc/group/e3sm/public_html/mpas_standalonedata/mpas-ocean/compass_cache/global_ocean/QU240/mesh/mesh/culled_mesh.210803.nc
+</pre></div>
+</div>
+<p>and the <code class="docutils literal notranslate"><span class="pre">cached</span></code> attribute could be set to <code class="docutils literal notranslate"><span class="pre">True</span></code> in the constructor of the
+cached version of the step.</p>
+</div>
+</div>
+<div class="section" id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="testing-cached-outputs">
+<span id="test-cached"></span><h3>Testing: cached outputs<a class="headerlink" href="#testing-cached-outputs" title="Permalink to this headline">¶</a></h3>
+<p>Date last modified: 2021/08/04</p>
+<p>Contributors: Xylar Asay-Davis</p>
+<p>I have constructed cached versions of the following steps on the LCRC server,
+using test-case runs on Chrysalis.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ocean/global_ocean/QU240/mesh/mesh/
+ocean/global_ocean/QU240/PHC/init/initial_state/
+ocean/global_ocean/QUwISC240/mesh/mesh/
+ocean/global_ocean/QUwISC240/PHC/init/initial_state/
+ocean/global_ocean/QUwISC240/PHC/init/ssh_adjustment/
+ocean/global_ocean/EC30to60/mesh/mesh/
+ocean/global_ocean/EC30to60/PHC/init/initial_state/
+ocean/global_ocean/WC14/mesh/mesh/
+ocean/global_ocean/WC14/PHC/init/initial_state/
+ocean/global_ocean/ECwISC30to60/mesh/mesh/
+ocean/global_ocean/ECwISC30to60/PHC/init/initial_state/
+ocean/global_ocean/ECwISC30to60/PHC/init/ssh_adjustment/
+ocean/global_ocean/SOwISC12to60/mesh/mesh/
+ocean/global_ocean/SOwISC12to60/PHC/init/initial_state/
+ocean/global_ocean/SOwISC12to60/PHC/init/ssh_adjustment/
+ocean/global_convergence/cosine_bell/QU60/mesh/
+ocean/global_convergence/cosine_bell/QU60/init/
+ocean/global_convergence/cosine_bell/QU90/mesh/
+ocean/global_convergence/cosine_bell/QU90/init/
+ocean/global_convergence/cosine_bell/QU120/mesh/
+ocean/global_convergence/cosine_bell/QU120/init/
+ocean/global_convergence/cosine_bell/QU180/mesh/
+ocean/global_convergence/cosine_bell/QU180/init/
+ocean/global_convergence/cosine_bell/QU210/mesh/
+ocean/global_convergence/cosine_bell/QU210/init/
+ocean/global_convergence/cosine_bell/QU240/mesh/
+ocean/global_convergence/cosine_bell/QU240/init/
+ocean/global_convergence/cosine_bell/QU150/mesh/
+ocean/global_convergence/cosine_bell/QU150/init/
+</pre></div>
+</div>
+<p>I have set up and run versions of all these steps with cached outputs, together
+with forward runs (<code class="docutils literal notranslate"><span class="pre">performance_test</span></code> in the global ocean test group, and
+<code class="docutils literal notranslate"><span class="pre">forward</span></code> steps in the <code class="docutils literal notranslate"><span class="pre">cosine_bell</span></code> test case)  that make use of the
+cached outputs as inputs.  All tests ran successfully and were bit-for-bit with
+a baseline that was used to produce the cached outputs.</p>
+</div>
+<div class="section" id="testing-selecting-whether-to-use-cached-outputs">
+<span id="test-select"></span><h3>Testing: selecting whether to use cached outputs<a class="headerlink" href="#testing-selecting-whether-to-use-cached-outputs" title="Permalink to this headline">¶</a></h3>
+<p>Date last modified: 2021/08/04</p>
+<p>Contributors: Xylar Asay-Davis</p>
+<p>I added QUwISC240 test case to the ocean <code class="docutils literal notranslate"><span class="pre">nightly</span></code> test suite using cached
+outputs for the <code class="docutils literal notranslate"><span class="pre">mesh</span></code> and <code class="docutils literal notranslate"><span class="pre">init</span></code> test cases:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ocean/global_ocean/QUwISC240/mesh
+  cached
+ocean/global_ocean/QUwISC240/PHC/init
+  cached
+ocean/global_ocean/QUwISC240/PHC/performance_test
+</pre></div>
+</div>
+<p>I created a new test suite, <code class="docutils literal notranslate"><span class="pre">cosine_bell_cached_init</span></code>, for the
+<code class="docutils literal notranslate"><span class="pre">cosine_bell</span></code> test case that uses cached outputs fro the <code class="docutils literal notranslate"><span class="pre">mesh</span></code> and
+<code class="docutils literal notranslate"><span class="pre">init</span></code> steps at each default mesh resolution:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ocean/global_convergence/cosine_bell
+  cached: QU60_mesh QU60_init QU90_mesh QU90_init QU120_mesh QU120_init
+  cached: QU150_mesh QU150_init QU180_mesh QU180_init QU210_mesh QU210_init
+  cached: QU240_mesh QU240_init
+</pre></div>
+</div>
+<p>I set up the remaining steps with cached outputs mentioned in
+<a class="reference internal" href="#test-cached"><span class="std std-ref">Testing: cached outputs</span></a> as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass list
+
+compass setup -n 40c 41c <span class="m">42</span> 60c 61c <span class="m">62</span> 80c 81c <span class="m">82</span> 85c 86c <span class="m">87</span> 90c 91c <span class="m">92</span> <span class="se">\</span>
+    95c 96c <span class="m">97</span> ...
+</pre></div>
+</div>
+<p>Results were bit-for-bit with the same test cases run without cached outputs.</p>
+</div>
+<div class="section" id="testing-updating-cached-outputs">
+<span id="test-update"></span><h3>Testing: updating cached outputs<a class="headerlink" href="#testing-updating-cached-outputs" title="Permalink to this headline">¶</a></h3>
+<p>Date last modified: 2021/08/04</p>
+<p>Contributors: Xylar Asay-Davis</p>
+<p>All cached files used in the testing above sere created with <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">cache</span></code>
+on Chrysalis.  Multiple runs of this command created, then updated the local
+<code class="docutils literal notranslate"><span class="pre">ocean_cached_files.json</span></code>, as expected.  The files ended up in the expected
+directories on the LCRC server with the expected date strings appended to the
+file basename (before the extension).</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">--dry_run</span></code> feature also worked as expected, updating the
+<code class="docutils literal notranslate"><span class="pre">ocean_cached_files.json</span></code> without copying files.  The <code class="docutils literal notranslate"><span class="pre">--date_string</span></code>
+flag could be used to specify an alternative suffix, as expected.</p>
+</div>
+<div class="section" id="testing-unique-identifier-for-cached-outputs">
+<span id="test-unique"></span><h3>Testing: unique identifier for cached outputs<a class="headerlink" href="#testing-unique-identifier-for-cached-outputs" title="Permalink to this headline">¶</a></h3>
+<p>Date last modified: 2021/08/04</p>
+<p>Contributors: Xylar Asay-Davis</p>
+<p>All files in the <code class="docutils literal notranslate"><span class="pre">compass_cache</span></code> database have date strings appended to them
+to make them unique.  No testing has been performed yet to ensure that new
+cached files with new dated can be added but I don’t foresee any problems.</p>
+</div>
+<div class="section" id="testing-either-normal-or-cached-versions-of-a-step">
+<span id="test-normal-or-cached"></span><h3>Testing: either “normal” or “cached” versions of a step<a class="headerlink" href="#testing-either-normal-or-cached-versions-of-a-step" title="Permalink to this headline">¶</a></h3>
+<p>Date last modified: 2021/08/04</p>
+<p>Contributors: Xylar Asay-Davis</p>
+<p>The implementation that I tested is based on this requrements.  However, in the
+future, the requirement could be relaxed if need be using the approach I
+outlined in <a class="reference internal" href="#imp-normal-or-cached"><span class="std std-ref">Implementation: either “normal” or “cached” versions of a step</span></a>.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="template.html" class="btn btn-neutral float-right" title="Template" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="compass_package.html" class="btn btn-neutral float-left" title="compass python package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

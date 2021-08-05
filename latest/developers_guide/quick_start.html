@@ -236,8 +236,21 @@ that can get you started.</p>
 machine, you will need to specify a path where
 <a class="reference external" href="https://docs.conda.io/en/latest/miniconda.html">Miniconda3</a> either has
 already been installed or where the script can install it.  You must have write
-permission in the base environment, so do not use a shared conda environment
-as the base environment.</p>
+permission in the base environment.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is <em>very</em> important that you not use a shared installation of Miniconda3
+such as the base environment for E3SM-Unified for <code class="docutils literal notranslate"><span class="pre">compass</span></code> development.
+Most developers will not have write access to shared environments, meaning
+that you will get write-permission errors when you try to update the base
+environment or create the compass development environment.</p>
+<p>For anyone who does have write permission to a shared environment, you
+would be creating your compass development environment in a shared space,
+which could cause confusion.</p>
+<p>Please use your own personal installation of Miniconda3 for development,
+letting <code class="docutils literal notranslate"><span class="pre">configure_compass_env.py</span></code> download and install Miniconda3 for
+you if you don’t already have it installed.</p>
+</div>
 <div class="section" id="supported-machines">
 <h3>Supported machines<a class="headerlink" href="#supported-machines" title="Permalink to this headline">¶</a></h3>
 <p>If you are on one of the <a class="reference internal" href="machines/index.html#dev-supported-machines"><span class="std std-ref">Supported Machines</span></a>, run:</p>
