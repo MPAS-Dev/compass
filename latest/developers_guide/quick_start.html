@@ -109,6 +109,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#supported-machines">Supported machines</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#unknown-machines">Unknown machines</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#what-the-script-does">What the script does</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#optional-flags">Optional flags</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#activating-the-environment">Activating the environment</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
 </ul>
@@ -271,8 +272,9 @@ workstation, you will need to specify which flavor of MPI you want to use
 where you would like to install Miniconda3 or where it is already installed.
 If you already have it installed, that path will be used to add (or update) the
 compass test environment.</p>
-<p>We only support one set of compilers for Mac and Linux, so there is no need to
-specify them.  See <a class="reference internal" href="machines/index.html#dev-other-machines"><span class="std std-ref">Other Machines</span></a> for more details.</p>
+<p>We only support one set of compilers for Mac and Linux (<code class="docutils literal notranslate"><span class="pre">gnu</span></code> for Linux and
+<code class="docutils literal notranslate"><span class="pre">clang</span></code> with <code class="docutils literal notranslate"><span class="pre">gfortran</span></code> for Mac), so there is no need to specify them.
+See <a class="reference internal" href="machines/index.html#dev-other-machines"><span class="std std-ref">Other Machines</span></a> for more details.</p>
 <p>In addition, unknown machines require a config file to be specified when setting
 up the compass test environment.  A config file can be specified using
 <code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">&lt;filename&gt;</span></code>.  More information, including example config files, can be found
@@ -301,6 +303,19 @@ and <code class="docutils literal notranslate"><span class="pre">mpi</span></cod
 <li><p>optionally (with the <code class="docutils literal notranslate"><span class="pre">--check</span></code> flag), run some tests to make sure some of
 the expected packages are available.</p></li>
 </ul>
+</div>
+<div class="section" id="optional-flags">
+<h3>Optional flags<a class="headerlink" href="#optional-flags" title="Permalink to this headline">¶</a></h3>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">--check</span></code></dt><dd><p>Check to make sure expected commands are present</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">--python</span></code></dt><dd><p>Select a particular python version (the default is currently 3.8)</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">--env-name</span></code></dt><dd><p>Set the name of the environment (and the prefix for the activation script)
+to something other than the default (<code class="docutils literal notranslate"><span class="pre">dev_compass_&lt;version&gt;</span></code> or
+<code class="docutils literal notranslate"><span class="pre">dev_compass_&lt;version&gt;_&lt;mpi&gt;</span></code>).</p>
+</dd>
+</dl>
 </div>
 <div class="section" id="activating-the-environment">
 <h3>Activating the environment<a class="headerlink" href="#activating-the-environment" title="Permalink to this headline">¶</a></h3>
@@ -347,14 +362,6 @@ can run:</p>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">--recreate</span></code> flag will delete the conda environment and create it from
 scratch.  This takes just a little extra time.</p>
-<p>You can check to make sure expected commands are present with <code class="docutils literal notranslate"><span class="pre">--check</span></code>, you
-can select a particular python version with <code class="docutils literal notranslate"><span class="pre">--python</span></code>, you can set the name
-of the environment (and the prefix for the activation script) something other
-than the default (<code class="docutils literal notranslate"><span class="pre">load_dev_compass_&lt;version&gt;</span></code>) with <code class="docutils literal notranslate"><span class="pre">--env-name</span></code>.</p>
-<p>If you are not on a supported machine, you need to choose your MPI type
-(<code class="docutils literal notranslate"><span class="pre">mpich</span></code> or <code class="docutils literal notranslate"><span class="pre">openmpi</span></code>) with the <code class="docutils literal notranslate"><span class="pre">--mpi</span></code> flag.  The compilers are
-automatically <code class="docutils literal notranslate"><span class="pre">gnu</span></code> for Linux and <code class="docutils literal notranslate"><span class="pre">clang</span></code> (with <code class="docutils literal notranslate"><span class="pre">gfortran</span></code>) for OSX, so
-you do not need to specify those.</p>
 </div>
 </div>
 <div class="section" id="creating-updating-only-the-compass-environment">
