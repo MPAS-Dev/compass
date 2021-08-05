@@ -11,6 +11,94 @@ input and output files, downloading data sets, building up config files,
 namelists and streams files, setting up and running the MPAS model, and
 verifying the output by comparing steps with one another or against a baseline.
 
+.. _dev_list:
+
+list module
+-----------
+
+The :py:func:`compass.list.list_cases()`, :py:func:`compass.list.list_machines()`
+and :py:func:`compass.list.list_suites()` functions are used by the
+``compass list`` command to list test cases, supported machines and test
+suites, respectively.  These functions are not currently used anywhere else
+in ``compass``.
+
+.. _dev_setup:
+
+setup module
+~~~~~~~~~~~~
+
+The :py:func:`compass.setup.setup_cases()` and :py:func:`compass.setup.setup_case()`
+functions are used by ``compass setup`` and ``compass suite`` to set up a list
+of test cases and a single test case, respectively, in a work directory.
+Subdirectories will be created for each test case and its steps; input,
+namelist and streams files will be downloaded, symlinked and/or generated
+in the setup process. A `pickle file <https://docs.python.org/3/library/pickle.html>`_
+called ``test_case.pickle`` will be written to each test case directory
+containing the test-case object for later use in calls to ``compass run``.
+Similarly, a file ``step.pickle`` containing both the step and test-case
+objects will be written to each step directory, allowing the step to be run
+on its own with ``compass run``.  In contrast to :ref:`config_files`, these
+pickle files are not intended for users (or developers) to read or modify.
+Properties of the test-case and step objects are not intended to change between
+setting up and running a test suite, test case or step.
+
+.. _dev_clean:
+
+clean module
+~~~~~~~~~~~~
+
+The :py:func:`compass.clean.clean_cases()` function is used by
+``compass clean`` and ``compass suite`` to delete the constants of a test-case
+subdirectory in the work directory.
+
+.. _dev_suite:
+
+suite module
+~~~~~~~~~~~~
+
+The :py:func:`compass.suite.setup_suite()` and :py:func:`compass.suite.clean_suite()`
+functions are used by ``compass suite`` to set up or clean up a test suite in a
+work directory.  Setting up a test suite includes setting up the test cases
+(see :ref:`dev_setup`), writing out a :ref:`dev_provenance` file, and saving
+a pickle file containing a python dictionary that defines the test suite for
+later use by ``compass run``.  The "target" and "minimum" number of cores
+required for running the test suite are displayed.  The "target" is the maximum
+of the ``cores`` attribute of all steps in the test suite.  This is the number
+of cores to run on to complete the test suite as quickly as possible, with the
+caveat that many cores may sit idle for some fraction of the runtime.  The
+"minimum" number of cores is the maximum of the ``min_cores`` attribute for
+all steps int he suite, indicating the fewest cores that the test may be run
+with before at least some steps in the suite will fail.
+
+.. _dev_run:
+
+run module
+~~~~~~~~~~
+
+The :py:func:`compass.run.run_suite()`, :py:func:`compass.run.run_test_case()`,
+and :py:func:`compass.run.run_step()` functions are used to run a test suite,
+test case or step, respectively, from the base, test case or step work
+directory, respectively, using ``compass run``.  Each of these functions reads
+a local pickle file to retrieve information about the test suite, test case
+and/or step that was stored during setup.
+
+:py:func:`compass.run.run_suite()` runs each test case in the test suite in
+the order that they are given in the text file defining the suite
+(``compass/<mpas_core>/suites/<suite_name>.txt``).  It displays a ``PASS`` or
+``FAIL`` message for the test execution, as well as similar messages for
+validation involving output within the test case or suite and validation
+against a baseline (depending on the implementation of the ``validate()``
+method in the test case and whether a baseline was provided during setup).
+Output from test cases and their steps are stored in log files in
+the ``case_output`` subdirectory of the base work directory.
+
+:py:func:`compass.run.run_test_case()` and :py:func:`compass.run.run_step()`
+run a single test case.  In the latter case, only the selected step from the
+test case is run, skipping any others.  If running the full test case, output
+from individual steps are stored in log files ``<step>.log`` in the test case's
+work directory.  The results of validation (if any) are displayed in the final
+stage of running the test case.
+
 .. _dev_config:
 
 Config files
@@ -529,3 +617,14 @@ Typical output will look like:
               Compare: 0.82317
        Percent Change: -10.781019682649793%
               Speedup: 1.1208377370409515
+
+
+.. _dev_provenance:
+
+Provenance
+----------
+
+The ``compass.provenance`` module defines a function
+:py:func:`compass.provenance.write()` for creating a file in the base work
+directory with provenance, such as the git version, conda packages, compass
+commands, and test cases.

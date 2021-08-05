@@ -76,6 +76,8 @@ the configuration and the names of its steps:
      - step1
      - step2
 
+See :ref:`dev_list` for more about the underlying framework.
+
 .. _dev_compass_setup:
 
 compass setup
@@ -140,6 +142,8 @@ previous run.  Many test cases validate variables to make sure they are
 identical between runs, compare timers to see how much performance has changed,
 or both.  See :ref:`dev_validation`.
 
+See :ref:`dev_setup` for more about the underlying framework.
+
 
 .. _dev_compass_clean:
 
@@ -162,6 +166,8 @@ As with :ref:`dev_compass_setup`, the test cases to cleaned up can be specified
 either by relative path or by number. The meanings of the ``-t`` or ``--test``,
 ``-n`` or ``--case_number``, and ``-w`` or ``--work_dir`` flags are the same
 as in :ref:`dev_compass_setup`.
+
+See :ref:`dev_clean` for more about the underlying framework.
 
 .. _dev_compass_suite:
 
@@ -201,6 +207,8 @@ override the defaults with ``-f`` or ``--config_file``.  As with
 ``-b`` or ``--baseline_dir``.  If supplied, each test case in the suite that
 includes :ref:`dev_validation` will be validated against the previous run in
 the baseline.
+
+See :ref:`dev_suite` for more about the underlying framework.
 
 .. _dev_compass_run:
 
@@ -255,3 +263,5 @@ Would both accomplish the same thing in this example -- skipping the
     If changes are made to ``steps_to_run`` in the config file and ``--steps``
     is provided on the command line, the command-line flags take precedence
     over the config option.
+
+See :ref:`dev_run` for more about the underlying framework.
