@@ -1,5 +1,7 @@
 from compass.testgroup import TestGroup
 from compass.ocean.tests.internal_wave.default import Default
+from compass.ocean.tests.internal_wave.rpe_test import RpeTest
+from compass.ocean.tests.internal_wave.ten_day_test import TenDayTest
 
 
 class InternalWave(TestGroup):
@@ -16,3 +18,4 @@ class InternalWave(TestGroup):
 
         self.add_test_case(Default(test_group=self))
         self.add_test_case(RpeTest(test_group=self))
+        self.add_test_case(TenDayTest(test_group=self))

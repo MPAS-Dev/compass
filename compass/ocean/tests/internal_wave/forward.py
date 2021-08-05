@@ -17,6 +17,9 @@ class Forward(Step):
         test_case : compass.TestCase
             The test case this step belongs to
 
+        name : str
+            the name of the test case
+
         subdir : str, optional
             the subdirectory for the step.  The default is ``name``
 
@@ -37,15 +40,14 @@ class Forward(Step):
         """
         if min_cores is None:
             min_cores = cores
-        super().__init__(test_case=test_case, name='forward', cores=4,
-                         min_cores=1, threads=1)
+        super().__init__(test_case=test_case, name=name, subdir=subdir,
+                         cores=cores, min_cores=min_cores, threads=threads)
         self.add_namelist_file('compass.ocean.tests.internal_wave',
                                'namelist.forward')
         if nu is not None:
             # update the viscosity to the requested value
             options = {'config_mom_del2': '{}'.format(nu)}
             self.add_namelist_options(options)
-
 
         self.add_streams_file('compass.ocean.tests.internal_wave',
                               'streams.forward')
