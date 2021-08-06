@@ -88,14 +88,26 @@ def _get_metadata(dsInit, config):
 
     author = config.get('global_ocean', 'author')
     if author == 'autodetect':
-        author = subprocess.check_output(
-            ['git', 'config', 'user.name']).decode("utf-8").strip()
+        try:
+            author = subprocess.check_output(
+                ['git', 'config', 'user.name']).decode("utf-8").strip()
+        except subprocess.CalledProcessError:
+            raise ValueError('It appears you have not set up a git username '
+                             'yet.  Please do so or provide a config file '
+                             'that sets config option "author" in '
+                             '[global_ocean].')
         config.set('global_ocean', 'author', author)
 
     email = config.get('global_ocean', 'email')
     if email == 'autodetect':
-        email = subprocess.check_output(
-            ['git', 'config', 'user.email']).decode("utf-8").strip()
+        try:
+            email = subprocess.check_output(
+                ['git', 'config', 'user.email']).decode("utf-8").strip()
+        except subprocess.CalledProcessError:
+            raise ValueError('It appears you have not set your email in git '
+                             'yet.  Please do so or provide a config file '
+                             'that sets config option "email" in '
+                             '[global_ocean].')
         config.set('global_ocean', 'email', email)
 
     creation_date = config.get('global_ocean', 'creation_date')
