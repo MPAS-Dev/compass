@@ -79,8 +79,8 @@ Each time you want to work with compass, you will need to run:
 
 .. _setup_overview:
 
-Setting up a test case
-----------------------
+Setting up test cases
+---------------------
 
 Before you set up a test case with ``compass``, you will need to build the
 MPAS component you wish to test with.  Since the instructions for building
@@ -213,6 +213,11 @@ in the repository.
 In order to run a bit-for-bit test with a previous test case, use
 ``-b $PREVIOUS_WORKDIR`` to specify a "baseline".
 
+When you set up one or more test cases, they will also be included in a custom
+test suite, which is called ``custom`` by default.  (You can give it another
+name with the ``--suite_name`` flag.)  You can run all the test cases in
+sequence with one command as described in :ref:`suite_overview` or run them
+one at a time as follows.
 
 Running a test case
 -------------------

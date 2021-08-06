@@ -1,11 +1,8 @@
 import argparse
 import sys
-import os
 from importlib import resources
-import pickle
 
 from compass.setup import setup_cases
-from compass.io import symlink
 from compass.clean import clean_cases
 
 
@@ -43,12 +40,6 @@ def setup_suite(mpas_core, suite_name, config_file=None, machine=None,
         The relative or absolute path to the root of a branch where the MPAS
         model has been built
     """
-    if machine is None and 'COMPASS_MACHINE' in os.environ:
-        machine = os.environ['COMPASS_MACHINE']
-
-    if config_file is None and machine is None:
-        raise ValueError('At least one of config_file and machine is needed.')
-
     text = resources.read_text('compass.{}.suites'.format(mpas_core),
                                '{}.txt'.format(suite_name))
     tests = list()
@@ -58,33 +49,9 @@ def setup_suite(mpas_core, suite_name, config_file=None, machine=None,
                 and not test.startswith('#')):
             tests.append(test)
 
-    if work_dir is None:
-        work_dir = os.getcwd()
-    work_dir = os.path.abspath(work_dir)
-
-    test_cases = setup_cases(tests, config_file=config_file, machine=machine,
-                             work_dir=work_dir, baseline_dir=baseline_dir,
-                             mpas_model_path=mpas_model_path)
-
-    test_suite = {'name': suite_name,
-                  'test_cases': test_cases,
-                  'work_dir': work_dir}
-
-    # pickle the test or step dictionary for use at runtime
-    pickle_file = os.path.join(test_suite['work_dir'],
-                               '{}.pickle'.format(suite_name))
-    with open(pickle_file, 'wb') as handle:
-        pickle.dump(test_suite, handle, protocol=pickle.HIGHEST_PROTOCOL)
-
-    if 'LOAD_COMPASS_ENV' in os.environ:
-        script_filename = os.environ['LOAD_COMPASS_ENV']
-        # make a symlink to the script for loading the compass conda env.
-        symlink(script_filename, os.path.join(work_dir, 'load_compass_env.sh'))
-
-    max_cores, max_of_min_cores = _get_required_cores(test_cases)
-
-    print('target cores: {}'.format(max_cores))
-    print('minimum cores: {}'.format(max_of_min_cores))
+    setup_cases(tests, config_file=config_file, machine=machine,
+                work_dir=work_dir, baseline_dir=baseline_dir,
+                mpas_model_path=mpas_model_path, suite_name=suite_name)
 
 
 def clean_suite(mpas_core, suite_name, work_dir=None):
@@ -111,19 +78,7 @@ def clean_suite(mpas_core, suite_name, work_dir=None):
     tests = [test.strip() for test in text.split('\n') if
              len(test.strip()) > 0 and not test.startswith('#')]
 
-    if work_dir is None:
-        work_dir = os.getcwd()
-    work_dir = os.path.abspath(work_dir)
-
-    clean_cases(tests=tests, work_dir=work_dir)
-
-    # delete the pickle file
-    pickle_file = os.path.join(work_dir, '{}.pickle'.format(suite_name))
-
-    try:
-        os.remove(pickle_file)
-    except OSError:
-        pass
+    clean_cases(tests=tests, work_dir=work_dir, suite_name=suite_name)
 
 
 def main():
@@ -173,16 +128,3 @@ def main():
                     config_file=args.config_file, machine=args.machine,
                     work_dir=args.work_dir, baseline_dir=args.baseline_dir,
                     mpas_model_path=args.mpas_model)
-
-
-def _get_required_cores(test_cases):
-    """ Get the maximum number of target cores and the max of min cores """
-
-    max_cores = 0
-    max_of_min_cores = 0
-    for test_case in test_cases.values():
-        for step in test_case.steps.values():
-            max_cores = max(max_cores, step.cores)
-            max_of_min_cores = max(max_of_min_cores, step.min_cores)
-
-    return max_cores, max_of_min_cores

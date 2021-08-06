@@ -95,7 +95,7 @@ The command-line options are:
 .. code-block:: none
 
     compass setup [-h] [-t PATH] [-n NUM [NUM ...]] [-f FILE] [-m MACH]
-                  [-w PATH] [-b PATH] [-p PATH]
+                  [-w PATH] [-b PATH] [-p PATH] [--suite_name SUITE]
 
 The ``-h`` or ``--help`` options will display the help message describing the
 command-line options.
@@ -142,8 +142,18 @@ previous run.  Many test cases validate variables to make sure they are
 identical between runs, compare timers to see how much performance has changed,
 or both.  See :ref:`dev_validation`.
 
-See :ref:`dev_setup` for more about the underlying framework.
+The test cases will be included in a "custom" test suite in the order they are
+named or numbered.  You can give this suite a name with ``--suite_name`` or
+leave it with the default name ``custom``.  You can run this test suite with
+``compass run [suite_name]`` as with the predefined test suites (see
+:ref:`dev_compass_suite`).
 
+Test cases within the custom suite are run in the order they are supplied to
+``compass setup``, so keep this in mind when providing the list.  Any test
+cases that depend on the output of other test cases must run afther their
+dependencies.
+
+See :ref:`dev_setup` for more about the underlying framework.
 
 .. _dev_compass_clean:
 
@@ -228,9 +238,10 @@ Whereas other ``compass`` commands are typically run in the local clone of the
 compass repo, ``compass run`` needs to be run in the appropriate work
 directory. If you are running a test suite, you may need to provide the name
 of the test suite if more than one suite has been set up in the same work
-directory (with or without the ``.pickle`` suffix that exists on the suite's
-file in the working directory).  If you are in the work directory for a test
-case or step, you do not need to provide any arguments.
+directory.  You can provide either just the suite name or
+``<suite_name>.pickle`` (the latter is convenient for tab completion).  If you
+are in the work directory for a test case or step, you do not need to provide
+any arguments.
 
 If you want to explicitly select which steps in a test case you want to run,
 you have two options.  You can either edit the ``steps_to_run`` config options
