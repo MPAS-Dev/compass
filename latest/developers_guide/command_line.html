@@ -272,7 +272,7 @@ want to run before setting up a compass test case.</p>
 </div>
 <p>The command-line options are:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>compass setup [-h] [-t PATH] [-n NUM [NUM ...]] [-f FILE] [-m MACH]
-              [-w PATH] [-b PATH] [-p PATH]
+              [-w PATH] [-b PATH] [-p PATH] [--suite_name SUITE]
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">-h</span></code> or <code class="docutils literal notranslate"><span class="pre">--help</span></code> options will display the help message describing the
@@ -300,7 +300,7 @@ and the default for the <code class="docutils literal notranslate"><span class="
 <code class="docutils literal notranslate"><span class="pre">E3SM-Project/components/mpas-ocean</span></code>.</p>
 <p>You can also supply a config file with config options pointing to the
 directories for cached data files, the location of the MPAS component, and much
-more (see <a class="reference internal" href="../users_guide/config_files.html#config-files"><span class="std std-ref">Config Files</span></a> and <a class="reference internal" href="../users_guide/quick_start.html#setup-overview"><span class="std std-ref">Setting up a test case</span></a>).  Point to your config
+more (see <a class="reference internal" href="../users_guide/config_files.html#config-files"><span class="std std-ref">Config Files</span></a> and <a class="reference internal" href="../users_guide/quick_start.html#setup-overview"><span class="std std-ref">Setting up test cases</span></a>).  Point to your config
 file using the <code class="docutils literal notranslate"><span class="pre">-f</span></code> or <code class="docutils literal notranslate"><span class="pre">--config_file</span></code> flag.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">-w</span></code> or <code class="docutils literal notranslate"><span class="pre">--work_dir</span></code> flags point to a relative or absolute path that
 is the base path where the test case(s) should be set up.  The default is the
@@ -312,6 +312,15 @@ compass code with test cases setups and output within the branch.</p>
 previous run.  Many test cases validate variables to make sure they are
 identical between runs, compare timers to see how much performance has changed,
 or both.  See <a class="reference internal" href="framework.html#dev-validation"><span class="std std-ref">Validation</span></a>.</p>
+<p>The test cases will be included in a “custom” test suite in the order they are
+named or numbered.  You can give this suite a name with <code class="docutils literal notranslate"><span class="pre">--suite_name</span></code> or
+leave it with the default name <code class="docutils literal notranslate"><span class="pre">custom</span></code>.  You can run this test suite with
+<code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span> <span class="pre">[suite_name]</span></code> as with the predefined test suites (see
+<a class="reference internal" href="#dev-compass-suite"><span class="std std-ref">compass suite</span></a>).</p>
+<p>Test cases within the custom suite are run in the order they are supplied to
+<code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">setup</span></code>, so keep this in mind when providing the list.  Any test
+cases that depend on the output of other test cases must run afther their
+dependencies.</p>
 <p>See <a class="reference internal" href="framework.html#dev-setup"><span class="std std-ref">setup module</span></a> for more about the underlying framework.</p>
 </div>
 <div class="section" id="compass-clean">
@@ -376,9 +385,10 @@ that has been set up in the current directory:</p>
 compass repo, <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span></code> needs to be run in the appropriate work
 directory. If you are running a test suite, you may need to provide the name
 of the test suite if more than one suite has been set up in the same work
-directory (with or without the <code class="docutils literal notranslate"><span class="pre">.pickle</span></code> suffix that exists on the suite’s
-file in the working directory).  If you are in the work directory for a test
-case or step, you do not need to provide any arguments.</p>
+directory.  You can provide either just the suite name or
+<code class="docutils literal notranslate"><span class="pre">&lt;suite_name&gt;.pickle</span></code> (the latter is convenient for tab completion).  If you
+are in the work directory for a test case or step, you do not need to provide
+any arguments.</p>
 <p>If you want to explicitly select which steps in a test case you want to run,
 you have two options.  You can either edit the <code class="docutils literal notranslate"><span class="pre">steps_to_run</span></code> config options
 in the config file:</p>

@@ -205,7 +205,8 @@
 
 
 <div class="viewcode-block" id="setup_cases"><a class="viewcode-back" href="../../developers_guide/generated/compass.setup.setup_cases.html#compass.setup.setup_cases">[docs]</a><span class="k">def</span> <span class="nf">setup_cases</span><span class="p">(</span><span class="n">tests</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numbers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">config_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">machine</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                <span class="n">work_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">baseline_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mpas_model_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                <span class="n">work_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">baseline_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mpas_model_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">suite_name</span><span class="o">=</span><span class="s1">&#39;custom&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Set up one or more test cases</span>
 
@@ -235,6 +236,10 @@
 <span class="sd">        The relative or absolute path to the root of a branch where the MPAS</span>
 <span class="sd">        model has been built</span>
 
+<span class="sd">    suite_name : str, optional</span>
+<span class="sd">        The name of the test suite if tests are being set up through a test</span>
+<span class="sd">        suite or ``&#39;custom&#39;`` if not</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    test_cases : dict of compass.TestCase</span>
@@ -252,6 +257,7 @@
 
     <span class="k">if</span> <span class="n">work_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">work_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+    <span class="n">work_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">work_dir</span><span class="p">)</span>
 
     <span class="n">mpas_cores</span> <span class="o">=</span> <span class="n">get_mpas_cores</span><span class="p">()</span>
 
@@ -290,6 +296,26 @@
     <span class="k">for</span> <span class="n">path</span><span class="p">,</span> <span class="n">test_case</span> <span class="ow">in</span> <span class="n">test_cases</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">setup_case</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">config_file</span><span class="p">,</span> <span class="n">machine</span><span class="p">,</span> <span class="n">work_dir</span><span class="p">,</span>
                    <span class="n">baseline_dir</span><span class="p">,</span> <span class="n">mpas_model_path</span><span class="p">)</span>
+
+    <span class="n">test_suite</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">suite_name</span><span class="p">,</span>
+                  <span class="s1">&#39;test_cases&#39;</span><span class="p">:</span> <span class="n">test_cases</span><span class="p">,</span>
+                  <span class="s1">&#39;work_dir&#39;</span><span class="p">:</span> <span class="n">work_dir</span><span class="p">}</span>
+
+    <span class="c1"># pickle the test or step dictionary for use at runtime</span>
+    <span class="n">pickle_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">test_suite</span><span class="p">[</span><span class="s1">&#39;work_dir&#39;</span><span class="p">],</span>
+                               <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.pickle&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suite_name</span><span class="p">))</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">pickle_file</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">test_suite</span><span class="p">,</span> <span class="n">handle</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">pickle</span><span class="o">.</span><span class="n">HIGHEST_PROTOCOL</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s1">&#39;LOAD_COMPASS_ENV&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+        <span class="n">script_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;LOAD_COMPASS_ENV&#39;</span><span class="p">]</span>
+        <span class="c1"># make a symlink to the script for loading the compass conda env.</span>
+        <span class="n">symlink</span><span class="p">(</span><span class="n">script_filename</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;load_compass_env.sh&#39;</span><span class="p">))</span>
+
+    <span class="n">max_cores</span><span class="p">,</span> <span class="n">max_of_min_cores</span> <span class="o">=</span> <span class="n">_get_required_cores</span><span class="p">(</span><span class="n">test_cases</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;target cores: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">max_cores</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;minimum cores: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">max_of_min_cores</span><span class="p">))</span>
 
     <span class="k">return</span> <span class="n">test_cases</span></div>
 
@@ -468,6 +494,10 @@
                         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The path to the build of the MPAS model for the &quot;</span>
                              <span class="s2">&quot;core.&quot;</span><span class="p">,</span>
                         <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;PATH&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--suite_name&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;suite_name&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;custom&quot;</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The name to use for the &#39;custom&#39; test suite&quot;</span>
+                             <span class="s2">&quot;containing all setup test cases.&quot;</span><span class="p">,</span>
+                        <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;SUITE&quot;</span><span class="p">)</span>
 
     <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">test</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -477,7 +507,21 @@
     <span class="n">setup_cases</span><span class="p">(</span><span class="n">tests</span><span class="o">=</span><span class="n">tests</span><span class="p">,</span> <span class="n">numbers</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">case_num</span><span class="p">,</span>
                 <span class="n">config_file</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">config_file</span><span class="p">,</span> <span class="n">machine</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">machine</span><span class="p">,</span>
                 <span class="n">work_dir</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">baseline_dir</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">baseline_dir</span><span class="p">,</span>
-                <span class="n">mpas_model_path</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">mpas_model</span><span class="p">)</span>
+                <span class="n">mpas_model_path</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">mpas_model</span><span class="p">,</span> <span class="n">suite_name</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">suite_name</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_get_required_cores</span><span class="p">(</span><span class="n">test_cases</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Get the maximum number of target cores and the max of min cores &quot;&quot;&quot;</span>
+
+    <span class="n">max_cores</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">max_of_min_cores</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">test_case</span> <span class="ow">in</span> <span class="n">test_cases</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">step_name</span> <span class="ow">in</span> <span class="n">test_case</span><span class="o">.</span><span class="n">steps_to_run</span><span class="p">:</span>
+            <span class="n">step</span> <span class="o">=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">step_name</span><span class="p">]</span>
+            <span class="n">max_cores</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">max_cores</span><span class="p">,</span> <span class="n">step</span><span class="o">.</span><span class="n">cores</span><span class="p">)</span>
+            <span class="n">max_of_min_cores</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">max_of_min_cores</span><span class="p">,</span> <span class="n">step</span><span class="o">.</span><span class="n">min_cores</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">max_cores</span><span class="p">,</span> <span class="n">max_of_min_cores</span>
 </pre></div>
 
            </div>
