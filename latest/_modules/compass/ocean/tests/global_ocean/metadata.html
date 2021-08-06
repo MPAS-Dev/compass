@@ -204,6 +204,41 @@
 <span class="kn">import</span> <span class="nn">shutil</span>
 
 
+<span class="k">def</span> <span class="nf">get_author_and_email_from_git</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the author and email address config options from git if they are set to</span>
+<span class="sd">    autodetect</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : configparser.ConfigParser</span>
+<span class="sd">        Configuration options for this test case</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">author</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;author&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">author</span> <span class="o">==</span> <span class="s1">&#39;autodetect&#39;</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">author</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span>
+                <span class="p">[</span><span class="s1">&#39;git&#39;</span><span class="p">,</span> <span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="s1">&#39;user.name&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;It appears you have not set up a git username &#39;</span>
+                             <span class="s1">&#39;yet.  Please do so or provide a config file &#39;</span>
+                             <span class="s1">&#39;that sets config option &quot;author&quot; in &#39;</span>
+                             <span class="s1">&#39;[global_ocean].&#39;</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;author&#39;</span><span class="p">,</span> <span class="n">author</span><span class="p">)</span>
+
+    <span class="n">email</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;email&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">email</span> <span class="o">==</span> <span class="s1">&#39;autodetect&#39;</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">email</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span>
+                <span class="p">[</span><span class="s1">&#39;git&#39;</span><span class="p">,</span> <span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="s1">&#39;user.email&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;It appears you have not set your email in git &#39;</span>
+                             <span class="s1">&#39;yet.  Please do so or provide a config file &#39;</span>
+                             <span class="s1">&#39;that sets config option &quot;email&quot; in &#39;</span>
+                             <span class="s1">&#39;[global_ocean].&#39;</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;email&#39;</span><span class="p">,</span> <span class="n">email</span><span class="p">)</span>
+
+
 <div class="viewcode-block" id="get_e3sm_mesh_names"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.metadata.get_e3sm_mesh_names.html#compass.ocean.tests.global_ocean.metadata.get_e3sm_mesh_names">[docs]</a><span class="k">def</span> <span class="nf">get_e3sm_mesh_names</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">levels</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get short and long E3SM mesh name from config options and the given number</span>
@@ -285,29 +320,7 @@
     <span class="sd">&quot;&quot;&quot; add metadata to a given dataset &quot;&quot;&quot;</span>
 
     <span class="n">author</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;author&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">author</span> <span class="o">==</span> <span class="s1">&#39;autodetect&#39;</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">author</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span>
-                <span class="p">[</span><span class="s1">&#39;git&#39;</span><span class="p">,</span> <span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="s1">&#39;user.name&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-        <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;It appears you have not set up a git username &#39;</span>
-                             <span class="s1">&#39;yet.  Please do so or provide a config file &#39;</span>
-                             <span class="s1">&#39;that sets config option &quot;author&quot; in &#39;</span>
-                             <span class="s1">&#39;[global_ocean].&#39;</span><span class="p">)</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;author&#39;</span><span class="p">,</span> <span class="n">author</span><span class="p">)</span>
-
     <span class="n">email</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;email&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">email</span> <span class="o">==</span> <span class="s1">&#39;autodetect&#39;</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">email</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span>
-                <span class="p">[</span><span class="s1">&#39;git&#39;</span><span class="p">,</span> <span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="s1">&#39;user.email&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-        <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;It appears you have not set your email in git &#39;</span>
-                             <span class="s1">&#39;yet.  Please do so or provide a config file &#39;</span>
-                             <span class="s1">&#39;that sets config option &quot;email&quot; in &#39;</span>
-                             <span class="s1">&#39;[global_ocean].&#39;</span><span class="p">)</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;email&#39;</span><span class="p">,</span> <span class="n">email</span><span class="p">)</span>
-
     <span class="n">creation_date</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;creation_date&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">creation_date</span> <span class="o">==</span> <span class="s1">&#39;autodetect&#39;</span><span class="p">:</span>
         <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
