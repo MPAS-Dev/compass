@@ -1,4 +1,6 @@
 from compass.config import add_config
+from compass.ocean.tests.global_ocean.metadata import \
+    get_author_and_email_from_git
 
 
 def configure_global_ocean(test_case, mesh, init=None):
@@ -48,3 +50,5 @@ def configure_global_ocean(test_case, mesh, init=None):
     if mesh.with_ice_shelf_cavities:
         config.set('global_ocean', 'wisc_description',
                    'Includes cavities under the ice shelves around Antarctica')
+
+    get_author_and_email_from_git(config)

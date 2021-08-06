@@ -6,6 +6,41 @@ import os
 import shutil
 
 
+def get_author_and_email_from_git(config):
+    """
+    Get the author and email address config options from git if they are set to
+    autodetect
+
+    Parameters
+    ----------
+    config : configparser.ConfigParser
+        Configuration options for this test case
+    """
+    author = config.get('global_ocean', 'author')
+    if author == 'autodetect':
+        try:
+            author = subprocess.check_output(
+                ['git', 'config', 'user.name']).decode("utf-8").strip()
+        except subprocess.CalledProcessError:
+            raise ValueError('It appears you have not set up a git username '
+                             'yet.  Please do so or provide a config file '
+                             'that sets config option "author" in '
+                             '[global_ocean].')
+        config.set('global_ocean', 'author', author)
+
+    email = config.get('global_ocean', 'email')
+    if email == 'autodetect':
+        try:
+            email = subprocess.check_output(
+                ['git', 'config', 'user.email']).decode("utf-8").strip()
+        except subprocess.CalledProcessError:
+            raise ValueError('It appears you have not set your email in git '
+                             'yet.  Please do so or provide a config file '
+                             'that sets config option "email" in '
+                             '[global_ocean].')
+        config.set('global_ocean', 'email', email)
+
+
 def get_e3sm_mesh_names(config, levels):
     """
     Get short and long E3SM mesh name from config options and the given number
@@ -87,29 +122,7 @@ def _get_metadata(dsInit, config):
     """ add metadata to a given dataset """
 
     author = config.get('global_ocean', 'author')
-    if author == 'autodetect':
-        try:
-            author = subprocess.check_output(
-                ['git', 'config', 'user.name']).decode("utf-8").strip()
-        except subprocess.CalledProcessError:
-            raise ValueError('It appears you have not set up a git username '
-                             'yet.  Please do so or provide a config file '
-                             'that sets config option "author" in '
-                             '[global_ocean].')
-        config.set('global_ocean', 'author', author)
-
     email = config.get('global_ocean', 'email')
-    if email == 'autodetect':
-        try:
-            email = subprocess.check_output(
-                ['git', 'config', 'user.email']).decode("utf-8").strip()
-        except subprocess.CalledProcessError:
-            raise ValueError('It appears you have not set your email in git '
-                             'yet.  Please do so or provide a config file '
-                             'that sets config option "email" in '
-                             '[global_ocean].')
-        config.set('global_ocean', 'email', email)
-
     creation_date = config.get('global_ocean', 'creation_date')
     if creation_date == 'autodetect':
         now = datetime.now()
