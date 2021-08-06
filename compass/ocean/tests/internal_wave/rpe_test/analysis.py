@@ -73,52 +73,35 @@ def _plot(nx, ny, filename, nus):
 
     plt.switch_backend('Agg')
 
-    nRow = 1
-    nCol = 5
-    iTime = [0]
-    time = ['20']
-
+    fig = plt.gcf()
+    nRow = 5
+    nCol = 2
+    iTime = [0, 1]
+    time = ['1', '21']
+    
     fig, axs = plt.subplots(nRow, nCol, figsize=(
-        2.1 * nCol, 5.0 * nRow), constrained_layout=True)
-
-    for iCol in range(nCol):
-        for iRow in range(nRow):
-            ncfile = Dataset('output_{}.nc'.format(iCol + 1), 'r')
-            var = ncfile.variables['temperature']
-            var1 = np.reshape(var[iTime[iRow], :, 0], [ny, nx])
-            # flip in y-dir
-            var = np.flipud(var1)
-
-            # Every other row in y needs to average two neighbors in x on
-            # planar hex mesh
-            var_avg = var
-            for j in range(0, ny, 2):
-                for i in range(1, nx - 2):
-                    var_avg[j, i] = (var[j, i + 1] + var[j, i]) / 2.0
-
-            if nRow == 1:
-                ax = axs[iCol]
-            else:
-                ax = axs[iRow, iCol]
+        4.0 * nCol, 3.7 * nRow), constrained_layout=True)
+    
+    for iRow in range(nRow):
+        ncfile = Dataset('output_' + str(iRow + 1) + '.nc', 'r')
+        var = ncfile.variables['temperature']
+        xtime = ncfile.variables['xtime']
+        for iCol in range(nCol):
+            ax = axs[iRow, iCol]
             dis = ax.imshow(
-                var_avg,
-                extent=[0, 160, 0, 500],
-                cmap='cmo.thermal',
-                vmin=11.8,
-                vmax=13.0)
-            ax.set_title("day {}, $\\nu_h=${}".format(time[iRow], nus[iCol]))
-            ax.set_xticks(np.arange(0, 161, step=40))
-            ax.set_yticks(np.arange(0, 501, step=50))
-
+                var[iTime[iCol], 0::4, :].T, 
+                extent=[0, 250, 500, 0], 
+                aspect='0.5', 
+                cmap='jet', 
+                vmin=10, 
+                vmax=20)
             if iRow == nRow - 1:
                 ax.set_xlabel('x, km')
             if iCol == 0:
-                ax.set_ylabel('y, km')
+                ax.set_ylabel('depth, m')
             if iCol == nCol - 1:
-                if nRow == 1:
-                    fig.colorbar(dis, ax=axs[nCol - 1], aspect=40)
-                else:
-                    fig.colorbar(dis, ax=axs[iRow, nCol - 1], aspect=40)
-            ncfile.close()
+                fig.colorbar(dis, ax=axs[iRow, iCol], aspect=10)
+            ax.set_title("day {}, $\\nu_h=${}".format(time[iCol], nus[iRow]))
+        ncfile.close()
 
     plt.savefig(filename)
