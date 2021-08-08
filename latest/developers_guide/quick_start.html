@@ -254,14 +254,15 @@ you if you don’t already have it installed.</p>
 <div class="section" id="supported-machines">
 <h3>Supported machines<a class="headerlink" href="#supported-machines" title="Permalink to this headline">¶</a></h3>
 <p>If you are on one of the <a class="reference internal" href="machines/index.html#dev-supported-machines"><span class="std std-ref">Supported Machines</span></a>, run:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./conda/configure_compass_env.py --conda &lt;conda_path&gt; -c &lt;compiler&gt;
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./conda/configure_compass_env.py --conda &lt;base_path_to_install_or_update_conda&gt; <span class="se">\</span>
+    -c &lt;compiler&gt;
 </pre></div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">&lt;conda_path&gt;</span></code> is typically <code class="docutils literal notranslate"><span class="pre">~/miniconda3</span></code>.  This is the location
-where you would like to install Miniconda3 or where it is already installed.
-If you have limited space in your home directory, you may want to give another
-path.  If you already have it installed, that path will be used to add
-(or update) the compass test environment.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">&lt;base_path_to_install_or_update_conda&gt;</span></code> is typically <code class="docutils literal notranslate"><span class="pre">~/miniconda3</span></code>.
+This is the location where you would like to install Miniconda3 or where it is
+already installed. If you have limited space in your home directory, you may
+want to give another path.  If you already have it installed, that path will
+be used to add (or update) the compass test environment.</p>
 <p>See the machine under <a class="reference internal" href="machines/index.html#dev-supported-machines"><span class="std std-ref">Supported Machines</span></a> for a list of available
 compilers to pass to <code class="docutils literal notranslate"><span class="pre">-c</span></code>.  If you don’t supply a compiler, you will get
 the default one for that machine (usually Intel). Typically, you will want the

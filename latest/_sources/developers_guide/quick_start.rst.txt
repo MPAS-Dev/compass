@@ -61,13 +61,14 @@ If you are on one of the :ref:`dev_supported_machines`, run:
 
 .. code-block:: bash
 
-  ./conda/configure_compass_env.py --conda <conda_path> -c <compiler>
+    ./conda/configure_compass_env.py --conda <base_path_to_install_or_update_conda> \
+        -c <compiler>
 
-The ``<conda_path>`` is typically ``~/miniconda3``.  This is the location
-where you would like to install Miniconda3 or where it is already installed.
-If you have limited space in your home directory, you may want to give another
-path.  If you already have it installed, that path will be used to add
-(or update) the compass test environment.
+The ``<base_path_to_install_or_update_conda>`` is typically ``~/miniconda3``.
+This is the location where you would like to install Miniconda3 or where it is
+already installed. If you have limited space in your home directory, you may
+want to give another path.  If you already have it installed, that path will
+be used to add (or update) the compass test environment.
 
 See the machine under :ref:`dev_supported_machines` for a list of available
 compilers to pass to ``-c``.  If you don't supply a compiler, you will get
