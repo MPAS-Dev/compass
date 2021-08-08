@@ -36,12 +36,10 @@ class Forward(Step):
         self.resolution = resolution
         self.dt_minutes = dt_minutes
 
-        self.add_namelist_file(
-            'compass.ocean.tests.global_convergence.rotation2D',
-            'namelist.forward')
-        self.add_streams_file(
-            'compass.ocean.tests.global_convergence.rotation2D',
-            'streams.forward')
+        package = 'compass.ocean.tests.sphere_transport.rotation2D'
+
+        self.add_namelist_file(package, 'namelist.forward', mode='forward')
+        self.add_streams_file(package,'streams.forward', mode='forward')
 
         self.add_input_file(filename='init.nc',
                             target='../init/initial_state.nc')
@@ -51,34 +49,37 @@ class Forward(Step):
         self.add_model_as_input()
 
         self.add_output_file(filename='output.nc')
+        print("from init:\n", self.namelist_data["namelist.ocean"])
 
     def setup(self):
         """
         Set namelist options base on config options
         """
         config = self.config
-        dtstr = self.get_timestep_config_str()
+        dtstr = self.get_timestep_str()
         self.add_namelist_options({'config_dt': dtstr,
           'config_time_integrator':config.get('rotation2D', 'time_integrator')})
+        print("from setup:\n", self.namelist_data["namelist.ocean"])
 
     def run(self):
         """
         Run this step of the testcase
         """
         config = self.config
-        dt = self.get_timestep_str(self.dt_minutes)
+        dt = self.get_timestep_str()
         self.update_namelist_at_runtime(options={'config_dt': dt,
           'config_time_integrator':config.get('rotation2D', 'time_integrator')},
           out_name='namelist.ocean')
 
         run_model(self)
 
-    def get_timestep_str(dtminutes):
+    def get_timestep_str(self):
         """
           These tests expect the time step to be input in units of minutes, but MPAS
           requires an "HH:MM:SS" string.  This function converts the time step input
           into the formatted string used by MPAS.
         """
+        dtminutes = self.dt_minutes
         dt = timedelta(minutes=dtminutes)
         if  dtminutes < 1:
            dtstr = "00:00:" + str(dt.total_seconds())[:2]
