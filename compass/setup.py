@@ -11,7 +11,8 @@ from compass import provenance
 
 
 def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
-                work_dir=None, baseline_dir=None, mpas_model_path=None):
+                work_dir=None, baseline_dir=None, mpas_model_path=None,
+                suite_name='custom'):
     """
     Set up one or more test cases
 
@@ -41,6 +42,10 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
         The relative or absolute path to the root of a branch where the MPAS
         model has been built
 
+    suite_name : str, optional
+        The name of the test suite if tests are being set up through a test
+        suite or ``'custom'`` if not
+
     Returns
     -------
     test_cases : dict of compass.TestCase
@@ -58,6 +63,7 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
 
     if work_dir is None:
         work_dir = os.getcwd()
+    work_dir = os.path.abspath(work_dir)
 
     mpas_cores = get_mpas_cores()
 
@@ -96,6 +102,26 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
     for path, test_case in test_cases.items():
         setup_case(path, test_case, config_file, machine, work_dir,
                    baseline_dir, mpas_model_path)
+
+    test_suite = {'name': suite_name,
+                  'test_cases': test_cases,
+                  'work_dir': work_dir}
+
+    # pickle the test or step dictionary for use at runtime
+    pickle_file = os.path.join(test_suite['work_dir'],
+                               '{}.pickle'.format(suite_name))
+    with open(pickle_file, 'wb') as handle:
+        pickle.dump(test_suite, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+    if 'LOAD_COMPASS_ENV' in os.environ:
+        script_filename = os.environ['LOAD_COMPASS_ENV']
+        # make a symlink to the script for loading the compass conda env.
+        symlink(script_filename, os.path.join(work_dir, 'load_compass_env.sh'))
+
+    max_cores, max_of_min_cores = _get_required_cores(test_cases)
+
+    print('target cores: {}'.format(max_cores))
+    print('minimum cores: {}'.format(max_of_min_cores))
 
     return test_cases
 
@@ -274,6 +300,10 @@ def main():
                         help="The path to the build of the MPAS model for the "
                              "core.",
                         metavar="PATH")
+    parser.add_argument("--suite_name", dest="suite_name", default="custom",
+                        help="The name to use for the 'custom' test suite"
+                             "containing all setup test cases.",
+                        metavar="SUITE")
 
     args = parser.parse_args(sys.argv[2:])
     if args.test is None:
@@ -283,4 +313,18 @@ def main():
     setup_cases(tests=tests, numbers=args.case_num,
                 config_file=args.config_file, machine=args.machine,
                 work_dir=args.work_dir, baseline_dir=args.baseline_dir,
-                mpas_model_path=args.mpas_model)
+                mpas_model_path=args.mpas_model, suite_name=args.suite_name)
+
+
+def _get_required_cores(test_cases):
+    """ Get the maximum number of target cores and the max of min cores """
+
+    max_cores = 0
+    max_of_min_cores = 0
+    for test_case in test_cases.values():
+        for step_name in test_case.steps_to_run:
+            step = test_case.steps[step_name]
+            max_cores = max(max_cores, step.cores)
+            max_of_min_cores = max(max_of_min_cores, step.min_cores)
+
+    return max_cores, max_of_min_cores

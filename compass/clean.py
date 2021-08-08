@@ -7,7 +7,7 @@ from compass.mpas_cores import get_mpas_cores
 from compass import provenance
 
 
-def clean_cases(tests=None, numbers=None, work_dir=None):
+def clean_cases(tests=None, numbers=None, work_dir=None, suite_name='custom'):
     """
     Set up one or more test cases
 
@@ -21,6 +21,10 @@ def clean_cases(tests=None, numbers=None, work_dir=None):
 
     work_dir : str, optional
         A directory that will serve as the base for creating case directories
+
+    suite_name : str, optional
+        The name of the test suite if tests are being set up through a test
+        suite or ``'custom'`` if not
     """
 
     if tests is None and numbers is None:
@@ -28,6 +32,7 @@ def clean_cases(tests=None, numbers=None, work_dir=None):
 
     if work_dir is None:
         work_dir = os.getcwd()
+    work_dir = os.path.abspath(work_dir)
 
     mpas_cores = get_mpas_cores()
     all_test_cases = dict()
@@ -64,6 +69,14 @@ def clean_cases(tests=None, numbers=None, work_dir=None):
             shutil.rmtree(test_case_dir)
         except OSError:
             pass
+
+    # delete the pickle file for the test suite (if any)
+    pickle_file = os.path.join(work_dir, '{}.pickle'.format(suite_name))
+
+    try:
+        os.remove(pickle_file)
+    except OSError:
+        pass
 
 
 def main():

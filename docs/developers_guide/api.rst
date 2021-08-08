@@ -42,6 +42,8 @@ list
    :toctree: generated/
 
    list_cases
+   list_machines
+   list_suites
 
 setup
 ~~~~~
