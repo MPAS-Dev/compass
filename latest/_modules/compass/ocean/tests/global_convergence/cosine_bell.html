@@ -196,7 +196,10 @@
            <div itemprop="articleBody">
             
   <h1>Source code for compass.ocean.tests.global_convergence.cosine_bell</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
+<span></span><span class="kn">import</span> <span class="nn">configparser</span>
+
+<span class="kn">from</span> <span class="nn">compass.config</span> <span class="kn">import</span> <span class="n">add_config</span>
+<span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
 
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_convergence.cosine_bell.mesh</span> <span class="kn">import</span> <span class="n">Mesh</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_convergence.cosine_bell.init</span> <span class="kn">import</span> <span class="n">Init</span>
@@ -223,18 +226,21 @@
 <span class="sd">            The global ocean test group that this test case belongs to</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;cosine_bell&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span> <span class="o">=</span> <span class="kc">None</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># add the steps with default resolutions so they can be listed</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">(</span>
+            <span class="n">interpolation</span><span class="o">=</span><span class="n">configparser</span><span class="o">.</span><span class="n">ExtendedInterpolation</span><span class="p">())</span>
+        <span class="n">add_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.cfg&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_setup_steps</span><span class="p">(</span><span class="n">config</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="CosineBell.configure"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_convergence.cosine_bell.CosineBell.configure.html#compass.ocean.tests.global_convergence.cosine_bell.CosineBell.configure">[docs]</a>    <span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set config options for the test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="n">resolutions</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;cosine_bell&#39;</span><span class="p">,</span> <span class="s1">&#39;resolutions&#39;</span><span class="p">)</span>
-        <span class="n">resolutions</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">resolution</span><span class="p">)</span> <span class="k">for</span> <span class="n">resolution</span> <span class="ow">in</span>
-                       <span class="n">resolutions</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()]</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span> <span class="o">=</span> <span class="n">resolutions</span>
+        <span class="c1"># set up the steps again in case a user has provided new resolutions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_setup_steps</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 
         <span class="n">init_options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;salinity&#39;</span><span class="p">,</span> <span class="s1">&#39;lat_center&#39;</span><span class="p">,</span> <span class="s1">&#39;lon_center&#39;</span><span class="p">,</span>
@@ -242,16 +248,9 @@
             <span class="n">init_options</span><span class="p">[</span><span class="s1">&#39;config_cosine_bell_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">option</span><span class="p">)]</span> <span class="o">=</span> \
                 <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;cosine_bell&#39;</span><span class="p">,</span> <span class="n">option</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">resolution</span> <span class="ow">in</span> <span class="n">resolutions</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">Mesh</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">))</span>
-
-            <span class="n">step</span> <span class="o">=</span> <span class="n">Init</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">)</span>
-            <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">init_options</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">Forward</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">))</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">Analysis</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolutions</span><span class="o">=</span><span class="n">resolutions</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s1">&#39;init&#39;</span> <span class="ow">in</span> <span class="n">step</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+                <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">init_options</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">update_cores</span><span class="p">()</span></div>
 
@@ -299,7 +298,31 @@
             <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;cosine_bell&#39;</span><span class="p">,</span> <span class="s1">&#39;QU</span><span class="si">{}</span><span class="s1">_cores&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">),</span>
                        <span class="nb">str</span><span class="p">(</span><span class="n">cores</span><span class="p">))</span>
             <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;cosine_bell&#39;</span><span class="p">,</span> <span class="s1">&#39;QU</span><span class="si">{}</span><span class="s1">_min_cores&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">),</span>
-                       <span class="nb">str</span><span class="p">(</span><span class="n">min_cores</span><span class="p">))</span></div>
+                       <span class="nb">str</span><span class="p">(</span><span class="n">min_cores</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_setup_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; setup steps given resolutions &quot;&quot;&quot;</span>
+        <span class="n">resolutions</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;cosine_bell&#39;</span><span class="p">,</span> <span class="s1">&#39;resolutions&#39;</span><span class="p">)</span>
+        <span class="n">resolutions</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">resolution</span><span class="p">)</span> <span class="k">for</span> <span class="n">resolution</span> <span class="ow">in</span>
+                       <span class="n">resolutions</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span> <span class="o">==</span> <span class="n">resolutions</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="c1"># start fresh with no steps</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">steps</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">steps_to_run</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span> <span class="o">=</span> <span class="n">resolutions</span>
+
+        <span class="k">for</span> <span class="n">resolution</span> <span class="ow">in</span> <span class="n">resolutions</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">Mesh</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">Init</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">Forward</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">Analysis</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolutions</span><span class="o">=</span><span class="n">resolutions</span><span class="p">))</span></div>
 </pre></div>
 
            </div>
