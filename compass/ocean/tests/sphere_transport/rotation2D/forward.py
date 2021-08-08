@@ -49,7 +49,7 @@ class Forward(Step):
         self.add_model_as_input()
 
         self.add_output_file(filename='output.nc')
-        print("from init:\n", self.namelist_data["namelist.ocean"])
+
 
     def setup(self):
         """
@@ -59,7 +59,7 @@ class Forward(Step):
         dtstr = self.get_timestep_str()
         self.add_namelist_options({'config_dt': dtstr,
           'config_time_integrator':config.get('rotation2D', 'time_integrator')})
-        print("from setup:\n", self.namelist_data["namelist.ocean"])
+
 
     def run(self):
         """
