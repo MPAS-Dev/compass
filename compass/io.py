@@ -41,8 +41,8 @@ def download(url, dest_path, config, exceptions=True):
 
     if not do_download:
         if not os.path.exists(dest_path):
-            raise OSError('File not found and downloading is disabled: '
-                          '{}'.format(dest_path))
+            raise OSError(f'File not found and downloading is disabled: '
+                          f'{dest_path}')
         return dest_path
 
     if not check_size and os.path.exists(dest_path):
@@ -62,12 +62,12 @@ def download(url, dest_path, config, exceptions=True):
 
     try:
         response = session.get(url, stream=True)
-        totalSize = response.headers.get('content-length')
+        total_size = response.headers.get('content-length')
     except requests.exceptions.RequestException:
         if exceptions:
             raise
         else:
-            print('  {} could not be reached!'.format(url))
+            print(f'  {url} could not be reached!')
             return None
 
     try:
@@ -76,44 +76,47 @@ def download(url, dest_path, config, exceptions=True):
         if exceptions:
             raise
         else:
-            print('ERROR while downloading {}:'.format(in_file_name))
+            print(f'ERROR while downloading {in_file_name}:')
             print(e)
             return None
 
-    if totalSize is None:
+    if total_size is None:
         # no content length header
         if not os.path.exists(dest_path):
+            dest_dir = os.path.dirname(dest_path)
             with open(dest_path, 'wb') as f:
-                print('Downloading {}...'.format(in_file_name))
+                print(f'Downloading {in_file_name}\n'
+                      f'  to {dest_dir}...')
                 try:
                     f.write(response.content)
                 except requests.exceptions.RequestException:
                     if exceptions:
                         raise
                     else:
-                        print('  {} failed!'.format(in_file_name))
+                        print(f'  {in_file_name} failed!')
                         return None
                 else:
-                    print('  {} done.'.format(in_file_name))
+                    print('  {in_file_name} done.')
     else:
         # we can do the download in chunks and use a progress bar, yay!
 
-        totalSize = int(totalSize)
+        total_size = int(total_size)
         if os.path.exists(dest_path) and \
-                totalSize == os.path.getsize(dest_path):
+                total_size == os.path.getsize(dest_path):
             # we already have the file, so just return
             return dest_path
 
         if out_file_name == in_file_name:
             file_names = in_file_name
         else:
-            file_names = '{} as {}'.format(in_file_name, out_file_name)
-        print('Downloading {} ({})...'.format(file_names,
-                                              _sizeof_fmt(totalSize)))
+            file_names = f'{in_file_name} as {out_file_name}'
+        dest_dir = os.path.dirname(dest_path)
+        print(f'Downloading {file_names} ({_sizeof_fmt(total_size)})\n'
+              f'  to {dest_dir}')
         widgets = [progressbar.Percentage(), ' ', progressbar.Bar(),
                    ' ', progressbar.ETA()]
         bar = progressbar.ProgressBar(widgets=widgets,
-                                      max_value=totalSize).start()
+                                      max_value=total_size).start()
         size = 0
         with open(dest_path, 'wb') as f:
             try:
@@ -126,10 +129,10 @@ def download(url, dest_path, config, exceptions=True):
                 if exceptions:
                     raise
                 else:
-                    print('  {} failed!'.format(in_file_name))
+                    print(f'  {in_file_name} failed!')
                     return None
             else:
-                print('  {} done.'.format(in_file_name))
+                print(f'  {in_file_name} done.')
     return dest_path
 
 
