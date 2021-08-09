@@ -1,13 +1,12 @@
 import numpy as np
-import xarray as xr
-import matplotlib.pyplot as plt
-
 from compass.step import Step
+from ..process_output import *
+from netCDF4 import Dataset
 
 
 class Analysis(Step):
     """
-    A step for visualizing the output from the cosine bell test case
+    A step for visualizing the output from the rotation2D test case
 
     Attributes
     ----------
@@ -20,7 +19,7 @@ class Analysis(Step):
 
         Parameters
         ----------
-        test_case : compass.ocean.tests.global_convergence.cosine_bell.CosineBell
+        test_case : compass.ocean.tests.sphere_transport.rotation2D.Rotation2D
             The test case this step belongs to
 
         resolutions : list of int
@@ -28,6 +27,7 @@ class Analysis(Step):
         """
         super().__init__(test_case=test_case, name='analysis')
         self.resolutions = resolutions
+        self.tcdata = dict()
 
         for resolution in resolutions:
             self.add_input_file(
@@ -39,101 +39,82 @@ class Analysis(Step):
             self.add_input_file(
                 filename='QU{}_output.nc'.format(resolution),
                 target='../QU{}/forward/output.nc'.format(resolution))
+            self.add_output_file('rotation2D_QU{}_sol.pdf'.format(resolution))
 
-        self.add_output_file('convergence.png')
+        self.add_output_file('rotation2D_convergence.pdf')
 
     def run(self):
         """
         Run this step of the test case
         """
-        plt.switch_backend('Agg')
-        resolutions = self.resolutions
-        xdata = list()
-        ydata = list()
-        for res in resolutions:
-            rmseValue, nCells = self.rmse(res)
-            xdata.append(nCells)
-            ydata.append(rmseValue)
-        xdata = np.asarray(xdata)
-        ydata = np.asarray(ydata)
+        ###
+        # Collect data
+        ###
+        for resolution in self.resolutions:
+          ncd = Dataset('../QU{}/forward/output.nc'.format(resolution))
+          self.tcdata[resolution] = {'dataset':ncd}
+          self.tcdata[resolution]['appx_mesh_size'] = appx_mesh_size(ncd)
+          self.tcdata[resolution]['err'] = compute_error_from_output_ncfile(ncd)
 
-        p = np.polyfit(np.log10(xdata), np.log10(ydata), 1)
-        conv = abs(p[0]) * 2.0
+        ###
+        # Plot solutions
+        ###
+        #   plt.rc('text', usetex=True) # .tex fails on Anvil
+        plt.rc('font', family='sans-serif')
+        plt.rc('ps', useafm=True)
+        plt.rc('pdf', use14corefonts=True)
+        for r in self.tcdata.keys():
+          tcstr = 'rotation2D_QU{}'.format(r)
+          fig = plt.figure(constrained_layout=True)
+          plot_sol(fig, tcstr, self.tcdata[r]['dataset'])
+          fig.savefig(tcstr + ".pdf", bbox_inches='tight')
 
-        yfit = xdata**p[0] * 10**p[1]
 
-        plt.loglog(xdata, yfit, 'k')
-        plt.loglog(xdata, ydata, 'or')
-        plt.annotate('Order of Convergence = {}'.format(np.round(conv, 3)),
-                     xycoords='axes fraction', xy=(0.3, 0.95), fontsize=14)
-        plt.xlabel('Number of Grid Cells', fontsize=14)
-        plt.ylabel('L2 Norm', fontsize=14)
-        plt.savefig('convergence.png', bbox_inches='tight', pad_inches=0.1)
+        ###
+        # convergence analysis
+        ###
+        rvals = sorted(self.tcdata.keys())
+        rvals.reverse()
+        dlambda = []
+        linf1 = []
+        linf2 = []
+        linf3 = []
+        l21 = []
+        l22 = []
+        l23 = []
+        for r in rvals:
+          dlambda.append(self.tcdata[r]['appx_mesh_size'])
+          linf1.append(self.tcdata[r]['err']['tracer1']['linf'])
+          linf2.append(self.tcdata[r]['err']['tracer2']['linf'])
+          linf3.append(self.tcdata[r]['err']['tracer3']['linf'])
+          l21.append(self.tcdata[r]['err']['tracer1']['l2'])
+          l22.append(self.tcdata[r]['err']['tracer2']['l2'])
+          l23.append(self.tcdata[r]['err']['tracer3']['l2'])
+        linfrate, l2rate = compute_convergence_rates(dlambda, linf1, l21)
+        print_error_conv_table('rotation2D', rvals, dlambda, l21, l2rate, linf1, linfrate)
 
-    def rmse(self, resolution):
-        """
-        Compute the RMSE for a given resolution
+        o1ref = 5*np.array(dlambda)
+        o2ref = 50*np.square(dlambda)
 
-        Parameters
-        ----------
-        resolution : int
-            The resolution of the (uniform) mesh in km
+        fig, ax = plt.subplots()
+        mSize = 8.0
+        mWidth = mSize/4
+        prop_cycle = plt.rcParams['axes.prop_cycle']
+        colors = prop_cycle.by_key()['color']
 
-        Returns
-        -------
-        rmseValue : float
-            The root-mean-squared error
+        ax.loglog(dlambda, linf1, '+:', color=colors[0], markersize=mSize, markerfacecolor='none', markeredgewidth=mWidth, label="tracer1_linf")
+        ax.loglog(dlambda, l21, '+-', color=colors[0], markersize=mSize, markerfacecolor='none', markeredgewidth=mWidth, label="tracer1_l2")
+        ax.loglog(dlambda, linf2, 's:', color=colors[1], markersize=mSize, markerfacecolor='none', markeredgewidth=mWidth, label="tracer2_linf")
+        ax.loglog(dlambda, l22, 's-', color=colors[1], markersize=mSize, markerfacecolor='none', markeredgewidth=mWidth, label="tracer2_l2")
+        ax.loglog(dlambda, linf3, 'v:', color=colors[2], markersize=mSize, markerfacecolor='none', markeredgewidth=mWidth, label="tracer3_linf")
+        ax.loglog(dlambda, l23, 'v-', color=colors[2], markersize=mSize, markerfacecolor='none', markeredgewidth=mWidth, label="tracer3_l2")
+        ax.loglog(dlambda, o1ref, 'k--',label="1st ord.")
+        ax.loglog(dlambda, o2ref, 'k-.', label="2nd ord.")
+        ax.set_xticks(dlambda)
+        ax.set_xticklabels(rvals)
+        ax.tick_params(which='minor', labelbottom=False)
+        ax.set(title='rotation2D', xlabel='QU res. val.', ylabel='rel. err.')
+        ax.legend(bbox_to_anchor=(1.05, 0.5), loc='center left')
+        fig.savefig('rotation2D_convergence.pdf', bbox_inches='tight')
+        plt.close()
 
-        nCells : int
-            The number of cells in the mesh
-        """
-        resTag = 'QU{}'.format(resolution)
-
-        config = self.config
-        latCent = config.getfloat('cosine_bell', 'lat_center')
-        lonCent = config.getfloat('cosine_bell', 'lon_center')
-        radius = config.getfloat('cosine_bell', 'radius')
-        psi0 = config.getfloat('cosine_bell', 'psi0')
-        pd = config.getfloat('cosine_bell', 'vel_pd')
-
-        init = xr.open_dataset('{}_init.nc'.format(resTag))
-        # find time since the beginning of run
-        ds = xr.open_dataset('{}_output.nc'.format(resTag))
-        for j in range(len(ds.xtime)):
-            tt = str(ds.xtime[j].values)
-            tt.rfind('_')
-            DY = float(tt[10:12]) - 1
-            if DY == pd:
-                sliceTime = j
-                break
-        HR = float(tt[13:15])
-        MN = float(tt[16:18])
-        t = 86400.0 * DY + HR * 3600. + MN
-        # find new location of blob center
-        # center is based on equatorial velocity
-        R = init.sphere_radius
-        distTrav = 2.0 * 3.14159265 * R / (86400.0 * pd) * t
-        # distance in radians is
-        distRad = distTrav / R
-        newLon = lonCent + distRad
-        if newLon > 2.0 * np.pi:
-            newLon -= 2.0 * np.pi
-
-        # construct analytic tracer
-        tracer = np.zeros_like(init.tracer1[0, :, 0].values)
-        latC = init.latCell.values
-        lonC = init.lonCell.values
-        temp = R * np.arccos(np.sin(latCent) * np.sin(latC) +
-                             np.cos(latCent) * np.cos(latC) * np.cos(
-            lonC - newLon))
-        mask = temp < radius
-        tracer[mask] = psi0 / 2.0 * (
-                    1.0 + np.cos(3.1415926 * temp[mask] / radius))
-
-        # oad forward mode data
-        tracerF = ds.tracer1[sliceTime, :, 0].values
-        rmseValue = np.sqrt(np.mean((tracerF - tracer)**2))
-
-        init.close()
-        ds.close()
-        return rmseValue, init.dims['nCells']

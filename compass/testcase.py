@@ -241,7 +241,7 @@ class TestCase:
         if step.min_cores is not None:
             if step.cores < step.min_cores:
                 raise ValueError(
-                    'Available cores for {} is below the minimum of {}'
+                    'Available cores ({}) is below the minimum of {}'
                     ''.format(step.cores, step.min_cores))
 
         missing_files = list()
