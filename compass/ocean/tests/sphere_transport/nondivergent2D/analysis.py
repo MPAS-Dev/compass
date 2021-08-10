@@ -68,53 +68,49 @@ class Analysis(Step):
           fig = plt.figure(constrained_layout=True)
           plot_sol(fig, tcstr, self.tcdata[r]['dataset'])
           fig.savefig(tcstr + "_sol.pdf", bbox_inches='tight')
-
+          plt.close(fig)
 
         ###
         # convergence analysis
         ###
+        dlambda, linf1, linf2, linf3, l21, l22, l23, fil, u1, o1, u2, o2, u3, o3 = make_convergence_arrays(self.tcdata)
+        linfrate, l2rate = compute_convergence_rates(dlambda, linf1, l21)
         rvals = sorted(self.tcdata.keys())
         rvals.reverse()
-        dlambda = []
-        linf1 = []
-        linf2 = []
-        linf3 = []
-        l21 = []
-        l22 = []
-        l23 = []
-        for r in rvals:
-          dlambda.append(self.tcdata[r]['appx_mesh_size'])
-          linf1.append(self.tcdata[r]['err']['tracer1']['linf'])
-          linf2.append(self.tcdata[r]['err']['tracer2']['linf'])
-          linf3.append(self.tcdata[r]['err']['tracer3']['linf'])
-          l21.append(self.tcdata[r]['err']['tracer1']['l2'])
-          l22.append(self.tcdata[r]['err']['tracer2']['l2'])
-          l23.append(self.tcdata[r]['err']['tracer3']['l2'])
-        linfrate, l2rate = compute_convergence_rates(dlambda, linf1, l21)
         print_error_conv_table('nondivergent2D', rvals, dlambda, l21, l2rate, linf1, linfrate)
 
-        o1ref = 5*np.array(dlambda)
-        o2ref = 50*np.square(dlambda)
-
         fig, ax = plt.subplots()
-        mSize = 8.0
-        mWidth = mSize/4
-        prop_cycle = plt.rcParams['axes.prop_cycle']
-        colors = prop_cycle.by_key()['color']
-
-        ax.loglog(dlambda, linf1, '+:', color=colors[0], markersize=mSize, markerfacecolor='none', markeredgewidth=mWidth, label="tracer1_linf")
-        ax.loglog(dlambda, l21, '+-', color=colors[0], markersize=mSize, markerfacecolor='none', markeredgewidth=mWidth, label="tracer1_l2")
-        ax.loglog(dlambda, linf2, 's:', color=colors[1], markersize=mSize, markerfacecolor='none', markeredgewidth=mWidth, label="tracer2_linf")
-        ax.loglog(dlambda, l22, 's-', color=colors[1], markersize=mSize, markerfacecolor='none', markeredgewidth=mWidth, label="tracer2_l2")
-        ax.loglog(dlambda, linf3, 'v:', color=colors[2], markersize=mSize, markerfacecolor='none', markeredgewidth=mWidth, label="tracer3_linf")
-        ax.loglog(dlambda, l23, 'v-', color=colors[2], markersize=mSize, markerfacecolor='none', markeredgewidth=mWidth, label="tracer3_l2")
-        ax.loglog(dlambda, o1ref, 'k--',label="1st ord.")
-        ax.loglog(dlambda, o2ref, 'k-.', label="2nd ord.")
-        ax.set_xticks(dlambda)
-        ax.set_xticklabels(rvals)
-        ax.tick_params(which='minor', labelbottom=False)
-        ax.set(title='nondivergent2D', xlabel='QU res. val.', ylabel='rel. err.')
-        ax.legend(bbox_to_anchor=(1.05, 0.5), loc='center left')
+        plot_convergence(ax, 'nondivergent2D', dlambda, rvals, linf1, l21, linf2, l22, linf3, l23)
         fig.savefig('nondivergent2D_convergence.pdf', bbox_inches='tight')
-        plt.close()
+        plt.close(fig)
+
+        ###
+        # range and filament preservation
+        ###
+        fig = plt.figure(constrained_layout=True)
+        gs = fig.add_gridspec(3,3)
+        ax0 = fig.add_subplot(gs[0,:])
+        plot_filament(ax0, 'nondivergent2D', rvals, fil)
+        time = np.array(range(13))
+        ctr = 0
+        for i in range(1,3):
+          for j in range(3):
+            r = rvals[ctr]
+            ax = fig.add_subplot(gs[i,j])
+            ax.set(title="QU{}".format(r))
+            ax.plot(time, u1[ctr], label='u1')
+            ax.plot(time, o1[ctr], label='o1')
+            ax.plot(time, u2[ctr], label='u2')
+            ax.plot(time, o2[ctr], label='o2')
+            ax.plot(time, u3[ctr], label='u3')
+            ax.plot(time, o3[ctr], label='o3')
+            ax.set_ylim((-0.5,0.5))
+            if r == 60:
+              ax.legend(bbox_to_anchor=(1,0.5), loc="center left")
+            if j == 0:
+              ax.set(ylabel="rel. range err.")
+            ctr += 1
+
+        fig.savefig('nondivergent2D_range_filament_err.pdf', bbox_inches='tight')
+        plt.close(fig)
 

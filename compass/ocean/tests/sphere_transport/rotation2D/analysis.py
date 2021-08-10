@@ -75,46 +75,13 @@ class Analysis(Step):
         ###
         rvals = sorted(self.tcdata.keys())
         rvals.reverse()
-        dlambda = []
-        linf1 = []
-        linf2 = []
-        linf3 = []
-        l21 = []
-        l22 = []
-        l23 = []
-        for r in rvals:
-          dlambda.append(self.tcdata[r]['appx_mesh_size'])
-          linf1.append(self.tcdata[r]['err']['tracer1']['linf'])
-          linf2.append(self.tcdata[r]['err']['tracer2']['linf'])
-          linf3.append(self.tcdata[r]['err']['tracer3']['linf'])
-          l21.append(self.tcdata[r]['err']['tracer1']['l2'])
-          l22.append(self.tcdata[r]['err']['tracer2']['l2'])
-          l23.append(self.tcdata[r]['err']['tracer3']['l2'])
+        dlambda, linf1, linf2, linf3, l21, l22, l23, _, u1, o1, u2, o2, u3, o3 = make_convergence_arrays(self.tcdata)
+        linfrate, l2rate = compute_convergence_rates(dlambda, linf1, l21)
         linfrate, l2rate = compute_convergence_rates(dlambda, linf1, l21)
         print_error_conv_table('rotation2D', rvals, dlambda, l21, l2rate, linf1, linfrate)
 
-        o1ref = 5*np.array(dlambda)
-        o2ref = 50*np.square(dlambda)
-
         fig, ax = plt.subplots()
-        mSize = 8.0
-        mWidth = mSize/4
-        prop_cycle = plt.rcParams['axes.prop_cycle']
-        colors = prop_cycle.by_key()['color']
-
-        ax.loglog(dlambda, linf1, '+:', color=colors[0], markersize=mSize, markerfacecolor='none', markeredgewidth=mWidth, label="tracer1_linf")
-        ax.loglog(dlambda, l21, '+-', color=colors[0], markersize=mSize, markerfacecolor='none', markeredgewidth=mWidth, label="tracer1_l2")
-        ax.loglog(dlambda, linf2, 's:', color=colors[1], markersize=mSize, markerfacecolor='none', markeredgewidth=mWidth, label="tracer2_linf")
-        ax.loglog(dlambda, l22, 's-', color=colors[1], markersize=mSize, markerfacecolor='none', markeredgewidth=mWidth, label="tracer2_l2")
-        ax.loglog(dlambda, linf3, 'v:', color=colors[2], markersize=mSize, markerfacecolor='none', markeredgewidth=mWidth, label="tracer3_linf")
-        ax.loglog(dlambda, l23, 'v-', color=colors[2], markersize=mSize, markerfacecolor='none', markeredgewidth=mWidth, label="tracer3_l2")
-        ax.loglog(dlambda, o1ref, 'k--',label="1st ord.")
-        ax.loglog(dlambda, o2ref, 'k-.', label="2nd ord.")
-        ax.set_xticks(dlambda)
-        ax.set_xticklabels(rvals)
-        ax.tick_params(which='minor', labelbottom=False)
-        ax.set(title='rotation2D', xlabel='QU res. val.', ylabel='rel. err.')
-        ax.legend(bbox_to_anchor=(1.05, 0.5), loc='center left')
+        plot_convergence(ax, 'rotation2D', dlambda, rvals, linf1, l21, linf2, l22, linf3, l23)
         fig.savefig('rotation2D_convergence.pdf', bbox_inches='tight')
         plt.close()
 
