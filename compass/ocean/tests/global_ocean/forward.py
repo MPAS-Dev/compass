@@ -88,34 +88,32 @@ class ForwardStep(Step):
         mesh_package = mesh.mesh_step.package
         mesh_package_contents = list(contents(mesh_package))
         mesh_namelists = ['namelist.forward',
-                          'namelist.{}'.format(time_integrator.lower())]
+                          f'namelist.{time_integrator.lower()}']
         for mesh_namelist in mesh_namelists:
             if mesh_namelist in mesh_package_contents:
                 self.add_namelist_file(mesh_package, mesh_namelist)
 
         mesh_streams = ['streams.forward',
-                        'streams.{}'.format(time_integrator.lower())]
+                        f'streams.{time_integrator.lower()}']
         for mesh_stream in mesh_streams:
             if mesh_stream in mesh_package_contents:
                 self.add_streams_file(mesh_package, mesh_stream)
 
-        mesh_path = mesh.mesh_step.path
-
         if mesh.with_ice_shelf_cavities:
-            initial_state_target = '{}/ssh_adjustment/adjusted_init.nc'.format(
-                init.path)
+            initial_state_target = \
+                f'{init.path}/ssh_adjustment/adjusted_init.nc'
         else:
-            initial_state_target = '{}/initial_state/initial_state.nc'.format(
-                init.path)
+            initial_state_target = \
+                f'{init.path}/initial_state/initial_state.nc'
         self.add_input_file(filename='init.nc',
                             work_dir_target=initial_state_target)
         self.add_input_file(
             filename='forcing_data.nc',
-            work_dir_target='{}/initial_state/init_mode_forcing_data.nc'
-                            ''.format(init.path))
+            work_dir_target=f'{init.path}/initial_state/'
+                            f'init_mode_forcing_data.nc')
         self.add_input_file(
             filename='graph.info',
-            work_dir_target='{}/culled_graph.info'.format(mesh_path))
+            work_dir_target=f'{init.path}/initial_state/graph.info')
 
         self.add_model_as_input()
 
@@ -223,7 +221,6 @@ def get_forward_subdir(init_subdir, time_integrator, name):
     elif time_integrator == 'RK4':
         subdir = os.path.join(init_subdir, time_integrator, name)
     else:
-        raise ValueError('Unexpected time integrator {}'.format(
-            time_integrator))
+        raise ValueError(f'Unexpected time integrator {time_integrator}')
 
     return subdir
