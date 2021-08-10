@@ -1,6 +1,7 @@
 from compass.testgroup import TestGroup
 
 from compass.ocean.tests.sphere_transport.rotation2D import Rotation2D
+from compass.ocean.tests.sphere_transport.nondivergent2D import Nondivergent2D
 
 
 class SphereTransport(TestGroup):
@@ -15,3 +16,4 @@ class SphereTransport(TestGroup):
         super().__init__(mpas_core=mpas_core, name='sphere_transport')
 
         self.add_test_case(Rotation2D(test_group=self))
+        self.add_test_case(Nondivergent2D(test_group=self))

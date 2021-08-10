@@ -6,7 +6,7 @@ from netCDF4 import Dataset
 
 class Analysis(Step):
     """
-    A step for visualizing the output from the rotation2D test case
+    A step for visualizing the output from the nondivergent2D test case
 
     Attributes
     ----------
@@ -19,7 +19,7 @@ class Analysis(Step):
 
         Parameters
         ----------
-        test_case : compass.ocean.tests.sphere_transport.rotation2D.Rotation2D
+        test_case : compass.ocean.tests.sphere_transport.nondivergent2D.Nondivergent2D
             The test case this step belongs to
 
         resolutions : list of int
@@ -39,9 +39,9 @@ class Analysis(Step):
             self.add_input_file(
                 filename='QU{}_output.nc'.format(resolution),
                 target='../QU{}/forward/output.nc'.format(resolution))
-            self.add_output_file('rotation2D_QU{}_sol.pdf'.format(resolution))
+            self.add_output_file('nondivergent2D_QU{}_sol.pdf'.format(resolution))
 
-        self.add_output_file('rotation2D_convergence.pdf')
+        self.add_output_file('nondivergent2D_convergence.pdf')
 
     def run(self):
         """
@@ -64,7 +64,7 @@ class Analysis(Step):
         plt.rc('ps', useafm=True)
         plt.rc('pdf', use14corefonts=True)
         for r in self.tcdata.keys():
-          tcstr = 'rotation2D_QU{}'.format(r)
+          tcstr = 'nondivergent2D_QU{}'.format(r)
           fig = plt.figure(constrained_layout=True)
           plot_sol(fig, tcstr, self.tcdata[r]['dataset'])
           fig.savefig(tcstr + "_sol.pdf", bbox_inches='tight')
@@ -91,7 +91,7 @@ class Analysis(Step):
           l22.append(self.tcdata[r]['err']['tracer2']['l2'])
           l23.append(self.tcdata[r]['err']['tracer3']['l2'])
         linfrate, l2rate = compute_convergence_rates(dlambda, linf1, l21)
-        print_error_conv_table('rotation2D', rvals, dlambda, l21, l2rate, linf1, linfrate)
+        print_error_conv_table('nondivergent2D', rvals, dlambda, l21, l2rate, linf1, linfrate)
 
         o1ref = 5*np.array(dlambda)
         o2ref = 50*np.square(dlambda)
@@ -113,8 +113,8 @@ class Analysis(Step):
         ax.set_xticks(dlambda)
         ax.set_xticklabels(rvals)
         ax.tick_params(which='minor', labelbottom=False)
-        ax.set(title='rotation2D', xlabel='QU res. val.', ylabel='rel. err.')
+        ax.set(title='nondivergent2D', xlabel='QU res. val.', ylabel='rel. err.')
         ax.legend(bbox_to_anchor=(1.05, 0.5), loc='center left')
-        fig.savefig('rotation2D_convergence.pdf', bbox_inches='tight')
+        fig.savefig('nondivergent2D_convergence.pdf', bbox_inches='tight')
         plt.close()
 

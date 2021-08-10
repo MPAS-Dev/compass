@@ -4,6 +4,7 @@ from matplotlib.gridspec import GridSpec
 from matplotlib.colors import ListedColormap
 from matplotlib.cm import ScalarMappable
 import numpy as np
+from importlib import resources
 
 def appx_mesh_size(dataset):
   ncells = len(dataset.dimensions["nCells"])
@@ -74,7 +75,7 @@ def print_error_conv_table(tcname, resvals, dlambda, l2, l2rates, linf, linfrate
       linfrates: appx. convergence rates for linf, computed by compute_convergence_rates
   """
   table_rows = []
-  for i, r in resvals:
+  for i, r in enumerate(resvals):
     table_rows.append([r, dlambda[i], l2[i], l2rates[i-1] if i>0 else '-', linf[i], linfrates[i-1] if i>0 else '-'])
   print(tcname + ": error data for tracer1")
   row_headers = ["res", "dlambda", "l2", "l2 rate", "linf", "linf rate"]
@@ -83,7 +84,7 @@ def print_error_conv_table(tcname, resvals, dlambda, l2, l2rates, linf, linfrate
   for row in table_rows:
     print(row_format.format(*row))
 
-def read_ncl_rgb_file(filename):
+def read_ncl_rgb_file(cmap_filename):
   """
     Read a .rgb file from the NCAR Command Language, and return a matplotlib colormap.
 
@@ -96,18 +97,26 @@ def read_ncl_rgb_file(filename):
     Returns:
       colormap usable by matplotlib that matches the ncl colormap
   """
-  if filename[-4:] != ".rgb":
-    raise ValueError("expected a .rgb file")
-  with open(filename, 'r') as f:
-    flines = f.readlines()
-  ncolors = int(flines[0].split()[-1])
-  rgb = np.zeros((ncolors,3))
-  for i, l in enumerate(flines[3:]):
-    ls = l.split()
-    for j in range(3):
-      rgb[i,j] = ls[j]
-  rgb /= 255
-  return ListedColormap(rgb, name=filename[:-4])
+  map_file_found = False
+  try :
+    with resources.open_text("compass.ocean.tests.sphere_transport.resources", cmap_filename) as f:
+      flines = f.readlines()
+    map_file_found = True
+  except:
+    pass
+  if map_file_found:
+    ncolors = int(flines[0].split()[-1])
+    rgb = np.zeros((ncolors,3))
+    for i, l in enumerate(flines[3:]):
+      ls = l.split()
+      for j in range(3):
+        rgb[i,j] = ls[j]
+    rgb /= 255
+    result = ListedColormap(rgb, name=cmap_filename)
+  else:
+    print("error reading ncl colormap. using matplotlib default instead.")
+    result = matplotlib.cm.get_cmap()
+  return result
 
 def plot_sol(fig, tcname, dataset):
   """
@@ -127,21 +136,21 @@ def plot_sol(fig, tcname, dataset):
   xticks = np.pi * np.array([0, 0.5, 1, 1.5, 2])
   xticklabels = [0, 90, 180, 270, 360]
 
-  clevels = np.linspace(0,1.1,20)
+  clev = np.linspace(0,1.1,20)
   nclcmap = read_ncl_rgb_file("wh-bl-gr-ye-re.rgb")
   axes = []
   for i in range(3):
     for j in range(3):
       axes.append(fig.add_subplot(gspc[i,j]))
-  axes[0].tricontourf(xc, yc, dataset.variables["tracer1"][0,:,1],levels=clev, cmap=nclcmap)
-  axes[1].tricontourf(xc, yc, dataset.variables["tracer1"][6,:,1],levels=clev, cmap=nclcmap)
-  axes[2].tricontourf(xc, yc, dataset.variables["tracer1"][12,:,1],levels=clev, cmap=nclcmap)
-  axes[3].tricontourf(xc, yc, dataset.variables["tracer2"][0,:,1],levels=clev, cmap=nclcmap)
-  axes[4].tricontourf(xc, yc, dataset.variables["tracer2"][6,:,1],levels=clev, cmap=nclcmap)
-  axes[5].tricontourf(xc, yc, dataset.variables["tracer2"][12,:,1],levels=clev, cmap=nclcmap)
-  axes[6].tricontourf(xc, yc, dataset.variables["tracer3"][0,:,1],levels=clev, cmap=nclcmap)
-  axes[7].tricontourf(xc, yc, dataset.variables["tracer3"][6,:,1],levels=clev, cmap=nclcmap)
-  axes[8].tricontourf(xc, yc, dataset.variables["tracer3"][12,:,1],levels=clev, cmap=nclcmap)
+  cm=axes[0].tricontourf(xc, yc, dataset.variables["tracer1"][0,:,1],levels=clev)
+  axes[1].tricontourf(xc, yc, dataset.variables["tracer1"][6,:,1],levels=clev)
+  axes[2].tricontourf(xc, yc, dataset.variables["tracer1"][12,:,1],levels=clev)
+  axes[3].tricontourf(xc, yc, dataset.variables["tracer2"][0,:,1],levels=clev)
+  axes[4].tricontourf(xc, yc, dataset.variables["tracer2"][6,:,1],levels=clev)
+  axes[5].tricontourf(xc, yc, dataset.variables["tracer2"][12,:,1],levels=clev)
+  axes[6].tricontourf(xc, yc, dataset.variables["tracer3"][0,:,1],levels=clev)
+  axes[7].tricontourf(xc, yc, dataset.variables["tracer3"][6,:,1],levels=clev)
+  axes[8].tricontourf(xc, yc, dataset.variables["tracer3"][12,:,1],levels=clev)
   for i in range(9):
     axes[i].set_xticks(xticks)
     axes[i].set_yticks(yticks)
@@ -153,3 +162,4 @@ def plot_sol(fig, tcname, dataset):
   for i in range(6):
     axes[i].set_xticklabels([])
   fig.colorbar(ScalarMappable(cmap=nclcmap))
+  fig.colorbar(cm)

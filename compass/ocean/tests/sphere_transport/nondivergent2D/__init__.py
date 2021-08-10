@@ -2,14 +2,14 @@ import configparser
 
 from compass.testcase import TestCase
 
-from compass.ocean.tests.sphere_transport.rotation2D.mesh import Mesh
-from compass.ocean.tests.sphere_transport.rotation2D.init import Init
-from compass.ocean.tests.sphere_transport.rotation2D.forward import Forward
-from compass.ocean.tests.sphere_transport.rotation2D.analysis import \
+from compass.ocean.tests.sphere_transport.nondivergent2D.mesh import Mesh
+from compass.ocean.tests.sphere_transport.nondivergent2D.init import Init
+from compass.ocean.tests.sphere_transport.nondivergent2D.forward import Forward
+from compass.ocean.tests.sphere_transport.nondivergent2D.analysis import \
     Analysis
 
 
-class Rotation2D(TestCase):
+class Nondivergent2D(TestCase):
     """
     A test case for 2D transport on the sphere
 
@@ -25,7 +25,7 @@ class Rotation2D(TestCase):
         ----------
         test_group : compass.ocean.tests.sphere_transport.SphereTransport
         """
-        super().__init__(test_group=test_group, name='rotation2D')
+        super().__init__(test_group=test_group, name='nondivergent2D')
         self.resolutions = None
 
     def configure(self):
@@ -33,10 +33,10 @@ class Rotation2D(TestCase):
         Set config options for the test case
         """
         config = self.config
-        resolutions = config.get('rotation2D', 'resolutions')
+        resolutions = config.get('nondivergent2D', 'resolutions')
         resolutions = [int(resolution) for resolution in
                        resolutions.replace(',', ' ').split()]
-        dtmin = config.get('rotation2D', 'timestep_minutes')
+        dtmin = config.get('nondivergent2D', 'timestep_minutes')
         dtmin = [int(dt) for dt in dtmin.replace(',', ' ').split()]
 
         self.resolutions = resolutions
@@ -61,9 +61,9 @@ class Rotation2D(TestCase):
         """
         config = self.config
         for resolution in self.resolutions:
-            cores = config.getint('rotation2D',
+            cores = config.getint('nondivergent2D',
                                   'QU{}_cores'.format(resolution))
-            min_cores = config.getint('rotation2D',
+            min_cores = config.getint('nondivergent2D',
                                       'QU{}_min_cores'.format(resolution))
             step = self.steps['QU{}_forward'.format(resolution)]
             step.cores = cores
@@ -77,9 +77,9 @@ class Rotation2D(TestCase):
 
         config = self.config
 
-        goal_cells_per_core = config.getfloat('rotation2D',
+        goal_cells_per_core = config.getfloat('nondivergent2D',
                                               'goal_cells_per_core')
-        max_cells_per_core = config.getfloat('rotation2D',
+        max_cells_per_core = config.getfloat('nondivergent2D',
                                              'max_cells_per_core')
 
         for resolution in self.resolutions:
@@ -96,7 +96,7 @@ class Rotation2D(TestCase):
             step.cores = cores
             step.min_cores = min_cores
 
-            config.set('rotation2D', 'QU{}_cores'.format(resolution),
+            config.set('nondivergent2D', 'QU{}_cores'.format(resolution),
                        str(cores))
-            config.set('rotation2D', 'QU{}_min_cores'.format(resolution),
+            config.set('nondivergent2D', 'QU{}_min_cores'.format(resolution),
                        str(min_cores))
