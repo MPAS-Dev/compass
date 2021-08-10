@@ -286,34 +286,32 @@
         <span class="n">mesh_package</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">mesh_step</span><span class="o">.</span><span class="n">package</span>
         <span class="n">mesh_package_contents</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">contents</span><span class="p">(</span><span class="n">mesh_package</span><span class="p">))</span>
         <span class="n">mesh_namelists</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;namelist.forward&#39;</span><span class="p">,</span>
-                          <span class="s1">&#39;namelist.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time_integrator</span><span class="o">.</span><span class="n">lower</span><span class="p">())]</span>
+                          <span class="sa">f</span><span class="s1">&#39;namelist.</span><span class="si">{</span><span class="n">time_integrator</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">mesh_namelist</span> <span class="ow">in</span> <span class="n">mesh_namelists</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">mesh_namelist</span> <span class="ow">in</span> <span class="n">mesh_package_contents</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="n">mesh_package</span><span class="p">,</span> <span class="n">mesh_namelist</span><span class="p">)</span>
 
         <span class="n">mesh_streams</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;streams.forward&#39;</span><span class="p">,</span>
-                        <span class="s1">&#39;streams.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time_integrator</span><span class="o">.</span><span class="n">lower</span><span class="p">())]</span>
+                        <span class="sa">f</span><span class="s1">&#39;streams.</span><span class="si">{</span><span class="n">time_integrator</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">mesh_stream</span> <span class="ow">in</span> <span class="n">mesh_streams</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">mesh_stream</span> <span class="ow">in</span> <span class="n">mesh_package_contents</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">mesh_package</span><span class="p">,</span> <span class="n">mesh_stream</span><span class="p">)</span>
 
-        <span class="n">mesh_path</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">mesh_step</span><span class="o">.</span><span class="n">path</span>
-
         <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
-            <span class="n">initial_state_target</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/ssh_adjustment/adjusted_init.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">init</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+            <span class="n">initial_state_target</span> <span class="o">=</span> \
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">init</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1">/ssh_adjustment/adjusted_init.nc&#39;</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">initial_state_target</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/initial_state/initial_state.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">init</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+            <span class="n">initial_state_target</span> <span class="o">=</span> \
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">init</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1">/initial_state/initial_state.nc&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;init.nc&#39;</span><span class="p">,</span>
                             <span class="n">work_dir_target</span><span class="o">=</span><span class="n">initial_state_target</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
             <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;forcing_data.nc&#39;</span><span class="p">,</span>
-            <span class="n">work_dir_target</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/initial_state/init_mode_forcing_data.nc&#39;</span>
-                            <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">init</span><span class="o">.</span><span class="n">path</span><span class="p">))</span>
+            <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">init</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1">/initial_state/&#39;</span>
+                            <span class="sa">f</span><span class="s1">&#39;init_mode_forcing_data.nc&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
             <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span>
-            <span class="n">work_dir_target</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/culled_graph.info&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_path</span><span class="p">))</span>
+            <span class="n">work_dir_target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">init</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1">/initial_state/graph.info&#39;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_model_as_input</span><span class="p">()</span>
 
@@ -421,8 +419,7 @@
     <span class="k">elif</span> <span class="n">time_integrator</span> <span class="o">==</span> <span class="s1">&#39;RK4&#39;</span><span class="p">:</span>
         <span class="n">subdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">init_subdir</span><span class="p">,</span> <span class="n">time_integrator</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unexpected time integrator </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="n">time_integrator</span><span class="p">))</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unexpected time integrator </span><span class="si">{</span><span class="n">time_integrator</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">subdir</span>
 </pre></div>
