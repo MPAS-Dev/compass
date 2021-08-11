@@ -98,17 +98,22 @@ class Analysis(Step):
             r = rvals[ctr]
             ax = fig.add_subplot(gs[i,j])
             ax.set(title="QU{}".format(r))
-            ax.plot(time, u1[ctr], label='u1')
-            ax.plot(time, o1[ctr], label='o1')
-            ax.plot(time, u2[ctr], label='u2')
-            ax.plot(time, o2[ctr], label='o2')
-            ax.plot(time, u3[ctr], label='u3')
-            ax.plot(time, o3[ctr], label='o3')
-            ax.set_ylim((-0.5,0.5))
+            ax.semilogy(time, u1[ctr], ls='--', label='u1')
+            ax.semilogy(time, o1[ctr], ls='--', label='o1')
+            ax.semilogy(time, u2[ctr], ls='-.', label='u2')
+            ax.semilogy(time, o2[ctr], ls='-.', label='o2')
+            ax.semilogy(time, u3[ctr], ls=':',  label='u3')
+            ax.semilogy(time, o3[ctr], ls=':',  label='o3')
+            ax.set_ylim((1e-7,0.05))
+            ax.set_yticks((1e-7, 1e-5,1e-3,1e-1))
+            ax.set_xticks((0,6,12))
+            ax.grid()
             if r == 60:
               ax.legend(bbox_to_anchor=(1,0.5), loc="center left")
             if j == 0:
               ax.set(ylabel="rel. range err.")
+            if i==2:
+              ax.set(xlabel="time (days)")
             ctr += 1
 
         fig.savefig('nondivergent2D_range_filament_err.pdf', bbox_inches='tight')

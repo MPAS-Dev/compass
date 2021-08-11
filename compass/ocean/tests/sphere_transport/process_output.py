@@ -51,12 +51,24 @@ def compute_error_from_output_ncfile(dataset, lev=1):
   under3 = []
   if len(dataset.dimensions["Time"]) == 13:
     for i in range(13):
-      over1.append( (np.amax(dataset.variables["tracer1"][i,:,lev]) - tracer1_max)/(tracer1_max - tracer1_min) )
-      under1.append( (np.amin(dataset.variables["tracer1"][i,:,lev]) - tracer1_min)/(tracer1_max - tracer1_min) )
-      over2.append( (np.amax(dataset.variables["tracer2"][i,:,lev]) - tracer2_max)/(tracer2_max - tracer2_min) )
-      under2.append( (np.amin(dataset.variables["tracer2"][i,:,lev]) - tracer2_min)/(tracer2_max - tracer2_min) )
-      over3.append( (np.amax(dataset.variables["tracer3"][i,:,lev]) - tracer3_max)/(tracer3_max - tracer3_min) )
-      under3.append( (np.amin(dataset.variables["tracer3"][i,:,lev]) - tracer3_min)/(tracer3_max - tracer3_min) )
+      dmax1 = dataset.variables["tracer1"][i,:,lev] - tracer1_max
+      dmax2 = dataset.variables["tracer2"][i,:,lev] - tracer2_max
+      dmax3 = dataset.variables["tracer3"][i,:,lev] - tracer3_max
+      dmin1 = dataset.variables["tracer1"][i,:,lev] - tracer1_min
+      dmin2 = dataset.variables["tracer2"][i,:,lev] - tracer2_min
+      dmin3 = dataset.variables["tracer3"][i,:,lev] - tracer3_min
+      isover1  = dmax1 > 0
+      isunder1 = dmin1 < 0
+      isover2  = dmax2 > 0
+      isunder2 = dmin2 < 0
+      isover3  = dmax3 > 0
+      isunder3 = dmin3 < 0
+      over1.append(  np.amax(dmax1 * isover1)  / (tracer1_max - tracer1_min))
+      under1.append(np.amax(-dmin1 * isunder1) / (tracer1_max - tracer1_min))
+      over2.append( np.amax(dmax2 * isover2)  / (tracer2_max - tracer2_min))
+      under2.append(np.amax(-dmin2 * isunder2) / (tracer2_max - tracer2_min))
+      over3.append( np.amax(dmax3 * isover3)  / (tracer3_max - tracer3_min))
+      under3.append(np.amax(-dmin3 * isunder3) / (tracer3_max - tracer3_min))
   else:
     over1 = 0
     over2 = 0
@@ -311,7 +323,7 @@ def plot_filament(ax, tcname, resvals, filament):
   ax.set_yticks(np.linspace(0,1,5))
   ax.set_ylim([0,1.5])
   ax.grid()
-  ax.legend()
+  ax.legend(bbox_to_anchor=(1,0.5),loc="center left")
 
 def plot_over_and_undershoot_errors(ax, tcname, resvals, u1, o1, u2, o2, u3, o3):
   if len(u1[0]) == 13:
