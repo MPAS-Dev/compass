@@ -43,6 +43,9 @@ def compute_error_from_output_ncfile(dataset, lev=1):
   tracer1_l2 = np.sqrt(np.sum(np.square(tracer1_error)*cell_area) / np.sum(np.square(tracer1_exact)*cell_area))
   tracer2_l2 = np.sqrt(np.sum(np.square(tracer2_error)*cell_area) / np.sum(np.square(tracer2_exact)*cell_area))
   tracer3_l2 = np.sqrt(np.sum(np.square(tracer3_error)*cell_area) / np.sum(np.square(tracer3_exact)*cell_area))
+  tracer1_mass0 = np.sum(cell_area*tracer1_exact)
+  tracer2_mass0 = np.sum(cell_area*tracer2_exact)
+  tracer3_mass0 = np.sum(cell_area*tracer3_exact)
   over1 = []
   under1 = []
   over2 = []
@@ -76,7 +79,12 @@ def compute_error_from_output_ncfile(dataset, lev=1):
     under1 = 0
     under2 = 0
     under3 = 0
-
+  tracer1_mass12 = np.sum(cell_area*dataset.variables["tracer1"][12,:,lev])
+  tracer2_mass12 = np.sum(cell_area*dataset.variables["tracer2"][12,:,lev])
+  tracer3_mass12 = np.sum(cell_area*dataset.variables["tracer3"][12,:,lev])
+  tracer1_masserr = np.abs(tracer1_mass0 - tracer1_mass12)/tracer1_mass0
+  tracer2_masserr = np.abs(tracer2_mass0 - tracer2_mass12)/tracer2_mass0
+  tracer3_masserr = np.abs(tracer3_mass0 - tracer3_mass12)/tracer3_mass0
   filament_tau = np.linspace(0,1,21)
   filament_area = np.zeros(21)
   filament_area0 = np.ones(21)
@@ -88,9 +96,9 @@ def compute_error_from_output_ncfile(dataset, lev=1):
   filament_norm = filament_area / filament_area0
 
   result = dict()
-  result["tracer1"] = {"linf":tracer1_linf, "l2":tracer1_l2, "over":over1, "under":under1}
-  result["tracer2"] = {"linf":tracer2_linf, "l2":tracer2_l2, "over":over2, "under":under2, "filament":filament_norm}
-  result["tracer3"] = {"linf":tracer3_linf, "l2":tracer3_l2, "over":over3, "under":under3}
+  result["tracer1"] = {"linf":tracer1_linf, "l2":tracer1_l2, "over":over1, "under":under1, "mass":tracer1_masserr}
+  result["tracer2"] = {"linf":tracer2_linf, "l2":tracer2_l2, "over":over2, "under":under2, "filament":filament_norm, "mass":tracer2_masserr}
+  result["tracer3"] = {"linf":tracer3_linf, "l2":tracer3_l2, "over":over3, "under":under3, "mass":tracer3_masserr}
   return result
 
 
@@ -189,20 +197,23 @@ def plot_sol(fig, tcname, dataset):
   xticklabels = [0, 90, 180, 270, 360]
 
   clev = np.linspace(0,1.1,20)
+  diffmin = -0.25
+  diffmax = -diffmin
+  dlev = np.linspace(diffmin, diffmax, 21)
   nclcmap = read_ncl_rgb_file("wh-bl-gr-ye-re.rgb")
   axes = []
   for i in range(3):
     for j in range(3):
       axes.append(fig.add_subplot(gspc[i,j]))
-  cm=axes[0].tricontourf(xc, yc, dataset.variables["tracer1"][0,:,1],levels=clev, cmap=nclcmap)
+  axes[0].tricontourf(xc, yc, dataset.variables["tracer1"][0,:,1],levels=clev, cmap=nclcmap)
   axes[1].tricontourf(xc, yc, dataset.variables["tracer1"][6,:,1],levels=clev, cmap=nclcmap)
-  axes[2].tricontourf(xc, yc, dataset.variables["tracer1"][12,:,1],levels=clev, cmap=nclcmap)
+  axes[2].tricontourf(xc, yc, dataset.variables["tracer1"][12,:,1] - dataset.variables["tracer1"][0,:,1],levels=dlev, cmap="seismic", vmin=diffmin, vmax=diffmax)
   axes[3].tricontourf(xc, yc, dataset.variables["tracer2"][0,:,1],levels=clev, cmap=nclcmap)
   axes[4].tricontourf(xc, yc, dataset.variables["tracer2"][6,:,1],levels=clev, cmap=nclcmap)
-  axes[5].tricontourf(xc, yc, dataset.variables["tracer2"][12,:,1],levels=clev, cmap=nclcmap)
+  axes[5].tricontourf(xc, yc, dataset.variables["tracer2"][12,:,1] - dataset.variables["tracer2"][0,:,1],levels=dlev, cmap="seismic", vmin=diffmin, vmax=diffmax)
   axes[6].tricontourf(xc, yc, dataset.variables["tracer3"][0,:,1],levels=clev, cmap=nclcmap)
   axes[7].tricontourf(xc, yc, dataset.variables["tracer3"][6,:,1],levels=clev, cmap=nclcmap)
-  axes[8].tricontourf(xc, yc, dataset.variables["tracer3"][12,:,1],levels=clev, cmap=nclcmap)
+  cm = axes[8].tricontourf(xc, yc, dataset.variables["tracer3"][12,:,1] - dataset.variables["tracer3"][0,:,1],levels=dlev, cmap="seismic", vmin=diffmin, vmax=diffmax)
   for i in range(9):
     axes[i].set_xticks(xticks)
     axes[i].set_yticks(yticks)
@@ -213,8 +224,8 @@ def plot_sol(fig, tcname, dataset):
     axes[6+i].set_xticklabels(xticklabels)
   for i in range(6):
     axes[i].set_xticklabels([])
+  cb= fig.colorbar(cm, ax=axes[8])
   fig.colorbar(ScalarMappable(cmap=nclcmap))
-  fig.colorbar(cm)
 
 def make_convergence_arrays(tcdata):
   """
@@ -230,8 +241,8 @@ def make_convergence_arrays(tcdata):
       linf2: the linf error of tracer2 for each resolution/mesh size pair
       linf3: the linf error of tracer3 for each resolution/mesh size pair
       l21: the l2 error of tracer1 for each resolution/mesh size pair
-      l22: the l2 error of tracer1 for each resolution/mesh size pair
-      l23: the l2 error of tracer1 for each resolution/mesh size pair
+      l22: the l2 error of tracer2 for each resolution/mesh size pair
+      l23: the l2 error of tracer3 for each resolution/mesh size pair
       filament: the "filament norm" for tracer2 at t=T/2.  See Sec. 3.3 of LSPT2012.
   """
   rvals = sorted(tcdata.keys())
@@ -250,6 +261,9 @@ def make_convergence_arrays(tcdata):
   o2 = []
   u3 = []
   o3 = []
+  mass1 = []
+  mass2 = []
+  mass3 = []
   for r in rvals:
     dlambda.append(tcdata[r]['appx_mesh_size'])
     linf1.append(tcdata[r]['err']['tracer1']['linf'])
@@ -265,7 +279,42 @@ def make_convergence_arrays(tcdata):
     o2.append(np.array(tcdata[r]['err']['tracer2']['over']))
     u3.append(np.array(tcdata[r]['err']['tracer3']['under']))
     o3.append(np.array(tcdata[r]['err']['tracer3']['over']))
-  return dlambda, linf1, linf2, linf3, l21, l22, l23, filament, u1, o1, u2, o2, u3, o3
+    mass1.append(tcdata[r]['err']['tracer1']['mass'])
+    mass2.append(tcdata[r]['err']['tracer2']['mass'])
+    mass3.append(tcdata[r]['err']['tracer3']['mass'])
+  return dlambda, linf1, linf2, linf3, l21, l22, l23, filament, u1, o1, u2, o2, u3, o3, mass1, mass2, mass3
+
+def print_data_as_csv(tcname, tcdata):
+  rvals = sorted(tcdata.keys())
+  rvals.reverse()
+  dlambda, linf1, linf2, linf3, l21, l22, l23, _, u1, o1, u2, o2, u3, o3, mass1, mass2, mass3 = make_convergence_arrays(tcdata)
+  headers = ["res", "dlambda", "linf1", "linf2", "linf3", "l21", "l22", "l23", "under1", "over1", "under2", "over2", "under3", "over3", "mass1", "mass2", "mass3"]
+  print('-----------')
+  print(' csv follows ')
+  print('-----------')
+  print('')
+  print(",".join(headers))
+  for i, r in enumerate(rvals):
+    print(",".join([str(r),
+                    str(dlambda[i]),
+                    str(linf1[i]),
+                    str(linf2[i]),
+                    str(linf3[i]),
+                    str(l21[i]),
+                    str(l22[i]),
+                    str(l23[i]),
+                    str(np.amax(np.abs(u1[i]))),
+                    str(np.amax(np.abs(o1[i]))),
+                    str(np.amax(np.abs(u2[i]))),
+                    str(np.amax(np.abs(o2[i]))),
+                    str(np.amax(np.abs(u3[i]))),
+                    str(np.amax(np.abs(o3[i]))),
+                    str(mass1[i]),
+                    str(mass2[i]),
+                    str(mass3[i])]))
+  print('')
+  print('-----------')
+
 
 
 

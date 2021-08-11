@@ -55,6 +55,7 @@ class Analysis(Step):
           self.tcdata[resolution] = {'dataset':ncd}
           self.tcdata[resolution]['appx_mesh_size'] = appx_mesh_size(ncd)
           self.tcdata[resolution]['err'] = compute_error_from_output_ncfile(ncd)
+        print_data_as_csv('nondivergent2D', self.tcdata)
 
         ###
         # Plot solutions
@@ -73,7 +74,7 @@ class Analysis(Step):
         ###
         # convergence analysis
         ###
-        dlambda, linf1, linf2, linf3, l21, l22, l23, fil, u1, o1, u2, o2, u3, o3 = make_convergence_arrays(self.tcdata)
+        dlambda, linf1, linf2, linf3, l21, l22, l23, fil, u1, o1, u2, o2, u3, o3, mass1, mass2, mass3 = make_convergence_arrays(self.tcdata)
         linfrate, l2rate = compute_convergence_rates(dlambda, linf1, l21)
         rvals = sorted(self.tcdata.keys())
         rvals.reverse()

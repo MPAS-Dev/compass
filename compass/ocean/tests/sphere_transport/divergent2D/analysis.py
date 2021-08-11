@@ -6,7 +6,7 @@ from netCDF4 import Dataset
 
 class Analysis(Step):
     """
-    A step for visualizing the output from the rotation2D test case
+    A step for visualizing the output from the divergent2D test case
 
     Attributes
     ----------
@@ -19,7 +19,7 @@ class Analysis(Step):
 
         Parameters
         ----------
-        test_case : compass.ocean.tests.sphere_transport.rotation2D.Rotation2D
+        test_case : compass.ocean.tests.sphere_transport.divergent2D.divergent2D
             The test case this step belongs to
 
         resolutions : list of int
@@ -39,9 +39,9 @@ class Analysis(Step):
             self.add_input_file(
                 filename='QU{}_output.nc'.format(resolution),
                 target='../QU{}/forward/output.nc'.format(resolution))
-            self.add_output_file('rotation2D_QU{}_sol.pdf'.format(resolution))
+            self.add_output_file('divergent2D_QU{}_sol.pdf'.format(resolution))
 
-        self.add_output_file('rotation2D_convergence.pdf')
+        self.add_output_file('divergent2D_convergence.pdf')
 
     def run(self):
         """
@@ -55,7 +55,7 @@ class Analysis(Step):
           self.tcdata[resolution] = {'dataset':ncd}
           self.tcdata[resolution]['appx_mesh_size'] = appx_mesh_size(ncd)
           self.tcdata[resolution]['err'] = compute_error_from_output_ncfile(ncd)
-        print_data_as_csv('rotation2D', self.tcdata)
+        print_data_as_csv('divergent2D', self.tcdata)
 
 
         ###
@@ -66,24 +66,24 @@ class Analysis(Step):
         plt.rc('ps', useafm=True)
         plt.rc('pdf', use14corefonts=True)
         for r in self.tcdata.keys():
-          tcstr = 'rotation2D_QU{}'.format(r)
+          tcstr = 'divergent2D_QU{}'.format(r)
           fig = plt.figure(constrained_layout=True)
           plot_sol(fig, tcstr, self.tcdata[r]['dataset'])
           fig.savefig(tcstr + "_sol.pdf", bbox_inches='tight')
-
+          plt.close(fig)
 
         ###
         # convergence analysis
         ###
-        rvals = sorted(self.tcdata.keys())
-        rvals.reverse()
         dlambda, linf1, linf2, linf3, l21, l22, l23, _, u1, o1, u2, o2, u3, o3, mass1, mass2, mass3 = make_convergence_arrays(self.tcdata)
         linfrate, l2rate = compute_convergence_rates(dlambda, linf1, l21)
-        linfrate, l2rate = compute_convergence_rates(dlambda, linf1, l21)
-        print_error_conv_table('rotation2D', rvals, dlambda, l21, l2rate, linf1, linfrate)
+        rvals = sorted(self.tcdata.keys())
+        rvals.reverse()
+        print_error_conv_table('divergent2D', rvals, dlambda, l21, l2rate, linf1, linfrate)
 
         fig, ax = plt.subplots()
-        plot_convergence(ax, 'rotation2D', dlambda, rvals, linf1, l21, linf2, l22, linf3, l23)
-        fig.savefig('rotation2D_convergence.pdf', bbox_inches='tight')
-        plt.close()
+        plot_convergence(ax, 'divergent2D', dlambda, rvals, linf1, l21, linf2, l22, linf3, l23)
+        fig.savefig('divergent2D_convergence.pdf', bbox_inches='tight')
+        plt.close(fig)
+
 
