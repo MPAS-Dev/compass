@@ -59,8 +59,8 @@ class Analysis(Step):
                 filename='QU{}_output.nc'.format(resolution),
                 target='../QU{}/forward/output.nc'.format(resolution))
             self.add_output_file('correlatedTracers2D_QU{}_sol.pdf'.format(resolution))
+        self.add_output_file('correlatedTracers2D_tripplots.pdf')
 
-        self.add_output_file('correlatedTracers2D_convergence.pdf')
 
     def run(self):
         """
