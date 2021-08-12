@@ -59,7 +59,7 @@ class Analysis(Step):
                 filename='QU{}_output.nc'.format(resolution),
                 target='../QU{}/forward/output.nc'.format(resolution))
             self.add_output_file('correlatedTracers2D_QU{}_sol.pdf'.format(resolution))
-        self.add_output_file('correlatedTracers2D_tripplots.pdf')
+        self.add_output_file('correlatedTracers2D_triplots.png')
 
 
     def run(self):
@@ -102,8 +102,12 @@ class Analysis(Step):
           ax = axes[int(i/2), i%2]
           init_triplot_axes(ax)
           ax.set(title="QU{}".format(r))
+          if i%2 == 0:
+            ax.set_ylabel("tracer3")
+          if int(i/2) == 2:
+            ax.set_xlabel("tracer2")
           ds = self.tcdata[r]['dataset']
           ax.plot(ds.variables["tracer2"][6,:,1], ds.variables["tracer3"][6,:,1], 'r.',
             markersize=1)
-        fig.savefig("correlatedTracers2D_tripplots.pdf")
+        fig.savefig("correlatedTracers2D_triplots.png")
 

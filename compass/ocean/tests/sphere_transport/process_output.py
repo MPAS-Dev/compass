@@ -206,8 +206,11 @@ def plot_sol(fig, tcname, dataset):
     for j in range(3):
       axes.append(fig.add_subplot(gspc[i,j]))
   axes[0].tricontourf(xc, yc, dataset.variables["tracer1"][0,:,1],levels=clev, cmap=nclcmap)
+  axes[0].set_title('sol. t=0')
   axes[1].tricontourf(xc, yc, dataset.variables["tracer1"][6,:,1],levels=clev, cmap=nclcmap)
+  axes[1].set_title('sol. t=T/2')
   axes[2].tricontourf(xc, yc, dataset.variables["tracer1"][12,:,1] - dataset.variables["tracer1"][0,:,1],levels=dlev, cmap="seismic", vmin=diffmin, vmax=diffmax)
+  axes[2].set_title('err. t=T')
   axes[3].tricontourf(xc, yc, dataset.variables["tracer2"][0,:,1],levels=clev, cmap=nclcmap)
   axes[4].tricontourf(xc, yc, dataset.variables["tracer2"][6,:,1],levels=clev, cmap=nclcmap)
   axes[5].tricontourf(xc, yc, dataset.variables["tracer2"][12,:,1] - dataset.variables["tracer2"][0,:,1],levels=dlev, cmap="seismic", vmin=diffmin, vmax=diffmax)
@@ -225,6 +228,7 @@ def plot_sol(fig, tcname, dataset):
   for i in range(6):
     axes[i].set_xticklabels([])
   cb= fig.colorbar(cm, ax=axes[8])
+  fig.suptitle(tcname)
   fig.colorbar(ScalarMappable(cmap=nclcmap))
 
 def make_convergence_arrays(tcdata):
