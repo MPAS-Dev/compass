@@ -32,10 +32,11 @@ class DecompTest(ForwardTestCase):
                          name='decomp_test')
         for procs in [4, 8]:
             name = '{}proc'.format(procs)
-            self.add_step(
-                ForwardStep(test_case=self, mesh=mesh, init=init,
-                            time_integrator=time_integrator, name=name,
-                            subdir=name, cores=procs, threads=1))
+            step = ForwardStep(test_case=self, mesh=mesh, init=init,
+                               time_integrator=time_integrator, name=name,
+                               subdir=name, cores=procs, threads=1)
+            step.add_output_file(filename='output.nc')
+            self.add_step(step)
 
     # no run() method is needed
 

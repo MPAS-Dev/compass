@@ -221,6 +221,7 @@ class WC14DynamicAdjustment(DynamicAdjustment):
 
         step.add_input_file(filename='../{}'.format(restart_filenames[5]))
         step.add_output_file(filename='../{}'.format(restart_filenames[6]))
+        step.add_output_file(filename='output.nc')
         self.add_step(step)
 
         self.restart_filenames = restart_filenames

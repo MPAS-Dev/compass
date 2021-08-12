@@ -37,6 +37,7 @@ class DailyOutputTest(ForwardTestCase):
                            threads=1)
 
         module = self.__module__
+        step.add_output_file(filename='output.nc')
         step.add_namelist_file(module, 'namelist.forward')
         step.add_streams_file(module, 'streams.forward')
         self.add_step(step)

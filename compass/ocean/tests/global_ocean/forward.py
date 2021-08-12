@@ -117,8 +117,6 @@ class ForwardStep(Step):
 
         self.add_model_as_input()
 
-        self.add_output_file(filename='output.nc')
-
     def setup(self):
         """
         Set up the test case in the work directory, including downloading any
