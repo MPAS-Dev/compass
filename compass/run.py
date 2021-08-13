@@ -61,8 +61,10 @@ def run_suite(suite_name):
 
             test_name = test_case.path.replace('/', '_')
             log_filename = '{}/case_outputs/{}.log'.format(cwd, test_name)
-            with LoggingContext(test_name, log_filename=log_filename) as \
+            with LoggingContext(f'stdout_{test_name}') as stdout_logger, \
+                    LoggingContext(test_name, log_filename=log_filename) as \
                     test_logger:
+                test_case.stdout_logger = stdout_logger
                 test_case.logger = test_logger
                 test_case.log_filename = log_filename
                 test_case.new_step_log_file = False
@@ -222,6 +224,7 @@ def run_test_case(steps_to_run=None, steps_not_to_run=None):
     test_case.new_step_log_file = True
     with LoggingContext(name=test_name) as logger:
         test_case.logger = logger
+        test_case.stdout_logger = logger
         logger.info('Running steps: {}'.format(', '.join(steps_to_run)))
         test_case.run()
         test_case.validate()
@@ -249,6 +252,7 @@ def run_step():
     test_name = step.path.replace('/', '_')
     with LoggingContext(name=test_name) as logger:
         test_case.logger = logger
+        test_case.stdout_logger = None
         test_case.run()
         test_case.validate()
 
