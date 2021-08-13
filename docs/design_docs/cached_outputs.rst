@@ -219,7 +219,7 @@ Each MPAS core in ``compass`` will optionally include a file
 names of output files in the work directory and those in the ``compass_cache``
 database for that MPAS core on the LCRC server.  For example:
 
-.. code-block:: json
+.. code-block:: none
 
     {
         "ocean/global_ocean/QU240/mesh/mesh/culled_mesh.nc": "global_ocean/QU240/mesh/mesh/culled_mesh.210803.nc",
@@ -357,7 +357,7 @@ As an example, yesterday (8/3/2021) when I made the following call:
 
 the result was a cache file ``ocean_cached_files.json`` like this:
 
-.. code-block:: json
+.. code-block:: none
 
     {
         "ocean/global_convergence/cosine_bell/QU60/mesh/mesh.nc": "global_convergence/cosine_bell/QU60/mesh/mesh.210803.nc",
