@@ -117,10 +117,6 @@ class InitialState(Step):
             work_dir_target=f'{mesh_path}/culled_mesh.nc')
 
         self.add_input_file(
-            filename='critical_passages.nc',
-            work_dir_target=f'{mesh_path}/critical_passages_mask_final.nc')
-
-        self.add_input_file(
             filename='graph.info',
             work_dir_target=f'{mesh_path}/culled_graph.info')
 
