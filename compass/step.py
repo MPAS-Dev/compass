@@ -76,9 +76,9 @@ class Step:
         time or the step will raise an exception
 
     outputs : list of str
-        a list of absolute paths of output files produced by this step and
-        available as inputs to other test cases and steps.  These files must
-        exist after the test has run or an exception will be raised
+        a list of absolute paths of output files produced by this step (or
+        cached) and available as inputs to other test cases and steps.  These
+        files must exist after the test has run or an exception will be raised
 
     namelist_data : dict
         a dictionary used internally to keep track of updates to the default
@@ -111,10 +111,14 @@ class Step:
     log_filename : str
         At run time, the name of a log file where output/errors from the step
         are being logged, or ``None`` if output is to stdout/stderr
+
+    cached : bool
+        Whether to get all of the outputs for the step from the database of
+        cached outputs for this MPAS core
     """
 
     def __init__(self, test_case, name, subdir=None, cores=1, min_cores=1,
-                 threads=1, max_memory=1000, max_disk=1000):
+                 threads=1, max_memory=1000, max_disk=1000, cached=False):
         """
         Create a new test case
 
@@ -150,6 +154,10 @@ class Step:
             the amount of disk space that the step is allowed to use in MB.
             This is currently just a placeholder for later use with task
             parallelism
+
+        cached : bool, optional
+            Whether to get all of the outputs for the step from the database of
+            cached outputs for this MPAS core
         """
         self.name = name
         self.test_case = test_case
@@ -185,6 +193,9 @@ class Step:
         # these will be set before running the step
         self.logger = None
         self.log_filename = None
+
+        # output caching
+        self.cached = cached
 
     def setup(self):
         """
@@ -454,6 +465,22 @@ class Step:
         step_dir = self.work_dir
         config = self.config
 
+        # process the outputs first because cached outputs will add more inputs
+        if self.cached:
+            # forget about the inputs -- we won't used them, but we will add
+            # the cached outputs as inputs
+            self.input_data = list()
+            for output in self.outputs:
+                filename = os.path.join(self.path, output)
+                if filename not in self.mpas_core.cached_files:
+                    raise ValueError(f'The file {filename} has not been added '
+                                     f'to the cache database')
+                target = self.mpas_core.cached_files[filename]
+                self.add_input_file(
+                    filename=output,
+                    target=target,
+                    database='compass_cache')
+
         inputs = []
         for entry in self.input_data:
             filename = entry['filename']
@@ -534,6 +561,10 @@ class Step:
         by parsing the files and dictionaries in the step's ``namelist_data``.
         """
 
+        if self.cached:
+            # no need for namelists
+            return
+
         step_work_dir = self.work_dir
         config = self.config
 
@@ -570,6 +601,9 @@ class Step:
         Writes out a streams file in the work directory with new values given
         by parsing the files and dictionaries in the step's ``streams_data``.
         """
+        if self.cached:
+            # no need for streams
+            return
 
         step_work_dir = self.work_dir
         config = self.config

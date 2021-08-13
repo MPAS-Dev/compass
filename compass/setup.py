@@ -3,6 +3,7 @@ import sys
 import configparser
 import os
 import pickle
+import warnings
 
 from compass.mpas_cores import get_mpas_cores
 from compass.config import add_config, ensure_absolute_paths
@@ -12,7 +13,7 @@ from compass import provenance
 
 def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
                 work_dir=None, baseline_dir=None, mpas_model_path=None,
-                suite_name='custom'):
+                suite_name='custom', cached=None):
     """
     Set up one or more test cases
 
@@ -21,8 +22,10 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
     tests : list of str, optional
         Relative paths for a test cases to set up
 
-    numbers : list of int, optional
-        Case numbers to setup, as listed from ``compass list``
+    numbers : list of str, optional
+        Case numbers to setup, as listed from ``compass list``, optionally with
+        a suffix ``c`` to indicate that all steps in that test case should be
+        cached
 
     config_file : str, optional
         Configuration file with custom options for setting up and running test
@@ -46,6 +49,11 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
         The name of the test suite if tests are being set up through a test
         suite or ``'custom'`` if not
 
+    cached : list of list of str, optional
+        For each test in ``tests``, which steps (if any) should be cached,
+        or a list with "_all" as the first entry if all steps in the test case
+        should be cached
+
     Returns
     -------
     test_cases : dict of compass.TestCase
@@ -61,6 +69,14 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
     if tests is None and numbers is None:
         raise ValueError('At least one of tests or numbers is needed.')
 
+    if cached is not None:
+        if tests is None:
+            warnings.warn('Ignoring "cached" argument becasue "tests" was '
+                          'not provided')
+        elif len(cached) != len(tests):
+            raise ValueError('A list of cached steps must be provided for '
+                             'each test in "tests"')
+
     if work_dir is None:
         work_dir = os.getcwd()
     work_dir = os.path.abspath(work_dir)
@@ -74,20 +90,34 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
                 all_test_cases[test_case.path] = test_case
 
     test_cases = dict()
+    cached_steps = dict()
     if numbers is not None:
         keys = list(all_test_cases)
         for number in numbers:
+            cache_all = False
+            if number.endswith('c'):
+                cache_all = True
+                number = int(number[:-1])
+            else:
+                number = int(number)
+
             if number >= len(keys):
                 raise ValueError('test number {} is out of range.  There are '
                                  'only {} tests.'.format(number, len(keys)))
             path = keys[number]
+            if cache_all:
+                cached_steps[path] = ['_all']
+            else:
+                cached_steps[path] = list()
             test_cases[path] = all_test_cases[path]
 
     if tests is not None:
-        for path in tests:
+        for index, path in enumerate(tests):
             if path not in all_test_cases:
                 raise ValueError('Test case with path {} is not in '
                                  'test_cases'.format(path))
+            if cached is not None:
+                cached_steps[path] = cached[index]
             test_cases[path] = all_test_cases[path]
 
     # get the MPAS core of the first test case.  We'll assume all tests are
@@ -101,7 +131,8 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
     print('Setting up test cases:')
     for path, test_case in test_cases.items():
         setup_case(path, test_case, config_file, machine, work_dir,
-                   baseline_dir, mpas_model_path)
+                   baseline_dir, mpas_model_path,
+                   cached_steps=cached_steps[path])
 
     test_suite = {'name': suite_name,
                   'test_cases': test_cases,
@@ -127,7 +158,7 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
 
 
 def setup_case(path, test_case, config_file, machine, work_dir, baseline_dir,
-               mpas_model_path):
+               mpas_model_path, cached_steps):
     """
     Set up one or more test cases
 
@@ -156,6 +187,10 @@ def setup_case(path, test_case, config_file, machine, work_dir, baseline_dir,
     mpas_model_path : str
         The relative or absolute path to the root of a branch where the MPAS
         model has been built
+
+    cached_steps : list of str
+        Which steps (if any) should be cached.  If all steps should be cached,
+         the first entry is "_all"
     """
 
     print('  {}'.format(path))
@@ -227,6 +262,14 @@ def setup_case(path, test_case, config_file, machine, work_dir, baseline_dir,
     with open(os.path.join(test_case_dir, test_case_config), 'w') as f:
         config.write(f)
 
+    if len(cached_steps) > 0 and cached_steps[0] == '_all':
+        cached_steps = list(test_case.steps.keys())
+    if len(cached_steps) > 0:
+        print_steps = ' '.join(cached_steps)
+        print(f'    steps with cached outputs: {print_steps}')
+    for step_name in cached_steps:
+        test_case.steps[step_name].cached = True
+
     # iterate over steps
     for step in test_case.steps.values():
         # make the step directory if it doesn't exist
@@ -279,10 +322,12 @@ def main():
                         help="Relative path for a test case to set up",
                         metavar="PATH")
     parser.add_argument("-n", "--case_number", nargs='+', dest="case_num",
-                        type=int,
+                        type=str,
                         help="Case number(s) to setup, as listed from "
                              "'compass list'. Can be a space-separated"
-                             "list of case numbers.", metavar="NUM")
+                             "list of case numbers.  A suffix 'c' indicates"
+                             "that all steps in the test should use cached"
+                             "outputs.", metavar="NUM")
     parser.add_argument("-f", "--config_file", dest="config_file",
                         help="Configuration file for test case setup",
                         metavar="FILE")
@@ -304,16 +349,25 @@ def main():
                         help="The name to use for the 'custom' test suite"
                              "containing all setup test cases.",
                         metavar="SUITE")
+    parser.add_argument("--cached", dest="cached", nargs='+',
+                        help="A list of steps in the test case supplied with"
+                             "--test that should use cached outputs, or "
+                             "'_all' if all steps should be cached",
+                        metavar="STEP")
 
     args = parser.parse_args(sys.argv[2:])
+    cached = None
     if args.test is None:
         tests = None
     else:
         tests = [args.test]
+        if args.cached is not None:
+            cached = [args.cached]
     setup_cases(tests=tests, numbers=args.case_num,
                 config_file=args.config_file, machine=args.machine,
                 work_dir=args.work_dir, baseline_dir=args.baseline_dir,
-                mpas_model_path=args.mpas_model, suite_name=args.suite_name)
+                mpas_model_path=args.mpas_model, suite_name=args.suite_name,
+                cached=cached)
 
 
 def _get_required_cores(test_cases):

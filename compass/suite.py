@@ -34,7 +34,7 @@ def setup_suite(mpas_core, suite_name, config_file=None, machine=None,
         directories
 
     baseline_dir : str, optional
-        Location of baseslines that can be compared to
+        Location of baselines that can be compared to
 
     mpas_model_path : str, optional
         The relative or absolute path to the root of a branch where the MPAS
@@ -42,16 +42,13 @@ def setup_suite(mpas_core, suite_name, config_file=None, machine=None,
     """
     text = resources.read_text('compass.{}.suites'.format(mpas_core),
                                '{}.txt'.format(suite_name))
-    tests = list()
-    for test in text.split('\n'):
-        test = test.strip()
-        if (len(test) > 0 and test not in tests
-                and not test.startswith('#')):
-            tests.append(test)
+
+    tests, cached = _parse_suite(text)
 
     setup_cases(tests, config_file=config_file, machine=machine,
                 work_dir=work_dir, baseline_dir=baseline_dir,
-                mpas_model_path=mpas_model_path, suite_name=suite_name)
+                mpas_model_path=mpas_model_path, suite_name=suite_name,
+                cached=cached)
 
 
 def clean_suite(mpas_core, suite_name, work_dir=None):
@@ -75,8 +72,8 @@ def clean_suite(mpas_core, suite_name, work_dir=None):
 
     text = resources.read_text('compass.{}.suites'.format(mpas_core),
                                '{}.txt'.format(suite_name))
-    tests = [test.strip() for test in text.split('\n') if
-             len(test.strip()) > 0 and not test.startswith('#')]
+
+    tests, _ = _parse_suite(text)
 
     clean_cases(tests=tests, work_dir=work_dir, suite_name=suite_name)
 
@@ -128,3 +125,26 @@ def main():
                     config_file=args.config_file, machine=args.machine,
                     work_dir=args.work_dir, baseline_dir=args.baseline_dir,
                     mpas_model_path=args.mpas_model)
+
+
+def _parse_suite(text):
+    """ Parse the text of a file defining a test suite """
+
+    tests = list()
+    cached = list()
+    for test in text.split('\n'):
+        test = test.strip()
+        if len(test) == 0 or test.startswith('#'):
+            # a blank line or comment
+            continue
+
+        if test == 'cached':
+            cached[-1] = ['_all']
+        elif test.startswith('cached:'):
+            steps = test[len('cached:'):].strip().split(' ')
+            cached[-1].extend(steps)
+        else:
+            tests.append(test)
+            cached.append(list())
+
+    return tests, cached
