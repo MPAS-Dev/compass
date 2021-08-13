@@ -120,9 +120,24 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#config-files">Config files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#logging">Logging</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#io">IO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#model">Model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#validation">Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#io">IO</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#symlinks">Symlinks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#download">Download</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#model">Model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#running-mpas">Running MPAS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#partitioning-the-mesh">Partitioning the mesh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#updating-pio-namelist-options">Updating PIO namelist options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#making-a-graph-file">Making a graph file</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#validation">Validation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#validating-variables">Validating variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#norms">Norms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#validating-timers">Validating timers</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#provenance">Provenance</a></li>
 </ul>
 </li>
@@ -421,6 +436,8 @@ from <code class="docutils literal notranslate"><span class="pre">mpas_tools</sp
 <p>A lot of I/O related tasks are handled internally in the step class
 <a class="reference internal" href="generated/compass.Step.html#compass.Step" title="compass.Step"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.Step</span></code></a>.  Some of the lower level functions can be called
 directly if need be.</p>
+<div class="section" id="symlinks">
+<span id="dev-io-symlink"></span><h3>Symlinks<a class="headerlink" href="#symlinks" title="Permalink to this headline">¶</a></h3>
 <p>You can create your own symlinks that aren’t input files (e.g. for a
 README file that the user might want to have available) using
 <a class="reference internal" href="generated/compass.io.symlink.html#compass.io.symlink" title="compass.io.symlink"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.io.symlink()</span></code></a>:</p>
@@ -443,6 +460,9 @@ be within the test case’s work directory, not the step’s work directory.  We
 must do this in <code class="docutils literal notranslate"><span class="pre">configure()</span></code> rather than <code class="docutils literal notranslate"><span class="pre">collect()</span></code> because we do not
 know if the test case will be set up at all (or in what work directory) during
 <code class="docutils literal notranslate"><span class="pre">collect()</span></code>.</p>
+</div>
+<div class="section" id="download">
+<span id="dev-io-download"></span><h3>Download<a class="headerlink" href="#download" title="Permalink to this headline">¶</a></h3>
 <p>You can download files more directly if you need to using
 <a class="reference internal" href="generated/compass.io.download.html#compass.io.download" title="compass.io.download"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.io.download()</span></code></a>, though we recommend using
 <a class="reference internal" href="generated/compass.Step.add_input_file.html#compass.Step.add_input_file" title="compass.Step.add_input_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.add_input_file()</span></code></a> whenever possible because it is more
@@ -477,8 +497,11 @@ gets downloaded into the bathymetry database (if it’s not already there).
 Then, we create a local symlink called <code class="docutils literal notranslate"><span class="pre">topography.nc</span></code> to the file in the
 bathymetry database.</p>
 </div>
+</div>
 <div class="section" id="model">
 <span id="dev-model"></span><h2>Model<a class="headerlink" href="#model" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="running-mpas">
+<h3>Running MPAS<a class="headerlink" href="#running-mpas" title="Permalink to this headline">¶</a></h3>
 <p>Steps that run the MPAS model should call the
 <a class="reference internal" href="generated/compass.Step.add_model_as_input.html#compass.Step.add_model_as_input" title="compass.Step.add_model_as_input"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.add_model_as_input()</span></code></a> method from
 their <code class="docutils literal notranslate"><span class="pre">__init__()</span></code> method.</p>
@@ -492,6 +515,9 @@ and <code class="docutils literal notranslate"><span class="pre">threads</span><
 constructor or <a class="reference internal" href="organization.html#dev-step-setup"><span class="std std-ref">setup()</span></a> method (i.e. before calling
 <a class="reference internal" href="organization.html#dev-step-run"><span class="std std-ref">run()</span></a>) so that the <code class="docutils literal notranslate"><span class="pre">compass</span></code> framework can ensure that the
 required resources are available.</p>
+</div>
+<div class="section" id="partitioning-the-mesh">
+<h3>Partitioning the mesh<a class="headerlink" href="#partitioning-the-mesh" title="Permalink to this headline">¶</a></h3>
 <p>The function <a class="reference internal" href="generated/compass.model.partition.html#compass.model.partition" title="compass.model.partition"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.model.partition()</span></code></a> calls the graph partitioning
 executable (<a class="reference external" href="https://arc.vt.edu/userguide/metis/">gpmetis</a> by default) to
 divide up the MPAS mesh across cores.  If you call
@@ -503,6 +529,9 @@ multiple times with the same partition and we don’t want to waste time
 creating the same partition over and over.  For such cases, you can call
 <a class="reference internal" href="generated/compass.model.partition.html#compass.model.partition" title="compass.model.partition"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.model.partition()</span></code></a> and then provide <cite>partition_graph=False</cite>
 to later calls to <a class="reference internal" href="generated/compass.model.run_model.html#compass.model.run_model" title="compass.model.run_model"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.model.run_model()</span></code></a>.</p>
+</div>
+<div class="section" id="updating-pio-namelist-options">
+<h3>Updating PIO namelist options<a class="headerlink" href="#updating-pio-namelist-options" title="Permalink to this headline">¶</a></h3>
 <p>You can use <code class="xref py py-func docutils literal notranslate"><span class="pre">compass.model.update_namelist_pio()</span></code> to automatically set
 the MPAS namelist options <code class="docutils literal notranslate"><span class="pre">config_pio_num_iotasks</span></code> and <code class="docutils literal notranslate"><span class="pre">config_pio_stride</span></code>
 such that there is 1 PIO task per node of the MPAS run.  This is particularly
@@ -519,6 +548,9 @@ update the number of PIO tasks only once.  In this case, use
 <p>If you wish to use the MPAS default behavior of 1 PIO task per core, or wish to
 set <code class="docutils literal notranslate"><span class="pre">config_pio_num_iotasks</span></code> and <code class="docutils literal notranslate"><span class="pre">config_pio_stride</span></code> yourself, simply
 use <code class="docutils literal notranslate"><span class="pre">update_pio=False</span></code> when calling <code class="docutils literal notranslate"><span class="pre">run_model()</span></code>.</p>
+</div>
+<div class="section" id="making-a-graph-file">
+<h3>Making a graph file<a class="headerlink" href="#making-a-graph-file" title="Permalink to this headline">¶</a></h3>
 <p>Some <code class="docutils literal notranslate"><span class="pre">compass</span></code> test cases take advantage of the fact that the
 <a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/mesh_conversion.html#cell-culler">MPAS-Tools cell culler</a>
 can produce a graph file as part of the process of culling cells from an
@@ -528,11 +560,14 @@ an MPAS mesh file.  Optionally, you can provide the name of an MPAS field on
 cells in the mesh file that gives different weight to different cells
 (<code class="docutils literal notranslate"><span class="pre">weight_field</span></code>) in the partitioning process.</p>
 </div>
+</div>
 <div class="section" id="validation">
 <span id="dev-validation"></span><h2>Validation<a class="headerlink" href="#validation" title="Permalink to this headline">¶</a></h2>
 <p>Test cases should typically include validation of variables and/or timers.
 This validation is a critical part of running test suites and comparing them
 to baselines.</p>
+<div class="section" id="validating-variables">
+<h3>Validating variables<a class="headerlink" href="#validating-variables" title="Permalink to this headline">¶</a></h3>
 <p>The function <a class="reference internal" href="generated/compass.validate.compare_variables.html#compass.validate.compare_variables" title="compass.validate.compare_variables"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.validate.compare_variables()</span></code></a> can be used to
 compare variables in a file with a given relative path (<code class="docutils literal notranslate"><span class="pre">filename1</span></code>) with
 the same variables in another file (<code class="docutils literal notranslate"><span class="pre">filename2</span></code>) and/or against a baseline.</p>
@@ -682,6 +717,9 @@ normalVelocity       Time index: 0, 1, 2
 validation should be performed on outputs of the steps in this test case that
 are explicitly added with <a class="reference internal" href="generated/compass.Step.add_output_file.html#compass.Step.add_output_file" title="compass.Step.add_output_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.add_output_file()</span></code></a>.  This
 check can be disabled by setting <code class="docutils literal notranslate"><span class="pre">check_outputs=False</span></code>.</p>
+</div>
+<div class="section" id="norms">
+<h3>Norms<a class="headerlink" href="#norms" title="Permalink to this headline">¶</a></h3>
 <p>In the unlikely circumstance that you would like to allow comparison to pass
 with non-zero differences between variables, you can supply keyword arguments
 <code class="docutils literal notranslate"><span class="pre">l1_norm</span></code>, <code class="docutils literal notranslate"><span class="pre">l2_norm</span></code> and/or <code class="docutils literal notranslate"><span class="pre">linf_norm</span></code> to give the desired maximum
@@ -698,6 +736,9 @@ times without clobbering a previous result.  When you specify a nonzero norm,
 you may want compass to print the norm values it is using for comparison
 when the results are printed.  To do so, use the optional <code class="docutils literal notranslate"><span class="pre">quiet=False</span></code>
 argument.</p>
+</div>
+<div class="section" id="validating-timers">
+<h3>Validating timers<a class="headerlink" href="#validating-timers" title="Permalink to this headline">¶</a></h3>
 <p>Timer validation is qualitatively similar to variable validation except that
 no errors are raised, meaning that the user must manually look at the
 comparison and make a judgment call about whether any changes in timing are
@@ -717,6 +758,7 @@ for the run are available.</p>
    Percent Change: -10.781019682649793%
           Speedup: 1.1208377370409515
 </pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="provenance">

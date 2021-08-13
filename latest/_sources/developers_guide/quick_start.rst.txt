@@ -3,6 +3,18 @@
 Quick Start for Developers
 ==========================
 
+.. _dev_shell:
+
+Unix Shell
+----------
+
+Currently, compass only supports ``bash`` and related unix shells (such as
+``ksh`` on the Mac).  We do not support ``csh``, ``tcsh`` or other variants of
+``csh``.  An activation script for those shells will not be created.
+
+If you normally use ``csh``, ``tcsh`` or similar, you will need to temporarily
+switch to bash by calling ``/bin/bash`` each time you want to use compass.
+
 .. _dev_compass_repo:
 
 Set up a compass repository: for beginners
