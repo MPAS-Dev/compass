@@ -6,13 +6,14 @@ class Init(Step):
     """
     A step for an initial condition for for the cosine bell test case
     """
+
     def __init__(self, test_case, resolution):
         """
         Create the step
 
         Parameters
         ----------
-        test_case : compass.ocean.tests.global_convergence.divergent2D.Divergent2D
+        test_case : compass.ocean.tests.sphere_transport.divergent2D.Divergent2D
             The test case this step belongs to
 
         resolution : int

@@ -10,6 +10,7 @@ class SphereTransport(TestGroup):
     """
     A test group for testing algorithms for passive tracer advection on the sphere
     """
+
     def __init__(self, mpas_core):
         """
         mpas_core : compass.ocean.Ocean

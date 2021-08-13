@@ -15,13 +15,14 @@ class Mesh(Step):
     resolution : int
         The resolution of the (uniform) mesh in km
     """
+
     def __init__(self, test_case, resolution):
         """
         Create a new step
 
         Parameters
         ----------
-        test_case : compass.ocean.tests.global_convergence.rotation2D.Rotation2D
+        test_case : compass.ocean.tests.sphere_transport.nondivergent2D.Nondivergent2D
             The test case this step belongs to
 
         resolution : int
@@ -72,8 +73,8 @@ class Mesh(Step):
         dlat = dlon
         constantCellWidth = float(self.resolution)
 
-        nlat = int(180/dlat) + 1
-        nlon = int(360/dlon) + 1
+        nlat = int(180 / dlat) + 1
+        nlon = int(360 / dlon) + 1
         lat = np.linspace(-90., 90., nlat)
         lon = np.linspace(-180., 180., nlon)
 

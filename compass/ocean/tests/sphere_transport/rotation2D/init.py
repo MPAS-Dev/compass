@@ -6,6 +6,7 @@ class Init(Step):
     """
     A step for an initial condition for for the cosine bell test case
     """
+
     def __init__(self, test_case, resolution):
         """
         Create the step

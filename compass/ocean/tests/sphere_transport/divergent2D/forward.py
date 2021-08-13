@@ -39,7 +39,7 @@ class Forward(Step):
         package = 'compass.ocean.tests.sphere_transport.divergent2D'
 
         self.add_namelist_file(package, 'namelist.forward', mode='forward')
-        self.add_streams_file(package,'streams.forward', mode='forward')
+        self.add_streams_file(package, 'streams.forward', mode='forward')
 
         self.add_input_file(filename='init.nc',
                             target='../init/initial_state.nc')
@@ -50,16 +50,14 @@ class Forward(Step):
 
         self.add_output_file(filename='output.nc')
 
-
     def setup(self):
         """
         Set namelist options base on config options
         """
         config = self.config
         dtstr = self.get_timestep_str()
-        self.add_namelist_options({'config_dt': dtstr,
-          'config_time_integrator':config.get('divergent2D', 'time_integrator')})
-
+        self.add_namelist_options({'config_dt': dtstr, 'config_time_integrator': config.get(
+            'divergent2D', 'time_integrator')})
 
     def run(self):
         """
@@ -67,30 +65,34 @@ class Forward(Step):
         """
         config = self.config
         dt = self.get_timestep_str()
-        self.update_namelist_at_runtime(options={'config_dt': dt,
-          'config_time_integrator':config.get('divergent2D', 'time_integrator')},
-          out_name='namelist.ocean')
+        self.update_namelist_at_runtime(
+            options={
+                'config_dt': dt,
+                'config_time_integrator': config.get(
+                    'divergent2D',
+                    'time_integrator')},
+            out_name='namelist.ocean')
 
         run_model(self)
 
     def get_timestep_str(self):
         """
-          These tests expect the time step to be input in units of minutes, but MPAS
-          requires an "HH:MM:SS" string.  This function converts the time step input
-          into the formatted string used by MPAS.
+        These tests expect the time step to be input in units of minutes,
+        but MPAS requires an "HH:MM:SS" string.  This function converts the
+        time step input into the formatted string used by MPAS.
         """
         dtminutes = self.dt_minutes
         dt = timedelta(minutes=dtminutes)
-        if  dtminutes < 1:
-           dtstr = "00:00:" + str(dt.total_seconds())[:2]
+        if dtminutes < 1:
+            dtstr = "00:00:" + str(dt.total_seconds())[:2]
         elif dtminutes >= 60:
-           dthours = dt/timedelta(hours=1)
-           dt = dt - timedelta(hours=int(dthours))
-           dtminutes = dt/timedelta(minutes=1)
-           dt = dt - timedelta(minutes=int(dtminutes))
-           dtstr = str(int(dthours))[:2].zfill(2) + ":" + str(int(dtminutes))[:2].zfill(2) +\
-           ":"+str(int(dt.total_seconds()))[:2].zfill(2)
+            dthours = dt / timedelta(hours=1)
+            dt = dt - timedelta(hours=int(dthours))
+            dtminutes = dt / timedelta(minutes=1)
+            dt = dt - timedelta(minutes=int(dtminutes))
+            dtstr = str(int(dthours))[:2].zfill(2) + ":" + str(int(dtminutes))[
+                :2].zfill(2) + ":" + str(int(dt.total_seconds()))[:2].zfill(2)
         else:
-           dtminutes = dt/timedelta(minutes=1)
-           dtstr = "00:" + str(int(dtminutes))[:2].zfill(2) + ":00"
+            dtminutes = dt / timedelta(minutes=1)
+            dtstr = "00:" + str(int(dtminutes))[:2].zfill(2) + ":00"
         return dtstr

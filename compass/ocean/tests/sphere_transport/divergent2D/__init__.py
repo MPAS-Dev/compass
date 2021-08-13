@@ -17,6 +17,7 @@ class Divergent2D(TestCase):
     ----------
     resolutions : list of int
     """
+
     def __init__(self, test_group):
         """
         Create test case for creating a global MPAS-Ocean mesh
@@ -49,7 +50,7 @@ class Divergent2D(TestCase):
             self.add_step(step)
 
             self.add_step(Forward(test_case=self, resolution=resolution,
-             dt_minutes=self.timesteps[i]))
+                                  dt_minutes=self.timesteps[i]))
 
         self.add_step(Analysis(test_case=self, resolutions=resolutions))
 
@@ -88,7 +89,7 @@ class Divergent2D(TestCase):
             # ideally, about 300 cells per core
             # (make it a multiple of 4 because...it looks better?)
             cores = max(1,
-                        4*round(approx_cells / (4 * goal_cells_per_core)))
+                        4 * round(approx_cells / (4 * goal_cells_per_core)))
             # In a pinch, about 3000 cells per core
             min_cores = max(1,
                             round(approx_cells / max_cells_per_core))
