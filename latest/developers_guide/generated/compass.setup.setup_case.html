@@ -124,6 +124,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../api.html#clean">clean</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api.html#suite">suite</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api.html#run">run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api.html#cache">cache</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#base-classes">Base Classes</a></li>
@@ -226,7 +227,7 @@
 <h1>compass.setup.setup_case<a class="headerlink" href="#compass-setup-setup-case" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="compass.setup.setup_case">
-<span class="sig-prename descclassname"><span class="pre">compass.setup.</span></span><span class="sig-name descname"><span class="pre">setup_case</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_case</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">machine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">work_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">baseline_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpas_model_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compass/setup.html#setup_case"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.setup.setup_case" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">compass.setup.</span></span><span class="sig-name descname"><span class="pre">setup_case</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_case</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">machine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">work_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">baseline_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpas_model_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cached_steps</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compass/setup.html#setup_case"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.setup.setup_case" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set up one or more test cases</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -241,6 +242,11 @@ be listed with <code class="docutils literal notranslate"><span class="pre">comp
 <li><p><strong>baseline_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Location of baseslines that can be compared to</p></li>
 <li><p><strong>mpas_model_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The relative or absolute path to the root of a branch where the MPAS
 model has been built</p></li>
+<li><p><strong>cached_steps</strong> (<em>list of str</em>) – <dl class="simple">
+<dt>Which steps (if any) should be cached.  If all steps should be cached,</dt><dd><p>the first entry is “_all”</p>
+</dd>
+</dl>
+</p></li>
 </ul>
 </dd>
 </dl>

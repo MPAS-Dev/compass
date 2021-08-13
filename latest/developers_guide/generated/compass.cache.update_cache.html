@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>compass.suite.clean_suite &mdash; compass latest documentation</title>
+  <title>compass.cache.update_cache &mdash; compass latest documentation</title>
   
 
   
@@ -41,8 +41,8 @@
     
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="compass.run.run_suite" href="compass.run.run_suite.html" />
-    <link rel="prev" title="compass.suite.setup_suite" href="compass.suite.setup_suite.html" /> 
+    <link rel="next" title="compass.MpasCore" href="compass.MpasCore.html" />
+    <link rel="prev" title="compass.run.run_step" href="compass.run.run_step.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -122,9 +122,9 @@
 <li class="toctree-l4"><a class="reference internal" href="../api.html#list">list</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api.html#setup">setup</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api.html#clean">clean</a></li>
-<li class="toctree-l4 current"><a class="reference internal" href="../api.html#suite">suite</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api.html#suite">suite</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api.html#run">run</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api.html#cache">cache</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../api.html#cache">cache</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#base-classes">Base Classes</a></li>
@@ -204,13 +204,13 @@
         
           <li><a href="../api.html">API reference</a> &raquo;</li>
         
-      <li>compass.suite.clean_suite</li>
+      <li>compass.cache.update_cache</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../../_sources/developers_guide/generated/compass.suite.clean_suite.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/developers_guide/generated/compass.cache.update_cache.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -223,21 +223,21 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="compass-suite-clean-suite">
-<h1>compass.suite.clean_suite<a class="headerlink" href="#compass-suite-clean-suite" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="compass-cache-update-cache">
+<h1>compass.cache.update_cache<a class="headerlink" href="#compass-cache-update-cache" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="compass.suite.clean_suite">
-<span class="sig-prename descclassname"><span class="pre">compass.suite.</span></span><span class="sig-name descname"><span class="pre">clean_suite</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mpas_core</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suite_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">work_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compass/suite.html#clean_suite"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.suite.clean_suite" title="Permalink to this definition">¶</a></dt>
-<dd><p>Clean up a test suite by removing its test cases and run script</p>
+<dt class="sig sig-object py" id="compass.cache.update_cache">
+<span class="sig-prename descclassname"><span class="pre">compass.cache.</span></span><span class="sig-name descname"><span class="pre">update_cache</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step_paths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date_string</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dry_run</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compass/cache.html#update_cache"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.cache.update_cache" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cache one or more compass output files for use in a cached variant of the
+test case or step</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>mpas_core</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The MPAS core (‘ocean’, ‘landice’, etc.) of the test suite</p></li>
-<li><p><strong>suite_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of the test suite.  A file <code class="docutils literal notranslate"><span class="pre">&lt;suite_name&gt;.txt</span></code> must exist
-within the core’s <code class="docutils literal notranslate"><span class="pre">suites</span></code> package that lists the paths of the tests
-in the suite</p></li>
-<li><p><strong>work_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – A directory that will serve as the base for creating test case
-directories</p></li>
+<li><p><strong>step_paths</strong> (<em>list of str</em>) – The relative path of the original (uncached) steps from the base work
+directory</p></li>
+<li><p><strong>date_string</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – The datestamp (YYMMDD) to use on the files.  Default is today’s date.</p></li>
+<li><p><strong>dry_run</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether this is a dry run (producing the json file but not copying
+files to the LCRC server)</p></li>
 </ul>
 </dd>
 </dl>
@@ -251,8 +251,8 @@ directories</p></li>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="compass.run.run_suite.html" class="btn btn-neutral float-right" title="compass.run.run_suite" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="compass.suite.setup_suite.html" class="btn btn-neutral float-left" title="compass.suite.setup_suite" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="compass.MpasCore.html" class="btn btn-neutral float-right" title="compass.MpasCore" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="compass.run.run_step.html" class="btn btn-neutral float-left" title="compass.run.run_step" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

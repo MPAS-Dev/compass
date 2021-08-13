@@ -192,7 +192,11 @@
            <div itemprop="articleBody">
             
   <h1>Source code for compass.mpas_core</h1><div class="highlight"><pre>
-<div class="viewcode-block" id="MpasCore"><a class="viewcode-back" href="../../developers_guide/generated/compass.MpasCore.html#compass.MpasCore">[docs]</a><span></span><span class="k">class</span> <span class="nc">MpasCore</span><span class="p">:</span>
+<span></span><span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="n">resources</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+
+<div class="viewcode-block" id="MpasCore"><a class="viewcode-back" href="../../developers_guide/generated/compass.MpasCore.html#compass.MpasCore">[docs]</a><span class="k">class</span> <span class="nc">MpasCore</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The base class for housing all the tests for a given MPAS core, such as</span>
 <span class="sd">    ocean, landice or sw (shallow water)</span>
@@ -204,6 +208,11 @@
 
 <span class="sd">    test_groups : dict</span>
 <span class="sd">        A dictionary of test groups for the MPAS core with their names as keys</span>
+
+<span class="sd">    cached_files : dict</span>
+<span class="sd">        A dictionary that maps from output file names in test cases to cached</span>
+<span class="sd">        files in the ``compass_cache`` database for the MPAS core.  These</span>
+<span class="sd">        file mappings are read in from ``cached_files.json`` in the MPAS core.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="MpasCore.__init__"><a class="viewcode-back" href="../../developers_guide/generated/compass.MpasCore.html#compass.MpasCore.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
@@ -218,7 +227,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
 
         <span class="c1"># test groups are added with add_test_groups()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">test_groups</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_groups</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">cached_files</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_read_cached_files</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="MpasCore.add_test_group"><a class="viewcode-back" href="../../developers_guide/generated/compass.MpasCore.add_test_group.html#compass.MpasCore.add_test_group">[docs]</a>    <span class="k">def</span> <span class="nf">add_test_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -229,7 +241,20 @@
 <span class="sd">        test_group : compass.TestGroup</span>
 <span class="sd">            the test group to add</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">test_groups</span><span class="p">[</span><span class="n">test_group</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">test_group</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_groups</span><span class="p">[</span><span class="n">test_group</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">test_group</span></div>
+
+    <span class="k">def</span> <span class="nf">_read_cached_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Read in the dictionary of cached files from cached_files.json &quot;&quot;&quot;</span>
+
+        <span class="n">package</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;compass.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;cached_files.json&#39;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">resources</span><span class="o">.</span><span class="n">path</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">path</span><span class="p">:</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="k">as</span> <span class="n">data_file</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">cached_files</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">data_file</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+            <span class="c1"># no cached files for this core</span>
+            <span class="k">pass</span></div>
 </pre></div>
 
            </div>

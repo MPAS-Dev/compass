@@ -115,6 +115,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#clean-module">clean module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#suite-module">suite module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#run-module">run module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cache-module">cache module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#config-files">Config files</a></li>
@@ -288,6 +289,16 @@ test case is run, skipping any others.  If running the full test case, output
 from individual steps are stored in log files <code class="docutils literal notranslate"><span class="pre">&lt;step&gt;.log</span></code> in the test case’s
 work directory.  The results of validation (if any) are displayed in the final
 stage of running the test case.</p>
+</div>
+<div class="section" id="cache-module">
+<span id="dev-cache"></span><h3>cache module<a class="headerlink" href="#cache-module" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference internal" href="generated/compass.cache.update_cache.html#compass.cache.update_cache" title="compass.cache.update_cache"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.cache.update_cache()</span></code></a> function is used by
+<code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">cache</span></code> to copy step outputs to the <code class="docutils literal notranslate"><span class="pre">compass_cache</span></code> database on
+the LCRC server and to update <code class="docutils literal notranslate"><span class="pre">&lt;mpas_core&gt;_cached_files.json</span></code> files that
+contain a mapping between these cached files and the original outputs.  This
+functionality enables running steps with <a class="reference internal" href="organization.html#dev-step-cached-output"><span class="std std-ref">Cached output files</span></a>, which
+can be used to skip time-consuming initialization steps for faster development
+and debugging.</p>
 </div>
 </div>
 <div class="section" id="config-files">

@@ -270,9 +270,9 @@
 <span class="sd">        time or the step will raise an exception</span>
 
 <span class="sd">    outputs : list of str</span>
-<span class="sd">        a list of absolute paths of output files produced by this step and</span>
-<span class="sd">        available as inputs to other test cases and steps.  These files must</span>
-<span class="sd">        exist after the test has run or an exception will be raised</span>
+<span class="sd">        a list of absolute paths of output files produced by this step (or</span>
+<span class="sd">        cached) and available as inputs to other test cases and steps.  These</span>
+<span class="sd">        files must exist after the test has run or an exception will be raised</span>
 
 <span class="sd">    namelist_data : dict</span>
 <span class="sd">        a dictionary used internally to keep track of updates to the default</span>
@@ -305,10 +305,14 @@
 <span class="sd">    log_filename : str</span>
 <span class="sd">        At run time, the name of a log file where output/errors from the step</span>
 <span class="sd">        are being logged, or ``None`` if output is to stdout/stderr</span>
+
+<span class="sd">    cached : bool</span>
+<span class="sd">        Whether to get all of the outputs for the step from the database of</span>
+<span class="sd">        cached outputs for this MPAS core</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="Step.__init__"><a class="viewcode-back" href="../../developers_guide/generated/compass.Step.html#compass.Step.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                 <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_memory</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">max_disk</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
+                 <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_memory</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">max_disk</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">cached</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new test case</span>
 
@@ -344,6 +348,10 @@
 <span class="sd">            the amount of disk space that the step is allowed to use in MB.</span>
 <span class="sd">            This is currently just a placeholder for later use with task</span>
 <span class="sd">            parallelism</span>
+
+<span class="sd">        cached : bool, optional</span>
+<span class="sd">            Whether to get all of the outputs for the step from the database of</span>
+<span class="sd">            cached outputs for this MPAS core</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">test_case</span> <span class="o">=</span> <span class="n">test_case</span>
@@ -378,7 +386,10 @@
 
         <span class="c1"># these will be set before running the step</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">log_filename</span> <span class="o">=</span> <span class="kc">None</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log_filename</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># output caching</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cached</span> <span class="o">=</span> <span class="n">cached</span></div>
 
 <div class="viewcode-block" id="Step.setup"><a class="viewcode-back" href="../../developers_guide/generated/compass.Step.setup.html#compass.Step.setup">[docs]</a>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -648,6 +659,22 @@
         <span class="n">step_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
 
+        <span class="c1"># process the outputs first because cached outputs will add more inputs</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cached</span><span class="p">:</span>
+            <span class="c1"># forget about the inputs -- we won&#39;t used them, but we will add</span>
+            <span class="c1"># the cached outputs as inputs</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">input_data</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">:</span>
+                <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">filename</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">cached_files</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;The file </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1"> has not been added &#39;</span>
+                                     <span class="sa">f</span><span class="s1">&#39;to the cache database&#39;</span><span class="p">)</span>
+                <span class="n">target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">cached_files</span><span class="p">[</span><span class="n">filename</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+                    <span class="n">filename</span><span class="o">=</span><span class="n">output</span><span class="p">,</span>
+                    <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">,</span>
+                    <span class="n">database</span><span class="o">=</span><span class="s1">&#39;compass_cache&#39;</span><span class="p">)</span>
+
         <span class="n">inputs</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_data</span><span class="p">:</span>
             <span class="n">filename</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">]</span>
@@ -728,6 +755,10 @@
 <span class="sd">        by parsing the files and dictionaries in the step&#39;s ``namelist_data``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cached</span><span class="p">:</span>
+            <span class="c1"># no need for namelists</span>
+            <span class="k">return</span>
+
         <span class="n">step_work_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
 
@@ -764,6 +795,9 @@
 <span class="sd">        Writes out a streams file in the work directory with new values given</span>
 <span class="sd">        by parsing the files and dictionaries in the step&#39;s ``streams_data``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cached</span><span class="p">:</span>
+            <span class="c1"># no need for streams</span>
+            <span class="k">return</span>
 
         <span class="n">step_work_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>

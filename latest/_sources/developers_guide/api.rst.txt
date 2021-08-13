@@ -90,6 +90,17 @@ run
    run_step
 
 
+cache
+~~~~~
+
+.. currentmodule:: compass.cache
+
+.. autosummary::
+   :toctree: generated/
+
+   update_cache
+
+
 Base Classes
 ^^^^^^^^^^^^
 

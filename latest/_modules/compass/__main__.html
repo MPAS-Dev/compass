@@ -196,9 +196,10 @@
 
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">os</span>
 
 <span class="kn">import</span> <span class="nn">compass</span>
-<span class="kn">from</span> <span class="nn">compass</span> <span class="kn">import</span> <span class="nb">list</span><span class="p">,</span> <span class="n">setup</span><span class="p">,</span> <span class="n">clean</span><span class="p">,</span> <span class="n">suite</span><span class="p">,</span> <span class="n">run</span>
+<span class="kn">from</span> <span class="nn">compass</span> <span class="kn">import</span> <span class="nb">list</span><span class="p">,</span> <span class="n">setup</span><span class="p">,</span> <span class="n">clean</span><span class="p">,</span> <span class="n">suite</span><span class="p">,</span> <span class="n">run</span><span class="p">,</span> <span class="n">cache</span>
 
 
 <div class="viewcode-block" id="main"><a class="viewcode-back" href="../../developers_guide/generated/compass.__main__.main.html#compass.__main__.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
@@ -234,11 +235,18 @@
 
     <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span>
 
+    <span class="c1"># only allow the &quot;compass cache&quot; command if we&#39;re on Anvil or Chrysalis</span>
+    <span class="n">allow_cache</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;COMPASS_MACHINE&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span> <span class="ow">and</span>
+                   <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;COMPASS_MACHINE&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;anvil&#39;</span><span class="p">,</span> <span class="s1">&#39;chrysalis&#39;</span><span class="p">])</span>
+
     <span class="n">commands</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;list&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="o">.</span><span class="n">main</span><span class="p">,</span>
                 <span class="s1">&#39;setup&#39;</span><span class="p">:</span> <span class="n">setup</span><span class="o">.</span><span class="n">main</span><span class="p">,</span>
                 <span class="s1">&#39;clean&#39;</span><span class="p">:</span> <span class="n">clean</span><span class="o">.</span><span class="n">main</span><span class="p">,</span>
                 <span class="s1">&#39;suite&#39;</span><span class="p">:</span> <span class="n">suite</span><span class="o">.</span><span class="n">main</span><span class="p">,</span>
                 <span class="s1">&#39;run&#39;</span><span class="p">:</span> <span class="n">run</span><span class="o">.</span><span class="n">main</span><span class="p">}</span>
+    <span class="k">if</span> <span class="n">allow_cache</span><span class="p">:</span>
+        <span class="n">commands</span><span class="p">[</span><span class="s1">&#39;cache&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="n">main</span>
+
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">command</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">commands</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Unrecognized command </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">command</span><span class="p">))</span>
         <span class="n">parser</span><span class="o">.</span><span class="n">print_help</span><span class="p">()</span>

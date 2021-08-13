@@ -111,6 +111,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#compass-clean">compass clean</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#compass-suite">compass suite</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#compass-run">compass run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#compass-cache">compass cache</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="organization.html">Organization of Tests</a></li>
@@ -415,6 +416,49 @@ is provided on the command line, the command-line flags take precedence
 over the config option.</p>
 </div>
 <p>See <a class="reference internal" href="framework.html#dev-run"><span class="std std-ref">run module</span></a> for more about the underlying framework.</p>
+</div>
+<div class="section" id="compass-cache">
+<span id="dev-compass-cache"></span><h2>compass cache<a class="headerlink" href="#compass-cache" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">compass</span></code> supports caching outputs from any step in a special database
+called <code class="docutils literal notranslate"><span class="pre">compass_cache</span></code> (see <a class="reference internal" href="organization.html#dev-step-input-download"><span class="std std-ref">Downloading and symlinking input files</span></a>). Files in this
+database have a directory structure similar to the work directory (but without
+the MPAS core subdirectory, which is redundant). The files include a date stamp
+so that new revisions can be added without removing older ones (supported by
+older compass versions).  See <a class="reference internal" href="organization.html#dev-step-cached-output"><span class="std std-ref">Cached output files</span></a> for more details.</p>
+<p>A new command, <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">cache</span></code> has been added to aid in updating the file
+<code class="docutils literal notranslate"><span class="pre">cached_files.json</span></code> within an MPAS core.  This command is only available on
+Anvil and Chrysalis, since developers can only copy files from a compass work
+directory onto the LCRC server from these two machines.  Developers run
+<code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">cache</span></code> from the base work directory, giving the relative paths of
+the step whose outputs should be cached:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass cache -i ocean/global_ocean/QU240/mesh/mesh <span class="se">\</span>
+    ocean/global_ocean/QU240/PHC/init/initial_state
+</pre></div>
+</div>
+<p>This will:</p>
+<ol class="arabic simple">
+<li><p>copy the output files from the steps directories into the appropriate
+<code class="docutils literal notranslate"><span class="pre">compass_cache</span></code> location on the LCRC server and</p></li>
+<li><p>add these files to a local <code class="docutils literal notranslate"><span class="pre">ocean_cached_files.json</span></code> that can then be
+copied to <code class="docutils literal notranslate"><span class="pre">compass/ocean</span></code> as part of a PR to add a cached version of a
+step.</p></li>
+</ol>
+<p>The resulting <code class="docutils literal notranslate"><span class="pre">ocean_cached_files.json</span></code> will look something like:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;ocean/global_ocean/QU240/mesh/mesh/culled_mesh.nc&quot;</span><span class="p">:</span> <span class="s2">&quot;global_ocean/QU240/mesh/mesh/culled_mesh.210803.nc&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;ocean/global_ocean/QU240/mesh/mesh/culled_graph.info&quot;</span><span class="p">:</span> <span class="s2">&quot;global_ocean/QU240/mesh/mesh/culled_graph.210803.info&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;ocean/global_ocean/QU240/mesh/mesh/critical_passages_mask_final.nc&quot;</span><span class="p">:</span> <span class="s2">&quot;global_ocean/QU240/mesh/mesh/critical_passages_mask_final.210803.nc&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;ocean/global_ocean/QU240/PHC/init/initial_state/initial_state.nc&quot;</span><span class="p">:</span> <span class="s2">&quot;global_ocean/QU240/PHC/init/initial_state/initial_state.210803.nc&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;ocean/global_ocean/QU240/PHC/init/initial_state/init_mode_forcing_data.nc&quot;</span><span class="p">:</span> <span class="s2">&quot;global_ocean/QU240/PHC/init/initial_state/init_mode_forcing_data.210803.nc&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>An optional flag <code class="docutils literal notranslate"><span class="pre">--date_string</span></code> lets the developer set the date string to
+a date they choose.  The default is today’s date.</p>
+<p>The flag <code class="docutils literal notranslate"><span class="pre">--dry_run</span></code> can be used to sanity check the resulting <code class="docutils literal notranslate"><span class="pre">json</span></code> file
+and the list of files printed to stdout without actually copying the files to
+the LCRC server.</p>
+<p>See <a class="reference internal" href="framework.html#dev-cache"><span class="std std-ref">cache module</span></a> for more about the underlying framework.</p>
 </div>
 </div>
 
