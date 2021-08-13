@@ -350,21 +350,18 @@
     <span class="n">test_case</span><span class="o">.</span><span class="n">validation</span> <span class="o">=</span> <span class="n">validation</span></div>
 
 
-<div class="viewcode-block" id="compare_timers"><a class="viewcode-back" href="../../developers_guide/generated/compass.validate.compare_timers.html#compass.validate.compare_timers">[docs]</a><span class="k">def</span> <span class="nf">compare_timers</span><span class="p">(</span><span class="n">timers</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">work_dir</span><span class="p">,</span> <span class="n">rundir1</span><span class="p">,</span> <span class="n">rundir2</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="compare_timers"><a class="viewcode-back" href="../../developers_guide/generated/compass.validate.compare_timers.html#compass.validate.compare_timers">[docs]</a><span class="k">def</span> <span class="nf">compare_timers</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">timers</span><span class="p">,</span> <span class="n">rundir1</span><span class="p">,</span> <span class="n">rundir2</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compare variables between files in the current test case and/or with the</span>
 <span class="sd">    baseline results.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
+<span class="sd">    test_case : compass.TestCase</span>
+<span class="sd">        An object describing a test case to validate</span>
+
 <span class="sd">    timers : list</span>
 <span class="sd">        A list of timer names to compare</span>
-
-<span class="sd">    config : configparser.ConfigParser</span>
-<span class="sd">        Configuration options for the test case</span>
-
-<span class="sd">    work_dir : str</span>
-<span class="sd">        The work directory for the test case</span>
 
 <span class="sd">    rundir1 : str</span>
 <span class="sd">        The relative path to a directory within the ``work_dir``. If</span>
@@ -380,13 +377,14 @@
 <span class="sd">        those in the corresponding baseline directory.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="n">work_dir</span> <span class="o">=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">work_dir</span>
+    <span class="n">baseline_root</span> <span class="o">=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">baseline_dir</span>
+
     <span class="k">if</span> <span class="n">rundir2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">_compute_timers</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">rundir1</span><span class="p">),</span>
                         <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">rundir2</span><span class="p">),</span> <span class="n">timers</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="s1">&#39;baseline_dir&#39;</span><span class="p">):</span>
-        <span class="n">baseline_root</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="s1">&#39;baseline_dir&#39;</span><span class="p">)</span>
-
+    <span class="k">if</span> <span class="n">baseline_root</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">_compute_timers</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">baseline_root</span><span class="p">,</span> <span class="n">rundir1</span><span class="p">),</span>
                         <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">rundir1</span><span class="p">),</span> <span class="n">timers</span><span class="p">)</span>
 
