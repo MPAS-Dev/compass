@@ -76,4 +76,4 @@ class PerformanceTest(ForwardTestCase):
                               filename1='forward/land_ice_fluxes.nc')
 
         timers = ['time integration']
-        compare_timers(timers, self.config, self.work_dir, rundir1='forward')
+        compare_timers(self, timers, rundir1='forward')

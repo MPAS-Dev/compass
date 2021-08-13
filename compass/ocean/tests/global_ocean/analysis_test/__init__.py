@@ -134,7 +134,7 @@ class AnalysisTest(ForwardTestCase):
                   'compute_eddyProductVariables', 'write_eddyProductVariables',
                   'compute_oceanHeatContent', 'write_oceanHeatContent',
                   'compute_mixedLayerHeatBudget', 'write_mixedLayerHeatBudget']
-        compare_timers(timers, config, work_dir, rundir1='forward')
+        compare_timers(self, timers, rundir1='forward')
 
         variables = ['temperature', 'salinity', 'layerThickness',
                      'normalVelocity']
@@ -150,4 +150,4 @@ class AnalysisTest(ForwardTestCase):
                           filename1='forward/output.nc')
 
         timers = ['time integration']
-        compare_timers(timers, self.config, self.work_dir, rundir1='forward')
+        compare_timers(self, timers, rundir1='forward')
