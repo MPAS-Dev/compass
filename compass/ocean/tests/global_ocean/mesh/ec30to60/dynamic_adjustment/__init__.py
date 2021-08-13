@@ -36,7 +36,8 @@ class EC30to60DynamicAdjustment(DynamicAdjustment):
             raise ValueError('{} dynamic adjustment not defined for {}'.format(
                 mesh.mesh_name, time_integrator))
 
-        restart_times = ['0001-01-11_00:00:00', '0001-01-21_00:00:00']
+        restart_times = ['0001-01-11_00:00:00', '0001-01-31_00:00:00',
+                         '0001-02-10_00:00:00']
         restart_filenames = [
             'restarts/rst.{}.nc'.format(restart_time.replace(':', '.'))
             for restart_time in restart_times]
@@ -47,6 +48,10 @@ class EC30to60DynamicAdjustment(DynamicAdjustment):
 
         module = self.__module__
 
+        global_stats = {'config_AM_globalStats_enable': '.true.',
+                        'config_AM_globalStats_compute_on_startup': '.true.',
+                        'config_AM_globalStats_write_on_startup': '.true.'}
+
         # first step
         step_name = 'damped_adjustment_1'
         step = ForwardStep(test_case=self, mesh=mesh, init=init,
@@ -55,9 +60,10 @@ class EC30to60DynamicAdjustment(DynamicAdjustment):
 
         namelist_options = {
             'config_run_duration': "'00-00-10_00:00:00'",
-            'config_dt': "'00:20:00'",
+            'config_dt': "'00:15:00'",
             'config_Rayleigh_friction': '.true.',
             'config_Rayleigh_damping_coeff': '1.0e-4'}
+        namelist_options.update(global_stats)
         step.add_namelist_options(namelist_options)
 
         stream_replacements = {
@@ -69,16 +75,18 @@ class EC30to60DynamicAdjustment(DynamicAdjustment):
         step.add_output_file(filename='../{}'.format(restart_filenames[0]))
         self.add_step(step)
 
-        # final step
-        step_name = 'simulation'
+        # second step
+        step_name = 'damped_adjustment_2'
         step = ForwardStep(test_case=self, mesh=mesh, init=init,
                            time_integrator=time_integrator, name=step_name,
                            subdir=step_name)
 
         namelist_options = {
-            'config_run_duration': "'00-00-10_00:00:00'",
+            'config_run_duration': "'00-00-20_00:00:00'",
+            'config_dt': "'00:15:00'",
             'config_do_restart': '.true.',
             'config_start_time': "'{}'".format(restart_times[0])}
+        namelist_options.update(global_stats)
         step.add_namelist_options(namelist_options)
 
         stream_replacements = {
@@ -89,6 +97,29 @@ class EC30to60DynamicAdjustment(DynamicAdjustment):
 
         step.add_input_file(filename='../{}'.format(restart_filenames[0]))
         step.add_output_file(filename='../{}'.format(restart_filenames[1]))
+        self.add_step(step)
+
+        # final step
+        step_name = 'simulation'
+        step = ForwardStep(test_case=self, mesh=mesh, init=init,
+                           time_integrator=time_integrator, name=step_name,
+                           subdir=step_name)
+
+        namelist_options = {
+            'config_run_duration': "'00-00-10_00:00:00'",
+            'config_do_restart': '.true.',
+            'config_start_time': "'{}'".format(restart_times[1])}
+        namelist_options.update(global_stats)
+        step.add_namelist_options(namelist_options)
+
+        stream_replacements = {
+            'output_interval': '00-00-10_00:00:00',
+            'restart_interval': '00-00-10_00:00:00'}
+        step.add_streams_file(module, 'streams.template',
+                              template_replacements=stream_replacements)
+
+        step.add_input_file(filename='../{}'.format(restart_filenames[1]))
+        step.add_output_file(filename='../{}'.format(restart_filenames[2]))
         self.add_step(step)
 
         self.restart_filenames = restart_filenames
