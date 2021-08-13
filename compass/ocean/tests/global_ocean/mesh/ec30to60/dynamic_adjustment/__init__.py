@@ -97,6 +97,7 @@ class EC30to60DynamicAdjustment(DynamicAdjustment):
 
         step.add_input_file(filename='../{}'.format(restart_filenames[0]))
         step.add_output_file(filename='../{}'.format(restart_filenames[1]))
+        step.add_output_file(filename='output.nc')
         self.add_step(step)
 
         # final step

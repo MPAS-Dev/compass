@@ -32,10 +32,11 @@ class ThreadsTest(ForwardTestCase):
                          name='threads_test')
         for threads in [1, 2]:
             name = '{}thread'.format(threads)
-            self.add_step(
-                ForwardStep(test_case=self, mesh=mesh, init=init,
-                            time_integrator=time_integrator, name=name,
-                            subdir=name, cores=4, threads=threads))
+            step = ForwardStep(test_case=self, mesh=mesh, init=init,
+                               time_integrator=time_integrator, name=name,
+                               subdir=name, cores=4, threads=threads)
+            step.add_output_file(filename='output.nc')
+            self.add_step(step)
 
     # no run() method is needed
 

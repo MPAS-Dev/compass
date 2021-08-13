@@ -34,6 +34,7 @@ class PerformanceTest(ForwardTestCase):
         step = ForwardStep(test_case=self, mesh=mesh, init=init,
                            time_integrator=time_integrator)
 
+        step.add_output_file(filename='output.nc')
         if mesh.with_ice_shelf_cavities:
             module = self.__module__
             step.add_namelist_file(module, 'namelist.wisc')
