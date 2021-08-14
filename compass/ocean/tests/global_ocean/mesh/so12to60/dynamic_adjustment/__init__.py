@@ -62,7 +62,7 @@ class SO12to60DynamicAdjustment(DynamicAdjustment):
         namelist_options = {
             'config_run_duration': "'00-00-02_00:00:00'",
             'config_dt': "'00:05:00'",
-            'config_btr_dt': "'00:00:20'",
+            'config_btr_dt': "'00:00:15'",
             'config_Rayleigh_friction': '.true.',
             'config_Rayleigh_damping_coeff': '1.0e-4'}
         namelist_options.update(global_stats)
@@ -86,9 +86,8 @@ class SO12to60DynamicAdjustment(DynamicAdjustment):
         namelist_options = {
             'config_run_duration': "'00-00-08_00:00:00'",
             'config_dt': "'00:05:00'",
-            'config_btr_dt': "'00:00:20'",
             'config_Rayleigh_friction': '.true.',
-            'config_Rayleigh_damping_coeff': '4.0e-5',
+            'config_Rayleigh_damping_coeff': '1.0e-5',
             'config_do_restart': '.true.',
             'config_start_time': "'{}'".format(restart_times[0])}
         namelist_options.update(global_stats)
@@ -113,9 +112,8 @@ class SO12to60DynamicAdjustment(DynamicAdjustment):
         namelist_options = {
             'config_run_duration': "'00-00-10_00:00:00'",
             'config_dt': "'00:05:00'",
-            'config_btr_dt': "'00:00:20'",
             'config_Rayleigh_friction': '.true.',
-            'config_Rayleigh_damping_coeff': '1.0e-5',
+            'config_Rayleigh_damping_coeff': '1.0e-6',
             'config_do_restart': '.true.',
             'config_start_time': "'{}'".format(restart_times[1])}
         namelist_options.update(global_stats)
@@ -140,7 +138,6 @@ class SO12to60DynamicAdjustment(DynamicAdjustment):
         namelist_options = {
             'config_run_duration': "'00-00-10_00:00:00'",
             'config_dt': "'00:05:00'",
-            'config_btr_dt': "'00:00:20'",
             'config_do_restart': '.true.',
             'config_start_time': "'{}'".format(restart_times[2])}
         namelist_options.update(global_stats)
