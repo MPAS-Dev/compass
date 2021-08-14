@@ -151,7 +151,6 @@ class SO12to60DynamicAdjustment(DynamicAdjustment):
 
         step.add_input_file(filename='../{}'.format(restart_filenames[2]))
         step.add_output_file(filename='../{}'.format(restart_filenames[3]))
-        step.add_output_file(filename='output.nc')
         self.add_step(step)
 
         # final step
@@ -175,6 +174,7 @@ class SO12to60DynamicAdjustment(DynamicAdjustment):
 
         step.add_input_file(filename='../{}'.format(restart_filenames[3]))
         step.add_output_file(filename='../{}'.format(restart_filenames[4]))
+        step.add_output_file(filename='output.nc')
         self.add_step(step)
 
         self.restart_filenames = restart_filenames
