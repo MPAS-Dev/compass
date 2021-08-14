@@ -37,8 +37,8 @@ class SO12to60DynamicAdjustment(DynamicAdjustment):
                 mesh.mesh_name, time_integrator))
 
         restart_times = ['0001-01-03_00:00:00', '0001-01-11_00:00:00',
-                         '0001-01-21_00:00:00', '0001-01-31_00:00:00',
-                         '0001-02-10_00:00:00']
+                         '0001-01-21_00:00:00', '0001-02-10_00:00:00',
+                         '0001-02-20_00:00:00']
         restart_filenames = [
             'restarts/rst.{}.nc'.format(restart_time.replace(':', '.'))
             for restart_time in restart_times]
@@ -136,7 +136,7 @@ class SO12to60DynamicAdjustment(DynamicAdjustment):
                            subdir=step_name)
 
         namelist_options = {
-            'config_run_duration': "'00-00-10_00:00:00'",
+            'config_run_duration': "'00-00-20_00:00:00'",
             'config_dt': "'00:05:00'",
             'config_do_restart': '.true.',
             'config_start_time': "'{}'".format(restart_times[2])}
