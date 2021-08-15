@@ -36,8 +36,9 @@ class SO12to60DynamicAdjustment(DynamicAdjustment):
             raise ValueError('{} dynamic adjustment not defined for {}'.format(
                 mesh.mesh_name, time_integrator))
 
-        restart_times = ['0001-01-03_00:00:00', '0001-01-07_00:00:00',
-                         '0001-01-11_00:00:00', '0001-01-21_00:00:00']
+        restart_times = ['0001-01-03_00:00:00', '0001-01-11_00:00:00',
+                         '0001-01-21_00:00:00', '0001-02-10_00:00:00',
+                         '0001-02-20_00:00:00']
         restart_filenames = [
             'restarts/rst.{}.nc'.format(restart_time.replace(':', '.'))
             for restart_time in restart_times]
@@ -61,7 +62,7 @@ class SO12to60DynamicAdjustment(DynamicAdjustment):
         namelist_options = {
             'config_run_duration': "'00-00-02_00:00:00'",
             'config_dt': "'00:05:00'",
-            'config_btr_dt': "'00:00:20'",
+            'config_btr_dt': "'00:00:15'",
             'config_Rayleigh_friction': '.true.',
             'config_Rayleigh_damping_coeff': '1.0e-4'}
         namelist_options.update(global_stats)
@@ -83,11 +84,10 @@ class SO12to60DynamicAdjustment(DynamicAdjustment):
                            subdir=step_name)
 
         namelist_options = {
-            'config_run_duration': "'00-00-04_00:00:00'",
-            'config_dt': "'00:07:30'",
-            'config_btr_dt': "'00:00:20'",
+            'config_run_duration': "'00-00-08_00:00:00'",
+            'config_dt': "'00:05:00'",
             'config_Rayleigh_friction': '.true.',
-            'config_Rayleigh_damping_coeff': '4.0e-5',
+            'config_Rayleigh_damping_coeff': '1.0e-5',
             'config_do_restart': '.true.',
             'config_start_time': "'{}'".format(restart_times[0])}
         namelist_options.update(global_stats)
@@ -110,11 +110,10 @@ class SO12to60DynamicAdjustment(DynamicAdjustment):
                            subdir=step_name)
 
         namelist_options = {
-            'config_run_duration': "'00-00-04_00:00:00'",
-            'config_dt': "'00:10:00'",
-            'config_btr_dt': "'00:00:20'",
+            'config_run_duration': "'00-00-10_00:00:00'",
+            'config_dt': "'00:05:00'",
             'config_Rayleigh_friction': '.true.',
-            'config_Rayleigh_damping_coeff': '1.0e-5',
+            'config_Rayleigh_damping_coeff': '1.0e-6',
             'config_do_restart': '.true.',
             'config_start_time': "'{}'".format(restart_times[1])}
         namelist_options.update(global_stats)
@@ -122,7 +121,7 @@ class SO12to60DynamicAdjustment(DynamicAdjustment):
 
         stream_replacements = {
             'output_interval': '00-00-10_00:00:00',
-            'restart_interval': '00-00-02_00:00:00'}
+            'restart_interval': '00-00-10_00:00:00'}
         step.add_streams_file(module, 'streams.template',
                               template_replacements=stream_replacements)
 
@@ -130,14 +129,15 @@ class SO12to60DynamicAdjustment(DynamicAdjustment):
         step.add_output_file(filename='../{}'.format(restart_filenames[2]))
         self.add_step(step)
 
-        # final step
-        step_name = 'simulation'
+        # fourth step
+        step_name = 'damped_adjustment_4'
         step = ForwardStep(test_case=self, mesh=mesh, init=init,
                            time_integrator=time_integrator, name=step_name,
                            subdir=step_name)
 
         namelist_options = {
-            'config_run_duration': "'00-00-10_00:00:00'",
+            'config_run_duration': "'00-00-20_00:00:00'",
+            'config_dt': "'00:05:00'",
             'config_do_restart': '.true.',
             'config_start_time': "'{}'".format(restart_times[2])}
         namelist_options.update(global_stats)
@@ -151,6 +151,29 @@ class SO12to60DynamicAdjustment(DynamicAdjustment):
 
         step.add_input_file(filename='../{}'.format(restart_filenames[2]))
         step.add_output_file(filename='../{}'.format(restart_filenames[3]))
+        self.add_step(step)
+
+        # final step
+        step_name = 'simulation'
+        step = ForwardStep(test_case=self, mesh=mesh, init=init,
+                           time_integrator=time_integrator, name=step_name,
+                           subdir=step_name)
+
+        namelist_options = {
+            'config_run_duration': "'00-00-10_00:00:00'",
+            'config_do_restart': '.true.',
+            'config_start_time': "'{}'".format(restart_times[3])}
+        namelist_options.update(global_stats)
+        step.add_namelist_options(namelist_options)
+
+        stream_replacements = {
+            'output_interval': '00-00-10_00:00:00',
+            'restart_interval': '00-00-10_00:00:00'}
+        step.add_streams_file(module, 'streams.template',
+                              template_replacements=stream_replacements)
+
+        step.add_input_file(filename='../{}'.format(restart_filenames[3]))
+        step.add_output_file(filename='../{}'.format(restart_filenames[4]))
         step.add_output_file(filename='output.nc')
         self.add_step(step)
 
