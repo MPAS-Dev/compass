@@ -112,9 +112,8 @@ def get_conda_base(conda_base, is_test, config):
                                  'none could be inferred.')
         else:
             conda_base = config.get('paths', 'compass_envs')
-        conda_base = os.path.abspath(conda_base)
     # handle "~" in the path
-    conda_base = os.path.expanduser(conda_base)
+    conda_base = os.path.abspath(os.path.expanduser(conda_base))
     return conda_base
 
 
