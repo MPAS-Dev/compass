@@ -199,6 +199,9 @@
 <span class="kn">from</span> <span class="nn">importlib.resources</span> <span class="kn">import</span> <span class="n">path</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">stat</span>
+<span class="kn">import</span> <span class="nn">grp</span>
+<span class="kn">import</span> <span class="nn">progressbar</span>
 
 <span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">download</span><span class="p">,</span> <span class="n">symlink</span>
 <span class="kn">import</span> <span class="nn">compass.namelist</span>
@@ -677,6 +680,7 @@
                     <span class="n">database</span><span class="o">=</span><span class="s1">&#39;compass_cache&#39;</span><span class="p">)</span>
 
         <span class="n">inputs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">databases_with_downloads</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_data</span><span class="p">:</span>
             <span class="n">filename</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">]</span>
             <span class="n">target</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span>
@@ -721,6 +725,9 @@
                     <span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_database_root&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mpas_core</span><span class="p">))</span>
                 <span class="n">download_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">database_root</span><span class="p">,</span> <span class="n">database</span><span class="p">,</span>
                                              <span class="n">download_target</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">download_path</span><span class="p">):</span>
+                    <span class="n">database_subdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">database_root</span><span class="p">,</span> <span class="n">database</span><span class="p">)</span>
+                    <span class="n">databases_with_downloads</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">database_subdir</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">url</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">download_path</span> <span class="o">=</span> <span class="n">download_target</span>
 
@@ -739,6 +746,9 @@
                 <span class="n">inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">databases_with_downloads</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fix_permissions</span><span class="p">(</span><span class="n">databases_with_downloads</span><span class="p">)</span>
 
         <span class="c1"># convert inputs and outputs to absolute paths</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">step_dir</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span> <span class="k">for</span>
@@ -842,7 +852,127 @@
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">found</span><span class="p">:</span>
                     <span class="n">defaults</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">default</span><span class="p">)</span>
 
-            <span class="n">compass</span><span class="o">.</span><span class="n">streams</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">defaults_tree</span><span class="p">,</span> <span class="n">out_filename</span><span class="p">)</span></div>
+            <span class="n">compass</span><span class="o">.</span><span class="n">streams</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">defaults_tree</span><span class="p">,</span> <span class="n">out_filename</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_fix_permissions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">databases</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fix permissions on the databases where files were downloaded so</span>
+<span class="sd">        everyone in the group can read/write to them</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="s1">&#39;permissions&#39;</span><span class="p">,</span> <span class="s1">&#39;group&#39;</span><span class="p">):</span>
+            <span class="k">return</span>
+
+        <span class="n">group</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;permissions&#39;</span><span class="p">,</span> <span class="s1">&#39;group&#39;</span><span class="p">)</span>
+
+        <span class="n">new_uid</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getuid</span><span class="p">()</span>
+        <span class="n">new_gid</span> <span class="o">=</span> <span class="n">grp</span><span class="o">.</span><span class="n">getgrnam</span><span class="p">(</span><span class="n">group</span><span class="p">)</span><span class="o">.</span><span class="n">gr_gid</span>
+
+        <span class="n">write_perm</span> <span class="o">=</span> <span class="p">(</span><span class="n">stat</span><span class="o">.</span><span class="n">S_IRUSR</span> <span class="o">|</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IWUSR</span> <span class="o">|</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IRGRP</span> <span class="o">|</span>
+                      <span class="n">stat</span><span class="o">.</span><span class="n">S_IWGRP</span> <span class="o">|</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IROTH</span><span class="p">)</span>
+        <span class="n">exec_perm</span> <span class="o">=</span> <span class="p">(</span><span class="n">stat</span><span class="o">.</span><span class="n">S_IRUSR</span> <span class="o">|</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IWUSR</span> <span class="o">|</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IXUSR</span> <span class="o">|</span>
+                     <span class="n">stat</span><span class="o">.</span><span class="n">S_IRGRP</span> <span class="o">|</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IWGRP</span> <span class="o">|</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IXGRP</span> <span class="o">|</span>
+                     <span class="n">stat</span><span class="o">.</span><span class="n">S_IROTH</span> <span class="o">|</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IXOTH</span><span class="p">)</span>
+
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IRWXU</span> <span class="o">|</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IRWXG</span> <span class="o">|</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IRWXO</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;changing permissions on downloaded files&#39;</span><span class="p">)</span>
+
+        <span class="c1"># first the base directories that don&#39;t seem to be included in</span>
+        <span class="c1"># os.walk()</span>
+        <span class="k">for</span> <span class="n">directory</span> <span class="ow">in</span> <span class="n">databases</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">dir_stat</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">perm</span> <span class="o">=</span> <span class="n">dir_stat</span><span class="o">.</span><span class="n">st_mode</span> <span class="o">&amp;</span> <span class="n">mask</span>
+
+            <span class="k">if</span> <span class="n">dir_stat</span><span class="o">.</span><span class="n">st_uid</span> <span class="o">!=</span> <span class="n">new_uid</span><span class="p">:</span>
+                <span class="c1"># current user doesn&#39;t own this dir so let&#39;s move on</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">perm</span> <span class="o">==</span> <span class="n">exec_perm</span> <span class="ow">and</span> <span class="n">dir_stat</span><span class="o">.</span><span class="n">st_gid</span> <span class="o">==</span> <span class="n">new_gid</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">chown</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">new_uid</span><span class="p">,</span> <span class="n">new_gid</span><span class="p">)</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">chmod</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">exec_perm</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+        <span class="n">files_and_dirs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="n">databases</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">base</span><span class="p">):</span>
+                <span class="n">files_and_dirs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">dirs</span><span class="p">)</span>
+                <span class="n">files_and_dirs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
+
+        <span class="n">widgets</span> <span class="o">=</span> <span class="p">[</span><span class="n">progressbar</span><span class="o">.</span><span class="n">Percentage</span><span class="p">(),</span> <span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">progressbar</span><span class="o">.</span><span class="n">Bar</span><span class="p">(),</span>
+                   <span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">progressbar</span><span class="o">.</span><span class="n">ETA</span><span class="p">()]</span>
+        <span class="n">bar</span> <span class="o">=</span> <span class="n">progressbar</span><span class="o">.</span><span class="n">ProgressBar</span><span class="p">(</span><span class="n">widgets</span><span class="o">=</span><span class="n">widgets</span><span class="p">,</span>
+                                      <span class="n">maxval</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">files_and_dirs</span><span class="p">))</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="n">progress</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="n">databases</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">base</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">directory</span> <span class="ow">in</span> <span class="n">dirs</span><span class="p">:</span>
+                    <span class="n">progress</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">bar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">progress</span><span class="p">)</span>
+
+                    <span class="n">directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">directory</span><span class="p">)</span>
+
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">dir_stat</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+                        <span class="k">continue</span>
+
+                    <span class="k">if</span> <span class="n">dir_stat</span><span class="o">.</span><span class="n">st_uid</span> <span class="o">!=</span> <span class="n">new_uid</span><span class="p">:</span>
+                        <span class="c1"># current user doesn&#39;t own this dir so let&#39;s move on</span>
+                        <span class="k">continue</span>
+
+                    <span class="n">perm</span> <span class="o">=</span> <span class="n">dir_stat</span><span class="o">.</span><span class="n">st_mode</span> <span class="o">&amp;</span> <span class="n">mask</span>
+
+                    <span class="k">if</span> <span class="n">perm</span> <span class="o">==</span> <span class="n">exec_perm</span> <span class="ow">and</span> <span class="n">dir_stat</span><span class="o">.</span><span class="n">st_gid</span> <span class="o">==</span> <span class="n">new_gid</span><span class="p">:</span>
+                        <span class="k">continue</span>
+
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">chown</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">new_uid</span><span class="p">,</span> <span class="n">new_gid</span><span class="p">)</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">chmod</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">exec_perm</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+                        <span class="k">continue</span>
+
+                <span class="k">for</span> <span class="n">file_name</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+                    <span class="n">progress</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">bar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">progress</span><span class="p">)</span>
+                    <span class="n">file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">file_stat</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+                        <span class="k">continue</span>
+
+                    <span class="k">if</span> <span class="n">file_stat</span><span class="o">.</span><span class="n">st_uid</span> <span class="o">!=</span> <span class="n">new_uid</span><span class="p">:</span>
+                        <span class="c1"># current user doesn&#39;t own this file so let&#39;s move on</span>
+                        <span class="k">continue</span>
+
+                    <span class="n">perm</span> <span class="o">=</span> <span class="n">file_stat</span><span class="o">.</span><span class="n">st_mode</span> <span class="o">&amp;</span> <span class="n">mask</span>
+
+                    <span class="k">if</span> <span class="n">perm</span> <span class="o">&amp;</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IXUSR</span><span class="p">:</span>
+                        <span class="c1"># executable, so make sure others can execute it</span>
+                        <span class="n">new_perm</span> <span class="o">=</span> <span class="n">exec_perm</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">new_perm</span> <span class="o">=</span> <span class="n">write_perm</span>
+
+                    <span class="k">if</span> <span class="n">perm</span> <span class="o">==</span> <span class="n">new_perm</span> <span class="ow">and</span> <span class="n">file_stat</span><span class="o">.</span><span class="n">st_gid</span> <span class="o">==</span> <span class="n">new_gid</span><span class="p">:</span>
+                        <span class="k">continue</span>
+
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">chown</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">new_uid</span><span class="p">,</span> <span class="n">new_gid</span><span class="p">)</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">chmod</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">new_perm</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+                        <span class="k">continue</span>
+
+        <span class="n">bar</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  done.&#39;</span><span class="p">)</span></div>
 </pre></div>
 
            </div>
