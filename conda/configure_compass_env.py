@@ -696,7 +696,7 @@ def update_permissions(config, is_test, activ_path, conda_base, system_libs):
         # shared system libraries
         directories.append(system_libs)
 
-    group = config.get('deploy', 'group')
+    group = config.get('permissions', 'group')
 
     new_uid = os.getuid()
     new_gid = grp.getgrnam(group).gr_gid
