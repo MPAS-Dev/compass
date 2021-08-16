@@ -1,0 +1,1704 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Developer Tutorial: Adding a new test group &mdash; compass latest documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Developer Tutorial: Porting a legacy COMPASS test group" href="dev_porting_legacy.html" />
+    <link rel="prev" title="Template" href="../design_docs/template.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> compass
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                latest
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Developer Tutorial: Adding a new test group</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#getting-started">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#making-a-new-test-group">Making a new test group</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-a-default-test-case">Adding a “default” test case</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#varying-resolution-or-other-parameters">Varying resolution (or other parameters)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-the-initial-state-step">Adding the initial_state step</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#creating-a-horizontal-mesh">Creating a horizontal mesh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#setting-config-options-based-on-resolution">Setting config options based on resolution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#creating-a-vertical-coordinate">Creating a vertical coordinate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#creating-an-initial-condition">Creating an initial condition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#adding-step-outputs">Adding step outputs</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-the-forward-step">Adding the forward step</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#defining-namelist-options">Defining namelist options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#defining-streams">Defining streams</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#defining-the-run-method">Defining the run method</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#adding-the-steps-to-the-test-case">Adding the steps to the test case</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-an-rpe-test-test-case">Adding an “rpe_test” test case</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Adding the steps to the test case</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#defining-namelist-options-and-streams-files">Defining namelist options and streams files</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-the-analysis-step">Adding the analysis step</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Setting config options based on resolution</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#set-up-and-run">Set up and run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#documentation">Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">compass</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Developer Tutorial: Adding a new test group</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/tutorials/dev_add_test_group.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="developer-tutorial-adding-a-new-test-group">
+<span id="dev-tutorial-add-test-group"></span><h1>Developer Tutorial: Adding a new test group<a class="headerlink" href="#developer-tutorial-adding-a-new-test-group" title="Permalink to this headline">¶</a></h1>
+<p>This tutorial presents a step-by-step guide to adding a new test group to the
+<code class="docutils literal notranslate"><span class="pre">compass</span></code> python package (see the <a class="reference internal" href="../glossary.html#glossary"><span class="std std-ref">Glossary</span></a> for definitions of these
+terms).  In this tutorial, I will use the <a class="reference internal" href="../developers_guide/ocean/test_groups/baroclinic_channel.html#dev-ocean-baroclinic-channel"><span class="std std-ref">baroclinic_channel</span></a>
+as an example.  This test group was actually ported from <a class="reference internal" href="../index.html#legacy-compass"><span class="std std-ref">Legacy COMPASS</span></a>,
+roughly in the manner described in <a class="reference internal" href="dev_porting_legacy.html#dev-tutorial-porting-legacy"><span class="std std-ref">Developer Tutorial: Porting a legacy COMPASS test group</span></a>.  But we
+will use it to describe the process for creating a test group from scratch.</p>
+<div class="section" id="getting-started">
+<h2>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<p>To begin with, you will need to check out the compass repo and create  a new
+branch from <code class="docutils literal notranslate"><span class="pre">master</span></code> for developing the new test group.  For this purpose, we
+will stick with the simpler approach in <a class="reference internal" href="../developers_guide/quick_start.html#dev-compass-repo"><span class="std std-ref">Set up a compass repository: for beginners</span></a> here, but feel
+free to use the <code class="docutils literal notranslate"><span class="pre">worktree</span></code> approach instead if you are comfortable with it.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone git@github.com:MPAS-Dev/compass.git add_baroclinic_channel
+<span class="nb">cd</span> add_baroclinic_channel
+</pre></div>
+</div>
+<p>Now, you will need to create a conda environment for developing compass, as
+described in <a class="reference internal" href="../developers_guide/quick_start.html#dev-conda-env"><span class="std std-ref">compass conda environment, compilers and system modules</span></a>.  We will assume a simple situation where
+you are working on a “supported” machine and using the default compilers and
+MPI libraries, but consult the documentation to make an environment to suit
+your needs.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># this one will take a while the first time</span>
+./conda/create_compass_env.py --conda <span class="nv">$HOME</span>/miniconda3
+</pre></div>
+</div>
+<p>If you don’t already have Miniconda3 installed in the directory pointed to by
+<code class="docutils literal notranslate"><span class="pre">--conda</span></code>, it will be installed automatically for you.  If all goes well, you
+will have a file named <code class="docutils literal notranslate"><span class="pre">load_dev_compass_1.0.0*.sh</span></code>, where the details of the
+<code class="docutils literal notranslate"><span class="pre">*</span></code> depend on your specific machine and compilers.  For example, on
+Chrysalis, you will have <code class="docutils literal notranslate"><span class="pre">load_dev_compass_1.0.0_chrysalis_intel_impi.sh</span></code>,
+which will be the example used here:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> load_dev_compass_1.0.0_chrysalis_intel_impi.sh
+</pre></div>
+</div>
+<p>Now, we’re ready to get the MPAS-Ocean source code from the E3SM repository:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get the E3SM code -- this one takes a while every time</span>
+git submodule update --init --recursive
+</pre></div>
+</div>
+<p>If your test group will require development in E3SM in addition to compass,
+you will want to create a branch (possibly with <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">worktree</span></code>) for your
+development there as well:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> E3SM-Project
+git fetch --all -p
+git branch xylar/mpas-ocean/add-baroclinic-channel origin/master
+git switch xylar/mpas-ocean/add-baroclinic-channel
+<span class="nb">cd</span> ../
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>E3SM has some pretty strict requirements on branch names.  If you are using
+your own fork of E3SM, you should start your branch name with the component
+you are developing (in this case <code class="docutils literal notranslate"><span class="pre">mpas-ocean</span></code>).  If you wish to push your
+branch to the E3SM repo, you need to begin the branch name with your GitHub
+username (<code class="docutils literal notranslate"><span class="pre">xylar</span></code> in this example), followed by the component name.  In
+either case, the branch name needs to be all lowercase, separated by
+hyphens, and to describe the work to be done.</p>
+</div>
+<p>Next, we’re ready to build the MPAS-Ocean executable:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> E3SM-Project/components/mpas-ocean/
+make intel-mpi
+<span class="nb">cd</span> ../../..
+</pre></div>
+</div>
+<p>The make target will be different depending on the machine and compilers, see
+<a class="reference internal" href="../developers_guide/machines/index.html#dev-supported-machines"><span class="std std-ref">Supported Machines</span></a> or <a class="reference internal" href="../developers_guide/machines/index.html#dev-other-machines"><span class="std std-ref">Other Machines</span></a> for the right one
+for your machine.</p>
+<p>Now, we’re ready to start developing!</p>
+</div>
+<div class="section" id="making-a-new-test-group">
+<h2>Making a new test group<a class="headerlink" href="#making-a-new-test-group" title="Permalink to this headline">¶</a></h2>
+<p>Use any method you like for editing code.  If you haven’t settled on a method
+and are working on your own laptop or desktop, you may want to try an
+integrated development environment (<a class="reference external" href="https://www.jetbrains.com/pycharm/">PyCharm</a>
+is a really nice one).  They have features to make sure your code adheres to
+the style required for compass (see <a class="reference internal" href="../developers_guide/overview.html#dev-style"><span class="std std-ref">Code Style</span></a>).  <code class="docutils literal notranslate"><span class="pre">vim</span></code> or a similar
+tool will work fine on supercomputers.</p>
+<p>Your new test group will be a new python package within the MPAS core
+(<code class="docutils literal notranslate"><span class="pre">ocean</span></code> here).  For this example, we create a new <code class="docutils literal notranslate"><span class="pre">baroclinic_channel</span></code>
+directory in <code class="docutils literal notranslate"><span class="pre">compass/ocean/tests</span></code>.  In that directory, we will make a new
+file called <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> that will initially be empty.  That’s all it takes
+to make <code class="docutils literal notranslate"><span class="pre">baroclinic_channel</span></code> a new package in <code class="docutils literal notranslate"><span class="pre">compass</span></code>.  It can be
+imported with:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.ocean.tests</span> <span class="kn">import</span> <span class="n">baroclinic_channel</span>
+</pre></div>
+</div>
+<p>Each test group in <code class="docutils literal notranslate"><span class="pre">compass</span></code> is a class that descends from the
+<a class="reference internal" href="../developers_guide/generated/compass.TestGroup.html#compass.TestGroup" title="compass.testgroup.TestGroup"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.testgroup.TestGroup</span></code></a> class.  Let’s make a new class for the
+<code class="docutils literal notranslate"><span class="pre">baroclinic_channel</span></code> test group in <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.testgroup</span> <span class="kn">import</span> <span class="n">TestGroup</span>
+
+
+<span class="k">class</span> <span class="nc">BaroclinicChannel</span><span class="p">(</span><span class="n">TestGroup</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A test group for baroclinic channel test cases</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpas_core</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        mpas_core : compass.MpasCore</span>
+<span class="sd">            the MPAS core that this test group belongs to</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="n">mpas_core</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;baroclinic_channel&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The method (a function for a class) called <code class="docutils literal notranslate"><span class="pre">__init__()</span></code> is the constructor
+used to make an instance (an object) representing the test group.  It needs
+to know what MPAS Core it belongs to so that is passed in as the <code class="docutils literal notranslate"><span class="pre">mpas_core</span></code>
+argument.  The only thing that happens so far is that the constructor for the
+base class <code class="docutils literal notranslate"><span class="pre">TestGroup</span></code> gets called.  In the process, we give the test group
+the name <code class="docutils literal notranslate"><span class="pre">baroclinic_channel</span></code>.  You can take a look at the base class
+<code class="docutils literal notranslate"><span class="pre">TestGroup</span></code> in <code class="docutils literal notranslate"><span class="pre">compass/testgroup.py</span></code> if you want.  That’s not necessary
+for the tutorial, but some new developers have found reading the base class
+code (particularly for <code class="docutils literal notranslate"><span class="pre">TestCase</span></code> and <code class="docutils literal notranslate"><span class="pre">Step</span></code>) to be highly instructive.</p>
+<p>Naming conventions in python are that we use
+<a class="reference external" href="https://en.wikipedia.org/wiki/Camel_case">CamelCase</a> for classes, which
+always start with a capital letter, and all lowercase, possibly with
+underscores, for variable, module, package and function names.  We avoid
+all-caps like <code class="docutils literal notranslate"><span class="pre">MPAS</span></code>, even though this might seem preferable. (We use
+<code class="docutils literal notranslate"><span class="pre">E3SM</span></code> in a few places because <code class="docutils literal notranslate"><span class="pre">E3sm</span></code> looks really awkward.)</p>
+<p>Our new <code class="docutils literal notranslate"><span class="pre">BaroclinicChannel</span></code> class defines the test group, but so far it
+doesn’t have any test cases in it.  We’ll come back and add them later in the
+tutorial.  Before we add a test case, let’s make <code class="docutils literal notranslate"><span class="pre">compass</span></code> aware that the
+test group exists. To do that, we need to open <code class="docutils literal notranslate"><span class="pre">compass/ocean/__init__.py</span></code>,
+add an import for the new test group, and add an instance of the test group to the list of test
+groups in the ocean core:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.mpas_core</span> <span class="kn">import</span> <span class="n">MpasCore</span>
+<span class="hll"><span class="kn">from</span> <span class="nn">compass.ocean.tests.baroclinic_channel</span> <span class="kn">import</span> <span class="n">BaroclinicChannel</span>
+</span><span class="kn">from</span> <span class="nn">compass.ocean.tests.global_convergence</span> <span class="kn">import</span> <span class="n">GlobalConvergence</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean</span> <span class="kn">import</span> <span class="n">GlobalOcean</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.gotm</span> <span class="kn">import</span> <span class="n">Gotm</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.ice_shelf_2d</span> <span class="kn">import</span> <span class="n">IceShelf2d</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.ziso</span> <span class="kn">import</span> <span class="n">Ziso</span>
+
+
+<span class="k">class</span> <span class="nc">Ocean</span><span class="p">(</span><span class="n">MpasCore</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A test group for General Ocean Turbulence Model (GOTM) test cases</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct the collection of MPAS-Ocean test cases</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">)</span>
+
+<span class="hll">        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_group</span><span class="p">(</span><span class="n">BaroclinicChannel</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
+</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_group</span><span class="p">(</span><span class="n">GlobalConvergence</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_group</span><span class="p">(</span><span class="n">GlobalOcean</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_group</span><span class="p">(</span><span class="n">Gotm</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_group</span><span class="p">(</span><span class="n">IceShelf2d</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_group</span><span class="p">(</span><span class="n">Ziso</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>We make an instance of the <code class="docutils literal notranslate"><span class="pre">BaroclinicChannel</span></code> class and we immediately add
+it to the <code class="docutils literal notranslate"><span class="pre">Ocean</span></code> core’s list of test groups.  That’s all we need to do.  Now
+<code class="docutils literal notranslate"><span class="pre">compass</span></code> knows about the test group.</p>
+</div>
+<div class="section" id="adding-a-default-test-case">
+<h2>Adding a “default” test case<a class="headerlink" href="#adding-a-default-test-case" title="Permalink to this headline">¶</a></h2>
+<p>We’ll add a test case called <code class="docutils literal notranslate"><span class="pre">default</span></code> to <code class="docutils literal notranslate"><span class="pre">baroclinic_channel</span></code> by making a
+<code class="docutils literal notranslate"><span class="pre">default</span></code> package within <code class="docutils literal notranslate"><span class="pre">compass/ocean/tests/baroclinic_channel</span></code>.  First,
+we make the directory <code class="docutils literal notranslate"><span class="pre">compass/ocean/tests/baroclinic_channel/default</span></code>, then
+we add an empty <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> file into it. As a starting point, we’ll create
+a new <code class="docutils literal notranslate"><span class="pre">Default</span></code> class in this file that descends from the
+<a class="reference internal" href="../developers_guide/generated/compass.TestCase.html#compass.TestCase" title="compass.testcase.TestCase"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.testcase.TestCase</span></code></a> base class (take a look at
+<code class="docutils literal notranslate"><span class="pre">compass/testcase.py</span></code> if you want to see the contents of <code class="docutils literal notranslate"><span class="pre">TestCase</span></code> if
+you’re interested).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
+
+
+<span class="k">class</span> <span class="nc">Default</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The default test case for the baroclinic channel test group simply creates</span>
+<span class="sd">    the mesh and initial condition, then performs a short forward run on 4</span>
+<span class="sd">    cores.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create the test case</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_group : compass.ocean.tests.baroclinic_channel.BaroclinicChannel</span>
+<span class="sd">            The test group that this test case belongs to</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;default&#39;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>As a starting point, we just pass along the test group (<code class="docutils literal notranslate"><span class="pre">BaroclinicChannel</span></code>)
+this test case belongs to on to the base class’s constructor
+(<code class="docutils literal notranslate"><span class="pre">super().__init__()</span></code>) and give the test case a name, <code class="docutils literal notranslate"><span class="pre">default</span></code>.</p>
+</div>
+<div class="section" id="varying-resolution-or-other-parameters">
+<h2>Varying resolution (or other parameters)<a class="headerlink" href="#varying-resolution-or-other-parameters" title="Permalink to this headline">¶</a></h2>
+<p>The test cases in the baroclinic channel test group support multiple
+resolutions.  In test groups like this one, it is typically convenient to
+define multiple versions of the test case by passing the resolution as a
+parameter to the constructor.</p>
+<p>This tutorial won’t describe how to do a parameter study.  There will be a
+separate tutorial for that purpose.  Instead, what is described here is how to
+make different variants of a test case with a list of parameter values that a
+user cannot easily change.  So far, this is mostly used to create test cases at
+different resolutions in <code class="docutils literal notranslate"><span class="pre">compass</span></code> but the <code class="docutils literal notranslate"><span class="pre">compass/ocean/tests/global_ocean</span></code>
+test group includes a number of test cases that vary base on:</p>
+<ul class="simple">
+<li><p>whether ice-shelf cavities are included in the ocean domain</p></li>
+<li><p>which initial condition is used</p></li>
+<li><p>whether biogeochemistry is included in the initial condition</p></li>
+<li><p>which time integrator (RK4 or split-explicit) to use</p></li>
+</ul>
+<p>The particular details of these parameters are not important.  The point is
+that there is little restriction on what types of parameters can be used to
+create variants of a test case.</p>
+<p>Three resolutions supported in <code class="docutils literal notranslate"><span class="pre">baroclinic_channel</span></code> test group: <code class="docutils literal notranslate"><span class="pre">'10km'</span></code>,
+<code class="docutils literal notranslate"><span class="pre">'4km'</span></code> and <code class="docutils literal notranslate"><span class="pre">'1km'</span></code>.  We add resolution as a parameter to the <code class="docutils literal notranslate"><span class="pre">default</span></code>
+test case:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
+
+
+<span class="k">class</span> <span class="nc">Default</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The default test case for the baroclinic channel test group simply creates</span>
+<span class="sd">    the mesh and initial condition, then performs a short forward run on 4</span>
+<span class="sd">    cores.</span>
+
+<span class="hll"><span class="sd">    Attributes</span>
+</span><span class="hll"><span class="sd">    ----------</span>
+</span><span class="hll"><span class="sd">    resolution : str</span>
+</span><span class="hll"><span class="sd">        The resolution of the test case</span>
+</span><span class="sd">    &quot;&quot;&quot;</span>
+
+<span class="hll">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
+</span>        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create the test case</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_group : compass.ocean.tests.baroclinic_channel.BaroclinicChannel</span>
+<span class="sd">            The test group that this test case belongs to</span>
+
+<span class="hll"><span class="sd">        resolution : str</span>
+</span><span class="hll"><span class="sd">            The resolution of the test case</span>
+</span><span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;default&#39;</span>
+<span class="hll">        <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
+</span><span class="hll">        <span class="n">subdir</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+</span><span class="hll">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+</span><span class="hll">                         <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
+</span></pre></div>
+</div>
+<p>We indicate that the work directory should include a subdirectory for
+resolution as well as the name of the test case, and we store the <code class="docutils literal notranslate"><span class="pre">resolution</span></code>
+as an attribute of the test case object itself (<code class="docutils literal notranslate"><span class="pre">self.resolution</span></code>).  We add
+resolution to the docstring for both the class (where we describe the
+<code class="docutils literal notranslate"><span class="pre">resolution</span></code> attribute) and the constructor (where we describe the
+<code class="docutils literal notranslate"><span class="pre">resolution</span></code> argument or parameter).  Later on in the test case in other
+methods, we will access the resolution with <code class="docutils literal notranslate"><span class="pre">self.resolution</span></code> whenever we
+need it.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">default</span></code> test case doesn’t do anything yet because we haven’t added
+any steps, but let’s add it to the <code class="docutils literal notranslate"><span class="pre">baroclinic_channel</span></code> test group so we can
+see how the resolution will be specified.  We add the following to the file
+<code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> that defines the <code class="docutils literal notranslate"><span class="pre">BaroclinicChannel</span></code> test group:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.testgroup</span> <span class="kn">import</span> <span class="n">TestGroup</span>
+<span class="hll"><span class="kn">from</span> <span class="nn">compass.ocean.tests.baroclinic_channel.default</span> <span class="kn">import</span> <span class="n">Default</span>
+</span>
+
+<span class="k">class</span> <span class="nc">BaroclinicChannel</span><span class="p">(</span><span class="n">TestGroup</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A test group for baroclinic channel test cases</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpas_core</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        mpas_core : compass.MpasCore</span>
+<span class="sd">            the MPAS core that this test group belongs to</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="n">mpas_core</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;baroclinic_channel&#39;</span><span class="p">)</span>
+
+<span class="hll">        <span class="k">for</span> <span class="n">resolution</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;10km&#39;</span><span class="p">]:</span>
+</span><span class="hll">            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
+</span><span class="hll">                <span class="n">Default</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">))</span>
+</span></pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">default</span></code> test case (and most other test cases in this test group) is
+for regression testing and will only be run at the coarsest resolution, 10 km.</p>
+</div>
+<div class="section" id="adding-the-initial-state-step">
+<h2>Adding the initial_state step<a class="headerlink" href="#adding-the-initial-state-step" title="Permalink to this headline">¶</a></h2>
+<p>In <code class="docutils literal notranslate"><span class="pre">compass</span></code>, steps are defined in python modules in classes that descend
+from the <a class="reference internal" href="../developers_guide/generated/compass.Step.html#compass.Step" title="compass.step.Step"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.step.Step</span></code></a> base class.  The modules can be defined
+within the test case package (if they are unique to the test case) or in the
+test group (if they are shared among several test cases).  In this example,
+we have only added one test case (<code class="docutils literal notranslate"><span class="pre">default</span></code>) so far but we anticipate
+adding more.  All test cases will require a similar <code class="docutils literal notranslate"><span class="pre">initial_state</span></code> step, so
+it makes sense for the <code class="docutils literal notranslate"><span class="pre">initial_state.py</span></code> module to be located in the test
+group’s package to promote <a class="reference internal" href="../developers_guide/overview.html#dev-code-sharing"><span class="std std-ref">Code sharing</span></a>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">initial_state</span></code> step will create the MPAS mesh and initial condition for
+the test case.  To start with, we’ll just create a new <code class="docutils literal notranslate"><span class="pre">InitialState</span></code> class
+that descends from <code class="docutils literal notranslate"><span class="pre">Step</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
+
+
+<span class="k">class</span> <span class="nc">InitialState</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A step for creating a mesh and initial condition for baroclinic channel</span>
+<span class="sd">    test cases</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    resolution : str</span>
+<span class="sd">        The resolution of the test case</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create the step</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_case : compass.TestCase</span>
+<span class="sd">            The test case this step belongs to</span>
+
+<span class="sd">        resolution : str</span>
+<span class="sd">            The resolution of the test case</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;initial_state&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
+</pre></div>
+</div>
+<p>This pattern is probably starting to look familiar.  The step takes the test
+case it belongs to as an input to its constructor, and passes that along to
+the base class’ version of the constructor, along with the name of the step.
+By default, the subdirectory for the step is the same as the step name, but
+just like for a test case, you can give the step a more complicated
+subdirectory name, possibly with multiple levels of directories.  This is
+particularly important for parameter studies, an example of which can be seen
+in the <code class="docutils literal notranslate"><span class="pre">compass/ocean/tests/global_convergence/cosine_bell</span></code> test case.</p>
+<div class="section" id="creating-a-horizontal-mesh">
+<h3>Creating a horizontal mesh<a class="headerlink" href="#creating-a-horizontal-mesh" title="Permalink to this headline">¶</a></h3>
+<p>While <a class="reference internal" href="../index.html#legacy-compass"><span class="std std-ref">Legacy COMPASS</span></a> typically used MPAS-Ocean itself to define initial
+conditions for test cases (by running the model “init” mode), we have found
+that it is usually much easier to set up a mesh and define an initial condition
+in python.  The thinking behind “init” mode in MPAS-Ocean was that MPI
+parallelism and MPAS computations like gradients or the equation of state might
+be useful to have.  In practice, these features are seldom needed and are
+outweighed by the fact that the MPAS framework is not well equipped to read in
+NetCDF datasets on regular grids or interpolate them, and that the development
+time needed to create an initial condition in MPAS-Ocean is typically
+substantially longer than in python.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">run()</span></code> method of the <code class="docutils literal notranslate"><span class="pre">initial_state</span></code> step does the actual work of
+creating a mesh and initial condition. Below, We will present the method in 3
+pieces.  Please browse the code yourself to see the complete method.</p>
+<p>First, we create a regular, planar, hexagonal mesh that is periodic in the x
+direction but not in y. The number of cells in mesh comes from config options
+<code class="docutils literal notranslate"><span class="pre">nx</span></code> and <code class="docutils literal notranslate"><span class="pre">ny</span></code>, and the physical size of each cell from the config option
+<code class="docutils literal notranslate"><span class="pre">dc</span></code>, as discussed below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mpas_tools.planar_hex</span> <span class="kn">import</span> <span class="n">make_planar_hex_mesh</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.mesh.conversion</span> <span class="kn">import</span> <span class="n">convert</span><span class="p">,</span> <span class="n">cull</span>
+
+<span class="o">...</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Run this step of the test case</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
+
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;baroclinic_channel&#39;</span><span class="p">]</span>
+        <span class="n">nx</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;nx&#39;</span><span class="p">)</span>
+        <span class="n">ny</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;ny&#39;</span><span class="p">)</span>
+        <span class="n">dc</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;dc&#39;</span><span class="p">)</span>
+
+        <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">make_planar_hex_mesh</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="o">=</span><span class="n">ny</span><span class="p">,</span> <span class="n">dc</span><span class="o">=</span><span class="n">dc</span><span class="p">,</span> <span class="n">nonperiodic_x</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                      <span class="n">nonperiodic_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">)</span>
+
+        <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">cull</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+        <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">convert</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">graphInfoFileName</span><span class="o">=</span><span class="s1">&#39;culled_graph.info&#39;</span><span class="p">,</span>
+                         <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">)</span>
+
+        <span class="o">...</span>
+</pre></div>
+</div>
+<p>We will continue with the <code class="docutils literal notranslate"><span class="pre">run()</span></code> method below, but first it is worth
+discussing how to test the config options used to generate the horizontal mesh.</p>
+</div>
+<div class="section" id="setting-config-options-based-on-resolution">
+<h3>Setting config options based on resolution<a class="headerlink" href="#setting-config-options-based-on-resolution" title="Permalink to this headline">¶</a></h3>
+<p>We need a way to get the number of mesh cells and the size of these cells for
+a given resolution.  We could add these to the test case directly but it is
+often a good idea to add them to a config file instead.  This way, a user
+could alter these defaults with relative ease, allowing them to explore
+variations on the test case.</p>
+<p>To set config options (see <a class="reference internal" href="../users_guide/config_files.html#config-files"><span class="std std-ref">Config Files</span></a>) for the test case, we define
+a <code class="docutils literal notranslate"><span class="pre">configure()</span></code> method in the test case.  All the steps of a test case share
+the same config file, so there isn’t a <code class="docutils literal notranslate"><span class="pre">configure()</span></code> method for individual
+steps.  The idea is that it isn’t very convenient for a user to have to edit a
+different config file for each step, so there should be one for the whole test
+case.  (Even editing config files for individual test cases is kind of a pain,
+so it can be more convenient to set config options in a “user”
+<a class="reference internal" href="../users_guide/config_files.html#config-files"><span class="std std-ref">Config Files</span></a> before setting up the test case.) Here, we use nested
+python dictionaries to give different parameters for different resolution.  We
+use the resolution to pick the right inner dictionary, and then set the config
+options:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Default</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+
+<span class="o">...</span>
+
+    <span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Modify the configuration options for this test case.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">resolution</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+
+        <span class="n">res_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;10km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nx&#39;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
+                               <span class="s1">&#39;ny&#39;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
+                               <span class="s1">&#39;dc&#39;</span><span class="p">:</span> <span class="mf">10e3</span><span class="p">},</span>
+                      <span class="s1">&#39;4km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nx&#39;</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span>
+                              <span class="s1">&#39;ny&#39;</span><span class="p">:</span> <span class="mi">126</span><span class="p">,</span>
+                              <span class="s1">&#39;dc&#39;</span><span class="p">:</span> <span class="mf">4e3</span><span class="p">},</span>
+                      <span class="s1">&#39;1km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nx&#39;</span><span class="p">:</span> <span class="mi">160</span><span class="p">,</span>
+                              <span class="s1">&#39;ny&#39;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+                              <span class="s1">&#39;dc&#39;</span><span class="p">:</span> <span class="mf">1e3</span><span class="p">}}</span>
+
+        <span class="k">if</span> <span class="n">resolution</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">res_params</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unsupported resolution </span><span class="si">{}</span><span class="s1">. Supported values are: &#39;</span>
+                             <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">res_params</span><span class="p">)))</span>
+        <span class="n">res_params</span> <span class="o">=</span> <span class="n">res_params</span><span class="p">[</span><span class="n">resolution</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">res_params</span><span class="p">:</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;baroclinic_channel&#39;</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">res_params</span><span class="p">[</span><span class="n">param</span><span class="p">]))</span>
+</pre></div>
+</div>
+<p>As noted above, we only support 3 resolutions (<code class="docutils literal notranslate"><span class="pre">'10km'</span></code>, <code class="docutils literal notranslate"><span class="pre">'4km'</span></code> and
+<code class="docutils literal notranslate"><span class="pre">'1km'</span></code>), and each has an associated with mesh sizes (<code class="docutils literal notranslate"><span class="pre">nx</span></code> and <code class="docutils literal notranslate"><span class="pre">ny</span></code>)
+and physical cell size (<code class="docutils literal notranslate"><span class="pre">dc</span></code>).  These are added to the <code class="docutils literal notranslate"><span class="pre">baroclinic_channel</span></code>
+section of the config file.  The <code class="docutils literal notranslate"><span class="pre">configure()</span></code> method will get called
+automatically when the test case gets set up, so these config options will show
+up in the config file that gets put in the test case’s work directory and
+symlinked into each steps work directory.</p>
+</div>
+<div class="section" id="creating-a-vertical-coordinate">
+<h3>Creating a vertical coordinate<a class="headerlink" href="#creating-a-vertical-coordinate" title="Permalink to this headline">¶</a></h3>
+<p>This step is specific to test groups in the <code class="docutils literal notranslate"><span class="pre">ocean</span></code> MPAS core.  Those in the
+<code class="docutils literal notranslate"><span class="pre">landice</span></code> core use a different approach to creating vertical coordinates.
+Returning to the <code class="docutils literal notranslate"><span class="pre">run()</span></code> method in the <code class="docutils literal notranslate"><span class="pre">initial_state</span></code> step, the code
+snippet below is an example of how to make use of the
+<a class="reference internal" href="../developers_guide/ocean/framework.html#dev-ocean-framework"><span class="std std-ref">Ocean framework</span></a> to create the vertical coordinate:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">xarray</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="o">...</span>
+
+<span class="kn">from</span> <span class="nn">compass.ocean.vertical</span> <span class="kn">import</span> <span class="n">init_vertical_coord</span>
+    <span class="o">...</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="o">...</span>
+
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">xCell</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">xCell</span>
+
+        <span class="n">bottom_depth</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;vertical_grid&#39;</span><span class="p">,</span> <span class="s1">&#39;bottom_depth&#39;</span><span class="p">)</span>
+
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;bottomDepth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bottom_depth</span> <span class="o">*</span> <span class="n">xarray</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">xCell</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">xCell</span><span class="p">)</span>
+
+        <span class="n">init_vertical_coord</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This step, too, relies on config options, this time from the <code class="docutils literal notranslate"><span class="pre">vertical_grid</span></code>
+section (see <a class="reference internal" href="../developers_guide/ocean/framework.html#dev-ocean-framework-vertical"><span class="std std-ref">Vertical coordinate</span></a> for more on this). The easiest
+way to define these is to put a config file into the test group or test case’s
+python package.  In this case, we know that these config options are going to
+be used across many test cases so it makes sense to put them directly in the
+<code class="docutils literal notranslate"><span class="pre">baroclinic_channel</span></code> test group.  If we put them in a file called
+<code class="docutils literal notranslate"><span class="pre">baroclinic_channel.cfg</span></code>, they will automatically get read in and added to
+the config file for each test case as part of setup:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span>
+<span class="k">[vertical_grid]</span>
+
+<span class="c1"># the type of vertical grid</span>
+<span class="na">grid_type</span> <span class="o">=</span> <span class="s">uniform</span>
+
+<span class="c1"># Number of vertical levels</span>
+<span class="na">vert_levels</span> <span class="o">=</span> <span class="s">20</span>
+
+<span class="c1"># Depth of the bottom of the ocean</span>
+<span class="na">bottom_depth</span> <span class="o">=</span> <span class="s">1000.0</span>
+
+<span class="c1"># The type of vertical coordinate (e.g. z-level, z-star)</span>
+<span class="na">coord_type</span> <span class="o">=</span> <span class="s">z-star</span>
+
+<span class="c1"># Whether to use &quot;partial&quot; or &quot;full&quot;, or &quot;None&quot; to not alter the topography</span>
+<span class="na">partial_cell_type</span> <span class="o">=</span> <span class="s">None</span>
+
+<span class="c1"># The minimum fraction of a layer for partial cells</span>
+<span class="na">min_pc_fraction</span> <span class="o">=</span> <span class="s">0.1</span>
+
+<span class="na">...</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="creating-an-initial-condition">
+<h3>Creating an initial condition<a class="headerlink" href="#creating-an-initial-condition" title="Permalink to this headline">¶</a></h3>
+<p>The final part of the <code class="docutils literal notranslate"><span class="pre">run()</span></code> method in the <code class="docutils literal notranslate"><span class="pre">initial_state</span></code> step is to
+define the initial condition:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">xarray</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="o">...</span>
+
+<span class="kn">from</span> <span class="nn">compass.ocean.vertical</span> <span class="kn">import</span> <span class="n">init_vertical_coord</span>
+    <span class="o">...</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="o">...</span>
+
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;baroclinic_channel&#39;</span><span class="p">]</span>
+        <span class="n">use_distances</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;use_distances&#39;</span><span class="p">)</span>
+        <span class="n">gradient_width_dist</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;gradient_width_dist&#39;</span><span class="p">)</span>
+        <span class="n">gradient_width_frac</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;gradient_width_frac&#39;</span><span class="p">)</span>
+        <span class="n">bottom_temperature</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;bottom_temperature&#39;</span><span class="p">)</span>
+        <span class="n">surface_temperature</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;surface_temperature&#39;</span><span class="p">)</span>
+        <span class="n">temperature_difference</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;temperature_difference&#39;</span><span class="p">)</span>
+        <span class="n">salinity</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;salinity&#39;</span><span class="p">)</span>
+        <span class="n">coriolis_parameter</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;coriolis_parameter&#39;</span><span class="p">)</span>
+
+        <span class="o">...</span>
+
+        <span class="n">xMin</span> <span class="o">=</span> <span class="n">xCell</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">xMax</span> <span class="o">=</span> <span class="n">xCell</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">yMin</span> <span class="o">=</span> <span class="n">yCell</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">yMax</span> <span class="o">=</span> <span class="n">yCell</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>
+
+        <span class="n">yMid</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">yMin</span> <span class="o">+</span> <span class="n">yMax</span><span class="p">)</span>
+        <span class="n">xPerturbMin</span> <span class="o">=</span> <span class="n">xMin</span> <span class="o">+</span> <span class="mf">4.0</span> <span class="o">*</span> <span class="p">(</span><span class="n">xMax</span> <span class="o">-</span> <span class="n">xMin</span><span class="p">)</span> <span class="o">/</span> <span class="mf">6.0</span>
+        <span class="n">xPerturbMax</span> <span class="o">=</span> <span class="n">xMin</span> <span class="o">+</span> <span class="mf">5.0</span> <span class="o">*</span> <span class="p">(</span><span class="n">xMax</span> <span class="o">-</span> <span class="n">xMin</span><span class="p">)</span> <span class="o">/</span> <span class="mf">6.0</span>
+
+        <span class="k">if</span> <span class="n">use_distances</span><span class="p">:</span>
+            <span class="n">perturbationWidth</span> <span class="o">=</span> <span class="n">gradient_width_dist</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">perturbationWidth</span> <span class="o">=</span> <span class="p">(</span><span class="n">yMax</span> <span class="o">-</span> <span class="n">yMin</span><span class="p">)</span> <span class="o">*</span> <span class="n">gradient_width_frac</span>
+
+        <span class="n">yOffset</span> <span class="o">=</span> <span class="n">perturbationWidth</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span>
+            <span class="mf">6.0</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">xCell</span> <span class="o">-</span> <span class="n">xMin</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">xMax</span> <span class="o">-</span> <span class="n">xMin</span><span class="p">))</span>
+
+        <span class="n">temp_vert</span> <span class="o">=</span> <span class="p">(</span><span class="n">bottom_temperature</span> <span class="o">+</span>
+                     <span class="p">(</span><span class="n">surface_temperature</span> <span class="o">-</span> <span class="n">bottom_temperature</span><span class="p">)</span> <span class="o">*</span>
+                     <span class="p">((</span><span class="n">ds</span><span class="o">.</span><span class="n">refZMid</span> <span class="o">+</span> <span class="n">bottom_depth</span><span class="p">)</span> <span class="o">/</span> <span class="n">bottom_depth</span><span class="p">))</span>
+
+        <span class="n">frac</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">yCell</span> <span class="o">&lt;</span> <span class="n">yMid</span> <span class="o">-</span> <span class="n">yOffset</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span>
+
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">yCell</span> <span class="o">&gt;=</span> <span class="n">yMid</span> <span class="o">-</span> <span class="n">yOffset</span><span class="p">,</span>
+                                 <span class="n">yCell</span> <span class="o">&lt;</span> <span class="n">yMid</span> <span class="o">-</span> <span class="n">yOffset</span> <span class="o">+</span> <span class="n">perturbationWidth</span><span class="p">)</span>
+        <span class="n">frac</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span>
+                            <span class="mf">1.</span> <span class="o">-</span> <span class="p">(</span><span class="n">yCell</span> <span class="o">-</span> <span class="p">(</span><span class="n">yMid</span> <span class="o">-</span> <span class="n">yOffset</span><span class="p">))</span> <span class="o">/</span> <span class="n">perturbationWidth</span><span class="p">,</span>
+                            <span class="n">frac</span><span class="p">)</span>
+
+        <span class="n">temperature</span> <span class="o">=</span> <span class="n">temp_vert</span> <span class="o">-</span> <span class="n">temperature_difference</span> <span class="o">*</span> <span class="n">frac</span>
+        <span class="n">temperature</span> <span class="o">=</span> <span class="n">temperature</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="s1">&#39;nCells&#39;</span><span class="p">,</span> <span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Determine yOffset for 3rd crest in sin wave</span>
+        <span class="n">yOffset</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">perturbationWidth</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span>
+            <span class="n">numpy</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">xCell</span> <span class="o">-</span> <span class="n">xPerturbMin</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">xPerturbMax</span> <span class="o">-</span> <span class="n">xPerturbMin</span><span class="p">))</span>
+
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span>
+            <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">yCell</span> <span class="o">&gt;=</span> <span class="n">yMid</span> <span class="o">-</span> <span class="n">yOffset</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">perturbationWidth</span><span class="p">,</span>
+                              <span class="n">yCell</span> <span class="o">&lt;=</span> <span class="n">yMid</span> <span class="o">-</span> <span class="n">yOffset</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">perturbationWidth</span><span class="p">),</span>
+            <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">xCell</span> <span class="o">&gt;=</span> <span class="n">xPerturbMin</span><span class="p">,</span>
+                              <span class="n">xCell</span> <span class="o">&lt;=</span> <span class="n">xPerturbMax</span><span class="p">))</span>
+
+        <span class="n">temperature</span> <span class="o">=</span> <span class="p">(</span><span class="n">temperature</span> <span class="o">+</span>
+                       <span class="n">mask</span> <span class="o">*</span> <span class="mf">0.3</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="p">((</span><span class="n">yCell</span> <span class="o">-</span> <span class="p">(</span><span class="n">yMid</span> <span class="o">-</span> <span class="n">yOffset</span><span class="p">))</span> <span class="o">/</span>
+                                           <span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">perturbationWidth</span><span class="p">))))</span>
+
+        <span class="n">temperature</span> <span class="o">=</span> <span class="n">temperature</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">normalVelocity</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xEdge</span><span class="p">)</span>
+        <span class="n">normalVelocity</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">broadcast</span><span class="p">(</span><span class="n">normalVelocity</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">refBottomDepth</span><span class="p">)</span>
+        <span class="n">normalVelocity</span> <span class="o">=</span> <span class="n">normalVelocity</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="s1">&#39;nEdges&#39;</span><span class="p">,</span> <span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span>
+        <span class="n">normalVelocity</span> <span class="o">=</span> <span class="n">normalVelocity</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temperature</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;salinity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">salinity</span> <span class="o">*</span> <span class="n">xarray</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">temperature</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;normalVelocity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">normalVelocity</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;fCell&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">coriolis_parameter</span> <span class="o">*</span> <span class="n">xarray</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">xCell</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;fEdge&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">coriolis_parameter</span> <span class="o">*</span> <span class="n">xarray</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xEdge</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;fVertex&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">coriolis_parameter</span> <span class="o">*</span> <span class="n">xarray</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xVertex</span><span class="p">)</span>
+
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="s1">&#39;ocean.nc&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The details aren’t critical for the purpose of this tutorial, though you may
+find this example to be useful for developing other test cases, particularly
+those for the <code class="docutils literal notranslate"><span class="pre">ocean</span></code> MPAS core.  The point is mostly to show how config
+options are used to define the initial condition. Again, we use config options
+from <code class="docutils literal notranslate"><span class="pre">baroclinic_channel.cfg</span></code>, this time in a section specific to the test
+group that we therefore call <code class="docutils literal notranslate"><span class="pre">baroclinic_channel</span></code>:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">...</span>
+<span class="c1"># config options for baroclinic channel testcases</span>
+<span class="k">[baroclinic_channel]</span>
+
+<span class="c1"># Logical flag that determines if locations of features are defined by distance</span>
+<span class="c1"># or fractions. False means fractions.</span>
+<span class="na">use_distances</span> <span class="o">=</span> <span class="s">False</span>
+
+<span class="c1"># Temperature of the surface in the northern half of the domain.</span>
+<span class="na">surface_temperature</span> <span class="o">=</span> <span class="s">13.1</span>
+
+<span class="c1"># Temperature of the bottom in the northern half of the domain.</span>
+<span class="na">bottom_temperature</span> <span class="o">=</span> <span class="s">10.1</span>
+
+<span class="c1"># Difference in the temperature field between the northern and southern halves</span>
+<span class="c1"># of the domain.</span>
+<span class="na">temperature_difference</span> <span class="o">=</span> <span class="s">1.2</span>
+
+<span class="c1"># Fraction of domain in Y direction the temperature gradient should be linear</span>
+<span class="c1"># over.</span>
+<span class="na">gradient_width_frac</span> <span class="o">=</span> <span class="s">0.08</span>
+
+<span class="c1"># Width of the temperature gradient around the center sin wave. Default value</span>
+<span class="c1"># is relative to a 500km domain in Y.</span>
+<span class="na">gradient_width_dist</span> <span class="o">=</span> <span class="s">40e3</span>
+
+<span class="c1"># Salinity of the water in the entire domain.</span>
+<span class="na">salinity</span> <span class="o">=</span> <span class="s">35.0</span>
+
+<span class="c1"># Coriolis parameter for entire domain.</span>
+<span class="na">coriolis_parameter</span> <span class="o">=</span> <span class="s">-1.2e-4</span>
+</pre></div>
+</div>
+<p>Again, the idea is that we make these config options rather than hard-coding
+them in the test case so that users can more easily alter the test case and
+also to provide a relatively obvious place to document these parameters.</p>
+</div>
+<div class="section" id="adding-step-outputs">
+<h3>Adding step outputs<a class="headerlink" href="#adding-step-outputs" title="Permalink to this headline">¶</a></h3>
+<p>Now that we’ve written the full <code class="docutils literal notranslate"><span class="pre">run()</span></code> method for the step, we know what
+the output files will be.  It is a very good idea to define the outputs
+explicitly.  For one, compass will check to make sure they are created as
+expected and raise an error if not.  For another, we anticipate that defining
+outputs will be a requirement for future work on task parallelism in which
+the connection between test cases and steps will be determined based on their
+inputs and outputs.  For this step, we add the following outputs in the
+constructor:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">InitialState</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+    <span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
+        <span class="o">...</span>
+        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;base_mesh.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;culled_mesh.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;culled_graph.info&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;ocean.nc&#39;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Only <code class="docutils literal notranslate"><span class="pre">ocean.nc</span></code> and <code class="docutils literal notranslate"><span class="pre">culled_graph.info</span></code> are strictly necessary, as these
+are used as inputs to the <code class="docutils literal notranslate"><span class="pre">forward</span></code> step that we will define below, but
+explicitly including other outputs is not a problem.</p>
+</div>
+</div>
+<div class="section" id="adding-the-forward-step">
+<h2>Adding the forward step<a class="headerlink" href="#adding-the-forward-step" title="Permalink to this headline">¶</a></h2>
+<p>Now, we will add a <code class="docutils literal notranslate"><span class="pre">forward</span></code> step for running the MPAS-Ocean model forward
+in time from the initial condition created in <code class="docutils literal notranslate"><span class="pre">initial_state</span></code>.  <code class="docutils literal notranslate"><span class="pre">forward</span></code>
+is conceptually similar to <code class="docutils literal notranslate"><span class="pre">initial_state</span></code> in that we make a <code class="docutils literal notranslate"><span class="pre">Forward</span></code>
+class that descends from <code class="docutils literal notranslate"><span class="pre">Step</span></code> with a constructor and that calls the base
+constructor with the name of the step.  This time, we also supply the target
+number of cores, minimum number of cores, and number of threads (the
+<code class="docutils literal notranslate"><span class="pre">initial_state</span></code> always used the default of 1 core and 1 thread):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
+
+
+<span class="k">class</span> <span class="nc">Forward</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A step for performing forward MPAS-Ocean runs as part of baroclinic</span>
+<span class="sd">    channel test cases.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    resolution : str</span>
+<span class="sd">        The resolution of the test case</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_cores</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nu</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a new test case</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_case : compass.TestCase</span>
+<span class="sd">            The test case this step belongs to</span>
+
+<span class="sd">        resolution : str</span>
+<span class="sd">            The resolution of the test case</span>
+
+<span class="sd">        name : str</span>
+<span class="sd">            the name of the test case</span>
+
+<span class="sd">        subdir : str, optional</span>
+<span class="sd">            the subdirectory for the step.  The default is ``name``</span>
+
+<span class="sd">        cores : int, optional</span>
+<span class="sd">            the number of cores the step would ideally use.  If fewer cores</span>
+<span class="sd">            are available on the system, the step will run on all available</span>
+<span class="sd">            cores as long as this is not below ``min_cores``</span>
+
+<span class="sd">        min_cores : int, optional</span>
+<span class="sd">            the number of cores the step requires.  If the system has fewer</span>
+<span class="sd">            than this number of cores, the step will fail</span>
+
+<span class="sd">        threads : int, optional</span>
+<span class="sd">            the number of threads the step will use</span>
+
+<span class="sd">        nu : float, optional</span>
+<span class="sd">            the viscosity (if different from the default for the test group)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
+        <span class="k">if</span> <span class="n">min_cores</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">min_cores</span> <span class="o">=</span> <span class="n">cores</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">,</span>
+                         <span class="n">cores</span><span class="o">=</span><span class="n">cores</span><span class="p">,</span> <span class="n">min_cores</span><span class="o">=</span><span class="n">min_cores</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="n">threads</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The default number of cores and threads is 1, and the default minimum number
+of cores (<code class="docutils literal notranslate"><span class="pre">min_cores</span></code>) is the same as the number of cores (so also 1 if
+<code class="docutils literal notranslate"><span class="pre">cores</span></code> isn’t specified).  See <a class="reference internal" href="../developers_guide/organization.html#dev-steps"><span class="std std-ref">Steps</span></a> for more details.  There is
+also a parameter <code class="docutils literal notranslate"><span class="pre">nu</span></code>, the viscosity, which will be set depending on the test
+case.</p>
+<p>Next, we add inputs that are outputs from the <code class="docutils literal notranslate"><span class="pre">initial_state</span></code> test case:
+.. code-block:: python</p>
+<blockquote>
+<div><dl class="simple">
+<dt>self.add_input_file(filename=’init.nc’,</dt><dd><p>target=’../initial_state/ocean.nc’)</p>
+</dd>
+<dt>self.add_input_file(filename=’graph.info’,</dt><dd><p>target=’../initial_state/culled_graph.info’)</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>We also add a link to the MPAS-Ocean executable as an input:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">add_model_as_input</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="section" id="defining-namelist-options">
+<h3>Defining namelist options<a class="headerlink" href="#defining-namelist-options" title="Permalink to this headline">¶</a></h3>
+<p>MPAS components require both namelist and streams files to work properly.  An
+important part of compass’ functionality is that it takes the default namelist
+options from a given build of an MPAS component and modifies only those
+options that are specific to the test case to produce the final namelist file
+used to run the model.</p>
+<p>In <code class="docutils literal notranslate"><span class="pre">compass</span></code>, there are two main ways to set namelist options for MPAS model
+runs and we will demonstrate both in this test case.  First, you can define a
+namelist file with the desired values.  This is useful for namelist options
+that are always the same for this test case and can’t be changed based on
+config options from the config file (see above).</p>
+<p>In <code class="docutils literal notranslate"><span class="pre">compass</span></code> the formatting for a namelist file within a test group or test
+case’s python package similar to the resulting namelist file.  Here is the
+<code class="docutils literal notranslate"><span class="pre">namelist.forward</span></code> file from the <code class="docutils literal notranslate"><span class="pre">baroclinic_channel</span></code> test group:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>config_write_output_on_startup = .false.
+config_run_duration = &#39;0000_00:15:00&#39;
+config_use_mom_del2 = .true.
+config_implicit_bottom_drag_coeff = 1.0e-2
+config_use_cvmix_background = .true.
+config_cvmix_background_diffusion = 0.0
+config_cvmix_background_viscosity = 1.0e-4
+</pre></div>
+</div>
+<p>Some namelist options are specific to a given resolution, so it is handy to
+define namelist files for each resolution.  As an example, here is
+<code class="docutils literal notranslate"><span class="pre">namelist.10km.forward</span></code>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>config_dt = &#39;00:05:00&#39;
+config_btr_dt = &#39;00:00:15&#39;
+config_mom_del2 = 10.0
+</pre></div>
+</div>
+<p>In the <code class="docutils literal notranslate"><span class="pre">forward</span></code> step, we add these namelists as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+<span class="k">class</span> <span class="nc">Forward</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+    <span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_cores</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nu</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="o">...</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.baroclinic_channel&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;namelist.forward&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.baroclinic_channel&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;namelist.</span><span class="si">{}</span><span class="s1">.forward&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>The first argument to <a class="reference internal" href="../developers_guide/generated/compass.Step.add_namelist_file.html#compass.Step.add_namelist_file" title="compass.Step.add_namelist_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.add_namelist_file()</span></code></a> is the
+python package where the namelist file can be found, and the second is the
+file name.  Files within the <code class="docutils literal notranslate"><span class="pre">compass</span></code> package can’t be referenced directly
+with a file path but rather with a package like in these examples.</p>
+<p>Another way to set namelist options is to use a python dictionary and to call
+<a class="reference internal" href="../developers_guide/generated/compass.Step.add_namelist_options.html#compass.Step.add_namelist_options" title="compass.Step.add_namelist_options"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.add_namelist_options()</span></code></a>.  This is the way to handle
+namelist options that depend on parameters (such as resolution) that are not
+known in advance.  In this case, we use this techinique to set the namelist
+option for the viscosity <code class="docutils literal notranslate"><span class="pre">config_mom_del2</span></code> using the parameter <code class="docutils literal notranslate"><span class="pre">nu</span></code> passed
+into the constructor (if it is not <code class="docutils literal notranslate"><span class="pre">None</span></code>, indicating that it was not set).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+<span class="k">class</span> <span class="nc">Forward</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+    <span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_cores</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nu</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="o">...</span>
+
+        <span class="k">if</span> <span class="n">nu</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># update the viscosity to the requested value</span>
+            <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_mom_del2&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nu</span><span class="p">)}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="defining-streams">
+<h3>Defining streams<a class="headerlink" href="#defining-streams" title="Permalink to this headline">¶</a></h3>
+<p>Similarly, it is convenient to define input and output streams for MPAS-Ocean
+using a streams file, very similar to what you will see when the test case
+is set up. In the <code class="docutils literal notranslate"><span class="pre">baroclinic_channel</span></code> test group, we add a
+<code class="docutils literal notranslate"><span class="pre">streams.forward</span></code> file that looks like this:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;streams&gt;</span>
+
+<span class="nt">&lt;immutable_stream</span> <span class="na">name=</span><span class="s">&quot;mesh&quot;</span>
+                  <span class="na">filename_template=</span><span class="s">&quot;init.nc&quot;</span><span class="nt">/&gt;</span>
+
+<span class="nt">&lt;immutable_stream</span> <span class="na">name=</span><span class="s">&quot;input&quot;</span>
+                  <span class="na">filename_template=</span><span class="s">&quot;init.nc&quot;</span><span class="nt">/&gt;</span>
+
+<span class="nt">&lt;immutable_stream</span> <span class="na">name=</span><span class="s">&quot;restart&quot;</span><span class="nt">/&gt;</span>
+
+<span class="nt">&lt;stream</span> <span class="na">name=</span><span class="s">&quot;output&quot;</span>
+        <span class="na">type=</span><span class="s">&quot;output&quot;</span>
+        <span class="na">filename_template=</span><span class="s">&quot;output.nc&quot;</span>
+        <span class="na">output_interval=</span><span class="s">&quot;0000_00:00:01&quot;</span>
+        <span class="na">clobber_mode=</span><span class="s">&quot;truncate&quot;</span><span class="nt">&gt;</span>
+
+    <span class="nt">&lt;var_struct</span> <span class="na">name=</span><span class="s">&quot;tracers&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;xtime&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;normalVelocity&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;layerThickness&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/stream&gt;</span>
+
+<span class="nt">&lt;/streams&gt;</span>
+</pre></div>
+</div>
+<p>Streams that are already defined like <code class="docutils literal notranslate"><span class="pre">mesh</span></code>, <code class="docutils literal notranslate"><span class="pre">input</span></code> and <code class="docutils literal notranslate"><span class="pre">restart</span></code>
+will use the default attributes defined by the MPAS component unless they are
+explicitly replaced in the streams file.  As an example, on setting up the
+step, the stream <code class="docutils literal notranslate"><span class="pre">mesh</span></code> in the <code class="docutils literal notranslate"><span class="pre">streams.ocean</span></code> file becomes:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;immutable_stream</span> <span class="na">name=</span><span class="s">&quot;mesh&quot;</span>
+                  <span class="na">type=</span><span class="s">&quot;input&quot;</span>
+                  <span class="na">filename_template=</span><span class="s">&quot;init.nc&quot;</span>
+                  <span class="na">input_interval=</span><span class="s">&quot;initial_only&quot;</span><span class="nt">/&gt;</span>
+</pre></div>
+</div>
+<p>In the <code class="docutils literal notranslate"><span class="pre">forward</span></code> step, we add these streams file as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+<span class="k">class</span> <span class="nc">Forward</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+    <span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_cores</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nu</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="o">...</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.baroclinic_channel&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;streams.forward&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Similarly to namelists, the first argument to
+<a class="reference internal" href="../developers_guide/generated/compass.Step.add_streams_file.html#compass.Step.add_streams_file" title="compass.Step.add_streams_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.add_streams_file()</span></code></a> is the python package where the
+streams file can be found, and the second is the file name.</p>
+</div>
+<div class="section" id="defining-the-run-method">
+<h3>Defining the run method<a class="headerlink" href="#defining-the-run-method" title="Permalink to this headline">¶</a></h3>
+<p>With these inputs, outputs, namelists and streams files defined, we can
+implement the <code class="docutils literal notranslate"><span class="pre">run()</span></code> method:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">run_model</span>
+<span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
+
+
+<span class="k">class</span> <span class="nc">Forward</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+<span class="o">...</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Run this step of the test case</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We simply run MPAS-Ocean by calling <a class="reference internal" href="../developers_guide/generated/compass.model.run_model.html#compass.model.run_model" title="compass.model.run_model"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.model.run_model()</span></code></a>.
+We pass the step itself as an argument because this is how <code class="docutils literal notranslate"><span class="pre">compass</span></code> knows
+how many cores and threads to run on, which namelist and streams files to use,
+which MPAS core this test case belongs to, and so on.</p>
+</div>
+<div class="section" id="adding-the-steps-to-the-test-case">
+<h3>Adding the steps to the test case<a class="headerlink" href="#adding-the-steps-to-the-test-case" title="Permalink to this headline">¶</a></h3>
+<p>Returning to the <code class="docutils literal notranslate"><span class="pre">default</span></code> test case, we are now ready to add
+<code class="docutils literal notranslate"><span class="pre">initial_state</span></code> and <code class="docutils literal notranslate"><span class="pre">forward</span></code> steps to the test case.  In
+<code class="docutils literal notranslate"><span class="pre">compass/ocean/tests/baroclinic_channel/default/__init.py</span></code>, we add:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
+<span class="hll"><span class="kn">from</span> <span class="nn">compass.ocean.tests.baroclinic_channel.initial_state</span> <span class="kn">import</span> <span class="n">InitialState</span>
+</span><span class="hll"><span class="kn">from</span> <span class="nn">compass.ocean.tests.baroclinic_channel.forward</span> <span class="kn">import</span> <span class="n">Forward</span>
+</span><span class="kn">from</span> <span class="nn">compass.ocean.tests</span> <span class="kn">import</span> <span class="n">baroclinic_channel</span>
+
+
+<span class="k">class</span> <span class="nc">Default</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The default test case for the baroclinic channel test group simply creates</span>
+<span class="sd">    the mesh and initial condition, then performs a short forward run on 4</span>
+<span class="sd">    cores.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    resolution : str</span>
+<span class="sd">        The resolution of the test case</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create the test case</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_group : compass.ocean.tests.baroclinic_channel.BaroclinicChannel</span>
+<span class="sd">            The test group that this test case belongs to</span>
+
+<span class="sd">        resolution : str</span>
+<span class="sd">            The resolution of the test case</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;default&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
+        <span class="n">subdir</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                         <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
+
+<span class="hll">        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
+</span><span class="hll">            <span class="n">InitialState</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">))</span>
+</span><span class="hll">        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
+</span><span class="hll">            <span class="n">Forward</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">))</span>
+</span></pre></div>
+</div>
+<p>We hard-code the <code class="docutils literal notranslate"><span class="pre">forward</span></code> test case to run on 4 cores and 1 thread, and do
+not pass a viscosity (meaning it will use the default value from
+<code class="docutils literal notranslate"><span class="pre">namelist.&lt;resolution&gt;.forward</span></code>).</p>
+</div>
+</div>
+<div class="section" id="adding-an-rpe-test-test-case">
+<h2>Adding an “rpe_test” test case<a class="headerlink" href="#adding-an-rpe-test-test-case" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">baroclinic_channel</span></code> test group contains several test cases in addition
+to <code class="docutils literal notranslate"><span class="pre">default</span></code>.  The <code class="docutils literal notranslate"><span class="pre">restart_test</span></code> checks whether running the model for one
+times step, writing out a restart file, loading the model state from the
+restart file, and running for another time step produces the same results as
+running for 2 time steps.  The <code class="docutils literal notranslate"><span class="pre">decomp_test</span></code> and <code class="docutils literal notranslate"><span class="pre">threads_test</span></code> check
+whether the results are the same when the model runs on different numbers of
+cores and threads, respectively.</p>
+<p>The most interesting test case is the <code class="docutils literal notranslate"><span class="pre">rpe_test</span></code>, which has been used to show
+that MPAS-Ocean has lower spurious dissipation of reference potential energy
+(RPE) than POP, MOM and MITgcm models
+(<a class="reference external" href="https://doi.org/10.1016/j.ocemod.2014.12.004">Petersen et al. 2015</a>).</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">rpe_test</span></code> test case can be run at any of the supported resolutions: 1,
+4 or 10 km.  It consists of an <code class="docutils literal notranslate"><span class="pre">initial_state</span></code> step exactly like the
+<code class="docutils literal notranslate"><span class="pre">default</span></code> test case, 5 variants of the <code class="docutils literal notranslate"><span class="pre">forward</span></code> step with different values
+of the viscosity, and an <code class="docutils literal notranslate"><span class="pre">analysis</span></code> step that is unique to this test case
+(and thus not part of the “framework” for the test group over all like the
+<code class="docutils literal notranslate"><span class="pre">initial_state</span></code> and <code class="docutils literal notranslate"><span class="pre">forward</span></code> steps).  Each <code class="docutils literal notranslate"><span class="pre">forward</span></code> step runs for
+much longer than in the <code class="docutils literal notranslate"><span class="pre">default</span></code> test case (20 days, rather than 15
+minutes).  This means that <code class="docutils literal notranslate"><span class="pre">rpe_test</span></code> isn’t appropriate for regression
+testing, since it is too time consuming to run.  Likewise, the higher
+resolutions (1 and 4 km) are fairly resource heavy, and therefore not as well
+suit to quick testing.  But this test case was the original purpose of the test
+group as a whole, serving to validate the code in a specific context.</p>
+<p>In analogy to the <code class="docutils literal notranslate"><span class="pre">default</span></code> test case, we will start by creating a directory
+<code class="docutils literal notranslate"><span class="pre">rpe_test</span></code> within the <code class="docutils literal notranslate"><span class="pre">baroclinic_channel</span></code> directory, adding a new file
+<code class="docutils literal notranslate"><span class="pre">__init__.py</span></code>, and adding a class <code class="docutils literal notranslate"><span class="pre">RpeTest</span></code> that descends from the
+<code class="docutils literal notranslate"><span class="pre">TestCase</span></code> base class:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
+
+
+<span class="k">class</span> <span class="nc">RpeTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The reference potential energy (RPE) test case for the baroclinic channel</span>
+<span class="sd">    test group performs a 20-day integration of the model forward in time at</span>
+<span class="sd">    5 different values of the viscosity at the given resolution.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    resolution : str</span>
+<span class="sd">        The resolution of the test case</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create the test case</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_group : compass.ocean.tests.baroclinic_channel.BaroclinicChannel</span>
+<span class="sd">            The test group that this test case belongs to</span>
+
+<span class="sd">        resolution : str</span>
+<span class="sd">            The resolution of the test case</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;rpe_test&#39;</span>
+        <span class="n">subdir</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                         <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
+</pre></div>
+</div>
+<p>So far, this is identical ot the <code class="docutils literal notranslate"><span class="pre">default</span></code> test case except for the name
+changes.</p>
+<p>Before we add steps, let’s add the <code class="docutils literal notranslate"><span class="pre">rpe_test</span></code> test case to the
+<code class="docutils literal notranslate"><span class="pre">baroclinic_channel</span></code> test group so we can compare it with the <code class="docutils literal notranslate"><span class="pre">default</span></code>
+tet case. We add the following to the file <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> that defines the
+<code class="docutils literal notranslate"><span class="pre">BaroclinicChannel</span></code> test group:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.testgroup</span> <span class="kn">import</span> <span class="n">TestGroup</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.baroclinic_channel.default</span> <span class="kn">import</span> <span class="n">Default</span>
+<span class="hll"><span class="kn">from</span> <span class="nn">compass.ocean.tests.baroclinic_channel.rpe_test</span> <span class="kn">import</span> <span class="n">RpeTest</span>
+</span>
+
+<span class="k">class</span> <span class="nc">BaroclinicChannel</span><span class="p">(</span><span class="n">TestGroup</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A test group for baroclinic channel test cases</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpas_core</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        mpas_core : compass.MpasCore</span>
+<span class="sd">            the MPAS core that this test group belongs to</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="n">mpas_core</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;baroclinic_channel&#39;</span><span class="p">)</span>
+
+<span class="hll">        <span class="k">for</span> <span class="n">resolution</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;1km&#39;</span><span class="p">,</span> <span class="s1">&#39;4km&#39;</span><span class="p">,</span> <span class="s1">&#39;10km&#39;</span><span class="p">]:</span>
+</span><span class="hll">            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
+</span><span class="hll">                <span class="n">RpeTest</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">))</span>
+</span>        <span class="k">for</span> <span class="n">resolution</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;10km&#39;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
+                <span class="n">Default</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">rpe_test</span></code> test case, unlike all the other test cases in this group, can
+be run at all three supported resolutions.</p>
+<div class="section" id="id1">
+<h3>Adding the steps to the test case<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>We are now ready to add the <code class="docutils literal notranslate"><span class="pre">initial_state</span></code> step and variants of the
+<code class="docutils literal notranslate"><span class="pre">forward</span></code> step to the test case.  In
+<code class="docutils literal notranslate"><span class="pre">compass/ocean/tests/baroclinic_channel/rpe_test/__init.py</span></code>, we add:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
+<span class="hll"><span class="kn">from</span> <span class="nn">compass.ocean.tests.baroclinic_channel.initial_state</span> <span class="kn">import</span> <span class="n">InitialState</span>
+</span><span class="hll"><span class="kn">from</span> <span class="nn">compass.ocean.tests.baroclinic_channel.forward</span> <span class="kn">import</span> <span class="n">Forward</span>
+</span>
+
+<span class="k">class</span> <span class="nc">RpeTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The reference potential energy (RPE) test case for the baroclinic channel</span>
+<span class="sd">    test group performs a 20-day integration of the model forward in time at</span>
+<span class="sd">    5 different values of the viscosity at the given resolution.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    resolution : str</span>
+<span class="sd">        The resolution of the test case</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create the test case</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_group : compass.ocean.tests.baroclinic_channel.BaroclinicChannel</span>
+<span class="sd">            The test group that this test case belongs to</span>
+
+<span class="sd">        resolution : str</span>
+<span class="sd">            The resolution of the test case</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;rpe_test&#39;</span>
+        <span class="n">subdir</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                         <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
+
+<span class="hll">        <span class="n">nus</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">200</span><span class="p">]</span>
+</span><span class="hll">
+</span><span class="hll">        <span class="n">res_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;1km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="mi">144</span><span class="p">,</span> <span class="s1">&#39;min_cores&#39;</span><span class="p">:</span> <span class="mi">36</span><span class="p">},</span>
+</span><span class="hll">                      <span class="s1">&#39;4km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="mi">36</span><span class="p">,</span> <span class="s1">&#39;min_cores&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">},</span>
+</span><span class="hll">                      <span class="s1">&#39;10km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span> <span class="s1">&#39;min_cores&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}}</span>
+</span><span class="hll">
+</span><span class="hll">        <span class="k">if</span> <span class="n">resolution</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">res_params</span><span class="p">:</span>
+</span><span class="hll">            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+</span><span class="hll">                <span class="s1">&#39;Unsupported resolution </span><span class="si">{}</span><span class="s1">. Supported values are: &#39;</span>
+</span><span class="hll">                <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">res_params</span><span class="p">)))</span>
+</span><span class="hll">
+</span><span class="hll">        <span class="n">params</span> <span class="o">=</span> <span class="n">res_params</span><span class="p">[</span><span class="n">resolution</span><span class="p">]</span>
+</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
+
+<span class="hll">        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
+</span><span class="hll">            <span class="n">InitialState</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">))</span>
+</span><span class="hll">
+</span><span class="hll">        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">nu</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">nus</span><span class="p">):</span>
+</span><span class="hll">            <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;rpe_test_</span><span class="si">{}</span><span class="s1">_nu_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nu</span><span class="p">)</span>
+</span><span class="hll">            <span class="n">step</span> <span class="o">=</span> <span class="n">Forward</span><span class="p">(</span>
+</span><span class="hll">                <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;cores&#39;</span><span class="p">],</span>
+</span><span class="hll">                <span class="n">min_cores</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;min_cores&#39;</span><span class="p">],</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
+</span><span class="hll">                <span class="n">nu</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">nu</span><span class="p">))</span>
+</span><span class="hll">
+</span><span class="hll">            <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
+</span><span class="hll">                <span class="s1">&#39;compass.ocean.tests.baroclinic_channel.rpe_test&#39;</span><span class="p">,</span>
+</span><span class="hll">                <span class="s1">&#39;namelist.forward&#39;</span><span class="p">)</span>
+</span><span class="hll">            <span class="n">step</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span>
+</span><span class="hll">                <span class="s1">&#39;compass.ocean.tests.baroclinic_channel.rpe_test&#39;</span><span class="p">,</span>
+</span><span class="hll">                <span class="s1">&#39;streams.forward&#39;</span><span class="p">)</span>
+</span><span class="hll">            <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
+</span></pre></div>
+</div>
+<p>Here, we use nested python dictionaries <code class="docutils literal notranslate"><span class="pre">res_params</span></code> to determine the target
+number of cores and the minimum allowed cores for each resolution of the test
+case.  (We also raise an error if an unexpected resolution is provided, just
+in case.)</p>
+<p>The list <code class="docutils literal notranslate"><span class="pre">nus</span></code> contains the viscosities for each forward step in the test
+case.  We create a different forward run with a different name for each
+viscosity, passing <code class="docutils literal notranslate"><span class="pre">nu</span></code> to the <code class="docutils literal notranslate"><span class="pre">Forward</span></code> step’s constructor so it will
+be used to set the appropriate config option.  Alternatively, given that this
+test case is the only one to use the <code class="docutils literal notranslate"><span class="pre">nu</span></code> parameter, we would have left the
+<code class="docutils literal notranslate"><span class="pre">nu</span></code> parameter out of <code class="docutils literal notranslate"><span class="pre">Forward</span></code> and set it here instead, as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+
+<span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">nu</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">nus</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;rpe_test_</span><span class="si">{}</span><span class="s1">_nu_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nu</span><span class="p">)</span>
+    <span class="n">step</span> <span class="o">=</span> <span class="n">Forward</span><span class="p">(</span>
+        <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;cores&#39;</span><span class="p">],</span>
+        <span class="n">min_cores</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;min_cores&#39;</span><span class="p">],</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">)</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_mom_del2&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nu</span><span class="p">)}</span>
+    <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
+
+    <span class="o">...</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="defining-namelist-options-and-streams-files">
+<h3>Defining namelist options and streams files<a class="headerlink" href="#defining-namelist-options-and-streams-files" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">rpe_test</span></code> requires a few specific namelist options and streams to
+accommodate the longer run and to modify the variables that are written out.
+We add these namelist options within <code class="docutils literal notranslate"><span class="pre">namelist.forward</span></code> in the test case’s
+directory:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>config_run_duration = &#39;20_00:00:00&#39;
+</pre></div>
+</div>
+<p>and the following stream in <code class="docutils literal notranslate"><span class="pre">streams.forward</span></code>:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;streams&gt;</span>
+
+<span class="nt">&lt;stream</span> <span class="na">name=</span><span class="s">&quot;output&quot;</span>
+        <span class="na">type=</span><span class="s">&quot;output&quot;</span>
+        <span class="na">filename_template=</span><span class="s">&quot;output.nc&quot;</span>
+        <span class="na">output_interval=</span><span class="s">&quot;0000-00-20_00:00:00&quot;</span>
+        <span class="na">clobber_mode=</span><span class="s">&quot;truncate&quot;</span><span class="nt">&gt;</span>
+
+    <span class="nt">&lt;var_struct</span> <span class="na">name=</span><span class="s">&quot;tracers&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;xtime&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;density&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;daysSinceStartOfSim&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;relativeVorticity&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/stream&gt;</span>
+
+<span class="nt">&lt;/streams&gt;</span>
+</pre></div>
+</div>
+<p>This makes sure that each MPAS-Ocean simulation runs for 20 model days, writing
+output only at the end of the simulation, and including the <code class="docutils literal notranslate"><span class="pre">density</span></code> and
+<code class="docutils literal notranslate"><span class="pre">relativeVorticity</span></code> fields, rather than <code class="docutils literal notranslate"><span class="pre">normalVelocity</span></code> and
+<code class="docutils literal notranslate"><span class="pre">layerThickness</span></code>, as in the defaults.  These fields are needed in the
+analysis step.</p>
+</div>
+</div>
+<div class="section" id="adding-the-analysis-step">
+<h2>Adding the analysis step<a class="headerlink" href="#adding-the-analysis-step" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">rpe_test</span></code> includes another step, <code class="docutils literal notranslate"><span class="pre">analysis</span></code> that plots results from
+each simulation.  The full analysis step looks like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">netCDF4</span> <span class="kn">import</span> <span class="n">Dataset</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">cmocean</span>
+
+<span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
+
+
+<span class="k">class</span> <span class="nc">Analysis</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A step for plotting the results of a series of RPE runs in the baroclinic</span>
+<span class="sd">    channel test group</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    resolution : str</span>
+<span class="sd">        The resolution of the test case</span>
+
+<span class="sd">    nus : list of float</span>
+<span class="sd">        A list of viscosities</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">nus</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create the step</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_case : compass.TestCase</span>
+<span class="sd">            The test case this step belongs to</span>
+
+<span class="sd">        resolution : str</span>
+<span class="sd">            The resolution of the test case</span>
+
+<span class="sd">        nus : list of float</span>
+<span class="sd">            A list of viscosities</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;analysis&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nus</span> <span class="o">=</span> <span class="n">nus</span>
+
+        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">nu</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">nus</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+                <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;output_</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span>
+                <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../rpe_test_</span><span class="si">{}</span><span class="s1">_nu_</span><span class="si">{}</span><span class="s1">/output.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">nu</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;sections_baroclinic_channel_</span><span class="si">{}</span><span class="s1">.png&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Run this step of the test case</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;baroclinic_channel&#39;</span><span class="p">]</span>
+        <span class="n">nx</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;nx&#39;</span><span class="p">)</span>
+        <span class="n">ny</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;ny&#39;</span><span class="p">)</span>
+        <span class="n">_plot</span><span class="p">(</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">nus</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_plot</span><span class="p">(</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">nus</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot section of the baroclinic channel at different viscosities</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    nx : int</span>
+<span class="sd">        The number of cells in the x direction</span>
+
+<span class="sd">    ny : int</span>
+<span class="sd">        The number of cells in the y direction (before culling)</span>
+
+<span class="sd">    filename : str</span>
+<span class="sd">        The output file name</span>
+
+<span class="sd">    nus : list of float</span>
+<span class="sd">        The viscosity values</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>where the details of the <code class="docutils literal notranslate"><span class="pre">_plot()</span></code> function have been left out for
+compactness.  <code class="docutils literal notranslate"><span class="pre">analysis</span></code> needs the results from each forward step’s
+<code class="docutils literal notranslate"><span class="pre">output.nc</span></code> file as inputs, and plots the results together in a single image
+that it writes out.</p>
+<p>We add the <code class="docutils literal notranslate"><span class="pre">analysis</span></code> step to the test case as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.baroclinic_channel.initial_state</span> <span class="kn">import</span> <span class="n">InitialState</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.baroclinic_channel.forward</span> <span class="kn">import</span> <span class="n">Forward</span>
+<span class="hll"><span class="kn">from</span> <span class="nn">compass.ocean.tests.baroclinic_channel.rpe_test.analysis</span> <span class="kn">import</span> <span class="n">Analysis</span>
+</span><span class="kn">from</span> <span class="nn">compass.ocean.tests</span> <span class="kn">import</span> <span class="n">baroclinic_channel</span>
+
+
+<span class="k">class</span> <span class="nc">RpeTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The reference potential energy (RPE) test case for the baroclinic channel</span>
+<span class="sd">    test group performs a 20-day integration of the model forward in time at</span>
+<span class="sd">    5 different values of the viscosity at the given resolution.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    resolution : str</span>
+<span class="sd">        The resolution of the test case</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create the test case</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_group : compass.ocean.tests.baroclinic_channel.BaroclinicChannel</span>
+<span class="sd">            The test group that this test case belongs to</span>
+
+<span class="sd">        resolution : str</span>
+<span class="sd">            The resolution of the test case</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;rpe_test&#39;</span>
+        <span class="n">subdir</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                         <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
+
+        <span class="n">nus</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">200</span><span class="p">]</span>
+
+        <span class="o">...</span>
+
+<span class="hll">        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
+</span><span class="hll">            <span class="n">Analysis</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span> <span class="n">nus</span><span class="o">=</span><span class="n">nus</span><span class="p">))</span>
+</span></pre></div>
+</div>
+<div class="section" id="id2">
+<h3>Setting config options based on resolution<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>It turns out that we need a <code class="docutils literal notranslate"><span class="pre">configure()</span></code> method that is identical to that in
+the <code class="docutils literal notranslate"><span class="pre">Default</span></code> test case.  We could copy the code but we have a strong
+preference for code reuse when possible in <code class="docutils literal notranslate"><span class="pre">compass</span></code>.  For this reason, it
+makes sense to make a function in the <code class="docutils literal notranslate"><span class="pre">baroclinic_channel</span></code> framework that
+each test case can use to do the same configuration.  In this example, we move
+the <code class="docutils literal notranslate"><span class="pre">configure</span></code> method from <code class="docutils literal notranslate"><span class="pre">Default</span></code> into
+<code class="docutils literal notranslate"><span class="pre">baroclinic_channel/__init__.py</span></code>, but you could choose to put it in a new
+module called <code class="docutils literal notranslate"><span class="pre">configure.py</span></code> if you prefer.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+
+<span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Modify the configuration options for one of the baroclinic test cases</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    resolution : str</span>
+<span class="sd">        The resolution of the test case</span>
+
+<span class="sd">    config : configparser.ConfigParser</span>
+<span class="sd">        Configuration options for this test case</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">res_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;10km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nx&#39;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
+                           <span class="s1">&#39;ny&#39;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
+                           <span class="s1">&#39;dc&#39;</span><span class="p">:</span> <span class="mf">10e3</span><span class="p">},</span>
+                  <span class="s1">&#39;4km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nx&#39;</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span>
+                          <span class="s1">&#39;ny&#39;</span><span class="p">:</span> <span class="mi">126</span><span class="p">,</span>
+                          <span class="s1">&#39;dc&#39;</span><span class="p">:</span> <span class="mf">4e3</span><span class="p">},</span>
+                  <span class="s1">&#39;1km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nx&#39;</span><span class="p">:</span> <span class="mi">160</span><span class="p">,</span>
+                          <span class="s1">&#39;ny&#39;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+                          <span class="s1">&#39;dc&#39;</span><span class="p">:</span> <span class="mf">1e3</span><span class="p">}}</span>
+
+    <span class="k">if</span> <span class="n">resolution</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">res_params</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unsupported resolution </span><span class="si">{}</span><span class="s1">. Supported values are: &#39;</span>
+                         <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">res_params</span><span class="p">)))</span>
+    <span class="n">res_params</span> <span class="o">=</span> <span class="n">res_params</span><span class="p">[</span><span class="n">resolution</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">res_params</span><span class="p">:</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;baroclinic_channel&#39;</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">res_params</span><span class="p">[</span><span class="n">param</span><span class="p">]))</span>
+</pre></div>
+</div>
+<p>Since <code class="docutils literal notranslate"><span class="pre">configure()</span></code> is no longer a method of a class descending from
+<code class="docutils literal notranslate"><span class="pre">TestCase</span></code>, it cannot have an argument <code class="docutils literal notranslate"><span class="pre">self</span></code> anymore.  Instead, the new
+function must take the attributes from the test case that it needs:
+<code class="docutils literal notranslate"><span class="pre">resolution</span></code> and <code class="docutils literal notranslate"><span class="pre">config</span></code>.  From there, the behavior is the same as before.</p>
+<p>Now, each test case will just call this <code class="docutils literal notranslate"><span class="pre">configure()</span></code> function inside its own
+<code class="docutils literal notranslate"><span class="pre">configure()</span></code> method.  The following code applies to both the <code class="docutils literal notranslate"><span class="pre">Default</span></code> and
+<code class="docutils literal notranslate"><span class="pre">RpeTest</span></code> test cases:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests</span> <span class="kn">import</span> <span class="n">baroclinic_channel</span>
+
+<span class="o">...</span>
+
+    <span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Modify the configuration options for this test case.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">baroclinic_channel</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We import the <code class="docutils literal notranslate"><span class="pre">baroclinic_channel</span></code> module instead of the <code class="docutils literal notranslate"><span class="pre">configure()</span></code>
+function because otherwise there would be confusion between the <code class="docutils literal notranslate"><span class="pre">configure()</span></code>
+function and the <code class="docutils literal notranslate"><span class="pre">configure()</span></code> method.  An alternative would be to import
+the function but give it a new name:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.baroclinic_channel</span> <span class="kn">import</span> <span class="n">configure</span> <span class="k">as</span> <span class="n">bc_configure</span>
+
+<span class="o">...</span>
+
+    <span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Modify the configuration options for this test case.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">bc_configure</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="set-up-and-run">
+<h2>Set up and run<a class="headerlink" href="#set-up-and-run" title="Permalink to this headline">¶</a></h2>
+<p>You’re all set!  You should be able to see your new test cases when you run
+<code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">list</span></code>, set them up by running <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">setup</span></code>, and run them by
+calling <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span></code> within the work directory.  See <a class="reference internal" href="../developers_guide/command_line.html#dev-command-line"><span class="std std-ref">Command-line interface</span></a>
+for details.</p>
+</div>
+<div class="section" id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<p>Make sure to add some documentation of your new test group.  You need to add
+all of the functions, classes and methods to the API documentation in
+<code class="docutils literal notranslate"><span class="pre">docs/developers_guide/&lt;core&gt;/api.rst</span></code>, following the examples for other
+test groups.  You also need to add a file to both the user’s guide and the
+developer’s guide describing the test group and its test cases and steps.</p>
+<p>For the user’s guide, create a file
+<code class="docutils literal notranslate"><span class="pre">docs/users_guide/&lt;core&gt;/test_groups/&lt;test_group&gt;.rst</span></code>.  In that file, you
+should describe the test group and its test cases in a way that would be
+relevant for a user wanting to run the test case and look at the output.
+This file should include a section giving the config options for the test
+group and each test case (if it has its own config options), describing what
+they are used for so that users know how to modify them if they want to.  Add
+<code class="docutils literal notranslate"><span class="pre">&lt;test_group&gt;</span></code> in the appropriate place (in alphabetical order) to the list
+of test groups in the file <code class="docutils literal notranslate"><span class="pre">docs/users_guide/&lt;core&gt;/test_groups/index.rst</span></code>.</p>
+<p>For the developer’s guide, create a file
+<code class="docutils literal notranslate"><span class="pre">docs/developers_guide/&lt;core&gt;/test_groups/&lt;test_group&gt;.rst</span></code>. In this file,
+you will describe the test group, its test cases and steps in a way that is
+relevant to developers who might want to modify the code or use it as an
+example for developing their own test cases.  Currently, the descriptions are
+brief in part because of the daunting task of documenting nearly 100 test cases
+but should be fleshed out over time.  It would help new developers if new test
+groups and test cases were documented well. Add <code class="docutils literal notranslate"><span class="pre">&lt;test_group&gt;</span></code> in the
+appropriate place (in alphabetical order) to the list of test groups in
+<code class="docutils literal notranslate"><span class="pre">docs/developers_guide/&lt;core&gt;/test_groups/index.rst</span></code>.</p>
+<p>At this point, you are ready to make a pull request with the new test group!</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="dev_porting_legacy.html" class="btn btn-neutral float-right" title="Developer Tutorial: Porting a legacy COMPASS test group" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../design_docs/template.html" class="btn btn-neutral float-left" title="Template" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

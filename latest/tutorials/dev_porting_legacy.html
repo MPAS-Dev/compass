@@ -42,7 +42,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Glossary" href="../glossary.html" />
-    <link rel="prev" title="Template" href="../design_docs/template.html" /> 
+    <link rel="prev" title="Developer Tutorial: Adding a new test group" href="dev_add_test_group.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -119,9 +119,10 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Developer Tutorial: Porting a legacy COMPASS test group</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#getting-started">Getting started</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#the-legacy-compass-test-case">The legacy COMPASS test case</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-legacy-compass-test-group">The legacy COMPASS test group</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#making-a-new-test-group">Making a new test group</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#adding-a-test-case">Adding a test case</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#varying-resolution-or-other-parameters">Varying resolution (or other parameters)</a></li>
@@ -234,7 +235,7 @@ If you prefer, you can use either of the approaches described in
 <a class="reference internal" href="../developers_guide/quick_start.html#dev-compass-repo"><span class="std std-ref">Set up a compass repository: for beginners</span></a> or <a class="reference internal" href="../developers_guide/quick_start.html#dev-compass-repo-advanced"><span class="std std-ref">Set up a compass repository with worktrees: for advanced users</span></a> to clone the repo
 and check out the <code class="docutils literal notranslate"><span class="pre">legacy</span></code> branch.</p>
 <p>Next, you will need to create a new branch from <code class="docutils literal notranslate"><span class="pre">master</span></code> for developing the
-new test case.  For this purpose, we will stick with the simpler approach in
+new test group.  For this purpose, we will stick with the simpler approach in
 <a class="reference internal" href="../developers_guide/quick_start.html#dev-compass-repo"><span class="std std-ref">Set up a compass repository: for beginners</span></a> here, but feel free to use the <code class="docutils literal notranslate"><span class="pre">worktree</span></code> approach
 instead if you are comfortable with it.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone git@github.com:MPAS-Dev/compass.git add_gotm
@@ -252,9 +253,9 @@ your needs.</p>
 </div>
 <p>If all goes well, you will have a file named <code class="docutils literal notranslate"><span class="pre">load_dev_compass_1.0.0*.sh</span></code>, where
 the details of the <code class="docutils literal notranslate"><span class="pre">*</span></code> depend on your specific machine and compilers.  For
-example, on Chrysalis, you will have <code class="docutils literal notranslate"><span class="pre">test_compass_1.0.0_chrysalis_intel_impi.sh</span></code>,
+example, on Chrysalis, you will have <code class="docutils literal notranslate"><span class="pre">load_dev_compass_1.0.0_chrysalis_intel_impi.sh</span></code>,
 which will be the example used here:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> test_compass_1.0.0_chrysalis_intel_impi.sh
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> load_dev_compass_1.0.0_chrysalis_intel_impi.sh
 </pre></div>
 </div>
 <p>Now, we’re ready to get the MPAS-Ocean source code from the E3SM repository and
@@ -271,8 +272,8 @@ make intel-mpi
 for your machine.</p>
 <p>Now, we’re ready to start developing!</p>
 </div>
-<div class="section" id="the-legacy-compass-test-case">
-<h2>The legacy COMPASS test case<a class="headerlink" href="#the-legacy-compass-test-case" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="the-legacy-compass-test-group">
+<h2>The legacy COMPASS test group<a class="headerlink" href="#the-legacy-compass-test-group" title="Permalink to this headline">¶</a></h2>
 <p>…But before we get started, a little background on legacy COMPASS for those
 who haven’t used it extensively.  In legacy COMPASS, the test group is just a
 directory with multiple test cases and, optionally, templates and other files
@@ -402,7 +403,7 @@ to know what MPAS Core it belongs to so that is passed in as the <code class="do
 argument.  The only thing that happens so far is that the constructor for the
 base class <code class="docutils literal notranslate"><span class="pre">TestGroup</span></code> gets called.  In the process, we give the test group
 the name <code class="docutils literal notranslate"><span class="pre">gotm</span></code>.  You can take a look at the base class <code class="docutils literal notranslate"><span class="pre">TestGroup</span></code> in
-<code class="docutils literal notranslate"><span class="pre">compass/testgroup</span></code> if you want.  That’s not necessary for the tutorial,
+<code class="docutils literal notranslate"><span class="pre">compass/testgroup.py</span></code> if you want.  That’s not necessary for the tutorial,
 but some new developers have found reading the base class code to be
 highly instructive.</p>
 <p>Naming conventions in python are that we use
@@ -410,7 +411,7 @@ highly instructive.</p>
 always start with a capital letter, and all lowercase, possibly with
 underscores, for variable, module, package and function names.  We avoid
 all-caps like <code class="docutils literal notranslate"><span class="pre">GOTM</span></code> or <code class="docutils literal notranslate"><span class="pre">MPAS</span></code>, even though these might seem preferable.
-(We use <code class="docutils literal notranslate"><span class="pre">E3SM</span></code> a few places because <code class="docutils literal notranslate"><span class="pre">E3sm</span></code> was simply too much for us to
+(We use <code class="docutils literal notranslate"><span class="pre">E3SM</span></code> in a few places because <code class="docutils literal notranslate"><span class="pre">E3sm</span></code> was simply too much for us to
 bear.)</p>
 <p>Our new <code class="docutils literal notranslate"><span class="pre">Gotm</span></code> class defines the test group, but so far it doesn’t have any
 test cases in it.  We’ll come back and add them later in the tutorial.  Before
@@ -500,7 +501,7 @@ horizontal grid cells but it’s acting like a single column), we will just
 hard-code the resolution into this particular test case.  Other test cases,
 like those in the baroclinic channel test group, do support multiple
 resolutions.  It is typically convenient to define multiple versions of the
-test case by passing a list of supported resolutions to the constructor.</p>
+test case by passing the resolutions as a parameter to the constructor.</p>
 <p>This tutorial won’t describe how to do a parameter study.  There will be a
 separate tutorial for that purpose.  Instead, what is described here is how to
 make different variants of a test case with a list of parameter values.  So
@@ -630,8 +631,8 @@ By default, the subdirectory for the step is the same as the step name, but
 just like for a test case, you can give the step a more complicated
 subdirectory name, possibly with multiple levels of directories.  See the
 steps in the <code class="docutils literal notranslate"><span class="pre">ocean/global_convergence/cosine_bell</span></code> test case for examples
-of this.  This test case runs on one core (so <code class="docutils literal notranslate"><span class="pre">cores</span></code> and <code class="docutils literal notranslate"><span class="pre">min_cores</span></code> are
-both 1) and one thread.</p>
+of this.  The <code class="docutils literal notranslate"><span class="pre">init</span></code> step runs on one core (so <code class="docutils literal notranslate"><span class="pre">cores</span></code> and <code class="docutils literal notranslate"><span class="pre">min_cores</span></code>
+are both 1) and one thread.</p>
 <p>The next step is to define the namelist, streams file, outputs from the step:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                  <span class="n">min_cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -810,7 +811,7 @@ set up.</p>
 <h3>Defining the run method<a class="headerlink" href="#defining-the-run-method" title="Permalink to this headline">¶</a></h3>
 <p>With these config options, namelists and streams files defined, we will
 implement the <code class="docutils literal notranslate"><span class="pre">run()</span></code> method of the <code class="docutils literal notranslate"><span class="pre">init</span></code> step to do the rest of the work
-for this step.  In legacy COMPASS, the XML for definint the run scrip was:</p>
+for this step.  In legacy COMPASS, the XML for defining the run scrip was:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;run_script</span> <span class="na">name=</span><span class="s">&quot;run.py&quot;</span><span class="nt">&gt;</span>
     <span class="nt">&lt;step</span> <span class="na">executable=</span><span class="s">&quot;planar_hex&quot;</span><span class="nt">&gt;</span>
         <span class="nt">&lt;argument</span> <span class="na">flag=</span><span class="s">&quot;--nx&quot;</span><span class="nt">&gt;</span>4<span class="nt">&lt;/argument&gt;</span>
@@ -951,7 +952,7 @@ number of cores, minimum number of cores, and number of threads:</p>
 <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../init/graph.info&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>As in <code class="docutils literal notranslate"><span class="pre">Init</span></code>, we want to make  link to the MPAS-Ocean executable.  The
+<p>As in <code class="docutils literal notranslate"><span class="pre">Init</span></code>, we want to make a link to the MPAS-Ocean executable.  The
 legacy COMPASS version of this was:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;add_executable</span> <span class="na">source=</span><span class="s">&quot;model&quot;</span> <span class="na">dest=</span><span class="s">&quot;ocean_model&quot;</span><span class="nt">/&gt;</span>
 </pre></div>
@@ -1375,7 +1376,7 @@ appropriate place (in alphabetical order) in the list of test groups in
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
         <a href="../glossary.html" class="btn btn-neutral float-right" title="Glossary" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="../design_docs/template.html" class="btn btn-neutral float-left" title="Template" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="dev_add_test_group.html" class="btn btn-neutral float-left" title="Developer Tutorial: Adding a new test group" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>
