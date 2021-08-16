@@ -668,7 +668,7 @@ class Step:
 
         if not config.has_option('permissions', 'group'):
             return
-        
+
         group = config.get('permissions', 'group')
 
         new_uid = os.getuid()
@@ -772,7 +772,7 @@ class Step:
 
                     try:
                         os.chown(file_name, new_uid, new_gid)
-                        os.chmod(file_name, perm)
+                        os.chmod(file_name, new_perm)
                     except OSError:
                         continue
 

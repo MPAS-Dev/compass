@@ -809,7 +809,7 @@ def update_permissions(config, is_test, activ_path, conda_base, system_libs):
 
                 try:
                     os.chown(file_name, new_uid, new_gid)
-                    os.chmod(file_name, perm)
+                    os.chmod(file_name, new_perm)
                 except OSError:
                     continue
 
