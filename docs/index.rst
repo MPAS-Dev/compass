@@ -71,6 +71,7 @@ components themselves evolves and new functionality is added.
    :caption: Tutorials
    :maxdepth: 1
 
+   tutorials/dev_add_test_group
    tutorials/dev_porting_legacy
 
 .. toctree::
