@@ -4,6 +4,9 @@ import configparser
 from importlib.resources import path
 import shutil
 import numpy
+import stat
+import grp
+import progressbar
 
 from compass.io import download, symlink
 import compass.namelist
@@ -482,6 +485,7 @@ class Step:
                     database='compass_cache')
 
         inputs = []
+        databases_with_downloads = set()
         for entry in self.input_data:
             filename = entry['filename']
             target = entry['target']
@@ -526,6 +530,9 @@ class Step:
                     'paths', '{}_database_root'.format(mpas_core))
                 download_path = os.path.join(database_root, database,
                                              download_target)
+                if not os.path.exists(download_path):
+                    database_subdir = os.path.join(database_root, database)
+                    databases_with_downloads.add(database_subdir)
             elif url is not None:
                 download_path = download_target
 
@@ -544,6 +551,9 @@ class Step:
                 inputs.append(target)
             else:
                 inputs.append(filename)
+
+        if len(databases_with_downloads) > 0:
+            self._fix_permissions(databases_with_downloads)
 
         # convert inputs and outputs to absolute paths
         self.inputs = [os.path.abspath(os.path.join(step_dir, filename)) for
@@ -648,3 +658,123 @@ class Step:
                     defaults.remove(default)
 
             compass.streams.write(defaults_tree, out_filename)
+
+    def _fix_permissions(self, databases):
+        """
+        Fix permissions on the databases where files were downloaded so
+        everyone in the group can read/write to them
+        """
+        config = self.config
+
+        if not config.has_option('permissions', 'group'):
+            return
+        
+        group = config.get('permissions', 'group')
+
+        new_uid = os.getuid()
+        new_gid = grp.getgrnam(group).gr_gid
+
+        write_perm = (stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP |
+                      stat.S_IWGRP | stat.S_IROTH)
+        exec_perm = (stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR |
+                     stat.S_IRGRP | stat.S_IWGRP | stat.S_IXGRP |
+                     stat.S_IROTH | stat.S_IXOTH)
+
+        mask = stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO
+
+        print('changing permissions on downloaded files')
+
+        # first the base directories that don't seem to be included in
+        # os.walk()
+        for directory in databases:
+            try:
+                dir_stat = os.stat(directory)
+            except OSError:
+                continue
+
+            perm = dir_stat.st_mode & mask
+
+            if dir_stat.st_uid != new_uid:
+                # current user doesn't own this dir so let's move on
+                continue
+
+            if perm == exec_perm and dir_stat.st_gid == new_gid:
+                continue
+
+            try:
+                os.chown(directory, new_uid, new_gid)
+                os.chmod(directory, exec_perm)
+            except OSError:
+                continue
+
+        files_and_dirs = []
+        for base in databases:
+            for root, dirs, files in os.walk(base):
+                files_and_dirs.extend(dirs)
+                files_and_dirs.extend(files)
+
+        widgets = [progressbar.Percentage(), ' ', progressbar.Bar(),
+                   ' ', progressbar.ETA()]
+        bar = progressbar.ProgressBar(widgets=widgets,
+                                      maxval=len(files_and_dirs)).start()
+        progress = 0
+        for base in databases:
+            for root, dirs, files in os.walk(base):
+                for directory in dirs:
+                    progress += 1
+                    bar.update(progress)
+
+                    directory = os.path.join(root, directory)
+
+                    try:
+                        dir_stat = os.stat(directory)
+                    except OSError:
+                        continue
+
+                    if dir_stat.st_uid != new_uid:
+                        # current user doesn't own this dir so let's move on
+                        continue
+
+                    perm = dir_stat.st_mode & mask
+
+                    if perm == exec_perm and dir_stat.st_gid == new_gid:
+                        continue
+
+                    try:
+                        os.chown(directory, new_uid, new_gid)
+                        os.chmod(directory, exec_perm)
+                    except OSError:
+                        continue
+
+                for file_name in files:
+                    progress += 1
+                    bar.update(progress)
+                    file_name = os.path.join(root, file_name)
+                    try:
+                        file_stat = os.stat(file_name)
+                    except OSError:
+                        continue
+
+                    if file_stat.st_uid != new_uid:
+                        # current user doesn't own this file so let's move on
+                        continue
+
+                    perm = file_stat.st_mode & mask
+
+                    if perm & stat.S_IXUSR:
+                        # executable, so make sure others can execute it
+                        new_perm = exec_perm
+                    else:
+                        new_perm = write_perm
+
+                    if perm == new_perm and file_stat.st_gid == new_gid:
+                        continue
+
+                    try:
+                        os.chown(file_name, new_uid, new_gid)
+                        os.chmod(file_name, perm)
+                    except OSError:
+                        continue
+
+        bar.finish()
+        print('  done.')
