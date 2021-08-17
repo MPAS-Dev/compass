@@ -2,14 +2,14 @@ import configparser
 
 from compass.testcase import TestCase
 
-from compass.ocean.tests.sphere_transport.correlated_tracers_2d.mesh import \
-    Mesh
-from compass.ocean.tests.sphere_transport.correlated_tracers_2d.init import \
-    Init
-from compass.ocean.tests.sphere_transport.correlated_tracers_2d.forward import \
-    Forward
-from compass.ocean.tests.sphere_transport.correlated_tracers_2d.analysis import \
-    Analysis
+from compass.ocean.tests.sphere_transport.correlated_tracers_2d.mesh \
+    import Mesh
+from compass.ocean.tests.sphere_transport.correlated_tracers_2d.init \
+    import Init
+from compass.ocean.tests.sphere_transport.correlated_tracers_2d.forward \
+    import Forward
+from compass.ocean.tests.sphere_transport.correlated_tracers_2d.analysis \
+    import Analysis
 
 
 class CorrelatedTracers2D(TestCase):

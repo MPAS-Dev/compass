@@ -232,8 +232,9 @@ def read_ncl_rgb_file(cmap_filename):
     """
     map_file_found = False
     try:
-        with resources.open_text("compass.ocean.tests.sphere_transport.resources",
-                                 cmap_filename) as f:
+        with resources.open_text(
+                "compass.ocean.tests.sphere_transport.resources", cmap_filename) \
+                as f:
             flines = f.readlines()
         map_file_found = True
     except BaseException:
