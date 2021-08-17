@@ -24,6 +24,15 @@ class ForwardStep(Step):
 
     time_integrator : {'split_explicit', 'RK4'}
         The time integrator to use for the forward run
+
+    cores_from_config : bool
+        Whether to get ``cores`` from the config file
+
+    min_cores_from_config : bool
+        Whether to get ``min_cores`` from the config file
+
+    threads_from_config : bool
+        Whether to get ``threads`` from the config file
     """
     def __init__(self, test_case, mesh, init, time_integrator, name='forward',
                  subdir=None, cores=None, min_cores=None, threads=None):
@@ -69,6 +78,10 @@ class ForwardStep(Step):
             min_cores = cores
         super().__init__(test_case=test_case, name=name, subdir=subdir,
                          cores=cores, min_cores=min_cores, threads=threads)
+
+        self.cores_from_config = cores is None
+        self.min_cores_from_config = min_cores is None
+        self.threads_from_config = threads is None
 
         self.add_namelist_file(
             'compass.ocean.tests.global_ocean', 'namelist.forward')
@@ -122,13 +135,13 @@ class ForwardStep(Step):
         Set up the test case in the work directory, including downloading any
         dependencies
         """
-        if self.cores is None:
+        if self.cores_from_config:
             self.cores = self.config.getint(
                 'global_ocean', 'forward_cores')
-        if self.min_cores is None:
+        if self.min_cores_from_config:
             self.min_cores = self.config.getint(
                 'global_ocean', 'forward_min_cores')
-        if self.threads is None:
+        if self.threads_from_config:
             self.threads = self.config.getint(
                 'global_ocean', 'forward_threads')
 
@@ -195,13 +208,18 @@ class ForwardTestCase(TestCase):
         Run each step of the testcase
         """
         config = self.config
-        # get the these properties from the config options
         for step_name in self.steps_to_run:
             step = self.steps[step_name]
-            # get the these properties from the config options
-            step.cores = config.getint('global_ocean', 'forward_cores')
-            step.min_cores = config.getint('global_ocean', 'forward_min_cores')
-            step.threads = config.getint('global_ocean', 'forward_threads')
+            if isinstance(step, ForwardStep):
+                if step.cores_from_config:
+                    step.cores = config.getint('global_ocean',
+                                               'forward_cores')
+                if step.min_cores_from_config:
+                    step.min_cores = config.getint('global_ocean',
+                                                   'forward_min_cores')
+                if step.threads_from_config:
+                    step.threads = config.getint('global_ocean',
+                                                 'forward_threads')
 
         # run the steps
         super().run()
