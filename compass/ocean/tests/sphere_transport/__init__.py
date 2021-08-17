@@ -1,14 +1,16 @@
 from compass.testgroup import TestGroup
 
-from compass.ocean.tests.sphere_transport.rotation2D import Rotation2D
-from compass.ocean.tests.sphere_transport.nondivergent2D import Nondivergent2D
-from compass.ocean.tests.sphere_transport.divergent2D import Divergent2D
-from compass.ocean.tests.sphere_transport.correlatedTracers2D import CorrelatedTracers2D
+from compass.ocean.tests.sphere_transport.rotation_2d import Rotation2D
+from compass.ocean.tests.sphere_transport.nondivergent_2d import Nondivergent2D
+from compass.ocean.tests.sphere_transport.divergent_2d import Divergent2D
+from compass.ocean.tests.sphere_transport.correlated_tracers_2d import \
+    CorrelatedTracers2D
 
 
 class SphereTransport(TestGroup):
     """
-    A test group for testing algorithms for passive tracer advection on the sphere
+    A test group for testing algorithms for passive tracer advection
+    on the sphere
     """
 
     def __init__(self, mpas_core):

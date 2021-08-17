@@ -7,7 +7,8 @@ from datetime import timedelta
 
 class Forward(Step):
     """
-    A step for performing forward MPAS-Ocean runs as part of the correlatedTracers2D
+    A step for performing forward MPAS-Ocean runs as part of the
+      nondivergent_2d test case.
 
     Attributes
     ----------
@@ -21,8 +22,8 @@ class Forward(Step):
 
         Parameters
         ----------
-        test_case : compass.ocean.tests.global_convergence.correlatedTracers2D.CorrelatedTracers2D
-            The test case this step belongs to
+        test_case :
+            compass.ocean.tests.global_convergence.nondivergent_2d.Nondivergent2D
 
         resolution : int
             The resolution of the (uniform) mesh in km
@@ -36,7 +37,7 @@ class Forward(Step):
         self.resolution = resolution
         self.dt_minutes = dt_minutes
 
-        package = 'compass.ocean.tests.sphere_transport.correlatedTracers2D'
+        package = 'compass.ocean.tests.sphere_transport.nondivergent_2d'
 
         self.add_namelist_file(package, 'namelist.forward', mode='forward')
         self.add_streams_file(package, 'streams.forward', mode='forward')
@@ -56,8 +57,9 @@ class Forward(Step):
         """
         config = self.config
         dtstr = self.get_timestep_str()
-        self.add_namelist_options({'config_dt': dtstr, 'config_time_integrator': config.get(
-            'correlatedTracers2D', 'time_integrator')})
+        self.add_namelist_options({'config_dt': dtstr,
+            'config_time_integrator': config.get(
+            'nondivergent_2d', 'time_integrator')})
 
     def run(self):
         """
@@ -69,7 +71,7 @@ class Forward(Step):
             options={
                 'config_dt': dt,
                 'config_time_integrator': config.get(
-                    'correlatedTracers2D',
+                    'nondivergent_2d',
                     'time_integrator')},
             out_name='namelist.ocean')
 

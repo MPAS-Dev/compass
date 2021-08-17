@@ -13,8 +13,8 @@ class Init(Step):
 
         Parameters
         ----------
-        test_case : compass.ocean.tests.sphere_transport.correlatedTracers2D.CorrelatedTracers2D
-            The test case this step belongs to
+        test_case :
+            compass.ocean.tests.sphere_transport.correlated_tracers_2d.CorrelatedTracers2D
 
         resolution : int
             The resolution of the (uniform) mesh in km
@@ -25,7 +25,7 @@ class Init(Step):
                          subdir='QU{}/init'.format(resolution),
                          cores=36, min_cores=1)
 
-        package = 'compass.ocean.tests.sphere_transport.correlatedTracers2D'
+        package = 'compass.ocean.tests.sphere_transport.correlated_tracers_2d'
 
         self.add_namelist_file(package, 'namelist.init', mode='init')
         self.add_streams_file(package, 'streams.init', mode='init')

@@ -2,14 +2,15 @@ import configparser
 
 from compass.testcase import TestCase
 
-from compass.ocean.tests.sphere_transport.nondivergent2D.mesh import Mesh
-from compass.ocean.tests.sphere_transport.nondivergent2D.init import Init
-from compass.ocean.tests.sphere_transport.nondivergent2D.forward import Forward
-from compass.ocean.tests.sphere_transport.nondivergent2D.analysis import \
+from compass.ocean.tests.sphere_transport.divergent_2d.mesh import Mesh
+from compass.ocean.tests.sphere_transport.divergent_2d.init import Init
+from compass.ocean.tests.sphere_transport.divergent_2d.forward import \
+    Forward
+from compass.ocean.tests.sphere_transport.divergent_2d.analysis import \
     Analysis
 
 
-class Nondivergent2D(TestCase):
+class Divergent2D(TestCase):
     """
     A test case for 2D transport on the sphere
 
@@ -26,7 +27,7 @@ class Nondivergent2D(TestCase):
         ----------
         test_group : compass.ocean.tests.sphere_transport.SphereTransport
         """
-        super().__init__(test_group=test_group, name='nondivergent2D')
+        super().__init__(test_group=test_group, name='divergent_2d')
         self.resolutions = None
 
     def configure(self):
@@ -34,10 +35,10 @@ class Nondivergent2D(TestCase):
         Set config options for the test case
         """
         config = self.config
-        resolutions = config.get('nondivergent2D', 'resolutions')
+        resolutions = config.get('divergent_2d', 'resolutions')
         resolutions = [int(resolution) for resolution in
                        resolutions.replace(',', ' ').split()]
-        dtmin = config.get('nondivergent2D', 'timestep_minutes')
+        dtmin = config.get('divergent_2d', 'timestep_minutes')
         dtmin = [int(dt) for dt in dtmin.replace(',', ' ').split()]
 
         self.resolutions = resolutions
@@ -62,9 +63,9 @@ class Nondivergent2D(TestCase):
         """
         config = self.config
         for resolution in self.resolutions:
-            cores = config.getint('nondivergent2D',
+            cores = config.getint('divergent_2d',
                                   'QU{}_cores'.format(resolution))
-            min_cores = config.getint('nondivergent2D',
+            min_cores = config.getint('divergent_2d',
                                       'QU{}_min_cores'.format(resolution))
             step = self.steps['QU{}_forward'.format(resolution)]
             step.cores = cores
@@ -78,9 +79,9 @@ class Nondivergent2D(TestCase):
 
         config = self.config
 
-        goal_cells_per_core = config.getfloat('nondivergent2D',
+        goal_cells_per_core = config.getfloat('divergent_2d',
                                               'goal_cells_per_core')
-        max_cells_per_core = config.getfloat('nondivergent2D',
+        max_cells_per_core = config.getfloat('divergent_2d',
                                              'max_cells_per_core')
 
         for resolution in self.resolutions:
@@ -97,7 +98,7 @@ class Nondivergent2D(TestCase):
             step.cores = cores
             step.min_cores = min_cores
 
-            config.set('nondivergent2D', 'QU{}_cores'.format(resolution),
+            config.set('divergent_2d', 'QU{}_cores'.format(resolution),
                        str(cores))
-            config.set('nondivergent2D', 'QU{}_min_cores'.format(resolution),
+            config.set('divergent_2d', 'QU{}_min_cores'.format(resolution),
                        str(min_cores))

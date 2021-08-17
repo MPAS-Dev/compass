@@ -20,8 +20,8 @@ class Analysis(Step):
 
         Parameters
         ----------
-        test_case : compass.ocean.tests.sphere_transport.nondivergent2D.Nondivergent2D
-            The test case this step belongs to
+        test_case :
+            compass.ocean.tests.sphere_transport.nondivergent_2d.Nondivergent2D
 
         resolutions : list of int
             The resolutions of the meshes that have been run
@@ -77,8 +77,8 @@ class Analysis(Step):
         ###
         # convergence analysis
         ###
-        dlambda, linf1, linf2, linf3, l21, l22, l23, fil, u1, o1, u2, o2, u3, o3, mass1, mass2, mass3 = make_convergence_arrays(
-            self.tcdata)
+        dlambda, linf1, linf2, linf3, l21, l22, l23, fil, u1, o1, u2, o2, \
+            u3, o3, mass1, mass2, mass3 = make_convergence_arrays(self.tcdata)
         linfrate, l2rate = compute_convergence_rates(dlambda, linf1, l21)
         rvals = sorted(self.tcdata.keys())
         rvals.reverse()

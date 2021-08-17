@@ -22,8 +22,8 @@ class Mesh(Step):
 
         Parameters
         ----------
-        test_case : compass.ocean.tests.sphere_transport.correlatedTracers2D.CorrelatedTracers2D
-            The test case this step belongs to
+        test_case :
+            compass.ocean.tests.sphere_transport.correlatedTracers2D.CorrelatedTracers2D
 
         resolution : int
             The resolution of the (uniform) mesh in km

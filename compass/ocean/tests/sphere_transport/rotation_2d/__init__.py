@@ -2,14 +2,14 @@ import configparser
 
 from compass.testcase import TestCase
 
-from compass.ocean.tests.sphere_transport.correlatedTracers2D.mesh import Mesh
-from compass.ocean.tests.sphere_transport.correlatedTracers2D.init import Init
-from compass.ocean.tests.sphere_transport.correlatedTracers2D.forward import Forward
-from compass.ocean.tests.sphere_transport.correlatedTracers2D.analysis import \
+from compass.ocean.tests.sphere_transport.rotation_2d.mesh import Mesh
+from compass.ocean.tests.sphere_transport.rotation_2d.init import Init
+from compass.ocean.tests.sphere_transport.rotation_2d.forward import Forward
+from compass.ocean.tests.sphere_transport.rotation_2d.analysis import \
     Analysis
 
 
-class CorrelatedTracers2D(TestCase):
+class Rotation2D(TestCase):
     """
     A test case for 2D transport on the sphere
 
@@ -26,7 +26,7 @@ class CorrelatedTracers2D(TestCase):
         ----------
         test_group : compass.ocean.tests.sphere_transport.SphereTransport
         """
-        super().__init__(test_group=test_group, name='correlatedTracers2D')
+        super().__init__(test_group=test_group, name='rotation_2d')
         self.resolutions = None
 
     def configure(self):
@@ -34,10 +34,10 @@ class CorrelatedTracers2D(TestCase):
         Set config options for the test case
         """
         config = self.config
-        resolutions = config.get('correlatedTracers2D', 'resolutions')
+        resolutions = config.get('rotation_2d', 'resolutions')
         resolutions = [int(resolution) for resolution in
                        resolutions.replace(',', ' ').split()]
-        dtmin = config.get('correlatedTracers2D', 'timestep_minutes')
+        dtmin = config.get('rotation_2d', 'timestep_minutes')
         dtmin = [int(dt) for dt in dtmin.replace(',', ' ').split()]
 
         self.resolutions = resolutions
@@ -62,9 +62,9 @@ class CorrelatedTracers2D(TestCase):
         """
         config = self.config
         for resolution in self.resolutions:
-            cores = config.getint('correlatedTracers2D',
+            cores = config.getint('rotation_2d',
                                   'QU{}_cores'.format(resolution))
-            min_cores = config.getint('correlatedTracers2D',
+            min_cores = config.getint('rotation_2d',
                                       'QU{}_min_cores'.format(resolution))
             step = self.steps['QU{}_forward'.format(resolution)]
             step.cores = cores
@@ -78,9 +78,9 @@ class CorrelatedTracers2D(TestCase):
 
         config = self.config
 
-        goal_cells_per_core = config.getfloat('correlatedTracers2D',
+        goal_cells_per_core = config.getfloat('rotation_2d',
                                               'goal_cells_per_core')
-        max_cells_per_core = config.getfloat('correlatedTracers2D',
+        max_cells_per_core = config.getfloat('rotation_2d',
                                              'max_cells_per_core')
 
         for resolution in self.resolutions:
@@ -97,9 +97,7 @@ class CorrelatedTracers2D(TestCase):
             step.cores = cores
             step.min_cores = min_cores
 
-            config.set('correlatedTracers2D', 'QU{}_cores'.format(resolution),
+            config.set('rotation_2d', 'QU{}_cores'.format(resolution),
                        str(cores))
-            config.set(
-                'correlatedTracers2D',
-                'QU{}_min_cores'.format(resolution),
-                str(min_cores))
+            config.set('rotation_2d', 'QU{}_min_cores'.format(resolution),
+                       str(min_cores))

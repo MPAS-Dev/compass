@@ -7,7 +7,7 @@ from datetime import timedelta
 
 class Forward(Step):
     """
-    A step for performing forward MPAS-Ocean runs as part of the rotation2D
+    A step for performing forward MPAS-Ocean runs as part of the divergent_2d
 
     Attributes
     ----------
@@ -21,8 +21,8 @@ class Forward(Step):
 
         Parameters
         ----------
-        test_case : compass.ocean.tests.global_convergence.rotation2D.Rotation2D
-            The test case this step belongs to
+        test_case :
+            compass.ocean.tests.global_convergence.divergent_2d.Divergent2D
 
         resolution : int
             The resolution of the (uniform) mesh in km
@@ -36,7 +36,7 @@ class Forward(Step):
         self.resolution = resolution
         self.dt_minutes = dt_minutes
 
-        package = 'compass.ocean.tests.sphere_transport.rotation2D'
+        package = 'compass.ocean.tests.sphere_transport.divergent_2d'
 
         self.add_namelist_file(package, 'namelist.forward', mode='forward')
         self.add_streams_file(package, 'streams.forward', mode='forward')
@@ -56,8 +56,9 @@ class Forward(Step):
         """
         config = self.config
         dtstr = self.get_timestep_str()
-        self.add_namelist_options({'config_dt': dtstr, 'config_time_integrator': config.get(
-            'rotation2D', 'time_integrator')})
+        self.add_namelist_options({'config_dt': dtstr,
+            'config_time_integrator': config.get(
+            'divergent_2d', 'time_integrator')})
 
     def run(self):
         """
@@ -69,7 +70,7 @@ class Forward(Step):
             options={
                 'config_dt': dt,
                 'config_time_integrator': config.get(
-                    'rotation2D',
+                    'divergent_2d',
                     'time_integrator')},
             out_name='namelist.ocean')
 
@@ -77,9 +78,9 @@ class Forward(Step):
 
     def get_timestep_str(self):
         """
-          These tests expect the time step to be input in units of minutes,
-            but MPAS requires an "HH:MM:SS" string.  This function converts
-            the time step input into the formatted string used by MPAS.
+        These tests expect the time step to be input in units of minutes,
+        but MPAS requires an "HH:MM:SS" string.  This function converts the
+        time step input into the formatted string used by MPAS.
         """
         dtminutes = self.dt_minutes
         dt = timedelta(minutes=dtminutes)

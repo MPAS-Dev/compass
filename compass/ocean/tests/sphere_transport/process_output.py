@@ -232,7 +232,8 @@ def read_ncl_rgb_file(cmap_filename):
     """
     map_file_found = False
     try:
-        with resources.open_text("compass.ocean.tests.sphere_transport.resources", cmap_filename) as f:
+        with resources.open_text("compass.ocean.tests.sphere_transport.resources",
+            cmap_filename) as f:
             flines = f.readlines()
         map_file_found = True
     except BaseException:
@@ -266,26 +267,29 @@ def plot_sol(fig, tcname, dataset):
     """
     xc = dataset.variables["lonCell"][:]
     yc = dataset.variables["latCell"][:]
-    gspc = GridSpec(nrows=3, ncols=3, figure=fig)
+    gspc = GridSpec(nrows=4, ncols=3, figure=fig)
     yticks = np.pi * np.array([-0.5, -0.25, 0, 0.25, 0.5])
     yticklabels = [-90, -45, 0, 45, 90]
     xticks = np.pi * np.array([0, 0.5, 1, 1.5, 2])
     xticklabels = [0, 90, 180, 270, 360]
 
-    clev = np.linspace(0, 1.1, 20)
+    clev = np.linspace(0, 1.1, 21)
     diffmin = -0.25
     diffmax = -diffmin
     dlev = np.linspace(diffmin, diffmax, 21)
     nclcmap = read_ncl_rgb_file("wh-bl-gr-ye-re.rgb")
     axes = []
-    for i in range(3):
+    for i in range(4):
         for j in range(3):
             axes.append(fig.add_subplot(gspc[i, j]))
     axes[0].tricontourf(xc, yc, dataset.variables["tracer1"]
-                        [0, :, 1], levels=clev, cmap=nclcmap)
+                        [0, :, 1], levels=clev, cmap=nclcmap,
+                        vmin=0, vmax=1.1)
     axes[0].set_title('sol. t=0')
+    axes[0].set_ylabel('tracer 1')
     axes[1].tricontourf(xc, yc, dataset.variables["tracer1"]
-                        [6, :, 1], levels=clev, cmap=nclcmap)
+                        [6, :, 1], levels=clev, cmap=nclcmap,
+                        vmin=0, vmax=1.1)
     axes[1].set_title('sol. t=T/2')
     axes[2].tricontourf(xc,
                         yc,
@@ -297,9 +301,12 @@ def plot_sol(fig, tcname, dataset):
                         vmax=diffmax)
     axes[2].set_title('err. t=T')
     axes[3].tricontourf(xc, yc, dataset.variables["tracer2"]
-                        [0, :, 1], levels=clev, cmap=nclcmap)
+                        [0, :, 1], levels=clev, cmap=nclcmap,
+                        vmin=0, vmax=1.1)
+    axes[3].set_ylabel('tracer 2')
     axes[4].tricontourf(xc, yc, dataset.variables["tracer2"]
-                        [6, :, 1], levels=clev, cmap=nclcmap)
+                        [6, :, 1], levels=clev, cmap=nclcmap,
+                        vmin=0, vmax=1.1)
     axes[5].tricontourf(xc,
                         yc,
                         dataset.variables["tracer2"][12, :, 1] -
@@ -308,10 +315,13 @@ def plot_sol(fig, tcname, dataset):
                         cmap="seismic",
                         vmin=diffmin,
                         vmax=diffmax)
-    axes[6].tricontourf(xc, yc, dataset.variables["tracer3"]
-                        [0, :, 1], levels=clev, cmap=nclcmap)
+    tcm=axes[6].tricontourf(xc, yc, dataset.variables["tracer3"]
+                        [0, :, 1], levels=clev, cmap=nclcmap,
+                        vmin=0, vmax=1.1)
+    axes[6].set_ylabel('tracer 3')
     axes[7].tricontourf(xc, yc, dataset.variables["tracer3"]
-                        [6, :, 1], levels=clev, cmap=nclcmap)
+                        [6, :, 1], levels=clev, cmap=nclcmap,
+                        vmin=0, vmax=1.1)
     cm = axes[8].tricontourf(xc,
                              yc,
                              dataset.variables["tracer3"][12, :, 1] -
@@ -320,19 +330,36 @@ def plot_sol(fig, tcname, dataset):
                              cmap="seismic",
                              vmin=diffmin,
                              vmax=diffmax)
-    for i in range(9):
+    lcm = axes[9].tricontourf(xc, yc, dataset.variables["layerThickness"]
+                        [0, :, 1])
+    axes[9].set_ylabel('layer thickness')
+    axes[10].tricontourf(xc, yc, dataset.variables["layerThickness"]
+                        [0, :, 1])
+    axes[11].tricontourf(xc,
+                         yc,
+                         dataset.variables["layerThickness"][12, :, 1] -
+                         dataset.variables["layerThickness"][0, :, 1],
+                         levels=dlev,
+                         cmap="seismic",
+                         vmin=diffmin,
+                         vmax=diffmax)
+
+    for i in range(12):
         axes[i].set_xticks(xticks)
         axes[i].set_yticks(yticks)
         if i % 3 != 0:
             axes[i].set_yticklabels([])
-    for i in range(3):
+    for i in range(4):
         axes[3 * i].set_yticklabels(yticklabels)
-        axes[6 + i].set_xticklabels(xticklabels)
-    for i in range(6):
+    for i in range(3):
+        axes[9 + i].set_xticklabels(xticklabels)
+    for i in range(9):
         axes[i].set_xticklabels([])
-    cb = fig.colorbar(cm, ax=axes[8])
+    cb1 = fig.colorbar(cm, ax=axes[8])
+    cb2 = fig.colorbar(tcm, ax=axes[5])
+#     cb3 = fig.colorbar(lcm, ax=axes[11])
     fig.suptitle(tcname)
-    fig.colorbar(ScalarMappable(cmap=nclcmap))
+
 
 
 def make_convergence_arrays(tcdata):
@@ -392,14 +419,15 @@ def make_convergence_arrays(tcdata):
         mass1.append(tcdata[r]['err']['tracer1']['mass'])
         mass2.append(tcdata[r]['err']['tracer2']['mass'])
         mass3.append(tcdata[r]['err']['tracer3']['mass'])
-    return dlambda, linf1, linf2, linf3, l21, l22, l23, filament, u1, o1, u2, o2, u3, o3, mass1, mass2, mass3
+    return dlambda, linf1, linf2, linf3, l21, l22, l23, filament, u1, o1, \
+        u2, o2, u3, o3, mass1, mass2, mass3
 
 
 def print_data_as_csv(tcname, tcdata):
     rvals = sorted(tcdata.keys())
     rvals.reverse()
-    dlambda, linf1, linf2, linf3, l21, l22, l23, _, u1, o1, u2, o2, u3, o3, mass1, mass2, mass3 = make_convergence_arrays(
-        tcdata)
+    dlambda, linf1, linf2, linf3, l21, l22, l23, _, u1, o1, u2, o2, u3, o3, \
+        mass1, mass2, mass3 = make_convergence_arrays(tcdata)
     headers = [
         "res",
         "dlambda",
