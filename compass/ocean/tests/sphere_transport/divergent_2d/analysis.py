@@ -20,8 +20,8 @@ class Analysis(Step):
 
         Parameters
         ----------
-        test_case :
-            compass.ocean.tests.sphere_transport.divergent_2d.divergent2D
+        test_case : compass.ocean.tests.sphere_transport.divergent_2d.divergent2D
+            The test case this step belongs to
 
         resolutions : list of int
             The resolutions of the meshes that have been run

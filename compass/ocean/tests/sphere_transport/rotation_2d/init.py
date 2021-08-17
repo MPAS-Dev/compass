@@ -13,8 +13,8 @@ class Init(Step):
 
         Parameters
         ----------
-        test_case :
-            compass.ocean.tests.global_convergence.rotation_2d.Rotation2D
+        test_case : compass.ocean.tests.global_convergence.rotation_2d.Rotation2D
+            The test case this step belongs to
 
         resolution : int
             The resolution of the (uniform) mesh in km

@@ -45,6 +45,7 @@ class Analysis(Step):
         Parameters
         ----------
         test_case : compass.ocean.tests.sphere_transport.correlatedTracers2D.CorrelatedTracers2D
+            The test case this step belongs to
 
         resolutions : list of int
             The resolutions of the meshes that have been run

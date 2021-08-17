@@ -22,8 +22,7 @@ class Forward(Step):
 
         Parameters
         ----------
-        test_case :
-            compass.ocean.tests.global_convergence.correlated_tracers_2d.CorrelatedTracers2D
+        test_case :  compass.ocean.tests.global_convergence.correlated_tracers_2d.CorrelatedTracers2D
             The test case this step belongs to
 
         resolution : int

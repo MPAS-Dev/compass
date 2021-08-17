@@ -13,8 +13,8 @@ class Init(Step):
 
         Parameters
         ----------
-        test_case :
-            compass.ocean.tests.sphere_transport.correlated_tracers_2d.CorrelatedTracers2D
+        test_case :  compass.ocean.tests.sphere_transport.correlated_tracers_2d.CorrelatedTracers2D
+            The test case this step belongs to
 
         resolution : int
             The resolution of the (uniform) mesh in km

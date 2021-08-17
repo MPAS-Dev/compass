@@ -21,8 +21,8 @@ class Forward(Step):
 
         Parameters
         ----------
-        test_case :
-            compass.ocean.tests.global_convergence.divergent_2d.Divergent2D
+        test_case : compass.ocean.tests.global_convergence.divergent_2d.Divergent2D
+            The test case this step belongs to
 
         resolution : int
             The resolution of the (uniform) mesh in km

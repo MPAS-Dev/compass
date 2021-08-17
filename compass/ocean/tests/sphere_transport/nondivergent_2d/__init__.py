@@ -26,6 +26,7 @@ class Nondivergent2D(TestCase):
         Parameters
         ----------
         test_group : compass.ocean.tests.sphere_transport.SphereTransport
+            The test group that this case belongs to
         """
         super().__init__(test_group=test_group, name='nondivergent_2d')
         self.resolutions = None

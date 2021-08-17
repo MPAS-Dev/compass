@@ -22,8 +22,8 @@ class Mesh(Step):
 
         Parameters
         ----------
-        test_case :
-            compass.ocean.tests.sphere_transport.nondivergent2D.Nondivergent2D
+        test_case : compass.ocean.tests.sphere_transport.nondivergent2D.Nondivergent2D
+            The test case this step belongs to
 
         resolution : int
             The resolution of the (uniform) mesh in km
