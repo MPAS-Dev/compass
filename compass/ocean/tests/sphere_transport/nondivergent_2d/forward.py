@@ -58,8 +58,8 @@ class Forward(Step):
         config = self.config
         dtstr = self.get_timestep_str()
         self.add_namelist_options({'config_dt': dtstr,
-            'config_time_integrator': config.get(
-            'nondivergent_2d', 'time_integrator')})
+                                   'config_time_integrator': config.get(
+                                       'nondivergent_2d', 'time_integrator')})
 
     def run(self):
         """

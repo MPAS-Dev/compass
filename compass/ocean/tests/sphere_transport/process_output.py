@@ -233,7 +233,7 @@ def read_ncl_rgb_file(cmap_filename):
     map_file_found = False
     try:
         with resources.open_text("compass.ocean.tests.sphere_transport.resources",
-            cmap_filename) as f:
+                                 cmap_filename) as f:
             flines = f.readlines()
         map_file_found = True
     except BaseException:
@@ -315,9 +315,9 @@ def plot_sol(fig, tcname, dataset):
                         cmap="seismic",
                         vmin=diffmin,
                         vmax=diffmax)
-    tcm=axes[6].tricontourf(xc, yc, dataset.variables["tracer3"]
-                        [0, :, 1], levels=clev, cmap=nclcmap,
-                        vmin=0, vmax=1.1)
+    tcm = axes[6].tricontourf(xc, yc, dataset.variables["tracer3"]
+                              [0, :, 1], levels=clev, cmap=nclcmap,
+                              vmin=0, vmax=1.1)
     axes[6].set_ylabel('tracer 3')
     axes[7].tricontourf(xc, yc, dataset.variables["tracer3"]
                         [6, :, 1], levels=clev, cmap=nclcmap,
@@ -331,10 +331,10 @@ def plot_sol(fig, tcname, dataset):
                              vmin=diffmin,
                              vmax=diffmax)
     lcm = axes[9].tricontourf(xc, yc, dataset.variables["layerThickness"]
-                        [0, :, 1])
+                              [0, :, 1])
     axes[9].set_ylabel('layer thickness')
     axes[10].tricontourf(xc, yc, dataset.variables["layerThickness"]
-                        [0, :, 1])
+                         [0, :, 1])
     axes[11].tricontourf(xc,
                          yc,
                          dataset.variables["layerThickness"][12, :, 1] -
@@ -359,7 +359,6 @@ def plot_sol(fig, tcname, dataset):
     cb2 = fig.colorbar(tcm, ax=axes[5])
 #     cb3 = fig.colorbar(lcm, ax=axes[11])
     fig.suptitle(tcname)
-
 
 
 def make_convergence_arrays(tcdata):

@@ -100,8 +100,10 @@ class CorrelatedTracers2D(TestCase):
             step.cores = cores
             step.min_cores = min_cores
 
-            config.set('correlated_tracers_2d', 'QU{}_cores'.format(resolution),
-                       str(cores))
+            config.set(
+                'correlated_tracers_2d',
+                'QU{}_cores'.format(resolution),
+                str(cores))
             config.set(
                 'correlated_tracers_2d',
                 'QU{}_min_cores'.format(resolution),
