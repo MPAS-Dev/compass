@@ -556,7 +556,12 @@ def write_load_compass(template_path, activ_path, conda_base, is_test, version,
     except FileExistsError:
         pass
 
-    script_filename = '{}/{}{}.sh'.format(activ_path, prefix, activ_suffix)
+    if prefix.endswith(activ_suffix):
+        # avoid a redundant activation script name if the suffix is already
+        # part of the environment name
+        script_filename = '{}/{}.sh'.format(activ_path, prefix)
+    else:
+        script_filename = '{}/{}{}.sh'.format(activ_path, prefix, activ_suffix)
 
     if not env_only:
         sys_info['env_vars'].append('export USE_PIO2=true')
