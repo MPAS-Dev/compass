@@ -26,5 +26,5 @@ class Ocean(MpasCore):
         self.add_test_group(Gotm(mpas_core=self))
         self.add_test_group(IceShelf2d(mpas_core=self))
         self.add_test_group(IsomipPlus(mpas_core=self))
-        self.add_test_group(Ziso(mpas_core=self))
         self.add_test_group(SphereTransport(mpas_core=self))
+        self.add_test_group(Ziso(mpas_core=self))
