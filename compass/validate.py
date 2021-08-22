@@ -156,21 +156,18 @@ def compare_variables(test_case, variables, filename1, filename2=None,
     test_case.validation = validation
 
 
-def compare_timers(timers, config, work_dir, rundir1, rundir2=None):
+def compare_timers(test_case, timers, rundir1, rundir2=None):
     """
     Compare variables between files in the current test case and/or with the
     baseline results.
 
     Parameters
     ----------
+    test_case : compass.TestCase
+        An object describing a test case to validate
+
     timers : list
         A list of timer names to compare
-
-    config : configparser.ConfigParser
-        Configuration options for the test case
-
-    work_dir : str
-        The work directory for the test case
 
     rundir1 : str
         The relative path to a directory within the ``work_dir``. If
@@ -186,13 +183,14 @@ def compare_timers(timers, config, work_dir, rundir1, rundir2=None):
         those in the corresponding baseline directory.
     """
 
+    work_dir = test_case.work_dir
+    baseline_root = test_case.baseline_dir
+
     if rundir2 is not None:
         _compute_timers(os.path.join(work_dir, rundir1),
                         os.path.join(work_dir, rundir2), timers)
 
-    if config.has_option('paths', 'baseline_dir'):
-        baseline_root = config.get('paths', 'baseline_dir')
-
+    if baseline_root is not None:
         _compute_timers(os.path.join(baseline_root, rundir1),
                         os.path.join(work_dir, rundir1), timers)
 

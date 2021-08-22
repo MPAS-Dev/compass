@@ -38,8 +38,7 @@ class InitialState(Step):
             Whether to include biogeochemistry (BGC) in the initial condition
         """
         if initial_condition not in ['PHC', 'EN4_1900']:
-            raise ValueError('Unknown initial_condition {}'.format(
-                initial_condition))
+            raise ValueError(f'Unknown initial_condition {initial_condition}')
 
         super().__init__(test_case=test_case, name='initial_state')
         self.mesh = mesh
@@ -51,7 +50,7 @@ class InitialState(Step):
         # generate the namelist, replacing a few default options
         self.add_namelist_file(package, 'namelist.init', mode='init')
         self.add_namelist_file(
-            package, 'namelist.{}'.format(initial_condition.lower()),
+            package, f'namelist.{initial_condition.lower()}',
             mode='init')
         if mesh.with_ice_shelf_cavities:
             self.add_namelist_file(package, 'namelist.wisc', mode='init')
@@ -115,25 +114,21 @@ class InitialState(Step):
 
         self.add_input_file(
             filename='mesh.nc',
-            work_dir_target='{}/culled_mesh.nc'.format(mesh_path))
-
-        self.add_input_file(
-            filename='critical_passages.nc',
-            work_dir_target='{}/critical_passages_mask_final.nc'.format(
-                mesh_path))
+            work_dir_target=f'{mesh_path}/culled_mesh.nc')
 
         self.add_input_file(
             filename='graph.info',
-            work_dir_target='{}/culled_graph.info'.format(mesh_path))
+            work_dir_target=f'{mesh_path}/culled_graph.info')
 
         if mesh.with_ice_shelf_cavities:
             self.add_input_file(
                 filename='land_ice_mask.nc',
-                work_dir_target='{}/land_ice_mask.nc'.format(mesh_path))
+                work_dir_target=f'{mesh_path}/land_ice_mask.nc')
 
         self.add_model_as_input()
 
-        for file in ['initial_state.nc', 'init_mode_forcing_data.nc']:
+        for file in ['initial_state.nc', 'init_mode_forcing_data.nc',
+                     'graph.info']:
             self.add_output_file(filename=file)
 
     def setup(self):

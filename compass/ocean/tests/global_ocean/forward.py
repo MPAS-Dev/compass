@@ -24,6 +24,15 @@ class ForwardStep(Step):
 
     time_integrator : {'split_explicit', 'RK4'}
         The time integrator to use for the forward run
+
+    cores_from_config : bool
+        Whether to get ``cores`` from the config file
+
+    min_cores_from_config : bool
+        Whether to get ``min_cores`` from the config file
+
+    threads_from_config : bool
+        Whether to get ``threads`` from the config file
     """
     def __init__(self, test_case, mesh, init, time_integrator, name='forward',
                  subdir=None, cores=None, min_cores=None, threads=None):
@@ -70,6 +79,10 @@ class ForwardStep(Step):
         super().__init__(test_case=test_case, name=name, subdir=subdir,
                          cores=cores, min_cores=min_cores, threads=threads)
 
+        self.cores_from_config = cores is None
+        self.min_cores_from_config = min_cores is None
+        self.threads_from_config = threads is None
+
         self.add_namelist_file(
             'compass.ocean.tests.global_ocean', 'namelist.forward')
         self.add_streams_file(
@@ -88,51 +101,47 @@ class ForwardStep(Step):
         mesh_package = mesh.mesh_step.package
         mesh_package_contents = list(contents(mesh_package))
         mesh_namelists = ['namelist.forward',
-                          'namelist.{}'.format(time_integrator.lower())]
+                          f'namelist.{time_integrator.lower()}']
         for mesh_namelist in mesh_namelists:
             if mesh_namelist in mesh_package_contents:
                 self.add_namelist_file(mesh_package, mesh_namelist)
 
         mesh_streams = ['streams.forward',
-                        'streams.{}'.format(time_integrator.lower())]
+                        f'streams.{time_integrator.lower()}']
         for mesh_stream in mesh_streams:
             if mesh_stream in mesh_package_contents:
                 self.add_streams_file(mesh_package, mesh_stream)
 
-        mesh_path = mesh.mesh_step.path
-
         if mesh.with_ice_shelf_cavities:
-            initial_state_target = '{}/ssh_adjustment/adjusted_init.nc'.format(
-                init.path)
+            initial_state_target = \
+                f'{init.path}/ssh_adjustment/adjusted_init.nc'
         else:
-            initial_state_target = '{}/initial_state/initial_state.nc'.format(
-                init.path)
+            initial_state_target = \
+                f'{init.path}/initial_state/initial_state.nc'
         self.add_input_file(filename='init.nc',
                             work_dir_target=initial_state_target)
         self.add_input_file(
             filename='forcing_data.nc',
-            work_dir_target='{}/initial_state/init_mode_forcing_data.nc'
-                            ''.format(init.path))
+            work_dir_target=f'{init.path}/initial_state/'
+                            f'init_mode_forcing_data.nc')
         self.add_input_file(
             filename='graph.info',
-            work_dir_target='{}/culled_graph.info'.format(mesh_path))
+            work_dir_target=f'{init.path}/initial_state/graph.info')
 
         self.add_model_as_input()
-
-        self.add_output_file(filename='output.nc')
 
     def setup(self):
         """
         Set up the test case in the work directory, including downloading any
         dependencies
         """
-        if self.cores is None:
+        if self.cores_from_config:
             self.cores = self.config.getint(
                 'global_ocean', 'forward_cores')
-        if self.min_cores is None:
+        if self.min_cores_from_config:
             self.min_cores = self.config.getint(
                 'global_ocean', 'forward_min_cores')
-        if self.threads is None:
+        if self.threads_from_config:
             self.threads = self.config.getint(
                 'global_ocean', 'forward_threads')
 
@@ -199,13 +208,18 @@ class ForwardTestCase(TestCase):
         Run each step of the testcase
         """
         config = self.config
-        # get the these properties from the config options
         for step_name in self.steps_to_run:
             step = self.steps[step_name]
-            # get the these properties from the config options
-            step.cores = config.getint('global_ocean', 'forward_cores')
-            step.min_cores = config.getint('global_ocean', 'forward_min_cores')
-            step.threads = config.getint('global_ocean', 'forward_threads')
+            if isinstance(step, ForwardStep):
+                if step.cores_from_config:
+                    step.cores = config.getint('global_ocean',
+                                               'forward_cores')
+                if step.min_cores_from_config:
+                    step.min_cores = config.getint('global_ocean',
+                                                   'forward_min_cores')
+                if step.threads_from_config:
+                    step.threads = config.getint('global_ocean',
+                                                 'forward_threads')
 
         # run the steps
         super().run()
@@ -223,7 +237,6 @@ def get_forward_subdir(init_subdir, time_integrator, name):
     elif time_integrator == 'RK4':
         subdir = os.path.join(init_subdir, time_integrator, name)
     else:
-        raise ValueError('Unexpected time integrator {}'.format(
-            time_integrator))
+        raise ValueError(f'Unexpected time integrator {time_integrator}')
 
     return subdir

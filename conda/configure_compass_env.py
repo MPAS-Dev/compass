@@ -112,9 +112,8 @@ def get_conda_base(conda_base, is_test, config):
                                  'none could be inferred.')
         else:
             conda_base = config.get('paths', 'compass_envs')
-        conda_base = os.path.abspath(conda_base)
     # handle "~" in the path
-    conda_base = os.path.expanduser(conda_base)
+    conda_base = os.path.abspath(os.path.expanduser(conda_base))
     return conda_base
 
 
@@ -557,7 +556,12 @@ def write_load_compass(template_path, activ_path, conda_base, is_test, version,
     except FileExistsError:
         pass
 
-    script_filename = '{}/{}{}.sh'.format(activ_path, prefix, activ_suffix)
+    if prefix.endswith(activ_suffix):
+        # avoid a redundant activation script name if the suffix is already
+        # part of the environment name
+        script_filename = '{}/{}.sh'.format(activ_path, prefix)
+    else:
+        script_filename = '{}/{}{}.sh'.format(activ_path, prefix, activ_suffix)
 
     if not env_only:
         sys_info['env_vars'].append('export USE_PIO2=true')
@@ -697,7 +701,7 @@ def update_permissions(config, is_test, activ_path, conda_base, system_libs):
         # shared system libraries
         directories.append(system_libs)
 
-    group = config.get('deploy', 'group')
+    group = config.get('permissions', 'group')
 
     new_uid = os.getuid()
     new_gid = grp.getgrnam(group).gr_gid
@@ -810,7 +814,7 @@ def update_permissions(config, is_test, activ_path, conda_base, system_libs):
 
                 try:
                     os.chown(file_name, new_uid, new_gid)
-                    os.chmod(file_name, perm)
+                    os.chmod(file_name, new_perm)
                 except OSError:
                     continue
 

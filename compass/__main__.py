@@ -2,9 +2,10 @@
 
 import sys
 import argparse
+import os
 
 import compass
-from compass import list, setup, clean, suite, run
+from compass import list, setup, clean, suite, run, cache
 
 
 def main():
@@ -40,11 +41,18 @@ The available compass commands are:
 
     args = parser.parse_args(sys.argv[1:2])
 
+    # only allow the "compass cache" command if we're on Anvil or Chrysalis
+    allow_cache = ('COMPASS_MACHINE' in os.environ and
+                   os.environ['COMPASS_MACHINE'] in ['anvil', 'chrysalis'])
+
     commands = {'list': list.main,
                 'setup': setup.main,
                 'clean': clean.main,
                 'suite': suite.main,
                 'run': run.main}
+    if allow_cache:
+        commands['cache'] = cache.main
+
     if args.command not in commands:
         print('Unrecognized command {}'.format(args.command))
         parser.print_help()

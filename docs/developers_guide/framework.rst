@@ -99,6 +99,19 @@ from individual steps are stored in log files ``<step>.log`` in the test case's
 work directory.  The results of validation (if any) are displayed in the final
 stage of running the test case.
 
+.. _dev_cache:
+
+cache module
+~~~~~~~~~~~~
+
+The :py:func:`compass.cache.update_cache()` function is used by
+``compass cache`` to copy step outputs to the ``compass_cache`` database on
+the LCRC server and to update ``<mpas_core>_cached_files.json`` files that
+contain a mapping between these cached files and the original outputs.  This
+functionality enables running steps with :ref:`dev_step_cached_output`, which
+can be used to skip time-consuming initialization steps for faster development
+and debugging.
+
 .. _dev_config:
 
 Config files
@@ -250,7 +263,7 @@ directly if need be.
 .. _dev_io_symlink:
 
 Symlinks
-^^^^^^^^
+~~~~~~~~
 
 You can create your own symlinks that aren't input files (e.g. for a
 README file that the user might want to have available) using
@@ -280,7 +293,7 @@ know if the test case will be set up at all (or in what work directory) during
 .. _dev_io_download:
 
 Download
-^^^^^^^^
+~~~~~~~~
 
 You can download files more directly if you need to using
 :py:func:`compass.io.download()`, though we recommend using
@@ -324,7 +337,7 @@ Model
 -----
 
 Running MPAS
-^^^^^^^^^^^^
+~~~~~~~~~~~~
 
 Steps that run the MPAS model should call the
 :py:meth:`compass.Step.add_model_as_input()` method from
@@ -342,7 +355,7 @@ constructor or :ref:`dev_step_setup` method (i.e. before calling
 required resources are available.
 
 Partitioning the mesh
-^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~
 
 The function :py:func:`compass.model.partition()` calls the graph partitioning
 executable (`gpmetis <https://arc.vt.edu/userguide/metis/>`_ by default) to
@@ -358,7 +371,7 @@ creating the same partition over and over.  For such cases, you can call
 to later calls to :py:func:`compass.model.run_model()`.
 
 Updating PIO namelist options
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You can use :py:func:`compass.model.update_namelist_pio()` to automatically set
 the MPAS namelist options ``config_pio_num_iotasks`` and ``config_pio_stride``
@@ -381,7 +394,7 @@ use ``update_pio=False`` when calling ``run_model()``.
 
 
 Making a graph file
-^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~
 
 Some ``compass`` test cases take advantage of the fact that the
 `MPAS-Tools cell culler <http://mpas-dev.github.io/MPAS-Tools/stable/mesh_conversion.html#cell-culler>`_
@@ -402,7 +415,7 @@ This validation is a critical part of running test suites and comparing them
 to baselines.
 
 Validating variables
-^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~
 
 The function :py:func:`compass.validate.compare_variables()` can be used to
 compare variables in a file with a given relative path (``filename1``) with
@@ -568,7 +581,7 @@ are explicitly added with :py:meth:`compass.Step.add_output_file()`.  This
 check can be disabled by setting ``check_outputs=False``.
 
 Norms
-^^^^^
+~~~~~
 
 In the unlikely circumstance that you would like to allow comparison to pass
 with non-zero differences between variables, you can supply keyword arguments
@@ -590,7 +603,7 @@ argument.
 
 
 Validating timers
-^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~
 
 Timer validation is qualitatively similar to variable validation except that
 no errors are raised, meaning that the user must manually look at the

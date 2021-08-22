@@ -34,6 +34,7 @@ class PerformanceTest(ForwardTestCase):
         step = ForwardStep(test_case=self, mesh=mesh, init=init,
                            time_integrator=time_integrator)
 
+        step.add_output_file(filename='output.nc')
         if mesh.with_ice_shelf_cavities:
             module = self.__module__
             step.add_namelist_file(module, 'namelist.wisc')
@@ -76,4 +77,4 @@ class PerformanceTest(ForwardTestCase):
                               filename1='forward/land_ice_fluxes.nc')
 
         timers = ['time integration']
-        compare_timers(timers, self.config, self.work_dir, rundir1='forward')
+        compare_timers(self, timers, rundir1='forward')

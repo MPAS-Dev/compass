@@ -96,4 +96,4 @@ class Default(TestCase):
         timers = ['init_lagrPartTrack', 'compute_lagrPartTrack',
                   'write_lagrPartTrack', 'restart_lagrPartTrack',
                   'finalize_lagrPartTrack']
-        compare_timers(timers, config, work_dir, rundir1='forward')
+        compare_timers(self, timers, rundir1='forward')

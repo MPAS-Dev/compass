@@ -23,7 +23,7 @@ If you prefer, you can use either of the approaches described in
 and check out the ``legacy`` branch.
 
 Next, you will need to create a new branch from ``master`` for developing the
-new test case.  For this purpose, we will stick with the simpler approach in
+new test group.  For this purpose, we will stick with the simpler approach in
 :ref:`dev_compass_repo` here, but feel free to use the ``worktree`` approach
 instead if you are comfortable with it.
 
@@ -45,12 +45,12 @@ your needs.
 
 If all goes well, you will have a file named ``load_dev_compass_1.0.0*.sh``, where
 the details of the ``*`` depend on your specific machine and compilers.  For
-example, on Chrysalis, you will have ``test_compass_1.0.0_chrysalis_intel_impi.sh``,
+example, on Chrysalis, you will have ``load_dev_compass_1.0.0_chrysalis_intel_impi.sh``,
 which will be the example used here:
 
 .. code-block:: bash
 
-  source test_compass_1.0.0_chrysalis_intel_impi.sh
+  source load_dev_compass_1.0.0_chrysalis_intel_impi.sh
 
 Now, we're ready to get the MPAS-Ocean source code from the E3SM repository and
 build the MPAS-Ocean executable:
@@ -69,8 +69,8 @@ for your machine.
 
 Now, we're ready to start developing!
 
-The legacy COMPASS test case
-----------------------------
+The legacy COMPASS test group
+-----------------------------
 
 ...But before we get started, a little background on legacy COMPASS for those
 who haven't used it extensively.  In legacy COMPASS, the test group is just a
@@ -214,7 +214,7 @@ to know what MPAS Core it belongs to so that is passed in as the ``mpas_core``
 argument.  The only thing that happens so far is that the constructor for the
 base class ``TestGroup`` gets called.  In the process, we give the test group
 the name ``gotm``.  You can take a look at the base class ``TestGroup`` in
-``compass/testgroup`` if you want.  That's not necessary for the tutorial,
+``compass/testgroup.py`` if you want.  That's not necessary for the tutorial,
 but some new developers have found reading the base class code to be
 highly instructive.
 
@@ -223,7 +223,7 @@ Naming conventions in python are that we use
 always start with a capital letter, and all lowercase, possibly with
 underscores, for variable, module, package and function names.  We avoid
 all-caps like ``GOTM`` or ``MPAS``, even though these might seem preferable.
-(We use ``E3SM`` a few places because ``E3sm`` was simply too much for us to
+(We use ``E3SM`` in a few places because ``E3sm`` was simply too much for us to
 bear.)
 
 Our new ``Gotm`` class defines the test group, but so far it doesn't have any
@@ -324,7 +324,7 @@ horizontal grid cells but it's acting like a single column), we will just
 hard-code the resolution into this particular test case.  Other test cases,
 like those in the baroclinic channel test group, do support multiple
 resolutions.  It is typically convenient to define multiple versions of the
-test case by passing a list of supported resolutions to the constructor.
+test case by passing the resolutions as a parameter to the constructor.
 
 This tutorial won't describe how to do a parameter study.  There will be a
 separate tutorial for that purpose.  Instead, what is described here is how to
@@ -466,8 +466,8 @@ By default, the subdirectory for the step is the same as the step name, but
 just like for a test case, you can give the step a more complicated
 subdirectory name, possibly with multiple levels of directories.  See the
 steps in the ``ocean/global_convergence/cosine_bell`` test case for examples
-of this.  This test case runs on one core (so ``cores`` and ``min_cores`` are
-both 1) and one thread.
+of this.  The ``init`` step runs on one core (so ``cores`` and ``min_cores``
+are both 1) and one thread.
 
 The next step is to define the namelist, streams file, outputs from the step:
 
@@ -672,7 +672,7 @@ Defining the run method
 
 With these config options, namelists and streams files defined, we will
 implement the ``run()`` method of the ``init`` step to do the rest of the work
-for this step.  In legacy COMPASS, the XML for definint the run scrip was:
+for this step.  In legacy COMPASS, the XML for defining the run scrip was:
 
 .. code-block:: xml
 
@@ -827,7 +827,7 @@ is replaced by these method calls within the step's constructor in ``compass``:
     self.add_input_file(filename='init.nc', target='../init/ocean.nc')
     self.add_input_file(filename='graph.info', target='../init/graph.info')
 
-As in ``Init``, we want to make  link to the MPAS-Ocean executable.  The
+As in ``Init``, we want to make a link to the MPAS-Ocean executable.  The
 legacy COMPASS version of this was:
 
 .. code-block:: xml

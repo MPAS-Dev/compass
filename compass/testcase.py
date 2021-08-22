@@ -145,6 +145,9 @@ class TestCase:
         cwd = os.getcwd()
         for step_name in self.steps_to_run:
             step = self.steps[step_name]
+            if step.cached:
+                logger.info(' * Cached: {}'.format(step_name))
+                continue
             step.config = self.config
             new_log_file = self.new_step_log_file
             if self.log_filename is not None:
