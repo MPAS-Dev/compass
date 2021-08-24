@@ -10,7 +10,7 @@ from mpas_tools.logging import LoggingContext
 import mpas_tools.io
 
 
-def run_suite(suite_name):
+def run_suite(suite_name, quiet=False):
     """
     Run the given test suite
 
@@ -18,6 +18,11 @@ def run_suite(suite_name):
     ----------
     suite_name : str
         The name of the test suite
+
+    quiet : bool, optional
+        Whether step names are not included in the output as the test suite
+        progresses
+
     """
     # ANSI fail text: https://stackoverflow.com/a/287944/7728169
     start_fail = '\033[91m'
@@ -61,10 +66,15 @@ def run_suite(suite_name):
 
             test_name = test_case.path.replace('/', '_')
             log_filename = '{}/case_outputs/{}.log'.format(cwd, test_name)
-            with LoggingContext(f'stdout_{test_name}') as stdout_logger, \
-                    LoggingContext(test_name, log_filename=log_filename) as \
+            with LoggingContext(test_name, log_filename=log_filename) as \
                     test_logger:
-                test_case.stdout_logger = stdout_logger
+                if quiet:
+                    # just log the step names and any failure messages to the
+                    # log file
+                    test_case.stdout_logger = test_logger
+                else:
+                    # log steps to stdout
+                    test_case.stdout_logger = logger
                 test_case.logger = test_logger
                 test_case.log_filename = log_filename
                 test_case.new_step_log_file = False
@@ -269,9 +279,14 @@ def main():
     parser.add_argument("--no-steps", dest="no_steps", nargs='+', default=None,
                         help="The steps of a test case not to run, see "
                              "steps_to_run in the config file for defaults.")
+    parser.add_argument("-q", "--quiet", dest="quiet", action="store_true",
+                        help="If set, step names are not included in the "
+                             "output as the test suite progresses.  Has no "
+                             "effect when running test cases or steps on "
+                             "their own.")
     args = parser.parse_args(sys.argv[2:])
     if args.suite is not None:
-        run_suite(args.suite)
+        run_suite(args.suite, quiet=args.quiet)
     elif os.path.exists('test_case.pickle'):
         run_test_case(args.steps, args.no_steps)
     elif os.path.exists('step.pickle'):
@@ -280,7 +295,7 @@ def main():
         pickles = glob.glob('*.pickle')
         if len(pickles) == 1:
             suite = os.path.splitext(os.path.basename(pickles[0]))[0]
-            run_suite(suite)
+            run_suite(suite, quiet=args.quiet)
         elif len(pickles) == 0:
             raise OSError('No pickle files were found. Are you sure this is '
                           'a compass suite, test-case or step work directory?')
