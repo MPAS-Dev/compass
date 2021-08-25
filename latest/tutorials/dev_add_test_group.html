@@ -41,7 +41,7 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Developer Tutorial: Porting a legacy COMPASS test group" href="dev_porting_legacy.html" />
+    <link rel="next" title="Developer Tutorial: Adding a parameter study" href="dev_add_param_study.html" />
     <link rel="prev" title="Template" href="../design_docs/template.html" /> 
 </head>
 
@@ -152,6 +152,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#documentation">Documentation</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
@@ -237,7 +238,7 @@ as an example.  This test group was actually ported from <a class="reference int
 roughly in the manner described in <a class="reference internal" href="dev_porting_legacy.html#dev-tutorial-porting-legacy"><span class="std std-ref">Developer Tutorial: Porting a legacy COMPASS test group</span></a>.  But we
 will use it to describe the process for creating a test group from scratch.</p>
 <div class="section" id="getting-started">
-<h2>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<span id="dev-tutorial-add-test-group-getting-started"></span><h2>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
 <p>To begin with, you will need to check out the compass repo and create  a new
 branch from <code class="docutils literal notranslate"><span class="pre">master</span></code> for developing the new test group.  For this purpose, we
 will stick with the simpler approach in <a class="reference internal" href="../developers_guide/quick_start.html#dev-compass-repo"><span class="std std-ref">Set up a compass repository: for beginners</span></a> here, but feel
@@ -301,7 +302,7 @@ for your machine.</p>
 <p>Now, we’re ready to start developing!</p>
 </div>
 <div class="section" id="making-a-new-test-group">
-<h2>Making a new test group<a class="headerlink" href="#making-a-new-test-group" title="Permalink to this headline">¶</a></h2>
+<span id="dev-tutorial-add-test-group-make-test-group"></span><h2>Making a new test group<a class="headerlink" href="#making-a-new-test-group" title="Permalink to this headline">¶</a></h2>
 <p>Use any method you like for editing code.  If you haven’t settled on a method
 and are working on your own laptop or desktop, you may want to try an
 integrated development environment (<a class="reference external" href="https://www.jetbrains.com/pycharm/">PyCharm</a>
@@ -389,7 +390,7 @@ it to the <code class="docutils literal notranslate"><span class="pre">Ocean</sp
 <code class="docutils literal notranslate"><span class="pre">compass</span></code> knows about the test group.</p>
 </div>
 <div class="section" id="adding-a-default-test-case">
-<h2>Adding a “default” test case<a class="headerlink" href="#adding-a-default-test-case" title="Permalink to this headline">¶</a></h2>
+<span id="dev-tutorial-add-test-group-add-default"></span><h2>Adding a “default” test case<a class="headerlink" href="#adding-a-default-test-case" title="Permalink to this headline">¶</a></h2>
 <p>We’ll add a test case called <code class="docutils literal notranslate"><span class="pre">default</span></code> to <code class="docutils literal notranslate"><span class="pre">baroclinic_channel</span></code> by making a
 <code class="docutils literal notranslate"><span class="pre">default</span></code> package within <code class="docutils literal notranslate"><span class="pre">compass/ocean/tests/baroclinic_channel</span></code>.  First,
 we make the directory <code class="docutils literal notranslate"><span class="pre">compass/ocean/tests/baroclinic_channel/default</span></code>, then
@@ -431,12 +432,13 @@ this test case belongs to on to the base class’s constructor
 resolutions.  In test groups like this one, it is typically convenient to
 define multiple versions of the test case by passing the resolution as a
 parameter to the constructor.</p>
-<p>This tutorial won’t describe how to do a parameter study.  There will be a
-separate tutorial for that purpose.  Instead, what is described here is how to
-make different variants of a test case with a list of parameter values that a
-user cannot easily change.  So far, this is mostly used to create test cases at
-different resolutions in <code class="docutils literal notranslate"><span class="pre">compass</span></code> but the <code class="docutils literal notranslate"><span class="pre">compass/ocean/tests/global_ocean</span></code>
-test group includes a number of test cases that vary base on:</p>
+<p>This tutorial won’t describe how to do a parameter study.  There is a separate
+tutorial for that purpose: <a class="reference internal" href="dev_add_param_study.html#dev-tutorial-add-param-study"><span class="std std-ref">Developer Tutorial: Adding a parameter study</span></a>. Instead, what
+is described here is how to make different variants of a test case with a list
+of parameter values that a user cannot easily change.  So far, this is mostly
+used to create test cases at different resolutions in <code class="docutils literal notranslate"><span class="pre">compass</span></code> but the
+<code class="docutils literal notranslate"><span class="pre">compass/ocean/tests/global_ocean</span></code> test group includes a number of test
+cases that vary base on:</p>
 <ul class="simple">
 <li><p>whether ice-shelf cavities are included in the ocean domain</p></li>
 <li><p>which initial condition is used</p></li>
@@ -1624,7 +1626,7 @@ calling <code class="docutils literal notranslate"><span class="pre">compass</sp
 for details.</p>
 </div>
 <div class="section" id="documentation">
-<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<span id="dev-tutorial-add-test-group-docs"></span><h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
 <p>Make sure to add some documentation of your new test group.  You need to add
 all of the functions, classes and methods to the API documentation in
 <code class="docutils literal notranslate"><span class="pre">docs/developers_guide/&lt;core&gt;/api.rst</span></code>, following the examples for other
@@ -1659,7 +1661,7 @@ appropriate place (in alphabetical order) to the list of test groups in
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="dev_porting_legacy.html" class="btn btn-neutral float-right" title="Developer Tutorial: Porting a legacy COMPASS test group" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="dev_add_param_study.html" class="btn btn-neutral float-right" title="Developer Tutorial: Adding a parameter study" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
         <a href="../design_docs/template.html" class="btn btn-neutral float-left" title="Template" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 

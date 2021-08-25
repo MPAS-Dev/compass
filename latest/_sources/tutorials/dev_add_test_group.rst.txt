@@ -10,6 +10,8 @@ as an example.  This test group was actually ported from :ref:`legacy_compass`,
 roughly in the manner described in :ref:`dev_tutorial_porting_legacy`.  But we
 will use it to describe the process for creating a test group from scratch.
 
+.. _dev_tutorial_add_test_group_getting_started:
+
 Getting started
 ---------------
 
@@ -88,6 +90,8 @@ The make target will be different depending on the machine and compilers, see
 for your machine.
 
 Now, we're ready to start developing!
+
+.. _dev_tutorial_add_test_group_make_test_group:
 
 Making a new test group
 -----------------------
@@ -189,6 +193,8 @@ We make an instance of the ``BaroclinicChannel`` class and we immediately add
 it to the ``Ocean`` core's list of test groups.  That's all we need to do.  Now
 ``compass`` knows about the test group.
 
+.. _dev_tutorial_add_test_group_add_default:
+
 Adding a "default" test case
 ----------------------------
 
@@ -237,12 +243,13 @@ resolutions.  In test groups like this one, it is typically convenient to
 define multiple versions of the test case by passing the resolution as a
 parameter to the constructor.
 
-This tutorial won't describe how to do a parameter study.  There will be a
-separate tutorial for that purpose.  Instead, what is described here is how to
-make different variants of a test case with a list of parameter values that a
-user cannot easily change.  So far, this is mostly used to create test cases at
-different resolutions in ``compass`` but the ``compass/ocean/tests/global_ocean``
-test group includes a number of test cases that vary base on:
+This tutorial won't describe how to do a parameter study.  There is a separate
+tutorial for that purpose: :ref:`dev_tutorial_add_param_study`. Instead, what
+is described here is how to make different variants of a test case with a list
+of parameter values that a user cannot easily change.  So far, this is mostly
+used to create test cases at different resolutions in ``compass`` but the
+``compass/ocean/tests/global_ocean`` test group includes a number of test
+cases that vary base on:
 
 * whether ice-shelf cavities are included in the ocean domain
 
@@ -1529,6 +1536,8 @@ You're all set!  You should be able to see your new test cases when you run
 ``compass list``, set them up by running ``compass setup``, and run them by
 calling ``compass run`` within the work directory.  See :ref:`dev_command_line`
 for details.
+
+.. _dev_tutorial_add_test_group_docs:
 
 Documentation
 -------------
