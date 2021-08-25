@@ -72,6 +72,7 @@ components themselves evolves and new functionality is added.
    :maxdepth: 1
 
    tutorials/dev_add_test_group
+   tutorials/dev_add_param_study
    tutorials/dev_porting_legacy
 
 .. toctree::
