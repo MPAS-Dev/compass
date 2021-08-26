@@ -56,6 +56,10 @@ class TestCase:
         Location of the same test case within the basesline work directory,
         for use in comparing variables and timers
 
+    stdout_logger : logging.Logger
+        A logger for output from the test case that goes to stdout regardless
+        of whether ``logger`` is a log file or stdout
+
     logger : logging.Logger
         A logger for output from the test case
 
@@ -114,6 +118,7 @@ class TestCase:
 
         # these will be set when running the test case
         self.new_step_log_file = True
+        self.stdout_logger = None
         self.logger = None
         self.log_filename = None
         self.validation = None
@@ -146,32 +151,18 @@ class TestCase:
         for step_name in self.steps_to_run:
             step = self.steps[step_name]
             if step.cached:
-                logger.info(' * Cached: {}'.format(step_name))
+                logger.info('  * Cached step: {}'.format(step_name))
                 continue
             step.config = self.config
-            new_log_file = self.new_step_log_file
             if self.log_filename is not None:
                 step.log_filename = self.log_filename
-                do_local_logging = True
-            else:
-                # We only want to do local log output if the step output is
-                # being redirected to a file.  Otherwise, we assume we're
-                # probably just running one step and the local logging is
-                # redundant and unnecessary
-                do_local_logging = new_log_file
 
-            if do_local_logging:
-                logger.info(' * Running {}'.format(step_name))
+            self._print_to_stdout('  * step: {}'.format(step_name))
             try:
-                self._run_step(step, new_log_file)
+                self._run_step(step, self.new_step_log_file)
             except BaseException:
-                if do_local_logging:
-                    logger.info('     Failed')
+                self._print_to_stdout('      Failed')
                 raise
-
-            if do_local_logging:
-                logger.info('     Complete')
-
             os.chdir(cwd)
 
     def validate(self):
@@ -223,6 +214,17 @@ class TestCase:
 
             if both_pass:
                 raise ValueError('Comparison failed, see above.')
+
+    def _print_to_stdout(self, message):
+        """
+        write out a message to stdout if we're not running a single step on its
+        own
+        """
+        if self.stdout_logger is not None:
+            self.stdout_logger.info(message)
+            if self.logger != self.stdout_logger:
+                # also write it to the log file
+                self.logger.info(message)
 
     def _run_step(self, step, new_log_file):
         """
