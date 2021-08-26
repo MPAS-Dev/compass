@@ -252,6 +252,10 @@
 <span class="sd">        Location of the same test case within the basesline work directory,</span>
 <span class="sd">        for use in comparing variables and timers</span>
 
+<span class="sd">    stdout_logger : logging.Logger</span>
+<span class="sd">        A logger for output from the test case that goes to stdout regardless</span>
+<span class="sd">        of whether ``logger`` is a log file or stdout</span>
+
 <span class="sd">    logger : logging.Logger</span>
 <span class="sd">        A logger for output from the test case</span>
 
@@ -310,6 +314,7 @@
 
         <span class="c1"># these will be set when running the test case</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">new_step_log_file</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stdout_logger</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log_filename</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">validation</span> <span class="o">=</span> <span class="kc">None</span></div>
@@ -342,32 +347,18 @@
         <span class="k">for</span> <span class="n">step_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps_to_run</span><span class="p">:</span>
             <span class="n">step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">step_name</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">step</span><span class="o">.</span><span class="n">cached</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39; * Cached: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step_name</span><span class="p">))</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  * Cached step: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step_name</span><span class="p">))</span>
                 <span class="k">continue</span>
             <span class="n">step</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-            <span class="n">new_log_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_step_log_file</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">step</span><span class="o">.</span><span class="n">log_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_filename</span>
-                <span class="n">do_local_logging</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="c1"># We only want to do local log output if the step output is</span>
-                <span class="c1"># being redirected to a file.  Otherwise, we assume we&#39;re</span>
-                <span class="c1"># probably just running one step and the local logging is</span>
-                <span class="c1"># redundant and unnecessary</span>
-                <span class="n">do_local_logging</span> <span class="o">=</span> <span class="n">new_log_file</span>
 
-            <span class="k">if</span> <span class="n">do_local_logging</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39; * Running </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step_name</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_print_to_stdout</span><span class="p">(</span><span class="s1">&#39;  * step: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step_name</span><span class="p">))</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_run_step</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">new_log_file</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_run_step</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_step_log_file</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">do_local_logging</span><span class="p">:</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;     Failed&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_print_to_stdout</span><span class="p">(</span><span class="s1">&#39;      Failed&#39;</span><span class="p">)</span>
                 <span class="k">raise</span>
-
-            <span class="k">if</span> <span class="n">do_local_logging</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;     Complete&#39;</span><span class="p">)</span>
-
             <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">cwd</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TestCase.validate"><a class="viewcode-back" href="../../developers_guide/generated/compass.TestCase.validate.html#compass.TestCase.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -419,6 +410,17 @@
 
             <span class="k">if</span> <span class="n">both_pass</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Comparison failed, see above.&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_print_to_stdout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        write out a message to stdout if we&#39;re not running a single step on its</span>
+<span class="sd">        own</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stdout_logger</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stdout_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stdout_logger</span><span class="p">:</span>
+                <span class="c1"># also write it to the log file</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_run_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">new_log_file</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
