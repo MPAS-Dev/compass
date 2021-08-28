@@ -117,7 +117,8 @@ def get_conda_base(conda_base, is_test, config):
     return conda_base
 
 
-def do_bootstrap(prevent_bootstrap, conda_base, activate_base):
+def do_bootstrap(prevent_bootstrap, conda_base, activate_base, shell,
+                 shell_path):
     if bootstrap and prevent_bootstrap:
         print('At least one dependency is missing and couldn\'t be installed '
               'for you.\nYou need requests, progressbar2, lxml and jinja2')
@@ -126,12 +127,12 @@ def do_bootstrap(prevent_bootstrap, conda_base, activate_base):
     if bootstrap:
         # we don't have all the packages we need, so we need to add them
         # to the base environment, activate it and rerun
-        install_miniconda(conda_base, activate_base)
+        install_miniconda(conda_base, activate_base, shell, shell_path)
 
         print('Rerunning the command from new conda environment')
-        command = '{}; ' \
-                  '{} --no-bootstrap'.format(activate_base, ' '.join(sys.argv))
-        check_call(command)
+        commands = activate_base + \
+            ['{} --no-bootstrap'.format(' '.join(sys.argv))]
+        check_call(commands, shell, shell_path)
         sys.exit(0)
 
 
@@ -189,7 +190,7 @@ def get_env_setup(args, config, machine, is_test, source_path, conda_base):
 
 def build_env(is_test, recreate, machine, compiler, mpi, conda_mpi, version,
               python, source_path, template_path, conda_base, activ_suffix,
-              env_name, env_suffix, activate_base):
+              env_name, env_suffix, activate_base, shell, shell_path):
 
     if compiler is not None or is_test:
         build_dir = 'conda/build{}'.format(activ_suffix)
@@ -212,7 +213,7 @@ def build_env(is_test, recreate, machine, compiler, mpi, conda_mpi, version,
         env_name = 'compass_{}{}'.format(version, env_suffix)
     env_path = os.path.join(conda_base, 'envs', env_name)
 
-    install_miniconda(conda_base, activate_base)
+    install_miniconda(conda_base, activate_base, shell, shell_path)
 
     if conda_mpi == 'nompi':
         mpi_prefix = 'nompi'
@@ -226,10 +227,11 @@ def build_env(is_test, recreate, machine, compiler, mpi, conda_mpi, version,
     packages = 'python={}'.format(python)
 
     base_activation_script = os.path.abspath(
-        '{}/etc/profile.d/conda.sh'.format(conda_base))
+        '{}/etc/profile.d/conda.{}'.format(conda_base, shell))
 
     activate_env = \
-        'source {}; conda activate {}'.format(base_activation_script, env_name)
+        ['source {}'.format(base_activation_script),
+         'conda activate {}'.format(env_name)]
 
     with open('{}/spec-file.template'.format(template_path), 'r') as f:
         template = Template(f.read())
@@ -247,41 +249,36 @@ def build_env(is_test, recreate, machine, compiler, mpi, conda_mpi, version,
         print('creating {}'.format(env_name))
         if is_test:
             # install dev dependencies and compass itself
-            commands = \
-                '{}; ' \
-                'mamba create -y -n {} {} ' \
-                '--file {} {}'.format(activate_base, env_name, channels,
-                                      spec_filename, packages)
-            check_call(commands)
+            commands = activate_base + \
+                ['mamba create -y -n {} {} --file {} {}'.format(
+                    env_name, channels, spec_filename, packages)]
+            check_call(commands, shell, shell_path)
 
-            commands = \
-                '{}; ' \
-                'cd {}; ' \
-                'python -m pip install -e .'.format(activate_env, source_path)
-            check_call(commands)
+            commands = activate_env + \
+                ['cd {}'.format(source_path),
+                 'python -m pip install -e .']
+            check_call(commands, shell, shell_path)
 
         else:
             packages = '{} "compass={}={}_*"'.format(
                 packages, version, mpi_prefix)
-            commands = '{}; mamba create -y -n {} {} {}'.format(
-                activate_base, env_name, channels, packages)
-            check_call(commands)
+            commands = activate_base + \
+                ['mamba create -y -n {} {} {}'.format(
+                    env_name, channels, packages)]
+            check_call(commands, shell, shell_path)
     else:
         if is_test:
             print('updating {}'.format(env_name))
             # install dev dependencies and compass itself
-            commands = \
-                '{}; ' \
-                'mamba install -y -n {} {} ' \
-                '--file {} {}'.format(activate_base, env_name, channels,
-                                      spec_filename, packages)
-            check_call(commands)
+            commands = activate_base + \
+                ['mamba install -y -n {} {} --file {} {}'.format(
+                    env_name, channels, spec_filename, packages)]
+            check_call(commands, shell, shell_path)
 
-            commands = \
-                '{}; ' \
-                'cd {}; ' \
-                'python -m pip install -e .'.format(activate_env, source_path)
-            check_call(commands)
+            commands = activate_env + \
+                ['cd {}'.format(source_path),
+                 'python -m pip install -e .']
+            check_call(commands, shell, shell_path)
         else:
             print('{} already exists'.format(env_name))
 
@@ -393,7 +390,7 @@ def get_e3sm_compiler_and_mpi(machine, compiler, mpilib, template_path):
 
 
 def get_sys_info(machine, compiler, mpilib, mpicc, mpicxx, mpifc,
-                 mod_commands):
+                 mod_commands, shell):
 
     if machine is None:
         machine = 'None'
@@ -450,10 +447,24 @@ def get_sys_info(machine, compiler, mpilib, mpicc, mpicxx, mpifc,
             'export NETCDF_C_PATH=$(dirname $(dirname $(which nc-config)))\n' \
             'export NETCDF_FORTRAN_PATH=$(dirname $(dirname $(which nf-config)))\n' \
             'export PNETCDF_PATH=$(dirname $(dirname $(which pnetcdf-config)))'
-        mpas_netcdf_paths = \
-            'export NETCDF=$(dirname $(dirname $(which nc-config)))\n' \
-            'export NETCDFF=$(dirname $(dirname $(which nf-config)))\n' \
-            'export PNETCDF=$(dirname $(dirname $(which pnetcdf-config)))'
+        if shell == 'sh':
+            mpas_netcdf_paths = \
+                'export NETCDF=$(dirname $(dirname $(which nc-config)))\n' \
+                'export NETCDFF=$(dirname $(dirname $(which nf-config)))\n' \
+                'export PNETCDF=$(dirname $(dirname $(which pnetcdf-config)))'
+        elif shell == 'csh':
+            mpas_netcdf_paths = \
+                'set tmp=`which nc-config`\n' \
+                'set tmp=`dirname $tmp`\n' \
+                'setenv NETCDF `dirname $tmp`\n' \
+                'set tmp=`which nf-config`\n' \
+                'set tmp=`dirname $tmp`\n' \
+                'setenv NETCDFF `dirname $tmp`\n' \
+                'set tmp=`which pnetcdf-config`\n' \
+                'set tmp=`dirname $tmp`\n' \
+                'setenv PNETCDF `dirname $tmp`'
+        else:
+            raise ValueError('Unexpected shell {}'.format(shell))
 
     sys_info = dict(modules=mod_commands, mpicc=mpicc, mpicxx=mpicxx,
                     mpifc=mpifc, esmf_comm=esmf_comm, esmf_netcdf=esmf_netcdf,
@@ -465,7 +476,8 @@ def get_sys_info(machine, compiler, mpilib, mpicc, mpicxx, mpifc,
 
 def build_system_libraries(config, machine, compiler, mpi, version,
                            template_path, env_path, env_name, activate_base,
-                           activate_env, mpicc, mpicxx, mpifc, mod_commands):
+                           activate_env, mpicc, mpicxx, mpifc, mod_commands,
+                           shell, shell_path):
 
     if machine is not None:
         esmf = config.get('deploy', 'esmf')
@@ -477,9 +489,9 @@ def build_system_libraries(config, machine, compiler, mpi, version,
 
     if esmf != 'None':
         # remove conda-forge esmf because we will use the system build
-        commands = '{}; conda remove -y --force -n {} esmf'.format(
-            activate_base, env_name)
-        check_call(commands)
+        commands = activate_base + \
+            ['conda remove -y --force -n {} esmf'.format(env_name)]
+        check_call(commands, shell, shell_path)
 
     force_build = False
     if machine is not None:
@@ -497,7 +509,7 @@ def build_system_libraries(config, machine, compiler, mpi, version,
         force_build = True
 
     sys_info = get_sys_info(machine, compiler, mpi, mpicc, mpicxx,
-                            mpifc, mod_commands)
+                            mpifc, mod_commands, shell)
 
     if esmf != 'None':
         sys_info['env_vars'].append('export PATH="{}:$PATH"'.format(
@@ -530,7 +542,8 @@ def build_system_libraries(config, machine, compiler, mpi, version,
     if machine is None:
         # need to activate the conda environment because that's where the
         # libraries are
-        modules = '{}\n{}'.format(activate_env.replace('; ', '\n'), modules)
+        modules = '{}\n{}'.format(
+            '\n'.join(activate_env).replace('.csh', '.sh'), modules)
 
     script = template.render(
         sys_info=sys_info, modules=modules,
@@ -541,15 +554,15 @@ def build_system_libraries(config, machine, compiler, mpi, version,
     with open(script_filename, 'w') as handle:
         handle.write(script)
 
-    command = '/bin/bash build.bash'
-    check_call(command)
+    command = ['/bin/bash build.bash']
+    check_call(command, shell, shell_path)
 
     return sys_info, system_libs
 
 
-def write_load_compass(template_path, activ_path, conda_base, is_test, version,
+def write_load_compass(template_path, activ_path, conda_base, is_test,
                        activ_suffix, prefix, env_name, machine, sys_info,
-                       env_only):
+                       env_only, shell):
 
     try:
         os.makedirs(activ_path)
@@ -559,9 +572,10 @@ def write_load_compass(template_path, activ_path, conda_base, is_test, version,
     if prefix.endswith(activ_suffix):
         # avoid a redundant activation script name if the suffix is already
         # part of the environment name
-        script_filename = '{}/{}.sh'.format(activ_path, prefix)
+        script_filename = '{}/{}.{}'.format(activ_path, prefix, shell)
     else:
-        script_filename = '{}/{}{}.sh'.format(activ_path, prefix, activ_suffix)
+        script_filename = '{}/{}{}.{}'.format(activ_path, prefix, activ_suffix,
+                                              shell)
 
     if not env_only:
         sys_info['env_vars'].append('export USE_PIO2=true')
@@ -572,23 +586,38 @@ def write_load_compass(template_path, activ_path, conda_base, is_test, version,
         sys_info['env_vars'].append('export COMPASS_MACHINE={}'.format(
             machine))
 
-    filename = '{}/load_compass.template'.format(template_path)
+    filename = '{}/load_compass.{}.template'.format(template_path, shell)
     with open(filename, 'r') as f:
         template = Template(f.read())
 
-    if is_test:
-        update_compass = \
-            'if [[ -f "./setup.py" && -d "compass" ]]; then\n' \
-            '   # safe to assume we\'re in the compass repo\n' \
-            '   # update the compass installation to point here\n' \
-            '   python -m pip install -e .\n' \
-            'fi'
+    update_compass = ''
+
+    if shell == 'sh':
+        env_vars = '\n  '.join(sys_info['env_vars'])
+        if is_test:
+            update_compass = \
+                'if [[ -f "./setup.py" && -d "compass" ]]; then\n' \
+                '   # safe to assume we\'re in the compass repo\n' \
+                '   # update the compass installation to point here\n' \
+                '   python -m pip install -e .\n' \
+                'fi'
+    elif shell == 'csh':
+        env_vars = [var.replace('export', 'setenv').replace('=', ' ') for var
+                    in sys_info['env_vars']]
+        env_vars = '\n  '.join(env_vars)
+        if is_test:
+            update_compass = \
+                'if ( -f "./setup.py" && -d "compass" ) then\n' \
+                '   # safe to assume we\'re in the compass repo\n' \
+                '   # update the compass installation to point here\n' \
+                '   python -m pip install -e .\n' \
+                'endif'
     else:
-        update_compass = ''
+        raise ValueError('Unexpected shell family {}'.format(shell))
 
     script = template.render(conda_base=conda_base, compass_env=env_name,
                              modules='\n'.join(sys_info['modules']),
-                             env_vars='\n'.join(sys_info['env_vars']),
+                             env_vars=env_vars,
                              netcdf_paths=sys_info['mpas_netcdf_paths'],
                              update_compass=update_compass)
 
@@ -596,7 +625,7 @@ def write_load_compass(template_path, activ_path, conda_base, is_test, version,
     lines = list()
     prev_line = ''
     for line in script.split('\n'):
-        line = line.strip()
+        line = line.rstrip()
         if line != '' or prev_line != '':
             lines.append(line)
         prev_line = line
@@ -612,7 +641,7 @@ def write_load_compass(template_path, activ_path, conda_base, is_test, version,
     return script_filename
 
 
-def check_env(script_filename, env_name):
+def check_env(script_filename, env_name, shell, shell_path):
     print("Checking the environment {}".format(env_name))
 
     activate = 'source {}'.format(script_filename)
@@ -627,33 +656,43 @@ def check_env(script_filename, env_name):
 
     for import_name in imports:
         command = '{}; python -c "import {}"'.format(activate, import_name)
-        test_command(command, os.environ, import_name)
+        test_command(command, os.environ, import_name, shell, shell_path)
 
     for command in commands:
         package = command[0]
-        command = '{}; {}'.format(activate, ' '.join(command))
-        test_command(command, os.environ, package)
+        command = [activate, ' '.join(command)]
+        test_command(command, os.environ, package, shell, shell_path)
 
 
-def test_command(command, env, package):
+def test_command(command, env, package, shell, shell_path):
     try:
-        check_call(command, env=env)
+        check_call(command, shell, shell_path, env=env)
     except subprocess.CalledProcessError as e:
         print('  {} failed'.format(package))
         raise e
     print('  {} passes'.format(package))
 
 
-def check_call(commands, env=None):
-    print('running: {}'.format(commands))
-    proc = subprocess.Popen(commands, env=env, executable='/bin/bash',
+def check_call(commands, shell, shell_path, env=None):
+    script = 'tmp.{}'.format(shell)
+    with open(script, 'w') as fp:
+        if shell == 'sh':
+            fp.write('set -e\n')
+        fp.write('\n'.join(commands))
+        fp.write('\n')
+    print('running:\n   {}'.format('\n   '.join(commands)))
+    if shell == 'csh':
+        command = '{}  -fe ./{}'.format(shell_path, script)
+    else:
+        command = '{} ./{}'.format(shell_path, script)
+    proc = subprocess.Popen(command, env=env, executable=shell_path,
                             shell=True)
     proc.wait()
     if proc.returncode != 0:
         raise subprocess.CalledProcessError(proc.returncode, commands)
 
 
-def install_miniconda(conda_base, activate_base):
+def install_miniconda(conda_base, activate_base, shell, shell_path):
     if not os.path.exists(conda_base):
         print('Installing Miniconda3')
         if platform.system() == 'Linux':
@@ -677,18 +716,18 @@ def install_miniconda(conda_base, activate_base):
             with open(miniconda, 'wb') as outfile:
                 outfile.write(r.content)
 
-        command = '/bin/bash {} -b -p {}'.format(miniconda, conda_base)
-        check_call(command)
+        command = ['/bin/bash {} -b -p {}'.format(miniconda, conda_base)]
+        check_call(command, shell, shell_path)
         os.remove(miniconda)
 
     print('Doing initial setup')
-    commands = '{}; ' \
-               'conda config --add channels conda-forge; ' \
-               'conda config --set channel_priority strict; ' \
-               'conda install -y requests lxml progressbar2 jinja2 mamba boa; ' \
-               'conda update -y --all'.format(activate_base)
+    commands = activate_base + \
+        ['conda config --add channels conda-forge',
+         'conda config --set channel_priority strict',
+         'conda install -y requests lxml progressbar2 jinja2 mamba boa',
+         'conda update -y --all']
 
-    check_call(commands)
+    check_call(commands, shell, shell_path)
 
 
 def update_permissions(config, is_test, activ_path, conda_base, system_libs):
@@ -718,7 +757,7 @@ def update_permissions(config, is_test, activ_path, conda_base, system_libs):
 
     if not is_test:
 
-        activation_files = glob.glob('{}/*_compass*.sh'.format(
+        activation_files = glob.glob('{}/load_*.*sh'.format(
             activ_path))
         for file_name in activation_files:
             os.chmod(file_name, read_perm)
@@ -890,12 +929,25 @@ def main():
 
     conda_base = get_conda_base(args.conda_base, is_test, config)
 
+    shell_path = os.environ['SHELL']
+    shell = None
+    for suffix in ['bash', 'ksh', 'sh', 'dash', 'zsh']:
+        if shell_path.endswith(suffix):
+            shell = 'sh'
+    for suffix in ['csh', 'tcsh']:
+        if shell_path.endswith(suffix):
+            shell = 'csh'
+    if shell is None:
+        raise ValueError('Shell {} not recognized'.format(shell_path))
+
     base_activation_script = os.path.abspath(
-        '{}/etc/profile.d/conda.sh'.format(conda_base))
+        '{}/etc/profile.d/conda.{}'.format(conda_base, shell))
 
-    activate_base = 'source {}; conda activate'.format(base_activation_script)
+    activate_base = ['source {}'.format(base_activation_script),
+                     'conda activate']
 
-    do_bootstrap(args.no_bootstrap, conda_base, activate_base)
+    do_bootstrap(args.no_bootstrap, conda_base, activate_base, shell,
+                 shell_path)
 
     python, recreate, compiler, mpi, conda_mpi, activ_suffix, env_suffix, \
         activ_path = get_env_setup(args, config, machine, is_test, source_path,
@@ -929,13 +981,13 @@ def main():
     env_path, env_name, activate_env = build_env(
         is_test, recreate, machine, compiler, mpi, conda_mpi, version, python,
         source_path, template_path, conda_base, activ_suffix, args.env_name,
-        env_suffix, activate_base)
+        env_suffix, activate_base, shell, shell_path)
 
     if compiler is not None:
         sys_info, system_libs = build_system_libraries(
             config, machine, compiler, mpi, version, template_path, env_path,
             env_name, activate_base, activate_env, mpicc, mpicxx, mpifc,
-            mod_commands)
+            mod_commands, shell, shell_path)
     else:
         sys_info = dict(modules=[], env_vars=[], mpas_netcdf_paths='')
         system_libs = None
@@ -949,14 +1001,14 @@ def main():
         prefix = 'load_compass_{}'.format(version)
 
     script_filename = write_load_compass(
-        template_path, activ_path, conda_base, is_test, version, activ_suffix,
-        prefix, env_name, machine, sys_info, args.env_only)
+        template_path, activ_path, conda_base, is_test, activ_suffix,
+        prefix, env_name, machine, sys_info, args.env_only, shell)
 
     if args.check:
-        check_env(script_filename, env_name)
+        check_env(script_filename, env_name, shell, shell_path)
 
-    commands = '{}; conda clean -y -p -t'.format(activate_base)
-    check_call(commands)
+    commands = activate_base + ['conda clean -y -p -t']
+    check_call(commands, shell, shell_path)
 
     if machine is not None:
         update_permissions(config, is_test, activ_path, conda_base,
