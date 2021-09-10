@@ -54,6 +54,9 @@ class Forward(Step):
         super().__init__(test_case=test_case, name=name, subdir=subdir,
                          cores=None, min_cores=None, threads=None)
 
+        # make sure output is double precision
+        self.add_streams_file('compass.ocean.streams', 'streams.output')
+
         self.add_namelist_file('compass.ocean.tests.isomip_plus',
                                'namelist.forward_and_ssh_adjust')
         self.add_namelist_file('compass.ocean.tests.isomip_plus',

@@ -33,6 +33,9 @@ class Forward(Step):
 
         self.resolution = resolution
 
+        # make sure output is double precision
+        self.add_streams_file('compass.ocean.streams', 'streams.output')
+
         self.add_namelist_file(
             'compass.ocean.tests.global_convergence.cosine_bell',
             'namelist.forward')
