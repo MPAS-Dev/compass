@@ -83,6 +83,9 @@ class ForwardStep(Step):
         self.min_cores_from_config = min_cores is None
         self.threads_from_config = threads is None
 
+        # make sure output is double precision
+        self.add_streams_file('compass.ocean.streams', 'streams.output')
+
         self.add_namelist_file(
             'compass.ocean.tests.global_ocean', 'namelist.forward')
         self.add_streams_file(

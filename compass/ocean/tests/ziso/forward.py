@@ -64,6 +64,9 @@ class Forward(Step):
         super().__init__(test_case=test_case, name=name, subdir=subdir,
                          cores=cores, min_cores=min_cores, threads=threads)
 
+        # make sure output is double precision
+        self.add_streams_file('compass.ocean.streams', 'streams.output')
+
         self.add_namelist_file('compass.ocean.tests.ziso', 'namelist.forward')
         self.add_streams_file('compass.ocean.tests.ziso', 'streams.forward')
 

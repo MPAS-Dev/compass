@@ -34,6 +34,9 @@ class SshAdjustment(Step):
         super().__init__(test_case=test_case, name='ssh_adjustment',
                          cores=cores, min_cores=min_cores, threads=threads)
 
+        # make sure output is double precision
+        self.add_streams_file('compass.ocean.streams', 'streams.output')
+
         self.add_namelist_file(
             'compass.ocean.tests.global_ocean', 'namelist.forward')
         self.add_namelist_options({'config_AM_globalStats_enable': '.false.'})
