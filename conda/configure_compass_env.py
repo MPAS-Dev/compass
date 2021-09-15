@@ -68,7 +68,7 @@ def setup_install_env(activate_base):
 
 
 def remove_install_env(activate_base):
-    print('Setting up a conda environment for installing compass')
+    print('Removing conda environment for installing compass')
     commands = '{}; ' \
                'conda remove -y --all -n ' \
                'temp_compass_install'.format(activate_base)
