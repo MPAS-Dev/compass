@@ -460,6 +460,40 @@ class Step(ABC):
             dict(package=package, streams=streams,
                  replacements=template_replacements, mode=mode))
 
+    def update_streams_at_runtime(self, package, streams,
+                                  template_replacements, out_name=None):
+        """
+        Update the streams files during the run phase of this step using the
+        given template and replacements.  This may be useful for updating
+        streams based on config options that a user may have changed before
+        running the step.
+
+        Parameters
+        ----------
+        package : Package
+            The package name or module object that contains the streams file
+
+        streams : str
+            The name of a Jinja2 template to be rendered with replacements
+
+        template_replacements : dict
+            A dictionary of replacements
+
+        out_name : str, optional
+            The name of the streams file to write out, ``streams.<core>`` by
+            default
+        """
+
+        if out_name is None:
+            out_name = f'streams.{self.mpas_core.name}'
+
+        filename = os.path.join(self.work_dir, out_name)
+
+        tree = etree.parse(filename)
+        tree = compass.streams.read(package, streams, tree=tree,
+                                    replacements=template_replacements)
+        compass.streams.write(tree, filename)
+
     def process_inputs_and_outputs(self):
         """
         Process the inputs to and outputs from a step added with
