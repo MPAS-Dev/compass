@@ -1,0 +1,29 @@
+<streams>
+
+<immutable_stream name="mesh"
+                  filename_template="init.nc"/>
+
+<immutable_stream name="input"
+                  filename_template="init.nc"/>
+
+<immutable_stream name="restart"
+                  output_interval="0030_00:00:00"/>
+
+<stream name="output"
+        type="output"
+		filename_template="output.nc"
+		clobber_mode="truncate"
+		reference_time="0001-01-01_00:00:00">
+
+    <var_struct name="tracers"/>
+    <stream name="mesh"/>
+    <var name="xtime"/>
+    <var name="normalVelocity"/>
+    <var name="layerThickness"/>
+    <var name="refZMid"/>
+    <var name="refLayerThickness"/>
+    <var name="kineticEnergyCell"/>
+    <var name="relativeVorticityCell"/>
+</stream>
+
+</streams>
