@@ -204,6 +204,7 @@
 
 <span class="kn">from</span> <span class="nn">mpas_tools.logging</span> <span class="kn">import</span> <span class="n">LoggingContext</span>
 <span class="kn">import</span> <span class="nn">mpas_tools.io</span>
+<span class="kn">from</span> <span class="nn">compass.parallel</span> <span class="kn">import</span> <span class="n">check_parallel_system</span>
 
 
 <div class="viewcode-block" id="run_suite"><a class="viewcode-back" href="../../developers_guide/generated/compass.run.run_suite.html#compass.run.run_suite">[docs]</a><span class="k">def</span> <span class="nf">run_suite</span><span class="p">(</span><span class="n">suite_name</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -239,6 +240,15 @@
                          <span class="s1">&#39;here.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suite_name</span><span class="p">))</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.pickle&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suite_name</span><span class="p">),</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
         <span class="n">test_suite</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+
+    <span class="c1"># get the config file for the first test case in the suite</span>
+    <span class="n">test_case</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">test_suite</span><span class="p">[</span><span class="s1">&#39;test_cases&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+    <span class="n">config_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">test_case</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span>
+                                   <span class="n">test_case</span><span class="o">.</span><span class="n">config_filename</span><span class="p">)</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">(</span>
+        <span class="n">interpolation</span><span class="o">=</span><span class="n">configparser</span><span class="o">.</span><span class="n">ExtendedInterpolation</span><span class="p">())</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">config_filename</span><span class="p">)</span>
+    <span class="n">check_parallel_system</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 
     <span class="c1"># start logging to stdout/stderr</span>
     <span class="k">with</span> <span class="n">LoggingContext</span><span class="p">(</span><span class="n">suite_name</span><span class="p">)</span> <span class="k">as</span> <span class="n">logger</span><span class="p">:</span>
@@ -399,6 +409,8 @@
     <span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">test_case</span><span class="o">.</span><span class="n">config_filename</span><span class="p">)</span>
     <span class="n">test_case</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
 
+    <span class="n">check_parallel_system</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+
     <span class="n">mpas_tools</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">default_format</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;io&#39;</span><span class="p">,</span> <span class="s1">&#39;format&#39;</span><span class="p">)</span>
     <span class="n">mpas_tools</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">default_engine</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;io&#39;</span><span class="p">,</span> <span class="s1">&#39;engine&#39;</span><span class="p">)</span>
 
@@ -450,6 +462,8 @@
         <span class="n">interpolation</span><span class="o">=</span><span class="n">configparser</span><span class="o">.</span><span class="n">ExtendedInterpolation</span><span class="p">())</span>
     <span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">step</span><span class="o">.</span><span class="n">config_filename</span><span class="p">)</span>
     <span class="n">test_case</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+
+    <span class="n">check_parallel_system</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 
     <span class="n">mpas_tools</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">default_format</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;io&#39;</span><span class="p">,</span> <span class="s1">&#39;format&#39;</span><span class="p">)</span>
     <span class="n">mpas_tools</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">default_engine</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;io&#39;</span><span class="p">,</span> <span class="s1">&#39;engine&#39;</span><span class="p">)</span>

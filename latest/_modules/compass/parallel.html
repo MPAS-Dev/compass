@@ -235,6 +235,36 @@
     <span class="k">return</span> <span class="n">cores</span><span class="p">,</span> <span class="n">nodes</span></div>
 
 
+<span class="k">def</span> <span class="nf">check_parallel_system</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check whether we are in an appropriate state for the given queuing system.</span>
+<span class="sd">    For systems with Slurm, this means that we need to have an interactive</span>
+<span class="sd">    or batch job on a compute node, as determined by the ``$SLURM_JOB_ID``</span>
+<span class="sd">    environment variable.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : configparser.ConfigParser</span>
+<span class="sd">        Configuration options for the test case</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    -------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If using Slurm and not on a compute node</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">parallel_system</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parallel&#39;</span><span class="p">,</span> <span class="s1">&#39;system&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">parallel_system</span> <span class="o">==</span> <span class="s1">&#39;slurm&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">&#39;SLURM_JOB_ID&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;SLURM_JOB_ID not defined.  You are likely not &#39;</span>
+                             <span class="s1">&#39;on a compute node.&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">parallel_system</span> <span class="o">==</span> <span class="s1">&#39;single_node&#39;</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unexpected parallel system: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">parallel_system</span><span class="p">))</span>
+
+
 <span class="k">def</span> <span class="nf">_get_subprocess_int</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
     <span class="n">value</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
     <span class="n">value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">))</span>
