@@ -102,5 +102,3 @@ def check_call(commands, env=None):
     proc.wait()
     if proc.returncode != 0:
         raise subprocess.CalledProcessError(proc.returncode, commands)
-
-
