@@ -3,6 +3,7 @@ import warnings
 import sys
 import argparse
 import subprocess
+from importlib.resources import path
 
 try:
     from configparser import ConfigParser
@@ -59,6 +60,9 @@ def get_config(config_file, machine=None):
     config.read(default_config)
 
     if machine is not None:
+        with path('mache.machines', f'{machine}.cfg') as machine_config:
+            config.read(str(machine_config))
+
         machine_config = os.path.join(here, '..', 'compass', 'machines',
                                       '{}.cfg'.format(machine))
         config.read(machine_config)
