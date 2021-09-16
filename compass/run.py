@@ -8,6 +8,7 @@ import glob
 
 from mpas_tools.logging import LoggingContext
 import mpas_tools.io
+from compass.parallel import check_parallel_system
 
 
 def run_suite(suite_name, quiet=False):
@@ -43,6 +44,15 @@ def run_suite(suite_name, quiet=False):
                          'here.'.format(suite_name))
     with open('{}.pickle'.format(suite_name), 'rb') as handle:
         test_suite = pickle.load(handle)
+
+    # get the config file for the first test case in the suite
+    test_case = next(iter(test_suite['test_cases'].values()))
+    config_filename = os.path.join(test_case.work_dir,
+                                   test_case.config_filename)
+    config = configparser.ConfigParser(
+        interpolation=configparser.ExtendedInterpolation())
+    config.read(config_filename)
+    check_parallel_system(config)
 
     # start logging to stdout/stderr
     with LoggingContext(suite_name) as logger:
@@ -203,6 +213,8 @@ def run_test_case(steps_to_run=None, steps_not_to_run=None):
     config.read(test_case.config_filename)
     test_case.config = config
 
+    check_parallel_system(config)
+
     mpas_tools.io.default_format = config.get('io', 'format')
     mpas_tools.io.default_engine = config.get('io', 'engine')
 
@@ -254,6 +266,8 @@ def run_step():
         interpolation=configparser.ExtendedInterpolation())
     config.read(step.config_filename)
     test_case.config = config
+
+    check_parallel_system(config)
 
     mpas_tools.io.default_format = config.get('io', 'format')
     mpas_tools.io.default_engine = config.get('io', 'engine')
