@@ -670,10 +670,10 @@ class Step:
         """
         config = self.config
 
-        if not config.has_option('permissions', 'group'):
+        if not config.has_option('e3sm_unified', 'group'):
             return
 
-        group = config.get('permissions', 'group')
+        group = config.get('e3sm_unified', 'group')
 
         new_uid = os.getuid()
         new_gid = grp.getgrnam(group).gr_gid
