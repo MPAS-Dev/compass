@@ -1,5 +1,5 @@
 {% set name = "compass" %}
-{% set version = "0.2.0" %}
+{% set version = "0.3.0" %}
 {% set build = 0 %}
 
 {% if mpi == "nompi" %}
@@ -29,11 +29,11 @@ build:
 
 requirements:
   run:
-    - python
-    - geometric_features 0.1.13
-    - mpas_tools 0.0.15
-    - jigsaw 0.9.12
-    - jigsawpy 0.2.1
+    - python >=3.7
+    - geometric_features 0.5.0
+    - mpas_tools 0.11.0
+    - jigsaw 0.9.14
+    - jigsawpy 0.3.3
     - metis
     - cartopy_offlinedata
     - ffmpeg
@@ -41,7 +41,7 @@ requirements:
     - esmf * {{ mpi_prefix }}_*
     - netcdf4 * nompi_*
     - nco
-    - pyremap >=0.0.7,<0.1.0
+    - pyremap >=0.0.13,<0.1.0
     - rasterio
     - affine
     - ipython
