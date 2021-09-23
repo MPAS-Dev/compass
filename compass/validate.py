@@ -67,6 +67,8 @@ def compare_variables(test_case, variables, filename1, filename2=None,
     """
     work_dir = test_case.work_dir
 
+    logger = test_case.logger
+
     path1 = os.path.abspath(os.path.join(work_dir, filename1))
     if filename2 is not None:
         path2 = os.path.abspath(os.path.join(work_dir, filename2))
@@ -122,7 +124,8 @@ def compare_variables(test_case, variables, filename1, filename2=None,
 
     if filename2 is not None:
         internal_pass = _compare_variables(
-            variables, path1, path2, l1_norm, l2_norm, linf_norm, quiet)
+            variables, path1, path2, l1_norm, l2_norm, linf_norm, quiet,
+            logger)
 
         if validation['internal_pass'] is None:
             validation['internal_pass'] = internal_pass
@@ -137,14 +140,14 @@ def compare_variables(test_case, variables, filename1, filename2=None,
         result = _compare_variables(
             variables, os.path.join(work_dir, filename1),
             os.path.join(baseline_root, filename1), l1_norm=0.0, l2_norm=0.0,
-            linf_norm=0.0, quiet=quiet)
+            linf_norm=0.0, quiet=quiet, logger=logger)
         baseline_pass = baseline_pass and result
 
         if filename2 is not None:
             result = _compare_variables(
                 variables, os.path.join(work_dir, filename2),
                 os.path.join(baseline_root, filename2), l1_norm=0.0,
-                l2_norm=0.0, linf_norm=0.0, quiet=quiet)
+                l2_norm=0.0, linf_norm=0.0, quiet=quiet, logger=logger)
             baseline_pass = baseline_pass and result
 
         if validation['baseline_pass'] is None:
@@ -200,12 +203,13 @@ def compare_timers(test_case, timers, rundir1, rundir2=None):
 
 
 def _compare_variables(variables, filename1, filename2, l1_norm, l2_norm,
-                       linf_norm, quiet):
+                       linf_norm, quiet, logger):
     """ compare fields in the two files """
 
     for filename in [filename1, filename2]:
         if not os.path.exists(filename):
-            raise OSError('File {} does not exist.'.format(filename))
+            logger.error(f'File {filename} does not exist.')
+            return False
 
     ds1 = xarray.open_dataset(filename1)
     ds2 = xarray.open_dataset(filename2)
@@ -213,24 +217,33 @@ def _compare_variables(variables, filename1, filename2, l1_norm, l2_norm,
     all_pass = True
 
     for variable in variables:
+        all_found = True
         for ds, filename in [(ds1, filename1), (ds2, filename2)]:
             if variable not in ds:
-                raise ValueError('Variable {} not in {}.'.format(
-                    variable, filename))
+                logger.error(f'Variable {variable} not in {filename}.')
+                all_found = False
+        if not all_found:
+            all_pass = False
+            continue
 
         da1 = ds1[variable]
         da2 = ds2[variable]
 
         if not numpy.all(da1.dims == da2.dims):
-            raise ValueError("Dimensions for variable {} don't match between "
-                             "files {} and {}.".format(
-                                 variable, filename1, filename2))
+            logger.error(f"Dimensions for variable {variable} don't match "
+                         f"between files {filename1} and {filename2}.")
+            all_pass = False
+            continue
 
+        all_match = True
         for dim in da1.sizes:
             if da1.sizes[dim] != da2.sizes[dim]:
-                raise ValueError("Field sizes for variable {} don't match "
-                                 "files {} and {}.".format(
-                                     variable, filename1, filename2))
+                logger.error(f"Field sizes for variable {variable} don't "
+                             f"match files {filename1} and {filename2}.")
+                all_match = False
+        if not all_match:
+            all_pass = False
+            continue
 
         if not quiet:
             print("    Pass thresholds are:")
