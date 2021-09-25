@@ -1,77 +1,37 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>Developer Tutorial: Adding a parameter study &mdash; compass latest documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Developer Tutorial: Porting a legacy COMPASS test group" href="dev_porting_legacy.html" />
     <link rel="prev" title="Developer Tutorial: Adding a new test group" href="dev_add_test_group.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> compass
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
                 latest
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -79,18 +39,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../users_guide/quick_start.html">Quick Start for Users</a></li>
@@ -141,72 +90,31 @@
 <li class="toctree-l1"><a class="reference internal" href="../versions.html">Code and Documentation Versions</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">compass</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Developer Tutorial: Adding a parameter study</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/tutorials/dev_add_param_study.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="developer-tutorial-adding-a-parameter-study">
+             
+  <section id="developer-tutorial-adding-a-parameter-study">
 <span id="dev-tutorial-add-param-study"></span><h1>Developer Tutorial: Adding a parameter study<a class="headerlink" href="#developer-tutorial-adding-a-parameter-study" title="Permalink to this headline">¶</a></h1>
 <p>This tutorial presents a step-by-step guide to adding a parameter study, a
 test case in which different steps run MPAS cores with different parameter
@@ -231,14 +139,14 @@ other test case within a test group.  Please refer to the companion tutorial
 <a class="reference internal" href="dev_add_test_group.html#dev-tutorial-add-test-group"><span class="std std-ref">Developer Tutorial: Adding a new test group</span></a>, which will be referenced liberally
 in this tutorial. Here, we will focus almost entirely the process that is
 specific to a parameter study.</p>
-<div class="section" id="getting-started">
+<section id="getting-started">
 <h2>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
 <p>Please see <a class="reference internal" href="dev_add_test_group.html#dev-tutorial-add-test-group-getting-started"><span class="std std-ref">Getting started</span></a> for the tutorial
 on adding a new test group.  The procedure is the same for this tutorial except
 that the example branch name will be <cite>add_cosine_bell</cite> instead of
 <cite>add_baroclinic_channel</cite>.</p>
-</div>
-<div class="section" id="making-a-new-test-group-and-cosine-bell-test-case">
+</section>
+<section id="making-a-new-test-group-and-cosine-bell-test-case">
 <h2>Making a new test group and “cosine_bell” test case<a class="headerlink" href="#making-a-new-test-group-and-cosine-bell-test-case" title="Permalink to this headline">¶</a></h2>
 <p>If your parameter study fits well in an existing test group, you don’t need
 to create a new one.  If the existing test groups aren’t a good fit, you will
@@ -249,8 +157,8 @@ test group is <code class="docutils literal notranslate"><span class="pre">globa
 called <code class="docutils literal notranslate"><span class="pre">cosine_bell</span></code> and with a class called <code class="docutils literal notranslate"><span class="pre">CosineBell</span></code>.  We will follow
 the procedure described in <a class="reference internal" href="dev_add_test_group.html#dev-tutorial-add-test-group-add-default"><span class="std std-ref">Adding a “default” test case</span></a> to
 get started.</p>
-</div>
-<div class="section" id="adding-mesh-init-and-forward-steps">
+</section>
+<section id="adding-mesh-init-and-forward-steps">
 <h2>Adding “mesh”, “init” and “forward” steps<a class="headerlink" href="#adding-mesh-init-and-forward-steps" title="Permalink to this headline">¶</a></h2>
 <p>Our test case will be made up of 3 steps at each resolution, followed a final
 <code class="docutils literal notranslate"><span class="pre">analysis</span></code> step that combines data from each mesh resolution.  The 3 steps
@@ -292,8 +200,8 @@ subdirectory.</p>
 <p>Much of the rest of the details of creating these steps is similar to the
 description in <a class="reference internal" href="dev_add_test_group.html#dev-tutorial-add-test-group"><span class="std std-ref">Developer Tutorial: Adding a new test group</span></a>, so I refer you to that
 tutorial for more details.</p>
-</div>
-<div class="section" id="adding-an-analysis-step">
+</section>
+<section id="adding-an-analysis-step">
 <h2>Adding an “analysis” step<a class="headerlink" href="#adding-an-analysis-step" title="Permalink to this headline">¶</a></h2>
 <p>Many parameter studies will perform some kind of analysis that brings together
 output from runs with different parameter values.  In our example, the
@@ -333,8 +241,8 @@ in that it takes all parameter values (in this case resolutions) as an input:</p
 <p>The remaining details of the analysis step are specific to this particular test
 case so we won’t go into them in this tutorial.  But feel free to have a look:
 <a class="reference external" href="https://github.com/MPAS-Dev/compass/blob/master/compass/ocean/tests/global_convergence/cosine_bell/analysis.py">analysis.py</a>.</p>
-</div>
-<div class="section" id="adding-the-steps-to-the-test-case">
+</section>
+<section id="adding-the-steps-to-the-test-case">
 <h2>Adding the steps to the test case<a class="headerlink" href="#adding-the-steps-to-the-test-case" title="Permalink to this headline">¶</a></h2>
 <p>The initial design for <code class="docutils literal notranslate"><span class="pre">cosine_bell</span></code> was that steps were only added to the
 test case in the <code class="docutils literal notranslate"><span class="pre">configure()</span></code> method, which gets run when the test case gets
@@ -423,8 +331,8 @@ reasonable way to set up steps with the default parameter values during setup.</
 <p>It is likely that other test cases supporting parameter studies will want to
 mimic this behavior so that the default steps can be listed with
 <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">list</span> <span class="pre">--verbose</span></code> as well.</p>
-</div>
-<div class="section" id="setting-the-number-of-cores">
+</section>
+<section id="setting-the-number-of-cores">
 <h2>Setting the number of cores<a class="headerlink" href="#setting-the-number-of-cores" title="Permalink to this headline">¶</a></h2>
 <p>For some parameter studies, particularly those where resolution is the
 parameter, it can be important to specify the target and minimum number of
@@ -490,60 +398,43 @@ steps.</p>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="documentation">
+</section>
+<section id="documentation">
 <h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
 <p>Please document the test case within its test group as described in the
 companion tutorial in its <a class="reference internal" href="dev_add_test_group.html#dev-tutorial-add-test-group-docs"><span class="std std-ref">Documentation</span></a> section.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="dev_porting_legacy.html" class="btn btn-neutral float-right" title="Developer Tutorial: Porting a legacy COMPASS test group" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="dev_add_test_group.html" class="btn btn-neutral float-left" title="Developer Tutorial: Adding a new test group" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="dev_porting_legacy.html" class="btn btn-neutral float-right" title="Developer Tutorial: Porting a legacy COMPASS test group" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..
-
-    </p>
+    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

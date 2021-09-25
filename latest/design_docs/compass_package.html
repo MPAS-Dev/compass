@@ -1,77 +1,37 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>compass python package &mdash; compass latest documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Caching outputs from compass steps" href="cached_outputs.html" />
     <link rel="prev" title="Design Documents" href="index.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> compass
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
                 latest
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -79,18 +39,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../users_guide/quick_start.html">Quick Start for Users</a></li>
@@ -200,78 +149,36 @@
 <li class="toctree-l1"><a class="reference internal" href="../versions.html">Code and Documentation Versions</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">compass</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
           <li><a href="index.html">Design Documents</a> &raquo;</li>
-        
       <li>compass python package</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/design_docs/compass_package.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="compass-python-package">
+             
+  <section id="compass-python-package">
 <h1>compass python package<a class="headerlink" href="#compass-python-package" title="Permalink to this headline">¶</a></h1>
 <p>Author: Xylar Asay-Davis</p>
 <p>date: 2020/11/16</p>
-<div class="section" id="summary">
+<section id="summary">
 <h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
 <p>While the existing COMPASS infrastructure has served us well in providing a
 framework for setting up MPAS test cases and test suites, several shortcomings
@@ -294,10 +201,10 @@ does exist is not very helpful either for new users or for new developers
 interested in creating new test cases.</p>
 <p>The proposed <code class="docutils literal notranslate"><span class="pre">compass</span></code> python package should address these challenges with
 the hope of making the MPAS test cases significantly easier to develop and run.</p>
-</div>
-<div class="section" id="requirements">
+</section>
+<section id="requirements">
 <h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="requirement-make-test-cases-easy-to-understand-modify-and-create">
+<section id="requirement-make-test-cases-easy-to-understand-modify-and-create">
 <span id="req-easy"></span><h3>Requirement: Make test cases easy to understand, modify and create<a class="headerlink" href="#requirement-make-test-cases-easy-to-understand-modify-and-create" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2020/12/04</p>
 <p>Contributors: Xylar Asay-Davis, Luke Van Roekel</p>
@@ -312,8 +219,8 @@ need to balance readability and reusability. There is a risk that the compass
 redesign, as it becomes heavily pythonic, may make it difficult for developers to
 contribute.  But we can’t go too far the other way either. We want the best
 balance possible between readability and reusibility.</p>
-</div>
-<div class="section" id="requirement-shared-code">
+</section>
+<section id="requirement-shared-code">
 <span id="req-shared-code"></span><h3>Requirement: Shared code<a class="headerlink" href="#requirement-shared-code" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2020/11/16</p>
 <p>Contributors: Xylar Asay-Davis</p>
@@ -329,8 +236,8 @@ unintended consequences when a linked file is modified with changes appropriate
 for only one of the test cases that uses it.  A more sophisticate method
 for code reuse should be developed beyond symlinks to isolated scripts and
 shared XML files.</p>
-</div>
-<div class="section" id="requirement-shared-configuration-options">
+</section>
+<section id="requirement-shared-configuration-options">
 <span id="req-shared-options"></span><h3>Requirement: Shared configuration options<a class="headerlink" href="#requirement-shared-configuration-options" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2020/11/16</p>
 <p>Contributors: Xylar Asay-Davis</p>
@@ -340,8 +247,8 @@ Some steps of some test cases (e.g. <code class="docutils literal notranslate"><
 <code class="docutils literal notranslate"><span class="pre">ocean/global_ocean</span></code> test cases) have their own dedicated config files, but
 these are again separate from the config file used to set up test cases, are
 awkward to modify (requiring editing after test case generation).</p>
-</div>
-<div class="section" id="requirement-ability-specify-modify-core-counts">
+</section>
+<section id="requirement-ability-specify-modify-core-counts">
 <span id="req-core-count"></span><h3>Requirement: Ability specify/modify core counts<a class="headerlink" href="#requirement-ability-specify-modify-core-counts" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2020/11/16</p>
 <p>Contributors: Xylar Asay-Davis</p>
@@ -354,8 +261,8 @@ cases.  A system is needed where the user can more easily override the default
 number of cores used in one or more steps of a test case.  The number of PIO
 tasks and the stride between them should be updated automatically to accommodate
 the new core count.</p>
-</div>
-<div class="section" id="requirement-machine-specific-data">
+</section>
+<section id="requirement-machine-specific-data">
 <span id="req-machine-data"></span><h3>Requirement: Machine-specific data<a class="headerlink" href="#requirement-machine-specific-data" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2020/11/16</p>
 <p>Contributors: Xylar Asay-Davis</p>
@@ -368,8 +275,8 @@ such as the number of cores per node and the locations of shared paths,
 test cases and the COMPASS infrastructure could take advantage of this to
 automate many aspects of setting up and running test cases that are currently
 unnecessarily redundant and tedious.</p>
-</div>
-<div class="section" id="requirement-looser-more-flexible-directory-structure">
+</section>
+<section id="requirement-looser-more-flexible-directory-structure">
 <span id="req-dir-struct"></span><h3>Requirement: Looser, more flexible directory structure<a class="headerlink" href="#requirement-looser-more-flexible-directory-structure" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2020/11/16</p>
 <p>Contributors: Xylar Asay-Davis</p>
@@ -382,8 +289,8 @@ be convenient if the directory structure could be more flexible, depending on
 the needs of a given test group and test case.  Even so, it is important that
 the subdirectory of each test case and step is unique, they do not overwrite one
 another.</p>
-</div>
-<div class="section" id="requirement-user-and-developer-friendly-documentation">
+</section>
+<section id="requirement-user-and-developer-friendly-documentation">
 <span id="req-docs"></span><h3>Requirement: User- and developer-friendly documentation<a class="headerlink" href="#requirement-user-and-developer-friendly-documentation" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2020/11/16</p>
 <p>Contributors: Xylar Asay-Davis</p>
@@ -393,8 +300,8 @@ a test case; and run the test case in via a batch queuing system.</p>
 <p>Similarly, we need a set of developer-friendly documentation to describe how to
 create a new “test group” with one or more “test cases”, each made up of
 one or more “steps”.</p>
-</div>
-<div class="section" id="requirement-considerations-related-to-running-test-cases-in-parallel">
+</section>
+<section id="requirement-considerations-related-to-running-test-cases-in-parallel">
 <span id="req-parallel"></span><h3>Requirement: Considerations related to running test cases in parallel<a class="headerlink" href="#requirement-considerations-related-to-running-test-cases-in-parallel" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2020/12/10</p>
 <p>Contributors: Xylar Asay-Davis, Matt Hoffman</p>
@@ -406,8 +313,8 @@ different viscosities in the baroclinic channel RPE test case).  Full support fo
 this capability will not be included in this design, but design choices should
 be mindful of this future addition in the hopes of minimizing future
 modifications, particularly to individual test cases.</p>
-</div>
-<div class="section" id="requirement-resolution-can-be-a-test-case-parameter">
+</section>
+<section id="requirement-resolution-can-be-a-test-case-parameter">
 <span id="req-res"></span><h3>Requirement: Resolution can be a test case parameter<a class="headerlink" href="#requirement-resolution-can-be-a-test-case-parameter" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2020/12/04</p>
 <p>Contributors: Xylar Asay-Davis, Mark Petersen</p>
@@ -419,8 +326,8 @@ can easily be altered (e.g. <code class="docutils literal notranslate"><span cla
 with either configuration options or within the code. For convergence tests,
 resolution is a parameter, rather than something fundamental.  This could also
 reduce the number of test cases in the full list.</p>
-</div>
-<div class="section" id="requirement-test-case-code-is-easy-to-alter-and-rerun">
+</section>
+<section id="requirement-test-case-code-is-easy-to-alter-and-rerun">
 <span id="req-alter-code"></span><h3>Requirement: Test case code is easy to alter and rerun<a class="headerlink" href="#requirement-test-case-code-is-easy-to-alter-and-rerun" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2020/12/04</p>
 <p>Contributors: Xylar Asay-Davis, Mark Petersen</p>
@@ -429,8 +336,8 @@ scripts like <code class="docutils literal notranslate"><span class="pre">build_
 easy to edit that file and rerun it, and quickly iterate until one gets the
 desired result. New people also understand this workflow. The new design should
 still be easy to work with.</p>
-</div>
-<div class="section" id="requirement-support-for-pre-made-initial-condition-files">
+</section>
+<section id="requirement-support-for-pre-made-initial-condition-files">
 <span id="req-premade-ic"></span><h3>Requirement: Support for pre-made initial condition files<a class="headerlink" href="#requirement-support-for-pre-made-initial-condition-files" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2020/12/04</p>
 <p>Contributors: Xylar Asay-Davis, Mark Petersen</p>
@@ -439,18 +346,18 @@ initial condition or read a pre-made initial condition from a file (possibly
 downloading this file if it has not been cached).  Alternatively, two different
 versions of a test case could exists, one with the generated and one with the
 pre-made initial condition.</p>
-</div>
-<div class="section" id="requirement-easy-batch-submission">
+</section>
+<section id="requirement-easy-batch-submission">
 <span id="req-batch"></span><h3>Requirement: Easy batch submission<a class="headerlink" href="#requirement-easy-batch-submission" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2020/12/04</p>
 <p>Contributors: Xylar Asay-Davis, Mark Petersen</p>
 <p>There should be an easy way for users to submit batch jobs without having to
 create their own batch script or modify an example.</p>
-</div>
-</div>
-<div class="section" id="algorithm-design">
+</section>
+</section>
+<section id="algorithm-design">
 <h2>Algorithm Design<a class="headerlink" href="#algorithm-design" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="algorithm-design-make-test-cases-easy-to-understand-modify-and-and-create">
+<section id="algorithm-design-make-test-cases-easy-to-understand-modify-and-and-create">
 <span id="alg-easy"></span><h3>Algorithm design: Make test cases easy to understand, modify and  and create<a class="headerlink" href="#algorithm-design-make-test-cases-easy-to-understand-modify-and-and-create" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2021/04/13</p>
 <p>Contributors: Xylar Asay-Davis</p>
@@ -563,8 +470,8 @@ COMPASS.  With the redesign, it will become essentially inevitable that
 developers have a certain minimum level of familiarity with python.  While there
 may be a learning curve, it is hoped that these skills will pay off far beyond
 COMPASS in a way that learning the existing XML-based approach cannot be.</p>
-</div>
-<div class="section" id="algorithm-design-shared-code">
+</section>
+<section id="algorithm-design-shared-code">
 <span id="alg-shared-code"></span><h3>Algorithm design: Shared code<a class="headerlink" href="#algorithm-design-shared-code" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2021/04/13</p>
 <p>Contributors: Xylar Asay-Davis</p>
@@ -708,8 +615,8 @@ that is defined using a combination of methods from <code class="docutils litera
         <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="algorithm-design-shared-configuration-options">
+</section>
+<section id="algorithm-design-shared-configuration-options">
 <span id="alg-shared-config"></span><h3>Algorithm design: Shared configuration options<a class="headerlink" href="#algorithm-design-shared-configuration-options" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2021/04/13</p>
 <p>Contributors: Xylar Asay-Davis</p>
@@ -743,8 +650,8 @@ case’s package) and would also allow calls to <code class="docutils literal no
 config options directly.</p>
 <p>The resulting config file would be written to <code class="docutils literal notranslate"><span class="pre">&lt;test_case&gt;.cfg</span></code> within the
 test case directory and symlinked to each step subdirectory as stated above.</p>
-</div>
-<div class="section" id="algorithm-design-ability-specify-modify-core-counts">
+</section>
+<section id="algorithm-design-ability-specify-modify-core-counts">
 <h3>Algorithm design: Ability specify/modify core counts<a class="headerlink" href="#algorithm-design-ability-specify-modify-core-counts" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2021/04/13</p>
 <p>Contributors: Xylar Asay-Davis</p>
@@ -801,8 +708,8 @@ test cases will not need to worry about this.  Here is an example from the
 <p>Shared infrastructure can also be used to set the number of PIO tasks to one
 per node, using the number of cores for a given step and the number of cores
 per node from the machine config file (see :ref_`alg_machine_data`).</p>
-</div>
-<div class="section" id="algorithm-design-machine-specific-data">
+</section>
+<section id="algorithm-design-machine-specific-data">
 <span id="alg-machine"></span><h3>Algorithm design: Machine-specific data<a class="headerlink" href="#algorithm-design-machine-specific-data" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2021/04/13</p>
 <p>Contributors: Xylar Asay-Davis</p>
@@ -857,8 +764,8 @@ use of python thread parallelism will not be part of the first version of the
 incorporated in the coming year.  An appropriate value for <code class="docutils literal notranslate"><span class="pre">threads</span></code> for
 each machine will likely need determined as that capability gets more
 exploration but is left as a placeholder for the time being.</p>
-</div>
-<div class="section" id="algorithm-design-looser-more-flexible-directory-structure">
+</section>
+<section id="algorithm-design-looser-more-flexible-directory-structure">
 <span id="alg-dir-struct"></span><h3>Algorithm design: Looser, more flexible directory structure<a class="headerlink" href="#algorithm-design-looser-more-flexible-directory-structure" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2021/04/13</p>
 <p>Contributors: Xylar Asay-Davis</p>
@@ -884,8 +791,8 @@ as the <code class="docutils literal notranslate"><span class="pre">subdir</span
 </div>
 <p>COMPASS will list test cases based on their full paths within the work directory,
 since this is the way that they can be uniquely identified.</p>
-</div>
-<div class="section" id="algorithm-design-user-and-developer-friendly-documentation">
+</section>
+<section id="algorithm-design-user-and-developer-friendly-documentation">
 <span id="alg-docs"></span><h3>Algorithm design: User- and developer-friendly documentation<a class="headerlink" href="#algorithm-design-user-and-developer-friendly-documentation" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2020/04/13</p>
 <p>Contributors: Xylar Asay-Davis</p>
@@ -949,8 +856,8 @@ will also include:</p>
 </ul>
 </li>
 </ul>
-</div>
-<div class="section" id="algorithm-design-considerations-related-to-running-test-cases-in-parallel">
+</section>
+<section id="algorithm-design-considerations-related-to-running-test-cases-in-parallel">
 <span id="alg-parallel"></span><h3>Algorithm design: Considerations related to running test cases in parallel<a class="headerlink" href="#algorithm-design-considerations-related-to-running-test-cases-in-parallel" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2021/04/13</p>
 <p>Contributors: Xylar Asay-Davis</p>
@@ -984,8 +891,8 @@ usage of each step once this can be determined using debugging output from
 Parsl.</p>
 <p>This design solution will be fleshed out further in a separate document at a
 later date.</p>
-</div>
-<div class="section" id="algorithm-design-resolution-can-be-a-test-case-parameter">
+</section>
+<section id="algorithm-design-resolution-can-be-a-test-case-parameter">
 <span id="alg-res"></span><h3>Algorithm design: Resolution can be a test case parameter<a class="headerlink" href="#algorithm-design-resolution-can-be-a-test-case-parameter" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2021/04/13</p>
 <p>Contributors: Xylar Asay-Davis</p>
@@ -996,8 +903,8 @@ or mesh generation.  To facilitate shared code, a test group can use the
 same code for a step that generates a mesh and/or initial condition for
 different resolutions, e.g. passing in the resolution or mesh name as an
 argument to the step’s constructor.</p>
-</div>
-<div class="section" id="algorithm-design-test-case-code-is-easy-to-alter-and-rerun">
+</section>
+<section id="algorithm-design-test-case-code-is-easy-to-alter-and-rerun">
 <span id="alg-alter-code"></span><h3>Algorithm design: Test case code is easy to alter and rerun<a class="headerlink" href="#algorithm-design-test-case-code-is-easy-to-alter-and-rerun" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2021/04/13</p>
 <p>Contributors: Xylar Asay-Davis</p>
@@ -1011,8 +918,8 @@ of a conda package or anything like that.  After some discussion about adding
 symlinks to individual python files within the <code class="docutils literal notranslate"><span class="pre">compass</span></code> package, it was
 decided that this has too many risks of being misunderstood, having unintended
 consequences, and could be difficult to implement.</p>
-</div>
-<div class="section" id="algorithm-design-support-for-pre-made-initial-condition-files">
+</section>
+<section id="algorithm-design-support-for-pre-made-initial-condition-files">
 <span id="alg-premade-ic"></span><h3>Algorithm design: Support for pre-made initial condition files<a class="headerlink" href="#algorithm-design-support-for-pre-made-initial-condition-files" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2021/04/13</p>
 <p>Contributors: Xylar Asay-Davis, Mark Petersen</p>
@@ -1028,8 +935,8 @@ compatibility.</p>
 <p>However, this work will be considered outside the scope of this design document
 and is only discussed to ensure that the proposed design does not hinder a
 future effort in this direction.</p>
-</div>
-<div class="section" id="algorithm-design-easy-batch-submission">
+</section>
+<section id="algorithm-design-easy-batch-submission">
 <span id="alg-batch"></span><h3>Algorithm design: Easy batch submission<a class="headerlink" href="#algorithm-design-easy-batch-submission" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2021/01/14</p>
 <p>Contributors: Xylar Asay-Davis, Mark Petersen</p>
@@ -1045,15 +952,15 @@ suites.  This work will not be part of the current implementation but an effort
 will be made to ensure that the design doesn’t hinder later automatic
 generation of batch scripts.  Additional information such as a default account
 name could be added to machine-specific config files to aid in this process.</p>
-</div>
-</div>
-<div class="section" id="implementation">
+</section>
+</section>
+<section id="implementation">
 <h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
 <p>The implementation of this design can be found in the branch:
 <a class="reference external" href="https://github.com/xylar/compass/tree/compass_1.0">xylar/compass/compass_1.0</a>
 and on the pull request at:
 <a class="reference external" href="https://github.com/MPAS-Dev/compass/pull/28">https://github.com/MPAS-Dev/compass/pull/28</a></p>
-<div class="section" id="implementation-make-test-cases-easy-to-understand-modify-and-and-create">
+<section id="implementation-make-test-cases-easy-to-understand-modify-and-and-create">
 <span id="imp-easy"></span><h3>Implementation: Make test cases easy to understand, modify and  and create<a class="headerlink" href="#implementation-make-test-cases-easy-to-understand-modify-and-and-create" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2021/04/13</p>
 <p>Contributors: Xylar Asay-Davis</p>
@@ -1067,7 +974,7 @@ just running the steps that belong to the test case. Similarly, in addition to
 the constructor, the <code class="docutils literal notranslate"><span class="pre">Step</span></code> base class has 2 other methods, <code class="docutils literal notranslate"><span class="pre">setup()</span></code> and
 <code class="docutils literal notranslate"><span class="pre">run()</span></code> for setting up and running the step.  Each of these is described
 below.</p>
-<div class="section" id="constructors">
+<section id="constructors">
 <h4>constructors<a class="headerlink" href="#constructors" title="Permalink to this headline">¶</a></h4>
 <p>When test cases and steps are instantiated, the constructor method
 <code class="docutils literal notranslate"><span class="pre">__init__()</span></code> is called. I will not go into the details of what happens in
@@ -1294,8 +1201,8 @@ stream.  If none are provided, the default constants will be used.  There is
 currently no mechanism for adding or removing <code class="docutils literal notranslate"><span class="pre">vars</span></code>, etc. from a stream
 because that seemed to be a feature that was rarely used or found to be useful
 in the legacy COMPASS implementation.</p>
-</div>
-<div class="section" id="configure">
+</section>
+<section id="configure">
 <h4>configure()<a class="headerlink" href="#configure" title="Permalink to this headline">¶</a></h4>
 <p>Test cases do not have very many options for customization.  The main one is
 customizing the config file that is shared between all steps in the test
@@ -1349,8 +1256,8 @@ file that applies to all steps in a test case, as shown above.</p>
 <code class="docutils literal notranslate"><span class="pre">config</span></code> with the other steps in the test case.  The idea is that it should
 be relatively easy to change config options for all the steps in the test case
 in one place.</p>
-</div>
-<div class="section" id="setup">
+</section>
+<section id="setup">
 <h4>setup()<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h4>
 <p>Test cases do not have a <code class="docutils literal notranslate"><span class="pre">setup()</span></code> method because the only setting up they
 typically include is to update config options in <code class="docutils literal notranslate"><span class="pre">configure()</span></code>.  The step
@@ -1364,8 +1271,8 @@ because neither of these attributes are defined within <code class="docutils lit
 Calls to <code class="docutils literal notranslate"><span class="pre">self.add_model_as_input()</span></code>, which adds a symlink to the MPAS
 model’s executable, must also happen in <code class="docutils literal notranslate"><span class="pre">setup()</span></code> because the path to the
 executable is a config option.</p>
-</div>
-<div class="section" id="run">
+</section>
+<section id="run">
 <h4>run<a class="headerlink" href="#run" title="Permalink to this headline">¶</a></h4>
 <p>The <code class="docutils literal notranslate"><span class="pre">run()</span></code> method of a test case should, at a minimum, call the
 base class’ <code class="docutils literal notranslate"><span class="pre">super().run()</span></code> to run all the steps in the test case.
@@ -1415,8 +1322,8 @@ which can be done trivially with a call to <code class="docutils literal notrans
     <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="global-ocean-test-group">
+</section>
+<section id="global-ocean-test-group">
 <h4>global ocean test group<a class="headerlink" href="#global-ocean-test-group" title="Permalink to this headline">¶</a></h4>
 <p>The global ocean test group includes many other test cases and steps, and
 is quite complex compared to idealized test cases, so may need the most
@@ -1670,14 +1577,14 @@ descends from <code class="docutils literal notranslate"><span class="pre">TestC
 </pre></div>
 </div>
 <p>Whew! That was a lot, thanks for bearing with me.</p>
-</div>
-</div>
-<div class="section" id="implementation-shared-code">
+</section>
+</section>
+<section id="implementation-shared-code">
 <span id="imp-shared-code"></span><h3>Implementation: Shared code<a class="headerlink" href="#implementation-shared-code" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2021/04/13</p>
 <p>Contributors: Xylar Asay-Davis</p>
 <p>The package includes myriad examples of code sharing so I will highlight a few.</p>
-<div class="section" id="compass-framework">
+<section id="compass-framework">
 <h4>compass framework<a class="headerlink" href="#compass-framework" title="Permalink to this headline">¶</a></h4>
 <p>The <code class="docutils literal notranslate"><span class="pre">compass</span></code> framework (classes, modules and packages not in the
 MPAS-core-specific packages) has a lot of code that is shared across existing
@@ -1695,8 +1602,8 @@ long scripts in legacy COMPASS.</p>
 <code class="docutils literal notranslate"><span class="pre">compass.parallel</span></code> module.  It contains two functions:
 <code class="docutils literal notranslate"><span class="pre">get_available_cores_and_nodes()</span></code>, which can find out the number of total
 cores and nodes available for running steps.</p>
-</div>
-<div class="section" id="within-an-mpas-core">
+</section>
+<section id="within-an-mpas-core">
 <h4>within an MPAS core<a class="headerlink" href="#within-an-mpas-core" title="Permalink to this headline">¶</a></h4>
 <p>Legacy COMPASS shares functionality with an MPAS core by having scripts at the MPAS core
 level that are linked within test cases and which take command-line arguments
@@ -1725,8 +1632,8 @@ land-ice pressure, and adjusts them to match one another</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">compass.ocean.plot</span></code>: plots initial state and 1D vertical grid</p></li>
 </ul>
 </div></blockquote>
-</div>
-<div class="section" id="within-a-test-group">
+</section>
+<section id="within-a-test-group">
 <h4>within a test group<a class="headerlink" href="#within-a-test-group" title="Permalink to this headline">¶</a></h4>
 <p>So far, the most common type of shared code within test groups are modules
 defining steps that are used in multiple test cases.  For example, the
@@ -1764,17 +1671,17 @@ they are not currently made available.</p>
 <p>Also, I want to note that it is because of this flexibility that I added an
 RK4 restart test, which failed and showed us that there was a recent problem
 with RK4 restarts (<a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Model/issues/777">https://github.com/MPAS-Dev/MPAS-Model/issues/777</a>).</p>
-</div>
-<div class="section" id="within-a-test-case">
+</section>
+<section id="within-a-test-case">
 <h4>within a test case<a class="headerlink" href="#within-a-test-case" title="Permalink to this headline">¶</a></h4>
 <p>There aren’t too many cases so far where reuse of code within a test case is
 particularly useful.  The main way this currently occurs is when the same
 module for a step gets used multiple times within a test case.  For example,
 the <cite>baroclinic_channel.rpe_test</cite> test case uses the same forward run with
 5 different viscosities.</p>
-</div>
-</div>
-<div class="section" id="implementation-shared-configuration-options">
+</section>
+</section>
+<section id="implementation-shared-configuration-options">
 <span id="imp-shared-config"></span><h3>Implementation: Shared configuration options<a class="headerlink" href="#implementation-shared-configuration-options" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2021/04/13</p>
 <p>Contributors: Xylar Asay-Davis</p>
@@ -1983,8 +1890,8 @@ would need to search through the code for the original config or look through
 the documentation to know what the config options are used for.  In the future,
 we could consider implementing our own customized version of <code class="docutils literal notranslate"><span class="pre">ConfigParser</span></code>
 that preserves comments.</p>
-</div>
-<div class="section" id="implementation-ability-specify-modify-core-counts">
+</section>
+<section id="implementation-ability-specify-modify-core-counts">
 <h3>Implementation: Ability specify/modify core counts<a class="headerlink" href="#implementation-ability-specify-modify-core-counts" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2021/01/16</p>
 <p>Contributors: Xylar Asay-Davis</p>
@@ -2100,8 +2007,8 @@ constructor:</p>
     <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">run_by_default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="implementation-machine-specific-data">
+</section>
+<section id="implementation-machine-specific-data">
 <span id="imp-machine"></span><h3>Implementation: Machine-specific data<a class="headerlink" href="#implementation-machine-specific-data" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2021/04/13</p>
 <p>Contributors: Xylar Asay-Davis</p>
@@ -2163,8 +2070,8 @@ job scripts, but this will be left for future work.</p>
 </div>
 <p>When setting up a test case or test suite, the <code class="docutils literal notranslate"><span class="pre">--machine</span></code> or <code class="docutils literal notranslate"><span class="pre">-m</span></code> flag
 is used to specify the machine.</p>
-</div>
-<div class="section" id="implementation-looser-more-flexible-directory-structure">
+</section>
+<section id="implementation-looser-more-flexible-directory-structure">
 <span id="imp-dir-struct"></span><h3>Implementation: Looser, more flexible directory structure<a class="headerlink" href="#implementation-looser-more-flexible-directory-structure" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2021/04/13</p>
 <p>Contributors: Xylar Asay-Davis</p>
@@ -2227,8 +2134,8 @@ trivial for a user to switch between the two time integrators simply by
 manually modifying the test case at runtime.  We treat the split-explicit
 time integrator as the default and put tests with RK4 in an additional <code class="docutils literal notranslate"><span class="pre">RK4</span></code>
 subdirectory.</p>
-</div>
-<div class="section" id="implementation-user-and-developer-friendly-documentation">
+</section>
+<section id="implementation-user-and-developer-friendly-documentation">
 <span id="imp-docs"></span><h3>Implementation: User- and developer-friendly documentation<a class="headerlink" href="#implementation-user-and-developer-friendly-documentation" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2021/04/13</p>
 <p>Contributors: Xylar Asay-Davis</p>
@@ -2244,31 +2151,31 @@ table of contents.</p>
 <a class="reference external" href="https://github.com/xylar/compass/tree/compass_1.0_docs">https://github.com/xylar/compass/tree/compass_1.0_docs</a>
 and for browsing at the URL:
 <a class="reference external" href="https://mpas-dev.github.io/compass/test/index.html">https://mpas-dev.github.io/compass/test/index.html</a></p>
-</div>
-<div class="section" id="implementation-considerations-related-to-running-test-cases-in-parallel">
+</section>
+<section id="implementation-considerations-related-to-running-test-cases-in-parallel">
 <span id="imp-parallel"></span><h3>Implementation: Considerations related to running test cases in parallel<a class="headerlink" href="#implementation-considerations-related-to-running-test-cases-in-parallel" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2021/04/13</p>
 <p>Contributors: Xylar Asay-Davis</p>
 <p>While an implementation of test-case parallelism will be left to a future
 design document and implementation, several parts of the current <code class="docutils literal notranslate"><span class="pre">compass</span></code>
 design and implementation were made with this work in mind.</p>
-<div class="section" id="cores-max-memory-and-max-disk">
+<section id="cores-max-memory-and-max-disk">
 <h4>cores, max_memory and max_disk<a class="headerlink" href="#cores-max-memory-and-max-disk" title="Permalink to this headline">¶</a></h4>
 <p>The <code class="docutils literal notranslate"><span class="pre">Step</span></code> base class keeps track of not only the number of cores (and
 threads) used but also the maximum allowed memory and disk.  While the latter
 two are not currently used for anything and the values are just placeholders,
 they are expected to be useful for Parsl <code class="docutils literal notranslate"><span class="pre">WorkerQueues</span></code>.</p>
-</div>
-<div class="section" id="inputs-and-outputs">
+</section>
+<section id="inputs-and-outputs">
 <h4>inputs and outputs<a class="headerlink" href="#inputs-and-outputs" title="Permalink to this headline">¶</a></h4>
 <p>An effort has been made to be thorough about providing an absolute path to the
 inputs and outputs of each step.  These are currently verified to make sure
 inputs are present before running a step and outputs are present after. We
 expect them to also be useful when we use Parsl to determine dependencies
 between steps and to figure out which can run in parallel with one another.</p>
-</div>
-</div>
-<div class="section" id="implementation-resolution-can-be-a-test-case-parameter">
+</section>
+</section>
+<section id="implementation-resolution-can-be-a-test-case-parameter">
 <span id="imp-res"></span><h3>Implementation: Resolution can be a test case parameter<a class="headerlink" href="#implementation-resolution-can-be-a-test-case-parameter" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2021/04/13</p>
 <p>Contributors: Xylar Asay-Davis</p>
@@ -2282,8 +2189,8 @@ across steps in a test case but the <code class="docutils literal notranslate"><
 <code class="docutils literal notranslate"><span class="pre">baroclinic_channel</span></code> includes viscosity as a parameter that varies across
 steps, and resolution is expected to be easy to use in the same way for future
 test cases.</p>
-</div>
-<div class="section" id="implementation-test-case-code-is-easy-to-alter-and-rerun">
+</section>
+<section id="implementation-test-case-code-is-easy-to-alter-and-rerun">
 <span id="imp-alter-code"></span><h3>Implementation: Test case code is easy to alter and rerun<a class="headerlink" href="#implementation-test-case-code-is-easy-to-alter-and-rerun" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2021/04/13</p>
 <p>Contributors: Xylar Asay-Davis</p>
@@ -2293,16 +2200,16 @@ directory are created.  These links seem to provide and easy method for
 altering code and having it affect test cases and steps immediately without
 the need to build a conda package or a conda environment, or even to rerun
 <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">compass</span> <span class="pre">setup</span></code> in most cases.</p>
-</div>
-<div class="section" id="implementation-support-for-pre-made-initial-condition-files">
+</section>
+<section id="implementation-support-for-pre-made-initial-condition-files">
 <span id="imp-premade-ic"></span><h3>Implementation: Support for pre-made initial condition files<a class="headerlink" href="#implementation-support-for-pre-made-initial-condition-files" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2021/01/16</p>
 <p>Contributors: Xylar Asay-Davis, Mark Petersen</p>
 <p>This work has not been included in any of the test cases that are part of the
 current implementation.  Nothing in the implementation should preclude adding
 this capability later on.</p>
-</div>
-<div class="section" id="implementation-easy-batch-submission">
+</section>
+<section id="implementation-easy-batch-submission">
 <span id="imp-batch"></span><h3>Implementation: Easy batch submission<a class="headerlink" href="#implementation-easy-batch-submission" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2021/01/16</p>
 <p>Contributors: Xylar Asay-Davis, Mark Petersen</p>
@@ -2311,11 +2218,11 @@ test case.  Additional machine-specific config options will be needed to make
 this possible. This capability will be part of a future design.  Nothing in the
 current implementation should preclude adding this capability later on.
 Indeed, it likely wouldn’t be to much work.</p>
-</div>
-</div>
-<div class="section" id="testing">
+</section>
+</section>
+<section id="testing">
 <h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="testing-make-test-cases-easy-to-understand-modify-and-create">
+<section id="testing-make-test-cases-easy-to-understand-modify-and-create">
 <span id="test-easy"></span><h3>Testing: Make test cases easy to understand, modify and create<a class="headerlink" href="#testing-make-test-cases-easy-to-understand-modify-and-create" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2021/04/13</p>
 <p>Contributors: Xylar Asay-Davis, Luke Van Roekel</p>
@@ -2326,8 +2233,8 @@ Luke Van Roekel has agreed to attempt to implement a test group
 understanding, modifying and creating test cases.  Mark Petersen will add a
 new shallow-water MPAS core.  Matt Hoffman will add new test cases as he has
 time and interest down the road.</p>
-</div>
-<div class="section" id="testing-shared-code">
+</section>
+<section id="testing-shared-code">
 <span id="test-shared-code"></span><h3>Testing: Shared code<a class="headerlink" href="#testing-shared-code" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2021/04/13</p>
 <p>Contributors: Xylar Asay-Davis</p>
@@ -2339,8 +2246,8 @@ The higher resolution versions of that test case have not yet been tested.</p>
 <p>So far, there is no indication of problems with shared code, but this is
 something of a subjective thing to test, beyond the proof of concept that code
 can, indeed, be shared.</p>
-</div>
-<div class="section" id="testing-shared-configuration-options">
+</section>
+<section id="testing-shared-configuration-options">
 <span id="test-shared-options"></span><h3>Testing: Shared configuration options<a class="headerlink" href="#testing-shared-configuration-options" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2021/01/16</p>
 <p>Contributors: Xylar Asay-Davis</p>
@@ -2360,14 +2267,14 @@ options from that file.</p>
 levels, and a target maximum layer thickness of 250.0 m (actual was 245.35 m).</p>
 <p>It would be nearly impossible to test altering all parameters to see if they
 have the intended effect, so this will not be part of this testing.</p>
-</div>
-<div class="section" id="testing-ability-specify-modify-core-counts">
+</section>
+<section id="testing-ability-specify-modify-core-counts">
 <span id="test-core-count"></span><h3>Testing: Ability specify/modify core counts<a class="headerlink" href="#testing-ability-specify-modify-core-counts" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2021/01/16</p>
 <p>Contributors: Xylar Asay-Davis</p>
 <p>This was included in <a class="reference internal" href="#test-shared-options"><span class="std std-ref">Testing: Shared configuration options</span></a>.</p>
-</div>
-<div class="section" id="testing-machine-specific-data">
+</section>
+<section id="testing-machine-specific-data">
 <span id="test-machine-data"></span><h3>Testing: Machine-specific data<a class="headerlink" href="#testing-machine-specific-data" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2021/01/14</p>
 <p>Contributors: Xylar Asay-Davis</p>
@@ -2376,8 +2283,8 @@ user config file.  This worked successfully and no cached files were
 downloaded, meaning the cache directories were found successfully via Anvil’s
 config file.  I verified that the number of available cores and nodes in my job
 were successfully detected via Slurm commands.</p>
-</div>
-<div class="section" id="testing-looser-more-flexible-directory-structure">
+</section>
+<section id="testing-looser-more-flexible-directory-structure">
 <span id="test-dir-struct"></span><h3>Testing: Looser, more flexible directory structure<a class="headerlink" href="#testing-looser-more-flexible-directory-structure" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2021/04/13</p>
 <p>Contributors: Xylar Asay-Davis</p>
@@ -2385,8 +2292,8 @@ were successfully detected via Slurm commands.</p>
 structure because it uses the <code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> test group.  More to the
 point, this capability has been tested by showing that test cases can be
 implemented using the flexible directory structure.</p>
-</div>
-<div class="section" id="testing-user-and-developer-friendly-documentation">
+</section>
+<section id="testing-user-and-developer-friendly-documentation">
 <span id="test-docs"></span><h3>Testing: User- and developer-friendly documentation<a class="headerlink" href="#testing-user-and-developer-friendly-documentation" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2021/04/13</p>
 <p>Contributors: Xylar Asay-Davis</p>
@@ -2395,90 +2302,73 @@ which is still evolving.  Users and developers will be asked to run test cases
 and suites with the documentation and to add new test cases.  In the near
 future, the documentation will be declared “good enough for now” and will be
 merged with the intention to update it on an ongoing basis.</p>
-</div>
-<div class="section" id="testing-considerations-related-to-running-test-cases-in-parallel">
+</section>
+<section id="testing-considerations-related-to-running-test-cases-in-parallel">
 <span id="test-parallel"></span><h3>Testing: Considerations related to running test cases in parallel<a class="headerlink" href="#testing-considerations-related-to-running-test-cases-in-parallel" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2021/01/16</p>
 <p>Contributors: Xylar Asay-Davis, Matt Hoffman</p>
 <p>This has not yet been implemented so will be tested as part of a later design.</p>
-</div>
-<div class="section" id="testing-resolution-can-be-a-test-case-parameter">
+</section>
+<section id="testing-resolution-can-be-a-test-case-parameter">
 <span id="test-res"></span><h3>Testing: Resolution can be a test case parameter<a class="headerlink" href="#testing-resolution-can-be-a-test-case-parameter" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2021/01/16</p>
 <p>Contributors: Xylar Asay-Davis, Mark Petersen</p>
 <p>Resolution is a parameter in many existing test cases.  No test case has yet
 been implemented that includes multiple steps with different resolutions so
 no testing of such a test case is possible at this time.</p>
-</div>
-<div class="section" id="testing-test-case-code-is-easy-to-alter-and-rerun">
+</section>
+<section id="testing-test-case-code-is-easy-to-alter-and-rerun">
 <span id="test-alter-code"></span><h3>Testing: Test case code is easy to alter and rerun<a class="headerlink" href="#testing-test-case-code-is-easy-to-alter-and-rerun" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2021/01/16</p>
 <p>Contributors: Xylar Asay-Davis, Mark Petersen</p>
 <p>Xylar and Mark have both demonstrated that it is easy to modify code and rerun
 test cases without additional work because of the symlinks to the <code class="docutils literal notranslate"><span class="pre">compass</span></code>
 directory.</p>
-</div>
-<div class="section" id="testing-support-for-pre-made-initial-condition-files">
+</section>
+<section id="testing-support-for-pre-made-initial-condition-files">
 <span id="test-premade-ic"></span><h3>Testing: Support for pre-made initial condition files<a class="headerlink" href="#testing-support-for-pre-made-initial-condition-files" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2021/01/16</p>
 <p>Contributors: Xylar Asay-Davis, Mark Petersen</p>
 <p>This was not yet implemented so no testing was performed.</p>
-</div>
-<div class="section" id="testing-easy-batch-submission">
+</section>
+<section id="testing-easy-batch-submission">
 <span id="test-batch"></span><h3>Testing: Easy batch submission<a class="headerlink" href="#testing-easy-batch-submission" title="Permalink to this headline">¶</a></h3>
 <p>Date last modified: 2021/01/16</p>
 <p>Contributors: Xylar Asay-Davis, Mark Petersen</p>
 <p>This was not yet implemented so no testing was performed.</p>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="cached_outputs.html" class="btn btn-neutral float-right" title="Caching outputs from compass steps" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="index.html" class="btn btn-neutral float-left" title="Design Documents" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cached_outputs.html" class="btn btn-neutral float-right" title="Caching outputs from compass steps" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..
-
-    </p>
+    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

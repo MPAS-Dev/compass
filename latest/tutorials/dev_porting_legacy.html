@@ -1,77 +1,37 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>Developer Tutorial: Porting a legacy COMPASS test group &mdash; compass latest documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Glossary" href="../glossary.html" />
     <link rel="prev" title="Developer Tutorial: Adding a parameter study" href="dev_add_param_study.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> compass
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
                 latest
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -79,18 +39,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../users_guide/quick_start.html">Quick Start for Users</a></li>
@@ -152,72 +101,31 @@
 <li class="toctree-l1"><a class="reference internal" href="../versions.html">Code and Documentation Versions</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">compass</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Developer Tutorial: Porting a legacy COMPASS test group</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/tutorials/dev_porting_legacy.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="developer-tutorial-porting-a-legacy-compass-test-group">
+             
+  <section id="developer-tutorial-porting-a-legacy-compass-test-group">
 <span id="dev-tutorial-porting-legacy"></span><h1>Developer Tutorial: Porting a legacy COMPASS test group<a class="headerlink" href="#developer-tutorial-porting-a-legacy-compass-test-group" title="Permalink to this headline">¶</a></h1>
 <p>This tutorial presents a step-by-step guide to porting a legacy COMPASS test
 group to the <code class="docutils literal notranslate"><span class="pre">compass</span></code> python package (see the <a class="reference internal" href="../glossary.html#glossary"><span class="std std-ref">Glossary</span></a> for
@@ -226,7 +134,7 @@ definitions of these terms). The tutorial uses the legacy COMPASS test group
 <code class="docutils literal notranslate"><span class="pre">compass.ocean.tests.gotm</span></code> for the test group in <code class="docutils literal notranslate"><span class="pre">compass</span></code>.  The example
 test group creates a tiny (4 x 4 cell) doubly periodic mesh and uses it to
 test MPAS-Ocean calls to the <a class="reference external" href="https://gotm.net/">General Ocean Turbulence Model (GOTM)</a>.</p>
-<div class="section" id="getting-started">
+<section id="getting-started">
 <h2>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
 <p>To begin with, you will need to check out two different branches of compass.
 First, you will need the <code class="docutils literal notranslate"><span class="pre">legacy</span></code> branch.  Since we will simply be looking
@@ -272,8 +180,8 @@ make intel-mpi
 <a class="reference internal" href="../developers_guide/machines/index.html#dev-supported-machines"><span class="std std-ref">Supported Machines</span></a> or <a class="reference internal" href="../developers_guide/machines/index.html#dev-other-machines"><span class="std std-ref">Other Machines</span></a> for the right one
 for your machine.</p>
 <p>Now, we’re ready to start developing!</p>
-</div>
-<div class="section" id="the-legacy-compass-test-group">
+</section>
+<section id="the-legacy-compass-test-group">
 <h2>The legacy COMPASS test group<a class="headerlink" href="#the-legacy-compass-test-group" title="Permalink to this headline">¶</a></h2>
 <p>…But before we get started, a little background on legacy COMPASS for those
 who haven’t used it extensively.  In legacy COMPASS, the test group is just a
@@ -364,8 +272,8 @@ in detail later in the tutorial.</p>
 <p>The example test case also has a namelist file used by GOTM (<code class="docutils literal notranslate"><span class="pre">gotmturb.nml</span></code>)
 and a python script for plotting the results compared to analytic solutions
 (<code class="docutils literal notranslate"><span class="pre">plot_profile.py</span></code>).</p>
-</div>
-<div class="section" id="making-a-new-test-group">
+</section>
+<section id="making-a-new-test-group">
 <h2>Making a new test group<a class="headerlink" href="#making-a-new-test-group" title="Permalink to this headline">¶</a></h2>
 <p>Okay, with those details as a reference point from legacy COMPASS, let’s jump
 into developing the new test group in <code class="docutils literal notranslate"><span class="pre">compass</span></code>.  Use any method you like
@@ -451,8 +359,8 @@ groups in the ocean core:</p>
 <p>We make an instance of the <code class="docutils literal notranslate"><span class="pre">Gotm</span></code> class and we immediately add it to the
 <code class="docutils literal notranslate"><span class="pre">Ocean</span></code> core’s list of test groups.  That’s all we need to do.  Now
 <code class="docutils literal notranslate"><span class="pre">compass</span></code> knows about the test group.</p>
-</div>
-<div class="section" id="adding-a-test-case">
+</section>
+<section id="adding-a-test-case">
 <h2>Adding a test case<a class="headerlink" href="#adding-a-test-case" title="Permalink to this headline">¶</a></h2>
 <p>We’ll add a test case called <code class="docutils literal notranslate"><span class="pre">default</span></code> to <code class="docutils literal notranslate"><span class="pre">gotm</span></code>.  Unlike in legacy
 COMPASS, we don’t need to specify the resolution of the test case.  We want
@@ -493,8 +401,8 @@ descends from the <code class="docutils literal notranslate"><span class="pre">T
 <p>As a starting point, we just pass along the test group (<code class="docutils literal notranslate"><span class="pre">Gotm</span></code>) this test
 case belongs to on to the base class’s constructor (<code class="docutils literal notranslate"><span class="pre">super().__init__()</span></code>)
 and give the test case a name, <code class="docutils literal notranslate"><span class="pre">default</span></code>.</p>
-</div>
-<div class="section" id="varying-resolution-or-other-parameters">
+</section>
+<section id="varying-resolution-or-other-parameters">
 <h2>Varying resolution (or other parameters)<a class="headerlink" href="#varying-resolution-or-other-parameters" title="Permalink to this headline">¶</a></h2>
 <p>Since the <code class="docutils literal notranslate"><span class="pre">Gotm</span></code> test group only has one test case at one resolution (and the
 resolution isn’t an important property of the setup—-it’s using multiple
@@ -588,8 +496,8 @@ pick the right inner dictionary, and then set config options (see
         <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;baroclinic_channel&#39;</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">res_params</span><span class="p">[</span><span class="n">param</span><span class="p">]))</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="adding-the-init-step">
+</section>
+<section id="adding-the-init-step">
 <h2>Adding the init step<a class="headerlink" href="#adding-the-init-step" title="Permalink to this headline">¶</a></h2>
 <p>In legacy COMPASS, the other <code class="docutils literal notranslate"><span class="pre">config_*.xml</span></code> files besides <code class="docutils literal notranslate"><span class="pre">config_driver.xml</span></code>
 define the step in the test case.  In <code class="docutils literal notranslate"><span class="pre">compass</span></code>, these are defined in classes
@@ -662,7 +570,7 @@ how we decided which of the outputs from the test case to include in this list.
 <code class="docutils literal notranslate"><span class="pre">mesh.nc</span></code> is the mesh, <code class="docutils literal notranslate"><span class="pre">graph.info</span></code> is the graph file used by
 <a class="reference external" href="http://glaros.dtc.umn.edu/gkhome/metis/metis/overview">Metis</a> to partition
 the mesh across processors, and <code class="docutils literal notranslate"><span class="pre">ocean.nc</span></code> is the initial condition.</p>
-<div class="section" id="defining-namelist-options">
+<section id="defining-namelist-options">
 <h3>Defining namelist options<a class="headerlink" href="#defining-namelist-options" title="Permalink to this headline">¶</a></h3>
 <p>In <code class="docutils literal notranslate"><span class="pre">compass</span></code>, there are two main ways to set namelist options for MPAS model
 runs and we will demonstrate both in this test case.  First, you can define a
@@ -706,8 +614,8 @@ that can come from config options, using
 <a class="reference internal" href="../developers_guide/generated/compass.Step.update_namelist_at_runtime.html#compass.Step.update_namelist_at_runtime" title="compass.Step.update_namelist_at_runtime"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.update_namelist_at_runtime()</span></code></a>.  This is why we haven’t
 yet included the <code class="docutils literal notranslate"><span class="pre">config_periodic_planar_vert_levels</span></code> and
 <code class="docutils literal notranslate"><span class="pre">config_periodic_planar_bottom_depth</span></code> options from the legacy test case.</p>
-</div>
-<div class="section" id="defining-streams">
+</section>
+<section id="defining-streams">
 <h3>Defining streams<a class="headerlink" href="#defining-streams" title="Permalink to this headline">¶</a></h3>
 <p>Similarly, it is convenient to define input and output streams for MPAS-Ocean
 using a streams file, very similar to what you will see when the test case
@@ -773,8 +681,8 @@ stream in the <code class="docutils literal notranslate"><span class="pre">strea
                   <span class="na">input_interval=</span><span class="s">&quot;initial_only&quot;</span><span class="nt">/&gt;</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="defining-config-options">
+</section>
+<section id="defining-config-options">
 <h3>Defining config options<a class="headerlink" href="#defining-config-options" title="Permalink to this headline">¶</a></h3>
 <p>The remainder of the <code class="docutils literal notranslate"><span class="pre">init</span></code> step will consist of defining the <code class="docutils literal notranslate"><span class="pre">run()</span></code>
 method that does the real work of the step.  To make it easier for users to
@@ -807,8 +715,8 @@ the initial condition (and therefore the rest of the test case).</p>
 <p>Since the config file has the same name (<code class="docutils literal notranslate"><span class="pre">default</span></code>) as the test case, it will
 be included automatically when the config file is produced when the test case gets
 set up.</p>
-</div>
-<div class="section" id="defining-the-run-method">
+</section>
+<section id="defining-the-run-method">
 <h3>Defining the run method<a class="headerlink" href="#defining-the-run-method" title="Permalink to this headline">¶</a></h3>
 <p>With these config options, namelists and streams files defined, we will
 implement the <code class="docutils literal notranslate"><span class="pre">run()</span></code> method of the <code class="docutils literal notranslate"><span class="pre">init</span></code> step to do the rest of the work
@@ -911,9 +819,9 @@ running the model.</p>
 We pass the step itself as an argument because this is how <code class="docutils literal notranslate"><span class="pre">compass</span></code> knows
 how many cores and threads to run on, which namelist and streams files to use,
 which MPAS core this test case belongs to, and so on.</p>
-</div>
-</div>
-<div class="section" id="adding-the-forward-step">
+</section>
+</section>
+<section id="adding-the-forward-step">
 <h2>Adding the forward step<a class="headerlink" href="#adding-the-forward-step" title="Permalink to this headline">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">Forward</span></code> step will be conceptually similar to the <code class="docutils literal notranslate"><span class="pre">Init</span></code> step.  Again,
 we make a <code class="docutils literal notranslate"><span class="pre">Forward</span></code> class that descends from <code class="docutils literal notranslate"><span class="pre">Step</span></code> with a constructor that
@@ -1123,8 +1031,8 @@ identical to the full streams file in the work directory:</p>
     <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="adding-the-analysis-step">
+</section>
+<section id="adding-the-analysis-step">
 <h2>Adding the analysis step<a class="headerlink" href="#adding-the-analysis-step" title="Permalink to this headline">¶</a></h2>
 <p>The legacy <code class="docutils literal notranslate"><span class="pre">analysis</span></code> step is defined like this:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;config</span> <span class="na">case=</span><span class="s">&quot;analysis&quot;</span><span class="nt">&gt;</span>
@@ -1249,8 +1157,8 @@ statements should generally be replaced with <code class="docutils literal notra
 logger calls (but <code class="docutils literal notranslate"><span class="pre">print()</span></code> statements are still okay, and will be captured
 in log files rather than going to the terminal when multiple steps or test
 cases are running).</p>
-</div>
-<div class="section" id="updating-the-test-case-and-test-group">
+</section>
+<section id="updating-the-test-case-and-test-group">
 <h2>Updating the test case and test group<a class="headerlink" href="#updating-the-test-case-and-test-group" title="Permalink to this headline">¶</a></h2>
 <p>The nearly final steps are to add the steps to the test case, and then the test
 case to the test group:</p>
@@ -1304,8 +1212,8 @@ case to the test group:</p>
 <span class="hll">        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">Default</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
 </span></pre></div>
 </div>
-</div>
-<div class="section" id="adding-validation">
+</section>
+<section id="adding-validation">
 <h2>Adding validation<a class="headerlink" href="#adding-validation" title="Permalink to this headline">¶</a></h2>
 <p>The legacy <code class="docutils literal notranslate"><span class="pre">gotm/2.5km/default</span></code> test case didn’t include any
 <a class="reference internal" href="../developers_guide/framework.html#dev-validation"><span class="std std-ref">Validation</span></a> but it is a very good idea to include some.  This way,
@@ -1332,15 +1240,15 @@ might run only some of the steps), the call to
 variables <code class="docutils literal notranslate"><span class="pre">layerThickness</span></code> and <code class="docutils literal notranslate"><span class="pre">normalVelocity</span></code> are exactly the same in
 this run as they were in a previous run if a baseline run was provided when the
 test case got set up (see <a class="reference internal" href="../users_guide/test_suites.html#test-suites"><span class="std std-ref">Test Suites</span></a>).</p>
-</div>
-<div class="section" id="set-up-and-run">
+</section>
+<section id="set-up-and-run">
 <h2>Set up and run<a class="headerlink" href="#set-up-and-run" title="Permalink to this headline">¶</a></h2>
 <p>You’re all set!  You should be able to see your new test case when you run
 <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">list</span></code>, set it up by running <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">setup</span></code>, and run it by running
 <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span></code> within the work directory.  See <a class="reference internal" href="../developers_guide/command_line.html#dev-command-line"><span class="std std-ref">Command-line interface</span></a> for
 more on that process.</p>
-</div>
-<div class="section" id="documentation">
+</section>
+<section id="documentation">
 <h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
 <p>Make sure to add some documentation of your new test group.  You need to add
 all of the functions, classes and methods to the API documentation in
@@ -1367,55 +1275,38 @@ newly added test cases are documented well. Add <code class="docutils literal no
 appropriate place (in alphabetical order) in the list of test groups in
 <code class="docutils literal notranslate"><span class="pre">docs/developers_guide/&lt;core&gt;/test_groups/index.rst</span></code>.</p>
 <p>At this point, you are ready to make a pull request with the ported test group!</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="../glossary.html" class="btn btn-neutral float-right" title="Glossary" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="dev_add_param_study.html" class="btn btn-neutral float-left" title="Developer Tutorial: Adding a parameter study" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../glossary.html" class="btn btn-neutral float-right" title="Glossary" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..
-
-    </p>
+    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>
