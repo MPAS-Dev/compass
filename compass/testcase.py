@@ -45,6 +45,10 @@ class TestCase:
         The local name of the config file that ``config`` has been written to
         during setup and read from during run
 
+    config_files : list
+        A list of dictionaries that provide information about the config files
+        from which config options are loaded
+
     work_dir : str
         The test case's work directory, defined during setup as the combination
         of ``base_work_dir`` and ``path``
@@ -111,6 +115,7 @@ class TestCase:
         # these will be set during setup
         self.config = None
         self.config_filename = None
+        self.config_files = list()
         self.work_dir = None
         self.base_work_dir = None
         # may be set during setup if there is a baseline for comparison
@@ -214,6 +219,35 @@ class TestCase:
 
             if both_pass:
                 raise ValueError('Comparison failed, see above.')
+
+    def add_config(self, filename, package=None, exception=True):
+        """
+        Add a config file to the list of files to load config options from.
+        These config files are the highest priority config options besides the
+        user config file, overriding default, machine, MPAS-core, test group
+        and test case config options. This method should be called only when
+        initializing the test case. All config files have already been read
+        and added to the test case's config options by the time that the
+        ``configure()`` method is called.
+
+        Parameters
+        ----------
+        filename : str
+            The name of the config file.  This can be an absolute or relative
+            path for a config file to be read directly or a file name within
+            a python package if ``package`` is provided.
+
+        package : str, optional
+            The name of the python package package that contains ``filename``
+
+        exception : bool
+            Whether to raise an exception if the config file isn't found
+        """
+        config_dict = {'filename': filename,
+                       'exception': exception}
+        if package is not None:
+            config_dict['package'] = package
+        self.config_files.append(config_dict)
 
     def _print_to_stdout(self, message):
         """

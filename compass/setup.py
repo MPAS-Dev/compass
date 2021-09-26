@@ -195,30 +195,43 @@ def setup_case(path, test_case, config_file, machine, work_dir, baseline_dir,
 
     print('  {}'.format(path))
 
-    config = configparser.ConfigParser(
-        interpolation=configparser.ExtendedInterpolation())
+    # we want to prepend some configs, so save the current configs for now
+    config_files = test_case.config_files
+    test_case.config_files = list()
 
     # start with default compass config options
-    add_config(config, 'compass', 'default.cfg')
+    test_case.add_config(package='compass', filename='default.cfg',
+                         exception=True)
 
     # add the machine config file
     if machine is None:
         machine = 'default'
-    add_config(config, 'compass.machines', '{}.cfg'.format(machine))
+    test_case.add_config(package='compass.machines', filename=f'{machine}.cfg',
+                         exception=True)
 
     # add the config options for the MPAS core
     mpas_core = test_case.mpas_core.name
-    add_config(config, 'compass.{}'.format(mpas_core),
-               '{}.cfg'.format(mpas_core))
+    test_case.add_config(package=f'compass.{mpas_core}',
+                         filename=f'{mpas_core}.cfg', exception=True)
 
     # add the config options for the test group (if defined)
     test_group = test_case.test_group.name
-    add_config(config, 'compass.{}.tests.{}'.format(mpas_core, test_group),
-               '{}.cfg'.format(test_group), exception=False)
+    test_case.add_config(package=f'compass.{mpas_core}.tests.{test_group}',
+                         filename=f'{test_group}.cfg', exception=False)
 
     # add the config options for the test case (if defined)
-    add_config(config, test_case.__module__,
-               '{}.cfg'.format(test_case.name), exception=False)
+    test_case.add_config(package=test_case.__module__,
+                         filename=f'{test_case.name}.cfg', exception=False)
+
+    # now append the config files that were added during test case
+    # initialization, as these are the highest priority other than the user
+    # config file
+    test_case.config_files.extend(config_files)
+
+    # add the custom config file once before calling configure() in case we
+    # need to use the config options from there
+    if config_file is not None:
+        test_case.add_config(filename=config_file, exception=True)
 
     test_case_dir = os.path.join(work_dir, path)
     try:
@@ -228,10 +241,18 @@ def setup_case(path, test_case, config_file, machine, work_dir, baseline_dir,
     test_case.work_dir = test_case_dir
     test_case.base_work_dir = work_dir
 
-    # add the custom config file once before calling configure() in case we
-    # need to use the config options from there
-    if config_file is not None:
-        config.read(config_file)
+    config = configparser.ConfigParser(
+        interpolation=configparser.ExtendedInterpolation())
+
+    for config_dict in test_case.config_files:
+        filename = config_dict['filename']
+        exception = config_dict['exception']
+        if 'package' in config_dict:
+            package = config_dict['package']
+            add_config(config, package=package, config_file=filename,
+                       exception=exception)
+        else:
+            config.read(filename)
 
     # add config options specific to the test case
     test_case.config = config
