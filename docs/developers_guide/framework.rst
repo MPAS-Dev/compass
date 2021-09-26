@@ -117,60 +117,58 @@ and debugging.
 Config files
 ------------
 
-The ``compass.config`` module includes functions for creating and manipulating
-config options and :ref:`config_files`.
+You can add a config file within an MPAS core with the same name as the MPAS
+core plus a ``.cfg`` extension (e.g. ``ocean.cfg``).  This file will
+automatically get loaded during setup.  Similarly, you can add config files
+within test groups or test cases with the same naming convention (e.g.
+``global_ocean.cfg`` for the ``global_ocean`` test group or ``cosine_bell.cfg``
+for the ``cosine_bell`` test case).  Each of these config files will be loaded
+automatically during setup without you needing to add them explicitly.
 
+If you need to add additional config files that serve other purposes, you can
+use the test case's In a test case's :py:meth:`compass.TestCase.add_config()`
+method within the test case's constructor (``__init__()`` method).  For
+example, a slightly simplified version of the
+:py:class:`compass.ocean.tests.global_ocean.mesh.Mesh` test case might load
+a config file specific to the global ocean mesh as follows:
+
+.. code-block:: python
+
+    def __init__(self, test_group, mesh_name):
+        ...
+        self.add_config(package=mesh_step.package,
+                        filename=mesh_step.mesh_config_filename,
+                        exception=True)
+        ...
+
+The ``package`` and ``filename`` arguments are the name of a package containing
+the config file and the name of the config file itself, respectively.  In this
+case, we know that the config file should always exist, so we would like the
+code to raise an exception (``exception=True``) if the file is not found.  This
+is the default behavior.  In some cases, you would like the code to add the
+config options if the config file exists and do nothing if it does not, in
+which case you should pass ``exception=False``.
+
+There is also a framework-level module, ``compass.config`` that includes
+functions for creating and manipulating config options and :ref:`config_files`.
 
 The :py:func:`compass.config.add_config()` function can be used to add the
 contents of a config file within a package to the current config parser.
-Examples of this can be found in most test cases as well as
-:py:func:`compass.setup.setup_case()`. Here is a typical example from
-:py:func:`compass.landice.tests.enthalpy_benchmark.A.A.configure()`:
+An example of this is the
+:py:class:`compass.ocean.tests.global_convergence.cosine_bell.CosineBell` test
+case:
 
 .. code-block:: python
 
-    def configure(self):
-        """
-        Modify the configuration options for this test case
-        """
-        add_config(self.config, 'compass.landice.tests.enthalpy_benchmark.A',
-                   'A.cfg', exception=True)
+    def __init__(self, test_group):
         ...
+        config = configparser.ConfigParser(
+            interpolation=configparser.ExtendedInterpolation())
+        add_config(config, self.__module__, '{}.cfg'.format(self.name))
+        self._setup_steps(config)
 
-The second and third arguments are the name of a package containing the config
-file and the name of the config file itself, respectively.  You can see that
-the file is in the path ``compass/landice/tests/enthalpy_benchmark/A``
-(replacing the ``.`` in the module name with ``/``).  In this case, we know
-that the config file should always exist, so we would like the code to raise
-an exception (``exception=True``) if the file is not found.  This is the
-default behavior.  In some cases, you would like the code to add the config
-options if the config file exists and do nothing if it does not.  This can
-be useful if a common configure function is being used for all test
-cases in a configuration, as in this example from
-:py:func:`compass.ocean.tests.global_ocean.configure.configure_global_ocean()`:
-
-.. code-block:: python
-
-    add_config(config, test_case.__module__, '{}.cfg'.format(test_case.name),
-               exception=False)
-
-When this is called within the ``mesh`` test case, nothing will happen because
-``compass/ocean/tests/global_ocean/mesh`` does not contain a ``mesh.cfg`` file.
-The config files for meshes are handled differently, since they aren't
-associated with a particular test case:
-
-.. code-block:: python
-
-    mesh_step = mesh.mesh_step
-    add_config(config, mesh_step.package, mesh_step.mesh_config_filename,
-               exception=True)
-
-In this case, the mesh step keeps track of the package and config file in its
-attributes (e.g. ``compass.ocean.tests.global_ocean.mesh.qu240`` and
-``qu240.cfg`` for the ``QU240`` and ``QUwISC240`` meshes).  Since we require
-each mesh to have config options (to define the vertical grid and the metadata
-to be added to the mesh, at the very least), we use ``exception=True`` so an
-exception will be raised if no config file is found.
+In this particular case, the config file is loaded to get a list of default
+resolutions for steps in the test case before the steps are created.
 
 The ``config`` module also contains 3 functions that are intended for internal
 use by the framework itself. Test-case developers will typically not need to

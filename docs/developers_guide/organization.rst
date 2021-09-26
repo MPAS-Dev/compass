@@ -412,6 +412,14 @@ Another set of attributes is not useful until ``configure()`` is called by the
     The local name of the config file that ``config`` has been written to
     during setup and read from during run
 
+``self.config_files``
+    A list of dictionaries that can be used to determine which config files
+    are used to set up the config options for this test case during setup.
+    These will include the default, machine, MPAS-core, test-group and
+    test-case config files.  It may also include one or more config files added
+    with the ``add_config()`` method.  Finally, it may include a user config
+    file.
+
 ``self.work_dir``
     The test case's work directory, defined during setup as the combination
     of ``base_work_dir`` and ``path``
@@ -592,6 +600,10 @@ The test case imports the classes for its steps --
 :py:func:`compass.TestCase.add_step()`.  After this, the :py:class:`dict` of
 steps will be available in ``self.steps``.
 
+In the constructor, you may add config files that will be loaded on setup by
+using the :py:meth:`compass.TestCase.add_config()` method, as
+described in :ref:`dev_config`.
+
 By default, the test case will go into a subdirectory with the same name as the
 test case (``rpe_test`` in this case).  However, ``compass`` is flexible
 about the subdirectory structure and the names of the subdirectories.  This
@@ -618,15 +630,16 @@ configure()
 ^^^^^^^^^^^
 
 The :py:meth:`compass.TestCase.configure()` method can be overridden by a
-child class to set config options or build them up from defaults stored in
-config files within the test case or its test group. The ``self.config``
-attribute that is modified in this function will be written to a config file
-for the test case (see :ref:`config_files`).
+child class to set config options that may require some calculation (as opposed
+to simply reading them from files with :py:meth:`compass.TestCase.add_config()`
+in the constructor). The ``self.config`` attribute that is modified in this
+function will be written to a config file for the test case
+(see :ref:`config_files`).
 
-If you override this method in a test case, you should assume that the
-``<test_case.name>.cfg`` file in its package has already been added to the
-config options prior to calling ``configure()``.  This happens automatically
-during test-case setup.
+If you override this method in a test case, you should assume that all config
+files including the ``<test_case.name>.cfg`` file in its package have already
+been added to the config options prior to calling ``configure()``.  This
+happens automatically during test-case setup.
 
 Since many test groups need similar behavior in the ``configure()`` method for
 each test case, it is common to have a shared function (sometimes also called

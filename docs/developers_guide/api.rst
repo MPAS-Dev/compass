@@ -139,6 +139,7 @@ testcase
    TestCase.run
    TestCase.validate
    TestCase.add_step
+   TestCase.add_config
 
 step
 ^^^^
