@@ -177,6 +177,21 @@ test cases and steps
    mesh.wc14.dynamic_adjustment.WC14DynamicAdjustment.configure
    mesh.wc14.dynamic_adjustment.WC14DynamicAdjustment.run
 
+   mesh.qu.QUInit
+   mesh.qu.QUInit.configure
+   mesh.qu.QUInit.run
+   mesh.qu.QUPerformanceTest
+   mesh.qu.QUPerformanceTest.configure
+   mesh.qu.QUPerformanceTest.run
+   mesh.qu.QUMeshStep
+   mesh.qu.QUMeshStep.setup
+   mesh.qu.QUMeshStep.build_cell_width_lat_lon
+   mesh.qu.set_qu_cores
+   mesh.qu.get_qu_dts
+   mesh.qu.dynamic_adjustment.QUDynamicAdjustment
+   mesh.qu.dynamic_adjustment.QUDynamicAdjustment.configure
+   mesh.qu.dynamic_adjustment.QUDynamicAdjustment.run
+
    performance_test.PerformanceTest
    performance_test.PerformanceTest.configure
    performance_test.PerformanceTest.run

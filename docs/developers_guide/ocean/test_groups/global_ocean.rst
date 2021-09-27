@@ -647,6 +647,81 @@ The default config options for this mesh are:
 The vertical grid is a ``60layerPHC`` profile (see :ref:`dev_ocean_framework_vertical`)
 with 60 vertical levels ranging in thickness from 10 to 250 m.
 
+.. _dev_ocean_global_ocean_qu:
+
+QU and QUwISC
++++++++++++++
+
+The generalized ``QU`` mesh is a quasi-uniform mesh with user-defined
+resolution (120 km by default). The ``QUwISC`` mesh is identical except that it
+includes the cavities below ice shelves in the ocean domain. The class
+:py:class:`compass.ocean.tests.global_ocean.mesh.qu.QUMeshStep` defines the
+resolution for both meshes. The ``compass.ocean.tests.global_ocean.mesh.qu``
+module includes config and namelist options appropriate for initialization and
+forward simulations with split-explicit (but not RK4) time integration on this
+mesh.  The number of target and minimum number of cores, and also the
+baroclinic and barotropic time steps are set algorithmically based on the
+mesh resolution.
+
+The default config options for this mesh are:
+
+.. code-block:: cfg
+
+    # Options related to the vertical grid
+    [vertical_grid]
+
+    # the type of vertical grid
+    grid_type = 60layerPHC
+
+    # options for global ocean testcases
+    [global_ocean]
+
+    ## metadata related to the mesh
+    # the prefix (e.g. QU, EC, WC, SO)
+    prefix = QU
+    # a description of the mesh
+    mesh_description = MPAS quasi-uniform mesh for E3SM version ${e3sm_version} at
+                       ${min_res}-km global resolution with ${levels} vertical
+                       level
+
+    # E3SM version that the mesh is intended for
+    e3sm_version = 2
+    # The revision number of the mesh, which should be incremented each time the
+    # mesh is revised
+    mesh_revision = <<<Missing>>>
+    # the minimum (finest) resolution in the mesh
+    min_res = ${global_ocean_qu:resolution}
+    # the maximum (coarsest) resolution in the mesh, can be the same as min_res
+    max_res = ${global_ocean_qu:resolution}
+    # The URL of the pull request documenting the creation of the mesh
+    pull_request = <<<Missing>>>
+
+    # options for global ocean test cases with quasi-uniform meshes
+    [global_ocean_qu]
+
+    # the resolution of the QU mesh in km
+    resolution = 120
+
+    # the number of cells per core to aim for
+    goal_cells_per_core = 300
+
+    # the approximate maximum number of cells per core (the test will fail if too
+    # few cores are available)
+    max_cells_per_core = 3000
+
+    # time step per resolution (s/km), since dt is proportional to resolution
+    dt_per_km = 30
+
+    # barotropic time step per resolution (s/km)
+    btr_dt_per_km = 1
+
+The vertical grid is a ``60layerPHC`` profile (see :ref:`dev_ocean_framework_vertical`)
+with 60 vertical levels ranging in thickness from 10 to 250 m.
+
+The target and minimum number of cores are controlled by ``goal_cells_per_core``
+and ``max_cells_per_core``, respectively.  The baroclinic and barotropic time
+steps are controlled by ``dt_per_km`` and ``btr_dt_per_km``, respectively.
+
 .. _dev_ocean_global_ocean_init:
 
 init test case

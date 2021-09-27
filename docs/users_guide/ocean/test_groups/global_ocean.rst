@@ -331,6 +331,52 @@ equator, and 35 km around Antarctica.
    :width: 500 px
    :align: center
 
+.. _global_ocean_mesh_qu:
+
+QU
+^^
+
+The quasi-uniform (QU) general mesh, is a global mesh with approximately
+constant horizontal resolution everywhere (as the name implies).  The
+resolution of the mesh is determined by a user config file, with a default
+of 120 km (very low resolution).  Config options specific to this mesh are:
+
+.. code-block:: cfg
+
+    # options for global ocean test cases with quasi-uniform meshes
+    [global_ocean_qu]
+
+    # the resolution of the QU mesh in km
+    resolution = 120
+
+    # the number of cells per core to aim for
+    goal_cells_per_core = 300
+
+    # the approximate maximum number of cells per core (the test will fail if too
+    # few cores are available)
+    max_cells_per_core = 3000
+
+    # time step per resolution (s/km), since dt is proportional to resolution
+    dt_per_km = 30
+
+    # barotropic time step per resolution (s/km)
+    btr_dt_per_km = 1
+
+You can place any of these in a user config file and modify them *before*
+setting up test cases with the QU mesh.
+
+:ref:`global_ocean_ice_shelf_cavities` around Antarctica are excluded from the
+mesh.
+
+.. _global_ocean_mesh_quwisc:
+
+QUwISC
+^^^^^^
+
+The quasi-uniform general mesh with ice-shelf cavities (QUwISC), is nearly
+identical to the :ref:`global_ocean_mesh_qu` except that it includes the
+:ref:`global_ocean_ice_shelf_cavities` around Antarctica in the ocean domain.
+
 .. _global_ocean_ice_shelf_cavities:
 
 Ice-shelf cavities
