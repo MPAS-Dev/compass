@@ -159,6 +159,7 @@ step
    Step.update_namelist_at_runtime
    Step.update_namelist_pio
    Step.add_streams_file
+   Step.update_streams_at_runtime
 
 config
 ^^^^^^

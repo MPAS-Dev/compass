@@ -1882,6 +1882,44 @@ Thus, calls to :py:meth:`compass.Step.add_streams_file()` with
 ``template_replacements`` are qualitatively similar to namelist calls to
 :py:meth:`compass.Step.add_namelist_options()`.
 
+.. _dev_step_update_streams:
+
+Updating a streams file at runtime
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Just as with namelist options, it is sometimes useful to update streams files
+after it has already been generated as part of setting up.  This typically
+happens within a step's ``run()`` method for properties of the stream that
+may be affected by config options that a user may have changed.  In such
+cases, call :py:meth:`compass.Step.update_streams_at_runtime()`.  In this
+fairly complicated example, the duration of the run in hours is a config option
+that we turn into a string.  A dictionary of replacements together with a
+template streams file, as described above, are used to update the streams file
+with the new run duration:
+
+.. code-block:: python
+
+    import time
+    from datetime import datetime, timedelta
+    ...
+
+    config = self.config
+    # the duration (hours) of the run
+    duration = int(3600 * config.getfloat('planar_convergence', 'duration'))
+    delta = timedelta(seconds=duration)
+    hours = delta.seconds//3600
+    minutes = delta.seconds//60 % 60
+    seconds = delta.seconds % 60
+    duration = f'{delta.days:03d}_{hours:02d}:{minutes:02d}:{seconds:02d}'
+
+    stream_replacements = {'output_interval': duration}
+
+    self.update_streams_at_runtime(
+        'compass.ocean.tests.planar_convergence',
+        'streams.template', template_replacements=stream_replacements,
+        out_name='streams.ocean')
+
+
 Adding MPAS model as an input
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
