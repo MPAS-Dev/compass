@@ -110,8 +110,11 @@
 <span class="kn">import</span> <span class="nn">pickle</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 
+<span class="kn">from</span> <span class="nn">mache</span> <span class="kn">import</span> <span class="n">MachineInfo</span><span class="p">,</span> <span class="n">discover_machine</span>
+
 <span class="kn">from</span> <span class="nn">compass.mpas_cores</span> <span class="kn">import</span> <span class="n">get_mpas_cores</span>
-<span class="kn">from</span> <span class="nn">compass.config</span> <span class="kn">import</span> <span class="n">add_config</span><span class="p">,</span> <span class="n">ensure_absolute_paths</span>
+<span class="kn">from</span> <span class="nn">compass.config</span> <span class="kn">import</span> <span class="n">add_config</span><span class="p">,</span> <span class="n">merge_other_config</span><span class="p">,</span> \
+    <span class="n">ensure_absolute_paths</span>
 <span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">symlink</span>
 <span class="kn">from</span> <span class="nn">compass</span> <span class="kn">import</span> <span class="n">provenance</span>
 
@@ -168,6 +171,14 @@
     <span class="k">if</span> <span class="n">machine</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s1">&#39;COMPASS_MACHINE&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
         <span class="n">machine</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;COMPASS_MACHINE&#39;</span><span class="p">]</span>
 
+    <span class="k">if</span> <span class="n">machine</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">machine</span> <span class="o">=</span> <span class="n">discover_machine</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">machine</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">machine_info</span> <span class="o">=</span> <span class="n">MachineInfo</span><span class="p">(</span><span class="n">machine</span><span class="o">=</span><span class="s1">&#39;unknown&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">machine_info</span> <span class="o">=</span> <span class="n">MachineInfo</span><span class="p">(</span><span class="n">machine</span><span class="o">=</span><span class="n">machine</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="n">config_file</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">machine</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;At least one of config_file and machine is needed.&#39;</span><span class="p">)</span>
 
@@ -176,7 +187,7 @@
 
     <span class="k">if</span> <span class="n">cached</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">tests</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Ignoring &quot;cached&quot; argument becasue &quot;tests&quot; was &#39;</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Ignoring &quot;cached&quot; argument because &quot;tests&quot; was &#39;</span>
                           <span class="s1">&#39;not provided&#39;</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">cached</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tests</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;A list of cached steps must be provided for &#39;</span>
@@ -235,8 +246,8 @@
 
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Setting up test cases:&#39;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">path</span><span class="p">,</span> <span class="n">test_case</span> <span class="ow">in</span> <span class="n">test_cases</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">setup_case</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">config_file</span><span class="p">,</span> <span class="n">machine</span><span class="p">,</span> <span class="n">work_dir</span><span class="p">,</span>
-                   <span class="n">baseline_dir</span><span class="p">,</span> <span class="n">mpas_model_path</span><span class="p">,</span>
+        <span class="n">setup_case</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">config_file</span><span class="p">,</span> <span class="n">machine</span><span class="p">,</span> <span class="n">machine_info</span><span class="p">,</span>
+                   <span class="n">work_dir</span><span class="p">,</span> <span class="n">baseline_dir</span><span class="p">,</span> <span class="n">mpas_model_path</span><span class="p">,</span>
                    <span class="n">cached_steps</span><span class="o">=</span><span class="n">cached_steps</span><span class="p">[</span><span class="n">path</span><span class="p">])</span>
 
     <span class="n">test_suite</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">suite_name</span><span class="p">,</span>
@@ -262,8 +273,8 @@
     <span class="k">return</span> <span class="n">test_cases</span></div>
 
 
-<div class="viewcode-block" id="setup_case"><a class="viewcode-back" href="../../developers_guide/generated/compass.setup.setup_case.html#compass.setup.setup_case">[docs]</a><span class="k">def</span> <span class="nf">setup_case</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">config_file</span><span class="p">,</span> <span class="n">machine</span><span class="p">,</span> <span class="n">work_dir</span><span class="p">,</span> <span class="n">baseline_dir</span><span class="p">,</span>
-               <span class="n">mpas_model_path</span><span class="p">,</span> <span class="n">cached_steps</span><span class="p">):</span>
+<div class="viewcode-block" id="setup_case"><a class="viewcode-back" href="../../developers_guide/generated/compass.setup.setup_case.html#compass.setup.setup_case">[docs]</a><span class="k">def</span> <span class="nf">setup_case</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">config_file</span><span class="p">,</span> <span class="n">machine</span><span class="p">,</span> <span class="n">machine_info</span><span class="p">,</span> <span class="n">work_dir</span><span class="p">,</span>
+               <span class="n">baseline_dir</span><span class="p">,</span> <span class="n">mpas_model_path</span><span class="p">,</span> <span class="n">cached_steps</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Set up one or more test cases</span>
 
@@ -282,6 +293,10 @@
 <span class="sd">    machine : str</span>
 <span class="sd">        The name of one of the machines with defined config options, which can</span>
 <span class="sd">        be listed with ``compass list --machines``</span>
+
+<span class="sd">    machine_info : mache.MachineInfo</span>
+<span class="sd">        Information about the machine, to be included in the config options</span>
+<span class="sd">        and passed along to each step</span>
 
 <span class="sd">    work_dir : str</span>
 <span class="sd">        A directory that will serve as the base for creating case directories</span>
@@ -306,7 +321,9 @@
     <span class="c1"># start with default compass config options</span>
     <span class="n">add_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;compass&#39;</span><span class="p">,</span> <span class="s1">&#39;default.cfg&#39;</span><span class="p">)</span>
 
-    <span class="c1"># add the machine config file</span>
+    <span class="c1"># add the E3SM config options from mache</span>
+    <span class="n">merge_other_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">machine_info</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+    <span class="c1"># add the compass machine config file</span>
     <span class="k">if</span> <span class="n">machine</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">machine</span> <span class="o">=</span> <span class="s1">&#39;default&#39;</span>
     <span class="n">add_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;compass.machines&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.cfg&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">machine</span><span class="p">))</span>

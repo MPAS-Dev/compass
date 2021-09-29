@@ -162,6 +162,25 @@
             <span class="k">raise</span></div>
 
 
+<span class="k">def</span> <span class="nf">merge_other_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">other_config</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Add config options from the other config parser to this one</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : configparser.ConfigParser</span>
+<span class="sd">        Configuration options</span>
+
+<span class="sd">    other_config : configparser.ConfigParser</span>
+<span class="sd">        Configuration options to add</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">section</span> <span class="ow">in</span> <span class="n">other_config</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">has_section</span><span class="p">(</span><span class="n">section</span><span class="p">):</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">section</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">other_config</span><span class="o">.</span><span class="n">items</span><span class="p">(</span><span class="n">section</span><span class="p">):</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+
 <div class="viewcode-block" id="ensure_absolute_paths"><a class="viewcode-back" href="../../developers_guide/generated/compass.config.ensure_absolute_paths.html#compass.config.ensure_absolute_paths">[docs]</a><span class="k">def</span> <span class="nf">ensure_absolute_paths</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    make sure all paths in the paths, namelists and streams sections are</span>

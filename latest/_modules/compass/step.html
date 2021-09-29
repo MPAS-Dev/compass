@@ -202,6 +202,9 @@
 <span class="sd">        Configuration options for this test case, a combination of the defaults</span>
 <span class="sd">        for the machine, core and configuration</span>
 
+<span class="sd">    machine_info : mache.MachineInfo</span>
+<span class="sd">        Information about E3SM supported machines</span>
+
 <span class="sd">    config_filename : str</span>
 <span class="sd">        The local name of the config file that ``config`` has been written to</span>
 <span class="sd">        during setup and read from during run</span>
@@ -294,6 +297,7 @@
 
         <span class="c1"># these will be set later during setup</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">machine_info</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config_filename</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">base_work_dir</span> <span class="o">=</span> <span class="kc">None</span>
@@ -771,10 +775,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="s1">&#39;permissions&#39;</span><span class="p">,</span> <span class="s1">&#39;group&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="s1">&#39;e3sm_unified&#39;</span><span class="p">,</span> <span class="s1">&#39;group&#39;</span><span class="p">):</span>
             <span class="k">return</span>
 
-        <span class="n">group</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;permissions&#39;</span><span class="p">,</span> <span class="s1">&#39;group&#39;</span><span class="p">)</span>
+        <span class="n">group</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;e3sm_unified&#39;</span><span class="p">,</span> <span class="s1">&#39;group&#39;</span><span class="p">)</span>
 
         <span class="n">new_uid</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getuid</span><span class="p">()</span>
         <span class="n">new_gid</span> <span class="o">=</span> <span class="n">grp</span><span class="o">.</span><span class="n">getgrnam</span><span class="p">(</span><span class="n">group</span><span class="p">)</span><span class="o">.</span><span class="n">gr_gid</span>
