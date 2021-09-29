@@ -15,8 +15,8 @@ def get_envs():
     # to use.
 
     envs = [{'suffix': '',
-             'version': '0.2.0',
-             'python': '3.8',
+             'version': '0.3.0',
+             'python': '3.9',
              'mpi': 'nompi'}]
 
     # whether to delete and rebuild each environment if it already exists
