@@ -97,6 +97,9 @@ class Step:
         Configuration options for this test case, a combination of the defaults
         for the machine, core and configuration
 
+    machine_info : mache.MachineInfo
+        Information about E3SM supported machines
+
     config_filename : str
         The local name of the config file that ``config`` has been written to
         during setup and read from during run
@@ -189,6 +192,7 @@ class Step:
 
         # these will be set later during setup
         self.config = None
+        self.machine_info = None
         self.config_filename = None
         self.work_dir = None
         self.base_work_dir = None
@@ -666,10 +670,10 @@ class Step:
         """
         config = self.config
 
-        if not config.has_option('permissions', 'group'):
+        if not config.has_option('e3sm_unified', 'group'):
             return
 
-        group = config.get('permissions', 'group')
+        group = config.get('e3sm_unified', 'group')
 
         new_uid = os.getuid()
         new_gid = grp.getgrnam(group).gr_gid
