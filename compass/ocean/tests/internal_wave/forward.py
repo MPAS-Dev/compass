@@ -52,9 +52,12 @@ class Forward(Step):
         self.add_streams_file('compass.ocean.tests.internal_wave',
                               'streams.forward')
 
-        self.add_input_file(filename='init.nc', target='../initial_state/ocean.nc')
-        self.add_input_file(filename='mesh.nc', target='../initial_state/culled_mesh.nc')
-        self.add_input_file(filename='graph.info', target='../initial_state/culled_graph.info')
+        self.add_input_file(filename='init.nc',
+                            target='../initial_state/ocean.nc')
+        self.add_input_file(filename='mesh.nc',
+                            target='../initial_state/culled_mesh.nc')
+        self.add_input_file(filename='graph.info',
+                            target='../initial_state/culled_graph.info')
 
         self.add_model_as_input()
 

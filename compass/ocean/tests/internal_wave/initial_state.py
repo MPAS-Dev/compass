@@ -96,24 +96,24 @@ class InitialState(Step):
         if use_distances:
             perturbation_width = amplitude_width_dist
         else:
-            perturbation_width =  (yMax - yMin) * amplitude_width_frac
+            perturbation_width = (yMax - yMin) * amplitude_width_frac
 
         # Set stratified temperature
-        temp_vert = (bottom_temperature +
-                     (surface_temperature - bottom_temperature) *
-                     ((ds.refZMid + bottom_depth) / bottom_depth))
+        temp_vert = (bottom_temperature
+                     + (surface_temperature - bottom_temperature) *
+                       ((ds.refZMid + bottom_depth) / bottom_depth))
 
         depth_frac = xarray.zeros_like(temp_vert)
         refBottomDepth = ds['refBottomDepth']
         for k in range(1, vert_levels):
             depth_frac[k] = refBottomDepth[k-1] / refBottomDepth[vert_levels-1]
 
-        # If cell is in the southern half, outside the sin width, subtract 
+        # If cell is in the southern half, outside the sin width, subtract
         # temperature difference
-        frac = xarray.where( numpy.abs(yCell - yMid) < perturbation_width,
-                            numpy.cos(0.5 * numpy.pi * (yCell - yMid)
-                                      / perturbation_width)
-                            * numpy.sin(numpy.pi * depth_frac), 
+        frac = xarray.where(numpy.abs(yCell - yMid) < perturbation_width,
+                            numpy.cos(0.5 * numpy.pi * (yCell - yMid) /
+                                      perturbation_width) *
+                            numpy.sin(numpy.pi * depth_frac),
                             0.)
 
         temperature = temp_vert - temperature_difference * frac

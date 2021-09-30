@@ -41,4 +41,3 @@ class TenDayTest(TestCase):
         compare_variables(test_case=self,
                           variables=['layerThickness', 'normalVelocity'],
                           filename1='forward/output.nc')
-
