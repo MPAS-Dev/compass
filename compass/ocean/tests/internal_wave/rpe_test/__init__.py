@@ -29,12 +29,12 @@ class RpeTest(TestCase):
         name = 'rpe_test'
         super().__init__(test_group=test_group, name=name)
 
-        nus = [1, 5, 10, 20, 200]
+        nus = [0.01, 1, 15, 150]
 
         self.add_step(InitialState(test_case=self))
 
         for index, nu in enumerate(nus):
-            name = 'rpe_test_{}_nu_{}'.format(index + 1, nu)
+            name = 'rpe_test_{}_nu_{:g}'.format(index + 1, nu)
             step = Forward(
                 test_case=self, name=name, subdir=name, cores=4,
                 threads=1, nu=float(nu))
