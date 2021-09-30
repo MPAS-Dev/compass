@@ -8,7 +8,9 @@ The ``ocean/internal_wave`` test group induces internal wave propagation and is 
 
 The domain is periodic on the zonal boundaries and solid on the meridional boundaries.
 Salinity is constant throughout the domain (at 35 PSU).  The initial
-temperature has a linear background stratification with a sinusoidal perturbation in the center of the domain. This perturbation initiates symmetric waves that propage out from the center and then back to the center after meeting the solid boundaries. 
+temperature has a linear background stratification with a sinusoidal perturbation in the center 
+of the domain. This perturbation initiates symmetric waves that propage out from the center and 
+then back to the center after meeting the solid boundaries. 
 with a gradient between the two halves that is sinusoidally perturbed in the
 meridional direction.  The surface temperature is also warmer than at depth.
 
@@ -22,7 +24,8 @@ thickness. By default, all cases have a horizontal resolution of 5 km.
 The test group includes 3 test cases.  All test cases have 2 steps,
 ``initial_state``, which defines the mesh and initial conditions for the model,
 and ``forward`` (given another name in many test cases to distinguish multiple
-forward runs), which performs time integration of the model. There is an optional ``viz`` step which performs visualization of vertical cross-sections through the center of the domain.
+forward runs), which performs time integration of the model. There is an optional ``viz`` 
+step which performs visualization of vertical cross-sections through the center of the domain.
 
 config options
 --------------
@@ -127,7 +130,8 @@ prognostic variables for regression testing.
 rpe_test
 --------
 
-Since mixing is a strong function of horizontal viscosity, this test case performs 20-day integrations of the model forward in time at 5 different values of the viscosity (with steps
+Since mixing is a strong function of horizontal viscosity, this test case performs 
+20-day integrations of the model forward in time at 5 different values of the viscosity (with steps
 named ``rpe_test_1_nu_1``, ``rpe_test_2_nu_5``, etc.)
 ``ocean/internal_wave/rpe_test``,
 Results of these tests have been used
