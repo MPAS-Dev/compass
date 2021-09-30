@@ -21,3 +21,10 @@ class IsomipPlus(TestGroup):
                         OceanTest(test_group=self, resolution=resolution,
                                   experiment=experiment,
                                   vertical_coordinate=vertical_coordinate))
+            for experiment in ['Ocean0']:
+                for vertical_coordinate in ['z-star']:
+                    self.add_test_case(
+                        OceanTest(test_group=self, resolution=resolution,
+                                  experiment=experiment,
+                                  vertical_coordinate=vertical_coordinate,
+                                  time_varying_forcing=True))

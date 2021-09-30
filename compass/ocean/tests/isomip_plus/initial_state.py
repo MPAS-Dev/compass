@@ -32,8 +32,12 @@ class InitialState(Step):
 
     vertical_coordinate : str
         The type of vertical coordinate (``z-star``, ``z-level``, etc.)
+
+    time_varying_forcing : bool
+        Whether the run includes time-varying land-ice forcing
     """
-    def __init__(self, test_case, resolution, experiment, vertical_coordinate):
+    def __init__(self, test_case, resolution, experiment, vertical_coordinate,
+                 time_varying_forcing):
         """
         Create the step
 
@@ -50,11 +54,15 @@ class InitialState(Step):
 
         vertical_coordinate : str
             The type of vertical coordinate (``z-star``, ``z-level``, etc.)
+
+        time_varying_forcing : bool
+            Whether the run includes time-varying land-ice forcing
         """
         super().__init__(test_case=test_case, name='initial_state')
         self.resolution = resolution
         self.experiment = experiment
         self.vertical_coordinate = vertical_coordinate
+        self.time_varying_forcing = time_varying_forcing
 
         if experiment in ['Ocean0', 'Ocean1']:
             self.add_input_file(filename='input_geometry.nc',
@@ -114,6 +122,22 @@ class InitialState(Step):
 
         ds = interpolate_geom(dsMesh, dsGeom, min_ocean_fraction)
 
+        for var in ['landIceFraction']:
+            ds[var] = ds[var].expand_dims(dim='Time', axis=0)
+
+        ds['landIceMask'] = \
+            (ds.landIceFraction >= min_land_ice_fraction).astype(int)
+
+        ref_density = constants['SHR_CONST_RHOSW']
+        landIcePressure, landIceDraft = compute_land_ice_pressure_and_draft(
+            ssh=ds.ssh, modify_mask=ds.ssh < 0., ref_density=ref_density)
+
+        ds['landIcePressure'] = landIcePressure
+        ds['landIceDraft'] = landIceDraft
+
+        if self.time_varying_forcing:
+            self._write_time_varying_forcing(ds_init=ds)
+
         ds['bottomDepth'] = -ds.bottomDepthObserved
 
         section = config['isomip_plus']
@@ -130,19 +154,6 @@ class InitialState(Step):
         ds['bottomDepth'] = numpy.maximum(ds.bottomDepth, min_depth)
 
         init_vertical_coord(config, ds)
-
-        for var in ['landIceFraction']:
-            ds[var] = ds[var].expand_dims(dim='Time', axis=0)
-
-        ds['landIceMask'] = \
-            (ds.landIceFraction >= min_land_ice_fraction).astype(int)
-
-        ref_density = constants['SHR_CONST_RHOSW']
-        landIcePressure, landIceDraft = compute_land_ice_pressure_and_draft(
-            ssh=ds.ssh, modify_mask=ds.ssh < 0., ref_density=ref_density)
-
-        ds['landIcePressure'] = landIcePressure
-        ds['landIceDraft'] = landIceDraft
 
         ds['modifyLandIcePressureMask'] = \
             (ds['landIceFraction'] > 0.01).astype(int)
@@ -244,3 +255,47 @@ class InitialState(Step):
             mask*evap_rate*restore_top_temp/hflux_factor
 
         write_netcdf(dsForcing, 'init_mode_forcing_data.nc')
+
+    def _write_time_varying_forcing(self, ds_init):
+        """
+        Write time-varying land-ice forcing and update the initial condition
+        """
+
+        config = self.config
+        dates = config.get('isomip_plus_forcing', 'dates')
+        dates = [date.ljust(64) for date in dates.replace(',', ' ').split()]
+        scales = config.get('isomip_plus_forcing', 'scales')
+        scales = [float(scale) for scale in scales.replace(',', ' ').split()]
+
+        ds_out = xarray.Dataset()
+        ds_out['xtime'] = ('Time', dates)
+        ds_out['xtime'] = ds_out.xtime.astype('S')
+
+        landIceDraft = list()
+        landIcePressure = list()
+        landIceFraction = list()
+
+        for scale in scales:
+            landIceDraft.append(scale*ds_init.landIceDraft)
+            landIcePressure.append(scale*ds_init.landIcePressure)
+            landIceFraction.append(ds_init.landIceFraction)
+
+        ds_out['landIceDraftForcing'] = xarray.concat(landIceDraft, 'Time')
+        ds_out.landIceDraftForcing.attrs['units'] = 'm'
+        ds_out.landIceDraftForcing.attrs['long_name'] = \
+            'The approximate elevation of the land ice-ocean interface'
+        ds_out['landIcePressureForcing'] = \
+            xarray.concat(landIcePressure, 'Time')
+        ds_out.landIcePressureForcing.attrs['units'] = 'm'
+        ds_out.landIcePressureForcing.attrs['long_name'] = \
+            'Pressure from the weight of land ice at the ice-ocean interface'
+        ds_out['landIceFractionForcing'] = \
+            xarray.concat(landIceFraction, 'Time')
+        ds_out.landIceFractionForcing.attrs['units'] = 'unitless'
+        ds_out.landIceFractionForcing.attrs['long_name'] = \
+            'The fraction of each cell covered by land ice'
+        write_netcdf(ds_out, 'land_ice_forcing.nc')
+
+        ds_init['landIceDraft'] = scales[0]*ds_init.landIceDraft
+        ds_init['ssh'] = ds_init.landIceDraft
+        ds_init['landIcePressure'] = scales[0]*ds_init.landIcePressure

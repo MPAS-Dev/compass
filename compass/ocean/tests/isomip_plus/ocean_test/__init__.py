@@ -22,10 +22,13 @@ class OceanTest(TestCase):
 
     vertical_coordinate : str
             The type of vertical coordinate (``z-star``, ``z-level``, etc.)
+
+    time_varying_forcing : bool
+        Whether the run includes time-varying land-ice forcing
     """
 
     def __init__(self, test_group, resolution, experiment,
-                 vertical_coordinate):
+                 vertical_coordinate, time_varying_forcing=False):
         """
         Create the test case
 
@@ -42,16 +45,23 @@ class OceanTest(TestCase):
 
         vertical_coordinate : str
             The type of vertical coordinate (``z-star``, ``z-level``, etc.)
+
+        time_varying_forcing : bool, optional
+            Whether the run includes time-varying land-ice forcing
         """
-        name = experiment
+        if time_varying_forcing:
+            name = f'time_varying_{experiment}'
+        else:
+            name = experiment
         self.resolution = resolution
         self.experiment = experiment
         self.vertical_coordinate = vertical_coordinate
+        self.time_varying_forcing = time_varying_forcing
 
         if resolution == int(resolution):
-            res_folder = '{}km'.format(int(resolution))
+            res_folder = f'{int(resolution)}km'
         else:
-            res_folder = '{}km'.format(resolution)
+            res_folder = f'{resolution}km'
 
         subdir = '{}/{}/{}'.format(res_folder, vertical_coordinate, name)
         super().__init__(test_group=test_group, name=name, subdir=subdir)
@@ -59,18 +69,21 @@ class OceanTest(TestCase):
         self.add_step(
             InitialState(test_case=self, resolution=resolution,
                          experiment=experiment,
-                         vertical_coordinate=vertical_coordinate))
+                         vertical_coordinate=vertical_coordinate,
+                         time_varying_forcing=time_varying_forcing))
         self.add_step(
             SshAdjustment(test_case=self, resolution=resolution))
         self.add_step(
             Forward(test_case=self, name='performance', resolution=resolution,
                     experiment=experiment,
-                    run_duration='0000-00-00_01:00:00'))
+                    run_duration='0000-00-00_01:00:00',
+                    time_varying_forcing=time_varying_forcing))
 
         self.add_step(
             Forward(test_case=self, name='simulation', resolution=resolution,
                     experiment=experiment,
-                    run_duration='0000-01-00_00:00:00'),
+                    run_duration='0000-01-00_00:00:00',
+                    time_varying_forcing=time_varying_forcing),
             run_by_default=False)
 
         self.add_step(
