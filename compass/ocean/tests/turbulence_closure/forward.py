@@ -4,8 +4,8 @@ from compass.step import Step
 
 class Forward(Step):
     """
-    A step for performing forward MPAS-Ocean runs as part of baroclinic
-    channel test cases.
+    A step for performing forward MPAS-Ocean runs as part of turbulence 
+    closure test cases.
 
     Attributes
     ----------
@@ -51,9 +51,9 @@ class Forward(Step):
             min_cores = cores
         super().__init__(test_case=test_case, name=name, subdir=subdir,
                          cores=cores, min_cores=min_cores, threads=threads)
-        self.add_namelist_file('compass.ocean.tests.baroclinic_channel',
+        self.add_namelist_file('compass.ocean.tests.turbulence_closure',
                                'namelist.forward')
-        self.add_namelist_file('compass.ocean.tests.baroclinic_channel',
+        self.add_namelist_file('compass.ocean.tests.turbulence_closure',
                                'namelist.{}.forward'.format(resolution))
         if nu is not None:
             # update the viscosity to the requested value
@@ -63,7 +63,7 @@ class Forward(Step):
         # make sure output is double precision
         self.add_streams_file('compass.ocean.streams', 'streams.output')
 
-        self.add_streams_file('compass.ocean.tests.baroclinic_channel',
+        self.add_streams_file('compass.ocean.tests.turbulence_closure',
                               'streams.forward')
 
         self.add_input_file(filename='init.nc',
