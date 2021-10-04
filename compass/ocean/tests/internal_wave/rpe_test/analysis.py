@@ -74,7 +74,7 @@ def _plot(nx, ny, filename, nus):
     plt.switch_backend('Agg')
 
     fig = plt.gcf()
-    nRow = 5
+    nRow = len(nus)
     nCol = 2
     iTime = [0, 1]
     time = ['1', '21']
