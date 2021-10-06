@@ -278,6 +278,37 @@ ice_shelf_2d
    viz.Viz
    viz.Viz.run
 
+internal_wave
+~~~~~~~~~~~~~
+
+.. currentmodule:: compass.ocean.tests.internal_wave
+
+.. autosummary::
+   :toctree: generated/
+
+   InternalWave
+
+   default.Default
+   default.Default.validate
+
+   rpe_test.RpeTest
+
+   rpe_test.analysis.Analysis
+   rpe_test.analysis.Analysis.run
+
+   ten_day_test.TenDayTest
+   ten_day_test.TenDayTest.validate
+
+   forward.Forward
+   forward.Forward.run
+
+   initial_state.InitialState
+   initial_state.InitialState.run
+
+   viz.Viz
+   viz.Viz.run
+
+
 isomip_plus
 ~~~~~~~~~~~
 
