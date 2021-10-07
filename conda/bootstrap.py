@@ -12,9 +12,32 @@ import grp
 import shutil
 import progressbar
 from jinja2 import Template
+from importlib.resources import path
+from configparser import ConfigParser
 
 from mache import MachineInfo, discover_machine
-from shared import parse_args, get_config, get_conda_base, check_call
+from shared import parse_args, get_conda_base, check_call
+
+
+def get_config(config_file, machine):
+    # we can't load compass so we find the config files
+    here = os.path.abspath(os.path.dirname(__file__))
+    default_config = os.path.join(here, '..', 'compass', 'default.cfg')
+    config = ConfigParser()
+    config.read(default_config)
+
+    if machine is not None:
+        with path('mache.machines', f'{machine}.cfg') as machine_config:
+            config.read(str(machine_config))
+
+        machine_config = os.path.join(here, '..', 'compass', 'machines',
+                                      '{}.cfg'.format(machine))
+        config.read(machine_config)
+
+    if config_file is not None:
+        config.read(config_file)
+
+    return config
 
 
 def get_version():
@@ -597,7 +620,7 @@ def main():
         if machine is not None:
             machine_info = MachineInfo(machine=machine)
 
-    config = get_config(args.config_file, machine=machine)
+    config = get_config(args.config_file, machine)
 
     is_test = not config.getboolean('deploy', 'release')
 

@@ -3,18 +3,6 @@ import warnings
 import sys
 import argparse
 import subprocess
-from importlib.resources import path
-
-try:
-    from configparser import ConfigParser
-except ImportError:
-    from six.moves import configparser
-    import six
-
-    if six.PY2:
-        ConfigParser = configparser.SafeConfigParser
-    else:
-        ConfigParser = configparser.ConfigParser
 
 
 def parse_args():
@@ -50,27 +38,6 @@ def parse_args():
     args = parser.parse_args(sys.argv[1:])
 
     return args
-
-
-def get_config(config_file, machine=None):
-    # we can't load compass so we find the config files
-    here = os.path.abspath(os.path.dirname(__file__))
-    default_config = os.path.join(here, '..', 'compass', 'default.cfg')
-    config = ConfigParser()
-    config.read(default_config)
-
-    if machine is not None:
-        with path('mache.machines', f'{machine}.cfg') as machine_config:
-            config.read(str(machine_config))
-
-        machine_config = os.path.join(here, '..', 'compass', 'machines',
-                                      '{}.cfg'.format(machine))
-        config.read(machine_config)
-
-    if config_file is not None:
-        config.read(config_file)
-
-    return config
 
 
 def get_conda_base(conda_base, is_test, config):

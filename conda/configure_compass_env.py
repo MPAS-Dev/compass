@@ -4,14 +4,38 @@ from __future__ import print_function
 
 import os
 import platform
+import sys
+
 try:
     from urllib.request import urlopen, Request
 except ImportError:
     from urllib2 import urlopen, Request
 
-import sys
+try:
+    from configparser import ConfigParser
+except ImportError:
+    from six.moves import configparser
+    import six
 
-from shared import parse_args, get_config, get_conda_base, check_call
+    if six.PY2:
+        ConfigParser = configparser.SafeConfigParser
+    else:
+        ConfigParser = configparser.ConfigParser
+
+from shared import parse_args, get_conda_base, check_call
+
+
+def get_config(config_file):
+    # we can't load compass so we find the config files
+    here = os.path.abspath(os.path.dirname(__file__))
+    default_config = os.path.join(here, '..', 'compass', 'default.cfg')
+    config = ConfigParser()
+    config.read(default_config)
+
+    if config_file is not None:
+        config.read(config_file)
+
+    return config
 
 
 def bootstrap(activate_install_env, source_path):
