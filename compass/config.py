@@ -57,6 +57,25 @@ def add_config(config, package, config_file, exception=True):
             raise
 
 
+def merge_other_config(config, other_config):
+    """
+    Add config options from the other config parser to this one
+
+    Parameters
+    ----------
+    config : configparser.ConfigParser
+        Configuration options
+
+    other_config : configparser.ConfigParser
+        Configuration options to add
+    """
+    for section in other_config.sections():
+        if not config.has_section(section):
+            config.add_section(section)
+        for key, value in other_config.items(section):
+            config.set(section, key, value)
+
+
 def ensure_absolute_paths(config):
     """
     make sure all paths in the paths, namelists and streams sections are

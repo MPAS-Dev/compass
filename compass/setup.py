@@ -5,8 +5,11 @@ import os
 import pickle
 import warnings
 
+from mache import MachineInfo, discover_machine
+
 from compass.mpas_cores import get_mpas_cores
-from compass.config import add_config, ensure_absolute_paths
+from compass.config import add_config, merge_other_config, \
+    ensure_absolute_paths
 from compass.io import symlink
 from compass import provenance
 
@@ -63,6 +66,14 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
     if machine is None and 'COMPASS_MACHINE' in os.environ:
         machine = os.environ['COMPASS_MACHINE']
 
+    if machine is None:
+        machine = discover_machine()
+
+    if machine is None:
+        machine_info = MachineInfo(machine='unknown')
+    else:
+        machine_info = MachineInfo(machine=machine)
+
     if config_file is None and machine is None:
         raise ValueError('At least one of config_file and machine is needed.')
 
@@ -71,7 +82,7 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
 
     if cached is not None:
         if tests is None:
-            warnings.warn('Ignoring "cached" argument becasue "tests" was '
+            warnings.warn('Ignoring "cached" argument because "tests" was '
                           'not provided')
         elif len(cached) != len(tests):
             raise ValueError('A list of cached steps must be provided for '
@@ -130,8 +141,8 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
 
     print('Setting up test cases:')
     for path, test_case in test_cases.items():
-        setup_case(path, test_case, config_file, machine, work_dir,
-                   baseline_dir, mpas_model_path,
+        setup_case(path, test_case, config_file, machine, machine_info,
+                   work_dir, baseline_dir, mpas_model_path,
                    cached_steps=cached_steps[path])
 
     test_suite = {'name': suite_name,
@@ -157,8 +168,8 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
     return test_cases
 
 
-def setup_case(path, test_case, config_file, machine, work_dir, baseline_dir,
-               mpas_model_path, cached_steps):
+def setup_case(path, test_case, config_file, machine, machine_info, work_dir,
+               baseline_dir, mpas_model_path, cached_steps):
     """
     Set up one or more test cases
 
@@ -177,6 +188,10 @@ def setup_case(path, test_case, config_file, machine, work_dir, baseline_dir,
     machine : str
         The name of one of the machines with defined config options, which can
         be listed with ``compass list --machines``
+
+    machine_info : mache.MachineInfo
+        Information about the machine, to be included in the config options
+        and passed along to each step
 
     work_dir : str
         A directory that will serve as the base for creating case directories
@@ -201,7 +216,9 @@ def setup_case(path, test_case, config_file, machine, work_dir, baseline_dir,
     # start with default compass config options
     add_config(config, 'compass', 'default.cfg')
 
-    # add the machine config file
+    # add the E3SM config options from mache
+    merge_other_config(config, machine_info.config)
+    # add the compass machine config file
     if machine is None:
         machine = 'default'
     add_config(config, 'compass.machines', '{}.cfg'.format(machine))

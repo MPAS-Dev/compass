@@ -19,6 +19,9 @@ class Forward(Step):
         """
         super().__init__(test_case=test_case, name='forward', cores=1,
                          min_cores=1, threads=1)
+        # make sure output is double precision
+        self.add_streams_file('compass.ocean.streams', 'streams.output')
+
         self.add_namelist_file('compass.ocean.tests.gotm.default',
                                'namelist.forward')
 

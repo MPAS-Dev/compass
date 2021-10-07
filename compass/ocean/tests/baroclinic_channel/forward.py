@@ -60,6 +60,9 @@ class Forward(Step):
             options = {'config_mom_del2': '{}'.format(nu)}
             self.add_namelist_options(options)
 
+        # make sure output is double precision
+        self.add_streams_file('compass.ocean.streams', 'streams.output')
+
         self.add_streams_file('compass.ocean.tests.baroclinic_channel',
                               'streams.forward')
 

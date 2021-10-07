@@ -12,5 +12,6 @@ Test groups
    global_ocean
    gotm
    ice_shelf_2d
+   internal_wave
    isomip_plus
    ziso
