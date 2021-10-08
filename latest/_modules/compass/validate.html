@@ -172,6 +172,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">work_dir</span> <span class="o">=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">work_dir</span>
 
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">logger</span>
+
     <span class="n">path1</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">filename1</span><span class="p">))</span>
     <span class="k">if</span> <span class="n">filename2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">path2</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">filename2</span><span class="p">))</span>
@@ -227,7 +229,8 @@
 
     <span class="k">if</span> <span class="n">filename2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">internal_pass</span> <span class="o">=</span> <span class="n">_compare_variables</span><span class="p">(</span>
-            <span class="n">variables</span><span class="p">,</span> <span class="n">path1</span><span class="p">,</span> <span class="n">path2</span><span class="p">,</span> <span class="n">l1_norm</span><span class="p">,</span> <span class="n">l2_norm</span><span class="p">,</span> <span class="n">linf_norm</span><span class="p">,</span> <span class="n">quiet</span><span class="p">)</span>
+            <span class="n">variables</span><span class="p">,</span> <span class="n">path1</span><span class="p">,</span> <span class="n">path2</span><span class="p">,</span> <span class="n">l1_norm</span><span class="p">,</span> <span class="n">l2_norm</span><span class="p">,</span> <span class="n">linf_norm</span><span class="p">,</span> <span class="n">quiet</span><span class="p">,</span>
+            <span class="n">logger</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">validation</span><span class="p">[</span><span class="s1">&#39;internal_pass&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">validation</span><span class="p">[</span><span class="s1">&#39;internal_pass&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">internal_pass</span>
@@ -242,14 +245,14 @@
         <span class="n">result</span> <span class="o">=</span> <span class="n">_compare_variables</span><span class="p">(</span>
             <span class="n">variables</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">filename1</span><span class="p">),</span>
             <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">baseline_root</span><span class="p">,</span> <span class="n">filename1</span><span class="p">),</span> <span class="n">l1_norm</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">l2_norm</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
-            <span class="n">linf_norm</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="n">quiet</span><span class="p">)</span>
+            <span class="n">linf_norm</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="n">quiet</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
         <span class="n">baseline_pass</span> <span class="o">=</span> <span class="n">baseline_pass</span> <span class="ow">and</span> <span class="n">result</span>
 
         <span class="k">if</span> <span class="n">filename2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">result</span> <span class="o">=</span> <span class="n">_compare_variables</span><span class="p">(</span>
                 <span class="n">variables</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">filename2</span><span class="p">),</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">baseline_root</span><span class="p">,</span> <span class="n">filename2</span><span class="p">),</span> <span class="n">l1_norm</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
-                <span class="n">l2_norm</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">linf_norm</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="n">quiet</span><span class="p">)</span>
+                <span class="n">l2_norm</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">linf_norm</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="n">quiet</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
             <span class="n">baseline_pass</span> <span class="o">=</span> <span class="n">baseline_pass</span> <span class="ow">and</span> <span class="n">result</span>
 
         <span class="k">if</span> <span class="n">validation</span><span class="p">[</span><span class="s1">&#39;baseline_pass&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -305,12 +308,13 @@
 
 
 <span class="k">def</span> <span class="nf">_compare_variables</span><span class="p">(</span><span class="n">variables</span><span class="p">,</span> <span class="n">filename1</span><span class="p">,</span> <span class="n">filename2</span><span class="p">,</span> <span class="n">l1_norm</span><span class="p">,</span> <span class="n">l2_norm</span><span class="p">,</span>
-                       <span class="n">linf_norm</span><span class="p">,</span> <span class="n">quiet</span><span class="p">):</span>
+                       <span class="n">linf_norm</span><span class="p">,</span> <span class="n">quiet</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; compare fields in the two files &quot;&quot;&quot;</span>
 
     <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="p">[</span><span class="n">filename1</span><span class="p">,</span> <span class="n">filename2</span><span class="p">]:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span><span class="s1">&#39;File </span><span class="si">{}</span><span class="s1"> does not exist.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;File </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1"> does not exist.&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
 
     <span class="n">ds1</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">filename1</span><span class="p">)</span>
     <span class="n">ds2</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">filename2</span><span class="p">)</span>
@@ -318,24 +322,33 @@
     <span class="n">all_pass</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="k">for</span> <span class="n">variable</span> <span class="ow">in</span> <span class="n">variables</span><span class="p">:</span>
+        <span class="n">all_found</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">for</span> <span class="n">ds</span><span class="p">,</span> <span class="n">filename</span> <span class="ow">in</span> <span class="p">[(</span><span class="n">ds1</span><span class="p">,</span> <span class="n">filename1</span><span class="p">),</span> <span class="p">(</span><span class="n">ds2</span><span class="p">,</span> <span class="n">filename2</span><span class="p">)]:</span>
             <span class="k">if</span> <span class="n">variable</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Variable </span><span class="si">{}</span><span class="s1"> not in </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="n">variable</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Variable </span><span class="si">{</span><span class="n">variable</span><span class="si">}</span><span class="s1"> not in </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
+                <span class="n">all_found</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">all_found</span><span class="p">:</span>
+            <span class="n">all_pass</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">continue</span>
 
         <span class="n">da1</span> <span class="o">=</span> <span class="n">ds1</span><span class="p">[</span><span class="n">variable</span><span class="p">]</span>
         <span class="n">da2</span> <span class="o">=</span> <span class="n">ds2</span><span class="p">[</span><span class="n">variable</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">da1</span><span class="o">.</span><span class="n">dims</span> <span class="o">==</span> <span class="n">da2</span><span class="o">.</span><span class="n">dims</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Dimensions for variable </span><span class="si">{}</span><span class="s2"> don&#39;t match between &quot;</span>
-                             <span class="s2">&quot;files </span><span class="si">{}</span><span class="s2"> and </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                                 <span class="n">variable</span><span class="p">,</span> <span class="n">filename1</span><span class="p">,</span> <span class="n">filename2</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Dimensions for variable </span><span class="si">{</span><span class="n">variable</span><span class="si">}</span><span class="s2"> don&#39;t match &quot;</span>
+                         <span class="sa">f</span><span class="s2">&quot;between files </span><span class="si">{</span><span class="n">filename1</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">filename2</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+            <span class="n">all_pass</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">continue</span>
 
+        <span class="n">all_match</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">da1</span><span class="o">.</span><span class="n">sizes</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">da1</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">!=</span> <span class="n">da2</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="n">dim</span><span class="p">]:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Field sizes for variable </span><span class="si">{}</span><span class="s2"> don&#39;t match &quot;</span>
-                                 <span class="s2">&quot;files </span><span class="si">{}</span><span class="s2"> and </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                                     <span class="n">variable</span><span class="p">,</span> <span class="n">filename1</span><span class="p">,</span> <span class="n">filename2</span><span class="p">))</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Field sizes for variable </span><span class="si">{</span><span class="n">variable</span><span class="si">}</span><span class="s2"> don&#39;t &quot;</span>
+                             <span class="sa">f</span><span class="s2">&quot;match files </span><span class="si">{</span><span class="n">filename1</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">filename2</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+                <span class="n">all_match</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">all_match</span><span class="p">:</span>
+            <span class="n">all_pass</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">continue</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">quiet</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    Pass thresholds are:&quot;</span><span class="p">)</span>
