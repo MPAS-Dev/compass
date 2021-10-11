@@ -15,7 +15,7 @@ is the command-line interface with commands like :ref:`dev_compass_list` and
 
     symlink('../initial_condition/initial_condition.nc', 'init.nc')
 
-Before we dig into the details of now to develop new test cases and other
+Before we dig into the details of how to develop new test cases and other
 infrastructure for ``compass``, we first give a little bit of background on
 the design philosophy behind the package.
 
@@ -64,7 +64,7 @@ of scripts (as was the case for :ref:`legacy_compass`) are that:
 
 3) functions within ``compass`` modules and subpackages have relatively simple
    interfaces that are easier to document and understand than the arguments
-   passed in to a script; and
+   passed into a script; and
 
 4) releases of the ``compass`` package would make it easy for developers of
    other python packages and scripts to use our code (though there are not yet

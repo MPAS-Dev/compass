@@ -141,7 +141,7 @@ in your user config file:
     # the number of multiprocessing or dask threads to use
     threads = 8
 
-The paths for the MPAS core "databases" can be any emtpy path to being with.
+The paths for the MPAS core "databases" can be any emtpy path to begin with.
 If the path doesn't exist, ``compass`` will create it.
 
 If you're not working on an HPC machine, you will probably not have multiple

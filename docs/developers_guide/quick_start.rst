@@ -276,7 +276,7 @@ compile MPAS-Ocean:
 
     source ./load_dev_compass_<version>_<machine>_<compiler>_<mpi>.sh
     cd E3SM-Project/components/mpas-ocean/
-    make <mpas_compiler>
+    make <mpas_make_target>
 
 For MALI:
 
@@ -284,10 +284,10 @@ For MALI:
 
     source ./load_dev_compass_<version>_<machine>_<compiler>_<mpi>.sh
     cd MALI-Dev/components/mpas-albany-landice
-    make <mpas_compiler>
+    make <mpas_make_target>
 
-See :ref:`dev_supported_machines` for the right ``<mpas_compiler>`` command for
-each machine and compiler.
+See the last column of the table in :ref:`dev_supported_machines` for the right
+``<mpas_make_target>`` command for each machine and compiler.
 
 
 .. _dev_working_with_compass:
@@ -313,6 +313,10 @@ To set up a test case, you will run something like:
 .. code-block:: bash
 
     compass setup -t ocean/global_ocean/QU240/mesh -m $MACHINE -w $WORKDIR -p $MPAS
+
+where ``$MACHINE`` is an ES3M machine, ``$WORKDIR`` is the location where compass
+test cases will be set up and ``$MPAS`` is the directory where the MPAS model
+executable has been compiled. See :ref:`dev_compass_setup` for details.
 
 To list available test suites, you would run:
 
