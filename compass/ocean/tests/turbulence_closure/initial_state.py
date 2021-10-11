@@ -106,32 +106,32 @@ class InitialState(Step):
 
         salinity = xarray.zeros_like(ds.layerThickness)
 
-        surf_indices = numpy.where(ds.zMid[0,:,:].values >= -mixed_layer_depth_temperature)
+        surf_indices = numpy.where(ds.refZMid.values >= -mixed_layer_depth_temperature)[0]
 
-        if len(surf_indices[0]) > 0:
-            temperature[0,surf_indices[0],surf_indices[1]] = surface_temperature + mixed_layer_temperature_gradient* \
-						                               ds.zMid[0,surf_indices[0],surf_indices[1]].values
+        if len(surf_indices) > 0:
+		    temperature[0,:,surf_indices] = surface_temperature + mixed_layer_temperature_gradient* \
+			                                ds.zMid[0,:,surf_indices].values
 
-        int_indices = numpy.where(ds.zMid[0,:,:].values < -mixed_layer_depth_temperature)
+        int_indices = numpy.where(ds.refZMid.values < -mixed_layer_depth_temperature)[0]
 
-        if len(int_indices[0]) > 0:
-            temperature[0,int_indices[0],int_indices[1]] = surface_temperature - mixed_layer_temperature_gradient* \
+        if len(int_indices) > 0:
+	  	    temperature[0,:,int_indices] = surface_temperature - mixed_layer_temperature_gradient* \
 													 mixed_layer_depth_temperature + interior_temperature_gradient* \
-													 (ds.zMid[0,int_indices[0],int_indices[1]] + \
+													 (ds.zMid[0,:,int_indices] + \
 													  mixed_layer_depth_temperature)
 
         temperature[0,:,0] += disturbance_amplitude*2*(numpy.random.rand(len(ds.xCell.values)) - 0.5)
 
-        surf_indices = numpy.where(ds.zMid[0,:,:].values >= -mixed_layer_depth_salinity)
+        surf_indices = numpy.where(ds.refZMid.values >= -mixed_layer_depth_salinity)[0]
         if len(surf_indices[0]) > 0:
-            salinity[0,surf_indices[0],surf_indices[1]] = surface_salinity - mixed_layer_salinity_gradient * \
-														ds.zMid[0,surf_indices[0],surf_indices[1]]
+		    salinity[0,:,surf_indices] = surface_salinity - mixed_layer_salinity_gradient * \
+			                               	ds.zMid[0,:,surf_indices]
 
-        int_indices = numpy.where(ds.zMid[0,:,:].values < -mixed_layer_depth_salinity)
-        if len(int_indices[0]) > 0:
-            salinity[0,int_indices[0],int_indices[1]] = surface_salinity - mixed_layer_salinity_gradient* \
+        int_indices = numpy.where(ds.refZMid.values < -mixed_layer_depth_salinity)[0]
+        if len(int_indices) > 0:
+		    salinity[0,:,int_indices] = surface_salinity - mixed_layer_salinity_gradient* \
 									  				  mixed_layer_depth_salinity + interior_salinity_gradient* \
-													  (ds.zMid[0,int_indices[0],int_indices[1]] + \
+													  (ds.zMid[0,:,int_indices] + \
 													   mixed_layer_depth_salinity)
 
         normalVelocity = normalVelocity.expand_dims(dim='Time', axis=0)
