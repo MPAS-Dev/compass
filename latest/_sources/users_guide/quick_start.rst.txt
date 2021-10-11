@@ -97,15 +97,16 @@ and you get output like this:
 
 .. code-block:: none
 
-   0: landice/dome/2000m/smoke_test
-   1: landice/dome/2000m/decomposition_test
-   2: landice/dome/2000m/restart_test
-   3: landice/dome/variable_resolution/smoke_test
-   4: landice/dome/variable_resolution/decomposition_test
-   5: landice/dome/variable_resolution/restart_test
-   6: landice/eismint2/standard_experiments
-   7: landice/eismint2/decomposition_test
-   8: landice/eismint2/restart_test
+   0: landice/circular_shelf/decomposition_test
+   1: landice/dome/2000m/sia_smoke_test
+   2: landice/dome/2000m/sia_decomposition_test
+   3: landice/dome/2000m/sia_restart_test
+   4: landice/dome/2000m/fo_smoke_test
+   5: landice/dome/2000m/fo_decomposition_test
+   6: landice/dome/2000m/fo_restart_test
+   7: landice/variable_resolution/sia_smoke_test
+   8: landice/variable_resolution/sia_decomposition_test
+   9: landice/variable_resolution/sia_restart_test
 
 The list is long, so it will likely be useful to ``grep`` for particular
 content:

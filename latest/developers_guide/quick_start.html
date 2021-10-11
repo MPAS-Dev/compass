@@ -339,17 +339,17 @@ be safe.</p>
 compile MPAS-Ocean:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> ./load_dev_compass_&lt;version&gt;_&lt;machine&gt;_&lt;compiler&gt;_&lt;mpi&gt;.sh
 <span class="nb">cd</span> E3SM-Project/components/mpas-ocean/
-make &lt;mpas_compiler&gt;
+make &lt;mpas_make_target&gt;
 </pre></div>
 </div>
 <p>For MALI:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> ./load_dev_compass_&lt;version&gt;_&lt;machine&gt;_&lt;compiler&gt;_&lt;mpi&gt;.sh
 <span class="nb">cd</span> MALI-Dev/components/mpas-albany-landice
-make &lt;mpas_compiler&gt;
+make &lt;mpas_make_target&gt;
 </pre></div>
 </div>
-<p>See <a class="reference internal" href="machines/index.html#dev-supported-machines"><span class="std std-ref">Supported Machines</span></a> for the right <code class="docutils literal notranslate"><span class="pre">&lt;mpas_compiler&gt;</span></code> command for
-each machine and compiler.</p>
+<p>See the last column of the table in <a class="reference internal" href="machines/index.html#dev-supported-machines"><span class="std std-ref">Supported Machines</span></a> for the right
+<code class="docutils literal notranslate"><span class="pre">&lt;mpas_make_target&gt;</span></code> command for each machine and compiler.</p>
 </section>
 <section id="running-compass-from-the-repo">
 <span id="dev-working-with-compass"></span><h2>Running compass from the repo<a class="headerlink" href="#running-compass-from-the-repo" title="Permalink to this headline">¶</a></h2>
@@ -366,6 +366,9 @@ test cases will come from the local <code class="docutils literal notranslate"><
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass setup -t ocean/global_ocean/QU240/mesh -m <span class="nv">$MACHINE</span> -w <span class="nv">$WORKDIR</span> -p <span class="nv">$MPAS</span>
 </pre></div>
 </div>
+<p>where <code class="docutils literal notranslate"><span class="pre">$MACHINE</span></code> is an ES3M machine, <code class="docutils literal notranslate"><span class="pre">$WORKDIR</span></code> is the location where compass
+test cases will be set up and <code class="docutils literal notranslate"><span class="pre">$MPAS</span></code> is the directory where the MPAS model
+executable has been compiled. See <a class="reference internal" href="command_line.html#dev-compass-setup"><span class="std std-ref">compass setup</span></a> for details.</p>
 <p>To list available test suites, you would run:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass list --suites
 </pre></div>
