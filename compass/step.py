@@ -380,9 +380,13 @@ class Step(ABC):
         """
 
         if out_name is None:
-            out_name = 'namelist.{}'.format(self.mpas_core.name)
+            out_name = f'namelist.{self.mpas_core.name}'
 
-        filename = '{}/{}'.format(self.work_dir, out_name)
+        print(f'Warning: replacing namelist options in {out_name}')
+        for key, value in options.items():
+            print(f'{key} = {value}')
+
+        filename = os.path.join(self.work_dir, out_name)
 
         namelist = compass.namelist.ingest(filename)
 
@@ -486,6 +490,13 @@ class Step(ABC):
 
         if out_name is None:
             out_name = f'streams.{self.mpas_core.name}'
+
+        if template_replacements is not None:
+            print(f'Warning: updating streams in {out_name} using the '
+                  f'following template and replacements:')
+            print(f'{package} {streams}')
+            for key, value in template_replacements.items():
+                print(f'{key} = {value}')
 
         filename = os.path.join(self.work_dir, out_name)
 
