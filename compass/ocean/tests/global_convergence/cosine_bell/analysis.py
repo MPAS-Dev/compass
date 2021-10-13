@@ -70,6 +70,9 @@ class Analysis(Step):
         plt.ylabel('L2 Norm', fontsize=14)
         plt.savefig('convergence.png', bbox_inches='tight', pad_inches=0.1)
 
+        if conv < 1.9:
+            raise ValueError(f'order of convergence {conv} < min tolerence 1.9')
+
     def rmse(self, resolution):
         """
         Compute the RMSE for a given resolution
