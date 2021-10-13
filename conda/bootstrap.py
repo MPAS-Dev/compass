@@ -206,12 +206,16 @@ def build_env(is_test, recreate, machine, compiler, mpi, conda_mpi, version,
 
 
 def get_sys_info(machine, compiler, mpilib, mpicc, mpicxx, mpifc,
-                 mod_commands):
+                 mod_commands, env_vars):
 
     if machine is None:
         machine = 'None'
 
-    env_vars = []
+    # convert env vars from mache to a list
+    env_list = list()
+    for var in env_vars:
+        env_list.append(f'export {var}={env_vars[var]}')
+    env_vars = env_list
 
     if 'intel' in compiler:
         esmf_compilers = '    export ESMF_COMPILER=intel'
@@ -278,7 +282,8 @@ def get_sys_info(machine, compiler, mpilib, mpicc, mpicxx, mpifc,
 
 def build_system_libraries(config, machine, compiler, mpi, version,
                            template_path, env_path, env_name, activate_base,
-                           activate_env, mpicc, mpicxx, mpifc, mod_commands):
+                           activate_env, mpicc, mpicxx, mpifc, mod_commands,
+                           env_vars):
 
     if machine is not None:
         esmf = config.get('deploy', 'esmf')
@@ -310,7 +315,7 @@ def build_system_libraries(config, machine, compiler, mpi, version,
         force_build = True
 
     sys_info = get_sys_info(machine, compiler, mpi, mpicc, mpicxx,
-                            mpifc, mod_commands)
+                            mpifc, mod_commands, env_vars)
 
     if esmf != 'None':
         sys_info['env_vars'].append('export PATH="{}:$PATH"'.format(
@@ -651,14 +656,15 @@ def main():
             compiler = 'gnu'
 
     if machine_info is not None:
-        mpicc, mpicxx, mpifc, mod_commands = \
+        mpicc, mpicxx, mpifc, mod_commands, env_vars = \
             machine_info.get_modules_and_mpi_compilers(compiler, mpi)
     else:
         # using conda-forge compilers
         mpicc = 'mpicc'
         mpicxx = 'mpicxx'
         mpifc = 'mpifort'
-        mod_commands = []
+        mod_commands = list()
+        env_vars = dict()
 
     env_path, env_name, activate_env = build_env(
         is_test, recreate, machine, compiler, mpi, conda_mpi, version, python,
@@ -669,7 +675,7 @@ def main():
         sys_info, system_libs = build_system_libraries(
             config, machine, compiler, mpi, version, template_path, env_path,
             env_name, activate_base, activate_env, mpicc, mpicxx, mpifc,
-            mod_commands)
+            mod_commands, env_vars)
     else:
         sys_info = dict(modules=[], env_vars=[], mpas_netcdf_paths='')
         system_libs = None
