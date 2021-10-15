@@ -25,7 +25,7 @@ class Forward(Step):
 
     """
     def __init__(self, test_case, resolution, experiment, name='forward',
-                 subdir=None, run_duration=None):
+                 subdir=None, run_duration=None, time_varying_forcing=False):
         """
         Create a new test case
 
@@ -48,6 +48,9 @@ class Forward(Step):
 
         run_duration : str, optional
             The duration of the run
+
+        time_varying_forcing : bool, optional
+            Whether the run includes time-varying land-ice forcing
         """
         self.resolution = resolution
         self.experiment = experiment
@@ -76,6 +79,15 @@ class Forward(Step):
         self.add_streams_file('compass.ocean.tests.isomip_plus',
                               'streams.forward.template',
                               template_replacements=template_replacements)
+
+        if time_varying_forcing:
+            self.add_namelist_file('compass.ocean.tests.isomip_plus',
+                                   'namelist.time_varying_forcing')
+            self.add_streams_file('compass.ocean.tests.isomip_plus',
+                                  'streams.time_varying_forcing')
+            self.add_input_file(
+                filename='land_ice_forcing.nc',
+                target='../initial_state/land_ice_forcing.nc')
 
         self.add_input_file(filename='init.nc',
                             target='../ssh_adjustment/adjusted_init.nc')

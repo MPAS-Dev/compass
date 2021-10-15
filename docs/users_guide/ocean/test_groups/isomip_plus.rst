@@ -157,6 +157,16 @@ The ``isomip_plus`` test cases share the following config options:
     # domain
     effective_density = 1026.
 
+    # config options for ISOMIP+ time-varying land-ice forcing
+    [isomip_plus_forcing]
+
+    # the forcing dates
+    dates = 0001-01-01_00:00:00, 0002-01-01_00:00:00, 0003-01-01_00:00:00
+
+    # the amount by which the initial landIcePressure and landIceDraft are scaled
+    # at each date
+    scales = 0.1, 1.0, 1.0
+
     # config options for computing ISOMIP+ streamfunctions
     [isomip_plus_streamfunction]
 
@@ -185,6 +195,8 @@ The ``isomip_plus`` test cases share the following config options:
 You can modify the horizontal mesh, vertical grid, geometry, and initial
 temperature and salinity of the test case by altering these options.
 
+.. _ocean_isomip_plus_ocean0:
+
 Ocean0
 ------
 
@@ -199,6 +211,8 @@ boundary, the temperature is restored to the same warm profile, leading to a
 vigorous circulation under the ice shelf that continually supplies heat and
 produces relatively high melt rates.  Because of the rigorous flow, the
 simulation reaches a quasi-steady state in 2-3 years.
+
+.. _ocean_isomip_plus_ocean1:
 
 Ocean1
 ------
@@ -216,6 +230,8 @@ ice-shelf base.  At this point, the melting and flow rapidly increase,
 eventually (in the coarse of ~20 years) leading to the same quasi-steady-state
 as in Ocean0.  The ISOMIP+ protocol suggests running this simulation for 20
 years.
+
+.. _ocean_isomip_plus_ocean2:
 
 Ocean2
 ------
@@ -235,6 +251,41 @@ water from the northern boundary will reach the ice-shelf base within a few
 years.  At this point, the melting and flow exponentially decrease, approaching
 a new quasi-steady state.  The ISOMIP+ protocol suggests running this
 simulation for 20 years, which is not long enough to reach quasi-steady state.
+
+.. _ocean_isomip_plus_time_varying_ocean0:
+
+time_varying_Ocean0
+-------------------
+
+``ocean/isomip_plus/2km/z-star/time_varying_Ocean0`` and
+``ocean/isomip_plus/5km/z-star/time_varying_Ocean0``
+
+This test case is identical to ``Ocean0`` except that the land-ice pressure
+and land-ice draft are prescribed to evolve in a very simple way in time.
+By default, the these 2 fields start out at year 0001 with 10% of their normal
+value (so the ice shelf is 10% of its thickness in a normal ``Ocean0`` run).
+Then, over the course of a year, both fields increase to 100% of their normal
+value and stay there for another year.  This test case is a simple way of
+exploring changing ice thickness without the need to support a changing
+grounding line (which remains fixed in time).
+
+Users can modify the test case by adding or modifying entries in these config
+options before running the test case:
+
+.. code-block:: cfg
+
+    # config options for ISOMIP+ time-varying land-ice forcing
+    [isomip_plus_forcing]
+
+    # the forcing dates
+    dates = 0001-01-01_00:00:00, 0002-01-01_00:00:00, 0003-01-01_00:00:00
+
+    # the amount by which the initial landIcePressure and landIceDraft are scaled
+    # at each date
+    scales = 0.1, 1.0, 1.0
+
+Dates do not have to be the beginnings of years, they could be any list that is
+monotonic in time. Scales can be any fraction between 0.0 and 1.0.
 
 Performance run
 ---------------
