@@ -1,4 +1,5 @@
 from mpas_tools.ocean import build_spherical_mesh
+from abc import ABC, abstractmethod
 
 from compass.ocean.tests.global_ocean.mesh.cull import cull_mesh
 from compass.step import Step
@@ -90,6 +91,7 @@ class MeshStep(Step):
                   use_progress_bar=use_progress_bar,
                   with_cavities=with_ice_shelf_cavities)
 
+    @abstractmethod
     def build_cell_width_lat_lon(self):
         """
         A function for creating cell width array for this mesh on a regular
