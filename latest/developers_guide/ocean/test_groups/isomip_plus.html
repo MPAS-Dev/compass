@@ -188,6 +188,16 @@ are produced for restoring to temperature and salinity profiles at the northern
 boundary and for “evaporative” fluxes a the surface that are used to mimic a
 spillway, removing water at the northern boundary and preventing runaway
 sea-level rise from the the incoming ice-shelf meltwater.</p>
+<p>For the time-varying version of a test case, <code class="docutils literal notranslate"><span class="pre">initial_state</span></code> also computes
+a set of time-varying <code class="docutils literal notranslate"><span class="pre">landIcePressureForcing</span></code> and <code class="docutils literal notranslate"><span class="pre">landIceDraftForcing</span></code>
+fields, based on the <code class="docutils literal notranslate"><span class="pre">isomip_plus_forcing</span></code> config options (see
+<a class="reference internal" href="../../../users_guide/ocean/test_groups/isomip_plus.html#ocean-isomip-plus-time-varying-ocean0"><span class="std std-ref">time_varying_Ocean0</span></a>).  The time evolution of the
+<code class="docutils literal notranslate"><span class="pre">landIcePressure</span></code> and <code class="docutils literal notranslate"><span class="pre">landIceDraft</span></code> fields is determined by linear
+interpolation in time between consecutive entries in the these forcing
+fields, which are stored in a file <code class="docutils literal notranslate"><span class="pre">land_ice_forcing.nc</span></code>.</p>
+<p>Currently, the grounding line and calving front are held fixed in time, so
+the field <code class="docutils literal notranslate"><span class="pre">landIceFractionForcing</span></code> is the same as <code class="docutils literal notranslate"><span class="pre">landIceFraction</span></code>
+in the initial condition for all time.</p>
 </section>
 <section id="ssh-adjustment">
 <h3>ssh_adjustment<a class="headerlink" href="#ssh-adjustment" title="Permalink to this headline">¶</a></h3>

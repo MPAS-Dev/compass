@@ -60,6 +60,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#ocean0">Ocean0</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ocean1">Ocean1</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ocean2">Ocean2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#time-varying-ocean0">time_varying_Ocean0</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#performance-run">Performance run</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#simulation-run">Simulation run</a></li>
 </ul>
@@ -276,6 +277,16 @@ interpolates the results to the MISOMIP comparison grid.</p>
 <span class="c1"># domain</span>
 <span class="na">effective_density</span> <span class="o">=</span> <span class="s">1026.</span>
 
+<span class="c1"># config options for ISOMIP+ time-varying land-ice forcing</span>
+<span class="k">[isomip_plus_forcing]</span>
+
+<span class="c1"># the forcing dates</span>
+<span class="na">dates</span> <span class="o">=</span> <span class="s">0001-01-01_00:00:00, 0002-01-01_00:00:00, 0003-01-01_00:00:00</span>
+
+<span class="c1"># the amount by which the initial landIcePressure and landIceDraft are scaled</span>
+<span class="c1"># at each date</span>
+<span class="na">scales</span> <span class="o">=</span> <span class="s">0.1, 1.0, 1.0</span>
+
 <span class="c1"># config options for computing ISOMIP+ streamfunctions</span>
 <span class="k">[isomip_plus_streamfunction]</span>
 
@@ -306,7 +317,7 @@ interpolates the results to the MISOMIP comparison grid.</p>
 temperature and salinity of the test case by altering these options.</p>
 </section>
 <section id="ocean0">
-<h2>Ocean0<a class="headerlink" href="#ocean0" title="Permalink to this headline">¶</a></h2>
+<span id="ocean-isomip-plus-ocean0"></span><h2>Ocean0<a class="headerlink" href="#ocean0" title="Permalink to this headline">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">ocean/isomip_plus/2km/z-star/Ocean0</span></code> and
 <code class="docutils literal notranslate"><span class="pre">ocean/isomip_plus/5km/z-star/Ocean0</span></code></p>
 <p>This test case is initialized with “warm” ocean conditions: 1 degree C at the
@@ -319,7 +330,7 @@ produces relatively high melt rates.  Because of the rigorous flow, the
 simulation reaches a quasi-steady state in 2-3 years.</p>
 </section>
 <section id="ocean1">
-<h2>Ocean1<a class="headerlink" href="#ocean1" title="Permalink to this headline">¶</a></h2>
+<span id="ocean-isomip-plus-ocean1"></span><h2>Ocean1<a class="headerlink" href="#ocean1" title="Permalink to this headline">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">ocean/isomip_plus/2km/z-star/Ocean1</span></code> and
 <code class="docutils literal notranslate"><span class="pre">ocean/isomip_plus/5km/z-star/Ocean1</span></code></p>
 <p>This test case is initialized with “cold” ocean conditions: -1.9 degree C
@@ -334,7 +345,7 @@ as in Ocean0.  The ISOMIP+ protocol suggests running this simulation for 20
 years.</p>
 </section>
 <section id="ocean2">
-<h2>Ocean2<a class="headerlink" href="#ocean2" title="Permalink to this headline">¶</a></h2>
+<span id="ocean-isomip-plus-ocean2"></span><h2>Ocean2<a class="headerlink" href="#ocean2" title="Permalink to this headline">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">ocean/isomip_plus/2km/z-star/Ocean2</span></code> and
 <code class="docutils literal notranslate"><span class="pre">ocean/isomip_plus/5km/z-star/Ocean2</span></code></p>
 <p>This test case is initialized with “warm” ocean conditions as in Ocean0.  At
@@ -349,6 +360,34 @@ water from the northern boundary will reach the ice-shelf base within a few
 years.  At this point, the melting and flow exponentially decrease, approaching
 a new quasi-steady state.  The ISOMIP+ protocol suggests running this
 simulation for 20 years, which is not long enough to reach quasi-steady state.</p>
+</section>
+<section id="time-varying-ocean0">
+<span id="ocean-isomip-plus-time-varying-ocean0"></span><h2>time_varying_Ocean0<a class="headerlink" href="#time-varying-ocean0" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">ocean/isomip_plus/2km/z-star/time_varying_Ocean0</span></code> and
+<code class="docutils literal notranslate"><span class="pre">ocean/isomip_plus/5km/z-star/time_varying_Ocean0</span></code></p>
+<p>This test case is identical to <code class="docutils literal notranslate"><span class="pre">Ocean0</span></code> except that the land-ice pressure
+and land-ice draft are prescribed to evolve in a very simple way in time.
+By default, the these 2 fields start out at year 0001 with 10% of their normal
+value (so the ice shelf is 10% of its thickness in a normal <code class="docutils literal notranslate"><span class="pre">Ocean0</span></code> run).
+Then, over the course of a year, both fields increase to 100% of their normal
+value and stay there for another year.  This test case is a simple way of
+exploring changing ice thickness without the need to support a changing
+grounding line (which remains fixed in time).</p>
+<p>Users can modify the test case by adding or modifying entries in these config
+options before running the test case:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># config options for ISOMIP+ time-varying land-ice forcing</span>
+<span class="k">[isomip_plus_forcing]</span>
+
+<span class="c1"># the forcing dates</span>
+<span class="na">dates</span> <span class="o">=</span> <span class="s">0001-01-01_00:00:00, 0002-01-01_00:00:00, 0003-01-01_00:00:00</span>
+
+<span class="c1"># the amount by which the initial landIcePressure and landIceDraft are scaled</span>
+<span class="c1"># at each date</span>
+<span class="na">scales</span> <span class="o">=</span> <span class="s">0.1, 1.0, 1.0</span>
+</pre></div>
+</div>
+<p>Dates do not have to be the beginnings of years, they could be any list that is
+monotonic in time. Scales can be any fraction between 0.0 and 1.0.</p>
 </section>
 <section id="performance-run">
 <h2>Performance run<a class="headerlink" href="#performance-run" title="Permalink to this headline">¶</a></h2>

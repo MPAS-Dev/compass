@@ -79,6 +79,18 @@ boundary and for "evaporative" fluxes a the surface that are used to mimic a
 spillway, removing water at the northern boundary and preventing runaway
 sea-level rise from the the incoming ice-shelf meltwater.
 
+For the time-varying version of a test case, ``initial_state`` also computes
+a set of time-varying ``landIcePressureForcing`` and ``landIceDraftForcing``
+fields, based on the ``isomip_plus_forcing`` config options (see
+:ref:`ocean_isomip_plus_time_varying_ocean0`).  The time evolution of the
+``landIcePressure`` and ``landIceDraft`` fields is determined by linear
+interpolation in time between consecutive entries in the these forcing
+fields, which are stored in a file ``land_ice_forcing.nc``.
+
+Currently, the grounding line and calving front are held fixed in time, so
+the field ``landIceFractionForcing`` is the same as ``landIceFraction``
+in the initial condition for all time.
+
 ssh_adjustment
 ~~~~~~~~~~~~~~
 

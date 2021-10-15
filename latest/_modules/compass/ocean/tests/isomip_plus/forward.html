@@ -132,7 +132,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="Forward.__init__"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.forward.Forward.html#compass.ocean.tests.isomip_plus.forward.Forward.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">experiment</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">,</span>
-                 <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">run_duration</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                 <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">run_duration</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">time_varying_forcing</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new test case</span>
 
@@ -155,6 +155,9 @@
 
 <span class="sd">        run_duration : str, optional</span>
 <span class="sd">            The duration of the run</span>
+
+<span class="sd">        time_varying_forcing : bool, optional</span>
+<span class="sd">            Whether the run includes time-varying land-ice forcing</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">experiment</span> <span class="o">=</span> <span class="n">experiment</span>
@@ -183,6 +186,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.isomip_plus&#39;</span><span class="p">,</span>
                               <span class="s1">&#39;streams.forward.template&#39;</span><span class="p">,</span>
                               <span class="n">template_replacements</span><span class="o">=</span><span class="n">template_replacements</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">time_varying_forcing</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.isomip_plus&#39;</span><span class="p">,</span>
+                                   <span class="s1">&#39;namelist.time_varying_forcing&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.isomip_plus&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;streams.time_varying_forcing&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+                <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;land_ice_forcing.nc&#39;</span><span class="p">,</span>
+                <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../initial_state/land_ice_forcing.nc&#39;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;init.nc&#39;</span><span class="p">,</span>
                             <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../ssh_adjustment/adjusted_init.nc&#39;</span><span class="p">)</span>
