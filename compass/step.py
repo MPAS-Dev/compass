@@ -7,13 +7,14 @@ import numpy
 import stat
 import grp
 import progressbar
+from abc import ABC, abstractmethod
 
 from compass.io import download, symlink
 import compass.namelist
 import compass.streams
 
 
-class Step:
+class Step(ABC):
     """
     The base class for a step of a test cases, such as setting up a mesh,
     creating an initial condition, or running the MPAS core forward in time.
@@ -213,10 +214,11 @@ class Step:
         """
         pass
 
+    @abstractmethod
     def run(self):
         """
-        Run the step.  The step should override this function to perform the
-        main work.
+        Run the step.  Every child class must override this method to perform
+        the main work.
         """
         pass
 
