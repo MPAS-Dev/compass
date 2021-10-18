@@ -1,6 +1,7 @@
 import numpy as np
 import xarray as xr
 import matplotlib.pyplot as plt
+import warnings
 
 from compass.step import Step
 
@@ -70,8 +71,15 @@ class Analysis(Step):
         plt.ylabel('L2 Norm', fontsize=14)
         plt.savefig('convergence.png', bbox_inches='tight', pad_inches=0.1)
 
-        if conv < 1.9:
-            raise ValueError(f'order of convergence {conv} < min tolerence 1.9')
+        section = self.config['cosine_bell']
+        conv_thresh = section.getfloat('conv_thresh')
+        conv_max = section.getfloat('conv_max')
+
+        if conv < conv_thresh:
+            raise ValueError(f'order of convergence {conv} < min tolerence {conv_thresh}')
+
+        if conv > conv_max:
+            warnings.warn(f'order of convergence {conv} > max tolerence {conv_max}')
 
     def rmse(self, resolution):
         """
