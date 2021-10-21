@@ -91,3 +91,35 @@ From a `LANL internal site <http://trac.lanl.gov/cgi-bin/external/trac.cgi/wiki/
 
 If you follow this approach, you would then call ``proxy_disable`` anytime you
 want to turn off the proxy (e.g. if the VPN is not running).
+
+gethostbyname failed
+--------------------
+
+If you see errors like the following (particularly on LANL Macs):
+
+.. code-block:: none
+
+    Fatal error in MPI_Init: Other MPI error, error stack:
+    MPIR_Init_thread(159)..............:
+    MPID_Init(164).....................: channel initialization failed
+    MPIDI_CH3_Init(95).................:
+    MPID_nem_init(314).................:
+    MPID_nem_tcp_init(173).............:
+    MPID_nem_tcp_get_business_card(395):
+    GetSockInterfaceAddr(369)..........: gethostbyname failed, pn2034311.lanl.gov (errno 0)
+
+this likely indicates that MPI is having a problem finding the local host.
+
+The solution is to set the following config option in the ``parallel`` section
+of your user config file:
+
+.. code-block:: cfg
+
+     # The parallel section describes options related to running tests in parallel
+     [parallel]
+
+     # whether to use mpirun or srun to run the model
+     parallel_executable = mpirun -host localhost
+
+The `example config files <https://github.com/MPAS-Dev/compass/tree/master/example_configs>`_
+have been updated to include this flag.

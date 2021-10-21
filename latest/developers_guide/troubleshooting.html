@@ -63,6 +63,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Troubleshooting</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#solver-errors-when-configuring-conda-environment">Solver errors when configuring conda environment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#proxy-on-lanl-macs">Proxy on LANL Macs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gethostbyname-failed">gethostbyname failed</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="docs.html">Documentation</a></li>
@@ -179,6 +180,32 @@ proxy_enable
 </div></blockquote>
 <p>If you follow this approach, you would then call <code class="docutils literal notranslate"><span class="pre">proxy_disable</span></code> anytime you
 want to turn off the proxy (e.g. if the VPN is not running).</p>
+</section>
+<section id="gethostbyname-failed">
+<h2>gethostbyname failed<a class="headerlink" href="#gethostbyname-failed" title="Permalink to this headline">¶</a></h2>
+<p>If you see errors like the following (particularly on LANL Macs):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Fatal error in MPI_Init: Other MPI error, error stack:
+MPIR_Init_thread(159)..............:
+MPID_Init(164).....................: channel initialization failed
+MPIDI_CH3_Init(95).................:
+MPID_nem_init(314).................:
+MPID_nem_tcp_init(173).............:
+MPID_nem_tcp_get_business_card(395):
+GetSockInterfaceAddr(369)..........: gethostbyname failed, pn2034311.lanl.gov (errno 0)
+</pre></div>
+</div>
+<p>this likely indicates that MPI is having a problem finding the local host.</p>
+<p>The solution is to set the following config option in the <code class="docutils literal notranslate"><span class="pre">parallel</span></code> section
+of your user config file:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># The parallel section describes options related to running tests in parallel</span>
+<span class="k">[parallel]</span>
+
+<span class="c1"># whether to use mpirun or srun to run the model</span>
+<span class="na">parallel_executable</span> <span class="o">=</span> <span class="s">mpirun -host localhost</span>
+</pre></div>
+</div>
+<p>The <a class="reference external" href="https://github.com/MPAS-Dev/compass/tree/master/example_configs">example config files</a>
+have been updated to include this flag.</p>
 </section>
 </section>
 
