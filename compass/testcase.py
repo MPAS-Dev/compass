@@ -1,6 +1,6 @@
 import os
 
-from mpas_tools.logging import LoggingContext
+from mpas_tools.logging import LoggingContext, check_call
 from compass.parallel import get_available_cores_and_nodes
 from compass.logging import log_method_call
 
@@ -146,6 +146,10 @@ class TestCase:
         to make the call to ``super().run()``, after any updates to steps
         based on config options, typically at the end of the new method.
         """
+        config = self.config
+        run_steps_as_subprocesses = config.getboolean(
+            'parallel', 'run_steps_as_subprocesses')
+
         logger = self.logger
         cwd = os.getcwd()
         for step_name in self.steps_to_run:
@@ -158,8 +162,12 @@ class TestCase:
                 step.log_filename = self.log_filename
 
             self._print_to_stdout('  * step: {}'.format(step_name))
+
             try:
-                self._run_step(step, self.new_step_log_file)
+                if run_steps_as_subprocesses:
+                    self._run_step_as_subprocess(step, self.new_step_log_file)
+                else:
+                    self._run_step(step, self.new_step_log_file)
             except BaseException:
                 self._print_to_stdout('      Failed')
                 raise
@@ -287,3 +295,32 @@ class TestCase:
                 'output file(s) missing in step {} of {}/{}/{}: {}'.format(
                     step.name, step.mpas_core.name, step.test_group.name,
                     step.test_case.subdir, missing_files))
+
+    def _run_step_as_subprocess(self, step, new_log_file):
+        """
+        Run the requested step as a subprocess
+
+        Parameters
+        ----------
+        step : compass.Step
+            The step to run
+
+        new_log_file : bool
+            Whether to log to a new log file
+        """
+        logger = self.logger
+        cwd = os.getcwd()
+        test_name = step.path.replace('/', '_')
+        if new_log_file:
+            log_filename = '{}/{}.log'.format(cwd, step.name)
+            step.log_filename = log_filename
+            step_logger = None
+        else:
+            step_logger = logger
+            log_filename = None
+        with LoggingContext(name=test_name, logger=step_logger,
+                            log_filename=log_filename) as step_logger:
+
+            os.chdir(step.work_dir)
+            step_args = ['compass', 'run', '--step_is_subprocess']
+            check_call(step_args, step_logger)
