@@ -104,3 +104,13 @@ class Analysis(Step):
             l23)
         fig.savefig('divergent2D_convergence.pdf', bbox_inches='tight')
         plt.close(fig)
+
+        section = self.config['divergent_2d']
+        conv_thresh = section.getfloat('conv_thresh')
+        conv_max = section.getfloat('conv_max')
+
+        if conv < conv_thresh:
+            raise ValueError(f'order of convergence {conv} < min tolerence {conv_thresh}')
+
+        if conv > conv_max:
+            warnings.warn(f'order of convergence {conv} > max tolerence {conv_max}')
