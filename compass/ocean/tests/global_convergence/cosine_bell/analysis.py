@@ -61,7 +61,7 @@ class Analysis(Step):
         p = np.polyfit(np.log10(xdata), np.log10(ydata), 1)
         conv = abs(p[0]) * 2.0
 
-        yfit = xdata**p[0] * 10**p[1]
+        yfit = xdata ** p[0] * 10 ** p[1]
 
         plt.loglog(xdata, yfit, 'k')
         plt.loglog(xdata, ydata, 'or')
@@ -76,10 +76,12 @@ class Analysis(Step):
         conv_max = section.getfloat('conv_max')
 
         if conv < conv_thresh:
-            raise ValueError(f'order of convergence {conv} < min tolerence {conv_thresh}')
+            raise ValueError(f'order of convergence '
+                             f' {conv} < min tolerence {conv_thresh}')
 
         if conv > conv_max:
-            warnings.warn(f'order of convergence {conv} > max tolerence {conv_max}')
+            warnings.warn(f'order of convergence '
+                          f'{conv} > max tolerence {conv_max}')
 
     def rmse(self, resolution):
         """
