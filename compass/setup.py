@@ -129,6 +129,8 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
                                  'test_cases'.format(path))
             if cached is not None:
                 cached_steps[path] = cached[index]
+            else:
+                cached_steps[path] = list()
             test_cases[path] = all_test_cases[path]
 
     # get the MPAS core of the first test case.  We'll assume all tests are
