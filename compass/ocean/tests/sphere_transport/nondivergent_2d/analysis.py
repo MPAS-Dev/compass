@@ -154,4 +154,3 @@ class Analysis(Step):
         if conv > conv_max:
             warnings.warn(f'order of convergence '
                           f'{conv} > max tolerence {conv_max}')
-
