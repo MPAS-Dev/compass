@@ -229,5 +229,10 @@ class GlobalOcean(TestGroup):
                     test_group=self, mesh=mesh, init=init,
                     dynamic_adjustment=dynamic_adjustment))
 
+        # Kuroshio12to60
+        for mesh_name in ['Kuroshio12to60']:
+            mesh = Mesh(test_group=self, mesh_name=mesh_name)
+            self.add_test_case(mesh)
+
         # A test case for making E3SM support files from an existing mesh
         self.add_test_case(FilesForE3SM(test_group=self))
