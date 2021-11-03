@@ -1,9 +1,10 @@
 import numpy as np
-from netCDF4 import Dataset
+import xarray
 import matplotlib.pyplot as plt
 import cmocean
 
 from compass.step import Step
+from compass.ocean.rpe import compute_rpe
 
 
 class Analysis(Step):
@@ -38,6 +39,10 @@ class Analysis(Step):
         self.resolution = resolution
         self.nus = nus
 
+        self.add_input_file(
+            filename='initial_state.nc',
+            target='../initial_state/ocean.nc')
+
         for index, nu in enumerate(nus):
             self.add_input_file(
                 filename='output_{}.nc'.format(index+1),
@@ -45,6 +50,7 @@ class Analysis(Step):
 
         self.add_output_file(
             filename='sections_baroclinic_channel_{}.png'.format(resolution))
+        self.add_output_file(filename='rpe_t.png')
 
     def run(self):
         """
@@ -53,10 +59,11 @@ class Analysis(Step):
         section = self.config['baroclinic_channel']
         nx = section.getint('nx')
         ny = section.getint('ny')
-        _plot(nx, ny, self.outputs[0], self.nus)
+        rpe = compute_rpe()
+        _plot(nx, ny, self.outputs[0], self.nus, rpe)
 
 
-def _plot(nx, ny, filename, nus):
+def _plot(nx, ny, filename, nus, rpe):
     """
     Plot section of the baroclinic channel at different viscosities
 
@@ -73,56 +80,67 @@ def _plot(nx, ny, filename, nus):
 
     nus : list of float
         The viscosity values
+
+    rpe : float, dim len(nu) x len(time)
     """
 
     plt.switch_backend('Agg')
+    nanosecondsPerDay = 8.64e13
+    num_files = len(nus)
+    time = 20
 
-    nRow = 1
-    nCol = 5
-    iTime = [0]
-    time = ['20']
+    ds = xarray.open_dataset('output_1.nc')
+    times = ds.daysSinceStartOfSim.values
+    times = times.tolist()
+    times = np.divide(times, nanosecondsPerDay)
 
-    fig, axs = plt.subplots(nRow, nCol, figsize=(
-        2.1 * nCol, 5.0 * nRow), constrained_layout=True)
+    fig = plt.figure()
+    for i in range(num_files):
+        rpe_norm = np.divide((rpe[i, :]-rpe[i, 0]), rpe[i, 0])
+        plt.plot(times, rpe_norm,
+                 label="$\\nu_h=${}".format(nus[i]))
+    plt.xlabel('Time, days')
+    plt.ylabel('RPE-RPE(0)/RPE(0)')
+    plt.legend()
+    plt.savefig('rpe_t.png')
+    plt.close(fig)
 
-    for iCol in range(nCol):
-        for iRow in range(nRow):
-            ncfile = Dataset('output_{}.nc'.format(iCol + 1), 'r')
-            var = ncfile.variables['temperature']
-            var1 = np.reshape(var[iTime[iRow], :, 0], [ny, nx])
-            # flip in y-dir
-            var = np.flipud(var1)
+    fig, axs = plt.subplots(1, num_files, figsize=(
+        2.1 * num_files, 5.0), constrained_layout=True)
 
-            # Every other row in y needs to average two neighbors in x on
-            # planar hex mesh
-            var_avg = var
-            for j in range(0, ny, 2):
-                for i in range(1, nx - 2):
-                    var_avg[j, i] = (var[j, i + 1] + var[j, i]) / 2.0
+    for iCol in range(num_files):
+        ds = xarray.open_dataset('output_{}.nc'.format(iCol + 1))
+        times = ds.daysSinceStartOfSim.values
+        times = np.divide(times.tolist(), nanosecondsPerDay)
+        tidx = np.argmin(np.abs(times-time))
+        var = ds.temperature.values
+        var1 = np.reshape(var[tidx, :, 0], [ny, nx])
+        # flip in y-dir
+        var = np.flipud(var1)
 
-            if nRow == 1:
-                ax = axs[iCol]
-            else:
-                ax = axs[iRow, iCol]
-            dis = ax.imshow(
-                var_avg,
-                extent=[0, 160, 0, 500],
-                cmap='cmo.thermal',
-                vmin=11.8,
-                vmax=13.0)
-            ax.set_title("day {}, $\\nu_h=${}".format(time[iRow], nus[iCol]))
-            ax.set_xticks(np.arange(0, 161, step=40))
-            ax.set_yticks(np.arange(0, 501, step=50))
+        # Every other row in y needs to average two neighbors in x on
+        # planar hex mesh
+        var_avg = var
+        for j in range(0, ny, 2):
+            for i in range(1, nx - 2):
+                var_avg[j, i] = (var[j, i + 1] + var[j, i]) / 2.0
 
-            if iRow == nRow - 1:
-                ax.set_xlabel('x, km')
-            if iCol == 0:
-                ax.set_ylabel('y, km')
-            if iCol == nCol - 1:
-                if nRow == 1:
-                    fig.colorbar(dis, ax=axs[nCol - 1], aspect=40)
-                else:
-                    fig.colorbar(dis, ax=axs[iRow, nCol - 1], aspect=40)
-            ncfile.close()
+        ax = axs[iCol]
+        dis = ax.imshow(
+            var_avg,
+            extent=[0, 160, 0, 500],
+            cmap='cmo.thermal',
+            vmin=11.8,
+            vmax=13.0)
+        ax.set_title("day {}, $\\nu_h=${}".format(
+            int(times[tidx]), nus[iCol]))
+        ax.set_xticks(np.arange(0, 161, step=40))
+        ax.set_yticks(np.arange(0, 501, step=50))
+
+        ax.set_xlabel('x, km')
+        if iCol == 0:
+            ax.set_ylabel('y, km')
+        if iCol == num_files - 1:
+            fig.colorbar(dis, ax=axs[num_files - 1], aspect=40)
 
     plt.savefig(filename)
