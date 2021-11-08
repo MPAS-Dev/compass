@@ -65,10 +65,10 @@ class DecompositionTest(TestCase):
         compare_variables(test_case=self, variables=['uReconstructX', ],
                           filename1='1proc_run/output.nc',
                           filename2='4proc_run/output.nc',
-                          l1_norm=1.0e-4, l2_norm=1.0e-6,
+                          l1_norm=1.0e-4, l2_norm=2.0e-6,
                           linf_norm=1.0e-7, quiet=False)
         compare_variables(test_case=self, variables=['uReconstructY', ],
                           filename1='1proc_run/output.nc',
                           filename2='4proc_run/output.nc',
-                          l1_norm=1.0e-4, l2_norm=1.0e-6,
+                          l1_norm=1.0e-4, l2_norm=2.0e-6,
                           linf_norm=1.0e-7, quiet=False)
