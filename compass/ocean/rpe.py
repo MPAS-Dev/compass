@@ -95,11 +95,8 @@ def compute_rpe(initial_state_file_name='initial_state.nc',
             thickness = np.divide(vol_sorted.tolist(), areaDomain)
 
             # --- RPE computation
-            z = 0.0
-            for i in range(nCells_1D):
-                zMid[i] = z-thickness[i]/2.0
-                z = z-thickness[i]
-            zMid = zMid + bottomMax
+            z = np.append([0.], -np.cumsum(thickness))
+            zMid = z[0:-1] - thickness/2. + bottomMax
             rpe1 = gravity * np.multiply(
                        np.multiply(density_sorted, zMid),
                        vol_sorted)
