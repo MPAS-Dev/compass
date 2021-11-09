@@ -85,8 +85,8 @@ def install_miniconda(conda_base, activate_base):
 def setup_install_env(activate_base):
     print('Setting up a conda environment for installing compass')
     commands = '{}; ' \
-               'conda create -y -n temp_compass_install ' \
-               'progressbar2 jinja2 "mache>=1.1.1"'.format(activate_base)
+               'mamba create -y -n temp_compass_install ' \
+               'progressbar2 jinja2 "mache>=1.1.4"'.format(activate_base)
 
     check_call(commands)
 
