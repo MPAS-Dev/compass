@@ -14,4 +14,5 @@ Test groups
    ice_shelf_2d
    internal_wave
    isomip_plus
+   planar_convergence
    ziso

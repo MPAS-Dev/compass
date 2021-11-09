@@ -366,6 +366,48 @@ isomip_plus
    streamfunction.Streamfunction
    streamfunction.Streamfunction.run
 
+planar_convergence
+~~~~~~~~~~~~~~~~~~
+
+.. currentmodule:: compass.ocean.tests.planar_convergence
+
+.. autosummary::
+   :toctree: generated/
+
+   PlanarConvergence
+
+   conv_init.ConvInit
+   conv_init.ConvInit.run
+
+   conv_test_case.ConvTestCase
+   conv_test_case.ConvTestCase.configure
+   conv_test_case.ConvTestCase.run
+   conv_test_case.ConvTestCase.update_cores
+
+   forward.Forward
+   forward.Forward.setup
+   forward.Forward.run
+   forward.Forward.get_dt_duration
+
+horizontal_advection
+''''''''''''''''''''
+
+.. currentmodule:: compass.ocean.tests.planar_convergence.horizontal_advection
+
+.. autosummary::
+   :toctree: generated/
+
+   HorizontalAdvection
+   HorizontalAdvection.configure
+   HorizontalAdvection.run
+
+   init.Init
+   init.Init.run
+
+   analysis.Analysis
+   analysis.Analysis.run
+   analysis.Analysis.rmse
+
 
 ziso
 ~~~~
