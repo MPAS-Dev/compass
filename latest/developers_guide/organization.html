@@ -88,6 +88,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#updating-namelist-options-at-runtime">Updating namelist options at runtime</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#adding-a-streams-file">Adding a streams file</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#adding-a-template-streams-file">Adding a template streams file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#updating-a-streams-file-at-runtime">Updating a streams file at runtime</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#adding-mpas-model-as-an-input">Adding MPAS model as an input</a></li>
@@ -1748,6 +1749,39 @@ spin up, we reuse the same template with just a few appropriate replacements.
 Thus, calls to <a class="reference internal" href="generated/compass.Step.add_streams_file.html#compass.Step.add_streams_file" title="compass.Step.add_streams_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.add_streams_file()</span></code></a> with
 <code class="docutils literal notranslate"><span class="pre">template_replacements</span></code> are qualitatively similar to namelist calls to
 <a class="reference internal" href="generated/compass.Step.add_namelist_options.html#compass.Step.add_namelist_options" title="compass.Step.add_namelist_options"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.add_namelist_options()</span></code></a>.</p>
+</section>
+<section id="updating-a-streams-file-at-runtime">
+<span id="dev-step-update-streams"></span><h4>Updating a streams file at runtime<a class="headerlink" href="#updating-a-streams-file-at-runtime" title="Permalink to this headline">¶</a></h4>
+<p>Just as with namelist options, it is sometimes useful to update streams files
+after it has already been generated as part of setting up.  This typically
+happens within a step’s <code class="docutils literal notranslate"><span class="pre">run()</span></code> method for properties of the stream that
+may be affected by config options that a user may have changed.  In such
+cases, call <a class="reference internal" href="generated/compass.Step.update_streams_at_runtime.html#compass.Step.update_streams_at_runtime" title="compass.Step.update_streams_at_runtime"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.update_streams_at_runtime()</span></code></a>.  In this
+fairly complicated example, the duration of the run in hours is a config option
+that we turn into a string.  A dictionary of replacements together with a
+template streams file, as described above, are used to update the streams file
+with the new run duration:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="o">...</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+<span class="c1"># the duration (hours) of the run</span>
+<span class="n">duration</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">3600</span> <span class="o">*</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;planar_convergence&#39;</span><span class="p">,</span> <span class="s1">&#39;duration&#39;</span><span class="p">))</span>
+<span class="n">delta</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">duration</span><span class="p">)</span>
+<span class="n">hours</span> <span class="o">=</span> <span class="n">delta</span><span class="o">.</span><span class="n">seconds</span><span class="o">//</span><span class="mi">3600</span>
+<span class="n">minutes</span> <span class="o">=</span> <span class="n">delta</span><span class="o">.</span><span class="n">seconds</span><span class="o">//</span><span class="mi">60</span> <span class="o">%</span> <span class="mi">60</span>
+<span class="n">seconds</span> <span class="o">=</span> <span class="n">delta</span><span class="o">.</span><span class="n">seconds</span> <span class="o">%</span> <span class="mi">60</span>
+<span class="n">duration</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">delta</span><span class="o">.</span><span class="n">days</span><span class="si">:</span><span class="s1">03d</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">hours</span><span class="si">:</span><span class="s1">02d</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">minutes</span><span class="si">:</span><span class="s1">02d</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">seconds</span><span class="si">:</span><span class="s1">02d</span><span class="si">}</span><span class="s1">&#39;</span>
+
+<span class="n">stream_replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;output_interval&#39;</span><span class="p">:</span> <span class="n">duration</span><span class="p">}</span>
+
+<span class="bp">self</span><span class="o">.</span><span class="n">update_streams_at_runtime</span><span class="p">(</span>
+    <span class="s1">&#39;compass.ocean.tests.planar_convergence&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;streams.template&#39;</span><span class="p">,</span> <span class="n">template_replacements</span><span class="o">=</span><span class="n">stream_replacements</span><span class="p">,</span>
+    <span class="n">out_name</span><span class="o">=</span><span class="s1">&#39;streams.ocean&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 </section>
 </section>
 <section id="adding-mpas-model-as-an-input">

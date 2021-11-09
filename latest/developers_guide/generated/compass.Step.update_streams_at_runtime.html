@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>compass.Step.setup &mdash; compass latest documentation</title>
+  <title>compass.Step.update_streams_at_runtime &mdash; compass latest documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -18,8 +18,8 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="compass.Step.run" href="compass.Step.run.html" />
-    <link rel="prev" title="compass.Step" href="compass.Step.html" /> 
+    <link rel="next" title="compass.config.duplicate_config" href="compass.config.duplicate_config.html" />
+    <link rel="prev" title="compass.Step.add_streams_file" href="compass.Step.add_streams_file.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -71,7 +71,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../api.html#testcase">testcase</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="../api.html#step">step</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="compass.Step.html">compass.Step</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">compass.Step.setup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compass.Step.setup.html">compass.Step.setup</a></li>
 <li class="toctree-l4"><a class="reference internal" href="compass.Step.run.html">compass.Step.run</a></li>
 <li class="toctree-l4"><a class="reference internal" href="compass.Step.add_input_file.html">compass.Step.add_input_file</a></li>
 <li class="toctree-l4"><a class="reference internal" href="compass.Step.add_output_file.html">compass.Step.add_output_file</a></li>
@@ -81,7 +81,7 @@
 <li class="toctree-l4"><a class="reference internal" href="compass.Step.update_namelist_at_runtime.html">compass.Step.update_namelist_at_runtime</a></li>
 <li class="toctree-l4"><a class="reference internal" href="compass.Step.update_namelist_pio.html">compass.Step.update_namelist_pio</a></li>
 <li class="toctree-l4"><a class="reference internal" href="compass.Step.add_streams_file.html">compass.Step.add_streams_file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="compass.Step.update_streams_at_runtime.html">compass.Step.update_streams_at_runtime</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">compass.Step.update_streams_at_runtime</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#config">config</a></li>
@@ -127,9 +127,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../api.html">API reference</a> &raquo;</li>
-      <li>compass.Step.setup</li>
+      <li>compass.Step.update_streams_at_runtime</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../_sources/developers_guide/generated/compass.Step.setup.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/developers_guide/generated/compass.Step.update_streams_at_runtime.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -137,15 +137,26 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="compass-step-setup">
-<h1>compass.Step.setup<a class="headerlink" href="#compass-step-setup" title="Permalink to this headline">¶</a></h1>
+  <section id="compass-step-update-streams-at-runtime">
+<h1>compass.Step.update_streams_at_runtime<a class="headerlink" href="#compass-step-update-streams-at-runtime" title="Permalink to this headline">¶</a></h1>
 <dl class="py method">
-<dt class="sig sig-object py" id="compass.Step.setup">
-<span class="sig-prename descclassname"><span class="pre">Step.</span></span><span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compass/step.html#Step.setup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.Step.setup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set up the test case in the work directory, including downloading any
-dependencies.  The step should override this function to perform setup
-operations such as generating namelist and streams files, adding inputs
-and outputs.</p>
+<dt class="sig sig-object py" id="compass.Step.update_streams_at_runtime">
+<span class="sig-prename descclassname"><span class="pre">Step.</span></span><span class="sig-name descname"><span class="pre">update_streams_at_runtime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">streams</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_replacements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compass/step.html#Step.update_streams_at_runtime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.Step.update_streams_at_runtime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the streams files during the run phase of this step using the
+given template and replacements.  This may be useful for updating
+streams based on config options that a user may have changed before
+running the step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>package</strong> (<em>Package</em>) – The package name or module object that contains the streams file</p></li>
+<li><p><strong>streams</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of a Jinja2 template to be rendered with replacements</p></li>
+<li><p><strong>template_replacements</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – A dictionary of replacements</p></li>
+<li><p><strong>out_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – The name of the streams file to write out, <code class="docutils literal notranslate"><span class="pre">streams.&lt;core&gt;</span></code> by
+default</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -154,8 +165,8 @@ and outputs.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="compass.Step.html" class="btn btn-neutral float-left" title="compass.Step" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="compass.Step.run.html" class="btn btn-neutral float-right" title="compass.Step.run" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="compass.Step.add_streams_file.html" class="btn btn-neutral float-left" title="compass.Step.add_streams_file" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="compass.config.duplicate_config.html" class="btn btn-neutral float-right" title="compass.config.duplicate_config" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

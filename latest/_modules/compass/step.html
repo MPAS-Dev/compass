@@ -485,9 +485,13 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">out_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">out_name</span> <span class="o">=</span> <span class="s1">&#39;namelist.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">out_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;namelist.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
 
-        <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">out_name</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Warning: replacing namelist options in </span><span class="si">{</span><span class="n">out_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">options</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">out_name</span><span class="p">)</span>
 
         <span class="n">namelist</span> <span class="o">=</span> <span class="n">compass</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">ingest</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
 
@@ -564,6 +568,47 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">streams_data</span><span class="p">[</span><span class="n">out_name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
             <span class="nb">dict</span><span class="p">(</span><span class="n">package</span><span class="o">=</span><span class="n">package</span><span class="p">,</span> <span class="n">streams</span><span class="o">=</span><span class="n">streams</span><span class="p">,</span>
                  <span class="n">replacements</span><span class="o">=</span><span class="n">template_replacements</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Step.update_streams_at_runtime"><a class="viewcode-back" href="../../developers_guide/generated/compass.Step.update_streams_at_runtime.html#compass.Step.update_streams_at_runtime">[docs]</a>    <span class="k">def</span> <span class="nf">update_streams_at_runtime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">package</span><span class="p">,</span> <span class="n">streams</span><span class="p">,</span>
+                                  <span class="n">template_replacements</span><span class="p">,</span> <span class="n">out_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the streams files during the run phase of this step using the</span>
+<span class="sd">        given template and replacements.  This may be useful for updating</span>
+<span class="sd">        streams based on config options that a user may have changed before</span>
+<span class="sd">        running the step.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        package : Package</span>
+<span class="sd">            The package name or module object that contains the streams file</span>
+
+<span class="sd">        streams : str</span>
+<span class="sd">            The name of a Jinja2 template to be rendered with replacements</span>
+
+<span class="sd">        template_replacements : dict</span>
+<span class="sd">            A dictionary of replacements</span>
+
+<span class="sd">        out_name : str, optional</span>
+<span class="sd">            The name of the streams file to write out, ``streams.&lt;core&gt;`` by</span>
+<span class="sd">            default</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">out_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">out_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;streams.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
+
+        <span class="k">if</span> <span class="n">template_replacements</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Warning: updating streams in </span><span class="si">{</span><span class="n">out_name</span><span class="si">}</span><span class="s1"> using the &#39;</span>
+                  <span class="sa">f</span><span class="s1">&#39;following template and replacements:&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">package</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">streams</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">template_replacements</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">out_name</span><span class="p">)</span>
+
+        <span class="n">tree</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="n">tree</span> <span class="o">=</span> <span class="n">compass</span><span class="o">.</span><span class="n">streams</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">streams</span><span class="p">,</span> <span class="n">tree</span><span class="o">=</span><span class="n">tree</span><span class="p">,</span>
+                                    <span class="n">replacements</span><span class="o">=</span><span class="n">template_replacements</span><span class="p">)</span>
+        <span class="n">compass</span><span class="o">.</span><span class="n">streams</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">process_inputs_and_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
