@@ -7,8 +7,9 @@ from compass.ocean.tests.internal_wave import InternalWave
 from compass.ocean.tests.ice_shelf_2d import IceShelf2d
 from compass.ocean.tests.isomip_plus import IsomipPlus
 from compass.ocean.tests.planar_convergence import PlanarConvergence
-from compass.ocean.tests.ziso import Ziso
+from compass.ocean.tests.soma import Soma
 from compass.ocean.tests.sphere_transport import SphereTransport
+from compass.ocean.tests.ziso import Ziso
 
 
 class Ocean(MpasCore):
@@ -30,5 +31,6 @@ class Ocean(MpasCore):
         self.add_test_group(IceShelf2d(mpas_core=self))
         self.add_test_group(IsomipPlus(mpas_core=self))
         self.add_test_group(PlanarConvergence(mpas_core=self))
+        self.add_test_group(Soma(mpas_core=self))
         self.add_test_group(SphereTransport(mpas_core=self))
         self.add_test_group(Ziso(mpas_core=self))
