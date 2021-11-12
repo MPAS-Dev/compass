@@ -118,13 +118,33 @@ class Analysis(Step):
         fig.savefig("correlatedTracers2D_triplots.png")
 
         section = self.config['correlated_tracers_2d']
-        conv_thresh = section.getfloat('conv_thresh')
-        conv_max = section.getfloat('conv_max')
 
-        if conv < conv_thresh:
-            raise ValueError(f'order of convergence '
-                             f'{conv} < min tolerence {conv_thresh}')
+        all_above_thres = True
+        error_message = ''
+        for tracer in ['tracer1', 'tracer2', 'tracer3']:
+            conv_thresh = section.getfloat(f'{tracer}_conv_thresh')
+            l2_err = list()
+            ncells = list()
+            for resolution in self.resolutions:
+                data = self.tcdata[resolution]
+                l2_err.append(data['err'][tracer]['l2'])
+                ncells.append(len(data['dataset'].dimensions["nCells"]))
+            l2_err = np.array(l2_err)
+            ncells = np.array(ncells)
+            print(l2_err, ncells)
+            p = np.polyfit(np.log10(ncells), np.log10(l2_err), 1)
 
-        if conv > conv_max:
-            warnings.warn(f'order of convergence '
-                          f' {conv} > max tolerence {conv_max}')
+            # factor of 2 because nCells is like an inverse area, and we
+            # want the convergence rate vs. cell size
+            conv = abs(p[0]) * 2.0
+            print(tracer, conv)
+
+            if conv < conv_thresh:
+                all_above_thres = False
+                error_message = \
+                    f'{error_message}\n' \
+                    f'            {tracer}: {conv:.2f} < {conv_thresh}'
+        
+        if not all_above_thres:
+            raise ValueError('The following tracers have order of convergence '
+                             '< min tolerance:' + error_message)
