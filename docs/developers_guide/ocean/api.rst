@@ -408,6 +408,27 @@ horizontal_advection
    analysis.Analysis.run
    analysis.Analysis.rmse
 
+soma
+~~~~
+
+.. currentmodule:: compass.ocean.tests.soma
+.. autosummary::
+   :toctree: generated/
+
+   Soma
+
+   soma_test_case.SomaTestCase
+   soma_test_case.SomaTestCase.validate
+
+   analysis.Analysis
+   analysis.Analysis.run
+
+   forward.Forward
+   forward.Forward.run
+
+   initial_state.InitialState
+   initial_state.InitialState.run
+
 sphere_transport
 ~~~~~~~~~~~~~~~~
 
