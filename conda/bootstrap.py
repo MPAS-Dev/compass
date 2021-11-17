@@ -622,6 +622,8 @@ def main():
     if not args.env_only:
         if args.machine is None:
             machine = discover_machine()
+        else:
+            machine = args.machine
         if machine is not None:
             machine_info = MachineInfo(machine=machine)
 
