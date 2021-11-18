@@ -14,9 +14,12 @@ class Default(TestCase):
     ----------
     resolution : str
         The resolution of the test case
+
+    with_particles : bool
+        Whether particles are include in the simulation
     """
 
-    def __init__(self, test_group, resolution):
+    def __init__(self, test_group, resolution, with_particles):
         """
         Create the test case
 
@@ -27,10 +30,17 @@ class Default(TestCase):
 
         resolution : str
             The resolution of the test case
+
+        with_particles : bool
+            Whether particles are include in the simulation
         """
         name = 'default'
         self.resolution = resolution
-        subdir = '{}/{}'.format(resolution, name)
+        self.with_particles = with_particles
+        if with_particles:
+            subdir = f'{resolution}/{name}_with_particles'
+        else:
+            subdir = f'{resolution}/{name}'
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
 
@@ -42,12 +52,11 @@ class Default(TestCase):
                                    out_name=out_name)
         self.add_step(step)
 
-        with_particles = self.resolution == '32km'
         self.add_step(
             Forward(test_case=self, resolution=resolution,
                     with_particles=with_particles))
 
-        if resolution == '32km':
+        if with_particles:
             self.add_step(Analysis(test_case=self, resolution=resolution))
 
     def validate(self):
@@ -65,7 +74,7 @@ class Default(TestCase):
             test_case=self, variables=variables,
             filename1='forward/output/output.0001-01-01_00.00.00.nc')
 
-        if self.resolution == '32km':
+        if self.with_particles:
             # just do particle validation at coarse res
             variables = [
                 'xParticle', 'yParticle', 'zParticle', 'zLevelParticle',

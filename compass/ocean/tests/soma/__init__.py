@@ -15,4 +15,10 @@ class Soma(TestGroup):
 
         for resolution in ['4km', '8km', '16km', '32km']:
             self.add_test_case(
-                Default(test_group=self, resolution=resolution))
+                Default(test_group=self, resolution=resolution,
+                        with_particles=False))
+
+        for resolution in ['32km']:
+            self.add_test_case(
+                Default(test_group=self, resolution=resolution,
+                        with_particles=True))

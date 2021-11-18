@@ -110,6 +110,7 @@ class Forward(Step):
         """
         cores = self.cores
         partition(cores, self.config, self.logger)
+
         if self.with_particles:
             section = self.config['soma']
             min_den = section.getfloat('min_particle_density')
@@ -119,4 +120,5 @@ class Forward(Step):
                 f_grid='mesh.nc', f_name='particles.nc',
                 f_decomp='graph.info.part.{}'.format(cores),
                 buoySurf=np.linspace(min_den, max_den, nsurf))
+
         run_model(self, partition_graph=False)
