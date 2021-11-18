@@ -45,22 +45,26 @@ class Forward(Step):
                                'min_cores': 3,
                                'dt': "'00:24:00'",
                                'btr_dt': "'0000_00:00:48'",
-                               'mom_del4': "2.0e11"},
+                               'mom_del4': "2.0e11",
+                               'run_duration': "'0000_02:00:00'"},
                       '16km': {'cores': 100,
                                'min_cores': 10,
                                'dt': "'00:12:00'",
                                'btr_dt': "'0000_00:00:24'",
-                               'mom_del4': "2.0e10 "},
+                               'mom_del4': "2.0e10 ",
+                               'run_duration': "'0000_01:00:00'"},
                       '8km': {'cores': 400,
                               'min_cores': 40,
                               'dt': "'00:06:00'",
                               'btr_dt': "'0000_00:00:12'",
-                              'mom_del4': "2.0e9"},
+                              'mom_del4': "2.0e9",
+                              'run_duration': "'0000_00:30:00'"},
                       '4km': {'cores': 1600,
                               'min_cores': 160,
                               'dt': "'00:03:00'",
                               'btr_dt': "'0000_00:00:06'",
-                              'mom_del4': "4.0e8"}}
+                              'mom_del4': "4.0e8",
+                              'run_duration': "'0000_00:15:00'"}}
 
         if resolution not in res_params:
             raise ValueError(
@@ -76,12 +80,17 @@ class Forward(Step):
         self.add_streams_file('compass.ocean.streams', 'streams.output')
 
         self.add_namelist_file('compass.ocean.tests.soma', 'namelist.forward')
-        self.add_streams_file('compass.ocean.tests.soma', 'streams.forward')
+
+        output_interval = res_params['run_duration'].replace("'", "")
+        replacements = {'output_interval': output_interval}
+        self.add_streams_file(package='compass.ocean.tests.soma',
+                              streams='streams.forward',
+                              template_replacements=replacements)
         self.add_namelist_file('compass.ocean.tests.soma', 'namelist.analysis')
         self.add_streams_file('compass.ocean.tests.soma', 'streams.analysis')
 
         options = dict()
-        for option in ['dt', 'btr_dt', 'mom_del4']:
+        for option in ['dt', 'btr_dt', 'mom_del4', 'run_duration']:
             options[f'config_{option}'] = res_params[option]
         if with_particles:
             options['config_AM_lagrPartTrack_enable'] = '.true.'
