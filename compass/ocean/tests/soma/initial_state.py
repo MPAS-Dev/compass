@@ -29,8 +29,27 @@ class InitialState(Step):
         resolution : str
             The resolution of the test case
         """
-        super().__init__(test_case=test_case, name='initial_state')
         self.resolution = resolution
+
+        res_params = {'32km': {'cores': 4,
+                               'min_cores': 1},
+                      '16km': {'cores': 10,
+                               'min_cores': 1},
+                      '8km': {'cores': 40,
+                              'min_cores': 1},
+                      '4km': {'cores': 160,
+                              'min_cores': 1}}
+
+        if resolution not in res_params:
+            raise ValueError(
+                f'Unsupported resolution {resolution}. Supported values are: '
+                f'{list(res_params)}')
+
+        res_params = res_params[resolution]
+
+        super().__init__(test_case=test_case, name='initial_state',
+                         cores=res_params['cores'],
+                         min_cores=res_params['min_cores'])
 
         mesh_filenames = {'32km': 'SOMA_32km_grid.161202.nc',
                           '16km': 'SOMA_16km_grid.161202.nc',
@@ -50,7 +69,11 @@ class InitialState(Step):
         self.add_namelist_file(package, 'namelist.init', mode='init',
                                out_name='namelist_mark_land.ocean')
         self.add_namelist_options(
-            options={'config_write_cull_cell_mask': '.true.'},
+            options={'config_write_cull_cell_mask': '.true.',
+                     'config_block_decomp_file_prefix':
+                         "'base_graph.info.part.'",
+                     'config_proc_decomp_file_prefix':
+                         "'base_graph.info.part.'"},
             mode='init', out_name='namelist_mark_land.ocean')
 
         self.add_streams_file(
@@ -96,11 +119,13 @@ class InitialState(Step):
         write_netcdf(ds_mesh, 'mesh.nc')
 
         run_model(self, namelist='namelist_mark_land.ocean',
-                  streams='streams_mark_land.ocean')
+                  streams='streams_mark_land.ocean',
+                  graph_file='base_graph.info')
 
         ds_mesh = cull(xarray.open_dataset('masked_initial_state.nc'),
                        graphInfoFileName='graph.info',
                        logger=self.logger)
         write_netcdf(ds_mesh, 'culled_mesh.nc')
 
-        run_model(self, namelist='namelist.ocean', streams='streams.ocean')
+        run_model(self, namelist='namelist.ocean', streams='streams.ocean',
+                  graph_file='graph.info')
