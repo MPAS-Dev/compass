@@ -110,7 +110,13 @@ class InitialState(Step):
             config_eos_linear_alpha=section.get('eos_linear_alpha'),
             config_soma_density_difference=section.get('density_difference'),
             config_soma_surface_temperature=section.get('surface_temperature'),
-            config_soma_surface_salinity=section.get('surface_salinity'))
+            config_soma_surface_salinity=section.get('surface_salinity'),
+            config_soma_salinity_gradient=section.get('salinity_gradient'),
+            config_soma_thermocline_depth=section.get('thermocline_depth'),
+            config_soma_density_difference_linear=section.get('density_difference_linear'),
+            config_soma_shelf_depth=section.get('shelf_depth'),
+            config_soma_bottom_depth=section.get('bottom_depth'))
+
         for out_name in ['namelist_mark_land.ocean', 'namelist.ocean']:
             self.update_namelist_at_runtime(options=options, out_name=out_name)
         ds_mesh = convert(xarray.open_dataset('base_mesh.nc'),

@@ -55,19 +55,17 @@ class Analysis(Step):
         drho = section.getfloat('density_difference')
         t0 = section.getfloat('surface_temperature')
         s0 = section.getfloat('surface_salinity')
+        gamma = section.getfloat('salinity_gradient')
+        beta = section.getfloat('density_difference_linear')
+        zt = section.getfloat('thermocline_depth')
+        bottom_depth = section.getfloat('bottom_depth')
 
-        # hard coded factors from namelist file
-        gamma = 1.0 / 1250.0  # psu /m
-        beta = 0.05
-        zt = 300  # m
-        hshelf = 100  # m
-        h0 = 2400  # m
         z = np.linspace(0, zLevelParticle.min(), 30)
 
         # compute profiles
         salinity = s0 - gamma * z
         temperature = ((1 - beta) * drho * np.tanh(z / zt)
-                       + beta * drho * (z / (h0 + hshelf))) / alpha + t0
+                       + beta * drho * (z / bottom_depth)) / alpha + t0
 
         # temperature comparison
         plt.figure()
