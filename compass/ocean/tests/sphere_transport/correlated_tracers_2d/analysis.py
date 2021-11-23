@@ -131,13 +131,11 @@ class Analysis(Step):
                 ncells.append(len(data['dataset'].dimensions["nCells"]))
             l2_err = np.array(l2_err)
             ncells = np.array(ncells)
-            print(l2_err, ncells)
             p = np.polyfit(np.log10(ncells), np.log10(l2_err), 1)
 
             # factor of 2 because nCells is like an inverse area, and we
             # want the convergence rate vs. cell size
             conv = abs(p[0]) * 2.0
-            print(tracer, conv)
 
             if conv < conv_thresh:
                 all_above_thres = False
