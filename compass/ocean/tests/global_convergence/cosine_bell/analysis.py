@@ -1,6 +1,7 @@
 import numpy as np
 import xarray as xr
 import matplotlib.pyplot as plt
+import warnings
 
 from compass.step import Step
 
@@ -60,7 +61,7 @@ class Analysis(Step):
         p = np.polyfit(np.log10(xdata), np.log10(ydata), 1)
         conv = abs(p[0]) * 2.0
 
-        yfit = xdata**p[0] * 10**p[1]
+        yfit = xdata ** p[0] * 10 ** p[1]
 
         plt.loglog(xdata, yfit, 'k')
         plt.loglog(xdata, ydata, 'or')
@@ -69,6 +70,18 @@ class Analysis(Step):
         plt.xlabel('Number of Grid Cells', fontsize=14)
         plt.ylabel('L2 Norm', fontsize=14)
         plt.savefig('convergence.png', bbox_inches='tight', pad_inches=0.1)
+
+        section = self.config['cosine_bell']
+        conv_thresh = section.getfloat('conv_thresh')
+        conv_max = section.getfloat('conv_max')
+
+        if conv < conv_thresh:
+            raise ValueError(f'order of convergence '
+                             f' {conv} < min tolerence {conv_thresh}')
+
+        if conv > conv_max:
+            warnings.warn(f'order of convergence '
+                          f'{conv} > max tolerence {conv_max}')
 
     def rmse(self, resolution):
         """
