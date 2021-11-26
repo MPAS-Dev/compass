@@ -34,6 +34,8 @@ def parse_args():
     parser.add_argument("--check", dest="check", action='store_true',
                         help="Check the resulting environment for expected "
                              "packages")
+    parser.add_argument("--use_local", dest="use_local", action='store_true',
+                        help="Use locally built conda packages (for testing).")
 
     args = parser.parse_args(sys.argv[1:])
 
