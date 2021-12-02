@@ -10,6 +10,9 @@ from compass.ocean.tests.global_ocean.mesh.arrm10to60.dynamic_adjustment import 
 from compass.ocean.tests.global_ocean.mesh.ec30to60.dynamic_adjustment import (
     EC30to60DynamicAdjustment,
 )
+from compass.ocean.tests.global_ocean.mesh.kuroshio12to60.dynamic_adjustment import (  # noqa: E501
+    Kuroshio12to60DynamicAdjustment,
+)
 from compass.ocean.tests.global_ocean.mesh.qu240.dynamic_adjustment import (
     QU240DynamicAdjustment,
 )
@@ -233,6 +236,24 @@ class GlobalOcean(TestGroup):
         for mesh_name in ['Kuroshio12to60']:
             mesh = Mesh(test_group=self, mesh_name=mesh_name)
             self.add_test_case(mesh)
+
+            init = Init(test_group=self, mesh=mesh,
+                        initial_condition='PHC',
+                        with_bgc=False)
+            self.add_test_case(init)
+            time_integrator = 'split_explicit'
+            self.add_test_case(
+                PerformanceTest(
+                    test_group=self, mesh=mesh, init=init,
+                    time_integrator=time_integrator))
+            dynamic_adjustment = Kuroshio12to60DynamicAdjustment(
+                test_group=self, mesh=mesh, init=init,
+                time_integrator=time_integrator)
+            self.add_test_case(dynamic_adjustment)
+            self.add_test_case(
+                FilesForE3SM(
+                    test_group=self, mesh=mesh, init=init,
+                    dynamic_adjustment=dynamic_adjustment))
 
         # A test case for making E3SM support files from an existing mesh
         self.add_test_case(FilesForE3SM(test_group=self))
