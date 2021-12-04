@@ -10,6 +10,7 @@
         output_interval="0030_00:00:00"/>
 
 <stream name="output"
+        clobber_mode="overwrite"
         output_interval="{{ output_interval }}">
 
     <stream name="mesh"/>
@@ -56,6 +57,7 @@
 
 <stream name="mixedLayerDepthsOutput"
         output_interval="stream:output:output_interval"
+        clobber_mode="overwrite"
         precision="double"/>
 
 </streams>
