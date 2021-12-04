@@ -1,6 +1,7 @@
 import os
 import multiprocessing
 import subprocess
+import warnings
 
 
 def get_available_cores_and_nodes(config):
@@ -49,7 +50,7 @@ def check_parallel_system(config):
     Parameters
     ----------
     config : configparser.ConfigParser
-        Configuration options for the test case
+        Configuration options
 
     Raises
     -------
@@ -67,6 +68,27 @@ def check_parallel_system(config):
     else:
         raise ValueError('Unexpected parallel system: {}'.format(
             parallel_system))
+
+
+def set_cores_per_node(config):
+    """
+    If the system has Slurm, find out the ``cpus_per_node`` and set the config
+    option accordingly.
+
+    Parameters
+    ----------
+    config : configparser.ConfigParser
+        Configuration options
+    """
+    parallel_system = config.get('parallel', 'system')
+    if parallel_system == 'slurm':
+        args = ['sinfo', '--noheader', '-o', '%c']
+        old_cpus_per_node = config.getint('parallel', 'cores_per_node')
+        cpus_per_node = _get_subprocess_int(args)
+        config.set('parallel', 'cores_per_node', f'{cpus_per_node}')
+        if old_cpus_per_node != cpus_per_node:
+            warnings.warn(f'Slurm found {cpus_per_node} cpus per node but '
+                          f'config from mache was {old_cpus_per_node}')
 
 
 def _get_subprocess_int(args):
