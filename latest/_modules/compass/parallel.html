@@ -106,6 +106,7 @@
 <span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">multiprocessing</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
 
 
 <div class="viewcode-block" id="get_available_cores_and_nodes"><a class="viewcode-back" href="../../developers_guide/generated/compass.parallel.get_available_cores_and_nodes.html#compass.parallel.get_available_cores_and_nodes">[docs]</a><span class="k">def</span> <span class="nf">get_available_cores_and_nodes</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
@@ -154,7 +155,7 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    config : configparser.ConfigParser</span>
-<span class="sd">        Configuration options for the test case</span>
+<span class="sd">        Configuration options</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    -------</span>
@@ -172,6 +173,27 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unexpected parallel system: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="n">parallel_system</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">set_cores_per_node</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    If the system has Slurm, find out the ``cpus_per_node`` and set the config</span>
+<span class="sd">    option accordingly.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : configparser.ConfigParser</span>
+<span class="sd">        Configuration options</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parallel_system</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parallel&#39;</span><span class="p">,</span> <span class="s1">&#39;system&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">parallel_system</span> <span class="o">==</span> <span class="s1">&#39;slurm&#39;</span><span class="p">:</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;sinfo&#39;</span><span class="p">,</span> <span class="s1">&#39;--noheader&#39;</span><span class="p">,</span> <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%c</span><span class="s1">&#39;</span><span class="p">]</span>
+        <span class="n">old_cpus_per_node</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;parallel&#39;</span><span class="p">,</span> <span class="s1">&#39;cores_per_node&#39;</span><span class="p">)</span>
+        <span class="n">cpus_per_node</span> <span class="o">=</span> <span class="n">_get_subprocess_int</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;parallel&#39;</span><span class="p">,</span> <span class="s1">&#39;cores_per_node&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cpus_per_node</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">old_cpus_per_node</span> <span class="o">!=</span> <span class="n">cpus_per_node</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Slurm found </span><span class="si">{</span><span class="n">cpus_per_node</span><span class="si">}</span><span class="s1"> cpus per node but &#39;</span>
+                          <span class="sa">f</span><span class="s1">&#39;config from mache was </span><span class="si">{</span><span class="n">old_cpus_per_node</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_get_subprocess_int</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
