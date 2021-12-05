@@ -8,7 +8,7 @@ import glob
 
 from mpas_tools.logging import LoggingContext
 import mpas_tools.io
-from compass.parallel import check_parallel_system
+from compass.parallel import check_parallel_system, set_cores_per_node
 
 
 def run_suite(suite_name, quiet=False):
@@ -95,6 +95,7 @@ def run_suite(suite_name, quiet=False):
                     interpolation=configparser.ExtendedInterpolation())
                 config.read(test_case.config_filename)
                 test_case.config = config
+                set_cores_per_node(test_case.config)
 
                 mpas_tools.io.default_format = config.get('io', 'format')
                 mpas_tools.io.default_engine = config.get('io', 'engine')
@@ -212,6 +213,7 @@ def run_test_case(steps_to_run=None, steps_not_to_run=None):
         interpolation=configparser.ExtendedInterpolation())
     config.read(test_case.config_filename)
     test_case.config = config
+    set_cores_per_node(test_case.config)
 
     check_parallel_system(config)
 
@@ -266,6 +268,7 @@ def run_step():
         interpolation=configparser.ExtendedInterpolation())
     config.read(step.config_filename)
     test_case.config = config
+    set_cores_per_node(test_case.config)
 
     check_parallel_system(config)
 
