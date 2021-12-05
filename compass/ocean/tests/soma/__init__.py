@@ -1,6 +1,5 @@
 from compass.testgroup import TestGroup
-from compass.ocean.tests.soma.default import Default
-from compass.ocean.tests.soma.long import Long
+from compass.ocean.tests.soma.soma_test_case import SomaTestCase
 
 
 class Soma(TestGroup):
@@ -16,15 +15,32 @@ class Soma(TestGroup):
 
         for resolution in ['4km', '8km', '16km', '32km']:
             self.add_test_case(
-                Default(test_group=self, resolution=resolution,
-                        with_particles=False))
+                SomaTestCase(test_group=self, resolution=resolution,
+                             with_particles=False,
+                             with_surface_restoring=False, long=False,
+                             three_layer=False))
 
-        for resolution in ['32km']:
             self.add_test_case(
-                Default(test_group=self, resolution=resolution,
-                        with_particles=True))
+                SomaTestCase(test_group=self, resolution=resolution,
+                             with_particles=False,
+                             with_surface_restoring=False, long=True,
+                             three_layer=False))
 
-        for resolution in ['4km', '8km', '16km', '32km']:
+            if resolution == '32km':
+                self.add_test_case(
+                    SomaTestCase(test_group=self, resolution=resolution,
+                                 with_particles=True,
+                                 with_surface_restoring=False, long=False,
+                                 three_layer=False))
+
             self.add_test_case(
-                Long(test_group=self, resolution=resolution))
+                SomaTestCase(test_group=self, resolution=resolution,
+                             with_particles=False,
+                             with_surface_restoring=True, long=False,
+                             three_layer=False))
 
+            self.add_test_case(
+                SomaTestCase(test_group=self, resolution=resolution,
+                             with_particles=False,
+                             with_surface_restoring=False, long=False,
+                             three_layer=True))

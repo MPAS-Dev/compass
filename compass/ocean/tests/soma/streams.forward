@@ -7,7 +7,7 @@
                   filename_template="init.nc"/>
 
 <immutable_stream name="restart"
-        output_interval="0030_00:00:00"/>
+        output_interval="{{ restart_interval }}"/>
 
 <stream name="output"
         clobber_mode="overwrite"
@@ -51,6 +51,8 @@
 <stream name="forcing_data"
         filename_template="forcing.nc">
 
+    <var_array name="activeTracersPistonVelocity"/>
+    <var_array name="activeTracersSurfaceRestoringValue"/>
     <var name="windStressZonal"/>
     <var name="windStressMeridional"/>
 </stream>

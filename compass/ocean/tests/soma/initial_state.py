@@ -17,7 +17,8 @@ class InitialState(Step):
         The resolution of the test case
     """
 
-    def __init__(self, test_case, resolution):
+    def __init__(self, test_case, resolution, with_surface_restoring,
+                 three_layer):
         """
         Create the step
 
@@ -28,6 +29,13 @@ class InitialState(Step):
 
         resolution : str
             The resolution of the test case
+
+        with_surface_restoring : bool
+            Whether surface restoring is included in the simulation
+
+        three_layer : bool
+            Whether to use only 3 vertical layers and no continental shelf
+
         """
         self.resolution = resolution
 
@@ -66,15 +74,30 @@ class InitialState(Step):
 
         package = 'compass.ocean.tests.soma'
 
+        options = dict()
+        if with_surface_restoring:
+            options['config_soma_use_surface_temp_restoring'] = '.true.'
+            options['config_use_activeTracers_surface_restoring'] = '.true.'
+
+        if three_layer:
+            options['config_soma_vert_levels'] = '3'
+            options['config_vertical_grid'] = "'uniform'"
+        else:
+            options['config_soma_vert_levels'] = '60'
+            options['config_vertical_grid'] = "'60layerPHC'"
+
         self.add_namelist_file(package, 'namelist.init', mode='init',
                                out_name='namelist_mark_land.ocean')
-        self.add_namelist_options(
-            options={'config_write_cull_cell_mask': '.true.',
-                     'config_block_decomp_file_prefix':
-                         "'base_graph.info.part.'",
-                     'config_proc_decomp_file_prefix':
-                         "'base_graph.info.part.'"},
-            mode='init', out_name='namelist_mark_land.ocean')
+
+        mark_land_options = dict(
+            config_write_cull_cell_mask='.true.',
+            config_block_decomp_file_prefix="'base_graph.info.part.'",
+            config_proc_decomp_file_prefix="'base_graph.info.part.'")
+
+        mark_land_options.update(options)
+
+        self.add_namelist_options(options=mark_land_options, mode='init',
+                                  out_name='namelist_mark_land.ocean')
 
         self.add_streams_file(
             package, 'streams.init', mode='init',
@@ -85,9 +108,9 @@ class InitialState(Step):
 
         self.add_namelist_file(package, 'namelist.init', mode='init',
                                out_name='namelist.ocean')
-        self.add_namelist_options(
-            options={'config_write_cull_cell_mask': '.false.'},
-            mode='init', out_name='namelist.ocean')
+        options['config_write_cull_cell_mask'] = '.false.'
+        self.add_namelist_options(options=options, mode='init',
+                                  out_name='namelist.ocean')
 
         self.add_streams_file(
             package, 'streams.init', mode='init',
@@ -113,7 +136,9 @@ class InitialState(Step):
             config_soma_surface_salinity=section.get('surface_salinity'),
             config_soma_salinity_gradient=section.get('salinity_gradient'),
             config_soma_thermocline_depth=section.get('thermocline_depth'),
-            config_soma_density_difference_linear=section.get('density_difference_linear'),
+            config_soma_density_difference_linear=section.get(
+                'density_difference_linear'),
+            config_soma_phi=section.get('phi'),
             config_soma_shelf_depth=section.get('shelf_depth'),
             config_soma_bottom_depth=section.get('bottom_depth'))
 

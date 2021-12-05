@@ -17,8 +17,8 @@ class Forward(Step):
     with_particles : bool
         Whether to run with Lagrangian particles
     """
-    def __init__(self, test_case, resolution, name='forward', subdir=None,
-                 with_particles=False):
+    def __init__(self, test_case, resolution, with_particles,
+                 with_surface_restoring, long, three_layer):
         """
         Create a new test case
 
@@ -30,14 +30,17 @@ class Forward(Step):
         resolution : str
             The resolution of the test case
 
-        name : str
-            the name of the test case
-
-        subdir : str, optional
-            the subdirectory for the step.  The default is ``name``
-
         with_particles : bool, optional
             Whether to run with Lagrangian particles
+
+        with_surface_restoring : bool
+            Whether surface restoring is included in the simulation
+
+        long : bool
+            Whether to run a long (3-year) simulation to quasi-equilibrium
+
+        three_layer : bool
+            Whether to use only 3 vertical layers and no continental shelf
         """
         self.resolution = resolution
         self.with_particles = with_particles
@@ -73,7 +76,7 @@ class Forward(Step):
 
         res_params = res_params[resolution]
 
-        super().__init__(test_case=test_case, name=name, subdir=subdir,
+        super().__init__(test_case=test_case, name='forward', subdir=None,
                          cores=res_params['cores'],
                          min_cores=res_params['min_cores'])
         # make sure output is double precision
@@ -81,8 +84,14 @@ class Forward(Step):
 
         self.add_namelist_file('compass.ocean.tests.soma', 'namelist.forward')
 
-        output_interval = res_params['run_duration'].replace("'", "")
-        replacements = {'output_interval': output_interval}
+        if long:
+            output_interval = "0010_00:00:00"
+            restart_interval = "0010_00:00:00"
+        else:
+            output_interval = res_params['run_duration'].replace("'", "")
+            restart_interval = "0030_00:00:00"
+        replacements = dict(
+            output_interval=output_interval, restart_interval=restart_interval)
         self.add_streams_file(package='compass.ocean.tests.soma',
                               streams='streams.forward',
                               template_replacements=replacements)
@@ -94,6 +103,21 @@ class Forward(Step):
             options[f'config_{option}'] = res_params[option]
         if with_particles:
             options['config_AM_lagrPartTrack_enable'] = '.true.'
+        if long:
+            # run for 3 years instead of 3 time steps
+            options['config_start_time'] = "'0001-01-01_00:00:00'"
+            options['config_stop_time'] = "'0004-01-01_00:00:00'"
+            options['config_run_duration'] = "'none'"
+
+        if three_layer:
+            # set config options for 3-layer run instead of 60 layers
+            options['config_vert_coord_movement'] = "'impermeable_interfaces'"
+            options['config_use_cvmix'] = 'false.'
+            options['config_AM_mixedLayerDepths_enable'] = 'false.'
+
+        if with_surface_restoring:
+            options['config_use_activeTracers_surface_restoring'] = '.true.'
+
         self.add_namelist_options(options=options)
 
         self.add_input_file(filename='mesh.nc',
