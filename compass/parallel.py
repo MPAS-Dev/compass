@@ -82,7 +82,8 @@ def set_cores_per_node(config):
     """
     parallel_system = config.get('parallel', 'system')
     if parallel_system == 'slurm':
-        args = ['sinfo', '--noheader', '-o', '%c']
+        node = os.environ['SLURMD_NODENAME']
+        args = ['sinfo', '--noheader', '--node', node, '-o', '%c']
         old_cpus_per_node = config.getint('parallel', 'cores_per_node')
         cpus_per_node = _get_subprocess_int(args)
         config.set('parallel', 'cores_per_node', f'{cpus_per_node}')
