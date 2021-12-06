@@ -15,9 +15,12 @@ class Default(TestCase):
     ----------
     resolution : str
         The resolution of the test case
+
+    with_particles : bool
+        Whether particles are include in the simulation
     """
 
-    def __init__(self, test_group, resolution):
+    def __init__(self, test_group, resolution, with_particles):
         """
         Create the test case
 
@@ -28,9 +31,14 @@ class Default(TestCase):
 
         resolution : str
             The resolution of the test case
+
+        with_particles : bool
+            Whether particles are include in the simulation
+
         """
         name = 'default'
         self.resolution = resolution
+        self.with_particles = with_particles
         subdir = '{}/{}'.format(resolution, name)
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
@@ -52,10 +60,10 @@ class Default(TestCase):
                        min_cores=res_params['min_cores'],
                        with_analysis=True, with_frazil=False)
 
-        if resolution == '20km':
+        if with_particles:
             # particles are on only for the 20km test case
             step.add_namelist_file('compass.ocean.tests.ziso.default',
-                                   'namelist.{}.forward'.format(resolution))
+                                   'namelist.particles')
         self.add_step(step)
 
     def configure(self):
@@ -85,15 +93,16 @@ class Default(TestCase):
             test_case=self, variables=variables,
             filename1='forward/output/output.0001-01-01_00.00.00.nc')
 
-        variables = [
-            'xParticle', 'yParticle', 'zParticle', 'zLevelParticle',
-            'buoyancyParticle', 'indexToParticleID', 'currentCell',
-            'transfered', 'numTimesReset']
-        compare_variables(test_case=self, variables=variables,
-                          filename1='forward/analysis_members/'
-                                    'lagrPartTrack.0001-01-01_00.00.00.nc')
+        if self.with_particles:
+            variables = [
+                'xParticle', 'yParticle', 'zParticle', 'zLevelParticle',
+                'buoyancyParticle', 'indexToParticleID', 'currentCell',
+                'transfered', 'numTimesReset']
+            compare_variables(test_case=self, variables=variables,
+                              filename1='forward/analysis_members/'
+                                        'lagrPartTrack.0001-01-01_00.00.00.nc')
 
-        timers = ['init_lagrPartTrack', 'compute_lagrPartTrack',
-                  'write_lagrPartTrack', 'restart_lagrPartTrack',
-                  'finalize_lagrPartTrack']
-        compare_timers(self, timers, rundir1='forward')
+            timers = ['init_lagrPartTrack', 'compute_lagrPartTrack',
+                      'write_lagrPartTrack', 'restart_lagrPartTrack',
+                      'finalize_lagrPartTrack']
+            compare_timers(self, timers, rundir1='forward')

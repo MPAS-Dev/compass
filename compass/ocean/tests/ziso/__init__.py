@@ -17,7 +17,8 @@ class Ziso(TestGroup):
 
         for resolution in ['20km']:
             self.add_test_case(
-                Default(test_group=self, resolution=resolution))
+                Default(test_group=self, resolution=resolution,
+                        with_particles=True))
             self.add_test_case(
                 WithFrazil(test_group=self, resolution=resolution))
 
