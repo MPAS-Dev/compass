@@ -212,10 +212,11 @@ def run_test_case(steps_to_run=None, steps_not_to_run=None):
     config = configparser.ConfigParser(
         interpolation=configparser.ExtendedInterpolation())
     config.read(test_case.config_filename)
-    test_case.config = config
-    set_cores_per_node(test_case.config)
 
     check_parallel_system(config)
+
+    test_case.config = config
+    set_cores_per_node(test_case.config)
 
     mpas_tools.io.default_format = config.get('io', 'format')
     mpas_tools.io.default_engine = config.get('io', 'engine')
@@ -267,10 +268,11 @@ def run_step():
     config = configparser.ConfigParser(
         interpolation=configparser.ExtendedInterpolation())
     config.read(step.config_filename)
-    test_case.config = config
-    set_cores_per_node(test_case.config)
 
     check_parallel_system(config)
+
+    test_case.config = config
+    set_cores_per_node(test_case.config)
 
     mpas_tools.io.default_format = config.get('io', 'format')
     mpas_tools.io.default_engine = config.get('io', 'engine')
