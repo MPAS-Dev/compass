@@ -42,7 +42,7 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
         A directory that will serve as the base for creating case directories
 
     baseline_dir : str, optional
-        Location of baseslines that can be compared to
+        Location of baselines that can be compared to
 
     mpas_model_path : str, optional
         The relative or absolute path to the root of a branch where the MPAS
@@ -199,7 +199,7 @@ def setup_case(path, test_case, config_file, machine, machine_info, work_dir,
         A directory that will serve as the base for creating case directories
 
     baseline_dir : str
-        Location of baseslines that can be compared to
+        Location of baselines that can be compared to
 
     mpas_model_path : str
         The relative or absolute path to the root of a branch where the MPAS
