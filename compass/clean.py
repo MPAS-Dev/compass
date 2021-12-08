@@ -14,16 +14,16 @@ def clean_cases(tests=None, numbers=None, work_dir=None, suite_name='custom'):
     Parameters
     ----------
     tests : list of str, optional
-        Relative paths for a test cases to set up
+        Relative paths for a test cases to clean up
 
     numbers : list of int, optional
-        Case numbers to setup, as listed from ``compass list``
+        Case numbers to clean up, as listed from ``compass list``
 
     work_dir : str, optional
-        A directory that will serve as the base for creating case directories
+        The base work directory where test cases have been set up
 
     suite_name : str, optional
-        The name of the test suite if tests are being set up through a test
+        The name of the test suite if tests to clean up belong to a test
         suite or ``'custom'`` if not
     """
 
