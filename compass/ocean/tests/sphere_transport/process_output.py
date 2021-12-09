@@ -1,8 +1,7 @@
-from netCDF4 import Dataset
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 from matplotlib.colors import ListedColormap
-from matplotlib.cm import ScalarMappable
+import matplotlib
 import numpy as np
 from importlib import resources
 
@@ -14,20 +13,24 @@ def appx_mesh_size(dataset):
 
 def compute_error_from_output_ncfile(dataset, lev=1):
     """
-      Given a netCDF4 Dataset associated with the output.nc file from a test
-        case in the sphere_transport test group, this function computes the
-        linf and l2 relative error values by comparing the final time step to
-        the initial condition.
+    Given a netCDF4 Dataset associated with the output.nc file from a test
+    case in the sphere_transport test group, this function computes the
+    linf and l2 relative error values by comparing the final time step to
+    the initial condition.
 
+    Parameters
+    ----------
+    dataset : NetCDF4.Dataset
+        a dataset initialized with an MPAS output.nc file.
 
-      Args:
-        dataset: a Dataset instance from the netCDF4 module, initialized with
-          an MPAS output.nc file.
-        lev: vertical level to plot.
+    lev: int, optional
+        vertical level to plot.
 
-      Returns:
-        dictionary containing the linf and l2 relative errors for each of the
-          3 debug tracers.
+    Returns
+    -------
+    result : dict
+        a dictionary containing the linf and l2 relative errors for each of the
+        3 debug tracers.
     """
     tracer1_exact = dataset.variables["tracer1"][0, :, lev]
     tracer2_exact = dataset.variables["tracer2"][0, :, lev]
@@ -155,18 +158,26 @@ def compute_error_from_output_ncfile(dataset, lev=1):
 
 def compute_convergence_rates(dlambda, linf, l2):
     """
-      Given a set of approximate mesh sizes (dlambda) and the corresponding
-        linf and l2 relative error values, this function computes the
-        approximate convergence rates for each error.  These values are
-        computed by compute_error_from_output_ncfile for tracer1.
+    Given a set of approximate mesh sizes (dlambda) and the corresponding
+    linf and l2 relative error values, this function computes the
+    approximate convergence rates for each error.  These values are
+    computed by compute_error_from_output_ncfile for tracer1.
 
-      Args:
-        dlambda: approximate mesh size
-        linf: linf relative error associated with each mesh size
-        l2: l2 relative error associated with each mesh size
+    Parameters
+    ----------
+    dlambda : numpy.ndarray
+        approximate mesh size
 
-      Returns:
-        linfrates, l2rates:  Approximate convergence rates for each error.
+    linf : numpy.ndarray
+        linf relative error associated with each mesh size
+
+    l2: numpy.ndarray
+        l2 relative error associated with each mesh size
+
+    Returns
+    -------
+    linfrates, l2rates : numpy.ndarray
+        Approximate convergence rates for each error.
     """
     runs = np.log(dlambda[1:]) - np.log(dlambda[:-1])
     linfrises = np.log(linf[1:]) - np.log(linf[:-1])
@@ -183,21 +194,33 @@ def print_error_conv_table(
         linf,
         linfrates):
     """
-      Print error values and approximate convergence rates to the console
-        as a table.
+    Print error values and approximate convergence rates to the console
+    as a table.
 
-      Args:
-        tcname: Name of test case
-        resvals: resolution values such as 240, for QU240
-        dlambda: approximate mesh size
-        l2: l2 error, computed by compute_error_from_output_ncfile
-          for tracer1
-        l2rates: appx. convergence rates for l2, computed by
-          compute_convergence_rates
-        linf: linf error, computed by compute_error_from_output_ncfile
-          for tracer1
-        linfrates: appx. convergence rates for linf, computed
-          by compute_convergence_rates
+    Parameters
+    ----------
+    tcname : str
+        Name of test case
+
+    resvals : list
+        resolution values such as 240, for ``QU240``
+
+    dlambda : numpy.ndarray
+        approximate mesh size
+
+    l2 : numpy.ndarray
+        l2 error, computed by ``compute_error_from_output_ncfile()``
+        for ``tracer1``
+    l2rates : numpy.ndarray
+        appx. convergence rates for l2, computed by
+        ``compute_convergence_rates()``
+    linf : numpy.ndarray
+        linf error, computed by ``compute_error_from_output_ncfile()``
+        for ``tracer1``
+
+    linfrates : numpy.ndarray
+        appx. convergence rates for linf, computed
+        by ``compute_convergence_rates()``
     """
     table_rows = []
     for i, r in enumerate(resvals):
@@ -217,17 +240,21 @@ def print_error_conv_table(
 
 def read_ncl_rgb_file(cmap_filename):
     """
-      Read a .rgb file from the NCAR Command Language, and return a
-        matplotlib colormap.
+    Read a .rgb file from the NCAR Command Language, and return a
+    matplotlib colormap.
 
-      Prerequisite: Download an RGB file using the links provided by
-        the NCL web pages,
-      https://www.ncl.ucar.edu/Document/Graphics/color_table_gallery.shtml
+    Prerequisite: Download an RGB file using the links provided by
+    the NCL web pages,
+    https://www.ncl.ucar.edu/Document/Graphics/color_table_gallery.shtml
 
-      Args:
-        filename: downloaded .rgb file name
+    Parameters
+    ----------
+    cmap_filename : str
+        downloaded .rgb file name
 
-      Returns:
+    Returns
+    -------
+    result : matplotlib.Colormap
         colormap usable by matplotlib that matches the ncl colormap
     """
     map_file_found = False
@@ -256,15 +283,21 @@ def read_ncl_rgb_file(cmap_filename):
 
 def plot_sol(fig, tcname, dataset):
     """
-      Plot the solution at time 0, t = T/2, and T=T for test cases in the
-        sphere_transport test group. Each tracer is plotted in its own row.
-        Columns correspond to t=0, t=T/2, and t=T.
+    Plot the solution at time 0, t = T/2, and T=T for test cases in the
+    ``sphere_transport`` test group. Each tracer is plotted in its own row.
+    Columns correspond to t=0, t=T/2, and t=T.
 
-      Args:
-        fig: A matplotlib figure instance
-        tcname: name of the test case whose solutions will be plotted
-        dataset: instance of a netCDF4 dataset initialized initialized with
-          an MPAS output.nc file.
+    Parameters
+    ----------
+    fig : matplotlib.Figure
+        A matplotlib figure instance
+
+    tcname : str
+        name of the test case whose solutions will be plotted
+
+    dataset : NetCDF4.Dataset
+        instance of a netCDF4 dataset initialized initialized with
+        an MPAS output.nc file.
     """
     xc = dataset.variables["lonCell"][:]
     yc = dataset.variables["latCell"][:]
@@ -358,29 +391,47 @@ def plot_sol(fig, tcname, dataset):
         axes[i].set_xticklabels([])
     cb1 = fig.colorbar(cm, ax=axes[8])
     cb2 = fig.colorbar(tcm, ax=axes[5])
-#     cb3 = fig.colorbar(lcm, ax=axes[11])
+    # cb3 = fig.colorbar(lcm, ax=axes[11])
     fig.suptitle(tcname)
 
 
 def make_convergence_arrays(tcdata):
     """
-      Collects data from a set of test case runs at different resolutions
-         to use for convergence data analysis and plotting.
+    Collects data from a set of test case runs at different resolutions
+    to use for convergence data analysis and plotting.
 
-      Arguments:
-        tcdata: a dictionary whose keys are the resolution values for a
-          sphere_transport test case
+    Parameters
+    ----------
+    tcdata : dict
+        a dictionary whose keys are the resolution values for a
+        ``sphere_transport`` test case
 
-      Returns:
-        dlambda: an array of increasing appx. mesh sizes
-        linf1: the linf error of tracer1 for each resolution/mesh size pair
-        linf2: the linf error of tracer2 for each resolution/mesh size pair
-        linf3: the linf error of tracer3 for each resolution/mesh size pair
-        l21: the l2 error of tracer1 for each resolution/mesh size pair
-        l22: the l2 error of tracer2 for each resolution/mesh size pair
-        l23: the l2 error of tracer3 for each resolution/mesh size pair
-        filament: the "filament norm" for tracer2 at t=T/2.
-          See Sec. 3.3 of LSPT2012.
+    Returns
+    -------
+    dlambda : list
+        an array of increasing appx. mesh sizes
+
+    linf1 : list
+        the linf error of tracer1 for each resolution/mesh size pair
+
+    linf2 : list
+        the linf error of tracer2 for each resolution/mesh size pair
+
+    linf3 : list
+        the linf error of tracer3 for each resolution/mesh size pair
+
+    l21 : list
+        the l2 error of tracer1 for each resolution/mesh size pair
+
+    l22 : list
+        the l2 error of tracer2 for each resolution/mesh size pair
+
+    l23 : list
+        the l2 error of tracer3 for each resolution/mesh size pair
+
+    filament : list
+        the "filament norm" for tracer2 at t=T/2.
+        See Sec. 3.3 of LSPT2012.
     """
     rvals = sorted(tcdata.keys())
     rvals.reverse()
@@ -424,6 +475,18 @@ def make_convergence_arrays(tcdata):
 
 
 def print_data_as_csv(tcname, tcdata):
+    """
+    Print test case data in csv format
+
+    Parameters
+    ----------
+    tcname : str
+        name of the test case whose solutions will be plotted
+
+    tcdata : dict
+        a dictionary whose keys are the resolution values for a
+        ``sphere_transport`` test case
+    """
     rvals = sorted(tcdata.keys())
     rvals.reverse()
     dlambda, linf1, linf2, linf3, l21, l22, l23, _, u1, o1, u2, o2, u3, o3, \
@@ -485,21 +548,41 @@ def plot_convergence(
         linf3,
         l23):
     """
-      Creates a convergence plot for a test case from the sphere_transport
-        test group.
+    Creates a convergence plot for a test case from the ``sphere_transport``
+    test group.
 
-      Arguments:
-        ax: A matplotlib Axes instance
-        tcname: The name of the test case
-        dlambda: An array of mesh size values
-        resvals: An integer array of resolution values, e.g., [120, 240]
-          for QU120 and QU240
-        linf1: the linf error for tracer1
-        l21: the l2 error for tracer1
-        linf2: the linf error for tracer2
-        l22: the l2 error for tracer2
-        linf3: the linf error for tracer3
-        l23: the l2 error for tracer3
+    Parameters
+    ----------
+    ax : matplotlib.Axes
+        A matplotlib Axes instance
+
+    tcname : str
+        The name of the test case
+
+    dlambda : numpy.ndarray
+        An array of mesh size values
+
+    resvals : numpy.ndarray
+        An integer array of resolution values, e.g., [120, 240]
+        for ``QU120`` and ``QU240``
+
+    linf1 : numpy.ndarray
+        the linf error for tracer1
+
+    l21 : numpy.ndarray
+        the l2 error for tracer1
+
+    linf2 : numpy.ndarray
+        the linf error for tracer2
+
+    l22 : numpy.ndarray
+        the l2 error for tracer2
+
+    linf3 : numpy.ndarray
+        the linf error for tracer3
+
+    l23 : numpy.ndarray
+        the l2 error for tracer3
     """
     mSize = 8.0
     mWidth = mSize / 4
@@ -572,7 +655,7 @@ def plot_convergence(
 
 def plot_filament(ax, tcname, resvals, filament):
     """
-      Plots the "filament norm," as in figure 5 of LSPT2012.
+    Plot the "filament norm," as in figure 5 of LSPT2012.
     """
     tau = np.linspace(0, 1, 21)
     for i, r in enumerate(resvals):
@@ -588,7 +671,7 @@ def plot_filament(ax, tcname, resvals, filament):
 def plot_over_and_undershoot_errors(
         ax, tcname, resvals, u1, o1, u2, o2, u3, o3):
     """
-      Plots over- and under-shoot error as a function of time.
+    Plots over- and under-shoot error as a function of time.
     """
     if len(u1[0]) == 13:
         time = np.array(range(13))
