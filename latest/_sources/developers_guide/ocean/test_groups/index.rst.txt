@@ -15,4 +15,5 @@ Test groups
    internal_wave
    isomip_plus
    planar_convergence
+   sphere_transport
    ziso
