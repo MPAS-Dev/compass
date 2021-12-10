@@ -408,6 +408,143 @@ horizontal_advection
    analysis.Analysis.run
    analysis.Analysis.rmse
 
+sphere_transport
+~~~~~~~~~~~~~~~~
+
+.. currentmodule:: compass.ocean.tests.sphere_transport
+
+.. autosummary::
+   :toctree: generated/
+
+   SphereTransport
+
+
+correlated_tracers_2d
+'''''''''''''''''''''
+
+.. currentmodule:: compass.ocean.tests.sphere_transport.correlated_tracers_2d
+
+.. autosummary::
+   :toctree: generated/
+
+   CorrelatedTracers2D
+   CorrelatedTracers2D.configure
+   CorrelatedTracers2D.run
+
+   mesh.Mesh
+   mesh.Mesh.run
+   mesh.Mesh.build_cell_width_lat_lon
+
+   init.Init
+   init.Init.run
+
+   forward.Forward
+   forward.Forward.setup
+   forward.Forward.run
+   forward.Forward.get_timestep_str
+
+   analysis.Analysis
+   analysis.Analysis.run
+
+divergent_2d
+''''''''''''
+
+.. currentmodule:: compass.ocean.tests.sphere_transport.divergent_2d
+
+.. autosummary::
+   :toctree: generated/
+
+   Divergent2D
+   Divergent2D.configure
+   Divergent2D.run
+
+   mesh.Mesh
+   mesh.Mesh.run
+   mesh.Mesh.build_cell_width_lat_lon
+
+   init.Init
+   init.Init.run
+
+   forward.Forward
+   forward.Forward.setup
+   forward.Forward.run
+   forward.Forward.get_timestep_str
+
+   analysis.Analysis
+   analysis.Analysis.run
+
+nondivergent_2d
+'''''''''''''''
+
+.. currentmodule:: compass.ocean.tests.sphere_transport.nondivergent_2d
+
+.. autosummary::
+   :toctree: generated/
+
+   Nondivergent2D
+   Nondivergent2D.configure
+   Nondivergent2D.run
+
+   mesh.Mesh
+   mesh.Mesh.run
+   mesh.Mesh.build_cell_width_lat_lon
+
+   init.Init
+   init.Init.run
+
+   forward.Forward
+   forward.Forward.setup
+   forward.Forward.run
+   forward.Forward.get_timestep_str
+
+   analysis.Analysis
+   analysis.Analysis.run
+
+rotation_2d
+'''''''''''
+
+.. currentmodule:: compass.ocean.tests.sphere_transport.rotation_2d
+
+.. autosummary::
+   :toctree: generated/
+
+   Rotation2D
+   Rotation2D.configure
+   Rotation2D.run
+
+   mesh.Mesh
+   mesh.Mesh.run
+   mesh.Mesh.build_cell_width_lat_lon
+
+   init.Init
+   init.Init.run
+
+   forward.Forward
+   forward.Forward.setup
+   forward.Forward.run
+   forward.Forward.get_timestep_str
+
+   analysis.Analysis
+   analysis.Analysis.run
+
+sphere_transport framework
+''''''''''''''''''''''''''
+
+.. currentmodule:: compass.ocean.tests.sphere_transport
+
+.. autosummary::
+   :toctree: generated/
+
+   process_output.compute_error_from_output_ncfile
+   process_output.compute_convergence_rates
+   process_output.print_error_conv_table
+   process_output.read_ncl_rgb_file
+   process_output.plot_sol
+   process_output.make_convergence_arrays
+   process_output.print_data_as_csv
+   process_output.plot_convergence
+   process_output.plot_filament
+   process_output.plot_over_and_undershoot_errors
 
 ziso
 ~~~~
