@@ -3,13 +3,7 @@
 from __future__ import print_function
 
 import os
-import platform
 import sys
-
-try:
-    from urllib.request import urlopen, Request
-except ImportError:
-    from urllib2 import urlopen, Request
 
 try:
     from configparser import ConfigParser
@@ -22,13 +16,13 @@ except ImportError:
     else:
         ConfigParser = configparser.ConfigParser
 
-from shared import parse_args, get_conda_base, check_call
+from shared import parse_args, get_conda_base, check_call, install_miniconda
 
 
 def get_config(config_file):
     # we can't load compass so we find the config files
     here = os.path.abspath(os.path.dirname(__file__))
-    default_config = os.path.join(here, '..', 'compass', 'default.cfg')
+    default_config = os.path.join(here, 'default.cfg')
     config = ConfigParser()
     config.read(default_config)
 
@@ -38,48 +32,17 @@ def get_config(config_file):
     return config
 
 
-def bootstrap(activate_install_env, source_path):
+def bootstrap(activate_install_env, source_path, local_conda_build):
 
     print('Creating the compass conda environment')
     bootstrap_command = '{}/conda/bootstrap.py'.format(source_path)
     command = '{}; ' \
               '{} {}'.format(activate_install_env, bootstrap_command,
                              ' '.join(sys.argv[1:]))
+    if local_conda_build is not None:
+        command = '{} --local_conda_build {}'.format(command,
+                                                     local_conda_build)
     check_call(command)
-    sys.exit(0)
-
-
-def install_miniconda(conda_base, activate_base):
-    if not os.path.exists(conda_base):
-        print('Installing Miniconda3')
-        if platform.system() == 'Linux':
-            system = 'Linux'
-        elif platform.system() == 'Darwin':
-            system = 'MacOSX'
-        else:
-            system = 'Linux'
-        miniconda = 'Miniconda3-latest-{}-x86_64.sh'.format(system)
-        url = 'https://repo.continuum.io/miniconda/{}'.format(miniconda)
-        print(url)
-        req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-        f = urlopen(req)
-        html = f.read()
-        with open(miniconda, 'wb') as outfile:
-            outfile.write(html)
-        f.close()
-
-        command = '/bin/bash {} -b -p {}'.format(miniconda, conda_base)
-        check_call(command)
-        os.remove(miniconda)
-
-    print('Doing initial setup')
-    commands = '{}; ' \
-               'conda config --add channels conda-forge; ' \
-               'conda config --set channel_priority strict; ' \
-               'conda install -y mamba boa; ' \
-               'conda update -y --all'.format(activate_base)
-
-    check_call(commands)
 
 
 def setup_install_env(activate_base, use_local):
@@ -106,14 +69,12 @@ def remove_install_env(activate_base):
 
 
 def main():
-    args = parse_args()
+    args = parse_args(bootstrap=False)
     source_path = os.getcwd()
 
     config = get_config(args.config_file)
 
-    is_test = not config.getboolean('deploy', 'release')
-
-    conda_base = get_conda_base(args.conda_base, is_test, config)
+    conda_base = get_conda_base(args.conda_base, config)
 
     base_activation_script = os.path.abspath(
         '{}/etc/profile.d/conda.sh'.format(conda_base))
@@ -129,7 +90,16 @@ def main():
 
     setup_install_env(activate_base, args.use_local)
 
-    bootstrap(activate_install_env, source_path)
+    env_type = config.get('deploy', 'env_type')
+    if env_type not in ['dev', 'test_release', 'release']:
+        raise ValueError('Unexpected env_type: {}'.format(env_type))
+
+    if env_type == 'test_release' and args.use_local:
+        local_conda_build = os.path.abspath('{}/conda-bld'.format(conda_base))
+    else:
+        local_conda_build = None
+
+    bootstrap(activate_install_env, source_path, local_conda_build)
 
     remove_install_env(activate_base)
 
