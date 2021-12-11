@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>soma &mdash; compass latest documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="sphere_transport" href="sphere_transport.html" />
+    <link rel="prev" title="planar_convergence" href="planar_convergence.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> compass
+          </a>
+              <div class="version">
+                latest
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../landice/index.html">Landice core</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Ocean core</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Test groups</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="baroclinic_channel.html">baroclinic_channel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="global_convergence.html">global_convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="global_ocean.html">global_ocean</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gotm.html">gotm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ice_shelf_2d.html">ice_shelf_2d</a></li>
+<li class="toctree-l3"><a class="reference internal" href="internal_wave.html">internal_wave</a></li>
+<li class="toctree-l3"><a class="reference internal" href="isomip_plus.html">isomip_plus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="planar_convergence.html">planar_convergence</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">soma</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#shared-config-options">shared config options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#default">default</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#long">long</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#particles">particles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#surface-restoring">surface_restoring</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#three-layer">three_layer</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="sphere_transport.html">sphere_transport</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ziso.html">ziso</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../framework/index.html">Framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../suites.html">Test suites</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Ocean core</a> &raquo;</li>
+          <li><a href="index.html">Test groups</a> &raquo;</li>
+      <li>soma</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/users_guide/ocean/test_groups/soma.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="soma">
+<span id="ocean-soma"></span><h1>soma<a class="headerlink" href="#soma" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">ocean/soma</span></code> test group implements variants of the Simulating Ocean
+Mesoscale Activity (SOMA) test case from
+<a class="reference external" href="https://doi.org/10.1175/JPO-D-14-0260.1">Wolfram et al. (2015)</a>.  From that
+paper:</p>
+<blockquote>
+<div><p>The SOMA configuration is designed to investigate equilibrium mesoscale
+activity in a setting similar to how ocean climate models are deployed. It
+simulates an eddying, midlatitude ocean basin with latitudes ranging
+from 21.5° to 48.5°N and longitudes ranging from 16.5°W to 16.5°E. In
+contrast to previous idealized double-gyre studies…this basin is circular
+instead of rectangular and features more realistic curved coastlines with a
+150-km-wide, 100-m-deep continental shelf.</p>
+</div></blockquote>
+<p>Appendix A of the paper describes the topography, initial condition and wind
+forcing.</p>
+<p>The implementation of <code class="docutils literal notranslate"><span class="pre">soma</span></code> in <code class="docutils literal notranslate"><span class="pre">compass</span></code> includes four test cases:
+<code class="docutils literal notranslate"><span class="pre">default</span></code>, <code class="docutils literal notranslate"><span class="pre">long</span></code>, <code class="docutils literal notranslate"><span class="pre">surface_restoring</span></code>, and <code class="docutils literal notranslate"><span class="pre">three_layer</span></code>
+at 4 resolutions: <code class="docutils literal notranslate"><span class="pre">4km</span></code>, <code class="docutils literal notranslate"><span class="pre">8km</span></code>, <code class="docutils literal notranslate"><span class="pre">16km</span></code> and <code class="docutils literal notranslate"><span class="pre">32km</span></code>, and a fifth test
+case, <code class="docutils literal notranslate"><span class="pre">particles</span></code>, that is only at <code class="docutils literal notranslate"><span class="pre">32km</span></code> resolution.  The test cases at all
+resolutions include <code class="docutils literal notranslate"><span class="pre">initial_state</span></code> and <code class="docutils literal notranslate"><span class="pre">forward</span></code> steps, and the
+<code class="docutils literal notranslate"><span class="pre">particles</span></code> test case, which also includes particle dynamics, has an extra
+<code class="docutils literal notranslate"><span class="pre">analysis</span></code> step.  The <code class="docutils literal notranslate"><span class="pre">initial_state</span></code> begins with a predefined mesh,
+culls out “land” cells, and defines the initial conditions for the model.
+The <code class="docutils literal notranslate"><span class="pre">forward</span></code> step performs a short time integration of the model.  The
+<code class="docutils literal notranslate"><span class="pre">analysis</span></code> step compares the temperature and salinity at each particle with
+an analytic solution defining the initial condition.</p>
+<section id="shared-config-options">
+<h2>shared config options<a class="headerlink" href="#shared-config-options" title="Permalink to this headline">¶</a></h2>
+<p>Both <code class="docutils literal notranslate"><span class="pre">soma</span></code> test cases share the following config options:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># config options for Simulating Ocean Mesoscale Activity (SOMA) testcases</span>
+<span class="k">[soma]</span>
+
+<span class="c1"># Linear thermal expansion coefficient</span>
+<span class="na">eos_linear_alpha</span> <span class="o">=</span> <span class="s">0.25</span>
+<span class="c1"># Density difference between surface and bottom waters</span>
+<span class="na">density_difference</span> <span class="o">=</span> <span class="s">5.0</span>
+<span class="c1"># Surface temperature value used in initial condition</span>
+<span class="na">surface_temperature</span> <span class="o">=</span> <span class="s">20.0</span>
+<span class="c1"># Surface salinity value used in initial condition</span>
+<span class="na">surface_salinity</span> <span class="o">=</span> <span class="s">34.0</span>
+<span class="c1"># vertical salinity gradient (PSU/m)</span>
+<span class="na">salinity_gradient</span> <span class="o">=</span> <span class="s">0.0008</span>
+<span class="c1"># Depth over which majority of initial stratification is placed (m)</span>
+<span class="na">thermocline_depth</span> <span class="o">=</span> <span class="s">300</span>
+<span class="c1"># Fraction of stratification put into linear profile extending from surface to</span>
+<span class="c1"># bottom</span>
+<span class="na">density_difference_linear</span> <span class="o">=</span> <span class="s">0.05</span>
+<span class="c1"># Scale factor controlling width of continental slope. Typically around 0.1</span>
+<span class="na">phi</span> <span class="o">=</span> <span class="s">0.1</span>
+<span class="c1"># Depth of the continental shelf (m)</span>
+<span class="na">shelf_depth</span> <span class="o">=</span> <span class="s">100</span>
+<span class="c1"># Depth of the bottom of the ocean for the SOMA test case (m)</span>
+<span class="na">bottom_depth</span> <span class="o">=</span> <span class="s">2500</span>
+
+<span class="c1"># the density range and number of surfaces for particles</span>
+<span class="na">min_particle_density</span> <span class="o">=</span> <span class="s">1028.5</span>
+<span class="na">max_particle_density</span> <span class="o">=</span> <span class="s">1030.0</span>
+<span class="na">surface_count</span> <span class="o">=</span> <span class="s">11</span>
+</pre></div>
+</div>
+<p>The parameters can be altered to change the initial condition or the particle
+distribution.</p>
+</section>
+<section id="default">
+<h2>default<a class="headerlink" href="#default" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">ocean/soma/&lt;resolution&gt;/default</span></code> is the default version of the SOMA
+test case from <a class="reference external" href="https://doi.org/10.1175/JPO-D-14-0260.1">Wolfram et al. (2015)</a>.
+This test uses 60 unequally spaced layers and does not use surface restoring
+or include particle dynamics.</p>
+<a class="reference internal image-reference" href="../../../_images/soma.png"><img alt="../../../_images/soma.png" class="align-center" src="../../../_images/soma.png" style="width: 500px;" /></a>
+<p>The test case includes a very short (3 time step) test run and validation of
+prognostic variables for regression testing.</p>
+</section>
+<section id="long">
+<h2>long<a class="headerlink" href="#long" title="Permalink to this headline">¶</a></h2>
+<p>Results in Wolfram et al. (2015) are shown from longer simulations, as provided
+by the <code class="docutils literal notranslate"><span class="pre">ocean/soma/&lt;resolution&gt;/long</span></code> test cases. As in the <code class="docutils literal notranslate"><span class="pre">default</span></code>
+test cases, this test uses 60 unequally spaced layers and does not use surface
+restoring or include particle dynamics. Unlike <code class="docutils literal notranslate"><span class="pre">default</span></code>, this test case is
+configured for a longer simulation (3 years) potentially appropriate for
+scientific work.</p>
+</section>
+<section id="particles">
+<h2>particles<a class="headerlink" href="#particles" title="Permalink to this headline">¶</a></h2>
+<p>Wolfram et al. (2015) is focused on diffusion as measured by particle
+trajectories.  For now, most SOMA test cases do not include particles, but
+we include one test case, <code class="docutils literal notranslate"><span class="pre">ocean/soma/32km/particles</span></code>, with particles from
+the Lagrangian, In situ, Global, High-Performance Particle Tracking (LIGHT)
+framework for regression testing.  Otherwise, the <code class="docutils literal notranslate"><span class="pre">particles</span></code> test case is
+identical to <code class="docutils literal notranslate"><span class="pre">default</span></code>. Particle-relate variables are also included in
+the test-case validation.</p>
+</section>
+<section id="surface-restoring">
+<h2>surface_restoring<a class="headerlink" href="#surface-restoring" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">ocean/soma/&lt;resolution&gt;/surface_restoring</span></code> test cases are identical to
+<code class="docutils literal notranslate"><span class="pre">default</span></code> except that they include restoring of the surface temperature to
+a prescribed field that varies linearly with latitude.</p>
+</section>
+<section id="three-layer">
+<h2>three_layer<a class="headerlink" href="#three-layer" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">ocean/soma/&lt;resolution&gt;/three_layer</span></code> test cases are identical to
+<code class="docutils literal notranslate"><span class="pre">default</span></code> except that they have only 3 vertical layers and do not include the
+continental shelf in the simulation domain.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="planar_convergence.html" class="btn btn-neutral float-left" title="planar_convergence" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="sphere_transport.html" class="btn btn-neutral float-right" title="sphere_transport" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
