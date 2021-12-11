@@ -1,0 +1,88 @@
+<streams>
+
+<stream name="globalStatsOutput"
+        clobber_mode="overwrite"
+        output_interval="0001_00:00:00">
+
+</stream>
+
+<stream name="zonalMeanOutput"
+        precision="double"
+        clobber_mode="overwrite"
+        output_interval="0003_00:00:00">
+
+</stream>
+
+<stream name="okuboWeissOutput"
+        precision="double"
+        output_interval="00-00-05_00:00:00"
+        clobber_mode="overwrite"
+        reference_time="0001-01-01_00:00:00">
+
+</stream>
+
+<stream name="highFrequencyOutput"
+        precision="double"
+        clobber_mode="overwrite"
+        output_interval="00-00-01_00:00:00">
+
+</stream>
+
+<stream name="eliassenPalmOutput"
+        precision="double"
+        clobber_mode="overwrite"
+        output_interval="00-01-00_00:00:00">
+
+</stream>
+
+<stream name="eliassenPalmRestart"
+        filename_interval="output_interval"/>
+
+<stream name="lagrPartTrackInput"
+        filename_template="particles.nc">
+
+</stream>
+
+<stream name="lagrPartTrackOutput"
+        clobber_mode="overwrite">
+    <var name="xtime"/>
+    <var name="indexToParticleID"/>
+    <var name="currentBlock"/>
+    <var name="currentCell"/>
+    <var name="xParticle"/>
+    <var name="yParticle"/>
+    <var name="zParticle"/>
+    <var name="zLevelParticle"/>
+    <var name="xParticleReset"/>
+    <var name="yParticleReset"/>
+    <var name="zParticleReset"/>
+    <var name="zLevelParticleReset"/>
+    <var name="currentCellReset"/>
+    <var name="currentBlockReset"/>
+    <var name="timeSinceReset"/>
+    <var name="resetTime"/>
+    <var name="numTimesReset"/>
+    <var name="buoyancyParticle"/>
+    <var name="verticalTreatment"/>
+    <var name="dtParticle"/>
+    <var name="indexLevel"/>
+    <var name="uVertexVelocity"/>
+    <var name="vVertexVelocity"/>
+    <var name="wVertexVelocity"/>
+    <var name="filteredVelocityU"/>
+    <var name="filteredVelocityV"/>
+    <var name="filteredVelocityW"/>
+    <var name="cellOwnerBlock"/>
+    <var name="transfered"/>
+    <var name="buoyancySurfaceValues"/>
+    <var name="buoyancySurfaceVelocityMeridional"/>
+    <var name="buoyancySurfaceVelocityZonal"/>
+    <var name="buoyancySurfaceDepth"/>
+    <var name="particleTemperature"/>
+    <var name="particleSalinity"/>
+</stream>
+
+<stream name="lagrPartTrackRestart"
+        filename_interval="output_interval"/>
+
+</streams>

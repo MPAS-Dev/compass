@@ -1,0 +1,65 @@
+<streams>
+
+<immutable_stream name="mesh"
+                  filename_template="mesh.nc"/>
+
+<immutable_stream name="input"
+                  filename_template="init.nc"/>
+
+<immutable_stream name="restart"
+        output_interval="{{ restart_interval }}"/>
+
+<stream name="output"
+        clobber_mode="overwrite"
+        output_interval="{{ output_interval }}">
+
+    <stream name="mesh"/>
+    <var_struct name="tracers"/>
+    <var name="layerThickness"/>
+    <var name="normalVelocity"/>
+    <var name="ssh"/>
+    <var name="maxLevelEdgeTop"/>
+    <var name="vertCoordMovementWeights"/>
+    <var name="edgeMask"/>
+    <var name="vertexMask"/>
+    <var name="cellMask"/>
+    <var name="refZMid"/>
+    <var name="refLayerThickness"/>
+    <var name="xtime"/>
+    <var name="zMid"/>
+    <var name="zTop"/>
+    <var name="kineticEnergyCell"/>
+    <var name="relativeVorticityCell"/>
+    <var name="velocityZonal"/>
+    <var name="velocityMeridional"/>
+    <var name="density"/>
+    <var name="divergence"/>
+    <var name="displacedDensity"/>
+    <var name="potentialDensity"/>
+    <var name="boundaryLayerDepth"/>
+    <var name="indexBoundaryLayerDepth"/>
+    <var name="indexSurfaceLayerDepth"/>
+    <var name="surfaceFrictionVelocity"/>
+    <var name="surfaceBuoyancyForcing"/>
+    <var name="seaIcePressure"/>
+    <var name="atmosphericPressure"/>
+    <var name="windStressZonal"/>
+    <var name="windStressMeridional"/>
+    <var name="BruntVaisalaFreqTop"/>
+</stream>
+
+<stream name="forcing_data"
+        filename_template="forcing.nc">
+
+    <var_array name="activeTracersPistonVelocity"/>
+    <var_array name="activeTracersSurfaceRestoringValue"/>
+    <var name="windStressZonal"/>
+    <var name="windStressMeridional"/>
+</stream>
+
+<stream name="mixedLayerDepthsOutput"
+        output_interval="stream:output:output_interval"
+        clobber_mode="overwrite"
+        precision="double"/>
+
+</streams>
