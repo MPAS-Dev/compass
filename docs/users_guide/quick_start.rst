@@ -81,13 +81,13 @@ follows:
 
 .. code-block:: bash
 
-    conda create -n compass python compass
+    conda create -n compass -c conda-forge -c e3sm/label/compass python=3.9 compass
 
 To get a specific version of python and ``compass``, you can instead run:
 
 .. code-block:: bash
 
-    conda create -n compass python=3.9 compass=1.0.0
+    conda create -n compass -c conda-forge -c e3sm/label/compass python=3.9 compass=1.0.0
 
 Each time you want to work with compass, you will need to run:
 
