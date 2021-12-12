@@ -3,12 +3,6 @@
 Quick Start for Users
 =====================
 
-.. note::
-
-    **The compass package has not yet been released.**  The following
-    documentation anticipates what the instructions will be when a release
-    has happened
-
 .. _conda_env:
 
 compass conda environment
