@@ -248,7 +248,7 @@ def get_sys_info(machine, compiler, mpilib, mpicc, mpicxx, mpifc,
     else:
         esmf_comm = mpilib
 
-    if machine == 'grizzly' or machine == 'badger':
+    if machine == 'badger':
         esmf_netcdf = \
             '    export ESMF_NETCDF="split"\n' \
             '    export ESMF_NETCDF_INCLUDE=$NETCDF_C_PATH/include\n' \

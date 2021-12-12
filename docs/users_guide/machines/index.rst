@@ -101,7 +101,6 @@ allow you to build and run the MPAS model.
    chrysalis
    compy
    cori
-   grizzly
 
 
 .. _other_machines:

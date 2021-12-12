@@ -21,10 +21,10 @@ compass conda environment
 For each ``compass`` release, we maintain a
 `conda environment <https://docs.conda.io/en/latest/>`_. that includes the
 ``compass`` package as well as all of its dependencies on our standard machines
-(Grizzly, Badger, Anvil, Chrysalis, Compy and Cori).  Here are the commands to
+(Badger, Anvil, Chrysalis, Compy and Cori).  Here are the commands to
 load the the environment for the latest ``compass`` release on each machine:
 
-* Grizzly and Badger:
+* Badger:
 
 .. code-block:: bash
 

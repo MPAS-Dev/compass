@@ -65,10 +65,6 @@ the MPAS model.
 +--------------+------------+-----------+-------------------+
 | cori-knl     | intel      | impi      | intel-mpi         |
 +--------------+------------+-----------+-------------------+
-| grizzly      | intel      | impi      | intel-mpi         |
-|              +------------+-----------+-------------------+
-|              | gnu        | mvapich   | gfortran          |
-+--------------+------------+-----------+-------------------+
 
 Below are specifics for each supported machine
 
@@ -80,7 +76,6 @@ Below are specifics for each supported machine
    chrysalis
    compy
    cori
-   grizzly
 
 
 .. _dev_other_machines:
