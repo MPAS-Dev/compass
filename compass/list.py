@@ -97,6 +97,7 @@ def list_suites(cores=None, verbose=False):
         except FileNotFoundError:
             continue
         for suite in sorted(suites):
+            print_header_if_cached = True
             if suite.endswith('.txt'):
                 print('  -c {} -t {}'.format(core, os.path.splitext(suite)[0]))
                 if verbose:
@@ -105,9 +106,19 @@ def list_suites(cores=None, verbose=False):
                     tests = list()
                     for test in text.split('\n'):
                         test = test.strip()
-                        if (len(test) > 0 and test not in tests
+                        if test == 'cached':
+                            print('\t  Cached steps: all')
+                        elif test.startswith('cached'):
+                            if print_header_if_cached:
+                                print('\t  Cached steps:')
+                            # don't print the header again if there are
+                            # multiple lines of cached steps
+                            print_header_if_cached = False
+                            print(test.replace('cached: ', '\t    '))
+                        elif (len(test) > 0 and test not in tests
                                 and not test.startswith('#')):
                             print("\t* {}".format(test))
+                            print_header_if_cached = True
 
 
 def main():
