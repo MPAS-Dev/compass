@@ -20,7 +20,7 @@ class Forward(Step):
     """
     def __init__(self, test_case, resolution, name='forward', subdir=None,
                  cores=1, min_cores=None, threads=1, with_analysis=False,
-                 with_frazil=False):
+                 with_frazil=False, long=False):
         """
         Create a new test case
 
@@ -55,10 +55,37 @@ class Forward(Step):
 
         with_frazil : bool, optional
             whether the run includes frazil formation
+
+        long : bool
+            Whether to run a long (3-year) simulation to quasi-equilibrium
         """
         self.resolution = resolution
         self.with_analysis = with_analysis
         self.with_frazil = with_frazil
+        res_params = {'20km': {'cores': 25,
+                               'min_cores': 3,
+                               'dt': "'00:24:00'",
+                               'btr_dt': "'0000_00:00:48'",
+                               'mom_del4': "2.0e11",
+                               'run_duration': "'0000_02:00:00'"},
+                      '10km': {'cores': 100,
+                               'min_cores': 10,
+                               'dt': "'00:12:00'",
+                               'btr_dt': "'0000_00:00:24'",
+                               'mom_del4': "2.0e10 ",
+                               'run_duration': "'0000_01:00:00'"},
+                      '5km': {'cores': 400,
+                              'min_cores': 40,
+                              'dt': "'00:06:00'",
+                              'btr_dt': "'0000_00:00:12'",
+                              'mom_del4': "2.0e9",
+                              'run_duration': "'0000_00:30:00'"},
+                      '2.5km': {'cores': 1600,
+                                'min_cores': 160,
+                                'dt': "'00:03:00'",
+                                'btr_dt': "'0000_00:00:06'",
+                                'mom_del4': "4.0e8",
+                                'run_duration': "'0000_00:15:00'"}}
         if min_cores is None:
             min_cores = cores
         super().__init__(test_case=test_case, name=name, subdir=subdir,
@@ -68,7 +95,17 @@ class Forward(Step):
         self.add_streams_file('compass.ocean.streams', 'streams.output')
 
         self.add_namelist_file('compass.ocean.tests.ziso', 'namelist.forward')
-        self.add_streams_file('compass.ocean.tests.ziso', 'streams.forward')
+        if long:
+            output_interval = "0010_00:00:00"
+            restart_interval = "0010_00:00:00"
+        else:
+            output_interval = res_params['run_duration'].replace("'", "")
+            restart_interval = "0030_00:00:00"
+        replacements = dict(
+            output_interval=output_interval, restart_interval=restart_interval)
+        self.add_streams_file(package='compass.ocean.tests.ziso',
+                              streams='streams.forward',
+                              template_replacements=replacements)
 
         if with_analysis:
             self.add_namelist_file('compass.ocean.tests.ziso',

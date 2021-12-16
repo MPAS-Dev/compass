@@ -7,10 +7,11 @@
                   filename_template="init.nc"/>
 
 <immutable_stream name="restart"
-        output_interval="0030_00:00:00"/>
+        output_interval="{{ restart_interval }}"/>
 
 <stream name="output"
-        output_interval="0000-01-00_00:00:00">
+        clobber_mode="overwrite"
+        output_interval="{{ output_interval }}">
 
 	<stream name="mesh"/>
 	<var_struct name="tracers"/>
