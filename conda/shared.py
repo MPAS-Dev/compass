@@ -44,6 +44,10 @@ def parse_args(bootstrap):
                              "packages")
     parser.add_argument("--use_local", dest="use_local", action='store_true',
                         help="Use locally built conda packages (for testing).")
+    parser.add_argument("--update_spack", dest="update_spack",
+                        action='store_true',
+                        help="If the shared spack environment should be "
+                             "created or recreated.")
     if bootstrap:
         parser.add_argument("--local_conda_build", dest="local_conda_build",
                             type=str,

@@ -16,7 +16,7 @@ from importlib.resources import path
 from configparser import ConfigParser
 
 from mache import MachineInfo, discover_machine
-from mache.spack import get_modules_env_vars_and_mpi_compilers
+from mache.spack import make_spack_env, get_modules_env_vars_and_mpi_compilers
 from shared import parse_args, get_conda_base, check_call, install_miniconda
 
 
@@ -130,12 +130,20 @@ def build_env(env_type, recreate, machine, compiler, mpi, conda_mpi, version,
         os.chdir(build_dir)
 
     if env_type == 'dev':
-        if env_name is None:
-            env_name = f'dev_compass_{version}{env_suffix}'
+        spack_env = f'dev_compass_{version}{env_suffix}'
     elif env_type == 'test_release':
-        env_name = f'test_compass_{version}{env_suffix}'
+        spack_env = f'test_compass_{version}{env_suffix}'
     else:
-        env_name = f'compass_{version}{env_suffix}'
+        spack_env = f'compass_{version}{env_suffix}'
+
+    if env_name is None or env_type != 'dev':
+        env_name = spack_env
+
+    # add the compiler and MPI library to the spack env name
+    spack_env = '{}_{}_{}'.format(spack_env, compiler, mpi)
+    # spack doesn't like dots
+    spack_env = spack_env.replace('.', '_')
+
     env_path = os.path.join(conda_base, 'envs', env_name)
 
     if conda_mpi == 'nompi':
@@ -218,7 +226,7 @@ def build_env(env_type, recreate, machine, compiler, mpi, conda_mpi, version,
         else:
             print(f'{env_name} already exists')
 
-    return env_path, env_name, activate_env
+    return env_path, env_name, activate_env, spack_env
 
 
 def get_sys_info(machine, compiler, mpilib, mpicc, mpicxx, mpifc,
@@ -295,11 +303,8 @@ def get_sys_info(machine, compiler, mpilib, mpicc, mpicxx, mpifc,
     return sys_info, mod_env_commands
 
 
-def build_system_libraries(config, machine, compiler, mpi, version,
-                           template_path, env_path, env_name, activate_env,
-                           mpicc, mpicxx, mpifc, mod_env_commands):
-
-    mache_mod_env_commands = mod_env_commands
+def build_spack_env(config, update_spack, machine, compiler, mpi, env_path,
+                    env_name, activate_env, spack_env, mod_env_commands):
 
     if machine is not None:
         esmf = config.get('deploy', 'esmf')
@@ -319,77 +324,42 @@ def build_system_libraries(config, machine, compiler, mpi, version,
             # it could be that esmf was already removed
             pass
 
-    force_build = False
     if machine is not None:
-        system_libs = config.get('deploy', 'system_libs')
-        compiler_path = os.path.join(
-            system_libs, 'compass_{}'.format(version), compiler, mpi)
-        scorpio_path = os.path.join(compiler_path,
-                                    'scorpio_{}'.format(scorpio))
-        esmf_path = os.path.join(compiler_path, 'esmf_{}'.format(esmf))
+        spack_base = config.get('deploy', 'spack')
+        scorpio_path = os.path.join(spack_base, 'var/spack/environments/',
+                                    spack_env, '.spack-env/view')
     else:
-        # using conda-forge compilers
-        system_libs = None
+        spack_base = None
         scorpio_path = env_path
-        esmf_path = env_path
-        force_build = True
-
-    sys_info, mod_env_commands = get_sys_info(
-        machine, compiler, mpi, mpicc, mpicxx, mpifc, mod_env_commands)
-
-    if esmf != 'None':
-        bin_path = os.path.join(esmf_path, 'bin')
-        lib_path = os.path.join(esmf_path, 'lib')
-        mod_env_commands = \
-            f'{mod_env_commands}\n' \
-            f'export PATH="{bin_path}:$PATH"\n' \
-            f'export LD_LIBRARY_PATH={lib_path}:$LD_LIBRARY_PATH'
 
     mod_env_commands = f'{mod_env_commands}\n' \
                        f'export PIO={scorpio_path}'
 
-    build_esmf = 'False'
-    if esmf == 'None':
-        esmf_branch = 'None'
-    else:
-        esmf_branch = 'ESMF_{}'.format(esmf.replace('.', '_'))
-        if not os.path.exists(esmf_path) or force_build:
-            build_esmf = 'True'
+    specs = list()
 
-    build_scorpio = 'False'
-    if scorpio != 'None' and (not os.path.exists(scorpio_path) or force_build):
-        build_scorpio = 'True'
+    if esmf != 'None':
+        specs.append(f'esmf@{esmf}+mpi+netcdf~pio+pnetcdf')
+    if scorpio != 'None':
+        specs.append(f'scorpio@{scorpio}+pnetcdf~timing+internal-timing~tools+malloc')
 
-    script_filename = 'build.bash'
+    if update_spack:
+        make_spack_env(spack_path=spack_base, env_name=spack_env,
+                       spack_specs=specs, compiler=compiler, mpi=mpi,
+                       machine=machine)
 
-    with open('{}/build.template'.format(template_path), 'r') as f:
-        template = Template(f.read())
+        # remove ESMC/ESMF include files that interfere with MPAS time keeping
+        include_path = os.path.join(scorpio_path, 'include')
+        for prefix in ['ESMC', 'esmf']:
+            files = glob.glob(os.path.join(include_path, f'{prefix}*'))
+            for filename in files:
+                os.remove(filename)
 
-    if machine is None:
-        # need to activate the conda environment because that's where the
-        # libraries are
-        activate_commands = activate_env.replace("; ", "\n")
-        mache_mod_env_commands = f'{activate_commands}\n' \
-                                 f'{mache_mod_env_commands}'
-
-    script = template.render(
-        sys_info=sys_info, modules=mache_mod_env_commands,
-        scorpio=scorpio, scorpio_path=scorpio_path,
-        build_scorpio=build_scorpio, esmf_path=esmf_path,
-        esmf_branch=esmf_branch, build_esmf=build_esmf)
-    print('Writing {}'.format(script_filename))
-    with open(script_filename, 'w') as handle:
-        handle.write(script)
-
-    command = '/bin/bash build.bash'
-    check_call(command)
-
-    return sys_info, system_libs, mod_env_commands
+    return spack_base, mod_env_commands
 
 
 def write_load_compass(template_path, activ_path, conda_base, env_type,
-                       activ_suffix, prefix, env_name, machine, sys_info,
-                       mod_env_commands, env_only):
+                       activ_suffix, prefix, env_name, spack_base, spack_env,
+                       machine, sys_info, mod_env_commands, env_only):
 
     try:
         os.makedirs(activ_path)
@@ -417,6 +387,12 @@ def write_load_compass(template_path, activ_path, conda_base, env_type,
     with open(filename, 'r') as f:
         template = Template(f.read())
 
+    if not env_only and spack_base is not None:
+        spack = f'source {spack_base}/share/spack/setup-env.sh\n' \
+                f'spack env activate {spack_env}'
+    else:
+        spack = ''
+
     if env_type == 'dev':
         update_compass = \
             'if [[ -f "./setup.py" && -d "compass" ]]; then\n' \
@@ -429,6 +405,7 @@ def write_load_compass(template_path, activ_path, conda_base, env_type,
 
     script = template.render(conda_base=conda_base, compass_env=env_name,
                              mod_env_commands=mod_env_commands,
+                             spack=spack,
                              netcdf_paths=sys_info['mpas_netcdf_paths'],
                              update_compass=update_compass)
 
@@ -484,15 +461,15 @@ def test_command(command, env, package):
     print('  {} passes'.format(package))
 
 
-def update_permissions(config, env_type, activ_path, conda_base, system_libs):
+def update_permissions(config, env_type, activ_path, conda_base, spack_base):
 
     directories = []
     if env_type != 'dev':
         directories.append(conda_base)
-    if system_libs is not None:
+    if spack_base is not None:
         # even if this is not a release, we need to update permissions on
         # shared system libraries
-        directories.append(system_libs)
+        directories.append(spack_base)
 
     group = config.get('e3sm_unified', 'group')
 
@@ -699,18 +676,21 @@ def main():
         mpifc = 'mpifort'
         mod_env_commands = ''
 
-    env_path, env_name, activate_env = build_env(
+    env_path, env_name, activate_env, spack_env = build_env(
         env_type, recreate, machine, compiler, mpi, conda_mpi, version, python,
         source_path, template_path, conda_base, activ_suffix, args.env_name,
         env_suffix, activate_base, args.use_local, args.local_conda_build)
 
     if compiler is not None:
-        sys_info, system_libs, mod_env_commands = build_system_libraries(
-            config, machine, compiler, mpi, version, template_path, env_path,
-            env_name, activate_env, mpicc, mpicxx, mpifc, mod_env_commands)
+        sys_info, mod_env_commands = get_sys_info(
+            machine, compiler, mpi, mpicc, mpicxx, mpifc, mod_env_commands)
+        spack_base = build_spack_env(
+            config, args.update_spack, machine, compiler, mpi, env_path,
+            env_name, activate_env, spack_env, sys_info)
     else:
-        sys_info = dict(modules=[], env_vars=[], mpas_netcdf_paths='')
-        system_libs = None
+        sys_info = dict(mpas_netcdf_paths='')
+        spack_base = None
+        mod_env_commands = ''
 
     if env_type == 'dev':
         if args.env_name is not None:
@@ -724,7 +704,8 @@ def main():
 
     script_filename = write_load_compass(
         template_path, activ_path, conda_base, env_type, activ_suffix, prefix,
-        env_name, machine, sys_info, mod_env_commands, args.env_only)
+        env_name, spack_base, spack_env, machine, sys_info, mod_env_commands,
+        args.env_only)
 
     if args.check:
         check_env(script_filename, env_name)
@@ -747,7 +728,7 @@ def main():
 
     if machine is not None:
         update_permissions(config, env_type, activ_path, conda_base,
-                           system_libs)
+                           spack_base)
 
 
 if __name__ == '__main__':
