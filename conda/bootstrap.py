@@ -16,7 +16,8 @@ from importlib.resources import path
 from configparser import ConfigParser
 
 from mache import MachineInfo, discover_machine
-from mache.spack import make_spack_env, get_modules_env_vars_and_mpi_compilers
+from mache.spack import make_spack_env, \
+    get_modules_env_vars_and_mpi_compilers, get_spack_script
 from shared import parse_args, get_conda_base, check_call, install_miniconda
 
 
@@ -354,12 +355,16 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, env_path,
             for filename in files:
                 os.remove(filename)
 
-    return spack_base, mod_env_commands
+    spack_script = get_spack_script(spack_path=spack_base, env_name=spack_env,
+                                    compiler=compiler, mpi=mpi, shell='sh',
+                                    machine=machine)
+
+    return spack_base, spack_script, mod_env_commands
 
 
 def write_load_compass(template_path, activ_path, conda_base, env_type,
-                       activ_suffix, prefix, env_name, spack_base, spack_env,
-                       machine, sys_info, mod_env_commands, env_only):
+                       activ_suffix, prefix, env_name, spack_script, machine,
+                       sys_info, mod_env_commands, env_only):
 
     try:
         os.makedirs(activ_path)
@@ -387,12 +392,6 @@ def write_load_compass(template_path, activ_path, conda_base, env_type,
     with open(filename, 'r') as f:
         template = Template(f.read())
 
-    if not env_only and spack_base is not None:
-        spack = f'source {spack_base}/share/spack/setup-env.sh\n' \
-                f'spack env activate {spack_env}'
-    else:
-        spack = ''
-
     if env_type == 'dev':
         update_compass = \
             'if [[ -f "./setup.py" && -d "compass" ]]; then\n' \
@@ -405,7 +404,7 @@ def write_load_compass(template_path, activ_path, conda_base, env_type,
 
     script = template.render(conda_base=conda_base, compass_env=env_name,
                              mod_env_commands=mod_env_commands,
-                             spack=spack,
+                             spack=spack_script,
                              netcdf_paths=sys_info['mpas_netcdf_paths'],
                              update_compass=update_compass)
 
@@ -684,13 +683,14 @@ def main():
     if compiler is not None:
         sys_info, mod_env_commands = get_sys_info(
             machine, compiler, mpi, mpicc, mpicxx, mpifc, mod_env_commands)
-        spack_base = build_spack_env(
+        spack_base, spack_script, mod_env_commands = build_spack_env(
             config, args.update_spack, machine, compiler, mpi, env_path,
-            env_name, activate_env, spack_env, sys_info)
+            env_name, activate_env, spack_env, mod_env_commands)
     else:
         sys_info = dict(mpas_netcdf_paths='')
         spack_base = None
         mod_env_commands = ''
+        spack_script = ''
 
     if env_type == 'dev':
         if args.env_name is not None:
@@ -704,7 +704,7 @@ def main():
 
     script_filename = write_load_compass(
         template_path, activ_path, conda_base, env_type, activ_suffix, prefix,
-        env_name, spack_base, spack_env, machine, sys_info, mod_env_commands,
+        env_name, spack_script, machine, sys_info, mod_env_commands,
         args.env_only)
 
     if args.check:
