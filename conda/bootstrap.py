@@ -238,16 +238,6 @@ def get_sys_info(machine, compiler, mpilib, mpicc, mpicxx, mpifc,
 
     # convert env vars from mache to a list
 
-    if 'intel' in compiler:
-        esmf_compilers = '    export ESMF_COMPILER=intel'
-    elif compiler == 'pgi':
-        esmf_compilers = '    export ESMF_COMPILER=pgi\n' \
-                         '    export ESMF_F90={}\n' \
-                         '    export ESMF_CXX={}'.format(mpifc, mpicxx)
-    else:
-        esmf_compilers = '    export ESMF_F90={}\n' \
-                         '    export ESMF_CXX={}'.format(mpifc, mpicxx)
-
     if 'intel' in compiler and machine == 'anvil':
         mod_env_commands = f'{mod_env_commands}\n' \
                            f'export I_MPI_CC=icc\n'  \
@@ -260,45 +250,16 @@ def get_sys_info(machine, compiler, mpilib, mpicc, mpicxx, mpifc,
                            f'export MPAS_EXTERNAL_LIBS="-lgomp"'
 
     if mpilib == 'mvapich':
-        esmf_comm = 'mvapich2'
         mod_env_commands = f'{mod_env_commands}\n' \
                            f'export MV2_ENABLE_AFFINITY=0' \
                            f'export MV2_SHOW_CPU_BINDING=1'
-    elif mpilib == 'mpich':
-        esmf_comm = 'mpich3'
-    elif mpilib == 'impi':
-        esmf_comm = 'intelmpi'
-    else:
-        esmf_comm = mpilib
 
-    if machine == 'grizzly' or machine == 'badger':
-        esmf_netcdf = \
-            '    export ESMF_NETCDF="split"\n' \
-            '    export ESMF_NETCDF_INCLUDE=$NETCDF_C_PATH/include\n' \
-            '    export ESMF_NETCDF_LIBPATH=$NETCDF_C_PATH/lib64'
-    else:
-        esmf_netcdf = '    export ESMF_NETCDF="nc-config"'
+    mpas_netcdf_paths = \
+        'export NETCDF=$(dirname $(dirname $(which nc-config)))\n' \
+        'export NETCDFF=$(dirname $(dirname $(which nf-config)))\n' \
+        'export PNETCDF=$(dirname $(dirname $(which pnetcdf-config)))'
 
-    if 'cori' in machine:
-        netcdf_paths = 'export NETCDF_C_PATH=$NETCDF_DIR\n' \
-                       'export NETCDF_FORTRAN_PATH=$NETCDF_DIR\n' \
-                       'export PNETCDF_PATH=$PNETCDF_DIR'
-        mpas_netcdf_paths = 'export NETCDF=$NETCDF_DIR\n' \
-                            'export NETCDFF=$NETCDF_DIR\n' \
-                            'export PNETCDF=$PNETCDF_DIR'
-    else:
-        netcdf_paths = \
-            'export NETCDF_C_PATH=$(dirname $(dirname $(which nc-config)))\n' \
-            'export NETCDF_FORTRAN_PATH=$(dirname $(dirname $(which nf-config)))\n' \
-            'export PNETCDF_PATH=$(dirname $(dirname $(which pnetcdf-config)))'
-        mpas_netcdf_paths = \
-            'export NETCDF=$(dirname $(dirname $(which nc-config)))\n' \
-            'export NETCDFF=$(dirname $(dirname $(which nf-config)))\n' \
-            'export PNETCDF=$(dirname $(dirname $(which pnetcdf-config)))'
-
-    sys_info = dict(mpicc=mpicc, mpicxx=mpicxx,
-                    mpifc=mpifc, esmf_comm=esmf_comm, esmf_netcdf=esmf_netcdf,
-                    esmf_compilers=esmf_compilers, netcdf_paths=netcdf_paths,
+    sys_info = dict(mpicc=mpicc, mpicxx=mpicxx, mpifc=mpifc,
                     mpas_netcdf_paths=mpas_netcdf_paths)
 
     return sys_info, mod_env_commands
