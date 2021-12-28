@@ -266,16 +266,11 @@ def get_sys_info(machine, compiler, mpilib, mpicc, mpicxx, mpifc,
     return sys_info, mod_env_commands
 
 
-def build_spack_env(config, update_spack, machine, compiler, mpi, env_path,
-                    env_name, activate_env, spack_env, mod_env_commands):
+def build_spack_env(config, update_spack, machine, compiler, mpi, env_name,
+                    activate_env, spack_env, mod_env_commands):
 
-    if machine is not None:
-        esmf = config.get('deploy', 'esmf')
-        scorpio = config.get('deploy', 'scorpio')
-    else:
-        # stick with the conda-forge ESMF and e3sm/label/compass SCORPIO
-        esmf = 'None'
-        scorpio = 'None'
+    esmf = config.get('deploy', 'esmf')
+    scorpio = config.get('deploy', 'scorpio')
 
     if esmf != 'None':
         # remove conda-forge esmf because we will use the system build
@@ -287,19 +282,22 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, env_path,
             # it could be that esmf was already removed
             pass
 
-    if machine is not None:
-        spack_base = config.get('deploy', 'spack')
-        spack_base = f'{spack_base}/spack_for_mache_{mache_version}'
-        scorpio_path = os.path.join(spack_base, 'var/spack/environments/',
-                                    spack_env, '.spack-env/view')
-    else:
-        spack_base = None
-        scorpio_path = env_path
-
-    mod_env_commands = f'{mod_env_commands}\n' \
-                       f'export PIO={scorpio_path}'
+    spack_base = config.get('deploy', 'spack')
+    spack_base = f'{spack_base}/spack_for_mache_{mache_version}'
 
     specs = list()
+
+    e3sm_hdf5_netcdf = config.getboolean('deploy', 'use_e3sm_hdf5_netcdf')
+    if not e3sm_hdf5_netcdf:
+        hdf5 = config.get('deploy', 'hdf5')
+        netcdf_c = config.get('deploy', 'netcdf_c')
+        netcdf_fortran = config.get('deploy', 'netcdf_fortran')
+        pnetcdf = config.get('deploy', 'pnetcdf')
+        specs.extend([
+            f'hdf5@{hdf5}+cxx+fortran+hl+mpi+shared',
+            f'netcdf-c@{netcdf_c}+mpi~parallel-netcdf',
+            f'netcdf-fortran@{netcdf_fortran}',
+            f'parallel-netcdf@{pnetcdf}+cxx+fortran'])
 
     if esmf != 'None':
         specs.append(f'esmf@{esmf}+mpi+netcdf~pio+pnetcdf')
@@ -309,10 +307,12 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, env_path,
     if update_spack:
         make_spack_env(spack_path=spack_base, env_name=spack_env,
                        spack_specs=specs, compiler=compiler, mpi=mpi,
-                       machine=machine)
+                       machine=machine,
+                       include_e3sm_hdf5_netcdf=e3sm_hdf5_netcdf)
 
         # remove ESMC/ESMF include files that interfere with MPAS time keeping
-        include_path = os.path.join(scorpio_path, 'include')
+        include_path = os.path.join(spack_base, 'var/spack/environments/',
+                                    spack_env, '.spack-env/view/include')
         for prefix in ['ESMC', 'esmf']:
             files = glob.glob(os.path.join(include_path, f'{prefix}*'))
             for filename in files:
@@ -320,7 +320,8 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, env_path,
 
     spack_script = get_spack_script(spack_path=spack_base, env_name=spack_env,
                                     compiler=compiler, mpi=mpi, shell='sh',
-                                    machine=machine)
+                                    machine=machine,
+                                    include_e3sm_hdf5_netcdf=e3sm_hdf5_netcdf)
 
     return spack_base, spack_script, mod_env_commands
 
@@ -643,17 +644,23 @@ def main():
         source_path, template_path, conda_base, activ_suffix, args.env_name,
         env_suffix, activate_base, args.use_local, args.local_conda_build)
 
+    spack_base = None
+    spack_script = ''
+    sys_info = dict(mpas_netcdf_paths='')
     if compiler is not None:
-        sys_info, mod_env_commands = get_sys_info(
-            machine, compiler, mpi, mpicc, mpicxx, mpifc, mod_env_commands)
-        spack_base, spack_script, mod_env_commands = build_spack_env(
-            config, args.update_spack, machine, compiler, mpi, env_path,
-            env_name, activate_env, spack_env, mod_env_commands)
-    else:
-        sys_info = dict(mpas_netcdf_paths='')
-        spack_base = None
-        mod_env_commands = ''
-        spack_script = ''
+        if machine is not None:
+            sys_info, mod_env_commands = get_sys_info(
+                machine, compiler, mpi, mpicc, mpicxx, mpifc, mod_env_commands)
+            spack_base, spack_script, mod_env_commands = build_spack_env(
+                config, args.update_spack, machine, compiler, mpi, env_name,
+                activate_env, spack_env, mod_env_commands)
+            scorpio_path = os.path.join(spack_base, 'var/spack/environments/',
+                                        spack_env, '.spack-env/view')
+            mod_env_commands = f'{mod_env_commands}\n' \
+                               f'export PIO={scorpio_path}'
+        else:
+            mod_env_commands = f'{mod_env_commands}\n' \
+                               f'export PIO={env_path}'
 
     if env_type == 'dev':
         if args.env_name is not None:
