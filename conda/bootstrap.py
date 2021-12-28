@@ -18,6 +18,7 @@ from configparser import ConfigParser
 from mache import MachineInfo, discover_machine
 from mache.spack import make_spack_env, \
     get_modules_env_vars_and_mpi_compilers, get_spack_script
+from mache.version import __version__ as mache_version
 from shared import parse_args, get_conda_base, check_call, install_miniconda
 
 
@@ -288,6 +289,7 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, env_path,
 
     if machine is not None:
         spack_base = config.get('deploy', 'spack')
+        spack_base = f'{spack_base}/spack_for_mache_{mache_version}'
         scorpio_path = os.path.join(spack_base, 'var/spack/environments/',
                                     spack_env, '.spack-env/view')
     else:
