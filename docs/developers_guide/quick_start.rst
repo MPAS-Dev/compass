@@ -267,6 +267,8 @@ to the current directory.
     be safe.
 
 
+.. _dev_build_mpas:
+
 Building MPAS components
 ------------------------
 

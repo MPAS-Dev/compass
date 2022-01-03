@@ -101,6 +101,12 @@ want to work with compass, you will need to run:
 
     conda activate compass
 
+Building MPAS components
+------------------------
+
+For instructions on how to build MPAS components, see the :ref:`dev_build_mpas`
+section of the Developer's Guide.
+
 .. _setup_overview:
 
 Setting up test cases
