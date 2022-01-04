@@ -42,14 +42,14 @@ def configure(name, resolution, config):
     res_params = {'20km': {'nx': 50,
                            'ny': 112,
                            'dc': 20e3},
-                  '10km': {'nx': 50,
-                           'ny': 112,
+                  '10km': {'nx': 100,
+                           'ny': 228,
                            'dc': 10e3},
-                  '5km': {'nx': 50,
-                          'ny': 112,
+                  '5km': {'nx': 200,
+                          'ny': 460,
                           'dc': 5e3},
-                  '2.5km': {'nx': 50,
-                            'ny': 112,
+                  '2.5km': {'nx': 400,
+                            'ny': 922,
                             'dc': 2.5e3}}
 
     if resolution not in res_params:
