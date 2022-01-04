@@ -1,7 +1,7 @@
 from compass.testgroup import TestGroup
 from compass.ocean.tests.ziso.with_frazil import WithFrazil
 from compass.config import add_config
-from compass.ocean.test.ziso.ziso_test_case import ZisoTestCase
+from compass.ocean.tests.ziso.ziso_test_case import ZisoTestCase
 
 
 class Ziso(TestGroup):
