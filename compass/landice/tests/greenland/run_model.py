@@ -70,9 +70,7 @@ class RunModel(Step):
 
         # download and link the mesh
         self.add_input_file(filename='landice_grid.nc',
-                            url=‘https://web.lcrc.anl.gov/public/e3sm/
-                                 inputdata/glc/mpasli/mpas.gis20km/
-                                 gis_20km_r01.20210824.nc')
+                            target='gis_20km_r01.20210824.nc', database='')
 
         for suffix in suffixes:
             self.add_namelist_file(
