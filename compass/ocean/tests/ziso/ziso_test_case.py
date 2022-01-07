@@ -64,11 +64,12 @@ class ZisoTestCase(TestCase):
         step = Forward(test_case=self, resolution=resolution,
                        cores=res_params['cores'],
                        min_cores=res_params['min_cores'],
-                       with_analysis=True, with_frazil=False, long=long)
+                       with_analysis=True, with_frazil=False, long=long,
+                       with_particles=with_particles)
 
         if with_particles:
             # particles are on only for the 20km test case
-            step.add_namelist_file('compass.ocean.tests.ziso.default',
+            step.add_namelist_file('compass.ocean.tests.ziso',
                                    'namelist.particles')
         self.add_step(step)
 

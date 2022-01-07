@@ -20,7 +20,7 @@ class Forward(Step):
     """
     def __init__(self, test_case, resolution, name='forward', subdir=None,
                  cores=1, min_cores=None, threads=1, with_analysis=False,
-                 with_frazil=False, long=False):
+                 with_frazil=False, long=False, with_particles=False):
         """
         Create a new test case
 
@@ -56,9 +56,13 @@ class Forward(Step):
         with_frazil : bool, optional
             whether the run includes frazil formation
 
-        long : bool
+        long : bool, optional
             Whether to run a long (3-year) simulation to quasi-equilibrium
+
+        with_particles : bool, optional
+            Whether particles are include in the simulation
         """
+        self.with_particles = with_particles
         self.resolution = resolution
         self.with_analysis = with_analysis
         self.with_frazil = with_frazil
@@ -136,7 +140,7 @@ class Forward(Step):
 
         self.add_output_file(filename='output/output.0001-01-01_00.00.00.nc')
 
-        if with_analysis:
+        if with_analysis and with_particles:
             self.add_output_file(
                 filename='analysis_members/lagrPartTrack.0001-01-01_00.00.00.nc')
 
