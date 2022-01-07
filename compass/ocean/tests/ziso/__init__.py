@@ -15,11 +15,17 @@ class Ziso(TestGroup):
         """
         super().__init__(mpas_core=mpas_core, name='ziso')
 
-        for resolution in ['20km']:
+        for resolution in ['2.5km', '5km', '10km', '20km']:
             self.add_test_case(
                 ZisoTestCase(test_group=self, resolution=resolution,
                              with_particles=False, long=False))
-
+            self.add_test_case(
+                ZisoTestCase(test_group=self, resolution=resolution,
+                             with_particles=False, long=True))
+            self.add_test_case(
+                ZisoTestCase(test_group=self, resolution=resolution,
+                             with_particles=True, long=False))
+        for resolution in ['20km']:
             self.add_test_case(
                 WithFrazil(test_group=self, resolution=resolution))
 
