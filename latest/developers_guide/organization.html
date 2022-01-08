@@ -259,45 +259,45 @@ ocean core, “init mode”).</p>
 <a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/">LCRC server</a>
 for the dynamical core in the <code class="docutils literal notranslate"><span class="pre">core_path</span></code> option in the <code class="docutils literal notranslate"><span class="pre">downloads</span></code>
 section:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># This config file has default config options for the landice core</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># This config file has default config options for the landice core</span><span class="w"></span>
 
-<span class="c1"># The paths section points compass to external paths</span>
-<span class="k">[paths]</span>
+<span class="c1"># The paths section points compass to external paths</span><span class="w"></span>
+<span class="k">[paths]</span><span class="w"></span>
 
-<span class="c1"># the relative or absolute path to the root of a branch where MALI has been</span>
-<span class="c1"># built</span>
-<span class="na">mpas_model</span> <span class="o">=</span> <span class="s">MALI-Dev/components/mpas-albany-landice</span>
+<span class="c1"># the relative or absolute path to the root of a branch where MALI has been</span><span class="w"></span>
+<span class="c1"># built</span><span class="w"></span>
+<span class="na">mpas_model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MALI-Dev/components/mpas-albany-landice</span><span class="w"></span>
 
-<span class="c1"># The namelists section defines paths to example_compact namelists that will be used</span>
-<span class="c1"># to generate specific namelists. By default, these point to the forward and</span>
-<span class="c1"># init namelists in the default_inputs directory after a successful build of</span>
-<span class="c1"># the landice model.  Change these in a custom config file if you need a different</span>
-<span class="c1"># example_compact.</span>
-<span class="k">[namelists]</span>
-<span class="na">forward</span> <span class="o">=</span> <span class="s">${paths:mpas_model}/default_inputs/namelist.landice</span>
+<span class="c1"># The namelists section defines paths to example_compact namelists that will be used</span><span class="w"></span>
+<span class="c1"># to generate specific namelists. By default, these point to the forward and</span><span class="w"></span>
+<span class="c1"># init namelists in the default_inputs directory after a successful build of</span><span class="w"></span>
+<span class="c1"># the landice model.  Change these in a custom config file if you need a different</span><span class="w"></span>
+<span class="c1"># example_compact.</span><span class="w"></span>
+<span class="k">[namelists]</span><span class="w"></span>
+<span class="na">forward</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">${paths:mpas_model}/default_inputs/namelist.landice</span><span class="w"></span>
 
-<span class="c1"># The streams section defines paths to example_compact streams files that will be used</span>
-<span class="c1"># to generate specific streams files. By default, these point to the forward and</span>
-<span class="c1"># init streams files in the default_inputs directory after a successful build of</span>
-<span class="c1"># the landice model. Change these in a custom config file if you need a different</span>
-<span class="c1"># example_compact.</span>
-<span class="k">[streams]</span>
-<span class="na">forward</span> <span class="o">=</span> <span class="s">${paths:mpas_model}/default_inputs/streams.landice</span>
-
-
-<span class="c1"># The executables section defines paths to required executables. These</span>
-<span class="c1"># executables are provided for use by specific test cases.  Most tools that</span>
-<span class="c1"># compass needs should be in the conda environment, so this is only the path</span>
-<span class="c1"># to the MALI executable by default.</span>
-<span class="k">[executables]</span>
-<span class="na">model</span> <span class="o">=</span> <span class="s">${paths:mpas_model}/landice_model</span>
+<span class="c1"># The streams section defines paths to example_compact streams files that will be used</span><span class="w"></span>
+<span class="c1"># to generate specific streams files. By default, these point to the forward and</span><span class="w"></span>
+<span class="c1"># init streams files in the default_inputs directory after a successful build of</span><span class="w"></span>
+<span class="c1"># the landice model. Change these in a custom config file if you need a different</span><span class="w"></span>
+<span class="c1"># example_compact.</span><span class="w"></span>
+<span class="k">[streams]</span><span class="w"></span>
+<span class="na">forward</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">${paths:mpas_model}/default_inputs/streams.landice</span><span class="w"></span>
 
 
-<span class="c1"># Options related to downloading files</span>
-<span class="k">[download]</span>
+<span class="c1"># The executables section defines paths to required executables. These</span><span class="w"></span>
+<span class="c1"># executables are provided for use by specific test cases.  Most tools that</span><span class="w"></span>
+<span class="c1"># compass needs should be in the conda environment, so this is only the path</span><span class="w"></span>
+<span class="c1"># to the MALI executable by default.</span><span class="w"></span>
+<span class="k">[executables]</span><span class="w"></span>
+<span class="na">model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">${paths:mpas_model}/landice_model</span><span class="w"></span>
 
-<span class="c1"># the path on the server for MALI</span>
-<span class="na">core_path</span> <span class="o">=</span> <span class="s">mpas-albany-landice</span>
+
+<span class="c1"># Options related to downloading files</span><span class="w"></span>
+<span class="k">[download]</span><span class="w"></span>
+
+<span class="c1"># the path on the server for MALI</span><span class="w"></span>
+<span class="na">core_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">mpas-albany-landice</span><span class="w"></span>
 </pre></div>
 </div>
 </section>
@@ -318,43 +318,43 @@ While it is not required, a test group will typically include a config file,
 named <code class="docutils literal notranslate"><span class="pre">&lt;test_group&gt;.cfg</span></code>, with a set of default config options that are
 the starting point for all its test cases.  As an example, here is the config
 file for the <code class="docutils literal notranslate"><span class="pre">dome</span></code> test group in the <code class="docutils literal notranslate"><span class="pre">landice</span></code> core:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># config options for dome test cases</span>
-<span class="k">[dome]</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># config options for dome test cases</span><span class="w"></span>
+<span class="k">[dome]</span><span class="w"></span>
 
-<span class="c1"># sizes (in cells) for the 2000m uniform mesh</span>
-<span class="na">nx</span> <span class="o">=</span> <span class="s">30</span>
-<span class="na">ny</span> <span class="o">=</span> <span class="s">34</span>
+<span class="c1"># sizes (in cells) for the 2000m uniform mesh</span><span class="w"></span>
+<span class="na">nx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">30</span><span class="w"></span>
+<span class="na">ny</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">34</span><span class="w"></span>
 
-<span class="c1"># resolution (in m) for the 2000m uniform mesh</span>
-<span class="na">dc</span> <span class="o">=</span> <span class="s">2000.0</span>
+<span class="c1"># resolution (in m) for the 2000m uniform mesh</span><span class="w"></span>
+<span class="na">dc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2000.0</span><span class="w"></span>
 
-<span class="c1"># number of levels in the mesh</span>
-<span class="na">levels</span> <span class="o">=</span> <span class="s">10</span>
+<span class="c1"># number of levels in the mesh</span><span class="w"></span>
+<span class="na">levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10</span><span class="w"></span>
 
-<span class="c1"># the dome type (&#39;halfar&#39; or &#39;cism&#39;)</span>
-<span class="na">dome_type</span> <span class="o">=</span> <span class="s">halfar</span>
+<span class="c1"># the dome type (&#39;halfar&#39; or &#39;cism&#39;)</span><span class="w"></span>
+<span class="na">dome_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">halfar</span><span class="w"></span>
 
-<span class="c1"># Whether to center the dome in the center of the cell that is closest to the</span>
-<span class="c1"># center of the domain</span>
-<span class="na">put_origin_on_a_cell</span> <span class="o">=</span> <span class="s">True</span>
+<span class="c1"># Whether to center the dome in the center of the cell that is closest to the</span><span class="w"></span>
+<span class="c1"># center of the domain</span><span class="w"></span>
+<span class="na">put_origin_on_a_cell</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span><span class="w"></span>
 
-<span class="c1"># whether to add a small shelf to the test</span>
-<span class="na">shelf</span> <span class="o">=</span> <span class="s">False</span>
+<span class="c1"># whether to add a small shelf to the test</span><span class="w"></span>
+<span class="na">shelf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span><span class="w"></span>
 
-<span class="c1"># whether to add hydrology to the initial condition</span>
-<span class="na">hydro</span> <span class="o">=</span> <span class="s">False</span>
+<span class="c1"># whether to add hydrology to the initial condition</span><span class="w"></span>
+<span class="na">hydro</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span><span class="w"></span>
 
-<span class="c1"># config options related to visualization for dome test cases</span>
-<span class="k">[dome_viz]</span>
+<span class="c1"># config options related to visualization for dome test cases</span><span class="w"></span>
+<span class="k">[dome_viz]</span><span class="w"></span>
 
-<span class="c1"># which time index to visualize</span>
-<span class="na">time_slice</span> <span class="o">=</span> <span class="s">0</span>
+<span class="c1"># which time index to visualize</span><span class="w"></span>
+<span class="na">time_slice</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span><span class="w"></span>
 
-<span class="c1"># whether to save image files</span>
-<span class="na">save_images</span> <span class="o">=</span> <span class="s">True</span>
+<span class="c1"># whether to save image files</span><span class="w"></span>
+<span class="na">save_images</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span><span class="w"></span>
 
-<span class="c1"># whether to hide figures (typically when save_images = True)</span>
-<span class="na">hide_figs</span> <span class="o">=</span> <span class="s">True</span>
+<span class="c1"># whether to hide figures (typically when save_images = True)</span><span class="w"></span>
+<span class="na">hide_figs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span><span class="w"></span>
 </pre></div>
 </div>
 <p>Some test group options will provide defaults for config options that are

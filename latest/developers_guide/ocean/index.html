@@ -114,55 +114,55 @@
 <p>The <code class="docutils literal notranslate"><span class="pre">ocean</span></code> core is defined by the <a class="reference internal" href="generated/compass.ocean.Ocean.html#compass.ocean.Ocean" title="compass.ocean.Ocean"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.Ocean</span></code></a>
 class. All test cases in the <code class="docutils literal notranslate"><span class="pre">ocean</span></code> core share the following set of
 default config options:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># This config file has default config options for the ocean core</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># This config file has default config options for the ocean core</span><span class="w"></span>
 
-<span class="c1"># The paths section points compass to external paths</span>
-<span class="k">[paths]</span>
+<span class="c1"># The paths section points compass to external paths</span><span class="w"></span>
+<span class="k">[paths]</span><span class="w"></span>
 
-<span class="c1"># the relative or absolute path to the root of a branch where MPAS-Ocean</span>
-<span class="c1"># has been built</span>
-<span class="na">mpas_model</span> <span class="o">=</span> <span class="s">E3SM-Project/components/mpas-ocean</span>
+<span class="c1"># the relative or absolute path to the root of a branch where MPAS-Ocean</span><span class="w"></span>
+<span class="c1"># has been built</span><span class="w"></span>
+<span class="na">mpas_model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">E3SM-Project/components/mpas-ocean</span><span class="w"></span>
 
-<span class="c1"># The namelists section defines paths to example_compact namelists that will be used</span>
-<span class="c1"># to generate specific namelists. By default, these point to the forward and</span>
-<span class="c1"># init namelists in the default_inputs directory after a successful build of</span>
-<span class="c1"># the ocean model.  Change these in a custom config file if you need a different</span>
-<span class="c1"># example_compact.</span>
-<span class="k">[namelists]</span>
-<span class="na">forward</span> <span class="o">=</span> <span class="s">${paths:mpas_model}/default_inputs/namelist.ocean.forward</span>
-<span class="na">init</span>    <span class="o">=</span> <span class="s">${paths:mpas_model}/default_inputs/namelist.ocean.init</span>
+<span class="c1"># The namelists section defines paths to example_compact namelists that will be used</span><span class="w"></span>
+<span class="c1"># to generate specific namelists. By default, these point to the forward and</span><span class="w"></span>
+<span class="c1"># init namelists in the default_inputs directory after a successful build of</span><span class="w"></span>
+<span class="c1"># the ocean model.  Change these in a custom config file if you need a different</span><span class="w"></span>
+<span class="c1"># example_compact.</span><span class="w"></span>
+<span class="k">[namelists]</span><span class="w"></span>
+<span class="na">forward</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">${paths:mpas_model}/default_inputs/namelist.ocean.forward</span><span class="w"></span>
+<span class="na">init</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s">${paths:mpas_model}/default_inputs/namelist.ocean.init</span><span class="w"></span>
 
-<span class="c1"># The streams section defines paths to example_compact streams files that will be used</span>
-<span class="c1"># to generate specific streams files. By default, these point to the forward and</span>
-<span class="c1"># init streams files in the default_inputs directory after a successful build of</span>
-<span class="c1"># the ocean model. Change these in a custom config file if you need a different</span>
-<span class="c1"># example_compact.</span>
-<span class="k">[streams]</span>
-<span class="na">forward</span> <span class="o">=</span> <span class="s">${paths:mpas_model}/default_inputs/streams.ocean.forward</span>
-<span class="na">init</span>    <span class="o">=</span> <span class="s">${paths:mpas_model}/default_inputs/streams.ocean.init</span>
-
-
-<span class="c1"># The executables section defines paths to required executables. These</span>
-<span class="c1"># executables are provided for use by specific test cases.  Most tools that</span>
-<span class="c1"># compass needs should be in the conda environment, so this is only the path</span>
-<span class="c1"># to the MPAS-Ocean executable by default.</span>
-<span class="k">[executables]</span>
-<span class="na">model</span> <span class="o">=</span> <span class="s">${paths:mpas_model}/ocean_model</span>
+<span class="c1"># The streams section defines paths to example_compact streams files that will be used</span><span class="w"></span>
+<span class="c1"># to generate specific streams files. By default, these point to the forward and</span><span class="w"></span>
+<span class="c1"># init streams files in the default_inputs directory after a successful build of</span><span class="w"></span>
+<span class="c1"># the ocean model. Change these in a custom config file if you need a different</span><span class="w"></span>
+<span class="c1"># example_compact.</span><span class="w"></span>
+<span class="k">[streams]</span><span class="w"></span>
+<span class="na">forward</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">${paths:mpas_model}/default_inputs/streams.ocean.forward</span><span class="w"></span>
+<span class="na">init</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s">${paths:mpas_model}/default_inputs/streams.ocean.init</span><span class="w"></span>
 
 
-<span class="c1"># Options related to downloading files</span>
-<span class="k">[download]</span>
+<span class="c1"># The executables section defines paths to required executables. These</span><span class="w"></span>
+<span class="c1"># executables are provided for use by specific test cases.  Most tools that</span><span class="w"></span>
+<span class="c1"># compass needs should be in the conda environment, so this is only the path</span><span class="w"></span>
+<span class="c1"># to the MPAS-Ocean executable by default.</span><span class="w"></span>
+<span class="k">[executables]</span><span class="w"></span>
+<span class="na">model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">${paths:mpas_model}/ocean_model</span><span class="w"></span>
 
-<span class="c1"># the path on the server for MPAS-Ocean</span>
-<span class="na">core_path</span> <span class="o">=</span> <span class="s">mpas-ocean</span>
+
+<span class="c1"># Options related to downloading files</span><span class="w"></span>
+<span class="k">[download]</span><span class="w"></span>
+
+<span class="c1"># the path on the server for MPAS-Ocean</span><span class="w"></span>
+<span class="na">core_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">mpas-ocean</span><span class="w"></span>
 
 
-<span class="c1"># Options relate to adjusting the sea-surface height or land-ice pressure</span>
-<span class="c1"># below ice shelves to they are dynamically consistent with one another</span>
-<span class="k">[ssh_adjustment]</span>
+<span class="c1"># Options relate to adjusting the sea-surface height or land-ice pressure</span><span class="w"></span>
+<span class="c1"># below ice shelves to they are dynamically consistent with one another</span><span class="w"></span>
+<span class="k">[ssh_adjustment]</span><span class="w"></span>
 
-<span class="c1"># the number of iterations of ssh adjustment to perform</span>
-<span class="na">iterations</span> <span class="o">=</span> <span class="s">10</span>
+<span class="c1"># the number of iterations of ssh adjustment to perform</span><span class="w"></span>
+<span class="na">iterations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10</span><span class="w"></span>
 </pre></div>
 </div>
 <p>The default location for MPAS-Ocean is in the

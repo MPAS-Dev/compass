@@ -140,51 +140,51 @@ horizontal advection of a Gaussian tracer.</p>
 <section id="shared-config-options">
 <h2>shared config options<a class="headerlink" href="#shared-config-options" title="Permalink to this headline">¶</a></h2>
 <p>Config options shared by all test cases include:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span>
-<span class="k">[vertical_grid]</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span><span class="w"></span>
+<span class="k">[vertical_grid]</span><span class="w"></span>
 
-<span class="c1"># the type of vertical grid</span>
-<span class="na">grid_type</span> <span class="o">=</span> <span class="s">uniform</span>
+<span class="c1"># the type of vertical grid</span><span class="w"></span>
+<span class="na">grid_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">uniform</span><span class="w"></span>
 
-<span class="c1"># Number of vertical levels</span>
-<span class="na">vert_levels</span> <span class="o">=</span> <span class="s">3</span>
+<span class="c1"># Number of vertical levels</span><span class="w"></span>
+<span class="na">vert_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span><span class="w"></span>
 
-<span class="c1"># Depth of the bottom of the ocean</span>
-<span class="na">bottom_depth</span> <span class="o">=</span> <span class="s">300.0</span>
+<span class="c1"># Depth of the bottom of the ocean</span><span class="w"></span>
+<span class="na">bottom_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">300.0</span><span class="w"></span>
 
-<span class="c1"># The type of vertical coordinate (e.g. z-level, z-star)</span>
-<span class="na">coord_type</span> <span class="o">=</span> <span class="s">z-star</span>
+<span class="c1"># The type of vertical coordinate (e.g. z-level, z-star)</span><span class="w"></span>
+<span class="na">coord_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">z-star</span><span class="w"></span>
 
-<span class="c1"># Whether to use &quot;partial&quot; or &quot;full&quot;, or &quot;None&quot; to not alter the topography</span>
-<span class="na">partial_cell_type</span> <span class="o">=</span> <span class="s">None</span>
+<span class="c1"># Whether to use &quot;partial&quot; or &quot;full&quot;, or &quot;None&quot; to not alter the topography</span><span class="w"></span>
+<span class="na">partial_cell_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">None</span><span class="w"></span>
 
-<span class="c1"># The minimum fraction of a layer for partial cells</span>
-<span class="na">min_pc_fraction</span> <span class="o">=</span> <span class="s">0.1</span>
+<span class="c1"># The minimum fraction of a layer for partial cells</span><span class="w"></span>
+<span class="na">min_pc_fraction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.1</span><span class="w"></span>
 
-<span class="c1"># options for planar convergence test cases</span>
-<span class="k">[planar_convergence]</span>
+<span class="c1"># options for planar convergence test cases</span><span class="w"></span>
+<span class="k">[planar_convergence]</span><span class="w"></span>
 
-<span class="c1"># a list of resolutions (km) to test</span>
-<span class="na">resolutions</span> <span class="o">=</span> <span class="s">2, 4, 8, 16, 32</span>
+<span class="c1"># a list of resolutions (km) to test</span><span class="w"></span>
+<span class="na">resolutions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2, 4, 8, 16, 32</span><span class="w"></span>
 
-<span class="c1"># number of mesh cells in x and y for 1 km resolution.  Other resolutions have</span>
-<span class="c1"># the same physical size.  The default is approximately square, because of the</span>
-<span class="c1"># staggering of the hex mesh.</span>
-<span class="na">nx_1km</span> <span class="o">=</span> <span class="s">512</span>
-<span class="na">ny_1km</span> <span class="o">=</span> <span class="s">640</span>
+<span class="c1"># number of mesh cells in x and y for 1 km resolution.  Other resolutions have</span><span class="w"></span>
+<span class="c1"># the same physical size.  The default is approximately square, because of the</span><span class="w"></span>
+<span class="c1"># staggering of the hex mesh.</span><span class="w"></span>
+<span class="na">nx_1km</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">512</span><span class="w"></span>
+<span class="na">ny_1km</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">640</span><span class="w"></span>
 
-<span class="c1"># the number of cells per core to aim for</span>
-<span class="na">goal_cells_per_core</span> <span class="o">=</span> <span class="s">300</span>
+<span class="c1"># the number of cells per core to aim for</span><span class="w"></span>
+<span class="na">goal_cells_per_core</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">300</span><span class="w"></span>
 
-<span class="c1"># the approximate maximum number of cells per core (the test will fail if too</span>
-<span class="c1"># few cores are available)</span>
-<span class="na">max_cells_per_core</span> <span class="o">=</span> <span class="s">3000</span>
+<span class="c1"># the approximate maximum number of cells per core (the test will fail if too</span><span class="w"></span>
+<span class="c1"># few cores are available)</span><span class="w"></span>
+<span class="na">max_cells_per_core</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3000</span><span class="w"></span>
 
-<span class="c1"># time step at 1 km.  dt at other resolutions is proportional to the resolution</span>
-<span class="na">dt_1km</span> <span class="o">=</span> <span class="s">15</span>
+<span class="c1"># time step at 1 km.  dt at other resolutions is proportional to the resolution</span><span class="w"></span>
+<span class="na">dt_1km</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">15</span><span class="w"></span>
 
-<span class="c1"># the duration (hours) of the run</span>
-<span class="na">duration</span> <span class="o">=</span> <span class="s">24</span>
+<span class="c1"># the duration (hours) of the run</span><span class="w"></span>
+<span class="na">duration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">24</span><span class="w"></span>
 </pre></div>
 </div>
 </section>
@@ -230,31 +230,31 @@ following showing convergence as a function of the number of cells:</p>
 <section id="config-options">
 <h2>config options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">horizontal_advection</span></code> config options include:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># options for planar horizontal advection test case</span>
-<span class="k">[horizontal_advection]</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># options for planar horizontal advection test case</span><span class="w"></span>
+<span class="k">[horizontal_advection]</span><span class="w"></span>
 
-<span class="c1"># Temperature (deg C) of the ocean</span>
-<span class="na">temperature</span> <span class="o">=</span> <span class="s">15.0</span>
+<span class="c1"># Temperature (deg C) of the ocean</span><span class="w"></span>
+<span class="na">temperature</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">15.0</span><span class="w"></span>
 
-<span class="c1"># Salinity (PSU) of the surface of the ocean</span>
-<span class="na">salinity</span> <span class="o">=</span> <span class="s">35.0</span>
+<span class="c1"># Salinity (PSU) of the surface of the ocean</span><span class="w"></span>
+<span class="na">salinity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">35.0</span><span class="w"></span>
 
-<span class="c1"># center of the tracer gaussian (km)</span>
-<span class="na">x_center</span> <span class="o">=</span> <span class="s">0.</span>
-<span class="na">y_center</span> <span class="o">=</span> <span class="s">0.</span>
+<span class="c1"># center of the tracer gaussian (km)</span><span class="w"></span>
+<span class="na">x_center</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.</span><span class="w"></span>
+<span class="na">y_center</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.</span><span class="w"></span>
 
-<span class="c1"># width of gaussian tracer &quot;blob&quot; (km)</span>
-<span class="na">gaussian_width</span> <span class="o">=</span> <span class="s">50</span>
+<span class="c1"># width of gaussian tracer &quot;blob&quot; (km)</span><span class="w"></span>
+<span class="na">gaussian_width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">50</span><span class="w"></span>
 
-<span class="c1"># whether to advect in x, y, or both</span>
-<span class="na">advect_x</span> <span class="o">=</span> <span class="s">True</span>
-<span class="na">advect_y</span> <span class="o">=</span> <span class="s">True</span>
+<span class="c1"># whether to advect in x, y, or both</span><span class="w"></span>
+<span class="na">advect_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span><span class="w"></span>
+<span class="na">advect_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span><span class="w"></span>
 
-<span class="c1"># convergence threshold below which the test fails</span>
-<span class="na">conv_thresh</span> <span class="o">=</span> <span class="s">1.9</span>
+<span class="c1"># convergence threshold below which the test fails</span><span class="w"></span>
+<span class="na">conv_thresh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.9</span><span class="w"></span>
 
-<span class="c1"># Convergence rate above which a warning is issued</span>
-<span class="na">conv_max</span> <span class="o">=</span> <span class="s">2.3</span>
+<span class="c1"># Convergence rate above which a warning is issued</span><span class="w"></span>
+<span class="na">conv_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2.3</span><span class="w"></span>
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">x_center</span></code>, <code class="docutils literal notranslate"><span class="pre">y_center</span></code> and <code class="docutils literal notranslate"><span class="pre">gaussian_width</span></code> are used to control

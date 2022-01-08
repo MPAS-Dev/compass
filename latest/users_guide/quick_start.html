@@ -251,37 +251,37 @@ not need a config file.</p>
 config file like in this example for MPAS-Ocean. See also
 <a class="reference external" href="https://github.com/MPAS-Dev/compass/tree/master/example_configs">these examples</a>
 in the repository.</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># The paths section points compass to external paths</span>
-<span class="k">[paths]</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># The paths section points compass to external paths</span><span class="w"></span>
+<span class="k">[paths]</span><span class="w"></span>
 
-<span class="c1"># the relative or absolute path to the root of a branch where MPAS-Ocean</span>
-<span class="c1"># has been built</span>
-<span class="na">mpas_model</span> <span class="o">=</span> <span class="s">E3SM-Project/components/mpas-ocean</span>
+<span class="c1"># the relative or absolute path to the root of a branch where MPAS-Ocean</span><span class="w"></span>
+<span class="c1"># has been built</span><span class="w"></span>
+<span class="na">mpas_model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">E3SM-Project/components/mpas-ocean</span><span class="w"></span>
 
-<span class="c1"># The mesh_database and the initial_condition_database are locations where</span>
-<span class="c1"># meshes / initial conditions might be found on a specific machine. They can be</span>
-<span class="c1"># the same directory, or different directory. Additionally, if they are empty</span>
-<span class="c1"># some test cases might download data into them, which will then be reused if</span>
-<span class="c1"># the test case is run again later.</span>
-<span class="na">mesh_database</span> <span class="o">=</span> <span class="s">/home/xylar/data/mpas/meshes</span>
-<span class="na">initial_condition_database</span> <span class="o">=</span> <span class="s">/home/xylar/data/mpas/initial_conditions</span>
-<span class="na">bathymetry_database</span> <span class="o">=</span> <span class="s">/home/xylar/data/mpas/bathymetry_database</span>
+<span class="c1"># The mesh_database and the initial_condition_database are locations where</span><span class="w"></span>
+<span class="c1"># meshes / initial conditions might be found on a specific machine. They can be</span><span class="w"></span>
+<span class="c1"># the same directory, or different directory. Additionally, if they are empty</span><span class="w"></span>
+<span class="c1"># some test cases might download data into them, which will then be reused if</span><span class="w"></span>
+<span class="c1"># the test case is run again later.</span><span class="w"></span>
+<span class="na">mesh_database</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/xylar/data/mpas/meshes</span><span class="w"></span>
+<span class="na">initial_condition_database</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/xylar/data/mpas/initial_conditions</span><span class="w"></span>
+<span class="na">bathymetry_database</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/xylar/data/mpas/bathymetry_database</span><span class="w"></span>
 
 
-<span class="c1"># The parallel section describes options related to running tests in parallel</span>
-<span class="k">[parallel]</span>
+<span class="c1"># The parallel section describes options related to running tests in parallel</span><span class="w"></span>
+<span class="k">[parallel]</span><span class="w"></span>
 
-<span class="c1"># parallel system of execution: slurm or single_node</span>
-<span class="na">system</span> <span class="o">=</span> <span class="s">single_node</span>
+<span class="c1"># parallel system of execution: slurm or single_node</span><span class="w"></span>
+<span class="na">system</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">single_node</span><span class="w"></span>
 
-<span class="c1"># whether to use mpirun or srun to run the model</span>
-<span class="na">parallel_executable</span> <span class="o">=</span> <span class="s">mpirun</span>
+<span class="c1"># whether to use mpirun or srun to run the model</span><span class="w"></span>
+<span class="na">parallel_executable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">mpirun</span><span class="w"></span>
 
-<span class="c1"># cores per node on the machine</span>
-<span class="na">cores_per_node</span> <span class="o">=</span> <span class="s">8</span>
+<span class="c1"># cores per node on the machine</span><span class="w"></span>
+<span class="na">cores_per_node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8</span><span class="w"></span>
 
-<span class="c1"># the number of multiprocessing or dask threads to use</span>
-<span class="na">threads</span> <span class="o">=</span> <span class="s">8</span>
+<span class="c1"># the number of multiprocessing or dask threads to use</span><span class="w"></span>
+<span class="na">threads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8</span><span class="w"></span>
 </pre></div>
 </div>
 <p>In order to run a bit-for-bit test with a previous test case, use

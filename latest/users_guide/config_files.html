@@ -126,33 +126,33 @@ you’re running on one of the supported machines, you might find it convenient
 to make your own changes to config options related to either setting up or
 running test suites and test case.</p>
 <p>Here is an example:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[paths]</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[paths]</span><span class="w"></span>
 
-<span class="na">mpas_model</span> <span class="o">=</span> <span class="s">.</span>
+<span class="na">mpas_model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">.</span><span class="w"></span>
 
-<span class="c1"># The root to a location where the mesh_database, initial_condition_database,</span>
-<span class="c1"># and bathymetry_database for MPAS-Ocean will be cached</span>
-<span class="na">ocean_database_root</span> <span class="o">=</span> <span class="s">/home/xylar/data/mpas/mpas_standalonedata/mpas-ocean</span>
+<span class="c1"># The root to a location where the mesh_database, initial_condition_database,</span><span class="w"></span>
+<span class="c1"># and bathymetry_database for MPAS-Ocean will be cached</span><span class="w"></span>
+<span class="na">ocean_database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/xylar/data/mpas/mpas_standalonedata/mpas-ocean</span><span class="w"></span>
 
-<span class="c1"># The root to a location where the mesh_database and initial_condition_database</span>
-<span class="c1"># for MALI will be cached</span>
-<span class="na">landice_database_root</span> <span class="o">=</span> <span class="s">/home/xylar/data/mpas/mpas_standalonedata/mpas-albany-landice</span>
+<span class="c1"># The root to a location where the mesh_database and initial_condition_database</span><span class="w"></span>
+<span class="c1"># for MALI will be cached</span><span class="w"></span>
+<span class="na">landice_database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/xylar/data/mpas/mpas_standalonedata/mpas-albany-landice</span><span class="w"></span>
 
 
-<span class="c1"># The parallel section describes options related to running tests in parallel</span>
-<span class="k">[parallel]</span>
+<span class="c1"># The parallel section describes options related to running tests in parallel</span><span class="w"></span>
+<span class="k">[parallel]</span><span class="w"></span>
 
-<span class="c1"># parallel system of execution: slurm or single_node</span>
-<span class="na">system</span> <span class="o">=</span> <span class="s">single_node</span>
+<span class="c1"># parallel system of execution: slurm or single_node</span><span class="w"></span>
+<span class="na">system</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">single_node</span><span class="w"></span>
 
-<span class="c1"># whether to use mpirun or srun to run the model</span>
-<span class="na">parallel_executable</span> <span class="o">=</span> <span class="s">mpirun</span>
+<span class="c1"># whether to use mpirun or srun to run the model</span><span class="w"></span>
+<span class="na">parallel_executable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">mpirun</span><span class="w"></span>
 
-<span class="c1"># cores per node on the machine</span>
-<span class="na">cores_per_node</span> <span class="o">=</span> <span class="s">8</span>
+<span class="c1"># cores per node on the machine</span><span class="w"></span>
+<span class="na">cores_per_node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8</span><span class="w"></span>
 
-<span class="c1"># the number of multiprocessing or dask threads to use</span>
-<span class="na">threads</span> <span class="o">=</span> <span class="s">8</span>
+<span class="c1"># the number of multiprocessing or dask threads to use</span><span class="w"></span>
+<span class="na">threads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8</span><span class="w"></span>
 </pre></div>
 </div>
 <p>The comments in this example are hopefully pretty self-explanatory. In this
@@ -163,12 +163,12 @@ Since you are free to run <code class="docutils literal notranslate"><span class
 assumes you are running from the directory where the MPAS model was built.
 You may prefer to keep your <code class="docutils literal notranslate"><span class="pre">compass</span></code> config files in another location, in
 which case you could provide an absolute path like:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># The paths section points compass to external paths</span>
-<span class="k">[paths]</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># The paths section points compass to external paths</span><span class="w"></span>
+<span class="k">[paths]</span><span class="w"></span>
 
-<span class="c1"># the relative or absolute path to the root of a branch where MPAS-Ocean</span>
-<span class="c1"># has been built</span>
-<span class="na">mpas_model</span> <span class="o">=</span> <span class="s">/home/xylar/code/E3SM-Project/components/mpas-ocean</span>
+<span class="c1"># the relative or absolute path to the root of a branch where MPAS-Ocean</span><span class="w"></span>
+<span class="c1"># has been built</span><span class="w"></span>
+<span class="na">mpas_model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/xylar/code/E3SM-Project/components/mpas-ocean</span><span class="w"></span>
 </pre></div>
 </div>
 <p>You provide the config file to <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">setup</span></code> and <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">suite</span></code> with
@@ -216,105 +216,105 @@ sets of config options for different meshes.</p></li>
 in which case they will override the values specified in one of the other
 config files listed above. Here is an example of some customization for the
 <a class="reference internal" href="ocean/test_groups/global_ocean.html#ocean-global-ocean"><span class="std std-ref">global_ocean</span></a> test group:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># options for global ocean testcases</span>
-<span class="k">[global_ocean]</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># options for global ocean testcases</span><span class="w"></span>
+<span class="k">[global_ocean]</span><span class="w"></span>
 
-<span class="c1"># The following options are detected from .gitconfig if not explicitly entered</span>
-<span class="na">author</span> <span class="o">=</span> <span class="s">Xylar Asay-Davis</span>
-<span class="na">email</span> <span class="o">=</span> <span class="s">xylar@lanl.gov</span>
-<span class="na">pull_request</span> <span class="o">=</span> <span class="s">https://github.com/MPAS-Dev/compass/pull/28</span>
+<span class="c1"># The following options are detected from .gitconfig if not explicitly entered</span><span class="w"></span>
+<span class="na">author</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">Xylar Asay-Davis</span><span class="w"></span>
+<span class="na">email</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">xylar@lanl.gov</span><span class="w"></span>
+<span class="na">pull_request</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">https://github.com/MPAS-Dev/compass/pull/28</span><span class="w"></span>
 </pre></div>
 </div>
 <p>In this example, the author’s name and email address, and the path to a pull
 request will be included in the metadata for output files from this test group.</p>
 <p>A typical config file resulting from combining all of the sources listed above
 looks like:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[download]</span>
-<span class="na">server_base_url</span> <span class="o">=</span> <span class="s">https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata</span>
-<span class="na">download</span> <span class="o">=</span> <span class="s">True</span>
-<span class="na">check_size</span> <span class="o">=</span> <span class="s">False</span>
-<span class="na">verify</span> <span class="o">=</span> <span class="s">True</span>
-<span class="na">core_path</span> <span class="o">=</span> <span class="s">mpas-ocean</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[download]</span><span class="w"></span>
+<span class="na">server_base_url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata</span><span class="w"></span>
+<span class="na">download</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span><span class="w"></span>
+<span class="na">check_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span><span class="w"></span>
+<span class="na">verify</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span><span class="w"></span>
+<span class="na">core_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">mpas-ocean</span><span class="w"></span>
 
-<span class="k">[parallel]</span>
-<span class="na">partition_executable</span> <span class="o">=</span> <span class="s">gpmetis</span>
-<span class="na">system</span> <span class="o">=</span> <span class="s">single_node</span>
-<span class="na">parallel_executable</span> <span class="o">=</span> <span class="s">mpirun</span>
-<span class="na">cores_per_node</span> <span class="o">=</span> <span class="s">8</span>
-<span class="na">threads</span> <span class="o">=</span> <span class="s">8</span>
+<span class="k">[parallel]</span><span class="w"></span>
+<span class="na">partition_executable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">gpmetis</span><span class="w"></span>
+<span class="na">system</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">single_node</span><span class="w"></span>
+<span class="na">parallel_executable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">mpirun</span><span class="w"></span>
+<span class="na">cores_per_node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8</span><span class="w"></span>
+<span class="na">threads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8</span><span class="w"></span>
 
-<span class="k">[paths]</span>
-<span class="na">mpas_model</span> <span class="o">=</span> <span class="s">/home/xylar/code/mpas-work/compass/compass_1.0/E3SM-Project/components/mpas-ocean</span>
-<span class="na">ocean_database_root</span> <span class="o">=</span> <span class="s">/home/xylar/data/mpas/mpas_standalonedata/mpas-ocean</span>
-<span class="na">landice_database_root</span> <span class="o">=</span> <span class="s">/home/xylar/data/mpas/mpas_standalonedata/mpas-albany-landice</span>
-<span class="na">baseline_dir</span> <span class="o">=</span> <span class="s">/home/xylar/data/mpas/test_20210413/compass_classes/ocean/global_ocean/QU240/PHC/init</span>
+<span class="k">[paths]</span><span class="w"></span>
+<span class="na">mpas_model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/xylar/code/mpas-work/compass/compass_1.0/E3SM-Project/components/mpas-ocean</span><span class="w"></span>
+<span class="na">ocean_database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/xylar/data/mpas/mpas_standalonedata/mpas-ocean</span><span class="w"></span>
+<span class="na">landice_database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/xylar/data/mpas/mpas_standalonedata/mpas-albany-landice</span><span class="w"></span>
+<span class="na">baseline_dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/xylar/data/mpas/test_20210413/compass_classes/ocean/global_ocean/QU240/PHC/init</span><span class="w"></span>
 
-<span class="k">[namelists]</span>
-<span class="na">forward</span> <span class="o">=</span> <span class="s">/home/xylar/code/mpas-work/compass/compass_1.0/E3SM-Project/components/mpas-ocean/default_inputs/namelist.ocean.forward</span>
-<span class="na">init</span> <span class="o">=</span> <span class="s">/home/xylar/code/mpas-work/compass/compass_1.0/E3SM-Project/components/mpas-ocean/default_inputs/namelist.ocean.init</span>
+<span class="k">[namelists]</span><span class="w"></span>
+<span class="na">forward</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/xylar/code/mpas-work/compass/compass_1.0/E3SM-Project/components/mpas-ocean/default_inputs/namelist.ocean.forward</span><span class="w"></span>
+<span class="na">init</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/xylar/code/mpas-work/compass/compass_1.0/E3SM-Project/components/mpas-ocean/default_inputs/namelist.ocean.init</span><span class="w"></span>
 
-<span class="k">[streams]</span>
-<span class="na">forward</span> <span class="o">=</span> <span class="s">/home/xylar/code/mpas-work/compass/compass_1.0/E3SM-Project/components/mpas-ocean/default_inputs/streams.ocean.forward</span>
-<span class="na">init</span> <span class="o">=</span> <span class="s">/home/xylar/code/mpas-work/compass/compass_1.0/E3SM-Project/components/mpas-ocean/default_inputs/streams.ocean.init</span>
+<span class="k">[streams]</span><span class="w"></span>
+<span class="na">forward</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/xylar/code/mpas-work/compass/compass_1.0/E3SM-Project/components/mpas-ocean/default_inputs/streams.ocean.forward</span><span class="w"></span>
+<span class="na">init</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/xylar/code/mpas-work/compass/compass_1.0/E3SM-Project/components/mpas-ocean/default_inputs/streams.ocean.init</span><span class="w"></span>
 
-<span class="k">[executables]</span>
-<span class="na">model</span> <span class="o">=</span> <span class="s">/home/xylar/code/mpas-work/compass/compass_1.0/E3SM-Project/components/mpas-ocean/ocean_model</span>
+<span class="k">[executables]</span><span class="w"></span>
+<span class="na">model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/xylar/code/mpas-work/compass/compass_1.0/E3SM-Project/components/mpas-ocean/ocean_model</span><span class="w"></span>
 
-<span class="k">[ssh_adjustment]</span>
-<span class="na">iterations</span> <span class="o">=</span> <span class="s">10</span>
+<span class="k">[ssh_adjustment]</span><span class="w"></span>
+<span class="na">iterations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10</span><span class="w"></span>
 
-<span class="k">[global_ocean]</span>
-<span class="na">mesh_cores</span> <span class="o">=</span> <span class="s">1</span>
-<span class="na">mesh_min_cores</span> <span class="o">=</span> <span class="s">1</span>
-<span class="na">mesh_max_memory</span> <span class="o">=</span> <span class="s">1000</span>
-<span class="na">mesh_max_disk</span> <span class="o">=</span> <span class="s">1000</span>
-<span class="na">init_cores</span> <span class="o">=</span> <span class="s">4</span>
-<span class="na">init_min_cores</span> <span class="o">=</span> <span class="s">1</span>
-<span class="na">init_max_memory</span> <span class="o">=</span> <span class="s">1000</span>
-<span class="na">init_max_disk</span> <span class="o">=</span> <span class="s">1000</span>
-<span class="na">init_threads</span> <span class="o">=</span> <span class="s">1</span>
-<span class="na">forward_cores</span> <span class="o">=</span> <span class="s">4</span>
-<span class="na">forward_min_cores</span> <span class="o">=</span> <span class="s">1</span>
-<span class="na">forward_threads</span> <span class="o">=</span> <span class="s">1</span>
-<span class="na">forward_max_memory</span> <span class="o">=</span> <span class="s">1000</span>
-<span class="na">forward_max_disk</span> <span class="o">=</span> <span class="s">1000</span>
-<span class="na">add_metadata</span> <span class="o">=</span> <span class="s">True</span>
-<span class="na">prefix</span> <span class="o">=</span> <span class="s">QU</span>
-<span class="na">mesh_description</span> <span class="o">=</span> <span class="s">MPAS quasi-uniform mesh for E3SM version ${e3sm_version} at</span>
-    <span class="na">${min_res}-km global resolution with ${levels} vertical</span>
-    <span class="na">level</span>
-<span class="na">bathy_description</span> <span class="o">=</span> <span class="s">Bathymetry is from GEBCO 2019, combined with BedMachine Antarctica around Antarctica.</span>
-<span class="na">init_description</span> <span class="o">=</span> <span class="s">Polar science center Hydrographic Climatology (PHC)</span>
-<span class="na">e3sm_version</span> <span class="o">=</span> <span class="s">2</span>
-<span class="na">mesh_revision</span> <span class="o">=</span> <span class="s">1</span>
-<span class="na">min_res</span> <span class="o">=</span> <span class="s">240</span>
-<span class="na">max_res</span> <span class="o">=</span> <span class="s">240</span>
-<span class="na">max_depth</span> <span class="o">=</span> <span class="s">autodetect</span>
-<span class="na">levels</span> <span class="o">=</span> <span class="s">autodetect</span>
-<span class="na">creation_date</span> <span class="o">=</span> <span class="s">autodetect</span>
-<span class="na">author</span> <span class="o">=</span> <span class="s">Xylar Asay-Davis</span>
-<span class="na">email</span> <span class="o">=</span> <span class="s">xylar@lanl.gov</span>
-<span class="na">pull_request</span> <span class="o">=</span> <span class="s">https://github.com/MPAS-Dev/compass/pull/28</span>
+<span class="k">[global_ocean]</span><span class="w"></span>
+<span class="na">mesh_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
+<span class="na">mesh_min_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
+<span class="na">mesh_max_memory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
+<span class="na">mesh_max_disk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
+<span class="na">init_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span><span class="w"></span>
+<span class="na">init_min_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
+<span class="na">init_max_memory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
+<span class="na">init_max_disk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
+<span class="na">init_threads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
+<span class="na">forward_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span><span class="w"></span>
+<span class="na">forward_min_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
+<span class="na">forward_threads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
+<span class="na">forward_max_memory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
+<span class="na">forward_max_disk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
+<span class="na">add_metadata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span><span class="w"></span>
+<span class="na">prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">QU</span><span class="w"></span>
+<span class="na">mesh_description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MPAS quasi-uniform mesh for E3SM version ${e3sm_version} at</span><span class="w"></span>
+<span class="w">    </span><span class="na">${min_res}-km global resolution with ${levels} vertical</span><span class="w"></span>
+<span class="w">    </span><span class="na">level</span><span class="w"></span>
+<span class="na">bathy_description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">Bathymetry is from GEBCO 2019, combined with BedMachine Antarctica around Antarctica.</span><span class="w"></span>
+<span class="na">init_description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">Polar science center Hydrographic Climatology (PHC)</span><span class="w"></span>
+<span class="na">e3sm_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2</span><span class="w"></span>
+<span class="na">mesh_revision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
+<span class="na">min_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">240</span><span class="w"></span>
+<span class="na">max_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">240</span><span class="w"></span>
+<span class="na">max_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span><span class="w"></span>
+<span class="na">levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span><span class="w"></span>
+<span class="na">creation_date</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span><span class="w"></span>
+<span class="na">author</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">Xylar Asay-Davis</span><span class="w"></span>
+<span class="na">email</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">xylar@lanl.gov</span><span class="w"></span>
+<span class="na">pull_request</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">https://github.com/MPAS-Dev/compass/pull/28</span><span class="w"></span>
 
-<span class="k">[files_for_e3sm]</span>
-<span class="na">enable_ocean_initial_condition</span> <span class="o">=</span> <span class="s">true</span>
-<span class="na">enable_ocean_graph_partition</span> <span class="o">=</span> <span class="s">true</span>
-<span class="na">enable_seaice_initial_condition</span> <span class="o">=</span> <span class="s">true</span>
-<span class="na">enable_scrip</span> <span class="o">=</span> <span class="s">true</span>
-<span class="na">enable_diagnostics_files</span> <span class="o">=</span> <span class="s">true</span>
-<span class="na">comparisonlatresolution</span> <span class="o">=</span> <span class="s">0.5</span>
-<span class="na">comparisonlonresolution</span> <span class="o">=</span> <span class="s">0.5</span>
-<span class="na">comparisonantarcticstereowidth</span> <span class="o">=</span> <span class="s">6000.</span>
-<span class="na">comparisonantarcticstereoresolution</span> <span class="o">=</span> <span class="s">10.</span>
-<span class="na">comparisonarcticstereowidth</span> <span class="o">=</span> <span class="s">6000.</span>
-<span class="na">comparisonarcticstereoresolution</span> <span class="o">=</span> <span class="s">10.</span>
+<span class="k">[files_for_e3sm]</span><span class="w"></span>
+<span class="na">enable_ocean_initial_condition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span><span class="w"></span>
+<span class="na">enable_ocean_graph_partition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span><span class="w"></span>
+<span class="na">enable_seaice_initial_condition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span><span class="w"></span>
+<span class="na">enable_scrip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span><span class="w"></span>
+<span class="na">enable_diagnostics_files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span><span class="w"></span>
+<span class="na">comparisonlatresolution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.5</span><span class="w"></span>
+<span class="na">comparisonlonresolution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.5</span><span class="w"></span>
+<span class="na">comparisonantarcticstereowidth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">6000.</span><span class="w"></span>
+<span class="na">comparisonantarcticstereoresolution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10.</span><span class="w"></span>
+<span class="na">comparisonarcticstereowidth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">6000.</span><span class="w"></span>
+<span class="na">comparisonarcticstereoresolution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10.</span><span class="w"></span>
 
-<span class="k">[vertical_grid]</span>
-<span class="na">grid_type</span> <span class="o">=</span> <span class="s">tanh_dz</span>
-<span class="na">vert_levels</span> <span class="o">=</span> <span class="s">16</span>
-<span class="na">bottom_depth</span> <span class="o">=</span> <span class="s">3000.0</span>
-<span class="na">min_layer_thickness</span> <span class="o">=</span> <span class="s">3.0</span>
-<span class="na">max_layer_thickness</span> <span class="o">=</span> <span class="s">500.0</span>
+<span class="k">[vertical_grid]</span><span class="w"></span>
+<span class="na">grid_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">tanh_dz</span><span class="w"></span>
+<span class="na">vert_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">16</span><span class="w"></span>
+<span class="na">bottom_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3000.0</span><span class="w"></span>
+<span class="na">min_layer_thickness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3.0</span><span class="w"></span>
+<span class="na">max_layer_thickness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">500.0</span><span class="w"></span>
 </pre></div>
 </div>
 <p>Unfortunately, all comments are lost in the process of combining config

@@ -125,32 +125,32 @@
 <span id="ocean-vertical"></span><h1>Vertical coordinate<a class="headerlink" href="#vertical-coordinate" title="Permalink to this headline">¶</a></h1>
 <p>The vertical coordinate used in most MPAS-Ocean test cases is determined by
 config options in the <code class="docutils literal notranslate"><span class="pre">vertical_grid</span></code> section of the config file:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span>
-<span class="k">[vertical_grid]</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span><span class="w"></span>
+<span class="k">[vertical_grid]</span><span class="w"></span>
 
-<span class="c1"># the type of vertical grid</span>
-<span class="na">grid_type</span> <span class="o">=</span> <span class="s">100layerE3SMv1</span>
+<span class="c1"># the type of vertical grid</span><span class="w"></span>
+<span class="na">grid_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">100layerE3SMv1</span><span class="w"></span>
 
-<span class="c1"># Number of vertical levels</span>
-<span class="na">vert_levels</span> <span class="o">=</span> <span class="s">100</span>
+<span class="c1"># Number of vertical levels</span><span class="w"></span>
+<span class="na">vert_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">100</span><span class="w"></span>
 
-<span class="c1"># Depth of the bottom of the ocean</span>
-<span class="na">bottom_depth</span> <span class="o">=</span> <span class="s">2500.0</span>
+<span class="c1"># Depth of the bottom of the ocean</span><span class="w"></span>
+<span class="na">bottom_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2500.0</span><span class="w"></span>
 
-<span class="c1"># The minimum layer thickness</span>
-<span class="na">min_layer_thickness</span> <span class="o">=</span> <span class="s">3.0</span>
+<span class="c1"># The minimum layer thickness</span><span class="w"></span>
+<span class="na">min_layer_thickness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3.0</span><span class="w"></span>
 
-<span class="c1"># The maximum layer thickness</span>
-<span class="na">max_layer_thickness</span> <span class="o">=</span> <span class="s">500.0</span>
+<span class="c1"># The maximum layer thickness</span><span class="w"></span>
+<span class="na">max_layer_thickness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">500.0</span><span class="w"></span>
 
-<span class="c1"># The type of vertical coordinate (e.g. z-level, z-star)</span>
-<span class="na">coord_type</span> <span class="o">=</span> <span class="s">z-star</span>
+<span class="c1"># The type of vertical coordinate (e.g. z-level, z-star)</span><span class="w"></span>
+<span class="na">coord_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">z-star</span><span class="w"></span>
 
-<span class="c1"># Whether to use &quot;partial&quot; or &quot;full&quot;, or &quot;None&quot; to not alter the topography</span>
-<span class="na">partial_cell_type</span> <span class="o">=</span> <span class="s">full</span>
+<span class="c1"># Whether to use &quot;partial&quot; or &quot;full&quot;, or &quot;None&quot; to not alter the topography</span><span class="w"></span>
+<span class="na">partial_cell_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">full</span><span class="w"></span>
 
-<span class="c1"># The minimum fraction of a layer for partial cells</span>
-<span class="na">min_pc_fraction</span> <span class="o">=</span> <span class="s">0.1</span>
+<span class="c1"># The minimum fraction of a layer for partial cells</span><span class="w"></span>
+<span class="na">min_pc_fraction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.1</span><span class="w"></span>
 </pre></div>
 </div>
 <p>The vertical coordinate is typically defined based on a 1D reference grid.
@@ -170,17 +170,17 @@ layer thickness is simply <code class="docutils literal notranslate"><span class
 interface of the deepest layer) divided by the number of layers
 (<code class="docutils literal notranslate"><span class="pre">vert_levels</span></code>).  In this example, the vertical grid would have 10 vertical
 layers, each 100 m thick.</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span>
-<span class="k">[vertical_grid]</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span><span class="w"></span>
+<span class="k">[vertical_grid]</span><span class="w"></span>
 
-<span class="c1"># the type of vertical grid</span>
-<span class="na">grid_type</span> <span class="o">=</span> <span class="s">uniform</span>
+<span class="c1"># the type of vertical grid</span><span class="w"></span>
+<span class="na">grid_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">uniform</span><span class="w"></span>
 
-<span class="c1"># Number of vertical levels</span>
-<span class="na">vert_levels</span> <span class="o">=</span> <span class="s">10</span>
+<span class="c1"># Number of vertical levels</span><span class="w"></span>
+<span class="na">vert_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10</span><span class="w"></span>
 
-<span class="c1"># Depth of the bottom of the ocean</span>
-<span class="na">bottom_depth</span> <span class="o">=</span> <span class="s">1000.0</span>
+<span class="c1"># Depth of the bottom of the ocean</span><span class="w"></span>
+<span class="na">bottom_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000.0</span><span class="w"></span>
 </pre></div>
 </div>
 </section>
@@ -204,23 +204,23 @@ number of vertical levels (one less than the number of layer interfaces) and
 <span class="math notranslate nohighlight">\(H_\mathrm{bot}\)</span> is <code class="docutils literal notranslate"><span class="pre">bottom_depth</span></code>, the depth of the seafloor.</p>
 <p>The following config options are all required.  This is an example of a
 64-layer vertical grid that has been explored in E3SM v2:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span>
-<span class="k">[vertical_grid]</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span><span class="w"></span>
+<span class="k">[vertical_grid]</span><span class="w"></span>
 
-<span class="c1"># the type of vertical grid</span>
-<span class="na">grid_type</span> <span class="o">=</span> <span class="s">tanh_dz</span>
+<span class="c1"># the type of vertical grid</span><span class="w"></span>
+<span class="na">grid_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">tanh_dz</span><span class="w"></span>
 
-<span class="c1"># Number of vertical levels</span>
-<span class="na">vert_levels</span> <span class="o">=</span> <span class="s">64</span>
+<span class="c1"># Number of vertical levels</span><span class="w"></span>
+<span class="na">vert_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">64</span><span class="w"></span>
 
-<span class="c1"># Depth of the bottom of the ocean</span>
-<span class="na">bottom_depth</span> <span class="o">=</span> <span class="s">6000.0</span>
+<span class="c1"># Depth of the bottom of the ocean</span><span class="w"></span>
+<span class="na">bottom_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">6000.0</span><span class="w"></span>
 
-<span class="c1"># The minimum layer thickness</span>
-<span class="na">min_layer_thickness</span> <span class="o">=</span> <span class="s">2.0</span>
+<span class="c1"># The minimum layer thickness</span><span class="w"></span>
+<span class="na">min_layer_thickness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2.0</span><span class="w"></span>
 
-<span class="c1"># The maximum layer thickness</span>
-<span class="na">max_layer_thickness</span> <span class="o">=</span> <span class="s">210.0</span>
+<span class="c1"># The maximum layer thickness</span><span class="w"></span>
+<span class="na">max_layer_thickness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">210.0</span><span class="w"></span>
 </pre></div>
 </div>
 </section>
@@ -230,11 +230,11 @@ number of vertical levels (one less than the number of layer interfaces) and
 (<a class="reference external" href="http://psc.apl.washington.edu/nonwp_projects/PHC/Climatology.html">PHC</a>).
 Layer thicknesses vary over 60 layers from 10 m at the surface to 250 m at the
 seafloor, which is at 5500 m depth.  To get the default grid, use:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span>
-<span class="k">[vertical_grid]</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span><span class="w"></span>
+<span class="k">[vertical_grid]</span><span class="w"></span>
 
-<span class="c1"># the type of vertical grid</span>
-<span class="na">grid_type</span> <span class="o">=</span> <span class="s">60layerPHC</span>
+<span class="c1"># the type of vertical grid</span><span class="w"></span>
+<span class="na">grid_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">60layerPHC</span><span class="w"></span>
 </pre></div>
 </div>
 <p>If the <code class="docutils literal notranslate"><span class="pre">bottom_depth</span></code> option is also defined, the depths will be renormalized
@@ -245,24 +245,24 @@ so that bottom of the deepest layer is at <code class="docutils literal notransl
 <p>This is the vertical grid was used in some E3SM v1 experiments. Layer
 thicknesses vary over 100 layers from 1.51 m at the surface to 221 m at the
 seafloor, which is at 6000 m depth.  To get the default grid, use:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span>
-<span class="k">[vertical_grid]</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span><span class="w"></span>
+<span class="k">[vertical_grid]</span><span class="w"></span>
 
-<span class="c1"># the type of vertical grid</span>
-<span class="na">grid_type</span> <span class="o">=</span> <span class="s">100layerE3SMv1</span>
+<span class="c1"># the type of vertical grid</span><span class="w"></span>
+<span class="na">grid_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">100layerE3SMv1</span><span class="w"></span>
 </pre></div>
 </div>
 <p>If the <code class="docutils literal notranslate"><span class="pre">bottom_depth</span></code> option is also defined, the depths will be renormalized
 so that bottom of the deepest layer is at <code class="docutils literal notranslate"><span class="pre">z</span> <span class="pre">=</span> <span class="pre">-bottom_depth</span></code>.  This is
 the default approach in the <a class="reference internal" href="../test_groups/ziso.html#ocean-ziso"><span class="std std-ref">ziso</span></a> test group:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span>
-<span class="k">[vertical_grid]</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span><span class="w"></span>
+<span class="k">[vertical_grid]</span><span class="w"></span>
 
-<span class="c1"># the type of vertical grid</span>
-<span class="na">grid_type</span> <span class="o">=</span> <span class="s">100layerE3SMv1</span>
+<span class="c1"># the type of vertical grid</span><span class="w"></span>
+<span class="na">grid_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">100layerE3SMv1</span><span class="w"></span>
 
-<span class="c1"># Depth of the bottom of the ocean</span>
-<span class="na">bottom_depth</span> <span class="o">=</span> <span class="s">2500.0</span>
+<span class="c1"># Depth of the bottom of the ocean</span><span class="w"></span>
+<span class="na">bottom_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2500.0</span><span class="w"></span>
 </pre></div>
 </div>
 <p>In this case, the thickness of the 100 layers vary between ~0.63 m and 92.1 m,

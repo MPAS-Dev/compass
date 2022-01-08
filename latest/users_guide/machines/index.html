@@ -135,31 +135,31 @@ cases are configured in a way that is appropriate for your machine.</p>
 <section id="config-options">
 <h2>config options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
 <p>The config options typically defined for a machine are:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[paths]</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[paths]</span><span class="w"></span>
 
-<span class="c1"># The root to a location where the mesh_database, initial_condition_database,</span>
-<span class="c1"># and bathymetry_database for MPAS-Ocean will be cached</span>
-<span class="na">ocean_database_root</span> <span class="o">=</span> <span class="s">/usr/projects/regionalclimate/COMMON_MPAS/ocean/grids/</span>
+<span class="c1"># The root to a location where the mesh_database, initial_condition_database,</span><span class="w"></span>
+<span class="c1"># and bathymetry_database for MPAS-Ocean will be cached</span><span class="w"></span>
+<span class="na">ocean_database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/usr/projects/regionalclimate/COMMON_MPAS/ocean/grids/</span><span class="w"></span>
 
-<span class="c1"># The root to a location where the mesh_database and initial_condition_database</span>
-<span class="c1"># for MALI will be cached</span>
-<span class="na">landice_database_root</span> <span class="o">=</span> <span class="s">/usr/projects/regionalclimate/COMMON_MPAS/mpas_standalonedata/mpas-albany-landice</span>
+<span class="c1"># The root to a location where the mesh_database and initial_condition_database</span><span class="w"></span>
+<span class="c1"># for MALI will be cached</span><span class="w"></span>
+<span class="na">landice_database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/usr/projects/regionalclimate/COMMON_MPAS/mpas_standalonedata/mpas-albany-landice</span><span class="w"></span>
 
 
-<span class="c1"># The parallel section describes options related to running tests in parallel</span>
-<span class="k">[parallel]</span>
+<span class="c1"># The parallel section describes options related to running tests in parallel</span><span class="w"></span>
+<span class="k">[parallel]</span><span class="w"></span>
 
-<span class="c1"># parallel system of execution: slurm or single_node</span>
-<span class="na">system</span> <span class="o">=</span> <span class="s">slurm</span>
+<span class="c1"># parallel system of execution: slurm or single_node</span><span class="w"></span>
+<span class="na">system</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">slurm</span><span class="w"></span>
 
-<span class="c1"># whether to use mpirun or srun to run the model</span>
-<span class="na">parallel_executable</span> <span class="o">=</span> <span class="s">srun</span>
+<span class="c1"># whether to use mpirun or srun to run the model</span><span class="w"></span>
+<span class="na">parallel_executable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">srun</span><span class="w"></span>
 
-<span class="c1"># cores per node on the machine</span>
-<span class="na">cores_per_node</span> <span class="o">=</span> <span class="s">36</span>
+<span class="c1"># cores per node on the machine</span><span class="w"></span>
+<span class="na">cores_per_node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">36</span><span class="w"></span>
 
-<span class="c1"># the slurm account</span>
-<span class="na">account</span> <span class="o">=</span> <span class="s">e3sm</span>
+<span class="c1"># the slurm account</span><span class="w"></span>
+<span class="na">account</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">e3sm</span><span class="w"></span>
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">paths</span></code> section provides local paths to the root of the “databases”
@@ -218,31 +218,31 @@ allow you to build and run the MPAS model.</p>
 <p>If you are working on an “unknown” machine, you will need to define some of
 the config options that would normally be in a machine’s config file yourself
 in your user config file:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[paths]</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[paths]</span><span class="w"></span>
 
-<span class="c1"># The root to a location where the mesh_database, initial_condition_database,</span>
-<span class="c1"># and bathymetry_database for MPAS-Ocean will be cached</span>
-<span class="na">ocean_database_root</span> <span class="o">=</span> <span class="s">/home/xylar/data/mpas/mpas_standalonedata/mpas-ocean</span>
+<span class="c1"># The root to a location where the mesh_database, initial_condition_database,</span><span class="w"></span>
+<span class="c1"># and bathymetry_database for MPAS-Ocean will be cached</span><span class="w"></span>
+<span class="na">ocean_database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/xylar/data/mpas/mpas_standalonedata/mpas-ocean</span><span class="w"></span>
 
-<span class="c1"># The root to a location where the mesh_database and initial_condition_database</span>
-<span class="c1"># for MALI will be cached</span>
-<span class="na">landice_database_root</span> <span class="o">=</span> <span class="s">/home/xylar/data/mpas/mpas_standalonedata/mpas-albany-landice</span>
+<span class="c1"># The root to a location where the mesh_database and initial_condition_database</span><span class="w"></span>
+<span class="c1"># for MALI will be cached</span><span class="w"></span>
+<span class="na">landice_database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/xylar/data/mpas/mpas_standalonedata/mpas-albany-landice</span><span class="w"></span>
 
 
-<span class="c1"># The parallel section describes options related to running tests in parallel</span>
-<span class="k">[parallel]</span>
+<span class="c1"># The parallel section describes options related to running tests in parallel</span><span class="w"></span>
+<span class="k">[parallel]</span><span class="w"></span>
 
-<span class="c1"># parallel system of execution: slurm or single_node</span>
-<span class="na">system</span> <span class="o">=</span> <span class="s">single_node</span>
+<span class="c1"># parallel system of execution: slurm or single_node</span><span class="w"></span>
+<span class="na">system</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">single_node</span><span class="w"></span>
 
-<span class="c1"># whether to use mpirun or srun to run the model</span>
-<span class="na">parallel_executable</span> <span class="o">=</span> <span class="s">mpirun</span>
+<span class="c1"># whether to use mpirun or srun to run the model</span><span class="w"></span>
+<span class="na">parallel_executable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">mpirun</span><span class="w"></span>
 
-<span class="c1"># cores per node on the machine</span>
-<span class="na">cores_per_node</span> <span class="o">=</span> <span class="s">8</span>
+<span class="c1"># cores per node on the machine</span><span class="w"></span>
+<span class="na">cores_per_node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8</span><span class="w"></span>
 
-<span class="c1"># the number of multiprocessing or dask threads to use</span>
-<span class="na">threads</span> <span class="o">=</span> <span class="s">8</span>
+<span class="c1"># the number of multiprocessing or dask threads to use</span><span class="w"></span>
+<span class="na">threads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8</span><span class="w"></span>
 </pre></div>
 </div>
 <p>The paths for the MPAS core “databases” can be any emtpy path to begin with.

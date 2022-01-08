@@ -197,11 +197,11 @@ GetSockInterfaceAddr(369)..........: gethostbyname failed, pn2034311.lanl.gov (e
 <p>this likely indicates that MPI is having a problem finding the local host.</p>
 <p>The solution is to set the following config option in the <code class="docutils literal notranslate"><span class="pre">parallel</span></code> section
 of your user config file:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># The parallel section describes options related to running tests in parallel</span>
-<span class="k">[parallel]</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># The parallel section describes options related to running tests in parallel</span><span class="w"></span>
+<span class="k">[parallel]</span><span class="w"></span>
 
-<span class="c1"># whether to use mpirun or srun to run the model</span>
-<span class="na">parallel_executable</span> <span class="o">=</span> <span class="s">mpirun -host localhost</span>
+<span class="c1"># whether to use mpirun or srun to run the model</span><span class="w"></span>
+<span class="na">parallel_executable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">mpirun -host localhost</span><span class="w"></span>
 </pre></div>
 </div>
 <p>The <a class="reference external" href="https://github.com/MPAS-Dev/compass/tree/master/example_configs">example config files</a>

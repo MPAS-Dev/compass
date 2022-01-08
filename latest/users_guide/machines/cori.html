@@ -170,71 +170,71 @@ salloc --partition<span class="o">=</span>debug --nodes<span class="o">=</span><
 are treated as separate supported machines in compass.  Here are the default
 config options added when you choose <code class="docutils literal notranslate"><span class="pre">-m</span> <span class="pre">cori-haswell</span></code> when setting up test
 cases or a test suite:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># The paths section describes paths that are used within the ocean core test</span>
-<span class="c1"># cases.</span>
-<span class="k">[paths]</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># The paths section describes paths that are used within the ocean core test</span><span class="w"></span>
+<span class="c1"># cases.</span><span class="w"></span>
+<span class="k">[paths]</span><span class="w"></span>
 
-<span class="c1"># The root to a location where the mesh_database, initial_condition_database,</span>
-<span class="c1"># and bathymetry_database for MPAS-Ocean will be cached</span>
-<span class="na">ocean_database_root</span> <span class="o">=</span> <span class="s">/global/cfs/cdirs/e3sm/mpas_standalonedata/mpas-ocean</span>
+<span class="c1"># The root to a location where the mesh_database, initial_condition_database,</span><span class="w"></span>
+<span class="c1"># and bathymetry_database for MPAS-Ocean will be cached</span><span class="w"></span>
+<span class="na">ocean_database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/e3sm/mpas_standalonedata/mpas-ocean</span><span class="w"></span>
 
-<span class="c1"># The root to a location where the mesh_database and initial_condition_database</span>
-<span class="c1"># for MALI will be cached</span>
-<span class="na">landice_database_root</span> <span class="o">=</span> <span class="s">/global/cfs/cdirs/e3sm/mpas_standalonedata/mpas-albany-landice</span>
+<span class="c1"># The root to a location where the mesh_database and initial_condition_database</span><span class="w"></span>
+<span class="c1"># for MALI will be cached</span><span class="w"></span>
+<span class="na">landice_database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/e3sm/mpas_standalonedata/mpas-albany-landice</span><span class="w"></span>
 
-<span class="c1"># the path to the base conda environment where compass environments have</span>
-<span class="c1"># been created</span>
-<span class="na">compass_envs</span> <span class="o">=</span> <span class="s">/global/cfs/cdirs/e3sm/software/anaconda_envs/base</span>
+<span class="c1"># the path to the base conda environment where compass environments have</span><span class="w"></span>
+<span class="c1"># been created</span><span class="w"></span>
+<span class="na">compass_envs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/e3sm/software/anaconda_envs/base</span><span class="w"></span>
 
 
-<span class="c1"># The parallel section describes options related to running tests in parallel</span>
-<span class="k">[parallel]</span>
+<span class="c1"># The parallel section describes options related to running tests in parallel</span><span class="w"></span>
+<span class="k">[parallel]</span><span class="w"></span>
 
-<span class="c1"># parallel system of execution: slurm or single_node</span>
-<span class="na">system</span> <span class="o">=</span> <span class="s">slurm</span>
+<span class="c1"># parallel system of execution: slurm or single_node</span><span class="w"></span>
+<span class="na">system</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">slurm</span><span class="w"></span>
 
-<span class="c1"># whether to use mpirun or srun to run the model</span>
-<span class="na">parallel_executable</span> <span class="o">=</span> <span class="s">srun</span>
+<span class="c1"># whether to use mpirun or srun to run the model</span><span class="w"></span>
+<span class="na">parallel_executable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">srun</span><span class="w"></span>
 
-<span class="c1"># cores per node on the machine</span>
-<span class="na">cores_per_node</span> <span class="o">=</span> <span class="s">32</span>
+<span class="c1"># cores per node on the machine</span><span class="w"></span>
+<span class="na">cores_per_node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">32</span><span class="w"></span>
 
-<span class="c1"># the number of multiprocessing or dask threads to use</span>
-<span class="na">threads</span> <span class="o">=</span> <span class="s">16</span>
+<span class="c1"># the number of multiprocessing or dask threads to use</span><span class="w"></span>
+<span class="na">threads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">16</span><span class="w"></span>
 </pre></div>
 </div>
 <p>And here are the same for <code class="docutils literal notranslate"><span class="pre">-m</span> <span class="pre">cori-knl</span></code>:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># The paths section describes paths that are used within the ocean core test</span>
-<span class="c1"># cases.</span>
-<span class="k">[paths]</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># The paths section describes paths that are used within the ocean core test</span><span class="w"></span>
+<span class="c1"># cases.</span><span class="w"></span>
+<span class="k">[paths]</span><span class="w"></span>
 
-<span class="c1"># The root to a location where the mesh_database, initial_condition_database,</span>
-<span class="c1"># and bathymetry_database for MPAS-Ocean will be cached</span>
-<span class="na">ocean_database_root</span> <span class="o">=</span> <span class="s">/global/cfs/cdirs/e3sm/mpas_standalonedata/mpas-ocean</span>
+<span class="c1"># The root to a location where the mesh_database, initial_condition_database,</span><span class="w"></span>
+<span class="c1"># and bathymetry_database for MPAS-Ocean will be cached</span><span class="w"></span>
+<span class="na">ocean_database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/e3sm/mpas_standalonedata/mpas-ocean</span><span class="w"></span>
 
-<span class="c1"># The root to a location where the mesh_database and initial_condition_database</span>
-<span class="c1"># for MALI will be cached</span>
-<span class="na">landice_database_root</span> <span class="o">=</span> <span class="s">/global/cfs/cdirs/e3sm/mpas_standalonedata/mpas-albany-landice</span>
+<span class="c1"># The root to a location where the mesh_database and initial_condition_database</span><span class="w"></span>
+<span class="c1"># for MALI will be cached</span><span class="w"></span>
+<span class="na">landice_database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/e3sm/mpas_standalonedata/mpas-albany-landice</span><span class="w"></span>
 
-<span class="c1"># the path to the base conda environment where compass environments have</span>
-<span class="c1"># been created</span>
-<span class="na">compass_envs</span> <span class="o">=</span> <span class="s">/global/cfs/cdirs/e3sm/software/anaconda_envs/base</span>
+<span class="c1"># the path to the base conda environment where compass environments have</span><span class="w"></span>
+<span class="c1"># been created</span><span class="w"></span>
+<span class="na">compass_envs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/e3sm/software/anaconda_envs/base</span><span class="w"></span>
 
 
-<span class="c1"># The parallel section describes options related to running tests in parallel</span>
-<span class="k">[parallel]</span>
+<span class="c1"># The parallel section describes options related to running tests in parallel</span><span class="w"></span>
+<span class="k">[parallel]</span><span class="w"></span>
 
-<span class="c1"># parallel system of execution: slurm or single_node</span>
-<span class="na">system</span> <span class="o">=</span> <span class="s">slurm</span>
+<span class="c1"># parallel system of execution: slurm or single_node</span><span class="w"></span>
+<span class="na">system</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">slurm</span><span class="w"></span>
 
-<span class="c1"># whether to use mpirun or srun to run the model</span>
-<span class="na">parallel_executable</span> <span class="o">=</span> <span class="s">srun</span>
+<span class="c1"># whether to use mpirun or srun to run the model</span><span class="w"></span>
+<span class="na">parallel_executable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">srun</span><span class="w"></span>
 
-<span class="c1"># cores per node on the machine</span>
-<span class="na">cores_per_node</span> <span class="o">=</span> <span class="s">68</span>
+<span class="c1"># cores per node on the machine</span><span class="w"></span>
+<span class="na">cores_per_node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">68</span><span class="w"></span>
 
-<span class="c1"># the number of multiprocessing or dask threads to use</span>
-<span class="na">threads</span> <span class="o">=</span> <span class="s">18</span>
+<span class="c1"># the number of multiprocessing or dask threads to use</span><span class="w"></span>
+<span class="na">threads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">18</span><span class="w"></span>
 </pre></div>
 </div>
 </section>
@@ -356,17 +356,17 @@ python -m ipykernel install --user --name myenv --display-name MyEnv
 <p>Be sure to specify what version of Python interpreter you want installed. This
 will create and install a JSON file called a “kernel spec” in <code class="docutils literal notranslate"><span class="pre">kernel.json</span></code> at
 the path described in the install command output.</p>
-<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-    <span class="nt">&quot;argv&quot;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="s2">&quot;/global/homes/u/user/.conda/envs/myenv/bin/python&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;-m&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;ipykernel_launcher&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;-f&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;{connection_file}&quot;</span>
-    <span class="p">],</span>
-    <span class="nt">&quot;display_name&quot;</span><span class="p">:</span> <span class="s2">&quot;MyEnv&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;language&quot;</span><span class="p">:</span> <span class="s2">&quot;python&quot;</span>
-<span class="p">}</span>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;argv&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;/global/homes/u/user/.conda/envs/myenv/bin/python&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;-m&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;ipykernel_launcher&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;-f&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;{connection_file}&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="p">],</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;display_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;MyEnv&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;language&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;python&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 </section>

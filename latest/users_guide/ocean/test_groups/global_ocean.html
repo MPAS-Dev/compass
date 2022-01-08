@@ -157,112 +157,112 @@ requires expert help from the E3SM development team.)</p>
 <h2>Shared config options<a class="headerlink" href="#shared-config-options" title="Permalink to this headline">¶</a></h2>
 <p>All <code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> test cases start the following shared config options.
 Note that meshes and test cases may modify these options, as noted below.</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># options for global ocean testcases</span>
-<span class="k">[global_ocean]</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># options for global ocean testcases</span><span class="w"></span>
+<span class="k">[global_ocean]</span><span class="w"></span>
 
-<span class="c1">## each mesh should replace these with appropriate values in its config file</span>
+<span class="c1">## each mesh should replace these with appropriate values in its config file</span><span class="w"></span>
 
-<span class="c1">## config options related to the mesh step</span>
-<span class="c1"># number of cores to use</span>
-<span class="na">mesh_cores</span> <span class="o">=</span> <span class="s">1</span>
-<span class="c1"># minimum of cores, below which the step fails</span>
-<span class="na">mesh_min_cores</span> <span class="o">=</span> <span class="s">1</span>
-<span class="c1"># maximum memory usage allowed (in MB)</span>
-<span class="na">mesh_max_memory</span> <span class="o">=</span> <span class="s">1000</span>
-<span class="c1"># maximum disk usage allowed (in MB)</span>
-<span class="na">mesh_max_disk</span> <span class="o">=</span> <span class="s">1000</span>
+<span class="c1">## config options related to the mesh step</span><span class="w"></span>
+<span class="c1"># number of cores to use</span><span class="w"></span>
+<span class="na">mesh_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
+<span class="c1"># minimum of cores, below which the step fails</span><span class="w"></span>
+<span class="na">mesh_min_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
+<span class="c1"># maximum memory usage allowed (in MB)</span><span class="w"></span>
+<span class="na">mesh_max_memory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
+<span class="c1"># maximum disk usage allowed (in MB)</span><span class="w"></span>
+<span class="na">mesh_max_disk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
 
-<span class="c1">## config options related to the initial_state step</span>
-<span class="c1"># number of cores to use</span>
-<span class="na">init_cores</span> <span class="o">=</span> <span class="s">4</span>
-<span class="c1"># minimum of cores, below which the step fails</span>
-<span class="na">init_min_cores</span> <span class="o">=</span> <span class="s">1</span>
-<span class="c1"># maximum memory usage allowed (in MB)</span>
-<span class="na">init_max_memory</span> <span class="o">=</span> <span class="s">1000</span>
-<span class="c1"># maximum disk usage allowed (in MB)</span>
-<span class="na">init_max_disk</span> <span class="o">=</span> <span class="s">1000</span>
-<span class="c1"># number of threads</span>
-<span class="na">init_threads</span> <span class="o">=</span> <span class="s">1</span>
+<span class="c1">## config options related to the initial_state step</span><span class="w"></span>
+<span class="c1"># number of cores to use</span><span class="w"></span>
+<span class="na">init_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span><span class="w"></span>
+<span class="c1"># minimum of cores, below which the step fails</span><span class="w"></span>
+<span class="na">init_min_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
+<span class="c1"># maximum memory usage allowed (in MB)</span><span class="w"></span>
+<span class="na">init_max_memory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
+<span class="c1"># maximum disk usage allowed (in MB)</span><span class="w"></span>
+<span class="na">init_max_disk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
+<span class="c1"># number of threads</span><span class="w"></span>
+<span class="na">init_threads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
 
-<span class="c1">## config options related to the forward steps</span>
-<span class="c1"># number of cores to use</span>
-<span class="na">forward_cores</span> <span class="o">=</span> <span class="s">4</span>
-<span class="c1"># minimum of cores, below which the step fails</span>
-<span class="na">forward_min_cores</span> <span class="o">=</span> <span class="s">1</span>
-<span class="c1"># number of threads</span>
-<span class="na">forward_threads</span> <span class="o">=</span> <span class="s">1</span>
-<span class="c1"># maximum memory usage allowed (in MB)</span>
-<span class="na">forward_max_memory</span> <span class="o">=</span> <span class="s">1000</span>
-<span class="c1"># maximum disk usage allowed (in MB)</span>
-<span class="na">forward_max_disk</span> <span class="o">=</span> <span class="s">1000</span>
+<span class="c1">## config options related to the forward steps</span><span class="w"></span>
+<span class="c1"># number of cores to use</span><span class="w"></span>
+<span class="na">forward_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span><span class="w"></span>
+<span class="c1"># minimum of cores, below which the step fails</span><span class="w"></span>
+<span class="na">forward_min_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
+<span class="c1"># number of threads</span><span class="w"></span>
+<span class="na">forward_threads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
+<span class="c1"># maximum memory usage allowed (in MB)</span><span class="w"></span>
+<span class="na">forward_max_memory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
+<span class="c1"># maximum disk usage allowed (in MB)</span><span class="w"></span>
+<span class="na">forward_max_disk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
 
-<span class="c1">## metadata related to the mesh</span>
-<span class="c1"># whether to add metadata to output files</span>
-<span class="na">add_metadata</span> <span class="o">=</span> <span class="s">True</span>
-<span class="c1"># the prefix (e.g. QU, EC, WC, SO)</span>
-<span class="na">prefix</span> <span class="o">=</span> <span class="s">PREFIX</span>
-<span class="c1"># a description of the mesh</span>
-<span class="na">mesh_description</span> <span class="o">=</span> <span class="s">&lt;&lt;&lt;Missing&gt;&gt;&gt;</span>
-<span class="c1"># a description of the bathymetry</span>
-<span class="na">bathy_description</span> <span class="o">=</span> <span class="s">&lt;&lt;&lt;Missing&gt;&gt;&gt;</span>
-<span class="c1"># a description of the mesh with ice-shelf cavities</span>
-<span class="na">init_description</span> <span class="o">=</span> <span class="s">&lt;&lt;&lt;Missing&gt;&gt;&gt;</span>
-<span class="c1"># E3SM version that the mesh is intended for</span>
-<span class="na">e3sm_version</span> <span class="o">=</span> <span class="s">2</span>
-<span class="c1"># The revision number of the mesh, which should be incremented each time the</span>
-<span class="c1"># mesh is revised</span>
-<span class="na">mesh_revision</span> <span class="o">=</span> <span class="s">&lt;&lt;Missing&gt;&gt;</span>
-<span class="c1"># the minimum (finest) resolution in the mesh</span>
-<span class="na">min_res</span> <span class="o">=</span> <span class="s">&lt;&lt;&lt;Missing&gt;&gt;&gt;</span>
-<span class="c1"># the maximum (coarsest) resolution in the mesh, can be the same as min_res</span>
-<span class="na">max_res</span> <span class="o">=</span> <span class="s">&lt;&lt;&lt;Missing&gt;&gt;&gt;</span>
-<span class="c1"># the maximum depth of the ocean, always detected automatically</span>
-<span class="na">max_depth</span> <span class="o">=</span> <span class="s">autodetect</span>
-<span class="c1"># the number of vertical levels, always detected automatically</span>
-<span class="na">levels</span> <span class="o">=</span> <span class="s">autodetect</span>
+<span class="c1">## metadata related to the mesh</span><span class="w"></span>
+<span class="c1"># whether to add metadata to output files</span><span class="w"></span>
+<span class="na">add_metadata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span><span class="w"></span>
+<span class="c1"># the prefix (e.g. QU, EC, WC, SO)</span><span class="w"></span>
+<span class="na">prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">PREFIX</span><span class="w"></span>
+<span class="c1"># a description of the mesh</span><span class="w"></span>
+<span class="na">mesh_description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;&lt;&lt;Missing&gt;&gt;&gt;</span><span class="w"></span>
+<span class="c1"># a description of the bathymetry</span><span class="w"></span>
+<span class="na">bathy_description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;&lt;&lt;Missing&gt;&gt;&gt;</span><span class="w"></span>
+<span class="c1"># a description of the mesh with ice-shelf cavities</span><span class="w"></span>
+<span class="na">init_description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;&lt;&lt;Missing&gt;&gt;&gt;</span><span class="w"></span>
+<span class="c1"># E3SM version that the mesh is intended for</span><span class="w"></span>
+<span class="na">e3sm_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2</span><span class="w"></span>
+<span class="c1"># The revision number of the mesh, which should be incremented each time the</span><span class="w"></span>
+<span class="c1"># mesh is revised</span><span class="w"></span>
+<span class="na">mesh_revision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;&lt;Missing&gt;&gt;</span><span class="w"></span>
+<span class="c1"># the minimum (finest) resolution in the mesh</span><span class="w"></span>
+<span class="na">min_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;&lt;&lt;Missing&gt;&gt;&gt;</span><span class="w"></span>
+<span class="c1"># the maximum (coarsest) resolution in the mesh, can be the same as min_res</span><span class="w"></span>
+<span class="na">max_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;&lt;&lt;Missing&gt;&gt;&gt;</span><span class="w"></span>
+<span class="c1"># the maximum depth of the ocean, always detected automatically</span><span class="w"></span>
+<span class="na">max_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span><span class="w"></span>
+<span class="c1"># the number of vertical levels, always detected automatically</span><span class="w"></span>
+<span class="na">levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span><span class="w"></span>
 
-<span class="c1"># the date the mesh was created as YYMMDD, typically detected automatically</span>
-<span class="na">creation_date</span> <span class="o">=</span> <span class="s">autodetect</span>
-<span class="c1"># The following options are detected from .gitconfig if not explicitly entered</span>
-<span class="na">author</span> <span class="o">=</span> <span class="s">autodetect</span>
-<span class="na">email</span> <span class="o">=</span> <span class="s">autodetect</span>
-<span class="c1"># The URL of the pull request documenting the creation of the mesh</span>
-<span class="na">pull_request</span> <span class="o">=</span> <span class="s">&lt;&lt;&lt;Missing&gt;&gt;&gt;</span>
+<span class="c1"># the date the mesh was created as YYMMDD, typically detected automatically</span><span class="w"></span>
+<span class="na">creation_date</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span><span class="w"></span>
+<span class="c1"># The following options are detected from .gitconfig if not explicitly entered</span><span class="w"></span>
+<span class="na">author</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span><span class="w"></span>
+<span class="na">email</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span><span class="w"></span>
+<span class="c1"># The URL of the pull request documenting the creation of the mesh</span><span class="w"></span>
+<span class="na">pull_request</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;&lt;&lt;Missing&gt;&gt;&gt;</span><span class="w"></span>
 
 
-<span class="c1"># config options related to initial condition and diagnostics support files</span>
-<span class="c1"># for E3SM</span>
-<span class="k">[files_for_e3sm]</span>
+<span class="c1"># config options related to initial condition and diagnostics support files</span><span class="w"></span>
+<span class="c1"># for E3SM</span><span class="w"></span>
+<span class="k">[files_for_e3sm]</span><span class="w"></span>
 
-<span class="c1"># whether to generate an ocean initial condition in E3SM</span>
-<span class="na">enable_ocean_initial_condition</span> <span class="o">=</span> <span class="s">true</span>
-<span class="c1"># whether to generate graph partitions for different numbers of ocean cores in</span>
-<span class="c1"># E3SM</span>
-<span class="na">enable_ocean_graph_partition</span> <span class="o">=</span> <span class="s">true</span>
-<span class="c1"># whether to generate a sea-ice initial condition in E3SM</span>
-<span class="na">enable_seaice_initial_condition</span> <span class="o">=</span> <span class="s">true</span>
-<span class="c1"># whether to generate SCRIP files for later use in creating E3SM mapping files</span>
-<span class="na">enable_scrip</span> <span class="o">=</span> <span class="s">true</span>
-<span class="c1"># whether to generate region masks, transects and mapping files for use in both</span>
-<span class="c1"># online analysis members and offline with MPAS-Analysis</span>
-<span class="na">enable_diagnostics_files</span> <span class="o">=</span> <span class="s">true</span>
+<span class="c1"># whether to generate an ocean initial condition in E3SM</span><span class="w"></span>
+<span class="na">enable_ocean_initial_condition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span><span class="w"></span>
+<span class="c1"># whether to generate graph partitions for different numbers of ocean cores in</span><span class="w"></span>
+<span class="c1"># E3SM</span><span class="w"></span>
+<span class="na">enable_ocean_graph_partition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span><span class="w"></span>
+<span class="c1"># whether to generate a sea-ice initial condition in E3SM</span><span class="w"></span>
+<span class="na">enable_seaice_initial_condition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span><span class="w"></span>
+<span class="c1"># whether to generate SCRIP files for later use in creating E3SM mapping files</span><span class="w"></span>
+<span class="na">enable_scrip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span><span class="w"></span>
+<span class="c1"># whether to generate region masks, transects and mapping files for use in both</span><span class="w"></span>
+<span class="c1"># online analysis members and offline with MPAS-Analysis</span><span class="w"></span>
+<span class="na">enable_diagnostics_files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span><span class="w"></span>
 
-<span class="c1">## the following relate to the comparison grids in MPAS-Analysis to generate</span>
-<span class="c1">## mapping files for.  The default values are also the defaults in</span>
-<span class="c1">## MPAS-Analysis.  Coarser or finer resolution may be desirable for some MPAS</span>
-<span class="c1">## meshes.</span>
+<span class="c1">## the following relate to the comparison grids in MPAS-Analysis to generate</span><span class="w"></span>
+<span class="c1">## mapping files for.  The default values are also the defaults in</span><span class="w"></span>
+<span class="c1">## MPAS-Analysis.  Coarser or finer resolution may be desirable for some MPAS</span><span class="w"></span>
+<span class="c1">## meshes.</span><span class="w"></span>
 
-<span class="c1"># The comparison lat/lon grid resolution in degrees</span>
-<span class="na">comparisonLatResolution</span> <span class="o">=</span> <span class="s">0.5</span>
-<span class="na">comparisonLonResolution</span> <span class="o">=</span> <span class="s">0.5</span>
+<span class="c1"># The comparison lat/lon grid resolution in degrees</span><span class="w"></span>
+<span class="na">comparisonLatResolution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.5</span><span class="w"></span>
+<span class="na">comparisonLonResolution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.5</span><span class="w"></span>
 
-<span class="c1"># The comparison Antarctic polar stereographic grid size and resolution in km</span>
-<span class="na">comparisonAntarcticStereoWidth</span> <span class="o">=</span> <span class="s">6000.</span>
-<span class="na">comparisonAntarcticStereoResolution</span> <span class="o">=</span> <span class="s">10.</span>
+<span class="c1"># The comparison Antarctic polar stereographic grid size and resolution in km</span><span class="w"></span>
+<span class="na">comparisonAntarcticStereoWidth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">6000.</span><span class="w"></span>
+<span class="na">comparisonAntarcticStereoResolution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10.</span><span class="w"></span>
 
-<span class="c1"># The comparison Arctic polar stereographic grid size and resolution in km</span>
-<span class="na">comparisonArcticStereoWidth</span> <span class="o">=</span> <span class="s">6000.</span>
-<span class="na">comparisonArcticStereoResolution</span> <span class="o">=</span> <span class="s">10.</span>
+<span class="c1"># The comparison Arctic polar stereographic grid size and resolution in km</span><span class="w"></span>
+<span class="na">comparisonArcticStereoWidth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">6000.</span><span class="w"></span>
+<span class="na">comparisonArcticStereoResolution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10.</span><span class="w"></span>
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">mesh_*</span></code>, <code class="docutils literal notranslate"><span class="pre">init_*</span></code> and <code class="docutils literal notranslate"><span class="pre">forward:*</span></code> config options are used to specify
@@ -316,19 +316,19 @@ is not yet known at the time of mesh creation):</p>
 The most convenient way to do this is to add them to the user config file
 when you are <a class="reference internal" href="../../quick_start.html#setup-overview"><span class="std std-ref">Setting up test cases</span></a> or <a class="reference internal" href="../../quick_start.html#suite-overview"><span class="std std-ref">Test Suites</span></a>.  In particular,
 you may wish to set:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># options for global ocean testcases</span>
-<span class="k">[global_ocean]</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># options for global ocean testcases</span><span class="w"></span>
+<span class="k">[global_ocean]</span><span class="w"></span>
 
-<span class="c1">## metadata related to the mesh</span>
-<span class="c1"># whether to add metadata to output files</span>
-<span class="na">add_metadata</span> <span class="o">=</span> <span class="s">True</span>
-<span class="c1"># the date the mesh was created as YYMMDD, typically detected automatically</span>
-<span class="na">creation_date</span> <span class="o">=</span> <span class="s">autodetect</span>
-<span class="c1"># The following options are detected from .gitconfig if not explicitly entered</span>
-<span class="na">author</span> <span class="o">=</span> <span class="s">autodetect</span>
-<span class="na">email</span> <span class="o">=</span> <span class="s">autodetect</span>
-<span class="c1"># The URL of the pull request documenting the creation of the mesh</span>
-<span class="na">pull_request</span> <span class="o">=</span> <span class="s">&lt;&lt;&lt;Missing&gt;&gt;&gt;</span>
+<span class="c1">## metadata related to the mesh</span><span class="w"></span>
+<span class="c1"># whether to add metadata to output files</span><span class="w"></span>
+<span class="na">add_metadata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span><span class="w"></span>
+<span class="c1"># the date the mesh was created as YYMMDD, typically detected automatically</span><span class="w"></span>
+<span class="na">creation_date</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span><span class="w"></span>
+<span class="c1"># The following options are detected from .gitconfig if not explicitly entered</span><span class="w"></span>
+<span class="na">author</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span><span class="w"></span>
+<span class="na">email</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span><span class="w"></span>
+<span class="c1"># The URL of the pull request documenting the creation of the mesh</span><span class="w"></span>
+<span class="na">pull_request</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;&lt;&lt;Missing&gt;&gt;&gt;</span><span class="w"></span>
 </pre></div>
 </div>
 </section>
@@ -730,11 +730,11 @@ name for this mesh <cite>WCAtl12to45E2r4</cite>.  We use all 36 cores on a node 
 test case can’t use multiple nodes for most steps).  We indicate that the mesh
 does not include ice-shelf cavities, which means we don’t compute masks for
 ice-shelf melt rates.</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[make_diagnostics_files]</span>
-<span class="na">mesh_name</span> <span class="o">=</span> <span class="s">WCAtl12to45E2r4</span>
-<span class="na">mesh_filename</span> <span class="o">=</span> <span class="s">ocean.WCAtl12to45E2r4.210318.nc</span>
-<span class="na">cores</span> <span class="o">=</span> <span class="s">36</span>
-<span class="na">with_ice_shelf_cavities</span> <span class="o">=</span> <span class="s">False</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[make_diagnostics_files]</span><span class="w"></span>
+<span class="na">mesh_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">WCAtl12to45E2r4</span><span class="w"></span>
+<span class="na">mesh_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">ocean.WCAtl12to45E2r4.210318.nc</span><span class="w"></span>
+<span class="na">cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">36</span><span class="w"></span>
+<span class="na">with_ice_shelf_cavities</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span><span class="w"></span>
 </pre></div>
 </div>
 <p>The resulting files are symlinked in a subdirectory of the test case called
