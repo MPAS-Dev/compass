@@ -77,6 +77,10 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
     if config_file is None and machine is None:
         raise ValueError('At least one of config_file and machine is needed.')
 
+    if not os.path.exists(config_file):
+        raise FileNotFoundError(
+            f'The user config file wasn\'t found: {config_file}')
+
     if tests is None and numbers is None:
         raise ValueError('At least one of tests or numbers is needed.')
 
