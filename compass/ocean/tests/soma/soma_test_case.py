@@ -91,8 +91,7 @@ class SomaTestCase(TestCase):
 
         self.add_step(InitialState(
             test_case=self, resolution=resolution,
-            with_surface_restoring=with_surface_restoring,
-            three_layer=three_layer))
+            with_surface_restoring=with_surface_restoring))
         options = dict()
         if with_surface_restoring:
             options['config_use_activeTracers_surface_restoring'] = '.true.'
@@ -112,6 +111,9 @@ class SomaTestCase(TestCase):
         """
         if self.three_layer:
             config = self.config
+            # use a 3-layer uniform vertical grid
+            config.set('vertical_grid', 'grid_type', 'uniform')
+            config.set('vertical_grid', 'vert_levels', '3')
             # remove the continental shelf
             config.set('soma', 'phi', '1e-16')
             config.set('soma', 'shelf_depth', '0.0')
