@@ -41,9 +41,9 @@ class Mesh(Step):
                             database='')
         # Add geojson file to databse, download from github, or other?
         # Currently just using a local copy.
-        # self.add_input_file(filename='thwaites_minimal.geojson',
-        #                    target='thwaites_minimal.geojson',
-        #                    database='')
+        self.add_input_file(filename='thwaites_minimal.geojson',
+                            target='thwaites_minimal.geojson',
+                            database=None, copy=True)
         self.add_input_file(filename='antarctica_1km_2020_10_20_ASE.nc',
                             target='antarctica_1km_2020_10_20_ASE.nc',
                             database='')
