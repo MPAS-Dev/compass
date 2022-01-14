@@ -4,8 +4,8 @@ from compass.landice.tests.thwaites.mesh import Mesh
 
 class HighResMesh(TestCase):
     """
-    The high resolution test case for the thwaites test group simply creates the mesh and
-    initial condition.
+    The high resolution test case for the thwaites test
+    group simply creates the mesh and initial condition.
     """
 
     def __init__(self, test_group):
