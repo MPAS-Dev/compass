@@ -5,7 +5,7 @@ from compass.landice.tests.humboldt.mesh import Mesh
 class Default(TestCase):
     """
     The default test case for the humboldt test group simply creates the
-    mesh and initial condition, then performs a short forward run on 4 cores.
+    mesh and initial condition.
 
     """
 
