@@ -11,7 +11,7 @@ login: ``ssh -t $my_username@wtrw.lanl.gov ssh ba-fe``
 config options
 --------------
 
-Here are the default config options added when when Badger is automatically
+Here are the default config options added when Badger is automatically
 detected or you choose ``-m badger`` when setting up test cases or a test
 suite:
 

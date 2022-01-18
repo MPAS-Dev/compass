@@ -85,7 +85,7 @@ follows:
 
 This will install the version of the package with MPI from conda-forge's MPICH
 package.  If you want OpenMPI, use ``"compass=*=mpi_openmpi*"`` instead.  If
-you do not want MPI from conda-froge (e.g. because you are working with a
+you do not want MPI from conda-forge (e.g. because you are working with a
 system with its own MPI), use ``"compass=*=nompi*"``
 
 To get a specific version of ``compass``, you can instead run:
