@@ -3,7 +3,7 @@
 humboldt
 ========
 
-The ``landice/humboldt`` test group creates a 1-10km Humboldt Glacier mesh. 
+The ``landice/humboldt`` test group creates a 1-10km mesh for Humboldt Glacier, Greenland.
 
 .. figure:: images/humboldt_1to10km.png
    :width: 777 px

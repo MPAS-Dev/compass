@@ -6,7 +6,7 @@ humboldt
 The ``humboldt`` test group (:py:class:`compass.landice.tests.humboldt.Humboldt`)
 creates a variable resolution 1-10 km mesh for a regional domain of Humboldt Glacier
 (see :ref:`landice_humboldt`).  Here, we describe the shared framework for
-this test group and the singe test case.
+this test group and the single test case.
 
 .. _dev_landice_humboldt_framework:
 
