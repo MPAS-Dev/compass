@@ -116,7 +116,7 @@ See :ref:`dev_other_machines` for more details.
 
 In addition, unknown machines require a config file to be specified when setting
 up the compass test environment.  A config file can be specified using
-``-f <filename>``, where ``<filename>`` includes an absolute or relative path to the file.  More information, including example config files, can be found
+``-f <filename>``, where ``<filename>`` is an absolute or relative path to the file.  More information, including example config files, can be found
 in :ref:`config_files`.
 
 What the script does
