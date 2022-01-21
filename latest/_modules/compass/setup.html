@@ -182,7 +182,7 @@
     <span class="k">if</span> <span class="n">config_file</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">machine</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;At least one of config_file and machine is needed.&#39;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">config_file</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">config_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">config_file</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
             <span class="sa">f</span><span class="s1">&#39;The user config file wasn</span><span class="se">\&#39;</span><span class="s1">t found: </span><span class="si">{</span><span class="n">config_file</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
