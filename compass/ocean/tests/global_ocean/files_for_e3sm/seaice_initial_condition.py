@@ -58,7 +58,7 @@ class SeaiceInitialCondition(Step):
             creation_date = ds.attrs['{}_Version_Creation_Date'.format(prefix)]
 
         try:
-            os.makedirs('../assembled_files/inputdata/ocn/mpas-seaice/{}'.format(
+            os.makedirs('../assembled_files/inputdata/ice/mpas-seaice/{}'.format(
                 mesh_short_name))
         except OSError:
             pass
@@ -86,5 +86,5 @@ class SeaiceInitialCondition(Step):
             write_netcdf(ds, dest_filename)
 
         symlink('../../../../../seaice_initial_condition/{}'.format(dest_filename),
-                '../assembled_files/inputdata/ocn/mpas-seaice/{}/{}'.format(
+                '../assembled_files/inputdata/ice/mpas-seaice/{}/{}'.format(
                     mesh_short_name, dest_filename))
