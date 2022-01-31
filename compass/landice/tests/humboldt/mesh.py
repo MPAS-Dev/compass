@@ -94,13 +94,8 @@ class Mesh(Step):
 
         check_call(args, logger=logger)
 
-        print('calling define_cullMask.py')
-        args = ['define_cullMask.py', '-f',
-                'gis_1km_preCull.nc', '-m'
-                'distance', '-d', '50.0']
-
-        check_call(args, logger=logger)
-
+        # This step is only necessary because the GeoJSON region
+        # is defined by lat-lon.
         print('calling set_lat_lon_fields_in_planar_grid.py')
         args = ['set_lat_lon_fields_in_planar_grid.py', '-f',
                 'gis_1km_preCull.nc', '-p', 'gis-gimp']
@@ -170,22 +165,14 @@ class Mesh(Step):
         vx = f.variables['vx'][0, :, :]
         vy = f.variables['vy'][0, :, :]
 
-        # subset data - optional
-        step = 1
-        x1 = x1[::step]
-        y1 = y1[::step]
-        thk = thk[::step, ::step]
-        topg = topg[::step, ::step]
-        vx = vx[::step, ::step]
-        vy = vy[::step, ::step]
-
         dx = x1[1] - x1[0]  # assumed constant and equal in x and y
         nx = len(x1)
         ny = len(y1)
 
         sz = thk.shape
 
-        # define extent of region to mesh
+        # Define extent of region to mesh.
+        # These coords are specific to the Humboldt Glacier mesh.
         xx0 = -630000
         xx1 = 84000
         yy0 = -1560000
@@ -217,6 +204,8 @@ class Mesh(Step):
                                               sz, order='F')
 
         # flood fill -------------------
+        # In the future this might become a separate function
+        # to be used by multiple test groups.
         cnt = 0
         while len(lastSearchList) > 0:
             # print(cnt)
