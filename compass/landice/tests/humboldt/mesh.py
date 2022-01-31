@@ -55,7 +55,7 @@ class Mesh(Step):
     def run(self):
         """
         Run this step of the test case
-       """
+        """
         logger = self.logger
         try:
             config = self.config
@@ -153,7 +153,17 @@ class Mesh(Step):
                         graph_filename='graph.info')
 
     def build_cell_width(self):
+        """
+        Determine MPAS mesh cell size based on user-defined density function.
 
+        This includes hard-coded definition of the extent of the regional
+        mesh, a flood-fill routine to ignore glaciers and ice caps not
+        connected to the ice sheet, and user-defined mesh density functions
+        based on observed flow speed and distance to the ice margin. In the
+        future, this function and its components will likely be separated
+        into separate generalized functions to be reusable by multiple test
+        groups.
+        """
         # get needed fields from GIS dataset
         f = netCDF4.Dataset('greenland_8km_2020_04_20.epsg3413.nc', 'r')
         f.set_auto_mask(False)  # disable masked arrays
