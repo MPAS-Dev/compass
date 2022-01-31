@@ -145,7 +145,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;README&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../README&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;restart.nc&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">restart_filename</span><span class="p">))</span>
+                            <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;../</span><span class="si">{</span><span class="n">restart_filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span> <span class="o">=</span> <span class="n">with_ice_shelf_cavities</span></div>
 
@@ -162,17 +162,17 @@
         <span class="k">with</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;restart.nc&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds</span><span class="p">:</span>
             <span class="n">mesh_short_name</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;MPAS_Mesh_Short_Name&#39;</span><span class="p">]</span>
             <span class="n">mesh_prefix</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;MPAS_Mesh_Prefix&#39;</span><span class="p">]</span>
-            <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;MPAS_Mesh_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_prefix</span><span class="p">)</span>
-            <span class="n">creation_date</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_Version_Creation_Date&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">)]</span>
+            <span class="n">prefix</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;MPAS_Mesh_</span><span class="si">{</span><span class="n">mesh_prefix</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">creation_date</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">_Version_Creation_Date&#39;</span><span class="p">]</span>
 
+        <span class="n">assembled_dir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;../assembled_files/inputdata/ice/mpas-seaice/&#39;</span> \
+                        <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_short_name</span><span class="si">}</span><span class="s1">&#39;</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s1">&#39;../assembled_files/inputdata/ocn/mpas-seaice/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">mesh_short_name</span><span class="p">))</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">assembled_dir</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
             <span class="k">pass</span>
 
-        <span class="n">dest_filename</span> <span class="o">=</span> <span class="s1">&#39;mpassi.</span><span class="si">{}</span><span class="s1">.</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_short_name</span><span class="p">,</span>
-                                                 <span class="n">creation_date</span><span class="p">)</span>
+        <span class="n">dest_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;mpassi.</span><span class="si">{</span><span class="n">mesh_short_name</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">creation_date</span><span class="si">}</span><span class="s1">.nc&#39;</span>
 
         <span class="n">keep_vars</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s1">&#39;areaCell&#39;</span><span class="p">,</span> <span class="s1">&#39;cellsOnCell&#39;</span><span class="p">,</span> <span class="s1">&#39;edgesOnCell&#39;</span><span class="p">,</span> <span class="s1">&#39;fCell&#39;</span><span class="p">,</span> <span class="s1">&#39;indexToCellID&#39;</span><span class="p">,</span>
@@ -193,9 +193,8 @@
             <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">keep_vars</span><span class="p">]</span>
             <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">dest_filename</span><span class="p">)</span>
 
-        <span class="n">symlink</span><span class="p">(</span><span class="s1">&#39;../../../../../seaice_initial_condition/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dest_filename</span><span class="p">),</span>
-                <span class="s1">&#39;../assembled_files/inputdata/ocn/mpas-seaice/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="n">mesh_short_name</span><span class="p">,</span> <span class="n">dest_filename</span><span class="p">))</span></div></div>
+        <span class="n">symlink</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;../../../../../seaice_initial_condition/</span><span class="si">{</span><span class="n">dest_filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">assembled_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">dest_filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>
