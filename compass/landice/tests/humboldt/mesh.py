@@ -271,10 +271,13 @@ class Mesh(Step):
         [XPOS, YPOS] = np.meshgrid(x1, y1)
         distToEdge = np.zeros(sz)
 
-        # -- KEY PARAMETER: how big of a search 'box' (one-directional) to use.
+        # -- KEY PARAMETER: how big of a search 'box' (one-directional) to use
+        # to calculate the distance from each cell to the ice margin.
         # Bigger number makes search slower, but if too small, the transition
         # zone could get truncated. Could automatically set this from maxDist
-        # variables used in next section.)
+        # variables used in next section. Currently, this is only used to
+        # determine mesh spacing in ice-free areas in order to keep mesh
+        # density low in areas that will be culled.
         windowSize = 100.0e3
         # ---
 
@@ -339,8 +342,6 @@ class Mesh(Step):
         cell_width[np.logical_and(thk == 0.0,
                    distToEdge > 50.0e3)] = maxSpac * 1000.0
         # plt.pcolor(cell_width); plt.colorbar(); plt.show()
-
-        # cell_width = 20000.0 * np.ones(thk.shape)
 
         return (cell_width.astype('float64'), x1.astype('float64'),
                 y1.astype('float64'), geom_points, geom_edges)
