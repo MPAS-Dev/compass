@@ -37,7 +37,7 @@ class SeaiceInitialCondition(Step):
 
         self.add_input_file(filename='README', target='../README')
         self.add_input_file(filename='restart.nc',
-                            target='../{}'.format(restart_filename))
+                            target=f'../{restart_filename}')
 
         self.with_ice_shelf_cavities = with_ice_shelf_cavities
 
@@ -54,17 +54,17 @@ class SeaiceInitialCondition(Step):
         with xarray.open_dataset('restart.nc') as ds:
             mesh_short_name = ds.attrs['MPAS_Mesh_Short_Name']
             mesh_prefix = ds.attrs['MPAS_Mesh_Prefix']
-            prefix = 'MPAS_Mesh_{}'.format(mesh_prefix)
-            creation_date = ds.attrs['{}_Version_Creation_Date'.format(prefix)]
+            prefix = f'MPAS_Mesh_{mesh_prefix}'
+            creation_date = ds.attrs[f'{prefix}_Version_Creation_Date']
 
+        assembled_dir = f'../assembled_files/inputdata/ice/mpas-seaice/' \
+                        f'{mesh_short_name}'
         try:
-            os.makedirs('../assembled_files/inputdata/ocn/mpas-seaice/{}'.format(
-                mesh_short_name))
+            os.makedirs(assembled_dir)
         except OSError:
             pass
 
-        dest_filename = 'mpassi.{}.{}.nc'.format(mesh_short_name,
-                                                 creation_date)
+        dest_filename = f'mpassi.{mesh_short_name}.{creation_date}.nc'
 
         keep_vars = [
             'areaCell', 'cellsOnCell', 'edgesOnCell', 'fCell', 'indexToCellID',
@@ -85,6 +85,5 @@ class SeaiceInitialCondition(Step):
             ds = ds[keep_vars]
             write_netcdf(ds, dest_filename)
 
-        symlink('../../../../../seaice_initial_condition/{}'.format(dest_filename),
-                '../assembled_files/inputdata/ocn/mpas-seaice/{}/{}'.format(
-                    mesh_short_name, dest_filename))
+        symlink(f'../../../../../seaice_initial_condition/{dest_filename}',
+                f'{assembled_dir}/{dest_filename}')
