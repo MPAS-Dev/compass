@@ -87,6 +87,10 @@ class Mesh(Step):
                 '-l', levels, '-v', 'glimmer']
         check_call(args, logger=logger)
 
+        # This step uses a subset of the whole Greenland dataset trimmed to
+        # the region around Humboldt Glacier, to speed up interpolation.
+        # This could also be replaced with the full Greenland Ice Sheet
+        # dataset.
         print('calling interpolate_to_mpasli_grid.py')
         args = ['interpolate_to_mpasli_grid.py', '-s',
                 'humboldt_1km_2020_04_20.epsg3413.icesheetonly.nc', '-d',
@@ -99,8 +103,8 @@ class Mesh(Step):
         # the GeoJSON file.
         print('calling define_cullMask.py')
         args = ['define_cullMask.py', '-f',
-               'gis_1km_preCull.nc', '-m'
-               'distance', '-d', '5.0']
+                'gis_1km_preCull.nc', '-m'
+                'distance', '-d', '5.0']
 
         check_call(args, logger=logger)
 
