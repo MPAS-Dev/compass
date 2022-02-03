@@ -39,8 +39,6 @@ class Mesh(Step):
         self.add_input_file(filename='antarctica_8km_2020_10_20.nc',
                             target='antarctica_8km_2020_10_20.nc',
                             database='')
-        # Add geojson file to databse, download from github, or other?
-        # Currently just using a local copy.
         self.add_input_file(filename='thwaites_minimal.geojson',
                             target='thwaites_minimal.geojson',
                             database=None, copy=True)
@@ -95,7 +93,7 @@ class Mesh(Step):
         print('calling define_cullMask.py')
         args = ['define_cullMask.py', '-f',
                 'ase_1km_preCull.nc', '-m'
-                'distance', '-d', '50.0']
+                'distance', '-d', '10.0']
 
         check_call(args, logger=logger)
 
@@ -253,14 +251,18 @@ class Mesh(Step):
                               [1, 1], [-1, 1], [1, -1], [-1, -1]])
 
         iceMask = thk > 0.0
-        # groundedMask = thk > (-1028.0 / 910.0 * topg)
-        # floatingMask = np.logical_and(thk < (-1028.0 /
-        #                               910.0 * topg), thk > 0.0)
+        groundedMask = thk > (-1028.0 / 910.0 * topg)
+        floatingMask = np.logical_and(thk < (-1028.0 /
+                                       910.0 * topg), thk > 0.0)
         marginMask = np.zeros(sz, dtype='i')
         for n in neighbors:
             marginMask = np.logical_or(marginMask,
                                        np.logical_not(
                                            np.roll(iceMask, n, axis=[0, 1])))
+            groundingLineMask = np.logical_or(marginMask,
+                                       np.logical_not(
+                                           np.roll(groundedMask, n, axis=[0, 1])))
+
         # where ice exists and neighbors non-ice locations
         marginMask = np.logical_and(marginMask, iceMask)
         # optional - plot mask
@@ -269,6 +271,7 @@ class Mesh(Step):
         # calc dist to margin -------------------
         [XPOS, YPOS] = np.meshgrid(x1, y1)
         distToEdge = np.zeros(sz)
+        distToGroundingLine = np.zeros(sz)
 
         # -- KEY PARAMETER: how big of a search 'box' (one-directional) to use.
         # Bigger number makes search slower, but if too small, the transition
@@ -297,8 +300,15 @@ class Mesh(Step):
 
             dist2Here = ((XPOS[np.ix_(irng, jrng)] - x1[j])**2 +
                          (YPOS[np.ix_(irng, jrng)] - y1[i])**2)**0.5
-            dist2Here[marginMask[np.ix_(irng, jrng)] == 0] = maxdist
-            distToEdge[i, j] = dist2Here.min()
+
+            dist2HereEdge = dist2Here.copy()
+            dist2HereGroundingLine = dist2Here.copy()
+
+            dist2HereEdge[marginMask[np.ix_(irng, jrng)] == 0] = maxdist
+            dist2HereGroundingLine[groundingLineMask[np.ix_(irng, jrng)] == 0] = maxdist
+
+            distToEdge[i, j] = dist2HereEdge.min()
+            distToGroundingLine[i, j] = dist2HereGroundingLine.min()
         # optional - plot distance calculation
         # plt.pcolor(distToEdge/1000.0); plt.colorbar(); plt.show()
 
@@ -312,7 +322,7 @@ class Mesh(Step):
         # lspd(lspd>ls_max) = ls_max
 
         # make dens fn mapping from log speed to cell spacing
-        minSpac = 1.00
+        minSpac = 1.0
         maxSpac = 8.0
         highLogSpeed = 2.5
         lowLogSpeed = 0.75
@@ -321,22 +331,31 @@ class Mesh(Step):
         spacing[thk == 0.0] = minSpac
         # plt.pcolor(spacing); plt.colorbar(); plt.show()
 
-        # make dens fn mapping for dist to margin
+        # make dens fn mapping for dist to ice margin
         minSpac = 1.0
         maxSpac = 8.0
         highDist = 100.0 * 1000.0  # m
-        lowDist = 10.0 * 1000.0
+        lowDist = 50.0 * 1000.0
         spacing2 = np.interp(distToEdge, [lowDist, highDist],
                              [minSpac, maxSpac], left=minSpac, right=maxSpac)
         spacing2[thk == 0.0] = minSpac
         # plt.pcolor(spacing2); plt.colorbar(); plt.show()
 
-        # merge two cell spacing methods
-        cell_width = np.minimum(spacing, spacing2) * 1000.0
+        # make dens fn mapping for dist to grounding line
+        minSpac = 1.0
+        maxSpac = 8.0
+        highdist = 100.0 * 1000.0 # m
+        lowDist = 50.0 * 1000.0
+        spacing3 = np.interp(distToGroundingLine, [lowDist, highDist],
+                             [minSpac, maxSpac], left=minSpac, right=maxSpac)
+        spacing3[thk == 0.0] = minSpac
+        # merge cell spacing methods
+        cell_width = np.minimum(spacing, spacing2)
+        cell_width = np.minimum(cell_width, spacing3) * 1000.0
         # put coarse res far out in non-ice area to keep mesh smaller in the
         # part we are going to cull anyway (speeds up whole process)
         cell_width[np.logical_and(thk == 0.0,
-                   distToEdge > 20.0e3)] = maxSpac * 1000.0
+                   distToEdge > 25.0e3)] = maxSpac * 1000.0
         # plt.pcolor(cell_width); plt.colorbar(); plt.show()
 
         # cell_width = 20000.0 * np.ones(thk.shape)
