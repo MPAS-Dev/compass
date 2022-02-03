@@ -94,6 +94,16 @@ class Mesh(Step):
 
         check_call(args, logger=logger)
 
+        # This step is only necessary if you wish to cull a certain
+        # distance from the ice margin, within the bounds defined by
+        # the GeoJSON file.
+        print('calling define_cullMask.py')
+        args = ['define_cullMask.py', '-f',
+               'gis_1km_preCull.nc', '-m'
+               'distance', '-d', '5.0']
+
+        check_call(args, logger=logger)
+
         # This step is only necessary because the GeoJSON region
         # is defined by lat-lon.
         print('calling set_lat_lon_fields_in_planar_grid.py')
