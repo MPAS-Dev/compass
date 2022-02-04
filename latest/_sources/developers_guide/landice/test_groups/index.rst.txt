@@ -14,3 +14,4 @@ Test groups
    greenland
    hydro_radial
    thwaites
+   humboldt

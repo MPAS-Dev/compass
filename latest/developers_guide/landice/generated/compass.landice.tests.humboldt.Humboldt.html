@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>compass.ocean.vertical.partial_cells.alter_bottom_depth &mdash; compass latest documentation</title>
+  <title>compass.landice.tests.humboldt.Humboldt &mdash; compass latest documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -18,8 +18,8 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="compass.ocean.vertical.partial_cells.alter_ssh" href="compass.ocean.vertical.partial_cells.alter_ssh.html" />
-    <link rel="prev" title="compass.ocean.vertical.grid_1d.write_1d_grid" href="compass.ocean.vertical.grid_1d.write_1d_grid.html" /> 
+    <link rel="next" title="compass.landice.tests.humboldt.default.Default" href="compass.landice.tests.humboldt.default.Default.html" />
+    <link rel="prev" title="compass.landice.tests.thwaites.run_model.RunModel.run" href="compass.landice.tests.thwaites.run_model.RunModel.run.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -56,8 +56,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../command_line.html">Command-line interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../organization.html">Organization of Tests</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../landice/index.html">Landice core</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ocean/index.html">Ocean core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../framework.html">Framework</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../machines/index.html">Machines</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../troubleshooting.html">Troubleshooting</a></li>
@@ -65,13 +65,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../../building_docs.html">Building the Documentation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../api.html">API reference</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="../../api.html#mpas-cores">MPAS Cores</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="../../landice/api.html">landice</a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="../api.html">ocean</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="compass.ocean.Ocean.html">compass.ocean.Ocean</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api.html#test-groups">Test Groups</a></li>
-<li class="toctree-l4 current"><a class="reference internal" href="../api.html#ocean-framework">ocean framework</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../api.html">landice</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="compass.landice.Landice.html">compass.landice.Landice</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../api.html#test-groups">Test Groups</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../ocean/api.html">ocean</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../api.html#compass-framework">compass framework</a></li>
@@ -109,10 +108,10 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../../api.html">API reference</a> &raquo;</li>
-          <li><a href="../api.html">ocean</a> &raquo;</li>
-      <li>compass.ocean.vertical.partial_cells.alter_bottom_depth</li>
+          <li><a href="../api.html">landice</a> &raquo;</li>
+      <li>compass.landice.tests.humboldt.Humboldt</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../../_sources/developers_guide/ocean/generated/compass.ocean.vertical.partial_cells.alter_bottom_depth.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/developers_guide/landice/generated/compass.landice.tests.humboldt.Humboldt.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -120,31 +119,36 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="compass-ocean-vertical-partial-cells-alter-bottom-depth">
-<h1>compass.ocean.vertical.partial_cells.alter_bottom_depth<a class="headerlink" href="#compass-ocean-vertical-partial-cells-alter-bottom-depth" title="Permalink to this headline">¶</a></h1>
-<dl class="py function">
-<dt class="sig sig-object py" id="compass.ocean.vertical.partial_cells.alter_bottom_depth">
-<span class="sig-prename descclassname"><span class="pre">compass.ocean.vertical.partial_cells.</span></span><span class="sig-name descname"><span class="pre">alter_bottom_depth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bottomDepth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refBottomDepth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxLevelCell</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/ocean/vertical/partial_cells.html#alter_bottom_depth"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.ocean.vertical.partial_cells.alter_bottom_depth" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alter <code class="docutils literal notranslate"><span class="pre">bottomDepth</span></code> and <code class="docutils literal notranslate"><span class="pre">maxLevelCell</span></code> for full or partial top cells,
-if requested</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/library/configparser.html#configparser.ConfigParser" title="(in Python v3.10)"><em>configparser.ConfigParser</em></a>) – Configuration options with parameters used to construct the vertical
-grid</p></li>
-<li><p><strong>bottomDepth</strong> (<a class="reference external" href="https://xarray.pydata.org/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v0.21.2.dev0)"><em>xarray.DataArray</em></a>) – The positive-down depth of the seafloor</p></li>
-<li><p><strong>refBottomDepth</strong> (<a class="reference external" href="https://xarray.pydata.org/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v0.21.2.dev0)"><em>xarray.DataArray</em></a>) – A 1D array of positive-down depths of the bottom of each z level</p></li>
-<li><p><strong>maxLevelCell</strong> (<a class="reference external" href="https://xarray.pydata.org/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v0.21.2.dev0)"><em>xarray.DataArray</em></a>) – The zero-based index of the bottom valid level</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>bottomDepth</strong> (<em>xarray.DataArray</em>) – The positive-down depth of the seafloor, after alteration</p></li>
-<li><p><strong>maxLevelCell</strong> (<em>xarray.DataArray</em>) – The zero-based index of the bottom valid level, after alteration</p></li>
-</ul>
-</p>
+  <section id="compass-landice-tests-humboldt-humboldt">
+<h1>compass.landice.tests.humboldt.Humboldt<a class="headerlink" href="#compass-landice-tests-humboldt-humboldt" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="compass.landice.tests.humboldt.Humboldt">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">compass.landice.tests.humboldt.</span></span><span class="sig-name descname"><span class="pre">Humboldt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mpas_core</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/landice/tests/humboldt.html#Humboldt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.landice.tests.humboldt.Humboldt" title="Permalink to this definition">¶</a></dt>
+<dd><p>A test group for humboldt test cases</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="compass.landice.tests.humboldt.Humboldt.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mpas_core</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/landice/tests/humboldt.html#Humboldt.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.landice.tests.humboldt.Humboldt.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>mpas_core<span class="classifier">compass.landice.Landice</span></dt><dd><p>the MPAS core that this test group belongs to</p>
 </dd>
 </dl>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#compass.landice.tests.humboldt.Humboldt.__init__" title="compass.landice.tests.humboldt.Humboldt.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(mpas_core)</p></td>
+<td><p>mpas_core : compass.landice.Landice</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_test_case</span></code>(test_case)</p></td>
+<td><p>Add a test case to the test group</p></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </section>
@@ -153,8 +157,8 @@ grid</p></li>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="compass.ocean.vertical.grid_1d.write_1d_grid.html" class="btn btn-neutral float-left" title="compass.ocean.vertical.grid_1d.write_1d_grid" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="compass.ocean.vertical.partial_cells.alter_ssh.html" class="btn btn-neutral float-right" title="compass.ocean.vertical.partial_cells.alter_ssh" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="compass.landice.tests.thwaites.run_model.RunModel.run.html" class="btn btn-neutral float-left" title="compass.landice.tests.thwaites.run_model.RunModel.run" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="compass.landice.tests.humboldt.default.Default.html" class="btn btn-neutral float-right" title="compass.landice.tests.humboldt.default.Default" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

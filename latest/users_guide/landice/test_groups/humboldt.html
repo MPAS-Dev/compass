@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>hydro_radial &mdash; compass latest documentation</title>
+  <title>humboldt &mdash; compass latest documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -18,8 +18,8 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="humboldt" href="humboldt.html" />
-    <link rel="prev" title="thwaites" href="thwaites.html" /> 
+    <link rel="next" title="Framework" href="../framework/index.html" />
+    <link rel="prev" title="hydro_radial" href="hydro_radial.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -54,15 +54,12 @@
 <li class="toctree-l3"><a class="reference internal" href="eismint2.html">eismint2</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenland.html">greenland</a></li>
 <li class="toctree-l3"><a class="reference internal" href="thwaites.html">thwaites</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">hydro_radial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hydro_radial.html">hydro_radial</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">humboldt</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#config-options">config options</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#spinup-test">spinup_test</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#steady-state-drift-test">steady_state_drift_test</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#decomposition-test">decomposition_test</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#restart-test">restart_test</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#default">default</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="humboldt.html">humboldt</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../framework/index.html">Framework</a></li>
@@ -119,9 +116,9 @@
       <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../index.html">Landice core</a> &raquo;</li>
           <li><a href="index.html">Test Groups</a> &raquo;</li>
-      <li>hydro_radial</li>
+      <li>humboldt</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../../_sources/users_guide/landice/test_groups/hydro_radial.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/users_guide/landice/test_groups/humboldt.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -129,78 +126,33 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="hydro-radial">
-<span id="landice-hydro-radial"></span><h1>hydro_radial<a class="headerlink" href="#hydro-radial" title="Permalink to this headline">¶</a></h1>
-<p>The <code class="docutils literal notranslate"><span class="pre">landice/hydro_radial</span></code> test group implements variants of the
-radially symmetric hydrological test case from
-<a class="reference external" href="https://doi.org/10.5194/gmd-8-1613-2015">Bueler et al. (2015)</a>.</p>
-<p>The domain is approximately rectangular with a radially symmetric ice sheet
-at its center.  The mesh has 1-km horizontal resolution and 3 vertical layers.
-&lt;&lt;&lt;Further description here&gt;&gt;&gt;</p>
-<p>&lt;&lt;&lt;Exmaple image here&gt;&gt;&gt;</p>
-<p>The test group includes 4 test cases.  All test cases are made up of 3
-types of steps, <code class="docutils literal notranslate"><span class="pre">setup_mesh</span></code>, which defines the mesh and initial conditions
-for the model; <code class="docutils literal notranslate"><span class="pre">run_model</span></code> (given another name in many test cases to
-distinguish multiple forward runs), which performs time integration of the
-model; and <code class="docutils literal notranslate"><span class="pre">visualize</span></code>, which optionally plots the results of the test case
-(PNG files, plot windows, or both).</p>
+  <section id="humboldt">
+<span id="landice-humboldt"></span><h1>humboldt<a class="headerlink" href="#humboldt" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">landice/humboldt</span></code> test group creates a 1-10km Humboldt Glacier mesh.</p>
+<figure class="align-center" id="id1">
+<a class="reference internal image-reference" href="../../../_images/humboldt_1to10km.png"><img alt="../../../_images/humboldt_1to10km.png" src="../../../_images/humboldt_1to10km.png" style="width: 777px;" /></a>
+<figcaption>
+<p><span class="caption-text">Ice thickness on Humboldt 1-10km variable resolution mesh.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>The test group includes a single test case that creates the variable resolution mesh.</p>
 <section id="config-options">
 <h2>config options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
-<p>All 4 test cases share the same set of default config options:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># config options for hydro_radial test cases</span><span class="w"></span>
-<span class="k">[hydro_radial]</span><span class="w"></span>
+<p>The test group uses the following default config options:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># number of levels in the mesh</span><span class="w"></span>
+<span class="na">levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10</span><span class="w"></span>
 
-<span class="c1"># sizes (in cells) for the 1000m uniform mesh</span><span class="w"></span>
-<span class="na">nx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">50</span><span class="w"></span>
-<span class="na">ny</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">58</span><span class="w"></span>
-
-<span class="c1"># resolution (in m) for the 1000m uniform mesh</span><span class="w"></span>
-<span class="na">dc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000.0</span><span class="w"></span>
-
-<span class="c1"># number of levels in the mesh</span><span class="w"></span>
-<span class="na">levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span><span class="w"></span>
-
-
-<span class="c1"># config options related to visualization for hydro_radial test cases</span><span class="w"></span>
-<span class="k">[hydro_radial_viz]</span><span class="w"></span>
-
-<span class="c1"># which time index to visualize</span><span class="w"></span>
-<span class="na">time_slice</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">-1</span><span class="w"></span>
-
-<span class="c1"># whether to save image files</span><span class="w"></span>
-<span class="na">save_images</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span><span class="w"></span>
-
-<span class="c1"># whether to hide figures (typically when save_images = True)</span><span class="w"></span>
-<span class="na">hide_figs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span><span class="w"></span>
+<span class="c1"># distance from ice margin to cull (km).</span><span class="w"></span>
+<span class="c1"># Set to a value &lt;= 0 if you do not want</span><span class="w"></span>
+<span class="c1"># to cull based on distance from margin.</span><span class="w"></span>
+<span class="na">cullDistance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5.0</span><span class="w"></span>
 </pre></div>
 </div>
 </section>
-<section id="spinup-test">
-<h2>spinup_test<a class="headerlink" href="#spinup-test" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">landice/hydro_radial/spinup_test</span></code> performs a 10,000-year spin-up run from
-“zero” (a very thin ice sheet) to quasi-steady state.</p>
-</section>
-<section id="steady-state-drift-test">
-<h2>steady_state_drift_test<a class="headerlink" href="#steady-state-drift-test" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">landice/hydro_radial/steady_state_drift_test</span></code> performs a 1-month run,
-starting from the “exact” (that is, a nearly exact steady-state solution) as
-the initial condition.</p>
-</section>
-<section id="decomposition-test">
-<h2>decomposition_test<a class="headerlink" href="#decomposition-test" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">landice/hydro_radial/decomposition_test</span></code> runs short (1-month) integrations
-of the model forward in time on 1 (<code class="docutils literal notranslate"><span class="pre">1proc_run</span></code> step) and then on 3 cores
-(<code class="docutils literal notranslate"><span class="pre">3proc_run</span></code> step) to make sure the resulting prognostic variables are
-bit-for-bit identical between the two runs.</p>
-</section>
-<section id="restart-test">
-<h2>restart_test<a class="headerlink" href="#restart-test" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">landice/hydro_radial/restart_test</span></code> first run a 2-year integration of the
-model forward in time (<code class="docutils literal notranslate"><span class="pre">full_run</span></code> step).  Then, a second step
-(<code class="docutils literal notranslate"><span class="pre">restart_run</span></code>) performs 2 1-year runs, where the second begins from a
-restart file saved by the first. Prognostic variables are compared between the
-“full” and “restart” runs at year 2 to make sure they are bit-for-bit
-identical.</p>
+<section id="default">
+<h2>default<a class="headerlink" href="#default" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">landice/humboldt/default</span></code> createst the 1-10km variable resolution mesh.
+There is no model integration step.</p>
 </section>
 </section>
 
@@ -208,8 +160,8 @@ identical.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="thwaites.html" class="btn btn-neutral float-left" title="thwaites" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="humboldt.html" class="btn btn-neutral float-right" title="humboldt" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="hydro_radial.html" class="btn btn-neutral float-left" title="hydro_radial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../framework/index.html" class="btn btn-neutral float-right" title="Framework" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

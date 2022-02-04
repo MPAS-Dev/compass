@@ -18,3 +18,4 @@ COMPASS to the ``compass`` package are those with test cases in the
    greenland
    thwaites
    hydro_radial
+   humboldt
