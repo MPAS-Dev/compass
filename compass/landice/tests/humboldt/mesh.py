@@ -61,21 +61,21 @@ class Mesh(Step):
         config = self.config
         section = config['humboldt']
 
-        print('calling build_cell_wdith')
+        logger.info('calling build_cell_wdith')
         cell_width, x1, y1, geom_points, geom_edges = self.build_cell_width()
-        print('calling build_planar_mesh')
+        logger.info('calling build_planar_mesh')
         build_planar_mesh(cell_width, x1, y1, geom_points,
                           geom_edges, logger=logger)
         dsMesh = xarray.open_dataset('base_mesh.nc')
-        print('culling mesh')
+        logger.info('culling mesh')
         dsMesh = cull(dsMesh, logger=logger)
-        print('converting to MPAS mesh')
+        logger.info('converting to MPAS mesh')
         dsMesh = convert(dsMesh, logger=logger)
-        print('writing grid_converted.nc')
+        logger.info('writing grid_converted.nc')
         write_netcdf(dsMesh, 'grid_converted.nc')
         # If no number of levels specified in config file, use 10
         levels = section.get('levels')
-        print('calling create_landice_grid_from_generic_MPAS_grid.py')
+        logger.info('calling create_landice_grid_from_generic_MPAS_grid.py')
         args = ['create_landice_grid_from_generic_MPAS_grid.py',
                 '-i', 'grid_converted.nc',
                 '-o', 'gis_1km_preCull.nc',
@@ -86,7 +86,7 @@ class Mesh(Step):
         # the region around Humboldt Glacier, to speed up interpolation.
         # This could also be replaced with the full Greenland Ice Sheet
         # dataset.
-        print('calling interpolate_to_mpasli_grid.py')
+        logger.info('calling interpolate_to_mpasli_grid.py')
         args = ['interpolate_to_mpasli_grid.py', '-s',
                 'humboldt_1km_2020_04_20.epsg3413.icesheetonly.nc', '-d',
                 'gis_1km_preCull.nc', '-m', 'b', '-t']
@@ -96,7 +96,7 @@ class Mesh(Step):
         # This step is only necessary if you wish to cull a certain
         # distance from the ice margin, within the bounds defined by
         # the GeoJSON file.
-        print('calling define_cullMask.py')
+        logger.info('calling define_cullMask.py')
         args = ['define_cullMask.py', '-f',
                 'gis_1km_preCull.nc', '-m'
                 'distance', '-d', '5.0']
@@ -105,35 +105,35 @@ class Mesh(Step):
 
         # This step is only necessary because the GeoJSON region
         # is defined by lat-lon.
-        print('calling set_lat_lon_fields_in_planar_grid.py')
+        logger.info('calling set_lat_lon_fields_in_planar_grid.py')
         args = ['set_lat_lon_fields_in_planar_grid.py', '-f',
                 'gis_1km_preCull.nc', '-p', 'gis-gimp']
 
         check_call(args, logger=logger)
 
-        print('calling MpasMaskCreator.x')
+        logger.info('calling MpasMaskCreator.x')
         args = ['MpasMaskCreator.x', 'gis_1km_preCull.nc',
                 'humboldt_mask.nc', '-f', 'Humboldt.geojson']
 
         check_call(args, logger=logger)
 
-        print('culling to geojson file')
+        logger.info('culling to geojson file')
         dsMesh = xarray.open_dataset('gis_1km_preCull.nc')
         humboldtMask = xarray.open_dataset('humboldt_mask.nc')
         dsMesh = cull(dsMesh, dsInverse=humboldtMask, logger=logger)
         write_netcdf(dsMesh, 'humboldt_culled.nc')
 
-        print('Marking horns for culling')
+        logger.info('Marking horns for culling')
         args = ['mark_horns_for_culling.py', '-f', 'humboldt_culled.nc']
         check_call(args, logger=logger)
 
-        print('culling and converting')
+        logger.info('culling and converting')
         dsMesh = xarray.open_dataset('humboldt_culled.nc')
         dsMesh = cull(dsMesh, logger=logger)
         dsMesh = convert(dsMesh, logger=logger)
         write_netcdf(dsMesh, 'humboldt_dehorned.nc')
 
-        print('calling create_landice_grid_from_generic_MPAS_grid.py')
+        logger.info('calling create_landice_grid_from_generic_MPAS_grid.py')
         args = ['create_landice_grid_from_generic_MPAS_grid.py', '-i',
                 'humboldt_dehorned.nc', '-o',
                 'Humboldt_1to10km.nc', '-l', levels, '-v', 'glimmer',
@@ -141,23 +141,23 @@ class Mesh(Step):
 
         check_call(args, logger=logger)
 
-        print('calling interpolate_to_mpasli_grid.py')
+        logger.info('calling interpolate_to_mpasli_grid.py')
         args = ['interpolate_to_mpasli_grid.py', '-s',
                 'humboldt_1km_2020_04_20.epsg3413.icesheetonly.nc',
                 '-d', 'Humboldt_1to10km.nc', '-m', 'b', '-t']
         check_call(args, logger=logger)
 
-        print('Marking domain boundaries dirichlet')
+        logger.info('Marking domain boundaries dirichlet')
         args = ['mark_domain_boundaries_dirichlet.py',
                 '-f', 'Humboldt_1to10km.nc']
         check_call(args, logger=logger)
 
-        print('calling set_lat_lon_fields_in_planar_grid.py')
+        logger.info('calling set_lat_lon_fields_in_planar_grid.py')
         args = ['set_lat_lon_fields_in_planar_grid.py', '-f',
                 'Humboldt_1to10km.nc', '-p', 'gis-gimp']
         check_call(args, logger=logger)
 
-        print('creating graph.info')
+        logger.info('creating graph.info')
         make_graph_file(mesh_filename='Humboldt_1to10km.nc',
                         graph_filename='graph.info')
 
@@ -227,7 +227,7 @@ class Mesh(Step):
         # to be used by multiple test groups.
         cnt = 0
         while len(lastSearchList) > 0:
-            # print(cnt)
+            # logger.info(cnt)
             cnt += 1
             newSearchList = np.array([], dtype='i')
 
@@ -291,7 +291,7 @@ class Mesh(Step):
         # ---
 
         d = int(np.ceil(windowSize / dx))
-        # print(windowSize, d)
+        # logger.info(windowSize, d)
         rng = np.arange(-1*d, d, dtype='i')
         maxdist = float(d) * dx
 
