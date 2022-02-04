@@ -23,8 +23,6 @@ The class :py:class:`compass.landice.tests.humboldt.mesh.Mesh`
 defines a step for creating a variable resolution Humboldt Glacier mesh.
 This is used by the ``default`` test case.
 
-.. _dev_landice_humboldt_decomposition_test:
-
 default
 -------
 

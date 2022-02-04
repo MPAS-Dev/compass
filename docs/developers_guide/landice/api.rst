@@ -203,7 +203,7 @@ thwaites
    run_model.RunModel.run
 
 humboldt
-~~~~~~~
+~~~~~~~~
 
 .. currentmodule:: compass.landice.tests.humboldt
 
