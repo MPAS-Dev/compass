@@ -19,17 +19,17 @@ in :ref:`landice_humboldt` in the User's Guide.
 mesh
 ~~~~
 
-The class :py:class:`compass.landice.tests.thwaites.mesh.Mesh`
+The class :py:class:`compass.landice.tests.humboldt.mesh.Mesh`
 defines a step for creating a variable resolution Humboldt Glacier mesh.
 This is used by the ``default`` test case.
 
-.. _dev_landice_thwaites_decomposition_test:
+.. _dev_landice_humboldt_decomposition_test:
 
 default
 -------
 
-The :py:class:`compass.landice.tests.thwaites.default.Default`
-calls the :py:class:`compass.landice.tests.thwaites.mesh.Mesh` to create
+The :py:class:`compass.landice.tests.humboldt.default.Default`
+calls the :py:class:`compass.landice.tests.humboldt.mesh.Mesh` to create
 the 1-10 km variable resolution Humboldt Glacier mesh.
 
 
