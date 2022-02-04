@@ -202,4 +202,20 @@ thwaites
    run_model.RunModel.setup
    run_model.RunModel.run
 
+humboldt
+~~~~~~~~
+
+.. currentmodule:: compass.landice.tests.humboldt
+
+.. autosummary::
+   :toctree: generated/
+
+   Humboldt
+
+   default.Default
+   default.Default.run
+
+   mesh.Mesh
+   mesh.Mesh.run
+
 
