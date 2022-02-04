@@ -44,8 +44,9 @@ class Mesh(Step):
                 target='humboldt_1km_2020_04_20.epsg3413.icesheetonly.nc',
                 database='')
         self.add_input_file(filename='Humboldt.geojson',
+                            package='compass.landice.tests.humboldt',
                             target='Humboldt.geojson',
-                            database=None, copy=True)
+                            database=None)
         self.add_input_file(filename='greenland_8km_2020_04_20.epsg3413.nc',
                             target='greenland_8km_2020_04_20.epsg3413.nc',
                             database='')
