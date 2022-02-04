@@ -23,6 +23,11 @@ The test group uses the following default config options:
     # number of levels in the mesh
     levels = 10
 
+    # distance from ice margin to cull (km).
+    # Set to a value <= 0 if you do not want
+    # to cull based on distance from margin.
+    cullDistance = 5.0
+
 default
 -------
 

@@ -96,12 +96,17 @@ class Mesh(Step):
         # This step is only necessary if you wish to cull a certain
         # distance from the ice margin, within the bounds defined by
         # the GeoJSON file.
-        logger.info('calling define_cullMask.py')
-        args = ['define_cullMask.py', '-f',
-                'gis_1km_preCull.nc', '-m'
-                'distance', '-d', '5.0']
+        cullDistance = section.get('cullDistance')
+        if float(cullDistance) > 0.:
+            logger.info('calling define_cullMask.py')
+            args = ['define_cullMask.py', '-f',
+                    'gis_1km_preCull.nc', '-m'
+                    'distance', '-d', cullDistance]
 
-        check_call(args, logger=logger)
+            check_call(args, logger=logger)
+        else:
+            logger.info('cullDistance <= 0 in config file. '
+                        'Will not cull by distance to margin. \n')
 
         # This step is only necessary because the GeoJSON region
         # is defined by lat-lon.
