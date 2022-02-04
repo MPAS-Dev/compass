@@ -57,11 +57,8 @@ class Mesh(Step):
         Run this step of the test case
         """
         logger = self.logger
-        try:
-            config = self.config
-            section = config['humboldt']
-        except NameError:
-            print('No config file; skipping')
+        config = self.config
+        section = config['humboldt']
 
         print('calling build_cell_wdith')
         cell_width, x1, y1, geom_points, geom_edges = self.build_cell_width()
@@ -76,10 +73,7 @@ class Mesh(Step):
         print('writing grid_converted.nc')
         write_netcdf(dsMesh, 'grid_converted.nc')
         # If no number of levels specified in config file, use 10
-        try:
-            levels = section.get('levels')
-        except NameError:
-            levels = '10'
+        levels = section.get('levels')
         print('calling create_landice_grid_from_generic_MPAS_grid.py')
         args = ['create_landice_grid_from_generic_MPAS_grid.py',
                 '-i', 'grid_converted.nc',
