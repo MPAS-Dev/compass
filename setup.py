@@ -31,7 +31,7 @@ install_requires = \
      'progressbar2',
      'pyamg',
      'requests',
-     'scipy',
+     'scipy<1.8.0',
      'shapely',
      'xarray']
 
