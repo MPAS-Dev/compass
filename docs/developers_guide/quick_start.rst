@@ -44,6 +44,14 @@ you're working on.
 The ``conda`` directory in the repository has a tool ``configure_compass_env.py``
 that can get you started.
 
+You will need to run ``./conda/configure_compass_env.py`` each time you check
+out a new branch or create a new worktree with ``git``.  Typically, you will
+*not* need to run this command when you make changes to files within the
+``compass`` python package.  These will automatically be recognized because
+``compass`` is installed into the conda environment in "editable" mode.  You
+*will* need to run the command if you add new code files or data files to the
+package because these don't get added automatically.
+
 Whether you are on one of the :ref:`dev_supported_machines` or an "unknown"
 machine, you will need to specify a path where
 `Miniconda3 <https://docs.conda.io/en/latest/miniconda.html>`_ either has
@@ -177,6 +185,34 @@ set environment variables needed for MPAS or ``compass``.  It will also set an
 environment variable ``LOAD_COMPASS_ENV`` that points to the activation script.
 ``compass`` uses this to make an symlink to the activation script called
 ``load_compass_env.sh`` in the work directory.
+
+If you switch between different ``compass`` branches, it is safest to rerun
+``./conda/configure_compass_env.py``  with the same arguments as above to make
+sure dependencies are up to date and the ``compass`` package points to the
+current directory.  If you are certain that no ``compass`` dependencies are
+different between branches, you can also simply source the activation script
+(``load_dev_compass*.sh``) in the branch.
+
+Once you have sourced the activation script, you can run ``compass`` commands
+anywhere, and it always refers to that branch.  To find out which branch you
+are actually running ``compass`` from, you should run:
+
+.. code-block:: bash
+
+    echo $LOAD_COMPASS_ENV
+
+This will give you the path to the load script, which will also tell you where
+the branch is.  If you do not use the worktree approach, you will also need to
+check what branch you are currently on with ``git log``, ``git branch`` or
+a similar command.
+
+.. note::
+
+    If you switch branches and *do not* remember to recreate the conda
+    environment (``./conda/configure_compass_env.py``) or at least source the
+    activation script (``load_dev_compass*.sh``), you are likely to end up with
+    an incorrect and possibly unusable ``compass`` package in your conda
+    environment.
 
 If you switch to another branch, you will need to rerun
 ``./conda/configure_compass_env.py`` with the same arguments as above to make

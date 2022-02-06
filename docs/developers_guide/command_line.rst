@@ -275,6 +275,10 @@ Would both accomplish the same thing in this example -- skipping the
     is provided on the command line, the command-line flags take precedence
     over the config option.
 
+To see which steps are are available in a given test case, you need to run
+:ref:`dev_compass_list` with the ``-v`` or ``--verbose`` flag.
+
+
 See :ref:`dev_run` for more about the underlying framework.
 
 .. _dev_compass_cache:
