@@ -3,6 +3,7 @@ import configparser
 
 from mpas_tools.logging import LoggingContext
 from compass.parallel import get_available_cores_and_nodes
+from compass.logging import log_method_call
 
 
 class TestCase:
@@ -272,6 +273,9 @@ class TestCase:
                             log_filename=log_filename) as step_logger:
             step.logger = step_logger
             os.chdir(step.work_dir)
+            step_logger.info('')
+            log_method_call(method=step.run, logger=step_logger)
+            step_logger.info('')
             step.run()
 
         missing_files = list()

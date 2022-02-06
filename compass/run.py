@@ -9,6 +9,7 @@ import glob
 from mpas_tools.logging import LoggingContext
 import mpas_tools.io
 from compass.parallel import check_parallel_system, set_cores_per_node
+from compass.logging import log_method_call
 
 
 def run_suite(suite_name, quiet=False):
@@ -104,6 +105,8 @@ def run_suite(suite_name, quiet=False):
                     'test_case', 'steps_to_run').replace(',', ' ').split()
 
                 test_start = time.time()
+                log_method_call(method=test_case.run, logger=test_logger)
+                test_logger.info('')
                 try:
                     test_case.run()
                     run_status = success_str
@@ -114,6 +117,10 @@ def run_suite(suite_name, quiet=False):
                     test_logger.exception('Exception raised in run()')
 
                 if test_pass:
+                    test_logger.info('')
+                    log_method_call(method=test_case.validate,
+                                    logger=test_logger)
+                    test_logger.info('')
                     try:
                         test_case.validate()
                     except BaseException:
@@ -250,8 +257,14 @@ def run_test_case(steps_to_run=None, steps_not_to_run=None):
     with LoggingContext(name=test_name) as logger:
         test_case.logger = logger
         test_case.stdout_logger = logger
+        log_method_call(method=test_case.run, logger=logger)
+        logger.info('')
         logger.info('Running steps: {}'.format(', '.join(steps_to_run)))
         test_case.run()
+
+        logger.info('')
+        log_method_call(method=test_case.validate, logger=logger)
+        logger.info('')
         test_case.validate()
 
 
@@ -282,7 +295,13 @@ def run_step():
     with LoggingContext(name=test_name) as logger:
         test_case.logger = logger
         test_case.stdout_logger = None
+        log_method_call(method=test_case.run, logger=logger)
+        logger.info('')
         test_case.run()
+
+        logger.info('')
+        log_method_call(method=test_case.validate, logger=logger)
+        logger.info('')
         test_case.validate()
 
 
