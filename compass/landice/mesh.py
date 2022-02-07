@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def flood_fill(thk, vx, vy):
+def flood_fill(thk):
     """
     Remove glaciers and ice-fields that are not connected to the ice sheet.
 
@@ -9,20 +9,15 @@ def flood_fill(thk, vx, vy):
     ----------
     thk : numpy.ndarray
         Ice thickness from gridded dataset
-    vx : numpy.ndarry
-        Velocity x-component from gridded dataset
-    vy : numpy.ndarray
-        Velocity y-component from gridded dataset
 
     Returns
     -------
-    thkTrimmed : numpy.ndarray
-        Ice thickness after flood-fill is applied
-    vxTrimmed : numpy.ndarray
-        Velocity x-component after flood-fill is applied
-    vyTrimmed : numpy.ndarry
-        Velocity y-component after flood-fill is applied
+    floodMask : numpy.ndarray
+        Ice sheet mask calculated by the flood fill routine,
+        where ice connected to the ice sheet is 1 and
+        everything else is 0.
     """
+
     sz = thk.shape
     searchedMask = np.zeros(sz)
     floodMask = np.zeros(sz)
@@ -59,13 +54,4 @@ def flood_fill(thk, vx, vy):
                                                       order='F')[0])
         lastSearchList = newSearchList
 
-    # apply flood fill
-    thkTrimmed = thk.copy()
-    vxTrimmed = vx.copy()
-    vyTrimmed = vy.copy()
-
-    thkTrimmed[floodMask == 0] = 0.0
-    vxTrimmed[floodMask == 0] = 0.0
-    vyTrimmed[floodMask == 0] = 0.0
-
-    return thkTrimmed, vxTrimmed, vyTrimmed
+    return floodMask
