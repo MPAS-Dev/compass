@@ -15,7 +15,6 @@ source:
   path: ../..
 
 build:
-  noarch: python
   script: {{ PYTHON }} -m pip install . --no-deps -vv
   number: {{ build }}
   {% if mpi != "nompi" %}
@@ -35,11 +34,11 @@ build:
 
 requirements:
   host:
-    - python >=3.6
+    - python
     - pip
     - setuptools
   run:
-    - python >=3.6
+    - python
     - cartopy
     - cartopy_offlinedata
     - cmocean
