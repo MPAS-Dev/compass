@@ -40,8 +40,9 @@ class Mesh(Step):
                             target='antarctica_8km_2020_10_20.nc',
                             database='')
         self.add_input_file(filename='thwaites_minimal.geojson',
+                            package='compass.landice.tests.thwaites',
                             target='thwaites_minimal.geojson',
-                            database=None, copy=True)
+                            database=None)
         self.add_input_file(filename='antarctica_1km_2020_10_20_ASE.nc',
                             target='antarctica_1km_2020_10_20_ASE.nc',
                             database='')
