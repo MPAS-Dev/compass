@@ -15,7 +15,6 @@ source:
   path: ../..
 
 build:
-  noarch: python
   script: {{ PYTHON }} -m pip install . --no-deps -vv
   number: {{ build }}
   {% if mpi != "nompi" %}
@@ -35,11 +34,11 @@ build:
 
 requirements:
   host:
-    - python >=3.6
+    - python
     - pip
     - setuptools
   run:
-    - python >=3.6
+    - python
     - cartopy
     - cartopy_offlinedata
     - cmocean
@@ -61,10 +60,10 @@ requirements:
     - netcdf4 * nompi_*
     - numpy
     - progressbar2
-    - pyamg
+    - pyamg >=4.2.2
     - pyremap >=0.0.13,<0.1.0
     - requests
-    - scipy <1.8.0
+    - scipy
     - shapely
     - xarray
 
