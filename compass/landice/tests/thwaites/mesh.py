@@ -254,15 +254,18 @@ class Mesh(Step):
         iceMask = thk > 0.0
         groundedMask = thk > (-1028.0 / 910.0 * topg)
         floatingMask = np.logical_and(thk < (-1028.0 /
-                                       910.0 * topg), thk > 0.0)
+                                             910.0 * topg), thk > 0.0)
         marginMask = np.zeros(sz, dtype='i')
+        groundingLineMask = np.zeros(sz, dtype='i')
+
         for n in neighbors:
-            marginMask = np.logical_or(marginMask,
-                                       np.logical_not(
-                                           np.roll(iceMask, n, axis=[0, 1])))
-            groundingLineMask = np.logical_or(marginMask,
-                                       np.logical_not(
-                                           np.roll(groundedMask, n, axis=[0, 1])))
+            notIceMask = np.logical_not(np.roll(iceMask, n, axis=[0, 1]))
+            marginMask = np.logical_or(marginMask, notIceMask)
+
+            notGroundedMask = np.logical_not(np.roll(groundedMask,
+                                                     n, axis=[0, 1]))
+            groundingLineMask = np.logical_or(groundingLineMask,
+                                              notGroundedMask)
 
         # where ice exists and neighbors non-ice locations
         marginMask = np.logical_and(marginMask, iceMask)
@@ -306,7 +309,8 @@ class Mesh(Step):
             dist2HereGroundingLine = dist2Here.copy()
 
             dist2HereEdge[marginMask[np.ix_(irng, jrng)] == 0] = maxdist
-            dist2HereGroundingLine[groundingLineMask[np.ix_(irng, jrng)] == 0] = maxdist
+            dist2HereGroundingLine[groundingLineMask
+                                   [np.ix_(irng, jrng)] == 0] = maxdist
 
             distToEdge[i, j] = dist2HereEdge.min()
             distToGroundingLine[i, j] = dist2HereGroundingLine.min()
@@ -345,7 +349,7 @@ class Mesh(Step):
         # make dens fn mapping for dist to grounding line
         minSpac = 1.0
         maxSpac = 8.0
-        highdist = 100.0 * 1000.0 # m
+        highdist = 100.0 * 1000.0  # m
         lowDist = 50.0 * 1000.0
         spacing3 = np.interp(distToGroundingLine, [lowDist, highDist],
                              [minSpac, maxSpac], left=minSpac, right=maxSpac)
