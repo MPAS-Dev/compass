@@ -69,14 +69,14 @@ which case you could provide an absolute path like:
 
     # the relative or absolute path to the root of a branch where MPAS-Ocean
     # has been built
-    mpas_model = /home/xylar/code/E3SM-Project/components/mpas-ocean
+    mpas_model = /home/xylar/code/E3SM/components/mpas-ocean
 
 You provide the config file to ``compass setup`` and ``compass suite`` with
 the ``-f`` flag:
 
 .. code-block:: bash
 
-    compass setup -f ocean.cfg ...
+    compass setup -f my_machine.cfg ...
 
 Test-case config files
 ----------------------

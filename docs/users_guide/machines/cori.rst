@@ -48,11 +48,16 @@ Archive:
 * E3SM uses `zstash <https://e3sm-project.github.io/zstash/docs/html/index.html>`_
 
 
-config options
---------------
+Cori-Haswell
+------------
 
-Since Cori's Haswell and KNL nodes have different configuration options, they
-are treated as separate supported machines in compass.  Here are the default
+Since Cori's Haswell and KNL nodes have different configuration options and
+compilers, they are treated as separate supported machines in compass.
+
+config options
+~~~~~~~~~~~~~~
+
+Here are the default
 config options added when you choose ``-m cori-haswell`` when setting up test
 cases or a test suite:
 
@@ -72,23 +77,93 @@ cases or a test suite:
 
     # the path to the base conda environment where compass environments have
     # been created
-    compass_envs = /global/cfs/cdirs/e3sm/software/anaconda_envs/base
+    compass_envs = /global/cfs/cdirs/e3sm/software/compass/cori-haswell/base
 
 
-    # The parallel section describes options related to running tests in parallel
+    # Options related to deploying a compass conda environment on supported
+    # machines
+    [deploy]
+
+    # the compiler set to use for system libraries and MPAS builds
+    compiler = intel
+
+    # the system MPI library to use for intel compiler
+    mpi_intel = mpt
+
+    # the system MPI library to use for gnu compiler
+    mpi_gnu = mpt
+
+    # the base path to system libraries to be added as part of setting up compass
+    system_libs = /global/cfs/cdirs/e3sm/software/compass/cori-haswell/system
+
+    # the version of ESMF to build if using system compilers and MPI (don't build)
+    esmf = None
+
+Additionally, some relevant config options come from the
+`mache <https://github.com/E3SM-Project/mache/>`_ package:
+
+.. code-block:: cfg
+
+    # The parallel section describes options related to running jobs in parallel
     [parallel]
 
-    # parallel system of execution: slurm or single_node
+    # parallel system of execution: slurm, cobalt or single_node
     system = slurm
 
-    # whether to use mpirun or srun to run the model
+    # whether to use mpirun or srun to run a task
     parallel_executable = srun
 
     # cores per node on the machine
     cores_per_node = 32
 
-    # the number of multiprocessing or dask threads to use
-    threads = 16
+    # account for running diagnostics jobs
+    account = e3sm
+
+    # available configurations(s) (default is the first)
+    configurations = haswell
+
+    # quality of service (default is the first)
+    qos = regular, premium, debug
+
+
+Intel on Cori-Haswell
+~~~~~~~~~~~~~~~~~~~~~
+
+To load the compass environment and modules, and set appropriate environment
+variables:
+
+.. code-block:: bash
+
+    source /global/cfs/cdirs/e3sm/software/compass/cori-haswell/load_compass1.0.0_intel_mpt.sh
+
+To build the MPAS model with
+
+.. code-block:: bash
+
+    make intel-nersc
+
+
+Gnu on Cori-Haswell
+~~~~~~~~~~~~~~~~~~~
+
+To load the compass environment and modules, and set appropriate environment
+variables:
+
+.. code-block:: bash
+
+    source /global/cfs/cdirs/e3sm/software/compass/cori-haswell/load_compass1.0.0_gnu_mpt.sh
+
+To build the MPAS model with
+
+.. code-block:: bash
+
+    make gnu-nersc
+
+Cori-KNL
+--------
+
+config options
+~~~~~~~~~~~~~~
 
 And here are the same for ``-m cori-knl``:
 
@@ -108,115 +183,57 @@ And here are the same for ``-m cori-knl``:
 
     # the path to the base conda environment where compass environments have
     # been created
-    compass_envs = /global/cfs/cdirs/e3sm/software/anaconda_envs/base
+    compass_envs = /global/cfs/cdirs/e3sm/software/compass/cori-knl/base
 
 
-    # The parallel section describes options related to running tests in parallel
+    # Options related to deploying a compass conda environment on supported
+    # machines
+    [deploy]
+
+    # the compiler set to use for system libraries and MPAS builds
+    compiler = intel
+
+    # the system MPI library to use for intel compiler
+    mpi_intel = impi
+
+    # the system MPI library to use for gnu compiler
+    mpi_gnu = mpt
+
+    # the base path to system libraries to be added as part of setting up compass
+    system_libs = /global/cfs/cdirs/e3sm/software/compass/cori-knl/system
+
+    # the version of ESMF to build if using system compilers and MPI (don't build)
+    esmf = None
+
+Additionally, some relevant config options come from the
+`mache <https://github.com/E3SM-Project/mache/>`_ package:
+
+.. code-block:: cfg
+
+    # The parallel section describes options related to running jobs in parallel
     [parallel]
 
-    # parallel system of execution: slurm or single_node
+    # parallel system of execution: slurm, cobalt or single_node
     system = slurm
 
-    # whether to use mpirun or srun to run the model
+    # whether to use mpirun or srun to run a task
     parallel_executable = srun
 
     # cores per node on the machine
     cores_per_node = 68
 
-    # the number of multiprocessing or dask threads to use
-    threads = 18
+    # account for running diagnostics jobs
+    account = e3sm
+
+    # available configurations(s) (default is the first)
+    configurations = knl
+
+    # quality of service (default is the first)
+    qos = regular, premium, debug
 
 
-cori-haswell, gnu
------------------
-
-.. note::
-
-    Compass 1.0.0 has not yet been released.  The following will apply after
-    the release.
-
-To load the compass environment and modules, and set appropriate environment
-variables:
-
-.. code-block:: bash
-
-    source /global/cfs/cdirs/e3sm/software/compass/cori-haswell/load_compass1.0.0_gnu_mpt.sh
-
-To build the MPAS model with
-
-.. code-block:: bash
-
-    make CORE=landice gnu-nersc
-
-or
-
-.. code-block:: bash
-
-    make CORE=ocean gnu-nersc
-
-
-cori-haswell, intel
--------------------
-
-.. note::
-
-    Compass 1.0.0 has not yet been released.  The following will apply after
-    the release.
-
-To load the compass environment and modules, and set appropriate environment
-variables:
-
-.. code-block:: bash
-
-    source /global/cfs/cdirs/e3sm/software/compass/cori-haswell/load_compass1.0.0_intel_mpt.sh
-
-To build the MPAS model with
-
-.. code-block:: bash
-
-    make CORE=landice intel-nersc
-
-or
-
-.. code-block:: bash
-
-    make CORE=ocean intel-nersc
-
-cori-knl, gnu
--------------
-
-.. note::
-
-    Compass 1.0.0 has not yet been released.  The following will apply after
-    the release.
-
-To load the compass environment and modules, and set appropriate environment
-variables:
-
-.. code-block:: bash
-
-    source /global/cfs/cdirs/e3sm/software/compass/cori-knl/load_compass1.0.0_gnu_mpt.sh
-
-To build the MPAS model with
-
-.. code-block:: bash
-
-    make CORE=landice gnu-nersc
-
-or
-
-.. code-block:: bash
-
-    make CORE=ocean gnu-nersc
-
-
-cori-knl, intel
----------------
-
-.. note::
-
-    Compass 1.0.0 has not yet been released.  The following will apply after
-    the release.
+Intel on Cori-KNL
+~~~~~~~~~~~~~~~~~
 
 To load the compass environment and modules, and set appropriate environment
 variables:
@@ -229,14 +246,7 @@ To build the MPAS model with
 
 .. code-block:: bash
 
-    make CORE=landice intel-nersc
-
-or
-
-.. code-block:: bash
-
-    make CORE=ocean intel-nersc
-
+    make intel-nersc
 
 
 Jupyter notebook on remote data
