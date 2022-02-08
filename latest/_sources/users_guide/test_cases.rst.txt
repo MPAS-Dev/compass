@@ -24,12 +24,14 @@ you like.  Currently, the steps in a test case run in sequence but there are
 plans to allow steps that don't depend on one another to run in parallel in the
 future.  Also, there is no requirement that all steps defined in a test case
 must run when that test case is run.  Some steps may be disabled depending on
-config options (see :ref:`config_files`) that you choose.
+config options (see :ref:`config_files`) that you choose.  Other steps, such
+as plotting or other forms of analysis, may be intended for you to run them
+manually if you want to see the plots.
 
-In compass, test cases are identified by their subdirectory relative to a work
-directory that the user chooses.  For example, the default test case from
-the :ref:`ocean_baroclinic_channel` configuration at 10-km resolution is
-identified as:
+In compass, test cases are identified by their subdirectory relative to a base
+work directory that you choose during ``compass setup``.  For example, the
+default test case from the :ref:`ocean_baroclinic_channel` configuration at
+10-km resolution is identified as:
 
 .. code-block:: none
 

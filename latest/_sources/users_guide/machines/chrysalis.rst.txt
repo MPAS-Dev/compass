@@ -6,8 +6,9 @@ Chrysalis
 config options
 --------------
 
-Here are the default config options added when you choose ``-m chrysalis`` when
-setting up test cases or a test suite:
+Here are the default config options added when Chrysalis is automatically
+detected or when you choose ``-m chrysalis`` when setting up test cases or a
+test suite:
 
 .. code-block:: cfg
 
@@ -25,32 +26,49 @@ setting up test cases or a test suite:
 
     # the path to the base conda environment where compass environments have
     # been created
-    compass_envs = /lcrc/soft/climate/e3sm-unified/base
+    compass_envs = /lcrc/soft/climate/compass/chrysalis/base
 
 
-    # The parallel section describes options related to running tests in parallel
+    # Options related to deploying a compass conda environment on supported
+    # machines
+    [deploy]
+
+    # the compiler set to use for system libraries and MPAS builds
+    compiler = intel
+
+    # the system MPI library to use for intel compiler
+    mpi_intel = impi
+
+    # the system MPI library to use for gnu compiler
+    mpi_gnu = openmpi
+
+    # the base path to system libraries to be added as part of setting up compass
+    system_libs = /lcrc/soft/climate/compass/chrysalis/system
+
+Additionally, some relevant config options come from the
+`mache <https://github.com/E3SM-Project/mache/>`_ package:
+
+.. code-block:: cfg
+
+    # The parallel section describes options related to running jobs in parallel
     [parallel]
 
-    # parallel system of execution: slurm or single_node
+    # parallel system of execution: slurm, cobalt or single_node
     system = slurm
 
-    # whether to use mpirun or srun to run the model
+    # whether to use mpirun or srun to run a task
     parallel_executable = srun
 
     # cores per node on the machine
-    cores_per_node = 64
+    cores_per_node = 128
 
-    # the number of multiprocessing or dask threads to use
-    threads = 18
+    # available partition(s) (default is the first)
+    partitions = debug, compute, high
 
 
-intel on Chrysalis
+
+Intel on Chrysalis
 ------------------
-
-.. note::
-
-    Compass 1.0.0 has not yet been released.  The following will apply after
-    the release.
 
 To load the compass environment and modules, and set appropriate environment
 variables:
@@ -63,22 +81,11 @@ To build the MPAS model with
 
 .. code-block:: bash
 
-    make CORE=landice intel-mpi
-
-or
-
-.. code-block:: bash
-
-    make CORE=ocean intel-mpi
+    make intel-mpi
 
 
-gnu on Chrysalis
+Gnu on Chrysalis
 ----------------
-
-.. note::
-
-    Compass 1.0.0 has not yet been released.  The following will apply after
-    the release.
 
 To load the compass environment and modules, and set appropriate environment
 variables:
@@ -91,11 +98,5 @@ To build the MPAS model with
 
 .. code-block:: bash
 
-    make CORE=landice gfortran
-
-or
-
-.. code-block:: bash
-
-    make CORE=ocean gfortran
+    make gfortran
 

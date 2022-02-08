@@ -60,11 +60,10 @@
 <li class="toctree-l3"><a class="reference internal" href="grizzly.html">Grizzly</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#other-machines">Other Machines</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="linux.html">Personal Linux/OSX Machine</a></li>
-<li class="toctree-l3"><a class="reference internal" href="osx.html">Personal OSX Machine</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="#other-machines">Other Machines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">MPICH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id5">OpenMPI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#no-mpi-from-conda-forge">No MPI from conda-forge</a></li>
 </ul>
 </li>
 </ul>
@@ -135,7 +134,9 @@ cases are configured in a way that is appropriate for your machine.</p>
 <section id="config-options">
 <h2>config options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
 <p>The config options typically defined for a machine are:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[paths]</span><span class="w"></span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># The paths section describes paths that are used within the ocean core test</span><span class="w"></span>
+<span class="c1"># cases.</span><span class="w"></span>
+<span class="k">[paths]</span><span class="w"></span>
 
 <span class="c1"># The root to a location where the mesh_database, initial_condition_database,</span><span class="w"></span>
 <span class="c1"># and bathymetry_database for MPAS-Ocean will be cached</span><span class="w"></span>
@@ -145,26 +146,60 @@ cases are configured in a way that is appropriate for your machine.</p>
 <span class="c1"># for MALI will be cached</span><span class="w"></span>
 <span class="na">landice_database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/usr/projects/regionalclimate/COMMON_MPAS/mpas_standalonedata/mpas-albany-landice</span><span class="w"></span>
 
+<span class="c1"># the path to the base conda environment where compass environments have</span><span class="w"></span>
+<span class="c1"># been created</span><span class="w"></span>
+<span class="na">compass_envs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/usr/projects/climate/SHARED_CLIMATE/compass/badger/base</span><span class="w"></span>
 
-<span class="c1"># The parallel section describes options related to running tests in parallel</span><span class="w"></span>
+
+<span class="c1"># Options related to deploying a compass conda environment on supported</span><span class="w"></span>
+<span class="c1"># machines</span><span class="w"></span>
+<span class="k">[deploy]</span><span class="w"></span>
+
+<span class="c1"># the compiler set to use for system libraries and MPAS builds</span><span class="w"></span>
+<span class="na">compiler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">intel</span><span class="w"></span>
+
+<span class="c1"># the system MPI library to use for intel compiler</span><span class="w"></span>
+<span class="na">mpi_intel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">impi</span><span class="w"></span>
+
+<span class="c1"># the system MPI library to use for gnu compiler</span><span class="w"></span>
+<span class="na">mpi_gnu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">mvapich</span><span class="w"></span>
+
+<span class="c1"># the base path to system libraries to be added as part of setting up compass</span><span class="w"></span>
+<span class="na">system_libs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/usr/projects/climate/SHARED_CLIMATE/compass/badger/system</span><span class="w"></span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">paths</span></code> section provides local paths to the root of the “databases”
+(local caches) of data files for each MPAS core.  These are generally in a
+shared location for the project to save space.  Similarly, <code class="docutils literal notranslate"><span class="pre">compass_envs</span></code>
+is a location where shared conda environments will be created for <code class="docutils literal notranslate"><span class="pre">compass</span></code>
+releases for users to share.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">deploy</span></code> section is used to help <code class="docutils literal notranslate"><span class="pre">compass</span></code> create development and
+release conda environments and activation scripts.  It says which compiler set
+is the default, which MPI library is the default for each supported compiler,
+and where libraries built with system MPI will be placed.</p>
+<p>Some config options come from a package, <a class="reference external" href="https://github.com/E3SM-Project/mache/">mache</a>
+that is a dependency of <code class="docutils literal notranslate"><span class="pre">compass</span></code>.  <code class="docutils literal notranslate"><span class="pre">mache</span></code> is designed to detect and
+provide a machine-specific configuration for E3SM supported machines.  Typical
+config options provided by <code class="docutils literal notranslate"><span class="pre">mache</span></code> that are relevant to <code class="docutils literal notranslate"><span class="pre">compass</span></code> are:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># The parallel section describes options related to running jobs in parallel</span><span class="w"></span>
 <span class="k">[parallel]</span><span class="w"></span>
 
-<span class="c1"># parallel system of execution: slurm or single_node</span><span class="w"></span>
+<span class="c1"># parallel system of execution: slurm, cobalt or single_node</span><span class="w"></span>
 <span class="na">system</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">slurm</span><span class="w"></span>
 
-<span class="c1"># whether to use mpirun or srun to run the model</span><span class="w"></span>
+<span class="c1"># whether to use mpirun or srun to run a task</span><span class="w"></span>
 <span class="na">parallel_executable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">srun</span><span class="w"></span>
 
 <span class="c1"># cores per node on the machine</span><span class="w"></span>
 <span class="na">cores_per_node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">36</span><span class="w"></span>
 
-<span class="c1"># the slurm account</span><span class="w"></span>
+<span class="c1"># account for running diagnostics jobs</span><span class="w"></span>
 <span class="na">account</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">e3sm</span><span class="w"></span>
+
+<span class="c1"># quality of service (default is the first)</span><span class="w"></span>
+<span class="na">qos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">regular, interactive</span><span class="w"></span>
 </pre></div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">paths</span></code> section provides local paths to the root of the “databases”
-(local caches) of data files for each MPAS core.  These are generally in a
-shared location for the project to save space.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">parallel</span></code> section defined properties of the machine, to do with parallel
 runs. Currently, machine files are defined for high-performance computing (HPC)
 machines with multiple nodes.  These machines all use <a class="reference internal" href="#slurm"><span class="std std-ref">Slurm job queueing</span></a> to submit
@@ -181,27 +216,23 @@ Here are some basic commands:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>salloc -N <span class="m">1</span> -t <span class="m">2</span>:0:0 <span class="c1"># interactive job (see machine specific versions below)</span>
 sbatch script <span class="c1"># submit a script</span>
 squeue <span class="c1"># show all jobs</span>
-squeue -u <span class="nv">$my_moniker</span> <span class="c1"># show only your jobs</span>
+squeue -u &lt;my_username&gt; <span class="c1"># show only your jobs</span>
 scancel jobID <span class="c1"># cancel a job</span>
 </pre></div>
 </div>
 </section>
 <section id="supported-machines">
 <span id="id2"></span><h2>Supported Machines<a class="headerlink" href="#supported-machines" title="Permalink to this headline">¶</a></h2>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Compass 1.0.0 has not yet been released.  The documentation for supported
-machines is what we anticipate once the release has occurred.  Developers
-or users working off of the <a class="reference external" href="https://github.com/MPAS-Dev/compass/tree/master">master</a>
-branch (as opposed to a <code class="docutils literal notranslate"><span class="pre">compass</span></code> release), you should look at the
-developer’s guide on <a class="reference internal" href="../../developers_guide/machines/index.html#dev-supported-machines"><span class="std std-ref">Supported Machines</span></a>.</p>
-</div>
 <p>On each supported machine, users will be able to source a script to activate
 the appropriate compass environment and compilers.  Most machines support 2
-compilers, each with one “flavor” of MPI and the required NetCDF, pNetCDF and
-SCORPIO libraries.  These scripts will first load the conda environment for
-<code class="docutils literal notranslate"><span class="pre">compass</span></code>, then it will load modules and set environment variables that will
-allow you to build and run the MPAS model.</p>
+compilers, each with one or more variants of MPI and the required NetCDF,
+pNetCDF and SCORPIO libraries.  These scripts will first load the conda
+environment for <code class="docutils literal notranslate"><span class="pre">compass</span></code>, then it will load modules and set environment
+variables that will allow you to build and run the MPAS model.</p>
+<p>A table with the full list of supported machines, compilers, MPI variants,
+and MPAS-model build commands is found in <a class="reference internal" href="../../developers_guide/machines/index.html#dev-supported-machines"><span class="std std-ref">Supported Machines</span></a> in
+the Developer’s Guide.  In the links below, we list only the commands needed
+to use the default MPI variant for each compiler on each machine.</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="anvil.html">Anvil</a></li>
@@ -239,26 +270,59 @@ in your user config file:</p>
 <span class="na">parallel_executable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">mpirun</span><span class="w"></span>
 
 <span class="c1"># cores per node on the machine</span><span class="w"></span>
-<span class="na">cores_per_node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8</span><span class="w"></span>
+<span class="na">cores_per_node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span><span class="w"></span>
 
 <span class="c1"># the number of multiprocessing or dask threads to use</span><span class="w"></span>
-<span class="na">threads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8</span><span class="w"></span>
+<span class="na">threads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span><span class="w"></span>
 </pre></div>
 </div>
 <p>The paths for the MPAS core “databases” can be any emtpy path to begin with.
 If the path doesn’t exist, <code class="docutils literal notranslate"><span class="pre">compass</span></code> will create it.</p>
 <p>If you’re not working on an HPC machine, you will probably not have multiple
 nodes or <a class="reference internal" href="#slurm"><span class="std std-ref">Slurm job queueing</span></a>.  You will probably install
-<a class="reference external" href="https://www.open-mpi.org/">OpenMPI</a> or <a class="reference external" href="https://www.mpich.org/">MPICH</a>,
-possibly via a
+<a class="reference external" href="https://www.mpich.org/">MPICH</a> or <a class="reference external" href="https://www.open-mpi.org/">OpenMPI</a>,
+probably via a
 <a class="reference external" href="https://docs.conda.io/projects/conda/en/latest/index.html">conda environment</a>.
 In this case, the <code class="docutils literal notranslate"><span class="pre">parallel_executable</span></code> is <code class="docutils literal notranslate"><span class="pre">mpirun</span></code>.</p>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="linux.html">Personal Linux/OSX Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="osx.html">Personal OSX Machine</a></li>
-</ul>
+<p>To install the <cite>compass</cite> package into a conda environment, you will first need
+to install <a class="reference external" href="https://docs.conda.io/en/latest/miniconda.html">Miniconda3</a> (if
+miniconda is not already installed), then add the
+<a class="reference external" href="https://conda-forge.org/#about">conda-forge channel</a>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda config --add channels conda-forge
+conda config --set channel_priority strict
+</pre></div>
 </div>
+<p>Then, you will run one of the following three commands, depending on how you
+would like to handle MPI support in the conda packages.</p>
+</section>
+<section id="id4">
+<h2>MPICH<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>To create a conda environment called “compass” with MPI from the <code class="docutils literal notranslate"><span class="pre">mpich</span></code>
+package, run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda create -n compass -c conda-forge -c e3sm/label/compass <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.9 <span class="s2">&quot;compass=*=mpi_mpich*&quot;</span>
+</pre></div>
+</div>
+<p>This is the recommended default for single-node Linux and OSX machines.</p>
+</section>
+<section id="id5">
+<h2>OpenMPI<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<p>To create a conda environment called “compass” with MPI from the <code class="docutils literal notranslate"><span class="pre">openmpi</span></code>
+package, run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda create -n compass -c conda-forge -c e3sm/label/compass <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.9 <span class="s2">&quot;compass=*=mpi_openmpi*&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="no-mpi-from-conda-forge">
+<h2>No MPI from conda-forge<a class="headerlink" href="#no-mpi-from-conda-forge" title="Permalink to this headline">¶</a></h2>
+<p>To create a conda environment called “compass” without any MPI package from
+conda-forge, run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda create -n compass -c conda-forge -c e3sm/label/compass <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.9 <span class="s2">&quot;compass=*=nompi*&quot;</span>
+</pre></div>
+</div>
+<p>This would be the starting point for working with <code class="docutils literal notranslate"><span class="pre">compass</span></code> on an unknown
+HPC machine.  From there, you would also need to load modules and set
+environment variables so that MPAS components can be built with system NetCDF,
+pNetCDF and SCORPIO. This will likely require working with an MPAS developer.</p>
 </section>
 </section>
 

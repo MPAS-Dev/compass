@@ -122,13 +122,19 @@ running:</p>
 </div>
 <p>the current set of available test suites is:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Suites:
+  -c landice -t fo_integration
+  -c landice -t full_integration
   -c landice -t sia_integration
-  -c ocean -t nightly
-  -c ocean -t ecwisc30to60
-  -c ocean -t quwisc240_for_e3sm
-  -c ocean -t quwisc240
+  -c ocean -t cosine_bell_cached_init
   -c ocean -t ec30to60
+  -c ocean -t ecwisc30to60
+  -c ocean -t nightly
+  -c ocean -t pr
   -c ocean -t qu240_for_e3sm
+  -c ocean -t quwisc240
+  -c ocean -t quwisc240_for_e3sm
+  -c ocean -t sowisc12to60
+  -c ocean -t wc14
 </pre></div>
 </div>
 <p>As an example, the ocean <code class="docutils literal notranslate"><span class="pre">nightly</span></code> test suite includes the test cases used
@@ -137,6 +143,7 @@ for regression testing of MPAS-Ocean.  Here are the tests included:</p>
 ocean/baroclinic_channel/10km/threads_test
 ocean/baroclinic_channel/10km/decomp_test
 ocean/baroclinic_channel/10km/restart_test
+
 ocean/global_ocean/QU240/mesh
 ocean/global_ocean/QU240/PHC/init
 ocean/global_ocean/QU240/PHC/performance_test
@@ -144,18 +151,36 @@ ocean/global_ocean/QU240/PHC/restart_test
 ocean/global_ocean/QU240/PHC/decomp_test
 ocean/global_ocean/QU240/PHC/threads_test
 ocean/global_ocean/QU240/PHC/analysis_test
+
 ocean/global_ocean/QU240/PHC/RK4/performance_test
 ocean/global_ocean/QU240/PHC/RK4/restart_test
 ocean/global_ocean/QU240/PHC/RK4/decomp_test
 ocean/global_ocean/QU240/PHC/RK4/threads_test
-ocean/global_ocean/QU240/EN4_1900/init
-ocean/global_ocean/QU240/EN4_1900/performance_test
-ocean/global_ocean/QU240/PHC_BGC/init
-ocean/global_ocean/QU240/PHC_BGC/performance_test
-ocean/ice_shelf_2d/5km/restart_test
+
+ocean/global_ocean/QUwISC240/mesh
+  cached
+ocean/global_ocean/QUwISC240/PHC/init
+  cached
+ocean/global_ocean/QUwISC240/PHC/performance_test
+
+ocean/ice_shelf_2d/5km/z-star/restart_test
+ocean/ice_shelf_2d/5km/z-level/restart_test
+
 ocean/ziso/20km/default
 ocean/ziso/20km/with_frazil
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Some tests have “cached” steps, meaning those steps (or the entire test
+case if no specific steps are listed) aren’t run but instead the results
+of a previous run are simply downloaded.  This is used to skip steps that
+are prohibitively time consuming during regression testing, but where the
+results are needed to run subsequent tests.  An example above is the
+<code class="docutils literal notranslate"><span class="pre">mesh</span></code> and <code class="docutils literal notranslate"><span class="pre">PHC/init</span></code> test cases from the <code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/</span></code>
+test group on the <code class="docutils literal notranslate"><span class="pre">QUwISC240</span></code> mesh.  These tests take several minutes to
+run, which is longer than we wish to take for a quick performance test,
+so they are cached instead.</p>
 </div>
 <p>Including the <code class="docutils literal notranslate"><span class="pre">-v</span></code> verbose argument to <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">list</span> <span class="pre">--suites</span></code> will
 print the tests belonging to each given suite.</p>
