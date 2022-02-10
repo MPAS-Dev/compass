@@ -12,7 +12,7 @@ from mpas_tools.logging import check_call
 
 from compass.step import Step
 from compass.model import make_graph_file
-from compass.landice.mesh import gridded_flood_fill
+from compass.landice.mesh import gridded_flood_fill, set_geom_points_and_edges
 
 
 class Mesh(Step):
@@ -198,19 +198,7 @@ class Mesh(Step):
         xx1 = -975432
         yy0 = -901349
         yy1 = 0
-        geom_points = np.array([  # list of xy "node" coordinates
-            ((xx0, yy0), 0),
-            ((xx1, yy0), 0),
-            ((xx1, yy1), 0),
-            ((xx0, yy1), 0)],
-            dtype=jigsawpy.jigsaw_msh_t.VERT2_t)
-
-        geom_edges = np.array([    # list of "edges" between nodes
-            ((0, 1), 0),
-            ((1, 2), 0),
-            ((2, 3), 0),
-            ((3, 0), 0)],
-            dtype=jigsawpy.jigsaw_msh_t.EDGE2_t)
+        geom_points, geom_edges = set_geom_points_and_edges(xx0, xx1, yy0, yy1)
 
         # Remove ice not connected to the ice sheet.
         floodMask = gridded_flood_fill(thk)
