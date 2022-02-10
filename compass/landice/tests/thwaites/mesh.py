@@ -12,7 +12,7 @@ from mpas_tools.logging import check_call
 
 from compass.step import Step
 from compass.model import make_graph_file
-
+from compass.landice.mesh import gridded_flood_fill
 
 class Mesh(Step):
     """
@@ -201,48 +201,8 @@ class Mesh(Step):
             ((3, 0), 0)],
             dtype=jigsawpy.jigsaw_msh_t.EDGE2_t)
 
-        # flood fill to remove island, icecaps, etc.
-        searchedMask = np.zeros(sz)
-        floodMask = np.zeros(sz)
-        iStart = sz[0] // 2
-        jStart = sz[1] // 2
-        floodMask[iStart, jStart] = 1
-
-        neighbors = np.array([[1, 0], [-1, 0], [0, 1], [0, -1]])
-
-        lastSearchList = np.ravel_multi_index([[iStart], [jStart]],
-                                              sz, order='F')
-
-        # flood fill -------------------
-        cnt = 0
-        while len(lastSearchList) > 0:
-            # print(cnt)
-            cnt += 1
-            newSearchList = np.array([], dtype='i')
-
-            for iii in range(len(lastSearchList)):
-                [i, j] = np.unravel_index(lastSearchList[iii], sz, order='F')
-                # search neighbors
-                for n in neighbors:
-                    ii = i + n[0]
-                    jj = j + n[1]  # subscripts to neighbor
-                    # only consider unsearched neighbors
-                    if searchedMask[ii, jj] == 0:
-                        searchedMask[ii, jj] = 1  # mark as searched
-
-                        if thk[ii, jj] > 0.0:
-                            floodMask[ii, jj] = 1  # mark as ice
-                            # add to list of newly found  cells
-                            newSearchList = np.append(newSearchList,
-                                                      np.ravel_multi_index(
-                                                          [[ii], [jj]], sz,
-                                                          order='F')[0])
-            lastSearchList = newSearchList
-        # optional - plot flood mask
-        # plt.pcolor(floodMask)
-        # plt.show()
-
-        # apply flood fill
+        # Remove ice not connected to the ice sheet.
+        floodMask = gridded_flood_fill(thk)
         thk[floodMask == 0] = 0.0
         vx[floodMask == 0] = 0.0
         vy[floodMask == 0] = 0.0
