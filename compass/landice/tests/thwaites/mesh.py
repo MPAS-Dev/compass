@@ -14,6 +14,7 @@ from compass.step import Step
 from compass.model import make_graph_file
 from compass.landice.mesh import gridded_flood_fill
 
+
 class Mesh(Step):
     """
     A step for creating a mesh and initial condition for thwaites test cases
@@ -52,81 +53,90 @@ class Mesh(Step):
     def run(self):
         """
         Run this step of the test case
-       """
+        """
         logger = self.logger
-        try:
-            config = self.config
-            section = config['high_res_mesh']
-        except KeyError:
-            print('No config file; skipping')
+        config = self.config
+        section = config['high_res_mesh']
 
-        print('calling build_cell_width')
+        logger.info('calling build_cell_width')
         cell_width, x1, y1, geom_points, geom_edges = self.build_cell_width()
-        print('calling build_planar_mesh')
+        logger.info('calling build_planar_mesh')
         build_planar_mesh(cell_width, x1, y1, geom_points,
                           geom_edges, logger=logger)
         dsMesh = xarray.open_dataset('base_mesh.nc')
-        print('culling mesh')
+        logger.info('culling mesh')
         dsMesh = cull(dsMesh, logger=logger)
-        print('converting to MPAS mesh')
+        logger.info('converting to MPAS mesh')
         dsMesh = convert(dsMesh, logger=logger)
-        print('writing grid_converted.nc')
+        logger.info('writing grid_converted.nc')
         write_netcdf(dsMesh, 'grid_converted.nc')
-        # If no number of levels specified in config file, use 10
-        try:
-            levels = section.get('levels')
-        except NameError:
-            levels = '10'
-        print('calling create_landice_grid_from_generic_MPAS_grid.py')
+
+        levels = section.get('levels')
+
+        logger.info('calling create_landice_grid_from_generic_MPAS_grid.py')
         args = ['create_landice_grid_from_generic_MPAS_grid.py',
                 '-i', 'grid_converted.nc',
                 '-o', 'ase_1km_preCull.nc',
                 '-l', levels, '-v', 'glimmer']
         check_call(args, logger=logger)
 
-        print('calling interpolate_to_mpasli_grid.py')
+        # This step uses a subset of the whole Antarctica dataset trimmed to
+        # the Amundsen Sean Embayment, to speed up interpolation.
+        # This could also be replaced with the full Antarctic Ice Sheet
+        # dataset.
+        logger.info('calling interpolate_to_mpasli_grid.py')
         args = ['interpolate_to_mpasli_grid.py', '-s',
                 'antarctica_1km_2020_10_20_ASE.nc', '-d',
                 'ase_1km_preCull.nc', '-m', 'b', '-t']
 
         check_call(args, logger=logger)
 
-        print('calling define_cullMask.py')
-        args = ['define_cullMask.py', '-f',
-                'ase_1km_preCull.nc', '-m'
-                'distance', '-d', '10.0']
+        # This step is only necessary if you wish to cull a certain
+        # distance from the ice margin, within the bounds defined by
+        # the GeoJSON file.
+        cullDistance = section.get('cullDistance')
+        if float(cullDistance) > 0.:
+            logger.info('calling define_cullMask.py')
+            args = ['define_cullMask.py', '-f',
+                    'ase_1km_preCull.nc', '-m'
+                    'distance', '-d', cullDistance]
 
-        check_call(args, logger=logger)
+            check_call(args, logger=logger)
+        else:
+            logger.info('cullDistance <= 0 in config file. '
+                        'Will not cull by distance to margin. \n')
 
-        print('calling set_lat_lon_fields_in_planar_grid.py')
+        # This step is only necessary because the GeoJSON region
+        # is defined by lat-lon.
+        logger.info('calling set_lat_lon_fields_in_planar_grid.py')
         args = ['set_lat_lon_fields_in_planar_grid.py', '-f',
                 'ase_1km_preCull.nc', '-p', 'ais-bedmap2']
 
         check_call(args, logger=logger)
 
-        print('calling MpasMaskCreator.x')
+        logger.info('calling MpasMaskCreator.x')
         args = ['MpasMaskCreator.x', 'ase_1km_preCull.nc',
                 'thwaites_mask.nc', '-f', 'thwaites_minimal.geojson']
 
         check_call(args, logger=logger)
 
-        print('culling to geojson file')
+        logger.info('culling to geojson file')
         dsMesh = xarray.open_dataset('ase_1km_preCull.nc')
         thwaitesMask = xarray.open_dataset('thwaites_mask.nc')
         dsMesh = cull(dsMesh, dsInverse=thwaitesMask, logger=logger)
         write_netcdf(dsMesh, 'thwaites_culled.nc')
 
-        print('Marking horns for culling')
+        logger.info('Marking horns for culling')
         args = ['mark_horns_for_culling.py', '-f', 'thwaites_culled.nc']
         check_call(args, logger=logger)
 
-        print('culling and converting')
+        logger.info('culling and converting')
         dsMesh = xarray.open_dataset('thwaites_culled.nc')
         dsMesh = cull(dsMesh, logger=logger)
         dsMesh = convert(dsMesh, logger=logger)
         write_netcdf(dsMesh, 'thwaites_dehorned.nc')
 
-        print('calling create_landice_grid_from_generic_MPAS_grid.py')
+        logger.info('calling create_landice_grid_from_generic_MPAS_grid.py')
         args = ['create_landice_grid_from_generic_MPAS_grid.py', '-i',
                 'thwaites_dehorned.nc', '-o',
                 'Thwaites_1to8km.nc', '-l', levels, '-v', 'glimmer',
@@ -134,31 +144,40 @@ class Mesh(Step):
 
         check_call(args, logger=logger)
 
-        print('calling interpolate_to_mpasli_grid.py')
+        logger.info('calling interpolate_to_mpasli_grid.py')
         args = ['interpolate_to_mpasli_grid.py', '-s',
                 'antarctica_1km_2020_10_20_ASE.nc',
                 '-d', 'Thwaites_1to8km.nc', '-m', 'b', '-t']
         check_call(args, logger=logger)
 
-        print('Marking domain boundaries dirichlet')
+        logger.info('Marking domain boundaries dirichlet')
         args = ['mark_domain_boundaries_dirichlet.py',
                 '-f', 'Thwaites_1to8km.nc']
         check_call(args, logger=logger)
 
-        print('calling set_lat_lon_fields_in_planar_grid.py')
+        logger.info('calling set_lat_lon_fields_in_planar_grid.py')
         args = ['set_lat_lon_fields_in_planar_grid.py', '-f',
                 'Thwaites_1to8km.nc', '-p', 'ais-bedmap2']
         check_call(args, logger=logger)
 
-        print('creating graph.info')
+        logger.info('creating graph.info')
         make_graph_file(mesh_filename='Thwaites_1to8km.nc',
                         graph_filename='graph.info')
 
     def build_cell_width(self):
+        """
+        Determine MPAS mesh cell size based on user-defined density function.
 
+        This includes hard-coded definition of the extent of the regional
+        mesh and user-defined mesh density functions based on observed flow
+        speed and distance to the ice margin. In the future, this function
+        and its components will likely be separated into separate generalized
+        functions to be reusable by multiple test groups.
+        """
         # get needed fields from Antarctica dataset
         f = netCDF4.Dataset('antarctica_8km_2020_10_20.nc', 'r')
         f.set_auto_mask(False)  # disable masked arrays
+        logger = self.logger
 
         x1 = f.variables['x1'][:]
         y1 = f.variables['y1'][:]
@@ -167,22 +186,14 @@ class Mesh(Step):
         vx = f.variables['vx'][0, :, :]
         vy = f.variables['vy'][0, :, :]
 
-        # subset data - optional
-        step = 1
-        x1 = x1[::step]
-        y1 = y1[::step]
-        thk = thk[::step, ::step]
-        topg = topg[::step, ::step]
-        vx = vx[::step, ::step]
-        vy = vy[::step, ::step]
-
         dx = x1[1] - x1[0]  # assumed constant and equal in x and y
         nx = len(x1)
         ny = len(y1)
 
         sz = thk.shape
 
-        # define extent of region to mesh
+        # Define extent of region to mesh.
+        # These coords are specific to the Thwaites Glacier mesh.
         xx0 = -1864434
         xx1 = -975432
         yy0 = -901349
@@ -237,15 +248,18 @@ class Mesh(Step):
         distToEdge = np.zeros(sz)
         distToGroundingLine = np.zeros(sz)
 
-        # -- KEY PARAMETER: how big of a search 'box' (one-directional) to use.
+        # -- KEY PARAMETER: how big of a search 'box' (one-directional) to use
+        # to calculate the distance from each cell to the ice margin.
         # Bigger number makes search slower, but if too small, the transition
         # zone could get truncated. Could automatically set this from maxDist
-        # variables used in next section.)
+        # variables used in next section. Currently, this is only used to
+        # determine mesh spacing in ice-free areas in order to keep mesh
+        # density low in areas that will be culled.
         windowSize = 100.0e3
         # ---
 
         d = int(np.ceil(windowSize / dx))
-        # print(windowSize, d)
+        # logger.info(windowSize, d)
         rng = np.arange(-1*d, d, dtype='i')
         maxdist = float(d) * dx
 
