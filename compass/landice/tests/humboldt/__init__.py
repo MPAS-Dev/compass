@@ -33,12 +33,12 @@ class Humboldt(TestGroup):
         # currently, so instead test using 'none' (fixed velocity field from
         # input field) or 'sia'
         velo_solver = 'none'
-        for calving_law in ['floating', 'eigencalving',
+        for calving_law in ['none', 'floating', 'eigencalving',
                                 'specified_calving_velocity',
                                 'von_Mises_stress', 'damagecalving', 
                                 'ismip6_retreat']:
 
-                self.add_test_case(
+            self.add_test_case(
                     DecompositionTest(test_group=self,
                                       velo_solver=velo_solver,
                                       calving_law=calving_law,
