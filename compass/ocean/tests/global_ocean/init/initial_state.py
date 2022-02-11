@@ -31,6 +31,9 @@ class InitialState(Step):
         test_case : compass.ocean.tests.global_ocean.init.Init
             The test case this step belongs to
 
+        mesh : compass.ocean.tests.global_ocean.mesh.Mesh
+            The test case that creates the mesh used by this test case
+
         initial_condition : {'PHC', 'EN4_1900'}
             The initial condition dataset to use
 
