@@ -1,5 +1,7 @@
 from compass.testgroup import TestGroup
 from compass.landice.tests.humboldt.default import Default
+from compass.landice.tests.humboldt.decomposition_test \
+     import DecompositionTest
 
 
 class Humboldt(TestGroup):
@@ -15,3 +17,29 @@ class Humboldt(TestGroup):
 
         self.add_test_case(
             Default(test_group=self))
+
+        mesh_type='default' # Not currently used but expected to be added
+
+        for velo_solver in ['FO',]:
+
+            self.add_test_case(
+                    DecompositionTest(test_group=self,
+                                      velo_solver=velo_solver,
+                                      calving_law='none',
+                                      mesh_type=mesh_type))
+
+        # Create decomp tests for all calving laws.
+        # Note that FO velo solver is NOT BFB across decompositions
+        # currently, so instead test using 'none' (fixed velocity field from
+        # input field) or 'sia'
+        velo_solver = 'none'
+        for calving_law in ['floating', 'eigencalving',
+                                'specified_calving_velocity',
+                                'von_Mises_stress', 'damagecalving', 
+                                'ismip6_retreat']:
+
+                self.add_test_case(
+                    DecompositionTest(test_group=self,
+                                      velo_solver=velo_solver,
+                                      calving_law=calving_law,
+                                      mesh_type=mesh_type))
