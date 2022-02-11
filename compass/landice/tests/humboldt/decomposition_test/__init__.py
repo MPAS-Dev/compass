@@ -21,6 +21,9 @@ class DecompositionTest(TestCase):
     calving_law : str
         The calving law used for the test case
 
+    proc_list : list
+        The pair of processor count values to test over.
+        Function of velocity solver.
     """
 
     def __init__(self, test_group, velo_solver, calving_law, mesh_type):
@@ -59,8 +62,11 @@ class DecompositionTest(TestCase):
         # Note it will not include uReconstructX/Y or muFriction!
         # It will also add a few minutes run time to the test!
         #self.add_step(Mesh(test_case=self))
-
-        for procs in [1, 32]:
+        if self.velo_solver == 'FO':
+            self.proc_list = [16, 32]
+        else:
+            self.proc_list = [1, 32]
+        for procs in self.proc_list:
             name = '{}proc_run'.format(procs)
             self.add_step(
                 RunModel(test_case=self, name=name, subdir=name, cores=procs,
@@ -77,11 +83,13 @@ class DecompositionTest(TestCase):
         Test cases can override this method to perform validation of variables
         and timers
         """
+        run_dir1='{}proc_run'.format(self.proc_list[0])
+        run_dir2='{}proc_run'.format(self.proc_list[1])
         if self.velo_solver in {'sia', 'none'}:
             compare_variables(test_case=self,
                               variables=['thickness', 'normalVelocity'],
-                              filename1='1proc_run/output.nc',
-                              filename2='32proc_run/output.nc')
+                              filename1=run_dir1+'/output.nc',
+                              filename2=run_dir2+'/output.nc')
 
         elif self.velo_solver == 'FO':
             # validate thickness
@@ -90,8 +98,8 @@ class DecompositionTest(TestCase):
             l2_norm = 1.0e-12
             linf_norm = 1.0e-12
             compare_variables(test_case=self, variables=variable,
-                              filename1='1proc_run/output.nc',
-                              filename2='32proc_run/output.nc',
+                              filename1=run_dir1+'/output.nc',
+                              filename2=run_dir2+'/output.nc',
                               l1_norm=l1_norm, l2_norm=l2_norm,
                               linf_norm=linf_norm, quiet=False)
 
@@ -101,7 +109,7 @@ class DecompositionTest(TestCase):
             l2_norm = 1.0e-18
             linf_norm = 1.0e-19
             compare_variables(test_case=self, variables=variable,
-                              filename1='1proc_run/output.nc',
-                              filename2='32proc_run/output.nc',
+                              filename1=run_dir1+'/output.nc',
+                              filename2=run_dir2+'/output.nc',
                               l1_norm=l1_norm, l2_norm=l2_norm,
                               linf_norm=linf_norm, quiet=False)
