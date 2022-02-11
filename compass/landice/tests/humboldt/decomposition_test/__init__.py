@@ -1,6 +1,6 @@
 from compass.validate import compare_variables
 from compass.testcase import TestCase
-from compass.landice.tests.humboldt.mesh import Mesh
+#from compass.landice.tests.humboldt.mesh import Mesh
 from compass.landice.tests.humboldt.run_model import RunModel
 
 
@@ -55,7 +55,10 @@ class DecompositionTest(TestCase):
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
 
-        self.add_step(Mesh(test_case=self))
+        # Commented code to make use of mesh generation step
+        # Note it will not include uReconstructX/Y or muFriction!
+        # It will also add a few minutes run time to the test!
+        #self.add_step(Mesh(test_case=self))
 
         for procs in [1, 32]:
             name = '{}proc_run'.format(procs)

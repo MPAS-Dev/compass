@@ -1,4 +1,4 @@
-from compass.model import run_model
+from compass.model import run_model, make_graph_file
 from compass.step import Step
 
 
@@ -109,10 +109,18 @@ class RunModel(Step):
                 'compass.landice.tests.humboldt', 'streams.landice',
                 out_name='streams.{}'.format(suffix))
 
-        self.add_input_file(filename='landice_grid.nc',
-                            target='../mesh/Humboldt_1to10km.nc')
-        self.add_input_file(filename='graph.info',
-                            target='../mesh/graph.info')
+        # Commented code to make use of mesh generation step
+        # Note it will not include uReconstructX/Y or muFriction!
+        #self.add_input_file(filename='landice_grid.nc',
+        #                    target='../mesh/Humboldt_1to10km.nc')
+        #self.add_input_file(filename='graph.info',
+        #                    target='../mesh/graph.info')
+
+        # download and link the mesh
+        self.mesh_file = 'Humboldt_1to10km_r04_20210615.nc'
+        self.add_input_file(filename=self.mesh_file, target=self.mesh_file,
+                            database='')
+
         if velo_solver == 'FO':
             self.add_input_file(filename='albany_input.yaml',
                                 package='compass.landice.tests.humboldt',
@@ -128,6 +136,8 @@ class RunModel(Step):
         """
         Run this step of the test case
         """
+        make_graph_file(mesh_filename=self.mesh_file,
+                        graph_filename='graph.info')
         for suffix in self.suffixes:
             run_model(step=self, namelist='namelist.{}'.format(suffix),
                       streams='streams.{}'.format(suffix))
