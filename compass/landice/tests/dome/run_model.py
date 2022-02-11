@@ -11,6 +11,9 @@ class RunModel(Step):
     mesh_type : str
         The resolution or mesh type of the test case
 
+    velo_solver : str
+        The velocity solver used for the test case
+
     suffixes : list of str, optional
         a list of suffixes for namelist and streams files produced
         for this step.  Most steps most runs will just have a
