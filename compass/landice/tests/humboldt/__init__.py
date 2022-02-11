@@ -2,6 +2,7 @@ from compass.testgroup import TestGroup
 from compass.landice.tests.humboldt.default import Default
 from compass.landice.tests.humboldt.decomposition_test \
      import DecompositionTest
+from compass.landice.tests.humboldt.restart_test import RestartTest
 
 
 class Humboldt(TestGroup):
@@ -43,3 +44,9 @@ class Humboldt(TestGroup):
                                       velo_solver=velo_solver,
                                       calving_law=calving_law,
                                       mesh_type=mesh_type))
+
+            self.add_test_case(
+                    RestartTest(test_group=self,
+                                velo_solver=velo_solver,
+                                calving_law=calving_law,
+                                mesh_type=mesh_type))
