@@ -114,6 +114,7 @@
 <span class="kn">from</span> <span class="nn">mpas_tools.logging</span> <span class="kn">import</span> <span class="n">LoggingContext</span>
 <span class="kn">import</span> <span class="nn">mpas_tools.io</span>
 <span class="kn">from</span> <span class="nn">compass.parallel</span> <span class="kn">import</span> <span class="n">check_parallel_system</span><span class="p">,</span> <span class="n">set_cores_per_node</span>
+<span class="kn">from</span> <span class="nn">compass.logging</span> <span class="kn">import</span> <span class="n">log_method_call</span>
 
 
 <div class="viewcode-block" id="run_suite"><a class="viewcode-back" href="../../developers_guide/generated/compass.run.run_suite.html#compass.run.run_suite">[docs]</a><span class="k">def</span> <span class="nf">run_suite</span><span class="p">(</span><span class="n">suite_name</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -209,6 +210,8 @@
                     <span class="s1">&#39;test_case&#39;</span><span class="p">,</span> <span class="s1">&#39;steps_to_run&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
 
                 <span class="n">test_start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+                <span class="n">log_method_call</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="n">test_case</span><span class="o">.</span><span class="n">run</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">test_logger</span><span class="p">)</span>
+                <span class="n">test_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">test_case</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
                     <span class="n">run_status</span> <span class="o">=</span> <span class="n">success_str</span>
@@ -219,6 +222,10 @@
                     <span class="n">test_logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Exception raised in run()&#39;</span><span class="p">)</span>
 
                 <span class="k">if</span> <span class="n">test_pass</span><span class="p">:</span>
+                    <span class="n">test_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+                    <span class="n">log_method_call</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="n">test_case</span><span class="o">.</span><span class="n">validate</span><span class="p">,</span>
+                                    <span class="n">logger</span><span class="o">=</span><span class="n">test_logger</span><span class="p">)</span>
+                    <span class="n">test_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
                     <span class="k">try</span><span class="p">:</span>
                         <span class="n">test_case</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
                     <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
@@ -355,8 +362,14 @@
     <span class="k">with</span> <span class="n">LoggingContext</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">test_name</span><span class="p">)</span> <span class="k">as</span> <span class="n">logger</span><span class="p">:</span>
         <span class="n">test_case</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
         <span class="n">test_case</span><span class="o">.</span><span class="n">stdout_logger</span> <span class="o">=</span> <span class="n">logger</span>
+        <span class="n">log_method_call</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="n">test_case</span><span class="o">.</span><span class="n">run</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Running steps: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">steps_to_run</span><span class="p">)))</span>
         <span class="n">test_case</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">log_method_call</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="n">test_case</span><span class="o">.</span><span class="n">validate</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
         <span class="n">test_case</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span></div>
 
 
@@ -387,7 +400,13 @@
     <span class="k">with</span> <span class="n">LoggingContext</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">test_name</span><span class="p">)</span> <span class="k">as</span> <span class="n">logger</span><span class="p">:</span>
         <span class="n">test_case</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
         <span class="n">test_case</span><span class="o">.</span><span class="n">stdout_logger</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">log_method_call</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="n">test_case</span><span class="o">.</span><span class="n">run</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
         <span class="n">test_case</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">log_method_call</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="n">test_case</span><span class="o">.</span><span class="n">validate</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
         <span class="n">test_case</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span></div>
 
 

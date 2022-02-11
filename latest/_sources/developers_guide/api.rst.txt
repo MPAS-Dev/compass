@@ -185,6 +185,16 @@ io
    download
    symlink
 
+logging
+^^^^^^^
+
+.. currentmodule:: compass.logging
+
+.. autosummary::
+   :toctree: generated/
+
+   log_method_call
+
 model
 ^^^^^
 
