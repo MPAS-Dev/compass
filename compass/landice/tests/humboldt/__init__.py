@@ -29,6 +29,12 @@ class Humboldt(TestGroup):
                                       calving_law='none',
                                       mesh_type=mesh_type))
 
+            self.add_test_case(
+                    RestartTest(test_group=self,
+                                velo_solver=velo_solver,
+                                calving_law='none',
+                                mesh_type=mesh_type))
+
         # Create decomp tests for all calving laws.
         # Note that FO velo solver is NOT BFB across decompositions
         # currently, so instead test using 'none' (fixed velocity field from
@@ -38,6 +44,9 @@ class Humboldt(TestGroup):
                                 'specified_calving_velocity',
                                 'von_Mises_stress', 'damagecalving', 
                                 'ismip6_retreat']:
+
+                if velo_solver=='FO' and calving_law=='none':
+                    continue # already added above
 
                 self.add_test_case(
                     DecompositionTest(test_group=self,

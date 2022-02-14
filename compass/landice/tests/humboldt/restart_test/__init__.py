@@ -63,7 +63,7 @@ class RestartTest(TestCase):
         self.add_step(step)
 
         name = 'restart_run'
-        step = RunModel(test_case=self, name=name, subdir=name, cores=4,
+        step = RunModel(test_case=self, name=name, subdir=name, cores=12,
                         threads=1, velo_solver=velo_solver,
                         calving_law=self.calving_law,
                         mesh_type=mesh_type,
@@ -95,6 +95,8 @@ class RestartTest(TestCase):
         and timers
         """
         variables = ['thickness', 'normalVelocity']
+        if self.calving_law != 'none':
+            variables.append('calvingThickness')
         compare_variables(test_case=self, variables=variables,
                           filename1='full_run/output.nc',
                           filename2='restart_run/output.nc')

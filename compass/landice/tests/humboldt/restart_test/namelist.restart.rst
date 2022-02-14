@@ -1,5 +1,5 @@
-config_start_time = '0001-01-01_00:00:00'
-config_run_duration = '0001-00-00_00:00:00'
-config_dt = '0001-00-00_00:00:00'
+config_start_time = '2009-07-01_00:00:00'
+config_run_duration = '0002-00-00_00:00:00'
+config_dt = '0000-03-00_00:00:00'
 config_write_output_on_startup = .true.
 config_do_restart = .true.

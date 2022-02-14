@@ -121,6 +121,12 @@ class RunModel(Step):
         self.add_input_file(filename=self.mesh_file, target=self.mesh_file,
                             database='')
 
+        # download and link a forcing file.
+        # This is only needed by some calving laws, but is fine for all runs
+        self.mesh_file = 'Humboldt_only_1to10km_MIROC5-rcp85_ismip-gis.nc'
+        self.add_input_file(filename=self.mesh_file, target=self.mesh_file,
+                            database='')
+
         if velo_solver == 'FO':
             self.add_input_file(filename='albany_input.yaml',
                                 package='compass.landice.tests.humboldt',

@@ -85,9 +85,17 @@ class DecompositionTest(TestCase):
         """
         run_dir1='{}proc_run'.format(self.proc_list[0])
         run_dir2='{}proc_run'.format(self.proc_list[1])
+
+        var_list = ['thickness',]
+        if self.velo_solver == 'sia':
+            var_list.append('normalVelocity')
+        if self.calving_law != 'none':
+            var_list.append('calvingThickness')
+
         if self.velo_solver in {'sia', 'none'}:
+
             compare_variables(test_case=self,
-                              variables=['thickness', 'normalVelocity'],
+                              variables=var_list,
                               filename1=run_dir1+'/output.nc',
                               filename2=run_dir2+'/output.nc')
 
@@ -109,6 +117,16 @@ class DecompositionTest(TestCase):
             l2_norm = 1.0e-18
             linf_norm = 1.0e-19
             compare_variables(test_case=self, variables=variable,
+                              filename1=run_dir1+'/output.nc',
+                              filename2=run_dir2+'/output.nc',
+                              l1_norm=l1_norm, l2_norm=l2_norm,
+                              linf_norm=linf_norm, quiet=False)
+
+            if 'calvingThickness' in var_list:
+                l1_norm = 0.0
+                l2_norm = 0.0
+                linf_norm = 0.0
+                compare_variables(test_case=self, variables='calvingThickness',
                               filename1=run_dir1+'/output.nc',
                               filename2=run_dir2+'/output.nc',
                               l1_norm=l1_norm, l2_norm=l2_norm,

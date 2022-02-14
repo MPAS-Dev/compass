@@ -20,9 +20,9 @@ config_ocean_density = 1028.0
 config_sea_level = 0.0
 config_dynamic_thickness = 10.0
 
-config_dt = '0000-00-05_00:00:00'
+config_dt = '0000-04-00_00:00:00'
 config_time_integration = 'forward_euler'
-config_adaptive_timestep = .true.
+config_adaptive_timestep = .false.
 config_min_adaptive_timestep = 60
 config_max_adaptive_timestep = 3.154e7
 config_adaptive_timestep_CFL_fraction = 0.8
@@ -31,5 +31,11 @@ config_adaptive_timestep_force_interval = '0001-00-00_00:00:00'
 
 config_start_time = 2007-07-01_00:00:00
 
-config_run_duration = '0000-00-25_00:00:00'
+config_run_duration = '0005-00-01_00:00:00'
 config_block_decomp_file_prefix = 'graph.info.part.'
+
+config_AM_globalStats_enable = .true.
+config_AM_globalStats_compute_interval = 'output_interval'
+config_AM_globalStats_stream_name = 'globalStatsOutput'
+config_AM_globalStats_compute_on_startup = .true.
+config_AM_globalStats_write_on_startup = .true.
