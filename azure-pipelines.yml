@@ -44,6 +44,8 @@ jobs:
 
   - bash: |
       eval "$(conda shell.bash hook)"
+      # workaround based on recent failures
+      rm /usr/share/miniconda/pkgs/cache/*.json
       conda mambabuild -m ci/mpi_$(mpi)_python${PYTHON_VERSION}.yaml conda/recipe
     displayName: Build COMPASS metapackage
 
