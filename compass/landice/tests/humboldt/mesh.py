@@ -12,6 +12,7 @@ from mpas_tools.logging import check_call
 
 from compass.step import Step
 from compass.model import make_graph_file
+from compass.landice.mesh import gridded_flood_fill
 
 
 class Mesh(Step):
@@ -171,12 +172,10 @@ class Mesh(Step):
         Determine MPAS mesh cell size based on user-defined density function.
 
         This includes hard-coded definition of the extent of the regional
-        mesh, a flood-fill routine to ignore glaciers and ice caps not
-        connected to the ice sheet, and user-defined mesh density functions
-        based on observed flow speed and distance to the ice margin. In the
-        future, this function and its components will likely be separated
-        into separate generalized functions to be reusable by multiple test
-        groups.
+        mesh and user-defined mesh density functions based on observed flow
+        speed and distance to the ice margin. In the future, this function
+        and its components will likely be separated into separate generalized
+        functions to be reusable by multiple test groups.
         """
         # get needed fields from GIS dataset
         f = netCDF4.Dataset('greenland_8km_2020_04_20.epsg3413.nc', 'r')
@@ -215,50 +214,8 @@ class Mesh(Step):
             ((3, 0), 0)],
             dtype=jigsawpy.jigsaw_msh_t.EDGE2_t)
 
-        # flood fill to remove island, icecaps, etc.
-        searchedMask = np.zeros(sz)
-        floodMask = np.zeros(sz)
-        iStart = sz[0] // 2
-        jStart = sz[1] // 2
-        floodMask[iStart, jStart] = 1
-
-        neighbors = np.array([[1, 0], [-1, 0], [0, 1], [0, -1]])
-
-        lastSearchList = np.ravel_multi_index([[iStart], [jStart]],
-                                              sz, order='F')
-
-        # flood fill -------------------
-        # In the future this might become a separate function
-        # to be used by multiple test groups.
-        cnt = 0
-        while len(lastSearchList) > 0:
-            # logger.info(cnt)
-            cnt += 1
-            newSearchList = np.array([], dtype='i')
-
-            for iii in range(len(lastSearchList)):
-                [i, j] = np.unravel_index(lastSearchList[iii], sz, order='F')
-                # search neighbors
-                for n in neighbors:
-                    ii = i + n[0]
-                    jj = j + n[1]  # subscripts to neighbor
-                    # only consider unsearched neighbors
-                    if searchedMask[ii, jj] == 0:
-                        searchedMask[ii, jj] = 1  # mark as searched
-
-                        if thk[ii, jj] > 0.0:
-                            floodMask[ii, jj] = 1  # mark as ice
-                            # add to list of newly found  cells
-                            newSearchList = np.append(newSearchList,
-                                                      np.ravel_multi_index(
-                                                          [[ii], [jj]], sz,
-                                                          order='F')[0])
-            lastSearchList = newSearchList
-        # optional - plot flood mask
-        # plt.pcolor(floodMask)
-        # plt.show()
-
-        # apply flood fill
+        # Remove ice not connected to the ice sheet.
+        floodMask = gridded_flood_fill(thk)
         thk[floodMask == 0] = 0.0
         vx[floodMask == 0] = 0.0
         vy[floodMask == 0] = 0.0
