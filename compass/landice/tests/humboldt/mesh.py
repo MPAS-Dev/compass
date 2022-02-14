@@ -12,7 +12,7 @@ from mpas_tools.logging import check_call
 
 from compass.step import Step
 from compass.model import make_graph_file
-from compass.landice.mesh import flood_fill
+from compass.landice.mesh import gridded_flood_fill
 
 
 class Mesh(Step):
@@ -215,7 +215,7 @@ class Mesh(Step):
             dtype=jigsawpy.jigsaw_msh_t.EDGE2_t)
 
         # Remove ice not connected to the ice sheet.
-        floodMask = flood_fill(thk)
+        floodMask = gridded_flood_fill(thk)
         thk[floodMask == 0] = 0.0
         vx[floodMask == 0] = 0.0
         vy[floodMask == 0] = 0.0

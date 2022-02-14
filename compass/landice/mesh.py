@@ -1,24 +1,29 @@
 import numpy as np
 
 
-def flood_fill(thk):
+def gridded_flood_fill(field):
     """
-    Remove glaciers and ice-fields that are not connected to the ice sheet.
+    Generic flood-fill routine to create mask of connected elements
+    in the desired input array (field) from a gridded dataset. This
+    is generally used to remove glaciers and ice-fields that are not
+    connected to the ice sheet. Note that there may be more efficient
+    algorithms.
 
     Parameters
     ----------
-    thk : numpy.ndarray
-        Ice thickness from gridded dataset
+    field : numpy.ndarray
+        Array from gridded dataset to use for flood-fill.
+        Usually ice thickness.
 
     Returns
     -------
     floodMask : numpy.ndarray
-        Ice sheet mask calculated by the flood fill routine,
-        where ice connected to the ice sheet is 1 and
-        everything else is 0.
+        Mask calculated by the flood fill routine,
+        where cells connected to the ice sheet (or main feature)
+        are 1 and everything else is 0.
     """
 
-    sz = thk.shape
+    sz = field.shape
     searchedMask = np.zeros(sz)
     floodMask = np.zeros(sz)
     iStart = sz[0] // 2
@@ -45,7 +50,7 @@ def flood_fill(thk):
                 if searchedMask[ii, jj] == 0:
                     searchedMask[ii, jj] = 1  # mark as searched
 
-                    if thk[ii, jj] > 0.0:
+                    if field[ii, jj] > 0.0:
                         floodMask[ii, jj] = 1  # mark as ice
                         # add to list of newly found  cells
                         newSearchList = np.append(newSearchList,
