@@ -1,7 +1,7 @@
 from compass.testgroup import TestGroup
-from compass.ocean.tests.ziso.default import Default
 from compass.ocean.tests.ziso.with_frazil import WithFrazil
 from compass.config import add_config
+from compass.ocean.tests.ziso.ziso_test_case import ZisoTestCase
 
 
 class Ziso(TestGroup):
@@ -15,9 +15,17 @@ class Ziso(TestGroup):
         """
         super().__init__(mpas_core=mpas_core, name='ziso')
 
-        for resolution in ['20km']:
+        for resolution in ['2.5km', '5km', '10km', '20km']:
             self.add_test_case(
-                Default(test_group=self, resolution=resolution))
+                ZisoTestCase(test_group=self, resolution=resolution,
+                             with_particles=False, long=False))
+            self.add_test_case(
+                ZisoTestCase(test_group=self, resolution=resolution,
+                             with_particles=False, long=True))
+            self.add_test_case(
+                ZisoTestCase(test_group=self, resolution=resolution,
+                             with_particles=True, long=False))
+        for resolution in ['20km']:
             self.add_test_case(
                 WithFrazil(test_group=self, resolution=resolution))
 
@@ -39,7 +47,16 @@ def configure(name, resolution, config):
     """
     res_params = {'20km': {'nx': 50,
                            'ny': 112,
-                           'dc': 20e3}}
+                           'dc': 20e3},
+                  '10km': {'nx': 100,
+                           'ny': 228,
+                           'dc': 10e3},
+                  '5km': {'nx': 200,
+                          'ny': 460,
+                          'dc': 5e3},
+                  '2.5km': {'nx': 400,
+                            'ny': 922,
+                            'dc': 2.5e3}}
 
     if resolution not in res_params:
         raise ValueError('Unsupported resolution {}. Supported values are: '

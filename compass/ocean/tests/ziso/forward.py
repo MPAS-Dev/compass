@@ -19,8 +19,8 @@ class Forward(Step):
         whether the run includes frazil formation
     """
     def __init__(self, test_case, resolution, name='forward', subdir=None,
-                 cores=1, min_cores=None, threads=1, with_analysis=False,
-                 with_frazil=False):
+                 with_analysis=False, with_frazil=False, long=False,
+                 with_particles=False):
         """
         Create a new test case
 
@@ -38,54 +38,114 @@ class Forward(Step):
         subdir : str, optional
             the subdirectory for the step.  The default is ``name``
 
-        cores : int, optional
-            the number of cores the step would ideally use.  If fewer cores
-            are available on the system, the step will run on all available
-            cores as long as this is not below ``min_cores``
-
-        min_cores : int, optional
-            the number of cores the step requires.  If the system has fewer
-            than this number of cores, the step will fail
-
-        threads : int, optional
-            the number of threads the step will use
-
         with_analysis : bool, optional
             whether analysis members are enabled as part of the run
 
         with_frazil : bool, optional
             whether the run includes frazil formation
+
+        long : bool, optional
+            Whether to run a long (3-year) simulation to quasi-equilibrium
+
+        with_particles : bool, optional
+            Whether particles are include in the simulation
         """
+        self.with_particles = with_particles
         self.resolution = resolution
         self.with_analysis = with_analysis
         self.with_frazil = with_frazil
-        if min_cores is None:
-            min_cores = cores
+        res_params = {'20km': {'cores': 20,
+                               'min_cores': 2,
+                               'cores_with_particles': 32,
+                               'min_cores_with_particles': 12,
+                               'dt': "'00:12:00'",
+                               'btr_dt': "'00:00:36'",
+                               'mom_del4': "5.0e10",
+                               'run_duration': "'0000_00:36:00'"},
+                      '10km': {'cores': 80,
+                               'min_cores': 8,
+                               'cores_with_particles': 130,
+                               'min_cores_with_particles': 50,
+                               'dt': "'00:06:00'",
+                               'btr_dt': "'00:00:18'",
+                               'mom_del4': "6.25e9",
+                               'run_duration': "'0000_00:18:00'"},
+                      '5km': {'cores': 300,
+                              'min_cores': 30,
+                              'cores_with_particles': 500,
+                              'min_cores_with_particles': 200,
+                              'dt': "'00:03:00'",
+                              'btr_dt': "'00:00:09'",
+                              'mom_del4': "7.8e8",
+                              'run_duration': "'0000_00:09:00'"},
+                      '2.5km': {'cores': 1200,
+                                'min_cores': 120,
+                                'cores_with_particles': 2100,
+                                'min_cores_with_particles': 900,
+                                'dt': "'00:01:30'",
+                                'btr_dt': "'00:00:04'",
+                                'mom_del4': "9.8e7",
+                                'run_duration': "'0000_00:04:30'"}}
+
+        if resolution not in res_params:
+            raise ValueError(
+                f'Unsupported resolution {resolution}. Supported values are: '
+                f'{list(res_params)}')
+
+        res_params = res_params[resolution]
+
+        if with_particles:
+            cores = res_params['cores_with_particles']
+            min_cores = res_params['min_cores_with_particles']
+        else:
+            cores = res_params['cores']
+            min_cores = res_params['min_cores']
+
         super().__init__(test_case=test_case, name=name, subdir=subdir,
-                         cores=cores, min_cores=min_cores, threads=threads)
+                         cores=cores, min_cores=min_cores, threads=1)
 
         # make sure output is double precision
         self.add_streams_file('compass.ocean.streams', 'streams.output')
 
         self.add_namelist_file('compass.ocean.tests.ziso', 'namelist.forward')
-        self.add_streams_file('compass.ocean.tests.ziso', 'streams.forward')
+        if long:
+            output_interval = "0010_00:00:00"
+            restart_interval = "0010_00:00:00"
+        else:
+            output_interval = res_params['run_duration'].replace("'", "")
+            restart_interval = "0030_00:00:00"
+        replacements = dict(
+            output_interval=output_interval, restart_interval=restart_interval)
+        self.add_streams_file(package='compass.ocean.tests.ziso',
+                              streams='streams.forward',
+                              template_replacements=replacements)
+        options = dict()
+        for option in ['dt', 'btr_dt', 'mom_del4', 'run_duration']:
+            options[f'config_{option}'] = res_params[option]
+        if long:
+            # run for 3 years instead of 3 time steps
+            options['config_start_time'] = "'0001-01-01_00:00:00'"
+            options['config_stop_time'] = "'0004-01-01_00:00:00'"
+            options['config_run_duration'] = "'none'"
 
+        self.add_namelist_options(options=options)
         if with_analysis:
             self.add_namelist_file('compass.ocean.tests.ziso',
                                    'namelist.analysis')
             self.add_streams_file('compass.ocean.tests.ziso',
                                   'streams.analysis')
 
+        if with_particles:
+            self.add_namelist_file('compass.ocean.tests.ziso',
+                                   'namelist.particles')
+            self.add_streams_file('compass.ocean.tests.ziso',
+                                  'streams.particles')
+
         if with_frazil:
             self.add_namelist_options(
                 {'config_use_frazil_ice_formation': '.true.'})
             self.add_streams_file('compass.ocean.streams', 'streams.frazil')
             self.add_output_file('frazil.nc')
-
-        self.add_namelist_file('compass.ocean.tests.ziso',
-                               'namelist.{}.forward'.format(resolution))
-        self.add_streams_file('compass.ocean.tests.ziso',
-                              'streams.{}.forward'.format(resolution))
 
         self.add_input_file(filename='init.nc',
                             target='../initial_state/ocean.nc')
@@ -98,7 +158,7 @@ class Forward(Step):
 
         self.add_output_file(filename='output/output.0001-01-01_00.00.00.nc')
 
-        if with_analysis:
+        if with_analysis and with_particles:
             self.add_output_file(
                 filename='analysis_members/lagrPartTrack.0001-01-01_00.00.00.nc')
 
@@ -108,9 +168,13 @@ class Forward(Step):
         """
         Run this step of the test case
         """
-        cores = self.cores
-        partition(cores, self.config, self.logger)
-        particles.write(init_filename='init.nc', particle_filename='particles.nc',
-                        graph_filename='graph.info.part.{}'.format(cores),
-                        types='buoyancy')
-        run_model(self, partition_graph=False)
+        if self.with_particles:
+            cores = self.cores
+            partition(cores, self.config, self.logger)
+            particles.write(init_filename='init.nc',
+                            particle_filename='particles.nc',
+                            graph_filename='graph.info.part.{}'.format(cores),
+                            types='buoyancy')
+            run_model(self, partition_graph=False)
+        else:
+            run_model(self, partition_graph=True)
