@@ -1,6 +1,5 @@
 import numpy as np
 import netCDF4
-import jigsawpy
 import xarray
 from matplotlib import pyplot as plt
 
@@ -12,7 +11,8 @@ from mpas_tools.logging import check_call
 
 from compass.step import Step
 from compass.model import make_graph_file
-from compass.landice.mesh import gridded_flood_fill, set_geom_points_and_edges
+from compass.landice.mesh import gridded_flood_fill, \
+                                 set_rectangular_geom_points_and_edges
 
 
 class Mesh(Step):
@@ -178,6 +178,8 @@ class Mesh(Step):
         f = netCDF4.Dataset('antarctica_8km_2020_10_20.nc', 'r')
         f.set_auto_mask(False)  # disable masked arrays
         logger = self.logger
+        config = self.config
+        section = config['high_res_mesh']
 
         x1 = f.variables['x1'][:]
         y1 = f.variables['y1'][:]
@@ -198,7 +200,8 @@ class Mesh(Step):
         xx1 = -975432
         yy0 = -901349
         yy1 = 0
-        geom_points, geom_edges = set_geom_points_and_edges(xx0, xx1, yy0, yy1)
+        geom_points, geom_edges = set_rectangular_geom_points_and_edges(
+                                                           xx0, xx1, yy0, yy1)
 
         # Remove ice not connected to the ice sheet.
         floodMask = gridded_flood_fill(thk)
@@ -206,123 +209,6 @@ class Mesh(Step):
         vx[floodMask == 0] = 0.0
         vy[floodMask == 0] = 0.0
 
-        # make masks -------------------
-        neighbors = np.array([[1, 0], [-1, 0], [0, 1], [0, -1],
-                              [1, 1], [-1, 1], [1, -1], [-1, -1]])
-
-        iceMask = thk > 0.0
-        groundedMask = thk > (-1028.0 / 910.0 * topg)
-        floatingMask = np.logical_and(thk < (-1028.0 /
-                                             910.0 * topg), thk > 0.0)
-        marginMask = np.zeros(sz, dtype='i')
-        groundingLineMask = np.zeros(sz, dtype='i')
-
-        for n in neighbors:
-            notIceMask = np.logical_not(np.roll(iceMask, n, axis=[0, 1]))
-            marginMask = np.logical_or(marginMask, notIceMask)
-
-            notGroundedMask = np.logical_not(np.roll(groundedMask,
-                                                     n, axis=[0, 1]))
-            groundingLineMask = np.logical_or(groundingLineMask,
-                                              notGroundedMask)
-
-        # where ice exists and neighbors non-ice locations
-        marginMask = np.logical_and(marginMask, iceMask)
-        # optional - plot mask
-        # plt.pcolor(marginMask); plt.show()
-
-        # calc dist to margin -------------------
-        [XPOS, YPOS] = np.meshgrid(x1, y1)
-        distToEdge = np.zeros(sz)
-        distToGroundingLine = np.zeros(sz)
-
-        # -- KEY PARAMETER: how big of a search 'box' (one-directional) to use
-        # to calculate the distance from each cell to the ice margin.
-        # Bigger number makes search slower, but if too small, the transition
-        # zone could get truncated. Could automatically set this from maxDist
-        # variables used in next section. Currently, this is only used to
-        # determine mesh spacing in ice-free areas in order to keep mesh
-        # density low in areas that will be culled.
-        windowSize = 100.0e3
-        # ---
-
-        d = int(np.ceil(windowSize / dx))
-        # logger.info(windowSize, d)
-        rng = np.arange(-1*d, d, dtype='i')
-        maxdist = float(d) * dx
-
-        # just look over areas with ice
-        # ind = np.where(np.ravel(thk, order='F') > 0)[0]
-        ind = np.where(np.ravel(thk, order='F') >= 0)[0]  # do it everywhere
-        for iii in range(len(ind)):
-            [i, j] = np.unravel_index(ind[iii], sz, order='F')
-
-            irng = i + rng
-            jrng = j + rng
-
-            # only keep indices in the grid
-            irng = irng[np.nonzero(np.logical_and(irng >= 0, irng < ny))]
-            jrng = jrng[np.nonzero(np.logical_and(jrng >= 0, jrng < nx))]
-
-            dist2Here = ((XPOS[np.ix_(irng, jrng)] - x1[j])**2 +
-                         (YPOS[np.ix_(irng, jrng)] - y1[i])**2)**0.5
-
-            dist2HereEdge = dist2Here.copy()
-            dist2HereGroundingLine = dist2Here.copy()
-
-            dist2HereEdge[marginMask[np.ix_(irng, jrng)] == 0] = maxdist
-            dist2HereGroundingLine[groundingLineMask
-                                   [np.ix_(irng, jrng)] == 0] = maxdist
-
-            distToEdge[i, j] = dist2HereEdge.min()
-            distToGroundingLine[i, j] = dist2HereGroundingLine.min()
-        # optional - plot distance calculation
-        # plt.pcolor(distToEdge/1000.0); plt.colorbar(); plt.show()
-
-        # now create cell spacing function -------
-        speed = (vx**2 + vy**2)**0.5
-        lspd = np.log10(speed)
-        # threshold
-        # ls_min = 0
-        # ls_max = 3
-        # lspd(lspd<ls_min) = ls_min
-        # lspd(lspd>ls_max) = ls_max
-
-        # make dens fn mapping from log speed to cell spacing
-        minSpac = 1.0
-        maxSpac = 8.0
-        highLogSpeed = 2.5
-        lowLogSpeed = 0.75
-        spacing = np.interp(lspd, [lowLogSpeed, highLogSpeed],
-                            [maxSpac, minSpac], left=maxSpac, right=minSpac)
-        spacing[thk == 0.0] = minSpac
-        # plt.pcolor(spacing); plt.colorbar(); plt.show()
-
-        # make dens fn mapping for dist to ice margin
-        minSpac = 1.0
-        maxSpac = 8.0
-        highDist = 100.0 * 1000.0  # m
-        lowDist = 50.0 * 1000.0
-        spacing2 = np.interp(distToEdge, [lowDist, highDist],
-                             [minSpac, maxSpac], left=minSpac, right=maxSpac)
-        spacing2[thk == 0.0] = minSpac
-        # plt.pcolor(spacing2); plt.colorbar(); plt.show()
-
-        # make dens fn mapping for dist to grounding line
-        minSpac = 1.0
-        maxSpac = 8.0
-        highdist = 100.0 * 1000.0  # m
-        lowDist = 50.0 * 1000.0
-        spacing3 = np.interp(distToGroundingLine, [lowDist, highDist],
-                             [minSpac, maxSpac], left=minSpac, right=maxSpac)
-        spacing3[thk == 0.0] = minSpac
-        # merge cell spacing methods
-        cell_width = np.minimum(spacing, spacing2)
-        cell_width = np.minimum(cell_width, spacing3) * 1000.0
-        # put coarse res far out in non-ice area to keep mesh smaller in the
-        # part we are going to cull anyway (speeds up whole process)
-        cell_width[np.logical_and(thk == 0.0,
-                   distToEdge > 25.0e3)] = maxSpac * 1000.0
         # plt.pcolor(cell_width); plt.colorbar(); plt.show()
 
         # cell_width = 20000.0 * np.ones(thk.shape)
