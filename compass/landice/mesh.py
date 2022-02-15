@@ -65,7 +65,8 @@ def gridded_flood_fill(field):
 
 def set_geom_points_and_edges(xx0, xx1, yy0, yy1):
     """
-    Set node and edge coordinates to pass to build_planar_mesh().
+    Set node and edge coordinates to pass to 
+    :py:func:`mpas_tools.mesh.creation.build_mesh.build_planar_mesh()`.
 
     Parameters
     ----------
