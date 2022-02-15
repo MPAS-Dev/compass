@@ -63,7 +63,7 @@ def gridded_flood_fill(field):
     return floodMask
 
 
-def set_geom_points_and_edges(xmin, xmax, ymin, ymax):
+def set_rectangular_geom_points_and_edges(xmin, xmax, ymin, ymax):
     """
     Set node and edge coordinates to pass to
     :py:func:`mpas_tools.mesh.creation.build_mesh.build_planar_mesh()`.

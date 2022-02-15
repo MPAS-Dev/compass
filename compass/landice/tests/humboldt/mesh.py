@@ -1,6 +1,5 @@
 import numpy as np
 import netCDF4
-import jigsawpy
 import xarray
 from matplotlib import pyplot as plt
 
@@ -12,7 +11,8 @@ from mpas_tools.logging import check_call
 
 from compass.step import Step
 from compass.model import make_graph_file
-from compass.landice.mesh import gridded_flood_fill, set_geom_points_and_edges
+from compass.landice.mesh import gridded_flood_fill, \
+                                 set_rectangular_geom_points_and_edges
 
 
 class Mesh(Step):
@@ -200,8 +200,8 @@ class Mesh(Step):
         xx1 = 84000
         yy0 = -1560000
         yy1 = -860000
-        geom_points, geom_edges = set_geom_points_and_edges(xx0, xx1,
-                                                            yy0, yy1)
+        geom_points, geom_edges = set_rectangular_geom_points_and_edges(
+                                                           xx0, xx1, yy0, yy1)
 
         # Remove ice not connected to the ice sheet.
         floodMask = gridded_flood_fill(thk)
