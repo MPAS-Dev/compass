@@ -105,9 +105,9 @@
              
   <h1>Source code for compass.ocean.tests.ziso</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">compass.testgroup</span> <span class="kn">import</span> <span class="n">TestGroup</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.ziso.default</span> <span class="kn">import</span> <span class="n">Default</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.ziso.with_frazil</span> <span class="kn">import</span> <span class="n">WithFrazil</span>
 <span class="kn">from</span> <span class="nn">compass.config</span> <span class="kn">import</span> <span class="n">add_config</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.ziso.ziso_test_case</span> <span class="kn">import</span> <span class="n">ZisoTestCase</span>
 
 
 <div class="viewcode-block" id="Ziso"><a class="viewcode-back" href="../../../../developers_guide/ocean/generated/compass.ocean.tests.ziso.Ziso.html#compass.ocean.tests.ziso.Ziso">[docs]</a><span class="k">class</span> <span class="nc">Ziso</span><span class="p">(</span><span class="n">TestGroup</span><span class="p">):</span>
@@ -121,9 +121,17 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="n">mpas_core</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ziso&#39;</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">resolution</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;20km&#39;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">resolution</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;2.5km&#39;</span><span class="p">,</span> <span class="s1">&#39;5km&#39;</span><span class="p">,</span> <span class="s1">&#39;10km&#39;</span><span class="p">,</span> <span class="s1">&#39;20km&#39;</span><span class="p">]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
-                <span class="n">Default</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">))</span>
+                <span class="n">ZisoTestCase</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
+                             <span class="n">with_particles</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">long</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
+                <span class="n">ZisoTestCase</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
+                             <span class="n">with_particles</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">long</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
+                <span class="n">ZisoTestCase</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
+                             <span class="n">with_particles</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">long</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">resolution</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;20km&#39;</span><span class="p">]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
                 <span class="n">WithFrazil</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">))</span></div></div>
 
@@ -145,7 +153,16 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">res_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;20km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nx&#39;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
                            <span class="s1">&#39;ny&#39;</span><span class="p">:</span> <span class="mi">112</span><span class="p">,</span>
-                           <span class="s1">&#39;dc&#39;</span><span class="p">:</span> <span class="mf">20e3</span><span class="p">}}</span>
+                           <span class="s1">&#39;dc&#39;</span><span class="p">:</span> <span class="mf">20e3</span><span class="p">},</span>
+                  <span class="s1">&#39;10km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nx&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+                           <span class="s1">&#39;ny&#39;</span><span class="p">:</span> <span class="mi">228</span><span class="p">,</span>
+                           <span class="s1">&#39;dc&#39;</span><span class="p">:</span> <span class="mf">10e3</span><span class="p">},</span>
+                  <span class="s1">&#39;5km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nx&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+                          <span class="s1">&#39;ny&#39;</span><span class="p">:</span> <span class="mi">460</span><span class="p">,</span>
+                          <span class="s1">&#39;dc&#39;</span><span class="p">:</span> <span class="mf">5e3</span><span class="p">},</span>
+                  <span class="s1">&#39;2.5km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nx&#39;</span><span class="p">:</span> <span class="mi">400</span><span class="p">,</span>
+                            <span class="s1">&#39;ny&#39;</span><span class="p">:</span> <span class="mi">922</span><span class="p">,</span>
+                            <span class="s1">&#39;dc&#39;</span><span class="p">:</span> <span class="mf">2.5e3</span><span class="p">}}</span>
 
     <span class="k">if</span> <span class="n">resolution</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">res_params</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unsupported resolution </span><span class="si">{}</span><span class="s1">. Supported values are: &#39;</span>

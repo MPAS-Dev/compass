@@ -142,22 +142,11 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                          <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
-        <span class="n">res_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;20km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;min_cores&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}}</span>
-
-        <span class="k">if</span> <span class="n">resolution</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">res_params</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s1">&#39;Unsupported resolution </span><span class="si">{}</span><span class="s1">. Supported values are: &#39;</span>
-                <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">res_params</span><span class="p">)))</span>
-
-        <span class="n">res_params</span> <span class="o">=</span> <span class="n">res_params</span><span class="p">[</span><span class="n">resolution</span><span class="p">]</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
             <span class="n">InitialState</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
                          <span class="n">with_frazil</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
             <span class="n">Forward</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
-                    <span class="n">cores</span><span class="o">=</span><span class="n">res_params</span><span class="p">[</span><span class="s1">&#39;cores&#39;</span><span class="p">],</span>
-                    <span class="n">min_cores</span><span class="o">=</span><span class="n">res_params</span><span class="p">[</span><span class="s1">&#39;min_cores&#39;</span><span class="p">],</span>
                     <span class="n">with_analysis</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">with_frazil</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="WithFrazil.configure"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.ziso.with_frazil.WithFrazil.configure.html#compass.ocean.tests.ziso.with_frazil.WithFrazil.configure">[docs]</a>    <span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

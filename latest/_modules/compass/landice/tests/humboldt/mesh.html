@@ -119,6 +119,7 @@
 
 <span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
 <span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">make_graph_file</span>
+<span class="kn">from</span> <span class="nn">compass.landice.mesh</span> <span class="kn">import</span> <span class="n">gridded_flood_fill</span>
 
 
 <div class="viewcode-block" id="Mesh"><a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.humboldt.mesh.Mesh.html#compass.landice.tests.humboldt.mesh.Mesh">[docs]</a><span class="k">class</span> <span class="nc">Mesh</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
@@ -278,12 +279,10 @@
 <span class="sd">        Determine MPAS mesh cell size based on user-defined density function.</span>
 
 <span class="sd">        This includes hard-coded definition of the extent of the regional</span>
-<span class="sd">        mesh, a flood-fill routine to ignore glaciers and ice caps not</span>
-<span class="sd">        connected to the ice sheet, and user-defined mesh density functions</span>
-<span class="sd">        based on observed flow speed and distance to the ice margin. In the</span>
-<span class="sd">        future, this function and its components will likely be separated</span>
-<span class="sd">        into separate generalized functions to be reusable by multiple test</span>
-<span class="sd">        groups.</span>
+<span class="sd">        mesh and user-defined mesh density functions based on observed flow</span>
+<span class="sd">        speed and distance to the ice margin. In the future, this function</span>
+<span class="sd">        and its components will likely be separated into separate generalized</span>
+<span class="sd">        functions to be reusable by multiple test groups.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># get needed fields from GIS dataset</span>
         <span class="n">f</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="s1">&#39;greenland_8km_2020_04_20.epsg3413.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
@@ -322,50 +321,8 @@
             <span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">0</span><span class="p">)],</span>
             <span class="n">dtype</span><span class="o">=</span><span class="n">jigsawpy</span><span class="o">.</span><span class="n">jigsaw_msh_t</span><span class="o">.</span><span class="n">EDGE2_t</span><span class="p">)</span>
 
-        <span class="c1"># flood fill to remove island, icecaps, etc.</span>
-        <span class="n">searchedMask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">sz</span><span class="p">)</span>
-        <span class="n">floodMask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">sz</span><span class="p">)</span>
-        <span class="n">iStart</span> <span class="o">=</span> <span class="n">sz</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">//</span> <span class="mi">2</span>
-        <span class="n">jStart</span> <span class="o">=</span> <span class="n">sz</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">//</span> <span class="mi">2</span>
-        <span class="n">floodMask</span><span class="p">[</span><span class="n">iStart</span><span class="p">,</span> <span class="n">jStart</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-
-        <span class="n">neighbors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
-
-        <span class="n">lastSearchList</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel_multi_index</span><span class="p">([[</span><span class="n">iStart</span><span class="p">],</span> <span class="p">[</span><span class="n">jStart</span><span class="p">]],</span>
-                                              <span class="n">sz</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
-
-        <span class="c1"># flood fill -------------------</span>
-        <span class="c1"># In the future this might become a separate function</span>
-        <span class="c1"># to be used by multiple test groups.</span>
-        <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">lastSearchList</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="c1"># logger.info(cnt)</span>
-            <span class="n">cnt</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="n">newSearchList</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([],</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;i&#39;</span><span class="p">)</span>
-
-            <span class="k">for</span> <span class="n">iii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lastSearchList</span><span class="p">)):</span>
-                <span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unravel_index</span><span class="p">(</span><span class="n">lastSearchList</span><span class="p">[</span><span class="n">iii</span><span class="p">],</span> <span class="n">sz</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
-                <span class="c1"># search neighbors</span>
-                <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">neighbors</span><span class="p">:</span>
-                    <span class="n">ii</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="n">n</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-                    <span class="n">jj</span> <span class="o">=</span> <span class="n">j</span> <span class="o">+</span> <span class="n">n</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># subscripts to neighbor</span>
-                    <span class="c1"># only consider unsearched neighbors</span>
-                    <span class="k">if</span> <span class="n">searchedMask</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="n">jj</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                        <span class="n">searchedMask</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="n">jj</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># mark as searched</span>
-
-                        <span class="k">if</span> <span class="n">thk</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="n">jj</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
-                            <span class="n">floodMask</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="n">jj</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># mark as ice</span>
-                            <span class="c1"># add to list of newly found  cells</span>
-                            <span class="n">newSearchList</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">newSearchList</span><span class="p">,</span>
-                                                      <span class="n">np</span><span class="o">.</span><span class="n">ravel_multi_index</span><span class="p">(</span>
-                                                          <span class="p">[[</span><span class="n">ii</span><span class="p">],</span> <span class="p">[</span><span class="n">jj</span><span class="p">]],</span> <span class="n">sz</span><span class="p">,</span>
-                                                          <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
-            <span class="n">lastSearchList</span> <span class="o">=</span> <span class="n">newSearchList</span>
-        <span class="c1"># optional - plot flood mask</span>
-        <span class="c1"># plt.pcolor(floodMask)</span>
-        <span class="c1"># plt.show()</span>
-
-        <span class="c1"># apply flood fill</span>
+        <span class="c1"># Remove ice not connected to the ice sheet.</span>
+        <span class="n">floodMask</span> <span class="o">=</span> <span class="n">gridded_flood_fill</span><span class="p">(</span><span class="n">thk</span><span class="p">)</span>
         <span class="n">thk</span><span class="p">[</span><span class="n">floodMask</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="n">vx</span><span class="p">[</span><span class="n">floodMask</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="n">vy</span><span class="p">[</span><span class="n">floodMask</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>

@@ -126,8 +126,8 @@
 <span class="sd">        whether the run includes frazil formation</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="Forward.__init__"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.ziso.forward.Forward.html#compass.ocean.tests.ziso.forward.Forward.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_cores</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">with_analysis</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                 <span class="n">with_frazil</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+                 <span class="n">with_analysis</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">with_frazil</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">long</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">with_particles</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new test case</span>
 
@@ -145,54 +145,114 @@
 <span class="sd">        subdir : str, optional</span>
 <span class="sd">            the subdirectory for the step.  The default is ``name``</span>
 
-<span class="sd">        cores : int, optional</span>
-<span class="sd">            the number of cores the step would ideally use.  If fewer cores</span>
-<span class="sd">            are available on the system, the step will run on all available</span>
-<span class="sd">            cores as long as this is not below ``min_cores``</span>
-
-<span class="sd">        min_cores : int, optional</span>
-<span class="sd">            the number of cores the step requires.  If the system has fewer</span>
-<span class="sd">            than this number of cores, the step will fail</span>
-
-<span class="sd">        threads : int, optional</span>
-<span class="sd">            the number of threads the step will use</span>
-
 <span class="sd">        with_analysis : bool, optional</span>
 <span class="sd">            whether analysis members are enabled as part of the run</span>
 
 <span class="sd">        with_frazil : bool, optional</span>
 <span class="sd">            whether the run includes frazil formation</span>
+
+<span class="sd">        long : bool, optional</span>
+<span class="sd">            Whether to run a long (3-year) simulation to quasi-equilibrium</span>
+
+<span class="sd">        with_particles : bool, optional</span>
+<span class="sd">            Whether particles are include in the simulation</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">with_particles</span> <span class="o">=</span> <span class="n">with_particles</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">with_analysis</span> <span class="o">=</span> <span class="n">with_analysis</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">with_frazil</span> <span class="o">=</span> <span class="n">with_frazil</span>
-        <span class="k">if</span> <span class="n">min_cores</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">min_cores</span> <span class="o">=</span> <span class="n">cores</span>
+        <span class="n">res_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;20km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+                               <span class="s1">&#39;min_cores&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                               <span class="s1">&#39;cores_with_particles&#39;</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
+                               <span class="s1">&#39;min_cores_with_particles&#39;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
+                               <span class="s1">&#39;dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:12:00&#39;&quot;</span><span class="p">,</span>
+                               <span class="s1">&#39;btr_dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:00:36&#39;&quot;</span><span class="p">,</span>
+                               <span class="s1">&#39;mom_del4&#39;</span><span class="p">:</span> <span class="s2">&quot;5.0e10&quot;</span><span class="p">,</span>
+                               <span class="s1">&#39;run_duration&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;0000_00:36:00&#39;&quot;</span><span class="p">},</span>
+                      <span class="s1">&#39;10km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="mi">80</span><span class="p">,</span>
+                               <span class="s1">&#39;min_cores&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+                               <span class="s1">&#39;cores_with_particles&#39;</span><span class="p">:</span> <span class="mi">130</span><span class="p">,</span>
+                               <span class="s1">&#39;min_cores_with_particles&#39;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
+                               <span class="s1">&#39;dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:06:00&#39;&quot;</span><span class="p">,</span>
+                               <span class="s1">&#39;btr_dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:00:18&#39;&quot;</span><span class="p">,</span>
+                               <span class="s1">&#39;mom_del4&#39;</span><span class="p">:</span> <span class="s2">&quot;6.25e9&quot;</span><span class="p">,</span>
+                               <span class="s1">&#39;run_duration&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;0000_00:18:00&#39;&quot;</span><span class="p">},</span>
+                      <span class="s1">&#39;5km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span>
+                              <span class="s1">&#39;min_cores&#39;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span>
+                              <span class="s1">&#39;cores_with_particles&#39;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+                              <span class="s1">&#39;min_cores_with_particles&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+                              <span class="s1">&#39;dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:03:00&#39;&quot;</span><span class="p">,</span>
+                              <span class="s1">&#39;btr_dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:00:09&#39;&quot;</span><span class="p">,</span>
+                              <span class="s1">&#39;mom_del4&#39;</span><span class="p">:</span> <span class="s2">&quot;7.8e8&quot;</span><span class="p">,</span>
+                              <span class="s1">&#39;run_duration&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;0000_00:09:00&#39;&quot;</span><span class="p">},</span>
+                      <span class="s1">&#39;2.5km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="mi">1200</span><span class="p">,</span>
+                                <span class="s1">&#39;min_cores&#39;</span><span class="p">:</span> <span class="mi">120</span><span class="p">,</span>
+                                <span class="s1">&#39;cores_with_particles&#39;</span><span class="p">:</span> <span class="mi">2100</span><span class="p">,</span>
+                                <span class="s1">&#39;min_cores_with_particles&#39;</span><span class="p">:</span> <span class="mi">900</span><span class="p">,</span>
+                                <span class="s1">&#39;dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:01:30&#39;&quot;</span><span class="p">,</span>
+                                <span class="s1">&#39;btr_dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:00:04&#39;&quot;</span><span class="p">,</span>
+                                <span class="s1">&#39;mom_del4&#39;</span><span class="p">:</span> <span class="s2">&quot;9.8e7&quot;</span><span class="p">,</span>
+                                <span class="s1">&#39;run_duration&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;0000_00:04:30&#39;&quot;</span><span class="p">}}</span>
+
+        <span class="k">if</span> <span class="n">resolution</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">res_params</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;Unsupported resolution </span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">. Supported values are: &#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">res_params</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="n">res_params</span> <span class="o">=</span> <span class="n">res_params</span><span class="p">[</span><span class="n">resolution</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">with_particles</span><span class="p">:</span>
+            <span class="n">cores</span> <span class="o">=</span> <span class="n">res_params</span><span class="p">[</span><span class="s1">&#39;cores_with_particles&#39;</span><span class="p">]</span>
+            <span class="n">min_cores</span> <span class="o">=</span> <span class="n">res_params</span><span class="p">[</span><span class="s1">&#39;min_cores_with_particles&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cores</span> <span class="o">=</span> <span class="n">res_params</span><span class="p">[</span><span class="s1">&#39;cores&#39;</span><span class="p">]</span>
+            <span class="n">min_cores</span> <span class="o">=</span> <span class="n">res_params</span><span class="p">[</span><span class="s1">&#39;min_cores&#39;</span><span class="p">]</span>
+
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">,</span>
-                         <span class="n">cores</span><span class="o">=</span><span class="n">cores</span><span class="p">,</span> <span class="n">min_cores</span><span class="o">=</span><span class="n">min_cores</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="n">threads</span><span class="p">)</span>
+                         <span class="n">cores</span><span class="o">=</span><span class="n">cores</span><span class="p">,</span> <span class="n">min_cores</span><span class="o">=</span><span class="n">min_cores</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
         <span class="c1"># make sure output is double precision</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.streams&#39;</span><span class="p">,</span> <span class="s1">&#39;streams.output&#39;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.ziso&#39;</span><span class="p">,</span> <span class="s1">&#39;namelist.forward&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.ziso&#39;</span><span class="p">,</span> <span class="s1">&#39;streams.forward&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">long</span><span class="p">:</span>
+            <span class="n">output_interval</span> <span class="o">=</span> <span class="s2">&quot;0010_00:00:00&quot;</span>
+            <span class="n">restart_interval</span> <span class="o">=</span> <span class="s2">&quot;0010_00:00:00&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">output_interval</span> <span class="o">=</span> <span class="n">res_params</span><span class="p">[</span><span class="s1">&#39;run_duration&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">restart_interval</span> <span class="o">=</span> <span class="s2">&quot;0030_00:00:00&quot;</span>
+        <span class="n">replacements</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">output_interval</span><span class="o">=</span><span class="n">output_interval</span><span class="p">,</span> <span class="n">restart_interval</span><span class="o">=</span><span class="n">restart_interval</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">package</span><span class="o">=</span><span class="s1">&#39;compass.ocean.tests.ziso&#39;</span><span class="p">,</span>
+                              <span class="n">streams</span><span class="o">=</span><span class="s1">&#39;streams.forward&#39;</span><span class="p">,</span>
+                              <span class="n">template_replacements</span><span class="o">=</span><span class="n">replacements</span><span class="p">)</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;dt&#39;</span><span class="p">,</span> <span class="s1">&#39;btr_dt&#39;</span><span class="p">,</span> <span class="s1">&#39;mom_del4&#39;</span><span class="p">,</span> <span class="s1">&#39;run_duration&#39;</span><span class="p">]:</span>
+            <span class="n">options</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;config_</span><span class="si">{</span><span class="n">option</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">res_params</span><span class="p">[</span><span class="n">option</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">long</span><span class="p">:</span>
+            <span class="c1"># run for 3 years instead of 3 time steps</span>
+            <span class="n">options</span><span class="p">[</span><span class="s1">&#39;config_start_time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&#39;0001-01-01_00:00:00&#39;&quot;</span>
+            <span class="n">options</span><span class="p">[</span><span class="s1">&#39;config_stop_time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&#39;0004-01-01_00:00:00&#39;&quot;</span>
+            <span class="n">options</span><span class="p">[</span><span class="s1">&#39;config_run_duration&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&#39;none&#39;&quot;</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">with_analysis</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.ziso&#39;</span><span class="p">,</span>
                                    <span class="s1">&#39;namelist.analysis&#39;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.ziso&#39;</span><span class="p">,</span>
                                   <span class="s1">&#39;streams.analysis&#39;</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">with_particles</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.ziso&#39;</span><span class="p">,</span>
+                                   <span class="s1">&#39;namelist.particles&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.ziso&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;streams.particles&#39;</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">with_frazil</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span>
                 <span class="p">{</span><span class="s1">&#39;config_use_frazil_ice_formation&#39;</span><span class="p">:</span> <span class="s1">&#39;.true.&#39;</span><span class="p">})</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.streams&#39;</span><span class="p">,</span> <span class="s1">&#39;streams.frazil&#39;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="s1">&#39;frazil.nc&#39;</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.ziso&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;namelist.</span><span class="si">{}</span><span class="s1">.forward&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.ziso&#39;</span><span class="p">,</span>
-                              <span class="s1">&#39;streams.</span><span class="si">{}</span><span class="s1">.forward&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;init.nc&#39;</span><span class="p">,</span>
                             <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../initial_state/ocean.nc&#39;</span><span class="p">)</span>
@@ -205,7 +265,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;output/output.0001-01-01_00.00.00.nc&#39;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">with_analysis</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">with_analysis</span> <span class="ow">and</span> <span class="n">with_particles</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span>
                 <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;analysis_members/lagrPartTrack.0001-01-01_00.00.00.nc&#39;</span><span class="p">)</span></div>
 
@@ -215,12 +275,16 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run this step of the test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">cores</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cores</span>
-        <span class="n">partition</span><span class="p">(</span><span class="n">cores</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
-        <span class="n">particles</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">init_filename</span><span class="o">=</span><span class="s1">&#39;init.nc&#39;</span><span class="p">,</span> <span class="n">particle_filename</span><span class="o">=</span><span class="s1">&#39;particles.nc&#39;</span><span class="p">,</span>
-                        <span class="n">graph_filename</span><span class="o">=</span><span class="s1">&#39;graph.info.part.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cores</span><span class="p">),</span>
-                        <span class="n">types</span><span class="o">=</span><span class="s1">&#39;buoyancy&#39;</span><span class="p">)</span>
-        <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">partition_graph</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div></div>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_particles</span><span class="p">:</span>
+            <span class="n">cores</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cores</span>
+            <span class="n">partition</span><span class="p">(</span><span class="n">cores</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
+            <span class="n">particles</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">init_filename</span><span class="o">=</span><span class="s1">&#39;init.nc&#39;</span><span class="p">,</span>
+                            <span class="n">particle_filename</span><span class="o">=</span><span class="s1">&#39;particles.nc&#39;</span><span class="p">,</span>
+                            <span class="n">graph_filename</span><span class="o">=</span><span class="s1">&#39;graph.info.part.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cores</span><span class="p">),</span>
+                            <span class="n">types</span><span class="o">=</span><span class="s1">&#39;buoyancy&#39;</span><span class="p">)</span>
+            <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">partition_graph</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">partition_graph</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>
