@@ -204,3 +204,97 @@ def set_cell_width(self, section, thk, vx=None, vy=None,
                    dist_to_edge > (10. * cull_distance))] = max_spac
 
     return cell_width
+
+
+def get_dist_to_edge_and_GL(thk, topg, x, y, windowSize=1.e5):
+    """
+    Calculate distance from each point to ice edge and grounding line,
+    to be used in mesh density functions in
+    :py:func:`compass.landice.mesh.set_cell_width()`.
+
+    Parameters
+    ----------
+    thk : numpy.ndarray
+        Ice thickness field from gridded dataset,
+        usually after trimming to flood fill mask
+    topg : numpy.ndarray
+        Bed topography field from gridded dataset
+    x : numpy.ndarray
+        x coordinates from gridded dataset
+    y : numpy.ndarray
+        y coordinates from gridded dataset
+
+    Returns
+    -------
+    distToEdge : numpy.ndarray
+        Distance from each cell to the ice edge
+    distToGroundingLine : numpy.ndarray
+        Distance from each cell to the grounding line
+    """
+
+    dx = x[1] - x[0]  # assumed constant and equal in x and y
+    nx = len(x)
+    ny = len(y)
+    sz = thk.shape
+
+    # Create masks to define ice edge and grounding line
+    neighbors = np.array([[1, 0], [-1, 0], [0, 1], [0, -1],
+                          [1, 1], [-1, 1], [1, -1], [-1, -1]])
+
+    iceMask = thk > 0.0
+    groundedMask = thk > (-1028.0 / 910.0 * topg)
+    floatingMask = np.logical_and(thk < (-1028.0 /
+                                         910.0 * topg), thk > 0.0)
+    marginMask = np.zeros(sz, dtype='i')
+    groundingLineMask = np.zeros(sz, dtype='i')
+
+    for n in neighbors:
+        notIceMask = np.logical_not(np.roll(iceMask, n, axis=[0, 1]))
+        marginMask = np.logical_or(marginMask, notIceMask)
+
+        notGroundedMask = np.logical_not(np.roll(groundedMask,
+                                                 n, axis=[0, 1]))
+        groundingLineMask = np.logical_or(groundingLineMask,
+                                          notGroundedMask)
+
+    # where ice exists and neighbors non-ice locations
+    marginMask = np.logical_and(marginMask, iceMask)
+    # optional - plot mask
+    # plt.pcolor(marginMask); plt.show()
+
+    # Calculate dist to margin and grounding line
+    [XPOS, YPOS] = np.meshgrid(x, y)
+    distToEdge = np.zeros(sz)
+    distToGroundingLine = np.zeros(sz)
+
+    d = int(np.ceil(windowSize / dx))
+    rng = np.arange(-1*d, d, dtype='i')
+    maxdist = float(d) * dx
+
+    # just look over areas with ice
+    # ind = np.where(np.ravel(thk, order='F') > 0)[0]
+    ind = np.where(np.ravel(thk, order='F') >= 0)[0]  # do it everywhere
+    for iii in range(len(ind)):
+        [i, j] = np.unravel_index(ind[iii], sz, order='F')
+
+        irng = i + rng
+        jrng = j + rng
+
+        # only keep indices in the grid
+        irng = irng[np.nonzero(np.logical_and(irng >= 0, irng < ny))]
+        jrng = jrng[np.nonzero(np.logical_and(jrng >= 0, jrng < nx))]
+
+        dist2Here = ((XPOS[np.ix_(irng, jrng)] - x[j])**2 +
+                     (YPOS[np.ix_(irng, jrng)] - y[i])**2)**0.5
+
+        dist2HereEdge = dist2Here.copy()
+        dist2HereGroundingLine = dist2Here.copy()
+
+        dist2HereEdge[marginMask[np.ix_(irng, jrng)] == 0] = maxdist
+        dist2HereGroundingLine[groundingLineMask
+                               [np.ix_(irng, jrng)] == 0] = maxdist
+
+        distToEdge[i, j] = dist2HereEdge.min()
+        distToGroundingLine[i, j] = dist2HereGroundingLine.min()
+
+    return distToEdge, distToGroundingLine

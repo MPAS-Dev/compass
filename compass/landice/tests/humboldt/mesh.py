@@ -13,7 +13,7 @@ from compass.step import Step
 from compass.model import make_graph_file
 from compass.landice.mesh import gridded_flood_fill, \
                                  set_rectangular_geom_points_and_edges, \
-                                 set_cell_width
+                                 set_cell_width, get_dist_to_edge_and_GL
 
 
 class Mesh(Step):
@@ -210,60 +210,8 @@ class Mesh(Step):
         vx[floodMask == 0] = 0.0
         vy[floodMask == 0] = 0.0
 
-        # make masks -------------------
-        neighbors = np.array([[1, 0], [-1, 0], [0, 1], [0, -1],
-                              [1, 1], [-1, 1], [1, -1], [-1, -1]])
-
-        iceMask = thk > 0.0
-        # groundedMask = thk > (-1028.0 / 910.0 * topg)
-        # floatingMask = np.logical_and(thk < (-1028.0 /
-        #                               910.0 * topg), thk > 0.0)
-        marginMask = np.zeros(sz, dtype='i')
-        for n in neighbors:
-            marginMask = np.logical_or(marginMask,
-                                       np.logical_not(
-                                           np.roll(iceMask, n, axis=[0, 1])))
-        # where ice exists and neighbors non-ice locations
-        marginMask = np.logical_and(marginMask, iceMask)
-        # optional - plot mask
-        # plt.pcolor(marginMask); plt.show()
-
-        # calc dist to margin -------------------
-        [XPOS, YPOS] = np.meshgrid(x1, y1)
-        distToEdge = np.zeros(sz)
-
-        # -- KEY PARAMETER: how big of a search 'box' (one-directional) to use
-        # to calculate the distance from each cell to the ice margin.
-        # Bigger number makes search slower, but if too small, the transition
-        # zone could get truncated. Could automatically set this from maxDist
-        # variables used in next section. Currently, this is only used to
-        # determine mesh spacing in ice-free areas in order to keep mesh
-        # density low in areas that will be culled.
-        windowSize = 100.0e3
-        # ---
-
-        d = int(np.ceil(windowSize / dx))
-        # logger.info(windowSize, d)
-        rng = np.arange(-1*d, d, dtype='i')
-        maxdist = float(d) * dx
-
-        # just look over areas with ice
-        # ind = np.where(np.ravel(thk, order='F') > 0)[0]
-        ind = np.where(np.ravel(thk, order='F') >= 0)[0]  # do it everywhere
-        for iii in range(len(ind)):
-            [i, j] = np.unravel_index(ind[iii], sz, order='F')
-
-            irng = i + rng
-            jrng = j + rng
-
-            # only keep indices in the grid
-            irng = irng[np.nonzero(np.logical_and(irng >= 0, irng < ny))]
-            jrng = jrng[np.nonzero(np.logical_and(jrng >= 0, jrng < nx))]
-
-            dist2Here = ((XPOS[np.ix_(irng, jrng)] - x1[j])**2 +
-                         (YPOS[np.ix_(irng, jrng)] - y1[i])**2)**0.5
-            dist2Here[marginMask[np.ix_(irng, jrng)] == 0] = maxdist
-            distToEdge[i, j] = dist2Here.min()
+        distToEdge, distToGL = get_dist_to_edge_and_GL(thk, topg, x1,
+                                                       y1, windowSize=1.e5)
         # optional - plot distance calculation
         # plt.pcolor(distToEdge/1000.0); plt.colorbar(); plt.show()
 
