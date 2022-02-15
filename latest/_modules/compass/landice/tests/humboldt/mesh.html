@@ -107,7 +107,6 @@
   <h1>Source code for compass.landice.tests.humboldt.mesh</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">netCDF4</span>
-<span class="kn">import</span> <span class="nn">jigsawpy</span>
 <span class="kn">import</span> <span class="nn">xarray</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 
@@ -119,7 +118,8 @@
 
 <span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
 <span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">make_graph_file</span>
-<span class="kn">from</span> <span class="nn">compass.landice.mesh</span> <span class="kn">import</span> <span class="n">gridded_flood_fill</span>
+<span class="kn">from</span> <span class="nn">compass.landice.mesh</span> <span class="kn">import</span> <span class="n">gridded_flood_fill</span><span class="p">,</span> \
+                                 <span class="n">set_rectangular_geom_points_and_edges</span>
 
 
 <div class="viewcode-block" id="Mesh"><a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.humboldt.mesh.Mesh.html#compass.landice.tests.humboldt.mesh.Mesh">[docs]</a><span class="k">class</span> <span class="nc">Mesh</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
@@ -307,19 +307,8 @@
         <span class="n">xx1</span> <span class="o">=</span> <span class="mi">84000</span>
         <span class="n">yy0</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1560000</span>
         <span class="n">yy1</span> <span class="o">=</span> <span class="o">-</span><span class="mi">860000</span>
-        <span class="n">geom_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>  <span class="c1"># list of xy &quot;node&quot; coordinates</span>
-            <span class="p">((</span><span class="n">xx0</span><span class="p">,</span> <span class="n">yy0</span><span class="p">),</span> <span class="mi">0</span><span class="p">),</span>
-            <span class="p">((</span><span class="n">xx1</span><span class="p">,</span> <span class="n">yy0</span><span class="p">),</span> <span class="mi">0</span><span class="p">),</span>
-            <span class="p">((</span><span class="n">xx1</span><span class="p">,</span> <span class="n">yy1</span><span class="p">),</span> <span class="mi">0</span><span class="p">),</span>
-            <span class="p">((</span><span class="n">xx0</span><span class="p">,</span> <span class="n">yy1</span><span class="p">),</span> <span class="mi">0</span><span class="p">)],</span>
-            <span class="n">dtype</span><span class="o">=</span><span class="n">jigsawpy</span><span class="o">.</span><span class="n">jigsaw_msh_t</span><span class="o">.</span><span class="n">VERT2_t</span><span class="p">)</span>
-
-        <span class="n">geom_edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>    <span class="c1"># list of &quot;edges&quot; between nodes</span>
-            <span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">0</span><span class="p">),</span>
-            <span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="mi">0</span><span class="p">),</span>
-            <span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="mi">0</span><span class="p">),</span>
-            <span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">0</span><span class="p">)],</span>
-            <span class="n">dtype</span><span class="o">=</span><span class="n">jigsawpy</span><span class="o">.</span><span class="n">jigsaw_msh_t</span><span class="o">.</span><span class="n">EDGE2_t</span><span class="p">)</span>
+        <span class="n">geom_points</span><span class="p">,</span> <span class="n">geom_edges</span> <span class="o">=</span> <span class="n">set_rectangular_geom_points_and_edges</span><span class="p">(</span>
+                                                           <span class="n">xx0</span><span class="p">,</span> <span class="n">xx1</span><span class="p">,</span> <span class="n">yy0</span><span class="p">,</span> <span class="n">yy1</span><span class="p">)</span>
 
         <span class="c1"># Remove ice not connected to the ice sheet.</span>
         <span class="n">floodMask</span> <span class="o">=</span> <span class="n">gridded_flood_fill</span><span class="p">(</span><span class="n">thk</span><span class="p">)</span>
