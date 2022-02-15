@@ -12,7 +12,8 @@ from mpas_tools.logging import check_call
 from compass.step import Step
 from compass.model import make_graph_file
 from compass.landice.mesh import gridded_flood_fill, \
-                                 set_rectangular_geom_points_and_edges
+                                 set_rectangular_geom_points_and_edges, \
+                                 set_cell_width
 
 
 class Mesh(Step):
@@ -266,41 +267,11 @@ class Mesh(Step):
         # optional - plot distance calculation
         # plt.pcolor(distToEdge/1000.0); plt.colorbar(); plt.show()
 
-        # now create cell spacing function -------
-        speed = (vx**2 + vy**2)**0.5
-        lspd = np.log10(speed)
-        # threshold
-        # ls_min = 0
-        # ls_max = 3
-        # lspd(lspd<ls_min) = ls_min
-        # lspd(lspd>ls_max) = ls_max
+        # Set cell widths based on mesh parameters set in config file
+        cell_width = set_cell_width(self, section='humboldt', thk=thk,
+                                    vx=vx, vy=vy, distToEdge=distToEdge,
+                                    distToGroundingLine=None)
 
-        # make dens fn mapping from log speed to cell spacing
-        minSpac = 1.00
-        maxSpac = 10.0
-        highLogSpeed = 2.5
-        lowLogSpeed = 0.75
-        spacing = np.interp(lspd, [lowLogSpeed, highLogSpeed],
-                            [maxSpac, minSpac], left=maxSpac, right=minSpac)
-        spacing[thk == 0.0] = minSpac
-        # plt.pcolor(spacing); plt.colorbar(); plt.show()
-
-        # make dens fn mapping for dist to margin
-        minSpac = 1.0
-        maxSpac = 10.0
-        highDist = 100.0 * 1000.0  # m
-        lowDist = 10.0 * 1000.0
-        spacing2 = np.interp(distToEdge, [lowDist, highDist],
-                             [minSpac, maxSpac], left=minSpac, right=maxSpac)
-        spacing2[thk == 0.0] = minSpac
-        # plt.pcolor(spacing2); plt.colorbar(); plt.show()
-
-        # merge two cell spacing methods
-        cell_width = np.minimum(spacing, spacing2) * 1000.0
-        # put coarse res far out in non-ice area to keep mesh smaller in the
-        # part we are going to cull anyway (speeds up whole process)
-        cell_width[np.logical_and(thk == 0.0,
-                   distToEdge > 50.0e3)] = maxSpac * 1000.0
         # plt.pcolor(cell_width); plt.colorbar(); plt.show()
 
         return (cell_width.astype('float64'), x1.astype('float64'),

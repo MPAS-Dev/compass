@@ -28,6 +28,25 @@ The test group uses the following default config options:
     # to cull based on distance from margin.
     cullDistance = 5.0
 
+    # mesh density parameters
+    # minimum cell spacing (meters)
+    minSpac = 1.e3
+    # maximum cell spacing (meters)
+    maxSpac = 1.e4
+    # log10 of max speed (m/yr) for cell spacing
+    highLogSpeed = 2.5
+    # log10 of min speed (m/yr) for cell spacing
+    lowLogSpeed = 0.75
+    # distance at which cell spacing = maxSpac (meters)
+    highDist = 1.e5
+    # distance within which cell spacing = minSpac (meters)
+    lowDist = 1.e4
+    
+    # mesh density functions
+    useSpeed = True
+    useDistToGroundingLine = False
+    useDistToEdge = True
+
 default
 -------
 
