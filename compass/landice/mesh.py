@@ -223,6 +223,11 @@ def get_dist_to_edge_and_GL(thk, topg, x, y, windowSize=1.e5):
         x coordinates from gridded dataset
     y : numpy.ndarray
         y coordinates from gridded dataset
+    windowSize : int or float
+        Size (in meters) of a search 'box' (one-directional) to use
+        to calculate the distance from each cell to the ice margin.
+        Bigger number makes search slower, but if too small, the transition
+        zone could get truncated.
 
     Returns
     -------
