@@ -189,12 +189,6 @@ class Mesh(Step):
         vx = f.variables['vx'][0, :, :]
         vy = f.variables['vy'][0, :, :]
 
-        dx = x1[1] - x1[0]  # assumed constant and equal in x and y
-        nx = len(x1)
-        ny = len(y1)
-
-        sz = thk.shape
-
         # Define extent of region to mesh.
         # These coords are specific to the Humboldt Glacier mesh.
         xx0 = -630000
