@@ -1,4 +1,5 @@
 import numpy as np
+import jigsawpy
 
 
 def gridded_flood_fill(field):
@@ -60,3 +61,44 @@ def gridded_flood_fill(field):
         lastSearchList = newSearchList
 
     return floodMask
+
+
+def set_rectangular_geom_points_and_edges(xmin, xmax, ymin, ymax):
+    """
+    Set node and edge coordinates to pass to
+    :py:func:`mpas_tools.mesh.creation.build_mesh.build_planar_mesh()`.
+
+    Parameters
+    ----------
+    xmin : int or float
+        Left-most x-coordinate in region to mesh
+    xmax : int or float
+        Right-most x-coordinate in region to mesh
+    ymin : int or float
+        Bottom-most y-coordinate in region to mesh
+    ymax : int or float
+        Top-most y-coordinate in region to mesh
+
+    Returns
+    -------
+    geom_points : jigsawpy.jigsaw_msh_t.VERT2_t
+        xy node coordinates to pass to build_planar_mesh()
+    geom_edges : jigsawpy.jigsaw_msh_t.EDGE2_t
+        xy edge coordinates between nodes to pass to build_planar_mesh()
+    """
+
+    geom_points = np.array([  # list of xy "node" coordinates
+        ((xmin, ymin), 0),
+        ((xmax, ymin), 0),
+        ((xmax, ymax), 0),
+        ((xmin, ymax), 0)],
+        dtype=jigsawpy.jigsaw_msh_t.VERT2_t)
+
+    geom_edges = np.array([  # list of "edges" between nodes
+        ((0, 1), 0),
+        ((1, 2), 0),
+        ((2, 3), 0),
+        ((3, 0), 0)],
+        dtype=jigsawpy.jigsaw_msh_t.EDGE2_t)
+
+    return geom_points, geom_edges
