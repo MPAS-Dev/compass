@@ -111,7 +111,8 @@ def set_cell_width(self, section, thk, vx=None, vy=None,
     :py:func:`mpas_tools.mesh.creation.build_mesh.build_planar_mesh()`.
     Requires the following options to be set in the given config section:
     ``min_spac``, ``max_spac``, ``high_log_speed``, ``low_log_speed``,
-    ``high_dist``, ``low_dist``, and ``cull_distance``.
+    ``high_dist``, ``low_dist``,``cull_distance``, ``use_speed``,
+    ``use_dist_to_edge``, and ``use_dist_to_grounding_line``.
 
     Parameters
     ----------
@@ -123,20 +124,20 @@ def set_cell_width(self, section, thk, vx=None, vy=None,
     vx : numpy.ndarray, optional
         x-component of ice velocity from gridded dataset,
         usually after trimming to flood fill mask. Can be set to ``None``
-        if ``useSpeed == False`` in config file.
+        if ``use_speed == False`` in config file.
     vy : numpy.ndarray, optional
         y-component of ice velocity from gridded dataset,
         usually after trimming to flood fill mask. Can be set to ``None``
-        if ``useSpeed == False`` in config file.
+        if ``use_speed == False`` in config file.
     dist_to_edge : numpy.ndarray, optional
         Distance from each cell to ice edge, calculated in separate function.
-        Can be set to ``None`` if ``useDistToEdge == False`` in config file
-        and you do not want to set large cell_width where cells will be culled
-        anyway, but this is not recommended.
+        Can be set to ``None`` if ``use_dist_to_edge == False`` in config file
+        and you do not want to set large ``cell_width`` where cells will be
+        culled anyway, but this is not recommended.
     dist_to_grounding_line : numpy.ndarray, optional
         Distance from each cell to grounding line, calculated in separate
         function.  Can be set to ``None`` if
-        ``useDistToGroundingLine == False`` in config file.
+        ``use_dist_to_grounding_line == False`` in config file.
 
     Returns
     -------
@@ -155,7 +156,8 @@ def set_cell_width(self, section, thk, vx=None, vy=None,
     low_log_speed = float(section.get('low_log_speed'))
     high_dist = float(section.get('high_dist'))
     low_dist = float(section.get('low_dist'))
-    cull_distance = float(section.get('cull_distance')) * 1.e3  # convert km to m
+    # convert km to m
+    cull_distance = float(section.get('cull_distance')) * 1.e3
 
     # Make cell spacing function mapping from log speed to cell spacing
     if section.get('use_speed') == 'True':
