@@ -249,7 +249,7 @@ def get_dist_to_edge_and_GL(thk, topg, x, y, window_size=1.e5):
     ice_mask = thk > 0.0
     grounded_mask = thk > (-1028.0 / 910.0 * topg)
     floating_mask = np.logical_and(thk < (-1028.0 /
-                                         910.0 * topg), thk > 0.0)
+                                          910.0 * topg), thk > 0.0)
     margin_mask = np.zeros(sz, dtype='i')
     grounding_line_mask = np.zeros(sz, dtype='i')
 
@@ -258,7 +258,7 @@ def get_dist_to_edge_and_GL(thk, topg, x, y, window_size=1.e5):
         margin_mask = np.logical_or(margin_mask, not_ice_mask)
 
         not_grounded_mask = np.logical_not(np.roll(grounded_mask,
-                                                 n, axis=[0, 1]))
+                                                   n, axis=[0, 1]))
         grounding_line_mask = np.logical_or(grounding_line_mask,
                                             not_grounded_mask)
 
@@ -290,7 +290,7 @@ def get_dist_to_edge_and_GL(thk, topg, x, y, window_size=1.e5):
         jrng = jrng[np.nonzero(np.logical_and(jrng >= 0, jrng < nx))]
 
         dist_to_here = ((XPOS[np.ix_(irng, jrng)] - x[j])**2 +
-                     (YPOS[np.ix_(irng, jrng)] - y[i])**2)**0.5
+                        (YPOS[np.ix_(irng, jrng)] - y[i])**2)**0.5
 
         dist_to_here_edge = dist_to_here.copy()
         dist_to_here_grounding_line = dist_to_here.copy()

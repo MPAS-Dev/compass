@@ -204,7 +204,7 @@ class Mesh(Step):
         vx[floodMask == 0] = 0.0
         vy[floodMask == 0] = 0.0
 
-        # Calculate distance from each grid point to ice edge 
+        # Calculate distance from each grid point to ice edge
         # and grounding line, for use in cell spacing functions.
         distToEdge, distToGL = get_dist_to_edge_and_GL(thk, topg, x1,
                                                        y1, window_size=1.e5)
