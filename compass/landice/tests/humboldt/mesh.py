@@ -98,7 +98,7 @@ class Mesh(Step):
         # This step is only necessary if you wish to cull a certain
         # distance from the ice margin, within the bounds defined by
         # the GeoJSON file.
-        cullDistance = section.get('cullDistance')
+        cullDistance = section.get('cull_distance')
         if float(cullDistance) > 0.:
             logger.info('calling define_cullMask.py')
             args = ['define_cullMask.py', '-f',
@@ -269,8 +269,8 @@ class Mesh(Step):
 
         # Set cell widths based on mesh parameters set in config file
         cell_width = set_cell_width(self, section='humboldt', thk=thk,
-                                    vx=vx, vy=vy, distToEdge=distToEdge,
-                                    distToGroundingLine=None)
+                                    vx=vx, vy=vy, dist_to_edge=distToEdge,
+                                    dist_to_grounding_line=None)
 
         # plt.pcolor(cell_width); plt.colorbar(); plt.show()
 

@@ -105,10 +105,13 @@ def set_rectangular_geom_points_and_edges(xmin, xmax, ymin, ymax):
 
 
 def set_cell_width(self, section, thk, vx=None, vy=None,
-                   distToEdge=None, distToGroundingLine=None):
+                   dist_to_edge=None, dist_to_grounding_line=None):
     """
     Set cell widths based on settings in config file to pass to
     :py:func:`mpas_tools.mesh.creation.build_mesh.build_planar_mesh()`.
+    Requires the following options to be set in the given config section:
+    ``min_spac``, ``max_spac``, ``high_log_speed``, ``low_log_speed``,
+    ``high_dist``, ``low_dist``, and ``cull_distance``.
 
     Parameters
     ----------
@@ -119,21 +122,21 @@ def set_cell_width(self, section, thk, vx=None, vy=None,
         usually after trimming to flood fill mask
     vx : numpy.ndarray, optional
         x-component of ice velocity from gridded dataset,
-        usually after trimming to flood fill mask. Can be set to None
-        if useSpeed == 'False' in config file.
+        usually after trimming to flood fill mask. Can be set to ``None``
+        if ``useSpeed == False`` in config file.
     vy : numpy.ndarray, optional
         y-component of ice velocity from gridded dataset,
-        usually after trimming to flood fill mask. Can be set to None
-        if useSpeed == 'False' in config file.
+        usually after trimming to flood fill mask. Can be set to ``None``
+        if ``useSpeed == False`` in config file.
     dist_to_edge : numpy.ndarray, optional
         Distance from each cell to ice edge, calculated in separate function.
-        Can be set to None if useDistToEdge == 'False' in config file and you
-        do not want to set large cell_width where cells will be culled anyway,
-        but this is not recommended.
+        Can be set to ``None`` if ``useDistToEdge == False`` in config file
+        and you do not want to set large cell_width where cells will be culled
+        anyway, but this is not recommended.
     dist_to_grounding_line : numpy.ndarray, optional
         Distance from each cell to grounding line, calculated in separate
-        function.  Can be set to None if useDistToGroundingLine == 'False'
-        in config file.
+        function.  Can be set to ``None`` if
+        ``useDistToGroundingLine == False`` in config file.
 
     Returns
     -------
@@ -146,56 +149,56 @@ def set_cell_width(self, section, thk, vx=None, vy=None,
     section = self.config[section]
 
     # Get config inputs for cell spacing functions
-    minSpac = float(section.get('minSpac'))
-    maxSpac = float(section.get('maxSpac'))
-    highLogSpeed = float(section.get('highLogSpeed'))
-    lowLogSpeed = float(section.get('lowLogSpeed'))
-    highDist = float(section.get('highDist'))
-    lowDist = float(section.get('lowDist'))
-    cullDistance = float(section.get('cullDistance')) * 1.e3  # convert km to m
+    min_spac = float(section.get('min_spac'))
+    max_spac = float(section.get('max_spac'))
+    high_log_speed = float(section.get('high_log_speed'))
+    low_log_speed = float(section.get('low_log_speed'))
+    high_dist = float(section.get('high_dist'))
+    low_dist = float(section.get('low_dist'))
+    cull_distance = float(section.get('cull_distance')) * 1.e3  # convert km to m
 
     # Make cell spacing function mapping from log speed to cell spacing
-    if section.get('useSpeed') == 'True':
+    if section.get('use_speed') == 'True':
         logger.info('Using speed for cell spacing')
         speed = (vx**2 + vy**2)**0.5
         lspd = np.log10(speed)
-        spacing = np.interp(lspd, [lowLogSpeed, highLogSpeed],
-                            [maxSpac, minSpac], left=maxSpac,
-                            right=minSpac)
-        spacing[thk == 0.0] = minSpac
+        spacing = np.interp(lspd, [low_log_speed, high_log_speed],
+                            [max_spac, min_spac], left=max_spac,
+                            right=min_spac)
+        spacing[thk == 0.0] = min_spac
     else:
-        spacing = maxSpac*np.ones_like(thk)
+        spacing = max_spac*np.ones_like(thk)
 
     # Make cell spacing function mapping from distance to ice edge
-    if section.get('useDistToEdge') == 'True':
+    if section.get('use_dist_to_edge') == 'True':
         logger.info('Using distance to ice edge for cell spacing')
-        spacing2 = np.interp(distToEdge, [lowDist, highDist],
-                             [minSpac, maxSpac], left=minSpac,
-                             right=maxSpac)
-        spacing2[thk == 0.0] = minSpac
+        spacing2 = np.interp(dist_to_edge, [low_dist, high_dist],
+                             [min_spac, max_spac], left=min_spac,
+                             right=max_spac)
+        spacing2[thk == 0.0] = min_spac
     else:
-        spacing2 = maxSpac*np.ones_like(thk)
+        spacing2 = max_spac*np.ones_like(thk)
 
     # Make cell spacing function mapping from distance to grounding line
-    if section.get('useDistToGroundingLine') == 'True':
+    if section.get('use_dist_to_grounding_line') == 'True':
         logger.info('Using distance to grounding line for cell spacing')
-        spacing3 = np.interp(distToGroundingLine, [lowDist, highDist],
-                             [minSpac, maxSpac], left=minSpac,
-                             right=maxSpac)
-        spacing3[thk == 0.0] = minSpac
+        spacing3 = np.interp(dist_to_grounding_line, [low_dist, high_dist],
+                             [min_spac, max_spac], left=min_spac,
+                             right=max_spac)
+        spacing3[thk == 0.0] = min_spac
     else:
-        spacing3 = maxSpac*np.ones_like(thk)
+        spacing3 = max_spac*np.ones_like(thk)
 
     # Merge cell spacing methods
     cell_width = np.minimum(spacing, spacing2)
     cell_width = np.minimum(cell_width, spacing3)
 
     # Set large cell_width in areas we are going to cull anyway (speeds up
-    # whole process). Use 10x the cullDistance to avoid this affecting
+    # whole process). Use 10x the cull_distance to avoid this affecting
     # cell size in the final mesh. There may be a more rigorous way to set
     # that distance.
-    if distToEdge is not None:
+    if dist_to_edge is not None:
         cell_width[np.logical_and(thk == 0.0,
-                   distToEdge > (10. * cullDistance))] = maxSpac
+                   dist_to_edge > (10. * cull_distance))] = max_spac
 
     return cell_width
