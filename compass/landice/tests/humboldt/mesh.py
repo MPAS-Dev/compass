@@ -204,8 +204,10 @@ class Mesh(Step):
         vx[floodMask == 0] = 0.0
         vy[floodMask == 0] = 0.0
 
+        # Calculate distance from each grid point to ice edge 
+        # and grounding line, for use in cell spacing functions.
         distToEdge, distToGL = get_dist_to_edge_and_GL(thk, topg, x1,
-                                                       y1, windowSize=1.e5)
+                                                       y1, window_size=1.e5)
         # optional - plot distance calculation
         # plt.pcolor(distToEdge/1000.0); plt.colorbar(); plt.show()
 
@@ -213,7 +215,6 @@ class Mesh(Step):
         cell_width = set_cell_width(self, section='humboldt', thk=thk,
                                     vx=vx, vy=vy, dist_to_edge=distToEdge,
                                     dist_to_grounding_line=None)
-
         # plt.pcolor(cell_width); plt.colorbar(); plt.show()
 
         return (cell_width.astype('float64'), x1.astype('float64'),

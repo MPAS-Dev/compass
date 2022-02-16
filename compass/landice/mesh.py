@@ -18,18 +18,18 @@ def gridded_flood_fill(field):
 
     Returns
     -------
-    floodMask : numpy.ndarray
-        Mask calculated by the flood fill routine,
+    flood_mask : numpy.ndarray
+        _mask calculated by the flood fill routine,
         where cells connected to the ice sheet (or main feature)
         are 1 and everything else is 0.
     """
 
     sz = field.shape
-    searchedMask = np.zeros(sz)
-    floodMask = np.zeros(sz)
+    searched_mask = np.zeros(sz)
+    flood_mask = np.zeros(sz)
     iStart = sz[0] // 2
     jStart = sz[1] // 2
-    floodMask[iStart, jStart] = 1
+    flood_mask[iStart, jStart] = 1
 
     neighbors = np.array([[1, 0], [-1, 0], [0, 1], [0, -1]])
 
@@ -48,11 +48,11 @@ def gridded_flood_fill(field):
                 ii = i + n[0]
                 jj = j + n[1]  # subscripts to neighbor
                 # only consider unsearched neighbors
-                if searchedMask[ii, jj] == 0:
-                    searchedMask[ii, jj] = 1  # mark as searched
+                if searched_mask[ii, jj] == 0:
+                    searched_mask[ii, jj] = 1  # mark as searched
 
                     if field[ii, jj] > 0.0:
-                        floodMask[ii, jj] = 1  # mark as ice
+                        flood_mask[ii, jj] = 1  # mark as ice
                         # add to list of newly found  cells
                         newSearchList = np.append(newSearchList,
                                                   np.ravel_multi_index(
@@ -60,7 +60,7 @@ def gridded_flood_fill(field):
                                                       order='F')[0])
         lastSearchList = newSearchList
 
-    return floodMask
+    return flood_mask
 
 
 def set_rectangular_geom_points_and_edges(xmin, xmax, ymin, ymax):
@@ -206,7 +206,7 @@ def set_cell_width(self, section, thk, vx=None, vy=None,
     return cell_width
 
 
-def get_dist_to_edge_and_GL(thk, topg, x, y, windowSize=1.e5):
+def get_dist_to_edge_and_GL(thk, topg, x, y, window_size=1.e5):
     """
     Calculate distance from each point to ice edge and grounding line,
     to be used in mesh density functions in
@@ -223,7 +223,7 @@ def get_dist_to_edge_and_GL(thk, topg, x, y, windowSize=1.e5):
         x coordinates from gridded dataset
     y : numpy.ndarray
         y coordinates from gridded dataset
-    windowSize : int or float
+    window_size : int or float
         Size (in meters) of a search 'box' (one-directional) to use
         to calculate the distance from each cell to the ice margin.
         Bigger number makes search slower, but if too small, the transition
@@ -231,9 +231,9 @@ def get_dist_to_edge_and_GL(thk, topg, x, y, windowSize=1.e5):
 
     Returns
     -------
-    distToEdge : numpy.ndarray
+    dist_to_edge : numpy.ndarray
         Distance from each cell to the ice edge
-    distToGroundingLine : numpy.ndarray
+    dist_to_grounding_line : numpy.ndarray
         Distance from each cell to the grounding line
     """
 
@@ -246,35 +246,35 @@ def get_dist_to_edge_and_GL(thk, topg, x, y, windowSize=1.e5):
     neighbors = np.array([[1, 0], [-1, 0], [0, 1], [0, -1],
                           [1, 1], [-1, 1], [1, -1], [-1, -1]])
 
-    iceMask = thk > 0.0
-    groundedMask = thk > (-1028.0 / 910.0 * topg)
-    floatingMask = np.logical_and(thk < (-1028.0 /
+    ice_mask = thk > 0.0
+    grounded_mask = thk > (-1028.0 / 910.0 * topg)
+    floating_mask = np.logical_and(thk < (-1028.0 /
                                          910.0 * topg), thk > 0.0)
-    marginMask = np.zeros(sz, dtype='i')
-    groundingLineMask = np.zeros(sz, dtype='i')
+    margin_mask = np.zeros(sz, dtype='i')
+    grounding_line_mask = np.zeros(sz, dtype='i')
 
     for n in neighbors:
-        notIceMask = np.logical_not(np.roll(iceMask, n, axis=[0, 1]))
-        marginMask = np.logical_or(marginMask, notIceMask)
+        not_ice_mask = np.logical_not(np.roll(ice_mask, n, axis=[0, 1]))
+        margin_mask = np.logical_or(margin_mask, not_ice_mask)
 
-        notGroundedMask = np.logical_not(np.roll(groundedMask,
+        not_grounded_mask = np.logical_not(np.roll(grounded_mask,
                                                  n, axis=[0, 1]))
-        groundingLineMask = np.logical_or(groundingLineMask,
-                                          notGroundedMask)
+        grounding_line_mask = np.logical_or(grounding_line_mask,
+                                            not_grounded_mask)
 
     # where ice exists and neighbors non-ice locations
-    marginMask = np.logical_and(marginMask, iceMask)
+    margin_mask = np.logical_and(margin_mask, ice_mask)
     # optional - plot mask
-    # plt.pcolor(marginMask); plt.show()
+    # plt.pcolor(margin_mask); plt.show()
 
     # Calculate dist to margin and grounding line
     [XPOS, YPOS] = np.meshgrid(x, y)
-    distToEdge = np.zeros(sz)
-    distToGroundingLine = np.zeros(sz)
+    dist_to_edge = np.zeros(sz)
+    dist_to_grounding_line = np.zeros(sz)
 
-    d = int(np.ceil(windowSize / dx))
+    d = int(np.ceil(window_size / dx))
     rng = np.arange(-1*d, d, dtype='i')
-    maxdist = float(d) * dx
+    max_dist = float(d) * dx
 
     # just look over areas with ice
     # ind = np.where(np.ravel(thk, order='F') > 0)[0]
@@ -289,17 +289,17 @@ def get_dist_to_edge_and_GL(thk, topg, x, y, windowSize=1.e5):
         irng = irng[np.nonzero(np.logical_and(irng >= 0, irng < ny))]
         jrng = jrng[np.nonzero(np.logical_and(jrng >= 0, jrng < nx))]
 
-        dist2Here = ((XPOS[np.ix_(irng, jrng)] - x[j])**2 +
+        dist_to_here = ((XPOS[np.ix_(irng, jrng)] - x[j])**2 +
                      (YPOS[np.ix_(irng, jrng)] - y[i])**2)**0.5
 
-        dist2HereEdge = dist2Here.copy()
-        dist2HereGroundingLine = dist2Here.copy()
+        dist_to_here_edge = dist_to_here.copy()
+        dist_to_here_grounding_line = dist_to_here.copy()
 
-        dist2HereEdge[marginMask[np.ix_(irng, jrng)] == 0] = maxdist
-        dist2HereGroundingLine[groundingLineMask
-                               [np.ix_(irng, jrng)] == 0] = maxdist
+        dist_to_here_edge[margin_mask[np.ix_(irng, jrng)] == 0] = max_dist
+        dist_to_here_grounding_line[grounding_line_mask
+                                    [np.ix_(irng, jrng)] == 0] = max_dist
 
-        distToEdge[i, j] = dist2HereEdge.min()
-        distToGroundingLine[i, j] = dist2HereGroundingLine.min()
+        dist_to_edge[i, j] = dist_to_here_edge.min()
+        dist_to_grounding_line[i, j] = dist_to_here_grounding_line.min()
 
-    return distToEdge, distToGroundingLine
+    return dist_to_edge, dist_to_grounding_line
