@@ -45,26 +45,26 @@ The other test cases do not use config options.
     # distance from ice margin to cull (km).
     # Set to a value <= 0 if you do not want
     # to cull based on distance from margin.
-    cullDistance = 10.0
-
+    cull_distance = 10.0
+    
     # mesh density parameters
     # minimum cell spacing (meters)
-    minSpac = 1.e3
+    min_spac = 1.e3
     # maximum cell spacing (meters)
-    maxSpac = 8.e3
+    max_spac = 8.e3
     # log10 of max speed for cell spacing
-    highLogSpeed = 2.5
+    high_log_speed = 2.5
     # log10 of min speed for cell spacing
-    lowLogSpeed = 0.75
-    # distance at which cell spacing = maxSpac
-    highDist = 1.e5
-    # distance within which cell spacing = minSpac
-    lowDist = 5.e4
-
+    low_log_speed = 0.75
+    # distance at which cell spacing = max_spac
+    high_dist = 1.e5
+    # distance within which cell spacing = min_spac
+    low_dist = 5.e4
+    
     # mesh density functions
-    useSpeed = True
-    useDistToGroundingLine = True
-    useDistToEdge = True
+    use_speed = True
+    use_dist_to_grounding_line = True
+    use_dist_to_edge = True
 
 decomposition_test
 ------------------
