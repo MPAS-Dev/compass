@@ -12,7 +12,8 @@ from mpas_tools.logging import check_call
 from compass.step import Step
 from compass.model import make_graph_file
 from compass.landice.mesh import gridded_flood_fill, \
-                                 set_rectangular_geom_points_and_edges
+                                 set_rectangular_geom_points_and_edges, \
+                                 set_cell_width ,get_dist_to_edge_and_GL
 
 
 class Mesh(Step):
@@ -188,12 +189,6 @@ class Mesh(Step):
         vx = f.variables['vx'][0, :, :]
         vy = f.variables['vy'][0, :, :]
 
-        dx = x1[1] - x1[0]  # assumed constant and equal in x and y
-        nx = len(x1)
-        ny = len(y1)
-
-        sz = thk.shape
-
         # Define extent of region to mesh.
         # These coords are specific to the Thwaites Glacier mesh.
         xx0 = -1864434
@@ -209,9 +204,15 @@ class Mesh(Step):
         vx[floodMask == 0] = 0.0
         vy[floodMask == 0] = 0.0
 
-        # plt.pcolor(cell_width); plt.colorbar(); plt.show()
+        # Calculate distances to ice edge and grounding line
+        distToEdge, distToGL = get_dist_to_edge_and_GL(thk, topg, x1,
+                                                       y1, windowSize=1.e5)
 
-        # cell_width = 20000.0 * np.ones(thk.shape)
+        # Set cell widths based on mesh parameters set in config file
+        cell_width = set_cell_width(self, section='high_res_mesh', thk=thk,
+                                    vx=vx, vy=vy, distToEdge=distToEdge,
+                                    distToGroundingLine=distToGL)
+        # plt.pcolor(cell_width); plt.colorbar(); plt.show()
 
         return (cell_width.astype('float64'), x1.astype('float64'),
                 y1.astype('float64'), geom_points, geom_edges)
