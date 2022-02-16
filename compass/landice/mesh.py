@@ -117,20 +117,20 @@ def set_cell_width(self, section, thk, vx=None, vy=None,
     thk : numpy.ndarray
         Ice thickness field from gridded dataset,
         usually after trimming to flood fill mask
-    vx : numpy.ndarray
+    vx : numpy.ndarray, optional
         x-component of ice velocity from gridded dataset,
         usually after trimming to flood fill mask. Can be set to None
         if useSpeed == 'False' in config file.
-    vy : numpy.ndarray
+    vy : numpy.ndarray, optional
         y-component of ice velocity from gridded dataset,
         usually after trimming to flood fill mask. Can be set to None
         if useSpeed == 'False' in config file.
-    distToEdge : numpy.ndarray
+    dist_to_edge : numpy.ndarray, optional
         Distance from each cell to ice edge, calculated in separate function.
         Can be set to None if useDistToEdge == 'False' in config file and you
         do not want to set large cell_width where cells will be culled anyway,
         but this is not recommended.
-    distToGroundingLine : numpy.ndarray
+    dist_to_grounding_line : numpy.ndarray, optional
         Distance from each cell to grounding line, calculated in separate
         function.  Can be set to None if useDistToGroundingLine == 'False'
         in config file.
@@ -164,7 +164,7 @@ def set_cell_width(self, section, thk, vx=None, vy=None,
                             right=minSpac)
         spacing[thk == 0.0] = minSpac
     else:
-        spacing = thk * 0. + maxSpac
+        spacing = maxSpac*np.ones_like(thk)
 
     # Make cell spacing function mapping from distance to ice edge
     if section.get('useDistToEdge') == 'True':
@@ -174,7 +174,7 @@ def set_cell_width(self, section, thk, vx=None, vy=None,
                              right=maxSpac)
         spacing2[thk == 0.0] = minSpac
     else:
-        spacing2 = thk * 0. + maxSpac
+        spacing2 = maxSpac*np.ones_like(thk)
 
     # Make cell spacing function mapping from distance to grounding line
     if section.get('useDistToGroundingLine') == 'True':
@@ -184,7 +184,7 @@ def set_cell_width(self, section, thk, vx=None, vy=None,
                              right=maxSpac)
         spacing3[thk == 0.0] = minSpac
     else:
-        spacing3 = thk * 0. + maxSpac
+        spacing3 = maxSpac*np.ones_like(thk)
 
     # Merge cell spacing methods
     cell_width = np.minimum(spacing, spacing2)
