@@ -205,7 +205,7 @@ class Mesh(Step):
         vy[floodMask == 0] = 0.0
 
         # Calculate distances to ice edge and grounding line
-        distToEdge, distToGL = get_dist_to_edge_and_GL(thk, topg, x1,
+        distToEdge, distToGL = get_dist_to_edge_and_GL(self, thk, topg, x1,
                                                        y1, window_size=1.e5)
 
         # Set cell widths based on mesh parameters set in config file
