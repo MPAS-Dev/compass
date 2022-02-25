@@ -1,6 +1,6 @@
 import numpy as np
 import jigsawpy
-
+import time
 
 def gridded_flood_fill(field):
     """
@@ -206,11 +206,12 @@ def set_cell_width(self, section, thk, vx=None, vy=None,
     return cell_width
 
 
-def get_dist_to_edge_and_GL(thk, topg, x, y, window_size=1.e5):
+def get_dist_to_edge_and_GL(self, thk, topg, x, y, window_size=1.e5):
     """
     Calculate distance from each point to ice edge and grounding line,
     to be used in mesh density functions in
-    :py:func:`compass.landice.mesh.set_cell_width()`.
+    :py:func:`compass.landice.mesh.set_cell_width()`. In future development,
+    this should be updated to use a faster package such as `scikit-fmm`.
 
     Parameters
     ----------
@@ -236,6 +237,8 @@ def get_dist_to_edge_and_GL(thk, topg, x, y, window_size=1.e5):
     dist_to_grounding_line : numpy.ndarray
         Distance from each cell to the grounding line
     """
+    logger = self.logger
+    tic = time.time()
 
     dx = x[1] - x[0]  # assumed constant and equal in x and y
     nx = len(x)
@@ -301,5 +304,9 @@ def get_dist_to_edge_and_GL(thk, topg, x, y, window_size=1.e5):
 
         dist_to_edge[i, j] = dist_to_here_edge.min()
         dist_to_grounding_line[i, j] = dist_to_here_grounding_line.min()
+
+    toc = time.time()
+    logger.info('compass.landice.mesh.get_dist_to_edge_and_GL() took {:0.2f} '
+                'seconds'.format(toc - tic))
 
     return dist_to_edge, dist_to_grounding_line
