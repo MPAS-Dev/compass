@@ -7,6 +7,7 @@ from compass.landice.tests.greenland import Greenland
 from compass.landice.tests.humboldt import Humboldt
 from compass.landice.tests.hydro_radial import HydroRadial
 from compass.landice.tests.thwaites import Thwaites
+from compass.landice.tests.antarctic import Antarctic
 
 
 class Landice(MpasCore):
@@ -28,3 +29,4 @@ class Landice(MpasCore):
         self.add_test_group(Humboldt(mpas_core=self))
         self.add_test_group(HydroRadial(mpas_core=self))
         self.add_test_group(Thwaites(mpas_core=self))
+        self.add_test_group(Antarctic(mpas_core=self))
