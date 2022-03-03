@@ -271,6 +271,7 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, env_name,
 
     esmf = config.get('deploy', 'esmf')
     scorpio = config.get('deploy', 'scorpio')
+    albany = config.get('deploy', 'albany')
 
     if esmf != 'None':
         # remove conda-forge esmf because we will use the system build
@@ -303,6 +304,9 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, env_name,
         specs.append(f'esmf@{esmf}+mpi+netcdf~pio+pnetcdf')
     if scorpio != 'None':
         specs.append(f'scorpio@{scorpio}+pnetcdf~timing+internal-timing~tools+malloc')
+
+    if albany != 'None':
+        specs.append(f'albany@{albany}')
 
     if update_spack:
         make_spack_env(spack_path=spack_base, env_name=spack_env,
