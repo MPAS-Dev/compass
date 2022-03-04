@@ -15,9 +15,8 @@ from jinja2 import Template
 from importlib.resources import path
 from configparser import ConfigParser
 
-from mache import MachineInfo, discover_machine
-from mache.spack import make_spack_env, \
-    get_modules_env_vars_and_mpi_compilers, get_spack_script
+from mache import discover_machine
+from mache.spack import make_spack_env, get_spack_script
 from mache.version import __version__ as mache_version
 from shared import parse_args, get_conda_base, check_call, install_miniconda
 
@@ -231,43 +230,41 @@ def build_env(env_type, recreate, machine, compiler, mpi, conda_mpi, version,
     return env_path, env_name, activate_env, spack_env
 
 
-def get_sys_info(machine, compiler, mpilib, mpicc, mpicxx, mpifc,
-                 mod_env_commands):
+def get_env_vars(machine, compiler, mpilib):
 
     if machine is None:
         machine = 'None'
 
     # convert env vars from mache to a list
+    env_vars = ''
 
     if 'intel' in compiler and machine == 'anvil':
-        mod_env_commands = f'{mod_env_commands}\n' \
-                           f'export I_MPI_CC=icc\n'  \
-                           f'export I_MPI_CXX=icpc\n'  \
-                           f'export I_MPI_F77=ifort\n'  \
-                           f'export I_MPI_F90=ifort'
+        env_vars = f'{env_vars}' \
+                   f'export I_MPI_CC=icc\n' \
+                   f'export I_MPI_CXX=icpc\n' \
+                   f'export I_MPI_F77=ifort\n' \
+                   f'export I_MPI_F90=ifort\n'
 
     if platform.system() == 'Linux' and machine == 'None':
-        mod_env_commands = f'{mod_env_commands}\n' \
-                           f'export MPAS_EXTERNAL_LIBS="-lgomp"'
+        env_vars = f'{env_vars}' \
+                   f'export MPAS_EXTERNAL_LIBS="-lgomp"\n'
 
     if mpilib == 'mvapich':
-        mod_env_commands = f'{mod_env_commands}\n' \
-                           f'export MV2_ENABLE_AFFINITY=0' \
-                           f'export MV2_SHOW_CPU_BINDING=1'
+        env_vars = f'{env_vars}' \
+                   f'export MV2_ENABLE_AFFINITY=0\n' \
+                   f'export MV2_SHOW_CPU_BINDING=1\n'
 
-    mpas_netcdf_paths = \
-        'export NETCDF=$(dirname $(dirname $(which nc-config)))\n' \
-        'export NETCDFF=$(dirname $(dirname $(which nf-config)))\n' \
-        'export PNETCDF=$(dirname $(dirname $(which pnetcdf-config)))'
+    env_vars = \
+        f'{env_vars}' \
+        f'export NETCDF=$(dirname $(dirname $(which nc-config)))\n' \
+        f'export NETCDFF=$(dirname $(dirname $(which nf-config)))\n' \
+        f'export PNETCDF=$(dirname $(dirname $(which pnetcdf-config)))\n'
 
-    sys_info = dict(mpicc=mpicc, mpicxx=mpicxx, mpifc=mpifc,
-                    mpas_netcdf_paths=mpas_netcdf_paths)
-
-    return sys_info, mod_env_commands
+    return env_vars
 
 
 def build_spack_env(config, update_spack, machine, compiler, mpi, env_name,
-                    activate_env, spack_env, mod_env_commands):
+                    activate_env, spack_env):
 
     esmf = config.get('deploy', 'esmf')
     scorpio = config.get('deploy', 'scorpio')
@@ -327,12 +324,12 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, env_name,
                                     machine=machine,
                                     include_e3sm_hdf5_netcdf=e3sm_hdf5_netcdf)
 
-    return spack_base, spack_script, mod_env_commands
+    return spack_base, spack_script
 
 
 def write_load_compass(template_path, activ_path, conda_base, env_type,
                        activ_suffix, prefix, env_name, spack_script, machine,
-                       sys_info, mod_env_commands, env_only):
+                       env_vars, env_only):
 
     try:
         os.makedirs(activ_path)
@@ -347,16 +344,16 @@ def write_load_compass(template_path, activ_path, conda_base, env_type,
         script_filename = '{}/{}{}.sh'.format(activ_path, prefix, activ_suffix)
 
     if not env_only:
-        mod_env_commands = f'{mod_env_commands}\n' \
+        env_vars = f'{env_vars}\n' \
                            f'export USE_PIO2=true'
-    mod_env_commands = f'{mod_env_commands}\n' \
-                       f'export HDF5_USE_FILE_LOCKING=FALSE\n' \
-                       f'export LOAD_COMPASS_ENV={script_filename}'
+    env_vars = f'{env_vars}\n' \
+               f'export HDF5_USE_FILE_LOCKING=FALSE\n' \
+               f'export LOAD_COMPASS_ENV={script_filename}'
     if machine is not None:
-        mod_env_commands = f'{mod_env_commands}\n' \
-                           f'export COMPASS_MACHINE={machine}'
+        env_vars = f'{env_vars}\n' \
+                   f'export COMPASS_MACHINE={machine}'
 
-    filename = '{}/load_compass.template'.format(template_path)
+    filename = f'{template_path}/load_compass.template'
     with open(filename, 'r') as f:
         template = Template(f.read())
 
@@ -371,9 +368,8 @@ def write_load_compass(template_path, activ_path, conda_base, env_type,
         update_compass = ''
 
     script = template.render(conda_base=conda_base, compass_env=env_name,
-                             mod_env_commands=mod_env_commands,
+                             env_vars=env_vars,
                              spack=spack_script,
-                             netcdf_paths=sys_info['mpas_netcdf_paths'],
                              update_compass=update_compass)
 
     # strip out redundant blank lines
@@ -590,14 +586,11 @@ def main():
     version = get_version()
 
     machine = None
-    machine_info = None
     if not args.env_only:
         if args.machine is None:
             machine = discover_machine()
         else:
             machine = args.machine
-        if machine is not None:
-            machine_info = MachineInfo(machine=machine)
 
     config = get_config(args.config_file, machine)
 
@@ -631,18 +624,6 @@ def main():
         else:
             compiler = 'gnu'
 
-    if machine_info is not None:
-        mpicc, mpicxx, mpifc, mod_env_commands = \
-            get_modules_env_vars_and_mpi_compilers(
-                machine, compiler, mpi, shell='sh',
-                include_e3sm_hdf5_netcdf=True)
-    else:
-        # using conda-forge compilers
-        mpicc = 'mpicc'
-        mpicxx = 'mpicxx'
-        mpifc = 'mpifort'
-        mod_env_commands = ''
-
     env_path, env_name, activate_env, spack_env = build_env(
         env_type, recreate, machine, compiler, mpi, conda_mpi, version, python,
         source_path, template_path, conda_base, activ_suffix, args.env_name,
@@ -650,21 +631,22 @@ def main():
 
     spack_base = None
     spack_script = ''
-    sys_info = dict(mpas_netcdf_paths='')
     if compiler is not None:
+        env_vars = get_env_vars(machine, compiler, mpi)
         if machine is not None:
-            sys_info, mod_env_commands = get_sys_info(
-                machine, compiler, mpi, mpicc, mpicxx, mpifc, mod_env_commands)
-            spack_base, spack_script, mod_env_commands = build_spack_env(
+            spack_base, spack_script = build_spack_env(
                 config, args.update_spack, machine, compiler, mpi, env_name,
-                activate_env, spack_env, mod_env_commands)
+                activate_env, spack_env)
             scorpio_path = os.path.join(spack_base, 'var/spack/environments/',
                                         spack_env, '.spack-env/view')
-            mod_env_commands = f'{mod_env_commands}\n' \
-                               f'export PIO={scorpio_path}'
+            env_vars = f'{env_vars}' \
+                       f'export PIO={scorpio_path}\n'
         else:
-            mod_env_commands = f'{mod_env_commands}\n' \
-                               f'export PIO={env_path}'
+            env_vars = f'{env_vars}' \
+                       f'export PIO={env_path}\n'
+
+    else:
+        env_vars = ''
 
     if env_type == 'dev':
         if args.env_name is not None:
@@ -678,8 +660,7 @@ def main():
 
     script_filename = write_load_compass(
         template_path, activ_path, conda_base, env_type, activ_suffix, prefix,
-        env_name, spack_script, machine, sys_info, mod_env_commands,
-        args.env_only)
+        env_name, spack_script, machine, env_vars, args.env_only)
 
     if args.check:
         check_env(script_filename, env_name)
