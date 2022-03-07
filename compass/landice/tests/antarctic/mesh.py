@@ -18,7 +18,7 @@ from compass.landice.mesh import gridded_flood_fill, \
 
 class Mesh(Step):
     """
-    A step for creating a mesh and initial condition for antarctica test cases
+    A step for creating a mesh and initial condition for Antarctic test cases
 
     Attributes
     ----------
@@ -56,7 +56,7 @@ class Mesh(Step):
         config = self.config
         section = config['antarctic']
 
-        logger.info('calling build_cell_wdith')
+        logger.info('calling build_cell_width')
         cell_width, x1, y1, geom_points, geom_edges = self.build_cell_width()
         logger.info('calling build_planar_mesh')
         build_planar_mesh(cell_width, x1, y1, geom_points,

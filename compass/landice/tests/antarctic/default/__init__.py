@@ -4,7 +4,7 @@ from compass.landice.tests.antarctic.mesh import Mesh
 
 class Default(TestCase):
     """
-    The default test case for the humboldt test group simply creates the
+    The default test case for the Antarctic test group simply creates the
     mesh and initial condition.
 
     """

@@ -4,7 +4,7 @@ from compass.landice.tests.antarctic.default import Default
 
 class Antarctic(TestGroup):
     """
-    A test group for antarctic test cases
+    A test group for Antarctic test cases
     """
     def __init__(self, mpas_core):
         """
