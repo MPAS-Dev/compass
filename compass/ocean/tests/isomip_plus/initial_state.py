@@ -35,9 +35,12 @@ class InitialState(Step):
 
     time_varying_forcing : bool
         Whether the run includes time-varying land-ice forcing
+
+    thin_film_present: bool
+        Whether the run includes a thin film below grounded ice
     """
     def __init__(self, test_case, resolution, experiment, vertical_coordinate,
-                 time_varying_forcing):
+                 time_varying_forcing, thin_film_present):
         """
         Create the step
 
@@ -57,12 +60,16 @@ class InitialState(Step):
 
         time_varying_forcing : bool
             Whether the run includes time-varying land-ice forcing
+
+        thin_film_present: bool
+            Whether the run includes a thin film below grounded ice
         """
         super().__init__(test_case=test_case, name='initial_state')
         self.resolution = resolution
         self.experiment = experiment
         self.vertical_coordinate = vertical_coordinate
         self.time_varying_forcing = time_varying_forcing
+        self.thin_film_present = thin_film_present
 
         if experiment in ['Ocean0', 'Ocean1']:
             self.add_input_file(filename='input_geometry.nc',

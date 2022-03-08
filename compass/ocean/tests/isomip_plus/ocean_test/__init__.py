@@ -28,7 +28,8 @@ class OceanTest(TestCase):
     """
 
     def __init__(self, test_group, resolution, experiment,
-                 vertical_coordinate, time_varying_forcing=False):
+                 vertical_coordinate, time_varying_forcing=False,
+                 thin_film_present=False):
         """
         Create the test case
 
@@ -48,11 +49,16 @@ class OceanTest(TestCase):
 
         time_varying_forcing : bool, optional
             Whether the run includes time-varying land-ice forcing
+
+        thin_film_present: bool, optional
+            Whether the run includes a thin film below grounded ice
         """
+        name = experiment
         if time_varying_forcing:
-            name = f'time_varying_{experiment}'
-        else:
-            name = experiment
+            name = f'time_varying_{name}'
+        if thin_film_present:
+            name = f'thin_film_{name}'
+
         self.resolution = resolution
         self.experiment = experiment
         self.vertical_coordinate = vertical_coordinate
@@ -70,7 +76,8 @@ class OceanTest(TestCase):
             InitialState(test_case=self, resolution=resolution,
                          experiment=experiment,
                          vertical_coordinate=vertical_coordinate,
-                         time_varying_forcing=time_varying_forcing))
+                         time_varying_forcing=time_varying_forcing,
+                         thin_film_present=thin_film_present))
         self.add_step(
             SshAdjustment(test_case=self, resolution=resolution))
         self.add_step(

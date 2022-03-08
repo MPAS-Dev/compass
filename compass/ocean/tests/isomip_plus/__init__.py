@@ -31,3 +31,8 @@ class IsomipPlus(TestGroup):
                 OceanTest(test_group=self, resolution=resolution,
                           experiment='Ocean0',
                           vertical_coordinate='sigma'))
+            self.add_test_case(
+                OceanTest(test_group=self, resolution=resolution,
+                          experiment='Ocean0',
+                          vertical_coordinate='sigma',
+                          thin_film_present=True))
