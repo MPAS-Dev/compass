@@ -201,6 +201,12 @@ class InitialState(Step):
                                sectionY=section_y, dsMesh=ds, ds=ds,
                                showProgress=show_progress)
 
+        plotter.plot_layer_interfaces()
+
+        plotter.plot_3d_field_top_bot_section(
+            ds.layerThickness, nameInTitle='layerThickness', prefix='h', units='m',
+            vmin=0., vmax=50., cmap='cmo.deep_r')
+
         plotter.plot_3d_field_top_bot_section(
             ds.zMid, nameInTitle='zMid', prefix='zmid', units='m',
             vmin=-720., vmax=0., cmap='cmo.deep_r')
