@@ -14,7 +14,7 @@ from compass.ocean.vertical import init_vertical_coord
 from compass.ocean.vertical.grid_1d import generate_1d_grid
 from compass.ocean.iceshelf import compute_land_ice_pressure_and_draft
 from compass.ocean.tests.isomip_plus.geom import process_input_geometry, \
-    interpolate_geom, interpolate_ocean_mask
+    interpolate_geom, define_thin_film_mask_step1, interpolate_ocean_mask
 from compass.ocean.tests.isomip_plus.viz.plot import MoviePlotter
 
 
@@ -94,9 +94,11 @@ class InitialState(Step):
         config = self.config
         logger = self.logger
         vertical_coordinate = self.vertical_coordinate
+        thin_film_present = self.thin_film_present
 
         section = config['isomip_plus']
         nx = section.getint('nx')
+        nx_thin_film = section.getint('nx_thin_film')
         ny = section.getint('ny')
         dc = section.getfloat('dc')
         filter_sigma = section.getfloat('topo_smoothing')*self.resolution
@@ -108,11 +110,21 @@ class InitialState(Step):
                                'input_geometry_processed.nc',
                                filterSigma=filter_sigma,
                                minIceThickness=min_ice_thickness,
-                               scale=draft_scaling)
+                               scale=draft_scaling,
+                               thin_film_present=thin_film_present)
 
-        dsMesh = make_planar_hex_mesh(nx=nx+2, ny=ny+2, dc=dc,
-                                      nonperiodic_x=False, nonperiodic_y=False)
-        translate(mesh=dsMesh, yOffset=-2*dc)
+        # Add xOffset to reduce distance between x=0 and start of GL
+        if thin_film_present:
+            nxOffset = nx_thin_film
+            # consider increasing nx
+            dsMesh = make_planar_hex_mesh(nx=nx+nxOffset, ny=ny, dc=dc,
+                                          nonperiodic_x=True, nonperiodic_y=True)
+        else:
+            nxOffset = 0
+            dsMesh = make_planar_hex_mesh(nx=nx+2, ny=ny+2, dc=dc,
+                                          nonperiodic_x=False, nonperiodic_y=False)
+
+        translate(mesh=dsMesh, xOffset=-1*nxOffset*dc, yOffset=-2*dc)
         write_netcdf(dsMesh, 'base_mesh.nc')
 
         dsGeom = xarray.open_dataset('input_geometry_processed.nc')
@@ -120,7 +132,10 @@ class InitialState(Step):
         min_ocean_fraction = config.getfloat('isomip_plus',
                                              'min_ocean_fraction')
 
-        dsMask = interpolate_ocean_mask(dsMesh, dsGeom, min_ocean_fraction)
+        if thin_film_present:
+            dsMask = define_thin_film_mask_step1(dsMesh, dsGeom)
+        else:
+            dsMask = interpolate_ocean_mask(dsMesh, dsGeom, min_ocean_fraction)
         dsMesh = cull(dsMesh, dsInverse=dsMask, logger=logger)
         dsMesh.attrs['is_periodic'] = 'NO'
 
@@ -128,7 +143,7 @@ class InitialState(Step):
                          logger=logger)
         write_netcdf(dsMesh, 'culled_mesh.nc')
 
-        ds = interpolate_geom(dsMesh, dsGeom, min_ocean_fraction)
+        ds = interpolate_geom(dsMesh, dsGeom, min_ocean_fraction, thin_film_present)
 
         for var in ['landIceFraction']:
             ds[var] = ds[var].expand_dims(dim='Time', axis=0)
@@ -164,6 +179,8 @@ class InitialState(Step):
 
         init_vertical_coord(config, ds)
 
+        # Addition of thin film here
+        # if thin_film_present, min_column_thickness characterizes the thin film thickness
         ds['modifyLandIcePressureMask'] = \
             (ds['landIceFraction'] > 0.01).astype(int)
 
