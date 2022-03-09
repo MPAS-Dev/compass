@@ -1,11 +1,8 @@
-import numpy as np
 import netCDF4
 import xarray
-from matplotlib import pyplot as plt
 
 from mpas_tools.mesh.creation import build_planar_mesh
 from mpas_tools.mesh.conversion import convert, cull
-from mpas_tools.planar_hex import make_planar_hex_mesh
 from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
 
@@ -13,16 +10,12 @@ from compass.step import Step
 from compass.model import make_graph_file
 from compass.landice.mesh import gridded_flood_fill, \
                                  set_rectangular_geom_points_and_edges, \
-                                 set_cell_width ,get_dist_to_edge_and_GL
+                                 set_cell_width, get_dist_to_edge_and_GL
 
 
 class Mesh(Step):
     """
     A step for creating a mesh and initial condition for thwaites test cases
-    Attributes
-    ----------
-    mesh_type : str
-        The resolution or mesh type of the test case
     """
     def __init__(self, test_case):
         """
@@ -31,8 +24,6 @@ class Mesh(Step):
         ----------
         test_case : compass.TestCase
             The test case this step belongs to
-        mesh_type : str
-            The resolution or mesh type of the test case
         """
         super().__init__(test_case=test_case, name='mesh')
 
@@ -64,13 +55,13 @@ class Mesh(Step):
         logger.info('calling build_planar_mesh')
         build_planar_mesh(cell_width, x1, y1, geom_points,
                           geom_edges, logger=logger)
-        dsMesh = xarray.open_dataset('base_mesh.nc')
+        ds_mesh = xarray.open_dataset('base_mesh.nc')
         logger.info('culling mesh')
-        dsMesh = cull(dsMesh, logger=logger)
+        ds_mesh = cull(ds_mesh, logger=logger)
         logger.info('converting to MPAS mesh')
-        dsMesh = convert(dsMesh, logger=logger)
+        ds_mesh = convert(ds_mesh, logger=logger)
         logger.info('writing grid_converted.nc')
-        write_netcdf(dsMesh, 'grid_converted.nc')
+        write_netcdf(ds_mesh, 'grid_converted.nc')
 
         levels = section.get('levels')
 
@@ -122,20 +113,20 @@ class Mesh(Step):
         check_call(args, logger=logger)
 
         logger.info('culling to geojson file')
-        dsMesh = xarray.open_dataset('ase_1km_preCull.nc')
+        ds_mesh = xarray.open_dataset('ase_1km_preCull.nc')
         thwaitesMask = xarray.open_dataset('thwaites_mask.nc')
-        dsMesh = cull(dsMesh, dsInverse=thwaitesMask, logger=logger)
-        write_netcdf(dsMesh, 'thwaites_culled.nc')
+        ds_mesh = cull(ds_mesh, dsInverse=thwaitesMask, logger=logger)
+        write_netcdf(ds_mesh, 'thwaites_culled.nc')
 
         logger.info('Marking horns for culling')
         args = ['mark_horns_for_culling.py', '-f', 'thwaites_culled.nc']
         check_call(args, logger=logger)
 
         logger.info('culling and converting')
-        dsMesh = xarray.open_dataset('thwaites_culled.nc')
-        dsMesh = cull(dsMesh, logger=logger)
-        dsMesh = convert(dsMesh, logger=logger)
-        write_netcdf(dsMesh, 'thwaites_dehorned.nc')
+        ds_mesh = xarray.open_dataset('thwaites_culled.nc')
+        ds_mesh = cull(ds_mesh, logger=logger)
+        ds_mesh = convert(ds_mesh, logger=logger)
+        write_netcdf(ds_mesh, 'thwaites_dehorned.nc')
 
         logger.info('calling create_landice_grid_from_generic_MPAS_grid.py')
         args = ['create_landice_grid_from_generic_MPAS_grid.py', '-i',
@@ -148,7 +139,7 @@ class Mesh(Step):
         logger.info('calling interpolate_to_mpasli_grid.py')
         args = ['interpolate_to_mpasli_grid.py', '-s',
                 'antarctica_1km_2020_10_20_ASE.nc',
-                '-d', 'Thwaites_1to8km.nc', '-m', 'b', '-t']
+                '-d', 'Thwaites_1to8km.nc', '-m', 'b']
         check_call(args, logger=logger)
 
         logger.info('Marking domain boundaries dirichlet')
@@ -178,9 +169,7 @@ class Mesh(Step):
         # get needed fields from Antarctica dataset
         f = netCDF4.Dataset('antarctica_8km_2020_10_20.nc', 'r')
         f.set_auto_mask(False)  # disable masked arrays
-        logger = self.logger
         config = self.config
-        section = config['high_res_mesh']
 
         x1 = f.variables['x1'][:]
         y1 = f.variables['y1'][:]
@@ -199,20 +188,20 @@ class Mesh(Step):
                                                            xx0, xx1, yy0, yy1)
 
         # Remove ice not connected to the ice sheet.
-        floodMask = gridded_flood_fill(thk)
-        thk[floodMask == 0] = 0.0
-        vx[floodMask == 0] = 0.0
-        vy[floodMask == 0] = 0.0
+        flood_mask = gridded_flood_fill(thk)
+        thk[flood_mask == 0] = 0.0
+        vx[flood_mask == 0] = 0.0
+        vy[flood_mask == 0] = 0.0
 
         # Calculate distances to ice edge and grounding line
-        distToEdge, distToGL = get_dist_to_edge_and_GL(self, thk, topg, x1,
-                                                       y1, window_size=1.e5)
+        dist_to_edge, dist_to_GL = get_dist_to_edge_and_GL(self, thk,
+                                                           topg, x1, y1,
+                                                           window_size=1.e5)
 
         # Set cell widths based on mesh parameters set in config file
         cell_width = set_cell_width(self, section='high_res_mesh', thk=thk,
-                                    vx=vx, vy=vy, dist_to_edge=distToEdge,
-                                    dist_to_grounding_line=distToGL)
-        # plt.pcolor(cell_width); plt.colorbar(); plt.show()
+                                    vx=vx, vy=vy, dist_to_edge=dist_to_edge,
+                                    dist_to_grounding_line=dist_to_GL)
 
-        return (cell_width.astype('float64'), x1.astype('float64'),
-                y1.astype('float64'), geom_points, geom_edges)
+        return cell_width.astype('float64'), x1.astype('float64'), \
+            y1.astype('float64'), geom_points, geom_edges

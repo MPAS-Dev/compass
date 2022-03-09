@@ -90,4 +90,5 @@ high_res_mesh
 ``landice/thwaites/high_res_mesh`` creates a variable resolution mesh based
 on the the config options listed above. This will not be the same as the
 pre-generated 4-14km mesh used in ``decomposition_test`` and ``restart_test``
-because it uses a newer version of Jigsaw.
+because it uses a newer version of Jigsaw. Note that the basal friction
+optimization is performed separately and is not part of this test case.

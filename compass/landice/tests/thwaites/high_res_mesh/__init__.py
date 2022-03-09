@@ -6,6 +6,8 @@ class HighResMesh(TestCase):
     """
     The high resolution test case for the thwaites test
     group simply creates the mesh and initial condition.
+    The basal friction optimization occurs separately,
+    outside of COMPASS.
     """
 
     def __init__(self, test_group):
