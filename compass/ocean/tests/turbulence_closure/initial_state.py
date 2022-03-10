@@ -109,13 +109,13 @@ class InitialState(Step):
         surf_indices = numpy.where(ds.refZMid.values >= -mixed_layer_depth_temperature)[0]
 
         if len(surf_indices) > 0:
-		    temperature[0,:,surf_indices] = surface_temperature + mixed_layer_temperature_gradient* \
+            temperature[0,:,surf_indices] = surface_temperature + mixed_layer_temperature_gradient* \
 			                                ds.zMid[0,:,surf_indices].values
 
         int_indices = numpy.where(ds.refZMid.values < -mixed_layer_depth_temperature)[0]
 
         if len(int_indices) > 0:
-	  	    temperature[0,:,int_indices] = surface_temperature - mixed_layer_temperature_gradient* \
+            temperature[0,:,int_indices] = surface_temperature - mixed_layer_temperature_gradient* \
 													 mixed_layer_depth_temperature + interior_temperature_gradient* \
 													 (ds.zMid[0,:,int_indices] + \
 													  mixed_layer_depth_temperature)
@@ -123,13 +123,13 @@ class InitialState(Step):
         temperature[0,:,0] += disturbance_amplitude*2*(numpy.random.rand(len(ds.xCell.values)) - 0.5)
 
         surf_indices = numpy.where(ds.refZMid.values >= -mixed_layer_depth_salinity)[0]
-        if len(surf_indices[0]) > 0:
-		    salinity[0,:,surf_indices] = surface_salinity - mixed_layer_salinity_gradient * \
+        if len(surf_indices) > 0:
+            salinity[0,:,surf_indices] = surface_salinity - mixed_layer_salinity_gradient * \
 			                               	ds.zMid[0,:,surf_indices]
 
         int_indices = numpy.where(ds.refZMid.values < -mixed_layer_depth_salinity)[0]
         if len(int_indices) > 0:
-		    salinity[0,:,int_indices] = surface_salinity - mixed_layer_salinity_gradient* \
+            salinity[0,:,int_indices] = surface_salinity - mixed_layer_salinity_gradient* \
 									  				  mixed_layer_depth_salinity + interior_salinity_gradient* \
 													  (ds.zMid[0,:,int_indices] + \
 													   mixed_layer_depth_salinity)
