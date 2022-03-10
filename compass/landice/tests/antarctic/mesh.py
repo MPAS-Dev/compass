@@ -2,6 +2,7 @@ import numpy as np
 import netCDF4
 import xarray
 from matplotlib import pyplot as plt
+from shutil import copyfile
 
 from mpas_tools.mesh.creation import build_planar_mesh
 from mpas_tools.mesh.conversion import convert, cull
@@ -57,7 +58,8 @@ class Mesh(Step):
         section = config['antarctic']
 
         logger.info('calling build_cell_width')
-        cell_width, x1, y1, geom_points, geom_edges = self.build_cell_width()
+        cell_width, x1, y1, geom_points, geom_edges, floodFillMask = \
+                                                   self.build_cell_width()
         logger.info('calling build_planar_mesh')
         build_planar_mesh(cell_width, x1, y1, geom_points,
                           geom_edges, logger=logger)
@@ -77,13 +79,21 @@ class Mesh(Step):
                 '-l', levels, '-v', 'glimmer']
         check_call(args, logger=logger)
 
-        # This step uses a subset of the whole Greenland dataset trimmed to
-        # the region around Humboldt Glacier, to speed up interpolation.
-        # This could also be replaced with the full Greenland Ice Sheet
+        # Apply floodFillMask to thickness field to help with culling
+        copyfile('antarctica_8km_2020_10_20.nc', 'antarctica_8km_2020_10_20_floodFillMask.nc')
+        gg = netCDF4.Dataset('antarctica_8km_2020_10_20_floodFillMask.nc', 'r+')
+        gg.variables['thk'][0,:,:] *= floodFillMask
+        gg.variables['vx'][0,:,:] *= floodFillMask
+        gg.variables['vy'][0,:,:] *= floodFillMask
+        gg.close()
+        
+        # This step uses a subset of the whole Antarctic dataset trimmed to
+        # the region around Antarctica, to speed up interpolation.
+        # This could also be replaced with the full Antarctic Ice Sheet
         # dataset.
         logger.info('calling interpolate_to_mpasli_grid.py')
         args = ['interpolate_to_mpasli_grid.py', '-s',
-                'antarctica_8km_2020_10_20.nc', '-d',
+                'antarctica_8km_2020_10_20_floodFillMask.nc', '-d',
                 'ais_8km_preCull.nc', '-m', 'b', '-t']
 
         check_call(args, logger=logger)
@@ -136,7 +146,7 @@ class Mesh(Step):
         logger.info('calling interpolate_to_mpasli_grid.py')
         args = ['interpolate_to_mpasli_grid.py', '-s',
                 'antarctica_8km_2020_10_20.nc',
-                '-d', 'Antarctic_1to10km.nc', '-m', 'b', '-t']
+                '-d', 'Antarctic_1to10km.nc', '-m', 'b']
         check_call(args, logger=logger)
 
         logger.info('Marking domain boundaries dirichlet')
@@ -203,4 +213,4 @@ class Mesh(Step):
         # plt.pcolor(cell_width); plt.colorbar(); plt.show()
 
         return (cell_width.astype('float64'), x1.astype('float64'),
-                y1.astype('float64'), geom_points, geom_edges)
+                y1.astype('float64'), geom_points, geom_edges, floodMask)
