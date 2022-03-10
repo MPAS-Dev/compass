@@ -175,9 +175,9 @@ def set_cell_width(self, section, thk, vx=None, vy=None,
                                np.logical_or(np.abs(vx) > 1.e5,
                                              np.abs(vy) > 1.e5))
         spacing[missing_data_mask] = max_spac
-        logger.info('Found {} points in input dataset with missing ' \
-                     'velocity values. Setting velocity-based spacing ' \
-                     'to maximum value.'.format(np.sum(missing_data_mask)))
+        logger.info(f'Found {np.sum(missing_data_mask)} points in input '
+                    f'dataset with missing velocity values. Setting '
+                    f'velocity-based spacing to maximum value.')
 
         spacing[thk == 0.0] = min_spac
     else:
