@@ -30,8 +30,10 @@ def get_available_cores_and_nodes(config):
         args = ['squeue', '--noheader', '-j', job_id, '-o', '%D']
         nodes = _get_subprocess_int(args)
     elif parallel_system == 'single_node':
-        cores_per_node = config.getint('parallel', 'cores_per_node')
-        cores = min(multiprocessing.cpu_count(), cores_per_node)
+        cores = multiprocessing.cpu_count()
+        if config.has_option('parallel', 'cores_per_node'):
+            cores_per_node = config.getint('parallel', 'cores_per_node')
+            cores = min(cores, cores_per_node)
         nodes = 1
     else:
         raise ValueError('Unexpected parallel system: {}'.format(
@@ -90,6 +92,10 @@ def set_cores_per_node(config):
         if old_cpus_per_node != cpus_per_node:
             warnings.warn(f'Slurm found {cpus_per_node} cpus per node but '
                           f'config from mache was {old_cpus_per_node}')
+    elif parallel_system == 'single_node':
+        if not config.has_option('parallel', 'cores_per_node'):
+            cores = multiprocessing.cpu_count()
+            config.set('parallel', 'cores_per_node', f'{cores}')
 
 
 def _get_subprocess_int(args):
