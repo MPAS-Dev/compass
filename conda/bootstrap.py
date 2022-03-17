@@ -302,7 +302,7 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, env_name,
         specs.append(f'scorpio@{scorpio}+pnetcdf~timing+internal-timing~tools+malloc')
 
     if albany != 'None':
-        specs.append(f'albany@{albany}')
+        specs.append(f'albany@{albany}+mpas')
 
     if update_spack:
         make_spack_env(spack_path=spack_branch_base, env_name=spack_env,
