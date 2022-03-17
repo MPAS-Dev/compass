@@ -18,7 +18,8 @@ from configparser import ConfigParser
 from mache import discover_machine
 from mache.spack import make_spack_env, get_spack_script
 from mache.version import __version__ as mache_version
-from shared import parse_args, get_conda_base, check_call, install_miniconda
+from shared import parse_args, get_conda_base, get_spack_base, check_call, \
+    install_miniconda
 
 
 def get_config(config_file, machine):
@@ -29,8 +30,9 @@ def get_config(config_file, machine):
     config.read(default_config)
 
     if machine is not None:
-        with path('mache.machines', f'{machine}.cfg') as machine_config:
-            config.read(str(machine_config))
+        if not machine.startswith('conda'):
+            with path('mache.machines', f'{machine}.cfg') as machine_config:
+                config.read(str(machine_config))
 
         machine_config = os.path.join(here, '..', 'compass', 'machines',
                                       '{}.cfg'.format(machine))
@@ -82,20 +84,18 @@ def get_env_setup(args, config, machine, env_type, source_path, conda_base):
     else:
         mpi = config.get('deploy', 'mpi_{}'.format(compiler))
 
-    if machine is not None:
-        conda_mpi = 'nompi'
-    else:
-        conda_mpi = mpi
-
-    if machine is not None:
-        activ_suffix = '_{}_{}_{}'.format(machine, compiler, mpi)
-        env_suffix = ''
-    elif conda_mpi != 'nompi':
-        activ_suffix = '_{}'.format(mpi)
-        env_suffix = activ_suffix
-    else:
+    if machine is None:
+        conda_mpi = None
         activ_suffix = ''
         env_suffix = ''
+    elif not machine.startswith('conda'):
+        conda_mpi = 'nompi'
+        activ_suffix = '_{}_{}_{}'.format(machine, compiler, mpi)
+        env_suffix = ''
+    else:
+        activ_suffix = '_{}'.format(mpi)
+        env_suffix = activ_suffix
+        conda_mpi = mpi
 
     if env_type == 'dev':
         activ_path = source_path
@@ -264,7 +264,7 @@ def get_env_vars(machine, compiler, mpilib):
 
 
 def build_spack_env(config, update_spack, machine, compiler, mpi, env_name,
-                    activate_env, spack_env):
+                    activate_env, spack_env, spack_base):
 
     esmf = config.get('deploy', 'esmf')
     scorpio = config.get('deploy', 'scorpio')
@@ -280,8 +280,7 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, env_name,
             # it could be that esmf was already removed
             pass
 
-    spack_base = config.get('deploy', 'spack')
-    spack_base = f'{spack_base}/spack_for_mache_{mache_version}'
+    spack_branch_base = f'{spack_base}/spack_for_mache_{mache_version}'
 
     specs = list()
 
@@ -306,25 +305,25 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, env_name,
         specs.append(f'albany@{albany}')
 
     if update_spack:
-        make_spack_env(spack_path=spack_base, env_name=spack_env,
+        make_spack_env(spack_path=spack_branch_base, env_name=spack_env,
                        spack_specs=specs, compiler=compiler, mpi=mpi,
                        machine=machine,
                        include_e3sm_hdf5_netcdf=e3sm_hdf5_netcdf)
 
         # remove ESMC/ESMF include files that interfere with MPAS time keeping
-        include_path = os.path.join(spack_base, 'var/spack/environments/',
-                                    spack_env, '.spack-env/view/include')
+        include_path = f'{spack_branch_base}/var/spack/environments/' \
+                       f'{spack_env}/.spack-env/view/include'
         for prefix in ['ESMC', 'esmf']:
             files = glob.glob(os.path.join(include_path, f'{prefix}*'))
             for filename in files:
                 os.remove(filename)
 
-    spack_script = get_spack_script(spack_path=spack_base, env_name=spack_env,
+    spack_script = get_spack_script(spack_path=spack_branch_base, env_name=spack_env,
                                     compiler=compiler, mpi=mpi, shell='sh',
                                     machine=machine,
                                     include_e3sm_hdf5_netcdf=e3sm_hdf5_netcdf)
 
-    return spack_base, spack_script
+    return spack_branch_base, spack_script
 
 
 def write_load_compass(template_path, activ_path, conda_base, env_type,
@@ -426,6 +425,11 @@ def test_command(command, env, package):
 
 def update_permissions(config, env_type, activ_path, conda_base, spack_base):
 
+    if not config.has_option('e3sm_unified', 'group'):
+        return
+
+    group = config.get('e3sm_unified', 'group')
+
     directories = []
     if env_type != 'dev':
         directories.append(conda_base)
@@ -433,8 +437,6 @@ def update_permissions(config, env_type, activ_path, conda_base, spack_base):
         # even if this is not a release, we need to update permissions on
         # shared system libraries
         directories.append(spack_base)
-
-    group = config.get('e3sm_unified', 'group')
 
     new_uid = os.getuid()
     new_gid = grp.getgrnam(group).gr_gid
@@ -592,6 +594,12 @@ def main():
         else:
             machine = args.machine
 
+    if machine is None and not args.env_only:
+        if platform.system() == 'Linux':
+            machine = 'conda-linux'
+        elif platform.system() == 'Darwin':
+            machine = 'conda-osx'
+
     config = get_config(args.config_file, machine)
 
     env_type = config.get('deploy', 'env_type')
@@ -599,6 +607,7 @@ def main():
         raise ValueError(f'Unexpected env_type: {env_type}')
     shared = (env_type != 'dev')
     conda_base = get_conda_base(args.conda_base, config, shared=shared)
+    spack_base = get_spack_base(args.spack_base, config)
 
     base_activation_script = os.path.abspath(
         '{}/etc/profile.d/conda.sh'.format(conda_base))
@@ -609,42 +618,21 @@ def main():
         activ_path = get_env_setup(args, config, machine, env_type,
                                    source_path, conda_base)
 
-    if machine is None and not args.env_only and args.mpi is None:
-        raise ValueError('Your machine wasn\'t recognized by compass but you '
-                         'didn\'t specify the MPI version. Please provide '
-                         'either the --mpi or --env_only flag.')
-
-    if machine is None:
-        if args.env_only:
-            compiler = None
-        elif platform.system() == 'Linux':
-            compiler = 'gnu'
-        elif platform.system() == 'Darwin':
-            compiler = 'clang'
-        else:
-            compiler = 'gnu'
-
     env_path, env_name, activate_env, spack_env = build_env(
         env_type, recreate, machine, compiler, mpi, conda_mpi, version, python,
         source_path, template_path, conda_base, activ_suffix, args.env_name,
         env_suffix, activate_base, args.use_local, args.local_conda_build)
 
-    spack_base = None
     spack_script = ''
     if compiler is not None:
         env_vars = get_env_vars(machine, compiler, mpi)
-        if machine is not None:
-            spack_base, spack_script = build_spack_env(
-                config, args.update_spack, machine, compiler, mpi, env_name,
-                activate_env, spack_env)
-            scorpio_path = os.path.join(spack_base, 'var/spack/environments/',
-                                        spack_env, '.spack-env/view')
-            env_vars = f'{env_vars}' \
-                       f'export PIO={scorpio_path}\n'
-        else:
-            env_vars = f'{env_vars}' \
-                       f'export PIO={env_path}\n'
-
+        spack_branch_base, spack_script = build_spack_env(
+            config, args.update_spack, machine, compiler, mpi, env_name,
+            activate_env, spack_env, spack_base)
+        scorpio_path = f'{spack_branch_base}/var/spack/environments/' \
+                       f'{spack_env}.spack-env/view'
+        env_vars = f'{env_vars}' \
+                   f'export PIO={scorpio_path}\n'
     else:
         env_vars = ''
 
@@ -681,9 +669,8 @@ def main():
     commands = '{}; conda clean -y -p -t'.format(activate_base)
     check_call(commands)
 
-    if machine is not None:
-        update_permissions(config, env_type, activ_path, conda_base,
-                           spack_base)
+    update_permissions(config, env_type, activ_path, conda_base,
+                       spack_base)
 
 
 if __name__ == '__main__':

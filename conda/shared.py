@@ -21,6 +21,8 @@ def parse_args(bootstrap):
                              "related config options")
     parser.add_argument("--conda", dest="conda_base",
                         help="Path to the conda base")
+    parser.add_argument("--spack", dest="spack_base",
+                        help="Path to the spack base")
     parser.add_argument("--env_name", dest="env_name",
                         help="The conda environment name and activation script"
                              " prefix")
@@ -77,6 +79,18 @@ def get_conda_base(conda_base, config, shared=False):
     # handle "~" in the path
     conda_base = os.path.abspath(os.path.expanduser(conda_base))
     return conda_base
+
+
+def get_spack_base(spack_base, config):
+    if spack_base is None:
+        if config.has_option('deploy', 'spack'):
+            spack_base = config.get('deploy', 'spack')
+        else:
+            raise ValueError('No spack base provided with --spack and none is '
+                             'provided in a config file.')
+    # handle "~" in the path
+    spack_base = os.path.abspath(os.path.expanduser(spack_base))
+    return spack_base
 
 
 def check_call(commands, env=None):
