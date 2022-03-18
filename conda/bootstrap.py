@@ -109,8 +109,8 @@ def get_env_setup(args, config, machine, env_type, source_path, conda_base):
 
 
 def build_env(env_type, recreate, machine, compiler, mpi, conda_mpi, version,
-              python, source_path, template_path, conda_base, activ_suffix,
-              env_name, env_suffix, activate_base, use_local,
+              python, source_path, conda_template_path, conda_base,
+              activ_suffix, env_name, env_suffix, activate_base, use_local,
               local_conda_build):
 
     if env_type != 'dev':
@@ -174,7 +174,7 @@ def build_env(env_type, recreate, machine, compiler, mpi, conda_mpi, version,
     activate_env = \
         f'source {base_activation_script}; conda activate {env_name}'
 
-    with open(f'{template_path}/spec-file.template', 'r') as f:
+    with open(f'{conda_template_path}/spec-file.template', 'r') as f:
         template = Template(f.read())
 
     if env_type == 'dev':
@@ -264,7 +264,7 @@ def get_env_vars(machine, compiler, mpilib):
 
 
 def build_spack_env(config, update_spack, machine, compiler, mpi, env_name,
-                    activate_env, spack_env, spack_base):
+                    activate_env, spack_env, spack_base, spack_template_path):
 
     esmf = config.get('deploy', 'esmf')
     scorpio = config.get('deploy', 'scorpio')
@@ -304,11 +304,15 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, env_name,
     if albany != 'None':
         specs.append(f'albany@{albany}+mpas')
 
+    yaml_template = f'{spack_template_path}/{machine}_{compiler}_{mpi}.yaml'
+    if not os.path.exists(yaml_template):
+        yaml_template = None
     if update_spack:
         make_spack_env(spack_path=spack_branch_base, env_name=spack_env,
                        spack_specs=specs, compiler=compiler, mpi=mpi,
                        machine=machine,
-                       include_e3sm_hdf5_netcdf=e3sm_hdf5_netcdf)
+                       include_e3sm_hdf5_netcdf=e3sm_hdf5_netcdf,
+                       yaml_template=yaml_template)
 
         # remove ESMC/ESMF include files that interfere with MPAS time keeping
         include_path = f'{spack_branch_base}/var/spack/environments/' \
@@ -318,10 +322,11 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, env_name,
             for filename in files:
                 os.remove(filename)
 
-    spack_script = get_spack_script(spack_path=spack_branch_base, env_name=spack_env,
-                                    compiler=compiler, mpi=mpi, shell='sh',
-                                    machine=machine,
-                                    include_e3sm_hdf5_netcdf=e3sm_hdf5_netcdf)
+    spack_script = get_spack_script(
+        spack_path=spack_branch_base, env_name=spack_env, compiler=compiler,
+        mpi=mpi, shell='sh', machine=machine,
+        include_e3sm_hdf5_netcdf=e3sm_hdf5_netcdf,
+        yaml_template=yaml_template)
 
     return spack_branch_base, spack_script
 
@@ -583,7 +588,8 @@ def main():
     args = parse_args(bootstrap=True)
 
     source_path = os.getcwd()
-    template_path = '{}/conda/compass_env'.format(source_path)
+    conda_template_path = f'{source_path}/conda/compass_env'
+    spack_template_path = f'{source_path}/conda/spack'
 
     version = get_version()
 
@@ -620,15 +626,16 @@ def main():
 
     env_path, env_name, activate_env, spack_env = build_env(
         env_type, recreate, machine, compiler, mpi, conda_mpi, version, python,
-        source_path, template_path, conda_base, activ_suffix, args.env_name,
-        env_suffix, activate_base, args.use_local, args.local_conda_build)
+        source_path, conda_template_path, conda_base, activ_suffix,
+        args.env_name, env_suffix, activate_base, args.use_local,
+        args.local_conda_build)
 
     spack_script = ''
     if compiler is not None:
         env_vars = get_env_vars(machine, compiler, mpi)
         spack_branch_base, spack_script = build_spack_env(
             config, args.update_spack, machine, compiler, mpi, env_name,
-            activate_env, spack_env, spack_base)
+            activate_env, spack_env, spack_base, spack_template_path)
         scorpio_path = f'{spack_branch_base}/var/spack/environments/' \
                        f'{spack_env}.spack-env/view'
         env_vars = f'{env_vars}' \
@@ -647,8 +654,8 @@ def main():
         prefix = 'load_compass_{}'.format(version)
 
     script_filename = write_load_compass(
-        template_path, activ_path, conda_base, env_type, activ_suffix, prefix,
-        env_name, spack_script, machine, env_vars, args.env_only)
+        conda_template_path, activ_path, conda_base, env_type, activ_suffix,
+        prefix, env_name, spack_script, machine, env_vars, args.env_only)
 
     if args.check:
         check_env(script_filename, env_name)
