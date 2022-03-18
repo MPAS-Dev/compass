@@ -236,7 +236,7 @@ def get_env_vars(machine, compiler, mpilib):
         machine = 'None'
 
     # convert env vars from mache to a list
-    env_vars = ''
+    env_vars = 'export MPAS_EXTERNAL_LIBS=""\n'
 
     if 'intel' in compiler and machine == 'anvil':
         env_vars = f'{env_vars}' \
@@ -246,8 +246,9 @@ def get_env_vars(machine, compiler, mpilib):
                    f'export I_MPI_F90=ifort\n'
 
     if platform.system() == 'Linux' and machine == 'None':
-        env_vars = f'{env_vars}' \
-                   f'export MPAS_EXTERNAL_LIBS="-lgomp"\n'
+        env_vars = \
+            f'{env_vars}' \
+            f'export MPAS_EXTERNAL_LIBS="${{MPAS_EXTERNAL_LIBS}} -lgomp"\n'
 
     if mpilib == 'mvapich':
         env_vars = f'{env_vars}' \
@@ -264,7 +265,8 @@ def get_env_vars(machine, compiler, mpilib):
 
 
 def build_spack_env(config, update_spack, machine, compiler, mpi, env_name,
-                    activate_env, spack_env, spack_base, spack_template_path):
+                    activate_env, spack_env, spack_base, spack_template_path,
+                    env_vars):
 
     esmf = config.get('deploy', 'esmf')
     scorpio = config.get('deploy', 'scorpio')
@@ -328,7 +330,25 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, env_name,
         include_e3sm_hdf5_netcdf=e3sm_hdf5_netcdf,
         yaml_template=yaml_template)
 
-    return spack_branch_base, spack_script
+    spack_view = f'{spack_branch_base}/var/spack/environments/' \
+                 f'{spack_env}/.spack-env/view'
+    env_vars = f'{env_vars}' \
+               f'export PIO={spack_view}\n'
+    if albany != 'None':
+        albany_flag_filename = f'{spack_view}/export_albany.in'
+        with open(albany_flag_filename, 'r') as f:
+            albany_flags = f.read()
+        if platform.system() == 'Darwin':
+            stdcxx = '-lc++'
+        else:
+            stdcxx = '-lstdc++'
+        env_vars = \
+            f'{env_vars}' \
+            f'export {albany_flags}\n' \
+            f'export MPAS_EXTERNAL_LIBS="${{MPAS_EXTERNAL_LIBS}} ' \
+            f'${{ALBANY_LINK_LIBS}} {stdcxx}"\n'
+
+    return spack_branch_base, spack_script, env_vars
 
 
 def write_load_compass(template_path, activ_path, conda_base, env_type,
@@ -633,13 +653,9 @@ def main():
     spack_script = ''
     if compiler is not None:
         env_vars = get_env_vars(machine, compiler, mpi)
-        spack_branch_base, spack_script = build_spack_env(
+        spack_branch_base, spack_script, env_vars = build_spack_env(
             config, args.update_spack, machine, compiler, mpi, env_name,
-            activate_env, spack_env, spack_base, spack_template_path)
-        scorpio_path = f'{spack_branch_base}/var/spack/environments/' \
-                       f'{spack_env}.spack-env/view'
-        env_vars = f'{env_vars}' \
-                   f'export PIO={scorpio_path}\n'
+            activate_env, spack_env, spack_base, spack_template_path, env_vars)
     else:
         env_vars = ''
 
