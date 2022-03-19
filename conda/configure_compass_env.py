@@ -82,11 +82,16 @@ def install_miniconda(conda_base, activate_base):
     check_call(commands)
 
 
-def setup_install_env(activate_base):
+def setup_install_env(activate_base, use_local):
+    if use_local:
+        channels = '--use-local'
+    else:
+        channels = ''
     print('Setting up a conda environment for installing compass')
     commands = '{}; ' \
-               'mamba create -y -n temp_compass_install ' \
-               'progressbar2 jinja2 "mache>=1.1.4"'.format(activate_base)
+               'mamba create -y -n temp_compass_install {} ' \
+               'progressbar2 jinja2 "mache>=1.2.1"'.format(activate_base,
+                                                           channels)
 
     check_call(commands)
 
@@ -122,7 +127,7 @@ def main():
     # install miniconda if needed
     install_miniconda(conda_base, activate_base)
 
-    setup_install_env(activate_base)
+    setup_install_env(activate_base, args.use_local)
 
     bootstrap(activate_install_env, source_path)
 
