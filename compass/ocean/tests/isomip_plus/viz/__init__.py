@@ -1,5 +1,6 @@
 import xarray
 import os
+import numpy
 
 from mpas_tools.io import write_netcdf
 
@@ -62,6 +63,30 @@ class Viz(Step):
         expt = self.experiment
 
         dsMesh = xarray.open_dataset('{}/init.nc'.format(sim_dir))
+        dsOut = xarray.open_dataset('{}/output.nc'.format(sim_dir))
+        dsForcing = xarray.open_dataset('{}/forcing_data_init.nc'.format(sim_dir))
+
+        plotter = MoviePlotter(inFolder=sim_dir,
+                                streamfunctionFolder=streamfunction_dir,
+                                outFolder='{}/plots'.format(out_dir),
+                                expt=expt, sectionY=section_y,
+                                dsMesh=dsMesh, ds=dsOut,
+                                showProgress=show_progress)
+
+
+        delssh = dsOut.ssh-dsOut.ssh[0,:]
+        plotter.plot_horiz_series(dsOut.ssh, 'ssh', 'ssh', True, cmap='cmo.curl')
+        plotter.plot_horiz_series(dsOut.velocityX[:,:,0], 'u', 'u', True,
+                                  cmap='cmo.balance')
+        plotter.plot_horiz_series(dsOut.velocityY[:,:,0], 'v', 'v', True,
+                                  cmap='cmo.balance')
+        plotter.plot_horiz_series(dsOut.ssh + dsMesh.bottomDepth, 'H', 'H', True,
+                                  vmin=3e-3+1e-10, vmax=10, cmap_set_under='r')
+        plotter.plot_horiz_series(delssh, 'delssh', 'delssh', True,
+                                  cmap='cmo.curl', vmin=-1, vmax=1)
+        delice = dsOut.landIcePressure-dsOut.landIcePressure[0,:]
+        plotter.plot_horiz_series(delice, 'delLandIcePressure', 'delLandIcePressure', 
+                                  True, cmap='cmo.curl')
 
         ds = xarray.open_mfdataset(
             '{}/timeSeriesStatsMonthly*.nc'.format(sim_dir),

@@ -451,7 +451,8 @@ class MoviePlotter(object):
                                            vmin=0., vmax=8., cmap='cmo.matter')
 
     def plot_horiz_series(self, da, nameInTitle, prefix, oceanDomain,
-                          units=None, vmin=None, vmax=None, cmap=None):
+                          units=None, vmin=None, vmax=None, cmap=None,
+                          cmap_set_under=None):
         """
         Plot a series of image of a given variable
 
@@ -501,7 +502,7 @@ class MoviePlotter(object):
                 title = '{} ({})'.format(nameInTitle, units)
             self._plot_horiz_field(field, title=title, outFileName=outFileName,
                                    oceanDomain=oceanDomain, vmin=vmin,
-                                   vmax=vmax, cmap=cmap)
+                                   vmax=vmax, cmap=cmap, cmap_set_under=cmap_set_under)
             if self.showProgress:
                 bar.update(tIndex+1)
         if self.showProgress:
@@ -509,7 +510,7 @@ class MoviePlotter(object):
 
     def plot_3d_field_top_bot_section(self, da, nameInTitle, prefix,
                                       units=None, vmin=None, vmax=None,
-                                      cmap=None):
+                                      cmap=None, cmap_set_under=None):
         """
         Plot a series of images of a given 3D variable showing the value
         at the top (sea surface or ice-ocean interface), sea floor and in an
@@ -560,7 +561,8 @@ class MoviePlotter(object):
         self.plot_horiz_series(daTop,
                                'top {}'.format(nameInTitle),
                                'top{}'.format(prefix), oceanDomain=True,
-                               vmin=vmin, vmax=vmax, cmap=cmap)
+                               vmin=vmin, vmax=vmax, cmap=cmap,
+                               cmap_set_under=cmap_set_under)
 
         maxLevelCell = self.dsMesh.maxLevelCell-1
 
@@ -667,11 +669,22 @@ class MoviePlotter(object):
 
             for z_index in range(1, X.shape[0]):
                 plt.plot(1e-3 * X[z_index, :], Z[z_index, :], 'k')
-            plt.plot(1e-3 * X[0, :], Z[0, :], 'g')
+            plt.plot(1e-3 * X[0, :], Z[0, :], 'b')
             plt.plot(1e-3 * X[0, :], self.zBotSection, 'g')
 
             ax.autoscale(tight=True)
             plt.ylim(ylim)
+            axins = ax.inset_axes([0.01, 0.6, 0.3, 0.39])
+            for z_index in range(1, X.shape[0]):
+                axins.plot(1e-3 * X[z_index, :], Z[z_index, :], 'k')
+            axins.plot(1e-3 * X[0, :], Z[0, :], 'b')
+            axins.plot(1e-3 * X[0, :], self.zBotSection, 'g')
+            x1, x2, y1, y2 = 420, 470, -650, -520
+            axins.set_xlim(x1, x2)
+            axins.set_ylim(y1, y2)
+            axins.set_xticklabels([])
+            axins.set_yticklabels([])
+            ax.indicate_inset_zoom(axins, edgecolor="black")
             plt.title('{} {}'.format('layer interfaces', self.date))
             plt.tight_layout(pad=0.5)
             plt.savefig(outFileName)
@@ -728,7 +741,8 @@ class MoviePlotter(object):
         self.date = '{}-{}'.format(year, month)
 
     def _plot_horiz_field(self, field, title, outFileName, oceanDomain=True,
-                          vmin=None, vmax=None, figsize=(9, 3), cmap=None):
+                          vmin=None, vmax=None, figsize=(9, 3), cmap=None,
+                          cmap_set_under=None):
 
         try:
             os.makedirs(os.path.dirname(outFileName))
@@ -753,7 +767,10 @@ class MoviePlotter(object):
         plt.figure(figsize=figsize)
         ax = plt.subplot(111)
         ax.add_collection(localPatches)
-        plt.colorbar(localPatches)
+        plt.colorbar(localPatches, extend='both')
+        if cmap_set_under is not None:
+            current_cmap = plt.get_cmap()
+            current_cmap.set_under(cmap_set_under)
         plt.axis([0, 500, 0, 1000])
         ax.set_aspect('equal')
         ax.autoscale(tight=True)
@@ -772,15 +789,38 @@ class MoviePlotter(object):
         if os.path.exists(outFileName):
             return
 
+        nTime = self.Z.shape[0]
+
+        z_mask = numpy.ones(self.X.shape)
+        z_mask[0:-1, 0:-1] *= numpy.where(self.sectionMask, 1., numpy.nan)
+        #z_mask[1:, 0:-1] *= numpy.where(self.sectionMask, 1., numpy.nan)
+        #z_mask[0:-1, 1:] *= numpy.where(self.sectionMask, 1., numpy.nan)
+        #z_mask[1:, 1:] *= numpy.where(self.sectionMask, 1., numpy.nan)
+
+        tIndex=0
+        Z = numpy.array(self.Z[tIndex, :, :])
+        ylim = [numpy.amin(Z), 20]
+        Z *= z_mask
+        X = self.X
+
+
         plt.figure(figsize=figsize)
         ax = plt.subplot(111)
+        plt.fill_between(1e-3 * X[0, :],self.zBotSection,y2=0,facecolor='lightsteelblue')
+        plt.fill_between(1e-3 * X[0, :],self.zBotSection,y2=-750,facecolor='grey')
         plt.pcolormesh(1e-3*inX, inZ, field, vmin=vmin, vmax=vmax, cmap=cmap)
+        for z_index in range(1, X.shape[0]):
+            plt.plot(1e-3 * X[z_index, :], Z[z_index, :], 'k')
+        #plt.plot(1e-3 * X[0, :], Z[0, :], 'b')
+        #plt.plot(1e-3 * X[0, :], self.zBotSection, 'g')
         plt.colorbar()
         ax.autoscale(tight=True)
         plt.ylim([numpy.amin(inZ), 20])
+        plt.xlim([400,800])
+        #plt.ylim([-700,-400])
         plt.title('{} {}'.format(title, self.date))
         plt.tight_layout(pad=0.5)
-        plt.savefig(outFileName)
+        plt.savefig(outFileName, dpi='figure')
         plt.close()
 
     def _compute_section_x_z(self):
