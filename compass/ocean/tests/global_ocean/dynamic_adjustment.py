@@ -1,3 +1,7 @@
+import os
+import xarray
+import glob
+
 from compass.validate import compare_variables
 from compass.ocean.tests.global_ocean.forward import ForwardTestCase
 
@@ -52,8 +56,28 @@ class DynamicAdjustment(ForwardTestCase):
         Test cases can override this method to perform validation of variables
         and timers
         """
+        config = self.config
         variables = ['temperature', 'salinity', 'layerThickness',
                      'normalVelocity']
 
         compare_variables(test_case=self, variables=variables,
                           filename1='simulation/output.nc')
+
+        temp_max = config.getfloat('dynamic_adjustment', 'temperature_max')
+        max_values = {'temperatureMax': temp_max}
+
+        for step_name in self.steps_to_run:
+            step = self.steps[step_name]
+            step_path = os.path.join(self.work_dir,  step.subdir)
+            global_stats_path = os.path.join(step_path, 'analysis_members',
+                                             'globalStats.*.nc')
+            global_stats_path = glob.glob(global_stats_path)
+            for filename in global_stats_path:
+                ds = xarray.open_dataset(filename)
+                for var, max_value in max_values.items():
+                    max_in_global_stats = ds[var].max().values
+                    if max_in_global_stats > max_value:
+                        raise ValueError(
+                            f'Max of {var} > allowed threshold: '
+                            f'{max_in_global_stats} > {max_value} '
+                            f'in {filename}')
