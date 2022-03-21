@@ -171,16 +171,13 @@ class InitialState(Step):
 
         # Deepen the bottom depth to maintain the minimum water-column
         # thickness
-        min_depth = -ds.ssh + min_column_thickness
-        if vertical_coordinate == 'z-star':
-            min_levels = section.getint('minimum_levels')
-            min_depth = numpy.maximum(min_depth, interfaces[min_levels+1])
+        vert_levels = config.getfloat('vertical_grid','vert_levels')
+        min_depth = numpy.maximum(-ds.ssh + min_column_thickness,
+                                  interfaces[numpy.minimum(int(vert_levels-1),min_levels+1)])
         ds['bottomDepth'] = numpy.maximum(ds.bottomDepth, min_depth)
 
         init_vertical_coord(config, ds)
 
-        # Addition of thin film here
-        # if thin_film_present, min_column_thickness characterizes the thin film thickness
         ds['modifyLandIcePressureMask'] = \
             (ds['landIceFraction'] > 0.01).astype(int)
 
