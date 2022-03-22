@@ -34,22 +34,22 @@ class Mesh(TestCase):
         name = 'mesh'
         subdir = '{}/{}'.format(mesh_name, name)
         super().__init__(test_group=test_group, name=name, subdir=subdir)
-        if mesh_name in 'QU240':
+        if mesh_name == 'QU240':
             self.mesh_step = QU240Mesh(self, mesh_name,
                                        with_ice_shelf_cavities=False)
-        elif mesh_name in 'QUwISC240':
+        elif mesh_name == 'QUwISC240':
             self.mesh_step = QU240Mesh(self, mesh_name,
                                        with_ice_shelf_cavities=True)
-        elif mesh_name in 'EC30to60':
+        elif mesh_name == 'EC30to60':
             self.mesh_step = EC30to60Mesh(self, mesh_name,
                                           with_ice_shelf_cavities=False)
-        elif mesh_name in 'ECwISC30to60':
+        elif mesh_name == 'ECwISC30to60':
             self.mesh_step = EC30to60Mesh(self, mesh_name,
                                           with_ice_shelf_cavities=True)
-        elif mesh_name in 'SOwISC12to60':
+        elif mesh_name == 'SOwISC12to60':
             self.mesh_step = SO12to60Mesh(self, mesh_name,
                                           with_ice_shelf_cavities=True)
-        elif mesh_name in 'WC14':
+        elif mesh_name == 'WC14':
             self.mesh_step = WC14Mesh(self, mesh_name,
                                       with_ice_shelf_cavities=False)
         else:
