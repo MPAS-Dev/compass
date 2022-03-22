@@ -105,7 +105,11 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.global_ocean.dynamic_adjustment</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">compass.validate</span> <span class="kn">import</span> <span class="n">compare_variables</span>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">xarray</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+
+<span class="kn">from</span> <span class="nn">compass.validate</span> <span class="kn">import</span> <span class="n">compare_variables</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.forward</span> <span class="kn">import</span> <span class="n">ForwardTestCase</span>
 
 
@@ -159,11 +163,31 @@
 <span class="sd">        Test cases can override this method to perform validation of variables</span>
 <span class="sd">        and timers</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;salinity&#39;</span><span class="p">,</span> <span class="s1">&#39;layerThickness&#39;</span><span class="p">,</span>
                      <span class="s1">&#39;normalVelocity&#39;</span><span class="p">]</span>
 
         <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
-                          <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;simulation/output.nc&#39;</span><span class="p">)</span></div>
+                          <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;simulation/output.nc&#39;</span><span class="p">)</span>
+
+        <span class="n">temp_max</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;dynamic_adjustment&#39;</span><span class="p">,</span> <span class="s1">&#39;temperature_max&#39;</span><span class="p">)</span>
+        <span class="n">max_values</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;temperatureMax&#39;</span><span class="p">:</span> <span class="n">temp_max</span><span class="p">}</span>
+
+        <span class="k">for</span> <span class="n">step_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps_to_run</span><span class="p">:</span>
+            <span class="n">step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">step_name</span><span class="p">]</span>
+            <span class="n">step_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span>  <span class="n">step</span><span class="o">.</span><span class="n">subdir</span><span class="p">)</span>
+            <span class="n">global_stats_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">step_path</span><span class="p">,</span> <span class="s1">&#39;analysis_members&#39;</span><span class="p">,</span>
+                                             <span class="s1">&#39;globalStats.*.nc&#39;</span><span class="p">)</span>
+            <span class="n">global_stats_path</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">global_stats_path</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">global_stats_path</span><span class="p">:</span>
+                <span class="n">ds</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">var</span><span class="p">,</span> <span class="n">max_value</span> <span class="ow">in</span> <span class="n">max_values</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">max_in_global_stats</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">var</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>
+                    <span class="k">if</span> <span class="n">max_in_global_stats</span> <span class="o">&gt;</span> <span class="n">max_value</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s1">&#39;Max of </span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s1"> &gt; allowed threshold: &#39;</span>
+                            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">max_in_global_stats</span><span class="si">}</span><span class="s1"> &gt; </span><span class="si">{</span><span class="n">max_value</span><span class="si">}</span><span class="s1"> &#39;</span>
+                            <span class="sa">f</span><span class="s1">&#39;in </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
 </pre></div>
 
            </div>
