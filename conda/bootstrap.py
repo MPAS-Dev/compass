@@ -266,7 +266,7 @@ def get_env_vars(machine, compiler, mpilib):
 
 def build_spack_env(config, update_spack, machine, compiler, mpi, env_name,
                     activate_env, spack_env, spack_base, spack_template_path,
-                    env_vars):
+                    env_vars, tmpdir):
 
     esmf = config.get('deploy', 'esmf')
     scorpio = config.get('deploy', 'scorpio')
@@ -314,7 +314,7 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, env_name,
                        spack_specs=specs, compiler=compiler, mpi=mpi,
                        machine=machine,
                        include_e3sm_hdf5_netcdf=e3sm_hdf5_netcdf,
-                       yaml_template=yaml_template)
+                       yaml_template=yaml_template, tmpdir=tmpdir)
 
         # remove ESMC/ESMF include files that interfere with MPAS time keeping
         include_path = f'{spack_branch_base}/var/spack/environments/' \
@@ -655,7 +655,8 @@ def main():
         env_vars = get_env_vars(machine, compiler, mpi)
         spack_branch_base, spack_script, env_vars = build_spack_env(
             config, args.update_spack, machine, compiler, mpi, env_name,
-            activate_env, spack_env, spack_base, spack_template_path, env_vars)
+            activate_env, spack_env, spack_base, spack_template_path, env_vars,
+            args.tmpdir)
     else:
         env_vars = ''
 

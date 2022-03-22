@@ -50,6 +50,9 @@ def parse_args(bootstrap):
                         action='store_true',
                         help="If the shared spack environment should be "
                              "created or recreated.")
+    parser.add_argument("--tmpdir", dest="tmpdir",
+                        help="A temporary directory for building spack "
+                             "packages")
     if bootstrap:
         parser.add_argument("--local_conda_build", dest="local_conda_build",
                             type=str,
