@@ -62,3 +62,17 @@ The restart step works by creating two different namelist and streams files,
 one each with ``landice`` as the suffix and one each with ``landice.rst`` as
 the suffix.  The former perform a 3-day run from the initial condition, while
 the latter perform a 2-day restart run beginning with the end of the first.
+
+mesh
+~~~~
+
+The class :py:class:`compass.landice.tests.thwaites.mesh.Mesh`
+defines a step for creating a variable resolution Thwaites Glacier mesh.
+This is used by the ``high_res_mesh`` test case.
+
+high_res_mesh
+-------------
+
+The :py:class:`compass.landice.tests.thwaites.high_res_mesh.HighResMesh`
+calls the :py:class:`compass.landice.tests.thwaites.mesh.Mesh` to create
+the variable resolution Thwaites Glacier mesh.
