@@ -1,6 +1,7 @@
 from compass.testgroup import TestGroup
 from compass.landice.tests.thwaites.decomposition_test import DecompositionTest
 from compass.landice.tests.thwaites.restart_test import RestartTest
+from compass.landice.tests.thwaites.high_res_mesh import HighResMesh
 
 
 class Thwaites(TestGroup):
@@ -18,3 +19,5 @@ class Thwaites(TestGroup):
         self.add_test_case(DecompositionTest(test_group=self))
 
         self.add_test_case(RestartTest(test_group=self))
+
+        self.add_test_case(HighResMesh(test_group=self))

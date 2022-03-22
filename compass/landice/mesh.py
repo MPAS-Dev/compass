@@ -167,6 +167,18 @@ def set_cell_width(self, section, thk, vx=None, vy=None,
         spacing = np.interp(lspd, [low_log_speed, high_log_speed],
                             [max_spac, min_spac], left=max_spac,
                             right=min_spac)
+
+        # Clean up where we have missing velocities. These are usually nans
+        # or the default netCDF _FillValue of ~10.e36
+        missing_data_mask = np.logical_or(
+                               np.logical_or(np.isnan(vx), np.isnan(vy)),
+                               np.logical_or(np.abs(vx) > 1.e5,
+                                             np.abs(vy) > 1.e5))
+        spacing[missing_data_mask] = max_spac
+        logger.info(f'Found {np.sum(missing_data_mask)} points in input '
+                    f'dataset with missing velocity values. Setting '
+                    f'velocity-based spacing to maximum value.')
+
         spacing[thk == 0.0] = min_spac
     else:
         spacing = max_spac*np.ones_like(thk)
