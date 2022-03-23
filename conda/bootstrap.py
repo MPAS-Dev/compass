@@ -336,6 +336,10 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, env_name,
                f'export PIO={spack_view}\n'
     if albany != 'None':
         albany_flag_filename = f'{spack_view}/export_albany.in'
+        if not os.path.exists(albany_flag_filename):
+            raise ValueError('Missing Albany linking flags in '
+                             '{albany_flag_filename}.\n Maybe your Spack '
+                             'environment may need to be rebuilt with Albany?')
         with open(albany_flag_filename, 'r') as f:
             albany_flags = f.read()
         if platform.system() == 'Darwin':
@@ -611,6 +615,7 @@ def main():
     conda_template_path = f'{source_path}/conda/compass_env'
     spack_template_path = f'{source_path}/conda/spack'
 
+
     version = get_version()
 
     machine = None
@@ -649,6 +654,9 @@ def main():
         source_path, conda_template_path, conda_base, activ_suffix,
         args.env_name, env_suffix, activate_base, args.use_local,
         args.local_conda_build)
+
+    if not args.with_albany:
+        config.set('deploy', 'albany', 'None')
 
     spack_script = ''
     if compiler is not None:

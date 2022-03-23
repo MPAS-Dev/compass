@@ -53,6 +53,10 @@ def parse_args(bootstrap):
     parser.add_argument("--tmpdir", dest="tmpdir",
                         help="A temporary directory for building spack "
                              "packages")
+    parser.add_argument("--with_albany", dest="with_albany",
+                        action='store_true',
+                        help="Whether to include albany in the spack "
+                             "environment")
     if bootstrap:
         parser.add_argument("--local_conda_build", dest="local_conda_build",
                             type=str,
