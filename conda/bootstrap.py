@@ -16,6 +16,7 @@ from importlib.resources import path
 from configparser import ConfigParser
 
 from mache import MachineInfo, discover_machine
+from mache.spack import get_modules_env_vars_and_mpi_compilers
 from shared import parse_args, get_conda_base, check_call
 
 
@@ -207,16 +208,12 @@ def build_env(is_test, recreate, machine, compiler, mpi, conda_mpi, version,
 
 
 def get_sys_info(machine, compiler, mpilib, mpicc, mpicxx, mpifc,
-                 mod_commands, env_vars):
+                 mod_env_commands):
 
     if machine is None:
         machine = 'None'
 
     # convert env vars from mache to a list
-    env_list = list()
-    for var in env_vars:
-        env_list.append(f'export {var}={env_vars[var]}')
-    env_vars = env_list
 
     if 'intel' in compiler:
         esmf_compilers = '    export ESMF_COMPILER=intel'
@@ -229,18 +226,21 @@ def get_sys_info(machine, compiler, mpilib, mpicc, mpicxx, mpifc,
                          '    export ESMF_CXX={}'.format(mpifc, mpicxx)
 
     if 'intel' in compiler and machine == 'anvil':
-        env_vars.extend(['export I_MPI_CC=icc',
-                         'export I_MPI_CXX=icpc',
-                         'export I_MPI_F77=ifort',
-                         'export I_MPI_F90=ifort'])
+        mod_env_commands = f'{mod_env_commands}\n' \
+                           f'export I_MPI_CC=icc\n'  \
+                           f'export I_MPI_CXX=icpc\n'  \
+                           f'export I_MPI_F77=ifort\n'  \
+                           f'export I_MPI_F90=ifort'
 
     if platform.system() == 'Linux' and machine == 'None':
-        env_vars.append('export MPAS_EXTERNAL_LIBS="-lgomp"')
+        mod_env_commands = f'{mod_env_commands}\n' \
+                           f'export MPAS_EXTERNAL_LIBS="-lgomp"'
 
     if mpilib == 'mvapich':
         esmf_comm = 'mvapich2'
-        env_vars.extend(['export MV2_ENABLE_AFFINITY=0',
-                         'export MV2_SHOW_CPU_BINDING=1'])
+        mod_env_commands = f'{mod_env_commands}\n' \
+                           f'export MV2_ENABLE_AFFINITY=0' \
+                           f'export MV2_SHOW_CPU_BINDING=1'
     elif mpilib == 'mpich':
         esmf_comm = 'mpich3'
     elif mpilib == 'impi':
@@ -273,18 +273,20 @@ def get_sys_info(machine, compiler, mpilib, mpicc, mpicxx, mpifc,
             'export NETCDFF=$(dirname $(dirname $(which nf-config)))\n' \
             'export PNETCDF=$(dirname $(dirname $(which pnetcdf-config)))'
 
-    sys_info = dict(modules=mod_commands, mpicc=mpicc, mpicxx=mpicxx,
+    sys_info = dict(mpicc=mpicc, mpicxx=mpicxx,
                     mpifc=mpifc, esmf_comm=esmf_comm, esmf_netcdf=esmf_netcdf,
                     esmf_compilers=esmf_compilers, netcdf_paths=netcdf_paths,
-                    mpas_netcdf_paths=mpas_netcdf_paths, env_vars=env_vars)
+                    mpas_netcdf_paths=mpas_netcdf_paths)
 
-    return sys_info
+    return sys_info, mod_env_commands
 
 
 def build_system_libraries(config, machine, compiler, mpi, version,
                            template_path, env_path, env_name, activate_base,
-                           activate_env, mpicc, mpicxx, mpifc, mod_commands,
-                           env_vars):
+                           activate_env, mpicc, mpicxx, mpifc,
+                           mod_env_commands):
+
+    mache_mod_env_commands = mod_env_commands
 
     if machine is not None:
         esmf = config.get('deploy', 'esmf')
@@ -315,17 +317,19 @@ def build_system_libraries(config, machine, compiler, mpi, version,
         esmf_path = env_path
         force_build = True
 
-    sys_info = get_sys_info(machine, compiler, mpi, mpicc, mpicxx,
-                            mpifc, mod_commands, env_vars)
+    sys_info, mod_env_commands = get_sys_info(
+        machine, compiler, mpi, mpicc, mpicxx, mpifc, mod_env_commands)
 
     if esmf != 'None':
-        sys_info['env_vars'].append('export PATH="{}:$PATH"'.format(
-            os.path.join(esmf_path, 'bin')))
-        sys_info['env_vars'].append(
-            'export LD_LIBRARY_PATH={}:$LD_LIBRARY_PATH'.format(
-                os.path.join(esmf_path, 'lib')))
+        bin_path = os.path.join(esmf_path, 'bin')
+        lib_path = os.path.join(esmf_path, 'lib')
+        mod_env_commands = \
+            f'{mod_env_commands}\n' \
+            f'export PATH="{bin_path}:$PATH"\n' \
+            f'export LD_LIBRARY_PATH={lib_path}:$LD_LIBRARY_PATH'
 
-    sys_info['env_vars'].append('export PIO={}'.format(scorpio_path))
+    mod_env_commands = f'{mod_env_commands}\n' \
+                       f'export PIO={scorpio_path}'
 
     build_esmf = 'False'
     if esmf == 'None':
@@ -344,15 +348,15 @@ def build_system_libraries(config, machine, compiler, mpi, version,
     with open('{}/build.template'.format(template_path), 'r') as f:
         template = Template(f.read())
 
-    modules = '\n'.join(sys_info['modules'])
-
     if machine is None:
         # need to activate the conda environment because that's where the
         # libraries are
-        modules = '{}\n{}'.format(activate_env.replace('; ', '\n'), modules)
+        activate_commands = activate_env.replace("; ", "\n")
+        mache_mod_env_commands = f'{activate_commands}\n' \
+                                 f'{mache_mod_env_commands}'
 
     script = template.render(
-        sys_info=sys_info, modules=modules,
+        sys_info=sys_info, modules=mache_mod_env_commands,
         scorpio=scorpio, scorpio_path=scorpio_path,
         build_scorpio=build_scorpio, esmf_path=esmf_path,
         esmf_branch=esmf_branch, build_esmf=build_esmf)
@@ -363,12 +367,12 @@ def build_system_libraries(config, machine, compiler, mpi, version,
     command = '/bin/bash build.bash'
     check_call(command)
 
-    return sys_info, system_libs
+    return sys_info, system_libs, mod_env_commands
 
 
-def write_load_compass(template_path, activ_path, conda_base, is_test, version,
+def write_load_compass(template_path, activ_path, conda_base, is_test,
                        activ_suffix, prefix, env_name, machine, sys_info,
-                       env_only):
+                       mod_env_commands, env_only):
 
     try:
         os.makedirs(activ_path)
@@ -383,13 +387,14 @@ def write_load_compass(template_path, activ_path, conda_base, is_test, version,
         script_filename = '{}/{}{}.sh'.format(activ_path, prefix, activ_suffix)
 
     if not env_only:
-        sys_info['env_vars'].append('export USE_PIO2=true')
-    sys_info['env_vars'].append('export HDF5_USE_FILE_LOCKING=FALSE')
-    sys_info['env_vars'].append('export LOAD_COMPASS_ENV={}'.format(
-        script_filename))
+        mod_env_commands = f'{mod_env_commands}\n' \
+                           f'export USE_PIO2=true'
+    mod_env_commands = f'{mod_env_commands}\n' \
+                       f'export HDF5_USE_FILE_LOCKING=FALSE\n' \
+                       f'export LOAD_COMPASS_ENV={script_filename}'
     if machine is not None:
-        sys_info['env_vars'].append('export COMPASS_MACHINE={}'.format(
-            machine))
+        mod_env_commands = f'{mod_env_commands}\n' \
+                           f'export COMPASS_MACHINE={machine}'
 
     filename = '{}/load_compass.template'.format(template_path)
     with open(filename, 'r') as f:
@@ -406,8 +411,7 @@ def write_load_compass(template_path, activ_path, conda_base, is_test, version,
         update_compass = ''
 
     script = template.render(conda_base=conda_base, compass_env=env_name,
-                             modules='\n'.join(sys_info['modules']),
-                             env_vars='\n'.join(sys_info['env_vars']),
+                             mod_env_commands=mod_env_commands,
                              netcdf_paths=sys_info['mpas_netcdf_paths'],
                              update_compass=update_compass)
 
@@ -659,15 +663,16 @@ def main():
             compiler = 'gnu'
 
     if machine_info is not None:
-        mpicc, mpicxx, mpifc, mod_commands, env_vars = \
-            machine_info.get_modules_and_mpi_compilers(compiler, mpi)
+        mpicc, mpicxx, mpifc, mod_env_commands = \
+            get_modules_env_vars_and_mpi_compilers(
+                machine, compiler, mpi, shell='sh',
+                include_e3sm_hdf5_netcdf=True)
     else:
         # using conda-forge compilers
         mpicc = 'mpicc'
         mpicxx = 'mpicxx'
         mpifc = 'mpifort'
-        mod_commands = list()
-        env_vars = dict()
+        mod_env_commands = ''
 
     env_path, env_name, activate_env = build_env(
         is_test, recreate, machine, compiler, mpi, conda_mpi, version, python,
@@ -675,10 +680,10 @@ def main():
         env_suffix, activate_base, args.use_local)
 
     if compiler is not None:
-        sys_info, system_libs = build_system_libraries(
+        sys_info, system_libs, mod_env_commands = build_system_libraries(
             config, machine, compiler, mpi, version, template_path, env_path,
             env_name, activate_base, activate_env, mpicc, mpicxx, mpifc,
-            mod_commands, env_vars)
+            mod_env_commands)
     else:
         sys_info = dict(modules=[], env_vars=[], mpas_netcdf_paths='')
         system_libs = None
@@ -692,8 +697,8 @@ def main():
         prefix = 'load_compass_{}'.format(version)
 
     script_filename = write_load_compass(
-        template_path, activ_path, conda_base, is_test, version, activ_suffix,
-        prefix, env_name, machine, sys_info, args.env_only)
+        template_path, activ_path, conda_base, is_test, activ_suffix,
+        prefix, env_name, machine, sys_info, mod_env_commands, args.env_only)
 
     if args.check:
         check_env(script_filename, env_name)
