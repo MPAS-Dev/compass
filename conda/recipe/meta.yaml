@@ -28,7 +28,7 @@ build:
   # `PKG_NAME * mpi_mpich_*` for mpich
   # `PKG_NAME * mpi_*` for any mpi
   # `PKG_NAME * nompi_*` for no mpi
-  string: "{{ mpi_prefix }}_py_h{{ PKG_HASH }}_{{ build }}"
+  string: "{{ mpi_prefix }}_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build }}"
   entry_points:
     - compass = compass.__main__:main
 
