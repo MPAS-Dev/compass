@@ -50,9 +50,11 @@ class WC14DynamicAdjustment(DynamicAdjustment):
 
         module = self.__module__
 
-        global_stats = {'config_AM_globalStats_enable': '.true.',
-                        'config_AM_globalStats_compute_on_startup': '.true.',
-                        'config_AM_globalStats_write_on_startup': '.true.'}
+        shared_options = \
+            {'config_AM_globalStats_enable': '.true.',
+             'config_AM_globalStats_compute_on_startup': '.true.',
+             'config_AM_globalStats_write_on_startup': '.true.',
+             'config_use_activeTracers_surface_restoring': '.true.'}
 
         # first step
         step_name = 'damped_adjustment_1'
@@ -66,7 +68,7 @@ class WC14DynamicAdjustment(DynamicAdjustment):
             'config_btr_dt': "'00:00:01.5'",
             'config_Rayleigh_friction': '.true.',
             'config_Rayleigh_damping_coeff': '1.0e-3'}
-        namelist_options.update(global_stats)
+        namelist_options.update(shared_options)
         step.add_namelist_options(namelist_options)
 
         stream_replacements = {
@@ -92,7 +94,7 @@ class WC14DynamicAdjustment(DynamicAdjustment):
             'config_Rayleigh_damping_coeff': '4.0e-4',
             'config_do_restart': '.true.',
             'config_start_time': "'{}'".format(restart_times[0])}
-        namelist_options.update(global_stats)
+        namelist_options.update(shared_options)
         step.add_namelist_options(namelist_options)
 
         stream_replacements = {
@@ -119,7 +121,7 @@ class WC14DynamicAdjustment(DynamicAdjustment):
             'config_Rayleigh_damping_coeff': '1.0e-4',
             'config_do_restart': '.true.',
             'config_start_time': "'{}'".format(restart_times[1])}
-        namelist_options.update(global_stats)
+        namelist_options.update(shared_options)
         step.add_namelist_options(namelist_options)
 
         stream_replacements = {
@@ -146,7 +148,7 @@ class WC14DynamicAdjustment(DynamicAdjustment):
             'config_Rayleigh_damping_coeff': '4.0e-5',
             'config_do_restart': '.true.',
             'config_start_time': "'{}'".format(restart_times[2])}
-        namelist_options.update(global_stats)
+        namelist_options.update(shared_options)
         step.add_namelist_options(namelist_options)
 
         stream_replacements = {
@@ -173,7 +175,7 @@ class WC14DynamicAdjustment(DynamicAdjustment):
             'config_Rayleigh_damping_coeff': '2.0e-5',
             'config_do_restart': '.true.',
             'config_start_time': "'{}'".format(restart_times[3])}
-        namelist_options.update(global_stats)
+        namelist_options.update(shared_options)
         step.add_namelist_options(namelist_options)
 
         stream_replacements = {
@@ -198,7 +200,7 @@ class WC14DynamicAdjustment(DynamicAdjustment):
             'config_btr_dt': "'00:00:15'",
             'config_do_restart': '.true.',
             'config_start_time': "'{}'".format(restart_times[4])}
-        namelist_options.update(global_stats)
+        namelist_options.update(shared_options)
         step.add_namelist_options(namelist_options)
 
         stream_replacements = {
@@ -221,7 +223,7 @@ class WC14DynamicAdjustment(DynamicAdjustment):
             'config_run_duration': "'00-00-24_00:00:00'",
             'config_do_restart': '.true.',
             'config_start_time': "'{}'".format(restart_times[5])}
-        namelist_options.update(global_stats)
+        namelist_options.update(shared_options)
         step.add_namelist_options(namelist_options)
 
         stream_replacements = {
