@@ -158,9 +158,11 @@
 
         <span class="n">module</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span>
 
-        <span class="n">global_stats</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_AM_globalStats_enable&#39;</span><span class="p">:</span> <span class="s1">&#39;.true.&#39;</span><span class="p">,</span>
-                        <span class="s1">&#39;config_AM_globalStats_compute_on_startup&#39;</span><span class="p">:</span> <span class="s1">&#39;.true.&#39;</span><span class="p">,</span>
-                        <span class="s1">&#39;config_AM_globalStats_write_on_startup&#39;</span><span class="p">:</span> <span class="s1">&#39;.true.&#39;</span><span class="p">}</span>
+        <span class="n">shared_options</span> <span class="o">=</span> \
+            <span class="p">{</span><span class="s1">&#39;config_AM_globalStats_enable&#39;</span><span class="p">:</span> <span class="s1">&#39;.true.&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;config_AM_globalStats_compute_on_startup&#39;</span><span class="p">:</span> <span class="s1">&#39;.true.&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;config_AM_globalStats_write_on_startup&#39;</span><span class="p">:</span> <span class="s1">&#39;.true.&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;config_use_activeTracers_surface_restoring&#39;</span><span class="p">:</span> <span class="s1">&#39;.true.&#39;</span><span class="p">}</span>
 
         <span class="c1"># first step</span>
         <span class="n">step_name</span> <span class="o">=</span> <span class="s1">&#39;damped_adjustment_1&#39;</span>
@@ -174,7 +176,7 @@
             <span class="s1">&#39;config_btr_dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:00:15&#39;&quot;</span><span class="p">,</span>
             <span class="s1">&#39;config_Rayleigh_friction&#39;</span><span class="p">:</span> <span class="s1">&#39;.true.&#39;</span><span class="p">,</span>
             <span class="s1">&#39;config_Rayleigh_damping_coeff&#39;</span><span class="p">:</span> <span class="s1">&#39;1.0e-4&#39;</span><span class="p">}</span>
-        <span class="n">namelist_options</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">global_stats</span><span class="p">)</span>
+        <span class="n">namelist_options</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">shared_options</span><span class="p">)</span>
         <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">namelist_options</span><span class="p">)</span>
 
         <span class="n">stream_replacements</span> <span class="o">=</span> <span class="p">{</span>
@@ -199,7 +201,7 @@
             <span class="s1">&#39;config_Rayleigh_damping_coeff&#39;</span><span class="p">:</span> <span class="s1">&#39;1.0e-5&#39;</span><span class="p">,</span>
             <span class="s1">&#39;config_do_restart&#39;</span><span class="p">:</span> <span class="s1">&#39;.true.&#39;</span><span class="p">,</span>
             <span class="s1">&#39;config_start_time&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">restart_times</span><span class="p">[</span><span class="mi">0</span><span class="p">])}</span>
-        <span class="n">namelist_options</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">global_stats</span><span class="p">)</span>
+        <span class="n">namelist_options</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">shared_options</span><span class="p">)</span>
         <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">namelist_options</span><span class="p">)</span>
 
         <span class="n">stream_replacements</span> <span class="o">=</span> <span class="p">{</span>
@@ -225,7 +227,7 @@
             <span class="s1">&#39;config_Rayleigh_damping_coeff&#39;</span><span class="p">:</span> <span class="s1">&#39;1.0e-6&#39;</span><span class="p">,</span>
             <span class="s1">&#39;config_do_restart&#39;</span><span class="p">:</span> <span class="s1">&#39;.true.&#39;</span><span class="p">,</span>
             <span class="s1">&#39;config_start_time&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">restart_times</span><span class="p">[</span><span class="mi">1</span><span class="p">])}</span>
-        <span class="n">namelist_options</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">global_stats</span><span class="p">)</span>
+        <span class="n">namelist_options</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">shared_options</span><span class="p">)</span>
         <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">namelist_options</span><span class="p">)</span>
 
         <span class="n">stream_replacements</span> <span class="o">=</span> <span class="p">{</span>
@@ -249,7 +251,7 @@
             <span class="s1">&#39;config_dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:05:00&#39;&quot;</span><span class="p">,</span>
             <span class="s1">&#39;config_do_restart&#39;</span><span class="p">:</span> <span class="s1">&#39;.true.&#39;</span><span class="p">,</span>
             <span class="s1">&#39;config_start_time&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">restart_times</span><span class="p">[</span><span class="mi">2</span><span class="p">])}</span>
-        <span class="n">namelist_options</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">global_stats</span><span class="p">)</span>
+        <span class="n">namelist_options</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">shared_options</span><span class="p">)</span>
         <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">namelist_options</span><span class="p">)</span>
 
         <span class="n">stream_replacements</span> <span class="o">=</span> <span class="p">{</span>
@@ -272,7 +274,7 @@
             <span class="s1">&#39;config_run_duration&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00-00-10_00:00:00&#39;&quot;</span><span class="p">,</span>
             <span class="s1">&#39;config_do_restart&#39;</span><span class="p">:</span> <span class="s1">&#39;.true.&#39;</span><span class="p">,</span>
             <span class="s1">&#39;config_start_time&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">restart_times</span><span class="p">[</span><span class="mi">3</span><span class="p">])}</span>
-        <span class="n">namelist_options</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">global_stats</span><span class="p">)</span>
+        <span class="n">namelist_options</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">shared_options</span><span class="p">)</span>
         <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">namelist_options</span><span class="p">)</span>
 
         <span class="n">stream_replacements</span> <span class="o">=</span> <span class="p">{</span>
