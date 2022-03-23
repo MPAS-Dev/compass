@@ -39,8 +39,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 with open(os.path.join(here, 'compass', '__init__.py')) as f:
     init_file = f.read()
 
-version = re.search(r'{}\s*=\s*[(]([^)]*)[)]'.format('__version_info__'),
-                    init_file).group(1).replace(', ', '.')
+version = '1.0.0rc4'
 
 os.chdir(here)
 

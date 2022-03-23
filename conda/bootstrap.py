@@ -641,7 +641,8 @@ def main():
     source_path = os.getcwd()
     template_path = '{}/conda/compass_env'.format(source_path)
 
-    version = get_version()
+    # version = get_version()
+    version = '1.0.0rc4'
 
     machine = None
     machine_info = None
