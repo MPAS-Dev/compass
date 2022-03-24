@@ -555,7 +555,10 @@ def update_permissions(config, env_type, activ_path, conda_base, system_libs):
         for root, dirs, files in os.walk(base):
             for directory in dirs:
                 progress += 1
-                bar.update(progress)
+                try:
+                    bar.update(progress)
+                except ValueError:
+                    pass
 
                 directory = os.path.join(root, directory)
 
@@ -581,7 +584,10 @@ def update_permissions(config, env_type, activ_path, conda_base, system_libs):
 
             for file_name in files:
                 progress += 1
-                bar.update(progress)
+                try:
+                    bar.update(progress)
+                except ValueError:
+                    pass
                 file_name = os.path.join(root, file_name)
                 try:
                     file_stat = os.stat(file_name)
