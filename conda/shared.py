@@ -1,11 +1,19 @@
+from __future__ import print_function
+
 import os
 import warnings
 import sys
 import argparse
 import subprocess
+import platform
+
+try:
+    from urllib.request import urlopen, Request
+except ImportError:
+    from urllib2 import urlopen, Request
 
 
-def parse_args():
+def parse_args(bootstrap):
     parser = argparse.ArgumentParser(
         description='Deploy a compass conda environment')
     parser.add_argument("-m", "--machine", dest="machine",
@@ -36,29 +44,32 @@ def parse_args():
                              "packages")
     parser.add_argument("--use_local", dest="use_local", action='store_true',
                         help="Use locally built conda packages (for testing).")
+    if bootstrap:
+        parser.add_argument("--local_conda_build", dest="local_conda_build",
+                            type=str,
+                            help="A path for conda packages (for testing).")
 
     args = parser.parse_args(sys.argv[1:])
 
     return args
 
 
-def get_conda_base(conda_base, is_test, config):
-    if conda_base is None:
-        if is_test:
-            if 'CONDA_EXE' in os.environ:
-                # if this is a test, assume we're the same base as the
-                # environment currently active
-                conda_exe = os.environ['CONDA_EXE']
-                conda_base = os.path.abspath(
-                    os.path.join(conda_exe, '..', '..'))
-                warnings.warn(
-                    '--conda path not supplied.  Using conda installed at '
-                    '{}'.format(conda_base))
-            else:
-                raise ValueError('No conda base provided with --conda and '
-                                 'none could be inferred.')
+def get_conda_base(conda_base, config, shared=False):
+    if shared:
+        conda_base = config.get('paths', 'compass_envs')
+    elif conda_base is None:
+        if 'CONDA_EXE' in os.environ:
+            # if this is a test, assume we're the same base as the
+            # environment currently active
+            conda_exe = os.environ['CONDA_EXE']
+            conda_base = os.path.abspath(
+                os.path.join(conda_exe, '..', '..'))
+            warnings.warn(
+                '--conda path not supplied.  Using conda installed at '
+                '{}'.format(conda_base))
         else:
-            conda_base = config.get('paths', 'compass_envs')
+            raise ValueError('No conda base provided with --conda and '
+                             'none could be inferred.')
     # handle "~" in the path
     conda_base = os.path.abspath(os.path.expanduser(conda_base))
     return conda_base
@@ -71,3 +82,36 @@ def check_call(commands, env=None):
     proc.wait()
     if proc.returncode != 0:
         raise subprocess.CalledProcessError(proc.returncode, commands)
+
+
+def install_miniconda(conda_base, activate_base):
+    if not os.path.exists(conda_base):
+        print('Installing Miniconda3')
+        if platform.system() == 'Linux':
+            system = 'Linux'
+        elif platform.system() == 'Darwin':
+            system = 'MacOSX'
+        else:
+            system = 'Linux'
+        miniconda = 'Miniconda3-latest-{}-x86_64.sh'.format(system)
+        url = 'https://repo.continuum.io/miniconda/{}'.format(miniconda)
+        print(url)
+        req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+        f = urlopen(req)
+        html = f.read()
+        with open(miniconda, 'wb') as outfile:
+            outfile.write(html)
+        f.close()
+
+        command = '/bin/bash {} -b -p {}'.format(miniconda, conda_base)
+        check_call(command)
+        os.remove(miniconda)
+
+    print('Doing initial setup')
+    commands = '{}; ' \
+               'conda config --add channels conda-forge; ' \
+               'conda config --set channel_priority strict; ' \
+               'conda install -y mamba boa; ' \
+               'conda update -y --all'.format(activate_base)
+
+    check_call(commands)

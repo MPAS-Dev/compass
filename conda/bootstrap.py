@@ -17,13 +17,13 @@ from configparser import ConfigParser
 
 from mache import MachineInfo, discover_machine
 from mache.spack import get_modules_env_vars_and_mpi_compilers
-from shared import parse_args, get_conda_base, check_call
+from shared import parse_args, get_conda_base, check_call, install_miniconda
 
 
 def get_config(config_file, machine):
     # we can't load compass so we find the config files
     here = os.path.abspath(os.path.dirname(__file__))
-    default_config = os.path.join(here, '..', 'compass', 'default.cfg')
+    default_config = os.path.join(here, 'default.cfg')
     config = ConfigParser()
     config.read(default_config)
 
@@ -55,7 +55,7 @@ def get_version():
     return version
 
 
-def get_env_setup(args, config, machine, is_test, source_path, conda_base):
+def get_env_setup(args, config, machine, env_type, source_path, conda_base):
 
     if args.python is not None:
         python = args.python
@@ -96,7 +96,7 @@ def get_env_setup(args, config, machine, is_test, source_path, conda_base):
         activ_suffix = ''
         env_suffix = ''
 
-    if is_test:
+    if env_type == 'dev':
         activ_path = source_path
     else:
         activ_path = os.path.abspath(os.path.join(conda_base, '..'))
@@ -107,11 +107,15 @@ def get_env_setup(args, config, machine, is_test, source_path, conda_base):
         env_suffix, activ_path
 
 
-def build_env(is_test, recreate, machine, compiler, mpi, conda_mpi, version,
+def build_env(env_type, recreate, machine, compiler, mpi, conda_mpi, version,
               python, source_path, template_path, conda_base, activ_suffix,
-              env_name, env_suffix, activate_base, use_local):
+              env_name, env_suffix, activate_base, use_local,
+              local_conda_build):
 
-    if compiler is not None or is_test:
+    if env_type != 'dev':
+        install_miniconda(conda_base, activate_base)
+
+    if compiler is not None or env_type == 'dev':
         build_dir = f'conda/build{activ_suffix}'
 
         try:
@@ -125,9 +129,11 @@ def build_env(is_test, recreate, machine, compiler, mpi, conda_mpi, version,
 
         os.chdir(build_dir)
 
-    if is_test:
+    if env_type == 'dev':
         if env_name is None:
             env_name = f'dev_compass_{version}{env_suffix}'
+    elif env_type == 'test_release':
+        env_name = f'test_compass_{version}{env_suffix}'
     else:
         env_name = f'compass_{version}{env_suffix}'
     env_path = os.path.join(conda_base, 'envs', env_name)
@@ -140,8 +146,14 @@ def build_env(is_test, recreate, machine, compiler, mpi, conda_mpi, version,
     channels = ['-c conda-forge', '-c defaults']
     if use_local:
         channels = ['--use-local'] + channels
-    if machine is None or not is_test:
-        # we need libpnetcdf and scorpio from the e3sm channel, compass label
+    if local_conda_build is not None:
+        channels = ['-c', local_conda_build] + channels
+    if env_type == 'test_release':
+        # for a test release, we will be the compass package from the dev label
+        channels = channels + ['-c e3sm/label/compass_dev']
+    if machine is None or env_type == 'release':
+        # we need libpnetcdf and scorpio (and maybe compass itself) from the
+        # e3sm channel, compass label
         channels = channels + ['-c e3sm/label/compass']
 
     channels = f'--override-channels {" ".join(channels)}'
@@ -156,7 +168,7 @@ def build_env(is_test, recreate, machine, compiler, mpi, conda_mpi, version,
     with open(f'{template_path}/spec-file.template', 'r') as f:
         template = Template(f.read())
 
-    if is_test:
+    if env_type == 'dev':
         spec_file = template.render(mpi=conda_mpi, mpi_prefix=mpi_prefix)
 
         spec_filename = f'spec-file-{conda_mpi}.txt'
@@ -167,7 +179,7 @@ def build_env(is_test, recreate, machine, compiler, mpi, conda_mpi, version,
 
     if not os.path.exists(env_path) or recreate:
         print(f'creating {env_name}')
-        if is_test:
+        if env_type == 'dev':
             # install dev dependencies and compass itself
             commands = \
                 f'{activate_base}; ' \
@@ -187,7 +199,7 @@ def build_env(is_test, recreate, machine, compiler, mpi, conda_mpi, version,
                        f'mamba create -y -n {env_name} {channels} {packages}'
             check_call(commands)
     else:
-        if is_test:
+        if env_type == 'dev':
             print(f'updating {env_name}')
             # install dev dependencies and compass itself
             commands = \
@@ -282,9 +294,8 @@ def get_sys_info(machine, compiler, mpilib, mpicc, mpicxx, mpifc,
 
 
 def build_system_libraries(config, machine, compiler, mpi, version,
-                           template_path, env_path, env_name, activate_base,
-                           activate_env, mpicc, mpicxx, mpifc,
-                           mod_env_commands):
+                           template_path, env_path, env_name, activate_env,
+                           mpicc, mpicxx, mpifc, mod_env_commands):
 
     mache_mod_env_commands = mod_env_commands
 
@@ -299,8 +310,12 @@ def build_system_libraries(config, machine, compiler, mpi, version,
     if esmf != 'None':
         # remove conda-forge esmf because we will use the system build
         commands = '{}; conda remove -y --force -n {} esmf'.format(
-            activate_base, env_name)
-        check_call(commands)
+            activate_env, env_name)
+        try:
+            check_call(commands)
+        except subprocess.CalledProcessError:
+            # it could be that esmf was already removed
+            pass
 
     force_build = False
     if machine is not None:
@@ -370,7 +385,7 @@ def build_system_libraries(config, machine, compiler, mpi, version,
     return sys_info, system_libs, mod_env_commands
 
 
-def write_load_compass(template_path, activ_path, conda_base, is_test,
+def write_load_compass(template_path, activ_path, conda_base, env_type,
                        activ_suffix, prefix, env_name, machine, sys_info,
                        mod_env_commands, env_only):
 
@@ -400,7 +415,7 @@ def write_load_compass(template_path, activ_path, conda_base, is_test,
     with open(filename, 'r') as f:
         template = Template(f.read())
 
-    if is_test:
+    if env_type == 'dev':
         update_compass = \
             'if [[ -f "./setup.py" && -d "compass" ]]; then\n' \
             '   # safe to assume we\'re in the compass repo\n' \
@@ -467,10 +482,10 @@ def test_command(command, env, package):
     print('  {} passes'.format(package))
 
 
-def update_permissions(config, is_test, activ_path, conda_base, system_libs):
+def update_permissions(config, env_type, activ_path, conda_base, system_libs):
 
     directories = []
-    if not is_test:
+    if env_type != 'dev':
         directories.append(conda_base)
     if system_libs is not None:
         # even if this is not a release, we need to update permissions on
@@ -492,7 +507,7 @@ def update_permissions(config, is_test, activ_path, conda_base, system_libs):
 
     mask = stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO
 
-    if not is_test:
+    if env_type != 'dev':
 
         activation_files = glob.glob('{}/*_compass*.sh'.format(
             activ_path))
@@ -615,7 +630,7 @@ def check_unsupported(machine, compiler, mpi, source_path):
 
 
 def main():
-    args = parse_args()
+    args = parse_args(bootstrap=True)
 
     source_path = os.getcwd()
     template_path = '{}/conda/compass_env'.format(source_path)
@@ -634,9 +649,11 @@ def main():
 
     config = get_config(args.config_file, machine)
 
-    is_test = not config.getboolean('deploy', 'release')
-
-    conda_base = get_conda_base(args.conda_base, is_test, config)
+    env_type = config.get('deploy', 'env_type')
+    if env_type not in ['dev', 'test_release', 'release']:
+        raise ValueError(f'Unexpected env_type: {env_type}')
+    shared = (env_type != 'dev')
+    conda_base = get_conda_base(args.conda_base, config, shared=shared)
 
     base_activation_script = os.path.abspath(
         '{}/etc/profile.d/conda.sh'.format(conda_base))
@@ -644,8 +661,8 @@ def main():
     activate_base = 'source {}; conda activate'.format(base_activation_script)
 
     python, recreate, compiler, mpi, conda_mpi, activ_suffix, env_suffix, \
-        activ_path = get_env_setup(args, config, machine, is_test, source_path,
-                                   conda_base)
+        activ_path = get_env_setup(args, config, machine, env_type,
+                                   source_path, conda_base)
 
     if machine is None and not args.env_only and args.mpi is None:
         raise ValueError('Your machine wasn\'t recognized by compass but you '
@@ -675,39 +692,53 @@ def main():
         mod_env_commands = ''
 
     env_path, env_name, activate_env = build_env(
-        is_test, recreate, machine, compiler, mpi, conda_mpi, version, python,
+        env_type, recreate, machine, compiler, mpi, conda_mpi, version, python,
         source_path, template_path, conda_base, activ_suffix, args.env_name,
-        env_suffix, activate_base, args.use_local)
+        env_suffix, activate_base, args.use_local, args.local_conda_build)
 
     if compiler is not None:
         sys_info, system_libs, mod_env_commands = build_system_libraries(
             config, machine, compiler, mpi, version, template_path, env_path,
-            env_name, activate_base, activate_env, mpicc, mpicxx, mpifc,
-            mod_env_commands)
+            env_name, activate_env, mpicc, mpicxx, mpifc, mod_env_commands)
     else:
         sys_info = dict(modules=[], env_vars=[], mpas_netcdf_paths='')
         system_libs = None
 
-    if is_test:
+    if env_type == 'dev':
         if args.env_name is not None:
             prefix = 'load_{}'.format(args.env_name)
         else:
             prefix = 'load_dev_compass_{}'.format(version)
+    elif env_type == 'test_release':
+        prefix = 'test_compass_{}'.format(version)
     else:
         prefix = 'load_compass_{}'.format(version)
 
     script_filename = write_load_compass(
-        template_path, activ_path, conda_base, is_test, activ_suffix,
-        prefix, env_name, machine, sys_info, mod_env_commands, args.env_only)
+        template_path, activ_path, conda_base, env_type, activ_suffix, prefix,
+        env_name, machine, sys_info, mod_env_commands, args.env_only)
 
     if args.check:
         check_env(script_filename, env_name)
+
+    if env_type == 'release':
+        # make a symlink to the activation script
+        link = os.path.join(activ_path,
+                            f'load_latest_compass_{compiler}_{mpi}.sh')
+        check_call(f'ln -sfn {script_filename} {link}')
+
+        default_compiler = config.get('deploy', 'compiler')
+        default_mpi = config.get('deploy', 'mpi_{}'.format(default_compiler))
+        if compiler == default_compiler and mpi == default_mpi:
+            # make a default symlink to the activation script
+            link = os.path.join(activ_path, 'load_latest_compass.sh')
+            check_call(f'ln -sfn {script_filename} {link}')
 
     commands = '{}; conda clean -y -p -t'.format(activate_base)
     check_call(commands)
 
     if machine is not None:
-        update_permissions(config, is_test, activ_path, conda_base,
+        update_permissions(config, env_type, activ_path, conda_base,
                            system_libs)
 
 
