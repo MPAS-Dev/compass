@@ -22,6 +22,7 @@ if [ "{{ build_scorpio }}" == "True" ]; then
     cd build
     FC={{ sys_info.mpifc }} CC={{ sys_info.mpicc }} CXX={{ sys_info.mpicxx }} cmake \
         -DCMAKE_INSTALL_PREFIX=$SCORPIO_PATH -DPIO_ENABLE_TIMING=OFF \
+        -DPIO_ENABLE_TOOLS=OFF \
         -DNetCDF_C_PATH=$NETCDF_C_PATH \
         -DNetCDF_Fortran_PATH=$NETCDF_FORTRAN_PATH \
         -DPnetCDF_PATH=$PNETCDF_PATH ..
