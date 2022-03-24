@@ -14,7 +14,7 @@ class InitialState(Step):
     A step for creating a mesh and initial condition for drying slope test
     cases
     """
-    def __init__(self, test_case):
+    def __init__(self, test_case, coord_type='sigma'):
         """
         Create the step
 
@@ -28,6 +28,8 @@ class InitialState(Step):
 
         self.add_namelist_file('compass.ocean.tests.drying_slope',
                                'namelist.init', mode='init')
+        self.add_namelist_file('compass.ocean.tests.drying_slope',
+                               f'namelist.{coord_type}.init', mode='init')
 
         self.add_streams_file('compass.ocean.tests.drying_slope',
                               'streams.init', mode='init')

@@ -43,12 +43,12 @@ class Default(TestCase):
         subdir = f'{res_name}/{coord_type}/{name}'
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
-
-        self.add_step(InitialState(test_case=self))
+        self.add_step(InitialState(test_case=self, coord_type=coord_type))
         for damping_coeff in [0.0025, 0.01]:
             self.add_step(Forward(test_case=self, resolution=resolution,
                                   cores=4, threads=1,
-                                  damping_coeff=damping_coeff))
+                                  damping_coeff=damping_coeff,
+                                  coord_type=coord_type))
         self.add_step(Viz(test_case=self))
 
     def configure(self):
@@ -56,6 +56,7 @@ class Default(TestCase):
         Modify the configuration options for this test case.
         """
 
+        coord_type = self.coord_type
         resolution = self.resolution
         config = self.config
         ny = round(28 / resolution)
@@ -67,3 +68,6 @@ class Default(TestCase):
                    'mesh cells in the y direction')
         config.set('drying_slope', 'dc', f'{dc}', comment='the distance '
                    'between adjacent cell centers')
+        config.set('vertical_grid', 'coordinate_type', f'{coord_type}')
+        if coord_type == 'single_layer':
+            config.set('vertical_grid', 'vert_levels', '1')
