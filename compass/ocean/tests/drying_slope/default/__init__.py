@@ -1,6 +1,6 @@
 from compass.testcase import TestCase
 from compass.ocean.tests.drying_slope.initial_state import InitialState
-#from compass.ocean.tests.drying_slope.forward import Forward
+from compass.ocean.tests.drying_slope.forward import Forward
 
 
 class Default(TestCase):
@@ -39,5 +39,5 @@ class Default(TestCase):
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
         self.add_step(InitialState(test_case=self))
-        #self.add_step(Forward(test_case=self, cores=4, threads=1))
+        self.add_step(Forward(test_case=self, cores=4, threads=1))
 

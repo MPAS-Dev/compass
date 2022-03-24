@@ -6,6 +6,14 @@
 <immutable_stream name="input"
                   filename_template="init.nc"/>
 
+<stream name="forcing"
+                  filename_template="forcing.nc"
+                  input_interval="initial_only"
+                  type="input">
+    <var name="tidalInputMask"/>
+    <var name="bottomDrag"/>
+</stream>
+
 <stream name="output"
         type="output"
         filename_template="output.nc"
