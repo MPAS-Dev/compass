@@ -53,7 +53,7 @@ def setup_install_env(activate_base, use_local):
     print('Setting up a conda environment for installing compass')
     commands = '{}; ' \
                'mamba create -y -n temp_compass_install {} ' \
-               'progressbar2 jinja2 "mache>=1.3.1"'.format(activate_base,
+               'progressbar2 jinja2 "mache>=1.3.2"'.format(activate_base,
                                                            channels)
 
     check_call(commands)
