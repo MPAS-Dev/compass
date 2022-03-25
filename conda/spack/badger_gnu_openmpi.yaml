@@ -4,7 +4,6 @@ spack:
   - gcc
   - openmpi
   - intel-mkl
-  - hdf5
 {{ specs }}
   concretization: together
   packages:
@@ -75,13 +74,6 @@ spack:
         prefix: /usr/projects/hpcsoft/toss3/common/x86_64/intel-clusterstudio/2020.4.912/compilers_and_libraries_2020
         modules:
         - mkl/2020.0.4
-      buildable: false
-    hdf5:
-      externals:
-      - spec: hdf5@1.10.7~cxx+fortran+hl~java+mpi+shared
-        prefix: /usr/projects/hpcsoft/toss3/badger/hdf5/1.10.7_gcc-9.3.0_openmpi-3.1.6
-        modules:
-        - hdf5-parallel/1.10.7
       buildable: false
   config:
     install_missing_compilers: false
