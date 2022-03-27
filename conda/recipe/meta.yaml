@@ -55,7 +55,6 @@ requirements:
     - matplotlib-base
     - metis
     - mpas_tools 0.13.0
-    - {{ mpi }}  # [mpi != 'nompi']
     - nco
     - netcdf4 * nompi_*
     - numpy
@@ -66,6 +65,21 @@ requirements:
     - scipy
     - shapely
     - xarray
+
+# tools for building MPAS components
+{% if mpi != "nompi" %}
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - {{ compiler('fortran') }}
+    - cmake
+    - libnetcdf * {{ mpi_prefix }}_*
+    - libpnetcdf * {{ mpi_prefix }}_*
+    - m4
+    - make
+    - {{ mpi }}
+    - netcdf-fortran
+    - scorpio * {{ mpi_prefix }}_*
+{% endif %}
 
 test:
   requires:
