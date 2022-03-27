@@ -8,10 +8,6 @@ Quick Start for Users
 compass conda environment
 -------------------------
 
-.. note::
-
-    **The following are planned instructions after a compass release.**
-
 For each ``compass`` release, we maintain a
 `conda environment <https://docs.conda.io/en/latest/>`_. that includes the
 ``compass`` package as well as all of its dependencies and some libraries
