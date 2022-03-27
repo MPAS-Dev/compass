@@ -72,13 +72,14 @@ requirements:
     - {{ compiler('cxx') }}
     - {{ compiler('fortran') }}
     - cmake
+    - hdf5 * {{ mpi_prefix }}_*
     - libnetcdf * {{ mpi_prefix }}_*
-    - libpnetcdf * {{ mpi_prefix }}_*
+    - libpnetcdf 1.12.2 {{ mpi_prefix }}_*
     - m4
     - make
     - {{ mpi }}
     - netcdf-fortran
-    - scorpio * {{ mpi_prefix }}_*
+    - scorpio 1.2.2 {{ mpi_prefix }}_*
 {% endif %}
 
 test:
