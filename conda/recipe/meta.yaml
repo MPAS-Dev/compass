@@ -31,6 +31,7 @@ build:
   string: "{{ mpi_prefix }}_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build }}"
   entry_points:
     - compass = compass.__main__:main
+    - create_compass_load_script = compass.load:main
 
 requirements:
   host:
