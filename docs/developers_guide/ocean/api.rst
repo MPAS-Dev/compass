@@ -578,9 +578,9 @@ ziso
    Ziso
    configure
 
-   default.Default
-   default.Default.configure
-   default.Default.run
+   ZisoTestCase
+   ZisoTestCase.configure
+   ZisoTestCase.run
 
    with_frazil.WithFrazil
    with_frazil.WithFrazil.configure
