@@ -68,10 +68,10 @@ requirements:
 
 # tools for building MPAS components
 {% if mpi != "nompi" %}
-    - {{ compiler('c') }}
-    - {{ compiler('cxx') }}
-    - {{ compiler('fortran') }}
+    - c-compiler
     - cmake
+    - cxx-compiler
+    - fortran-compiler
     - hdf5 * {{ mpi_prefix }}_*
     - libnetcdf * {{ mpi_prefix }}_*
     - libpnetcdf 1.12.2 {{ mpi_prefix }}_*
