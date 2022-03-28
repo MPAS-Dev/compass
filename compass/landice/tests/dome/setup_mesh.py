@@ -91,7 +91,7 @@ def _setup_dome_initial_conditions(config, logger, filename):
 
     Parameters
     ----------
-    config : configparser.ConfigParser
+    config : compass.config.CompassConfigParser
         Configuration options for this test case, a combination of the defaults
         for the machine, core and configuration
 

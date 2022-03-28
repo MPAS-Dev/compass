@@ -58,7 +58,7 @@ def visualize_circular_shelf(config, logger, filename):
 
     Parameters
     ----------
-    config : configparser.ConfigParser
+    config : compass.config.CompassConfigParser
         Configuration options for this test case, a combination of the defaults
         for the machine, core and configuration
 
