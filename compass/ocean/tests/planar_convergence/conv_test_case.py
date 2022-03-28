@@ -1,6 +1,4 @@
-import configparser
-
-from compass.config import add_config
+from compass.config import CompassConfigParser
 from compass.testcase import TestCase
 from compass.ocean.tests.planar_convergence.forward import \
     Forward
@@ -31,10 +29,9 @@ class ConvTestCase(TestCase):
         self.resolutions = None
 
         # add the steps with default resolutions so they can be listed
-        config = configparser.ConfigParser(
-            interpolation=configparser.ExtendedInterpolation())
+        config = CompassConfigParser()
         module = 'compass.ocean.tests.planar_convergence'
-        add_config(config, module, 'planar_convergence.cfg')
+        config.add_from_package(module, 'planar_convergence.cfg')
         self._setup_steps(config)
 
     def configure(self):
@@ -104,7 +101,7 @@ class ConvTestCase(TestCase):
 
         Parameters
         ----------
-        config : configparser.ConfigParse
+        config : compass.config.CompassConfigParser
             The config options containing the resolutions
         """
 

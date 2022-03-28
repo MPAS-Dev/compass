@@ -74,7 +74,7 @@ def make_diagnostics_files(config, logger, mesh_short_name,
 
     Parameters
     ----------
-    config : configparser.ConfigParser
+    config : compass.config.CompassConfigParser
         Configuration options for this test case
 
     logger : logging.Logger
