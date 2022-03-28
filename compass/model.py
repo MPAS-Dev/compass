@@ -76,7 +76,7 @@ def partition(cores, config, logger, graph_file='graph.info'):
     cores : int
         The number of cores that the model should be run on
 
-    config : configparser.ConfigParser
+    config : compass.config.CompassConfigParser
         Configuration options for the test case, used to get the partitioning
         executable
 

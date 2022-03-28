@@ -1,9 +1,8 @@
 import os
 import sys
 import subprocess
-import configparser
 
-from compass.config import add_config
+from compass.config import CompassConfigParser
 
 
 def write(work_dir, test_cases, mpas_core=None, config_filename=None,
@@ -114,13 +113,11 @@ def write(work_dir, test_cases, mpas_core=None, config_filename=None,
 def _get_mpas_git_version(mpas_core, config_filename, mpas_model_path):
 
     if mpas_model_path is None:
-        config = configparser.ConfigParser(
-            interpolation=configparser.ExtendedInterpolation())
+        config = CompassConfigParser()
         # add the config options for the MPAS core
-        add_config(config, 'compass.{}'.format(mpas_core),
-                   '{}.cfg'.format(mpas_core))
+        config.add_from_package(f'compass.{mpas_core}', f'{mpas_core}.cfg')
         if config_filename is not None:
-            config.read(config_filename)
+            config.add_user_config(config_filename)
         if not config.has_option('paths', 'mpas_model'):
             raise ValueError('Couldn\'t find MPAS model.  Not in user config '
                              'file or passed with -p flag.')

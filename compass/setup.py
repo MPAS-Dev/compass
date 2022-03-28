@@ -1,15 +1,13 @@
 import argparse
 import sys
-import configparser
 import os
 import pickle
 import warnings
 
-from mache import MachineInfo, discover_machine
+from mache import discover_machine
 
 from compass.mpas_cores import get_mpas_cores
-from compass.config import add_config, merge_other_config, \
-    ensure_absolute_paths
+from compass.config import CompassConfigParser
 from compass.io import symlink
 from compass import provenance
 
@@ -68,11 +66,6 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
 
     if machine is None:
         machine = discover_machine()
-
-    if machine is None:
-        machine_info = MachineInfo(machine='unknown')
-    else:
-        machine_info = MachineInfo(machine=machine)
 
     if config_file is None and machine is None:
         raise ValueError('At least one of config_file and machine is needed.')
@@ -147,8 +140,8 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
 
     print('Setting up test cases:')
     for path, test_case in test_cases.items():
-        setup_case(path, test_case, config_file, machine, machine_info,
-                   work_dir, baseline_dir, mpas_model_path,
+        setup_case(path, test_case, config_file, machine, work_dir,
+                   baseline_dir, mpas_model_path,
                    cached_steps=cached_steps[path])
 
     test_suite = {'name': suite_name,
@@ -174,8 +167,8 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
     return test_cases
 
 
-def setup_case(path, test_case, config_file, machine, machine_info, work_dir,
-               baseline_dir, mpas_model_path, cached_steps):
+def setup_case(path, test_case, config_file, machine, work_dir, baseline_dir,
+               mpas_model_path, cached_steps):
     """
     Set up one or more test cases
 
@@ -195,10 +188,6 @@ def setup_case(path, test_case, config_file, machine, machine_info, work_dir,
         The name of one of the machines with defined config options, which can
         be listed with ``compass list --machines``
 
-    machine_info : mache.MachineInfo
-        Information about the machine, to be included in the config options
-        and passed along to each step
-
     work_dir : str
         A directory that will serve as the base for creating case directories
 
@@ -216,32 +205,35 @@ def setup_case(path, test_case, config_file, machine, machine_info, work_dir,
 
     print('  {}'.format(path))
 
-    config = configparser.ConfigParser(
-        interpolation=configparser.ExtendedInterpolation())
+    config = CompassConfigParser()
+
+    if config_file is not None:
+        config.add_user_config(config_file)
 
     # start with default compass config options
-    add_config(config, 'compass', 'default.cfg')
+    config.add_from_package('compass', 'default.cfg')
 
     # add the E3SM config options from mache
-    merge_other_config(config, machine_info.config)
+    if machine is not None:
+        config.add_from_package('mache', f'{machine}.cfg')
+
     # add the compass machine config file
     if machine is None:
         machine = 'default'
-    add_config(config, 'compass.machines', '{}.cfg'.format(machine))
+    config.add_from_package('compass.machines', f'{machine}.cfg')
 
     # add the config options for the MPAS core
     mpas_core = test_case.mpas_core.name
-    add_config(config, 'compass.{}'.format(mpas_core),
-               '{}.cfg'.format(mpas_core))
+    config.add_from_package(f'compass.{mpas_core}', f'{mpas_core}.cfg')
 
     # add the config options for the test group (if defined)
     test_group = test_case.test_group.name
-    add_config(config, 'compass.{}.tests.{}'.format(mpas_core, test_group),
-               '{}.cfg'.format(test_group), exception=False)
+    config.add_from_package(f'compass.{mpas_core}.tests.{test_group}',
+                            f'{test_group}.cfg', exception=False)
 
     # add the config options for the test case (if defined)
-    add_config(config, test_case.__module__,
-               '{}.cfg'.format(test_case.name), exception=False)
+    config.add_from_package(test_case.__module__,
+                            f'{test_case.name}.cfg', exception=False)
 
     test_case_dir = os.path.join(work_dir, path)
     try:
@@ -251,19 +243,9 @@ def setup_case(path, test_case, config_file, machine, machine_info, work_dir,
     test_case.work_dir = test_case_dir
     test_case.base_work_dir = work_dir
 
-    # add the custom config file once before calling configure() in case we
-    # need to use the config options from there
-    if config_file is not None:
-        config.read(config_file)
-
     # add config options specific to the test case
     test_case.config = config
     test_case.configure()
-
-    # add the custom config file (again) last, so these options are the
-    # defaults
-    if config_file is not None:
-        config.read(config_file)
 
     # add the baseline directory for this test case
     if baseline_dir is not None:
@@ -274,10 +256,6 @@ def setup_case(path, test_case, config_file, machine, machine_info, work_dir,
         config.set('paths', 'mpas_model', mpas_model_path)
 
     config.set('test_case', 'steps_to_run', ' '.join(test_case.steps_to_run))
-
-    # make sure all paths in the paths, namelists and streams sections are
-    # absolute paths
-    ensure_absolute_paths(config)
 
     # write out the config file
     test_case_config = '{}.cfg'.format(test_case.name)

@@ -2,7 +2,6 @@ import argparse
 import sys
 import os
 import pickle
-import configparser
 import time
 import glob
 
@@ -10,6 +9,7 @@ from mpas_tools.logging import LoggingContext
 import mpas_tools.io
 from compass.parallel import check_parallel_system, set_cores_per_node
 from compass.logging import log_method_call
+from compass.config import CompassConfigParser
 
 
 def run_suite(suite_name, quiet=False):
@@ -50,9 +50,8 @@ def run_suite(suite_name, quiet=False):
     test_case = next(iter(test_suite['test_cases'].values()))
     config_filename = os.path.join(test_case.work_dir,
                                    test_case.config_filename)
-    config = configparser.ConfigParser(
-        interpolation=configparser.ExtendedInterpolation())
-    config.read(config_filename)
+    config = CompassConfigParser()
+    config.add_user_config(config_filename)
     check_parallel_system(config)
 
     # start logging to stdout/stderr
@@ -92,9 +91,8 @@ def run_suite(suite_name, quiet=False):
 
                 os.chdir(test_case.work_dir)
 
-                config = configparser.ConfigParser(
-                    interpolation=configparser.ExtendedInterpolation())
-                config.read(test_case.config_filename)
+                config = CompassConfigParser()
+                config.add_user_config(test_case.config_filename)
                 test_case.config = config
                 set_cores_per_node(test_case.config)
 
@@ -216,9 +214,8 @@ def run_test_case(steps_to_run=None, steps_not_to_run=None):
     with open('test_case.pickle', 'rb') as handle:
         test_case = pickle.load(handle)
 
-    config = configparser.ConfigParser(
-        interpolation=configparser.ExtendedInterpolation())
-    config.read(test_case.config_filename)
+    config = CompassConfigParser()
+    config.add_user_config(test_case.config_filename)
 
     check_parallel_system(config)
 
@@ -278,9 +275,8 @@ def run_step():
     test_case.steps_to_run = [step.name]
     test_case.new_step_log_file = False
 
-    config = configparser.ConfigParser(
-        interpolation=configparser.ExtendedInterpolation())
-    config.read(step.config_filename)
+    config = CompassConfigParser()
+    config.add_user_config(step.config_filename)
 
     check_parallel_system(config)
 
