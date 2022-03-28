@@ -50,7 +50,7 @@ def init_z_star_vertical_coord(config, ds):
 
     Parameters
     ----------
-    config : configparser.ConfigParser
+    config : compass.config.CompassConfigParser
         Configuration options with parameters used to construct the vertical
         grid
 

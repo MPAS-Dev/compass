@@ -13,7 +13,7 @@ def generate_1d_grid(config):
 
     Parameters
     ----------
-    config : configparser.ConfigParser
+    config : compass.config.CompassConfigParser
         Configuration options with parameters used to construct the vertical
         grid
 
@@ -103,7 +103,7 @@ def add_1d_grid(config, ds):
 
     Parameters
     ----------
-    config : configparser.ConfigParser
+    config : compass.config.CompassConfigParser
         Configuration options with parameters used to construct the vertical
         grid
 
