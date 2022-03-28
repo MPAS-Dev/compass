@@ -33,11 +33,8 @@ class Rotation2D(TestCase):
         Set config options for the test case
         """
         config = self.config
-        resolutions = config.get('rotation_2d', 'resolutions')
-        resolutions = [int(resolution) for resolution in
-                       resolutions.replace(',', ' ').split()]
-        dtmin = config.get('rotation_2d', 'timestep_minutes')
-        dtmin = [int(dt) for dt in dtmin.replace(',', ' ').split()]
+        resolutions = config.getlist('rotation_2d', 'resolutions', dtype=int)
+        dtmin = config.getlist('rotation_2d', 'timestep_minutes', dtype=int)
 
         self.resolutions = resolutions
         self.timesteps = dtmin

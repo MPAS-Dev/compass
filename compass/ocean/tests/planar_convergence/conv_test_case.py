@@ -105,9 +105,8 @@ class ConvTestCase(TestCase):
             The config options containing the resolutions
         """
 
-        resolutions = config.get('planar_convergence', 'resolutions')
-        resolutions = [int(resolution) for resolution in
-                       resolutions.replace(',', ' ').split()]
+        resolutions = config.getlist('planar_convergence', 'resolutions',
+                                     dtype=int)
 
         if self.resolutions is not None and self.resolutions == resolutions:
             return

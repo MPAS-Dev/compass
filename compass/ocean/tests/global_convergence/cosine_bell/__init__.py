@@ -101,9 +101,7 @@ class CosineBell(TestCase):
 
     def _setup_steps(self, config):
         """ setup steps given resolutions """
-        resolutions = config.get('cosine_bell', 'resolutions')
-        resolutions = [int(resolution) for resolution in
-                       resolutions.replace(',', ' ').split()]
+        resolutions = config.getlist('cosine_bell', 'resolutions', dtype=int)
 
         if self.resolutions is not None and self.resolutions == resolutions:
             return
