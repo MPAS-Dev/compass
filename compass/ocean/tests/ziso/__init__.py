@@ -1,6 +1,5 @@
 from compass.testgroup import TestGroup
 from compass.ocean.tests.ziso.with_frazil import WithFrazil
-from compass.config import add_config
 from compass.ocean.tests.ziso.ziso_test_case import ZisoTestCase
 
 
@@ -42,7 +41,7 @@ def configure(name, resolution, config):
     resolution : str
         The resolution of the test case
 
-    config : configparser.ConfigParser
+    config : compass.config.CompassConfigParser
         Configuration options for this test case
     """
     res_params = {'20km': {'nx': 50,

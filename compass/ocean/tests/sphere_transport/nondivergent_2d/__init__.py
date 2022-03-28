@@ -1,5 +1,3 @@
-import configparser
-
 from compass.testcase import TestCase
 
 from compass.ocean.tests.sphere_transport.nondivergent_2d.mesh import Mesh

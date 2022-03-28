@@ -40,7 +40,7 @@ def configure(resolution, config):
     resolution : str
         The resolution of the test case
 
-    config : configparser.ConfigParser
+    config : compass.config.CompassConfigParser
         Configuration options for this test case
     """
     res_params = {'10km': {'nx': 16,

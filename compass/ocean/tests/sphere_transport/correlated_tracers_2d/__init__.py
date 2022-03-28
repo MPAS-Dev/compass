@@ -1,5 +1,3 @@
-import configparser
-
 from compass.testcase import TestCase
 
 from compass.ocean.tests.sphere_transport.correlated_tracers_2d.mesh \

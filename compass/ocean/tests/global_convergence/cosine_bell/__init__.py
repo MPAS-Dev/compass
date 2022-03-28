@@ -1,6 +1,4 @@
-import configparser
-
-from compass.config import add_config
+from compass.config import CompassConfigParser
 from compass.testcase import TestCase
 
 from compass.ocean.tests.global_convergence.cosine_bell.mesh import Mesh
@@ -31,9 +29,8 @@ class CosineBell(TestCase):
         self.resolutions = None
 
         # add the steps with default resolutions so they can be listed
-        config = configparser.ConfigParser(
-            interpolation=configparser.ExtendedInterpolation())
-        add_config(config, self.__module__, '{}.cfg'.format(self.name))
+        config = CompassConfigParser()
+        config.add_from_package(self.__module__, '{}.cfg'.format(self.name))
         self._setup_steps(config)
 
     def configure(self):

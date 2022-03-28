@@ -1,6 +1,5 @@
 import os
 
-from compass.config import add_config
 from compass.io import symlink
 from compass.testcase import TestCase
 from compass.step import Step
@@ -30,9 +29,9 @@ class MakeDiagnosticsFiles(TestCase):
         """
         Modify the configuration options for this test case
         """
-        add_config(self.config,
-                   'compass.ocean.tests.global_ocean.make_diagnostics_files',
-                   'make_diagnostics_files.cfg', exception=True)
+        self.config.add_from_package(
+           'compass.ocean.tests.global_ocean.make_diagnostics_files',
+           'make_diagnostics_files.cfg', exception=True)
 
     def run(self):
         """

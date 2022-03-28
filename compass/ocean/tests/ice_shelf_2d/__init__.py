@@ -36,7 +36,7 @@ def configure(resolution, coord_type, config):
     coord_type : str
         The type of vertical coordinate (``z-star``, ``z-level``, etc.)
 
-    config : configparser.ConfigParser
+    config : compass.config.CompassConfigParser
         Configuration options for this test case
     """
     res_params = {'5km': {'nx': 10, 'ny': 44, 'dc': 5e3}}
