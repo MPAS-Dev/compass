@@ -1,5 +1,4 @@
 import os
-import configparser
 
 from mpas_tools.logging import LoggingContext
 from compass.parallel import get_available_cores_and_nodes
@@ -38,7 +37,7 @@ class TestCase:
         the path within the base work directory of the test case, made up of
         ``mpas_core``, ``test_group``, and the test case's ``subdir``
 
-    config : configparser.ConfigParser
+    config : compass.config.CompassConfigParser
         Configuration options for this test case, a combination of the defaults
         for the machine, core and configuration
 

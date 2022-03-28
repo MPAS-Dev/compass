@@ -4,11 +4,10 @@ import sys
 from datetime import datetime
 import os
 from importlib import resources
-import configparser
 import shutil
 import pickle
 
-from compass.config import add_config
+from compass.config import CompassConfigParser
 
 
 def update_cache(step_paths, date_string=None, dry_run=False):
@@ -39,9 +38,8 @@ def update_cache(step_paths, date_string=None, dry_run=False):
     if invalid:
         raise ValueError('You must cache files from either Anvil or Chrysalis')
 
-    config = configparser.ConfigParser(
-        interpolation=configparser.ExtendedInterpolation())
-    add_config(config, 'compass.machines', '{}.cfg'.format(machine))
+    config = CompassConfigParser()
+    config.add_from_package('compass.machines', '{}.cfg'.format(machine))
 
     if date_string is None:
         date_string = datetime.now().strftime("%y%m%d")

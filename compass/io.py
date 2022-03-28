@@ -18,7 +18,7 @@ def download(url, dest_path, config, exceptions=True):
         The path (including file name) where the downloaded file should be
         saved
 
-    config : configparser.ConfigParser
+    config : compass.config.CompassConfigParser
         Configuration options used to find custom paths if ``dest_path`` is
         a config option
 
