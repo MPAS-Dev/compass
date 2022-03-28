@@ -71,7 +71,7 @@
 <li class="toctree-l3"><a class="reference internal" href="sphere_transport.html">sphere_transport</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">ziso</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#framework">framework</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#default">default</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ziso-test-case">ziso_test_case</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#with-frazil">with_frazil</a></li>
 </ul>
 </li>
@@ -134,8 +134,10 @@
 <p>The <code class="docutils literal notranslate"><span class="pre">ziso</span></code> test group
 (<a class="reference internal" href="../generated/compass.ocean.tests.ziso.Ziso.html#compass.ocean.tests.ziso.Ziso" title="compass.ocean.tests.ziso.Ziso"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.ziso.Ziso</span></code></a>)
 implements variants of the Zonally Idealized Southern Ocean (ZISO) test case
-(see <a class="reference internal" href="../../../users_guide/ocean/test_groups/ziso.html#ocean-ziso"><span class="std std-ref">ziso</span></a>) at 20-km resolutions. Here, we describe the shared
-framework for this test group and the 2 test cases.</p>
+(see <a class="reference internal" href="../../../users_guide/ocean/test_groups/ziso.html#ocean-ziso"><span class="std std-ref">ziso</span></a> in the User’s Guide) at 2.5, 5, 10 and 20-km
+resolutions. Here, we describe the shared framework for this test group and the
+4 types of test cases currently supported: <code class="docutils literal notranslate"><span class="pre">default</span></code>, <code class="docutils literal notranslate"><span class="pre">long</span></code>,
+<code class="docutils literal notranslate"><span class="pre">particles</span></code>, and <code class="docutils literal notranslate"><span class="pre">with_frazil</span></code>.</p>
 <section id="framework">
 <span id="dev-ocean-ziso-framework"></span><h2>framework<a class="headerlink" href="#framework" title="Permalink to this headline">¶</a></h2>
 <p>The shared config options for the <code class="docutils literal notranslate"><span class="pre">ziso</span></code> test group are described
@@ -164,44 +166,70 @@ for test cases with frazil-ice production compared to those without.</p>
 <h3>forward<a class="headerlink" href="#forward" title="Permalink to this headline">¶</a></h3>
 <p>The class <a class="reference internal" href="../generated/compass.ocean.tests.ziso.forward.Forward.html#compass.ocean.tests.ziso.forward.Forward" title="compass.ocean.tests.ziso.forward.Forward"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.ziso.forward.Forward</span></code></a> defines a step
 for running MPAS-Ocean from the initial condition produced in the
-<code class="docutils literal notranslate"><span class="pre">initial_state</span></code> step.  If <code class="docutils literal notranslate"><span class="pre">with_frazil</span> <span class="pre">=</span> <span class="pre">True</span></code>, frazil ice production is
-enabled; if <code class="docutils literal notranslate"><span class="pre">with_analysis</span> <span class="pre">=</span> <span class="pre">True</span></code>, analysis members are enabled:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">with_analysis</span><span class="p">:</span>
-    <span class="n">add_namelist_file</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="s1">&#39;compass.ocean.tests.ziso&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;namelist.analysis&#39;</span><span class="p">)</span>
-    <span class="n">add_streams_file</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="s1">&#39;compass.ocean.tests.ziso&#39;</span><span class="p">,</span> <span class="s1">&#39;streams.analysis&#39;</span><span class="p">)</span>
-
-<span class="k">if</span> <span class="n">with_frazil</span><span class="p">:</span>
-    <span class="n">add_namelist_options</span><span class="p">(</span><span class="n">step</span><span class="p">,</span>
-                         <span class="p">{</span><span class="s1">&#39;config_use_frazil_ice_formation&#39;</span><span class="p">:</span> <span class="s1">&#39;.true.&#39;</span><span class="p">})</span>
-    <span class="n">add_streams_file</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="s1">&#39;compass.ocean.streams&#39;</span><span class="p">,</span> <span class="s1">&#39;streams.frazil&#39;</span><span class="p">)</span>
+<code class="docutils literal notranslate"><span class="pre">initial_state</span></code> step.  Namelist and streams files are generated when the test
+case is set up (combining the <code class="docutils literal notranslate"><span class="pre">*.forward</span></code> and <code class="docutils literal notranslate"><span class="pre">*.analysis</span></code> files from the
+test group) and updated at runtime based on the config options in the
+<code class="docutils literal notranslate"><span class="pre">[ziso]</span></code> section of the config file.</p>
+<p>A dictionary <code class="docutils literal notranslate"><span class="pre">res_params</span></code> is used to set parameters like the number of cores
+and the time steps for each resolution:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">res_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;20km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+                       <span class="s1">&#39;min_cores&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                       <span class="s1">&#39;cores_with_particles&#39;</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
+                       <span class="s1">&#39;min_cores_with_particles&#39;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
+                       <span class="s1">&#39;dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:12:00&#39;&quot;</span><span class="p">,</span>
+                       <span class="s1">&#39;btr_dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:00:36&#39;&quot;</span><span class="p">,</span>
+                       <span class="s1">&#39;mom_del4&#39;</span><span class="p">:</span> <span class="s2">&quot;5.0e10&quot;</span><span class="p">,</span>
+                       <span class="s1">&#39;run_duration&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;0000_00:36:00&#39;&quot;</span><span class="p">},</span>
+              <span class="s1">&#39;10km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="mi">80</span><span class="p">,</span>
+                       <span class="s1">&#39;min_cores&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+                       <span class="s1">&#39;cores_with_particles&#39;</span><span class="p">:</span> <span class="mi">130</span><span class="p">,</span>
+                       <span class="s1">&#39;min_cores_with_particles&#39;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
+                       <span class="s1">&#39;dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:06:00&#39;&quot;</span><span class="p">,</span>
+                       <span class="s1">&#39;btr_dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:00:18&#39;&quot;</span><span class="p">,</span>
+                       <span class="s1">&#39;mom_del4&#39;</span><span class="p">:</span> <span class="s2">&quot;6.25e9&quot;</span><span class="p">,</span>
+                       <span class="s1">&#39;run_duration&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;0000_00:18:00&#39;&quot;</span><span class="p">},</span>
+              <span class="s1">&#39;5km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span>
+                      <span class="s1">&#39;min_cores&#39;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span>
+                      <span class="s1">&#39;cores_with_particles&#39;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+                      <span class="s1">&#39;min_cores_with_particles&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+                      <span class="s1">&#39;dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:03:00&#39;&quot;</span><span class="p">,</span>
+                      <span class="s1">&#39;btr_dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:00:09&#39;&quot;</span><span class="p">,</span>
+                      <span class="s1">&#39;mom_del4&#39;</span><span class="p">:</span> <span class="s2">&quot;7.8e8&quot;</span><span class="p">,</span>
+                      <span class="s1">&#39;run_duration&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;0000_00:09:00&#39;&quot;</span><span class="p">},</span>
+              <span class="s1">&#39;2.5km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="mi">1200</span><span class="p">,</span>
+                        <span class="s1">&#39;min_cores&#39;</span><span class="p">:</span> <span class="mi">120</span><span class="p">,</span>
+                        <span class="s1">&#39;cores_with_particles&#39;</span><span class="p">:</span> <span class="mi">2100</span><span class="p">,</span>
+                        <span class="s1">&#39;min_cores_with_particles&#39;</span><span class="p">:</span> <span class="mi">900</span><span class="p">,</span>
+                        <span class="s1">&#39;dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:01:30&#39;&quot;</span><span class="p">,</span>
+                        <span class="s1">&#39;btr_dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:00:04&#39;&quot;</span><span class="p">,</span>
+                        <span class="s1">&#39;mom_del4&#39;</span><span class="p">:</span> <span class="s2">&quot;9.8e7&quot;</span><span class="p">,</span>
+                        <span class="s1">&#39;run_duration&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;0000_00:04:30&#39;&quot;</span><span class="p">}}</span>
 </pre></div>
 </div>
-<p>Namelist and streams files are generate during <code class="docutils literal notranslate"><span class="pre">setup()</span></code>.</p>
-<p><a class="reference internal" href="../framework.html#dev-ocean-framework-particles"><span class="std std-ref">Particles</span></a> are included in all simulations.  In order
-to partition the particles, we need to first generate the required graph
-partition, then partition the particles, and finally run MPAS-Ocean (including
-updating PIO namelist options):</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cores</span> <span class="o">=</span> <span class="n">step</span><span class="p">[</span><span class="s1">&#39;cores&#39;</span><span class="p">]</span>
-
-<span class="n">partition</span><span class="p">(</span><span class="n">cores</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
-<span class="n">particles</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">init_filename</span><span class="o">=</span><span class="s1">&#39;init.nc&#39;</span><span class="p">,</span> <span class="n">particle_filename</span><span class="o">=</span><span class="s1">&#39;particles.nc&#39;</span><span class="p">,</span>
-                <span class="n">graph_filename</span><span class="o">=</span><span class="s1">&#39;graph.info.part.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cores</span><span class="p">),</span>
-                <span class="n">types</span><span class="o">=</span><span class="s1">&#39;buoyancy&#39;</span><span class="p">)</span>
-<span class="n">run_model</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">partition_graph</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<p>If <a class="reference internal" href="../framework.html#dev-ocean-framework-particles"><span class="std std-ref">Particles</span></a> are includes (in the <code class="docutils literal notranslate"><span class="pre">particles</span></code>
+test cases),  we first generate the required graph partition, then partition
+the particles, and finally run MPAS-Ocean (including updating PIO namelist
+options):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_particles</span><span class="p">:</span>
+    <span class="n">cores</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cores</span>
+    <span class="n">partition</span><span class="p">(</span><span class="n">cores</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
+    <span class="n">particles</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">init_filename</span><span class="o">=</span><span class="s1">&#39;init.nc&#39;</span><span class="p">,</span>
+                    <span class="n">particle_filename</span><span class="o">=</span><span class="s1">&#39;particles.nc&#39;</span><span class="p">,</span>
+                    <span class="n">graph_filename</span><span class="o">=</span><span class="s1">&#39;graph.info.part.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cores</span><span class="p">),</span>
+                    <span class="n">types</span><span class="o">=</span><span class="s1">&#39;buoyancy&#39;</span><span class="p">)</span>
+    <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">partition_graph</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
 </section>
-<section id="default">
-<span id="dev-ocean-ziso-default"></span><h2>default<a class="headerlink" href="#default" title="Permalink to this headline">¶</a></h2>
-<p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.ziso.default.Default</span></code> test performs a
-90-second (3-time-step) run on 4 cores, including analysis but without
-frazil-ice formation. If a baseline is provided when calling
+<section id="ziso-test-case">
+<span id="dev-ocean-ziso-default"></span><h2>ziso_test_case<a class="headerlink" href="#ziso-test-case" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="../generated/compass.ocean.tests.ziso.ZisoTestCase.html#compass.ocean.tests.ziso.ZisoTestCase" title="compass.ocean.tests.ziso.ZisoTestCase"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.ziso.ZisoTestCase</span></code></a> class defines most of the
+ZISO test cases. If a baseline is provided when calling
 <a class="reference internal" href="../../command_line.html#dev-compass-setup"><span class="std std-ref">compass setup</span></a>, the test case ensures that the final values of
-<code class="docutils literal notranslate"><span class="pre">temperature</span></code> and <code class="docutils literal notranslate"><span class="pre">layerThickness</span></code> as well as a number of particle-related
-variables are identical to the baseline values, and also compares timers
-related to particles with the baseline.</p>
+<code class="docutils literal notranslate"><span class="pre">temperature</span></code> and <code class="docutils literal notranslate"><span class="pre">layerThickness</span></code> are identical to the baseline values.
+If particles are included, a number of particle-related variables and timers
+are also validated against the baseline.</p>
 </section>
 <section id="with-frazil">
 <span id="dev-ocean-ziso-with-frazil"></span><h2>with_frazil<a class="headerlink" href="#with-frazil" title="Permalink to this headline">¶</a></h2>

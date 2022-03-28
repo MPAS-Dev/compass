@@ -63,6 +63,8 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">ziso</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#shared-config-options">shared config options</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#default">default</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#long">long</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#particles">particles</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#with-frazil">with_frazil</a></li>
 </ul>
 </li>
@@ -167,9 +169,6 @@ be ported form <a class="reference internal" href="../../../index.html#legacy-co
 <span class="c1"># the type of vertical grid</span><span class="w"></span>
 <span class="na">grid_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">100layerE3SMv1</span><span class="w"></span>
 
-<span class="c1"># Number of vertical levels</span><span class="w"></span>
-<span class="na">vert_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">100</span><span class="w"></span>
-
 <span class="c1"># Depth of the bottom of the ocean</span><span class="w"></span>
 <span class="na">bottom_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2500.0</span><span class="w"></span>
 
@@ -183,7 +182,7 @@ be ported form <a class="reference internal" href="../../../index.html#legacy-co
 <span class="na">min_pc_fraction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.1</span><span class="w"></span>
 
 
-<span class="c1"># namelist options for Zonally periodic Idealized Southern Ocean (ZISO)</span><span class="w"></span>
+<span class="c1"># config options for Zonally periodic Idealized Southern Ocean (ZISO)</span><span class="w"></span>
 <span class="c1"># testcases</span><span class="w"></span>
 <span class="k">[ziso]</span><span class="w"></span>
 
@@ -253,16 +252,6 @@ be ported form <a class="reference internal" href="../../../index.html#legacy-co
 
 <span class="c1"># Temperature anomaly to produce frazil</span><span class="w"></span>
 <span class="na">frazil_temperature_anomaly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">-3.0</span><span class="w"></span>
-
-<span class="c1">## the following are set manually within the test case</span><span class="w"></span>
-<span class="c1"># number of mesh cells in x</span><span class="w"></span>
-<span class="na">nx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">50</span><span class="w"></span>
-
-<span class="c1"># number of mesh cells in y</span><span class="w"></span>
-<span class="na">ny</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">112</span><span class="w"></span>
-
-<span class="c1"># size of grid cells in meters</span><span class="w"></span>
-<span class="na">dc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">20e3</span><span class="w"></span>
 </pre></div>
 </div>
 <p>They use a vertical coordinate that has 100, non-uniform layers distributed
@@ -282,8 +271,24 @@ Global, High-Performance Particle Tracking (LIGHT;
 <p>The initial salinity is constant at 34 PSU and the initial temperature is warm
 at the surface and cooler at depth:</p>
 <a class="reference internal image-reference" href="../../../_images/ziso.png"><img alt="../../../_images/ziso.png" class="align-center" src="../../../_images/ziso.png" style="width: 500px;" /></a>
-<p>The test case includes a very short (1 min 30 sec) test run and validation of
+<p>The test case includes a very short (3 time step) test run and validation of
 prognostic and particle-relate variables for regression testing.</p>
+</section>
+<section id="long">
+<h2>long<a class="headerlink" href="#long" title="Permalink to this headline">¶</a></h2>
+<p>Results in Ringler et al. (2016) are shown from longer simulations.  The
+<code class="docutils literal notranslate"><span class="pre">ocean/ziso/&lt;resolution&gt;/long</span></code> test cases provide a variant on these original
+simulations. As in the <code class="docutils literal notranslate"><span class="pre">default</span></code> test, this test not include particle
+dynamics. Unlike <code class="docutils literal notranslate"><span class="pre">default</span></code>, this test case is configured for a longer
+simulation (10 day) that demonstrates how to use the configuration might be
+used for for scientific work.</p>
+</section>
+<section id="particles">
+<h2>particles<a class="headerlink" href="#particles" title="Permalink to this headline">¶</a></h2>
+<p>These ZISO test cases include particles from the Lagrangian, In situ, Global,
+High-Performance Particle Tracking (LIGHT) framework for regression testing.
+Otherwise, the <code class="docutils literal notranslate"><span class="pre">particles</span></code> tests are identical to <code class="docutils literal notranslate"><span class="pre">default</span></code>.
+Particle-relate variables are also included in the test-case validation.</p>
 </section>
 <section id="with-frazil">
 <h2>with_frazil<a class="headerlink" href="#with-frazil" title="Permalink to this headline">¶</a></h2>

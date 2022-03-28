@@ -75,7 +75,7 @@ variables:
 
 .. code-block:: bash
 
-    source /lcrc/soft/climate/compass/chrysalis/load_compass1.0.0_intel_impi.sh
+    source /lcrc/soft/climate/compass/chrysalis/load_latest_compass_intel_impi.sh
 
 To build the MPAS model with
 
@@ -92,7 +92,7 @@ variables:
 
 .. code-block:: bash
 
-    source /lcrc/soft/climate/compass/chrysalis/load_compass1.0.0_gnu_openmpi.sh
+    source /lcrc/soft/climate/compass/chrysalis/load_latest_compass_gnu_openmpi.sh
 
 To build the MPAS model with
 
