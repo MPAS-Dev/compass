@@ -79,4 +79,5 @@ setup(name='compass',
       package_data={'': data_files},
       install_requires=install_requires,
       entry_points={'console_scripts':
-                    ['compass = compass.__main__:main']})
+                    ['compass = compass.__main__:main',
+                     'create_compass_load_script=compass.load:main']})
