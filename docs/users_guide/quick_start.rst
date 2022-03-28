@@ -8,6 +8,9 @@ Quick Start for Users
 compass conda environment
 -------------------------
 
+E3SM supported machines
+~~~~~~~~~~~~~~~~~~~~~~~
+
 For each ``compass`` release, we maintain a
 `conda environment <https://docs.conda.io/en/latest/>`_. that includes the
 ``compass`` package as well as all of its dependencies and some libraries
@@ -68,6 +71,9 @@ for build MPAS components with Gnu compilers and OpenMPI using:
 
     source /lcrc/soft/climate/compass/anvil/load_latest_compass_gnu_openmpi.sh
 
+other machines
+~~~~~~~~~~~~~~
+
 To install your own ``compass`` conda environment on other machines, first,
 install `Miniconda3 <https://docs.conda.io/en/latest/miniconda.html>`_ (if
 miniconda is not already installed), then add the
@@ -83,7 +89,8 @@ follows:
 
 .. code-block:: bash
 
-    conda create -n compass -c conda-forge -c e3sm/label/compass python=3.9 "compass=*=mpi_mpich*"
+    conda create -n compass -c conda-forge -c e3sm/label/compass python=3.9 \
+        "compass=*=mpi_mpich*"
 
 This will install the version of the package with MPI from conda-forge's MPICH
 package.  If you want OpenMPI, use ``"compass=*=mpi_openmpi*"`` instead.  If
@@ -94,14 +101,32 @@ To get a specific version of ``compass``, you can instead run:
 
 .. code-block:: bash
 
-    conda create -n compass -c conda-forge -c e3sm/label/compass python=3.9 "compass=1.0.0=mpi_mpich*"
+    conda create -n compass -c conda-forge -c e3sm/label/compass python=3.9 \
+        "compass=1.0.0=mpi_mpich*"
 
-That is, you will replace ``compass=*`` with ``compass=1.0.0``.  Each time you
-want to work with compass, you will need to run:
+That is, you will replace ``compass=*`` with ``compass=1.0.0``.
+
+Then, you will need to create a load script to activate the conda environment
+and set some environment variables. In a directory where you want to store the
+script, run:
 
 .. code-block:: bash
 
     conda activate compass
+    create_compass_load_script
+
+From then on, each time you want to set up test cases or suites with compass
+or build MPAS components, you will need to source that load script, for
+example:
+
+.. code-block:: bash
+
+    source load_compass_1.0.0_mpich.sh
+
+When you set up tests, a link called ``load_compass_env.sh`` will be added to
+each test case or suite work directory.  To run the tests, you may find it
+more convenient to source that link instead of finding the path to the original
+load script.
 
 .. _build_mpas:
 
