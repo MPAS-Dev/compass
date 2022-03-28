@@ -9,7 +9,7 @@ def alter_bottom_depth(config, bottomDepth, refBottomDepth, maxLevelCell):
 
     Parameters
     ----------
-    config : configparser.ConfigParser
+    config : compass.config.CompassConfigParser
         Configuration options with parameters used to construct the vertical
         grid
 
@@ -58,7 +58,7 @@ def alter_ssh(config, ssh, refBottomDepth, minLevelCell):
 
     Parameters
     ----------
-    config : configparser.ConfigParser
+    config : compass.config.CompassConfigParser
         Configuration options with parameters used to construct the vertical
         grid
 
