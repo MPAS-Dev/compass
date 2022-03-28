@@ -48,9 +48,6 @@ Both ``ziso`` test cases share the following config options:
     # the type of vertical grid
     grid_type = 100layerE3SMv1
 
-    # Number of vertical levels
-    vert_levels = 100
-
     # Depth of the bottom of the ocean
     bottom_depth = 2500.0
 
@@ -64,7 +61,7 @@ Both ``ziso`` test cases share the following config options:
     min_pc_fraction = 0.1
 
 
-    # namelist options for Zonally periodic Idealized Southern Ocean (ZISO)
+    # config options for Zonally periodic Idealized Southern Ocean (ZISO)
     # testcases
     [ziso]
 
@@ -135,16 +132,6 @@ Both ``ziso`` test cases share the following config options:
     # Temperature anomaly to produce frazil
     frazil_temperature_anomaly = -3.0
 
-    ## the following are set manually within the test case
-    # number of mesh cells in x
-    nx = 50
-
-    # number of mesh cells in y
-    ny = 112
-
-    # size of grid cells in meters
-    dc = 20e3
-
 
 They use a vertical coordinate that has 100, non-uniform layers distributed
 in the functional form given by the ``100layerE3SMv1`` grid type (with much
@@ -170,8 +157,26 @@ at the surface and cooler at depth:
    :width: 500 px
    :align: center
 
-The test case includes a very short (1 min 30 sec) test run and validation of
+The test case includes a very short (3 time step) test run and validation of
 prognostic and particle-relate variables for regression testing.
+
+long
+----
+
+Results in Ringler et al. (2016) are shown from longer simulations.  The
+``ocean/ziso/<resolution>/long`` test cases provide a variant on these original
+simulations. As in the ``default`` test, this test not include particle
+dynamics. Unlike ``default``, this test case is configured for a longer
+simulation (10 day) that demonstrates how to use the configuration might be
+used for for scientific work.
+
+particles
+---------
+
+These ZISO test cases include particles from the Lagrangian, In situ, Global,
+High-Performance Particle Tracking (LIGHT) framework for regression testing.
+Otherwise, the ``particles`` tests are identical to ``default``.
+Particle-relate variables are also included in the test-case validation.
 
 with_frazil
 -----------

@@ -8,17 +8,16 @@ Quick Start for Users
 compass conda environment
 -------------------------
 
-.. note::
-
-    **The following are planned instructions after a compass release.**
+E3SM supported machines
+~~~~~~~~~~~~~~~~~~~~~~~
 
 For each ``compass`` release, we maintain a
 `conda environment <https://docs.conda.io/en/latest/>`_. that includes the
 ``compass`` package as well as all of its dependencies and some libraries
 (currently `ESMF <https://earthsystemmodeling.org/>`_ and
 `SCORPIO <https://e3sm.org/scorpio-parallel-io-library/>`_) built with system
-MPI on our standard machines (Grizzly, Badger, Anvil, Chrysalis, Compy and
-Cori).  Here are the commands to load the the environment for the latest
+MPI on our standard machines (Anvil, Badger, Chrysalis, Compy, Cori, and
+Grizzly).  Here are the commands to load the the environment for the latest
 ``compass`` release with the default compiler and MPI library on each machine:
 
 * Anvil (Blues):
@@ -27,7 +26,7 @@ Cori).  Here are the commands to load the the environment for the latest
 
     source /lcrc/soft/climate/compass/anvil/load_latest_compass.sh
 
-* Grizzly and Badger:
+* Badger:
 
 .. code-block:: bash
 
@@ -57,14 +56,23 @@ Cori).  Here are the commands to load the the environment for the latest
 
     source /global/cfs/cdirs/e3sm/software/compass/cori-knl/load_latest_compass.sh
 
-Each of these paths has load scripts for the latest version of compass with
-all supported compiler and MPI combinations.  For example, on Anvil, you can
-get an environment appropriate for build MPAS components with Gnu compilers
-and OpenMPI using:
+* Grizzly:
+
+.. code-block:: bash
+
+    source /usr/projects/climate/SHARED_CLIMATE/compass/grizzly/load_latest_compass.sh
+
+These same paths (minus ``load_latest_compass.sh``) also have load scripts for
+the latest version of compass with all the supported compiler and MPI
+combinations.  For example, on Anvil, you can get an environment appropriate
+for build MPAS components with Gnu compilers and OpenMPI using:
 
 .. code-block:: bash
 
     source /lcrc/soft/climate/compass/anvil/load_latest_compass_gnu_openmpi.sh
+
+other machines
+~~~~~~~~~~~~~~
 
 To install your own ``compass`` conda environment on other machines, first,
 install `Miniconda3 <https://docs.conda.io/en/latest/miniconda.html>`_ (if
@@ -81,7 +89,8 @@ follows:
 
 .. code-block:: bash
 
-    conda create -n compass -c conda-forge -c e3sm/label/compass python=3.9 "compass=*=mpi_mpich*"
+    conda create -n compass -c conda-forge -c e3sm/label/compass python=3.9 \
+        "compass=*=mpi_mpich*"
 
 This will install the version of the package with MPI from conda-forge's MPICH
 package.  If you want OpenMPI, use ``"compass=*=mpi_openmpi*"`` instead.  If
@@ -92,20 +101,76 @@ To get a specific version of ``compass``, you can instead run:
 
 .. code-block:: bash
 
-    conda create -n compass -c conda-forge -c e3sm/label/compass python=3.9 "compass=1.0.0=mpi_mpich*"
+    conda create -n compass -c conda-forge -c e3sm/label/compass python=3.9 \
+        "compass=1.0.0=mpi_mpich*"
 
-That is, you will replace ``compass=*`` with ``compass=1.0.0``.  Each time you
-want to work with compass, you will need to run:
+That is, you will replace ``compass=*`` with ``compass=1.0.0``.
+
+Then, you will need to create a load script to activate the conda environment
+and set some environment variables. In a directory where you want to store the
+script, run:
 
 .. code-block:: bash
 
     conda activate compass
+    create_compass_load_script
+
+From then on, each time you want to set up test cases or suites with compass
+or build MPAS components, you will need to source that load script, for
+example:
+
+.. code-block:: bash
+
+    source load_compass_1.0.0_mpich.sh
+
+When you set up tests, a link called ``load_compass_env.sh`` will be added to
+each test case or suite work directory.  To run the tests, you may find it
+more convenient to source that link instead of finding the path to the original
+load script.
+
+.. _build_mpas:
 
 Building MPAS components
 ------------------------
 
-For instructions on how to build MPAS components, see the :ref:`dev_build_mpas`
-section of the Developer's Guide.
+You will need to check out a branch of E3SM to build an MPAS component.
+
+Typically, for MPAS-Ocean, you will clone
+`E3SM <https://github.com/E3SM-Project/E3SM>`_ and for MALI, you will clone
+`MALI-Dev <https://github.com/MALI-Dev/E3SM>`_.
+
+To build MPAS-Ocean, first source the appropriate load script (see
+:ref:`conda_env`) then run:
+
+.. code-block:: bash
+
+    cd components/mpas-ocean
+    git submodule update --init --recursive
+    make <mpas_make_target>
+
+MALI can be compiled with or without the Albany library that contains the
+first-order velocity solver.  The Albany first-order velocity solver is the
+only velocity option that is scientifically validated, but the Albany library
+is only installed on Badger, Grizzly, and Cori.  Therefore, in some situations
+it is desirable to compile without Albany to run basic tests on platforms where
+Albany is not available.  This basic mode of MALI can be compiled similarly to
+MPAS-Ocean.  Again, first source the appropriate load script (see
+:ref:`conda_env`) then run:
+
+.. code-block:: bash
+
+    cd components/mpas-albany-landice
+    git submodule update --init --recursive
+    make <mpas_make_target>
+
+Compiling MALI with Albany has not yet been standardized, though this is a
+feature we hope to support in the next release.  Some information is available
+at `https://github.com/MALI-Dev/E3SM/wiki <https://github.com/MALI-Dev/E3SM/wiki>`_,
+and complete instructions will be added here in the future.
+
+See the last column of the table in :ref:`dev_supported_machines` for the right
+``<mpas_make_target>`` command for each machine and compiler.
+
 
 .. _setup_overview:
 
@@ -113,9 +178,10 @@ Setting up test cases
 ---------------------
 
 Before you set up a test case with ``compass``, you will need to build the
-MPAS component you wish to test with.  Since the instructions for building
-MPAS are machine specific, they are covered in the :ref:`machines` part of the
-User's Guide.
+MPAS component you wish to test with, see :ref:`build_mpas` above.
+
+If you have not already done so, you will need to source the appropriate load
+script, see :ref:`conda_env`.
 
 To see all available test cases you can set up in compass, run:
 
@@ -270,13 +336,16 @@ environment and modules, and then
 .. code-block:: bash
 
     cd <workdir>/<test_subdir>
+    source load_compass_env.sh
     compass run
 
 The ``<workdir>`` is the same path provided to the ``-w`` flag above.  The
 sequence of subdirectories (``<test_subdir>``) is the same as given when you
 list the test cases.  If the test case was set up properly, the directory
 should contain a file ``test_case.pickle`` that contains the information
-``compass`` needs to run the test case.
+``compass`` needs to run the test case.  The load script
+``load_compass_env.sh`` is a link to whatever load script you sourced before
+setting up the test case (see :ref:`conda_env`).
 
 .. _suite_overview:
 
@@ -328,9 +397,12 @@ and
 .. code-block:: bash
 
     cd <workdir>
+    source load_compass_env.sh
     compass run [nightly]
 
 In this case, you can specify the name of the suite to run.  This is required
 if there are multiple suites in the same ``<workdir>``.  You can optionally
 specify a suite like ``compass run [suitename].pickle``, which is convenient
-for tab completion on the command line.
+for tab completion on the command line. The load script
+``load_compass_env.sh`` is a link to whatever load script you sourced before
+setting up the test case (see :ref:`conda_env`).

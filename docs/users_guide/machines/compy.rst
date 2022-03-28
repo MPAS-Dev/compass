@@ -80,7 +80,7 @@ variables:
 
 .. code-block:: bash
 
-    source source /share/apps/E3SM/conda_envs/compass/load_compass1.0.0_intel_impi.sh
+    source source /share/apps/E3SM/conda_envs/compass/load_latest_compass_intel_impi.sh
 
 To build the MPAS model with
 

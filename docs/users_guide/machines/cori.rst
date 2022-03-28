@@ -134,7 +134,7 @@ variables:
 
 .. code-block:: bash
 
-    source /global/cfs/cdirs/e3sm/software/compass/cori-haswell/load_compass1.0.0_intel_mpt.sh
+    source /global/cfs/cdirs/e3sm/software/compass/cori-haswell/load_latest_compass_intel_mpt.sh
 
 To build the MPAS model with
 
@@ -151,7 +151,7 @@ variables:
 
 .. code-block:: bash
 
-    source /global/cfs/cdirs/e3sm/software/compass/cori-haswell/load_compass1.0.0_gnu_mpt.sh
+    source /global/cfs/cdirs/e3sm/software/compass/cori-haswell/load_latest_compass_gnu_mpt.sh
 
 To build the MPAS model with
 
@@ -240,7 +240,7 @@ variables:
 
 .. code-block:: bash
 
-    source /global/cfs/cdirs/e3sm/software/compass/cori-knl/load_compass1.0.0_intel_impi.sh
+    source /global/cfs/cdirs/e3sm/software/compass/cori-knl/load_latest_compass_intel_impi.sh
 
 To build the MPAS model with
 

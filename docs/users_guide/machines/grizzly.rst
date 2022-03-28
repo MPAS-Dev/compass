@@ -141,7 +141,7 @@ variables:
 
 .. code-block:: bash
 
-    source /usr/projects/climate/SHARED_CLIMATE/compass/badger/load_compass1.0.0_gnu_mvapich.sh
+    source /usr/projects/climate/SHARED_CLIMATE/compass/badger/load_latest_compass_gnu_mvapich.sh
 
 To build the MPAS model with
 
@@ -168,7 +168,7 @@ variables:
 
 .. code-block:: bash
 
-    source /usr/projects/climate/SHARED_CLIMATE/compass/badger/load_compass1.0.0_intel_impi.sh
+    source /usr/projects/climate/SHARED_CLIMATE/compass/badger/load_latest_compass_intel_impi.sh
 
 To build the MPAS model with
 

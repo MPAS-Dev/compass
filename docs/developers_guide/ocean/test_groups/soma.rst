@@ -68,7 +68,7 @@ updating PIO namelist options):
             buoySurf=np.linspace(min_den, max_den, nsurf))
     run_model(self, partition_graph=False)
 
-.. _dev_ocean_soma_default:
+.. _dev_ocean_soma_analysis:
 
 analysis
 ~~~~~~~~
@@ -82,11 +82,13 @@ profiles.
    :width: 500 px
    :align: center
 
+.. _dev_ocean_soma_test_case:
+
 soma_test_case
 --------------
 
 The :py:class:`compass.ocean.tests.soma.soma_test_case.SomaTestCase` class
-defined all the SOMA test cases. If a baseline is provided when calling
+defines all the SOMA test cases. If a baseline is provided when calling
 :ref:`dev_compass_setup`, the test case ensures that the final values of
 ``temperature`` and ``layerThickness`` are identical to the baseline values.
 If particles are included, a number of particle-related variables and timers
