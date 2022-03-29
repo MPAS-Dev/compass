@@ -20,6 +20,7 @@ class CompassConfigParser:
         self._configs = dict()
         self._user_config = dict()
         self._combined = None
+        self._sources = None
 
     def add_user_config(self, filename):
         """
@@ -221,7 +222,7 @@ class CompassConfigParser:
         config.set(section, option, value)
         self._combined = None
 
-    def write(self, fp):
+    def write(self, fp, include_sources=True):
         """
         Write the config options to the give file pointer.
 
@@ -229,10 +230,23 @@ class CompassConfigParser:
         ----------
         fp : typing.TestIO
             The file pointer to write to.
+
+        include_sources : bool, optional
+            Whether to include a comment above each option indicating the
+            source file where it was defined
         """
         if self._combined is None:
             self._combine()
-        self._combined.write(fp)
+        for section in self._combined.sections():
+            section_items = self._combined.items(section=section)
+            fp.write(f'[{section}]\n')
+            for key, value in section_items:
+                if include_sources:
+                    source = self._sources[(section, key)]
+                    fp.write(f'# source: {source}\n')
+                value = str(value).replace('\n', '\n\t')
+                fp.write(f'{key} = {value}\n')
+            fp.write('\n')
 
     def __getitem__(self, section):
         """
@@ -268,11 +282,13 @@ class CompassConfigParser:
         self._combined = ConfigParser(interpolation=ExtendedInterpolation())
         configs = dict(self._configs)
         configs.update(self._user_config)
+        self._sources = dict()
         for source, config in configs.items():
             for section in config.sections():
                 if not self._combined.has_section(section):
                     self._combined.add_section(section)
                 for key, value in config.items(section):
+                    self._sources[(section, key)] = source
                     self._combined.set(section, key, value)
         self._ensure_absolute_paths()
 
