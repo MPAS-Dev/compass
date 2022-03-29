@@ -117,15 +117,16 @@ and debugging.
 Config files
 ------------
 
-The ``compass.config`` module includes functions for creating and manipulating
-config options and :ref:`config_files`.
+The ``compass.config`` module includes the
+:py:class:`compass.config.CompassConfigParser` class reading, getting, setting,
+and writing config options and :ref:`config_files`.
 
 
-The :py:func:`compass.config.add_config()` function can be used to add the
-contents of a config file within a package to the current config parser.
-Examples of this can be found in most test cases as well as
+The :py:meth:`compass.config.CompassConfigParser.add_from_package()` method can
+be used to add the contents of a config file within a package to the config
+options. Examples of this can be found in many test cases as well as
 :py:func:`compass.setup.setup_case()`. Here is a typical example from
-:py:func:`compass.landice.tests.enthalpy_benchmark.A.A.configure()`:
+:py:func:`compass.ocean.tests.global_ocean.make_diagnostics_files.MakeDiagnosticsFiles.configure()`:
 
 .. code-block:: python
 
@@ -133,13 +134,13 @@ Examples of this can be found in most test cases as well as
         """
         Modify the configuration options for this test case
         """
-        add_config(self.config, 'compass.landice.tests.enthalpy_benchmark.A',
-                   'A.cfg', exception=True)
-        ...
+        self.config.add_from_package(
+           'compass.ocean.tests.global_ocean.make_diagnostics_files',
+           'make_diagnostics_files.cfg', exception=True)
 
-The second and third arguments are the name of a package containing the config
+The first and second arguments are the name of a package containing the config
 file and the name of the config file itself, respectively.  You can see that
-the file is in the path ``compass/landice/tests/enthalpy_benchmark/A``
+the file is in the path ``compass/ocean/tests/global_ocean/make_diagnostics_files``
 (replacing the ``.`` in the module name with ``/``).  In this case, we know
 that the config file should always exist, so we would like the code to raise
 an exception (``exception=True``) if the file is not found.  This is the
@@ -147,50 +148,56 @@ default behavior.  In some cases, you would like the code to add the config
 options if the config file exists and do nothing if it does not.  This can
 be useful if a common configure function is being used for all test
 cases in a configuration, as in this example from
-:py:func:`compass.ocean.tests.global_ocean.configure.configure_global_ocean()`:
+:py:func:`setup.setup_case()`:
 
 .. code-block:: python
 
-    add_config(config, test_case.__module__, '{}.cfg'.format(test_case.name),
-               exception=False)
+    # add the config options for the test group (if defined)
+    test_group = test_case.test_group.name
+    config.add_from_package(f'compass.{mpas_core}.tests.{test_group}',
+                            f'{test_group}.cfg', exception=False)
 
-When this is called within the ``mesh`` test case, nothing will happen because
-``compass/ocean/tests/global_ocean/mesh`` does not contain a ``mesh.cfg`` file.
-The config files for meshes are handled differently, since they aren't
-associated with a particular test case:
+If a test group doesn't have any config options, nothing will happen.
+
+The ``CompassConfigParser`` class also includes methods for adding a user
+config file and other config files by file name, but these are largely intended
+for use by the framework rather than individual test cases.
+
+Other methods for the ``CompassConfigParser`` are similar to those for
+:py:class:`configparser.ConfigParser`.  In addition to ``get()``,
+``getinteger()``, ``getfloat()`` and ``getboolean()`` methods, this class
+implements :py:meth:`compass.config.CompassConfigParser.getlist()`, which
+can be used to parse a config value separated by spaces and/or commas into
+a list of strings, floats, integers, booleans, etc.
+
+Currently, ``CompassConfigParser`` supports accessing a config section using
+section names as keys, e.g.:
 
 .. code-block:: python
 
-    mesh_step = mesh.mesh_step
-    add_config(config, mesh_step.package, mesh_step.mesh_config_filename,
-               exception=True)
+    section = self.config['enthalpy_benchmark_viz']
+    display_image = section.getboolean('display_image')
+    ...
 
-In this case, the mesh step keeps track of the package and config file in its
-attributes (e.g. ``compass.ocean.tests.global_ocean.mesh.qu240`` and
-``qu240.cfg`` for the ``QU240`` and ``QUwISC240`` meshes).  Since we require
-each mesh to have config options (to define the vertical grid and the metadata
-to be added to the mesh, at the very least), we use ``exception=True`` so an
-exception will be raised if no config file is found.
+But it does not allow assignment of a section or many of the other
+dictionary-like features supported by :py:class:`configparser.ConfigParser`.
 
-The ``config`` module also contains 3 functions that are intended for internal
-use by the framework itself. Test-case developers will typically not need to
-call these functions directly.
+Comments in config files
+~~~~~~~~~~~~~~~~~~~~~~~~
 
-The :py:func:`compass.config.duplicate_config()` function can be used to make a
-deep copy of a ``config`` object so changes can be made without affecting the
-original.
+One of the main advantages of :py:class:`compass.config.CompassConfigParser`
+over :py:class:`configparser.ConfigParser` is that it keeps track of comments
+that are associated with config sections and options.  There are a few "rules"
+that make this possible.
 
-The :py:func:`compass.config.ensure_absolute_paths()` function is used
-internally by the framework to check and update config options in the
-``paths``, ``namelists``, ``streams``, and ``executables`` sections of the
-config file to make sure they have absolute paths. The absolute paths are
-determined from the location where one of the tools from the compass
-:ref:`dev_command_line` was called.
+Comments must be with the ``#`` character.  They must be placed *before* the
+config section or option in question (preferably without blank lines between).
+The comments can be any number of lines.
 
-The :py:func:`compass.config.get_source_file()` function is used to get an
-absolute path for a file using one of the config options defined in the
-``paths`` section.  This function is used by the framework as part of
-downloading files (e.g. to a defined database), see :ref:`dev_io`.
+.. note::
+
+    Inline comments (after a config option on the same line) are not allowed
+    and will be parsed as part of the config option itself.
 
 .. _dev_logging:
 
