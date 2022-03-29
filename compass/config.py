@@ -2,6 +2,7 @@ from configparser import RawConfigParser, ConfigParser, ExtendedInterpolation
 import os
 from importlib import resources
 import inspect
+import sys
 
 
 class CompassConfigParser:
@@ -19,7 +20,9 @@ class CompassConfigParser:
 
         self._configs = dict()
         self._user_config = dict()
+        self._comments = dict()
         self._combined = None
+        self._combined_comments = None
         self._sources = None
 
     def add_user_config(self, filename):
@@ -196,7 +199,7 @@ class CompassConfigParser:
             self._combine()
         return self._combined.has_option(section, option)
 
-    def set(self, section, option, value=None):
+    def set(self, section, option, value=None, comment=''):
         """
         Set the value of the given option in the given section.  The file from
          which this function was called is also retained for provenance.
@@ -211,6 +214,10 @@ class CompassConfigParser:
 
         value : str, optional
             The value to set the option to
+
+        comment : str, optional
+            A comment to include with the config option when it is written
+            to a file
         """
         calling_frame = inspect.stack(context=2)[1]
         filename = os.path.abspath(calling_frame.filename)
@@ -221,8 +228,13 @@ class CompassConfigParser:
             config.add_section(section)
         config.set(section, option, value)
         self._combined = None
+        self._combined_comments = None
+        self._sources = None
+        if filename not in self._comments:
+            self._comments[filename] = dict()
+        self._comments[filename][(section, option)] = comment
 
-    def write(self, fp, include_sources=True):
+    def write(self, fp, include_sources=True, include_comments=True):
         """
         Write the config options to the given file pointer.
 
@@ -234,18 +246,26 @@ class CompassConfigParser:
         include_sources : bool, optional
             Whether to include a comment above each option indicating the
             source file where it was defined
+
+        include_comments : bool, optional
+            Whether to include the original comments associated with each
+            section or option
         """
         if self._combined is None:
             self._combine()
         for section in self._combined.sections():
             section_items = self._combined.items(section=section)
-            fp.write(f'[{section}]\n')
-            for key, value in section_items:
+            if include_comments and section in self._combined_comments:
+                fp.write(self._combined_comments[section])
+            fp.write(f'[{section}]\n\n')
+            for option, value in section_items:
+                if include_comments:
+                    fp.write(self._combined_comments[(section, option)])
                 if include_sources:
-                    source = self._sources[(section, key)]
+                    source = self._sources[(section, option)]
                     fp.write(f'# source: {source}\n')
                 value = str(value).replace('\n', '\n\t')
-                fp.write(f'{key} = {value}\n')
+                fp.write(f'{option} = {value}\n\n')
             fp.write('\n')
 
     def __getitem__(self, section):
@@ -272,24 +292,36 @@ class CompassConfigParser:
         if not os.path.exists(filename):
             raise FileNotFoundError(f'Config file does not exist: {filename}')
         config.read(filenames=filename)
+        with open(filename) as fp:
+            comments = self._parse_comments(fp, filename, comments_before=True)
+
         if user:
             self._user_config = {filename: config}
         else:
             self._configs[filename] = config
+        self._comments[filename] = comments
         self._combined = None
+        self._combined_comments = None
+        self._sources = None
 
     def _combine(self):
         self._combined = ConfigParser(interpolation=ExtendedInterpolation())
         configs = dict(self._configs)
         configs.update(self._user_config)
         self._sources = dict()
+        self._combined_comments = dict()
         for source, config in configs.items():
             for section in config.sections():
+                if section in self._comments[source]:
+                    self._combined_comments[section] = \
+                        self._comments[source][section]
                 if not self._combined.has_section(section):
                     self._combined.add_section(section)
-                for key, value in config.items(section):
-                    self._sources[(section, key)] = source
-                    self._combined.set(section, key, value)
+                for option, value in config.items(section):
+                    self._sources[(section, option)] = source
+                    self._combined.set(section, option, value)
+                    self._combined_comments[(section, option)] = \
+                        self._comments[source][(section, option)]
         self._ensure_absolute_paths()
 
     def _ensure_absolute_paths(self):
@@ -304,3 +336,64 @@ class CompassConfigParser:
             for option, value in config.items(section):
                 value = os.path.abspath(value)
                 config.set(section, option, value)
+
+    @staticmethod
+    def _parse_comments(fp, filename, comments_before=True):
+        """ Parse the comments in a config file into a dictionary """
+        comments = dict()
+        current_comment = ''
+        section_name = None
+        option_name = None
+        indent_level = 0
+        for line_number, line in enumerate(fp, start=1):
+            value = line.strip()
+            is_comment = value.startswith('#')
+            if is_comment:
+                current_comment = current_comment + line
+            if len(value) == 0 or is_comment:
+                # end of value
+                indent_level = sys.maxsize
+                continue
+
+            cur_indent_level = len(line) - len(line.lstrip())
+            is_continuation = cur_indent_level > indent_level
+            # a section header or option header?
+            if section_name is None or option_name is None or \
+                    not is_continuation:
+                indent_level = cur_indent_level
+                # is it a section header?
+                is_section = value.startswith('[') and value.endswith(']')
+                if is_section:
+                    if not comments_before:
+                        if option_name is None:
+                            comments[section_name] = current_comment
+                        else:
+                            comments[(section_name, option_name)] = \
+                                current_comment
+                    section_name = value[1:-1].strip().lower()
+                    option_name = None
+
+                    if comments_before:
+                        comments[section_name] = current_comment
+                    current_comment = ''
+                # an option line?
+                else:
+                    delimiter_index = value.find('=')
+                    if delimiter_index == -1:
+                        raise ValueError(f'Expected to find "=" on line '
+                                         f'{line_number} of {filename}')
+
+                    if not comments_before:
+                        if option_name is None:
+                            comments[section_name] = current_comment
+                        else:
+                            comments[(section_name, option_name)] = \
+                                current_comment
+
+                    option_name = value[:delimiter_index].strip().lower()
+
+                    if comments_before:
+                        comments[(section_name, option_name)] = current_comment
+                    current_comment = ''
+
+        return comments
