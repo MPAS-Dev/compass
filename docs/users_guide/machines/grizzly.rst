@@ -64,17 +64,6 @@ Archiving
 
 * you can just copy files directly into here for a particular project.
 
-git and compass environment, for all LANL IC machines:
-
-.. code-block:: bash
-
-    module load git
-    module use /usr/projects/climate/SHARED_CLIMATE/modulefiles/all/
-    module unload python
-    source /usr/projects/climate/SHARED_CLIMATE/anaconda_envs/load_latest_compass.sh
-
-Example compass config file for LANL IC: ``general.config.ocean_turq``
-
 LANL uses slurm. To obtain an interactive node:
 
 .. code-block:: bash
