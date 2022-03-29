@@ -46,11 +46,11 @@ def get_version():
     # dependencies, so we get the version by parsing (same approach used in
     # the root setup.py)
     here = os.path.abspath(os.path.dirname(__file__))
-    with open(os.path.join(here, '..', 'compass', '__init__.py')) as f:
-        init_file = f.read()
-
-    version = re.search(r'{}\s*=\s*[(]([^)]*)[)]'.format('__version_info__'),
-                        init_file).group(1).replace(', ', '.')
+    version_path = os.path.join(here, '..', 'compass', 'version.py')
+    with open(version_path) as f:
+        main_ns = {}
+        exec(f.read(), main_ns)
+        version = main_ns['__version__']
 
     return version
 
@@ -194,7 +194,9 @@ def build_env(env_type, recreate, machine, compiler, mpi, conda_mpi, version,
             check_call(commands)
 
         else:
-            packages = f'{packages} "compass={version}={mpi_prefix}_*"'
+            # conda packages don't like dashes
+            version_conda = version.replace('-', '')
+            packages = f'{packages} "compass={version_conda}={mpi_prefix}_*"'
             commands = f'{activate_base}; ' \
                        f'mamba create -y -n {env_name} {channels} {packages}'
             check_call(commands)
