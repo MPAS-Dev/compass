@@ -172,14 +172,6 @@
 <li><p>storage available at: <code class="docutils literal notranslate"><span class="pre">cd</span> <span class="pre">/archive/&lt;project_name&gt;</span></code></p></li>
 <li><p>you can just copy files directly into here for a particular project.</p></li>
 </ul>
-<p>git and compass environment, for all LANL IC machines:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>module load git
-module use /usr/projects/climate/SHARED_CLIMATE/modulefiles/all/
-module unload python
-<span class="nb">source</span> /usr/projects/climate/SHARED_CLIMATE/anaconda_envs/load_latest_compass.sh
-</pre></div>
-</div>
-<p>Example compass config file for LANL IC: <code class="docutils literal notranslate"><span class="pre">general.config.ocean_turq</span></code></p>
 <p>LANL uses slurm. To obtain an interactive node:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>salloc -N <span class="m">1</span> -t <span class="m">2</span>:0:0 --qos<span class="o">=</span>interactive
 </pre></div>
@@ -228,43 +220,25 @@ setting up test cases or a test suite:</p>
 </section>
 <section id="grizzly-gnu">
 <h2>grizzly, gnu<a class="headerlink" href="#grizzly-gnu" title="Permalink to this headline">¶</a></h2>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Compass 1.0.0 has not yet been released.  The following will apply after
-the release.</p>
-</div>
 <p>To load the compass environment and modules, and set appropriate environment
 variables:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> /usr/projects/climate/SHARED_CLIMATE/compass/badger/load_latest_compass_gnu_mvapich.sh
 </pre></div>
 </div>
 <p>To build the MPAS model with</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make <span class="nv">CORE</span><span class="o">=</span>landice gfortran
-</pre></div>
-</div>
-<p>or</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make <span class="nv">CORE</span><span class="o">=</span>ocean gfortran
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make gfortran
 </pre></div>
 </div>
 </section>
 <section id="grizzly-intel">
 <h2>grizzly, intel<a class="headerlink" href="#grizzly-intel" title="Permalink to this headline">¶</a></h2>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Compass 1.0.0 has not yet been released.  The following will apply after
-the release.</p>
-</div>
 <p>To load the compass environment and modules, and set appropriate environment
 variables:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> /usr/projects/climate/SHARED_CLIMATE/compass/badger/load_latest_compass_intel_impi.sh
 </pre></div>
 </div>
 <p>To build the MPAS model with</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make <span class="nv">CORE</span><span class="o">=</span>landice intel-mpi
-</pre></div>
-</div>
-<p>or</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make <span class="nv">CORE</span><span class="o">=</span>ocean intel-mpi
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make intel-mpi
 </pre></div>
 </div>
 </section>
