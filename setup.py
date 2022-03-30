@@ -36,11 +36,11 @@ install_requires = \
      'xarray']
 
 here = os.path.abspath(os.path.dirname(__file__))
-with open(os.path.join(here, 'compass', '__init__.py')) as f:
-    init_file = f.read()
-
-version = re.search(r'{}\s*=\s*[(]([^)]*)[)]'.format('__version_info__'),
-                    init_file).group(1).replace(', ', '.')
+version_path = os.path.join(here, 'compass', 'version.py')
+with open(version_path) as f:
+    main_ns = {}
+    exec(f.read(), main_ns)
+    version = main_ns['__version__']
 
 os.chdir(here)
 

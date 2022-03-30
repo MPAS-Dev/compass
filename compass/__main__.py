@@ -4,8 +4,8 @@ import sys
 import argparse
 import os
 
-import compass
 from compass import list, setup, clean, suite, run, cache
+from compass.version import __version__
 
 
 def main():
@@ -33,7 +33,7 @@ The available compass commands are:
     parser.add_argument('command', help='command to run')
     parser.add_argument('-v', '--version',
                         action='version',
-                        version='compass {}'.format(compass.__version__),
+                        version=f'compass {__version__}',
                         help="Show version number and exit")
     if len(sys.argv) == 1:
         parser.print_help()
