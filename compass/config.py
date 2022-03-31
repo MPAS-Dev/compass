@@ -219,6 +219,8 @@ class CompassConfigParser:
             A comment to include with the config option when it is written
             to a file
         """
+        section = section.lower()
+        option = option.lower()
         calling_frame = inspect.stack(context=2)[1]
         filename = os.path.abspath(calling_frame.filename)
         if filename not in self._configs:
@@ -232,6 +234,7 @@ class CompassConfigParser:
         self._sources = None
         if filename not in self._comments:
             self._comments[filename] = dict()
+        comment = ''.join([f'# {line}\n' for line in comment.split('\n')])
         self._comments[filename][(section, option)] = comment
 
     def write(self, fp, include_sources=True, include_comments=True):
