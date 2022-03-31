@@ -199,7 +199,7 @@ class CompassConfigParser:
             self._combine()
         return self._combined.has_option(section, option)
 
-    def set(self, section, option, value=None, comment=''):
+    def set(self, section, option, value=None, comment=None):
         """
         Set the value of the given option in the given section.  The file from
          which this function was called is also retained for provenance.
@@ -234,7 +234,10 @@ class CompassConfigParser:
         self._sources = None
         if filename not in self._comments:
             self._comments[filename] = dict()
-        comment = ''.join([f'# {line}\n' for line in comment.split('\n')])
+        if comment is None:
+            comment = ''
+        else:
+            comment = ''.join([f'# {line}\n' for line in comment.split('\n')])
         self._comments[filename][(section, option)] = comment
 
     def write(self, fp, include_sources=True, include_comments=True):
