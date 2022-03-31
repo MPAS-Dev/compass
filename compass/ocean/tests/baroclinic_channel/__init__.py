@@ -53,9 +53,14 @@ def configure(resolution, config):
                           'ny': 500,
                           'dc': 1e3}}
 
+    comment = {'nx': 'the number of mesh cells in the x direction',
+               'ny': 'the number of mesh cells in the y direction',
+               'dc': 'the distance between adjacent cell centers'}
+
     if resolution not in res_params:
-        raise ValueError('Unsupported resolution {}. Supported values are: '
-                         '{}'.format(resolution, list(res_params)))
+        raise ValueError(f'Unsupported resolution {resolution}. Supported '
+                         f'values are: {list(res_params)}')
     res_params = res_params[resolution]
     for param in res_params:
-        config.set('baroclinic_channel', param, '{}'.format(res_params[param]))
+        config.set('baroclinic_channel', param, str(res_params[param]),
+                   comment=comment[param])
