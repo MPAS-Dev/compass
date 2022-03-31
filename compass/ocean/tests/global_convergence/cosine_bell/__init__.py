@@ -30,7 +30,7 @@ class CosineBell(TestCase):
 
         # add the steps with default resolutions so they can be listed
         config = CompassConfigParser()
-        config.add_from_package(self.__module__, '{}.cfg'.format(self.name))
+        config.add_from_package(self.__module__, f'{self.name}.cfg')
         self._setup_steps(config)
 
     def configure(self):
@@ -44,7 +44,7 @@ class CosineBell(TestCase):
         init_options = dict()
         for option in ['temperature', 'salinity', 'lat_center', 'lon_center',
                        'radius', 'psi0', 'vel_pd']:
-            init_options['config_cosine_bell_{}'.format(option)] = \
+            init_options[f'config_cosine_bell_{option}'] = \
                 config.get('cosine_bell', option)
 
         for step in self.steps.values():
@@ -59,11 +59,10 @@ class CosineBell(TestCase):
         """
         config = self.config
         for resolution in self.resolutions:
-            cores = config.getint('cosine_bell',
-                                  'QU{}_cores'.format(resolution))
+            cores = config.getint('cosine_bell', f'QU{resolution}_cores')
             min_cores = config.getint('cosine_bell',
-                                      'QU{}_min_cores'.format(resolution))
-            step = self.steps['QU{}_forward'.format(resolution)]
+                                      f'QU{resolution}_min_cores')
+            step = self.steps[f'QU{resolution}_forward']
             step.cores = cores
             step.min_cores = min_cores
 
@@ -90,14 +89,15 @@ class CosineBell(TestCase):
             # In a pinch, about 3000 cells per core
             min_cores = max(1,
                             round(approx_cells / max_cells_per_core))
-            step = self.steps['QU{}_forward'.format(resolution)]
+            step = self.steps[f'QU{resolution}_forward']
             step.cores = cores
             step.min_cores = min_cores
 
-            config.set('cosine_bell', 'QU{}_cores'.format(resolution),
-                       str(cores))
-            config.set('cosine_bell', 'QU{}_min_cores'.format(resolution),
-                       str(min_cores))
+            config.set('cosine_bell', f'QU{resolution}_cores', str(cores),
+                       comment=f'Target core count for {resolution} km mesh')
+            config.set('cosine_bell', f'QU{resolution}_min_cores',
+                       str(min_cores),
+                       comment=f'Minimum core count for {resolution} km mesh')
 
     def _setup_steps(self, config):
         """ setup steps given resolutions """
