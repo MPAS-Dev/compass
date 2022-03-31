@@ -215,7 +215,7 @@ def setup_case(path, test_case, config_file, machine, work_dir, baseline_dir,
 
     # add the E3SM config options from mache
     if machine is not None:
-        config.add_from_package('mache', f'{machine}.cfg')
+        config.add_from_package('mache.machines', f'{machine}.cfg')
 
     # add the compass machine config file
     if machine is None:
