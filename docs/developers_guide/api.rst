@@ -80,13 +80,12 @@ suite
 run
 ~~~
 
-.. currentmodule:: compass.run
+.. currentmodule:: compass.run.serial
 
 .. autosummary::
    :toctree: generated/
 
    run_suite
-   run_test_case
    run_step
 
 
