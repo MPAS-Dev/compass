@@ -3,6 +3,20 @@
 <immutable_stream name="input_init"
                   filename_template="culled_mesh.nc"/>
 
+<immutable_stream name="atmospheric_forcing"
+                  type="input"
+                  filename_template="atmospheric_forcing.nc"
+                  filename_interval="none"
+                  packages="timeVaryingAtmosphericForcingPKG"
+                  input_interval="none"/>
+
+<immutable_stream name="land_ice_forcing"
+                  type="input"
+                  filename_template="land_ice_forcing.nc"
+                  filename_interval="none"
+                  packages="timeVaryingLandIceForcingPKG"
+                  input_interval="none"/>
+
 <stream name="forcing_data_init">
         type="output"
         output_interval="0000_00:00:01"
@@ -36,7 +50,6 @@
     <var name="maxLevelCell"/>
     <var name="vertCoordMovementWeights"/>
     <var name="edgeMask"/>
-    <var name="cullCell"/>
 </stream>
 
 </streams>
