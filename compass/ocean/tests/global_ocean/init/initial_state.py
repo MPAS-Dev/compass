@@ -113,21 +113,6 @@ class InitialState(Step):
                        '1timeLevel.nc',
                 database='initial_condition_database')
 
-        mesh_path = mesh.mesh_step.path
-
-        self.add_input_file(
-            filename='mesh.nc',
-            work_dir_target=f'{mesh_path}/culled_mesh.nc')
-
-        self.add_input_file(
-            filename='graph.info',
-            work_dir_target=f'{mesh_path}/culled_graph.info')
-
-        if mesh.with_ice_shelf_cavities:
-            self.add_input_file(
-                filename='land_ice_mask.nc',
-                work_dir_target=f'{mesh_path}/land_ice_mask.nc')
-
         self.add_model_as_input()
 
         for file in ['initial_state.nc', 'init_mode_forcing_data.nc',
@@ -144,6 +129,21 @@ class InitialState(Step):
         self.cores = config.getint('global_ocean', 'init_cores')
         self.min_cores = config.getint('global_ocean', 'init_min_cores')
         self.threads = config.getint('global_ocean', 'init_threads')
+
+        mesh_path = self.mesh.get_cull_mesh_path()
+
+        self.add_input_file(
+            filename='mesh.nc',
+            work_dir_target=f'{mesh_path}/culled_mesh.nc')
+
+        self.add_input_file(
+            filename='graph.info',
+            work_dir_target=f'{mesh_path}/culled_graph.info')
+
+        if self.mesh.with_ice_shelf_cavities:
+            self.add_input_file(
+                filename='land_ice_mask.nc',
+                work_dir_target=f'{mesh_path}/land_ice_mask.nc')
 
     def run(self):
         """

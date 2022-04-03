@@ -1,33 +1,13 @@
 import numpy as np
 import mpas_tools.mesh.creation.mesh_definition_tools as mdt
 
-from compass.ocean.tests.global_ocean.mesh.mesh import MeshStep
+from compass.mesh import QuasiUniformSphericalMeshStep
 
 
-class EC30to60Mesh(MeshStep):
+class EC30to60BaseMesh(QuasiUniformSphericalMeshStep):
     """
     A step for creating EC30to60 and ECwISC30to60 meshes
     """
-    def __init__(self, test_case, mesh_name, with_ice_shelf_cavities):
-        """
-        Create a new step
-
-        Parameters
-        ----------
-        test_case : compass.TestCase
-            The test case this step belongs to
-
-        mesh_name : str
-            The name of the mesh
-
-        with_ice_shelf_cavities : bool
-            Whether the mesh includes ice-shelf cavities
-        """
-
-        super().__init__(test_case, mesh_name, with_ice_shelf_cavities,
-                         package=self.__module__,
-                         mesh_config_filename='ec30to60.cfg')
-
     def build_cell_width_lat_lon(self):
         """
         Create cell width array for this mesh on a regular latitude-longitude

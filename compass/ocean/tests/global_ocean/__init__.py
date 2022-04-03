@@ -34,7 +34,7 @@ class GlobalOcean(TestGroup):
         super().__init__(mpas_core=mpas_core, name='global_ocean')
 
         # we do a lot of tests for QU240/QUwISC240
-        for mesh_name in ['QU240', 'QUwISC240']:
+        for mesh_name in ['QU240', 'Icos240', 'QUwISC240']:
             mesh = Mesh(test_group=self, mesh_name=mesh_name)
             self.add_test_case(mesh)
 

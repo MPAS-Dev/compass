@@ -1,4 +1,5 @@
 import xarray
+import os
 
 from geometric_features import GeometricFeatures, FeatureCollection, \
     read_feature_collection
@@ -10,6 +11,83 @@ from mpas_tools.ocean.coastline_alteration import widen_transect_edge_masks, \
     add_critical_land_blockages, add_land_locked_cells_to_mask
 from mpas_tools.viz.paraview_extractor import extract_vtk
 from mpas_tools.logging import LoggingContext, check_call
+
+from compass.step import Step
+
+
+class CullMeshStep(Step):
+    """
+    A step for culling a global MPAS-Ocean mesh
+
+    Attributes
+    ----------
+    base_mesh_step : compass.mesh.spherical.SphericalBaseStep
+        The base mesh step containing input files to this step
+
+    with_ice_shelf_cavities : bool
+        Whether the mesh includes ice-shelf cavities
+    """
+    def __init__(self, test_case, base_mesh_step, with_ice_shelf_cavities,
+                 name='cull_mesh', subdir=None):
+        """
+        Create a new step
+
+        Parameters
+        ----------
+        test_case : compass.ocean.tests.global_ocean.mesh.Mesh
+            The test case this step belongs to
+
+        base_mesh_step : compass.mesh.spherical.SphericalBaseStep
+            The base mesh step containing input files to this step
+
+        with_ice_shelf_cavities : bool
+            Whether the mesh includes ice-shelf cavities
+
+        name : str, optional
+            the name of the step
+
+        subdir : str, optional
+            the subdirectory for the step.  The default is ``name``
+        """
+        super().__init__(test_case, name=name, subdir=subdir, cores=None,
+                         min_cores=None, threads=None)
+        self.base_mesh_step = base_mesh_step
+
+        for file in ['culled_mesh.nc', 'culled_graph.info',
+                     'critical_passages_mask_final.nc']:
+            self.add_output_file(filename=file)
+
+        self.with_ice_shelf_cavities = with_ice_shelf_cavities
+
+    def setup(self):
+        """
+        Set up the test case in the work directory, including downloading any
+        dependencies.
+        """
+        # get the these properties from the config options
+        config = self.config
+        self.cores = config.getint('global_ocean', 'mesh_cores')
+        self.min_cores = config.getint('global_ocean', 'mesh_min_cores')
+        base_path = self.base_mesh_step.path
+        for file in ['base_mesh.nc']:
+            target = os.path.join(base_path, file)
+            self.add_input_file(filename=file,
+                                work_dir_target=target)
+
+    def run(self):
+        """
+        Run this step of the test case
+        """
+        with_ice_shelf_cavities = self.with_ice_shelf_cavities
+        logger = self.logger
+
+        # only use progress bars if we're not writing to a log file
+        use_progress_bar = self.log_filename is None
+
+        cull_mesh(with_critical_passages=True, logger=logger,
+                  use_progress_bar=use_progress_bar,
+                  with_cavities=with_ice_shelf_cavities,
+                  process_count=self.cores)
 
 
 def cull_mesh(with_cavities=False, with_critical_passages=False,

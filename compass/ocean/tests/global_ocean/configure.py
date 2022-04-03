@@ -18,8 +18,8 @@ def configure_global_ocean(test_case, mesh, init=None):
         The test case that produces the initial condition for this run
     """
     config = test_case.config
-    mesh_step = mesh.mesh_step
-    config.add_from_package(mesh_step.package, mesh_step.mesh_config_filename,
+    config.add_from_package('compass.mesh', 'mesh.cfg')
+    config.add_from_package(mesh.package, mesh.mesh_config_filename,
                             exception=True)
 
     if mesh.with_ice_shelf_cavities:

@@ -1,8 +1,9 @@
 from compass.testcase import TestCase
-from compass.ocean.tests.global_ocean.mesh.qu240 import QU240Mesh
-from compass.ocean.tests.global_ocean.mesh.ec30to60 import EC30to60Mesh
-from compass.ocean.tests.global_ocean.mesh.so12to60 import SO12to60Mesh
-from compass.ocean.tests.global_ocean.mesh.wc14 import WC14Mesh
+from compass.mesh import IcosahedralMeshStep, QuasiUniformSphericalMeshStep
+from compass.ocean.tests.global_ocean.mesh.ec30to60 import EC30to60BaseMesh
+from compass.ocean.tests.global_ocean.mesh.so12to60 import SO12to60BaseMesh
+from compass.ocean.tests.global_ocean.mesh.wc14 import WC14BaseMesh
+from compass.ocean.tests.global_ocean.mesh.cull import CullMeshStep
 from compass.ocean.tests.global_ocean.configure import configure_global_ocean
 from compass.validate import compare_variables
 
@@ -13,8 +14,11 @@ class Mesh(TestCase):
 
     Attributes
     ----------
-    mesh_step : compass.ocean.tests.global_ocean.mesh.mesh.MeshStep
-        The step for creating the mesh
+    package : str
+        The python package for the mesh
+
+    mesh_config_filename : str
+        The name of the mesh config file
 
     with_ice_shelf_cavities : bool
         Whether the mesh includes ice-shelf cavities
@@ -34,47 +38,69 @@ class Mesh(TestCase):
         name = 'mesh'
         subdir = '{}/{}'.format(mesh_name, name)
         super().__init__(test_group=test_group, name=name, subdir=subdir)
-        if mesh_name in 'QU240':
-            self.mesh_step = QU240Mesh(self, mesh_name,
-                                       with_ice_shelf_cavities=False)
-        elif mesh_name in 'QUwISC240':
-            self.mesh_step = QU240Mesh(self, mesh_name,
-                                       with_ice_shelf_cavities=True)
-        elif mesh_name in 'EC30to60':
-            self.mesh_step = EC30to60Mesh(self, mesh_name,
-                                          with_ice_shelf_cavities=False)
-        elif mesh_name in 'ECwISC30to60':
-            self.mesh_step = EC30to60Mesh(self, mesh_name,
-                                          with_ice_shelf_cavities=True)
-        elif mesh_name in 'SOwISC12to60':
-            self.mesh_step = SO12to60Mesh(self, mesh_name,
-                                          with_ice_shelf_cavities=True)
-        elif mesh_name in 'WC14':
-            self.mesh_step = WC14Mesh(self, mesh_name,
-                                      with_ice_shelf_cavities=False)
-        else:
-            raise ValueError('Unknown mesh name {}'.format(mesh_name))
 
-        self.add_step(self.mesh_step)
+        with_ice_shelf_cavities = 'wISC' in mesh_name
+        mesh_lower = mesh_name.lower()
+        if with_ice_shelf_cavities:
+            mesh_lower = mesh_lower.replace('wisc', '')
+        if 'icos' in mesh_lower:
+            mesh_lower = mesh_lower.replace('icos', 'qu')
+
+        self.package = f'compass.ocean.tests.global_ocean.mesh.{mesh_lower}'
+        self.mesh_config_filename = f'{mesh_lower}.cfg'
 
         self.mesh_name = mesh_name
-        self.with_ice_shelf_cavities = self.mesh_step.with_ice_shelf_cavities
+        self.with_ice_shelf_cavities = with_ice_shelf_cavities
+
+        name = 'base_mesh'
+        subdir = None
+        if mesh_name in ['Icos240', 'IcoswISC240']:
+            base_mesh_step = IcosahedralMeshStep(
+                self, name=name, subdir=subdir, cell_width=240)
+        elif mesh_name in ['QU240', 'QUwISC240']:
+            base_mesh_step = QuasiUniformSphericalMeshStep(
+                self, name=name, subdir=subdir, cell_width=240)
+        elif mesh_name in ['EC30to60', 'ECwISC30to60']:
+            base_mesh_step = EC30to60BaseMesh(self, name=name, subdir=subdir)
+        elif mesh_name in ['SOwISC12to60']:
+            base_mesh_step = SO12to60BaseMesh(self, name=name, subdir=subdir)
+        elif mesh_name in 'WC14':
+            base_mesh_step = WC14BaseMesh(self, name=name, subdir=subdir)
+        else:
+            raise ValueError(f'Unknown mesh name {mesh_name}')
+
+        self.add_step(base_mesh_step)
+
+        cull_step = CullMeshStep(
+            self, base_mesh_step, self.with_ice_shelf_cavities,
+            name='cull_mesh', subdir=None)
+
+        self.add_step(cull_step)
 
     def configure(self):
         """
         Modify the configuration options for this test case
         """
         configure_global_ocean(test_case=self, mesh=self)
+        config = self.config
+        config.set('spherical_mesh', 'add_mesh_density', 'True')
+        config.set('spherical_mesh', 'plot_cell_width', 'True')
+
+        for step_name in ['base_mesh', 'cull_mesh']:
+            step = self.steps[step_name]
+            step.cores = config.getint('global_ocean', 'mesh_cores')
+            step.min_cores = config.getint('global_ocean', 'mesh_min_cores')
 
     def run(self):
         """
         Run each step of the testcase
         """
-        step = self.mesh_step
         config = self.config
         # get the these properties from the config options
-        step.cores = config.getint('global_ocean', 'mesh_cores')
-        step.min_cores = config.getint('global_ocean', 'mesh_min_cores')
+        for step_name in ['base_mesh', 'cull_mesh']:
+            step = self.steps[step_name]
+            step.cores = config.getint('global_ocean', 'mesh_cores')
+            step.min_cores = config.getint('global_ocean', 'mesh_min_cores')
 
         # run the step
         super().run()
@@ -86,4 +112,15 @@ class Mesh(TestCase):
         """
         variables = ['xCell', 'yCell', 'zCell']
         compare_variables(test_case=self, variables=variables,
-                          filename1='mesh/culled_mesh.nc')
+                          filename1='cull_mesh/culled_mesh.nc')
+
+    def get_cull_mesh_path(self):
+        """
+        Get the path of the cull mesh step (for input files)
+
+        Returns
+        -------
+        cull_mesh_path : str
+            The path to the work directory of the cull mesh step.
+        """
+        return self.steps['cull_mesh'].path

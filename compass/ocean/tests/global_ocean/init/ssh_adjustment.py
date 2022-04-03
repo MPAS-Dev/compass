@@ -47,7 +47,7 @@ class SshAdjustment(Step):
         self.add_streams_file('compass.ocean.tests.global_ocean.init',
                               'streams.ssh_adjust')
 
-        mesh_path = test_case.mesh.mesh_step.path
+        mesh_path = test_case.mesh.get_cull_mesh_path()
         init_path = test_case.steps['initial_state'].path
 
         self.add_input_file(
