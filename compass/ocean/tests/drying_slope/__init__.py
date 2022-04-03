@@ -14,7 +14,7 @@ class DryingSlope(TestGroup):
         """
         super().__init__(mpas_core=mpas_core, name='drying_slope')
 
-        for resolution in ['1km']:
+        for resolution in [0.25, 1]:
             for coord_type in ['sigma']:
                 self.add_test_case(
                     Default(test_group=self, resolution=resolution,

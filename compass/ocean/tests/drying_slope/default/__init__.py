@@ -36,7 +36,11 @@ class Default(TestCase):
 
         self.resolution = resolution
         self.coord_type = coord_type
-        subdir = '{}/{}/{}'.format(resolution, coord_type, name)
+        if resolution < 1.:
+            res_name = str(int(resolution*1e3))+'m'
+        else:
+            res_name = str(int(resolution))+'km'
+        subdir = '{}/{}/{}'.format(res_name, coord_type, name)
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
 
@@ -46,3 +50,17 @@ class Default(TestCase):
                                   damping_coeff=damping_coeff))
         self.add_step(Viz(test_case=self))
 
+    def configure(self):
+        """
+        Modify the configuration options for this test case.
+        """
+
+        resolution = self.resolution
+        config = self.config
+        ny = round(28 / resolution)
+        if resolution < 1.:
+            ny += 2
+        dc = 1e3 * resolution
+
+        config.set('drying_slope', 'ny', '{}'.format(ny))
+        config.set('drying_slope', 'dc', '{}'.format(dc))
