@@ -14,7 +14,7 @@ class Default(TestCase):
         The horizontal resolution of the test case
 
     coord_type : str
-        The type of vertical coordinate (``z-star``, ``z-level``, etc.)
+        The type of vertical coordinate (``sigma``, ``single_layer``, etc.)
     """
 
     def __init__(self, test_group, resolution, coord_type):
@@ -39,7 +39,10 @@ class Default(TestCase):
         subdir = '{}/{}/{}'.format(resolution, coord_type, name)
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
+
         self.add_step(InitialState(test_case=self))
-        self.add_step(Forward(test_case=self, cores=4, threads=1))
+        for damping_coeff in [0.0025, 0.01]:
+            self.add_step(Forward(test_case=self, cores=4, threads=1,
+                                  damping_coeff=damping_coeff))
         self.add_step(Viz(test_case=self))
 

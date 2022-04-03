@@ -8,7 +8,7 @@ class Forward(Step):
     test cases.
     """
     def __init__(self, test_case, name='forward', subdir=None, cores=1,
-                 min_cores=None, threads=1):
+                 min_cores=None, threads=1, damping_coeff=None):
         """
         Create a new test case
 
@@ -35,13 +35,25 @@ class Forward(Step):
         threads : int, optional
             the number of threads the step will use
 
+        damping_coeff: real, optional
+            the value of the rayleigh damping coefficient
+
         """
         if min_cores is None:
             min_cores = cores
+        if damping_coeff is not None:
+            name ='{}_{}'.format(name, damping_coeff)
+
         super().__init__(test_case=test_case, name=name, subdir=subdir,
                          cores=cores, min_cores=min_cores, threads=threads)
+
         self.add_namelist_file('compass.ocean.tests.drying_slope',
                                'namelist.forward')
+        if damping_coeff is not None:
+            # update the Rayleigh damping coeff to the requested value
+            options = {'config_Rayleigh_damping_coeff': '{}'.format(damping_coeff)}
+            self.add_namelist_options(options)
+
         self.add_streams_file('compass.ocean.tests.drying_slope',
                               'streams.forward')
 
@@ -67,4 +79,5 @@ class Forward(Step):
         """
         Run this step of the test case
         """
+
         run_model(self)
