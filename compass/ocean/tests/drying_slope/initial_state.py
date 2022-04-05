@@ -8,6 +8,7 @@ from mpas_tools.mesh.conversion import convert, cull
 from compass.step import Step
 from compass.model import run_model
 
+
 class InitialState(Step):
     """
     A step for creating a mesh and initial condition for drying slope test
@@ -31,7 +32,7 @@ class InitialState(Step):
         self.add_streams_file('compass.ocean.tests.drying_slope',
                               'streams.init', mode='init')
 
-        for file in ['base_mesh.nc', 'culled_mesh.nc', 'culled_graph.info', 
+        for file in ['base_mesh.nc', 'culled_mesh.nc', 'culled_graph.info',
                      'ocean.nc']:
             self.add_output_file(file)
 

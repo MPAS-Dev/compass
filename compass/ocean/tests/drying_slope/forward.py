@@ -42,7 +42,7 @@ class Forward(Step):
         if min_cores is None:
             min_cores = cores
         if damping_coeff is not None:
-            name ='{}_{}'.format(name, damping_coeff)
+            name = '{}_{}'.format(name, damping_coeff)
 
         super().__init__(test_case=test_case, name=name, subdir=subdir,
                          cores=cores, min_cores=min_cores, threads=threads)
@@ -51,23 +51,26 @@ class Forward(Step):
                                'namelist.forward')
         if damping_coeff is not None:
             # update the Rayleigh damping coeff to the requested value
-            options = {'config_Rayleigh_damping_coeff': '{}'.format(damping_coeff)}
+            options = {'config_Rayleigh_damping_coeff': '{}'.format(
+                       damping_coeff)}
             self.add_namelist_options(options)
 
         self.add_streams_file('compass.ocean.tests.drying_slope',
                               'streams.forward')
 
+        input_path = '../initial_state'
         self.add_input_file(filename='mesh.nc',
-                            target='../initial_state/culled_mesh.nc')
+                            target='{}/culled_mesh.nc'.format(input_path))
 
         self.add_input_file(filename='init.nc',
-                            target='../initial_state/ocean.nc')
+                            target='{}/ocean.nc'.format(input_path))
 
         self.add_input_file(filename='forcing.nc',
-                            target='../initial_state/init_mode_forcing_data.nc')
+                            target='{}/init_mode_forcing_data.nc'.format(
+                                   input_path))
 
         self.add_input_file(filename='graph.info',
-                            target='../initial_state/culled_graph.info')
+                            target='{}/culled_graph.info'.format(input_path))
 
         self.add_model_as_input()
 

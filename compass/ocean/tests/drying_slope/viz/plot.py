@@ -151,7 +151,8 @@ class TimeSeriesPlotter(object):
                 # Plot comparison data
                 for datatype in ['analytical', 'ROMS']:
                     datafile = '{}/drying_slope/r{}d{}-{}.csv'.format(
-                                datapath,damping_coeff,atime,datatype.lower())
+                                datapath, damping_coeff, atime,
+                                datatype.lower())
                     data = pd.read_csv(datafile, header=None)
                     ax2[i].scatter(data[0], data[1], marker='.',
                                    color=colors[datatype], label=datatype)
@@ -223,7 +224,7 @@ class MoviePlotter(object):
             The folder with analytical and ROMS results for comparison
 
         """
-        colors = {'MPAS-O':'k', 'analytical':'b', 'ROMS':'g'}
+        colors = {'MPAS-O': 'k', 'analytical': 'b', 'ROMS': 'g'}
 
         times = ['0.50', '0.05', '0.40', '0.15', '0.30', '0.25']
         locs = [9.3, 7.2, 4.2, 2.2, 1.2, 0.2]
@@ -231,12 +232,12 @@ class MoviePlotter(object):
 
         damping_coeffs = [0.0025, 0.01]
 
-        xBed = numpy.linspace(0,25,100)
+        xBed = numpy.linspace(0, 25, 100)
         yBed = 10.0/25.0*xBed
 
         ii = 0
         # Plot profiles over the 12h simulation duration
-        for itime in numpy.linspace(0,0.5,5*12+1):
+        for itime in numpy.linspace(0, 0.5, 5*12+1):
 
             plottime = int((float(itime)/0.2 + 1e-16)*24.0)
 
@@ -278,10 +279,11 @@ class MoviePlotter(object):
 
                     for datatype in ['analytical', 'ROMS']:
                         datafile = '{}/drying_slope/r{}d{}-{}.csv'.format(
-                                    datapath, damping_coeff, atime, datatype.lower())
+                                    datapath, damping_coeff, atime,
+                                    datatype.lower())
                         data = pd.read_csv(datafile, header=None)
-                        ax2[i].scatter(data[0], data[1], marker = '.',
-                                       color = colors[datatype], label=datatype)
+                        ax2[i].scatter(data[0], data[1], marker='.',
+                                       color=colors[datatype], label=datatype)
 
                 ds.close()
 
@@ -295,8 +297,8 @@ class MoviePlotter(object):
             plt.close(fig2)
             ii += 1
 
-    def images_to_movies(self, outFolder='.', framesPerSecond=30, extension='mp4',
-                         overwrite=True):
+    def images_to_movies(self, outFolder='.', framesPerSecond=30,
+                         extension='mp4', overwrite=True):
         """
         Convert all the image sequences into movies with ffmpeg
         """
@@ -311,7 +313,7 @@ class MoviePlotter(object):
         if overwrite or not os.path.exists(outFileName):
 
             imageFileTemplate = '{}/{}_%03d.png'.format(self.outFolder,
-                                                           prefix)
+                                                        prefix)
             logFileName = '{}/logs/{}.log'.format(outFolder, prefix)
             with open(logFileName, 'w') as logFile:
                 args = ['ffmpeg', '-y', '-r', framesPerSecond,
