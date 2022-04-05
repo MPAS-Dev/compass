@@ -58,7 +58,8 @@ def get_version():
     return version
 
 
-def get_env_setup(args, config, machine, env_type, source_path, conda_base):
+def get_env_setup(args, config, machine, env_type, source_path, conda_base,
+                  with_albany):
 
     if args.python is not None:
         python = args.python
@@ -103,6 +104,9 @@ def get_env_setup(args, config, machine, env_type, source_path, conda_base):
         activ_path = os.path.abspath(os.path.join(conda_base, '..'))
 
     check_unsupported(machine, compiler, mpi, source_path)
+
+    if with_albany:
+        check_albany_supported(machine, compiler, mpi, source_path)
 
     return python, recreate, compiler, mpi, conda_mpi,  activ_suffix, \
         env_suffix, activ_path
@@ -595,17 +599,38 @@ def update_permissions(config, env_type, activ_path, conda_base, spack_base):
 def check_unsupported(machine, compiler, mpi, source_path):
     with open(os.path.join(source_path, 'conda', 'unsupported.txt'), 'r') as f:
         content = f.readlines()
-    content = [line.strip() for line in content if not line.startswith('#')]
+    content = [line.strip() for line in content if not
+               line.strip().startswith('#')]
     for line in content:
         if line.strip() == '':
             continue
         unsupported = [part.strip() for part in line.split(',')]
         if len(unsupported) != 3:
-            raise ValueError('Bad line in "unsupported.txt" {}'.format(line))
+            raise ValueError(f'Bad line in "unsupported.txt" {line}')
         if machine == unsupported[0] and compiler == unsupported[1] and \
                 mpi == unsupported[2]:
-            raise ValueError('{} with {} is not supported on {}'.format(
-                compiler, mpi, machine))
+            raise ValueError(f'{compiler} with {mpi} is not supported on '
+                             f'{machine}')
+
+
+def check_albany_supported(machine, compiler, mpi, source_path):
+    filename = os.path.join(source_path, 'conda', 'albany_supported.txt')
+    with open(filename, 'r') as f:
+        content = f.readlines()
+    content = [line.strip() for line in content if not
+               line.strip().startswith('#')]
+    for line in content:
+        if line.strip() == '':
+            continue
+        supported = [part.strip() for part in line.split(',')]
+        if len(supported) != 3:
+            raise ValueError(f'Bad line in "albany_supported.txt" {line}')
+        if machine == supported[0] and compiler == supported[1] and \
+                mpi == supported[2]:
+            return
+
+    raise ValueError(f'{compiler} with {mpi} is not supported with Albany on '
+                     f'{machine}')
 
 
 def main():
@@ -614,7 +639,6 @@ def main():
     source_path = os.getcwd()
     conda_template_path = f'{source_path}/conda/compass_env'
     spack_template_path = f'{source_path}/conda/spack'
-
 
     version = get_version()
 
@@ -647,7 +671,7 @@ def main():
 
     python, recreate, compiler, mpi, conda_mpi, activ_suffix, env_suffix, \
         activ_path = get_env_setup(args, config, machine, env_type,
-                                   source_path, conda_base)
+                                   source_path, conda_base, args.with_albany)
 
     env_path, env_name, activate_env, spack_env = build_env(
         env_type, recreate, machine, compiler, mpi, conda_mpi, version, python,
