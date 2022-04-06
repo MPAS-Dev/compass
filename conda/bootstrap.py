@@ -350,11 +350,15 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, env_name,
             stdcxx = '-lc++'
         else:
             stdcxx = '-lstdc++'
+        if mpi == 'openmpi' and machine in ['anvil', 'chrysalis']:
+            mpicxx = '-lmpi_cxx'
+        else:
+            mpicxx = ''
         env_vars = \
             f'{env_vars}' \
             f'export {albany_flags}\n' \
             f'export MPAS_EXTERNAL_LIBS="${{MPAS_EXTERNAL_LIBS}} ' \
-            f'${{ALBANY_LINK_LIBS}} {stdcxx}"\n'
+            f'${{ALBANY_LINK_LIBS}} {stdcxx} {mpicxx}"\n'
 
     return spack_branch_base, spack_script, env_vars
 
@@ -631,7 +635,6 @@ def check_albany_supported(machine, compiler, mpi, source_path):
 
     raise ValueError(f'{compiler} with {mpi} is not supported with Albany on '
                      f'{machine}')
-
 
 def main():
     args = parse_args(bootstrap=True)
