@@ -332,7 +332,7 @@ MPAS-Ocean, i.e.:
     make <mpas_make_target>
 
 Compiling MALI with Albany has not yet been standardized.  Some information is
-available at 
+available at
 `https://github.com/MALI-Dev/E3SM/wiki <https://github.com/MALI-Dev/E3SM/wiki>`_,
 and complete instructions will be added here in the future.
 

@@ -6,7 +6,7 @@ Badger
 .. note::
 
   It is important that you not point to custom module files for the compiler,
-  MPI, and netcdf modules on Grizzly to work properly.  If you have:
+  MPI, and netcdf modules on Badger to work properly.  If you have:
 
   .. code-block:: bash
 

@@ -16,8 +16,8 @@ For each ``compass`` release, we maintain a
 ``compass`` package as well as all of its dependencies and some libraries
 (currently `ESMF <https://earthsystemmodeling.org/>`_ and
 `SCORPIO <https://e3sm.org/scorpio-parallel-io-library/>`_) built with system
-MPI on our standard machines (Anvil, Badger, Chrysalis, Compy, Cori, and
-Grizzly).  Here are the commands to load the the environment for the latest
+MPI on our standard machines (Anvil, Badger, Chrysalis, Compy, and Cori).
+Here are the commands to load the the environment for the latest
 ``compass`` release with the default compiler and MPI library on each machine:
 
 * Anvil (Blues):
@@ -49,12 +49,6 @@ Grizzly).  Here are the commands to load the the environment for the latest
 .. code-block:: bash
 
     source /global/cfs/cdirs/e3sm/software/compass/cori-haswell/load_latest_compass.sh
-
-* Grizzly:
-
-.. code-block:: bash
-
-    source /usr/projects/climate/SHARED_CLIMATE/compass/grizzly/load_latest_compass.sh
 
 These same paths (minus ``load_latest_compass.sh``) also have load scripts for
 the latest version of compass with all the supported compiler and MPI

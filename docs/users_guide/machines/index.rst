@@ -139,7 +139,6 @@ to use the default MPI variant for each compiler on each machine.
    chrysalis
    compy
    cori
-   grizzly
 
 
 .. _other_machines:
