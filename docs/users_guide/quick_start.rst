@@ -50,12 +50,6 @@ Grizzly).  Here are the commands to load the the environment for the latest
 
     source /global/cfs/cdirs/e3sm/software/compass/cori-haswell/load_latest_compass.sh
 
-* Cori-KNL:
-
-.. code-block:: bash
-
-    source /global/cfs/cdirs/e3sm/software/compass/cori-knl/load_latest_compass.sh
-
 * Grizzly:
 
 .. code-block:: bash

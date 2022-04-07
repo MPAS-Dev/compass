@@ -2211,7 +2211,6 @@ The available machines are listed with:
        default
        cori-haswell
        chrysalis
-       cori-knl
        compy
        grizzly
 
