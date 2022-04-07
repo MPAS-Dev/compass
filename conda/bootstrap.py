@@ -3,7 +3,6 @@
 from __future__ import print_function
 
 import os
-import re
 import platform
 import subprocess
 import glob
@@ -86,7 +85,7 @@ def get_env_setup(args, config, machine, env_type, source_path, conda_base,
         mpi = config.get('deploy', 'mpi_{}'.format(compiler))
 
     if machine is None:
-        conda_mpi = None
+        conda_mpi = 'nompi'
         activ_suffix = ''
         env_suffix = ''
     elif not machine.startswith('conda'):
@@ -164,7 +163,8 @@ def build_env(env_type, recreate, machine, compiler, mpi, conda_mpi, version,
     if env_type == 'test_release':
         # for a test release, we will be the compass package from the dev label
         channels = channels + ['-c e3sm/label/compass_dev']
-    if machine is None or env_type == 'release':
+    if (machine is not None and machine.startswith('conda')) \
+            or env_type == 'release':
         # we need libpnetcdf and scorpio (and maybe compass itself) from the
         # e3sm channel, compass label
         channels = channels + ['-c e3sm/label/compass']
@@ -249,7 +249,7 @@ def get_env_vars(machine, compiler, mpilib):
                    f'export I_MPI_F77=ifort\n' \
                    f'export I_MPI_F90=ifort\n'
 
-    if platform.system() == 'Linux' and machine == 'None':
+    if platform.system() == 'Linux' and machine.startswith('conda'):
         env_vars = \
             f'{env_vars}' \
             f'export MPAS_EXTERNAL_LIBS="${{MPAS_EXTERNAL_LIBS}} -lgomp"\n'
@@ -636,6 +636,7 @@ def check_albany_supported(machine, compiler, mpi, source_path):
     raise ValueError(f'{compiler} with {mpi} is not supported with Albany on '
                      f'{machine}')
 
+
 def main():
     args = parse_args(bootstrap=True)
 
@@ -652,6 +653,8 @@ def main():
         else:
             machine = args.machine
 
+    e3sm_machine = machine is not None
+
     if machine is None and not args.env_only:
         if platform.system() == 'Linux':
             machine = 'conda-linux'
@@ -665,7 +668,6 @@ def main():
         raise ValueError(f'Unexpected env_type: {env_type}')
     shared = (env_type != 'dev')
     conda_base = get_conda_base(args.conda_base, config, shared=shared)
-    spack_base = get_spack_base(args.spack_base, config)
 
     base_activation_script = os.path.abspath(
         '{}/etc/profile.d/conda.sh'.format(conda_base))
@@ -675,6 +677,13 @@ def main():
     python, recreate, compiler, mpi, conda_mpi, activ_suffix, env_suffix, \
         activ_path = get_env_setup(args, config, machine, env_type,
                                    source_path, conda_base, args.with_albany)
+
+    if args.spack_base is not None:
+        spack_base = args.spack_base
+    elif e3sm_machine and compiler is not None:
+        spack_base = get_spack_base(args.spack_base, config)
+    else:
+        spack_base = None
 
     env_path, env_name, activate_env, spack_env = build_env(
         env_type, recreate, machine, compiler, mpi, conda_mpi, version, python,
@@ -688,10 +697,14 @@ def main():
     spack_script = ''
     if compiler is not None:
         env_vars = get_env_vars(machine, compiler, mpi)
-        spack_branch_base, spack_script, env_vars = build_spack_env(
-            config, args.update_spack, machine, compiler, mpi, env_name,
-            activate_env, spack_env, spack_base, spack_template_path, env_vars,
-            args.tmpdir)
+        if spack_base is not None:
+            spack_branch_base, spack_script, env_vars = build_spack_env(
+                config, args.update_spack, machine, compiler, mpi, env_name,
+                activate_env, spack_env, spack_base, spack_template_path,
+                env_vars, args.tmpdir)
+        else:
+            env_vars = f'{env_vars}' \
+                       f'export PIO={env_path}\n'
     else:
         env_vars = ''
 
