@@ -42,8 +42,8 @@ Archive:
 Cori-Haswell
 ------------
 
-Since Cori's Haswell and KNL nodes have different configuration options and
-compilers, they are treated as separate supported machines in compass.
+Cori's Haswell and KNL nodes have different configuration options and
+compilers.  We only support Cori-Haswell at this time.
 
 config options
 ~~~~~~~~~~~~~~
@@ -84,8 +84,12 @@ cases or a test suite:
     # the system MPI library to use for gnu compiler
     mpi_gnu = mpt
 
-    # the base path to system libraries to be added as part of setting up compass
-    system_libs = /global/cfs/cdirs/e3sm/software/compass/cori-haswell/system
+    # the base path for spack environments used by compass
+    spack = /global/cfs/cdirs/e3sm/software/compass/cori-haswell/spack
+
+    # whether to use the same modules for hdf5, netcdf-c, netcdf-fortran and
+    # pnetcdf as E3SM (spack modules are used otherwise)
+    use_e3sm_hdf5_netcdf = True
 
     # the version of ESMF to build if using system compilers and MPI (don't build)
     esmf = None
@@ -131,7 +135,7 @@ To build the MPAS model with
 
 .. code-block:: bash
 
-    make intel-nersc
+    make [DEBUG=true] [OPENMP=true] intel-nersc
 
 
 Gnu on Cori-Haswell
@@ -148,7 +152,7 @@ To build the MPAS model with
 
 .. code-block:: bash
 
-    make gnu-nersc
+    make [DEBUG=true] [OPENMP=true] [ALBANY=true] gnu-nersc
 
 
 Jupyter notebook on remote data

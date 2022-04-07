@@ -139,22 +139,22 @@ To build MPAS-Ocean, first source the appropriate load script (see
 MALI can be compiled with or without the Albany library that contains the
 first-order velocity solver.  The Albany first-order velocity solver is the
 only velocity option that is scientifically validated, but the Albany library
-is only installed on Badger, Grizzly, and Cori.  Therefore, in some situations
-it is desirable to compile without Albany to run basic tests on platforms where
-Albany is not available.  This basic mode of MALI can be compiled similarly to
-MPAS-Ocean.  Again, first source the appropriate load script (see
-:ref:`conda_env`) then run:
+is only available with Gnu compilers (and therefore not at all on Compy).
+Therefore, in some situations it is desirable to compile without Albany to run
+basic tests on platforms where Albany is not available.  This basic mode of
+MALI can be compiled similarly to MPAS-Ocean.  Again, first source the
+appropriate load script (see :ref:`conda_env`) then run:
 
 .. code-block:: bash
 
     cd components/mpas-albany-landice
     git submodule update --init --recursive
-    make <mpas_make_target>
+    make [ALBANY=true] <mpas_make_target>
 
-Compiling MALI with Albany has not yet been standardized, though this is a
-feature we hope to support in the next release.  Some information is available
-at `https://github.com/MALI-Dev/E3SM/wiki <https://github.com/MALI-Dev/E3SM/wiki>`_,
-and complete instructions will be added here in the future.
+where `ALBANY=true` is included if you want to compile with Albany support
+and excluded if you do not.  Some more information on building and running
+MALI is available at
+`https://github.com/MALI-Dev/E3SM/wiki <https://github.com/MALI-Dev/E3SM/wiki>`_.
 
 See the last column of the table in :ref:`dev_supported_machines` for the right
 ``<mpas_make_target>`` command for each machine and compiler.

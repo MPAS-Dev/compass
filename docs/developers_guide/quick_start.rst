@@ -82,7 +82,7 @@ If you are on one of the :ref:`dev_supported_machines`, run:
 .. code-block:: bash
 
     ./conda/configure_compass_env.py --conda <base_path_to_install_or_update_conda> \
-        -c <compiler>
+        -c <compiler> [--mpi <mpi>] [-m <machine>] [--with_albany]
 
 The ``<base_path_to_install_or_update_conda>`` is typically ``~/miniconda3``.
 This is the location where you would like to install Miniconda3 or where it is
@@ -94,13 +94,23 @@ See the machine under :ref:`dev_supported_machines` for a list of available
 compilers to pass to ``-c``.  If you don't supply a compiler, you will get
 the default one for that machine (usually Intel). Typically, you will want the
 default MPI flavor that compass has defined for each compiler, so you should
-not need to specify which MPI version to use but you may do so with ``-i`` if
-you need to.
+not need to specify which MPI version to use but you may do so with ``--mpi``
+if you need to.
 
 If you are on a login node, the script should automatically recognize what
 machine you are on.  You can supply the machine name with ``-m <machine>`` if
 you run into trouble with the automatic recognition (e.g. if you're setting
 up the environment on a compute node, which is not recommended).
+
+If you are working with MALI, you should specify ``--with_albany``.  This will
+ensure that the Albany and Trilinos libraries are included among those built
+with system compilers and MPI libraries, a requirement for many MAlI test
+cases.  Currently, only Albany is only supported with ``gnu`` compilers.
+
+It is safe to add the ``--with_albany`` flag for MPAS-Ocean but it is not
+recommended unless a user wants to be able to run both models with the same
+conda/spack environment.  The main downside is simply that unneeded libraries
+will be linked in to MPAS-Ocean.
 
 Unknown machines
 ~~~~~~~~~~~~~~~~
@@ -128,6 +138,15 @@ up the compass test environment.  A config file can be specified using
 file. More information, including example config files, can be found
 in :ref:`config_files`.
 
+.. note::
+
+    Currently, there is not a good way to build Albany for an unknown machine as
+    part of the compass deployment process, meaning MALI will be limited to the
+    shallow-ice approximation (SIA) solver.
+
+    To get started on HPC systems that aren't supported by Compass, get in touch
+    with the developers.
+
 What the script does
 ~~~~~~~~~~~~~~~~~~~~
 
@@ -138,20 +157,21 @@ this script will also:
   so changes you make to the repo are immediately reflected in the conda
   environment.
 
-* build the `SCORPIO <https://github.com/E3SM-Project/scorpio>`_ library if it
-  hasn't already been built.  SCORPIO is needed building and running MPAS
-  components.
+* uses Spack to build several libraries with system compilers and MPI library,
+  including: `SCORPIO <https://github.com/E3SM-Project/scorpio>`_ (parallel
+  i/o for MPAS components) and `ESMF <https://earthsystemmodeling.org/>`_
+  (making mapping files in parallel).
 
-* build the `ESMF <https://earthsystemmodeling.org/>`_ library if it hasn't
-  already been built.  ESMF with the system's version of MPI is needed for
-  making mapping files.
+* optionally (with the ``--with_albany`` flag) use Spack to install
+  `Trilinos <https://trilinos.github.io/>`_ and
+  `Albany <https://github.com/sandialabs/Albany>`_ libraries.
 
-* make an activation script called
-  ``load_dev_compass_<version>_<machine>_<compiler>_<mpi>.sh``,
-  where ``<version>`` is the compass version, ``<machine>`` is the name of the
-  machine (to prevent confusion when running from the same branch on multiple
-  machines), ``<compiler>`` is the compiler name (e.g. ``intel`` or ``gnu``),
-  and ``mpi`` is the MPI flavor (e.g. ``impi``, ``mvapich``, ``openmpi``).
+* make an activation script called ``load_*.sh``, where the details of the
+  name encode the conda environment name, the machine, compilers and MPI
+  libraries, e.g.
+  ``load_dev_compass_<version>_<machine>_<compiler>_<mpi>.sh`` (``<version>``
+  is the compass version, ``<machine>`` is the name of the
+  machine, ``<compiler>`` is the compiler name, and ``mpi`` is the MPI flavor).
 
 * optionally (with the ``--check`` flag), run some tests to make sure some of
   the expected packages are available.
@@ -169,6 +189,10 @@ Optional flags
     Set the name of the environment (and the prefix for the activation script)
     to something other than the default (``dev_compass_<version>`` or
     ``dev_compass_<version>_<mpi>``).
+
+``--with-albany``
+    Install Albany for full MALI support (currently only with ``gnu``
+    compilers)
 
 Activating the environment
 ~~~~~~~~~~~~~~~~~~~~~~~~~~

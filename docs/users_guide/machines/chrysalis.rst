@@ -42,8 +42,12 @@ test suite:
     # the system MPI library to use for gnu compiler
     mpi_gnu = openmpi
 
-    # the base path to system libraries to be added as part of setting up compass
-    system_libs = /lcrc/soft/climate/compass/chrysalis/system
+    # the base path for spack environments used by compass
+    spack = /lcrc/soft/climate/compass/chrysalis/spack
+
+    # whether to use the same modules for hdf5, netcdf-c, netcdf-fortran and
+    # pnetcdf as E3SM (spack modules are used otherwise)
+    use_e3sm_hdf5_netcdf = True
 
 Additionally, some relevant config options come from the
 `mache <https://github.com/E3SM-Project/mache/>`_ package:
@@ -81,7 +85,7 @@ To build the MPAS model with
 
 .. code-block:: bash
 
-    make intel-mpi
+    make [DEBUG=true] [OPENMP=true] intel-mpi
 
 
 Gnu on Chrysalis
@@ -98,5 +102,5 @@ To build the MPAS model with
 
 .. code-block:: bash
 
-    make gfortran
+    make [DEBUG=true] [OPENMP=true] [ALBANY=true] gfortran
 

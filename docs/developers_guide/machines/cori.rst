@@ -16,7 +16,7 @@ Then, you can build the MPAS model with
 
 .. code-block:: bash
 
-    make intel-nersc
+    make [DEBUG=true] [OPENMP=true] intel-nersc
 
 cori-haswell, gnu
 -----------------
@@ -31,4 +31,4 @@ Then, you can build the MPAS model with
 
 .. code-block:: bash
 
-    make gnu-nersc
+    make [DEBUG=true] [OPENMP=true] [ALBANY=true] gnu-nersc
