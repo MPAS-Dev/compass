@@ -92,7 +92,7 @@ class Viz(Step):
 
         fig1.suptitle('Tidal amplitude forcing (right side)')
         fig1.savefig(f'{outFolder}/ssh_t.png', bbox_inches='tight', dpi=200)
-                     
+
         plt.close(fig1)
 
     def _plot_ssh_validation(self, outFolder='.'):

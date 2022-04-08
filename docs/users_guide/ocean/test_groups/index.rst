@@ -12,6 +12,7 @@ coming months.
    :titlesonly:
 
    baroclinic_channel
+   drying_slope
    global_convergence
    global_ocean
    gotm
