@@ -35,7 +35,7 @@ class Forward(Step):
         threads : int, optional
             the number of threads the step will use
 
-        damping_coeff: real, optional
+        damping_coeff: float, optional
             the value of the rayleigh damping coefficient
 
         """

@@ -10,8 +10,8 @@ class Default(TestCase):
 
     Attributes
     ----------
-    resolution : str
-        The horizontal resolution of the test case
+    resolution : float
+        The resolution of the test case in km
 
     coord_type : str
         The type of vertical coordinate (``sigma``, ``single_layer``, etc.)
@@ -26,8 +26,8 @@ class Default(TestCase):
         test_group : compass.ocean.tests.drying_slope.DryingSlope
             The test group that this test case belongs to
 
-        resolution : str
-            The resolution of the test case
+        resolution : float
+            The resolution of the test case in km
 
         coord_type : str
             The type of vertical coordinate (``sigma``, ``single_layer``)
@@ -39,7 +39,7 @@ class Default(TestCase):
         if resolution < 1.:
             res_name = f'{int(resolution*1e3)}m'
         else:
-            res_name = f`{int(resolution)}km'
+            res_name = f'{int(resolution)}km'
         subdir = f'{res_name}/{coord_type}/{name}'
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)

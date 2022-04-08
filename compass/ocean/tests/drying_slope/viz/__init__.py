@@ -32,9 +32,8 @@ class Viz(Step):
         self.datatypes = datatypes
 
         for damping_coeff in damping_coeffs:
-            self.add_input_file(filename='output_{}.nc'.format(damping_coeff),
-                                target='../forward_{}/output.nc'.format(
-                                       damping_coeff))
+            self.add_input_file(filename=f'output_{damping_coeff}.nc',
+                                target=f'../forward_{damping_coeff}/output.nc')
             for time in times:
                 for datatype in datatypes:
                     filename = f'r{damping_coeff}d{time}-{datatype.lower()}.csv'
@@ -73,11 +72,11 @@ class Viz(Step):
         markersize = 20
 
         # SSH forcing figure
-        damping_coeffs = [0.0025, 0.01]
+        damping_coeffs = self.damping_coeffs
         fig1, ax1 = plt.subplots(nrows=len(damping_coeffs), ncols=1,
                                  figsize=figsize, dpi=100)
         for i, damping_coeff in enumerate(damping_coeffs):
-            ds = xarray.open_dataset('output_{}.nc'.format(damping_coeff))
+            ds = xarray.open_dataset(f'output_{damping_coeff}.nc')
             ssh = ds.ssh
             ympas = ds.ssh.where(ds.tidalInputMask).mean('nCells').values
             xmpas = numpy.linspace(0, 1.0, len(ds.xtime))*12.0
@@ -92,8 +91,8 @@ class Viz(Step):
         ax1[1].set_xlabel('Time (hrs)')
 
         fig1.suptitle('Tidal amplitude forcing (right side)')
-        fig1.savefig('{}/ssh_t.png'.format(outFolder),
-                     bbox_inches='tight', dpi=200)
+        fig1.savefig(f'{outFolder}/ssh_t.png', bbox_inches='tight', dpi=200)
+                     
         plt.close(fig1)
 
     def _plot_ssh_validation(self, outFolder='.'):
@@ -119,7 +118,7 @@ class Viz(Step):
         yBed = 10.0/25.0*xBed
 
         for i, damping_coeff in enumerate(damping_coeffs):
-            ds = xarray.open_dataset('output_{}.nc'.format(damping_coeff))
+            ds = xarray.open_dataset(f'output_{damping_coeff}.nc')
             ds = ds.drop_vars(numpy.setdiff1d([j for j in ds.variables],
                                               ['yCell', 'ssh']))
 
@@ -149,9 +148,8 @@ class Viz(Step):
 
                 # Plot comparison data
                 for datatype in datatypes:
-                    datafile = './r{}d{}-{}.csv'.format(
-                                damping_coeff, atime,
-                                datatype.lower())
+                    datafile = f'./r{damping_coeff}d{atime}-'\
+                               f'{datatype.lower()}.csv'
                     data = pd.read_csv(datafile, header=None)
                     ax2[i].scatter(data[0], data[1], marker='.',
                                    color=colors[datatype], label=datatype)
@@ -163,8 +161,7 @@ class Viz(Step):
         h, l1 = ax2[1].get_legend_handles_labels()
         ax2[1].legend(h[0:3], l1[0:3], frameon=False, loc='lower left')
 
-        fig2.savefig('{}/ssh_depth_section.png'.format(outFolder),
-                     dpi=200)
+        fig2.savefig(f'{outFolder}/ssh_depth_section.png', dpi=200)
         plt.close(fig2)
 
 
@@ -197,14 +194,14 @@ class Viz(Step):
 
             fig2, ax2 = plt.subplots(nrows=len(damping_coeffs), ncols=1,
                                      sharex=True, sharey=True)
-            ax2[0].set_title('t = {0:.3f} days'.format(itime))
+            ax2[0].set_title(f't = {itime:.3f} days')
             fig2.text(0.04, 0.5, 'Channel depth (m)', va='center',
                       rotation='vertical')
             fig2.text(0.5, 0.02, 'Along channel distance (km)', ha='center')
 
             for i, damping_coeff in enumerate(damping_coeffs):
 
-                ds = xarray.open_dataset('output_{}.nc'.format(damping_coeff))
+                ds = xarray.open_dataset(f'output_{damping_coeff}.nc')
                 ds = ds.drop_vars(numpy.setdiff1d([j for j in ds.variables],
                                                   ['yCell', 'ssh']))
 
@@ -228,13 +225,12 @@ class Viz(Step):
 
                 # Plot comparison data
                 for atime, ay in zip(times, locs):
-                    ax2[i].text(1, ay, atime + ' days', size=8,
+                    ax2[i].text(1, ay, f'{atime} days', size=8,
                                 transform=ax2[i].transAxes)
 
                     for datatype in datatypes:
-                        datafile = './r{}d{}-{}.csv'.format(
-                                    damping_coeff, atime,
-                                    datatype.lower())
+                        datafile = f'./r{damping_coeff}d{atime}-'\
+                                   f'{datatype.lower()}.csv'
                         data = pd.read_csv(datafile, header=None)
                         ax2[i].scatter(data[0], data[1], marker='.',
                                        color=colors[datatype], label=datatype)
@@ -246,8 +242,7 @@ class Viz(Step):
             h, l1 = ax2[1].get_legend_handles_labels()
             ax2[1].legend(h[0:3], l1[0:3], frameon=False, loc='lower left')
 
-            fig2.savefig('{}/ssh_depth_section_{:03d}.png'.format(
-                         outFolder, ii), dpi=200)
+            fig2.savefig(f'{outFolder}/ssh_depth_section_{ii:03d}.png', dpi=200)
             plt.close(fig2)
             ii += 1
 
@@ -257,22 +252,22 @@ class Viz(Step):
         Convert all the image sequences into movies with ffmpeg
         """
         try:
-            os.makedirs('{}/logs'.format(outFolder))
+            os.makedirs(f'{outFolder}/logs')
         except OSError:
             pass
 
-        framesPerSecond = '{}'.format(framesPerSecond)
+        framesPerSecond = str(framesPerSecond)
         prefix = 'ssh_depth_section'
-        outFileName = '{}/{}.{}'.format(outFolder, prefix, extension)
+        outFileName = f'{outFolder}/{prefix}.{extension}'
         if overwrite or not os.path.exists(outFileName):
 
-            imageFileTemplate = '{}/{}_%03d.png'.format(outFolder,
-                                                        prefix)
-            logFileName = '{}/logs/{}.log'.format(outFolder, prefix)
+            imageFileTemplate = f'{outFolder}/{prefix}_%03d.png'
+            logFileName = f'{outFolder}/logs/{prefix}.log'
             with open(logFileName, 'w') as logFile:
                 args = ['ffmpeg', '-y', '-r', framesPerSecond,
                         '-i', imageFileTemplate, '-b:v', '32000k',
                         '-r', framesPerSecond, '-pix_fmt', 'yuv420p',
                         outFileName]
-                print('running {}'.format(' '.join(args)))
+                print_args = ' '.join(args)
+                print(f'running {print_args}')
                 subprocess.check_call(args, stdout=logFile, stderr=logFile)
