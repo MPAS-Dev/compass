@@ -98,7 +98,7 @@ class TimeSeriesPlotter(object):
                      bbox_inches='tight', dpi=200)
         plt.close(fig1)
 
-    def plot_ssh_validation(self, datapath):
+    def plot_ssh_validation(self):
         """
         """
         colors = {'MPAS-O': 'k', 'analytical': 'b', 'ROMS': 'g'}
@@ -150,8 +150,8 @@ class TimeSeriesPlotter(object):
 
                 # Plot comparison data
                 for datatype in ['analytical', 'ROMS']:
-                    datafile = '{}/drying_slope/r{}d{}-{}.csv'.format(
-                                datapath, damping_coeff, atime,
+                    datafile = './r{}d{}-{}.csv'.format(
+                                damping_coeff, atime,
                                 datatype.lower())
                     data = pd.read_csv(datafile, header=None)
                     ax2[i].scatter(data[0], data[1], marker='.',
@@ -213,15 +213,13 @@ class MoviePlotter(object):
 
         plt.switch_backend('Agg')
 
-    def plot_ssh_validation(self, datapath):
+    def plot_ssh_validation(self):
         """
         Compare ssh along the channel at different time slices with the
         analytical solution and ROMS results.
 
         Parameters
         ----------
-        datapath: str
-            The folder with analytical and ROMS results for comparison
 
         """
         colors = {'MPAS-O': 'k', 'analytical': 'b', 'ROMS': 'g'}
@@ -278,8 +276,8 @@ class MoviePlotter(object):
                                 transform=ax2[i].transAxes)
 
                     for datatype in ['analytical', 'ROMS']:
-                        datafile = '{}/drying_slope/r{}d{}-{}.csv'.format(
-                                    datapath, damping_coeff, atime,
+                        datafile = './r{}d{}-{}.csv'.format(
+                                    damping_coeff, atime,
                                     datatype.lower())
                         data = pd.read_csv(datafile, header=None)
                         ax2[i].scatter(data[0], data[1], marker='.',

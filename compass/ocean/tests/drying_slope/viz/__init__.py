@@ -25,10 +25,22 @@ class Viz(Step):
         """
         super().__init__(test_case=test_case, name='viz')
 
-        for damping_coeff in [0.0025, 0.01]:
+        damping_coeffs = [0.0025, 0.01]
+        times = ['0.50', '0.05', '0.40', '0.15', '0.30', '0.25']
+        datatypes = ['analytical', 'ROMS']
+        self.damping_coeffs = damping_coeffs
+        self.times = times
+        self.datatypes = datatypes
+
+        for damping_coeff in damping_coeffs:
             self.add_input_file(filename='output_{}.nc'.format(damping_coeff),
                                 target='../forward_{}/output.nc'.format(
                                        damping_coeff))
+            for time in times:
+                for datatype in datatypes:
+                    filename = f'r{damping_coeff}d{time}-{datatype.lower()}.csv'
+                    self.add_input_file(filename=f'comparison_data/{filename}', target=filename,
+                                        database='drying_slope')
 
     def run(self):
         """
@@ -41,10 +53,10 @@ class Viz(Step):
         movie_format = section.get('movie_format')
 
         tsPlotter = TimeSeriesPlotter()
-        tsPlotter.plot_ssh_validation(datapath)
+        tsPlotter.plot_ssh_validation()
         tsPlotter.plot_ssh_time_series()
 
         mPlotter = MoviePlotter()
-        mPlotter.plot_ssh_validation(datapath)
+        mPlotter.plot_ssh_validation()
         mPlotter.images_to_movies(framesPerSecond=frames_per_second,
                                   extension=movie_format)
