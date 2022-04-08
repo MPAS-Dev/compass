@@ -37,10 +37,10 @@ class Default(TestCase):
         self.resolution = resolution
         self.coord_type = coord_type
         if resolution < 1.:
-            res_name = str(int(resolution*1e3))+'m'
+            res_name = f'{int(resolution*1e3)}m'
         else:
-            res_name = str(int(resolution))+'km'
-        subdir = '{}/{}/{}'.format(res_name, coord_type, name)
+            res_name = f`{int(resolution)}km'
+        subdir = f'{res_name}/{coord_type}/{name}'
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
 
@@ -62,5 +62,5 @@ class Default(TestCase):
             ny += 2
         dc = 1e3 * resolution
 
-        config.set('drying_slope', 'ny', '{}'.format(ny))
-        config.set('drying_slope', 'dc', '{}'.format(dc))
+        config.set('drying_slope', 'ny', f'{ny}')
+        config.set('drying_slope', 'dc', f'{dc}')
