@@ -4,7 +4,7 @@ from compass.landice.tests.greenland.mesh import Mesh
 
 class HighResMesh(TestCase):
     """
-    The high resolution test case for the thwaites test
+    The high resolution test case for the greenland test
     group simply creates the mesh and initial condition.
     The basal friction optimization occurs separately,
     outside of COMPASS.
@@ -15,7 +15,7 @@ class HighResMesh(TestCase):
         Create the test case
         Parameters
         ----------
-        test_group : compass.landice.tests.greenland.HighResMesh
+        test_group : compass.landice.tests.greenland.Greenland
             The test group that this test case belongs to
         """
         name = 'high_res_mesh'
