@@ -14,8 +14,12 @@ class Analysis(Step):
     ----------
     resolutions : list of int
         The resolutions of the meshes that have been run
+
+    icosahedral : bool
+        Whether to use icosahedral, as opposed to less regular, JIGSAW
+        meshes
     """
-    def __init__(self, test_case, resolutions):
+    def __init__(self, test_case, resolutions, icosahedral):
         """
         Create the step
 
@@ -26,20 +30,29 @@ class Analysis(Step):
 
         resolutions : list of int
             The resolutions of the meshes that have been run
+
+        icosahedral : bool
+            Whether to use icosahedral, as opposed to less regular, JIGSAW
+            meshes
         """
         super().__init__(test_case=test_case, name='analysis')
         self.resolutions = resolutions
+        self.icosahedral = icosahedral
 
         for resolution in resolutions:
+            if icosahedral:
+                mesh_name = f'Icos{resolution}'
+            else:
+                mesh_name = f'QU{resolution}'
             self.add_input_file(
-                filename='QU{}_namelist.ocean'.format(resolution),
-                target='../QU{}/init/namelist.ocean'.format(resolution))
+                filename=f'{mesh_name}_namelist.ocean',
+                target=f'../{mesh_name}/init/namelist.ocean')
             self.add_input_file(
-                filename='QU{}_init.nc'.format(resolution),
-                target='../QU{}/init/initial_state.nc'.format(resolution))
+                filename=f'{mesh_name}_init.nc',
+                target=f'../{mesh_name}/init/initial_state.nc')
             self.add_input_file(
-                filename='QU{}_output.nc'.format(resolution),
-                target='../QU{}/forward/output.nc'.format(resolution))
+                filename=f'{mesh_name}_output.nc',
+                target=f'../{mesh_name}/forward/output.nc')
 
         self.add_output_file('convergence.png')
 
@@ -52,7 +65,11 @@ class Analysis(Step):
         xdata = list()
         ydata = list()
         for res in resolutions:
-            rmseValue, nCells = self.rmse(res)
+            if self.icosahedral:
+                mesh_name = f'Icos{res}'
+            else:
+                mesh_name = f'QU{res}'
+            rmseValue, nCells = self.rmse(mesh_name)
             xdata.append(nCells)
             ydata.append(rmseValue)
         xdata = np.asarray(xdata)
@@ -72,8 +89,12 @@ class Analysis(Step):
         plt.savefig('convergence.png', bbox_inches='tight', pad_inches=0.1)
 
         section = self.config['cosine_bell']
-        conv_thresh = section.getfloat('conv_thresh')
-        conv_max = section.getfloat('conv_max')
+        if self.icosahedral:
+            conv_thresh = section.getfloat('icos_conv_thresh')
+            conv_max = section.getfloat('icos_conv_max')
+        else:
+            conv_thresh = section.getfloat('qu_conv_thresh')
+            conv_max = section.getfloat('qu_conv_max')
 
         if conv < conv_thresh:
             raise ValueError(f'order of convergence '
@@ -83,14 +104,14 @@ class Analysis(Step):
             warnings.warn(f'order of convergence '
                           f'{conv} > max tolerence {conv_max}')
 
-    def rmse(self, resolution):
+    def rmse(self, mesh_name):
         """
         Compute the RMSE for a given resolution
 
         Parameters
         ----------
-        resolution : int
-            The resolution of the (uniform) mesh in km
+        mesh_name : str
+            The name of the mesh
 
         Returns
         -------
@@ -100,7 +121,6 @@ class Analysis(Step):
         nCells : int
             The number of cells in the mesh
         """
-        resTag = 'QU{}'.format(resolution)
 
         config = self.config
         latCent = config.getfloat('cosine_bell', 'lat_center')
@@ -109,9 +129,9 @@ class Analysis(Step):
         psi0 = config.getfloat('cosine_bell', 'psi0')
         pd = config.getfloat('cosine_bell', 'vel_pd')
 
-        init = xr.open_dataset('{}_init.nc'.format(resTag))
+        init = xr.open_dataset(f'{mesh_name}_init.nc')
         # find time since the beginning of run
-        ds = xr.open_dataset('{}_output.nc'.format(resTag))
+        ds = xr.open_dataset(f'{mesh_name}_output.nc')
         for j in range(len(ds.xtime)):
             tt = str(ds.xtime[j].values)
             tt.rfind('_')

@@ -1,7 +1,8 @@
 from compass.config import CompassConfigParser
 from compass.testcase import TestCase
 
-from compass.ocean.tests.global_convergence.cosine_bell.mesh import Mesh
+from compass.mesh.spherical import QuasiUniformSphericalMeshStep, \
+    IcosahedralMeshStep
 from compass.ocean.tests.global_convergence.cosine_bell.init import Init
 from compass.ocean.tests.global_convergence.cosine_bell.forward import Forward
 from compass.ocean.tests.global_convergence.cosine_bell.analysis import \
@@ -15,8 +16,12 @@ class CosineBell(TestCase):
     Attributes
     ----------
     resolutions : list of int
+        A list of mesh resolutions
+
+    icosahedral : bool
+        Whether to use icosahedral, as opposed to less regular, JIGSAW meshes
     """
-    def __init__(self, test_group):
+    def __init__(self, test_group, icosahedral):
         """
         Create test case for creating a global MPAS-Ocean mesh
 
@@ -24,9 +29,19 @@ class CosineBell(TestCase):
         ----------
         test_group : compass.ocean.tests.cosine_bell.GlobalOcean
             The global ocean test group that this test case belongs to
+
+        icosahedral : bool
+            Whether to use icosahedral, as opposed to less regular, JIGSAW
+            meshes
         """
-        super().__init__(test_group=test_group, name='cosine_bell')
+        if icosahedral:
+            subdir = 'icos/cosine_bell'
+        else:
+            subdir = 'qu/cosine_bell'
+        super().__init__(test_group=test_group, name='cosine_bell',
+                         subdir=subdir)
         self.resolutions = None
+        self.icosahedral = icosahedral
 
         # add the steps with default resolutions so they can be listed
         config = CompassConfigParser()
@@ -38,6 +53,10 @@ class CosineBell(TestCase):
         Set config options for the test case
         """
         config = self.config
+        config.add_from_package('compass.mesh', 'mesh.cfg')
+
+        config.set('spherical_mesh', 'mpas_mesh_filename', 'mesh.nc')
+
         # set up the steps again in case a user has provided new resolutions
         self._setup_steps(config)
 
@@ -59,10 +78,13 @@ class CosineBell(TestCase):
         """
         config = self.config
         for resolution in self.resolutions:
-            cores = config.getint('cosine_bell', f'QU{resolution}_cores')
-            min_cores = config.getint('cosine_bell',
-                                      f'QU{resolution}_min_cores')
-            step = self.steps[f'QU{resolution}_forward']
+            if self.icosahedral:
+                mesh_name = f'Icos{resolution}'
+            else:
+                mesh_name = f'QU{resolution}'
+            cores = config.getint('cosine_bell', f'{mesh_name}_cores')
+            min_cores = config.getint('cosine_bell', f'{mesh_name}_min_cores')
+            step = self.steps[f'{mesh_name}_forward']
             step.cores = cores
             step.min_cores = min_cores
 
@@ -80,6 +102,10 @@ class CosineBell(TestCase):
                                              'max_cells_per_core')
 
         for resolution in self.resolutions:
+            if self.icosahedral:
+                mesh_name = f'Icos{resolution}'
+            else:
+                mesh_name = f'QU{resolution}'
             # a heuristic based on QU30 (65275 cells) and QU240 (10383 cells)
             approx_cells = 6e8 / resolution**2
             # ideally, about 300 cells per core
@@ -89,18 +115,29 @@ class CosineBell(TestCase):
             # In a pinch, about 3000 cells per core
             min_cores = max(1,
                             round(approx_cells / max_cells_per_core))
-            step = self.steps[f'QU{resolution}_forward']
+            step = self.steps[f'{mesh_name}_forward']
             step.cores = cores
             step.min_cores = min_cores
 
-            config.set('cosine_bell', f'QU{resolution}_cores', str(cores),
+            config.set('cosine_bell', f'{mesh_name}_cores', str(cores),
                        comment=f'Target core count for {resolution} km mesh')
-            config.set('cosine_bell', f'QU{resolution}_min_cores',
+            config.set('cosine_bell', f'{mesh_name}_min_cores',
                        str(min_cores),
                        comment=f'Minimum core count for {resolution} km mesh')
 
     def _setup_steps(self, config):
         """ setup steps given resolutions """
+        if self.icosahedral:
+            default_resolutions = '60, 120, 240, 480'
+        else:
+            default_resolutions = '60, 90, 120, 150, 180, 210, 240'
+
+        # set the default values that a user may change before setup
+        config.set('cosine_bell', 'resolutions', default_resolutions,
+                   comment='a list of resolutions (km) to test')
+
+        # get the resolutions back, perhaps with values set in the user's
+        # config file
         resolutions = config.getlist('cosine_bell', 'resolutions', dtype=int)
 
         if self.resolutions is not None and self.resolutions == resolutions:
@@ -113,10 +150,26 @@ class CosineBell(TestCase):
         self.resolutions = resolutions
 
         for resolution in resolutions:
-            self.add_step(Mesh(test_case=self, resolution=resolution))
+            if self.icosahedral:
+                mesh_name = f'Icos{resolution}'
+            else:
+                mesh_name = f'QU{resolution}'
 
-            self.add_step(Init(test_case=self, resolution=resolution))
+            name = f'{mesh_name}_mesh'
+            subdir = f'{mesh_name}/mesh'
+            if self.icosahedral:
+                self.add_step(IcosahedralMeshStep(
+                    test_case=self, name=name, subdir=subdir,
+                    cell_width=resolution))
+            else:
+                self.add_step(QuasiUniformSphericalMeshStep(
+                    test_case=self, name=name, subdir=subdir,
+                    cell_width=resolution))
 
-            self.add_step(Forward(test_case=self, resolution=resolution))
+            self.add_step(Init(test_case=self, mesh_name=mesh_name))
 
-        self.add_step(Analysis(test_case=self, resolutions=resolutions))
+            self.add_step(Forward(test_case=self, resolution=resolution,
+                                  mesh_name=mesh_name))
+
+        self.add_step(Analysis(test_case=self, resolutions=resolutions,
+                               icosahedral=self.icosahedral))

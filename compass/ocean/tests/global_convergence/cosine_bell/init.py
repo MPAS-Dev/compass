@@ -6,7 +6,7 @@ class Init(Step):
     """
     A step for an initial condition for for the cosine bell test case
     """
-    def __init__(self, test_case, resolution):
+    def __init__(self, test_case, mesh_name):
         """
         Create the step
 
@@ -15,13 +15,13 @@ class Init(Step):
         test_case : compass.ocean.tests.global_convergence.cosine_bell.CosineBell
             The test case this step belongs to
 
-        resolution : int
-            The resolution of the (uniform) mesh in km
+        mesh_name : str
+            The name of the mesh
         """
 
         super().__init__(test_case=test_case,
-                         name='QU{}_init'.format(resolution),
-                         subdir='QU{}/init'.format(resolution),
+                         name=f'{mesh_name}_init',
+                         subdir=f'{mesh_name}/init',
                          cores=36, min_cores=1)
 
         package = 'compass.ocean.tests.global_convergence.cosine_bell'
