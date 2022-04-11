@@ -15,7 +15,7 @@ class Forward(Step):
         The resolution of the (uniform) mesh in km
     """
 
-    def __init__(self, test_case, resolution):
+    def __init__(self, test_case, resolution, mesh_name):
         """
         Create a new step
 
@@ -26,10 +26,13 @@ class Forward(Step):
 
         resolution : int
             The resolution of the (uniform) mesh in km
+
+        mesh_name : str
+            The name of the mesh
         """
         super().__init__(test_case=test_case,
-                         name='QU{}_forward'.format(resolution),
-                         subdir='QU{}/forward'.format(resolution))
+                         name=f'{mesh_name}_forward',
+                         subdir=f'{mesh_name}/forward')
 
         self.resolution = resolution
 

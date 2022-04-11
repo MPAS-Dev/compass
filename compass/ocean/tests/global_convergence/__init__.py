@@ -15,4 +15,6 @@ class GlobalConvergence(TestGroup):
         """
         super().__init__(mpas_core=mpas_core, name='global_convergence')
 
-        self.add_test_case(CosineBell(test_group=self))
+        for icosahedral in [False, True]:
+            self.add_test_case(CosineBell(test_group=self,
+                                          icosahedral=icosahedral))
