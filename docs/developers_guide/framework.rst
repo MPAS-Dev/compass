@@ -75,7 +75,7 @@ with before at least some steps in the suite will fail.
 run.serial module
 ~~~~~~~~~~~~~~~~~
 
-The function :py:func:`compass.run.serial.run_suite()` is used to run a
+The function :py:func:`compass.run.serial.run_tests()` is used to run a
 test suite or test case and :py:func:`compass.run.serial.run_step()` is used to
 run a step using ``compass run``.  Suites run from the base work directory
 with a pickle file starting with the suite name, or ``custom.pickle`` if a
@@ -84,7 +84,7 @@ subdirectories with a ``testcase.pickle`` or ``step.pickle`` file in them.
 Both of these functions reads the local pickle file to retrieve information
 about the test suite, test case and/or step that was stored during setup.
 
-If :py:func:`compass.run.serial.run_suite()` is used for a test suite, it will
+If :py:func:`compass.run.serial.run_tests()` is used for a test suite, it will
 run each test case in the test suite in the order that they are given in the
 text file defining the suite (``compass/<mpas_core>/suites/<suite_name>.txt``).
 Output from test cases and their steps are stored in log files in the

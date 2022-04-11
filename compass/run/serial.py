@@ -12,10 +12,10 @@ from compass.logging import log_method_call
 from compass.config import CompassConfigParser
 
 
-def run_suite(suite_name, quiet=False, is_test_case=False, steps_to_run=None,
+def run_tests(suite_name, quiet=False, is_test_case=False, steps_to_run=None,
               steps_not_to_run=None):
     """
-    Run the given test suite (or test case)
+    Run the given test suite or test case
 
     Parameters
     ----------
@@ -269,9 +269,9 @@ def main():
                              "their own.")
     args = parser.parse_args(sys.argv[2:])
     if args.suite is not None:
-        run_suite(args.suite, quiet=args.quiet)
+        run_tests(args.suite, quiet=args.quiet)
     elif os.path.exists('test_case.pickle'):
-        run_suite(suite_name='test_case', quiet=args.quiet, is_test_case=True,
+        run_tests(suite_name='test_case', quiet=args.quiet, is_test_case=True,
                   steps_to_run=args.steps, steps_not_to_run=args.no_steps)
     elif os.path.exists('step.pickle'):
         run_step()
@@ -279,7 +279,7 @@ def main():
         pickles = glob.glob('*.pickle')
         if len(pickles) == 1:
             suite = os.path.splitext(os.path.basename(pickles[0]))[0]
-            run_suite(suite, quiet=args.quiet)
+            run_tests(suite, quiet=args.quiet)
         elif len(pickles) == 0:
             raise OSError('No pickle files were found. Are you sure this is '
                           'a compass suite, test-case or step work directory?')

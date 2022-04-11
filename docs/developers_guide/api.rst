@@ -85,7 +85,7 @@ run
 .. autosummary::
    :toctree: generated/
 
-   run_suite
+   run_tests
    run_step
 
 
