@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>compass.ocean.tests.isomip_plus.viz.plot &mdash; compass 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../../../" id="documentation_options" src="../../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../../_static/jquery.js"></script>
+        <script src="../../../../../../_static/underscore.js"></script>
+        <script src="../../../../../../_static/doctools.js"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../../../index.html" class="icon icon-home"> compass
+          </a>
+              <div class="version">
+                1.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../../../index.html">Module code</a> &raquo;</li>
+          <li><a href="../../../../ocean.html">compass.ocean</a> &raquo;</li>
+          <li><a href="../../isomip_plus.html">compass.ocean.tests.isomip_plus</a> &raquo;</li>
+          <li><a href="../viz.html">compass.ocean.tests.isomip_plus.viz</a> &raquo;</li>
+      <li>compass.ocean.tests.isomip_plus.viz.plot</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for compass.ocean.tests.isomip_plus.viz.plot</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">xarray</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">progressbar</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">cmocean</span>
+<span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <span class="n">Polygon</span>
+<span class="kn">from</span> <span class="nn">matplotlib.collections</span> <span class="kn">import</span> <span class="n">PatchCollection</span>
+
+
+<div class="viewcode-block" id="TimeSeriesPlotter"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.viz.plot.TimeSeriesPlotter.html#compass.ocean.tests.isomip_plus.viz.plot.TimeSeriesPlotter">[docs]</a><span class="k">class</span> <span class="nc">TimeSeriesPlotter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A plotter object to hold on to some info needed for plotting time series</span>
+<span class="sd">    from ISOMIP+ simulation results</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    inFolder : str</span>
+<span class="sd">        The folder with simulation results</span>
+
+<span class="sd">    outFolder : str</span>
+<span class="sd">        The folder where images will be written</span>
+
+<span class="sd">    expt : {&#39;Ocean0&#39;, &#39;Ocean1&#39;, &#39;Ocean2&#39;}</span>
+<span class="sd">        The name of the experiment</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="TimeSeriesPlotter.__init__"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.viz.plot.TimeSeriesPlotter.html#compass.ocean.tests.isomip_plus.viz.plot.TimeSeriesPlotter.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inFolder</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">outFolder</span><span class="o">=</span><span class="s1">&#39;plots&#39;</span><span class="p">,</span> <span class="n">expt</span><span class="o">=</span><span class="s1">&#39;Ocean0&#39;</span><span class="p">,</span>
+                 <span class="n">dsMesh</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ds</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a plotter object to hold on to some info needed for plotting</span>
+<span class="sd">        time series from ISOMIP+ simulation results</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        inFolder : str, optional</span>
+<span class="sd">            The folder with simulation results</span>
+
+<span class="sd">        outFolder : str, optional</span>
+<span class="sd">            The folder where images will be written</span>
+
+<span class="sd">        expt : {&#39;Ocean0&#39;, &#39;Ocean1&#39;, &#39;Ocean2&#39;}, optional</span>
+<span class="sd">            The name of the experiment</span>
+
+<span class="sd">        dsMesh : xarray.Dataset, optional</span>
+<span class="sd">            The MPAS mesh</span>
+
+<span class="sd">        ds : xarray.Dataset, optional</span>
+<span class="sd">            The time series output</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">inFolder</span> <span class="o">=</span> <span class="n">inFolder</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outFolder</span> <span class="o">=</span> <span class="n">outFolder</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">expt</span> <span class="o">=</span> <span class="n">expt</span>
+
+        <span class="k">if</span> <span class="n">dsMesh</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dsMesh</span> <span class="o">=</span> <span class="n">dsMesh</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dsMesh</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span>
+                <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/init.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inFolder</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">ds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ds</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_mfdataset</span><span class="p">(</span>
+                <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/timeSeriesStatsMonthly*.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inFolder</span><span class="p">),</span>
+                <span class="n">concat_dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">combine</span><span class="o">=</span><span class="s1">&#39;nested&#39;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outFolder</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">switch_backend</span><span class="p">(</span><span class="s1">&#39;Agg&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TimeSeriesPlotter.plot_melt_time_series"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.viz.plot.TimeSeriesPlotter.plot_melt_time_series.html#compass.ocean.tests.isomip_plus.viz.plot.TimeSeriesPlotter.plot_melt_time_series">[docs]</a>    <span class="k">def</span> <span class="nf">plot_melt_time_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sshMax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot a series of image for each of several variables related to melt</span>
+<span class="sd">        at the ice shelf-ocean interface: mean melt rate, total melt flux,</span>
+<span class="sd">        mean thermal driving, mean friction velocity</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">rho_fw</span> <span class="o">=</span> <span class="mf">1000.</span>
+        <span class="n">secPerYear</span> <span class="o">=</span> <span class="mi">365</span><span class="o">*</span><span class="mi">24</span><span class="o">*</span><span class="mi">60</span><span class="o">*</span><span class="mi">60</span>
+
+        <span class="n">areaCell</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dsMesh</span><span class="o">.</span><span class="n">areaCell</span>
+        <span class="n">iceMask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ds</span><span class="o">.</span><span class="n">timeMonthly_avg_landIceFraction</span>
+        <span class="n">meltFlux</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ds</span><span class="o">.</span><span class="n">timeMonthly_avg_landIceFreshwaterFlux</span>
+        <span class="k">if</span> <span class="n">sshMax</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ssh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ds</span><span class="o">.</span><span class="n">timeMonthly_avg_ssh</span>
+            <span class="n">iceMask</span> <span class="o">=</span> <span class="n">iceMask</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">ssh</span> <span class="o">&lt;</span> <span class="n">sshMax</span><span class="p">)</span>
+
+        <span class="n">totalMeltFlux</span> <span class="o">=</span> <span class="p">(</span><span class="n">meltFlux</span><span class="o">*</span><span class="n">areaCell</span><span class="o">*</span><span class="n">iceMask</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nCells&#39;</span><span class="p">)</span>
+        <span class="n">totalArea</span> <span class="o">=</span> <span class="p">(</span><span class="n">areaCell</span><span class="o">*</span><span class="n">iceMask</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nCells&#39;</span><span class="p">)</span>
+        <span class="n">meanMeltRate</span> <span class="o">=</span> <span class="n">totalMeltFlux</span><span class="o">/</span><span class="n">totalArea</span><span class="o">/</span><span class="n">rho_fw</span><span class="o">*</span><span class="n">secPerYear</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_time_series</span><span class="p">(</span><span class="n">meanMeltRate</span><span class="p">,</span> <span class="s1">&#39;mean melt rate&#39;</span><span class="p">,</span> <span class="s1">&#39;meanMeltRate&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;m/yr&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_time_series</span><span class="p">(</span><span class="mf">1e-6</span><span class="o">*</span><span class="n">totalMeltFlux</span><span class="p">,</span> <span class="s1">&#39;total melt flux&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;totalMeltFlux&#39;</span><span class="p">,</span> <span class="s1">&#39;kT/yr&#39;</span><span class="p">)</span>
+
+        <span class="n">da</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ds</span><span class="o">.</span><span class="n">timeMonthly_avg_landIceBoundaryLayerTracers_landIceBoundaryLayerTemperature</span> <span class="o">-</span>
+              <span class="bp">self</span><span class="o">.</span><span class="n">ds</span><span class="o">.</span><span class="n">timeMonthly_avg_landIceInterfaceTracers_landIceInterfaceTemperature</span><span class="p">)</span>
+        <span class="n">da</span> <span class="o">=</span> <span class="p">(</span><span class="n">da</span><span class="o">*</span><span class="n">areaCell</span><span class="o">*</span><span class="n">iceMask</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nCells&#39;</span><span class="p">)</span><span class="o">/</span><span class="n">totalArea</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_time_series</span><span class="p">(</span><span class="n">da</span><span class="p">,</span> <span class="s1">&#39;mean thermal driving&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;meanThermalDriving&#39;</span><span class="p">,</span> <span class="s1">&#39;deg C&#39;</span><span class="p">)</span>
+
+        <span class="n">da</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ds</span><span class="o">.</span><span class="n">timeMonthly_avg_landIceFrictionVelocity</span>
+        <span class="n">da</span> <span class="o">=</span> <span class="p">(</span><span class="n">da</span><span class="o">*</span><span class="n">areaCell</span><span class="o">*</span><span class="n">iceMask</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nCells&#39;</span><span class="p">)</span><span class="o">/</span><span class="n">totalArea</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_time_series</span><span class="p">(</span><span class="n">da</span><span class="p">,</span> <span class="s1">&#39;mean friction velocity&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;meanFrictionVelocity&#39;</span><span class="p">,</span> <span class="s1">&#39;m/s&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TimeSeriesPlotter.plot_time_series"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.viz.plot.TimeSeriesPlotter.plot_time_series.html#compass.ocean.tests.isomip_plus.viz.plot.TimeSeriesPlotter.plot_time_series">[docs]</a>    <span class="k">def</span> <span class="nf">plot_time_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">da</span><span class="p">,</span> <span class="n">nameInTitle</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                         <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+        <span class="n">fileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.png&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outFolder</span><span class="p">,</span> <span class="n">prefix</span><span class="p">)</span>
+        <span class="k">if</span><span class="p">(</span><span class="ow">not</span> <span class="n">overwrite</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fileName</span><span class="p">)):</span>
+            <span class="k">return</span>
+
+        <span class="n">nTime</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span>
+        <span class="n">time</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nTime</span><span class="p">)</span><span class="o">/</span><span class="mf">12.</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">da</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">units</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ylabel</span> <span class="o">=</span> <span class="n">nameInTitle</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ylabel</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> (</span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nameInTitle</span><span class="p">,</span> <span class="n">units</span><span class="p">)</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;time (yrs)&#39;</span><span class="p">)</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fileName</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="MoviePlotter"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.html#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter">[docs]</a><span class="k">class</span> <span class="nc">MoviePlotter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A plotter object to hold on to some info needed for plotting images from</span>
+<span class="sd">    ISOMIP+ simulation results</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    inFolder : str</span>
+<span class="sd">        The folder with simulation results</span>
+
+<span class="sd">    streamfunctionFolder : str</span>
+<span class="sd">        The folder where streamfunction input files were computed</span>
+
+<span class="sd">    outFolder : str</span>
+<span class="sd">        The folder where images will be written</span>
+
+<span class="sd">    expt : {&#39;Ocean0&#39;, &#39;Ocean1&#39;, &#39;Ocean2&#39;}</span>
+<span class="sd">        The name of the experiment</span>
+
+<span class="sd">    sectionY : float</span>
+<span class="sd">        The location along the y axis of a transect in the x-z plane to plot</span>
+
+<span class="sd">    dsMesh : ``xarray.Dataset``</span>
+<span class="sd">        A data set with mesh data</span>
+
+<span class="sd">    ds : ``xarray.Dataset``</span>
+<span class="sd">        A data set with the montly-mean simulation results</span>
+
+<span class="sd">    oceanMask : ``numpy.ndarray``</span>
+<span class="sd">        A mask of cells that are in the ocean domain (probably all ones)</span>
+
+<span class="sd">    cavityMask : ``numpy.ndarray``</span>
+<span class="sd">        A mask of cells that are in the sub-ice-shelf cavity</span>
+
+<span class="sd">    oceanPatches : ``PatchCollection``</span>
+<span class="sd">        A set of polygons covering ocean cells</span>
+
+<span class="sd">    cavityPatches : ``PatchCollection``</span>
+<span class="sd">        A set of polygons covering only cells in the cavity</span>
+
+<span class="sd">    X, Z : ``numpy.ndarray``</span>
+<span class="sd">        The horiz. and vert. coordinates of the x-z cross section</span>
+
+<span class="sd">    sectionMask : ``numpy.ndarray``</span>
+<span class="sd">        A mask for the cross section indicating where values are valid (i.e.</span>
+<span class="sd">        above the bathymetry)</span>
+
+<span class="sd">    showProgress : bool</span>
+<span class="sd">        Whether to show a progressbar</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="MoviePlotter.__init__"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.html#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inFolder</span><span class="p">,</span> <span class="n">streamfunctionFolder</span><span class="p">,</span>  <span class="n">outFolder</span><span class="p">,</span> <span class="n">expt</span><span class="p">,</span>
+                 <span class="n">sectionY</span><span class="p">,</span> <span class="n">dsMesh</span><span class="p">,</span>  <span class="n">ds</span><span class="p">,</span> <span class="n">showProgress</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a plotter object to hold on to some info needed for plotting</span>
+<span class="sd">        images from ISOMIP+ simulation results</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        inFolder : str</span>
+<span class="sd">            The folder with simulation results</span>
+
+<span class="sd">        streamfunctionFolder : str</span>
+<span class="sd">            The folder where streamfunction input files were computed</span>
+
+<span class="sd">        outFolder : str</span>
+<span class="sd">            The folder where images will be written</span>
+
+<span class="sd">        expt : {&#39;Ocean0&#39;, &#39;Ocean1&#39;, &#39;Ocean2&#39;}</span>
+<span class="sd">            The name of the experiment</span>
+
+<span class="sd">        sectionY : float</span>
+<span class="sd">            The location along the y axis of a transect in the x-z plane to</span>
+<span class="sd">            plot</span>
+
+<span class="sd">        dsMesh : xarray.Dataset</span>
+<span class="sd">            The MPAS mesh</span>
+
+<span class="sd">        ds : xarray.Dataset</span>
+<span class="sd">            The time series output</span>
+
+<span class="sd">        showProgress : bool</span>
+<span class="sd">            Whether to show a progressbar</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">switch_backend</span><span class="p">(</span><span class="s1">&#39;Agg&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">inFolder</span> <span class="o">=</span> <span class="n">inFolder</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">streamfunctionFolder</span> <span class="o">=</span> <span class="n">streamfunctionFolder</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outFolder</span> <span class="o">=</span> <span class="n">outFolder</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">expt</span> <span class="o">=</span> <span class="n">expt</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sectionY</span> <span class="o">=</span> <span class="n">sectionY</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">showProgress</span> <span class="o">=</span> <span class="n">showProgress</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">dsMesh</span> <span class="o">=</span> <span class="n">dsMesh</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span>
+
+        <span class="n">landIceMask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dsMesh</span><span class="o">.</span><span class="n">landIceFraction</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.01</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">oceanMask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dsMesh</span><span class="o">.</span><span class="n">maxLevelCell</span><span class="o">-</span><span class="mi">1</span> <span class="o">&gt;=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cavityMask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">oceanMask</span><span class="p">,</span> <span class="n">landIceMask</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">oceanPatches</span> <span class="o">=</span> <span class="n">_compute_cell_patches</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dsMesh</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">oceanMask</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cavityPatches</span> <span class="o">=</span> <span class="n">_compute_cell_patches</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dsMesh</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cavityMask</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sectionCellIndices</span> <span class="o">=</span> <span class="n">_compute_section_cell_indices</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionY</span><span class="p">,</span>
+                                                                <span class="bp">self</span><span class="o">.</span><span class="n">dsMesh</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_compute_section_x_z</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="MoviePlotter.plot_barotropic_streamfunction"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_barotropic_streamfunction.html#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_barotropic_streamfunction">[docs]</a>    <span class="k">def</span> <span class="nf">plot_barotropic_streamfunction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot a series of image of the barotropic streamfunction</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        vmin, vmax : float, optional</span>
+<span class="sd">            The minimum and maximum values for the colorbar, defaults are</span>
+<span class="sd">            chosen depending on ``expt``</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/barotropicStreamfunction.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">streamfunctionFolder</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">vmin</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">vmax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">expt</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Ocean0&#39;</span><span class="p">,</span> <span class="s1">&#39;Ocean1&#39;</span><span class="p">]:</span>
+                <span class="n">vmin</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+                <span class="n">vmax</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">vmin</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span>
+                <span class="n">vmax</span> <span class="o">=</span> <span class="mf">0.5</span>
+
+        <span class="n">nTime</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">showProgress</span><span class="p">:</span>
+            <span class="n">widgets</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;plotting barotropic streamfunction: &#39;</span><span class="p">,</span>
+                       <span class="n">progressbar</span><span class="o">.</span><span class="n">Percentage</span><span class="p">(),</span> <span class="s1">&#39; &#39;</span><span class="p">,</span>
+                       <span class="n">progressbar</span><span class="o">.</span><span class="n">Bar</span><span class="p">(),</span> <span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">progressbar</span><span class="o">.</span><span class="n">ETA</span><span class="p">()]</span>
+            <span class="n">bar</span> <span class="o">=</span> <span class="n">progressbar</span><span class="o">.</span><span class="n">ProgressBar</span><span class="p">(</span><span class="n">widgets</span><span class="o">=</span><span class="n">widgets</span><span class="p">,</span>
+                                          <span class="n">maxval</span><span class="o">=</span><span class="n">nTime</span><span class="p">)</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">bar</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">for</span> <span class="n">tIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nTime</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_date</span><span class="p">(</span><span class="n">tIndex</span><span class="p">)</span>
+            <span class="n">bsf</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">bsfCell</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="n">tIndex</span><span class="p">)</span>
+            <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/bsf/bsf_</span><span class="si">{:04d}</span><span class="s1">.png&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">outFolder</span><span class="p">,</span> <span class="n">tIndex</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_plot_horiz_field</span><span class="p">(</span><span class="n">bsf</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;barotropic streamfunction (Sv)&#39;</span><span class="p">,</span>
+                                   <span class="n">outFileName</span><span class="o">=</span><span class="n">outFileName</span><span class="p">,</span> <span class="n">oceanDomain</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                   <span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;cmo.curl&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">showProgress</span><span class="p">:</span>
+                <span class="n">bar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">tIndex</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">showProgress</span><span class="p">:</span>
+            <span class="n">bar</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="MoviePlotter.plot_overturning_streamfunction"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_overturning_streamfunction.html#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_overturning_streamfunction">[docs]</a>    <span class="k">def</span> <span class="nf">plot_overturning_streamfunction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">0.3</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot a series of image of the overturning streamfunction</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        vmin, vmax : float, optional</span>
+<span class="sd">            The minimum and maximum values for the colorbar</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/overturningStreamfunction.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">streamfunctionFolder</span><span class="p">))</span>
+
+        <span class="n">nTime</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">showProgress</span><span class="p">:</span>
+            <span class="n">widgets</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;plotting overturning streamfunction: &#39;</span><span class="p">,</span>
+                       <span class="n">progressbar</span><span class="o">.</span><span class="n">Percentage</span><span class="p">(),</span> <span class="s1">&#39; &#39;</span><span class="p">,</span>
+                       <span class="n">progressbar</span><span class="o">.</span><span class="n">Bar</span><span class="p">(),</span> <span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">progressbar</span><span class="o">.</span><span class="n">ETA</span><span class="p">()]</span>
+            <span class="n">bar</span> <span class="o">=</span> <span class="n">progressbar</span><span class="o">.</span><span class="n">ProgressBar</span><span class="p">(</span><span class="n">widgets</span><span class="o">=</span><span class="n">widgets</span><span class="p">,</span>
+                                          <span class="n">maxval</span><span class="o">=</span><span class="n">nTime</span><span class="p">)</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">bar</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">for</span> <span class="n">tIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nTime</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_date</span><span class="p">(</span><span class="n">tIndex</span><span class="p">)</span>
+            <span class="n">osf</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">osf</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="n">tIndex</span><span class="p">)</span>
+            <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/osf/osf_</span><span class="si">{:04d}</span><span class="s1">.png&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outFolder</span><span class="p">,</span>
+                                                         <span class="n">tIndex</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">_interp_extrap_corner</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+            <span class="n">z</span> <span class="o">=</span> <span class="n">_interp_extrap_corner</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_plot_vert_field</span><span class="p">(</span>
+                <span class="n">x</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">osf</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;overturning streamfunction (Sv)&#39;</span><span class="p">,</span>
+                <span class="n">outFileName</span><span class="o">=</span><span class="n">outFileName</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;cmo.curl&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">showProgress</span><span class="p">:</span>
+                <span class="n">bar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">tIndex</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">showProgress</span><span class="p">:</span>
+            <span class="n">bar</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="MoviePlotter.plot_melt_rates"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_melt_rates.html#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_melt_rates">[docs]</a>    <span class="k">def</span> <span class="nf">plot_melt_rates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mf">100.</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">100.</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot a series of image of the melt rate</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        vmin, vmax : float, optional</span>
+<span class="sd">            The minimum and maximum values for the colorbar</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rho_fw</span> <span class="o">=</span> <span class="mf">1000.</span>
+        <span class="n">secPerYear</span> <span class="o">=</span> <span class="mi">365</span><span class="o">*</span><span class="mi">24</span><span class="o">*</span><span class="mi">60</span><span class="o">*</span><span class="mi">60</span>
+
+        <span class="n">da</span> <span class="o">=</span> <span class="n">secPerYear</span><span class="o">/</span><span class="n">rho_fw</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">ds</span><span class="o">.</span><span class="n">timeMonthly_avg_landIceFreshwaterFlux</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span><span class="n">da</span><span class="p">,</span> <span class="s1">&#39;melt rate&#39;</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;meltRate&#39;</span><span class="p">,</span>
+                               <span class="n">oceanDomain</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;m/yr&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span>
+                               <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;cmo.curl&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MoviePlotter.plot_ice_shelf_boundary_variables"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_ice_shelf_boundary_variables.html#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_ice_shelf_boundary_variables">[docs]</a>    <span class="k">def</span> <span class="nf">plot_ice_shelf_boundary_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot a series of image for each of several variables related to the</span>
+<span class="sd">        ice shelf-ocean interface: heat flux from the ocean, heat flux into the</span>
+<span class="sd">        ice, thermal driving, haline driving, and the friction velocity under</span>
+<span class="sd">        ice</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ds</span><span class="o">.</span><span class="n">timeMonthly_avg_landIceHeatFlux</span><span class="p">,</span>
+                               <span class="s1">&#39;heat flux from ocean to ice-ocean interface&#39;</span><span class="p">,</span>
+                               <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;oceanHeatFlux&#39;</span><span class="p">,</span>
+                               <span class="n">oceanDomain</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;W/s&#39;</span><span class="p">,</span>
+                               <span class="n">vmin</span><span class="o">=-</span><span class="mf">1e3</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">1e3</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;cmo.curl&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ds</span><span class="o">.</span><span class="n">timeMonthly_avg_heatFluxToLandIce</span><span class="p">,</span>
+                               <span class="s1">&#39;heat flux into ice at ice-ocean interface&#39;</span><span class="p">,</span>
+                               <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;iceHeatFlux&#39;</span><span class="p">,</span>
+                               <span class="n">oceanDomain</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;W/s&#39;</span><span class="p">,</span>
+                               <span class="n">vmin</span><span class="o">=-</span><span class="mf">1e1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">1e1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;cmo.curl&#39;</span><span class="p">)</span>
+
+        <span class="n">da</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ds</span><span class="o">.</span><span class="n">timeMonthly_avg_landIceBoundaryLayerTracers_landIceBoundaryLayerTemperature</span> <span class="o">-</span>
+              <span class="bp">self</span><span class="o">.</span><span class="n">ds</span><span class="o">.</span><span class="n">timeMonthly_avg_landIceInterfaceTracers_landIceInterfaceTemperature</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span><span class="n">da</span><span class="p">,</span> <span class="s1">&#39;thermal driving&#39;</span><span class="p">,</span>
+                               <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;thermalDriving&#39;</span><span class="p">,</span>
+                               <span class="n">oceanDomain</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;deg C&#39;</span><span class="p">,</span>
+                               <span class="n">vmin</span><span class="o">=-</span><span class="mi">2</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;cmo.thermal&#39;</span><span class="p">)</span>
+
+        <span class="n">da</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ds</span><span class="o">.</span><span class="n">timeMonthly_avg_landIceBoundaryLayerTracers_landIceBoundaryLayerSalinity</span> <span class="o">-</span>
+              <span class="bp">self</span><span class="o">.</span><span class="n">ds</span><span class="o">.</span><span class="n">timeMonthly_avg_landIceInterfaceTracers_landIceInterfaceSalinity</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span><span class="n">da</span><span class="p">,</span> <span class="s1">&#39;haline driving&#39;</span><span class="p">,</span>
+                               <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;halineDriving&#39;</span><span class="p">,</span>
+                               <span class="n">oceanDomain</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;PSU&#39;</span><span class="p">,</span>
+                               <span class="n">vmin</span><span class="o">=-</span><span class="mi">10</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;cmo.haline&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ds</span><span class="o">.</span><span class="n">timeMonthly_avg_landIceFrictionVelocity</span><span class="p">,</span>
+                               <span class="s1">&#39;friction velocity&#39;</span><span class="p">,</span>
+                               <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;frictionVelocity&#39;</span><span class="p">,</span>
+                               <span class="n">oceanDomain</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;m/s&#39;</span><span class="p">,</span>
+                               <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;cmo.speed&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MoviePlotter.plot_temperature"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_temperature.html#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_temperature">[docs]</a>    <span class="k">def</span> <span class="nf">plot_temperature</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot a series of images of temperature at the sea surface or</span>
+<span class="sd">        ice-ocean interface, sea floor and in an x-z section</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">da</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ds</span><span class="o">.</span><span class="n">timeMonthly_avg_activeTracers_temperature</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_3d_field_top_bot_section</span><span class="p">(</span><span class="n">da</span><span class="p">,</span>
+                                           <span class="n">nameInTitle</span><span class="o">=</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span>
+                                           <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;Temp&#39;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;deg C&#39;</span><span class="p">,</span>
+                                           <span class="n">vmin</span><span class="o">=-</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+                                           <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;cmo.thermal&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MoviePlotter.plot_salinity"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_salinity.html#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_salinity">[docs]</a>    <span class="k">def</span> <span class="nf">plot_salinity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot a series of images of salinity at the sea surface or</span>
+<span class="sd">        ice-ocean interface, sea floor and in an x-z section</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">da</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ds</span><span class="o">.</span><span class="n">timeMonthly_avg_activeTracers_salinity</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_3d_field_top_bot_section</span><span class="p">(</span><span class="n">da</span><span class="p">,</span>
+                                           <span class="n">nameInTitle</span><span class="o">=</span><span class="s1">&#39;salinity&#39;</span><span class="p">,</span>
+                                           <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;Salinity&#39;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;PSU&#39;</span><span class="p">,</span>
+                                           <span class="n">vmin</span><span class="o">=</span><span class="mf">33.8</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">34.7</span><span class="p">,</span>
+                                           <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;cmo.haline&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MoviePlotter.plot_potential_density"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_potential_density.html#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_potential_density">[docs]</a>    <span class="k">def</span> <span class="nf">plot_potential_density</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot a series of images of salinity at the sea surface or</span>
+<span class="sd">        ice-ocean interface, sea floor and in an x-z section</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">da</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ds</span><span class="o">.</span><span class="n">timeMonthly_avg_potentialDensity</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_3d_field_top_bot_section</span><span class="p">(</span><span class="n">da</span><span class="p">,</span>
+                                           <span class="n">nameInTitle</span><span class="o">=</span><span class="s1">&#39;potential density&#39;</span><span class="p">,</span>
+                                           <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;PotRho&#39;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;kg/m^3&#39;</span><span class="p">,</span>
+                                           <span class="n">vmin</span><span class="o">=</span><span class="mf">1027.</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">1028.</span><span class="p">,</span>
+                                           <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;cmo.dense&#39;</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">plot_haney_number</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">haneyFolder</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot a series of images of the Haney number rx1 at the sea surface or</span>
+<span class="sd">        ice-ocean interface, sea floor and in an x-z section</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        haneyFolder : str, optional</span>
+<span class="sd">            The location of the haney number output, default is ``inFolder``</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">haneyFolder</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">haneyFolder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inFolder</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/haney.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">haneyFolder</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_3d_field_top_bot_section</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">haneyCell</span><span class="p">,</span>
+                                           <span class="n">nameInTitle</span><span class="o">=</span><span class="s1">&#39;Haney Number (rx1)&#39;</span><span class="p">,</span>
+                                           <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;Haney&#39;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                           <span class="n">vmin</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">8.</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;cmo.matter&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="MoviePlotter.plot_horiz_series"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_horiz_series.html#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_horiz_series">[docs]</a>    <span class="k">def</span> <span class="nf">plot_horiz_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">da</span><span class="p">,</span> <span class="n">nameInTitle</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">oceanDomain</span><span class="p">,</span>
+                          <span class="n">units</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot a series of image of a given variable</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        da : ``xarray.DataArray``</span>
+<span class="sd">            The data array of time series to plot</span>
+
+<span class="sd">        nameInTitle : str</span>
+<span class="sd">            The name of the variable to use in the title and the progress bar</span>
+
+<span class="sd">        prefix : str</span>
+<span class="sd">            The nae of the variable to use in the subfolder and file prefix</span>
+
+<span class="sd">        oceanDomain : bool</span>
+<span class="sd">            True if the variable is for the full ocean, False if only for the</span>
+<span class="sd">            cavity</span>
+
+<span class="sd">        units : str, optional</span>
+<span class="sd">            The units of the variable to be included in the title</span>
+
+<span class="sd">        vmin, vmax : float, optional</span>
+<span class="sd">            The minimum and maximum values for the colorbar</span>
+
+<span class="sd">        cmap : Colormap or str</span>
+<span class="sd">            A color map to plot</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">nTime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">showProgress</span><span class="p">:</span>
+            <span class="n">widgets</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;plotting </span><span class="si">{}</span><span class="s1">: &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nameInTitle</span><span class="p">),</span>
+                       <span class="n">progressbar</span><span class="o">.</span><span class="n">Percentage</span><span class="p">(),</span> <span class="s1">&#39; &#39;</span><span class="p">,</span>
+                       <span class="n">progressbar</span><span class="o">.</span><span class="n">Bar</span><span class="p">(),</span> <span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">progressbar</span><span class="o">.</span><span class="n">ETA</span><span class="p">()]</span>
+            <span class="n">bar</span> <span class="o">=</span> <span class="n">progressbar</span><span class="o">.</span><span class="n">ProgressBar</span><span class="p">(</span><span class="n">widgets</span><span class="o">=</span><span class="n">widgets</span><span class="p">,</span>
+                                          <span class="n">maxval</span><span class="o">=</span><span class="n">nTime</span><span class="p">)</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">bar</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">for</span> <span class="n">tIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nTime</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_date</span><span class="p">(</span><span class="n">tIndex</span><span class="p">)</span>
+            <span class="n">field</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="n">tIndex</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+            <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">_</span><span class="si">{:04d}</span><span class="s1">.png&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">outFolder</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">tIndex</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">units</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">title</span> <span class="o">=</span> <span class="n">nameInTitle</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> (</span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nameInTitle</span><span class="p">,</span> <span class="n">units</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_plot_horiz_field</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">outFileName</span><span class="o">=</span><span class="n">outFileName</span><span class="p">,</span>
+                                   <span class="n">oceanDomain</span><span class="o">=</span><span class="n">oceanDomain</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span>
+                                   <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">showProgress</span><span class="p">:</span>
+                <span class="n">bar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">tIndex</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">showProgress</span><span class="p">:</span>
+            <span class="n">bar</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="MoviePlotter.plot_3d_field_top_bot_section"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_3d_field_top_bot_section.html#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_3d_field_top_bot_section">[docs]</a>    <span class="k">def</span> <span class="nf">plot_3d_field_top_bot_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">da</span><span class="p">,</span> <span class="n">nameInTitle</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span>
+                                      <span class="n">units</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                      <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot a series of images of a given 3D variable showing the value</span>
+<span class="sd">        at the top (sea surface or ice-ocean interface), sea floor and in an</span>
+<span class="sd">        x-z section</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        da : ``xarray.DataArray``</span>
+<span class="sd">            The data array of time series to plot</span>
+
+<span class="sd">        nameInTitle : str</span>
+<span class="sd">            The name of the variable to use in the title and the progress bar</span>
+
+<span class="sd">        prefix : str</span>
+<span class="sd">            The nae of the variable to use in the subfolder and file prefix</span>
+
+<span class="sd">        units : str, optional</span>
+<span class="sd">            The units of the variable to be included in the title</span>
+
+<span class="sd">        vmin, vmax : float, optional</span>
+<span class="sd">            The minimum and maximum values for the colorbar</span>
+
+<span class="sd">        cmap : Colormap or str, optional</span>
+<span class="sd">            A color map to plot</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">vmin</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">vmin</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">vmax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">vmax</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+
+        <span class="n">minLevelCell</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dsMesh</span><span class="o">.</span><span class="n">minLevelCell</span><span class="o">-</span><span class="mi">1</span>
+
+        <span class="n">daTop</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">da</span><span class="p">)</span>
+
+        <span class="n">daTop</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;verticalIndex&#39;</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,</span>
+             <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">daTop</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">]))</span>
+
+        <span class="c1"># mask only the values with the right vertical index</span>
+        <span class="n">daTop</span> <span class="o">=</span> <span class="n">daTop</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">daTop</span><span class="o">.</span><span class="n">verticalIndex</span> <span class="o">==</span> <span class="n">minLevelCell</span><span class="p">)</span>
+
+        <span class="c1"># Each vertical layer has at most one non-NaN value so the &quot;sum&quot;</span>
+        <span class="c1"># over the vertical is used to collapse the array in the vertical</span>
+        <span class="c1"># dimension</span>
+        <span class="n">daTop</span> <span class="o">=</span> <span class="n">daTop</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">minLevelCell</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span><span class="n">daTop</span><span class="p">,</span>
+                               <span class="s1">&#39;top </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nameInTitle</span><span class="p">),</span>
+                               <span class="s1">&#39;top</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">),</span> <span class="n">oceanDomain</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                               <span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
+
+        <span class="n">maxLevelCell</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dsMesh</span><span class="o">.</span><span class="n">maxLevelCell</span><span class="o">-</span><span class="mi">1</span>
+
+        <span class="n">daBot</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">da</span><span class="p">)</span>
+
+        <span class="n">daBot</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;verticalIndex&#39;</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,</span>
+             <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">daBot</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">]))</span>
+
+        <span class="c1"># mask only the values with the right vertical index</span>
+        <span class="n">daBot</span> <span class="o">=</span> <span class="n">daBot</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">daBot</span><span class="o">.</span><span class="n">verticalIndex</span> <span class="o">==</span> <span class="n">maxLevelCell</span><span class="p">)</span>
+
+        <span class="c1"># Each vertical layer has at most one non-NaN value so the &quot;sum&quot;</span>
+        <span class="c1"># over the vertical is used to collapse the array in the vertical</span>
+        <span class="c1"># dimension</span>
+        <span class="n">daBot</span> <span class="o">=</span> <span class="n">daBot</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">maxLevelCell</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_horiz_series</span><span class="p">(</span><span class="n">daBot</span><span class="p">,</span>
+                               <span class="s1">&#39;bot </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nameInTitle</span><span class="p">),</span>
+                               <span class="s1">&#39;bot</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">),</span> <span class="n">oceanDomain</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                               <span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
+
+        <span class="n">daSection</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nCells</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionCellIndices</span><span class="p">)</span>
+
+        <span class="n">nTime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">showProgress</span><span class="p">:</span>
+            <span class="n">widgets</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;plotting </span><span class="si">{}</span><span class="s1"> section: &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nameInTitle</span><span class="p">),</span>
+                       <span class="n">progressbar</span><span class="o">.</span><span class="n">Percentage</span><span class="p">(),</span> <span class="s1">&#39; &#39;</span><span class="p">,</span>
+                       <span class="n">progressbar</span><span class="o">.</span><span class="n">Bar</span><span class="p">(),</span> <span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">progressbar</span><span class="o">.</span><span class="n">ETA</span><span class="p">()]</span>
+            <span class="n">bar</span> <span class="o">=</span> <span class="n">progressbar</span><span class="o">.</span><span class="n">ProgressBar</span><span class="p">(</span><span class="n">widgets</span><span class="o">=</span><span class="n">widgets</span><span class="p">,</span>
+                                          <span class="n">maxval</span><span class="o">=</span><span class="n">nTime</span><span class="p">)</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">bar</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">for</span> <span class="n">tIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nTime</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_date</span><span class="p">(</span><span class="n">tIndex</span><span class="p">)</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionMask</span><span class="p">)</span>
+            <span class="n">field</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">masked_array</span><span class="p">(</span><span class="n">daSection</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="n">tIndex</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+                                          <span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">)</span>
+            <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/section</span><span class="si">{}</span><span class="s1">/section</span><span class="si">{}</span><span class="s1">_</span><span class="si">{:04d}</span><span class="s1">.png&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">outFolder</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">tIndex</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">units</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">title</span> <span class="o">=</span> <span class="n">nameInTitle</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> (</span><span class="si">{}</span><span class="s1">) along section at y=</span><span class="si">{:g}</span><span class="s1"> km&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">nameInTitle</span><span class="p">,</span> <span class="n">units</span><span class="p">,</span> <span class="mf">1e-3</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionY</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_plot_vert_field</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Z</span><span class="p">[</span><span class="n">tIndex</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:],</span>
+                                  <span class="n">field</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
+                                  <span class="n">outFileName</span><span class="o">=</span><span class="n">outFileName</span><span class="p">,</span>
+                                  <span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">showProgress</span><span class="p">:</span>
+                <span class="n">bar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">tIndex</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">showProgress</span><span class="p">:</span>
+            <span class="n">bar</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="MoviePlotter.plot_layer_interfaces"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_layer_interfaces.html#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_layer_interfaces">[docs]</a>    <span class="k">def</span> <span class="nf">plot_layer_interfaces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">5</span><span class="p">)):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot layer interfaces, the sea surface height and the bottom topography</span>
+<span class="sd">        of the cross section at fixed y.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        figsize : tuple, optional</span>
+<span class="sd">            The size of the figure</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">nTime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Z</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">showProgress</span><span class="p">:</span>
+            <span class="n">widgets</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;plotting section of layer interfaces: &#39;</span><span class="p">,</span>
+                       <span class="n">progressbar</span><span class="o">.</span><span class="n">Percentage</span><span class="p">(),</span> <span class="s1">&#39; &#39;</span><span class="p">,</span>
+                       <span class="n">progressbar</span><span class="o">.</span><span class="n">Bar</span><span class="p">(),</span> <span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">progressbar</span><span class="o">.</span><span class="n">ETA</span><span class="p">()]</span>
+            <span class="n">bar</span> <span class="o">=</span> <span class="n">progressbar</span><span class="o">.</span><span class="n">ProgressBar</span><span class="p">(</span><span class="n">widgets</span><span class="o">=</span><span class="n">widgets</span><span class="p">,</span>
+                                          <span class="n">maxval</span><span class="o">=</span><span class="n">nTime</span><span class="p">)</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">bar</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">z_mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">z_mask</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionMask</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+        <span class="n">z_mask</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionMask</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+        <span class="n">z_mask</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">*=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionMask</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+        <span class="n">z_mask</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">*=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionMask</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">tIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nTime</span><span class="p">):</span>
+            <span class="n">Z</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Z</span><span class="p">[</span><span class="n">tIndex</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:])</span>
+            <span class="n">ylim</span> <span class="o">=</span> <span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">Z</span><span class="p">),</span> <span class="mi">20</span><span class="p">]</span>
+            <span class="n">Z</span> <span class="o">*=</span> <span class="n">z_mask</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">X</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_date</span><span class="p">(</span><span class="n">tIndex</span><span class="p">)</span>
+
+            <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/layers/layers_</span><span class="si">{:04d}</span><span class="s1">.png&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outFolder</span><span class="p">,</span>
+                                                               <span class="n">tIndex</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">outFileName</span><span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">outFileName</span><span class="p">))</span>
+            <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+            <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">z_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="mf">1e-3</span> <span class="o">*</span> <span class="n">X</span><span class="p">[</span><span class="n">z_index</span><span class="p">,</span> <span class="p">:],</span> <span class="n">Z</span><span class="p">[</span><span class="n">z_index</span><span class="p">,</span> <span class="p">:],</span> <span class="s1">&#39;k&#39;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="mf">1e-3</span> <span class="o">*</span> <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:],</span> <span class="n">Z</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:],</span> <span class="s1">&#39;g&#39;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="mf">1e-3</span> <span class="o">*</span> <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:],</span> <span class="bp">self</span><span class="o">.</span><span class="n">zBotSection</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">)</span>
+
+            <span class="n">ax</span><span class="o">.</span><span class="n">autoscale</span><span class="p">(</span><span class="n">tight</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="n">ylim</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;layer interfaces&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="p">))</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">(</span><span class="n">pad</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">outFileName</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">showProgress</span><span class="p">:</span>
+                <span class="n">bar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">tIndex</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">showProgress</span><span class="p">:</span>
+            <span class="n">bar</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="MoviePlotter.images_to_movies"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.images_to_movies.html#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.images_to_movies">[docs]</a>    <span class="k">def</span> <span class="nf">images_to_movies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outFolder</span><span class="p">,</span> <span class="n">framesPerSecond</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">extension</span><span class="o">=</span><span class="s1">&#39;mp4&#39;</span><span class="p">,</span>
+                         <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert all the image sequences into movies with ffmpeg</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/logs&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outFolder</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="n">framesPerSecond</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">framesPerSecond</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">fileName</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span>
+                <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/*/*0001.png&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outFolder</span><span class="p">))):</span>
+            <span class="n">prefix</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">fileName</span><span class="p">)[:</span><span class="o">-</span><span class="mi">9</span><span class="p">]</span>
+            <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outFolder</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">extension</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">overwrite</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">outFileName</span><span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="n">imageFileTemplate</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">_</span><span class="si">%04d</span><span class="s1">.png&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outFolder</span><span class="p">,</span>
+                                                           <span class="n">prefix</span><span class="p">,</span> <span class="n">prefix</span><span class="p">)</span>
+            <span class="n">logFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/logs/</span><span class="si">{}</span><span class="s1">.log&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outFolder</span><span class="p">,</span> <span class="n">prefix</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">logFileName</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">logFile</span><span class="p">:</span>
+                <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ffmpeg&#39;</span><span class="p">,</span> <span class="s1">&#39;-y&#39;</span><span class="p">,</span> <span class="s1">&#39;-r&#39;</span><span class="p">,</span> <span class="n">framesPerSecond</span><span class="p">,</span>
+                        <span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="n">imageFileTemplate</span><span class="p">,</span> <span class="s1">&#39;-b:v&#39;</span><span class="p">,</span> <span class="s1">&#39;32000k&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;-r&#39;</span><span class="p">,</span> <span class="n">framesPerSecond</span><span class="p">,</span> <span class="s1">&#39;-pix_fmt&#39;</span><span class="p">,</span> <span class="s1">&#39;yuv420p&#39;</span><span class="p">,</span>
+                        <span class="n">outFileName</span><span class="p">]</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;running </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">)))</span>
+                <span class="n">subprocess</span><span class="o">.</span><span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">logFile</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">logFile</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">update_date</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tIndex</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s1">&#39;xtime_startMonthly&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ds</span><span class="p">:</span>
+            <span class="n">var</span> <span class="o">=</span> <span class="s1">&#39;xtime_startMonthly&#39;</span>
+        <span class="k">elif</span> <span class="s1">&#39;xtime&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ds</span><span class="p">:</span>
+            <span class="n">var</span> <span class="o">=</span> <span class="s1">&#39;xtime&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="k">return</span>
+
+        <span class="n">xtime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ds</span><span class="p">[</span><span class="n">var</span><span class="p">]</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="n">tIndex</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">xtime</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">xtime</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;U&#39;</span><span class="p">)))</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="n">year</span> <span class="o">=</span> <span class="n">xtime</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span>
+        <span class="n">month</span> <span class="o">=</span> <span class="n">xtime</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="mi">7</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">-</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_plot_horiz_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">,</span> <span class="n">oceanDomain</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                          <span class="n">vmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">outFileName</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">outFileName</span><span class="p">):</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="n">oceanDomain</span><span class="p">:</span>
+            <span class="n">localPatches</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">oceanPatches</span><span class="p">)</span>
+            <span class="n">localPatches</span><span class="o">.</span><span class="n">set_array</span><span class="p">(</span><span class="n">field</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">oceanMask</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">localPatches</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cavityPatches</span><span class="p">)</span>
+            <span class="n">localPatches</span><span class="o">.</span><span class="n">set_array</span><span class="p">(</span><span class="n">field</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">cavityMask</span><span class="p">])</span>
+
+        <span class="n">localPatches</span><span class="o">.</span><span class="n">set_edgecolor</span><span class="p">(</span><span class="s1">&#39;face&#39;</span><span class="p">)</span>
+        <span class="n">localPatches</span><span class="o">.</span><span class="n">set_clim</span><span class="p">(</span><span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cmap</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">localPatches</span><span class="o">.</span><span class="n">set_cmap</span><span class="p">(</span><span class="n">cmap</span><span class="p">)</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">add_collection</span><span class="p">(</span><span class="n">localPatches</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">localPatches</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1000</span><span class="p">])</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">autoscale</span><span class="p">(</span><span class="n">tight</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">(</span><span class="n">pad</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">outFileName</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_plot_vert_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inX</span><span class="p">,</span> <span class="n">inZ</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                         <span class="n">vmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">outFileName</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">outFileName</span><span class="p">):</span>
+            <span class="k">return</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="mf">1e-3</span><span class="o">*</span><span class="n">inX</span><span class="p">,</span> <span class="n">inZ</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">autoscale</span><span class="p">(</span><span class="n">tight</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">([</span><span class="n">numpy</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">inZ</span><span class="p">),</span> <span class="mi">20</span><span class="p">])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">(</span><span class="n">pad</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">outFileName</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_compute_section_x_z</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">_interp_extrap_corner</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dsMesh</span><span class="o">.</span><span class="n">xCell</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionCellIndices</span><span class="p">])</span>
+        <span class="n">nx</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">nVertLevels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dsMesh</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">]</span>
+        <span class="n">nTime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nVertLevels</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">nx</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">zIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nVertLevels</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">[</span><span class="n">zIndex</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">x</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sectionMask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nVertLevels</span><span class="p">,</span> <span class="n">nx</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">zIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nVertLevels</span><span class="p">):</span>
+            <span class="n">minLevelCell</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dsMesh</span><span class="o">.</span><span class="n">minLevelCell</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span>
+                <span class="n">nCells</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionCellIndices</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="n">maxLevelCell</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dsMesh</span><span class="o">.</span><span class="n">maxLevelCell</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span>
+                <span class="n">nCells</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionCellIndices</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sectionMask</span><span class="p">[</span><span class="n">zIndex</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span>
+                <span class="n">zIndex</span> <span class="o">&gt;=</span> <span class="n">minLevelCell</span><span class="p">,</span> <span class="n">zIndex</span> <span class="o">&lt;=</span> <span class="n">maxLevelCell</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">Z</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nTime</span><span class="p">,</span> <span class="n">nVertLevels</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">nx</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zBotSection</span> <span class="o">=</span> <span class="o">-</span><span class="n">_interp_extrap_corner</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dsMesh</span><span class="o">.</span><span class="n">bottomDepth</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span>
+                <span class="n">nCells</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionCellIndices</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">tIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nTime</span><span class="p">):</span>
+            <span class="k">if</span> <span class="s1">&#39;timeMonthly_avg_layerThickness&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ds</span><span class="p">:</span>
+                <span class="n">var</span> <span class="o">=</span> <span class="s1">&#39;timeMonthly_avg_layerThickness&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">var</span> <span class="o">=</span> <span class="s1">&#39;layerThickness&#39;</span>
+            <span class="n">layerThickness</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ds</span><span class="p">[</span><span class="n">var</span><span class="p">]</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span>
+                <span class="n">Time</span><span class="o">=</span><span class="n">tIndex</span><span class="p">,</span> <span class="n">nCells</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionCellIndices</span><span class="p">)</span>
+            <span class="n">layerThickness</span> <span class="o">=</span> <span class="n">layerThickness</span><span class="o">.</span><span class="n">values</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionMask</span><span class="o">.</span><span class="n">T</span>
+            <span class="n">layerThickness</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">layerThickness</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">Z</span><span class="p">[</span><span class="n">tIndex</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">zBotSection</span>
+            <span class="k">for</span> <span class="n">zIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nVertLevels</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+                <span class="n">layerThicknessSection</span> <span class="o">=</span> <span class="n">_interp_extrap_corner</span><span class="p">(</span>
+                    <span class="n">layerThickness</span><span class="p">[:,</span> <span class="n">zIndex</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">Z</span><span class="p">[</span><span class="n">tIndex</span><span class="p">,</span> <span class="n">zIndex</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Z</span><span class="p">[</span><span class="n">tIndex</span><span class="p">,</span> <span class="n">zIndex</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">+</span> \
+                    <span class="n">layerThicknessSection</span></div>
+
+
+<span class="k">def</span> <span class="nf">_compute_cell_patches</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">mask</span><span class="p">):</span>
+    <span class="n">patches</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">nVerticesOnCell</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">nEdgesOnCell</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">verticesOnCell</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">verticesOnCell</span><span class="o">.</span><span class="n">values</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">xVertex</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">xVertex</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">yVertex</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">yVertex</span><span class="o">.</span><span class="n">values</span>
+    <span class="k">for</span> <span class="n">iCell</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dsMesh</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nCells&#39;</span><span class="p">]):</span>
+        <span class="k">if</span><span class="p">(</span><span class="ow">not</span> <span class="n">mask</span><span class="p">[</span><span class="n">iCell</span><span class="p">]):</span>
+            <span class="k">continue</span>
+        <span class="n">nVert</span> <span class="o">=</span> <span class="n">nVerticesOnCell</span><span class="p">[</span><span class="n">iCell</span><span class="p">]</span>
+        <span class="n">vertexIndices</span> <span class="o">=</span> <span class="n">verticesOnCell</span><span class="p">[</span><span class="n">iCell</span><span class="p">,</span> <span class="p">:</span><span class="n">nVert</span><span class="p">]</span>
+        <span class="n">vertices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nVert</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">vertices</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e-3</span><span class="o">*</span><span class="n">xVertex</span><span class="p">[</span><span class="n">vertexIndices</span><span class="p">]</span>
+        <span class="n">vertices</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e-3</span><span class="o">*</span><span class="n">yVertex</span><span class="p">[</span><span class="n">vertexIndices</span><span class="p">]</span>
+
+        <span class="n">polygon</span> <span class="o">=</span> <span class="n">Polygon</span><span class="p">(</span><span class="n">vertices</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">patches</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">polygon</span><span class="p">)</span>
+
+    <span class="n">p</span> <span class="o">=</span> <span class="n">PatchCollection</span><span class="p">(</span><span class="n">patches</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">p</span>
+
+
+<span class="k">def</span> <span class="nf">_compute_section_cell_indices</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dsMesh</span><span class="p">):</span>
+    <span class="n">xCell</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">xCell</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">yCell</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">yCell</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">xMin</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">xCell</span><span class="p">)</span>
+    <span class="n">xMax</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">xCell</span><span class="p">)</span>
+    <span class="n">xs</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>
+    <span class="n">cellIndices</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">xs</span><span class="p">:</span>
+        <span class="n">distanceSquared</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">xCell</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">y</span><span class="o">-</span><span class="n">yCell</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">distanceSquared</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cellIndices</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">cellIndices</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">index</span><span class="p">:</span>
+            <span class="n">cellIndices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">cellIndices</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_interp_extrap_corner</span><span class="p">(</span><span class="n">inField</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Interpolate/extrapolate a 1D field from grid centers to grid corners&quot;&quot;&quot;</span>
+
+    <span class="n">outField</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">inField</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">outField</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">inField</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">inField</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+    <span class="c1"># extrapolate the ends</span>
+    <span class="n">outField</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">inField</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">inField</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">outField</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">inField</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">inField</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">outField</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
