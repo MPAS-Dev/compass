@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter &mdash; compass test_docs documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_barotropic_streamfunction" href="compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_barotropic_streamfunction.html" />
+    <link rel="prev" title="compass.ocean.tests.isomip_plus.viz.plot.TimeSeriesPlotter.plot_time_series" href="compass.ocean.tests.isomip_plus.viz.plot.TimeSeriesPlotter.plot_time_series.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> compass
+          </a>
+              <div class="version">
+                test_docs
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../api.html">API reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../api.html#mpas-cores">MPAS Cores</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../landice/api.html">landice</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../api.html">ocean</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="compass.ocean.Ocean.html">compass.ocean.Ocean</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../api.html#test-groups">Test Groups</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api.html#ocean-framework">ocean framework</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api.html#compass-framework">compass framework</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../api.html">API reference</a> &raquo;</li>
+          <li><a href="../api.html">ocean</a> &raquo;</li>
+      <li>compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="compass-ocean-tests-isomip-plus-viz-plot-movieplotter">
+<h1>compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter<a class="headerlink" href="#compass-ocean-tests-isomip-plus-viz-plot-movieplotter" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">compass.ocean.tests.isomip_plus.viz.plot.</span></span><span class="sig-name descname"><span class="pre">MoviePlotter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inFolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">streamfunctionFolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outFolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sectionY</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dsMesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">showProgress</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/ocean/tests/isomip_plus/viz/plot.html#MoviePlotter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter" title="Permalink to this definition">¶</a></dt>
+<dd><p>A plotter object to hold on to some info needed for plotting images from
+ISOMIP+ simulation results</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>inFolder</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The folder with simulation results</p></li>
+<li><p><strong>streamfunctionFolder</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The folder where streamfunction input files were computed</p></li>
+<li><p><strong>outFolder</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The folder where images will be written</p></li>
+<li><p><strong>expt</strong> (<em>{'Ocean0'</em><em>, </em><em>'Ocean1'</em><em>, </em><em>'Ocean2'}</em>) – The name of the experiment</p></li>
+<li><p><strong>sectionY</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – The location along the y axis of a transect in the x-z plane to plot</p></li>
+<li><p><strong>dsMesh</strong> (<code class="docutils literal notranslate"><span class="pre">xarray.Dataset</span></code>) – A data set with mesh data</p></li>
+<li><p><strong>ds</strong> (<code class="docutils literal notranslate"><span class="pre">xarray.Dataset</span></code>) – A data set with the montly-mean simulation results</p></li>
+<li><p><strong>oceanMask</strong> (<code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code>) – A mask of cells that are in the ocean domain (probably all ones)</p></li>
+<li><p><strong>cavityMask</strong> (<code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code>) – A mask of cells that are in the sub-ice-shelf cavity</p></li>
+<li><p><strong>oceanPatches</strong> (<code class="docutils literal notranslate"><span class="pre">PatchCollection</span></code>) – A set of polygons covering ocean cells</p></li>
+<li><p><strong>cavityPatches</strong> (<code class="docutils literal notranslate"><span class="pre">PatchCollection</span></code>) – A set of polygons covering only cells in the cavity</p></li>
+<li><p><strong>Z</strong> (<em>X</em><em>,</em>) – The horiz. and vert. coordinates of the x-z cross section</p></li>
+<li><p><strong>sectionMask</strong> (<code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code>) – A mask for the cross section indicating where values are valid (i.e.
+above the bathymetry)</p></li>
+<li><p><strong>showProgress</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to show a progressbar</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inFolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">streamfunctionFolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outFolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sectionY</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dsMesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">showProgress</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/ocean/tests/isomip_plus/viz/plot.html#MoviePlotter.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a plotter object to hold on to some info needed for plotting
+images from ISOMIP+ simulation results</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>inFolder</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The folder with simulation results</p></li>
+<li><p><strong>streamfunctionFolder</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The folder where streamfunction input files were computed</p></li>
+<li><p><strong>outFolder</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The folder where images will be written</p></li>
+<li><p><strong>expt</strong> (<em>{'Ocean0'</em><em>, </em><em>'Ocean1'</em><em>, </em><em>'Ocean2'}</em>) – The name of the experiment</p></li>
+<li><p><strong>sectionY</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – The location along the y axis of a transect in the x-z plane to
+plot</p></li>
+<li><p><strong>dsMesh</strong> (<a class="reference external" href="https://xarray.pydata.org/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v2022.3.1.dev0)"><em>xarray.Dataset</em></a>) – The MPAS mesh</p></li>
+<li><p><strong>ds</strong> (<a class="reference external" href="https://xarray.pydata.org/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v2022.3.1.dev0)"><em>xarray.Dataset</em></a>) – The time series output</p></li>
+<li><p><strong>showProgress</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to show a progressbar</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.__init__" title="compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(inFolder, streamfunctionFolder, ...)</p></td>
+<td><p>Create a plotter object to hold on to some info needed for plotting images from ISOMIP+ simulation results</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.images_to_movies.html#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.images_to_movies" title="compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.images_to_movies"><code class="xref py py-obj docutils literal notranslate"><span class="pre">images_to_movies</span></code></a>(outFolder[, ...])</p></td>
+<td><p>Convert all the image sequences into movies with ffmpeg</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_3d_field_top_bot_section.html#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_3d_field_top_bot_section" title="compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_3d_field_top_bot_section"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_3d_field_top_bot_section</span></code></a>(da, ...[, ...])</p></td>
+<td><p>Plot a series of images of a given 3D variable showing the value at the top (sea surface or ice-ocean interface), sea floor and in an x-z section</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_barotropic_streamfunction.html#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_barotropic_streamfunction" title="compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_barotropic_streamfunction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_barotropic_streamfunction</span></code></a>([vmin, vmax])</p></td>
+<td><p>Plot a series of image of the barotropic streamfunction</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_haney_number</span></code>([haneyFolder])</p></td>
+<td><p>Plot a series of images of the Haney number rx1 at the sea surface or ice-ocean interface, sea floor and in an x-z section</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_horiz_series.html#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_horiz_series" title="compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_horiz_series"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_horiz_series</span></code></a>(da, nameInTitle, prefix, ...)</p></td>
+<td><p>Plot a series of image of a given variable</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_ice_shelf_boundary_variables.html#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_ice_shelf_boundary_variables" title="compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_ice_shelf_boundary_variables"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_ice_shelf_boundary_variables</span></code></a>()</p></td>
+<td><p>Plot a series of image for each of several variables related to the ice shelf-ocean interface: heat flux from the ocean, heat flux into the ice, thermal driving, haline driving, and the friction velocity under ice</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_layer_interfaces.html#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_layer_interfaces" title="compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_layer_interfaces"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_layer_interfaces</span></code></a>([figsize])</p></td>
+<td><p>Plot layer interfaces, the sea surface height and the bottom topography of the cross section at fixed y.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_melt_rates.html#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_melt_rates" title="compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_melt_rates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_melt_rates</span></code></a>([vmin, vmax])</p></td>
+<td><p>Plot a series of image of the melt rate</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_overturning_streamfunction.html#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_overturning_streamfunction" title="compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_overturning_streamfunction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_overturning_streamfunction</span></code></a>([vmin, vmax])</p></td>
+<td><p>Plot a series of image of the overturning streamfunction</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_potential_density.html#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_potential_density" title="compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_potential_density"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_potential_density</span></code></a>()</p></td>
+<td><p>Plot a series of images of salinity at the sea surface or ice-ocean interface, sea floor and in an x-z section</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_salinity.html#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_salinity" title="compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_salinity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_salinity</span></code></a>()</p></td>
+<td><p>Plot a series of images of salinity at the sea surface or ice-ocean interface, sea floor and in an x-z section</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_temperature.html#compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_temperature" title="compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_temperature"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_temperature</span></code></a>()</p></td>
+<td><p>Plot a series of images of temperature at the sea surface or ice-ocean interface, sea floor and in an x-z section</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_date</span></code>(tIndex)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="compass.ocean.tests.isomip_plus.viz.plot.TimeSeriesPlotter.plot_time_series.html" class="btn btn-neutral float-left" title="compass.ocean.tests.isomip_plus.viz.plot.TimeSeriesPlotter.plot_time_series" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_barotropic_streamfunction.html" class="btn btn-neutral float-right" title="compass.ocean.tests.isomip_plus.viz.plot.MoviePlotter.plot_barotropic_streamfunction" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Machines &mdash; compass test_docs documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Anvil" href="anvil.html" />
+    <link rel="prev" title="Test suites" href="../ocean/suites.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> compass
+          </a>
+              <div class="version">
+                test_docs
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Machines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#config-options">config options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#slurm-job-queueing">Slurm job queueing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#supported-machines">Supported Machines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="anvil.html">Anvil</a></li>
+<li class="toctree-l3"><a class="reference internal" href="badger.html">Badger</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chrysalis.html">Chrysalis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="compy.html">CompyMcNodeFace</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cori.html">Cori</a></li>
+<li class="toctree-l3"><a class="reference internal" href="grizzly.html">Grizzly</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#other-machines">Other Machines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">MPICH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id5">OpenMPI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#no-mpi-from-conda-forge">No MPI from conda-forge</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Machines</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/users_guide/machines/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="machines">
+<span id="id1"></span><h1>Machines<a class="headerlink" href="#machines" title="Permalink to this headline">¶</a></h1>
+<p>One of the major advantages of <code class="docutils literal notranslate"><span class="pre">compass</span></code> over <a class="reference internal" href="../../index.html#legacy-compass"><span class="std std-ref">Legacy COMPASS</span></a> is that it
+attempts to be aware of the capabilities of the machine it is running on.  This
+is a particular advantage for so-called “supported” machines with a config file
+defined for them in the <code class="docutils literal notranslate"><span class="pre">compass</span></code> package.  But even for “unknown” machines,
+it is not difficult to set a few config options in your user config file to
+describe your machine.  Then, <code class="docutils literal notranslate"><span class="pre">compass</span></code> can use this data to make sure test
+cases are configured in a way that is appropriate for your machine.</p>
+<section id="config-options">
+<h2>config options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
+<p>The config options typically defined for a machine are:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># The paths section describes paths that are used within the ocean core test</span><span class="w"></span>
+<span class="c1"># cases.</span><span class="w"></span>
+<span class="k">[paths]</span><span class="w"></span>
+
+<span class="c1"># The root to a location where the mesh_database, initial_condition_database,</span><span class="w"></span>
+<span class="c1"># and bathymetry_database for MPAS-Ocean will be cached</span><span class="w"></span>
+<span class="na">ocean_database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/usr/projects/regionalclimate/COMMON_MPAS/ocean/grids/</span><span class="w"></span>
+
+<span class="c1"># The root to a location where the mesh_database and initial_condition_database</span><span class="w"></span>
+<span class="c1"># for MALI will be cached</span><span class="w"></span>
+<span class="na">landice_database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/usr/projects/regionalclimate/COMMON_MPAS/mpas_standalonedata/mpas-albany-landice</span><span class="w"></span>
+
+<span class="c1"># the path to the base conda environment where compass environments have</span><span class="w"></span>
+<span class="c1"># been created</span><span class="w"></span>
+<span class="na">compass_envs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/usr/projects/climate/SHARED_CLIMATE/compass/badger/base</span><span class="w"></span>
+
+
+<span class="c1"># Options related to deploying a compass conda environment on supported</span><span class="w"></span>
+<span class="c1"># machines</span><span class="w"></span>
+<span class="k">[deploy]</span><span class="w"></span>
+
+<span class="c1"># the compiler set to use for system libraries and MPAS builds</span><span class="w"></span>
+<span class="na">compiler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">intel</span><span class="w"></span>
+
+<span class="c1"># the system MPI library to use for intel compiler</span><span class="w"></span>
+<span class="na">mpi_intel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">impi</span><span class="w"></span>
+
+<span class="c1"># the system MPI library to use for gnu compiler</span><span class="w"></span>
+<span class="na">mpi_gnu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">mvapich</span><span class="w"></span>
+
+<span class="c1"># the base path to system libraries to be added as part of setting up compass</span><span class="w"></span>
+<span class="na">system_libs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/usr/projects/climate/SHARED_CLIMATE/compass/badger/system</span><span class="w"></span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">paths</span></code> section provides local paths to the root of the “databases”
+(local caches) of data files for each MPAS core.  These are generally in a
+shared location for the project to save space.  Similarly, <code class="docutils literal notranslate"><span class="pre">compass_envs</span></code>
+is a location where shared conda environments will be created for <code class="docutils literal notranslate"><span class="pre">compass</span></code>
+releases for users to share.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">deploy</span></code> section is used to help <code class="docutils literal notranslate"><span class="pre">compass</span></code> create development and
+release conda environments and activation scripts.  It says which compiler set
+is the default, which MPI library is the default for each supported compiler,
+and where libraries built with system MPI will be placed.</p>
+<p>Some config options come from a package, <a class="reference external" href="https://github.com/E3SM-Project/mache/">mache</a>
+that is a dependency of <code class="docutils literal notranslate"><span class="pre">compass</span></code>.  <code class="docutils literal notranslate"><span class="pre">mache</span></code> is designed to detect and
+provide a machine-specific configuration for E3SM supported machines.  Typical
+config options provided by <code class="docutils literal notranslate"><span class="pre">mache</span></code> that are relevant to <code class="docutils literal notranslate"><span class="pre">compass</span></code> are:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># The parallel section describes options related to running jobs in parallel</span><span class="w"></span>
+<span class="k">[parallel]</span><span class="w"></span>
+
+<span class="c1"># parallel system of execution: slurm, cobalt or single_node</span><span class="w"></span>
+<span class="na">system</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">slurm</span><span class="w"></span>
+
+<span class="c1"># whether to use mpirun or srun to run a task</span><span class="w"></span>
+<span class="na">parallel_executable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">srun</span><span class="w"></span>
+
+<span class="c1"># cores per node on the machine</span><span class="w"></span>
+<span class="na">cores_per_node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">36</span><span class="w"></span>
+
+<span class="c1"># account for running diagnostics jobs</span><span class="w"></span>
+<span class="na">account</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">e3sm</span><span class="w"></span>
+
+<span class="c1"># quality of service (default is the first)</span><span class="w"></span>
+<span class="na">qos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">regular, interactive</span><span class="w"></span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">parallel</span></code> section defined properties of the machine, to do with parallel
+runs. Currently, machine files are defined for high-performance computing (HPC)
+machines with multiple nodes.  These machines all use <a class="reference internal" href="#slurm"><span class="std std-ref">Slurm job queueing</span></a> to submit
+parallel jobs.  They also all use the <code class="docutils literal notranslate"><span class="pre">srun</span></code> command to run individual
+tasks within a job.  The number of <code class="docutils literal notranslate"><span class="pre">cores_per_node</span></code> vary between machines,
+as does the account that typical <code class="docutils literal notranslate"><span class="pre">compass</span></code> users will have access to on the
+machine.</p>
+</section>
+<section id="slurm-job-queueing">
+<span id="slurm"></span><h2>Slurm job queueing<a class="headerlink" href="#slurm-job-queueing" title="Permalink to this headline">¶</a></h2>
+<p>Most HPC systems now use the
+<a class="reference external" href="https://slurm.schedmd.com/documentation.html">slurm workload manager</a>.
+Here are some basic commands:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>salloc -N <span class="m">1</span> -t <span class="m">2</span>:0:0 <span class="c1"># interactive job (see machine specific versions below)</span>
+sbatch script <span class="c1"># submit a script</span>
+squeue <span class="c1"># show all jobs</span>
+squeue -u &lt;my_username&gt; <span class="c1"># show only your jobs</span>
+scancel jobID <span class="c1"># cancel a job</span>
+</pre></div>
+</div>
+</section>
+<section id="supported-machines">
+<span id="id2"></span><h2>Supported Machines<a class="headerlink" href="#supported-machines" title="Permalink to this headline">¶</a></h2>
+<p>On each supported machine, users will be able to source a script to activate
+the appropriate compass environment and compilers.  Most machines support 2
+compilers, each with one or more variants of MPI and the required NetCDF,
+pNetCDF and SCORPIO libraries.  These scripts will first load the conda
+environment for <code class="docutils literal notranslate"><span class="pre">compass</span></code>, then it will load modules and set environment
+variables that will allow you to build and run the MPAS model.</p>
+<p>A table with the full list of supported machines, compilers, MPI variants,
+and MPAS-model build commands is found in <a class="reference internal" href="../../developers_guide/machines/index.html#dev-supported-machines"><span class="std std-ref">Supported Machines</span></a> in
+the Developer’s Guide.  In the links below, we list only the commands needed
+to use the default MPI variant for each compiler on each machine.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="anvil.html">Anvil</a></li>
+<li class="toctree-l1"><a class="reference internal" href="badger.html">Badger</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chrysalis.html">Chrysalis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="compy.html">CompyMcNodeFace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cori.html">Cori</a></li>
+<li class="toctree-l1"><a class="reference internal" href="grizzly.html">Grizzly</a></li>
+</ul>
+</div>
+</section>
+<section id="other-machines">
+<span id="id3"></span><h2>Other Machines<a class="headerlink" href="#other-machines" title="Permalink to this headline">¶</a></h2>
+<p>If you are working on an “unknown” machine, you will need to define some of
+the config options that would normally be in a machine’s config file yourself
+in your user config file:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[paths]</span><span class="w"></span>
+
+<span class="c1"># The root to a location where the mesh_database, initial_condition_database,</span><span class="w"></span>
+<span class="c1"># and bathymetry_database for MPAS-Ocean will be cached</span><span class="w"></span>
+<span class="na">ocean_database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/xylar/data/mpas/mpas_standalonedata/mpas-ocean</span><span class="w"></span>
+
+<span class="c1"># The root to a location where the mesh_database and initial_condition_database</span><span class="w"></span>
+<span class="c1"># for MALI will be cached</span><span class="w"></span>
+<span class="na">landice_database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/xylar/data/mpas/mpas_standalonedata/mpas-albany-landice</span><span class="w"></span>
+
+
+<span class="c1"># The parallel section describes options related to running tests in parallel</span><span class="w"></span>
+<span class="k">[parallel]</span><span class="w"></span>
+
+<span class="c1"># parallel system of execution: slurm or single_node</span><span class="w"></span>
+<span class="na">system</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">single_node</span><span class="w"></span>
+
+<span class="c1"># whether to use mpirun or srun to run the model</span><span class="w"></span>
+<span class="na">parallel_executable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">mpirun</span><span class="w"></span>
+
+<span class="c1"># cores per node on the machine</span><span class="w"></span>
+<span class="na">cores_per_node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span><span class="w"></span>
+
+<span class="c1"># the number of multiprocessing or dask threads to use</span><span class="w"></span>
+<span class="na">threads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span><span class="w"></span>
+</pre></div>
+</div>
+<p>The paths for the MPAS core “databases” can be any emtpy path to begin with.
+If the path doesn’t exist, <code class="docutils literal notranslate"><span class="pre">compass</span></code> will create it.</p>
+<p>If you’re not working on an HPC machine, you will probably not have multiple
+nodes or <a class="reference internal" href="#slurm"><span class="std std-ref">Slurm job queueing</span></a>.  You will probably install
+<a class="reference external" href="https://www.mpich.org/">MPICH</a> or <a class="reference external" href="https://www.open-mpi.org/">OpenMPI</a>,
+probably via a
+<a class="reference external" href="https://docs.conda.io/projects/conda/en/latest/index.html">conda environment</a>.
+In this case, the <code class="docutils literal notranslate"><span class="pre">parallel_executable</span></code> is <code class="docutils literal notranslate"><span class="pre">mpirun</span></code>.</p>
+<p>To install the <cite>compass</cite> package into a conda environment, you will first need
+to install <a class="reference external" href="https://docs.conda.io/en/latest/miniconda.html">Miniconda3</a> (if
+miniconda is not already installed), then add the
+<a class="reference external" href="https://conda-forge.org/#about">conda-forge channel</a>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda config --add channels conda-forge
+conda config --set channel_priority strict
+</pre></div>
+</div>
+<p>Then, you will run one of the following three commands, depending on how you
+would like to handle MPI support in the conda packages.</p>
+</section>
+<section id="id4">
+<h2>MPICH<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>To create a conda environment called “compass” with MPI from the <code class="docutils literal notranslate"><span class="pre">mpich</span></code>
+package, run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda create -n compass -c conda-forge -c e3sm/label/compass <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.9 <span class="s2">&quot;compass=*=mpi_mpich*&quot;</span>
+</pre></div>
+</div>
+<p>This is the recommended default for single-node Linux and OSX machines.</p>
+</section>
+<section id="id5">
+<h2>OpenMPI<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<p>To create a conda environment called “compass” with MPI from the <code class="docutils literal notranslate"><span class="pre">openmpi</span></code>
+package, run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda create -n compass -c conda-forge -c e3sm/label/compass <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.9 <span class="s2">&quot;compass=*=mpi_openmpi*&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="no-mpi-from-conda-forge">
+<h2>No MPI from conda-forge<a class="headerlink" href="#no-mpi-from-conda-forge" title="Permalink to this headline">¶</a></h2>
+<p>To create a conda environment called “compass” without any MPI package from
+conda-forge, run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda create -n compass -c conda-forge -c e3sm/label/compass <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.9 <span class="s2">&quot;compass=*=nompi*&quot;</span>
+</pre></div>
+</div>
+<p>This would be the starting point for working with <code class="docutils literal notranslate"><span class="pre">compass</span></code> on an unknown
+HPC machine.  From there, you would also need to load modules and set
+environment variables so that MPAS components can be built with system NetCDF,
+pNetCDF and SCORPIO. This will likely require working with an MPAS developer.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../ocean/suites.html" class="btn btn-neutral float-left" title="Test suites" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="anvil.html" class="btn btn-neutral float-right" title="Anvil" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
