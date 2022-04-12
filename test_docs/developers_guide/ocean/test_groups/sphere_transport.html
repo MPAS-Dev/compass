@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>sphere_transport &mdash; compass test_docs documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="ziso" href="ziso.html" />
+    <link rel="prev" title="soma" href="soma.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> compass
+          </a>
+              <div class="version">
+                test_docs
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../landice/index.html">Landice core</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Ocean core</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Test groups</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="baroclinic_channel.html">baroclinic_channel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="global_convergence.html">global_convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="global_ocean.html">global_ocean</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gotm.html">gotm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ice_shelf_2d.html">ice_shelf_2d</a></li>
+<li class="toctree-l3"><a class="reference internal" href="internal_wave.html">internal_wave</a></li>
+<li class="toctree-l3"><a class="reference internal" href="isomip_plus.html">isomip_plus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="planar_convergence.html">planar_convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soma.html">soma</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">sphere_transport</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#rotation-2d">rotation_2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nondivergent-2d">nondivergent_2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#divergent-2d">divergent_2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#correlated-tracers-2d">correlated_tracers_2d</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ziso.html">ziso</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../framework.html">Ocean framework</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Ocean core</a> &raquo;</li>
+          <li><a href="index.html">Test groups</a> &raquo;</li>
+      <li>sphere_transport</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/developers_guide/ocean/test_groups/sphere_transport.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="sphere-transport">
+<span id="dev-ocean-sphere-transport"></span><h1>sphere_transport<a class="headerlink" href="#sphere-transport" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">sphere_transport</span></code> test group implements 4 test cases for standard
+transport schemes.   See <a class="reference internal" href="../../../users_guide/ocean/test_groups/sphere_transport.html#ocean-sphere-transport"><span class="std std-ref">sphere_transport</span></a> in the User’s Guide for
+more details.</p>
+<section id="rotation-2d">
+<span id="dev-ocean-sphere-transport-rotation-2d"></span><h2>rotation_2d<a class="headerlink" href="#rotation-2d" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="../generated/compass.ocean.tests.sphere_transport.rotation_2d.Rotation2D.html#compass.ocean.tests.sphere_transport.rotation_2d.Rotation2D" title="compass.ocean.tests.sphere_transport.rotation_2d.Rotation2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.sphere_transport.rotation_2d.Rotation2D</span></code></a>
+test performs a series of 12-day runs that advect 3 tracers around the sphere
+with solid-body rotation. The resolution of the sphere varies (by default,
+between 60 and 240 km).  Advected results are compared with a known exact
+solution to determine the rate of convergence.  See
+<a class="reference internal" href="../../../users_guide/ocean/test_groups/sphere_transport.html#ocean-sphere-transport-rotation-2d"><span class="std std-ref">rotation_2d</span></a> for config options and
+more details on the test case.</p>
+<section id="mesh">
+<h3>mesh<a class="headerlink" href="#mesh" title="Permalink to this headline">¶</a></h3>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.sphere_transport.rotation_2d.mesh.Mesh.html#compass.ocean.tests.sphere_transport.rotation_2d.mesh.Mesh" title="compass.ocean.tests.sphere_transport.rotation_2d.mesh.Mesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.sphere_transport.rotation_2d.mesh.Mesh</span></code></a>
+defines a step for building a global mesh with uniform resolution using
+<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.ocean.build_mesh.build_spherical_mesh.html#mpas_tools.ocean.build_mesh.build_spherical_mesh" title="(in mpas_tools vstable)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_tools.ocean.build_mesh.build_spherical_mesh()</span></code></a>.</p>
+</section>
+<section id="init">
+<h3>init<a class="headerlink" href="#init" title="Permalink to this headline">¶</a></h3>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.sphere_transport.rotation_2d.init.Init.html#compass.ocean.tests.sphere_transport.rotation_2d.init.Init" title="compass.ocean.tests.sphere_transport.rotation_2d.init.Init"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.sphere_transport.rotation_2d.init.Init</span></code></a>
+defines a step for setting up the initial state for each test case with a
+tracer distributed in a cosine-bell shape.</p>
+</section>
+<section id="forward">
+<h3>forward<a class="headerlink" href="#forward" title="Permalink to this headline">¶</a></h3>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.sphere_transport.rotation_2d.forward.Forward.html#compass.ocean.tests.sphere_transport.rotation_2d.forward.Forward" title="compass.ocean.tests.sphere_transport.rotation_2d.forward.Forward"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.sphere_transport.rotation_2d.forward.Forward</span></code></a>
+defines a step for running MPAS-Ocean from the initial condition produced in
+the <code class="docutils literal notranslate"><span class="pre">initial_state</span></code> step.  The time step for a given resolution is given by
+the <code class="docutils literal notranslate"><span class="pre">timestep_munutes</span></code> config option.  Other namelist options are taken from
+the test case’s <code class="docutils literal notranslate"><span class="pre">namelist.forward</span></code>.</p>
+</section>
+<section id="analysis">
+<h3>analysis<a class="headerlink" href="#analysis" title="Permalink to this headline">¶</a></h3>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.sphere_transport.rotation_2d.analysis.Analysis.html#compass.ocean.tests.sphere_transport.rotation_2d.analysis.Analysis" title="compass.ocean.tests.sphere_transport.rotation_2d.analysis.Analysis"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.sphere_transport.rotation_2d.analysis.Analysis</span></code></a>
+defines a step for plotting various results of the simulations in
+<code class="docutils literal notranslate"><span class="pre">rotation_2d_convergence.pdf</span></code> and at each resolution in <code class="docutils literal notranslate"><span class="pre">*_sol.pdf</span></code>.</p>
+</section>
+</section>
+<section id="nondivergent-2d">
+<span id="dev-ocean-sphere-transport-nondivergent-2d"></span><h2>nondivergent_2d<a class="headerlink" href="#nondivergent-2d" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="../generated/compass.ocean.tests.sphere_transport.nondivergent_2d.Nondivergent2D.html#compass.ocean.tests.sphere_transport.nondivergent_2d.Nondivergent2D" title="compass.ocean.tests.sphere_transport.nondivergent_2d.Nondivergent2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.sphere_transport.nondivergent_2d.Nondivergent2D</span></code></a>
+test performs a series of 12-day runs that advect 3 tracers around the sphere
+within a divergence-free flow. The resolution of the sphere varies (by default,
+between 60 and 240 km).  Advected results are compared with a known exact
+solution to determine the rate of convergence.  See
+<a class="reference internal" href="../../../users_guide/ocean/test_groups/sphere_transport.html#ocean-sphere-transport-nondivergent-2d"><span class="std std-ref">nondivergent_2d</span></a> for config options and
+more details on the test case.</p>
+<section id="id1">
+<h3>mesh<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.sphere_transport.nondivergent_2d.mesh.Mesh.html#compass.ocean.tests.sphere_transport.nondivergent_2d.mesh.Mesh" title="compass.ocean.tests.sphere_transport.nondivergent_2d.mesh.Mesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.sphere_transport.nondivergent_2d.mesh.Mesh</span></code></a>
+defines a step for building a global mesh with uniform resolution using
+<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.ocean.build_mesh.build_spherical_mesh.html#mpas_tools.ocean.build_mesh.build_spherical_mesh" title="(in mpas_tools vstable)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_tools.ocean.build_mesh.build_spherical_mesh()</span></code></a>.</p>
+</section>
+<section id="id2">
+<h3>init<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.sphere_transport.nondivergent_2d.init.Init.html#compass.ocean.tests.sphere_transport.nondivergent_2d.init.Init" title="compass.ocean.tests.sphere_transport.nondivergent_2d.init.Init"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.sphere_transport.nondivergent_2d.init.Init</span></code></a>
+defines a step for setting up the initial state for each test case with a
+tracer distributed in a cosine-bell shape.</p>
+</section>
+<section id="id3">
+<h3>forward<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.sphere_transport.nondivergent_2d.forward.Forward.html#compass.ocean.tests.sphere_transport.nondivergent_2d.forward.Forward" title="compass.ocean.tests.sphere_transport.nondivergent_2d.forward.Forward"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.sphere_transport.nondivergent_2d.forward.Forward</span></code></a>
+defines a step for running MPAS-Ocean from the initial condition produced in
+the <code class="docutils literal notranslate"><span class="pre">initial_state</span></code> step.  The time step for a given resolution is given by
+the <code class="docutils literal notranslate"><span class="pre">timestep_munutes</span></code> config option.  Other namelist options are taken from
+the test case’s <code class="docutils literal notranslate"><span class="pre">namelist.forward</span></code>.</p>
+</section>
+<section id="id4">
+<h3>analysis<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.sphere_transport.nondivergent_2d.analysis.Analysis.html#compass.ocean.tests.sphere_transport.nondivergent_2d.analysis.Analysis" title="compass.ocean.tests.sphere_transport.nondivergent_2d.analysis.Analysis"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.sphere_transport.nondivergent_2d.analysis.Analysis</span></code></a>
+defines a step for plotting various results of the simulations in
+<code class="docutils literal notranslate"><span class="pre">nondivergent2D_convergence.pdf</span></code> and at each resolution in <code class="docutils literal notranslate"><span class="pre">*_sol.pdf</span></code>.</p>
+</section>
+</section>
+<section id="divergent-2d">
+<span id="dev-ocean-sphere-transport-divergent-2d"></span><h2>divergent_2d<a class="headerlink" href="#divergent-2d" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="../generated/compass.ocean.tests.sphere_transport.divergent_2d.Divergent2D.html#compass.ocean.tests.sphere_transport.divergent_2d.Divergent2D" title="compass.ocean.tests.sphere_transport.divergent_2d.Divergent2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.sphere_transport.divergent_2d.Divergent2D</span></code></a>
+test performs a series of 12-day runs that advect 3 tracers around the sphere
+within a flow with nonzero divergence. The resolution of the sphere varies (by
+default, between 60 and 240 km).  Advected results are compared with a known
+exact solution to determine the rate of convergence.  See
+<a class="reference internal" href="../../../users_guide/ocean/test_groups/sphere_transport.html#ocean-sphere-transport-divergent-2d"><span class="std std-ref">divergent_2d</span></a> for config options and
+more details on the test case.</p>
+<section id="id5">
+<h3>mesh<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.sphere_transport.divergent_2d.mesh.Mesh.html#compass.ocean.tests.sphere_transport.divergent_2d.mesh.Mesh" title="compass.ocean.tests.sphere_transport.divergent_2d.mesh.Mesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.sphere_transport.divergent_2d.mesh.Mesh</span></code></a>
+defines a step for building a global mesh with uniform resolution using
+<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.ocean.build_mesh.build_spherical_mesh.html#mpas_tools.ocean.build_mesh.build_spherical_mesh" title="(in mpas_tools vstable)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_tools.ocean.build_mesh.build_spherical_mesh()</span></code></a>.</p>
+</section>
+<section id="id6">
+<h3>init<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.sphere_transport.divergent_2d.init.Init.html#compass.ocean.tests.sphere_transport.divergent_2d.init.Init" title="compass.ocean.tests.sphere_transport.divergent_2d.init.Init"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.sphere_transport.divergent_2d.init.Init</span></code></a>
+defines a step for setting up the initial state for each test case with a
+tracer distributed in a cosine-bell shape.</p>
+</section>
+<section id="id7">
+<h3>forward<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.sphere_transport.divergent_2d.forward.Forward.html#compass.ocean.tests.sphere_transport.divergent_2d.forward.Forward" title="compass.ocean.tests.sphere_transport.divergent_2d.forward.Forward"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.sphere_transport.divergent_2d.forward.Forward</span></code></a>
+defines a step for running MPAS-Ocean from the initial condition produced in
+the <code class="docutils literal notranslate"><span class="pre">initial_state</span></code> step.  The time step for a given resolution is given by
+the <code class="docutils literal notranslate"><span class="pre">timestep_munutes</span></code> config option.  Other namelist options are taken from
+the test case’s <code class="docutils literal notranslate"><span class="pre">namelist.forward</span></code>.</p>
+</section>
+<section id="id8">
+<h3>analysis<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.sphere_transport.divergent_2d.analysis.Analysis.html#compass.ocean.tests.sphere_transport.divergent_2d.analysis.Analysis" title="compass.ocean.tests.sphere_transport.divergent_2d.analysis.Analysis"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.sphere_transport.divergent_2d.analysis.Analysis</span></code></a>
+defines a step for plotting various results of the simulations in
+<code class="docutils literal notranslate"><span class="pre">divergent2D_convergence.pdf</span></code> and at each resolution in <code class="docutils literal notranslate"><span class="pre">*_sol.pdf</span></code>.</p>
+</section>
+</section>
+<section id="correlated-tracers-2d">
+<span id="dev-ocean-sphere-transport-correlated-tracers-2d"></span><h2>correlated_tracers_2d<a class="headerlink" href="#correlated-tracers-2d" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="../generated/compass.ocean.tests.sphere_transport.correlated_tracers_2d.CorrelatedTracers2D.html#compass.ocean.tests.sphere_transport.correlated_tracers_2d.CorrelatedTracers2D" title="compass.ocean.tests.sphere_transport.correlated_tracers_2d.CorrelatedTracers2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.sphere_transport.correlated_tracers_2d.CorrelatedTracers2D</span></code></a>
+test performs a series of 12-day runs that advect 3 tracers around the sphere
+with the same flow field as <a class="reference internal" href="#dev-ocean-sphere-transport-nondivergent-2d"><span class="std std-ref">nondivergent_2d</span></a>.
+The resolution of the sphere varies (by default, between 60 and 240 km).
+Advected results are compared with a known exact solution to determine the rate
+of convergence.  See <a class="reference internal" href="../../../users_guide/ocean/test_groups/sphere_transport.html#ocean-sphere-transport-correlated-tracers-2d"><span class="std std-ref">correlated_tracers_2d</span></a> for
+config options and more details on the test case.</p>
+<section id="id9">
+<h3>mesh<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.sphere_transport.correlated_tracers_2d.mesh.Mesh.html#compass.ocean.tests.sphere_transport.correlated_tracers_2d.mesh.Mesh" title="compass.ocean.tests.sphere_transport.correlated_tracers_2d.mesh.Mesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.sphere_transport.correlated_tracers_2d.mesh.Mesh</span></code></a>
+defines a step for building a global mesh with uniform resolution using
+<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.ocean.build_mesh.build_spherical_mesh.html#mpas_tools.ocean.build_mesh.build_spherical_mesh" title="(in mpas_tools vstable)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_tools.ocean.build_mesh.build_spherical_mesh()</span></code></a>.</p>
+</section>
+<section id="id10">
+<h3>init<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.sphere_transport.correlated_tracers_2d.init.Init.html#compass.ocean.tests.sphere_transport.correlated_tracers_2d.init.Init" title="compass.ocean.tests.sphere_transport.correlated_tracers_2d.init.Init"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.sphere_transport.correlated_tracers_2d.init.Init</span></code></a>
+defines a step for setting up the initial state for each test case with a
+tracer distributed in a cosine-bell shape.</p>
+</section>
+<section id="id11">
+<h3>forward<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.sphere_transport.correlated_tracers_2d.forward.Forward.html#compass.ocean.tests.sphere_transport.correlated_tracers_2d.forward.Forward" title="compass.ocean.tests.sphere_transport.correlated_tracers_2d.forward.Forward"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.sphere_transport.correlated_tracers_2d.forward.Forward</span></code></a>
+defines a step for running MPAS-Ocean from the initial condition produced in
+the <code class="docutils literal notranslate"><span class="pre">initial_state</span></code> step.  The time step for a given resolution is given by
+the <code class="docutils literal notranslate"><span class="pre">timestep_munutes</span></code> config option.  Other namelist options are taken from
+the test case’s <code class="docutils literal notranslate"><span class="pre">namelist.forward</span></code>.</p>
+</section>
+<section id="id12">
+<h3>analysis<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.sphere_transport.correlated_tracers_2d.analysis.Analysis.html#compass.ocean.tests.sphere_transport.correlated_tracers_2d.analysis.Analysis" title="compass.ocean.tests.sphere_transport.correlated_tracers_2d.analysis.Analysis"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.sphere_transport.correlated_tracers_2d.analysis.Analysis</span></code></a>
+defines a step for plotting various results of the simulations in
+<code class="docutils literal notranslate"><span class="pre">correlatedTracers2D_triplots.pdf</span></code> and at each resolution in <code class="docutils literal notranslate"><span class="pre">*_sol.pdf</span></code>.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="soma.html" class="btn btn-neutral float-left" title="soma" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ziso.html" class="btn btn-neutral float-right" title="ziso" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

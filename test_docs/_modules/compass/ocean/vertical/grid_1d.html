@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>compass.ocean.vertical.grid_1d &mdash; compass test_docs documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> compass
+          </a>
+              <div class="version">
+                test_docs
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+          <li><a href="../../ocean.html">compass.ocean</a> &raquo;</li>
+          <li><a href="../vertical.html">compass.ocean.vertical</a> &raquo;</li>
+      <li>compass.ocean.vertical.grid_1d</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for compass.ocean.vertical.grid_1d</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="n">resources</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">netCDF4</span> <span class="kn">import</span> <span class="n">Dataset</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">root_scalar</span>
+
+
+<div class="viewcode-block" id="generate_1d_grid"><a class="viewcode-back" href="../../../../developers_guide/ocean/generated/compass.ocean.vertical.grid_1d.generate_1d_grid.html#compass.ocean.vertical.grid_1d.generate_1d_grid">[docs]</a><span class="k">def</span> <span class="nf">generate_1d_grid</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate a vertical grid for a test case, using the config options in the</span>
+<span class="sd">    ``vertical_grid`` section</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : configparser.ConfigParser</span>
+<span class="sd">        Configuration options with parameters used to construct the vertical</span>
+<span class="sd">        grid</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    interfaces : numpy.ndarray</span>
+<span class="sd">        A 1D array of positive depths for layer interfaces in meters</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;vertical_grid&#39;</span><span class="p">]</span>
+    <span class="n">grid_type</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;grid_type&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">grid_type</span> <span class="o">==</span> <span class="s1">&#39;uniform&#39;</span><span class="p">:</span>
+        <span class="n">vert_levels</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;vert_levels&#39;</span><span class="p">)</span>
+        <span class="n">interfaces</span> <span class="o">=</span> <span class="n">_generate_uniform</span><span class="p">(</span><span class="n">vert_levels</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">grid_type</span> <span class="o">==</span> <span class="s1">&#39;tanh_dz&#39;</span><span class="p">:</span>
+        <span class="n">vert_levels</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;vert_levels&#39;</span><span class="p">)</span>
+        <span class="n">min_layer_thickness</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;min_layer_thickness&#39;</span><span class="p">)</span>
+        <span class="n">max_layer_thickness</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;max_layer_thickness&#39;</span><span class="p">)</span>
+        <span class="n">bottom_depth</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;bottom_depth&#39;</span><span class="p">)</span>
+        <span class="n">interfaces</span> <span class="o">=</span> <span class="n">_create_tanh_dz_grid</span><span class="p">(</span><span class="n">vert_levels</span><span class="p">,</span> <span class="n">bottom_depth</span><span class="p">,</span>
+                                          <span class="n">min_layer_thickness</span><span class="p">,</span>
+                                          <span class="n">max_layer_thickness</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">grid_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;60layerPHC&#39;</span><span class="p">,</span> <span class="s1">&#39;100layerE3SMv1&#39;</span><span class="p">]:</span>
+        <span class="n">interfaces</span> <span class="o">=</span> <span class="n">_read_json</span><span class="p">(</span><span class="n">grid_type</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unexpected grid type: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">grid_type</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="s1">&#39;vertical_grid&#39;</span><span class="p">,</span> <span class="s1">&#39;bottom_depth&#39;</span><span class="p">)</span> <span class="ow">and</span> \
+            <span class="n">grid_type</span> <span class="o">!=</span> <span class="s1">&#39;tanh_dz&#39;</span><span class="p">:</span>
+        <span class="n">bottom_depth</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;bottom_depth&#39;</span><span class="p">)</span>
+        <span class="c1"># renormalize to the requested range</span>
+        <span class="n">interfaces</span> <span class="o">=</span> <span class="p">(</span><span class="n">bottom_depth</span><span class="o">/</span><span class="n">interfaces</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">interfaces</span>
+
+    <span class="k">return</span> <span class="n">interfaces</span></div>
+
+
+<div class="viewcode-block" id="write_1d_grid"><a class="viewcode-back" href="../../../../developers_guide/ocean/generated/compass.ocean.vertical.grid_1d.write_1d_grid.html#compass.ocean.vertical.grid_1d.write_1d_grid">[docs]</a><span class="k">def</span> <span class="nf">write_1d_grid</span><span class="p">(</span><span class="n">interfaces</span><span class="p">,</span> <span class="n">out_filename</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    write the vertical grid to a file</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    interfaces : numpy.ndarray</span>
+<span class="sd">        A 1D array of positive depths for layer interfaces in meters</span>
+
+<span class="sd">    out_filename : str</span>
+<span class="sd">        MPAS file name for output of vertical grid</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">nz</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">interfaces</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+
+    <span class="c1"># open a new netCDF file for writing.</span>
+    <span class="n">ncfile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">out_filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+    <span class="c1"># create the depth_t dimension.</span>
+    <span class="n">ncfile</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,</span> <span class="n">nz</span><span class="p">)</span>
+
+    <span class="n">refBottomDepth</span> <span class="o">=</span> <span class="n">ncfile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span>
+        <span class="s1">&#39;refBottomDepth&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">char</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,))</span>
+    <span class="n">refMidDepth</span> <span class="o">=</span> <span class="n">ncfile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span>
+        <span class="s1">&#39;refMidDepth&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">char</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,))</span>
+    <span class="n">refLayerThickness</span> <span class="o">=</span> <span class="n">ncfile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span>
+        <span class="s1">&#39;refLayerThickness&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">char</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,))</span>
+
+    <span class="n">botDepth</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="n">midDepth</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">interfaces</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">interfaces</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+
+    <span class="n">refBottomDepth</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">botDepth</span>
+    <span class="n">refMidDepth</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">midDepth</span>
+    <span class="n">refLayerThickness</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">interfaces</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="n">interfaces</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">ncfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<span class="k">def</span> <span class="nf">add_1d_grid</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Add a 1D vertical grid based on the config options in the ``vertical_grid``</span>
+<span class="sd">    section to a mesh data set</span>
+
+<span class="sd">    The following variables are added to the mesh:</span>
+<span class="sd">    * ``refTopDepth`` - the positive-down depth of the top of each ref. level</span>
+<span class="sd">    * ``refZMid`` - the positive-down depth of the middle of each ref. level</span>
+<span class="sd">    * ``refBottomDepth`` - the positive-down depth of the bottom of each ref.</span>
+<span class="sd">      level</span>
+<span class="sd">    * ``refInterfaces`` - the positive-down depth of the interfaces between</span>
+<span class="sd">      ref. levels (with ``nVertLevels`` + 1 elements).</span>
+<span class="sd">    There is considerable redundancy between these variables but each is</span>
+<span class="sd">    sometimes convenient.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : configparser.ConfigParser</span>
+<span class="sd">        Configuration options with parameters used to construct the vertical</span>
+<span class="sd">        grid</span>
+
+<span class="sd">    ds : xarray.Dataset</span>
+<span class="sd">        A data set to add the grid variables to</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">interfaces</span> <span class="o">=</span> <span class="n">generate_1d_grid</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
+
+    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;refTopDepth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,</span> <span class="n">interfaces</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;refZMid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">interfaces</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="n">interfaces</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;refBottomDepth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,</span> <span class="n">interfaces</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;refInterfaces&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;nVertLevelsP1&#39;</span><span class="p">,</span> <span class="n">interfaces</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_generate_uniform</span><span class="p">(</span><span class="n">vert_levels</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Generate uniform layer interfaces between 0 and 1 &quot;&quot;&quot;</span>
+    <span class="n">interfaces</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="n">vert_levels</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">interfaces</span>
+
+
+<span class="k">def</span> <span class="nf">_read_json</span><span class="p">(</span><span class="n">grid_type</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Read the grid interfaces from a json file &quot;&quot;&quot;</span>
+
+    <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.json&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">grid_type</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">resources</span><span class="o">.</span><span class="n">open_text</span><span class="p">(</span><span class="s2">&quot;compass.ocean.vertical&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">data_file</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">data_file</span><span class="p">)</span>
+        <span class="n">interfaces</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">interfaces</span>
+
+
+<span class="k">def</span> <span class="nf">_create_tanh_dz_grid</span><span class="p">(</span><span class="n">num_vert_levels</span><span class="p">,</span> <span class="n">bottom_depth</span><span class="p">,</span> <span class="n">min_layer_thickness</span><span class="p">,</span>
+                         <span class="n">max_layer_thickness</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates the vertical grid for MPAS-Ocean and writes it to a NetCDF file</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    num_vert_levels : int</span>
+<span class="sd">        Number of vertical levels for the grid</span>
+
+<span class="sd">    bottom_depth : float</span>
+<span class="sd">        bottom depth for the chosen vertical coordinate [m]</span>
+
+<span class="sd">    min_layer_thickness : float</span>
+<span class="sd">        Target thickness of the first layer [m]</span>
+
+<span class="sd">    max_layer_thickness : float</span>
+<span class="sd">        Target maximum thickness in column [m]</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    interfaces : numpy.ndarray</span>
+<span class="sd">        A 1D array of positive depths for layer interfaces in meters</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">nz</span> <span class="o">=</span> <span class="n">num_vert_levels</span>
+    <span class="n">dz1</span> <span class="o">=</span> <span class="n">min_layer_thickness</span>
+    <span class="n">dz2</span> <span class="o">=</span> <span class="n">max_layer_thickness</span>
+
+    <span class="c1"># the bracket here is large enough that it should hopefully encompass any</span>
+    <span class="c1"># reasonable value of delta, the characteristic length scale over which</span>
+    <span class="c1"># dz varies.  The args are passed on to the match_bottom function below,</span>
+    <span class="c1"># and the root finder will determine a value of delta (sol.root) such that</span>
+    <span class="c1"># match_bottom is within a tolerance of zero, meaning the bottom of the</span>
+    <span class="c1"># coordinate computed by cumsum_z hits bottom_depth almost exactly</span>
+    <span class="n">sol</span> <span class="o">=</span> <span class="n">root_scalar</span><span class="p">(</span><span class="n">_match_bottom</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;brentq&#39;</span><span class="p">,</span>
+                      <span class="n">bracket</span><span class="o">=</span><span class="p">[</span><span class="n">dz1</span><span class="p">,</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">bottom_depth</span><span class="p">],</span>
+                      <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">nz</span><span class="p">,</span> <span class="n">dz1</span><span class="p">,</span> <span class="n">dz2</span><span class="p">,</span> <span class="n">bottom_depth</span><span class="p">))</span>
+
+    <span class="n">delta</span> <span class="o">=</span> <span class="n">sol</span><span class="o">.</span><span class="n">root</span>
+    <span class="n">layerThickness</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">_cumsum_z</span><span class="p">(</span><span class="n">delta</span><span class="p">,</span> <span class="n">nz</span><span class="p">,</span> <span class="n">dz1</span><span class="p">,</span> <span class="n">dz2</span><span class="p">)</span>
+    <span class="n">interfaces</span> <span class="o">=</span> <span class="o">-</span><span class="n">z</span>
+
+    <span class="k">return</span> <span class="n">interfaces</span>
+
+
+<span class="k">def</span> <span class="nf">_match_bottom</span><span class="p">(</span><span class="n">delta</span><span class="p">,</span> <span class="n">nz</span><span class="p">,</span> <span class="n">dz1</span><span class="p">,</span> <span class="n">dz2</span><span class="p">,</span> <span class="n">bottom_depth</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the difference between the bottom depth computed with the given</span>
+<span class="sd">    parameters and the target ``bottom_depth``, used in the root finding</span>
+<span class="sd">    algorithm to determine which value of ``delta`` to use.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    delta : float</span>
+<span class="sd">        The characteristic length scale over which dz varies (this parameter</span>
+<span class="sd">        will be optimized to hit a target depth in a target number of layers)</span>
+
+<span class="sd">    nz : int</span>
+<span class="sd">        The number of layers</span>
+
+<span class="sd">    dz1 : float</span>
+<span class="sd">        The layer thickness at the top of the ocean (z = 0)</span>
+
+<span class="sd">    dz2 : float</span>
+<span class="sd">        The layer thickness at z --&gt; -infinity</span>
+
+<span class="sd">    bottom_depth: float</span>
+<span class="sd">        depth of the bottom of the ocean that should match the bottom layer</span>
+<span class="sd">        interface.  Note: the bottom_depth is positive, whereas the layer</span>
+<span class="sd">        interfaces are negative.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    diff : float</span>
+<span class="sd">        The computed bottom depth minus the target ``bottom_depth``.  ``diff``</span>
+<span class="sd">        should be zero when we have found the desired ``delta``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">_cumsum_z</span><span class="p">(</span><span class="n">delta</span><span class="p">,</span> <span class="n">nz</span><span class="p">,</span> <span class="n">dz1</span><span class="p">,</span> <span class="n">dz2</span><span class="p">)</span>
+    <span class="n">diff</span> <span class="o">=</span> <span class="o">-</span><span class="n">bottom_depth</span> <span class="o">-</span> <span class="n">z</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">diff</span>
+
+
+<span class="k">def</span> <span class="nf">_cumsum_z</span><span class="p">(</span><span class="n">delta</span><span class="p">,</span> <span class="n">nz</span><span class="p">,</span> <span class="n">dz1</span><span class="p">,</span> <span class="n">dz2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute layer interface depths and layer thicknesses over ``nz`` layers</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    delta : float</span>
+<span class="sd">        The characteristic length scale over which dz varies (this parameter</span>
+<span class="sd">        will be optimized to hit a target depth in a target number of layers)</span>
+
+<span class="sd">    nz : int</span>
+<span class="sd">        The number of layers</span>
+
+<span class="sd">    dz1 : float</span>
+<span class="sd">        The layer thickness at the top of the ocean (z = 0)</span>
+
+<span class="sd">    dz2 : float</span>
+<span class="sd">        The layer thickness at z --&gt; -infinity</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dz : numpy.ndarray</span>
+<span class="sd">        The layer thicknesses for each layer</span>
+
+<span class="sd">    z : numpy.ndarray</span>
+<span class="sd">        The depth (positive up) of each layer interface (``nz + 1`` total</span>
+<span class="sd">        elements)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dz</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nz</span><span class="p">)</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nz</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">zindex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nz</span><span class="p">):</span>
+        <span class="n">dz</span><span class="p">[</span><span class="n">zindex</span><span class="p">]</span> <span class="o">=</span> <span class="n">_dz_z</span><span class="p">(</span><span class="n">z</span><span class="p">[</span><span class="n">zindex</span><span class="p">],</span> <span class="n">dz1</span><span class="p">,</span> <span class="n">dz2</span><span class="p">,</span> <span class="n">delta</span><span class="p">)</span>
+        <span class="n">z</span><span class="p">[</span><span class="n">zindex</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="n">zindex</span><span class="p">]</span> <span class="o">-</span> <span class="n">dz</span><span class="p">[</span><span class="n">zindex</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">dz</span><span class="p">,</span> <span class="n">z</span>
+
+
+<span class="k">def</span> <span class="nf">_dz_z</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">dz1</span><span class="p">,</span> <span class="n">dz2</span><span class="p">,</span> <span class="n">delta</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    layer thickness as a function of depth</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    z : float</span>
+<span class="sd">        Depth coordinate (positive up) at which to find the layer thickness</span>
+
+<span class="sd">    dz1 : float</span>
+<span class="sd">        The layer thickness at the top of the ocean (z = 0)</span>
+
+<span class="sd">    dz2 : float</span>
+<span class="sd">        The layer thickness at z --&gt; -infinity</span>
+
+<span class="sd">    delta : float</span>
+<span class="sd">        The characteristic length scale over which dz varies (this parameter</span>
+<span class="sd">        will be optimized to hit a target depth in a target numer of layers)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dz : float</span>
+<span class="sd">        The layer thickness</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">dz2</span> <span class="o">-</span> <span class="n">dz1</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span><span class="o">-</span><span class="n">z</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">delta</span><span class="p">)</span> <span class="o">+</span> <span class="n">dz1</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
