@@ -1,5 +1,3 @@
-import configparser
-
 from compass.testcase import TestCase
 
 from compass.ocean.tests.sphere_transport.divergent_2d.mesh import Mesh
@@ -36,11 +34,8 @@ class Divergent2D(TestCase):
         Set config options for the test case
         """
         config = self.config
-        resolutions = config.get('divergent_2d', 'resolutions')
-        resolutions = [int(resolution) for resolution in
-                       resolutions.replace(',', ' ').split()]
-        dtmin = config.get('divergent_2d', 'timestep_minutes')
-        dtmin = [int(dt) for dt in dtmin.replace(',', ' ').split()]
+        resolutions = config.getlist('divergent_2d', 'resolutions', dtype=int)
+        dtmin = config.getlist('divergent_2d', 'timestep_minutes', dtype=int)
 
         self.resolutions = resolutions
         self.timesteps = dtmin

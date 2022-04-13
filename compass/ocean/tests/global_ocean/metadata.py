@@ -13,7 +13,7 @@ def get_author_and_email_from_git(config):
 
     Parameters
     ----------
-    config : configparser.ConfigParser
+    config : compass.config.CompassConfigParser
         Configuration options for this test case
     """
     author = config.get('global_ocean', 'author')
@@ -49,7 +49,7 @@ def get_e3sm_mesh_names(config, levels):
 
     Parameters
     ----------
-    config : configparser.ConfigParser
+    config : compass.config.CompassConfigParser
         Configuration options for this test case
 
     levels : int
@@ -64,10 +64,10 @@ def get_e3sm_mesh_names(config, levels):
         The long E3SM name of the ocean and sea-ice mesh
     """
 
+    config.set('global_ocean', 'levels', '{}'.format(levels))
     mesh_prefix = config.get('global_ocean', 'prefix')
     min_res = config.get('global_ocean', 'min_res')
     max_res = config.get('global_ocean', 'max_res')
-    config.set('global_ocean', 'levels', '{}'.format(levels))
     e3sm_version = config.get('global_ocean', 'e3sm_version')
     mesh_revision = config.get('global_ocean', 'mesh_revision')
 
@@ -94,7 +94,7 @@ def add_mesh_and_init_metadata(output_filenames, config, init_filename):
     output_filenames : list
         A list of output files.
 
-    config : configparser.ConfigParser
+    config : compass.config.CompassConfigParser
         Configuration options for this test case
 
     init_filename : str

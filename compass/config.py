@@ -1,119 +1,413 @@
+from configparser import RawConfigParser, ConfigParser, ExtendedInterpolation
 import os
-import configparser
-from io import StringIO
 from importlib import resources
+import inspect
+import sys
 
 
-def duplicate_config(config):
+class CompassConfigParser:
     """
-    Make a deep copy of config to changes can be made without affecting the
-    original
-
-    Parameters
-    ----------
-    config : configparser.ConfigParser
-        Configuration options
-
-    Returns
-    -------
-    new_config : configparser.ConfigParser
-        Deep copy of configuration options
+    A "meta" config parser that keeps a dictionary of config parsers and their
+    sources to combine when needed.  The custom config parser allows provenance
+    of the source of different config options and allows the "user" config
+    options to always take precedence over other config options (even if they
+    are added later).
     """
+    def __init__(self):
+        """
+        Make a new (empty) config parser
+        """
 
-    config_string = StringIO()
-    config.write(config_string)
-    # We must reset the buffer to make it ready for reading.
-    config_string.seek(0)
-    new_config = configparser.ConfigParser(
-        interpolation=configparser.ExtendedInterpolation())
-    new_config.read_file(config_string)
-    return new_config
+        self._configs = dict()
+        self._user_config = dict()
+        self._comments = dict()
+        self._combined = None
+        self._combined_comments = None
+        self._sources = None
 
+    def add_user_config(self, filename):
+        """
+        Add a the contents of a user config file to the parser.  These options
+        take precedence over all other options.
 
-def add_config(config, package, config_file, exception=True):
-    """
-    Add the contents of a config file within a package to the current config
-    parser
+        Parameters
+        ----------
+        filename : str
+            The relative or absolute path to the config file
+        """
+        self._add(filename, user=True)
 
-    Parameters
-    ----------
-    config : configparser.ConfigParser
-        Configuration options
+    def add_from_file(self, filename):
+        """
+        Add the contents of a config file to the parser.
 
-    package : str or Package
-        The package where ``config_file`` is found
+        Parameters
+        ----------
+        filename : str
+            The relative or absolute path to the config file
+        """
+        self._add(filename, user=False)
 
-    config_file : str
-        The name of the config file to add
+    def add_from_package(self, package, config_filename, exception=True):
+        """
+        Add the contents of a config file to the parser.
 
-    exception : bool
-        Whether to raise an exception if the config file isn't found
-    """
-    try:
-        with resources.path(package, config_file) as path:
-            config.read(path)
-    except (ModuleNotFoundError, FileNotFoundError, TypeError):
-        if exception:
-            raise
+        Parameters
+        ----------
+        package : str or Package
+            The package where ``config_filename`` is found
 
+        config_filename : str
+            The name of the config file to add
 
-def merge_other_config(config, other_config):
-    """
-    Add config options from the other config parser to this one
+        exception : bool, optional
+            Whether to raise an exception if the config file isn't found
+        """
+        try:
+            with resources.path(package, config_filename) as path:
+                self._add(path, user=False)
+        except (ModuleNotFoundError, FileNotFoundError, TypeError):
+            if exception:
+                raise
 
-    Parameters
-    ----------
-    config : configparser.ConfigParser
-        Configuration options
+    def get(self, section, option):
+        """
+        Get an option value for a given section.
 
-    other_config : configparser.ConfigParser
-        Configuration options to add
-    """
-    for section in other_config.sections():
+        Parameters
+        ----------
+        section : str
+            The name of the config section
+
+        option : str
+            The name of the config option
+
+        Returns
+        -------
+        value : str
+            The value of the config option
+        """
+        if self._combined is None:
+            self._combine()
+        return self._combined.get(section, option)
+
+    def getint(self, section, option):
+        """
+        Get an option integer value for a given section.
+
+        Parameters
+        ----------
+        section : str
+            The name of the config section
+
+        option : str
+            The name of the config option
+
+        Returns
+        -------
+        value : int
+            The value of the config option
+        """
+        if self._combined is None:
+            self._combine()
+        return self._combined.getint(section, option)
+
+    def getfloat(self, section, option):
+        """
+        Get an option float value for a given section.
+
+        Parameters
+        ----------
+        section : str
+            The name of the config section
+
+        option : str
+            The name of the config option
+
+        Returns
+        -------
+        value : float
+            The value of the config option
+        """
+        if self._combined is None:
+            self._combine()
+        return self._combined.getfloat(section, option)
+
+    def getboolean(self, section, option):
+        """
+        Get an option boolean value for a given section.
+
+        Parameters
+        ----------
+        section : str
+            The name of the config section
+
+        option : str
+            The name of the config option
+
+        Returns
+        -------
+        value : bool
+            The value of the config option
+        """
+        if self._combined is None:
+            self._combine()
+        return self._combined.getboolean(section, option)
+
+    def getlist(self, section, option, dtype=str):
+        """
+        Get an option value as a list for a given section.
+
+        Parameters
+        ----------
+        section : str
+            The name of the config section
+
+        option : str
+            The name of the config option
+
+        dtype : {Type[str], Type[int], Type[float]}
+            The type of the elements in the list
+
+        Returns
+        -------
+        value : list
+            The value of the config option parsed into a list
+        """
+        values = self.get(section, option)
+        values = [dtype(value) for value in values.replace(',', ' ').split()]
+        return values
+
+    def has_option(self, section, option):
+        """
+        Whether the given section has the given option
+
+        Parameters
+        ----------
+        section : str
+            The name of the config section
+
+        option : str
+            The name of the config option
+
+        Returns
+        -------
+        found : bool
+            Whether the option was found in the section
+        """
+        if self._combined is None:
+            self._combine()
+        return self._combined.has_option(section, option)
+
+    def set(self, section, option, value=None, comment=None, user=False):
+        """
+        Set the value of the given option in the given section.  The file from
+         which this function was called is also retained for provenance.
+
+        Parameters
+        ----------
+        section : str
+            The name of the config section
+
+        option : str
+            The name of the config option
+
+        value : str, optional
+            The value to set the option to
+
+        comment : str, optional
+            A comment to include with the config option when it is written
+            to a file
+
+        user : bool, optional
+            Whether this config option was supplied by the user (e.g. through
+            a command-line flag) and should take priority over other sources
+        """
+        section = section.lower()
+        option = option.lower()
+        calling_frame = inspect.stack(context=2)[1]
+        filename = os.path.abspath(calling_frame.filename)
+
+        if user:
+            config_dict = self._user_config
+        else:
+            config_dict = self._configs
+        if filename not in config_dict:
+            config_dict[filename] = RawConfigParser()
+        config = config_dict[filename]
         if not config.has_section(section):
             config.add_section(section)
-        for key, value in other_config.items(section):
-            config.set(section, key, value)
+        config.set(section, option, value)
+        self._combined = None
+        self._combined_comments = None
+        self._sources = None
+        if filename not in self._comments:
+            self._comments[filename] = dict()
+        if comment is None:
+            comment = ''
+        else:
+            comment = ''.join([f'# {line}\n' for line in comment.split('\n')])
+        self._comments[filename][(section, option)] = comment
 
+    def write(self, fp, include_sources=True, include_comments=True):
+        """
+        Write the config options to the given file pointer.
 
-def ensure_absolute_paths(config):
-    """
-    make sure all paths in the paths, namelists and streams sections are
-    absolute paths
+        Parameters
+        ----------
+        fp : typing.TestIO
+            The file pointer to write to.
 
-    Parameters
-    ----------
-    config : configparser.ConfigParser
-        Configuration options
-    """
-    for section in ['paths', 'namelists', 'streams', 'executables']:
-        for option, value in config.items(section):
-            value = os.path.abspath(value)
-            config.set(section, option, value)
+        include_sources : bool, optional
+            Whether to include a comment above each option indicating the
+            source file where it was defined
 
+        include_comments : bool, optional
+            Whether to include the original comments associated with each
+            section or option
+        """
+        if self._combined is None:
+            self._combine()
+        for section in self._combined.sections():
+            section_items = self._combined.items(section=section)
+            if include_comments and section in self._combined_comments:
+                fp.write(self._combined_comments[section])
+            fp.write(f'[{section}]\n\n')
+            for option, value in section_items:
+                if include_comments:
+                    fp.write(self._combined_comments[(section, option)])
+                if include_sources:
+                    source = self._sources[(section, option)]
+                    fp.write(f'# source: {source}\n')
+                value = str(value).replace('\n', '\n\t')
+                fp.write(f'{option} = {value}\n\n')
+            fp.write('\n')
 
-def get_source_file(source_path, source, config):
-    """
-    Get an absolute path given a tag name for that path
+    def __getitem__(self, section):
+        """
+        Get get the config options for a given section.
 
-    Parameters
-    ----------
-    source_path : str
-        The keyword path for a path as defined in :ref:`dev_config`,
-        a config option from a relative or absolute directory for the source
+        Parameters
+        ----------
+        section : str
+            The name of the section to retrieve.
 
-    source : str
-        The basename or relative path of the source within the ``source_path``
-        directory
+        Returns
+        -------
+        section_proxy : configparser.SectionProxy
+            The config options for the given section.
+        """
+        if self._combined is None:
+            self._combine()
+        return self._combined[section]
 
-    config : configparser.ConfigParser
-        Configuration options used to determine the the absolute paths for the
-        given ``source_path``
-    """
+    def _add(self, filename, user):
+        filename = os.path.abspath(filename)
+        config = RawConfigParser()
+        if not os.path.exists(filename):
+            raise FileNotFoundError(f'Config file does not exist: {filename}')
+        config.read(filenames=filename)
+        with open(filename) as fp:
+            comments = self._parse_comments(fp, filename, comments_before=True)
 
-    if config.has_option('paths', source_path):
-        source_path = config.get('paths', source_path)
+        if user:
+            self._user_config = {filename: config}
+        else:
+            self._configs[filename] = config
+        self._comments[filename] = comments
+        self._combined = None
+        self._combined_comments = None
+        self._sources = None
 
-    source_file = '{}/{}'.format(source_path, source)
-    source_file = os.path.abspath(source_file)
-    return source_file
+    def _combine(self):
+        self._combined = ConfigParser(interpolation=ExtendedInterpolation())
+        self._sources = dict()
+        self._combined_comments = dict()
+        for configs in [self._configs, self._user_config]:
+            for source, config in configs.items():
+                for section in config.sections():
+                    if section in self._comments[source]:
+                        self._combined_comments[section] = \
+                            self._comments[source][section]
+                    if not self._combined.has_section(section):
+                        self._combined.add_section(section)
+                    for option, value in config.items(section):
+                        self._sources[(section, option)] = source
+                        self._combined.set(section, option, value)
+                        self._combined_comments[(section, option)] = \
+                            self._comments[source][(section, option)]
+        self._ensure_absolute_paths()
+
+    def _ensure_absolute_paths(self):
+        """
+        make sure all paths in the paths, namelists, streams, and executables
+        sections are absolute paths
+        """
+        config = self._combined
+        for section in ['paths', 'namelists', 'streams', 'executables']:
+            if not config.has_section(section):
+                continue
+            for option, value in config.items(section):
+                value = os.path.abspath(value)
+                config.set(section, option, value)
+
+    @staticmethod
+    def _parse_comments(fp, filename, comments_before=True):
+        """ Parse the comments in a config file into a dictionary """
+        comments = dict()
+        current_comment = ''
+        section_name = None
+        option_name = None
+        indent_level = 0
+        for line_number, line in enumerate(fp, start=1):
+            value = line.strip()
+            is_comment = value.startswith('#')
+            if is_comment:
+                current_comment = current_comment + line
+            if len(value) == 0 or is_comment:
+                # end of value
+                indent_level = sys.maxsize
+                continue
+
+            cur_indent_level = len(line) - len(line.lstrip())
+            is_continuation = cur_indent_level > indent_level
+            # a section header or option header?
+            if section_name is None or option_name is None or \
+                    not is_continuation:
+                indent_level = cur_indent_level
+                # is it a section header?
+                is_section = value.startswith('[') and value.endswith(']')
+                if is_section:
+                    if not comments_before:
+                        if option_name is None:
+                            comments[section_name] = current_comment
+                        else:
+                            comments[(section_name, option_name)] = \
+                                current_comment
+                    section_name = value[1:-1].strip().lower()
+                    option_name = None
+
+                    if comments_before:
+                        comments[section_name] = current_comment
+                    current_comment = ''
+                # an option line?
+                else:
+                    delimiter_index = value.find('=')
+                    if delimiter_index == -1:
+                        raise ValueError(f'Expected to find "=" on line '
+                                         f'{line_number} of {filename}')
+
+                    if not comments_before:
+                        if option_name is None:
+                            comments[section_name] = current_comment
+                        else:
+                            comments[(section_name, option_name)] = \
+                                current_comment
+
+                    option_name = value[:delimiter_index].strip().lower()
+
+                    if comments_before:
+                        comments[(section_name, option_name)] = current_comment
+                    current_comment = ''
+
+        return comments

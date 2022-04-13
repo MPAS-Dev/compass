@@ -10,7 +10,7 @@ def get_available_cores_and_nodes(config):
 
     Parameters
     ----------
-    config : configparser.ConfigParser
+    config : compass.config.CompassConfigParser
         Configuration options for the test case
 
     Returns
@@ -49,7 +49,7 @@ def check_parallel_system(config):
 
     Parameters
     ----------
-    config : configparser.ConfigParser
+    config : compass.config.CompassConfigParser
         Configuration options
 
     Raises
@@ -77,7 +77,7 @@ def set_cores_per_node(config):
 
     Parameters
     ----------
-    config : configparser.ConfigParser
+    config : compass.config.CompassConfigParser
         Configuration options
     """
     parallel_system = config.get('parallel', 'system')

@@ -132,7 +132,7 @@ def plot_vertical_grid(grid_filename, config,
     grid_filename : str
         The name of the NetCDF file containing the vertical grid
 
-    config : configparser.ConfigParser
+    config : compass.config.CompassConfigParser
         Configuration options for the vertical grid
 
     out_filename : str, optional

@@ -1,4 +1,3 @@
-from compass.config import add_config
 from compass.ocean.tests.global_ocean.metadata import \
     get_author_and_email_from_git
 
@@ -20,8 +19,8 @@ def configure_global_ocean(test_case, mesh, init=None):
     """
     config = test_case.config
     mesh_step = mesh.mesh_step
-    add_config(config, mesh_step.package, mesh_step.mesh_config_filename,
-               exception=True)
+    config.add_from_package(mesh_step.package, mesh_step.mesh_config_filename,
+                            exception=True)
 
     if mesh.with_ice_shelf_cavities:
         config.set('global_ocean', 'prefix', '{}wISC'.format(

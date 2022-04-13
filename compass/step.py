@@ -1,6 +1,5 @@
 import os
 from lxml import etree
-import configparser
 from importlib.resources import path
 import shutil
 import numpy
@@ -94,7 +93,7 @@ class Step(ABC):
         a dictionary used internally to keep track of updates to the default
         streams from calls to :py:meth:`compass.Step.add_streams_file`
 
-    config : configparser.ConfigParser
+    config : compass.config.CompassConfigParser
         Configuration options for this test case, a combination of the defaults
         for the machine, core and configuration
 

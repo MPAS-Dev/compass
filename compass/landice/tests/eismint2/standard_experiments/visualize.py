@@ -51,7 +51,7 @@ def visualize_eismint2(config, logger, experiment):
 
     Parameters
     ----------
-    config : configparser.ConfigParser
+    config : compass.config.CompassConfigParser
         Configuration options for this test case, a combination of the defaults
         for the machine, core and configuration
 
