@@ -13,8 +13,8 @@ from mpas_tools.logging import check_call
 from compass.step import Step
 from compass.model import make_graph_file
 from compass.landice.mesh import gridded_flood_fill, \
-                                 set_rectangular_geom_points_and_edges, \
-                                 set_cell_width, get_dist_to_edge_and_GL
+    set_rectangular_geom_points_and_edges, \
+    set_cell_width, get_dist_to_edge_and_GL
 
 
 class Mesh(Step):
@@ -26,6 +26,7 @@ class Mesh(Step):
     mesh_type : str
         The resolution or mesh type of the test case
     """
+
     def __init__(self, test_case):
         """
         Create the step
@@ -41,11 +42,11 @@ class Mesh(Step):
         super().__init__(test_case=test_case, name='mesh')
 
         self.add_output_file(filename='graph.info')
-        self.add_output_file(filename='Antarctic_1to10km.nc')
+        self.add_output_file(filename='Antarctic_8to80km.nc')
         self.add_input_file(
-                filename='antarctica_8km_2020_10_20.nc',
-                target='antarctica_8km_2020_10_20.nc',
-                database='')
+            filename='antarctica_8km_2020_10_20.nc',
+            target='antarctica_8km_2020_10_20.nc',
+            database='')
 
     # no setup() method is needed
 
@@ -59,7 +60,7 @@ class Mesh(Step):
 
         logger.info('calling build_cell_width')
         cell_width, x1, y1, geom_points, geom_edges, floodFillMask = \
-                                                   self.build_cell_width()
+            self.build_cell_width()
         logger.info('calling build_planar_mesh')
         build_planar_mesh(cell_width, x1, y1, geom_points,
                           geom_edges, logger=logger)
@@ -80,13 +81,15 @@ class Mesh(Step):
         check_call(args, logger=logger)
 
         # Apply floodFillMask to thickness field to help with culling
-        copyfile('antarctica_8km_2020_10_20.nc', 'antarctica_8km_2020_10_20_floodFillMask.nc')
-        gg = netCDF4.Dataset('antarctica_8km_2020_10_20_floodFillMask.nc', 'r+')
-        gg.variables['thk'][0,:,:] *= floodFillMask
-        gg.variables['vx'][0,:,:] *= floodFillMask
-        gg.variables['vy'][0,:,:] *= floodFillMask
+        copyfile('antarctica_8km_2020_10_20.nc',
+                 'antarctica_8km_2020_10_20_floodFillMask.nc')
+        gg = netCDF4.Dataset('antarctica_8km_2020_10_20_floodFillMask.nc',
+                             'r+')
+        gg.variables['thk'][0, :, :] *= floodFillMask
+        gg.variables['vx'][0, :, :] *= floodFillMask
+        gg.variables['vy'][0, :, :] *= floodFillMask
         gg.close()
-        
+
         # This step uses a subset of the whole Antarctic dataset trimmed to
         # the region around Antarctica, to speed up interpolation.
         # This could also be replaced with the full Antarctic Ice Sheet
@@ -105,7 +108,7 @@ class Mesh(Step):
         if float(cullDistance) > 0.:
             logger.info('calling define_cullMask.py')
             args = ['define_cullMask.py', '-f',
-                    'ais_8km_preCull.nc', '-m'
+                    'ais_8km_preCull.nc', '-m',
                     'distance', '-d', cullDistance]
 
             check_call(args, logger=logger)
@@ -138,7 +141,7 @@ class Mesh(Step):
         logger.info('calling create_landice_grid_from_generic_MPAS_grid.py')
         args = ['create_landice_grid_from_generic_MPAS_grid.py', '-i',
                 'antarctic_dehorned.nc', '-o',
-                'Antarctic_1to10km.nc', '-l', levels, '-v', 'glimmer',
+                'Antarctic_8to80km.nc', '-l', levels, '-v', 'glimmer',
                 '--beta', '--thermal', '--obs', '--diri']
 
         check_call(args, logger=logger)
@@ -146,21 +149,21 @@ class Mesh(Step):
         logger.info('calling interpolate_to_mpasli_grid.py')
         args = ['interpolate_to_mpasli_grid.py', '-s',
                 'antarctica_8km_2020_10_20.nc',
-                '-d', 'Antarctic_1to10km.nc', '-m', 'b']
+                '-d', 'Antarctic_8to80km.nc', '-m', 'b']
         check_call(args, logger=logger)
 
         logger.info('Marking domain boundaries dirichlet')
         args = ['mark_domain_boundaries_dirichlet.py',
-                '-f', 'Antarctic_1to10km.nc']
+                '-f', 'Antarctic_8to80km.nc']
         check_call(args, logger=logger)
 
         logger.info('calling set_lat_lon_fields_in_planar_grid.py')
         args = ['set_lat_lon_fields_in_planar_grid.py', '-f',
-                'Antarctic_1to10km.nc', '-p', 'ais-bedmap2']
+                'Antarctic_8to80km.nc', '-p', 'ais-bedmap2']
         check_call(args, logger=logger)
 
         logger.info('creating graph.info')
-        make_graph_file(mesh_filename='Antarctic_1to10km.nc',
+        make_graph_file(mesh_filename='Antarctic_8to80km.nc',
                         graph_filename='graph.info')
 
     def build_cell_width(self):
@@ -191,7 +194,7 @@ class Mesh(Step):
         yy0 = -3333500
         yy1 = 3330500
         geom_points, geom_edges = set_rectangular_geom_points_and_edges(
-                                                           xx0, xx1, yy0, yy1)
+            xx0, xx1, yy0, yy1)
 
         # Remove ice not connected to the ice sheet.
         floodMask = gridded_flood_fill(thk)

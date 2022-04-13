@@ -2,6 +2,7 @@ import numpy as np
 import jigsawpy
 import time
 
+
 def gridded_flood_fill(field):
     """
     Generic flood-fill routine to create mask of connected elements
@@ -162,7 +163,7 @@ def set_cell_width(self, section, thk, vx=None, vy=None,
     # Make cell spacing function mapping from log speed to cell spacing
     if section.get('use_speed') == 'True':
         logger.info('Using speed for cell spacing')
-        speed = (vx**2 + vy**2)**0.5
+        speed = (vx ** 2 + vy ** 2) ** 0.5
         lspd = np.log10(speed)
         spacing = np.interp(lspd, [low_log_speed, high_log_speed],
                             [max_spac, min_spac], left=max_spac,
@@ -181,7 +182,7 @@ def set_cell_width(self, section, thk, vx=None, vy=None,
 
         spacing[thk == 0.0] = min_spac
     else:
-        spacing = max_spac*np.ones_like(thk)
+        spacing = max_spac * np.ones_like(thk)
 
     # Make cell spacing function mapping from distance to ice edge
     if section.get('use_dist_to_edge') == 'True':
@@ -191,7 +192,7 @@ def set_cell_width(self, section, thk, vx=None, vy=None,
                              right=max_spac)
         spacing2[thk == 0.0] = min_spac
     else:
-        spacing2 = max_spac*np.ones_like(thk)
+        spacing2 = max_spac * np.ones_like(thk)
 
     # Make cell spacing function mapping from distance to grounding line
     if section.get('use_dist_to_grounding_line') == 'True':
@@ -201,7 +202,7 @@ def set_cell_width(self, section, thk, vx=None, vy=None,
                              right=max_spac)
         spacing3[thk == 0.0] = min_spac
     else:
-        spacing3 = max_spac*np.ones_like(thk)
+        spacing3 = max_spac * np.ones_like(thk)
 
     # Merge cell spacing methods
     cell_width = np.minimum(spacing, spacing2)
@@ -213,7 +214,7 @@ def set_cell_width(self, section, thk, vx=None, vy=None,
     # that distance.
     if dist_to_edge is not None:
         cell_width[np.logical_and(thk == 0.0,
-                   dist_to_edge > (10. * cull_distance))] = max_spac
+                                  dist_to_edge > (10. * cull_distance))] = max_spac
 
     return cell_width
 
@@ -288,7 +289,7 @@ def get_dist_to_edge_and_GL(self, thk, topg, x, y, window_size=1.e5):
     dist_to_grounding_line = np.zeros(sz)
 
     d = int(np.ceil(window_size / dx))
-    rng = np.arange(-1*d, d, dtype='i')
+    rng = np.arange(-1 * d, d, dtype='i')
     max_dist = float(d) * dx
 
     # just look over areas with ice
@@ -304,8 +305,8 @@ def get_dist_to_edge_and_GL(self, thk, topg, x, y, window_size=1.e5):
         irng = irng[np.nonzero(np.logical_and(irng >= 0, irng < ny))]
         jrng = jrng[np.nonzero(np.logical_and(jrng >= 0, jrng < nx))]
 
-        dist_to_here = ((XPOS[np.ix_(irng, jrng)] - x[j])**2 +
-                        (YPOS[np.ix_(irng, jrng)] - y[i])**2)**0.5
+        dist_to_here = ((XPOS[np.ix_(irng, jrng)] - x[j]) ** 2 +
+                        (YPOS[np.ix_(irng, jrng)] - y[i]) ** 2) ** 0.5
 
         dist_to_here_edge = dist_to_here.copy()
         dist_to_here_grounding_line = dist_to_here.copy()
