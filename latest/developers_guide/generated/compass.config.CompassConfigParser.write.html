@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>compass.config.duplicate_config &mdash; compass latest documentation</title>
+  <title>compass.config.CompassConfigParser.write &mdash; compass latest documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -18,8 +18,8 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="compass.config.add_config" href="compass.config.add_config.html" />
-    <link rel="prev" title="compass.Step.update_streams_at_runtime" href="compass.Step.update_streams_at_runtime.html" /> 
+    <link rel="next" title="compass.config.CompassConfigParser.__getitem__" href="compass.config.CompassConfigParser.__getitem__.html" />
+    <link rel="prev" title="compass.config.CompassConfigParser.set" href="compass.config.CompassConfigParser.set.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -71,10 +71,19 @@
 <li class="toctree-l3"><a class="reference internal" href="../api.html#testcase">testcase</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#step">step</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="../api.html#config">config</a><ul class="current">
-<li class="toctree-l4 current"><a class="current reference internal" href="#">compass.config.duplicate_config</a></li>
-<li class="toctree-l4"><a class="reference internal" href="compass.config.add_config.html">compass.config.add_config</a></li>
-<li class="toctree-l4"><a class="reference internal" href="compass.config.ensure_absolute_paths.html">compass.config.ensure_absolute_paths</a></li>
-<li class="toctree-l4"><a class="reference internal" href="compass.config.get_source_file.html">compass.config.get_source_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compass.config.CompassConfigParser.html">compass.config.CompassConfigParser</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compass.config.CompassConfigParser.add_user_config.html">compass.config.CompassConfigParser.add_user_config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compass.config.CompassConfigParser.add_from_file.html">compass.config.CompassConfigParser.add_from_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compass.config.CompassConfigParser.add_from_package.html">compass.config.CompassConfigParser.add_from_package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compass.config.CompassConfigParser.get.html">compass.config.CompassConfigParser.get</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compass.config.CompassConfigParser.getint.html">compass.config.CompassConfigParser.getint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compass.config.CompassConfigParser.getfloat.html">compass.config.CompassConfigParser.getfloat</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compass.config.CompassConfigParser.getboolean.html">compass.config.CompassConfigParser.getboolean</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compass.config.CompassConfigParser.getlist.html">compass.config.CompassConfigParser.getlist</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compass.config.CompassConfigParser.has_option.html">compass.config.CompassConfigParser.has_option</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compass.config.CompassConfigParser.set.html">compass.config.CompassConfigParser.set</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">compass.config.CompassConfigParser.write</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compass.config.CompassConfigParser.__getitem__.html">compass.config.CompassConfigParser.__getitem__</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#io">io</a></li>
@@ -120,9 +129,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../api.html">API reference</a> &raquo;</li>
-      <li>compass.config.duplicate_config</li>
+      <li>compass.config.CompassConfigParser.write</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../_sources/developers_guide/generated/compass.config.duplicate_config.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/developers_guide/generated/compass.config.CompassConfigParser.write.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -130,19 +139,21 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="compass-config-duplicate-config">
-<h1>compass.config.duplicate_config<a class="headerlink" href="#compass-config-duplicate-config" title="Permalink to this headline">¶</a></h1>
-<dl class="py function">
-<dt class="sig sig-object py" id="compass.config.duplicate_config">
-<span class="sig-prename descclassname"><span class="pre">compass.config.</span></span><span class="sig-name descname"><span class="pre">duplicate_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compass/config.html#duplicate_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.config.duplicate_config" title="Permalink to this definition">¶</a></dt>
-<dd><p>Make a deep copy of config to changes can be made without affecting the
-original</p>
+  <section id="compass-config-compassconfigparser-write">
+<h1>compass.config.CompassConfigParser.write<a class="headerlink" href="#compass-config-compassconfigparser-write" title="Permalink to this headline">¶</a></h1>
+<dl class="py method">
+<dt class="sig sig-object py" id="compass.config.CompassConfigParser.write">
+<span class="sig-prename descclassname"><span class="pre">CompassConfigParser.</span></span><span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_sources</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_comments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compass/config.html#CompassConfigParser.write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.config.CompassConfigParser.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the config options to the given file pointer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/library/configparser.html#configparser.ConfigParser" title="(in Python v3.10)"><em>configparser.ConfigParser</em></a>) – Configuration options</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>new_config</strong> (<em>configparser.ConfigParser</em>) – Deep copy of configuration options</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fp</strong> (<em>TestIO</em>) – The file pointer to write to.</p></li>
+<li><p><strong>include_sources</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to include a comment above each option indicating the
+source file where it was defined</p></li>
+<li><p><strong>include_comments</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to include the original comments associated with each
+section or option</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -153,8 +164,8 @@ original</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="compass.Step.update_streams_at_runtime.html" class="btn btn-neutral float-left" title="compass.Step.update_streams_at_runtime" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="compass.config.add_config.html" class="btn btn-neutral float-right" title="compass.config.add_config" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="compass.config.CompassConfigParser.set.html" class="btn btn-neutral float-left" title="compass.config.CompassConfigParser.set" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="compass.config.CompassConfigParser.__getitem__.html" class="btn btn-neutral float-right" title="compass.config.CompassConfigParser.__getitem__" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>compass.config.ensure_absolute_paths &mdash; compass latest documentation</title>
+  <title>compass.config.CompassConfigParser.add_from_file &mdash; compass latest documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -18,8 +18,8 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="compass.config.get_source_file" href="compass.config.get_source_file.html" />
-    <link rel="prev" title="compass.config.add_config" href="compass.config.add_config.html" /> 
+    <link rel="next" title="compass.config.CompassConfigParser.add_from_package" href="compass.config.CompassConfigParser.add_from_package.html" />
+    <link rel="prev" title="compass.config.CompassConfigParser.add_user_config" href="compass.config.CompassConfigParser.add_user_config.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -71,10 +71,19 @@
 <li class="toctree-l3"><a class="reference internal" href="../api.html#testcase">testcase</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#step">step</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="../api.html#config">config</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="compass.config.duplicate_config.html">compass.config.duplicate_config</a></li>
-<li class="toctree-l4"><a class="reference internal" href="compass.config.add_config.html">compass.config.add_config</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">compass.config.ensure_absolute_paths</a></li>
-<li class="toctree-l4"><a class="reference internal" href="compass.config.get_source_file.html">compass.config.get_source_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compass.config.CompassConfigParser.html">compass.config.CompassConfigParser</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compass.config.CompassConfigParser.add_user_config.html">compass.config.CompassConfigParser.add_user_config</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">compass.config.CompassConfigParser.add_from_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compass.config.CompassConfigParser.add_from_package.html">compass.config.CompassConfigParser.add_from_package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compass.config.CompassConfigParser.get.html">compass.config.CompassConfigParser.get</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compass.config.CompassConfigParser.getint.html">compass.config.CompassConfigParser.getint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compass.config.CompassConfigParser.getfloat.html">compass.config.CompassConfigParser.getfloat</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compass.config.CompassConfigParser.getboolean.html">compass.config.CompassConfigParser.getboolean</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compass.config.CompassConfigParser.getlist.html">compass.config.CompassConfigParser.getlist</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compass.config.CompassConfigParser.has_option.html">compass.config.CompassConfigParser.has_option</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compass.config.CompassConfigParser.set.html">compass.config.CompassConfigParser.set</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compass.config.CompassConfigParser.write.html">compass.config.CompassConfigParser.write</a></li>
+<li class="toctree-l4"><a class="reference internal" href="compass.config.CompassConfigParser.__getitem__.html">compass.config.CompassConfigParser.__getitem__</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#io">io</a></li>
@@ -120,9 +129,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../api.html">API reference</a> &raquo;</li>
-      <li>compass.config.ensure_absolute_paths</li>
+      <li>compass.config.CompassConfigParser.add_from_file</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../_sources/developers_guide/generated/compass.config.ensure_absolute_paths.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/developers_guide/generated/compass.config.CompassConfigParser.add_from_file.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -130,16 +139,15 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="compass-config-ensure-absolute-paths">
-<h1>compass.config.ensure_absolute_paths<a class="headerlink" href="#compass-config-ensure-absolute-paths" title="Permalink to this headline">¶</a></h1>
-<dl class="py function">
-<dt class="sig sig-object py" id="compass.config.ensure_absolute_paths">
-<span class="sig-prename descclassname"><span class="pre">compass.config.</span></span><span class="sig-name descname"><span class="pre">ensure_absolute_paths</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compass/config.html#ensure_absolute_paths"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.config.ensure_absolute_paths" title="Permalink to this definition">¶</a></dt>
-<dd><p>make sure all paths in the paths, namelists and streams sections are
-absolute paths</p>
+  <section id="compass-config-compassconfigparser-add-from-file">
+<h1>compass.config.CompassConfigParser.add_from_file<a class="headerlink" href="#compass-config-compassconfigparser-add-from-file" title="Permalink to this headline">¶</a></h1>
+<dl class="py method">
+<dt class="sig sig-object py" id="compass.config.CompassConfigParser.add_from_file">
+<span class="sig-prename descclassname"><span class="pre">CompassConfigParser.</span></span><span class="sig-name descname"><span class="pre">add_from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compass/config.html#CompassConfigParser.add_from_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.config.CompassConfigParser.add_from_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add the contents of a config file to the parser.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/library/configparser.html#configparser.ConfigParser" title="(in Python v3.10)"><em>configparser.ConfigParser</em></a>) – Configuration options</p>
+<dd class="field-odd"><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The relative or absolute path to the config file</p>
 </dd>
 </dl>
 </dd></dl>
@@ -150,8 +158,8 @@ absolute paths</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="compass.config.add_config.html" class="btn btn-neutral float-left" title="compass.config.add_config" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="compass.config.get_source_file.html" class="btn btn-neutral float-right" title="compass.config.get_source_file" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="compass.config.CompassConfigParser.add_user_config.html" class="btn btn-neutral float-left" title="compass.config.CompassConfigParser.add_user_config" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="compass.config.CompassConfigParser.add_from_package.html" class="btn btn-neutral float-right" title="compass.config.CompassConfigParser.add_from_package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

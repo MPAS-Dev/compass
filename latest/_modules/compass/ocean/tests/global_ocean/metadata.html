@@ -120,7 +120,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    config : configparser.ConfigParser</span>
+<span class="sd">    config : compass.config.CompassConfigParser</span>
 <span class="sd">        Configuration options for this test case</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">author</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;author&#39;</span><span class="p">)</span>
@@ -156,7 +156,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    config : configparser.ConfigParser</span>
+<span class="sd">    config : compass.config.CompassConfigParser</span>
 <span class="sd">        Configuration options for this test case</span>
 
 <span class="sd">    levels : int</span>
@@ -171,10 +171,10 @@
 <span class="sd">        The long E3SM name of the ocean and sea-ice mesh</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;levels&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">levels</span><span class="p">))</span>
     <span class="n">mesh_prefix</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;prefix&#39;</span><span class="p">)</span>
     <span class="n">min_res</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;min_res&#39;</span><span class="p">)</span>
     <span class="n">max_res</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;max_res&#39;</span><span class="p">)</span>
-    <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;levels&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">levels</span><span class="p">))</span>
     <span class="n">e3sm_version</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;e3sm_version&#39;</span><span class="p">)</span>
     <span class="n">mesh_revision</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;mesh_revision&#39;</span><span class="p">)</span>
 
@@ -201,7 +201,7 @@
 <span class="sd">    output_filenames : list</span>
 <span class="sd">        A list of output files.</span>
 
-<span class="sd">    config : configparser.ConfigParser</span>
+<span class="sd">    config : compass.config.CompassConfigParser</span>
 <span class="sd">        Configuration options for this test case</span>
 
 <span class="sd">    init_filename : str</span>

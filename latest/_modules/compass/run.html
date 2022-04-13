@@ -107,7 +107,6 @@
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">pickle</span>
-<span class="kn">import</span> <span class="nn">configparser</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">glob</span>
 
@@ -115,6 +114,7 @@
 <span class="kn">import</span> <span class="nn">mpas_tools.io</span>
 <span class="kn">from</span> <span class="nn">compass.parallel</span> <span class="kn">import</span> <span class="n">check_parallel_system</span><span class="p">,</span> <span class="n">set_cores_per_node</span>
 <span class="kn">from</span> <span class="nn">compass.logging</span> <span class="kn">import</span> <span class="n">log_method_call</span>
+<span class="kn">from</span> <span class="nn">compass.config</span> <span class="kn">import</span> <span class="n">CompassConfigParser</span>
 
 
 <div class="viewcode-block" id="run_suite"><a class="viewcode-back" href="../../developers_guide/generated/compass.run.run_suite.html#compass.run.run_suite">[docs]</a><span class="k">def</span> <span class="nf">run_suite</span><span class="p">(</span><span class="n">suite_name</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -155,9 +155,8 @@
     <span class="n">test_case</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">test_suite</span><span class="p">[</span><span class="s1">&#39;test_cases&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
     <span class="n">config_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">test_case</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span>
                                    <span class="n">test_case</span><span class="o">.</span><span class="n">config_filename</span><span class="p">)</span>
-    <span class="n">config</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">(</span>
-        <span class="n">interpolation</span><span class="o">=</span><span class="n">configparser</span><span class="o">.</span><span class="n">ExtendedInterpolation</span><span class="p">())</span>
-    <span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">config_filename</span><span class="p">)</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">CompassConfigParser</span><span class="p">()</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">add_from_file</span><span class="p">(</span><span class="n">config_filename</span><span class="p">)</span>
     <span class="n">check_parallel_system</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 
     <span class="c1"># start logging to stdout/stderr</span>
@@ -197,9 +196,8 @@
 
                 <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">test_case</span><span class="o">.</span><span class="n">work_dir</span><span class="p">)</span>
 
-                <span class="n">config</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">(</span>
-                    <span class="n">interpolation</span><span class="o">=</span><span class="n">configparser</span><span class="o">.</span><span class="n">ExtendedInterpolation</span><span class="p">())</span>
-                <span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">test_case</span><span class="o">.</span><span class="n">config_filename</span><span class="p">)</span>
+                <span class="n">config</span> <span class="o">=</span> <span class="n">CompassConfigParser</span><span class="p">()</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">add_from_file</span><span class="p">(</span><span class="n">test_case</span><span class="o">.</span><span class="n">config_filename</span><span class="p">)</span>
                 <span class="n">test_case</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
                 <span class="n">set_cores_per_node</span><span class="p">(</span><span class="n">test_case</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
 
@@ -321,9 +319,8 @@
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;test_case.pickle&#39;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
         <span class="n">test_case</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
 
-    <span class="n">config</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">(</span>
-        <span class="n">interpolation</span><span class="o">=</span><span class="n">configparser</span><span class="o">.</span><span class="n">ExtendedInterpolation</span><span class="p">())</span>
-    <span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">test_case</span><span class="o">.</span><span class="n">config_filename</span><span class="p">)</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">CompassConfigParser</span><span class="p">()</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">add_from_file</span><span class="p">(</span><span class="n">test_case</span><span class="o">.</span><span class="n">config_filename</span><span class="p">)</span>
 
     <span class="n">check_parallel_system</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 
@@ -383,9 +380,8 @@
     <span class="n">test_case</span><span class="o">.</span><span class="n">steps_to_run</span> <span class="o">=</span> <span class="p">[</span><span class="n">step</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
     <span class="n">test_case</span><span class="o">.</span><span class="n">new_step_log_file</span> <span class="o">=</span> <span class="kc">False</span>
 
-    <span class="n">config</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">(</span>
-        <span class="n">interpolation</span><span class="o">=</span><span class="n">configparser</span><span class="o">.</span><span class="n">ExtendedInterpolation</span><span class="p">())</span>
-    <span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">step</span><span class="o">.</span><span class="n">config_filename</span><span class="p">)</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">CompassConfigParser</span><span class="p">()</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">add_from_file</span><span class="p">(</span><span class="n">step</span><span class="o">.</span><span class="n">config_filename</span><span class="p">)</span>
 
     <span class="n">check_parallel_system</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 
