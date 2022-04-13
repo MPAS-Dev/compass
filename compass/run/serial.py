@@ -123,6 +123,8 @@ def run_tests(suite_name, quiet=False, is_test_case=False, steps_to_run=None,
                 test_start = time.time()
                 log_method_call(method=test_case.run, logger=test_logger)
                 test_logger.info('')
+                test_list = ', '.join(test_case.steps_to_run)
+                test_logger.info(f'Running steps: {test_list}')
                 try:
                     test_case.run()
                     run_status = success_str
