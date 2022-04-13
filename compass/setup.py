@@ -253,7 +253,7 @@ def setup_case(path, test_case, config_file, machine, work_dir, baseline_dir,
 
     # set the mpas_model path from the command line if provided
     if mpas_model_path is not None:
-        config.set('paths', 'mpas_model', mpas_model_path)
+        config.set('paths', 'mpas_model', mpas_model_path, user=True)
 
     config.set('test_case', 'steps_to_run', ' '.join(test_case.steps_to_run))
 
