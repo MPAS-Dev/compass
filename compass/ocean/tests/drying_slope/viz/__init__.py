@@ -12,6 +12,19 @@ class Viz(Step):
     """
     A step for visualizing drying slope results, as well as comparison with
     analytical solution and ROMS results.
+
+    Attributes
+    ----------
+    damping_coeffs : list of float
+        Rayleigh damping coefficients used for the MPAS-Ocean and ROMS
+        forward runs
+
+    times : list of str
+        Time in days since the start of the simulation for which ROMS
+        comparison data is available
+
+    datatypes : list of str
+        The sources of data for comparison to the MPAS-Ocean run
     """
     def __init__(self, test_case):
         """
@@ -25,7 +38,7 @@ class Viz(Step):
         super().__init__(test_case=test_case, name='viz')
 
         damping_coeffs = [0.0025, 0.01]
-        times = ['0.50', '0.05', '0.40', '0.15', '0.30', '0.25']
+        times = ['0.05', '0.15', '0.25', '0.30', '0.40', '0.50']
         datatypes = ['analytical', 'ROMS']
         self.damping_coeffs = damping_coeffs
         self.times = times
@@ -36,7 +49,8 @@ class Viz(Step):
                                 target=f'../forward_{damping_coeff}/output.nc')
             for time in times:
                 for datatype in datatypes:
-                    filename = f'r{damping_coeff}d{time}-{datatype.lower()}.csv'
+                    filename = f'r{damping_coeff}d{time}-{datatype.lower()}'\
+                               '.csv'
                     self.add_input_file(filename=filename, target=filename,
                                         database='drying_slope')
 
@@ -61,8 +75,13 @@ class Viz(Step):
         self._plot_ssh_validation_for_movie(outFolder=outFolder)
         self._images_to_movies(framesPerSecond=frames_per_second,
                                outFolder=outFolder, extension=movie_format)
+
     def _plot_ssh_time_series(self, outFolder='.'):
         """
+        Plot ssh forcing on the right x boundary as a function of time against
+        the analytical solution. The agreement should be within machine
+        precision if the namelist options are consistent with the Warner et al.
+        (2013) test case.
         """
         colors = {'MPAS-O': 'k', 'analytical': 'b', 'ROMS': 'g'}
         xSsh = numpy.linspace(0, 12.0, 100)
@@ -71,7 +90,6 @@ class Viz(Step):
         figsize = [6.4, 4.8]
         markersize = 20
 
-        # SSH forcing figure
         damping_coeffs = self.damping_coeffs
         fig1, ax1 = plt.subplots(nrows=len(damping_coeffs), ncols=1,
                                  figsize=figsize, dpi=100)
@@ -97,11 +115,12 @@ class Viz(Step):
 
     def _plot_ssh_validation(self, outFolder='.'):
         """
-        Plot ssh as a function of along-channel distance for all times for which there is validation data
+        Plot ssh as a function of along-channel distance for all times for
+        which there is validation data
         """
         colors = {'MPAS-O': 'k', 'analytical': 'b', 'ROMS': 'g'}
 
-        locs = [9.3, 7.2, 4.2, 2.2, 1.2, 0.2]
+        locs = [7.2, 2.2, 0.2, 1.2, 4.2, 9.3]
         locs = 0.92 - numpy.divide(locs, 11.)
 
         times = self.times
@@ -164,7 +183,6 @@ class Viz(Step):
         fig2.savefig(f'{outFolder}/ssh_depth_section.png', dpi=200)
         plt.close(fig2)
 
-
     def _plot_ssh_validation_for_movie(self, outFolder='.'):
         """
         Compare ssh along the channel at different time slices with the
@@ -176,7 +194,7 @@ class Viz(Step):
         """
         colors = {'MPAS-O': 'k', 'analytical': 'b', 'ROMS': 'g'}
 
-        locs = [9.3, 7.2, 4.2, 2.2, 1.2, 0.2]
+        locs = [7.2, 2.2, 0.2, 1.2, 4.2, 9.3]
         locs = 0.92 - numpy.divide(locs, 11.)
 
         times = self.times
@@ -242,12 +260,13 @@ class Viz(Step):
             h, l1 = ax2[1].get_legend_handles_labels()
             ax2[1].legend(h[0:3], l1[0:3], frameon=False, loc='lower left')
 
-            fig2.savefig(f'{outFolder}/ssh_depth_section_{ii:03d}.png', dpi=200)
+            fig2.savefig(f'{outFolder}/ssh_depth_section_{ii:03d}.png',
+                         dpi=200)
             plt.close(fig2)
             ii += 1
 
     def _images_to_movies(self, outFolder='.', framesPerSecond=30,
-                         extension='mp4', overwrite=True):
+                          extension='mp4', overwrite=True):
         """
         Convert all the image sequences into movies with ffmpeg
         """
