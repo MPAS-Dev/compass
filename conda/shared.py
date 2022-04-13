@@ -29,8 +29,8 @@ def parse_args(bootstrap):
     parser.add_argument("-p", "--python", dest="python", type=str,
                         help="The python version to deploy")
     parser.add_argument("-i", "--mpi", dest="mpi", type=str,
-                        help="The MPI library (nompi, mpich, openmpi or a "
-                             "system flavor) to deploy")
+                        help="The MPI library to deploy, see the docs for "
+                             "details")
     parser.add_argument("-c", "--compiler", dest="compiler", type=str,
                         help="The name of the compiler")
     parser.add_argument("--env_only", dest="env_only", action='store_true',
