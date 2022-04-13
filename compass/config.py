@@ -199,7 +199,7 @@ class CompassConfigParser:
             self._combine()
         return self._combined.has_option(section, option)
 
-    def set(self, section, option, value=None, comment=None):
+    def set(self, section, option, value=None, comment=None, user=False):
         """
         Set the value of the given option in the given section.  The file from
          which this function was called is also retained for provenance.
@@ -218,14 +218,23 @@ class CompassConfigParser:
         comment : str, optional
             A comment to include with the config option when it is written
             to a file
+
+        user : bool, optional
+            Whether this config option was supplied by the user (e.g. through
+            a command-line flag) and should take priority over other sources
         """
         section = section.lower()
         option = option.lower()
         calling_frame = inspect.stack(context=2)[1]
         filename = os.path.abspath(calling_frame.filename)
-        if filename not in self._configs:
-            self._configs[filename] = RawConfigParser()
-        config = self._configs[filename]
+
+        if user:
+            config_dict = self._user_config
+        else:
+            config_dict = self._configs
+        if filename not in config_dict:
+            config_dict[filename] = RawConfigParser()
+        config = config_dict[filename]
         if not config.has_section(section):
             config.add_section(section)
         config.set(section, option, value)
@@ -312,22 +321,21 @@ class CompassConfigParser:
 
     def _combine(self):
         self._combined = ConfigParser(interpolation=ExtendedInterpolation())
-        configs = dict(self._configs)
-        configs.update(self._user_config)
         self._sources = dict()
         self._combined_comments = dict()
-        for source, config in configs.items():
-            for section in config.sections():
-                if section in self._comments[source]:
-                    self._combined_comments[section] = \
-                        self._comments[source][section]
-                if not self._combined.has_section(section):
-                    self._combined.add_section(section)
-                for option, value in config.items(section):
-                    self._sources[(section, option)] = source
-                    self._combined.set(section, option, value)
-                    self._combined_comments[(section, option)] = \
-                        self._comments[source][(section, option)]
+        for configs in [self._configs, self._user_config]:
+            for source, config in configs.items():
+                for section in config.sections():
+                    if section in self._comments[source]:
+                        self._combined_comments[section] = \
+                            self._comments[source][section]
+                    if not self._combined.has_section(section):
+                        self._combined.add_section(section)
+                    for option, value in config.items(section):
+                        self._sources[(section, option)] = source
+                        self._combined.set(section, option, value)
+                        self._combined_comments[(section, option)] = \
+                            self._comments[source][(section, option)]
         self._ensure_absolute_paths()
 
     def _ensure_absolute_paths(self):
