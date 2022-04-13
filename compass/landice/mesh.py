@@ -213,8 +213,9 @@ def set_cell_width(self, section, thk, vx=None, vy=None,
     # cell size in the final mesh. There may be a more rigorous way to set
     # that distance.
     if dist_to_edge is not None:
-        cell_width[np.logical_and(thk == 0.0,
-                                  dist_to_edge > (10. * cull_distance))] = max_spac
+        mask = np.logical_and(
+            thk == 0.0, dist_to_edge > (10. * cull_distance))
+        cell_width[mask] = max_spac
 
     return cell_width
 
