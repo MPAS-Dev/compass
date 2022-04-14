@@ -385,7 +385,7 @@ def write_load_compass(template_path, activ_path, conda_base, env_type,
     env_vars = f'{env_vars}\n' \
                f'export HDF5_USE_FILE_LOCKING=FALSE\n' \
                f'export LOAD_COMPASS_ENV={script_filename}'
-    if machine is not None:
+    if machine is not None and not machine.startswith('conda'):
         env_vars = f'{env_vars}\n' \
                    f'export COMPASS_MACHINE={machine}'
 
