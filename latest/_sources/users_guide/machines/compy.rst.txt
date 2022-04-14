@@ -42,8 +42,14 @@ suite:
     # the system MPI library to use for gnu compiler
     mpi_pgi = mvapich2
 
-    # the base path to system libraries to be added as part of setting up compass
-    system_libs =  /share/apps/E3SM/conda_envs/compass/system
+    # the base path for spack environments used by compass
+    spack = /share/apps/E3SM/conda_envs/compass/spack
+
+    # whether to use the same modules for hdf5, netcdf-c, netcdf-fortran and
+    # pnetcdf as E3SM (spack modules are used otherwise)
+    #
+    # We don't use them on Compy because hdf5 and netcdf were build without MPI
+    use_e3sm_hdf5_netcdf = False
 
 Additionally, some relevant config options come from the
 `mache <https://github.com/E3SM-Project/mache/>`_ package:
@@ -86,4 +92,4 @@ To build the MPAS model with
 
 .. code-block:: bash
 
-    make intel-mpi
+    make [DEBUG=true] [OPENMP=true] intel-mpi

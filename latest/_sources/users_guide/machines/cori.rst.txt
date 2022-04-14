@@ -42,8 +42,8 @@ Archive:
 Cori-Haswell
 ------------
 
-Since Cori's Haswell and KNL nodes have different configuration options and
-compilers, they are treated as separate supported machines in compass.
+Cori's Haswell and KNL nodes have different configuration options and
+compilers.  We only support Cori-Haswell at this time.
 
 config options
 ~~~~~~~~~~~~~~
@@ -84,8 +84,12 @@ cases or a test suite:
     # the system MPI library to use for gnu compiler
     mpi_gnu = mpt
 
-    # the base path to system libraries to be added as part of setting up compass
-    system_libs = /global/cfs/cdirs/e3sm/software/compass/cori-haswell/system
+    # the base path for spack environments used by compass
+    spack = /global/cfs/cdirs/e3sm/software/compass/cori-haswell/spack
+
+    # whether to use the same modules for hdf5, netcdf-c, netcdf-fortran and
+    # pnetcdf as E3SM (spack modules are used otherwise)
+    use_e3sm_hdf5_netcdf = True
 
     # the version of ESMF to build if using system compilers and MPI (don't build)
     esmf = None
@@ -131,7 +135,7 @@ To build the MPAS model with
 
 .. code-block:: bash
 
-    make intel-nersc
+    make [DEBUG=true] [OPENMP=true] intel-nersc
 
 
 Gnu on Cori-Haswell
@@ -148,96 +152,7 @@ To build the MPAS model with
 
 .. code-block:: bash
 
-    make gnu-nersc
-
-Cori-KNL
---------
-
-config options
-~~~~~~~~~~~~~~
-
-And here are the same for ``-m cori-knl``:
-
-.. code-block:: cfg
-
-    # The paths section describes paths that are used within the ocean core test
-    # cases.
-    [paths]
-
-    # The root to a location where the mesh_database, initial_condition_database,
-    # and bathymetry_database for MPAS-Ocean will be cached
-    ocean_database_root = /global/cfs/cdirs/e3sm/mpas_standalonedata/mpas-ocean
-
-    # The root to a location where the mesh_database and initial_condition_database
-    # for MALI will be cached
-    landice_database_root = /global/cfs/cdirs/e3sm/mpas_standalonedata/mpas-albany-landice
-
-    # the path to the base conda environment where compass environments have
-    # been created
-    compass_envs = /global/cfs/cdirs/e3sm/software/compass/cori-knl/base
-
-
-    # Options related to deploying a compass conda environment on supported
-    # machines
-    [deploy]
-
-    # the compiler set to use for system libraries and MPAS builds
-    compiler = intel
-
-    # the system MPI library to use for intel compiler
-    mpi_intel = impi
-
-    # the system MPI library to use for gnu compiler
-    mpi_gnu = mpt
-
-    # the base path to system libraries to be added as part of setting up compass
-    system_libs = /global/cfs/cdirs/e3sm/software/compass/cori-knl/system
-
-    # the version of ESMF to build if using system compilers and MPI (don't build)
-    esmf = None
-
-Additionally, some relevant config options come from the
-`mache <https://github.com/E3SM-Project/mache/>`_ package:
-
-.. code-block:: cfg
-
-    # The parallel section describes options related to running jobs in parallel
-    [parallel]
-
-    # parallel system of execution: slurm, cobalt or single_node
-    system = slurm
-
-    # whether to use mpirun or srun to run a task
-    parallel_executable = srun
-
-    # cores per node on the machine
-    cores_per_node = 68
-
-    # account for running diagnostics jobs
-    account = e3sm
-
-    # available configurations(s) (default is the first)
-    configurations = knl
-
-    # quality of service (default is the first)
-    qos = regular, premium, debug
-
-
-Intel on Cori-KNL
-~~~~~~~~~~~~~~~~~
-
-To load the compass environment and modules, and set appropriate environment
-variables:
-
-.. code-block:: bash
-
-    source /global/cfs/cdirs/e3sm/software/compass/cori-knl/load_latest_compass_intel_impi.sh
-
-To build the MPAS model with
-
-.. code-block:: bash
-
-    make intel-nersc
+    make [DEBUG=true] [OPENMP=true] [ALBANY=true] gnu-nersc
 
 
 Jupyter notebook on remote data

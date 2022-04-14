@@ -62,7 +62,6 @@
 <li class="toctree-l3"><a class="reference internal" href="chrysalis.html">Chrysalis</a></li>
 <li class="toctree-l3"><a class="reference internal" href="compy.html">CompyMcNodeFace</a></li>
 <li class="toctree-l3"><a class="reference internal" href="cori.html">Cori</a></li>
-<li class="toctree-l3"><a class="reference internal" href="grizzly.html">Grizzly</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#other-machines">Other Machines</a></li>
@@ -130,8 +129,52 @@
              
   <section id="badger">
 <span id="machine-badger"></span><h1>Badger<a class="headerlink" href="#badger" title="Permalink to this headline">¶</a></h1>
-<p>For details on LANL IC, see <a class="reference internal" href="grizzly.html#machine-grizzly"><span class="std std-ref">Grizzly</span></a>.</p>
-<p>login: <code class="docutils literal notranslate"><span class="pre">ssh</span> <span class="pre">-t</span> <span class="pre">$my_username&#64;wtrw.lanl.gov</span> <span class="pre">ssh</span> <span class="pre">ba-fe</span></code></p>
+<p><a class="reference external" href="https://int.lanl.gov/hpc/institutional-computing/index.shtml">LANL IC overview and search</a></p>
+<p><a class="reference external" href="http://hpccalendar.lanl.gov/">DST Calendar</a> (within LANL yellow)</p>
+<p>Information about Slurm:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://hpc.lanl.gov/job-scheduling/index.html#JobScheduling-IntroductiontoSlurm">Introduction to Slurm at LANL</a></p></li>
+<li><p><a class="reference external" href="https://hpc.lanl.gov/job-scheduling/basic-slurm-guide-for-lanl-hpc-users.html">Basic Slurm Guide for LANL HPC Users</a></p></li>
+<li><p><a class="reference external" href="https://hpc.lanl.gov/job-scheduling/slurm-commands.html">Slurm Command Summary</a></p></li>
+<li><p><a class="reference external" href="https://hpc.lanl.gov/job-scheduling/slurm-commands.html#SlurmCommands-SlurmJobSubmission">Slurm: Running Jobs on HPC Platforms</a></p></li>
+<li><p><a class="reference external" href="https://hpc.lanl.gov/job-scheduling/basic-slurm-guide-for-lanl-hpc-users.html#BasicSlurmGuideforLANLHPCUsers-BatchScriptGenerator">example of batch scripts</a></p></li>
+</ul>
+<p>Machine specifications: <a class="reference external" href="https://hpc.lanl.gov/platforms/badger.html">badger</a>
+<a class="reference external" href="https://hpc.lanl.gov/networks/turquoise-network/index.html">turquoise network</a></p>
+<p>login: <code class="docutils literal notranslate"><span class="pre">ssh</span> <span class="pre">-t</span> <span class="pre">$my_moniker&#64;wtrw.lanl.gov</span> <span class="pre">ssh</span> <span class="pre">ba-fe</span></code></p>
+<p>File locations:</p>
+<ul class="simple">
+<li><p>small home directory, for start-up scripts only: <code class="docutils literal notranslate"><span class="pre">/users/$my_moniker</span></code></p></li>
+<li><p>home directory, backed up: <code class="docutils literal notranslate"><span class="pre">/usr/projects/climate/$my_moniker</span></code></p></li>
+<li><p>scratch space, not backed up: <code class="docutils literal notranslate"><span class="pre">/lustre/scratch3/turquoise/$my_moniker</span></code> or
+<code class="docutils literal notranslate"><span class="pre">scratch4</span></code></p></li>
+</ul>
+<p>Check compute time:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">sacctmgr</span> <span class="pre">list</span> <span class="pre">assoc</span> <span class="pre">user=$my_moniker</span> <span class="pre">format=Cluster,Account%18,Partition,QOS%45</span></code></p></li>
+<li><p>Which is my default account? sacctmgr list user $my_moniker</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sshare</span> <span class="pre">-a</span> <span class="pre">|</span> <span class="pre">head</span> <span class="pre">-2;</span> <span class="pre">sshare</span> <span class="pre">-a</span> <span class="pre">|</span> <span class="pre">grep</span> <span class="pre">$ACCOUNT</span> <span class="pre">|</span> <span class="pre">head</span> <span class="pre">-1</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sreport</span> <span class="pre">-t</span> <span class="pre">Hours</span> <span class="pre">cluster</span> <span class="pre">AccountUtilizationByUser</span> <span class="pre">start=2019-12-02</span> <span class="pre">|</span> <span class="pre">grep</span> <span class="pre">$ACCOUNT</span></code></p></li>
+<li><p>check job priority: <code class="docutils literal notranslate"><span class="pre">sshare</span> <span class="pre">-a</span> <span class="pre">|</span> <span class="pre">head</span> <span class="pre">-2;</span> <span class="pre">sshare</span> <span class="pre">-a</span> <span class="pre">|</span> <span class="pre">grep</span> <span class="pre">$ACCOUNT</span></code></p></li>
+<li><p><a class="reference external" href="https://hpcinfo.lanl.gov">LANL Cluster Usage Overview</a> (within LANL yellow)</p></li>
+</ul>
+<p>Check disk usage:</p>
+<ul class="simple">
+<li><p>your home space: <code class="docutils literal notranslate"><span class="pre">chkhome</span></code></p></li>
+<li><p>total disk usage in Petabytes: <code class="docutils literal notranslate"><span class="pre">df</span> <span class="pre">-BP</span> <span class="pre">|head</span> <span class="pre">-n</span> <span class="pre">1;</span> <span class="pre">df</span> <span class="pre">-BP|grep</span> <span class="pre">climate;</span> <span class="pre">df</span> <span class="pre">-BP</span> <span class="pre">|grep</span> <span class="pre">scratch</span></code></p></li>
+</ul>
+<p>Archiving</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://hpc.lanl.gov/data/filesystems-and-storage-on-hpc-clusters/hpss-data-archive/index.html">turquoise HPSS archive</a></p></li>
+<li><p>archive front end: <code class="docutils literal notranslate"><span class="pre">ssh</span> <span class="pre">-t</span> <span class="pre">$my_moniker&#64;wtrw.lanl.gov</span> <span class="pre">ssh</span> <span class="pre">ar-tn</span></code></p></li>
+<li><p>storage available at: <code class="docutils literal notranslate"><span class="pre">cd</span> <span class="pre">/archive/&lt;project_name&gt;</span></code></p></li>
+<li><p>you can just copy files directly into here for a particular project.</p></li>
+</ul>
+<p>LANL uses slurm. To obtain an interactive node:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>salloc -N <span class="m">1</span> -t <span class="m">2</span>:0:0 --qos<span class="o">=</span>interactive
+</pre></div>
+</div>
+<p>Use <code class="docutils literal notranslate"><span class="pre">--account=ACCOUNT_NAME</span></code> to change to a particular account.</p>
 <section id="config-options">
 <h2>config options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
 <p>Here are the default config options added when Badger is automatically
@@ -167,8 +210,12 @@ suite:</p>
 <span class="c1"># the system MPI library to use for gnu compiler</span><span class="w"></span>
 <span class="na">mpi_gnu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">mvapich</span><span class="w"></span>
 
-<span class="c1"># the base path to system libraries to be added as part of setting up compass</span><span class="w"></span>
-<span class="na">system_libs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/usr/projects/climate/SHARED_CLIMATE/compass/badger/system</span><span class="w"></span>
+<span class="c1"># the base path for spack environments used by compass</span><span class="w"></span>
+<span class="na">spack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/usr/projects/climate/SHARED_CLIMATE/compass/badger/spack</span><span class="w"></span>
+
+<span class="c1"># whether to use the same modules for hdf5, netcdf-c, netcdf-fortran and</span><span class="w"></span>
+<span class="c1"># pnetcdf as E3SM (spack modules are used otherwise)</span><span class="w"></span>
+<span class="na">use_e3sm_hdf5_netcdf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span><span class="w"></span>
 </pre></div>
 </div>
 <p>Additionally, some relevant config options come from the
@@ -201,7 +248,7 @@ variables:</p>
 </pre></div>
 </div>
 <p>To build the MPAS model with</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make intel-mpi
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make <span class="o">[</span><span class="nv">DEBUG</span><span class="o">=</span>true<span class="o">]</span> <span class="o">[</span><span class="nv">OPENMP</span><span class="o">=</span>true<span class="o">]</span> intel-mpi
 </pre></div>
 </div>
 </section>
@@ -213,7 +260,7 @@ variables:</p>
 </pre></div>
 </div>
 <p>To build the MPAS model with</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make gfortran
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make <span class="o">[</span><span class="nv">DEBUG</span><span class="o">=</span>true<span class="o">]</span> <span class="o">[</span><span class="nv">OPENMP</span><span class="o">=</span>true<span class="o">]</span> <span class="o">[</span><span class="nv">ALBANY</span><span class="o">=</span>true<span class="o">]</span> gfortran
 </pre></div>
 </div>
 </section>

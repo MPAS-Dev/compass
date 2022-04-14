@@ -62,7 +62,6 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="compy.html">CompyMcNodeFace</a></li>
 <li class="toctree-l3"><a class="reference internal" href="cori.html">Cori</a></li>
-<li class="toctree-l3"><a class="reference internal" href="grizzly.html">Grizzly</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#other-machines">Other Machines</a></li>
@@ -165,8 +164,12 @@ test suite:</p>
 <span class="c1"># the system MPI library to use for gnu compiler</span><span class="w"></span>
 <span class="na">mpi_gnu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">openmpi</span><span class="w"></span>
 
-<span class="c1"># the base path to system libraries to be added as part of setting up compass</span><span class="w"></span>
-<span class="na">system_libs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/lcrc/soft/climate/compass/chrysalis/system</span><span class="w"></span>
+<span class="c1"># the base path for spack environments used by compass</span><span class="w"></span>
+<span class="na">spack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/lcrc/soft/climate/compass/chrysalis/spack</span><span class="w"></span>
+
+<span class="c1"># whether to use the same modules for hdf5, netcdf-c, netcdf-fortran and</span><span class="w"></span>
+<span class="c1"># pnetcdf as E3SM (spack modules are used otherwise)</span><span class="w"></span>
+<span class="na">use_e3sm_hdf5_netcdf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span><span class="w"></span>
 </pre></div>
 </div>
 <p>Additionally, some relevant config options come from the
@@ -196,7 +199,7 @@ variables:</p>
 </pre></div>
 </div>
 <p>To build the MPAS model with</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make intel-mpi
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make <span class="o">[</span><span class="nv">DEBUG</span><span class="o">=</span>true<span class="o">]</span> <span class="o">[</span><span class="nv">OPENMP</span><span class="o">=</span>true<span class="o">]</span> intel-mpi
 </pre></div>
 </div>
 </section>
@@ -208,7 +211,7 @@ variables:</p>
 </pre></div>
 </div>
 <p>To build the MPAS model with</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make gfortran
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make <span class="o">[</span><span class="nv">DEBUG</span><span class="o">=</span>true<span class="o">]</span> <span class="o">[</span><span class="nv">OPENMP</span><span class="o">=</span>true<span class="o">]</span> <span class="o">[</span><span class="nv">ALBANY</span><span class="o">=</span>true<span class="o">]</span> gfortran
 </pre></div>
 </div>
 </section>

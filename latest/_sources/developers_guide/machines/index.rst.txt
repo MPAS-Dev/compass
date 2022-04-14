@@ -34,6 +34,12 @@ you were setting things up.  You can can source this file on a compute node
 MPI libraries and environment variables for running ``compass`` tests and
 the MPAS model.
 
+.. note::
+
+  Albany (and therefore most of the functionality in MALI) is currently only
+  supported for those configurations with ``gnu`` compilers.
+
+
 +--------------+------------+-----------+-------------------+
 | Machine      | Compiler   | MPI lib.  |  MPAS make target |
 +==============+============+===========+===================+
@@ -63,12 +69,6 @@ the MPAS model.
 |              +------------+-----------+-------------------+
 |              | gnu        | mpt       | gnu-nersc         |
 +--------------+------------+-----------+-------------------+
-| cori-knl     | intel      | impi      | intel-mpi         |
-+--------------+------------+-----------+-------------------+
-| grizzly      | intel      | impi      | intel-mpi         |
-|              +------------+-----------+-------------------+
-|              | gnu        | mvapich   | gfortran          |
-+--------------+------------+-----------+-------------------+
 
 Below are specifics for each supported machine
 
@@ -80,7 +80,6 @@ Below are specifics for each supported machine
    chrysalis
    compy
    cori
-   grizzly
 
 
 .. _dev_other_machines:

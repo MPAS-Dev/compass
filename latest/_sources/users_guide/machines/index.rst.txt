@@ -48,8 +48,12 @@ The config options typically defined for a machine are:
     # the system MPI library to use for gnu compiler
     mpi_gnu = mvapich
 
-    # the base path to system libraries to be added as part of setting up compass
-    system_libs = /usr/projects/climate/SHARED_CLIMATE/compass/badger/system
+    # the base path for spack environments used by compass
+    spack = /usr/projects/climate/SHARED_CLIMATE/compass/badger/spack
+
+    # whether to use the same modules for hdf5, netcdf-c, netcdf-fortran and
+    # pnetcdf as E3SM (spack modules are used otherwise)
+    use_e3sm_hdf5_netcdf = False
 
 
 The ``paths`` section provides local paths to the root of the "databases"
@@ -139,7 +143,6 @@ to use the default MPI variant for each compiler on each machine.
    chrysalis
    compy
    cori
-   grizzly
 
 
 .. _other_machines:

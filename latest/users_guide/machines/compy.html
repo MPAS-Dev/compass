@@ -61,7 +61,6 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="cori.html">Cori</a></li>
-<li class="toctree-l3"><a class="reference internal" href="grizzly.html">Grizzly</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#other-machines">Other Machines</a></li>
@@ -164,8 +163,14 @@ suite:</p>
 <span class="c1"># the system MPI library to use for gnu compiler</span><span class="w"></span>
 <span class="na">mpi_pgi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">mvapich2</span><span class="w"></span>
 
-<span class="c1"># the base path to system libraries to be added as part of setting up compass</span><span class="w"></span>
-<span class="na">system_libs</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="s">/share/apps/E3SM/conda_envs/compass/system</span><span class="w"></span>
+<span class="c1"># the base path for spack environments used by compass</span><span class="w"></span>
+<span class="na">spack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/share/apps/E3SM/conda_envs/compass/spack</span><span class="w"></span>
+
+<span class="c1"># whether to use the same modules for hdf5, netcdf-c, netcdf-fortran and</span><span class="w"></span>
+<span class="c1"># pnetcdf as E3SM (spack modules are used otherwise)</span><span class="w"></span>
+<span class="c1">#</span><span class="w"></span>
+<span class="c1"># We don&#39;t use them on Compy because hdf5 and netcdf were build without MPI</span><span class="w"></span>
+<span class="na">use_e3sm_hdf5_netcdf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span><span class="w"></span>
 </pre></div>
 </div>
 <p>Additionally, some relevant config options come from the
@@ -201,7 +206,7 @@ variables:</p>
 </pre></div>
 </div>
 <p>To build the MPAS model with</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make intel-mpi
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make <span class="o">[</span><span class="nv">DEBUG</span><span class="o">=</span>true<span class="o">]</span> <span class="o">[</span><span class="nv">OPENMP</span><span class="o">=</span>true<span class="o">]</span> intel-mpi
 </pre></div>
 </div>
 </section>

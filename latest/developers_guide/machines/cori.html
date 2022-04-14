@@ -18,7 +18,7 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Grizzly" href="grizzly.html" />
+    <link rel="next" title="Troubleshooting" href="../troubleshooting.html" />
     <link rel="prev" title="CompyMcNodeFace" href="compy.html" /> 
 </head>
 
@@ -68,10 +68,8 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Cori</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#cori-haswell-intel">cori-haswell, intel</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#cori-haswell-gnu">cori-haswell, gnu</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#cori-knl-intel">cori-knl, intel</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="grizzly.html">Grizzly</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#other-machines">Other Machines</a></li>
@@ -134,7 +132,7 @@ able to source:</p>
 </pre></div>
 </div>
 <p>Then, you can build the MPAS model with</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make intel-nersc
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make <span class="o">[</span><span class="nv">DEBUG</span><span class="o">=</span>true<span class="o">]</span> <span class="o">[</span><span class="nv">OPENMP</span><span class="o">=</span>true<span class="o">]</span> intel-nersc
 </pre></div>
 </div>
 </section>
@@ -145,19 +143,7 @@ able to source:</p>
 </pre></div>
 </div>
 <p>Then, you can build the MPAS model with</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make gnu-nersc
-</pre></div>
-</div>
-</section>
-<section id="cori-knl-intel">
-<h2>cori-knl, intel<a class="headerlink" href="#cori-knl-intel" title="Permalink to this headline">¶</a></h2>
-<p>This is the default <code class="docutils literal notranslate"><span class="pre">compass</span></code> compiler on Cori-KNL.  If the environment has
-been set up properly (see <a class="reference internal" href="../quick_start.html#dev-conda-env"><span class="std std-ref">compass conda environment, compilers and system modules</span></a>), you should be able to source:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> load_dev_compass_1.0.0_cori-knl_intel_mpt.sh
-</pre></div>
-</div>
-<p>Then, you can build the MPAS model with</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make  intel-mpi
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make <span class="o">[</span><span class="nv">DEBUG</span><span class="o">=</span>true<span class="o">]</span> <span class="o">[</span><span class="nv">OPENMP</span><span class="o">=</span>true<span class="o">]</span> <span class="o">[</span><span class="nv">ALBANY</span><span class="o">=</span>true<span class="o">]</span> gnu-nersc
 </pre></div>
 </div>
 </section>
@@ -168,7 +154,7 @@ been set up properly (see <a class="reference internal" href="../quick_start.htm
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="compy.html" class="btn btn-neutral float-left" title="CompyMcNodeFace" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="grizzly.html" class="btn btn-neutral float-right" title="Grizzly" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../troubleshooting.html" class="btn btn-neutral float-right" title="Troubleshooting" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

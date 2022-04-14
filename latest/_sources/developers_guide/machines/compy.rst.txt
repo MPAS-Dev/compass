@@ -21,5 +21,5 @@ Then, you can build the MPAS model with
 
 .. code-block:: bash
 
-    make intel-mpi
+    make [DEBUG=true] [OPENMP=true] intel-mpi
 

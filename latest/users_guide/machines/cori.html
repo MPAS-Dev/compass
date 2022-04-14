@@ -18,7 +18,7 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Grizzly" href="grizzly.html" />
+    <link rel="next" title="Quick Start for Developers" href="../../developers_guide/quick_start.html" />
     <link rel="prev" title="CompyMcNodeFace" href="compy.html" /> 
 </head>
 
@@ -58,11 +58,9 @@
 <li class="toctree-l3"><a class="reference internal" href="compy.html">CompyMcNodeFace</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Cori</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#cori-haswell">Cori-Haswell</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#cori-knl">Cori-KNL</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#jupyter-notebook-on-remote-data">Jupyter notebook on remote data</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="grizzly.html">Grizzly</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#other-machines">Other Machines</a></li>
@@ -160,8 +158,8 @@ salloc --partition<span class="o">=</span>debug --nodes<span class="o">=</span><
 </ul>
 <section id="cori-haswell">
 <h2>Cori-Haswell<a class="headerlink" href="#cori-haswell" title="Permalink to this headline">¶</a></h2>
-<p>Since Cori’s Haswell and KNL nodes have different configuration options and
-compilers, they are treated as separate supported machines in compass.</p>
+<p>Cori’s Haswell and KNL nodes have different configuration options and
+compilers.  We only support Cori-Haswell at this time.</p>
 <section id="config-options">
 <h3>config options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h3>
 <p>Here are the default
@@ -197,8 +195,12 @@ cases or a test suite:</p>
 <span class="c1"># the system MPI library to use for gnu compiler</span><span class="w"></span>
 <span class="na">mpi_gnu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">mpt</span><span class="w"></span>
 
-<span class="c1"># the base path to system libraries to be added as part of setting up compass</span><span class="w"></span>
-<span class="na">system_libs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/e3sm/software/compass/cori-haswell/system</span><span class="w"></span>
+<span class="c1"># the base path for spack environments used by compass</span><span class="w"></span>
+<span class="na">spack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/e3sm/software/compass/cori-haswell/spack</span><span class="w"></span>
+
+<span class="c1"># whether to use the same modules for hdf5, netcdf-c, netcdf-fortran and</span><span class="w"></span>
+<span class="c1"># pnetcdf as E3SM (spack modules are used otherwise)</span><span class="w"></span>
+<span class="na">use_e3sm_hdf5_netcdf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span><span class="w"></span>
 
 <span class="c1"># the version of ESMF to build if using system compilers and MPI (don&#39;t build)</span><span class="w"></span>
 <span class="na">esmf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">None</span><span class="w"></span>
@@ -237,7 +239,7 @@ variables:</p>
 </pre></div>
 </div>
 <p>To build the MPAS model with</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make intel-nersc
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make <span class="o">[</span><span class="nv">DEBUG</span><span class="o">=</span>true<span class="o">]</span> <span class="o">[</span><span class="nv">OPENMP</span><span class="o">=</span>true<span class="o">]</span> intel-nersc
 </pre></div>
 </div>
 </section>
@@ -249,87 +251,7 @@ variables:</p>
 </pre></div>
 </div>
 <p>To build the MPAS model with</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make gnu-nersc
-</pre></div>
-</div>
-</section>
-</section>
-<section id="cori-knl">
-<h2>Cori-KNL<a class="headerlink" href="#cori-knl" title="Permalink to this headline">¶</a></h2>
-<section id="id1">
-<h3>config options<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
-<p>And here are the same for <code class="docutils literal notranslate"><span class="pre">-m</span> <span class="pre">cori-knl</span></code>:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># The paths section describes paths that are used within the ocean core test</span><span class="w"></span>
-<span class="c1"># cases.</span><span class="w"></span>
-<span class="k">[paths]</span><span class="w"></span>
-
-<span class="c1"># The root to a location where the mesh_database, initial_condition_database,</span><span class="w"></span>
-<span class="c1"># and bathymetry_database for MPAS-Ocean will be cached</span><span class="w"></span>
-<span class="na">ocean_database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/e3sm/mpas_standalonedata/mpas-ocean</span><span class="w"></span>
-
-<span class="c1"># The root to a location where the mesh_database and initial_condition_database</span><span class="w"></span>
-<span class="c1"># for MALI will be cached</span><span class="w"></span>
-<span class="na">landice_database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/e3sm/mpas_standalonedata/mpas-albany-landice</span><span class="w"></span>
-
-<span class="c1"># the path to the base conda environment where compass environments have</span><span class="w"></span>
-<span class="c1"># been created</span><span class="w"></span>
-<span class="na">compass_envs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/e3sm/software/compass/cori-knl/base</span><span class="w"></span>
-
-
-<span class="c1"># Options related to deploying a compass conda environment on supported</span><span class="w"></span>
-<span class="c1"># machines</span><span class="w"></span>
-<span class="k">[deploy]</span><span class="w"></span>
-
-<span class="c1"># the compiler set to use for system libraries and MPAS builds</span><span class="w"></span>
-<span class="na">compiler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">intel</span><span class="w"></span>
-
-<span class="c1"># the system MPI library to use for intel compiler</span><span class="w"></span>
-<span class="na">mpi_intel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">impi</span><span class="w"></span>
-
-<span class="c1"># the system MPI library to use for gnu compiler</span><span class="w"></span>
-<span class="na">mpi_gnu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">mpt</span><span class="w"></span>
-
-<span class="c1"># the base path to system libraries to be added as part of setting up compass</span><span class="w"></span>
-<span class="na">system_libs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/e3sm/software/compass/cori-knl/system</span><span class="w"></span>
-
-<span class="c1"># the version of ESMF to build if using system compilers and MPI (don&#39;t build)</span><span class="w"></span>
-<span class="na">esmf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">None</span><span class="w"></span>
-</pre></div>
-</div>
-<p>Additionally, some relevant config options come from the
-<a class="reference external" href="https://github.com/E3SM-Project/mache/">mache</a> package:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># The parallel section describes options related to running jobs in parallel</span><span class="w"></span>
-<span class="k">[parallel]</span><span class="w"></span>
-
-<span class="c1"># parallel system of execution: slurm, cobalt or single_node</span><span class="w"></span>
-<span class="na">system</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">slurm</span><span class="w"></span>
-
-<span class="c1"># whether to use mpirun or srun to run a task</span><span class="w"></span>
-<span class="na">parallel_executable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">srun</span><span class="w"></span>
-
-<span class="c1"># cores per node on the machine</span><span class="w"></span>
-<span class="na">cores_per_node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">68</span><span class="w"></span>
-
-<span class="c1"># account for running diagnostics jobs</span><span class="w"></span>
-<span class="na">account</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">e3sm</span><span class="w"></span>
-
-<span class="c1"># available configurations(s) (default is the first)</span><span class="w"></span>
-<span class="na">configurations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">knl</span><span class="w"></span>
-
-<span class="c1"># quality of service (default is the first)</span><span class="w"></span>
-<span class="na">qos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">regular, premium, debug</span><span class="w"></span>
-</pre></div>
-</div>
-</section>
-<section id="intel-on-cori-knl">
-<h3>Intel on Cori-KNL<a class="headerlink" href="#intel-on-cori-knl" title="Permalink to this headline">¶</a></h3>
-<p>To load the compass environment and modules, and set appropriate environment
-variables:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> /global/cfs/cdirs/e3sm/software/compass/cori-knl/load_latest_compass_intel_impi.sh
-</pre></div>
-</div>
-<p>To build the MPAS model with</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make intel-nersc
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make <span class="o">[</span><span class="nv">DEBUG</span><span class="o">=</span>true<span class="o">]</span> <span class="o">[</span><span class="nv">OPENMP</span><span class="o">=</span>true<span class="o">]</span> <span class="o">[</span><span class="nv">ALBANY</span><span class="o">=</span>true<span class="o">]</span> gnu-nersc
 </pre></div>
 </div>
 </section>
@@ -389,7 +311,7 @@ the path described in the install command output.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="compy.html" class="btn btn-neutral float-left" title="CompyMcNodeFace" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="grizzly.html" class="btn btn-neutral float-right" title="Grizzly" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../../developers_guide/quick_start.html" class="btn btn-neutral float-right" title="Quick Start for Developers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
