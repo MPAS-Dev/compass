@@ -289,20 +289,17 @@ in the repository.
     # whether to use mpirun or srun to run the model
     parallel_executable = mpirun -host localhost
 
-    # cores per node on the machine
-    cores_per_node = 4
-
-    # the number of multiprocessing or dask threads to use
-    threads = 4
+    # cores per node on the machine, detected automatically by default
+    # cores_per_node = 4
 
 The two ``*_database_root`` directories can point to locations where you would
 like to download data for MALI and MPAS-Ocean.  This data is downloaded only
 once and cached for the next time you call ``compass setup`` or
 ``compass suite`` (see below).
 
-The ``cores_per_node`` and ``threads`` config options should be the number of
-CPUs on your computer.  You can set this to a smaller number if you want
-``compass``.
+The ``cores_per_node`` config option will default to the number of CPUs on your
+computer.  You can set this to a smaller number if you want ``compass`` to
+use fewer cores.
 
 In order to run regression testing that compares the output of the current run
 with that from a previous compass run, use ``-b <previous_workdir>`` to specify

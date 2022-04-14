@@ -269,13 +269,10 @@ in your user config file:</p>
 <span class="na">system</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">single_node</span><span class="w"></span>
 
 <span class="c1"># whether to use mpirun or srun to run the model</span><span class="w"></span>
-<span class="na">parallel_executable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">mpirun</span><span class="w"></span>
+<span class="na">parallel_executable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">mpirun -host localhost</span><span class="w"></span>
 
-<span class="c1"># cores per node on the machine</span><span class="w"></span>
-<span class="na">cores_per_node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span><span class="w"></span>
-
-<span class="c1"># the number of multiprocessing or dask threads to use</span><span class="w"></span>
-<span class="na">threads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span><span class="w"></span>
+<span class="c1"># cores per node on the machine, detected automatically by default</span><span class="w"></span>
+<span class="c1"># cores_per_node = 4</span><span class="w"></span>
 </pre></div>
 </div>
 <p>The paths for the MPAS core “databases” can be any emtpy path to begin with.

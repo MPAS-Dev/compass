@@ -347,20 +347,17 @@ in the repository.</p>
 <span class="c1"># whether to use mpirun or srun to run the model</span><span class="w"></span>
 <span class="na">parallel_executable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">mpirun -host localhost</span><span class="w"></span>
 
-<span class="c1"># cores per node on the machine</span><span class="w"></span>
-<span class="na">cores_per_node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span><span class="w"></span>
-
-<span class="c1"># the number of multiprocessing or dask threads to use</span><span class="w"></span>
-<span class="na">threads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span><span class="w"></span>
+<span class="c1"># cores per node on the machine, detected automatically by default</span><span class="w"></span>
+<span class="c1"># cores_per_node = 4</span><span class="w"></span>
 </pre></div>
 </div>
 <p>The two <code class="docutils literal notranslate"><span class="pre">*_database_root</span></code> directories can point to locations where you would
 like to download data for MALI and MPAS-Ocean.  This data is downloaded only
 once and cached for the next time you call <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">setup</span></code> or
 <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">suite</span></code> (see below).</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">cores_per_node</span></code> and <code class="docutils literal notranslate"><span class="pre">threads</span></code> config options should be the number of
-CPUs on your computer.  You can set this to a smaller number if you want
-<code class="docutils literal notranslate"><span class="pre">compass</span></code>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">cores_per_node</span></code> config option will default to the number of CPUs on your
+computer.  You can set this to a smaller number if you want <code class="docutils literal notranslate"><span class="pre">compass</span></code> to
+use fewer cores.</p>
 <p>In order to run regression testing that compares the output of the current run
 with that from a previous compass run, use <code class="docutils literal notranslate"><span class="pre">-b</span> <span class="pre">&lt;previous_workdir&gt;</span></code> to specify
 a “baseline”.</p>
