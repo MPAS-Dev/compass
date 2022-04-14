@@ -17,7 +17,13 @@ Then, you can build the MPAS model with
 
 .. code-block:: bash
 
-    make intel-mpi
+    make [DEBUG=true] [OPENMP=true] intel-mpi
+
+For other MPI libraries (``openmpi`` or ``mvapich`` instead of ``impi``), use
+
+.. code-block:: bash
+
+    make [DEBUG=true] [OPENMP=true] ifort
 
 gnu
 ---
@@ -32,4 +38,4 @@ Then, you can build the MPAS model with
 
 .. code-block:: bash
 
-    make gfortran
+    make [DEBUG=true] [OPENMP=true] [ALBANY=true] gfortran

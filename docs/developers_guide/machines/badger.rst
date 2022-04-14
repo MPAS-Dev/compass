@@ -6,7 +6,7 @@ Badger
 .. note::
 
   It is important that you not point to custom module files for the compiler,
-  MPI, and netcdf modules on Grizzly to work properly.  If you have:
+  MPI, and netcdf modules on Badger to work properly.  If you have:
 
   .. code-block:: bash
 
@@ -33,7 +33,7 @@ Then, you can build the MPAS model with
 
 .. code-block:: bash
 
-    make intel-mpi
+    make [DEBUG=true] [OPENMP=true] intel-mpi
 
 gnu
 ---
@@ -48,4 +48,4 @@ Then, you can build the MPAS model with
 
 .. code-block:: bash
 
-    make gfortran
+    make [DEBUG=true] [OPENMP=true] [ALBANY=true] gfortran

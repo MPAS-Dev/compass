@@ -2211,9 +2211,7 @@ The available machines are listed with:
        default
        cori-haswell
        chrysalis
-       cori-knl
        compy
-       grizzly
 
 When setting up a test case or test suite, the ``--machine`` or ``-m`` flag
 is used to specify the machine.

@@ -21,14 +21,16 @@ def parse_args(bootstrap):
                              "related config options")
     parser.add_argument("--conda", dest="conda_base",
                         help="Path to the conda base")
+    parser.add_argument("--spack", dest="spack_base",
+                        help="Path to the spack base")
     parser.add_argument("--env_name", dest="env_name",
                         help="The conda environment name and activation script"
                              " prefix")
     parser.add_argument("-p", "--python", dest="python", type=str,
                         help="The python version to deploy")
     parser.add_argument("-i", "--mpi", dest="mpi", type=str,
-                        help="The MPI library (nompi, mpich, openmpi or a "
-                             "system flavor) to deploy")
+                        help="The MPI library to deploy, see the docs for "
+                             "details")
     parser.add_argument("-c", "--compiler", dest="compiler", type=str,
                         help="The name of the compiler")
     parser.add_argument("--env_only", dest="env_only", action='store_true',
@@ -44,6 +46,17 @@ def parse_args(bootstrap):
                              "packages")
     parser.add_argument("--use_local", dest="use_local", action='store_true',
                         help="Use locally built conda packages (for testing).")
+    parser.add_argument("--update_spack", dest="update_spack",
+                        action='store_true',
+                        help="If the shared spack environment should be "
+                             "created or recreated.")
+    parser.add_argument("--tmpdir", dest="tmpdir",
+                        help="A temporary directory for building spack "
+                             "packages")
+    parser.add_argument("--with_albany", dest="with_albany",
+                        action='store_true',
+                        help="Whether to include albany in the spack "
+                             "environment")
     if bootstrap:
         parser.add_argument("--local_conda_build", dest="local_conda_build",
                             type=str,
@@ -73,6 +86,18 @@ def get_conda_base(conda_base, config, shared=False):
     # handle "~" in the path
     conda_base = os.path.abspath(os.path.expanduser(conda_base))
     return conda_base
+
+
+def get_spack_base(spack_base, config):
+    if spack_base is None:
+        if config.has_option('deploy', 'spack'):
+            spack_base = config.get('deploy', 'spack')
+        else:
+            raise ValueError('No spack base provided with --spack and none is '
+                             'provided in a config file.')
+    # handle "~" in the path
+    spack_base = os.path.abspath(os.path.expanduser(spack_base))
+    return spack_base
 
 
 def check_call(commands, env=None):
