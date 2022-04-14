@@ -64,9 +64,9 @@ class DecompositionTest(TestCase):
                               variables=['thickness', ],
                               filename1='{}/output.nc'.format(name1),
                               filename2='{}/output.nc'.format(name2),
-                              l1_norm=1.0e-11,
-                              l2_norm=1.0e-11,
-                              linf_norm=1.0e-11,
+                              l1_norm=1.0e-4,
+                              l2_norm=1.0e-4,
+                              linf_norm=1.0e-4,
                               quiet=False)
 
             # validate normalVelocity
@@ -74,7 +74,7 @@ class DecompositionTest(TestCase):
                               variables=['normalVelocity', ],
                               filename1='{}/output.nc'.format(name1),
                               filename2='{}/output.nc'.format(name2),
-                              l1_norm=1.0e-13,
-                              l2_norm=1.0e-15,
-                              linf_norm=1.0e-16,
+                              l1_norm=1.0e-5,
+                              l2_norm=1.0e-5,
+                              linf_norm=1.0e-5,
                               quiet=False)
