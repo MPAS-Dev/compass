@@ -171,13 +171,10 @@ in your user config file:
     system = single_node
 
     # whether to use mpirun or srun to run the model
-    parallel_executable = mpirun
+    parallel_executable = mpirun -host localhost
 
-    # cores per node on the machine
-    cores_per_node = 4
-
-    # the number of multiprocessing or dask threads to use
-    threads = 4
+    # cores per node on the machine, detected automatically by default
+    # cores_per_node = 4
 
 The paths for the MPAS core "databases" can be any emtpy path to begin with.
 If the path doesn't exist, ``compass`` will create it.
