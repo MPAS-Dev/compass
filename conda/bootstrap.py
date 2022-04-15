@@ -305,7 +305,7 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, env_name,
     if esmf != 'None':
         specs.append(f'esmf@{esmf}+mpi+netcdf~pio+pnetcdf')
     if scorpio != 'None':
-        specs.append(f'scorpio@{scorpio}+pnetcdf~timing+internal-timing~tools+malloc')
+        specs.append(f'scorpio@{scorpio}+pnetcdf+timing+internal-timing~tools+malloc')
 
     if albany != 'None':
         specs.append(f'albany@{albany}+mpas')
