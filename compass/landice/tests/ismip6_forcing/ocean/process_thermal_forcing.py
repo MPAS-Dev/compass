@@ -2,7 +2,8 @@ import os
 import pandas as pd
 import subprocess
 import xarray as xr
-from compass.landice.tests.ismip6_forcing.ocean.create_mapfile import build_mapping_file
+from compass.landice.tests.ismip6_forcing.ocean.create_mapfile \
+    import build_mapping_file
 from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
 from compass.step import Step

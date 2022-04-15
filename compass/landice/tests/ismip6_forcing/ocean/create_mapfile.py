@@ -74,7 +74,6 @@ def build_mapping_file(ismip6_grid_file, mapping_file, mali_mesh_file=None,
             "-i", "-64bit_offset",
             "--dst_regional", "--src_regional"]
 
-
     # include flag and input and output file names
     subprocess.check_call(args)
 

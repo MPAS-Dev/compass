@@ -129,7 +129,7 @@ def create_atm_scrip(ismip6_grid_file, ismip6_scripfile):
 
     out_file.variables['grid_center_lat'][:] = ds.lat.values.flat
     out_file.variables['grid_center_lon'][:] = ds.lon.values.flat
-    out_file.variables['grid_dims'][:] = [nx, ny]  # => check the scrip format docs
+    out_file.variables['grid_dims'][:] = [nx, ny]
     out_file.variables['grid_imask'][:] = 1
 
     lat_corner = ds.lat_bnds
