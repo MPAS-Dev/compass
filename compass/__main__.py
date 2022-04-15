@@ -4,8 +4,9 @@ import sys
 import argparse
 import os
 
-from compass import list, setup, clean, suite, run, cache
+from compass import list, setup, clean, suite, cache
 from compass.version import __version__
+import compass.run.serial as run_serial
 
 
 def main():
@@ -49,7 +50,7 @@ The available compass commands are:
                 'setup': setup.main,
                 'clean': clean.main,
                 'suite': suite.main,
-                'run': run.main}
+                'run': run_serial.main}
     if allow_cache:
         commands['cache'] = cache.main
 

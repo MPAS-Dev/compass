@@ -72,32 +72,34 @@ with before at least some steps in the suite will fail.
 
 .. _dev_run:
 
-run module
-~~~~~~~~~~
+run.serial module
+~~~~~~~~~~~~~~~~~
 
-The :py:func:`compass.run.run_suite()`, :py:func:`compass.run.run_test_case()`,
-and :py:func:`compass.run.run_step()` functions are used to run a test suite,
-test case or step, respectively, from the base, test case or step work
-directory, respectively, using ``compass run``.  Each of these functions reads
-a local pickle file to retrieve information about the test suite, test case
-and/or step that was stored during setup.
+The function :py:func:`compass.run.serial.run_tests()` is used to run a
+test suite or test case and :py:func:`compass.run.serial.run_step()` is used to
+run a step using ``compass run``.  Suites run from the base work directory
+with a pickle file starting with the suite name, or ``custom.pickle`` if a
+suite name was not given. Test cases or steps run from their respective
+subdirectories with a ``testcase.pickle`` or ``step.pickle`` file in them.
+Both of these functions reads the local pickle file to retrieve information
+about the test suite, test case and/or step that was stored during setup.
 
-:py:func:`compass.run.run_suite()` runs each test case in the test suite in
-the order that they are given in the text file defining the suite
-(``compass/<mpas_core>/suites/<suite_name>.txt``).  It displays a ``PASS`` or
-``FAIL`` message for the test execution, as well as similar messages for
-validation involving output within the test case or suite and validation
-against a baseline (depending on the implementation of the ``validate()``
-method in the test case and whether a baseline was provided during setup).
-Output from test cases and their steps are stored in log files in
-the ``case_output`` subdirectory of the base work directory.
+If :py:func:`compass.run.serial.run_tests()` is used for a test suite, it will
+run each test case in the test suite in the order that they are given in the
+text file defining the suite (``compass/<mpas_core>/suites/<suite_name>.txt``).
+Output from test cases and their steps are stored in log files in the
+``case_output`` subdirectory of the base work directory. If the function is
+used for a single test case, it will run the steps of that test case, writing
+output for each step to a log file starting with the step's name. In either
+case (suite or individual test), it displays a ``PASS`` or ``FAIL`` message for
+the test execution, as well as similar messages for validation involving output
+within the test case or suite and validation against a baseline (depending on
+the implementation of the ``validate()`` method in the test case and whether a
+baseline was provided during setup).
 
-:py:func:`compass.run.run_test_case()` and :py:func:`compass.run.run_step()`
-run a single test case.  In the latter case, only the selected step from the
-test case is run, skipping any others.  If running the full test case, output
-from individual steps are stored in log files ``<step>.log`` in the test case's
-work directory.  The results of validation (if any) are displayed in the final
-stage of running the test case.
+:py:func:`compass.run.run_step()` runs only the selected step from a given
+test case, skipping any others, displaying the output in the terminal window
+rather than a log file.
 
 .. _dev_cache:
 

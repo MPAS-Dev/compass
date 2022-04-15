@@ -12,9 +12,10 @@ from compass.logging import log_method_call
 from compass.config import CompassConfigParser
 
 
-def run_suite(suite_name, quiet=False):
+def run_tests(suite_name, quiet=False, is_test_case=False, steps_to_run=None,
+              steps_not_to_run=None):
     """
-    Run the given test suite
+    Run the given test suite or test case
 
     Parameters
     ----------
@@ -25,6 +26,17 @@ def run_suite(suite_name, quiet=False):
         Whether step names are not included in the output as the test suite
         progresses
 
+    is_test_case : bool
+        Whether this is a test case instead of a full test suite
+
+    steps_to_run : list of str, optional
+        A list of the steps to run if this is a test case, not a full suite.
+        The default behavior is to run the default steps unless they are in
+        ``steps_not_to_run``
+
+    steps_not_to_run : list of str, optional
+        A list of steps not to run if this is a test case, not a full suite.
+        Typically, these are steps to remove from the defaults
     """
     # ANSI fail text: https://stackoverflow.com/a/287944/7728169
     start_fail = '\033[91m'
@@ -59,10 +71,11 @@ def run_suite(suite_name, quiet=False):
 
         os.environ['PYTHONUNBUFFERED'] = '1'
 
-        try:
-            os.makedirs('case_outputs')
-        except OSError:
-            pass
+        if not is_test_case:
+            try:
+                os.makedirs('case_outputs')
+            except OSError:
+                pass
 
         failures = 0
         cwd = os.getcwd()
@@ -75,9 +88,14 @@ def run_suite(suite_name, quiet=False):
             logger.info('{}'.format(test_name))
 
             test_name = test_case.path.replace('/', '_')
-            log_filename = '{}/case_outputs/{}.log'.format(cwd, test_name)
-            with LoggingContext(test_name, log_filename=log_filename) as \
-                    test_logger:
+            if is_test_case:
+                log_filename = None
+                test_logger = logger
+            else:
+                log_filename = '{}/case_outputs/{}.log'.format(cwd, test_name)
+                test_logger = None
+            with LoggingContext(test_name, logger=test_logger,
+                                log_filename=log_filename) as test_logger:
                 if quiet:
                     # just log the step names and any failure messages to the
                     # log file
@@ -87,7 +105,7 @@ def run_suite(suite_name, quiet=False):
                     test_case.stdout_logger = logger
                 test_case.logger = test_logger
                 test_case.log_filename = log_filename
-                test_case.new_step_log_file = False
+                test_case.new_step_log_file = is_test_case
 
                 os.chdir(test_case.work_dir)
 
@@ -99,12 +117,14 @@ def run_suite(suite_name, quiet=False):
                 mpas_tools.io.default_format = config.get('io', 'format')
                 mpas_tools.io.default_engine = config.get('io', 'engine')
 
-                test_case.steps_to_run = config.get(
-                    'test_case', 'steps_to_run').replace(',', ' ').split()
+                test_case.steps_to_run = _update_steps_to_run(
+                    steps_to_run, steps_not_to_run, config, test_case.steps)
 
                 test_start = time.time()
                 log_method_call(method=test_case.run, logger=test_logger)
                 test_logger.info('')
+                test_list = ', '.join(test_case.steps_to_run)
+                test_logger.info(f'Running steps: {test_list}')
                 try:
                     test_case.run()
                     run_status = success_str
@@ -196,75 +216,6 @@ def run_suite(suite_name, quiet=False):
             sys.exit(1)
 
 
-def run_test_case(steps_to_run=None, steps_not_to_run=None):
-    """
-    Used by the framework to run a test case when ``compass run`` gets called
-    in the test case's work directory
-
-    Parameters
-    ----------
-    steps_to_run : list of str, optional
-        A list of the steps to run.  The default behavior is to run the default
-        steps unless they are in ``steps_not_to_run``
-
-    steps_not_to_run : list of str, optional
-        A list of steps not to run.  Typically, these are steps to remove from
-        the defaults
-    """
-    with open('test_case.pickle', 'rb') as handle:
-        test_case = pickle.load(handle)
-
-    config = CompassConfigParser()
-    config.add_from_file(test_case.config_filename)
-
-    check_parallel_system(config)
-
-    test_case.config = config
-    set_cores_per_node(test_case.config)
-
-    mpas_tools.io.default_format = config.get('io', 'format')
-    mpas_tools.io.default_engine = config.get('io', 'engine')
-
-    if steps_to_run is None:
-        steps_to_run = config.get('test_case',
-                                  'steps_to_run').replace(',', ' ').split()
-
-    for step in steps_to_run:
-        if step not in test_case.steps:
-            raise ValueError(
-                'A step "{}" was requested but is not one of the steps in '
-                'this test case:\n{}'.format(step, list(test_case.steps)))
-
-    if steps_not_to_run is not None:
-        for step in steps_not_to_run:
-            if step not in test_case.steps:
-                raise ValueError(
-                    'A step "{}" was flagged not to run but is not one of the '
-                    'steps in this test case:'
-                    '\n{}'.format(step, list(test_case.steps)))
-
-        steps_to_run = [step for step in steps_to_run if step not in
-                        steps_not_to_run]
-
-    test_case.steps_to_run = steps_to_run
-
-    # start logging to stdout/stderr
-    test_name = test_case.path.replace('/', '_')
-    test_case.new_step_log_file = True
-    with LoggingContext(name=test_name) as logger:
-        test_case.logger = logger
-        test_case.stdout_logger = logger
-        log_method_call(method=test_case.run, logger=logger)
-        logger.info('')
-        logger.info('Running steps: {}'.format(', '.join(steps_to_run)))
-        test_case.run()
-
-        logger.info('')
-        log_method_call(method=test_case.validate, logger=logger)
-        logger.info('')
-        test_case.validate()
-
-
 def run_step():
     """
     Used by the framework to run a step when ``compass run`` gets called in the
@@ -320,19 +271,45 @@ def main():
                              "their own.")
     args = parser.parse_args(sys.argv[2:])
     if args.suite is not None:
-        run_suite(args.suite, quiet=args.quiet)
+        run_tests(args.suite, quiet=args.quiet)
     elif os.path.exists('test_case.pickle'):
-        run_test_case(args.steps, args.no_steps)
+        run_tests(suite_name='test_case', quiet=args.quiet, is_test_case=True,
+                  steps_to_run=args.steps, steps_not_to_run=args.no_steps)
     elif os.path.exists('step.pickle'):
         run_step()
     else:
         pickles = glob.glob('*.pickle')
         if len(pickles) == 1:
             suite = os.path.splitext(os.path.basename(pickles[0]))[0]
-            run_suite(suite, quiet=args.quiet)
+            run_tests(suite, quiet=args.quiet)
         elif len(pickles) == 0:
             raise OSError('No pickle files were found. Are you sure this is '
                           'a compass suite, test-case or step work directory?')
         else:
             raise ValueError('More than one suite was found. Please specify '
                              'which to run: compass run <suite>')
+
+
+def _update_steps_to_run(steps_to_run, steps_not_to_run, config, steps):
+    if steps_to_run is None:
+        steps_to_run = config.get('test_case',
+                                  'steps_to_run').replace(',', ' ').split()
+
+    for step in steps_to_run:
+        if step not in steps:
+            raise ValueError(
+                'A step "{}" was requested but is not one of the steps in '
+                'this test case:\n{}'.format(step, list(steps)))
+
+    if steps_not_to_run is not None:
+        for step in steps_not_to_run:
+            if step not in steps:
+                raise ValueError(
+                    'A step "{}" was flagged not to run but is not one of the '
+                    'steps in this test case:'
+                    '\n{}'.format(step, list(steps)))
+
+        steps_to_run = [step for step in steps_to_run if step not in
+                        steps_not_to_run]
+
+    return steps_to_run

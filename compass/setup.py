@@ -307,7 +307,10 @@ def setup_case(path, test_case, config_file, machine, work_dir, baseline_dir,
     # pickle the test case and step for use at runtime
     pickle_filename = os.path.join(test_case.work_dir, 'test_case.pickle')
     with open(pickle_filename, 'wb') as handle:
-        pickle.dump(test_case, handle, protocol=pickle.HIGHEST_PROTOCOL)
+        test_suite = {'name': 'test_case',
+                      'test_cases': {test_case.path: test_case},
+                      'work_dir': test_case.work_dir}
+        pickle.dump(test_suite, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
     if 'LOAD_COMPASS_ENV' in os.environ:
         script_filename = os.environ['LOAD_COMPASS_ENV']
