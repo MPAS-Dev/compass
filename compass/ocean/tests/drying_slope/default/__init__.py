@@ -62,5 +62,7 @@ class Default(TestCase):
             ny += 2
         dc = 1e3 * resolution
 
-        config.set('drying_slope', 'ny', f'{ny}')
-        config.set('drying_slope', 'dc', f'{dc}')
+        config.set('drying_slope', 'ny', f'{ny}', comment='the number of '
+                   'mesh cells in the y direction')
+        config.set('drying_slope', 'dc', f'{dc}', comment='the distance '
+                   'between adjacent cell centers')
