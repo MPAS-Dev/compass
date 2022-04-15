@@ -63,7 +63,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#setup-module">setup module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#clean-module">clean module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#suite-module">suite module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#run-module">run module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#run-serial-module">run.serial module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#cache-module">cache module</a></li>
 </ul>
 </li>
@@ -194,29 +194,31 @@ caveat that many cores may sit idle for some fraction of the runtime.  The
 all steps int he suite, indicating the fewest cores that the test may be run
 with before at least some steps in the suite will fail.</p>
 </section>
-<section id="run-module">
-<span id="dev-run"></span><h3>run module<a class="headerlink" href="#run-module" title="Permalink to this headline">¶</a></h3>
-<p>The <a class="reference internal" href="generated/compass.run.run_suite.html#compass.run.run_suite" title="compass.run.run_suite"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.run.run_suite()</span></code></a>, <a class="reference internal" href="generated/compass.run.run_test_case.html#compass.run.run_test_case" title="compass.run.run_test_case"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.run.run_test_case()</span></code></a>,
-and <a class="reference internal" href="generated/compass.run.run_step.html#compass.run.run_step" title="compass.run.run_step"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.run.run_step()</span></code></a> functions are used to run a test suite,
-test case or step, respectively, from the base, test case or step work
-directory, respectively, using <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span></code>.  Each of these functions reads
-a local pickle file to retrieve information about the test suite, test case
-and/or step that was stored during setup.</p>
-<p><a class="reference internal" href="generated/compass.run.run_suite.html#compass.run.run_suite" title="compass.run.run_suite"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.run.run_suite()</span></code></a> runs each test case in the test suite in
-the order that they are given in the text file defining the suite
-(<code class="docutils literal notranslate"><span class="pre">compass/&lt;mpas_core&gt;/suites/&lt;suite_name&gt;.txt</span></code>).  It displays a <code class="docutils literal notranslate"><span class="pre">PASS</span></code> or
-<code class="docutils literal notranslate"><span class="pre">FAIL</span></code> message for the test execution, as well as similar messages for
-validation involving output within the test case or suite and validation
-against a baseline (depending on the implementation of the <code class="docutils literal notranslate"><span class="pre">validate()</span></code>
-method in the test case and whether a baseline was provided during setup).
-Output from test cases and their steps are stored in log files in
-the <code class="docutils literal notranslate"><span class="pre">case_output</span></code> subdirectory of the base work directory.</p>
-<p><a class="reference internal" href="generated/compass.run.run_test_case.html#compass.run.run_test_case" title="compass.run.run_test_case"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.run.run_test_case()</span></code></a> and <a class="reference internal" href="generated/compass.run.run_step.html#compass.run.run_step" title="compass.run.run_step"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.run.run_step()</span></code></a>
-run a single test case.  In the latter case, only the selected step from the
-test case is run, skipping any others.  If running the full test case, output
-from individual steps are stored in log files <code class="docutils literal notranslate"><span class="pre">&lt;step&gt;.log</span></code> in the test case’s
-work directory.  The results of validation (if any) are displayed in the final
-stage of running the test case.</p>
+<section id="run-serial-module">
+<span id="dev-run"></span><h3>run.serial module<a class="headerlink" href="#run-serial-module" title="Permalink to this headline">¶</a></h3>
+<p>The function <a class="reference internal" href="generated/compass.run.serial.run_tests.html#compass.run.serial.run_tests" title="compass.run.serial.run_tests"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.run.serial.run_tests()</span></code></a> is used to run a
+test suite or test case and <a class="reference internal" href="generated/compass.run.serial.run_step.html#compass.run.serial.run_step" title="compass.run.serial.run_step"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.run.serial.run_step()</span></code></a> is used to
+run a step using <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span></code>.  Suites run from the base work directory
+with a pickle file starting with the suite name, or <code class="docutils literal notranslate"><span class="pre">custom.pickle</span></code> if a
+suite name was not given. Test cases or steps run from their respective
+subdirectories with a <code class="docutils literal notranslate"><span class="pre">testcase.pickle</span></code> or <code class="docutils literal notranslate"><span class="pre">step.pickle</span></code> file in them.
+Both of these functions reads the local pickle file to retrieve information
+about the test suite, test case and/or step that was stored during setup.</p>
+<p>If <a class="reference internal" href="generated/compass.run.serial.run_tests.html#compass.run.serial.run_tests" title="compass.run.serial.run_tests"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.run.serial.run_tests()</span></code></a> is used for a test suite, it will
+run each test case in the test suite in the order that they are given in the
+text file defining the suite (<code class="docutils literal notranslate"><span class="pre">compass/&lt;mpas_core&gt;/suites/&lt;suite_name&gt;.txt</span></code>).
+Output from test cases and their steps are stored in log files in the
+<code class="docutils literal notranslate"><span class="pre">case_output</span></code> subdirectory of the base work directory. If the function is
+used for a single test case, it will run the steps of that test case, writing
+output for each step to a log file starting with the step’s name. In either
+case (suite or individual test), it displays a <code class="docutils literal notranslate"><span class="pre">PASS</span></code> or <code class="docutils literal notranslate"><span class="pre">FAIL</span></code> message for
+the test execution, as well as similar messages for validation involving output
+within the test case or suite and validation against a baseline (depending on
+the implementation of the <code class="docutils literal notranslate"><span class="pre">validate()</span></code> method in the test case and whether a
+baseline was provided during setup).</p>
+<p><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.run.run_step()</span></code> runs only the selected step from a given
+test case, skipping any others, displaying the output in the terminal window
+rather than a log file.</p>
 </section>
 <section id="cache-module">
 <span id="dev-cache"></span><h3>cache module<a class="headerlink" href="#cache-module" title="Permalink to this headline">¶</a></h3>
