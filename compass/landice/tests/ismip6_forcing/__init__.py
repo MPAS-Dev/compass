@@ -14,6 +14,6 @@ class Ismip6Forcing(TestGroup):
             the MPAS core that this test group belongs to
         """
         super().__init__(mpas_core=mpas_core, name='ismip6_forcing')
-        
+
         self.add_test_case(Atmosphere(test_group=self))
         self.add_test_case(Ocean(test_group=self))

@@ -4,7 +4,8 @@ import shutil
 import subprocess
 import xarray as xr
 import numpy as np
-from compass.landice.tests.ismip6_forcing.atmosphere.create_mapfile_smb import build_mapping_file
+from compass.landice.tests.ismip6_forcing.atmosphere.create_mapfile_smb \
+    import build_mapping_file
 from mpas_tools.scrip.from_mpas import scrip_from_mpas
 from mpas_tools.io import write_netcdf
 from compass.step import Step
@@ -40,7 +41,7 @@ class ProcessSMB(Step):
         mali_mesh_file = section.get('mali_mesh_file')
         self.add_input_file(filename=mali_mesh_file,
                             target=os.path.join(input_path, mali_mesh_file))
-        self.add_output_file(filename= f"output_{input_file}")
+        self.add_output_file(filename=f"output_{input_file}")
 
     def run(self):
         """

@@ -3,6 +3,7 @@ from compass.testcase import TestCase
 from compass.landice.tests.ismip6_forcing.atmosphere.process_smb \
     import ProcessSMB
 
+
 class Atmosphere(TestCase):
     """
     A test case for processing the ISMIP6 atmosphere forcing data.
@@ -42,4 +43,3 @@ class Atmosphere(TestCase):
             raise ValueError("You need to supply a user config file, which "
                              "should contain the ismip6_ais_atmosphere section"
                              "with the input_path option")
-
