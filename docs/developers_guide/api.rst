@@ -169,18 +169,6 @@ config
    :toctree: generated/
 
    CompassConfigParser
-   CompassConfigParser.add_user_config
-   CompassConfigParser.add_from_file
-   CompassConfigParser.add_from_package
-   CompassConfigParser.get
-   CompassConfigParser.getint
-   CompassConfigParser.getfloat
-   CompassConfigParser.getboolean
-   CompassConfigParser.getlist
-   CompassConfigParser.has_option
-   CompassConfigParser.set
-   CompassConfigParser.write
-   CompassConfigParser.__getitem__
 
 io
 ^^
