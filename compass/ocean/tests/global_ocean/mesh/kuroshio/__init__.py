@@ -39,7 +39,7 @@ class KuroshioBaseMesh(QuasiUniformSphericalMeshStep):
         lat : numpy.array
             longitude in degrees (length m and between -90 and 90)
         """
-
+        config = self.config
         dlon = 0.1
         dlat = dlon
         earth_radius = constants['SHR_CONST_REARTH']
@@ -63,7 +63,7 @@ class KuroshioBaseMesh(QuasiUniformSphericalMeshStep):
 
         trans_width = 800e3
         trans_start = 0
-        dx_min = 12.
+        dx_min = config.getfloat('global_ocean', 'min_res')
 
         weights = 0.5 * (1 + np.tanh((so_signed_distance - trans_start) /
                                      trans_width))
