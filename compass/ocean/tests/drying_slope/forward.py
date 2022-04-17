@@ -7,8 +7,8 @@ class Forward(Step):
     A step for performing forward MPAS-Ocean runs as part of drying slope
     test cases.
     """
-    def __init__(self, test_case, name='forward', subdir=None, cores=1,
-                 min_cores=None, threads=1, damping_coeff=None):
+    def __init__(self, test_case, resolution, name='forward', subdir=None,
+                 cores=1, min_cores=None, threads=1, damping_coeff=None):
         """
         Create a new test case
 
@@ -16,6 +16,9 @@ class Forward(Step):
         ----------
         test_case : compass.TestCase
             The test case this step belongs to
+
+        resolution : str
+            The resolution of the test case
 
         name : str
             the name of the test case
@@ -49,6 +52,12 @@ class Forward(Step):
 
         self.add_namelist_file('compass.ocean.tests.drying_slope',
                                'namelist.forward')
+        if resolution < 1.:
+            res_name = f'{int(resolution*1e3)}m'
+        else:
+            res_name = f'{int(resolution)}km'
+        self.add_namelist_file('compass.ocean.tests.drying_slope',
+                               f'namelist.{res_name}.forward')
         if damping_coeff is not None:
             # update the Rayleigh damping coeff to the requested value
             options = {'config_Rayleigh_damping_coeff': f'{damping_coeff}'}

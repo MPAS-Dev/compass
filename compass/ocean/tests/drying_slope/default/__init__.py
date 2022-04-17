@@ -46,7 +46,8 @@ class Default(TestCase):
 
         self.add_step(InitialState(test_case=self))
         for damping_coeff in [0.0025, 0.01]:
-            self.add_step(Forward(test_case=self, cores=4, threads=1,
+            self.add_step(Forward(test_case=self, resolution=resolution,
+                                  cores=4, threads=1,
                                   damping_coeff=damping_coeff))
         self.add_step(Viz(test_case=self))
 
