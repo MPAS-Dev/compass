@@ -60,14 +60,13 @@ The config options for this test case are:
    
    # the number of grid cells in x and y
    nx = 6
-   ny = 28
-   
-   # the size of grid cells (m)
-   dc = 1000.0
    
    # config options for visualizing drying slope ouptut
    [drying_slope_viz]
    
+   # whether to generate movie
+   generate_movie = False
+
    # frames per second for movies
    frames_per_second = 30
    

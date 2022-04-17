@@ -61,20 +61,22 @@ class Viz(Step):
         section = self.config['paths']
         datapath = section.get('ocean_database_root')
         section = self.config['drying_slope_viz']
-        frames_per_second = section.getint('frames_per_second')
-        movie_format = section.get('movie_format')
-        outFolder = 'movie'
-        if not os.path.exists(outFolder):
-            try:
-                os.makedirs(os.path.join(os.getcwd(), outFolder))
-            except OSError:
-                pass
+        generate_movie = section.getboolean('generate_movie')
 
         self._plot_ssh_validation()
         self._plot_ssh_time_series()
-        self._plot_ssh_validation_for_movie(outFolder=outFolder)
-        self._images_to_movies(framesPerSecond=frames_per_second,
-                               outFolder=outFolder, extension=movie_format)
+        if generate_movie:
+            frames_per_second = section.getint('frames_per_second')
+            movie_format = section.get('movie_format')
+            outFolder = 'movie'
+            if not os.path.exists(outFolder):
+                try:
+                    os.makedirs(os.path.join(os.getcwd(), outFolder))
+                except OSError:
+                    pass
+            self._plot_ssh_validation_for_movie(outFolder=outFolder)
+            self._images_to_movies(framesPerSecond=frames_per_second,
+                                   outFolder=outFolder, extension=movie_format)
 
     def _plot_ssh_time_series(self, outFolder='.'):
         """
