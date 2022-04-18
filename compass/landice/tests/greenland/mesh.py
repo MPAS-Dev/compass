@@ -57,7 +57,7 @@ class Mesh(Step):
         """
         logger = self.logger
         config = self.config
-        section = config['high_res_mesh']
+        section = config['high_res_GIS_mesh']
 
         logger.info('calling build_cell_wdith')
         cell_width, x1, y1, geom_points, geom_edges = self.build_cell_width()
@@ -71,7 +71,7 @@ class Mesh(Step):
         dsMesh = convert(dsMesh, logger=logger)
         logger.info('writing grid_converted.nc')
         write_netcdf(dsMesh, 'grid_converted.nc')
-        # If no number of levels specified in config file, use 10
+
         levels = section.get('levels')
         logger.info('calling create_landice_grid_from_generic_MPAS_grid.py')
         args = ['create_landice_grid_from_generic_MPAS_grid.py',
@@ -80,10 +80,6 @@ class Mesh(Step):
                 '-l', levels, '-v', 'glimmer']
         check_call(args, logger=logger)
 
-        # This step uses a subset of the whole Greenland dataset trimmed to
-        # the region around GIS Glacier, to speed up interpolation.
-        # This could also be replaced with the full Greenland Ice Sheet
-        # dataset.
         logger.info('calling interpolate_to_mpasli_grid.py')
         args = ['interpolate_to_mpasli_grid.py', '-s',
                 'greenland_1km_2020_04_20.epsg3413.icesheetonly.nc', '-d',
@@ -91,26 +87,11 @@ class Mesh(Step):
 
         check_call(args, logger=logger)
 
-        # This step is only necessary if you wish to cull a certain
-        # distance from the ice margin, within the bounds defined by
-        # the GeoJSON file.
         cullDistance = section.get('cull_distance')
-        if float(cullDistance) > 0.:
-            logger.info('calling define_cullMask.py')
-            args = ['define_cullMask.py', '-f',
-                    'gis_1km_preCull.nc', '-m'
-                    'distance', '-d', cullDistance]
-
-            check_call(args, logger=logger)
-        else:
-            logger.info('cullDistance <= 0 in config file. '
-                        'Will not cull by distance to margin. \n')
-
-        # This step is only necessary because the GeoJSON region
-        # is defined by lat-lon.
-        logger.info('calling set_lat_lon_fields_in_planar_grid.py')
-        args = ['set_lat_lon_fields_in_planar_grid.py', '-f',
-                'gis_1km_preCull.nc', '-p', 'gis-gimp']
+        logger.info('calling define_cullMask.py')
+        args = ['define_cullMask.py', '-f',
+                'gis_1km_preCull.nc', '-m'
+                'distance', '-d', cullDistance]
 
         check_call(args, logger=logger)
 
@@ -139,7 +120,7 @@ class Mesh(Step):
         logger.info('calling interpolate_to_mpasli_grid.py')
         args = ['interpolate_to_mpasli_grid.py', '-s',
                 'greenland_1km_2020_04_20.epsg3413.icesheetonly.nc',
-                '-d', 'GIS.nc', '-m', 'b', '-t']
+                '-d', 'GIS.nc', '-m', 'b']
         check_call(args, logger=logger)
 
         logger.info('Marking domain boundaries dirichlet')
@@ -160,11 +141,9 @@ class Mesh(Step):
         """
         Determine MPAS mesh cell size based on user-defined density function.
 
-        This includes hard-coded definition of the extent of the regional
+        This includes the definition of the extent of the regional
         mesh and user-defined mesh density functions based on observed flow
-        speed and distance to the ice margin. In the future, this function
-        and its components will likely be separated into separate generalized
-        functions to be reusable by multiple test groups.
+        speed and distance to the ice margin.
         """
         # get needed fields from GIS dataset
         f = netCDF4.Dataset('greenland_8km_2020_04_20.epsg3413.nc', 'r')
@@ -200,7 +179,7 @@ class Mesh(Step):
         # plt.pcolor(distToEdge/1000.0); plt.colorbar(); plt.show()
 
         # Set cell widths based on mesh parameters set in config file
-        cell_width = set_cell_width(self, section='high_res_mesh', thk=thk,
+        cell_width = set_cell_width(self, section='high_res_GIS_mesh', thk=thk,
                                     vx=vx, vy=vy, dist_to_edge=distToEdge,
                                     dist_to_grounding_line=None)
         # plt.pcolor(cell_width); plt.colorbar(); plt.show()
