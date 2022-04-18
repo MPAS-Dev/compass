@@ -15,7 +15,7 @@ from compass.job import write_job_script
 
 def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
                 work_dir=None, baseline_dir=None, mpas_model_path=None,
-                suite_name='custom', cached=None):
+                suite_name='custom', cached=None, copy_executable=False):
     """
     Set up one or more test cases
 
@@ -29,7 +29,7 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
         a suffix ``c`` to indicate that all steps in that test case should be
         cached
 
-    config_file : str, optional
+    config_file : {str, None}, optional
         Configuration file with custom options for setting up and running test
         cases
 
@@ -55,6 +55,9 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
         For each test in ``tests``, which steps (if any) should be cached,
         or a list with "_all" as the first entry if all steps in the test case
         should be cached
+
+    copy_executable : bool, optional
+        Whether to copy the MPAS executable to the work directory
 
     Returns
     -------
@@ -145,7 +148,8 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
     for path, test_case in test_cases.items():
         setup_case(path, test_case, config_file, machine, work_dir,
                    baseline_dir, mpas_model_path,
-                   cached_steps=cached_steps[path])
+                   cached_steps=cached_steps[path],
+                   copy_executable=copy_executable)
 
     test_suite = {'name': suite_name,
                   'test_cases': test_cases,
@@ -175,7 +179,7 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
 
 
 def setup_case(path, test_case, config_file, machine, work_dir, baseline_dir,
-               mpas_model_path, cached_steps):
+               mpas_model_path, cached_steps, copy_executable):
     """
     Set up one or more test cases
 
@@ -208,6 +212,9 @@ def setup_case(path, test_case, config_file, machine, work_dir, baseline_dir,
     cached_steps : list of str
         Which steps (if any) should be cached.  If all steps should be cached,
          the first entry is "_all"
+
+    copy_executable : bool, optional
+        Whether to copy the MPAS executable to the work directory
     """
 
     print('  {}'.format(path))
@@ -220,6 +227,9 @@ def setup_case(path, test_case, config_file, machine, work_dir, baseline_dir,
     test_group = test_case.test_group.name
     config.add_from_package(f'compass.{mpas_core}.tests.{test_group}',
                             f'{test_group}.cfg', exception=False)
+
+    if copy_executable:
+        config.set('setup', 'copy_executable', 'True')
 
     # add the config options for the test case (if defined)
     config.add_from_package(test_case.__module__,
@@ -360,6 +370,10 @@ def main():
                              "--test that should use cached outputs, or "
                              "'_all' if all steps should be cached",
                         metavar="STEP")
+    parser.add_argument("--copy_executable", dest="copy_executable",
+                        action="store_true",
+                        help="If the MPAS executable should be copied to the "
+                             "work directory")
 
     args = parser.parse_args(sys.argv[2:])
     cached = None
@@ -373,7 +387,7 @@ def main():
                 config_file=args.config_file, machine=args.machine,
                 work_dir=args.work_dir, baseline_dir=args.baseline_dir,
                 mpas_model_path=args.mpas_model, suite_name=args.suite_name,
-                cached=cached)
+                cached=cached, copy_executable=args.copy_executable)
 
 
 def _get_required_cores(test_cases):
