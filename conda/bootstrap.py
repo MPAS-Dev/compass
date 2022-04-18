@@ -276,16 +276,6 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, env_name,
     scorpio = config.get('deploy', 'scorpio')
     albany = config.get('deploy', 'albany')
 
-    if esmf != 'None':
-        # remove conda-forge esmf because we will use the system build
-        commands = '{}; conda remove -y --force -n {} esmf'.format(
-            activate_env, env_name)
-        try:
-            check_call(commands)
-        except subprocess.CalledProcessError:
-            # it could be that esmf was already removed
-            pass
-
     spack_branch_base = f'{spack_base}/spack_for_mache_{mache_version}'
 
     specs = list()
