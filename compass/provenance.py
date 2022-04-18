@@ -118,6 +118,13 @@ def _get_mpas_git_version(mpas_core, config_filename, mpas_model_path):
         config.add_from_package(f'compass.{mpas_core}', f'{mpas_core}.cfg')
         if config_filename is not None:
             config.add_user_config(config_filename)
+
+        if 'COMPASS_BRANCH' in os.environ:
+            compass_branch = os.environ['COMPASS_BRANCH']
+            config.set('paths', 'compass_branch', compass_branch)
+        else:
+            config.set('paths', 'compass_branch', os.getcwd())
+
         if not config.has_option('paths', 'mpas_model'):
             raise ValueError('Couldn\'t find MPAS model.  Not in user config '
                              'file or passed with -p flag.')
