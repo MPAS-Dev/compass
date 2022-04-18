@@ -19,9 +19,9 @@ class Humboldt(TestGroup):
         self.add_test_case(
             Default(test_group=self))
 
-        mesh_type='default' # Not currently used but expected to be added
+        mesh_type = 'default'  # Not currently used but expected to be added
 
-        for velo_solver in ['FO',]:
+        for velo_solver in ['FO', ]:
 
             self.add_test_case(
                     DecompositionTest(test_group=self,
@@ -39,14 +39,14 @@ class Humboldt(TestGroup):
         # Note that FO velo solver is NOT BFB across decompositions
         # currently, so instead test using 'none' (fixed velocity field from
         # input field) or 'sia'
-        for velo_solver in ['none', 'FO',]:
+        for velo_solver in ['none', 'FO']:
             for calving_law in ['none', 'floating', 'eigencalving',
                                 'specified_calving_velocity',
-                                'von_Mises_stress', 'damagecalving', 
+                                'von_Mises_stress', 'damagecalving',
                                 'ismip6_retreat']:
 
-                if velo_solver=='FO' and calving_law=='none':
-                    continue # already added above
+                if velo_solver == 'FO' and calving_law == 'none':
+                    continue  # already added above
 
                 self.add_test_case(
                     DecompositionTest(test_group=self,

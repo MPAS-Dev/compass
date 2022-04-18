@@ -40,11 +40,11 @@ class RestartTest(TestCase):
         self.mesh_type = mesh_type
         self.velo_solver = velo_solver
         if calving_law:
-           self.calving_law = calving_law
+            self.calving_law = calving_law
         else:
-           self.calving_law = 'none'
+            self.calving_law = 'none'
         subdir = 'mesh-{}_restart_test/velo-{}_calving-{}'.format(
-                 mesh_type, velo_solver.lower(), calving_law.lower(), name)
+                 mesh_type, velo_solver.lower(), calving_law.lower())
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
 

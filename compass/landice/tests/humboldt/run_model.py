@@ -39,7 +39,7 @@ class RunModel(Step):
         velo_solver : {'sia', 'FO', 'none'}
             The velocity solver setting to use for this test case
 
-        calving_law: {'none', 'floating', 'eigencalving', 
+        calving_law: {'none', 'floating', 'eigencalving',
                       'specified_calving_velocity', 'von_Mises_stress',
                       'damagecalving', 'ismip6_retreat'}, optional
             The calving law setting to use for this test case. If not
@@ -79,12 +79,13 @@ class RunModel(Step):
         assert self.velo_solver in {'sia', 'FO', 'none'}, \
             "Value of velo_solver must be one of {'sia', 'FO', 'none'}"
         if calving_law:
-           self.calving_law = calving_law
+            self.calving_law = calving_law
         else:
-           self.calving_law = 'none'
-        assert self.calving_law in {'none', 'floating', 'eigencalving', 
-                      'specified_calving_velocity', 'von_Mises_stress',
-                      'damagecalving', 'ismip6_retreat'}, \
+            self.calving_law = 'none'
+        assert self.calving_law in {'none', 'floating', 'eigencalving',
+                                    'specified_calving_velocity',
+                                    'von_Mises_stress',
+                                    'damagecalving', 'ismip6_retreat'}, \
             "Value of calving_law must be one of {'none', 'floating', " \
             "'eigencalving', 'specified_calving_velocity', " \
             "'von_Mises_stress', 'damagecalving', 'ismip6_retreat'}"
@@ -101,7 +102,7 @@ class RunModel(Step):
                 'compass.landice.tests.humboldt', 'namelist.landice',
                 out_name='namelist.{}'.format(suffix))
             options = {'config_velocity_solver': "'{}'".format(velo_solver),
-                       'config_calving' : "'{}'".format(calving_law)}
+                       'config_calving': "'{}'".format(calving_law)}
             self.add_namelist_options(options=options,
                                       out_name='namelist.{}'.format(suffix))
 
@@ -111,10 +112,10 @@ class RunModel(Step):
 
         # Commented code to make use of mesh generation step
         # Note it will not include uReconstructX/Y or muFriction!
-        #self.add_input_file(filename='landice_grid.nc',
-        #                    target='../mesh/Humboldt_1to10km.nc')
-        #self.add_input_file(filename='graph.info',
-        #                    target='../mesh/graph.info')
+        # self.add_input_file(filename='landice_grid.nc',
+        #                     target='../mesh/Humboldt_1to10km.nc')
+        # self.add_input_file(filename='graph.info',
+        #                     target='../mesh/graph.info')
 
         # download and link the mesh
         self.mesh_file = 'Humboldt_1to10km_r04_20210615.nc'
