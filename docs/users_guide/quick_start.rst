@@ -311,6 +311,16 @@ name with the ``--suite_name`` flag.)  You can run all the test cases in
 sequence with one command as described in :ref:`suite_overview` or run them
 one at a time as follows.
 
+If you want to copy the MPAS executable over to the work directory, you can
+use the ``--copy_executable`` flag or set the config option
+``copy_executable = True`` in the ``[setup]`` section of your user config
+file.  One use of this capability for compass simulations that are used in
+a paper.  In that case, it would be better to have a copy of the executable
+that will not be changed even if the E3SM branch is modified, recompiled or
+deleted.  Another use might be to maintain a long-lived baseline test.
+Again, it is safer to have the executable used to produce the baseline
+preserved.
+
 Running a test case
 -------------------
 
