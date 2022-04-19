@@ -57,6 +57,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#smoke-test">smoke_test</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#decomposition-test">decomposition_test</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#restart-test">restart_test</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#high-res-mesh">high_res_mesh</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="thwaites.html">thwaites</a></li>
@@ -141,14 +142,47 @@
 <p>The test group includes 3 test cases, each of which has one or more steps
 that are variants on <code class="docutils literal notranslate"><span class="pre">run_model</span></code> (given other names in the decomposition and
 restart test cases to distinguish multiple model runs), which performs time
-integration of the model.</p>
+integration of the model. There is a fourth test case, <code class="docutils literal notranslate"><span class="pre">high_res_mesh</span></code>, that
+creates a variable resolution Greenland Ice Sheet mesh, with the step <code class="docutils literal notranslate"><span class="pre">mesh</span></code>.</p>
 <p>The test cases in this test group can run with either the SIA or FO velocity
 solvers. Running with the FO solver requires a build of MALI that includes
 Albany, but the SIA variant of the test can be run without Albany.  The FO
-version uses no-slip basal boundary condition.</p>
+version uses no-slip basal boundary condition. There is no integration step
+for the test case <code class="docutils literal notranslate"><span class="pre">high_res_mesh</span></code>.</p>
 <section id="config-options">
 <h2>config options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
-<p>There are no config options specific to this test group.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">high_res_mesh</span></code> test case uses the default config options below.
+The other test cases do not use config options.</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[high_res_mesh]</span><span class="w"></span>
+
+<span class="c1"># number of levels in the mesh</span><span class="w"></span>
+<span class="na">levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10</span><span class="w"></span>
+
+<span class="c1"># distance from ice margin to cull (km).</span><span class="w"></span>
+<span class="c1"># Set to a value &lt;= 0 if you do not want</span><span class="w"></span>
+<span class="c1"># to cull based on distance from margin.</span><span class="w"></span>
+<span class="na">cull_distance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10.0</span><span class="w"></span>
+
+<span class="c1"># mesh density parameters</span><span class="w"></span>
+<span class="c1"># minimum cell spacing (meters)</span><span class="w"></span>
+<span class="na">min_spac</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3.e3</span><span class="w"></span>
+<span class="c1"># maximum cell spacing (meters)</span><span class="w"></span>
+<span class="na">max_spac</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">30.e3</span><span class="w"></span>
+<span class="c1"># log10 of max speed for cell spacing</span><span class="w"></span>
+<span class="na">high_log_speed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2.5</span><span class="w"></span>
+<span class="c1"># log10 of min speed for cell spacing</span><span class="w"></span>
+<span class="na">low_log_speed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.75</span><span class="w"></span>
+<span class="c1"># distance at which cell spacing = max_spac</span><span class="w"></span>
+<span class="na">high_dist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.e5</span><span class="w"></span>
+<span class="c1"># distance within which cell spacing = min_spac</span><span class="w"></span>
+<span class="na">low_dist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5.e4</span><span class="w"></span>
+
+<span class="c1"># mesh density functions</span><span class="w"></span>
+<span class="na">use_speed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span><span class="w"></span>
+<span class="na">use_dist_to_grounding_line</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span><span class="w"></span>
+<span class="na">use_dist_to_edge</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span><span class="w"></span>
+</pre></div>
+</div>
 </section>
 <section id="smoke-test">
 <h2>smoke_test<a class="headerlink" href="#smoke-test" title="Permalink to this headline">¶</a></h2>
@@ -170,6 +204,14 @@ of the model forward in time (<code class="docutils literal notranslate"><span c
 from a restart file saved by the first. Prognostic variables are compared
 between the “full” and “restart” runs at year 2 to make sure they are
 bit-for-bit identical.</p>
+</section>
+<section id="high-res-mesh">
+<h2>high_res_mesh<a class="headerlink" href="#high-res-mesh" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">landice/greenland/high_res_mesh</span></code> creates a variable resolution mesh based
+on the the config options listed above. This will not be the same as the
+pre-generated 20 km mesh used in the other three test cases because it uses
+a newer version of Jigsaw. Note that the basal friction optimization is
+performed separately and is not part of this test case.</p>
 </section>
 </section>
 
