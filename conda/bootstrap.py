@@ -366,7 +366,7 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, env_name,
 
 def write_load_compass(template_path, activ_path, conda_base, env_type,
                        activ_suffix, prefix, env_name, spack_script, machine,
-                       env_vars, env_only, source_path):
+                       env_vars, env_only, source_path, without_openmp):
 
     try:
         os.makedirs(activ_path)
@@ -382,7 +382,14 @@ def write_load_compass(template_path, activ_path, conda_base, env_type,
 
     if not env_only:
         env_vars = f'{env_vars}\n' \
-                           f'export USE_PIO2=true'
+                   f'export USE_PIO2=true'
+    if without_openmp:
+        env_vars = f'{env_vars}\n' \
+                   f'export OPENMP=false'
+    else:
+        env_vars = f'{env_vars}\n' \
+                   f'export OPENMP=true'
+
     env_vars = f'{env_vars}\n' \
                f'export HDF5_USE_FILE_LOCKING=FALSE\n' \
                f'export LOAD_COMPASS_ENV={script_filename}'
@@ -726,7 +733,7 @@ def main():
     script_filename = write_load_compass(
         conda_template_path, activ_path, conda_base, env_type, activ_suffix,
         prefix, env_name, spack_script, machine, env_vars, args.env_only,
-        source_path)
+        source_path, args.without_openmp)
 
     if args.check:
         check_env(script_filename, env_name)
