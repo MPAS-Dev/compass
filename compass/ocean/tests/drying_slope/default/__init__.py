@@ -44,11 +44,16 @@ class Default(TestCase):
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
         self.add_step(InitialState(test_case=self, coord_type=coord_type))
-        for damping_coeff in [0.0025, 0.01]:
+        if coord_type == 'single_layer':
             self.add_step(Forward(test_case=self, resolution=resolution,
                                   cores=4, threads=1,
-                                  damping_coeff=damping_coeff,
                                   coord_type=coord_type))
+        else:
+            for damping_coeff in [0.0025, 0.01]:
+                self.add_step(Forward(test_case=self, resolution=resolution,
+                                      cores=4, threads=1,
+                                      damping_coeff=damping_coeff,
+                                      coord_type=coord_type))
         self.add_step(Viz(test_case=self))
 
     def configure(self):
