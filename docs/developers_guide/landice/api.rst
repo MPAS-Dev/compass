@@ -149,6 +149,13 @@ greenland
    run_model.RunModel.setup
    run_model.RunModel.run
 
+   mesh.Mesh
+   mesh.Mesh.run
+   mesh.Mesh.build_cell_width
+
+   high_res_mesh.HighResMesh
+   high_res_mesh.HighResMesh.run
+
 hydro_radial
 ~~~~~~~~~~~~
 

@@ -2,6 +2,7 @@ from compass.testgroup import TestGroup
 from compass.landice.tests.greenland.smoke_test import SmokeTest
 from compass.landice.tests.greenland.decomposition_test import DecompositionTest
 from compass.landice.tests.greenland.restart_test import RestartTest
+from compass.landice.tests.greenland.high_res_mesh import HighResMesh
 
 
 class Greenland(TestGroup):
@@ -24,3 +25,6 @@ class Greenland(TestGroup):
 
             self.add_test_case(
                 RestartTest(test_group=self, velo_solver=velo_solver))
+
+        self.add_test_case(
+            HighResMesh(test_group=self))
