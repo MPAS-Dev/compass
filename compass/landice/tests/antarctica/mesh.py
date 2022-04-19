@@ -3,6 +3,8 @@ import netCDF4
 import xarray
 from matplotlib import pyplot as plt
 from shutil import copyfile
+import time
+from scipy.interpolate import NearestNDInterpolator
 
 from mpas_tools.mesh.creation import build_planar_mesh
 from mpas_tools.mesh.conversion import convert, cull
@@ -71,6 +73,7 @@ class Mesh(Step):
         dsMesh = convert(dsMesh, logger=logger)
         logger.info('writing grid_converted.nc')
         write_netcdf(dsMesh, 'grid_converted.nc')
+        
         levels = section.get('levels')
         logger.info('calling create_landice_grid_from_generic_MPAS_grid.py')
         args = ['create_landice_grid_from_generic_MPAS_grid.py',
@@ -89,6 +92,79 @@ class Mesh(Step):
         gg.variables['vy'][0, :, :] *= floodFillMask
         gg.close()
 
+        # Now deal with the peculiarities of the AIS dataset. This section
+        # could be separated into its own function
+        copyfile('antarctica_8km_2020_10_20_floodFillMask.nc',
+                'antarctica_8km_2020_10_20_floodFillMask_filledFields.nc')
+        data = netCDF4.Dataset(
+                'antarctica_8km_2020_10_20_floodFillMask_filledFields.nc',
+                'r+')
+        data.set_auto_mask(False)
+        x1 = data.variables["x1"][:]
+        y1 = data.variables["y1"][:]
+        cellsWithIce = data.variables["thk"][:].ravel() > 0.
+        data.createVariable('iceMask', 'f', ('time', 'y1', 'x1'))
+        data.variables['iceMask'][:] = data.variables["thk"][:] > 0.
+
+        # Note: dhdt is only reported over grounded ice, so we will have to
+        # either update the dataset to include ice shelves or give them values of
+        # 0 with reasonably large uncertainties.
+        dHdt = data.variables["dhdt"][:]
+        dHdtErr = 0.05 * dHdt #assign arbitrary uncertainty of 5%
+        dHdtErr[dHdt > 1.e30] = 1.  # Where dHdt data are missing, set large uncertainty
+
+        xGrid, yGrid = np.meshgrid(x1,y1)
+        xx = xGrid.ravel()
+        yy = yGrid.ravel()
+        for field in ['thk', 'bheatflx', 'vx', 'vy',
+                      'ex', 'ey', 'thkerr', 'dhdt']:
+            tic = time.perf_counter()
+            logger.info('Beginning building interpolator for {}'.format(field))
+            if field in ['thk', 'thkerr']:
+                mask = cellsWithIce.ravel()
+            elif field == 'bheatflx':
+                mask = np.logical_and(
+                        data.variables[field][:].ravel() < 1.0e9,
+                        data.variables[field][:].ravel() != 0.0)
+            elif field in ['vx', 'vy', 'ex', 'ey', 'dhdt']:
+                mask = np.logical_and(
+                         data.variables[field][:].ravel() < 1.0e9,
+                         cellsWithIce.ravel() > 0)
+            else:
+                mask = cellsWithIce
+            interp = NearestNDInterpolator(
+                                   list(zip(xx[mask], yy[mask])),
+                                   data.variables[field][:].ravel()[mask])
+            toc = time.perf_counter()
+            logger.info('Finished building interpolator in {} seconds'.format(
+                            toc - tic))
+
+            tic = time.perf_counter()
+            logger.info('Beginning interpolation for {}'.format(field))
+            data.variables[field][0, :] = interp(xGrid,yGrid)
+            toc = time.perf_counter()
+            logger.info('Interpolation completed in {} seconds'.format(
+                            toc - tic))
+
+        bigToc = time.perf_counter()
+        logger.info('All interpolations completed in {} seconds'.format(
+                        toc - tic))
+
+        data.createVariable('dHdtErr', 'f', ('time', 'y1', 'x1'))
+        data.variables['dHdtErr'][:] = dHdtErr
+
+        data.createVariable('vErr', 'f', ('time', 'y1', 'x1'))
+        data.variables['vErr'][:] = np.sqrt(data.variables['ex'][:]**2
+                                            + data.variables['ey'][:]**2)
+
+        data.variables['bheatflx'][:] *= -1.e-3  # correct units
+        data.variables['bheatflx'].units = 'W m-2'
+
+        data.renameVariable('dhdt', 'dHdt')
+        data.renameVariable('thkerr', 'topgerr')
+
+        data.close()
+
         logger.info('calling interpolate_to_mpasli_grid.py')
         args = ['interpolate_to_mpasli_grid.py', '-s',
                 'antarctica_8km_2020_10_20_floodFillMask.nc', '-d',
@@ -104,10 +180,7 @@ class Mesh(Step):
                     'ais_8km_preCull.nc', '-m',
                     'distance', '-d', cullDistance]
 
-            check_call(args, logger=logger)
-        else:
-            logger.info('cullDistance <= 0 in config file. '
-                        'Will not cull by distance to margin. \n')
+        check_call(args, logger=logger)
 
         check_call(args, logger=logger)
 
@@ -133,9 +206,18 @@ class Mesh(Step):
 
         check_call(args, logger=logger)
 
+        # Add iceMask for later trimming. Could be added to
+        # calling create_landice_grid_from_generic_MPAS_grid.py
+        # if we want to make this a typical feature.
+        data = netCDF4.Dataset('Antarctica.nc', 'r+')
+        data.createVariable('iceMask', 'f', ('Time', 'nCells'))
+        data.variables['iceMask'][:] = 0.
+        data.close()
+
+        # Must add iceMask to interpolation script.
         logger.info('calling interpolate_to_mpasli_grid.py')
         args = ['interpolate_to_mpasli_grid.py', '-s',
-                'antarctica_8km_2020_10_20.nc',
+                'antarctica_8km_2020_10_20_floodFillMask_filledFields.nc',
                 '-d', 'Antarctica.nc', '-m', 'b']
         check_call(args, logger=logger)
 
@@ -152,6 +234,15 @@ class Mesh(Step):
         logger.info('creating graph.info')
         make_graph_file(mesh_filename='Antarctica.nc',
                         graph_filename='graph.info')
+
+        # Clean up: trim to iceMask
+        data = netCDF4.Dataset('Antarctica.nc', 'r+')
+        data.set_auto_mask(False)
+        data.variables['thickness'][:] *= (data.variables['iceMask'][:] > 0.5)
+        
+        mask = np.where(data.variables['thickness'][:] == 0.0)
+        data.variables['observedSurfaceVelocityUncertainty'][mask] = 1.0
+        data.close()
 
     def build_cell_width(self):
         """
