@@ -48,13 +48,15 @@ class Default(TestCase):
             self.add_step(Forward(test_case=self, resolution=resolution,
                                   cores=4, threads=1,
                                   coord_type=coord_type))
+            damping_coeffs = None
         else:
-            for damping_coeff in [0.0025, 0.01]:
+            damping_coeffs = [0.0025, 0.01]
+            for damping_coeff in damping_coeffs:
                 self.add_step(Forward(test_case=self, resolution=resolution,
                                       cores=4, threads=1,
                                       damping_coeff=damping_coeff,
                                       coord_type=coord_type))
-        self.add_step(Viz(test_case=self))
+        self.add_step(Viz(test_case=self, damping_coeffs=damping_coeffs))
 
     def configure(self):
         """
