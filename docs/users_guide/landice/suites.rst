@@ -3,7 +3,7 @@
 Test suites
 ===========
 
-The ``landice`` core currently includes 3 :ref:`test_suites` that can be used
+The ``landice`` core currently includes 5 :ref:`test_suites` that can be used
 to run a series of land-ice test cases and optionally compare them against a
 baseline run of the same tests.
 
@@ -80,4 +80,60 @@ full_integration test suite
 ---------------------------
 
 The ``full_integration`` test suite is a combination of the ``sia_integration``
-and ``fo_integration`` test suites.
+and ``fo_integration`` test suites.  This is the suite that should primarily
+be used for testing and integration of MALI Pull Requests.
+
+humboldt_calving_tests
+----------------------
+
+The ``humboldt_calving_tests`` test suite provide complete coverage of all
+calving laws currently support by MALI applied to a 3 km resolution
+Humboldt Glacier domain.
+For the tests in this suite, the velocity solver is disabled, and the velocity
+field comes from an input field, allowing for rapid testing and for testing
+bit-for-bit behavior of the calving physics implementations.  
+The suite includes:
+
+.. code-block:: none
+
+    landice/humboldt/mesh-3km_decomposition_test/velo-none_calving-none
+    landice/humboldt/mesh-3km_decomposition_test/velo-none_calving-floating
+    landice/humboldt/mesh-3km_decomposition_test/velo-none_calving-eigencalving
+    landice/humboldt/mesh-3km_decomposition_test/velo-none_calving-specified_calving_velocity
+    landice/humboldt/mesh-3km_decomposition_test/velo-none_calving-von_mises_stress
+    landice/humboldt/mesh-3km_decomposition_test/velo-none_calving-damagecalving
+    landice/humboldt/mesh-3km_decomposition_test/velo-none_calving-ismip6_retreat
+    landice/humboldt/mesh-3km_restart_test/velo-none_calving-none
+    landice/humboldt/mesh-3km_restart_test/velo-none_calving-floating
+    landice/humboldt/mesh-3km_restart_test/velo-none_calving-eigencalving
+    landice/humboldt/mesh-3km_restart_test/velo-none_calving-specified_calving_velocity
+    landice/humboldt/mesh-3km_restart_test/velo-none_calving-von_mises_stress
+    landice/humboldt/mesh-3km_restart_test/velo-none_calving-damagecalving
+    landice/humboldt/mesh-3km_restart_test/velo-none_calving-ismip6_retreat
+
+humboldt_calving_tests_FO
+-------------------------
+
+The ``humboldt_calving_tests_FO`` test suite is identical
+``humboldt_calving_tests`` but with the FO solver enabled.
+In this case decomposition tests are not required to be bit-for-bit to pass but
+instead use a small tolerance to account for expected differences of the FO
+solver on differing numbers of processor.
+The suite includes:
+
+.. code-block:: none
+
+    landice/humboldt/mesh-3km_decomposition_test/velo-fo_calving-none
+    landice/humboldt/mesh-3km_decomposition_test/velo-fo_calving-floating
+    landice/humboldt/mesh-3km_decomposition_test/velo-fo_calving-eigencalving
+    landice/humboldt/mesh-3km_decomposition_test/velo-fo_calving-specified_calving_velocity
+    landice/humboldt/mesh-3km_decomposition_test/velo-fo_calving-von_mises_stress
+    landice/humboldt/mesh-3km_decomposition_test/velo-fo_calving-damagecalving
+    landice/humboldt/mesh-3km_decomposition_test/velo-fo_calving-ismip6_retreat
+    landice/humboldt/mesh-3km_restart_test/velo-fo_calving-none
+    landice/humboldt/mesh-3km_restart_test/velo-fo_calving-floating
+    landice/humboldt/mesh-3km_restart_test/velo-fo_calving-eigencalving
+    landice/humboldt/mesh-3km_restart_test/velo-fo_calving-specified_calving_velocity
+    landice/humboldt/mesh-3km_restart_test/velo-fo_calving-von_mises_stress
+    landice/humboldt/mesh-3km_restart_test/velo-fo_calving-damagecalving
+    landice/humboldt/mesh-3km_restart_test/velo-fo_calving-ismip6_retreat

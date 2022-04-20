@@ -29,5 +29,5 @@ Some helpful external links:
    :titlesonly:
 
    test_groups/index
-   framework/index
    suites
+   framework/index
