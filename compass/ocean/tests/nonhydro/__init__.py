@@ -1,5 +1,6 @@
 from compass.testgroup import TestGroup
 from compass.ocean.tests.nonhydro.solitary_wave import SolitaryWave
+from compass.ocean.tests.nonhydro.stratified_seiche import StratifiedSeiche
 
 class Nonhydro(TestGroup):
     """
@@ -14,4 +15,5 @@ class Nonhydro(TestGroup):
      
         self.add_test_case(
             SolitaryWave(test_group=self))
-
+        self.add_test_case(
+            StratifiedSeiche(test_group=self))
