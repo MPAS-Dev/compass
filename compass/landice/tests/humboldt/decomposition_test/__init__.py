@@ -88,7 +88,7 @@ class DecompositionTest(TestCase):
 
         var_list = ['thickness', ]
         if self.velo_solver == 'sia':
-            var_list.append('normalVelocity')
+            var_list.append('surfaceSpeed')
         if self.calving_law != 'none':
             var_list.append('calvingThickness')
 
@@ -102,9 +102,9 @@ class DecompositionTest(TestCase):
         elif self.velo_solver == 'FO':
             # validate thickness
             variable = ['thickness', ]
-            l1_norm = 1.0e-11
-            l2_norm = 1.0e-12
-            linf_norm = 1.0e-12
+            l1_norm = 1.0e-10
+            l2_norm = 1.0e-11
+            linf_norm = 1.0e-11
             compare_variables(test_case=self, variables=variable,
                               filename1=run_dir1+'/output.nc',
                               filename2=run_dir2+'/output.nc',
@@ -112,10 +112,10 @@ class DecompositionTest(TestCase):
                               linf_norm=linf_norm, quiet=False)
 
             # validate normalVelocity
-            variable = ['normalVelocity', ]
-            l1_norm = 1.0e-17
-            l2_norm = 1.0e-18
-            linf_norm = 1.0e-19
+            variable = ['surfaceSpeed', ]
+            l1_norm = 1.0e-15
+            l2_norm = 1.0e-16
+            linf_norm = 1.0e-17
             compare_variables(test_case=self, variables=variable,
                               filename1=run_dir1+'/output.nc',
                               filename2=run_dir2+'/output.nc',
@@ -123,10 +123,11 @@ class DecompositionTest(TestCase):
                               linf_norm=linf_norm, quiet=False)
 
             if 'calvingThickness' in var_list:
-                l1_norm = 0.0
-                l2_norm = 0.0
-                linf_norm = 0.0
-                compare_variables(test_case=self, variables='calvingThickness',
+                l1_norm = 1.0e-11
+                l2_norm = 1.0e-11
+                linf_norm = 1.0e-12
+                compare_variables(test_case=self,
+                                  variables=['calvingThickness' ,],
                                   filename1=run_dir1+'/output.nc',
                                   filename2=run_dir2+'/output.nc',
                                   l1_norm=l1_norm, l2_norm=l2_norm,
