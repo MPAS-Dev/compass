@@ -5,6 +5,18 @@ ANONYMOUS:
 # and "Preconditioner Type: MueLu" to " Preconditioner Type: ML" several lines below
   Build Type: Tpetra
 
+  Problem:
+    LandIce Field Norm:
+      sliding_velocity_basalside:
+        Regularization Type: Given Value
+        Regularization Value: 1.0e-4
+    LandIce BCs:
+      BC 0:
+        Basal Friction Coefficient:
+          Type: Power Law
+          Power Exponent: 3.33333333333E-1
+          Effective Pressure Type: Hydrostatic
+
 # Discretization Description
   Discretization:
     Exodus Output File Name: albany_output.exo
