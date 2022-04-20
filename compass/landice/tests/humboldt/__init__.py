@@ -1,5 +1,5 @@
 from compass.testgroup import TestGroup
-from compass.landice.tests.humboldt.default import Default
+from compass.landice.tests.humboldt.mesh_gen import MeshGen
 from compass.landice.tests.humboldt.decomposition_test \
      import DecompositionTest
 from compass.landice.tests.humboldt.restart_test import RestartTest
@@ -17,7 +17,7 @@ class Humboldt(TestGroup):
         super().__init__(mpas_core=mpas_core, name='humboldt')
 
         self.add_test_case(
-            Default(test_group=self))
+            MeshGen(test_group=self))
 
         # Set up tests without calving using the 1km mesh
         mesh_type = '1km'
