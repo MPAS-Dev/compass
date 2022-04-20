@@ -24,6 +24,13 @@ class RunModel(Step):
         the ``restart_run`` step of the ``restart_test`` runs the model
         twice, the second time with ``namelist.landice.rst`` and
         ``streams.landice.rst``
+
+    mesh_file : str
+        The name of the mesh file being used
+
+    forcing_file : str
+        The name of the forcing file being used
+
     """
     def __init__(self, test_case, velo_solver, mesh_type,
                  name='run_model', calving_law=None, subdir=None, cores=1,
@@ -45,7 +52,7 @@ class RunModel(Step):
             The calving law setting to use for this test case. If not
             specified, set to 'none'.
 
-        mesh_type : str
+        mesh_type : {'1km', '3km'}
             The resolution or mesh type of the test case
 
         name : str, optional
@@ -97,19 +104,6 @@ class RunModel(Step):
         super().__init__(test_case=test_case, name=name, subdir=subdir,
                          cores=cores, min_cores=min_cores, threads=threads)
 
-        for suffix in suffixes:
-            self.add_namelist_file(
-                'compass.landice.tests.humboldt', 'namelist.landice',
-                out_name='namelist.{}'.format(suffix))
-            options = {'config_velocity_solver': "'{}'".format(velo_solver),
-                       'config_calving': "'{}'".format(calving_law)}
-            self.add_namelist_options(options=options,
-                                      out_name='namelist.{}'.format(suffix))
-
-            self.add_streams_file(
-                'compass.landice.tests.humboldt', 'streams.landice',
-                out_name='streams.{}'.format(suffix))
-
         # Commented code to make use of mesh generation step
         # Note it will not include uReconstructX/Y or muFriction!
         # self.add_input_file(filename='landice_grid.nc',
@@ -117,15 +111,17 @@ class RunModel(Step):
         # self.add_input_file(filename='graph.info',
         #                     target='../mesh/graph.info')
 
-        # download and link the mesh
-        self.mesh_file = 'Humboldt_1to10km_r04_20210615.nc'
+        # download and link one of the premade meshes and forcing files
+        if self.mesh_type == '1km':
+            self.mesh_file = 'Humboldt_1to10km_r04_20210615.nc'
+            self.forcing_file = 'Humboldt_1to10km_MIROC5-rcp85_ismip-gis.nc'
+        elif self.mesh_type == '3km':
+            self.mesh_file = 'Humboldt_3to30km_r04_20210615.nc'
+            self.forcing_file = 'Humboldt_3to30km_MIROC5-rcp85_ismip6-gis.nc'
         self.add_input_file(filename=self.mesh_file, target=self.mesh_file,
                             database='')
-
-        # download and link a forcing file.
-        # This is only needed by some calving laws, but is fine for all runs
-        self.mesh_file = 'Humboldt_only_1to10km_MIROC5-rcp85_ismip-gis.nc'
-        self.add_input_file(filename=self.mesh_file, target=self.mesh_file,
+        self.add_input_file(filename=self.forcing_file,
+                            target=self.forcing_file,
                             database='')
 
         if velo_solver == 'FO':
@@ -136,6 +132,23 @@ class RunModel(Step):
         self.add_model_as_input()
 
         self.add_output_file(filename='output.nc')
+
+        for suffix in suffixes:
+            self.add_namelist_file(
+                'compass.landice.tests.humboldt', 'namelist.landice',
+                out_name='namelist.{}'.format(suffix))
+            options = {'config_velocity_solver': "'{}'".format(velo_solver),
+                       'config_calving': "'{}'".format(calving_law)}
+            self.add_namelist_options(options=options,
+                                      out_name='namelist.{}'.format(suffix))
+
+            stream_replacements = {'HUMBOLDT_INPUT_FILE': self.mesh_file,
+                                   'HUMBOLDT_FORCING_FILE': self.forcing_file}
+            self.add_streams_file(
+                'compass.landice.tests.humboldt', 'streams.landice.template',
+                out_name='streams.{}'.format(suffix),
+                template_replacements = stream_replacements)
+
 
     # no setup() is needed
 

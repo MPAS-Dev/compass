@@ -1,7 +1,7 @@
 <streams>
 
 <immutable_stream name="input"
-                  filename_template="Humboldt_1to10km_r04_20210615.nc"/>
+                  filename_template="{{ HUMBOLDT_INPUT_FILE }}"/>
 
 <immutable_stream name="restart"
                   type="input;output"
@@ -15,7 +15,7 @@
 <immutable_stream name="ismip6-gis"
                   type="input"
                   mode="forward;analysis"
-                  filename_template="Humboldt_only_1to10km_MIROC5-rcp85_ismip-gis.nc"
+                  filename_template="{{ HUMBOLDT_FORCING_FILE }}"
                   input_interval="0001-00-00_00:00:00"
                   reference_time="2000-07-01_00:00:00"
                   record_interval="0001-00-00_00:00:00"
@@ -39,6 +39,9 @@
     <var name="uReconstructX"/>
     <var name="uReconstructY"/>
     <var name="calvingThickness"/>
+    <var name="calvingVelocity"/>
+    <var name="vonMisesStress"/>
+    <var name="cellMask"/>
 
 </stream>
 

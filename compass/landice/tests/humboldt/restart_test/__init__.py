@@ -33,7 +33,7 @@ class RestartTest(TestCase):
         calving_law : str
             The calving law used for the test case
 
-        mesh_type : str
+        mesh_type : {'1km', '3km'}
             The resolution or type of mesh of the test case
         """
         name = 'restart_test'
@@ -49,7 +49,7 @@ class RestartTest(TestCase):
                          subdir=subdir)
 
         name = 'full_run'
-        step = RunModel(test_case=self, name=name, subdir=name, cores=12,
+        step = RunModel(test_case=self, name=name, subdir=name, cores=32,
                         threads=1, velo_solver=velo_solver,
                         calving_law=self.calving_law,
                         mesh_type=mesh_type)
@@ -63,7 +63,7 @@ class RestartTest(TestCase):
         self.add_step(step)
 
         name = 'restart_run'
-        step = RunModel(test_case=self, name=name, subdir=name, cores=12,
+        step = RunModel(test_case=self, name=name, subdir=name, cores=32,
                         threads=1, velo_solver=velo_solver,
                         calving_law=self.calving_law,
                         mesh_type=mesh_type,

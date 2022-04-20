@@ -41,7 +41,7 @@ class DecompositionTest(TestCase):
         calving_law : str
             The calving law used for the test case
 
-        mesh_type : str
+        mesh_type : {'1km', '3km'}
             The resolution or type of mesh of the test case
         """
         name = 'decomposition_test'
