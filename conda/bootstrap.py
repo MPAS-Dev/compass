@@ -341,9 +341,10 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, env_name,
     if albany != 'None':
         albany_flag_filename = f'{spack_view}/export_albany.in'
         if not os.path.exists(albany_flag_filename):
-            raise ValueError('Missing Albany linking flags in '
-                             '{albany_flag_filename}.\n Maybe your Spack '
-                             'environment may need to be rebuilt with Albany?')
+            raise ValueError(f'Missing Albany linking flags in '
+                             f'{albany_flag_filename}.\n Maybe your Spack '
+                             f'environment may need to be rebuilt with '
+                             f'Albany?')
         with open(albany_flag_filename, 'r') as f:
             albany_flags = f.read()
         if platform.system() == 'Darwin':
