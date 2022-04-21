@@ -18,7 +18,7 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="compass.config.CompassConfigParser.add_user_config" href="compass.config.CompassConfigParser.add_user_config.html" />
+    <link rel="next" title="compass.io.download" href="compass.io.download.html" />
     <link rel="prev" title="compass.Step.update_streams_at_runtime" href="compass.Step.update_streams_at_runtime.html" /> 
 </head>
 
@@ -72,18 +72,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../api.html#step">step</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="../api.html#config">config</a><ul class="current">
 <li class="toctree-l4 current"><a class="current reference internal" href="#">compass.config.CompassConfigParser</a></li>
-<li class="toctree-l4"><a class="reference internal" href="compass.config.CompassConfigParser.add_user_config.html">compass.config.CompassConfigParser.add_user_config</a></li>
-<li class="toctree-l4"><a class="reference internal" href="compass.config.CompassConfigParser.add_from_file.html">compass.config.CompassConfigParser.add_from_file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="compass.config.CompassConfigParser.add_from_package.html">compass.config.CompassConfigParser.add_from_package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="compass.config.CompassConfigParser.get.html">compass.config.CompassConfigParser.get</a></li>
-<li class="toctree-l4"><a class="reference internal" href="compass.config.CompassConfigParser.getint.html">compass.config.CompassConfigParser.getint</a></li>
-<li class="toctree-l4"><a class="reference internal" href="compass.config.CompassConfigParser.getfloat.html">compass.config.CompassConfigParser.getfloat</a></li>
-<li class="toctree-l4"><a class="reference internal" href="compass.config.CompassConfigParser.getboolean.html">compass.config.CompassConfigParser.getboolean</a></li>
-<li class="toctree-l4"><a class="reference internal" href="compass.config.CompassConfigParser.getlist.html">compass.config.CompassConfigParser.getlist</a></li>
-<li class="toctree-l4"><a class="reference internal" href="compass.config.CompassConfigParser.has_option.html">compass.config.CompassConfigParser.has_option</a></li>
-<li class="toctree-l4"><a class="reference internal" href="compass.config.CompassConfigParser.set.html">compass.config.CompassConfigParser.set</a></li>
-<li class="toctree-l4"><a class="reference internal" href="compass.config.CompassConfigParser.write.html">compass.config.CompassConfigParser.write</a></li>
-<li class="toctree-l4"><a class="reference internal" href="compass.config.CompassConfigParser.__getitem__.html">compass.config.CompassConfigParser.__getitem__</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#io">io</a></li>
@@ -149,9 +137,11 @@ sources to combine when needed.  The custom config parser allows provenance
 of the source of different config options and allows the “user” config
 options to always take precedence over other config options (even if they
 are added later).</p>
+<p>This version simply overrides the <code class="docutils literal notranslate"><span class="pre">combine()</span></code> method to also ensure that
+certain paths are absolute, rather than relative.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="compass.config.CompassConfigParser.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compass/config.html#CompassConfigParser.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.config.CompassConfigParser.__init__" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#compass.config.CompassConfigParser.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make a new (empty) config parser</p>
 </dd></dl>
 
@@ -165,37 +155,52 @@ are added later).</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="#compass.config.CompassConfigParser.__init__" title="compass.config.CompassConfigParser.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>()</p></td>
 <td><p>Make a new (empty) config parser</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compass.config.CompassConfigParser.add_from_file.html#compass.config.CompassConfigParser.add_from_file" title="compass.config.CompassConfigParser.add_from_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_from_file</span></code></a>(filename)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_from_file</span></code>(filename)</p></td>
 <td><p>Add the contents of a config file to the parser.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compass.config.CompassConfigParser.add_from_package.html#compass.config.CompassConfigParser.add_from_package" title="compass.config.CompassConfigParser.add_from_package"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_from_package</span></code></a>(package, config_filename[, ...])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_from_package</span></code>(package, config_filename[, ...])</p></td>
 <td><p>Add the contents of a config file to the parser.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compass.config.CompassConfigParser.add_user_config.html#compass.config.CompassConfigParser.add_user_config" title="compass.config.CompassConfigParser.add_user_config"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_user_config</span></code></a>(filename)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_user_config</span></code>(filename)</p></td>
 <td><p>Add a the contents of a user config file to the parser.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compass.config.CompassConfigParser.get.html#compass.config.CompassConfigParser.get" title="compass.config.CompassConfigParser.get"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get</span></code></a>(section, option)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">combine</span></code>()</p></td>
+<td><p>Combine the config files into one.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy</span></code>()</p></td>
+<td><p>Get a deep copy of the config parser</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get</span></code>(section, option)</p></td>
 <td><p>Get an option value for a given section.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compass.config.CompassConfigParser.getboolean.html#compass.config.CompassConfigParser.getboolean" title="compass.config.CompassConfigParser.getboolean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getboolean</span></code></a>(section, option)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">getboolean</span></code>(section, option)</p></td>
 <td><p>Get an option boolean value for a given section.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compass.config.CompassConfigParser.getfloat.html#compass.config.CompassConfigParser.getfloat" title="compass.config.CompassConfigParser.getfloat"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getfloat</span></code></a>(section, option)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">getexpression</span></code>(section, option[, dtype, ...])</p></td>
+<td><p>Get an option as an expression (typically a list, though tuples and dicts are also available).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">getfloat</span></code>(section, option)</p></td>
 <td><p>Get an option float value for a given section.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compass.config.CompassConfigParser.getint.html#compass.config.CompassConfigParser.getint" title="compass.config.CompassConfigParser.getint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getint</span></code></a>(section, option)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">getint</span></code>(section, option)</p></td>
 <td><p>Get an option integer value for a given section.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compass.config.CompassConfigParser.getlist.html#compass.config.CompassConfigParser.getlist" title="compass.config.CompassConfigParser.getlist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getlist</span></code></a>(section, option[, dtype])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">getlist</span></code>(section, option[, dtype])</p></td>
 <td><p>Get an option value as a list for a given section.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compass.config.CompassConfigParser.has_option.html#compass.config.CompassConfigParser.has_option" title="compass.config.CompassConfigParser.has_option"><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_option</span></code></a>(section, option)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_option</span></code>(section, option)</p></td>
 <td><p>Whether the given section has the given option</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compass.config.CompassConfigParser.set.html#compass.config.CompassConfigParser.set" title="compass.config.CompassConfigParser.set"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set</span></code></a>(section, option[, value, comment, user])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_section</span></code>(section)</p></td>
+<td><p>Whether the given section is part of the config</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">list_files</span></code>()</p></td>
+<td><p>Get a list of files contributing to the combined config options</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set</span></code>(section, option[, value, comment, user])</p></td>
 <td><p>Set the value of the given option in the given section.  The file from</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compass.config.CompassConfigParser.write.html#compass.config.CompassConfigParser.write" title="compass.config.CompassConfigParser.write"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write</span></code></a>(fp[, include_sources, include_comments])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">write</span></code>(fp[, include_sources, include_comments])</p></td>
 <td><p>Write the config options to the given file pointer.</p></td>
 </tr>
 </tbody>
@@ -209,7 +214,7 @@ are added later).</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="compass.Step.update_streams_at_runtime.html" class="btn btn-neutral float-left" title="compass.Step.update_streams_at_runtime" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="compass.config.CompassConfigParser.add_user_config.html" class="btn btn-neutral float-right" title="compass.config.CompassConfigParser.add_user_config" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="compass.io.download.html" class="btn btn-neutral float-right" title="compass.io.download" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
