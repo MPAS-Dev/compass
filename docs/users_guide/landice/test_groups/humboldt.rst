@@ -84,15 +84,27 @@ that MALI currently supports, paired with either the FO velocity solver or no
 velocity solver.
 The full set of combinations use the 3 km mesh.  There is additionally a
 decomposition test using the 1 km mesh that has calving disabled.
+Finally, there is a set of "full physics" tests that use von Mises calving,
+plus damage threshold calving and marine facemelting.  This configuration can
+be run with either the FO velocity solver or no velocity solver.  It is meant
+to exercise the widest range of physics currently supported in MALI.  To make
+this test faster for the integration test suite, it uses a 6-month time step
+instead of 4 months.
 
 restart_tests
 -------------
 
-There are a number of variants of a restart test that runs a 5-year simulation
+There are a number of variants of a restart test that runs a 3-year simulation
 compared to a 2-year simulation followed by a restart for an additional
-3 years.  Results should be bit-for-bit identical.  
+1 year.  Results should be bit-for-bit identical.  
 There are variants of this test for each calving law
 that MALI currently supports, paired with either the FO velocity solver or no
 velocity solver.
 The full set of combinations use the 3 km mesh.  There is additionally a
 decomposition test using the 1 km mesh that has calving disabled.
+Finally, there is a set of "full physics" tests that use von Mises calving,
+plus damage threshold calving and marine facemelting.  This configuration can
+be run with either the FO velocity solver or no velocity solver.  It is meant
+to exercise the widest range of physics currently supported in MALI.  To make
+this test faster for the integration test suite, it uses a 6-month time step
+instead of 4 months.

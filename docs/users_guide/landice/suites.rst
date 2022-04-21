@@ -70,6 +70,7 @@ The ``fo_integration`` test suite includes the following test cases:
     landice/greenland/fo_restart_test
     landice/thwaites/decomposition_test
     landice/thwaites/restart_test
+    landice/humboldt/mesh-3km_restart_test/velo-fo_calving-von_mises_stress_damage-threshold_faceMelting
 
 All of these tests use the FO velocity solver and require that MALI be compiled
 with the Albany library.
@@ -103,6 +104,7 @@ The suite includes:
     landice/humboldt/mesh-3km_decomposition_test/velo-none_calving-von_mises_stress
     landice/humboldt/mesh-3km_decomposition_test/velo-none_calving-damagecalving
     landice/humboldt/mesh-3km_decomposition_test/velo-none_calving-ismip6_retreat
+    landice/humboldt/mesh-3km_decomposition_test/velo-none_calving-von_mises_stress_damage-threshold_faceMelting
     landice/humboldt/mesh-3km_restart_test/velo-none_calving-none
     landice/humboldt/mesh-3km_restart_test/velo-none_calving-floating
     landice/humboldt/mesh-3km_restart_test/velo-none_calving-eigencalving
@@ -110,6 +112,7 @@ The suite includes:
     landice/humboldt/mesh-3km_restart_test/velo-none_calving-von_mises_stress
     landice/humboldt/mesh-3km_restart_test/velo-none_calving-damagecalving
     landice/humboldt/mesh-3km_restart_test/velo-none_calving-ismip6_retreat
+    landice/humboldt/mesh-3km_restart_test/velo-none_calving-von_mises_stress_damage-threshold_faceMelting
 
 humboldt_calving_tests_FO
 -------------------------
@@ -130,6 +133,7 @@ The suite includes:
     landice/humboldt/mesh-3km_decomposition_test/velo-fo_calving-von_mises_stress
     landice/humboldt/mesh-3km_decomposition_test/velo-fo_calving-damagecalving
     landice/humboldt/mesh-3km_decomposition_test/velo-fo_calving-ismip6_retreat
+    landice/humboldt/mesh-3km_decomposition_test/velo-fo_calving-von_mises_stress_damage-threshold_faceMelting
     landice/humboldt/mesh-3km_restart_test/velo-fo_calving-none
     landice/humboldt/mesh-3km_restart_test/velo-fo_calving-floating
     landice/humboldt/mesh-3km_restart_test/velo-fo_calving-eigencalving
@@ -137,3 +141,4 @@ The suite includes:
     landice/humboldt/mesh-3km_restart_test/velo-fo_calving-von_mises_stress
     landice/humboldt/mesh-3km_restart_test/velo-fo_calving-damagecalving
     landice/humboldt/mesh-3km_restart_test/velo-fo_calving-ismip6_retreat
+    landice/humboldt/mesh-3km_restart_test/velo-fo_calving-von_mises_stress_damage-threshold_faceMelting
