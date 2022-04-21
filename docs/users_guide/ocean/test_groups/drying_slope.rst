@@ -28,11 +28,14 @@ factors of 0.0025 and 0.01 are applied in separate simulations.
 By default, there are 10 vertical layers. The sigma vertical coordinate is
 used. Horizontal resolution of 250m and 1 km are available.
 
-The test group includes 1 test case.  The test case has 4 steps,
-``initial_state``, which defines the mesh and initial conditions for the model,
-two ``forward`` steps, one for each Rayleigh damping coefficient, and a ``viz``
-which performs visualization of the ssh field and comparison with the analytical
-solution as well as the solution from the ROMS model.
+The test group includes 1 test case.  The test case has 4 steps. The
+``initial_state`` defines the mesh and initial conditions for the model. For
+the ``sigma`` vertical coordiante, two ``forward`` steps are run, one for each
+Rayleigh damping coefficient; for the ``single_layer`` case, one ``forward``
+step is run at one value of the explicit bottom drag coefficient. The ``viz``
+step performs visualization of the ssh field. For the ``sigma`` case, the
+``viz`` step also produces a comparison plot with the analytical solution as
+well as the solution from the ROMS model.
 
 .. image:: images/drying_slope_validation.png
    :width: 500 px
