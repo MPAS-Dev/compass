@@ -33,7 +33,11 @@ class RunModel(Step):
 
     """
     def __init__(self, test_case, velo_solver, mesh_type,
-                 name='run_model', calving_law=None, subdir=None, cores=1,
+                 name='run_model',
+                 calving_law=None,
+                 damage=None,
+                 face_melt=False,
+                 subdir=None, cores=1,
                  min_cores=None, threads=1, suffixes=None):
         """
         Create a new test case
@@ -51,6 +55,12 @@ class RunModel(Step):
                       'damagecalving', 'ismip6_retreat'}, optional
             The calving law setting to use for this test case. If not
             specified, set to 'none'.
+
+        damage : str
+            The damage method used for the test case
+
+        face_melt : bool
+            Whether to include face melting
 
         mesh_type : {'1km', '3km'}
             The resolution or mesh type of the test case
@@ -96,6 +106,10 @@ class RunModel(Step):
             "Value of calving_law must be one of {'none', 'floating', " \
             "'eigencalving', 'specified_calving_velocity', " \
             "'von_Mises_stress', 'damagecalving', 'ismip6_retreat'}"
+        if not damage is None:
+            assert damage in {'threshold', }, \
+                "Value of damage must be one of {'threshold', }."
+
         if suffixes is None:
             suffixes = ['landice']
         self.suffixes = suffixes
@@ -139,6 +153,14 @@ class RunModel(Step):
                 out_name='namelist.{}'.format(suffix))
             options = {'config_velocity_solver': "'{}'".format(velo_solver),
                        'config_calving': "'{}'".format(calving_law)}
+            # optionally add damage and facemelt options if included
+            if damage == 'threshold':
+                options['config_calculate_damage'] = '.true.'
+                options['config_damage_calving_method'] = "'threshold'"
+                options['config_damage_calving_threshold'] = '0.5'
+            if face_melt == True:
+                options['config_front_mass_bal_grounded'] = "'ismip6'"
+            # now add accumulated options to namelist
             self.add_namelist_options(options=options,
                                       out_name='namelist.{}'.format(suffix))
 

@@ -21,20 +21,37 @@ class Humboldt(TestGroup):
 
         # Set up tests without calving using the 1km mesh
         mesh_type = '1km'
-
         for velo_solver in ['FO', ]:
-
             self.add_test_case(
                     DecompositionTest(test_group=self,
                                       velo_solver=velo_solver,
                                       calving_law='none',
                                       mesh_type=mesh_type))
-
             self.add_test_case(
                     RestartTest(test_group=self,
                                 velo_solver=velo_solver,
                                 calving_law='none',
                                 mesh_type=mesh_type))
+
+        # Set up 'full physics' tests using the 3km mesh
+        mesh_type = '3km'
+        for velo_solver in ['FO', 'none']:
+            self.add_test_case(
+                    DecompositionTest(test_group=self,
+                                      velo_solver=velo_solver,
+                                      calving_law='von_Mises_stress',
+                                      mesh_type=mesh_type,
+                                      damage='threshold',
+                                      face_melt=True))
+
+            self.add_test_case(
+                    RestartTest(test_group=self,
+                                velo_solver=velo_solver,
+                                calving_law='von_Mises_stress',
+                                mesh_type=mesh_type,
+                                damage='threshold',
+                                face_melt=True))
+
 
         # Create decomp and restart tests for all calving laws.
         # Note that FO velo solver is NOT BFB across decompositions

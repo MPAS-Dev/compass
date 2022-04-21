@@ -16,9 +16,16 @@ class RestartTest(TestCase):
 
     calving_law : str
         The calving law used for the test case
+
+    damage : str
+        The damage method used for the test case
+
+    face_melt : bool
+        Whether to include face melting
     """
 
-    def __init__(self, test_group, velo_solver, calving_law, mesh_type):
+    def __init__(self, test_group, velo_solver, calving_law, mesh_type,
+                 damage = None, face_melt = False):
         """
         Create the test case
 
@@ -35,16 +42,30 @@ class RestartTest(TestCase):
 
         mesh_type : {'1km', '3km'}
             The resolution or type of mesh of the test case
+
+        damage : str
+            The damage method used for the test case
+
+        face_melt : bool
+            Whether to include face melting
         """
         name = 'restart_test'
         self.mesh_type = mesh_type
         self.velo_solver = velo_solver
-        if calving_law:
-            self.calving_law = calving_law
-        else:
-            self.calving_law = 'none'
+        assert self.velo_solver in {'sia', 'FO', 'none'}, \
+            "Value of velo_solver must be one of {'sia', 'FO', 'none'}"
+        self.calving_law = calving_law
+        self.damage = damage
+        self.face_melt = face_melt
+
+        # build dir name.  always include velo solver and calving law
         subdir = 'mesh-{}_restart_test/velo-{}_calving-{}'.format(
                  mesh_type, velo_solver.lower(), calving_law.lower())
+        # append damage and facemelt if provided
+        if not damage is None:
+            subdir += '_damage-{}'.format(damage)
+        if face_melt == True:
+            subdir += '_faceMelting'
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
 
@@ -52,6 +73,8 @@ class RestartTest(TestCase):
         step = RunModel(test_case=self, name=name, subdir=name, cores=32,
                         threads=1, velo_solver=velo_solver,
                         calving_law=self.calving_law,
+                        damage=self.damage,
+                        face_melt=self.face_melt,
                         mesh_type=mesh_type)
         # modify the namelist options and streams file
         step.add_namelist_file(
@@ -65,7 +88,9 @@ class RestartTest(TestCase):
         name = 'restart_run'
         step = RunModel(test_case=self, name=name, subdir=name, cores=32,
                         threads=1, velo_solver=velo_solver,
-                        calving_law=self.calving_law,
+                        calving_law=self.calving_law, 
+                        damage=self.damage,
+                        face_melt=self.face_melt,
                         mesh_type=mesh_type,
                         suffixes=['landice', 'landice.rst'])
 
@@ -94,9 +119,18 @@ class RestartTest(TestCase):
         Test cases can override this method to perform validation of variables
         and timers
         """
-        variables = ['thickness', 'normalVelocity']
-        if self.calving_law != 'none':
+        variables = ['thickness', 'surfaceSpeed']
+
+        if not self.calving_law is None and self.calving_law != 'none':
             variables.append('calvingThickness')
+
+        if not self.damage is None and self.damage != 'none':
+            variables.append('damage')
+
+        if self.face_melt == True:
+            variables.append('faceMeltingThickness')
+
+
         compare_variables(test_case=self, variables=variables,
                           filename1='full_run/output.nc',
                           filename2='restart_run/output.nc')
