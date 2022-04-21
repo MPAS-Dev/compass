@@ -52,7 +52,6 @@ class Humboldt(TestGroup):
                                 damage='threshold',
                                 face_melt=True))
 
-
         # Create decomp and restart tests for all calving laws.
         # Note that FO velo solver is NOT BFB across decompositions
         # currently, so instead test using 'none' (fixed velocity field from

@@ -33,7 +33,7 @@ class DecompositionTest(TestCase):
     """
 
     def __init__(self, test_group, velo_solver, calving_law, mesh_type,
-                 damage = None, face_melt = False):
+                 damage=None, face_melt=False):
         """
         Create the test case
 
@@ -70,9 +70,9 @@ class DecompositionTest(TestCase):
         subdir = 'mesh-{}_decomposition_test/velo-{}_calving-{}'.format(
                  mesh_type, velo_solver.lower(), calving_law.lower())
         # append damage and facemelt if provided
-        if not damage is None:
+        if damage is not None:
             subdir += '_damage-{}'.format(damage)
-        if face_melt == True:
+        if face_melt is True:
             subdir += '_faceMelting'
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
@@ -111,13 +111,13 @@ class DecompositionTest(TestCase):
         if self.velo_solver == 'sia':
             var_list.append('surfaceSpeed')
 
-        if not self.calving_law is None and self.calving_law != 'none':
+        if self.calving_law is not None and self.calving_law != 'none':
             var_list.append('calvingThickness')
 
-        if not self.damage is None and self.damage != 'none':
+        if self.damage is not None and self.damage != 'none':
             var_list.append('damage')
 
-        if self.face_melt == True:
+        if self.face_melt is True:
             var_list.append('faceMeltingThickness')
 
         if self.velo_solver in {'sia', 'none'}:
@@ -154,7 +154,7 @@ class DecompositionTest(TestCase):
                 l2_norm = 1.0e-11
                 linf_norm = 1.0e-12
                 compare_variables(test_case=self,
-                                  variables=['calvingThickness' ,],
+                                  variables=['calvingThickness', ],
                                   filename1=run_dir1+'/output.nc',
                                   filename2=run_dir2+'/output.nc',
                                   l1_norm=l1_norm, l2_norm=l2_norm,
@@ -165,7 +165,7 @@ class DecompositionTest(TestCase):
                 l2_norm = 1.0e-11
                 linf_norm = 1.0e-12
                 compare_variables(test_case=self,
-                                  variables=['damage' ,],
+                                  variables=['damage', ],
                                   filename1=run_dir1+'/output.nc',
                                   filename2=run_dir2+'/output.nc',
                                   l1_norm=l1_norm, l2_norm=l2_norm,
@@ -176,9 +176,8 @@ class DecompositionTest(TestCase):
                 l2_norm = 1.0e-11
                 linf_norm = 1.0e-12
                 compare_variables(test_case=self,
-                                  variables=['faceMeltingThickness' ,],
+                                  variables=['faceMeltingThickness', ],
                                   filename1=run_dir1+'/output.nc',
                                   filename2=run_dir2+'/output.nc',
                                   l1_norm=l1_norm, l2_norm=l2_norm,
                                   linf_norm=linf_norm, quiet=False)
-

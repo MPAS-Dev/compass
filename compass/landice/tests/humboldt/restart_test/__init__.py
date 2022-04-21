@@ -25,7 +25,7 @@ class RestartTest(TestCase):
     """
 
     def __init__(self, test_group, velo_solver, calving_law, mesh_type,
-                 damage = None, face_melt = False):
+                 damage=None, face_melt=False):
         """
         Create the test case
 
@@ -62,9 +62,9 @@ class RestartTest(TestCase):
         subdir = 'mesh-{}_restart_test/velo-{}_calving-{}'.format(
                  mesh_type, velo_solver.lower(), calving_law.lower())
         # append damage and facemelt if provided
-        if not damage is None:
+        if damage is not None:
             subdir += '_damage-{}'.format(damage)
-        if face_melt == True:
+        if face_melt is True:
             subdir += '_faceMelting'
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
@@ -88,7 +88,7 @@ class RestartTest(TestCase):
         name = 'restart_run'
         step = RunModel(test_case=self, name=name, subdir=name, cores=32,
                         threads=1, velo_solver=velo_solver,
-                        calving_law=self.calving_law, 
+                        calving_law=self.calving_law,
                         damage=self.damage,
                         face_melt=self.face_melt,
                         mesh_type=mesh_type,
@@ -121,15 +121,14 @@ class RestartTest(TestCase):
         """
         variables = ['thickness', 'surfaceSpeed']
 
-        if not self.calving_law is None and self.calving_law != 'none':
+        if self.calving_law is not None and self.calving_law != 'none':
             variables.append('calvingThickness')
 
-        if not self.damage is None and self.damage != 'none':
+        if self.damage is not None and self.damage != 'none':
             variables.append('damage')
 
-        if self.face_melt == True:
+        if self.face_melt is True:
             variables.append('faceMeltingThickness')
-
 
         compare_variables(test_case=self, variables=variables,
                           filename1='full_run/output.nc',

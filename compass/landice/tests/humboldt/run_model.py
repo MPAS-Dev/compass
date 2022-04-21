@@ -106,7 +106,7 @@ class RunModel(Step):
             "Value of calving_law must be one of {'none', 'floating', " \
             "'eigencalving', 'specified_calving_velocity', " \
             "'von_Mises_stress', 'damagecalving', 'ismip6_retreat'}"
-        if not damage is None:
+        if damage is not None:
             assert damage in {'threshold', }, \
                 "Value of damage must be one of {'threshold', }."
 
@@ -158,7 +158,7 @@ class RunModel(Step):
                 options['config_calculate_damage'] = '.true.'
                 options['config_damage_calving_method'] = "'threshold'"
                 options['config_damage_calving_threshold'] = '0.5'
-            if face_melt == True:
+            if face_melt is True:
                 options['config_front_mass_bal_grounded'] = "'ismip6'"
                 # Assuming that if have this on, this is a 'full physics'
                 # run and we want to keep it cheaper to allow it to be run in
@@ -176,8 +176,7 @@ class RunModel(Step):
             self.add_streams_file(
                 'compass.landice.tests.humboldt', 'streams.landice.template',
                 out_name='streams.{}'.format(suffix),
-                template_replacements = stream_replacements)
-
+                template_replacements=stream_replacements)
 
     # no setup() is needed
 
