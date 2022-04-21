@@ -41,6 +41,7 @@ def run_tests(suite_name, quiet=False, is_test_case=False, steps_to_run=None,
     # ANSI fail text: https://stackoverflow.com/a/287944/7728169
     start_fail = '\033[91m'
     start_pass = '\033[92m'
+    start_time_color = '\033[94m'
     end = '\033[0m'
     pass_str = '{}PASS{}'.format(start_pass, end)
     success_str = '{}SUCCESS{}'.format(start_pass, end)
@@ -188,6 +189,12 @@ def run_tests(suite_name, quiet=False, is_test_case=False, steps_to_run=None,
                     failures += 1
 
                 test_times[test_name] = time.time() - test_start
+
+                secs = round(test_times[test_name])
+                mins = secs // 60
+                secs -= 60 * mins
+                logger.info(f'  test runtime:        '
+                            f'{start_time_color}{mins:02d}:{secs:02d}{end}')
 
         suite_time = time.time() - suite_start
 
