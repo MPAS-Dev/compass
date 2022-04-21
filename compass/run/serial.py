@@ -189,6 +189,11 @@ def run_tests(suite_name, quiet=False, is_test_case=False, steps_to_run=None,
 
                 test_times[test_name] = time.time() - test_start
 
+                secs = round(test_times[test_name])
+                mins = secs // 60
+                secs -= 60 * mins
+                logger.info(f'  test runtime:        {mins:02d}:{secs:02d}')
+
         suite_time = time.time() - suite_start
 
         os.chdir(cwd)
