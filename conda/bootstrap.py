@@ -366,7 +366,7 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, env_name,
 
 def write_load_compass(template_path, activ_path, conda_base, env_type,
                        activ_suffix, prefix, env_name, spack_script, machine,
-                       env_vars, env_only):
+                       env_vars, env_only, source_path):
 
     try:
         os.makedirs(activ_path)
@@ -389,6 +389,10 @@ def write_load_compass(template_path, activ_path, conda_base, env_type,
     if machine is not None and not machine.startswith('conda'):
         env_vars = f'{env_vars}\n' \
                    f'export COMPASS_MACHINE={machine}'
+
+    if env_type == 'dev':
+        env_vars = f'{env_vars}\n' \
+                   f'export COMPASS_BRANCH={source_path}'
 
     filename = f'{template_path}/load_compass.template'
     with open(filename, 'r') as f:
@@ -721,7 +725,8 @@ def main():
 
     script_filename = write_load_compass(
         conda_template_path, activ_path, conda_base, env_type, activ_suffix,
-        prefix, env_name, spack_script, machine, env_vars, args.env_only)
+        prefix, env_name, spack_script, machine, env_vars, args.env_only,
+        source_path)
 
     if args.check:
         check_env(script_filename, env_name)

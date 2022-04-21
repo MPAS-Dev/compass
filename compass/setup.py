@@ -235,6 +235,12 @@ def setup_case(path, test_case, config_file, machine, work_dir, baseline_dir,
     config.add_from_package(test_case.__module__,
                             f'{test_case.name}.cfg', exception=False)
 
+    if 'COMPASS_BRANCH' in os.environ:
+        compass_branch = os.environ['COMPASS_BRANCH']
+        config.set('paths', 'compass_branch', compass_branch)
+    else:
+        config.set('paths', 'compass_branch', os.getcwd())
+
     test_case_dir = os.path.join(work_dir, path)
     try:
         os.makedirs(test_case_dir)
@@ -253,6 +259,7 @@ def setup_case(path, test_case, config_file, machine, work_dir, baseline_dir,
 
     # set the mpas_model path from the command line if provided
     if mpas_model_path is not None:
+        mpas_model_path = os.path.abspath(mpas_model_path)
         config.set('paths', 'mpas_model', mpas_model_path, user=True)
 
     config.set('test_case', 'steps_to_run', ' '.join(test_case.steps_to_run))
