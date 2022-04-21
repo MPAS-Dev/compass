@@ -223,6 +223,13 @@
         <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;compass.</span><span class="si">{</span><span class="n">mpas_core</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mpas_core</span><span class="si">}</span><span class="s1">.cfg&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">config_filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">config</span><span class="o">.</span><span class="n">add_user_config</span><span class="p">(</span><span class="n">config_filename</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s1">&#39;COMPASS_BRANCH&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+            <span class="n">compass_branch</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;COMPASS_BRANCH&#39;</span><span class="p">]</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="s1">&#39;compass_branch&#39;</span><span class="p">,</span> <span class="n">compass_branch</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="s1">&#39;compass_branch&#39;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
+
         <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="s1">&#39;mpas_model&#39;</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Couldn</span><span class="se">\&#39;</span><span class="s1">t find MPAS model.  Not in user config &#39;</span>
                              <span class="s1">&#39;file or passed with -p flag.&#39;</span><span class="p">)</span>
