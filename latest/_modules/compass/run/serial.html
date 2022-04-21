@@ -146,6 +146,7 @@
     <span class="c1"># ANSI fail text: https://stackoverflow.com/a/287944/7728169</span>
     <span class="n">start_fail</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[91m&#39;</span>
     <span class="n">start_pass</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[92m&#39;</span>
+    <span class="n">start_time_color</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[94m&#39;</span>
     <span class="n">end</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[0m&#39;</span>
     <span class="n">pass_str</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">PASS</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">start_pass</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
     <span class="n">success_str</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">SUCCESS</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">start_pass</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
@@ -293,6 +294,12 @@
                     <span class="n">failures</span> <span class="o">+=</span> <span class="mi">1</span>
 
                 <span class="n">test_times</span><span class="p">[</span><span class="n">test_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">test_start</span>
+
+                <span class="n">secs</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">test_times</span><span class="p">[</span><span class="n">test_name</span><span class="p">])</span>
+                <span class="n">mins</span> <span class="o">=</span> <span class="n">secs</span> <span class="o">//</span> <span class="mi">60</span>
+                <span class="n">secs</span> <span class="o">-=</span> <span class="mi">60</span> <span class="o">*</span> <span class="n">mins</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  test runtime:        &#39;</span>
+                            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">start_time_color</span><span class="si">}{</span><span class="n">mins</span><span class="si">:</span><span class="s1">02d</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">secs</span><span class="si">:</span><span class="s1">02d</span><span class="si">}{</span><span class="n">end</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
         <span class="n">suite_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">suite_start</span>
 
