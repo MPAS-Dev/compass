@@ -119,12 +119,16 @@ and debugging.
 Config files
 ------------
 
-The ``compass.config`` module includes the
-:py:class:`compass.config.CompassConfigParser` class reading, getting, setting,
-and writing config options and :ref:`config_files`.
+The primary documentation for the config parser is in
+`MPAS-Tools config parser <http://mpas-dev.github.io/MPAS-Tools/stable/config.html>`_.
+Here, we include some specific details relevant to using the
+:py:class:`mpas_tools.config.MpasConfigParser` in compass.
 
+Here, we provide the :py:class:`compass.config.CompassConfigParser` that has
+almost the same functionality but also ensures that certain relative paths are
+converted automatically to absolute paths.
 
-The :py:meth:`compass.config.CompassConfigParser.add_from_package()` method can
+The :py:meth:`mpas_tools.config.MpasConfigParser.add_from_package()` method can
 be used to add the contents of a config file within a package to the config
 options. Examples of this can be found in many test cases as well as
 :py:func:`compass.setup.setup_case()`. Here is a typical example from
@@ -161,45 +165,31 @@ cases in a configuration, as in this example from
 
 If a test group doesn't have any config options, nothing will happen.
 
-The ``CompassConfigParser`` class also includes methods for adding a user
+The ``MpasConfigParser`` class also includes methods for adding a user
 config file and other config files by file name, but these are largely intended
 for use by the framework rather than individual test cases.
 
-Other methods for the ``CompassConfigParser`` are similar to those for
+Other methods for the ``MpasConfigParser`` are similar to those for
 :py:class:`configparser.ConfigParser`.  In addition to ``get()``,
 ``getinteger()``, ``getfloat()`` and ``getboolean()`` methods, this class
-implements :py:meth:`compass.config.CompassConfigParser.getlist()`, which
+implements :py:meth:`mpas_tools.config.MpasConfigParser.getlist()`, which
 can be used to parse a config value separated by spaces and/or commas into
-a list of strings, floats, integers, booleans, etc.
-
-Currently, ``CompassConfigParser`` supports accessing a config section using
-section names as keys, e.g.:
-
-.. code-block:: python
-
-    section = self.config['enthalpy_benchmark_viz']
-    display_image = section.getboolean('display_image')
-    ...
-
-But it does not allow assignment of a section or many of the other
-dictionary-like features supported by :py:class:`configparser.ConfigParser`.
+a list of strings, floats, integers, booleans, etc. Another useful method
+is :py:meth:`mpas_tools.config.MpasConfigParser.getexpression()`, which can
+be used to get python dictionaries, lists and tuples as well as a small set
+of functions (``range()``, :py:meth:`numpy.linspace()`,
+:py:meth:`numpy.arange()`, and :py:meth:`numpy.array()`)
 
 Comments in config files
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-One of the main advantages of :py:class:`compass.config.CompassConfigParser`
+One of the main advantages of :py:class:`mpas_tools.config.MpasConfigParser`
 over :py:class:`configparser.ConfigParser` is that it keeps track of comments
-that are associated with config sections and options.  There are a few "rules"
-that make this possible.
+that are associated with config sections and options.
 
-Comments must be with the ``#`` character.  They must be placed *before* the
-config section or option in question (preferably without blank lines between).
-The comments can be any number of lines.
+See `comments in config files <http://mpas-dev.github.io/MPAS-Tools/stable/config.html#config_comments>`_
+in MPAS-Tools for more details.
 
-.. note::
-
-    Inline comments (after a config option on the same line) are not allowed
-    and will be parsed as part of the config option itself.
 
 .. _dev_logging:
 
