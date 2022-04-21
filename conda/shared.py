@@ -57,6 +57,11 @@ def parse_args(bootstrap):
                         action='store_true',
                         help="Whether to include albany in the spack "
                              "environment")
+    parser.add_argument("--without_openmp", dest="without_openmp",
+                        action='store_true',
+                        help="If this flag is included, OPENMP=true will not "
+                             "be added to the load script.  By default, MPAS "
+                             "builds will be with OpenMP.")
     if bootstrap:
         parser.add_argument("--local_conda_build", dest="local_conda_build",
                             type=str,
