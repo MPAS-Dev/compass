@@ -160,6 +160,13 @@ class RunModel(Step):
                 options['config_damage_calving_threshold'] = '0.5'
             if face_melt == True:
                 options['config_front_mass_bal_grounded'] = "'ismip6'"
+                # Assuming that if have this on, this is a 'full physics'
+                # run and we want to keep it cheaper to allow it to be run in
+                # the full integration suite, so we increase the dt if a
+                # 3km run.
+                # NOTE: This could lead to confusion!
+                if self.mesh_type == '3km':
+                    options['config_dt'] = "'0000-06-00_00:00:00'"
             # now add accumulated options to namelist
             self.add_namelist_options(options=options,
                                       out_name='namelist.{}'.format(suffix))
