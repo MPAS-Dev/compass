@@ -754,8 +754,14 @@ def main():
     commands = '{}; conda clean -y -p -t'.format(activate_base)
     check_call(commands)
 
-    update_permissions(config, env_type, activ_path, conda_base,
-                       spack_base)
+    if args.update_spack or env_type != 'dev':
+        # we need to update permissions on shared stuff
+        if not args.update_spack:
+            # don't waste time on Spack permissions
+            spack_base = None
+
+        update_permissions(config, env_type, activ_path, conda_base,
+                           spack_base)
 
 
 if __name__ == '__main__':
