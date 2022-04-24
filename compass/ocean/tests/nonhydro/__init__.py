@@ -2,6 +2,7 @@ from compass.testgroup import TestGroup
 from compass.ocean.tests.nonhydro.solitary_wave import SolitaryWave
 from compass.ocean.tests.nonhydro.stratified_seiche import StratifiedSeiche
 
+
 class Nonhydro(TestGroup):
     """
     A test group for nonhydrostatic test cases
@@ -12,7 +13,7 @@ class Nonhydro(TestGroup):
             the MPAS core that this test group belongs to
         """
         super().__init__(mpas_core=mpas_core, name='nonhydro')
-     
+
         self.add_test_case(
             SolitaryWave(test_group=self))
         self.add_test_case(

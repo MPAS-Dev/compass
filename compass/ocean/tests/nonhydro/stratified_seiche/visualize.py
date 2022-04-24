@@ -78,11 +78,11 @@ class Visualize(Step):
         #vertical velocity
         zMid_origin1 = zMidH[12, 0, :]/16
         print(np.shape(zMid_origin1))
-        vertAleTransportTop_origin1 = vertAleTransportTopH[12, 0, 0:40]/max(abs(vertAleTransportTopH[12, 0, 0:40]))
+        vertAleTransportTop_origin1 = vertAleTransportTopH[12, 0, 0:100]/max(abs(vertAleTransportTopH[12, 0, 0:100]))
         print(np.shape(vertAleTransportTop_origin1))
         zMid_origin2 = zMidNH[12, 0, :]/16
         print(np.shape(zMid_origin2))
-        vertAleTransportTop_origin2 = vertAleTransportTopNH[12, 0, 0:40]/max(abs(vertAleTransportTopNH[12, 0, 0:40]))
+        vertAleTransportTop_origin2 = vertAleTransportTopNH[12, 0, 0:100]/max(abs(vertAleTransportTopNH[12, 0, 0:100]))
         print(np.shape(vertAleTransportTop_origin2))
 
         #plots
@@ -90,7 +90,6 @@ class Visualize(Step):
         plt.subplot(1, 2, 1) 
         plt.plot(normalVelocity1, zMidEdge1, 'r')
         plt.plot(normalVelocity2, zMidEdge2, 'b')
-        plt.plot(normalVelocity2, zMidEdge2, '--', color='black')
         plt.xlabel('u/u_max')
         plt.ylabel('z/H')
         plt.yticks([0, -0.2, -0.4, -0.6, -0.8, -1])
@@ -99,7 +98,6 @@ class Visualize(Step):
         plt.subplot(1, 2, 2)
         plt.plot(vertAleTransportTop_origin1, zMid_origin1, 'r', label='H model')
         plt.plot(vertAleTransportTop_origin2, zMid_origin2, 'b', label='NH model')
-        plt.plot(vertAleTransportTop_origin2, zMid_origin2, '--', color='black', label='eigenfunction analysis')
         plt.xlim([-1.1, 1.1])
         plt.xlabel('w/w_max')
         plt.legend()
