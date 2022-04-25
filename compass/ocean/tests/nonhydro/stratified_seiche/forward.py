@@ -47,14 +47,17 @@ class Forward(Step):
         self.nonhydro_mode = nonhydro_mode
         super().__init__(test_case=test_case, name=name,
                          cores=cores, min_cores=min_cores, threads=threads)
-        self.add_namelist_file('compass.ocean.tests.nonhydro.stratified_seiche',
-                               'namelist.forward')
+        self.add_namelist_file(
+            'compass.ocean.tests.nonhydro.stratified_seiche',
+            'namelist.forward')
         if nonhydro_mode:
-            self.add_namelist_file('compass.ocean.tests.nonhydro.stratified_seiche',
-                                   'namelist.nonhydro')
+            self.add_namelist_file(
+                'compass.ocean.tests.nonhydro.stratified_seiche',
+                'namelist.nonhydro')
         else:
-            self.add_namelist_file('compass.ocean.tests.nonhydro.stratified_seiche',
-                                   'namelist.hydro')
+            self.add_namelist_file(
+                'compass.ocean.tests.nonhydro.stratified_seiche',
+                'namelist.hydro')
 
         # make sure output is double precision
         self.add_streams_file('compass.ocean.streams', 'streams.output')

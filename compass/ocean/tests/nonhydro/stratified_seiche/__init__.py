@@ -1,5 +1,6 @@
 from compass.testcase import TestCase
-from compass.ocean.tests.nonhydro.stratified_seiche.initial_state import InitialState
+from compass.ocean.tests.nonhydro.stratified_seiche.initial_state import \
+    InitialState
 from compass.ocean.tests.nonhydro.stratified_seiche.forward import Forward
 from compass.ocean.tests.nonhydro.stratified_seiche.visualize import Visualize
 

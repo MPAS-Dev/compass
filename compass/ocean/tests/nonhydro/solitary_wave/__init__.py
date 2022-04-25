@@ -1,5 +1,6 @@
 from compass.testcase import TestCase
-from compass.ocean.tests.nonhydro.solitary_wave.initial_state import InitialState
+from compass.ocean.tests.nonhydro.solitary_wave.initial_state import \
+    InitialState
 from compass.ocean.tests.nonhydro.solitary_wave.forward import Forward
 from compass.ocean.tests.nonhydro.solitary_wave.visualize import Visualize
 

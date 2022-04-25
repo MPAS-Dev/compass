@@ -50,11 +50,13 @@ class Forward(Step):
         self.add_namelist_file('compass.ocean.tests.nonhydro.solitary_wave',
                                'namelist.forward')
         if nonhydro_mode:
-            self.add_namelist_file('compass.ocean.tests.nonhydro.solitary_wave',
-                                   'namelist.nonhydro')
+            self.add_namelist_file(
+                'compass.ocean.tests.nonhydro.solitary_wave',
+                'namelist.nonhydro')
         else:
-            self.add_namelist_file('compass.ocean.tests.nonhydro.solitary_wave',
-                                   'namelist.hydro')
+            self.add_namelist_file(
+                'compass.ocean.tests.nonhydro.solitary_wave',
+                'namelist.hydro')
 
         # make sure output is double precision
         self.add_streams_file('compass.ocean.streams', 'streams.output')

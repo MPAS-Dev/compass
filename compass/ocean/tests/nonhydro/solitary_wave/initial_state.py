@@ -14,7 +14,7 @@ from compass.step import Step
 class InitialState(Step):
     """
     A step for creating a mesh and initial condition for solitary wave
-    test cases 
+    test case
     """
     def __init__(self, test_case):
         """
@@ -24,8 +24,7 @@ class InitialState(Step):
         ----------
         test_case : compass.TestCase
         """
-        super().__init__(test_case=test_case, name='initial_state')
-        #self.resolution = resolution
+        super().__init__(test_case=test_case, name='initial_state') 
 
         for file in ['base_mesh.nc', 'culled_mesh.nc', 'culled_graph.info',
                      'initial_state.nc']:
@@ -54,18 +53,18 @@ class InitialState(Step):
                          logger=logger)
         write_netcdf(dsMesh, 'culled_mesh.nc')
 
-        section = config['solitary_wave']
-        #Prendere cose da .cfg file
+        section = config['solitary_wave'] 
         maxDepth = section.getfloat('maxDepth')
         nVertLevels = section.getint('nVertLevels')
         config_eos_linear_alpha = section.getfloat('eos_linear_alpha')
         config_eos_linear_beta = section.getfloat('eos_linear_beta')
         config_eos_linear_Tref = section.getfloat('eos_linear_Tref')
         config_eos_linear_Sref = section.getfloat('eos_linear_Sref')
-        config_eos_linear_densityref = section.getfloat('eos_linear_densityref')
+        config_eos_linear_densityref = section.getfloat(
+                                     'eos_linear_densityref')
 
         # comment('obtain dimensions and mesh variables')
-        vertical_coordinate = 'uniform'        
+        vertical_coordinate = 'uniform'
 
         ds = dsMesh.copy()
         nCells = ds.nCells.size
@@ -78,17 +77,12 @@ class InitialState(Step):
         yEdge = ds.yEdge
         angleEdge = ds.angleEdge
         cellsOnEdge = ds.cellsOnEdge
-        edgesOnCell = ds.edgesOnCell 
-
-        #ds['bottomDepth'] = bottom_depth * xarray.ones_like(xCell)
-        #ds['ssh'] = xarray.zeros_like(xCell)
-
-        #init_vertical_coord(config, ds)
+        edgesOnCell = ds.edgesOnCell
 
         # Adjust coordinates so first edge is at zero in x and y
         xOffset = xEdge.min()
         xCell -= xOffset
-        xEdge -= xOffset 
+        xEdge -= xOffset
         yOffset = np.min(yEdge)
         yCell -= yOffset
         yEdge -= yOffset
@@ -99,31 +93,31 @@ class InitialState(Step):
         xCellMid = 0.5 * (xCellMax + xCellMin)
         xEdgeMax = max(xEdge)
 
-    	# initialize velocity field 
+        # initialize velocity field
         u = np.zeros([1, nEdges, nVertLevels])
 
         # comment('create and initialize variables')
         time1 = time.time()
 
-        varsZ = [ 'refLayerThickness', 'refBottomDepth', 'refZMid', 'vertCoordMovementWeights']
+        varsZ = ['refLayerThickness', 'refBottomDepth', 'refZMid', 'vertCoordMovementWeights']
         for var in varsZ:
             globals()[var] = np.nan * np.ones(nVertLevels)
 
         vars2D = ['ssh', 'bottomDepth', 'surfaceStress',
-              'atmosphericPressure', 'boundaryLayerDepth']
+            'atmosphericPressure', 'boundaryLayerDepth']
         for var in vars2D:
             globals()[var] = np.nan * np.ones(nCells)
         maxLevelCell = np.ones(nCells, dtype=np.int32)
 
-        vars3D = [ 'layerThickness','temperature', 'salinity',
+        vars3D = ['layerThickness', 'temperature', 'salinity',
              'zMid', 'density']
         for var in vars3D:
             globals()[var] = np.nan * np.ones([1, nCells, nVertLevels])
         restingThickness = np.nan * np.ones([nCells, nVertLevels])
 
         # Note that this line shouldn't be required, but if layerThickness is
-        # initialized with nans, the simulation dies. It must multiply by a nan on
-        # a land cell on an edge, and then multiply by zero.
+        # initialized with nans, the simulation dies. It must multiply by
+        # a nan or a land cell on an edge, and then multiply by zero.
         layerThickness[:] = -1e34
 
         # equally spaced layers
@@ -137,35 +131,37 @@ class InitialState(Step):
         # SSH
         ssh[:] = 0.0
 
-        # Compute maxLevelCell and layerThickness for z-level (variation only on top)
-        if (vertical_coordinate=='z'):
+        # Compute maxLevelCell and layerThickness for z-level 
+        # (variation only on top)
+        if (vertical_coordinate == 'z'):
             vertCoordMovementWeights[:] = 0.0
             vertCoordMovementWeights[0] = 1.0
             for iCell in range(0, nCells):
                 maxLevelCell[iCell] = nVertLevels - 1
-                bottomDepth[iCell] = refBottomDepth[nVertLevels - 1]
-                #layerThickness[0, iCell, 0:maxLevelCell[iCell] ] = refLayerThickness[0:maxLevelCell[iCell]]
+                bottomDepth[iCell] = refBottomDepth[nVertLevels - 1] 
                 layerThickness[0, iCell, :] = refLayerThickness[:]
                 layerThickness[0, iCell, 0] += ssh[iCell]
             restingThickness[:, :] = layerThickness[0, :, :]
         #Compute maxLevelCell and layerThickness for uniform
-        elif (vertical_coordinate=='uniform'):
+        elif (vertical_coordinate == 'uniform'):
             vertCoordMovementWeights[:] = 1.0
             vertCoordMovementWeights[0] = 1.0
             for iCell in range(0, nCells):
                 maxLevelCell[iCell] = nVertLevels - 1
                 bottomDepth[iCell] = refBottomDepth[nVertLevels - 1]
-                layerThickness[0, iCell, :] = refLayerThickness[:] + ssh[iCell]/nVertLevels
+                layerThickness[0, iCell, :] = refLayerThickness[:] + \
+                    ssh[iCell]/nVertLevels
             restingThickness[:, :] = refLayerThickness[:]
 
-        # Compute zMid (same, regardless of vertical coordinate) 
+        # Compute zMid (same, regardless of vertical coordinate)
         for iCell in range(0, nCells):
             k = maxLevelCell[iCell]
             zMid[0, iCell, k] = -bottomDepth[iCell] + \
                 0.5 * layerThickness[0, iCell, k]
             for k in range(maxLevelCell[iCell] - 1, -1, -1):
                 zMid[0, iCell, k] = zMid[0, iCell, k + 1] + 0.5 * \
-                    (layerThickness[0, iCell, k + 1] + layerThickness[0, iCell, k])
+                    (layerThickness[0, iCell, k + 1] + \
+                    layerThickness[0, iCell, k])
 
         # initialize tracers
         rho0 = 1000.0  # kg/m^3
@@ -176,27 +172,32 @@ class InitialState(Step):
         # linear equation of state
         # rho = rho0 - alpha*(T-Tref) + beta*(S-Sref)
         # set S=Sref
-        # T = Tref - (rho - rhoRef)/alpha 
+        # T = Tref - (rho - rhoRef)/alpha
         for k in range(0, nVertLevels):
             activeCells = k <= maxLevelCell
-            salinity[0, activeCells, k] = S0
-            #density[0, activeCells, k] = rho0 + rhoz * zMid[0, activeCells, k]
-            density[0, activeCells, k] = rho0 - (0.5*1.0)*(np.tanh((2/200.0)*np.arctanh(0.99)*(zMid[0, activeCells, k] + 250.0*np.exp(-(xCell[activeCells]/15000.0)*(xCell[activeCells]/15000.0)) + 250.0)))
+            salinity[0, activeCells, k] = S0 
+            density[0, activeCells, k] = rho0 - (0.5*1.0)*(np.tanh((2/200.0)*np.arctanh(0.99)*(zMid[0, activeCells, k] + \
+                250.0*np.exp(-(xCell[activeCells]/15000.0)*(xCell[activeCells]/15000.0)) + 250.0)))
             # T = Tref - (rho - rhoRef)/alpha
             temperature[0, activeCells, k] = config_eos_linear_Tref \
                 - (density[0, activeCells, k] - config_eos_linear_densityref) / \
-                  config_eos_linear_alpha
+                config_eos_linear_alpha
 
         # initial velocity on edges
-        ds['normalVelocity'] = (('Time', 'nEdges', 'nVertLevels',), np.zeros([1, nEdges, nVertLevels]))
+        ds['normalVelocity'] = (('Time', 'nEdges', 'nVertLevels',),
+            np.zeros([1, nEdges, nVertLevels]))
         normalVelocity = ds['normalVelocity']
         for iEdge in range(0, nEdges):
-            normalVelocity[0, iEdge, :] = u[0, iEdge, :] * math.cos(angleEdge[iEdge])
+            normalVelocity[0, iEdge, :] = u[0, iEdge, :] * \
+                math.cos(angleEdge[iEdge])
 
         # Coriolis parameter
-        ds['fCell'] = (('nCells', 'nVertLevels',), np.zeros([nCells, nVertLevels]))
-        ds['fEdge'] = (('nEdges', 'nVertLevels',), np.zeros([nEdges, nVertLevels]))
-        ds['fVertex'] = (('nVertices', 'nVertLevels',), np.zeros([nVertices, nVertLevels]))
+        ds['fCell'] = (('nCells', 'nVertLevels',), 
+            np.zeros([nCells, nVertLevels]))
+        ds['fEdge'] = (('nEdges', 'nVertLevels',),
+            np.zeros([nEdges, nVertLevels]))
+        ds['fVertex'] = (('nVertices', 'nVertLevels',),
+            np.zeros([nVertices, nVertLevels]))
 
         # surface fields
         surfaceStress[:] = 0.0
@@ -216,10 +217,6 @@ class InitialState(Step):
             ds[var] = (['Time', 'nCells', 'nVertLevels'], globals()[var])
         # If you prefer not to have NaN as the fill value, you should consider
         # using mpas_tools.io.write_netcdf() instead
-        ds.to_netcdf('initial_state.nc', format='NETCDF3_64BIT_OFFSET')
-        # write_netcdf(ds,'initial_state.nc')
+        ds.to_netcdf('initial_state.nc', format='NETCDF3_64BIT_OFFSET') 
         print('   time: %f' % ((time.time() - time1)))
         print('Total time: %f' % ((time.time() - timeStart)))
-
-        #write_netcdf(ds, 'ocean.nc')
-
