@@ -21,7 +21,7 @@ class Humboldt(TestGroup):
 
         # Set up tests without calving using the 1km mesh
         mesh_type = '1km'
-        for velo_solver in ['FO', ]:
+        for velo_solver in ['FO']:
             self.add_test_case(
                     DecompositionTest(test_group=self,
                                       velo_solver=velo_solver,

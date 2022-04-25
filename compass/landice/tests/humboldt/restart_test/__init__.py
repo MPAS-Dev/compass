@@ -122,7 +122,7 @@ class RestartTest(TestCase):
         variables = ['thickness', 'surfaceSpeed']
 
         if self.calving_law is not None and self.calving_law != 'none':
-            variables.append('calvingThickness')
+            variables.extend(['calvingVelocity', 'calvingThickness'])
 
         if self.damage is not None and self.damage != 'none':
             variables.append('damage')
