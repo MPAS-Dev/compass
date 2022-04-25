@@ -50,12 +50,12 @@ class RunModel(Step):
         velo_solver : {'sia', 'FO', 'none'}
             The velocity solver setting to use for this test case
 
-        calving_law: {'none', 'floating', 'eigencalving',
-                      'specified_calving_velocity', 'von_Mises_stress',
-                      'damagecalving', 'ismip6_retreat'}, optional
+        calving_law: str, optional
             The calving law setting to use for this test case. If not
-            specified, set to 'none'.
-
+            specified, set to 'none'. Valid values are: 'none', 
+            'floating', 'eigencalving', 'specified_calving_velocity', 
+            'von_Mises_stress', 'damagecalving', 'ismip6_retreat'
+        
         damage : str
             The damage method used for the test case
 
@@ -117,13 +117,6 @@ class RunModel(Step):
             min_cores = cores
         super().__init__(test_case=test_case, name=name, subdir=subdir,
                          cores=cores, min_cores=min_cores, threads=threads)
-
-        # Commented code to make use of mesh generation step
-        # Note it will not include uReconstructX/Y or muFriction!
-        # self.add_input_file(filename='landice_grid.nc',
-        #                     target='../mesh/Humboldt_1to10km.nc')
-        # self.add_input_file(filename='graph.info',
-        #                     target='../mesh/graph.info')
 
         # download and link one of the premade meshes and forcing files
         if self.mesh_type == '1km':
