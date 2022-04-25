@@ -10,6 +10,7 @@ from compass.mpas_cores import get_mpas_cores
 from compass.config import CompassConfigParser
 from compass.io import symlink
 from compass import provenance
+from compass.job import write_job_script
 
 
 def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
@@ -163,8 +164,12 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
 
     max_cores, max_of_min_cores = _get_required_cores(test_cases)
 
-    print('target cores: {}'.format(max_cores))
-    print('minimum cores: {}'.format(max_of_min_cores))
+    print(f'target cores: {max_cores}')
+    print(f'minimum cores: {max_of_min_cores}')
+
+    if machine is not None:
+        write_job_script(basic_config, machine, max_cores, max_of_min_cores,
+                         work_dir)
 
     return test_cases
 
@@ -309,6 +314,11 @@ def setup_case(path, test_case, config_file, machine, work_dir, baseline_dir,
         # make a symlink to the script for loading the compass conda env.
         symlink(script_filename, os.path.join(test_case_dir,
                                               'load_compass_env.sh'))
+
+    if machine is not None:
+        max_cores, max_of_min_cores = _get_required_cores({path: test_case})
+        write_job_script(config, machine, max_cores, max_of_min_cores,
+                         work_dir)
 
 
 def main():
