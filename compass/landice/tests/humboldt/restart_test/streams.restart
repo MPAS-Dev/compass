@@ -3,7 +3,7 @@
 <immutable_stream name="restart"
                   filename_template="rst.$Y_$M_$D.nc"
                   filename_interval="output_interval"
-                  reference_time="2007-07-01_00:00:00"
+                  reference_time="0001-01-01_00:00:00"
                   output_interval="0001-00-00_00:00:00"/>
 
 <stream name="output"
