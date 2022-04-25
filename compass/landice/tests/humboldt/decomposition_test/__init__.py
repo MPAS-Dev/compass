@@ -1,6 +1,5 @@
 from compass.validate import compare_variables
 from compass.testcase import TestCase
-# from compass.landice.tests.humboldt.mesh import Mesh
 from compass.landice.tests.humboldt.run_model import RunModel
 
 
@@ -8,7 +7,9 @@ class DecompositionTest(TestCase):
     """
     A test case for performing two MALI runs of a humboldt setup, one with one
     core and one with four.  The test case verifies that the results of the
-    two runs are identical or close to identical.
+    two runs are identical or close to identical.  The FO velocity solver is
+    not bit for bit across decompositions, so identical results are not
+    expected when it is used.
 
     Attributes
     ----------
@@ -77,10 +78,6 @@ class DecompositionTest(TestCase):
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
 
-        # Commented code to make use of mesh generation step
-        # Note it will not include uReconstructX/Y or muFriction!
-        # It will also add a few minutes run time to the test!
-        # self.add_step(Mesh(test_case=self))
         if self.velo_solver == 'FO':
             self.proc_list = [16, 32]
         else:
