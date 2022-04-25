@@ -114,10 +114,10 @@ The suite includes:
     landice/humboldt/mesh-3km_restart_test/velo-none_calving-ismip6_retreat
     landice/humboldt/mesh-3km_restart_test/velo-none_calving-von_mises_stress_damage-threshold_faceMelting
 
-humboldt_calving_tests_FO
+humboldt_calving_tests_fo
 -------------------------
 
-The ``humboldt_calving_tests_FO`` test suite is identical
+The ``humboldt_calving_tests_fo`` test suite is identical
 ``humboldt_calving_tests`` but with the FO solver enabled.
 In this case decomposition tests are not required to be bit-for-bit to pass but
 instead use a small tolerance to account for expected differences of the FO
