@@ -43,12 +43,12 @@ decomposition_test
 ------------------
 The compass.landice.tests.humboldt.decomposition_test.DecompositionTest
 performs the same simulation on different numbers of cores. It ensures
-relevant variablesd are identical or have expected differences.
+relevant variables are identical or have expected differences.
 
 restart_test
 ------------
 The compass.landice.tests.humboldt.restart_test.RestartTest performs a
-run of a full specified duration followe by a short run plus a restart
+run of a full specified duration followed by a short run plus a restart
 to equal the same total duration.  It checks that relevant variables
 are bit-for-bit when doing a restart.
 
