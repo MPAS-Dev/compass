@@ -1,17 +1,17 @@
 from compass.testgroup import TestGroup
-from compass.landice.tests.antarctic.default import Default
+from compass.landice.tests.antarctica.mesh_gen import MeshGen
 
 
-class Antarctic(TestGroup):
+class Antarctica(TestGroup):
     """
-    A test group for Antarctic test cases
+    A test group for Antarctica test cases
     """
     def __init__(self, mpas_core):
         """
         mpas_core : compass.landice.Landice
             the MPAS core that this test group belongs to
         """
-        super().__init__(mpas_core=mpas_core, name='antarctic')
+        super().__init__(mpas_core=mpas_core, name='antarctica')
 
         self.add_test_case(
-            Default(test_group=self))
+            MeshGen(test_group=self))

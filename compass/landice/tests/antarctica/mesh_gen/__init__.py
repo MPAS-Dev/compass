@@ -1,10 +1,10 @@
 from compass.testcase import TestCase
-from compass.landice.tests.antarctic.mesh import Mesh
+from compass.landice.tests.antarctica.mesh import Mesh
 
 
-class Default(TestCase):
+class MeshGen(TestCase):
     """
-    The default test case for the Antarctic test group simply creates the
+    The default test case for the Antarctica test group simply creates the
     mesh and initial condition.
 
     """
@@ -15,11 +15,11 @@ class Default(TestCase):
 
         Parameters
         ----------
-        test_group : compass.landice.tests.antarctic.Antarctic
+        test_group : compass.landice.tests.antarctica.Antarctica
             The test group that this test case belongs to
 
         """
-        name = 'default'
+        name = 'mesh_gen'
         subdir = name
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)

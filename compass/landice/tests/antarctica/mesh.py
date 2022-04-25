@@ -19,7 +19,7 @@ from compass.landice.mesh import gridded_flood_fill, \
 
 class Mesh(Step):
     """
-    A step for creating a mesh and initial condition for Antarctic test cases
+    A step for creating a mesh and initial condition for Antarctica test cases
 
     Attributes
     ----------
@@ -42,7 +42,7 @@ class Mesh(Step):
         super().__init__(test_case=test_case, name='mesh')
 
         self.add_output_file(filename='graph.info')
-        self.add_output_file(filename='Antarctic_8to80km.nc')
+        self.add_output_file(filename='Antarctica_8to80km.nc')
         self.add_input_file(
             filename='antarctica_8km_2020_10_20.nc',
             target='antarctica_8km_2020_10_20.nc',
@@ -56,7 +56,7 @@ class Mesh(Step):
         """
         logger = self.logger
         config = self.config
-        section = config['antarctic']
+        section = config['antarctica']
 
         logger.info('calling build_cell_width')
         cell_width, x1, y1, geom_points, geom_edges, floodFillMask = \
@@ -71,7 +71,6 @@ class Mesh(Step):
         dsMesh = convert(dsMesh, logger=logger)
         logger.info('writing grid_converted.nc')
         write_netcdf(dsMesh, 'grid_converted.nc')
-        # If no number of levels specified in config file, use 10
         levels = section.get('levels')
         logger.info('calling create_landice_grid_from_generic_MPAS_grid.py')
         args = ['create_landice_grid_from_generic_MPAS_grid.py',
@@ -90,7 +89,7 @@ class Mesh(Step):
         gg.variables['vy'][0, :, :] *= floodFillMask
         gg.close()
 
-        # This step uses a subset of the whole Antarctic dataset trimmed to
+        # This step uses a subset of the whole Antarctica dataset trimmed to
         # the region around Antarctica, to speed up interpolation.
         # This could also be replaced with the full Antarctic Ice Sheet
         # dataset.
@@ -126,22 +125,22 @@ class Mesh(Step):
 
         dsMesh = xarray.open_dataset('ais_8km_preCull.nc')
         dsMesh = cull(dsMesh, logger=logger)
-        write_netcdf(dsMesh, 'antarctic_culled.nc')
+        write_netcdf(dsMesh, 'antarctica_culled.nc')
 
         logger.info('Marking horns for culling')
-        args = ['mark_horns_for_culling.py', '-f', 'antarctic_culled.nc']
+        args = ['mark_horns_for_culling.py', '-f', 'antarctica_culled.nc']
         check_call(args, logger=logger)
 
         logger.info('culling and converting')
-        dsMesh = xarray.open_dataset('antarctic_culled.nc')
+        dsMesh = xarray.open_dataset('antarctica_culled.nc')
         dsMesh = cull(dsMesh, logger=logger)
         dsMesh = convert(dsMesh, logger=logger)
-        write_netcdf(dsMesh, 'antarctic_dehorned.nc')
+        write_netcdf(dsMesh, 'antarctica_dehorned.nc')
 
         logger.info('calling create_landice_grid_from_generic_MPAS_grid.py')
         args = ['create_landice_grid_from_generic_MPAS_grid.py', '-i',
-                'antarctic_dehorned.nc', '-o',
-                'Antarctic_8to80km.nc', '-l', levels, '-v', 'glimmer',
+                'antarctica_dehorned.nc', '-o',
+                'Antarctica_8to80km.nc', '-l', levels, '-v', 'glimmer',
                 '--beta', '--thermal', '--obs', '--diri']
 
         check_call(args, logger=logger)
@@ -149,21 +148,21 @@ class Mesh(Step):
         logger.info('calling interpolate_to_mpasli_grid.py')
         args = ['interpolate_to_mpasli_grid.py', '-s',
                 'antarctica_8km_2020_10_20.nc',
-                '-d', 'Antarctic_8to80km.nc', '-m', 'b']
+                '-d', 'Antarctica_8to80km.nc', '-m', 'b']
         check_call(args, logger=logger)
 
         logger.info('Marking domain boundaries dirichlet')
         args = ['mark_domain_boundaries_dirichlet.py',
-                '-f', 'Antarctic_8to80km.nc']
+                '-f', 'Antarctica_8to80km.nc']
         check_call(args, logger=logger)
 
         logger.info('calling set_lat_lon_fields_in_planar_grid.py')
         args = ['set_lat_lon_fields_in_planar_grid.py', '-f',
-                'Antarctic_8to80km.nc', '-p', 'ais-bedmap2']
+                'Antarctica_8to80km.nc', '-p', 'ais-bedmap2']
         check_call(args, logger=logger)
 
         logger.info('creating graph.info')
-        make_graph_file(mesh_filename='Antarctic_8to80km.nc',
+        make_graph_file(mesh_filename='Antarctica_8to80km.nc',
                         graph_filename='graph.info')
 
     def build_cell_width(self):
@@ -188,7 +187,7 @@ class Mesh(Step):
         vy = f.variables['vy'][0, :, :]
 
         # Define extent of region to mesh.
-        # These coords are specific to the Antarctic mesh.
+        # These coords are specific to the Antarctica mesh.
         xx0 = -3333500
         xx1 = 3330500
         yy0 = -3333500
@@ -210,7 +209,7 @@ class Mesh(Step):
         # plt.pcolor(distToEdge/1000.0); plt.colorbar(); plt.show()
 
         # Set cell widths based on mesh parameters set in config file
-        cell_width = set_cell_width(self, section='antarctic', thk=thk,
+        cell_width = set_cell_width(self, section='antarctica', thk=thk,
                                     vx=vx, vy=vy, dist_to_edge=distToEdge,
                                     dist_to_grounding_line=distToGL)
         # plt.pcolor(cell_width); plt.colorbar(); plt.show()
