@@ -165,16 +165,18 @@ class InitialState(Step):
 
         section = config['isomip_plus']
 
+        min_layer_thickness = section.getfloat('min_layer_thickness')
         min_column_thickness = section.getfloat('min_column_thickness')
-
-        interfaces = generate_1d_grid(config)
 
         # Deepen the bottom depth to maintain the minimum water-column
         # thickness
-        vert_levels = config.getfloat('vertical_grid','vert_levels')
-        min_depth = numpy.maximum(-ds.ssh + min_column_thickness,
-                                  interfaces[numpy.minimum(int(vert_levels-1),min_levels+1)])
+        print(f'min_levels*min_layer_thickness={min_levels*min_layer_thickness}')
+        min_depth = -ds.ssh + max(min_column_thickness, min_levels*min_layer_thickness)
+
+        print(f'Adjusted bottomDepth for {numpy.sum(ds.bottomDepth.values<min_depth.values)} cells')
         ds['bottomDepth'] = numpy.maximum(ds.bottomDepth, min_depth)
+
+        interfaces = generate_1d_grid(config)
 
         init_vertical_coord(config, ds)
 
