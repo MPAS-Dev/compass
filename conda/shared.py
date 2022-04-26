@@ -59,9 +59,9 @@ def parse_args(bootstrap):
                              "environment")
     parser.add_argument("--without_openmp", dest="without_openmp",
                         action='store_true',
-                        help="If this flag is included, OPENMP=true will not "
+                        help="If this flag is included, OPENMP=false will "
                              "be added to the load script.  By default, MPAS "
-                             "builds will be with OpenMP.")
+                             "builds will be with OpenMP (OPENMP=true).")
     if bootstrap:
         parser.add_argument("--local_conda_build", dest="local_conda_build",
                             type=str,
