@@ -333,9 +333,10 @@ def get_env_vars(machine, compiler, mpilib):
 def build_spack_env(config, update_spack, machine, compiler, mpi, spack_env,
                     spack_base, spack_template_path, env_vars, tmpdir):
 
-    esmf = config.get('deploy', 'esmf')
-    scorpio = config.get('deploy', 'scorpio')
     albany = config.get('deploy', 'albany')
+    esmf = config.get('deploy', 'esmf')
+    petsc = config.get('deploy', 'petsc')
+    scorpio = config.get('deploy', 'scorpio')
 
     spack_branch_base = f'{spack_base}/spack_for_mache_{mache_version}'
 
@@ -355,6 +356,9 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, spack_env,
 
     if esmf != 'None':
         specs.append(f'esmf@{esmf}+mpi+netcdf~pio+pnetcdf')
+    if petsc != 'None':
+        specs.append(f'petsc@{petsc}+mpi+batch')
+
     if scorpio != 'None':
         specs.append(f'scorpio@{scorpio}+pnetcdf~timing+internal-timing~tools+malloc')
 
@@ -411,6 +415,11 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, spack_env,
             f'export {albany_flags}\n' \
             f'export MPAS_EXTERNAL_LIBS="${{MPAS_EXTERNAL_LIBS}} ' \
             f'${{ALBANY_LINK_LIBS}} {stdcxx} {mpicxx}"\n'
+
+    if petsc != 'None':
+        env_vars = f'{env_vars}' \
+                   f'export PETSC={spack_view}\n' \
+                   f'export USE_PETSC=true\n'
 
     return spack_branch_base, spack_script, env_vars
 
