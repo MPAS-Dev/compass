@@ -90,7 +90,7 @@ def main():
         'conda activate {}'.format(base_activation_script, env_name)
     try:
         os.makedirs('conda/logs')
-    except FileExistsError:
+    except OSError:
         pass
 
     logger = get_logger(log_filename='conda/logs/prebootstrap.log',
