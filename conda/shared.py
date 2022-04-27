@@ -173,7 +173,7 @@ def get_logger(name, log_filename):
     print('Logging to: {}\n'.format(log_filename))
     try:
         os.remove(log_filename)
-    except FileNotFoundError:
+    except OSError:
         pass
     logger = logging.getLogger(name)
     handler = logging.FileHandler(log_filename)
