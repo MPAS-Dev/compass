@@ -52,10 +52,10 @@ class RunModel(Step):
 
         calving_law: str, optional
             The calving law setting to use for this test case. If not
-            specified, set to 'none'. Valid values are: 'none', 
-            'floating', 'eigencalving', 'specified_calving_velocity', 
+            specified, set to 'none'. Valid values are: 'none',
+            'floating', 'eigencalving', 'specified_calving_velocity',
             'von_Mises_stress', 'damagecalving', 'ismip6_retreat'
-        
+
         damage : str
             The damage method used for the test case
 
