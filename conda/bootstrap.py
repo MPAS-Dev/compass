@@ -746,6 +746,13 @@ def main():
     compilers, mpis = get_compilers_mpis(config, machine, args.compilers,
                                          args.mpis, source_path)
 
+    if machine is not None:
+        # write out a log file for use by matrix builds
+        with open('conda/logs/matrix.log', 'w') as f:
+            f.write(f'{machine}\n')
+            for compiler, mpi in zip(compilers, mpis):
+                f.write(f'{compiler}, {mpi}\n')
+
     print('Configuring environment(s) for the following compilers and MPI '
           'libraries:')
     for compiler, mpi in zip(compilers, mpis):
