@@ -156,6 +156,31 @@ greenland
    high_res_mesh.HighResMesh
    high_res_mesh.HighResMesh.run
 
+humboldt
+~~~~~~~~
+
+.. currentmodule:: compass.landice.tests.humboldt
+
+.. autosummary::
+   :toctree: generated/
+
+   Humboldt
+
+   mesh_gen.MeshGen
+   mesh_gen.MeshGen.run
+
+   mesh.Mesh
+   mesh.Mesh.run
+
+   run_model.RunModel
+   run_model.RunModel.run
+
+   decomposition_test.DecompositionTest
+   decomposition_test.DecompositionTest.validate
+
+   restart_test.RestartTest
+   restart_test.RestartTest.validate
+
 hydro_radial
 ~~~~~~~~~~~~
 
@@ -208,21 +233,5 @@ thwaites
    run_model.RunModel
    run_model.RunModel.setup
    run_model.RunModel.run
-
-humboldt
-~~~~~~~~
-
-.. currentmodule:: compass.landice.tests.humboldt
-
-.. autosummary::
-   :toctree: generated/
-
-   Humboldt
-
-   default.Default
-   default.Default.run
-
-   mesh.Mesh
-   mesh.Mesh.run
 
 

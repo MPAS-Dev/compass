@@ -61,7 +61,7 @@ class Mesh(Step):
         """
         logger = self.logger
         config = self.config
-        section = config['humboldt']
+        section = config['humboldt_mesh']
 
         logger.info('calling build_cell_wdith')
         cell_width, x1, y1, geom_points, geom_edges = self.build_cell_width()

@@ -13,9 +13,9 @@ COMPASS to the ``compass`` package are those with test cases in the
 
    circular_shelf
    dome
-   enthalpy_benchmark
    eismint2
+   enthalpy_benchmark
    greenland
-   thwaites
-   hydro_radial
    humboldt
+   hydro_radial
+   thwaites
