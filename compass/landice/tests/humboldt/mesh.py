@@ -102,7 +102,7 @@ class Mesh(Step):
         if float(cullDistance) > 0.:
             logger.info('calling define_cullMask.py')
             args = ['define_cullMask.py', '-f',
-                    'gis_1km_preCull.nc', '-m'
+                    'gis_1km_preCull.nc', '-m',
                     'distance', '-d', cullDistance]
 
             check_call(args, logger=logger)
