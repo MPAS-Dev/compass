@@ -28,11 +28,11 @@ def parse_args(bootstrap):
                              " prefix")
     parser.add_argument("-p", "--python", dest="python", type=str,
                         help="The python version to deploy")
-    parser.add_argument("-i", "--mpi", dest="mpi", type=str,
-                        help="The MPI library to deploy, see the docs for "
-                             "details")
-    parser.add_argument("-c", "--compiler", dest="compiler", type=str,
-                        help="The name of the compiler")
+    parser.add_argument("-c", "--compiler", dest="compilers", type=str,
+                        nargs="*", help="The name of the compiler(s)")
+    parser.add_argument("-i", "--mpi", dest="mpis", type=str, nargs="*",
+                        help="The MPI library (or libraries) to deploy, see "
+                             "the docs for details")
     parser.add_argument("--env_only", dest="env_only", action='store_true',
                         help="Create only the compass environment, don't "
                              "install compilers or build SCORPIO")
