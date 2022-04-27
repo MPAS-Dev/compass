@@ -169,7 +169,7 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
 
     if machine is not None:
         write_job_script(basic_config, machine, max_cores, max_of_min_cores,
-                         work_dir)
+                         work_dir, suite=suite_name)
 
     return test_cases
 
@@ -318,7 +318,7 @@ def setup_case(path, test_case, config_file, machine, work_dir, baseline_dir,
     if machine is not None:
         max_cores, max_of_min_cores = _get_required_cores({path: test_case})
         write_job_script(config, machine, max_cores, max_of_min_cores,
-                         work_dir)
+                         test_case_dir)
 
 
 def main():

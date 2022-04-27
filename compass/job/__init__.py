@@ -4,7 +4,8 @@ import os
 import numpy as np
 
 
-def write_job_script(config, machine, target_cores, min_cores, work_dir):
+def write_job_script(config, machine, target_cores, min_cores, work_dir,
+                     suite=''):
     """
 
     Parameters
@@ -24,6 +25,9 @@ def write_job_script(config, machine, target_cores, min_cores, work_dir):
 
     work_dir : str
         The work directory where the job script should be written
+
+    suite : str, optional
+        The name of the suite
     """
 
     if config.has_option('parallel', 'account'):
@@ -70,6 +74,11 @@ def write_job_script(config, machine, target_cores, min_cores, work_dir):
             constraint = ''
 
     job_name = config.get('job', 'job_name')
+    if job_name == '<<<default>>>':
+        if suite == '':
+            job_name = 'compass'
+        else:
+            job_name = f'compass_{suite}'
     wall_time = config.get('job', 'wall_time')
 
     template = Template(resources.read_text(
@@ -77,7 +86,12 @@ def write_job_script(config, machine, target_cores, min_cores, work_dir):
 
     text = template.render(job_name=job_name, account=account,
                            nodes=f'{nodes}', wall_time=wall_time, qos=qos,
-                           partition=partition, constraint=constraint)
-    script_filename = os.path.join(work_dir, 'job_script.sh')
+                           partition=partition, constraint=constraint,
+                           suite=suite)
+    if suite == '':
+        script_filename = 'compass_job_script.sh'
+    else:
+        script_filename = f'compass_job_script.{suite}.sh'
+    script_filename = os.path.join(work_dir, script_filename)
     with open(script_filename, 'w') as handle:
         handle.write(text)

@@ -18,5 +18,5 @@
 {%- endif %}
 
 source load_compass_env.sh
-compass run
+compass run {{suite}}
 
