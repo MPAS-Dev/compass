@@ -16,7 +16,8 @@ except ImportError:
     else:
         ConfigParser = configparser.ConfigParser
 
-from shared import parse_args, get_conda_base, check_call, install_miniconda
+from shared import parse_args, get_conda_base, check_call, install_miniconda, \
+    get_logger
 
 
 def get_config(config_file):
@@ -34,7 +35,7 @@ def get_config(config_file):
 
 def bootstrap(activate_install_env, source_path, local_conda_build):
 
-    print('Creating the compass conda environment')
+    print('Creating the compass conda environment\n')
     bootstrap_command = '{}/conda/bootstrap.py'.format(source_path)
     command = '{}; ' \
               '{} {}'.format(activate_install_env, bootstrap_command,
@@ -45,27 +46,28 @@ def bootstrap(activate_install_env, source_path, local_conda_build):
     check_call(command)
 
 
-def setup_install_env(activate_base, use_local):
+def setup_install_env(env_name, activate_base, use_local, logger, recreate,
+                      conda_base):
+    env_path = os.path.join(conda_base, 'envs', env_name)
     if use_local:
         channels = '--use-local'
     else:
         channels = ''
-    print('Setting up a conda environment for installing compass')
-    commands = '{}; ' \
-               'mamba create -y -n temp_compass_install {} ' \
-               'progressbar2 jinja2 "mache>=1.3.2"'.format(activate_base,
-                                                           channels)
+    packages = 'progressbar2 jinja2 "mache>=1.3.2"'
+    if recreate or not os.path.exists(env_path):
+        print('Setting up a conda environment for installing compass\n')
+        commands = '{}; ' \
+                   'mamba create -y -n {} {} {}'.format(activate_base,
+                                                        env_name, channels,
+                                                        packages)
+    else:
+        print('Updating conda environment for installing compass\n')
+        commands = '{}; ' \
+                   'mamba install -y -n {} {} {}'.format(activate_base,
+                                                         env_name, channels,
+                                                         packages)
 
-    check_call(commands)
-
-
-def remove_install_env(activate_base):
-    print('Removing conda environment for installing compass')
-    commands = '{}; ' \
-               'conda remove -y --all -n ' \
-               'temp_compass_install'.format(activate_base)
-
-    check_call(commands)
+    check_call(commands, logger=logger)
 
 
 def main():
@@ -74,7 +76,9 @@ def main():
 
     config = get_config(args.config_file)
 
-    conda_base = get_conda_base(args.conda_base, config)
+    conda_base = get_conda_base(args.conda_base, config, warn=True)
+
+    env_name = 'compass_bootstrap'
 
     base_activation_script = os.path.abspath(
         '{}/etc/profile.d/conda.sh'.format(conda_base))
@@ -83,12 +87,20 @@ def main():
 
     activate_install_env = \
         'source {}; ' \
-        'conda activate temp_compass_install'.format(base_activation_script)
+        'conda activate {}'.format(base_activation_script, env_name)
+    try:
+        os.makedirs('conda/logs')
+    except FileExistsError:
+        pass
+
+    logger = get_logger(log_filename='conda/logs/prebootstrap.log',
+                        name=__name__)
 
     # install miniconda if needed
-    install_miniconda(conda_base, activate_base)
+    install_miniconda(conda_base, activate_base, logger)
 
-    setup_install_env(activate_base, args.use_local)
+    setup_install_env(env_name, activate_base, args.use_local, logger,
+                      args.recreate, conda_base)
 
     env_type = config.get('deploy', 'env_type')
     if env_type not in ['dev', 'test_release', 'release']:
@@ -100,8 +112,6 @@ def main():
         local_conda_build = None
 
     bootstrap(activate_install_env, source_path, local_conda_build)
-
-    remove_install_env(activate_base)
 
 
 if __name__ == '__main__':

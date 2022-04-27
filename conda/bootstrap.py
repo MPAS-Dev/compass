@@ -18,7 +18,7 @@ from mache import discover_machine, MachineInfo
 from mache.spack import make_spack_env, get_spack_script
 from mache.version import __version__ as mache_version
 from shared import parse_args, get_conda_base, get_spack_base, check_call, \
-    install_miniconda
+    install_miniconda, get_logger
 
 
 def get_config(config_file, machine):
@@ -208,11 +208,11 @@ def get_env_setup(args, config, machine, compiler, mpi, env_type, source_path,
 
 def build_conda_env(env_type, recreate, machine, mpi, conda_mpi, version,
                     python, source_path, conda_template_path, conda_base,
-                    activ_suffix, env_name, env_path, activate_base, use_local,
-                    local_conda_build):
+                    env_name, env_path, activate_base, use_local,
+                    local_conda_build, logger):
 
     if env_type != 'dev':
-        install_miniconda(conda_base, activate_base)
+        install_miniconda(conda_base, activate_base, logger)
 
     if conda_mpi == 'nompi':
         mpi_prefix = 'nompi'
@@ -262,13 +262,13 @@ def build_conda_env(env_type, recreate, machine, mpi, conda_mpi, version,
                 f'{activate_base}; ' \
                 f'mamba create -y -n {env_name} {channels} ' \
                 f'--file {spec_filename} {packages}'
-            check_call(commands)
+            check_call(commands, logger=logger)
 
             commands = \
                 f'{activate_env}; ' \
                 f'cd {source_path}; ' \
                 f'python -m pip install -e .'
-            check_call(commands)
+            check_call(commands, logger=logger)
 
         else:
             # conda packages don't like dashes
@@ -276,22 +276,22 @@ def build_conda_env(env_type, recreate, machine, mpi, conda_mpi, version,
             packages = f'{packages} "compass={version_conda}={mpi_prefix}_*"'
             commands = f'{activate_base}; ' \
                        f'mamba create -y -n {env_name} {channels} {packages}'
-            check_call(commands)
+            check_call(commands, logger=logger)
     else:
         if env_type == 'dev':
-            print(f'updating {env_name}')
+            print(f'Updating {env_name}\n')
             # install dev dependencies and compass itself
             commands = \
                 f'{activate_base}; ' \
                 f'mamba install -y -n {env_name} {channels} ' \
                 f'--file {spec_filename} {packages}'
-            check_call(commands)
+            check_call(commands, logger=logger)
 
             commands = \
                 f'{activate_env}; ' \
                 f'cd {source_path}; ' \
                 f'python -m pip install -e .'
-            check_call(commands)
+            check_call(commands, logger=logger)
         else:
             print(f'{env_name} already exists')
 
@@ -458,11 +458,17 @@ def write_load_compass(template_path, activ_path, conda_base, env_type,
 
     if env_type == 'dev':
         update_compass = \
-            'if [[ -f "./setup.py" && -d "compass" ]]; then\n' \
-            '   # safe to assume we\'re in the compass repo\n' \
-            '   # update the compass installation to point here\n' \
-            '   python -m pip install -e .\n' \
-            'fi'
+            """
+            if [[ -f "./setup.py" && -d "compass" ]]; then
+               # safe to assume we're in the compass repo
+               # update the compass installation to point here
+               mkdir -p conda/logs
+               echo Reinstalling compass package in edit mode...
+               python -m pip install -e . &> conda/logs/install_compass.log
+               echo Done.
+               echo
+            fi
+            """
     else:
         update_compass = ''
 
@@ -484,14 +490,14 @@ def write_load_compass(template_path, activ_path, conda_base, env_type,
 
     script = '\n'.join(lines)
 
-    print('Writing {}'.format(script_filename))
+    print('Writing:\n   {}\n'.format(script_filename))
     with open(script_filename, 'w') as handle:
         handle.write(script)
 
     return script_filename
 
 
-def check_env(script_filename, env_name):
+def check_env(script_filename, env_name, logger):
     print("Checking the environment {}".format(env_name))
 
     activate = 'source {}'.format(script_filename)
@@ -506,17 +512,17 @@ def check_env(script_filename, env_name):
 
     for import_name in imports:
         command = '{}; python -c "import {}"'.format(activate, import_name)
-        test_command(command, os.environ, import_name)
+        test_command(command, os.environ, import_name, logger)
 
     for command in commands:
         package = command[0]
         command = '{}; {}'.format(activate, ' '.join(command))
-        test_command(command, os.environ, package)
+        test_command(command, os.environ, package, logger)
 
 
-def test_command(command, env, package):
+def test_command(command, env, package, logger):
     try:
-        check_call(command, env=env)
+        check_call(command, env=env, logger=logger)
     except subprocess.CalledProcessError as e:
         print('  {} failed'.format(package))
         raise e
@@ -699,6 +705,9 @@ def check_albany_supported(machine, compiler, mpi, source_path):
 def main():
     args = parse_args(bootstrap=True)
 
+    logger = get_logger(log_filename='conda/logs/bootstrap.log',
+                        name=__name__)
+
     source_path = os.getcwd()
     conda_template_path = f'{source_path}/conda/compass_env'
     spack_template_path = f'{source_path}/conda/spack'
@@ -726,7 +735,8 @@ def main():
     if env_type not in ['dev', 'test_release', 'release']:
         raise ValueError(f'Unexpected env_type: {env_type}')
     shared = (env_type != 'dev')
-    conda_base = get_conda_base(args.conda_base, config, shared=shared)
+    conda_base = get_conda_base(args.conda_base, config, shared=shared,
+                                warn=False)
 
     base_activation_script = os.path.abspath(
         '{}/etc/profile.d/conda.sh'.format(conda_base))
@@ -784,8 +794,8 @@ def main():
             build_conda_env(
                 env_type, recreate, machine, mpi, conda_mpi, compass_version,
                 python, source_path, conda_template_path, conda_base,
-                activ_suffix, conda_env_name, conda_env_path, activate_base,
-                args.use_local, args.local_conda_build)
+                conda_env_name, conda_env_path, activate_base, args.use_local,
+                args.local_conda_build, logger)
             previous_conda_env = conda_env_name
 
             if env_type != 'dev':
@@ -802,6 +812,10 @@ def main():
                     config, args.update_spack, machine, compiler, mpi,
                     spack_env, spack_base, spack_template_path, env_vars,
                     args.tmpdir)
+                spack_script = f'echo Loading Spack environment...\n' \
+                               f'{spack_script}\n' \
+                               f'echo Done.\n' \
+                               f'echo\n'
             else:
                 env_vars = f'{env_vars}' \
                            f'export PIO={conda_env_path}\n'
@@ -824,7 +838,7 @@ def main():
             env_vars, args.env_only, source_path, args.without_openmp)
 
         if args.check:
-            check_env(script_filename, conda_env_name)
+            check_env(script_filename, conda_env_name, logger)
 
         if env_type == 'release':
             # make a symlink to the activation script
@@ -842,7 +856,7 @@ def main():
         os.chdir(source_path)
 
     commands = '{}; conda clean -y -p -t'.format(activate_base)
-    check_call(commands)
+    check_call(commands, logger=logger)
 
     if args.update_spack or env_type != 'dev':
         # we need to update permissions on shared stuff
