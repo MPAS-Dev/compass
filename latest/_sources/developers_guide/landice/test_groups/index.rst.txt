@@ -12,6 +12,6 @@ Test groups
    enthalpy_benchmark
    eismint2
    greenland
+   humboldt
    hydro_radial
    thwaites
-   humboldt

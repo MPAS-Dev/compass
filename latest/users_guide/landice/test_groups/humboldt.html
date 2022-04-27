@@ -18,8 +18,8 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Framework" href="../framework/index.html" />
-    <link rel="prev" title="hydro_radial" href="hydro_radial.html" /> 
+    <link rel="next" title="hydro_radial" href="hydro_radial.html" />
+    <link rel="prev" title="greenland" href="greenland.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -50,20 +50,22 @@
 <li class="toctree-l2 current"><a class="reference internal" href="index.html">Test Groups</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="circular_shelf.html">circular_shelf</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dome.html">dome</a></li>
-<li class="toctree-l3"><a class="reference internal" href="enthalpy_benchmark.html">enthalpy_benchmark</a></li>
 <li class="toctree-l3"><a class="reference internal" href="eismint2.html">eismint2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="enthalpy_benchmark.html">enthalpy_benchmark</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenland.html">greenland</a></li>
-<li class="toctree-l3"><a class="reference internal" href="thwaites.html">thwaites</a></li>
-<li class="toctree-l3"><a class="reference internal" href="hydro_radial.html">hydro_radial</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">humboldt</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#config-options">config options</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#default">default</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mesh-gen">mesh_gen</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#decomposition-tests">decomposition_tests</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#restart-tests">restart_tests</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="hydro_radial.html">hydro_radial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="thwaites.html">thwaites</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../framework/index.html">Framework</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../suites.html">Test suites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../framework/index.html">Framework</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../ocean/index.html">Ocean core</a></li>
@@ -128,7 +130,21 @@
              
   <section id="humboldt">
 <span id="landice-humboldt"></span><h1>humboldt<a class="headerlink" href="#humboldt" title="Permalink to this headline">¶</a></h1>
-<p>The <code class="docutils literal notranslate"><span class="pre">landice/humboldt</span></code> test group creates a 1-10km Humboldt Glacier mesh.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">landice/humboldt</span></code> test group includes a test case for creating a
+mesh for Humboldt Glacier, Greenland, and a series of tests for running
+simulations on a Humboldt Glacier mesh.  Note that the tests that run MALI do
+not use the output of the mesh generation step directly, but instead
+download a pre-generated initial condition file.  This is because some of the
+initialization steps still happen outside of COMPASS, most notably the
+optimization for basal friction, which requires expert usage and takes a
+larger amount of computing resources than COMPASS is typically run with.</p>
+<p>The tests that run MALI are set up in a way that creates a separate version
+of each test with each calving law that MALI currently supports.  There are
+versions of each with either the FO velocity solver or no velocity solver,
+in which case a modeled velocity field from the initial condition is used.
+There are also two meshes available for running with MALI: a fast 3 km
+resolution mesh and a slower but more accurate 1 km mesh.  Most tests use the
+faster 3 km mesh.</p>
 <figure class="align-center" id="id1">
 <a class="reference internal image-reference" href="../../../_images/humboldt_1to10km.png"><img alt="../../../_images/humboldt_1to10km.png" src="../../../_images/humboldt_1to10km.png" style="width: 777px;" /></a>
 <figcaption>
@@ -138,8 +154,11 @@
 <p>The test group includes a single test case that creates the variable resolution mesh.</p>
 <section id="config-options">
 <h2>config options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
-<p>The test group uses the following default config options:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># number of levels in the mesh</span><span class="w"></span>
+<p>The test group uses the following default config options.  At this point only
+the mesh generation options are adjusted through the config file.</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[humboldt_mesh]</span><span class="w"></span>
+
+<span class="c1"># number of levels in the mesh</span><span class="w"></span>
 <span class="na">levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10</span><span class="w"></span>
 
 <span class="c1"># distance from ice margin to cull (km).</span><span class="w"></span>
@@ -168,10 +187,46 @@
 </pre></div>
 </div>
 </section>
-<section id="default">
-<h2>default<a class="headerlink" href="#default" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">landice/humboldt/default</span></code> createst the 1-10km variable resolution mesh.
+<section id="mesh-gen">
+<h2>mesh_gen<a class="headerlink" href="#mesh-gen" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">landice/humboldt/default</span></code> creates a 1-10km variable resolution mesh.
 There is no model integration step.</p>
+</section>
+<section id="decomposition-tests">
+<h2>decomposition_tests<a class="headerlink" href="#decomposition-tests" title="Permalink to this headline">¶</a></h2>
+<p>There are a number of variants of a decomposition test that runs a 5-year
+simulation on 16 (16proc_run step) and then on 32 cores (32proc_run step)
+to make sure key prognostic variables are either bit-fot-bit (without the
+FO solver) or have only small differences within a specified tolerance (with
+the FO solver).  The FO solver is not BFB on different decompositions, but the
+differences are small.  There are variants of this test for each calving law
+that MALI currently supports, paired with either the FO velocity solver or no
+velocity solver.
+The full set of combinations use the 3 km mesh.  There is additionally a
+decomposition test using the 1 km mesh that has calving disabled.
+Finally, there is a set of “full physics” tests that use von Mises calving,
+plus damage threshold calving and marine facemelting.  This configuration can
+be run with either the FO velocity solver or no velocity solver.  It is meant
+to exercise the widest range of physics currently supported in MALI.  To make
+this test faster for the integration test suite, it uses a 6-month time step
+instead of 4 months.</p>
+</section>
+<section id="restart-tests">
+<h2>restart_tests<a class="headerlink" href="#restart-tests" title="Permalink to this headline">¶</a></h2>
+<p>There are a number of variants of a restart test that runs a 3-year simulation
+compared to a 2-year simulation followed by a restart for an additional
+1 year.  Results should be bit-for-bit identical.
+There are variants of this test for each calving law
+that MALI currently supports, paired with either the FO velocity solver or no
+velocity solver.
+The full set of combinations use the 3 km mesh.  There is additionally a
+decomposition test using the 1 km mesh that has calving disabled.
+Finally, there is a set of “full physics” tests that use von Mises calving,
+plus damage threshold calving and marine facemelting.  This configuration can
+be run with either the FO velocity solver or no velocity solver.  It is meant
+to exercise the widest range of physics currently supported in MALI.  To make
+this test faster for the integration test suite, it uses a 6-month time step
+instead of 4 months.</p>
 </section>
 </section>
 
@@ -179,8 +234,8 @@ There is no model integration step.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="hydro_radial.html" class="btn btn-neutral float-left" title="hydro_radial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../framework/index.html" class="btn btn-neutral float-right" title="Framework" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="greenland.html" class="btn btn-neutral float-left" title="greenland" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="hydro_radial.html" class="btn btn-neutral float-right" title="hydro_radial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
