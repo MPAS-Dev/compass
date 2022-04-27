@@ -42,7 +42,7 @@ class Mesh(Step):
         super().__init__(test_case=test_case, name='mesh')
 
         self.add_output_file(filename='graph.info')
-        self.add_output_file(filename='Antarctica_8to80km.nc')
+        self.add_output_file(filename='Antarctica.nc')
         self.add_input_file(
             filename='antarctica_8km_2020_10_20.nc',
             target='antarctica_8km_2020_10_20.nc',
@@ -100,9 +100,7 @@ class Mesh(Step):
 
         check_call(args, logger=logger)
 
-        # This step is only necessary if you wish to cull a certain
-        # distance from the ice margin, within the bounds defined by
-        # the GeoJSON file.
+        # Cull a certain distance from the ice margin
         cullDistance = section.get('cull_distance')
         if float(cullDistance) > 0.:
             logger.info('calling define_cullMask.py')
@@ -115,8 +113,7 @@ class Mesh(Step):
             logger.info('cullDistance <= 0 in config file. '
                         'Will not cull by distance to margin. \n')
 
-        # This step is only necessary because the GeoJSON region
-        # is defined by lat-lon.
+        # Set lat-lon fields in the pre-culled mesh
         logger.info('calling set_lat_lon_fields_in_planar_grid.py')
         args = ['set_lat_lon_fields_in_planar_grid.py', '-f',
                 'ais_8km_preCull.nc', '-p', 'ais-bedmap2']
@@ -140,7 +137,7 @@ class Mesh(Step):
         logger.info('calling create_landice_grid_from_generic_MPAS_grid.py')
         args = ['create_landice_grid_from_generic_MPAS_grid.py', '-i',
                 'antarctica_dehorned.nc', '-o',
-                'Antarctica_8to80km.nc', '-l', levels, '-v', 'glimmer',
+                'Antarctica.nc', '-l', levels, '-v', 'glimmer',
                 '--beta', '--thermal', '--obs', '--diri']
 
         check_call(args, logger=logger)
@@ -148,21 +145,21 @@ class Mesh(Step):
         logger.info('calling interpolate_to_mpasli_grid.py')
         args = ['interpolate_to_mpasli_grid.py', '-s',
                 'antarctica_8km_2020_10_20.nc',
-                '-d', 'Antarctica_8to80km.nc', '-m', 'b']
+                '-d', 'Antarctica.nc', '-m', 'b']
         check_call(args, logger=logger)
 
         logger.info('Marking domain boundaries dirichlet')
         args = ['mark_domain_boundaries_dirichlet.py',
-                '-f', 'Antarctica_8to80km.nc']
+                '-f', 'Antarctica.nc']
         check_call(args, logger=logger)
 
         logger.info('calling set_lat_lon_fields_in_planar_grid.py')
         args = ['set_lat_lon_fields_in_planar_grid.py', '-f',
-                'Antarctica_8to80km.nc', '-p', 'ais-bedmap2']
+                'Antarctica.nc', '-p', 'ais-bedmap2']
         check_call(args, logger=logger)
 
         logger.info('creating graph.info')
-        make_graph_file(mesh_filename='Antarctica_8to80km.nc',
+        make_graph_file(mesh_filename='Antarctica.nc',
                         graph_filename='graph.info')
 
     def build_cell_width(self):
@@ -171,9 +168,7 @@ class Mesh(Step):
 
         This includes hard-coded definition of the extent of the regional
         mesh and user-defined mesh density functions based on observed flow
-        speed and distance to the ice margin. In the future, this function
-        and its components will likely be separated into separate generalized
-        functions to be reusable by multiple test groups.
+        speed and distance to the ice margin.
         """
         # get needed fields from AIS dataset
         f = netCDF4.Dataset('antarctica_8km_2020_10_20.nc', 'r')
