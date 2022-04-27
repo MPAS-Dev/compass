@@ -110,8 +110,7 @@
 <span class="kn">from</span> <span class="nn">compass.config</span> <span class="kn">import</span> <span class="n">CompassConfigParser</span>
 
 
-<div class="viewcode-block" id="write"><a class="viewcode-back" href="../../developers_guide/generated/compass.provenance.write.html#compass.provenance.write">[docs]</a><span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">test_cases</span><span class="p">,</span> <span class="n">mpas_core</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">config_filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-          <span class="n">mpas_model_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="write"><a class="viewcode-back" href="../../developers_guide/generated/compass.provenance.write.html#compass.provenance.write">[docs]</a><span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">test_cases</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Write a file with provenance, such as the git version, conda packages,</span>
 <span class="sd">    command, and test cases, to the work directory</span>
@@ -124,16 +123,9 @@
 <span class="sd">    test_cases : dict</span>
 <span class="sd">        A dictionary describing all of the test cases and their steps</span>
 
-<span class="sd">    mpas_core : str</span>
-<span class="sd">        The name of the MPAS core</span>
-
-<span class="sd">    config_filename : str, optional</span>
-<span class="sd">        The name of config file with custom options for setting up and running</span>
-<span class="sd">        test cases</span>
-
-<span class="sd">    mpas_model_path : str, optional</span>
-<span class="sd">        The relative or absolute path to the root of a branch where the MPAS</span>
-<span class="sd">        model has been built</span>
+<span class="sd">    config : compass.config.CompassConfigParser</span>
+<span class="sd">        Configuration options for this test case, a combination of user configs</span>
+<span class="sd">        and the defaults for the machine and MPAS core</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">compass_git_version</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;.git&#39;</span><span class="p">):</span>
@@ -144,13 +136,12 @@
         <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span><span class="p">:</span>
             <span class="k">pass</span>
 
-    <span class="k">if</span> <span class="n">mpas_core</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># this is a call to clean and we don&#39;t need to document the MPAS</span>
         <span class="c1"># version</span>
         <span class="n">mpas_git_version</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">mpas_git_version</span> <span class="o">=</span> <span class="n">_get_mpas_git_version</span><span class="p">(</span><span class="n">mpas_core</span><span class="p">,</span> <span class="n">config_filename</span><span class="p">,</span>
-                                                 <span class="n">mpas_model_path</span><span class="p">)</span>
+        <span class="n">mpas_git_version</span> <span class="o">=</span> <span class="n">_get_mpas_git_version</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;conda&#39;</span><span class="p">,</span> <span class="s1">&#39;list&#39;</span><span class="p">]</span>
@@ -215,27 +206,9 @@
     <span class="n">provenance_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 
-<span class="k">def</span> <span class="nf">_get_mpas_git_version</span><span class="p">(</span><span class="n">mpas_core</span><span class="p">,</span> <span class="n">config_filename</span><span class="p">,</span> <span class="n">mpas_model_path</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_get_mpas_git_version</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
 
-    <span class="k">if</span> <span class="n">mpas_model_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">config</span> <span class="o">=</span> <span class="n">CompassConfigParser</span><span class="p">()</span>
-        <span class="c1"># add the config options for the MPAS core</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;compass.</span><span class="si">{</span><span class="n">mpas_core</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mpas_core</span><span class="si">}</span><span class="s1">.cfg&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">config_filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">config</span><span class="o">.</span><span class="n">add_user_config</span><span class="p">(</span><span class="n">config_filename</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="s1">&#39;COMPASS_BRANCH&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
-            <span class="n">compass_branch</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;COMPASS_BRANCH&#39;</span><span class="p">]</span>
-            <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="s1">&#39;compass_branch&#39;</span><span class="p">,</span> <span class="n">compass_branch</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="s1">&#39;compass_branch&#39;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="s1">&#39;mpas_model&#39;</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Couldn</span><span class="se">\&#39;</span><span class="s1">t find MPAS model.  Not in user config &#39;</span>
-                             <span class="s1">&#39;file or passed with -p flag.&#39;</span><span class="p">)</span>
-        <span class="n">mpas_model_path</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="s1">&#39;mpas_model&#39;</span><span class="p">)</span>
-
-    <span class="n">mpas_model_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">mpas_model_path</span><span class="p">)</span>
+    <span class="n">mpas_model_path</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="s1">&#39;mpas_model&#39;</span><span class="p">)</span>
 
     <span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
     <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">mpas_model_path</span><span class="p">)</span>

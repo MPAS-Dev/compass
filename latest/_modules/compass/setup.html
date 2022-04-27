@@ -239,9 +239,11 @@
     <span class="c1"># for this core</span>
     <span class="n">first_path</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">test_cases</span><span class="p">))</span>
     <span class="n">mpas_core</span> <span class="o">=</span> <span class="n">test_cases</span><span class="p">[</span><span class="n">first_path</span><span class="p">]</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span>
-    <span class="n">provenance</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">test_cases</span><span class="p">,</span> <span class="n">mpas_core</span><span class="o">=</span><span class="n">mpas_core</span><span class="p">,</span>
-                     <span class="n">config_filename</span><span class="o">=</span><span class="n">config_file</span><span class="p">,</span>
-                     <span class="n">mpas_model_path</span><span class="o">=</span><span class="n">mpas_model_path</span><span class="p">)</span>
+
+    <span class="n">basic_config</span> <span class="o">=</span> <span class="n">_get_basic_config</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="n">machine</span><span class="p">,</span> <span class="n">mpas_model_path</span><span class="p">,</span>
+                                     <span class="n">mpas_core</span><span class="p">)</span>
+
+    <span class="n">provenance</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">test_cases</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">basic_config</span><span class="p">)</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Setting up test cases:&#39;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">path</span><span class="p">,</span> <span class="n">test_case</span> <span class="ow">in</span> <span class="n">test_cases</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -310,26 +312,9 @@
 
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
 
-    <span class="n">config</span> <span class="o">=</span> <span class="n">CompassConfigParser</span><span class="p">()</span>
-
-    <span class="k">if</span> <span class="n">config_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">add_user_config</span><span class="p">(</span><span class="n">config_file</span><span class="p">)</span>
-
-    <span class="c1"># start with default compass config options</span>
-    <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="s1">&#39;compass&#39;</span><span class="p">,</span> <span class="s1">&#39;default.cfg&#39;</span><span class="p">)</span>
-
-    <span class="c1"># add the E3SM config options from mache</span>
-    <span class="k">if</span> <span class="n">machine</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="s1">&#39;mache.machines&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">machine</span><span class="si">}</span><span class="s1">.cfg&#39;</span><span class="p">)</span>
-
-    <span class="c1"># add the compass machine config file</span>
-    <span class="k">if</span> <span class="n">machine</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">machine</span> <span class="o">=</span> <span class="s1">&#39;default&#39;</span>
-    <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="s1">&#39;compass.machines&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">machine</span><span class="si">}</span><span class="s1">.cfg&#39;</span><span class="p">)</span>
-
-    <span class="c1"># add the config options for the MPAS core</span>
     <span class="n">mpas_core</span> <span class="o">=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span>
-    <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;compass.</span><span class="si">{</span><span class="n">mpas_core</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mpas_core</span><span class="si">}</span><span class="s1">.cfg&#39;</span><span class="p">)</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">_get_basic_config</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="n">machine</span><span class="p">,</span> <span class="n">mpas_model_path</span><span class="p">,</span>
+                               <span class="n">mpas_core</span><span class="p">)</span>
 
     <span class="c1"># add the config options for the test group (if defined)</span>
     <span class="n">test_group</span> <span class="o">=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">test_group</span><span class="o">.</span><span class="n">name</span>
@@ -501,6 +486,45 @@
             <span class="n">max_of_min_cores</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">max_of_min_cores</span><span class="p">,</span> <span class="n">step</span><span class="o">.</span><span class="n">min_cores</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">max_cores</span><span class="p">,</span> <span class="n">max_of_min_cores</span>
+
+
+<span class="k">def</span> <span class="nf">_get_basic_config</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="n">machine</span><span class="p">,</span> <span class="n">mpas_model_path</span><span class="p">,</span> <span class="n">mpas_core</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get a base config parser for the machine and MPAS core but not a specific</span>
+<span class="sd">    test</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">CompassConfigParser</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">config_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">add_user_config</span><span class="p">(</span><span class="n">config_file</span><span class="p">)</span>
+
+    <span class="c1"># start with default compass config options</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="s1">&#39;compass&#39;</span><span class="p">,</span> <span class="s1">&#39;default.cfg&#39;</span><span class="p">)</span>
+
+    <span class="c1"># add the E3SM config options from mache</span>
+    <span class="k">if</span> <span class="n">machine</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="s1">&#39;mache.machines&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">machine</span><span class="si">}</span><span class="s1">.cfg&#39;</span><span class="p">)</span>
+
+    <span class="c1"># add the compass machine config file</span>
+    <span class="k">if</span> <span class="n">machine</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">machine</span> <span class="o">=</span> <span class="s1">&#39;default&#39;</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="s1">&#39;compass.machines&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">machine</span><span class="si">}</span><span class="s1">.cfg&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s1">&#39;COMPASS_BRANCH&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+        <span class="n">compass_branch</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;COMPASS_BRANCH&#39;</span><span class="p">]</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="s1">&#39;compass_branch&#39;</span><span class="p">,</span> <span class="n">compass_branch</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="s1">&#39;compass_branch&#39;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
+
+    <span class="c1"># add the config options for the MPAS core</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;compass.</span><span class="si">{</span><span class="n">mpas_core</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mpas_core</span><span class="si">}</span><span class="s1">.cfg&#39;</span><span class="p">)</span>
+
+    <span class="c1"># set the mpas_model path from the command line if provided</span>
+    <span class="k">if</span> <span class="n">mpas_model_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">mpas_model_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">mpas_model_path</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="s1">&#39;mpas_model&#39;</span><span class="p">,</span> <span class="n">mpas_model_path</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">config</span>
 </pre></div>
 
            </div>
