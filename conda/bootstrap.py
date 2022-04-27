@@ -335,6 +335,7 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, spack_env,
 
     albany = config.get('deploy', 'albany')
     esmf = config.get('deploy', 'esmf')
+    lapack = config.get('deploy', 'lapack')
     petsc = config.get('deploy', 'petsc')
     scorpio = config.get('deploy', 'scorpio')
 
@@ -356,6 +357,11 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, spack_env,
 
     if esmf != 'None':
         specs.append(f'esmf@{esmf}+mpi+netcdf~pio+pnetcdf')
+    if lapack != 'None':
+        specs.append(f'netlib-lapack@{lapack}')
+        include_e3sm_lapack = False
+    else:
+        include_e3sm_lapack = True
     if petsc != 'None':
         specs.append(f'petsc@{petsc}+mpi+batch')
 
@@ -372,6 +378,7 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, spack_env,
         make_spack_env(spack_path=spack_branch_base, env_name=spack_env,
                        spack_specs=specs, compiler=compiler, mpi=mpi,
                        machine=machine,
+                       include_e3sm_lapack=include_e3sm_lapack,
                        include_e3sm_hdf5_netcdf=e3sm_hdf5_netcdf,
                        yaml_template=yaml_template, tmpdir=tmpdir)
 
@@ -386,6 +393,7 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, spack_env,
     spack_script = get_spack_script(
         spack_path=spack_branch_base, env_name=spack_env, compiler=compiler,
         mpi=mpi, shell='sh', machine=machine,
+        include_e3sm_lapack=include_e3sm_lapack,
         include_e3sm_hdf5_netcdf=e3sm_hdf5_netcdf,
         yaml_template=yaml_template)
 
@@ -415,6 +423,11 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, spack_env,
             f'export {albany_flags}\n' \
             f'export MPAS_EXTERNAL_LIBS="${{MPAS_EXTERNAL_LIBS}} ' \
             f'${{ALBANY_LINK_LIBS}} {stdcxx} {mpicxx}"\n'
+
+    if lapack != 'None':
+        env_vars = f'{env_vars}' \
+                   f'export LAPACK={spack_view}\n' \
+                   f'export USE_LAPACK=true\n'
 
     if petsc != 'None':
         env_vars = f'{env_vars}' \
