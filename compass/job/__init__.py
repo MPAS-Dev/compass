@@ -88,6 +88,7 @@ def write_job_script(config, machine, target_cores, min_cores, work_dir,
                            nodes=f'{nodes}', wall_time=wall_time, qos=qos,
                            partition=partition, constraint=constraint,
                            suite=suite)
+    text = _clean_up_whitespace(text)
     if suite == '':
         script_filename = 'compass_job_script.sh'
     else:
@@ -95,3 +96,27 @@ def write_job_script(config, machine, target_cores, min_cores, work_dir,
     script_filename = os.path.join(work_dir, script_filename)
     with open(script_filename, 'w') as handle:
         handle.write(text)
+
+
+def _clean_up_whitespace(text):
+    prev_line = None
+    lines = text.split('\n')
+    trimmed = list()
+    # remove extra blank lines
+    for line in lines:
+        if line != '' or prev_line != '':
+            trimmed.append(line)
+            prev_line = line
+
+    line = ''
+    lines = list()
+    # remove blank lines between comments
+    for next_line in trimmed:
+        if line != '' or not next_line.startswith('#'):
+            lines.append(line)
+        line = next_line
+
+    # add the last line that we missed and an extra blank line
+    lines.extend([trimmed[-1], ''])
+    text = '\n'.join(lines)
+    return text
