@@ -49,7 +49,20 @@ all_build_targets = {
 }
 
 
-def setup_matrix(config_filename):
+def setup_matrix(config_filename, submit):
+    """
+    Build and set up (and optionally submit jobs for) a matrix of MPAS builds
+
+    Parameters
+    ----------
+    config_filename : str
+        The name of the config file containing config options to use for both
+        the matrix and the test case(s)
+
+    submit : bool
+        Whether to submit each suite or set of tests once it has been built
+        and set up
+    """
 
     config = ConfigParser()
     config.read(config_filename)
@@ -123,10 +136,35 @@ def setup_matrix(config_filename):
 
                 compass_setup(script_name, setup_command, mpas_path,
                               mpas_model, work_base, baseline_base, config,
-                              env_name, suffix)
+                              env_name, suffix, submit)
 
 
 def get_load_script_name(machine, compiler, mpi, env_name):
+    """
+    Get the load script for this configuration
+
+    Parameters
+    ----------
+    machine : str
+        The name of the current machine
+
+    compiler : str
+        The name of the compiler
+
+    mpi : str
+        the MPI library
+
+    env_name : str
+        The name of the conda environment to run compass from
+
+    Returns
+    -------
+    script_name : str
+        The name of the load script to source to get the appropriate compass
+        environment
+
+
+    """
     if machine.startswith('conda'):
         script_name = 'load_{}_{}.sh'.format(env_name, mpi)
     else:
@@ -136,6 +174,31 @@ def get_load_script_name(machine, compiler, mpi, env_name):
 
 
 def build_mpas(script_name, mpas_path, make_command, suffix):
+    """
+    Build the MPAS component
+
+
+    Parameters
+    ----------
+    script_name : str
+        The name of the load script to source to get the appropriate compass
+        environment
+
+    mpas_path : str
+        The path to the MPAS component to run
+
+    make_command : str
+        The make command to run to build the MPAS component
+
+    suffix : str
+        A suffix related to the machine, compilers, MPI libraries, etc.
+
+    Returns
+    -------
+    new_mpas_model : str
+        The new name for the MPAS executable with a suffix for the build
+
+    """
 
     mpas_subdir = os.path.basename(mpas_path)
     if mpas_subdir == 'mpas-ocean':
@@ -147,6 +210,7 @@ def build_mpas(script_name, mpas_path, make_command, suffix):
                          '{}'.format(mpas_subdir))
 
     cwd = os.getcwd()
+    print('Changing directory to:\n{}\n'.format(mpas_path))
     os.chdir(mpas_path)
     args = 'source {}; {}'.format(script_name, make_command)
 
@@ -158,13 +222,54 @@ def build_mpas(script_name, mpas_path, make_command, suffix):
     new_mpas_model = '{}_{}'.format(mpas_model, suffix)
     shutil.move(mpas_model, new_mpas_model)
 
+    print('Changing directory to:\n{}\n'.format(cwd))
     os.chdir(cwd)
 
     return new_mpas_model
 
 
 def compass_setup(script_name, setup_command, mpas_path, mpas_model, work_base,
-                  baseline_base, config, env_name, suffix):
+                  baseline_base, config, env_name, suffix, submit):
+    """
+    Set up the compass suite or test case(s)
+
+    Parameters
+    ----------
+    script_name : str
+        The name of the load script to source to get the appropriate compass
+        environment
+
+    setup_command : str
+        The command for setting up the compass test case or suite
+
+    mpas_path : str
+        The path to the MPAS component to run
+
+    mpas_model : str
+        The name of the MPAS executable within the ``mpas_path``
+
+    work_base : str
+        The base work directory for the matrix.  The work directory used for
+        the suite or test case(s) is a subdirectory ``suffix`` within this
+        directory.
+
+    baseline_base : str
+        The base work directory for a baseline matrix to compare to (or an
+        empty string for no baseline)
+
+    config : configparser.ConfigParser
+        Config options for both the matrix and the test case(s)
+
+    env_name : str
+        The name of the conda environment to run compass from
+
+    suffix : str
+        A suffix related to the machine, compilers, MPI libraries, etc.
+
+    submit : bool
+        Whether to submit each suite or set of tests once it has been built
+        and set up
+    """
 
     if not config.has_section('paths'):
         config.add_section('paths')
@@ -178,12 +283,14 @@ def compass_setup(script_name, setup_command, mpas_path, mpas_model, work_base,
     with open(new_config_filename, 'w') as f:
         config.write(f)
 
+    work_dir = '{}/{}'.format(work_base, suffix)
+
     args = 'source {}; ' \
            '{} ' \
            '-p {} ' \
-           '-w {}/{} ' \
-           '-f {}'.format(script_name, setup_command, mpas_path, work_base,
-                          suffix, new_config_filename)
+           '-w {} ' \
+           '-f {}'.format(script_name, setup_command, mpas_path, work_dir,
+                          new_config_filename)
 
     if baseline_base != '':
         args = '{} -b {}/{}'.format(args, baseline_base, suffix)
@@ -192,6 +299,29 @@ def compass_setup(script_name, setup_command, mpas_path, mpas_model, work_base,
     print('\nRunning:\n{}\n'.format('\n'.join(args.split('; '))))
     logger = get_logger(name=__name__, log_filename=log_filename)
     check_call(args, logger=logger)
+
+    if submit:
+        suite = None
+        if setup_command.startswith('compass suite'):
+            parts = setup_command.split()
+            index = parts.index('-t')
+            if index == -1:
+                index = parts.index('--test_suite')
+
+            if index != -1 and len(parts) > index+1:
+                suite = parts[index+1]
+        elif setup_command.startswith('compass setup'):
+            suite = 'custom'
+
+        if suite is not None:
+            job_script = 'compass_job_script.{}.sh'.format(suite)
+            if not os.path.exists(os.path.join(work_dir, job_script)):
+                raise OSError('Could not find job script {} for suite '
+                              '{}'.format(job_script, suite))
+            args = 'cd {}; ' \
+                   'sbatch {}'.format(work_dir, job_script)
+            print('\nRunning:\n{}\n'.format('\n'.join(args.split('; '))))
+            check_call(args)
 
 
 def main():
@@ -202,9 +332,12 @@ def main():
                         required=True,
                         help="Configuration file with matrix build options",
                         metavar="FILE")
+    parser.add_argument("--submit", dest="submit", action='store_true',
+                        help="Whether to submit the job scripts for each test"
+                             "once setup is complete.")
 
     args = parser.parse_args()
-    setup_matrix(args.config_file)
+    setup_matrix(args.config_file, args.submit)
 
 
 if __name__ == '__main__':
