@@ -113,11 +113,6 @@ class Mesh(Step):
             logger.info('cullDistance <= 0 in config file. '
                         'Will not cull by distance to margin. \n')
 
-        # Set lat-lon fields in the pre-culled mesh
-        logger.info('calling set_lat_lon_fields_in_planar_grid.py')
-        args = ['set_lat_lon_fields_in_planar_grid.py', '-f',
-                'ais_8km_preCull.nc', '-p', 'ais-bedmap2']
-
         check_call(args, logger=logger)
 
         dsMesh = xarray.open_dataset('ais_8km_preCull.nc')
