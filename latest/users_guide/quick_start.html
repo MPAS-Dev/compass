@@ -51,6 +51,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#building-mpas-components">Building MPAS components</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#setting-up-test-cases">Setting up test cases</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#running-a-test-case">Running a test case</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-with-a-job-script">Running with a job script</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#test-suites">Test Suites</a></li>
 </ul>
 </li>
@@ -384,6 +385,21 @@ should contain a file <code class="docutils literal notranslate"><span class="pr
 <code class="docutils literal notranslate"><span class="pre">compass</span></code> needs to run the test case.  The load script
 <code class="docutils literal notranslate"><span class="pre">load_compass_env.sh</span></code> is a link to whatever load script you sourced before
 setting up the test case (see <a class="reference internal" href="#conda-env"><span class="std std-ref">compass conda environment</span></a>).</p>
+</section>
+<section id="running-with-a-job-script">
+<h2>Running with a job script<a class="headerlink" href="#running-with-a-job-script" title="Permalink to this headline">¶</a></h2>
+<p>Alternatively, on supported machines, you can run the test case or suite with
+a job script generated automatically during setup, for example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> &lt;workdir&gt;/&lt;test_subdir&gt;
+sbatch job_script.sh
+</pre></div>
+</div>
+<p>You can edit the job script to change the wall-clock time (1 hour by default)
+or the number of nodes (scaled according to the number of cores require by the
+test cases by default).</p>
+<p>You can also use config options, passed to <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">suite</span></code> or
+<code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">setup</span></code> with <code class="docutils literal notranslate"><span class="pre">-f</span></code> in a user config file to control the job script.
+The following are the config options that are relevant to job scripts:</p>
 </section>
 <section id="test-suites">
 <span id="suite-overview"></span><h2>Test Suites<a class="headerlink" href="#test-suites" title="Permalink to this headline">¶</a></h2>

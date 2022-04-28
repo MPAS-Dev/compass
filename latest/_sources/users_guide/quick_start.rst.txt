@@ -332,6 +332,69 @@ should contain a file ``test_case.pickle`` that contains the information
 ``load_compass_env.sh`` is a link to whatever load script you sourced before
 setting up the test case (see :ref:`conda_env`).
 
+Running with a job script
+-------------------------
+
+Alternatively, on supported machines, you can run the test case or suite with
+a job script generated automatically during setup, for example:
+
+.. code-block:: bash
+
+    cd <workdir>/<test_subdir>
+    sbatch job_script.sh
+
+You can edit the job script to change the wall-clock time (1 hour by default)
+or the number of nodes (scaled according to the number of cores require by the
+test cases by default).
+
+.. code-block:: bash
+    #!/bin/bash
+    #SBATCH  --job-name=compass
+    #SBATCH  --account=condo
+    #SBATCH  --nodes=5
+    #SBATCH  --output=compass.o%j
+    #SBATCH  --exclusive
+    #SBATCH  --time=1:00:00
+    #SBATCH  --qos=regular
+    #SBATCH  --partition=acme-small
+
+
+    source load_compass_env.sh
+    compass run
+
+You can also use config options, passed to ``compass suite`` or
+``compass setup`` with ``-f`` in a user config file to control the job script.
+The following are the config options that are relevant to job scripts:
+
+.. code-block:: cfg
+    # The parallel section describes options related to running jobs in parallel
+    [parallel]
+
+    # account for running diagnostics jobs
+    account = condo
+
+    # Config options related to creating a job script
+    [job]
+
+    # the name of the parallel job
+    job_name = compass
+
+    # wall-clock time
+    wall_time = 1:00:00
+
+    # The job partition to use, by default, taken from the first partition (if any)
+    # provided for the machine by mache
+    partition = acme-small
+
+    # The job quality of service (QOS) to use, by default, taken from the first
+    # qos (if any) provided for the machine by mache
+    qos = regular
+
+    # The job constraint to use, by default, taken from the first constraint (if
+    # any) provided for the  machine by mache
+    constraint =
+
+
 .. _suite_overview:
 
 Test Suites
