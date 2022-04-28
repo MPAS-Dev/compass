@@ -3,7 +3,9 @@ spack:
   - cmake
   - gcc
   - mvapich2
+{% if e3sm_lapack %}
   - intel-mkl
+{% endif %}
 {{ specs }}
   concretization: together
   packages:
@@ -11,7 +13,9 @@ spack:
       compiler: [gcc@9.3.0]
       providers:
         mpi: [mvapich2@2.3]
+{% if e3sm_lapack %}
         lapack: [intel-mkl@2020.0.4]
+{% endif %}
     bzip2:
       externals:
       - spec: bzip2@1.0.6
