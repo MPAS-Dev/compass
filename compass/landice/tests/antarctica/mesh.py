@@ -89,10 +89,6 @@ class Mesh(Step):
         gg.variables['vy'][0, :, :] *= floodFillMask
         gg.close()
 
-        # This step uses a subset of the whole Antarctica dataset trimmed to
-        # the region around Antarctica, to speed up interpolation.
-        # This could also be replaced with the full Antarctic Ice Sheet
-        # dataset.
         logger.info('calling interpolate_to_mpasli_grid.py')
         args = ['interpolate_to_mpasli_grid.py', '-s',
                 'antarctica_8km_2020_10_20_floodFillMask.nc', '-d',
