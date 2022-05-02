@@ -76,5 +76,5 @@ class DtConvergenceTest(TestCase):
 
             i += 1
 
-        ax[0].legend(loc='best')
+        ax[0].legend(loc='best', prop={'size': 5})
         plt.savefig('MISMIP+_calving_dt_comparison.png', dpi=150)
