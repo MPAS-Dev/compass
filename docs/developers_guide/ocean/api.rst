@@ -54,6 +54,29 @@ baroclinic_channel
    initial_state.InitialState.run
 
 
+drying_slope
+~~~~~~~~~~~~
+
+.. currentmodule:: compass.ocean.tests.drying_slope
+
+.. autosummary::
+   :toctree: generated/
+
+   DryingSlope
+
+   default.Default
+   default.Default.configure
+
+   forward.Forward
+   forward.Forward.run
+
+   initial_state.InitialState
+   initial_state.InitialState.run
+
+   viz.Viz
+   viz.Viz.run
+
+
 global_convergence
 ~~~~~~~~~~~~~~~~~~
 
