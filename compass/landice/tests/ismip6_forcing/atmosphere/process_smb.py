@@ -32,16 +32,9 @@ class ProcessSMB(Step):
         """
         config = self.config
         section = config['ismip6_ais']
-
         base_path_ismip6 = section.get('base_path_ismip6')
         base_path_mali = section.get('base_path_mali')
         mali_mesh_file = section.get('mali_mesh_file')
-
-        self.add_input_file(filename=mali_mesh_file,
-                            target=os.path.join(base_path_mali,
-                                                mali_mesh_file))
-
-        section = config['ismip6_ais']
         period_endyear = section.get("period_endyear")
         model = section.get("model")
         scenario = section.get("scenario")
@@ -59,6 +52,10 @@ class ProcessSMB(Step):
                              "should contain the ismip6_ais "
                              "section with the scenario option")
 
+        self.add_input_file(filename=mali_mesh_file,
+                            target=os.path.join(base_path_mali,
+                                                mali_mesh_file))
+
         input_file_list = self._files[period_endyear][model][scenario]
         for file in input_file_list:
             print(base_path_ismip6)
@@ -66,7 +63,7 @@ class ProcessSMB(Step):
             self.add_input_file(filename=os.path.basename(file),
                                 target=os.path.join(base_path_ismip6, file))
 
-        output_file = f"processed_{model}_{scenario}_{period_endyear}.nc"
+        output_file = f"processed_SMB_{model}_{scenario}_{period_endyear}.nc"
         self.add_output_file(filename=output_file)
 
     def run(self):
@@ -77,7 +74,6 @@ class ProcessSMB(Step):
         config = self.config
 
         section = config['ismip6_ais']
-        # base_path_ismip6 = section.get('base_path_ismip6')
         mali_mesh_name = section.get('mali_mesh_name')
         mali_mesh_file = section.get('mali_mesh_file')
         period_endyear = section.get("period_endyear")
@@ -111,7 +107,7 @@ class ProcessSMB(Step):
 
         # call the function that renames the ismip6 variables to MALI variables
         logger.info("Renaming the ismip6 variables to mali variable names...")
-        output_file = f"processed_{model}_{scenario}_{period_endyear}.nc"
+        output_file = f"processed_SMB_{model}_{scenario}_{period_endyear}.nc"
         self.rename_ismip6smb_to_mali_vars(remapped_file_temp, output_file)
 
         # correct the SMB anomaly field with mali base SMB field
@@ -236,8 +232,10 @@ class ProcessSMB(Step):
     _files = {
         "2100": {
             "CCSM4": {
-                "RCP26": ["AIS/Atmosphere_forcing/ccsm4_rcp2.6/Regridded_8km/CCSM4_8km_anomaly_rcp26_1995-2100.nc"],
-                "RCP85": ["AIS/Atmosphere_Forcing/ccsm4_rcp8.5/Regridded_8km/CCSM4_8km_anomaly_1995-2100.nc"]
+                "RCP26": [
+                    "AIS/Atmosphere_forcing/ccsm4_rcp2.6/Regridded_8km/CCSM4_8km_anomaly_rcp26_1995-2100.nc"],
+                "RCP85": [
+                    "AIS/Atmosphere_Forcing/ccsm4_rcp8.5/Regridded_8km/CCSM4_8km_anomaly_1995-2100.nc"]
             },
             "CESM2": {
                 "SSP585v1": [
@@ -278,7 +276,8 @@ class ProcessSMB(Step):
             "NorESM1-M": {
                 "RCP26": [
                     "AIS/Atmosphere_Forcing/noresm1-m_rcp2.6/Regridded_8km/NorESM-M_8km_anomaly_rcp26_1995-2100.nc"],
-                "RCP85": ["AIS/Atmosphere_Forcing/noresm1-m_rcp8.5/Regridded_8km/NorESM-M_8km_anomaly_1995-2100.nc"]
+                "RCP85": [
+                    "AIS/Atmosphere_Forcing/noresm1-m_rcp8.5/Regridded_8km/NorESM-M_8km_anomaly_1995-2100.nc"]
             },
             "UKESM1-0-LL": {
                 "SSP585": [
@@ -287,8 +286,9 @@ class ProcessSMB(Step):
         },
         "2300": {
             "CCSM4": {
-                "RCP85": ["AIS/Atmospheric_forcing/CCSM4_RCP85/Regridded_08km/CCSM4_8km_anomaly_1995-2100.nc",
-                          "AIS/Atmospheric_forcing/CCSM4_RCP85/Regridded_08km/CCSM4_8km_anomaly_2101-2300.nc"]
+                "RCP85": [
+                    "AIS/Atmospheric_forcing/CCSM4_RCP85/Regridded_08km/CCSM4_8km_anomaly_1995-2100.nc",
+                    "AIS/Atmospheric_forcing/CCSM4_RCP85/Regridded_08km/CCSM4_8km_anomaly_2101-2300.nc"]
             },
             "CESM2-WACCM": {
                 "SSP585": [
