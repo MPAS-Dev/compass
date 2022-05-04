@@ -1,6 +1,8 @@
 from compass.testgroup import TestGroup
 from compass.landice.tests.ismip6_forcing.atmosphere import Atmosphere
-from compass.landice.tests.ismip6_forcing.ocean import Ocean
+from compass.landice.tests.ismip6_forcing.ocean_thermal import OceanThermal
+from compass.landice.tests.ismip6_forcing.ocean_basal import OceanBasal
+
 
 
 class Ismip6Forcing(TestGroup):
@@ -16,4 +18,5 @@ class Ismip6Forcing(TestGroup):
         super().__init__(mpas_core=mpas_core, name='ismip6_forcing')
 
         self.add_test_case(Atmosphere(test_group=self))
-        self.add_test_case(Ocean(test_group=self))
+        self.add_test_case(OceanBasal(test_group=self))
+        self.add_test_case(OceanThermal(test_group=self))
