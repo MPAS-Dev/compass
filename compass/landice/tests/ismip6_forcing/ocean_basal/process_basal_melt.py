@@ -30,20 +30,25 @@ class ProcessBasalMelt(Step):
         """
         config = self.config
         section = config['ismip6_ais']
-        base_path = section.get('base_path')
+        base_path_ismip6 = section.get('base_path_ismip6')
+        base_path_mali = section.get('base_path_mali')
         mali_mesh_file = section.get('mali_mesh_file')
+
         section = config['ismip6_ais_ocean_basal']
         basin_file = section.get('basin_file')
         coeff_file = section.get('coeff_file')
+
+        self.add_input_file(filename=mali_mesh_file,
+                            target=os.path.join(base_path_mali,
+                                                mali_mesh_file))
         self.add_input_file(filename=basin_file,
-                            target=os.path.join(base_path,
+                            target=os.path.join(base_path_ismip6,
                                                 basin_file))
         self.add_input_file(filename=coeff_file,
-                            target=os.path.join(base_path,
+                            target=os.path.join(base_path_ismip6,
                                                 coeff_file))
-        self.add_input_file(filename=mali_mesh_file,
-                            target=os.path.join(base_path, mali_mesh_file))
         self.add_output_file(filename=f"output_basin_and_{coeff_file}")
+
 
     def run(self):
         """
@@ -58,7 +63,6 @@ class ProcessBasalMelt(Step):
         basin_file = section.get('basin_file')
         coeff_file = section.get('coeff_file')
         method_remap = section.get('method_remap')
-        output_file = f"output_basin_and_{coeff_file}"
 
         # combine, interpolate and rename the basin file and deltaT0_gamma0
         # ismip6 input files
@@ -76,6 +80,7 @@ class ProcessBasalMelt(Step):
                                            remapped_file_temp, mali_mesh_name,
                                            mali_mesh_file, method_remap)
 
+        output_file = f"output_basin_and_{coeff_file}"
         # call the function that renames the ismip6 variables to MALI variables
         print("Renaming the ismip6 variables to mali variable names...")
         self.rename_ismip6BasalMelt_to_mali_vars(remapped_file_temp,

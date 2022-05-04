@@ -28,49 +28,71 @@ class ProcessThermalForcing(Step):
         Set up this step of the test case
         """
         config = self.config
-        section = config['ismip6_ais_ocean']
-
-        input_path = section.get('input_path')
-        thermal_forcing_file = section.get('thermal_forcing_file')
-        self.add_input_file(filename=thermal_forcing_file,
-                            target=os.path.join(input_path,
-                                                thermal_forcing_file))
+        section = config['ismip6_ais']
+        base_path_ismip6 = section.get('base_path_ismip6')
+        base_path_mali = section.get('base_path_mali')
         mali_mesh_file = section.get('mali_mesh_file')
+        period_endyear = section.get("period_endyear")
+        model = section.get("model")
+        scenario = section.get("scenario")
+
+        if period_endyear == "NotAvailable":
+            raise ValueError("You need to supply a user config file, which "
+                             "should contain the ismip6_ais "
+                             "section with the period_endyear option")
+        if model == "NotAvailable":
+            raise ValueError("You need to supply a user config file, which "
+                             "should contain the ismip6_ais "
+                             "section with the model option")
+        if scenario == "NotAvailable":
+            raise ValueError("You need to supply a user config file, which "
+                             "should contain the ismip6_ais "
+                             "section with the scenario option")
+
         self.add_input_file(filename=mali_mesh_file,
-                            target=os.path.join(input_path, mali_mesh_file))
-        self.add_output_file(filename=f"output_{thermal_forcing_file}")
+                            target=os.path.join(base_path_mali,
+                                                mali_mesh_file))
+
+
+        input_file_list = self._files[period_endyear][model][scenario]
+        for file in input_file_list:
+            self.add_input_file(filename=os.path.basename(file),
+                                target=os.path.join(base_path_ismip6, file))
+
+        output_file = f"processed_TF_{model}_{scenario}_{period_endyear}.nc"
+        self.add_output_file(filename=output_file)
 
     def run(self):
         """
         Run this step of the test case
         """
-        #logger = self.logger
+        logger = self.logger
         config = self.config
-        section = config['ismip6_ais_ocean']
 
-        input_path = section.get('input_path')
-        thermal_forcing_file = section.get('thermal_forcing_file')
-        self.add_input_file(filename=thermal_forcing_file,
-                            target=os.path.join(input_path,
-                                                thermal_forcing_file))
-        mali_mesh_file = section.get('mali_mesh_file')
-        self.add_input_file(filename=mali_mesh_file,
-                            target=os.path.join(input_path, mali_mesh_file))
+        section = config['ismip6_ais']
         mali_mesh_name = section.get('mali_mesh_name')
         mali_mesh_file = section.get('mali_mesh_file')
+        period_endyear = section.get("period_endyear")
+        model = section.get("model")
+        scenario = section.get("scenario")
+
+        section = config['ismip6_ais_ocean_thermal']
         method_remap = section.get('method_remap')
-        output_file = f"output_{thermal_forcing_file}"
+
+        input_file_list = self._files[period_endyear][model][scenario]
+        input_file = os.path.basename(input_file_list[0])
 
         # interpolate and rename the ismip6 thermal forcing data
         remapped_file_temp = "remapped.nc"  # temporary file name
 
         # call the function that reads in, remap and rename the file.
         print("Calling a remapping function...")
-        self.remap_ismip6thermalforcing_to_mali(thermal_forcing_file,
+        self.remap_ismip6thermalforcing_to_mali(input_file,
                                                 remapped_file_temp,
                                                 mali_mesh_name,
                                                 mali_mesh_file, method_remap)
 
+        output_file = f"processed_TF_{model}_{scenario}_{period_endyear}.nc"
         # call the function that renames the ismip6 variables to MALI variables
         print("Renaming the ismip6 variables to mali variable names...")
         self.rename_ismip6thermalforcing_to_mali_vars(remapped_file_temp,
@@ -170,3 +192,99 @@ class ProcessThermalForcing(Step):
         # write to a new netCDF file
         write_netcdf(ds, output_file)
         ds.close()
+
+
+    # create a nested dictionary for the ISMIP6 original forcing files including relative path
+    _files = {
+        "2100": {
+            "CCSM4": {
+               # "RCP26": ["AIS/Atmosphere_forcing/ccsm4_rcp2.6/Regridded_8km/CCSM4_8km_anomaly_rcp26_1995-2100.nc"],
+                "RCP85": ["AIS/Ocean_Forcing/ccsm4_rcp8.5/1995-2100/CCSM4_thermal_forcing_8km_x_60m.nc"]
+            },
+            "CESM2": {
+                "SSP585": [
+                    "AIS/Ocean_Forcing/cesm2_ssp585/1995-2100/CESM2_ssp585_thermal_forcing_8km_x_60m.nc"]
+              #  "SSP585v1": [
+              #     "AIS/Atmosphere_Forcing/CESM2_ssp585/Regridded_8km/CESM2_anomaly_ssp585_1995-2100_8km_v1.nc"],
+              #  "SSP585v2": [
+              #      "AIS/Atmosphere_forcing/CESM2_ssp585/Regridded_8km/CESM2_anomaly_ssp585_1995-2100_8km_v2.nc"]
+            },
+            "CNRM_CM6": {
+                "SSP126": [
+                    "AIS/Ocean_Forcing/cnrm-cm6-1_ssp126/1995-2100/CNRM-CM6-1_ssp126_thermal_forcing_8km_x_60m.nc"],
+                "SSP585": [
+                    "AIS/Ocean_Forcing/cnrm-cm6-1_ssp585/1995-2100/CNRM-CM6-1_ssp585_thermal_forcing_8km_x_60m.nc"]
+            },
+            "CNRM_ESM2": {
+                "SSP585": [
+                    "AIS/Ocean_Forcing/cnrm-esm2-1_ssp585/1995-2100/CNRM-ESM2-1_ssp585_thermal_forcing_8km_x_60m.nc"]
+            },
+            "CSIRO-Mk3-6-0": {
+                "RCP85": [
+                    "AIS/Ocean_Forcing/csiro-mk3-6-0_rcp8.5/1995-2100/CSIRO-Mk3-6-0_RCP85_thermal_forcing_8km_x_60m.nc"]
+            },
+            "HadGEM2-ES": {
+                "RCP85": [
+                    "AIS/Ocean_Forcing/hadgem2-es_rcp8.5/1995-2100/HadGEM2-ES_RCP85_thermal_forcing_8km_x_60m.nc"]
+            },
+            "IPSL-CM5A-MR": {
+                "RCP26": [
+                    "AIS/Ocean_Forcing/ipsl-cm5a-mr_rcp2.6/1995-2100/IPSL-CM5A-MR_RCP26_thermal_forcing_8km_x_60m.nc"],
+                "RCP85": [
+                    "AIS/Ocean_Forcing/ipsl-cm5a-mr_rcp8.5/1995-2100/IPSL-CM5A-MR_RCP85_thermal_forcing_8km_x_60m.nc"]
+            },
+            "MIROC-ESM-CHEM": {
+              #  "RCP26": [
+              #      "AIS/Atmosphere_Forcing/miroc-esm-chem_rcp2.6/Regridded_8km/MIROC-ESM-CHEM_8km_anomaly_rcp26_1995-2100.nc"],
+                "RCP85": [
+                    "AIS/Ocean_Forcing/miroc-esm-chem_rcp8.5/1995-2100/MIROC-ESM-CHEM_thermal_forcing_8km_x_60m.nc"]
+            },
+            "NorESM1-M": {
+                "RCP26": [
+                    "AIS/Ocean_Forcing/noresm1-m_rcp2.6/1995-2100/NorESM1-M_RCP26_thermal_forcing_8km_x_60m.nc"],
+                "RCP85": [
+                    "AIS/Ocean_Forcing/noresm1-m_rcp8.5/1995-2100/NorESM1-M_thermal_forcing_8km_x_60m.nc"]
+            },
+            "UKESM1-0-LL": {
+                "SSP585":[
+                    "AIS/Ocean_Forcing/ukesm1-0-ll_ssp585/1995-2100/UKESM1-0-LL_ssp585_thermal_forcing_8km_x_60m.nc"]
+            }
+        },
+        "2300": {
+            "CCSM4": {
+                "RCP85": [
+                    "AIS/Ocean_forcing/ccsm4_RCP85/1995-2300/CCSM4_RCP85_thermal_forcing_8km_x_60m.nc"]
+            },
+            "CESM2-WACCM": {
+                "SSP585":[
+                    "AIS/Ocean_forcing/cesm2-waccm_ssp585/1995-2299/CESM2-WACCM_SSP585_thermal_forcing_8km_x_60m.nc"],
+                "SSP585-repeat": [
+                    "AIS/Ocean_forcing/cesm2-waccm_ssp585-repeat/1995-2300/CESM2-WACCM_ssp585_thermal_forcing_8km_x_60m.nc"]
+            },
+  #          "CSIRO-Mk3-6-0": {
+  #              "RCP85": [
+  #                  "AIS/Atmospheric_forcing/CSIRO-Mk3-6-0_RCP85/Regridded_8km/CSIRO-Mk3-6-0_8km_anomaly_rcp85_1995-2100.nc",
+  #                  "AIS/Atmospheric_forcing/CSIRO-Mk3-6-0_RCP85/Regridded_8km/CSIRO-Mk3-6-0_8km_anomaly_rcp85_2101-2300.nc"]
+#         },
+            "HadGEM2-ES": {
+                "RCP85": [
+                    "AIS/Ocean_forcing/hadgem2-es_RCP85/1995-2299/HadGEM2-ES_RCP85_thermal_forcing_8km_x_60m.nc"],
+                "RCP85-repeat": [
+                    "AIS/Ocean_forcing/hadgem2-es_RCP85-repeat/1995-2300/HadGEM2-ES_rcp85_thermal_forcing_8km_x_60m.nc"]
+            },
+            "NorESM1-M": {
+                "RCP26-repeat": [
+                    "AIS/Ocean_forcing/noresm1-m_RCP26-repeat/1995-2300/NorESM1-M_RCP26_thermal_forcing_8km_x_60m.nc"],
+                "RCP85-repeat": [
+                    "AIS/Ocean_forcing/noresm1-m_RCP85-repeat/1995-2300/NorESM1-M_thermal_forcing_8km_x_60m.nc"]
+            },
+            "UKESM1-0-LL": {
+                "SSP126": [
+                    "AIS/Ocean_forcing/ukesm1-0-ll_ssp126/1995-2300/UKESM1-0-LL_thermal_forcing_8km_x_60m.nc"],
+                "SSP585": [
+                    "AIS/Ocean_forcing/ukesm1-0-ll_ssp585/1995-2300/UKESM1-0-LL_SSP585_thermal_forcing_8km_x_60m.nc"],
+                "SSP585-repeat": [
+                    "AIS/Ocean_forcing/ukesm1-0-ll_ssp585-repeat/1995-2300/UKESM1-0-LL_ssp585_thermal_forcing_8km_x_60m.nc"]
+            }
+        }
+    }
