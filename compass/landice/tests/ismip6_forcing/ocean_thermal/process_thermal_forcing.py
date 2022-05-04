@@ -1,11 +1,9 @@
 import os
-import pandas as pd
 import subprocess
 import xarray as xr
 from compass.landice.tests.ismip6_forcing.ocean_thermal.create_mapfile \
     import build_mapping_file
 from mpas_tools.io import write_netcdf
-from mpas_tools.logging import check_call
 from compass.step import Step
 
 
@@ -157,9 +155,9 @@ class ProcessThermalForcing(Step):
         # add xtime variable
         xtime = []
         for t_index in range(ds.sizes["Time"]):
-            date = ds.Time[t_index].values
-            date = pd.to_datetime(str(date))
-            date = date.strftime("%Y-%m-%d_00:00:00").ljust(64)
+            date = ds.Time[t_index]
+            date = date.dt.strftime("%Y-%m-%d_00:00:00")
+            date = str(date.values).ljust(64)
             xtime.append(date)
 
         ds["xtime"] = ("Time", xtime)
