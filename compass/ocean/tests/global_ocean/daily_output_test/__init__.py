@@ -38,6 +38,9 @@ class DailyOutputTest(ForwardTestCase):
 
         module = self.__module__
         step.add_output_file(filename='output.nc')
+        step.add_output_file(
+            filename='analysis_members/'
+                     'mpaso.hist.am.timeSeriesStatsDaily.0001-01-01.nc')
         step.add_namelist_file(module, 'namelist.forward')
         step.add_streams_file(module, 'streams.forward')
         self.add_step(step)
