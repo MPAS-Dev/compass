@@ -1,4 +1,3 @@
-from compass.validate import compare_variables
 from compass.testcase import TestCase
 from compass.landice.tests.ismip6_forcing.atmosphere.process_smb \
     import ProcessSMB
@@ -37,9 +36,28 @@ class Atmosphere(TestCase):
         """
         Configures test case
         """
-        input_path = self.config.get(section="ismip6_ais_atmosphere",
-                                     option="input_path")
-        if input_path == "NotAvailable":
+        base_path_ismip6 = self.config.get(section="ismip6_ais",
+                                     option="base_path_ismip6")
+        base_path_mali = self.config.get(section="ismip6_ais",
+                                     option="base_path_mali")
+        mali_mesh_name = self.config.get(section="ismip6_ais",
+                                     option="mali_mesh_name")
+        mali_mesh_file = self.config.get(section="ismip6_ais",
+                                     option="mali_mesh_file")
+
+        if base_path_ismip6 == "NotAvailable":
             raise ValueError("You need to supply a user config file, which "
-                             "should contain the ismip6_ais_atmosphere section"
-                             "with the input_path option")
+                             "should contain the ismip6_ais "
+                             "section with the base_path_ismip6 option")
+        if base_path_mali == "NotAvailable":
+            raise ValueError("You need to supply a user config file, which "
+                             "should contain the ismip6_ais "
+                             "section with the base_path_mali option")
+        if mali_mesh_name == "NotAvailable":
+            raise ValueError("You need to supply a user config file, which "
+                             "should contain the ismip6_ais "
+                             "section with the mali_mesh_name option")
+        if mali_mesh_file == "NotAvailable":
+            raise ValueError("You need to supply a user config file, which "
+                             "should contain the ismip6_ais "
+                             "section with the mali_mesh_file option")
