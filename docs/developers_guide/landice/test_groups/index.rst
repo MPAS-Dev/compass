@@ -14,4 +14,5 @@ Test groups
    greenland
    humboldt
    hydro_radial
+   kangerlussuaq
    thwaites

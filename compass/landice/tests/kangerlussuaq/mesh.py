@@ -75,7 +75,6 @@ class Mesh(Step):
         dsMesh = convert(dsMesh, logger=logger)
         logger.info('writing grid_converted.nc')
         write_netcdf(dsMesh, 'grid_converted.nc')
-        # If no number of levels specified in config file, use 10
         levels = section.get('levels')
         logger.info('calling create_landice_grid_from_generic_MPAS_grid.py')
         args = ['create_landice_grid_from_generic_MPAS_grid.py',
@@ -84,10 +83,6 @@ class Mesh(Step):
                 '-l', levels, '-v', 'glimmer']
         check_call(args, logger=logger)
 
-        # This step uses a subset of the whole Greenland dataset trimmed to
-        # the region around Kangerlussuaq Glacier, to speed up interpolation.
-        # This could also be replaced with the full Greenland Ice Sheet
-        # dataset.
         logger.info('calling interpolate_to_mpasli_grid.py')
         args = ['interpolate_to_mpasli_grid.py', '-s',
                 'greenland_1km_2020_04_20.epsg3413.icesheetonly.nc', '-d',
@@ -174,9 +169,7 @@ class Mesh(Step):
 
         This includes hard-coded definition of the extent of the regional
         mesh and user-defined mesh density functions based on observed flow
-        speed and distance to the ice margin. In the future, this function
-        and its components will likely be separated into separate generalized
-        functions to be reusable by multiple test groups.
+        speed and distance to the ice margin.
         """
         # get needed fields from GIS dataset
         f = netCDF4.Dataset('greenland_8km_2020_04_20.epsg3413.nc', 'r')
