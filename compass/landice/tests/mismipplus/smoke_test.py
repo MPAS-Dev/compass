@@ -2,6 +2,7 @@ from compass.validate import compare_variables
 from compass.testcase import TestCase
 from compass.landice.tests.mismipplus.run_model import RunModel
 
+
 class SmokeTest(TestCase):
     """
     A test case for running a smoke test of the MISMIP+ configuration
@@ -27,7 +28,6 @@ class SmokeTest(TestCase):
                         cores=cores, min_cores=min_cores, threads=1)
         self.add_step(step)
 
-
     # no configure() method is needed
 
     # no run() method is needed
@@ -43,4 +43,3 @@ class SmokeTest(TestCase):
         compare_variables(test_case=self, variables=variables,
                           filename1='simulation/output.nc',
                           filename2='simulation/output.nc')
-

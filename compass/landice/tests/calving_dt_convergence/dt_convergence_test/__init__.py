@@ -1,10 +1,11 @@
-from compass.validate import compare_variables
 from compass.testcase import TestCase
 from compass.landice.tests.calving_dt_convergence.run_model import RunModel
+# from compass.validate import compare_variables  # not currently used
 import numpy
 import netCDF4
 import matplotlib.pyplot as plt
 import matplotlib.cm
+
 
 class DtConvergenceTest(TestCase):
     """
@@ -29,7 +30,7 @@ class DtConvergenceTest(TestCase):
 
         cores = 36
         min_cores = 4
-        
+
         # Do fewer runs if FO solver
         if velo == 'FO':
             self.fractions = numpy.arange(0.25, 2.3, 0.25)
@@ -46,7 +47,6 @@ class DtConvergenceTest(TestCase):
                             cores=cores, min_cores=min_cores, threads=1)
             self.add_step(step)
 
-
     # no configure() method is needed
 
     # no run() method is needed
@@ -56,13 +56,13 @@ class DtConvergenceTest(TestCase):
         Test cases can override this method to perform validation of variables
         and timers
         """
-        #variables = ['thickness', 'surfaceSpeed']
-        #compare_variables(test_case=self, variables=variables,
-        #                  filename1='full_run/output.nc',
-        #                  filename2='restart_run/output.nc')
+        # variables = ['thickness', 'surfaceSpeed']
+        # compare_variables(test_case=self, variables=variables,
+        #                   filename1='full_run/output.nc',
+        #                   filename2='restart_run/output.nc')
 
         # plot results
-        fig, ax = plt.subplots(4, figsize=(10,7))
+        fig, ax = plt.subplots(4, figsize=(10, 7))
         ax[0].set(xlabel='year', ylabel='calving flux (kg/yr)')
         ax[1].set(xlabel='year', ylabel='cum. calving flux (kg)')
         ax[2].set(xlabel='year', ylabel='actual dt to calving dt ratio')
@@ -92,13 +92,12 @@ class DtConvergenceTest(TestCase):
             # Now count errors
             file = open(f"{name}/log.landice.0000.out", "r")
             logcontents = file.read()
-            #get number of occurrences of the substring in the string
+            # get number of occurrences of the substring in the string
             nWarn[i] = logcontents.count("WARNING: Failed to ablate")
             ax[3].plot(frac, nWarn[i], 'ko')
 
             f.close()
             i += 1
-
 
         ax[0].legend(loc='best', prop={'size': 5})
         plt.savefig('calving_dt_comparison.png', dpi=150)

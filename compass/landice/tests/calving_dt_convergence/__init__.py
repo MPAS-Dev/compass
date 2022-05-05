@@ -30,8 +30,8 @@ class CalvingDtConvergence(TestGroup):
                              'FO'
                             ]:
                     if (calving == 'specified_calving_velocity' and
-                        velo == 'FO'):
-                        continue # This combination is not useful
+                       velo == 'FO'):
+                        continue  # This combination is not useful
                     self.add_test_case(DtConvergenceTest(test_group=self,
                                                          mesh=mesh,
                                                          calving=calving,

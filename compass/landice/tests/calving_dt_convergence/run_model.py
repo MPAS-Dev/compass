@@ -1,6 +1,7 @@
 from compass.model import make_graph_file, run_model
 from compass.step import Step
 
+
 class RunModel(Step):
     """
     A step for performing forward MALI runs as part of MISMIP+ test cases.
@@ -16,7 +17,8 @@ class RunModel(Step):
         ``streams.landice.rst``
     """
     def __init__(self, test_case, name, mesh, calving, velo, calv_dt_frac,
-                 subdir=None, cores=1, min_cores=None, threads=1, suffixes=None):
+                 subdir=None, cores=1, min_cores=None, threads=1,
+                 suffixes=None):
         """
         Create a new test case
 
@@ -84,7 +86,8 @@ class RunModel(Step):
 
         for suffix in suffixes:
             self.add_namelist_file(
-                'compass.landice.tests.calving_dt_convergence', 'namelist.landice',
+                'compass.landice.tests.calving_dt_convergence',
+                'namelist.landice',
                 out_name='namelist.{}'.format(suffix))
 
             # Modify nl & streams for the requested options
@@ -99,7 +102,8 @@ class RunModel(Step):
                 # adjust calving params for Thwaites
                 options['config_floating_von_Mises_threshold_stress'] = "50000"
                 options['config_grounded_von_Mises_threshold_stress'] = "50000"
-                options['config_calving_velocity_const'] = "0.000477705" # 15km/yr
+                options['config_calving_velocity_const'] = "0.000477705"
+                # (15km/yr)
 
             self.add_namelist_options(options=options,
                                       out_name='namelist.{}'.format(suffix))
@@ -110,7 +114,6 @@ class RunModel(Step):
                 'streams.landice.template',
                 out_name='streams.{}'.format(suffix),
                 template_replacements=stream_replacements)
-
 
         self.add_model_as_input()
 
