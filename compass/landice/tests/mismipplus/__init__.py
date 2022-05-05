@@ -1,5 +1,5 @@
 from compass.testgroup import TestGroup
-from compass.landice.tests.mismipplus.dt_convergence_test import DtConvergenceTest
+from compass.landice.tests.mismipplus.smoke_test import SmokeTest
 
 
 class MISMIPplus(TestGroup):
@@ -14,4 +14,4 @@ class MISMIPplus(TestGroup):
         """
         super().__init__(mpas_core=mpas_core, name='mismipplus')
 
-        self.add_test_case(DtConvergenceTest(test_group=self))
+        self.add_test_case(SmokeTest(test_group=self))
