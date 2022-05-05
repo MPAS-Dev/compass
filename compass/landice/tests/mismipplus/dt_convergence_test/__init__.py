@@ -52,9 +52,11 @@ class DtConvergenceTest(TestCase):
         #                  filename2='restart_run/output.nc')
 
         # plot results
-        fig, ax = plt.subplots(2)
+        fig, ax = plt.subplots(4, figsize=(10,7))
         ax[0].set(xlabel='year', ylabel='calving flux (kg/yr)')
-        ax[1].set(xlabel='fraction', ylabel='# warnings')
+        ax[1].set(xlabel='year', ylabel='cum. calving flux (kg)')
+        ax[2].set(xlabel='year', ylabel='actual dt to calving dt ratio')
+        ax[3].set(xlabel='fraction', ylabel='# warnings')
         colors = matplotlib.cm.jet(numpy.linspace(0, 1, len(self.fractions)))
         nWarn = numpy.zeros([len(self.fractions)])
 
@@ -64,17 +66,29 @@ class DtConvergenceTest(TestCase):
             f = netCDF4.Dataset(f'{name}/globalStats.nc', 'r')
             yr = f.variables['daysSinceStart'][:] / 365.0
             calv = f.variables['totalCalvingFlux'][:]
-            ax[0].plot(yr[1:], calv[1:], '-o', label=f'{frac:.2f}', color=colors[i])
-            f.close()
+            deltat = f.variables['deltat'][:]
+            ax[0].plot(yr[1:], calv[1:], '-', label=f'{frac:.2f}',
+                       color=colors[i])
+
+            ax[1].plot(yr[1:], (calv[1:]*deltat[1:]).cumsum(), '-',
+                       color=colors[i])
+
+            ratio = f.variables['dtCalvingCFLratio'][:]
+            ax[2].plot(yr[1:], numpy.ones(yr[1:].shape) * frac, 'k:',
+                       label=f'{frac:.2f}')
+            ax[2].plot(yr[1:], ratio[1:], '-', label=f'{frac:.2f}',
+                       color=colors[i])
 
             # Now count errors
             file = open(f"{name}/log.landice.0000.out", "r")
             logcontents = file.read()
             #get number of occurrences of the substring in the string
             nWarn[i] = logcontents.count("WARNING: Failed to ablate")
-            ax[1].plot(frac, nWarn[i], 'bo')
+            ax[3].plot(frac, nWarn[i], 'ko')
 
+            f.close()
             i += 1
+
 
         ax[0].legend(loc='best', prop={'size': 5})
         plt.savefig('MISMIP+_calving_dt_comparison.png', dpi=150)
