@@ -15,4 +15,3 @@ class Kangerlussuaq(TestGroup):
 
         self.add_test_case(
             MeshGen(test_group=self))
-
