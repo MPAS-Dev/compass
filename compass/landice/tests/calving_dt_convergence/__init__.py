@@ -22,13 +22,16 @@ class CalvingDtConvergence(TestGroup):
                     ]:
             for calving in [
                             'specified_calving_velocity',
-                            'eigencalving',
-                            'von_Mises_stress'
+                            'von_Mises_stress',
+                            'eigencalving'
                            ]:
                 for velo in [
                              'none',
                              'FO'
                             ]:
+                    if (calving == 'specified_calving_velocity' and
+                        velo == 'FO'):
+                        continue # This combination is not useful
                     self.add_test_case(DtConvergenceTest(test_group=self,
                                                          mesh=mesh,
                                                          calving=calving,
