@@ -12,7 +12,7 @@ larger amount of computing resources than COMPASS is typically run with.
    :width: 777 px
    :align: center
 
-   Ice thickness on Kangerlussuaq 1-10km variable resolution mesh.
+   Ice thickness and grid spacing in meters on Kangerlussuaq 1-10km variable resolution mesh.
 
 The test group includes a single test case that creates the variable resolution mesh.
 
