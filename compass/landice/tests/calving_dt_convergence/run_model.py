@@ -92,9 +92,11 @@ class RunModel(Step):
                        'config_velocity_solver': f"'{velo}'",
                        'config_adaptive_timestep_calvingCFL_fraction':
                        f"{calv_dt_frac}"}
-#            if velo == 'FO':
-#                options['config_run_duration'] = "'0005-00-00_00:00:00'"
+            if velo == 'FO':
+                # Make FO runs shorter
+                options['config_run_duration'] = "'0005-00-00_00:00:00'"
             if mesh == 'thwaites':
+                # adjust calving params for Thwaites
                 options['config_floating_von_Mises_threshold_stress'] = "50000"
                 options['config_grounded_von_Mises_threshold_stress'] = "50000"
                 options['config_calving_velocity_const'] = "0.000477705" # 15km/yr
