@@ -66,9 +66,13 @@ class DtConvergenceTest(TestCase):
         ax[0].set(xlabel='year', ylabel='calving flux (kg/yr)')
         ax[1].set(xlabel='year', ylabel='cum. calving flux (kg)')
         ax[2].set(xlabel='year', ylabel='actual dt to calving dt ratio')
-        ax[3].set(xlabel='fraction', ylabel='# warnings')
+        ax[3].set(xlabel='fraction')
+        ax[3].set_ylabel('# warnings', color='c')
+        ax2 = ax[3].twinx()
+        ax2.set_ylabel('fraction with warnings', color='g')
         colors = matplotlib.cm.jet(numpy.linspace(0, 1, len(self.fractions)))
         nWarn = numpy.zeros([len(self.fractions)])
+        nTimesteps = numpy.zeros([len(self.fractions)])
 
         i = 0
         for frac in self.fractions:
@@ -94,7 +98,9 @@ class DtConvergenceTest(TestCase):
             logcontents = file.read()
             # get number of occurrences of the substring in the string
             nWarn[i] = logcontents.count("WARNING: Failed to ablate")
-            ax[3].plot(frac, nWarn[i], 'ko')
+            nTimesteps[i] = logcontents.count("Starting timestep number")
+            ax[3].plot(frac, nWarn[i], 'co')
+            ax2.plot(frac, nWarn[i]/nTimesteps[i], 'gx')
 
             f.close()
             i += 1
