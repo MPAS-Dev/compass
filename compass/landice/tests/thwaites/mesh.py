@@ -28,7 +28,7 @@ class Mesh(Step):
         super().__init__(test_case=test_case, name='mesh')
 
         self.add_output_file(filename='graph.info')
-        self.add_output_file(filename='Thwaites_1to8km.nc')
+        self.add_output_file(filename='Thwaites.nc')
         self.add_input_file(filename='antarctica_8km_2020_10_20.nc',
                             target='antarctica_8km_2020_10_20.nc',
                             database='')
@@ -131,7 +131,7 @@ class Mesh(Step):
         logger.info('calling create_landice_grid_from_generic_MPAS_grid.py')
         args = ['create_landice_grid_from_generic_MPAS_grid.py', '-i',
                 'thwaites_dehorned.nc', '-o',
-                'Thwaites_1to8km.nc', '-l', levels, '-v', 'glimmer',
+                'Thwaites.nc', '-l', levels, '-v', 'glimmer',
                 '--beta', '--thermal', '--obs', '--diri']
 
         check_call(args, logger=logger)
@@ -139,21 +139,21 @@ class Mesh(Step):
         logger.info('calling interpolate_to_mpasli_grid.py')
         args = ['interpolate_to_mpasli_grid.py', '-s',
                 'antarctica_1km_2020_10_20_ASE.nc',
-                '-d', 'Thwaites_1to8km.nc', '-m', 'b']
+                '-d', 'Thwaites.nc', '-m', 'b']
         check_call(args, logger=logger)
 
         logger.info('Marking domain boundaries dirichlet')
         args = ['mark_domain_boundaries_dirichlet.py',
-                '-f', 'Thwaites_1to8km.nc']
+                '-f', 'Thwaites.nc']
         check_call(args, logger=logger)
 
         logger.info('calling set_lat_lon_fields_in_planar_grid.py')
         args = ['set_lat_lon_fields_in_planar_grid.py', '-f',
-                'Thwaites_1to8km.nc', '-p', 'ais-bedmap2']
+                'Thwaites.nc', '-p', 'ais-bedmap2']
         check_call(args, logger=logger)
 
         logger.info('creating graph.info')
-        make_graph_file(mesh_filename='Thwaites_1to8km.nc',
+        make_graph_file(mesh_filename='Thwaites.nc',
                         graph_filename='graph.info')
 
     def build_cell_width(self):
