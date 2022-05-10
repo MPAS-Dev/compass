@@ -76,13 +76,6 @@ All three test cases share some set of default config options under the section
     # config options for ismip6 ocean basal test case
     [ismip6_ais_ocean_basal]
 
-    # Input imbie2 basin number file.
-    basin_file = imbie2_basin_numbers_8km.nc
-
-    # Input uniform melt rate coefficient (gamma0)
-    # and temperature correction per basin file
-    coeff_file = coeff_gamma0_DeltaT_quadratic_non_local_median.nc
-
     # Remapping method used in building a mapping file. Options include: bilinear, neareststod, conserve
     method_remap = neareststod
 
