@@ -182,6 +182,22 @@ hydro_radial
    visualize.Visualize.run
    visualize.visualize_hydro_radial
 
+ismip6_forcing
+~~~~~~~~~~~~~~
+
+.. currentmodule:: compass.landice.tests.ismip6_forcing
+
+.. autosummary::
+   :toctree: generated/
+
+   HydroRadial
+
+   atmosphere.Atmosphere
+   atmosphere.Atmosphere.run
+
+   ocean_thermal.OceanThermal
+   ocean_thermal.OceanThermal.run
+
 thwaites
 ~~~~~~~~
 

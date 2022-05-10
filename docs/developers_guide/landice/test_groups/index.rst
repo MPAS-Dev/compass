@@ -12,6 +12,7 @@ Test groups
    enthalpy_benchmark
    eismint2
    greenland
-   hydro_radial
-   thwaites
    humboldt
+   hydro_radial
+   ismip6_forcing
+   thwaites

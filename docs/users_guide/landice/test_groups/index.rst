@@ -16,6 +16,7 @@ COMPASS to the ``compass`` package are those with test cases in the
    enthalpy_benchmark
    eismint2
    greenland
-   thwaites
-   hydro_radial
    humboldt
+   hydro_radial
+   ismip6_forcing
+   thwaites
