@@ -19,4 +19,5 @@ COMPASS to the ``compass`` package are those with test cases in the
    humboldt
    hydro_radial
    kangerlussuaq
+   koge_bugt_s
    thwaites
