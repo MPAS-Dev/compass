@@ -2,9 +2,9 @@ from compass.testcase import TestCase
 from compass.landice.tests.humboldt.mesh import Mesh
 
 
-class Default(TestCase):
+class MeshGen(TestCase):
     """
-    The default test case for the humboldt test group simply creates the
+    The MeshGen test case for the humboldt test group simply creates the
     mesh and initial condition.
 
     """
@@ -19,7 +19,7 @@ class Default(TestCase):
             The test group that this test case belongs to
 
         """
-        name = 'default'
+        name = 'mesh_gen'
         subdir = name
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)

@@ -3,7 +3,7 @@ import os
 import subprocess
 import sys
 
-from compass import __version__ as compass_version
+from compass.version import __version__ as compass_version
 from jinja2 import Template
 from importlib import resources
 

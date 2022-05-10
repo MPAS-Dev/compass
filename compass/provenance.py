@@ -5,8 +5,7 @@ import subprocess
 from compass.config import CompassConfigParser
 
 
-def write(work_dir, test_cases, mpas_core=None, config_filename=None,
-          mpas_model_path=None):
+def write(work_dir, test_cases, config=None):
     """
     Write a file with provenance, such as the git version, conda packages,
     command, and test cases, to the work directory
@@ -19,16 +18,9 @@ def write(work_dir, test_cases, mpas_core=None, config_filename=None,
     test_cases : dict
         A dictionary describing all of the test cases and their steps
 
-    mpas_core : str
-        The name of the MPAS core
-
-    config_filename : str, optional
-        The name of config file with custom options for setting up and running
-        test cases
-
-    mpas_model_path : str, optional
-        The relative or absolute path to the root of a branch where the MPAS
-        model has been built
+    config : compass.config.CompassConfigParser
+        Configuration options for this test case, a combination of user configs
+        and the defaults for the machine and MPAS core
     """
     compass_git_version = None
     if os.path.exists('.git'):
@@ -39,13 +31,12 @@ def write(work_dir, test_cases, mpas_core=None, config_filename=None,
         except subprocess.CalledProcessError:
             pass
 
-    if mpas_core is None:
+    if config is None:
         # this is a call to clean and we don't need to document the MPAS
         # version
         mpas_git_version = None
     else:
-        mpas_git_version = _get_mpas_git_version(mpas_core, config_filename,
-                                                 mpas_model_path)
+        mpas_git_version = _get_mpas_git_version(config)
 
     try:
         args = ['conda', 'list']
@@ -110,20 +101,9 @@ def write(work_dir, test_cases, mpas_core=None, config_filename=None,
     provenance_file.close()
 
 
-def _get_mpas_git_version(mpas_core, config_filename, mpas_model_path):
+def _get_mpas_git_version(config):
 
-    if mpas_model_path is None:
-        config = CompassConfigParser()
-        # add the config options for the MPAS core
-        config.add_from_package(f'compass.{mpas_core}', f'{mpas_core}.cfg')
-        if config_filename is not None:
-            config.add_user_config(config_filename)
-        if not config.has_option('paths', 'mpas_model'):
-            raise ValueError('Couldn\'t find MPAS model.  Not in user config '
-                             'file or passed with -p flag.')
-        mpas_model_path = config.get('paths', 'mpas_model')
-
-    mpas_model_path = os.path.abspath(mpas_model_path)
+    mpas_model_path = config.get('paths', 'mpas_model')
 
     cwd = os.getcwd()
     os.chdir(mpas_model_path)

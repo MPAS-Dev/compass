@@ -1,11 +1,11 @@
 from __future__ import print_function
 
 import os
-import warnings
 import sys
 import argparse
 import subprocess
 import platform
+import logging
 
 try:
     from urllib.request import urlopen, Request
@@ -28,11 +28,11 @@ def parse_args(bootstrap):
                              " prefix")
     parser.add_argument("-p", "--python", dest="python", type=str,
                         help="The python version to deploy")
-    parser.add_argument("-i", "--mpi", dest="mpi", type=str,
-                        help="The MPI library to deploy, see the docs for "
-                             "details")
-    parser.add_argument("-c", "--compiler", dest="compiler", type=str,
-                        help="The name of the compiler")
+    parser.add_argument("-c", "--compiler", dest="compilers", type=str,
+                        nargs="*", help="The name of the compiler(s)")
+    parser.add_argument("-i", "--mpi", dest="mpis", type=str, nargs="*",
+                        help="The MPI library (or libraries) to deploy, see "
+                             "the docs for details")
     parser.add_argument("--env_only", dest="env_only", action='store_true',
                         help="Create only the compass environment, don't "
                              "install compilers or build SCORPIO")
@@ -57,6 +57,11 @@ def parse_args(bootstrap):
                         action='store_true',
                         help="Whether to include albany in the spack "
                              "environment")
+    parser.add_argument("--without_openmp", dest="without_openmp",
+                        action='store_true',
+                        help="If this flag is included, OPENMP=true will not "
+                             "be added to the load script.  By default, MPAS "
+                             "builds will be with OpenMP.")
     if bootstrap:
         parser.add_argument("--local_conda_build", dest="local_conda_build",
                             type=str,
@@ -67,7 +72,7 @@ def parse_args(bootstrap):
     return args
 
 
-def get_conda_base(conda_base, config, shared=False):
+def get_conda_base(conda_base, config, shared=False, warn=False):
     if shared:
         conda_base = config.get('paths', 'compass_envs')
     elif conda_base is None:
@@ -77,9 +82,10 @@ def get_conda_base(conda_base, config, shared=False):
             conda_exe = os.environ['CONDA_EXE']
             conda_base = os.path.abspath(
                 os.path.join(conda_exe, '..', '..'))
-            warnings.warn(
-                '--conda path not supplied.  Using conda installed at '
-                '{}'.format(conda_base))
+            if warn:
+                print('\nWarning: --conda path not supplied.  Using conda '
+                      'installed at:\n'
+                      '   {}\n'.format(conda_base))
         else:
             raise ValueError('No conda base provided with --conda and '
                              'none could be inferred.')
@@ -100,16 +106,37 @@ def get_spack_base(spack_base, config):
     return spack_base
 
 
-def check_call(commands, env=None):
-    print('running: {}'.format(commands))
-    proc = subprocess.Popen(commands, env=env, executable='/bin/bash',
-                            shell=True)
-    proc.wait()
-    if proc.returncode != 0:
-        raise subprocess.CalledProcessError(proc.returncode, commands)
+def check_call(commands, env=None, logger=None):
+    print_command = '\n   '.join(commands.split('; '))
+    if logger is None:
+        print('\n Running:\n   {}\n'.format(print_command))
+    else:
+        logger.info('\nrunning:\n   {}\n'.format(print_command))
+
+    if logger is None:
+        process = subprocess.Popen(commands, env=env, executable='/bin/bash',
+                                   shell=True)
+        process.wait()
+    else:
+        process = subprocess.Popen(commands, stdout=subprocess.PIPE,
+                                   stderr=subprocess.PIPE, env=env,
+                                   executable='/bin/bash', shell=True)
+        stdout, stderr = process.communicate()
+
+        if stdout:
+            stdout = stdout.decode('utf-8')
+            for line in stdout.split('\n'):
+                logger.info(line)
+        if stderr:
+            stderr = stderr.decode('utf-8')
+            for line in stderr.split('\n'):
+                logger.error(line)
+
+    if process.returncode != 0:
+        raise subprocess.CalledProcessError(process.returncode, commands)
 
 
-def install_miniconda(conda_base, activate_base):
+def install_miniconda(conda_base, activate_base, logger):
     if not os.path.exists(conda_base):
         print('Installing Miniconda3')
         if platform.system() == 'Linux':
@@ -129,14 +156,72 @@ def install_miniconda(conda_base, activate_base):
         f.close()
 
         command = '/bin/bash {} -b -p {}'.format(miniconda, conda_base)
-        check_call(command)
+        check_call(command, logger=logger)
         os.remove(miniconda)
 
-    print('Doing initial setup')
+    print('Doing initial setup\n')
     commands = '{}; ' \
                'conda config --add channels conda-forge; ' \
                'conda config --set channel_priority strict; ' \
                'conda install -y mamba boa; ' \
                'conda update -y --all'.format(activate_base)
 
-    check_call(commands)
+    check_call(commands, logger=logger)
+
+
+def get_logger(name, log_filename):
+    print('Logging to: {}\n'.format(log_filename))
+    try:
+        os.remove(log_filename)
+    except OSError:
+        pass
+    logger = logging.getLogger(name)
+    handler = logging.FileHandler(log_filename)
+    formatter = CompassFormatter()
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    logger.setLevel(logging.INFO)
+    logger.propagate = False
+    return logger
+
+
+class CompassFormatter(logging.Formatter):
+    """
+    A custom formatter for logging
+    Modified from:
+    https://stackoverflow.com/a/8349076/7728169
+    https://stackoverflow.com/a/14859558/7728169
+    """
+
+    # printing error messages without a prefix because they are sometimes
+    # errors and sometimes only warnings sent to stderr
+    dbg_fmt = "DEBUG: %(module)s: %(lineno)d: %(msg)s"
+    info_fmt = "%(msg)s"
+    err_fmt = info_fmt
+
+    def __init__(self, fmt=info_fmt):
+        logging.Formatter.__init__(self, fmt)
+
+    def format(self, record):
+
+        # Save the original format configured by the user
+        # when the logger formatter was instantiated
+        format_orig = self._fmt
+
+        # Replace the original format with one customized by logging level
+        if record.levelno == logging.DEBUG:
+            self._fmt = CompassFormatter.dbg_fmt
+
+        elif record.levelno == logging.INFO:
+            self._fmt = CompassFormatter.info_fmt
+
+        elif record.levelno == logging.ERROR:
+            self._fmt = CompassFormatter.err_fmt
+
+        # Call the original formatter class to do the grunt work
+        result = logging.Formatter.format(self, record)
+
+        # Restore the original format configured by the user
+        self._fmt = format_orig
+
+        return result

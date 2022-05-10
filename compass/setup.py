@@ -10,6 +10,7 @@ from compass.mpas_cores import get_mpas_cores
 from compass.config import CompassConfigParser
 from compass.io import symlink
 from compass import provenance
+from compass.job import write_job_script
 
 
 def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
@@ -134,9 +135,11 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
     # for this core
     first_path = next(iter(test_cases))
     mpas_core = test_cases[first_path].mpas_core.name
-    provenance.write(work_dir, test_cases, mpas_core=mpas_core,
-                     config_filename=config_file,
-                     mpas_model_path=mpas_model_path)
+
+    basic_config = _get_basic_config(config_file, machine, mpas_model_path,
+                                     mpas_core)
+
+    provenance.write(work_dir, test_cases, config=basic_config)
 
     print('Setting up test cases:')
     for path, test_case in test_cases.items():
@@ -161,8 +164,12 @@ def setup_cases(tests=None, numbers=None, config_file=None, machine=None,
 
     max_cores, max_of_min_cores = _get_required_cores(test_cases)
 
-    print('target cores: {}'.format(max_cores))
-    print('minimum cores: {}'.format(max_of_min_cores))
+    print(f'target cores: {max_cores}')
+    print(f'minimum cores: {max_of_min_cores}')
+
+    if machine is not None:
+        write_job_script(basic_config, machine, max_cores, max_of_min_cores,
+                         work_dir, suite=suite_name)
 
     return test_cases
 
@@ -205,26 +212,9 @@ def setup_case(path, test_case, config_file, machine, work_dir, baseline_dir,
 
     print('  {}'.format(path))
 
-    config = CompassConfigParser()
-
-    if config_file is not None:
-        config.add_user_config(config_file)
-
-    # start with default compass config options
-    config.add_from_package('compass', 'default.cfg')
-
-    # add the E3SM config options from mache
-    if machine is not None:
-        config.add_from_package('mache.machines', f'{machine}.cfg')
-
-    # add the compass machine config file
-    if machine is None:
-        machine = 'default'
-    config.add_from_package('compass.machines', f'{machine}.cfg')
-
-    # add the config options for the MPAS core
     mpas_core = test_case.mpas_core.name
-    config.add_from_package(f'compass.{mpas_core}', f'{mpas_core}.cfg')
+    config = _get_basic_config(config_file, machine, mpas_model_path,
+                               mpas_core)
 
     # add the config options for the test group (if defined)
     test_group = test_case.test_group.name
@@ -234,6 +224,12 @@ def setup_case(path, test_case, config_file, machine, work_dir, baseline_dir,
     # add the config options for the test case (if defined)
     config.add_from_package(test_case.__module__,
                             f'{test_case.name}.cfg', exception=False)
+
+    if 'COMPASS_BRANCH' in os.environ:
+        compass_branch = os.environ['COMPASS_BRANCH']
+        config.set('paths', 'compass_branch', compass_branch)
+    else:
+        config.set('paths', 'compass_branch', os.getcwd())
 
     test_case_dir = os.path.join(work_dir, path)
     try:
@@ -253,6 +249,7 @@ def setup_case(path, test_case, config_file, machine, work_dir, baseline_dir,
 
     # set the mpas_model path from the command line if provided
     if mpas_model_path is not None:
+        mpas_model_path = os.path.abspath(mpas_model_path)
         config.set('paths', 'mpas_model', mpas_model_path, user=True)
 
     config.set('test_case', 'steps_to_run', ' '.join(test_case.steps_to_run))
@@ -317,6 +314,11 @@ def setup_case(path, test_case, config_file, machine, work_dir, baseline_dir,
         # make a symlink to the script for loading the compass conda env.
         symlink(script_filename, os.path.join(test_case_dir,
                                               'load_compass_env.sh'))
+
+    if machine is not None:
+        max_cores, max_of_min_cores = _get_required_cores({path: test_case})
+        write_job_script(config, machine, max_cores, max_of_min_cores,
+                         test_case_dir)
 
 
 def main():
@@ -389,3 +391,42 @@ def _get_required_cores(test_cases):
             max_of_min_cores = max(max_of_min_cores, step.min_cores)
 
     return max_cores, max_of_min_cores
+
+
+def _get_basic_config(config_file, machine, mpas_model_path, mpas_core):
+    """
+    Get a base config parser for the machine and MPAS core but not a specific
+    test
+    """
+    config = CompassConfigParser()
+
+    if config_file is not None:
+        config.add_user_config(config_file)
+
+    # start with default compass config options
+    config.add_from_package('compass', 'default.cfg')
+
+    # add the E3SM config options from mache
+    if machine is not None:
+        config.add_from_package('mache.machines', f'{machine}.cfg')
+
+    # add the compass machine config file
+    if machine is None:
+        machine = 'default'
+    config.add_from_package('compass.machines', f'{machine}.cfg')
+
+    if 'COMPASS_BRANCH' in os.environ:
+        compass_branch = os.environ['COMPASS_BRANCH']
+        config.set('paths', 'compass_branch', compass_branch)
+    else:
+        config.set('paths', 'compass_branch', os.getcwd())
+
+    # add the config options for the MPAS core
+    config.add_from_package(f'compass.{mpas_core}', f'{mpas_core}.cfg')
+
+    # set the mpas_model path from the command line if provided
+    if mpas_model_path is not None:
+        mpas_model_path = os.path.abspath(mpas_model_path)
+        config.set('paths', 'mpas_model', mpas_model_path, user=True)
+
+    return config

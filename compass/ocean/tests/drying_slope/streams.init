@@ -1,0 +1,40 @@
+<streams>
+
+<immutable_stream name="input_init"
+                  filename_template="culled_mesh.nc"/>
+
+<stream name="forcing_data_init">
+        type="output"
+        output_interval="0000_00:00:01"
+        clobber_mode="truncate"
+        filename_template="forcing.nc">
+
+    <var name="tidalInputMask"/>
+</stream>
+
+<stream name="output_init"
+        type="output"
+        output_interval="0000_00:00:01"
+        clobber_mode="truncate"
+        filename_template="ocean.nc">
+
+    <stream name="input_init"/>
+    <var name="layerThickness"/>
+    <var_struct name="tracers"/>
+    <var name="refZMid"/>
+    <var name="normalVelocity"/>
+    <var name="surfaceStress"/>
+    <var name="atmosphericPressure"/>
+    <var name="boundaryLayerDepth"/>
+    <var name="tidalInputMask"/>
+    <var name="ssh"/>
+    <var name="restingThickness"/>
+    <var name="refBottomDepth"/>
+    <var name="bottomDepth"/>
+    <var name="bottomDepthObserved"/>
+    <var name="maxLevelCell"/>
+    <var name="vertCoordMovementWeights"/>
+    <var name="edgeMask"/>
+</stream>
+
+</streams>
