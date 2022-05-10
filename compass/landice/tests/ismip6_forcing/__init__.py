@@ -4,12 +4,12 @@ from compass.landice.tests.ismip6_forcing.ocean_thermal import OceanThermal
 from compass.landice.tests.ismip6_forcing.ocean_basal import OceanBasal
 
 
-
 class Ismip6Forcing(TestGroup):
     """
     A test group for processing the ISMIP6
          ocean and atmosphere forcing data
     """
+
     def __init__(self, mpas_core):
         """
         mpas_core : compass.landice.Landice

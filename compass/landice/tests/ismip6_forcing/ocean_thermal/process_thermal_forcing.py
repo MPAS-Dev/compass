@@ -54,7 +54,6 @@ class ProcessThermalForcing(Step):
                             target=os.path.join(base_path_mali,
                                                 mali_mesh_file))
 
-
         input_file_list = self._files[period_endyear][model][scenario]
         for file in input_file_list:
             self.add_input_file(filename=os.path.basename(file),
@@ -207,7 +206,6 @@ class ProcessThermalForcing(Step):
         write_netcdf(ds, output_file)
         ds.close()
 
-
     # create a nested dictionary for the ISMIP6 original forcing files including relative path
     _files = {
         "2100": {
@@ -255,7 +253,7 @@ class ProcessThermalForcing(Step):
                     "AIS/Ocean_Forcing/noresm1-m_rcp8.5/1995-2100/NorESM1-M_thermal_forcing_8km_x_60m.nc"]
             },
             "UKESM1-0-LL": {
-                "SSP585":[
+                "SSP585": [
                     "AIS/Ocean_Forcing/ukesm1-0-ll_ssp585/1995-2100/UKESM1-0-LL_ssp585_thermal_forcing_8km_x_60m.nc"]
             }
         },
@@ -265,7 +263,7 @@ class ProcessThermalForcing(Step):
                     "AIS/Ocean_Forcing/ccsm4_RCP85/1995-2300/CCSM4_RCP85_thermal_forcing_8km_x_60m.nc"]
             },
             "CESM2-WACCM": {
-                "SSP585":[
+                "SSP585": [
                     "AIS/Ocean_Forcing/cesm2-waccm_ssp585/1995-2299/CESM2-WACCM_SSP585_thermal_forcing_8km_x_60m.nc"],
                 "SSP585-repeat": [
                     "AIS/Ocean_Forcing/cesm2-waccm_ssp585-repeat/1995-2300/CESM2-WACCM_ssp585_thermal_forcing_8km_x_60m.nc"]
