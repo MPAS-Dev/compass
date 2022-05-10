@@ -4,7 +4,8 @@ from compass.step import Step
 
 class RunModel(Step):
     """
-    A step for performing forward MALI runs as part of MISMIP+ test cases.
+    A step for performing forward MALI runs as part of calving dt convergence
+    test cases.
 
     Attributes
     ----------

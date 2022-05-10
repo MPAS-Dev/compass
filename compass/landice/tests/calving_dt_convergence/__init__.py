@@ -5,8 +5,10 @@ from compass.landice.tests.calving_dt_convergence.dt_convergence_test \
 
 class CalvingDtConvergence(TestGroup):
     """
-    A test group for MISMIP+ test cases.
-    This test group uses a pre-made mesh file.
+    A test group for a series of test cases for assessing timestep
+    convergence related to calving.
+    This test group uses a pre-made mesh files and various calving
+    and velocity options.
     """
     def __init__(self, mpas_core):
         """

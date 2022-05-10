@@ -12,6 +12,11 @@ class DtConvergenceTest(TestCase):
     A test case for running the same configuration with a series of
     values for config_adaptive_timestep_calvingCFL_fraction
     to check for convergence
+
+    Attributes
+    ----------
+    name : str
+        The name of the case
     """
 
     def __init__(self, test_group, mesh, calving, velo):
@@ -20,13 +25,13 @@ class DtConvergenceTest(TestCase):
 
         Parameters
         ----------
-        test_group : compass.landice.tests.mismipplus.MISMIPplus
+        test_group : compass.landice.tests.calving_dt_convergence.CalvingDtConvergence
             The test group that this test case belongs to
 
         """
-        name = f'calving_dt_convergence_test_{mesh}_{calving}_{velo}'
+        self.name = f'calving_dt_convergence_test_{mesh}_{calving}_{velo}'
         subdir = f'{mesh}.{calving}.{velo}'
-        super().__init__(test_group=test_group, name=name, subdir=subdir)
+        super().__init__(test_group=test_group, name=self.name, subdir=subdir)
 
         cores = 36
         min_cores = 4
@@ -56,6 +61,7 @@ class DtConvergenceTest(TestCase):
         Test cases can override this method to perform validation of variables
         and timers
         """
+        # If variable comparison is added, need to uncomment line 3 as well
         # variables = ['thickness', 'surfaceSpeed']
         # compare_variables(test_case=self, variables=variables,
         #                   filename1='full_run/output.nc',
@@ -106,4 +112,4 @@ class DtConvergenceTest(TestCase):
             i += 1
 
         ax[0].legend(loc='best', prop={'size': 5})
-        plt.savefig('calving_dt_comparison.png', dpi=150)
+        plt.savefig(f'{self.name}_comparison_plot.png', dpi=150)
