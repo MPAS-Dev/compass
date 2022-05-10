@@ -1,4 +1,5 @@
 import os
+import shutil
 import subprocess
 import xarray as xr
 from compass.landice.tests.ismip6_forcing.ocean_basal.create_mapfile \
@@ -35,20 +36,19 @@ class ProcessBasalMelt(Step):
         mali_mesh_file = section.get('mali_mesh_file')
 
         section = config['ismip6_ais_ocean_basal']
-        basin_file = section.get('basin_file')
-        coeff_file = section.get('coeff_file')
-
         self.add_input_file(filename=mali_mesh_file,
                             target=os.path.join(base_path_mali,
                                                 mali_mesh_file))
-        self.add_input_file(filename=basin_file,
+        self.add_input_file(filename=os.path.basename(self._file_basin),
                             target=os.path.join(base_path_ismip6,
-                                                basin_file))
-        self.add_input_file(filename=coeff_file,
-                            target=os.path.join(base_path_ismip6,
-                                                coeff_file))
-        self.add_output_file(filename=f"output_basin_and_{coeff_file}")
+                                                self._file_basin))
 
+        input_file_list = self._files_coeff
+        for file in input_file_list:
+            self.add_input_file(filename=os.path.basename(file),
+                                target=os.path.join(base_path_ismip6, file))
+            self.add_output_file(filename=f"processed_basin_and_"
+                                          f"{os.path.basename(file)}")
 
     def run(self):
         """
@@ -59,10 +59,10 @@ class ProcessBasalMelt(Step):
         section = config['ismip6_ais']
         mali_mesh_name = section.get('mali_mesh_name')
         mali_mesh_file = section.get('mali_mesh_file')
+
         section = config['ismip6_ais_ocean_basal']
-        basin_file = section.get('basin_file')
-        coeff_file = section.get('coeff_file')
         method_remap = section.get('method_remap')
+        output_path = section.get('output_path')
 
         # combine, interpolate and rename the basin file and deltaT0_gamma0
         # ismip6 input files
@@ -71,27 +71,51 @@ class ProcessBasalMelt(Step):
 
         # call the function that combines data
         # logger.info = ('calling combine_ismip6_inputfiles')
-        self.combine_ismip6_inputfiles(basin_file, coeff_file,
-                                       combined_file_temp)
+        input_file_list = self._files_coeff
+        i = 0
+        for file in input_file_list:
+            print(f"processing the input file {os.path.basename(file)}")
+            i += 1
+            self.combine_ismip6_inputfiles(os.path.basename(self._file_basin),
+                                           os.path.basename(file),
+                                           combined_file_temp)
 
-        # call the function that reads in, remap and rename the file.
-        print("Calling a remapping function...")
-        self.remap_ismip6BasalMelt_to_mali(combined_file_temp,
-                                           remapped_file_temp, mali_mesh_name,
-                                           mali_mesh_file, method_remap)
+            # remap the input forcing file.
+            print("Calling the remapping function...")
+            self.remap_ismip6BasalMelt_to_mali(combined_file_temp,
+                                               remapped_file_temp,
+                                               mali_mesh_name,
+                                               mali_mesh_file, method_remap)
 
-        output_file = f"output_basin_and_{coeff_file}"
-        # call the function that renames the ismip6 variables to MALI variables
-        print("Renaming the ismip6 variables to mali variable names...")
-        self.rename_ismip6BasalMelt_to_mali_vars(remapped_file_temp,
-                                                 output_file)
+            output_file = f"processed_basin_and_{os.path.basename(file)}"
 
-        print("Remapping and renamping process done successfully. "
-              "Removing the temporary files 'combined.nc' and 'remapped.nc'")
+            # rename the ismip6 variables to MALI variables
+            print("Renaming the ismip6 variables to mali variable names...")
+            self.rename_ismip6BasalMelt_to_mali_vars(remapped_file_temp,
+                                                     output_file)
 
-        # remove the temporary combined file
-        os.remove(combined_file_temp)
-        os.remove(remapped_file_temp)
+            print("Remapping and renamping process done successfully. "
+                  "Removing the temporary files 'combined.nc' "
+                  "and 'remapped.nc'")
+
+            # remove the temporary combined file
+            os.remove(combined_file_temp)
+            os.remove(remapped_file_temp)
+
+            # place the output file in appropriate directory
+            print(output_path)
+            if output_path == "NotAvailable":
+                pass
+            else:
+                if not os.path.exists(output_path):
+                    print("Creating a new directory for the output data")
+                    os.makedirs(output_path)
+
+            src = os.path.join(os.getcwd(), output_file)
+            dst = os.path.join(output_path, output_file)
+            shutil.copy(src, dst)
+
+            print("")
 
     def combine_ismip6_inputfiles(self, basin_file, coeff_gamma0_deltaT_file,
                                   combined_file_temp):
@@ -188,3 +212,19 @@ class ProcessBasalMelt(Step):
         # write to a new netCDF file
         write_netcdf(ds, output_file)
         ds.close()
+
+    # input files: input uniform melt rate coefficient (gamma0)
+    # and temperature correction per basin
+    _file_basin = "AIS/Ocean_Forcing/imbie2/imbie2_basin_numbers_8km.nc"
+    _files_coeff = {"AIS/Ocean_Forcing/parametrizations/coeff_gamma0_DeltaT_quadratic_local_5th_pct_PIGL_gamma_calibration.nc",
+                    "AIS/Ocean_Forcing/parametrizations/coeff_gamma0_DeltaT_quadratic_local_5th_percentile.nc",
+                    "AIS/Ocean_Forcing/parametrizations/coeff_gamma0_DeltaT_quadratic_local_95th_pct_PIGL_gamma_calibration.nc",
+                    "AIS/Ocean_Forcing/parametrizations/coeff_gamma0_DeltaT_quadratic_local_95th_percentile.nc",
+                    "AIS/Ocean_Forcing/parametrizations/coeff_gamma0_DeltaT_quadratic_local_median_PIGL_gamma_calibration.nc",
+                    "AIS/Ocean_Forcing/parametrizations/coeff_gamma0_DeltaT_quadratic_local_median.nc",
+                    "AIS/Ocean_Forcing/parametrizations/coeff_gamma0_DeltaT_quadratic_non_local_5th_pct_PIGL_gamma_calibration.nc",
+                    "AIS/Ocean_Forcing/parametrizations/coeff_gamma0_DeltaT_quadratic_non_local_5th_percentile.nc",
+                    "AIS/Ocean_Forcing/parametrizations/coeff_gamma0_DeltaT_quadratic_non_local_95th_pct_PIGL_gamma_calibration.nc",
+                    "AIS/Ocean_Forcing/parametrizations/coeff_gamma0_DeltaT_quadratic_non_local_95th_percentile.nc",
+                    "AIS/Ocean_Forcing/parametrizations/coeff_gamma0_DeltaT_quadratic_non_local_median_PIGL_gamma_calibration.nc",
+                    "AIS/Ocean_Forcing/parametrizations/coeff_gamma0_DeltaT_quadratic_non_local_median.nc"}
