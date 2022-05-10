@@ -57,7 +57,7 @@ def build_mapping_file(ismip6_grid_file, mapping_file, mali_mesh_file=None,
     scrip_from_mpas(mali_mesh_file, mali_scripfile)
 
     # create a mapping file using ESMF weight gen
-    print("Creating a mapping file...")
+    print(f"Creating a mapping file. Mapping method used: {method_remap}")
 
     if method_remap is None:
         raise ValueError("Desired remapping option should be provided with "
