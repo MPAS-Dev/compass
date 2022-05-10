@@ -238,7 +238,7 @@ class ProcessSMB(Step):
         ds_base = xr.open_dataset(mali_mesh_file)
         for i in range(len(ds["sfcMassBal"])):
             ds["sfcMassBal"][i] = ds["sfcMassBal"][i] \
-                                  + ds_base["sfcMassBal"][0,:]
+                                  + ds_base["sfcMassBal"][0, :]
 
         # write to a new netCDF file
         write_netcdf(ds, output_file)

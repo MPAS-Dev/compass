@@ -1,6 +1,6 @@
 from compass.testcase import TestCase
-from compass.landice.tests.ismip6_forcing.ocean_thermal.process_thermal_forcing\
-    import ProcessThermalForcing
+from compass.landice.tests.ismip6_forcing.ocean_thermal.\
+    process_thermal_forcing import ProcessThermalForcing
 
 
 class OceanThermal(TestCase):
@@ -31,13 +31,13 @@ class OceanThermal(TestCase):
         Configures test case
         """
         base_path_ismip6 = self.config.get(section="ismip6_ais",
-                                     option="base_path_ismip6")
+                                           option="base_path_ismip6")
         base_path_mali = self.config.get(section="ismip6_ais",
-                                     option="base_path_mali")
+                                         option="base_path_mali")
         mali_mesh_name = self.config.get(section="ismip6_ais",
-                                     option="mali_mesh_name")
+                                         option="mali_mesh_name")
         mali_mesh_file = self.config.get(section="ismip6_ais",
-                                     option="mali_mesh_file")
+                                         option="mali_mesh_file")
 
         if base_path_ismip6 == "NotAvailable":
             raise ValueError("You need to supply a user config file, which "
