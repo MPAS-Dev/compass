@@ -1,4 +1,5 @@
 import os
+import shutil
 import subprocess
 import xarray as xr
 from compass.landice.tests.ismip6_forcing.ocean_thermal.create_mapfile \
@@ -78,6 +79,7 @@ class ProcessThermalForcing(Step):
 
         section = config['ismip6_ais_ocean_thermal']
         method_remap = section.get('method_remap')
+        output_path = section.get('output_path')
 
         input_file_list = self._files[period_endyear][model][scenario]
         input_file = os.path.basename(input_file_list[0])
@@ -103,6 +105,18 @@ class ProcessThermalForcing(Step):
 
         # remove the temporary combined file
         os.remove(remapped_file_temp)
+
+        # place the output file in appropriate directory
+        if output_path == "NotAvailable":
+            pass
+        else:
+            if not os.path.exists(output_path):
+                print("Creating a new directory for the output data")
+                os.makedirs(output_path)
+
+        src = os.path.join(os.getcwd(), output_file)
+        dst = os.path.join(output_path, output_file)
+        shutil.copy(src, dst)
 
     def remap_ismip6thermalforcing_to_mali(self, input_file,
                                            output_file, mali_mesh_name,
@@ -198,16 +212,13 @@ class ProcessThermalForcing(Step):
     _files = {
         "2100": {
             "CCSM4": {
-               # "RCP26": ["AIS/Atmosphere_forcing/ccsm4_rcp2.6/Regridded_8km/CCSM4_8km_anomaly_rcp26_1995-2100.nc"],
                 "RCP85": ["AIS/Ocean_Forcing/ccsm4_rcp8.5/1995-2100/CCSM4_thermal_forcing_8km_x_60m.nc"]
             },
             "CESM2": {
-                "SSP585": [
-                    "AIS/Ocean_Forcing/cesm2_ssp585/1995-2100/CESM2_ssp585_thermal_forcing_8km_x_60m.nc"]
-              #  "SSP585v1": [
-              #     "AIS/Atmosphere_Forcing/CESM2_ssp585/Regridded_8km/CESM2_anomaly_ssp585_1995-2100_8km_v1.nc"],
-              #  "SSP585v2": [
-              #      "AIS/Atmosphere_forcing/CESM2_ssp585/Regridded_8km/CESM2_anomaly_ssp585_1995-2100_8km_v2.nc"]
+                "SSP585v1": [
+                    "AIS/Ocean_Forcing/cesm2_ssp585/1995-2100/CESM2_ssp585_thermal_forcing_8km_x_60m.nc"],
+                "SSP585v2": [
+                    "AIS/Ocean_Forcing/cesm2_ssp585/1995-2100/CESM2_ssp585_thermal_forcing_8km_x_60m.nc"],
             },
             "CNRM_CM6": {
                 "SSP126": [
@@ -234,8 +245,6 @@ class ProcessThermalForcing(Step):
                     "AIS/Ocean_Forcing/ipsl-cm5a-mr_rcp8.5/1995-2100/IPSL-CM5A-MR_RCP85_thermal_forcing_8km_x_60m.nc"]
             },
             "MIROC-ESM-CHEM": {
-              #  "RCP26": [
-              #      "AIS/Atmosphere_Forcing/miroc-esm-chem_rcp2.6/Regridded_8km/MIROC-ESM-CHEM_8km_anomaly_rcp26_1995-2100.nc"],
                 "RCP85": [
                     "AIS/Ocean_Forcing/miroc-esm-chem_rcp8.5/1995-2100/MIROC-ESM-CHEM_thermal_forcing_8km_x_60m.nc"]
             },
@@ -253,38 +262,33 @@ class ProcessThermalForcing(Step):
         "2300": {
             "CCSM4": {
                 "RCP85": [
-                    "AIS/Ocean_forcing/ccsm4_RCP85/1995-2300/CCSM4_RCP85_thermal_forcing_8km_x_60m.nc"]
+                    "AIS/Ocean_Forcing/ccsm4_RCP85/1995-2300/CCSM4_RCP85_thermal_forcing_8km_x_60m.nc"]
             },
             "CESM2-WACCM": {
                 "SSP585":[
-                    "AIS/Ocean_forcing/cesm2-waccm_ssp585/1995-2299/CESM2-WACCM_SSP585_thermal_forcing_8km_x_60m.nc"],
+                    "AIS/Ocean_Forcing/cesm2-waccm_ssp585/1995-2299/CESM2-WACCM_SSP585_thermal_forcing_8km_x_60m.nc"],
                 "SSP585-repeat": [
-                    "AIS/Ocean_forcing/cesm2-waccm_ssp585-repeat/1995-2300/CESM2-WACCM_ssp585_thermal_forcing_8km_x_60m.nc"]
+                    "AIS/Ocean_Forcing/cesm2-waccm_ssp585-repeat/1995-2300/CESM2-WACCM_ssp585_thermal_forcing_8km_x_60m.nc"]
             },
-  #          "CSIRO-Mk3-6-0": {
-  #              "RCP85": [
-  #                  "AIS/Atmospheric_forcing/CSIRO-Mk3-6-0_RCP85/Regridded_8km/CSIRO-Mk3-6-0_8km_anomaly_rcp85_1995-2100.nc",
-  #                  "AIS/Atmospheric_forcing/CSIRO-Mk3-6-0_RCP85/Regridded_8km/CSIRO-Mk3-6-0_8km_anomaly_rcp85_2101-2300.nc"]
-#         },
             "HadGEM2-ES": {
                 "RCP85": [
-                    "AIS/Ocean_forcing/hadgem2-es_RCP85/1995-2299/HadGEM2-ES_RCP85_thermal_forcing_8km_x_60m.nc"],
+                    "AIS/Ocean_Forcing/hadgem2-es_RCP85/1995-2299/HadGEM2-ES_RCP85_thermal_forcing_8km_x_60m.nc"],
                 "RCP85-repeat": [
-                    "AIS/Ocean_forcing/hadgem2-es_RCP85-repeat/1995-2300/HadGEM2-ES_rcp85_thermal_forcing_8km_x_60m.nc"]
+                    "AIS/Ocean_Forcing/hadgem2-es_RCP85-repeat/1995-2300/HadGEM2-ES_rcp85_thermal_forcing_8km_x_60m.nc"]
             },
             "NorESM1-M": {
                 "RCP26-repeat": [
-                    "AIS/Ocean_forcing/noresm1-m_RCP26-repeat/1995-2300/NorESM1-M_RCP26_thermal_forcing_8km_x_60m.nc"],
+                    "AIS/Ocean_Forcing/noresm1-m_RCP26-repeat/1995-2300/NorESM1-M_RCP26_thermal_forcing_8km_x_60m.nc"],
                 "RCP85-repeat": [
-                    "AIS/Ocean_forcing/noresm1-m_RCP85-repeat/1995-2300/NorESM1-M_thermal_forcing_8km_x_60m.nc"]
+                    "AIS/Ocean_Forcing/noresm1-m_RCP85-repeat/1995-2300/NorESM1-M_thermal_forcing_8km_x_60m.nc"]
             },
             "UKESM1-0-LL": {
                 "SSP126": [
-                    "AIS/Ocean_forcing/ukesm1-0-ll_ssp126/1995-2300/UKESM1-0-LL_thermal_forcing_8km_x_60m.nc"],
+                    "AIS/Ocean_Forcing/ukesm1-0-ll_ssp126/1995-2300/UKESM1-0-LL_thermal_forcing_8km_x_60m.nc"],
                 "SSP585": [
-                    "AIS/Ocean_forcing/ukesm1-0-ll_ssp585/1995-2300/UKESM1-0-LL_SSP585_thermal_forcing_8km_x_60m.nc"],
+                    "AIS/Ocean_Forcing/ukesm1-0-ll_ssp585/1995-2300/UKESM1-0-LL_SSP585_thermal_forcing_8km_x_60m.nc"],
                 "SSP585-repeat": [
-                    "AIS/Ocean_forcing/ukesm1-0-ll_ssp585-repeat/1995-2300/UKESM1-0-LL_ssp585_thermal_forcing_8km_x_60m.nc"]
+                    "AIS/Ocean_Forcing/ukesm1-0-ll_ssp585-repeat/1995-2300/UKESM1-0-LL_ssp585_thermal_forcing_8km_x_60m.nc"]
             }
         }
     }
