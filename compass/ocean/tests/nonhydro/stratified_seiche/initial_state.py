@@ -39,7 +39,7 @@ class InitialState(Step):
 
         timeStart = time.time()
 
-        section = config['stratified_seiche']
+        section = config['horizontal_grid']
         nx = section.getint('nx')
         ny = section.getint('ny')
         dc = section.getfloat('dc')
@@ -62,6 +62,10 @@ class InitialState(Step):
         config_eos_linear_Sref = section.getfloat('eos_linear_Sref')
         config_eos_linear_densityref = section.getfloat(
             'eos_linear_densityref')
+        deltaRho = section.getfloat('deltaRho')
+        interfaceThick = section.getfloat('interfaceThick')
+        amplitude = section.getfloat('amplitude')
+        wavenumber = section.getfloat('wavenumber')
 
         # comment('obtain dimensions and mesh variables')
         vertical_coordinate = 'uniform'
@@ -86,12 +90,6 @@ class InitialState(Step):
         yOffset = np.min(yEdge)
         yCell -= yOffset
         yEdge -= yOffset
-
-        # x values for convenience
-        xCellMax = max(xCell)
-        xCellMin = min(xCell)
-        xCellMid = 0.5 * (xCellMax + xCellMin)
-        xEdgeMax = max(xEdge)
 
         # initialize velocity field 
         u = np.zeros([1, nEdges, nVertLevels])
@@ -164,22 +162,16 @@ class InitialState(Step):
                     (layerThickness[0, iCell, k + 1] + \
                     layerThickness[0, iCell, k])
 
-        # initialize tracers
-        rho0 = 1000.0  # kg/m^3
-        rhoz = -2.0e-4  # kg/m^3/m in z
-        S0 = 35.0
-        r = 1
-
         # linear equation of state
         # rho = rho0 - alpha*(T-Tref) + beta*(S-Sref)
         # set S=Sref
         # T = Tref - (rho - rhoRef)/alpha
         for k in range(0, nVertLevels):
             activeCells = k <= maxLevelCell
-            salinity[0, activeCells, k] = S0 
-            density[0, activeCells, k] = rho0 + (10.0/2)*(1.0 - \
-                np.tanh((2/1)*np.arctanh(0.99)*(zMid[0, :, k] + \
-                0.5*maxDepth - 0.1*np.cos((np.pi/10)*xCell[:]))))
+            salinity[0, activeCells, k] = config_eos_linear_Sref
+            density[0, activeCells, k] = config_eos_linear_densityref + \
+                (deltaRho/2)*(1.0 - np.tanh((2/interfaceThick)*np.arctanh(0.99)*(zMid[0, :, k] + \
+                0.5*maxDepth - amplitude*np.cos(wavenumber*xCell[:]))))
             # T = Tref - (rho - rhoRef)/alpha
             temperature[0, activeCells, k] = config_eos_linear_Tref \
                 - (density[0, activeCells, k] - config_eos_linear_densityref) / \

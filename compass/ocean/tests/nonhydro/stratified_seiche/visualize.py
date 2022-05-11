@@ -50,10 +50,9 @@ class Visualize(Step):
         cellsOnEdge = initfile.variables['cellsOnEdge']
         edgesOnCell = initfile.variables['edgesOnCell']
 
-        # horizontall velocity
+        # horizontal velocity
         zMidEdge = 0.5*(zMidH[12, 31, :] + zMidH[12, 32, :])
-        zMidEdge1 = zMidEdge/16
-        print(np.shape(zMidEdge1))
+        zMidEdge1 = zMidEdge/16 
         for i in range(0, 6):
             iEdge = edgesOnCell[31, i] - 1
             for j in range(0, 6):
@@ -62,10 +61,8 @@ class Visualize(Step):
                     midEdge = iEdge
         normalVelocity1 = normalVelocityH[12, midEdge, :]/ \
             max(normalVelocityH[12, midEdge, :])
-        print(np.shape(normalVelocity1))
         zMidEdge = 0.5*(zMidNH[12, 31, :] + zMidNH[12, 32, :])
         zMidEdge2 = zMidEdge/16
-        print(np.shape(zMidEdge2))
         for i in range(0, 6):
             iEdge = edgesOnCell[31, i] - 1
             for j in range(0, 6):
@@ -73,20 +70,15 @@ class Visualize(Step):
                 if (iEdge == jEdge):
                     midEdge = iEdge
         normalVelocity2 = normalVelocityNH[12, midEdge, :]/ \
-            max(normalVelocityNH[12, midEdge, :])
-        print(np.shape(normalVelocity2))
+            max(normalVelocityNH[12, midEdge, :]) 
 
         # vertical velocity
         zMid_origin1 = zMidH[12, 0, :]/16
-        print(np.shape(zMid_origin1))
         vertAleTransportTop_origin1 = vertAleTransportTopH[12, 0, 0:100]/ \
             max(abs(vertAleTransportTopH[12, 0, 0:100]))
-        print(np.shape(vertAleTransportTop_origin1))
         zMid_origin2 = zMidNH[12, 0, :]/16
-        print(np.shape(zMid_origin2))
         vertAleTransportTop_origin2 = vertAleTransportTopNH[12, 0, 0:100]/ \
             max(abs(vertAleTransportTopNH[12, 0, 0:100]))
-        print(np.shape(vertAleTransportTop_origin2))
 
         # plots
         plt.figure(figsize=(8.4, 4.2))
