@@ -7,6 +7,7 @@ Test groups
 .. toctree::
    :titlesonly:
 
+   calving_dt_convergence
    circular_shelf
    dome
    enthalpy_benchmark
@@ -16,4 +17,5 @@ Test groups
    hydro_radial
    kangerlussuaq
    koge_bugt_s
+   mismipplus
    thwaites
