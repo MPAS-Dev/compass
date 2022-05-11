@@ -230,6 +230,22 @@ kangerlussuaq
    mesh.Mesh
    mesh.Mesh.run
 
+koge_bugt_s
+~~~~~~~~~~~
+
+.. currentmodule:: compass.landice.tests.boge_bugt_s
+
+.. autosummary::
+      :toctrr: generate/
+
+   KogeBugtS
+
+   mesh_gen.MeshGen
+   mesh_gen.MeshGen.run
+
+   mesh.Mesh
+   mesh.Mesh.run
+
 thwaites
 ~~~~~~~~
 

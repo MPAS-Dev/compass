@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>thwaites &mdash; compass latest documentation</title>
+  <title>koge_bugt_s &mdash; compass latest documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -18,8 +18,8 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Test suites" href="../suites.html" />
-    <link rel="prev" title="koge_bugt_s" href="koge_bugt_s.html" /> 
+    <link rel="next" title="thwaites" href="thwaites.html" />
+    <link rel="prev" title="kangerlussuaq" href="kangerlussuaq.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -56,14 +56,12 @@
 <li class="toctree-l3"><a class="reference internal" href="humboldt.html">humboldt</a></li>
 <li class="toctree-l3"><a class="reference internal" href="hydro_radial.html">hydro_radial</a></li>
 <li class="toctree-l3"><a class="reference internal" href="kangerlussuaq.html">kangerlussuaq</a></li>
-<li class="toctree-l3"><a class="reference internal" href="koge_bugt_s.html">koge_bugt_s</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">thwaites</a><ul>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">koge_bugt_s</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#config-options">config options</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#decomposition-test">decomposition_test</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#restart-test">restart_test</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#high-res-mesh">high_res_mesh</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mesh-gen">mesh_gen</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="thwaites.html">thwaites</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../suites.html">Test suites</a></li>
@@ -120,9 +118,9 @@
       <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../index.html">Landice core</a> &raquo;</li>
           <li><a href="index.html">Test Groups</a> &raquo;</li>
-      <li>thwaites</li>
+      <li>koge_bugt_s</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../../_sources/users_guide/landice/test_groups/thwaites.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/users_guide/landice/test_groups/koge_bugt_s.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -130,36 +128,24 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="thwaites">
-<span id="landice-thwaites"></span><h1>thwaites<a class="headerlink" href="#thwaites" title="Permalink to this headline">¶</a></h1>
-<p>The <code class="docutils literal notranslate"><span class="pre">landice/thwaites</span></code> test group runs tests with a coarse (4-14-km)
-<a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-albany-landice/thwaites.4km.210608.nc">Thwaites Glacier mesh</a>.
-The purpose of this test group is to provide a realistic glacier that
-includess an ice shelf.
-The mesh and initial condition are already generated.  In the future,
-additional test cases may be added for generating a new version of the
-Thwaites mesh at different resolutions and using different data sources.</p>
+  <section id="koge-bugt-s">
+<span id="landice-koge-bugt-s"></span><h1>koge_bugt_s<a class="headerlink" href="#koge-bugt-s" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">landice/koge_bugt_s</span></code> test group includes a test case for creating a
+mesh for Koge Bugt S, Greenland. The optimization for basal friction
+happens outside of COMPASS because it requires expert usage and takes a
+larger amount of computing resources than COMPASS is typically run with.</p>
 <figure class="align-center" id="id1">
-<a class="reference internal image-reference" href="../../../_images/thwaites_speed.png"><img alt="../../../_images/thwaites_speed.png" src="../../../_images/thwaites_speed.png" style="width: 777px;" /></a>
+<a class="reference internal image-reference" href="../../../_images/koge_bugt_s_500m_to_4km.png"><img alt="../../../_images/koge_bugt_s_500m_to_4km.png" src="../../../_images/koge_bugt_s_500m_to_4km.png" style="width: 777px;" /></a>
 <figcaption>
-<p><span class="caption-text">FO velocity solution visualized in Paraview.  Grounding line position
-shown with a white line.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+<p><span class="caption-text">Ice thickness and grid spacing in meters on Koge Bugt S 500m-4km variable resolution mesh.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
 </figcaption>
 </figure>
-<p>The test group includes three test cases, two of which have one or more steps
-that are variants on <code class="docutils literal notranslate"><span class="pre">run_model</span></code> (given other names in the decomposition and
-restart test cases to distinguish multiple model runs), which performs time
-integration of the model.  There is a not an explicit smoke test, but the
-<code class="docutils literal notranslate"><span class="pre">full_run</span></code> step of the <code class="docutils literal notranslate"><span class="pre">restart_test</span></code> can be used as a smoke test.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">decomposition_test</span></code> and <code class="docutils literal notranslate"><span class="pre">restart_test</span></code> test cases in this test group
-can only be run with the FO velocity solvers. Running with the FO solver requires
-a build of MALI that includes Albany. There is no integration step for the test
-case <code class="docutils literal notranslate"><span class="pre">high_res_mesh</span></code>.</p>
+<p>The test group includes a single test case that creates the variable resolution mesh.</p>
 <section id="config-options">
 <h2>config options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
-<p>The <code class="docutils literal notranslate"><span class="pre">high_res_mesh</span></code> test case uses the default config options below.
-The other test cases do not use config options.</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[high_res_mesh]</span><span class="w"></span>
+<p>The test group uses the following default config options.  At this point only
+the mesh generation options are adjusted through the config file.</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[high_res_KogeBugtS_mesh]</span><span class="w"></span>
 
 <span class="c1"># number of levels in the mesh</span><span class="w"></span>
 <span class="na">levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10</span><span class="w"></span>
@@ -167,52 +153,35 @@ The other test cases do not use config options.</p>
 <span class="c1"># distance from ice margin to cull (km).</span><span class="w"></span>
 <span class="c1"># Set to a value &lt;= 0 if you do not want</span><span class="w"></span>
 <span class="c1"># to cull based on distance from margin.</span><span class="w"></span>
-<span class="na">cull_distance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10.0</span><span class="w"></span>
+<span class="na">cull_distance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5.0</span><span class="w"></span>
 
 <span class="c1"># mesh density parameters</span><span class="w"></span>
 <span class="c1"># minimum cell spacing (meters)</span><span class="w"></span>
-<span class="na">min_spac</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.e3</span><span class="w"></span>
+<span class="na">min_spac</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5.e-2</span><span class="w"></span>
 <span class="c1"># maximum cell spacing (meters)</span><span class="w"></span>
-<span class="na">max_spac</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8.e3</span><span class="w"></span>
-<span class="c1"># log10 of max speed for cell spacing</span><span class="w"></span>
+<span class="na">max_spac</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4.e-3</span><span class="w"></span>
+<span class="c1"># log10 of max speed (m/yr) for cell spacing</span><span class="w"></span>
 <span class="na">high_log_speed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2.5</span><span class="w"></span>
-<span class="c1"># log10 of min speed for cell spacing</span><span class="w"></span>
+<span class="c1"># log10 of min speed (m/yr) for cell spacing</span><span class="w"></span>
 <span class="na">low_log_speed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.75</span><span class="w"></span>
-<span class="c1"># distance at which cell spacing = max_spac</span><span class="w"></span>
+<span class="c1"># distance at which cell spacing = max_spac (meters)</span><span class="w"></span>
 <span class="na">high_dist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.e5</span><span class="w"></span>
-<span class="c1"># distance within which cell spacing = min_spac</span><span class="w"></span>
-<span class="na">low_dist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5.e4</span><span class="w"></span>
+<span class="c1"># distance within which cell spacing = min_spac (meters)</span><span class="w"></span>
+<span class="na">low_dist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.e4</span><span class="w"></span>
 
 <span class="c1"># mesh density functions</span><span class="w"></span>
 <span class="na">use_speed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span><span class="w"></span>
-<span class="na">use_dist_to_grounding_line</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span><span class="w"></span>
+<span class="na">use_dist_to_grounding_line</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span><span class="w"></span>
 <span class="na">use_dist_to_edge</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span><span class="w"></span>
 </pre></div>
 </div>
 </section>
-<section id="decomposition-test">
-<h2>decomposition_test<a class="headerlink" href="#decomposition-test" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">landice/thwaites/decomposition_test</span></code> runs short (2-day) integrations of the
-model forward in time on 16 (<code class="docutils literal notranslate"><span class="pre">16proc_run</span></code> step) and then on 32 cores
-(<code class="docutils literal notranslate"><span class="pre">32proc_run</span></code> step) to make sure the resulting prognostic variables are
-bit-for-bit identical between the two runs.</p>
-</section>
-<section id="restart-test">
-<h2>restart_test<a class="headerlink" href="#restart-test" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">landice/thwaites/restart_test</span></code> first runs a short (5-day) integration
-of the model forward in time (<code class="docutils literal notranslate"><span class="pre">full_run</span></code> step).  Then, a second step
-(<code class="docutils literal notranslate"><span class="pre">restart_run</span></code>) performs two subsequent 2 and 3 day integrations, where the
-second begins from a restart file saved by the first. Prognostic variables
-are compared between the “full” and “restart” runs to make sure they are
-bit-for-bit identical.</p>
-</section>
-<section id="high-res-mesh">
-<h2>high_res_mesh<a class="headerlink" href="#high-res-mesh" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">landice/thwaites/high_res_mesh</span></code> creates a variable resolution mesh based
-on the the config options listed above. This will not be the same as the
-pre-generated 4-14km mesh used in <code class="docutils literal notranslate"><span class="pre">decomposition_test</span></code> and <code class="docutils literal notranslate"><span class="pre">restart_test</span></code>
-because it uses a newer version of Jigsaw. Note that the basal friction
-optimization is performed separately and is not part of this test case.</p>
+<section id="mesh-gen">
+<h2>mesh_gen<a class="headerlink" href="#mesh-gen" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">landice/koge_bugt_s/default</span></code> creates a variable resolution mesh.
+The default is 500m-4km resolution with mesh density determined by
+observed ice speed and distance to ice margin. There is no model
+integration step.</p>
 </section>
 </section>
 
@@ -220,8 +189,8 @@ optimization is performed separately and is not part of this test case.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="koge_bugt_s.html" class="btn btn-neutral float-left" title="koge_bugt_s" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../suites.html" class="btn btn-neutral float-right" title="Test suites" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="kangerlussuaq.html" class="btn btn-neutral float-left" title="kangerlussuaq" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="thwaites.html" class="btn btn-neutral float-right" title="thwaites" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
