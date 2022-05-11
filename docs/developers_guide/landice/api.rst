@@ -263,6 +263,23 @@ koge_bugt_s
    mesh.Mesh
    mesh.Mesh.run
 
+mismipplus
+~~~~~~~~~~
+
+.. currentmodule:: compass.landice.tests.mismipplus
+
+.. autosummary::
+   :toctree: generated/
+
+   MISMIPplus
+
+   smoke_test.SmokeTest
+   smoke_test.SmokeTest.run
+
+   run_model.RunModel
+   run_model.RunModel.setup
+   run_model.RunModel.run
+
 thwaites
 ~~~~~~~~
 

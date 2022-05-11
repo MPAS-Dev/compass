@@ -17,4 +17,5 @@ Test groups
    hydro_radial
    kangerlussuaq
    koge_bugt_s
+   mismipplus
    thwaites

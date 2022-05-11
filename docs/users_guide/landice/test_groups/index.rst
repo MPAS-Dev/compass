@@ -22,4 +22,5 @@ physics but that are not run routinely.
    hydro_radial
    kangerlussuaq
    koge_bugt_s
+   mismipplus
    thwaites
