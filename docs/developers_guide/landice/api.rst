@@ -11,6 +11,23 @@ landice
 Test Groups
 ^^^^^^^^^^^
 
+calving_dt_convergence
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. currentmodule:: compass.landice.tests.calving_dt_convergence
+
+.. autosummary::
+   :toctree: generated/
+
+   CalvingDtConvergence
+
+   dt_convergence_test.DtConvergenceTest
+   dt_convergence_test.DtConvergenceTest.validate
+
+   run_model.RunModel
+   run_model.RunModel.run
+
+
 circular_shelf
 ~~~~~~~~~~~~~~
 

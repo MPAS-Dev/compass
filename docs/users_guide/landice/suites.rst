@@ -5,7 +5,8 @@ Test suites
 
 The ``landice`` core currently includes 5 :ref:`test_suites` that can be used
 to run a series of land-ice test cases and optionally compare them against a
-baseline run of the same tests.
+baseline run of the same tests.  The test suites are described in order of
+typical usage.
 
 .. _landice_suite_sia_integration:
 
@@ -84,6 +85,8 @@ The ``full_integration`` test suite is a combination of the ``sia_integration``
 and ``fo_integration`` test suites.  This is the suite that should primarily
 be used for testing and integration of MALI Pull Requests.
 
+.. _landice_suite_humboldt_calving_tests:
+
 humboldt_calving_tests
 ----------------------
 
@@ -114,10 +117,12 @@ The suite includes:
     landice/humboldt/mesh-3km_restart_test/velo-none_calving-ismip6_retreat
     landice/humboldt/mesh-3km_restart_test/velo-none_calving-von_mises_stress_damage-threshold_faceMelting
 
+.. _landice_suite_humboldt_calving_tests_fo:
+
 humboldt_calving_tests_fo
 -------------------------
 
-The ``humboldt_calving_tests_fo`` test suite is identical
+The ``humboldt_calving_tests_fo`` test suite is identical to
 ``humboldt_calving_tests`` but with the FO solver enabled.
 In this case decomposition tests are not required to be bit-for-bit to pass but
 instead use a small tolerance to account for expected differences of the FO
@@ -142,3 +147,29 @@ The suite includes:
     landice/humboldt/mesh-3km_restart_test/velo-fo_calving-damagecalving
     landice/humboldt/mesh-3km_restart_test/velo-fo_calving-ismip6_retreat
     landice/humboldt/mesh-3km_restart_test/velo-fo_calving-von_mises_stress_damage-threshold_faceMelting
+
+.. _calving_dt_convergence.txt:
+
+calving_dt_convergence
+----------------------
+
+The ``calving_dt_convergence`` test suite runs timestep convergence tests for
+calving physics for a number of different model meshes, calving laws, and
+velocity solver options.  The tests with "none" velocity solver use data
+velocity fiels, and each take 5-10 minutes.  The tests with FO velocity
+solver each take a few hours and one may prefer to run them in individual
+jobs (which is why they are listed last in the test suite).  Each test
+generates a .png image summarizing the results.
+The suite includes:
+
+.. code-block:: none
+
+    landice/calving_dt_convergence/mismip+.specified_calving_velocity.none
+    landice/calving_dt_convergence/mismip+.von_Mises_stress.none
+    landice/calving_dt_convergence/humboldt.specified_calving_velocity.none
+    landice/calving_dt_convergence/humboldt.von_Mises_stress.none
+    landice/calving_dt_convergence/thwaites.specified_calving_velocity.none
+    landice/calving_dt_convergence/thwaites.von_Mises_stress.none
+    landice/calving_dt_convergence/mismip+.von_Mises_stress.FO
+    landice/calving_dt_convergence/humboldt.von_Mises_stress.FO
+    landice/calving_dt_convergence/thwaites.von_Mises_stress.FO

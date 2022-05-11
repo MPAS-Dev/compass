@@ -9,6 +9,9 @@ class RunModel(Step):
 
     Attributes
     ----------
+    mesh_file : str
+        name of mesh file used
+
     suffixes : list of str, optional
         a list of suffixes for namelist and streams files produced
         for this step.  Most steps most runs will just have a
@@ -28,11 +31,23 @@ class RunModel(Step):
         test_case : compass.TestCase
             The test case this step belongs to
 
-        calv_dt_frac : float, optional
-            the value to use for calving dt fraction
-
-        name : str, optional
+        name : str
             the name of the test case
+
+        mesh : str
+            the name of the mesh to be used. Valid values are:
+            'mismip+', 'humboldt', 'thwaites'
+
+        calving : str
+            the name of the calving option to be used. Valid values are:
+            'specified_calving_velocity', 'eigencalving', 'von_Mises_stress'
+
+        velo : str
+            the name of the velocity setting to use.  Valid values are:
+            'none', 'FO'
+
+        calv_dt_frac : float
+            the value to use for calving dt fraction
 
         subdir : str, optional
             the subdirectory for the step.  The default is ``name``

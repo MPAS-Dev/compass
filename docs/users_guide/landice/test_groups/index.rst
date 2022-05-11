@@ -3,14 +3,16 @@
 Test Groups
 ===========
 
-For the time being, ``landice`` test groups that have been ported from legacy
-COMPASS to the ``compass`` package are those with test cases in the
-:ref:`landice_suite_sia_integration` and many of the test cases in the
-:ref:`landice_suite_fo_integration`.
+The ``landice`` test groups include tests are generally of three varieties:
+tests run routinely for code integration and regression testing,
+"tests" used to set up meshes and initial conditions,
+and other specialty tests for more carefully assessing model
+physics but that are not run routinely.
 
 .. toctree::
    :titlesonly:
 
+   calving_dt_convergence
    circular_shelf
    dome
    eismint2
