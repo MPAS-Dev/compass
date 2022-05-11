@@ -28,7 +28,7 @@ Processing data includes regridding the original ISMIP6 SMB data from its
 native polarstereo grid to MALI's unstructured grid, renaming variables and
 correcting the SMB anomaly field for the MALI base SMB.
 
-.. _dev_landice_ocean_thermal:
+.. _dev_landice_ismip6_forcing_ocean_thermal:
 
 ocean_thermal
 -------------
@@ -38,7 +38,7 @@ performs the processing of ocean thermal forcing. Processing data includes
 regridding the original ISMIP6 thermal forcing data from its native
 polarstereo grid to MALI's unstructured grid and renaming variables.
 
-.. _dev_landice_ocean_basal:
+.. _dev_landice_ismip6_forcing_ocean_basal:
 
 ocean_basal
 ------------
