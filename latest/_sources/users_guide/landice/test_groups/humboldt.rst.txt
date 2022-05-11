@@ -26,8 +26,6 @@ faster 3 km mesh.
 
    Ice thickness on Humboldt 1-10km variable resolution mesh.
 
-The test group includes a single test case that creates the variable resolution mesh.
-
 config options
 --------------
 
