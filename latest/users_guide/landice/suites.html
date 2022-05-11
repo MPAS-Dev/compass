@@ -54,6 +54,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#full-integration-test-suite">full_integration test suite</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#humboldt-calving-tests">humboldt_calving_tests</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#humboldt-calving-tests-fo">humboldt_calving_tests_fo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#calving-dt-convergence">calving_dt_convergence</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="framework/index.html">Framework</a></li>
@@ -120,9 +121,11 @@
              
   <section id="test-suites">
 <span id="landice-suites"></span><h1>Test suites<a class="headerlink" href="#test-suites" title="Permalink to this headline">¶</a></h1>
-<p>The <code class="docutils literal notranslate"><span class="pre">landice</span></code> core currently includes 5 <a class="reference internal" href="../test_suites.html#test-suites"><span class="std std-ref">Test Suites</span></a> that can be used
+<p>The <code class="docutils literal notranslate"><span class="pre">landice</span></code> core currently includes a number of
+<a class="reference internal" href="../test_suites.html#test-suites"><span class="std std-ref">Test Suites</span></a> that can be used
 to run a series of land-ice test cases and optionally compare them against a
-baseline run of the same tests.</p>
+baseline run of the same tests.  The test suites are described in order of
+typical usage.</p>
 <section id="sia-integration-test-suite">
 <span id="landice-suite-sia-integration"></span><h2>sia_integration test suite<a class="headerlink" href="#sia-integration-test-suite" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass suite -c landice -t sia_integration ...
@@ -185,7 +188,7 @@ and <code class="docutils literal notranslate"><span class="pre">fo_integration<
 be used for testing and integration of MALI Pull Requests.</p>
 </section>
 <section id="humboldt-calving-tests">
-<h2>humboldt_calving_tests<a class="headerlink" href="#humboldt-calving-tests" title="Permalink to this headline">¶</a></h2>
+<span id="landice-suite-humboldt-calving-tests"></span><h2>humboldt_calving_tests<a class="headerlink" href="#humboldt-calving-tests" title="Permalink to this headline">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">humboldt_calving_tests</span></code> test suite provide complete coverage of all
 calving laws currently support by MALI applied to a 3 km resolution
 Humboldt Glacier domain.
@@ -213,8 +216,8 @@ landice/humboldt/mesh-3km_restart_test/velo-none_calving-von_mises_stress_damage
 </div>
 </section>
 <section id="humboldt-calving-tests-fo">
-<h2>humboldt_calving_tests_fo<a class="headerlink" href="#humboldt-calving-tests-fo" title="Permalink to this headline">¶</a></h2>
-<p>The <code class="docutils literal notranslate"><span class="pre">humboldt_calving_tests_fo</span></code> test suite is identical
+<span id="landice-suite-humboldt-calving-tests-fo"></span><h2>humboldt_calving_tests_fo<a class="headerlink" href="#humboldt-calving-tests-fo" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">humboldt_calving_tests_fo</span></code> test suite is identical to
 <code class="docutils literal notranslate"><span class="pre">humboldt_calving_tests</span></code> but with the FO solver enabled.
 In this case decomposition tests are not required to be bit-for-bit to pass but
 instead use a small tolerance to account for expected differences of the FO
@@ -236,6 +239,28 @@ landice/humboldt/mesh-3km_restart_test/velo-fo_calving-von_mises_stress
 landice/humboldt/mesh-3km_restart_test/velo-fo_calving-damagecalving
 landice/humboldt/mesh-3km_restart_test/velo-fo_calving-ismip6_retreat
 landice/humboldt/mesh-3km_restart_test/velo-fo_calving-von_mises_stress_damage-threshold_faceMelting
+</pre></div>
+</div>
+</section>
+<section id="calving-dt-convergence">
+<span id="calving-dt-convergence-txt"></span><h2>calving_dt_convergence<a class="headerlink" href="#calving-dt-convergence" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">calving_dt_convergence</span></code> test suite runs timestep convergence tests for
+calving physics for a number of different model meshes, calving laws, and
+velocity solver options.  The tests with “none” velocity solver use data
+velocity fields, and collectively take about 15 minutes.  The tests with FO
+velocity solver each take about 100 minutes and one may prefer to run them in
+individual jobs (which is why they are listed last in the test suite).
+Each test generates a .png image summarizing the results.
+The suite includes:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>landice/calving_dt_convergence/mismip+.specified_calving_velocity.none
+landice/calving_dt_convergence/mismip+.von_Mises_stress.none
+landice/calving_dt_convergence/humboldt.specified_calving_velocity.none
+landice/calving_dt_convergence/humboldt.von_Mises_stress.none
+landice/calving_dt_convergence/thwaites.specified_calving_velocity.none
+landice/calving_dt_convergence/thwaites.von_Mises_stress.none
+landice/calving_dt_convergence/mismip+.von_Mises_stress.FO
+landice/calving_dt_convergence/humboldt.von_Mises_stress.FO
+landice/calving_dt_convergence/thwaites.von_Mises_stress.FO
 </pre></div>
 </div>
 </section>
