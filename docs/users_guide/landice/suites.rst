@@ -3,7 +3,8 @@
 Test suites
 ===========
 
-The ``landice`` core currently includes 5 :ref:`test_suites` that can be used
+The ``landice`` core currently includes a number of
+:ref:`test_suites` that can be used
 to run a series of land-ice test cases and optionally compare them against a
 baseline run of the same tests.  The test suites are described in order of
 typical usage.
@@ -156,10 +157,10 @@ calving_dt_convergence
 The ``calving_dt_convergence`` test suite runs timestep convergence tests for
 calving physics for a number of different model meshes, calving laws, and
 velocity solver options.  The tests with "none" velocity solver use data
-velocity fiels, and each take 5-10 minutes.  The tests with FO velocity
-solver each take a few hours and one may prefer to run them in individual
-jobs (which is why they are listed last in the test suite).  Each test
-generates a .png image summarizing the results.
+velocity fields, and collectively take about 15 minutes.  The tests with FO
+velocity solver each take about 100 minutes and one may prefer to run them in
+individual jobs (which is why they are listed last in the test suite).
+Each test generates a .png image summarizing the results.
 The suite includes:
 
 .. code-block:: none

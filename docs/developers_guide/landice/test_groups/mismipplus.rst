@@ -15,7 +15,8 @@ framework
 
 There are no shared config options for the ``mismipplus`` test group.
 
-The mismipplus test can only be run with the FO velocity solver.
+The mismipplus test should only be run with the FO velocity solver,
+or with a data velocity field.
 Running with the FO solver requires building MALI with the Albany
 library.
 
@@ -29,13 +30,13 @@ run_model
 ~~~~~~~~~
 
 The class :py:class:`compass.landice.tests.mismipplus.run_model.RunModel`
-defines a step for running MALI an initial condition downloaded from
+defines a step for running MALI using an initial condition downloaded from
 the shared data server.
 
 smoke_test
 ----------
 
 The :py:class:`compass.landice.tests.mismipplus.smoke_test.SmokeTest`
-performs a 5 year run.  There is a validation step that compares th output
+performs a 5 year run.  There is a validation step that compares the output
 file against itself.  This is to allow the test to be compared against a
 baseline if desired.
