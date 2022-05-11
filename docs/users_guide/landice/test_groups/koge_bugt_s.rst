@@ -36,9 +36,9 @@ the mesh generation options are adjusted through the config file.
 
     # mesh density parameters
     # minimum cell spacing (meters)
-    min_spac = 1.e3
+    min_spac = 5.e-2
     # maximum cell spacing (meters)
-    max_spac = 1.e4
+    max_spac = 4.e-3
     # log10 of max speed (m/yr) for cell spacing
     high_log_speed = 2.5
     # log10 of min speed (m/yr) for cell spacing
