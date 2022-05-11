@@ -15,4 +15,5 @@ Test groups
    humboldt
    hydro_radial
    kangerlussuaq
+   koge_bugt_s
    thwaites
