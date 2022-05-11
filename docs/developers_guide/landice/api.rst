@@ -214,6 +214,22 @@ hydro_radial
    visualize.Visualize.run
    visualize.visualize_hydro_radial
 
+kangerlussuaq
+~~~~~~~~~~~~~
+
+.. currentmodule:: compass.landice.tests.kangerlussuaq
+
+.. autosummary::
+   :toctrr: generate/
+
+   Kangerlussuaq
+
+   mesh_gen.MeshGen
+   mesh_gen.MeshGen.run
+
+   mesh.Mesh
+   mesh.Mesh.run
+
 thwaites
 ~~~~~~~~
 
