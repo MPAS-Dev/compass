@@ -80,10 +80,10 @@ class ProcessSMB(Step):
         period_endyear = section.get("period_endyear")
         model = section.get("model")
         scenario = section.get("scenario")
+        output_base_path = section.get('output_base_path')
 
         section = config['ismip6_ais_atmosphere']
         method_remap = section.get('method_remap')
-        output_path = section.get('output_path')
 
         input_file_list = self._files[period_endyear][model][scenario]
         i = 0
@@ -124,12 +124,14 @@ class ProcessSMB(Step):
         os.remove(combined_file_temp)
 
         # place the output file in appropriate directory
-        if output_path == "NotAvailable":
-            pass
-        else:
-            if not os.path.exists(output_path):
-                print("Creating a new directory for the output data")
-                os.makedirs(output_path)
+        if output_base_path == "NotAvailable":
+            return
+
+        output_path = f'{output_base_path}/atmosphere_forcing/' \
+                      f'{model}_{scenario}/1995-{period_endyear}'
+        if not os.path.exists(output_path):
+            print("Creating a new directory for the output data")
+            os.makedirs(output_path)
 
         src = os.path.join(os.getcwd(), output_file)
         dst = os.path.join(output_path, output_file)
@@ -236,9 +238,11 @@ class ProcessSMB(Step):
 
         ds = xr.open_dataset(output_file)
         ds_base = xr.open_dataset(mali_mesh_file)
-        for i in range(len(ds["sfcMassBal"])):
-            ds["sfcMassBal"][i] = ds["sfcMassBal"][i] \
-                                  + ds_base["sfcMassBal"][0, :]
+        # get the first time index
+        ref_smb = ds_base["sfcMassBal"].isel(Time=0)
+        # broadcast so time is the same size as in ds
+        #ref_smb = ref_smb.broadcast(ds["sfcMassBal"])
+        ds["sfcMassBal"] = ds["sfcMassBal"] + ref_smb
 
         # write to a new netCDF file
         write_netcdf(ds, output_file)
