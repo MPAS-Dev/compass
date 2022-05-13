@@ -241,7 +241,7 @@ class ProcessSMB(Step):
         # get the first time index
         ref_smb = ds_base["sfcMassBal"].isel(Time=0)
         # broadcast so time is the same size as in ds
-        #ref_smb = ref_smb.broadcast(ds["sfcMassBal"])
+        ref_smb = ref_smb.broadcast(ds["sfcMassBal"])
         ds["sfcMassBal"] = ds["sfcMassBal"] + ref_smb
 
         # write to a new netCDF file

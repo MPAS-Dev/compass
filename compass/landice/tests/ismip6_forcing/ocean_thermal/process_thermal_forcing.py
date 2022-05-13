@@ -126,8 +126,8 @@ class ProcessThermalForcing(Step):
             return
 
         if not os.path.exists(output_path):
-                print("Creating a new directory for the output data")
-                os.makedirs(output_path)
+            print("Creating a new directory for the output data")
+            os.makedirs(output_path)
 
         src = os.path.join(os.getcwd(), output_file)
         dst = os.path.join(output_path, output_file)
