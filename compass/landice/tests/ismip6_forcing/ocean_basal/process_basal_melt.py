@@ -59,10 +59,10 @@ class ProcessBasalMelt(Step):
         section = config['ismip6_ais']
         mali_mesh_name = section.get('mali_mesh_name')
         mali_mesh_file = section.get('mali_mesh_file')
+        output_base_path = section.get('output_base_path')
 
         section = config['ismip6_ais_ocean_basal']
         method_remap = section.get('method_remap')
-        output_path = section.get('output_path')
 
         # combine, interpolate and rename the basin file and deltaT0_gamma0
         # ismip6 input files
@@ -103,13 +103,13 @@ class ProcessBasalMelt(Step):
             os.remove(remapped_file_temp)
 
             # place the output file in appropriate directory
-            print(output_path)
-            if output_path == "NotAvailable":
-                pass
-            else:
-                if not os.path.exists(output_path):
-                    print("Creating a new directory for the output data")
-                    os.makedirs(output_path)
+            if output_base_path == "NotAvailable":
+                return
+
+            output_path = f'{output_base_path}/basal_melt/parametrizations/'
+            if not os.path.exists(output_path):
+                print("Creating a new directory for the output data")
+                os.makedirs(output_path)
 
             src = os.path.join(os.getcwd(), output_file)
             dst = os.path.join(output_path, output_file)
