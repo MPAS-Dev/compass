@@ -13,6 +13,7 @@ from compass.ocean.tests.sphere_transport import SphereTransport
 from compass.ocean.tests.spherical_harmonic_transform import \
     SphericalHarmonicTransform
 from compass.ocean.tests.ziso import Ziso
+from compass.ocean.tests.hurricane import Hurricane
 
 
 class Ocean(MpasCore):
@@ -39,3 +40,4 @@ class Ocean(MpasCore):
         self.add_test_group(SphereTransport(mpas_core=self))
         self.add_test_group(SphericalHarmonicTransform(mpas_core=self))
         self.add_test_group(Ziso(mpas_core=self))
+        self.add_test_group(Hurricane(mpas_core=self))
