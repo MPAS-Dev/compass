@@ -1,0 +1,63 @@
+<streams>
+
+<immutable_stream name="input"
+                  filename_template="{{ INPUT_FILE }}"/>
+
+<immutable_stream name="restart"
+                  type="input;output"
+                  filename_template="restart.$Y-$M-$D.nc"
+                  filename_interval="output_interval"
+                  output_interval="0010-00-00_00:00:00"
+                  clobber_mode="truncate"
+                  precision="double"
+                  input_interval="initial_only"/>
+
+<stream name="output"
+        type="output"
+        filename_template="output.nc"
+        output_interval="0000-03-00_00:00:00"
+        clobber_mode="truncate">
+
+    <stream name="basicmesh"/>
+    <var name="xtime"/>
+    <var name="thickness"/>
+    <var name="bedTopography"/>
+    <var name="upperSurface"/>
+    <var name="cellMask"/>
+    <var name="edgeMask"/>
+    <var name="surfaceSpeed"/>
+    <var name="basalSpeed"/>
+    <var name="calvingVelocity"/>
+    <var name="calvingThickness"/>
+    <var name="vonMisesStress"/>
+    <var name="frontAblationMask"/>
+    <var name="eMin"/>
+    <var name="eMax"/>
+    <var name="unablatedVolumeNonDynCell"/>
+    <var name="unablatedVolumeDynCell"/>
+    <var name="calvingCFLdt"/>
+    <var name="daysSinceStart"/>
+</stream>
+
+<stream name="globalStatsOutput"
+        type="output"
+        filename_template="globalStats.nc"
+        filename_interval="none"
+        clobber_mode="truncate"
+        reference_time="0000-01-01_00:00:00"
+        output_interval="0000-00-00_01:00:00"
+        packages="globalStatsAMPKG"
+        runtime_format="single_file">
+
+    <stream name="globalStatsOutput"/>
+    <var name="xtime"/>
+    <var name="daysSinceStart"/>
+    <var name="deltat"/>
+    <var name="allowableDtACFL"/>
+    <var name="allowableDtDCFL"/>
+    <var name="calvingCFLdt"/>
+    <var name="dtCalvingCFLratio"/>
+    <var_struct name="globalStatsAM"/>
+</stream>
+
+</streams>

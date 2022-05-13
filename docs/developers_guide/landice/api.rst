@@ -11,6 +11,23 @@ landice
 Test Groups
 ^^^^^^^^^^^
 
+calving_dt_convergence
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. currentmodule:: compass.landice.tests.calving_dt_convergence
+
+.. autosummary::
+   :toctree: generated/
+
+   CalvingDtConvergence
+
+   dt_convergence_test.DtConvergenceTest
+   dt_convergence_test.DtConvergenceTest.validate
+
+   run_model.RunModel
+   run_model.RunModel.run
+
+
 circular_shelf
 ~~~~~~~~~~~~~~
 
@@ -220,15 +237,67 @@ ismip6_forcing
 .. currentmodule:: compass.landice.tests.ismip6_forcing
 
 .. autosummary::
-   :toctree: generated/
-
-   HydroRadial
+   :toctrr: generate/
+   
+   Ismip6Forcing
 
    atmosphere.Atmosphere
    atmosphere.Atmosphere.run
 
+   ocean_basal.OceanBasal
+   ocean_basal.OceanBasal.run
+   
    ocean_thermal.OceanThermal
    ocean_thermal.OceanThermal.run
+   
+kangerlussuaq
+~~~~~~~~~~~~~
+
+.. currentmodule:: compass.landice.tests.kangerlussuaq
+
+.. autosummary::
+   :toctrr: generate/
+
+   Kangerlussuaq
+
+   mesh_gen.MeshGen
+   mesh_gen.MeshGen.run
+
+   mesh.Mesh
+   mesh.Mesh.run
+
+koge_bugt_s
+~~~~~~~~~~~
+
+.. currentmodule:: compass.landice.tests.boge_bugt_s
+
+.. autosummary::
+      :toctrr: generate/
+
+   KogeBugtS
+
+   mesh_gen.MeshGen
+   mesh_gen.MeshGen.run
+
+   mesh.Mesh
+   mesh.Mesh.run
+
+mismipplus
+~~~~~~~~~~
+
+.. currentmodule:: compass.landice.tests.mismipplus
+
+.. autosummary::
+   :toctree: generated/
+
+   MISMIPplus
+
+   smoke_test.SmokeTest
+   smoke_test.SmokeTest.run
+
+   run_model.RunModel
+   run_model.RunModel.setup
+   run_model.RunModel.run
 
 thwaites
 ~~~~~~~~
