@@ -37,6 +37,9 @@ class ProcessThermalForcing(Step):
         model = section.get("model")
         scenario = section.get("scenario")
 
+        section = config['ismip6_ais_ocean_thermal']
+        process_obs_data = section.get("process_obs_data")
+
         if period_endyear == "NotAvailable":
             raise ValueError("You need to supply a user config file, which "
                              "should contain the ismip6_ais "
@@ -54,12 +57,15 @@ class ProcessThermalForcing(Step):
                             target=os.path.join(base_path_mali,
                                                 mali_mesh_file))
 
-        input_file_list = self._files[period_endyear][model][scenario]
-        for file in input_file_list:
-            self.add_input_file(filename=os.path.basename(file),
-                                target=os.path.join(base_path_ismip6, file))
+        if process_obs_data == "True":
+            input_file = self._file_obs
+            output_file = f"processed_obs_TF_1995-2017_8km_x_60m.nc"
+        else:
+            input_file = self._files[period_endyear][model][scenario]
+            output_file = f"processed_TF_{model}_{scenario}_{period_endyear}.nc"
 
-        output_file = f"processed_TF_{model}_{scenario}_{period_endyear}.nc"
+        self.add_input_file(filename=os.path.basename(input_file[0]),
+                            target=os.path.join(base_path_ismip6, input_file[0]))
         self.add_output_file(filename=output_file)
 
     def run(self):
@@ -75,12 +81,23 @@ class ProcessThermalForcing(Step):
         period_endyear = section.get("period_endyear")
         model = section.get("model")
         scenario = section.get("scenario")
+        output_base_path = section.get('output_base_path')
 
         section = config['ismip6_ais_ocean_thermal']
         method_remap = section.get('method_remap')
-        output_path = section.get('output_path')
+        process_obs_data = section.get('process_obs_data')
 
-        input_file_list = self._files[period_endyear][model][scenario]
+        if process_obs_data == "True":
+            input_file_list = self._file_obs
+            output_file = f'processed_obs_TF_1995-2017_8km_x_60m.nc'
+            output_path = f'{output_base_path}/ocean_thermal_forcing/'\
+                          f'obs'
+        else:
+            input_file_list = self._files[period_endyear][model][scenario]
+            output_file = f'processed_TF_{model}_{scenario}_{period_endyear}.nc'
+            output_path = f'{output_base_path}/ocean_thermal_forcing/' \
+                          f'{model}_{scenario}/1995-{period_endyear}'
+
         input_file = os.path.basename(input_file_list[0])
 
         # interpolate and rename the ismip6 thermal forcing data
@@ -93,7 +110,6 @@ class ProcessThermalForcing(Step):
                                                 mali_mesh_name,
                                                 mali_mesh_file, method_remap)
 
-        output_file = f"processed_TF_{model}_{scenario}_{period_endyear}.nc"
         # call the function that renames the ismip6 variables to MALI variables
         print("Renaming the ismip6 variables to mali variable names...")
         self.rename_ismip6thermalforcing_to_mali_vars(remapped_file_temp,
@@ -106,10 +122,10 @@ class ProcessThermalForcing(Step):
         os.remove(remapped_file_temp)
 
         # place the output file in appropriate directory
-        if output_path == "NotAvailable":
-            pass
-        else:
-            if not os.path.exists(output_path):
+        if output_base_path == "NotAvailable":
+            return
+
+        if not os.path.exists(output_path):
                 print("Creating a new directory for the output data")
                 os.makedirs(output_path)
 
@@ -169,6 +185,10 @@ class ProcessThermalForcing(Step):
             remapped ismip6 data renamed on mali mesh
         """
 
+        config = self.config
+        section = config['ismip6_ais_ocean_thermal']
+        process_obs_data = section.get('process_obs_data')
+
         # open dataset in 20 years chunk
         ds = xr.open_dataset(remapped_file_temp, chunks=dict(time=20),
                              engine="netcdf4")
@@ -177,36 +197,43 @@ class ProcessThermalForcing(Step):
         ds = ds.drop_vars('z')  # dropping 'z' while it's still called 'z'
 
         # build dictionary for ismip6 variables that MALI takes in
-        ismip6_to_mali_dims = dict(
-            z="nISMIP6OceanLayers",
-            time="Time",
-            ncol="nCells")
-        ds = ds.rename(ismip6_to_mali_dims)
+        if process_obs_data == "True":
+            ismip6_to_mali_dims = dict(
+                z="nISMIP6OceanLayers",
+                ncol="nCells")
+            ds = ds.rename(ismip6_to_mali_dims)
+        else:
+            ismip6_to_mali_dims = dict(
+                z="nISMIP6OceanLayers",
+                time="Time",
+                ncol="nCells")
+            ds = ds.rename(ismip6_to_mali_dims)
+            # add xtime variable
+            xtime = []
+            for t_index in range(ds.sizes["Time"]):
+                date = ds.Time[t_index]
+                date = date.dt.strftime("%Y-%m-%d_00:00:00")
+                date = str(date.values).ljust(64)
+                xtime.append(date)
+
+            ds["xtime"] = ("Time", xtime)
+            ds["xtime"] = ds.xtime.astype('S')
+            ds = ds.drop_vars(["Time"])
 
         ismip6_to_mali_vars = dict(
             thermal_forcing="ismip6shelfMelt_3dThermalForcing")
         ds = ds.rename(ismip6_to_mali_vars)
 
-        # add xtime variable
-        xtime = []
-        for t_index in range(ds.sizes["Time"]):
-            date = ds.Time[t_index]
-            date = date.dt.strftime("%Y-%m-%d_00:00:00")
-            date = str(date.values).ljust(64)
-            xtime.append(date)
-
-        ds["xtime"] = ("Time", xtime)
-        ds["xtime"] = ds.xtime.astype('S')
-
         # drop unnecessary variables
-        ds = ds.drop_vars(["z_bnds", "lat_vertices", "Time",
-                           "lon_vertices", "lat", "lon", "area"])
+        ds = ds.drop_vars(["z_bnds", "lat_vertices", "area",
+                           "lon_vertices", "lat", "lon"])
 
         # write to a new netCDF file
         write_netcdf(ds, output_file)
         ds.close()
 
     # create a nested dictionary for the ISMIP6 original forcing files including relative path
+    _file_obs = ["AIS/Ocean_Forcing/climatology_from_obs_1995-2017/obs_thermal_forcing_1995-2017_8km_x_60m.nc"]
     _files = {
         "2100": {
             "CCSM4": {
