@@ -397,9 +397,52 @@ sbatch job_script.sh
 <p>You can edit the job script to change the wall-clock time (1 hour by default)
 or the number of nodes (scaled according to the number of cores require by the
 test cases by default).</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="c1">#SBATCH  --job-name=compass</span>
+<span class="c1">#SBATCH  --account=condo</span>
+<span class="c1">#SBATCH  --nodes=5</span>
+<span class="c1">#SBATCH  --output=compass.o%j</span>
+<span class="c1">#SBATCH  --exclusive</span>
+<span class="c1">#SBATCH  --time=1:00:00</span>
+<span class="c1">#SBATCH  --qos=regular</span>
+<span class="c1">#SBATCH  --partition=acme-small</span>
+
+
+<span class="nb">source</span> load_compass_env.sh
+compass run
+</pre></div>
+</div>
 <p>You can also use config options, passed to <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">suite</span></code> or
 <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">setup</span></code> with <code class="docutils literal notranslate"><span class="pre">-f</span></code> in a user config file to control the job script.
 The following are the config options that are relevant to job scripts:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># The parallel section describes options related to running jobs in parallel</span><span class="w"></span>
+<span class="k">[parallel]</span><span class="w"></span>
+
+<span class="c1"># account for running diagnostics jobs</span><span class="w"></span>
+<span class="na">account</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">condo</span><span class="w"></span>
+
+<span class="c1"># Config options related to creating a job script</span><span class="w"></span>
+<span class="k">[job]</span><span class="w"></span>
+
+<span class="c1"># the name of the parallel job</span><span class="w"></span>
+<span class="na">job_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">compass</span><span class="w"></span>
+
+<span class="c1"># wall-clock time</span><span class="w"></span>
+<span class="na">wall_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1:00:00</span><span class="w"></span>
+
+<span class="c1"># The job partition to use, by default, taken from the first partition (if any)</span><span class="w"></span>
+<span class="c1"># provided for the machine by mache</span><span class="w"></span>
+<span class="na">partition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">acme-small</span><span class="w"></span>
+
+<span class="c1"># The job quality of service (QOS) to use, by default, taken from the first</span><span class="w"></span>
+<span class="c1"># qos (if any) provided for the machine by mache</span><span class="w"></span>
+<span class="na">qos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">regular</span><span class="w"></span>
+
+<span class="c1"># The job constraint to use, by default, taken from the first constraint (if</span><span class="w"></span>
+<span class="c1"># any) provided for the  machine by mache</span><span class="w"></span>
+<span class="na">constraint</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
+</pre></div>
+</div>
 </section>
 <section id="test-suites">
 <span id="suite-overview"></span><h2>Test Suites<a class="headerlink" href="#test-suites" title="Permalink to this headline">¶</a></h2>
