@@ -23,3 +23,4 @@ coming months.
    soma
    sphere_transport
    ziso
+   spherical_harmonic_transform

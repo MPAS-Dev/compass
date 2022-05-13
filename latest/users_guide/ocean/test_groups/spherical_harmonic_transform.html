@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>gotm &mdash; compass latest documentation</title>
+  <title>spherical_harmonic_transform &mdash; compass latest documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -18,8 +18,8 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="ice_shelf_2d" href="ice_shelf_2d.html" />
-    <link rel="prev" title="global_ocean" href="global_ocean.html" /> 
+    <link rel="next" title="Framework" href="../framework/index.html" />
+    <link rel="prev" title="ziso" href="ziso.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -53,10 +53,7 @@
 <li class="toctree-l3"><a class="reference internal" href="drying_slope.html">drying_slope</a></li>
 <li class="toctree-l3"><a class="reference internal" href="global_convergence.html">global_convergence</a></li>
 <li class="toctree-l3"><a class="reference internal" href="global_ocean.html">global_ocean</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">gotm</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#default">default</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="gotm.html">gotm</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ice_shelf_2d.html">ice_shelf_2d</a></li>
 <li class="toctree-l3"><a class="reference internal" href="internal_wave.html">internal_wave</a></li>
 <li class="toctree-l3"><a class="reference internal" href="isomip_plus.html">isomip_plus</a></li>
@@ -64,7 +61,10 @@
 <li class="toctree-l3"><a class="reference internal" href="soma.html">soma</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sphere_transport.html">sphere_transport</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ziso.html">ziso</a></li>
-<li class="toctree-l3"><a class="reference internal" href="spherical_harmonic_transform.html">spherical_harmonic_transform</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">spherical_harmonic_transform</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#qu-convergence">qu_convergence</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../framework/index.html">Framework</a></li>
@@ -120,9 +120,9 @@
       <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../index.html">Ocean core</a> &raquo;</li>
           <li><a href="index.html">Test groups</a> &raquo;</li>
-      <li>gotm</li>
+      <li>spherical_harmonic_transform</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../../_sources/users_guide/ocean/test_groups/gotm.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/users_guide/ocean/test_groups/spherical_harmonic_transform.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -130,49 +130,90 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="gotm">
-<span id="ocean-gotm"></span><h1>gotm<a class="headerlink" href="#gotm" title="Permalink to this headline">¶</a></h1>
-<p>The <code class="docutils literal notranslate"><span class="pre">gotm</span></code> test group (<a class="reference internal" href="../../../developers_guide/ocean/generated/compass.ocean.tests.gotm.Gotm.html#compass.ocean.tests.gotm.Gotm" title="compass.ocean.tests.gotm.Gotm"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.gotm.Gotm</span></code></a>)
-implements a test case for validating the General Ocean Turbulence Model
-(<a class="reference external" href="https://gotm.net/portfolio/">GOTM</a>) within MPAS-Ocean.
-GOTM is a turbulence closure library that includes a set of two equation models
-such as k-epsilon and the generic length scale model (GLS;
-<a class="reference external" href="https://doi.org/10.1357/002224003322005087">Umlauf and Burchard, 2003</a>).</p>
-<section id="default">
-<span id="ocean-gotm-default"></span><h2>default<a class="headerlink" href="#default" title="Permalink to this headline">¶</a></h2>
-<p>The <code class="docutils literal notranslate"><span class="pre">default</span></code> test case implements implements a
-single column test case following Section 5.1 of
-<a class="reference external" href="https://doi.org/10.1016/j.ocemod.2020.101619">Kärnä, 2020</a>:</p>
-<a class="reference internal image-reference" href="../../../_images/gotm_eqns.png"><img alt="../../../_images/gotm_eqns.png" class="align-center" src="../../../_images/gotm_eqns.png" style="width: 691px;" /></a>
-<p>The simulated velocity and viscosity profiles are compared with the analytical
-solution of Equations (67) and (69).</p>
-<p>The results depends on the bottom drag coefficient, here set to 0.0173,
-corresponding to the value inferred from the analytical solution with a layer
-thickness of 0.06 m.</p>
-<a class="reference internal image-reference" href="../../../_images/gotm_vel.png"><img alt="../../../_images/gotm_vel.png" class="align-center" src="../../../_images/gotm_vel.png" style="width: 500px;" /></a>
-<a class="reference internal image-reference" href="../../../_images/gotm_visc.png"><img alt="../../../_images/gotm_visc.png" class="align-center" src="../../../_images/gotm_visc.png" style="width: 500px;" /></a>
+  <section id="spherical-harmonic-transform">
+<span id="ocean-spherical-harmonic-transform"></span><h1>spherical_harmonic_transform<a class="headerlink" href="#spherical-harmonic-transform" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">spherical_harmonic_transform</span></code> test group implements test cases
+for the spherical harmonic transformation implementations in
+MPAS-Ocean. These tests involve computing the forward and inverse spherical
+harmonic transform of a certain order for an analytical function.
+The truncation errors for each order are compared with the analytical
+function.</p>
+<p>For ocean simulations, the spherical harmonic transformation capability
+is used to compute the self attraction and loading forcing for tides.</p>
+<p>Two different implementations are used in this test group:</p>
+<ul class="simple">
+<li><p>The first is a “serial” algorithm which involves an interpolation
+from the MPAS mesh to a Guassian grid and  then uses a fast shperical
+harmonic library, SHTns, to compute the forward and inverse
+transformations. The approximate function is then interpolated back
+to the MPAS mesh.
+Since the SHTns library dosen’t use distributed memory parallelism,
+the function values are first gathered onto a single MPI rank that
+is responsible for the interpolation and forward and inverse
+transformations. Finally, a scatter is performed to return the local
+approximate function values to each core.</p></li>
+<li><p>The second implimentation is a “parallel” algoritm which does not use
+a fast library, but instead computes the spherical harmonic transform
+directly on the unstructured mesh using an MPI All_Reduce.</p></li>
+</ul>
+<p>In order for this test case to run properly for the “serial” algorithm,
+MPAS-Ocean must be compiled with the <code class="docutils literal notranslate"><span class="pre">USE_SHTNS=true</span></code> and
+<code class="docutils literal notranslate"><span class="pre">OPENMP=false</span></code> options.</p>
+<p>The test group includes 1 test case with 3 steps:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">mesh</span></code> creates a quasi uniform MPAS mesh on the sphere</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">init</span></code> runs MPAS-Ocean init mode to compute the shperical harmonic
+transformations</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">analysis</span></code> reads the error values from the MPAS log files and
+generates a convergence plot which will look like the image below:</p></li>
+</ul>
+<a class="reference internal image-reference" href="../../../_images/spherical_harmonic_transform_convergence.png"><img alt="../../../_images/spherical_harmonic_transform_convergence.png" class="align-center" src="../../../_images/spherical_harmonic_transform_convergence.png" style="width: 500px;" /></a>
+<section id="qu-convergence">
+<span id="ocean-spherical-harmonic-transform-qu-convergence"></span><h2>qu_convergence<a class="headerlink" href="#qu-convergence" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">qu_convergence</span></code> test case uses quasi-uniform meshes and an analyitical
+function that is a sprial:</p>
+<a class="reference internal image-reference" href="../../../_images/spherical_harmonic_transform_qu_function.png"><img alt="../../../_images/spherical_harmonic_transform_qu_function.png" class="align-center" src="../../../_images/spherical_harmonic_transform_qu_function.png" style="width: 500px;" /></a>
 <section id="config-options">
 <h3>config options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h3>
-<p>The <code class="docutils literal notranslate"><span class="pre">default</span></code> config options include:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># config options for General Ocean Turbulence Model (GOTM) test cases</span><span class="w"></span>
-<span class="k">[gotm]</span><span class="w"></span>
+<p>Here, we give config options for the <code class="docutils literal notranslate"><span class="pre">qu_convergence</span></code> test case.</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># options for the QU mesh convergence test case for spherical harmonic transforms</span><span class="w"></span>
+<span class="k">[qu_convergence]</span><span class="w"></span>
 
-<span class="c1"># the number of grid cells in x and y</span><span class="w"></span>
-<span class="na">nx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span><span class="w"></span>
-<span class="na">ny</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span><span class="w"></span>
+<span class="c1"># a list of resolutions to test</span><span class="w"></span>
+<span class="na">resolutions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">60, 30</span><span class="w"></span>
 
-<span class="c1"># the size of grid cells (m)</span><span class="w"></span>
-<span class="na">dc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2500.0</span><span class="w"></span>
+<span class="c1"># a list of spherical harmoic orders to test for the parallel algorithm</span><span class="w"></span>
+<span class="na">parallel_N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">18, 26, 29, 35, 60</span><span class="w"></span>
 
-<span class="c1"># the number of vertical levels</span><span class="w"></span>
-<span class="na">vert_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">250</span><span class="w"></span>
-
-<span class="c1"># the depth of the sea floor (m)</span><span class="w"></span>
-<span class="na">bottom_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">15.0</span><span class="w"></span>
+<span class="c1"># a list of Gaussian grid resolutions (number of latitudes) for the serial algorithm</span><span class="w"></span>
+<span class="na">serial_nLat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">40, 64, 92, 220, 980</span><span class="w"></span>
 </pre></div>
 </div>
-<p>These options control the size and resolution of the horizontal mesh and
-vertical grid.</p>
+</section>
+<section id="resolutions">
+<h3>resolutions<a class="headerlink" href="#resolutions" title="Permalink to this headline">¶</a></h3>
+<p>To alter the resolutions used in this test, you will need to create your own
+config file (or add a <code class="docutils literal notranslate"><span class="pre">qu_convergence</span></code> section to a config file if you’re
+already using one).  The resolutions are a comma-separated list of the
+quasi-uniform resolution of the mesh in km.  If you specify a different list
+before setting up <code class="docutils literal notranslate"><span class="pre">qu_convergence</span></code>, steps will be generated with the requested
+resolutions.  (If you alter <code class="docutils literal notranslate"><span class="pre">resolutions</span></code> in the test case’s config file in
+the work directory, nothing will happen.)</p>
+</section>
+<section id="parallel-n">
+<h3>parallel_N<a class="headerlink" href="#parallel-n" title="Permalink to this headline">¶</a></h3>
+<p>For each resolution, the spherial harmonic orders for the parallel algorithm
+are specified as a comma separated list for the <code class="docutils literal notranslate"><span class="pre">parallel_N</span></code> option.
+You can alter this before setup (in a user config file)
+or before running the test case (in the config file in the work directory).</p>
+</section>
+<section id="serial-nlat">
+<h3>serial_nLat<a class="headerlink" href="#serial-nlat" title="Permalink to this headline">¶</a></h3>
+<p>For each resolution, the number of latitudes in the Gaussian grid for
+the serial algorithm are specified as a comma separated list for the
+<code class="docutils literal notranslate"><span class="pre">serial_nLat</span></code> option.  This is related to the spherical harmonic order
+by: N = nLat/2 - 1. You can alter this before setup (in a user config file)
+or before running the test case (in the config file in the work directory).</p>
 </section>
 </section>
 </section>
@@ -181,8 +222,8 @@ vertical grid.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="global_ocean.html" class="btn btn-neutral float-left" title="global_ocean" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="ice_shelf_2d.html" class="btn btn-neutral float-right" title="ice_shelf_2d" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ziso.html" class="btn btn-neutral float-left" title="ziso" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../framework/index.html" class="btn btn-neutral float-right" title="Framework" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
