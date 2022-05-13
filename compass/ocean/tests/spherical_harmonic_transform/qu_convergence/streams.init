@@ -1,0 +1,19 @@
+<streams>
+
+<immutable_stream name="input_init"
+                  type="input"
+                  filename_template="mesh.nc"
+                  input_interval="initial_only"/>
+
+<stream name="output_init"
+        type="output"
+        output_interval="0000_00:00:01"
+        clobber_mode="truncate"
+        filename_template="initial_state.nc">
+
+    <stream name="input_init"/>
+    <var name="ssh"/>
+    <var name="ssh_sal"/>
+</stream>
+
+</streams>
