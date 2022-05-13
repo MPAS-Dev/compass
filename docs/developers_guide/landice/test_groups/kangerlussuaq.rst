@@ -1,7 +1,7 @@
 .. _dev_landice_kangerlussuaq:
 
 kangerlussuaq
-========
+=============
 
 The ``kangerlussuaq`` test group (:py:class:`compass.landice.tests.kangerlussuaq.Kangerlussuaq`)
 creates a variable resolution (default 1-10 km) mesh for a regional domain of Kangerlussuaq Glacier

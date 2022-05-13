@@ -348,6 +348,7 @@ or the number of nodes (scaled according to the number of cores require by the
 test cases by default).
 
 .. code-block:: bash
+
     #!/bin/bash
     #SBATCH  --job-name=compass
     #SBATCH  --account=condo
@@ -367,6 +368,7 @@ You can also use config options, passed to ``compass suite`` or
 The following are the config options that are relevant to job scripts:
 
 .. code-block:: cfg
+
     # The parallel section describes options related to running jobs in parallel
     [parallel]
 

@@ -1,7 +1,7 @@
 .. _dev_landice_koge_bugt_s:
 
 koge_bugt_s
-========
+===========
 
 The ``koge_bugt_s`` test group (:py:class:`compass.landice.tests.koge_bugt_s.KogeBugtS`)
 creates a variable resolution (default 500m to 4km) mesh for a regional domain of Koge Bugt S, Greenland

@@ -237,7 +237,7 @@ kangerlussuaq
 .. currentmodule:: compass.landice.tests.kangerlussuaq
 
 .. autosummary::
-   :toctrr: generate/
+   :toctree: generated/
 
    Kangerlussuaq
 
@@ -250,10 +250,10 @@ kangerlussuaq
 koge_bugt_s
 ~~~~~~~~~~~
 
-.. currentmodule:: compass.landice.tests.boge_bugt_s
+.. currentmodule:: compass.landice.tests.koge_bugt_s
 
 .. autosummary::
-      :toctrr: generate/
+   :toctree: generated/
 
    KogeBugtS
 
