@@ -1,7 +1,7 @@
 .. _landice_kangerlussuaq:
 
 kangerlussuaq
-========
+=============
 
 The ``landice/kangerlussuaq`` test group includes a test case for creating a
 mesh for Kangerlussuaq Glacier, Greenland. The optimization for basal friction
@@ -47,7 +47,7 @@ the mesh generation options are adjusted through the config file.
     high_dist = 1.e5
     # distance within which cell spacing = min_spac (meters)
     low_dist = 1.e4
-    
+
     # mesh density functions
     use_speed = True
     use_dist_to_grounding_line = False

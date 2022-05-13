@@ -1,7 +1,7 @@
 .. _landice_koge_bugt_s:
 
 koge_bugt_s
-========
+===========
 
 The ``landice/koge_bugt_s`` test group includes a test case for creating a
 mesh for Koge Bugt S, Greenland. The optimization for basal friction
@@ -47,7 +47,7 @@ the mesh generation options are adjusted through the config file.
     high_dist = 1.e5
     # distance within which cell spacing = min_spac (meters)
     low_dist = 1.e4
-    
+
     # mesh density functions
     use_speed = True
     use_dist_to_grounding_line = False
