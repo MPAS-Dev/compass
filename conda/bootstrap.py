@@ -146,7 +146,7 @@ def get_compilers_mpis(config, machine, compilers, mpis, source_path):
 
 
 def get_env_setup(args, config, machine, compiler, mpi, env_type, source_path,
-                  conda_base, env_name, compass_version):
+                  conda_base, env_name, compass_version, logger):
 
     if args.python is not None:
         python = args.python
@@ -171,6 +171,27 @@ def get_env_setup(args, config, machine, compiler, mpi, env_type, source_path,
         env_suffix = activ_suffix
         conda_mpi = mpi
 
+    lib_suffix = ''
+    if args.with_albany:
+        lib_suffix = f'{lib_suffix}_albany'
+    else:
+        config.set('deploy', 'albany', 'None')
+
+    if args.with_netlib_lapack:
+        lib_suffix = f'{lib_suffix}_netlib_lapack'
+    else:
+        config.set('deploy', 'lapack', 'None')
+
+    if args.with_petsc:
+        lib_suffix = f'{lib_suffix}_petsc'
+        logger.info('Turning off OpenMP because it doesn\'t work well '
+                    'with  PETSc')
+        args.without_openmp = True
+    else:
+        config.set('deploy', 'petsc', 'None')
+
+    activ_suffix = f'{activ_suffix}{lib_suffix}'
+
     if env_type == 'dev':
         activ_path = source_path
     else:
@@ -190,7 +211,7 @@ def get_env_setup(args, config, machine, compiler, mpi, env_type, source_path,
         env_name = spack_env
 
     # add the compiler and MPI library to the spack env name
-    spack_env = '{}_{}_{}'.format(spack_env, compiler, mpi)
+    spack_env = f'{spack_env}_{compiler}_{mpi}{lib_suffix}'
     # spack doesn't like dots
     spack_env = spack_env.replace('.', '_')
 
@@ -792,7 +813,7 @@ def main():
             activ_path, conda_env_path, conda_env_name, activate_env, \
             spack_env = get_env_setup(args, config, machine, compiler, mpi,
                                       env_type, source_path, conda_base,
-                                      args.env_name, compass_version)
+                                      args.env_name, compass_version, logger)
 
         build_dir = f'conda/build{activ_suffix}'
 
@@ -829,9 +850,6 @@ def main():
 
             if env_type != 'dev':
                 permissions_dirs.append(conda_base)
-
-        if not args.with_albany:
-            config.set('deploy', 'albany', 'None')
 
         spack_script = ''
         if compiler is not None:
