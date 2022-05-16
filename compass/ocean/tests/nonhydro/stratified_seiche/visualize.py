@@ -38,6 +38,16 @@ class Visualize(Step):
         fig = plt.gcf()
         fig.set_size_inches(8.0, 10.0)
 
+        config = self.config
+
+        section = config['stratified_seiche']
+        nVertLevels = section.getint('nVertLevels')
+        section = config['visualize']
+        time = section.getint('plotTime')
+        cell1_midEdge = section.getint('cell1')
+        cell2_midEdge = section.getint('cell2')
+        firstCell = section.getint('firstCell')
+
         initfile = Dataset(f'init_hydro.nc', 'r')
         ncfileH = Dataset(f'output_hydro.nc', 'r')
         ncfileNH = Dataset(f'output_nonhydro.nc', 'r')
@@ -51,34 +61,34 @@ class Visualize(Step):
         edgesOnCell = initfile.variables['edgesOnCell']
 
         # horizontal velocity
-        zMidEdge = 0.5*(zMidH[12, 31, :] + zMidH[12, 32, :])
+        zMidEdge = 0.5*(zMidH[time, cell1_midEdge, :] + zMidH[time, cell2_midEdge, :])
         zMidEdge1 = zMidEdge/16 
         for i in range(0, 6):
-            iEdge = edgesOnCell[31, i] - 1
+            iEdge = edgesOnCell[cell1_midEdge, i] - 1
             for j in range(0, 6):
-                jEdge = edgesOnCell[32, j] - 1
+                jEdge = edgesOnCell[cell2_midEdge, j] - 1
                 if (iEdge == jEdge):
                     midEdge = iEdge
-        normalVelocity1 = normalVelocityH[12, midEdge, :]/ \
-            max(normalVelocityH[12, midEdge, :])
-        zMidEdge = 0.5*(zMidNH[12, 31, :] + zMidNH[12, 32, :])
+        normalVelocity1 = normalVelocityH[time, midEdge, :]/ \
+            max(normalVelocityH[time, midEdge, :])
+        zMidEdge = 0.5*(zMidNH[time, cell1_midEdge, :] + zMidNH[time, cell2_midEdge, :])
         zMidEdge2 = zMidEdge/16
         for i in range(0, 6):
-            iEdge = edgesOnCell[31, i] - 1
+            iEdge = edgesOnCell[cell1_midEdge, i] - 1
             for j in range(0, 6):
-                jEdge = edgesOnCell[32, j] - 1
+                jEdge = edgesOnCell[cell2_midEdge, j] - 1
                 if (iEdge == jEdge):
                     midEdge = iEdge
-        normalVelocity2 = normalVelocityNH[12, midEdge, :]/ \
-            max(normalVelocityNH[12, midEdge, :]) 
+        normalVelocity2 = normalVelocityNH[time, midEdge, :]/ \
+            max(normalVelocityNH[time, midEdge, :]) 
 
         # vertical velocity
-        zMid_origin1 = zMidH[12, 0, :]/16
-        vertAleTransportTop_origin1 = vertAleTransportTopH[12, 0, 0:100]/ \
-            max(abs(vertAleTransportTopH[12, 0, 0:100]))
-        zMid_origin2 = zMidNH[12, 0, :]/16
-        vertAleTransportTop_origin2 = vertAleTransportTopNH[12, 0, 0:100]/ \
-            max(abs(vertAleTransportTopNH[12, 0, 0:100]))
+        zMid_origin1 = zMidH[time, firstCell, :]/16
+        vertAleTransportTop_origin1 = vertAleTransportTopH[time, firstCell, 0:nVertLevels]/ \
+            max(abs(vertAleTransportTopH[time, firstCell, 0:nVertLevels]))
+        zMid_origin2 = zMidNH[time, firstCell, :]/16
+        vertAleTransportTop_origin2 = vertAleTransportTopNH[time, firstCell, 0:nVertLevels]/ \
+            max(abs(vertAleTransportTopNH[time, firstCell, 0:nVertLevels]))
 
         # plots
         plt.figure(figsize=(8.4, 4.2))

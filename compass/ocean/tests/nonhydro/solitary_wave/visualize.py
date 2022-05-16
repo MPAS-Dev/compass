@@ -39,19 +39,27 @@ class Visualize(Step):
         nGrids = len(grids)
         plt.figure(1, figsize=(12.0, 6.0))
 
+        config = self.config
+
+        section = config['horizontal_grid']
+        nx = section.getint('nx')
+        section = config['visualize']
+        maxLayerForPlot = section.getint('maxLayerForPlot')
+        time = section.getint('plotTime')
+
         for j in range(nGrids):
             grid = grids[j] 
             ncfileIC = Dataset(f'init_{grid}.nc', 'r')
             ncfile = Dataset(f'output_{grid}.nc', 'r')
-            temp = ncfile.variables['temperature'][27, 0:1200, :]
-            xCell = ncfileIC.variables['xCell'][0:1200]
-            zMid = ncfile.variables['zMid'][27, 0, :]
+            temp = ncfile.variables['temperature'][time, 0:nx, :]
+            xCell = ncfileIC.variables['xCell'][0:nx]
+            zMid = ncfile.variables['zMid'][time, 0, :]
             L0 = 1436
             a0 = 220
             x = xCell/L0
             z = zMid/a0
-            z1 = z[0:35]
-            temp1 = temp[:, 0:35]
+            z1 = z[0:maxLayerForPlot]
+            temp1 = temp[:, 0:maxLayerForPlot]
             plt.ylabel('z/a0')
             plt.subplot(2, 1, j+1)
             plt.contour(x, z1, temp1.T)
