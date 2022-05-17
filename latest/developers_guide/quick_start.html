@@ -57,6 +57,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#set-up-a-compass-repository-for-beginners">Set up a compass repository: for beginners</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#compass-conda-environment-compilers-and-system-modules">compass conda environment, compilers and system modules</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#supported-machines">Supported machines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#environments-with-albany">Environments with Albany</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#environments-with-petsc-and-netlib-lapack">Environments with PETSc and Netlib-LAPACK</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#unknown-machines">Unknown machines</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#what-the-script-does">What the script does</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#optional-flags">Optional flags</a></li>
@@ -181,7 +183,8 @@ you if you don’t already have it installed.</p>
 <h3>Supported machines<a class="headerlink" href="#supported-machines" title="Permalink to this headline">¶</a></h3>
 <p>If you are on one of the <a class="reference internal" href="machines/index.html#dev-supported-machines"><span class="std std-ref">Supported Machines</span></a>, run:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./conda/configure_compass_env.py --conda &lt;base_path_to_install_or_update_conda&gt; <span class="se">\</span>
-    -c &lt;compiler&gt; <span class="o">[</span>--mpi &lt;mpi&gt;<span class="o">]</span> <span class="o">[</span>-m &lt;machine&gt;<span class="o">]</span> <span class="o">[</span>--with_albany<span class="o">]</span>
+    -c &lt;compiler&gt; <span class="o">[</span>--mpi &lt;mpi&gt;<span class="o">]</span> <span class="o">[</span>-m &lt;machine&gt;<span class="o">]</span> <span class="o">[</span>--with_albany<span class="o">]</span> <span class="se">\</span>
+    <span class="o">[</span>--with_netlib_lapack<span class="o">]</span> <span class="o">[</span>--with_petsc<span class="o">]</span>
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">&lt;base_path_to_install_or_update_conda&gt;</span></code> is typically <code class="docutils literal notranslate"><span class="pre">~/miniconda3</span></code>.
@@ -199,6 +202,9 @@ if you need to.</p>
 machine you are on.  You can supply the machine name with <code class="docutils literal notranslate"><span class="pre">-m</span> <span class="pre">&lt;machine&gt;</span></code> if
 you run into trouble with the automatic recognition (e.g. if you’re setting
 up the environment on a compute node, which is not recommended).</p>
+</section>
+<section id="environments-with-albany">
+<h3>Environments with Albany<a class="headerlink" href="#environments-with-albany" title="Permalink to this headline">¶</a></h3>
 <p>If you are working with MALI, you should specify <code class="docutils literal notranslate"><span class="pre">--with_albany</span></code>.  This will
 ensure that the Albany and Trilinos libraries are included among those built
 with system compilers and MPI libraries, a requirement for many MAlI test
@@ -207,6 +213,14 @@ cases.  Currently, only Albany is only supported with <code class="docutils lite
 recommended unless a user wants to be able to run both models with the same
 conda/spack environment.  The main downside is simply that unneeded libraries
 will be linked in to MPAS-Ocean.</p>
+</section>
+<section id="environments-with-petsc-and-netlib-lapack">
+<h3>Environments with PETSc and Netlib-LAPACK<a class="headerlink" href="#environments-with-petsc-and-netlib-lapack" title="Permalink to this headline">¶</a></h3>
+<p>If you are working with MPAS-Ocean test cases that need PETSC and
+Netlib-LAPACK, you should specify <code class="docutils literal notranslate"><span class="pre">--with_petsc</span> <span class="pre">--with_netlib_lapack</span></code> to
+point to Spack environments where these libraries are included.  Appropriate
+environment variables for pointing to these libraries will be build into the
+resulting load script (see below).</p>
 </section>
 <section id="unknown-machines">
 <h3>Unknown machines<a class="headerlink" href="#unknown-machines" title="Permalink to this headline">¶</a></h3>
@@ -245,16 +259,24 @@ this script will also:</p>
 <li><p>install the <code class="docutils literal notranslate"><span class="pre">compass</span></code> package from the local branch in “development” mode
 so changes you make to the repo are immediately reflected in the conda
 environment.</p></li>
-<li><p>uses Spack to build several libraries with system compilers and MPI library,
-including: <a class="reference external" href="https://github.com/E3SM-Project/scorpio">SCORPIO</a> (parallel
-i/o for MPAS components) and <a class="reference external" href="https://earthsystemmodeling.org/">ESMF</a>
-(making mapping files in parallel).</p></li>
-<li><p>optionally (with the <code class="docutils literal notranslate"><span class="pre">--with_albany</span></code> flag) use Spack to install
-<a class="reference external" href="https://trilinos.github.io/">Trilinos</a> and
-<a class="reference external" href="https://github.com/sandialabs/Albany">Albany</a> libraries.</p></li>
+<li><p>with the <code class="docutils literal notranslate"><span class="pre">--update_speck</span></code> flag on supported machines, installs or
+reinstalls a spack environment with various system libraries.  The
+<code class="docutils literal notranslate"><span class="pre">--spack</span></code> flag can be used to point to a location for the spack repo to be
+checked out.  Without this flag, a default location is used. Spack is used to
+build several libraries with system compilers and MPI library, including:
+<a class="reference external" href="https://github.com/E3SM-Project/scorpio">SCORPIO</a> (parallel i/o for MPAS
+components) <a class="reference external" href="https://earthsystemmodeling.org/">ESMF</a> (making mapping files
+in parallel), <a class="reference external" href="https://trilinos.github.io/">Trilinos</a>,
+<a class="reference external" href="https://github.com/sandialabs/Albany">Albany</a>,
+<a class="reference external" href="http://www.netlib.org/lapack/">Netlib-LAPACK</a> and
+<a class="reference external" href="https://petsc.org/">PETSc</a>.</p></li>
+<li><p>with the <code class="docutils literal notranslate"><span class="pre">--with_albany</span></code> flag, creates or uses an existing Spack
+environment that includes Albany and Trilinos.</p></li>
+<li><p>with the <code class="docutils literal notranslate"><span class="pre">--with_petsc</span> <span class="pre">--with_netlib_lapack</span></code> flags, creates or uses an
+existing Spack environment that includes PETSc and Netlib-LAPACK.</p></li>
 <li><p>make an activation script called <code class="docutils literal notranslate"><span class="pre">load_*.sh</span></code>, where the details of the
-name encode the conda environment name, the machine, compilers and MPI
-libraries, e.g.
+name encode the conda environment name, the machine, compilers, MPI
+libraries, and optional libraries,  e.g.
 <code class="docutils literal notranslate"><span class="pre">load_dev_compass_&lt;version&gt;_&lt;machine&gt;_&lt;compiler&gt;_&lt;mpi&gt;.sh</span></code> (<code class="docutils literal notranslate"><span class="pre">&lt;version&gt;</span></code>
 is the compass version, <code class="docutils literal notranslate"><span class="pre">&lt;machine&gt;</span></code> is the name of the
 machine, <code class="docutils literal notranslate"><span class="pre">&lt;compiler&gt;</span></code> is the compiler name, and <code class="docutils literal notranslate"><span class="pre">mpi</span></code> is the MPI flavor).</p></li>
