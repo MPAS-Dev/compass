@@ -146,7 +146,7 @@ def get_compilers_mpis(config, machine, compilers, mpis, source_path):
 
 
 def get_env_setup(args, config, machine, compiler, mpi, env_type, source_path,
-                  conda_base, env_name, compass_version):
+                  conda_base, env_name, compass_version, logger):
 
     if args.python is not None:
         python = args.python
@@ -171,6 +171,27 @@ def get_env_setup(args, config, machine, compiler, mpi, env_type, source_path,
         env_suffix = activ_suffix
         conda_mpi = mpi
 
+    lib_suffix = ''
+    if args.with_albany:
+        lib_suffix = f'{lib_suffix}_albany'
+    else:
+        config.set('deploy', 'albany', 'None')
+
+    if args.with_netlib_lapack:
+        lib_suffix = f'{lib_suffix}_netlib_lapack'
+    else:
+        config.set('deploy', 'lapack', 'None')
+
+    if args.with_petsc:
+        lib_suffix = f'{lib_suffix}_petsc'
+        logger.info('Turning off OpenMP because it doesn\'t work well '
+                    'with  PETSc')
+        args.without_openmp = True
+    else:
+        config.set('deploy', 'petsc', 'None')
+
+    activ_suffix = f'{activ_suffix}{lib_suffix}'
+
     if env_type == 'dev':
         activ_path = source_path
     else:
@@ -190,7 +211,7 @@ def get_env_setup(args, config, machine, compiler, mpi, env_type, source_path,
         env_name = spack_env
 
     # add the compiler and MPI library to the spack env name
-    spack_env = '{}_{}_{}'.format(spack_env, compiler, mpi)
+    spack_env = f'{spack_env}_{compiler}_{mpi}{lib_suffix}'
     # spack doesn't like dots
     spack_env = spack_env.replace('.', '_')
 
@@ -333,9 +354,11 @@ def get_env_vars(machine, compiler, mpilib):
 def build_spack_env(config, update_spack, machine, compiler, mpi, spack_env,
                     spack_base, spack_template_path, env_vars, tmpdir):
 
-    esmf = config.get('deploy', 'esmf')
-    scorpio = config.get('deploy', 'scorpio')
     albany = config.get('deploy', 'albany')
+    esmf = config.get('deploy', 'esmf')
+    lapack = config.get('deploy', 'lapack')
+    petsc = config.get('deploy', 'petsc')
+    scorpio = config.get('deploy', 'scorpio')
 
     spack_branch_base = f'{spack_base}/spack_for_mache_{mache_version}'
 
@@ -355,6 +378,14 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, spack_env,
 
     if esmf != 'None':
         specs.append(f'esmf@{esmf}+mpi+netcdf~pio+pnetcdf')
+    if lapack != 'None':
+        specs.append(f'netlib-lapack@{lapack}')
+        include_e3sm_lapack = False
+    else:
+        include_e3sm_lapack = True
+    if petsc != 'None':
+        specs.append(f'petsc@{petsc}+mpi+batch')
+
     if scorpio != 'None':
         specs.append(f'scorpio@{scorpio}+pnetcdf~timing+internal-timing~tools+malloc')
 
@@ -368,6 +399,7 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, spack_env,
         make_spack_env(spack_path=spack_branch_base, env_name=spack_env,
                        spack_specs=specs, compiler=compiler, mpi=mpi,
                        machine=machine,
+                       include_e3sm_lapack=include_e3sm_lapack,
                        include_e3sm_hdf5_netcdf=e3sm_hdf5_netcdf,
                        yaml_template=yaml_template, tmpdir=tmpdir)
 
@@ -382,6 +414,7 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, spack_env,
     spack_script = get_spack_script(
         spack_path=spack_branch_base, env_name=spack_env, compiler=compiler,
         mpi=mpi, shell='sh', machine=machine,
+        include_e3sm_lapack=include_e3sm_lapack,
         include_e3sm_hdf5_netcdf=e3sm_hdf5_netcdf,
         yaml_template=yaml_template)
 
@@ -411,6 +444,16 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, spack_env,
             f'export {albany_flags}\n' \
             f'export MPAS_EXTERNAL_LIBS="${{MPAS_EXTERNAL_LIBS}} ' \
             f'${{ALBANY_LINK_LIBS}} {stdcxx} {mpicxx}"\n'
+
+    if lapack != 'None':
+        env_vars = f'{env_vars}' \
+                   f'export LAPACK={spack_view}\n' \
+                   f'export USE_LAPACK=true\n'
+
+    if petsc != 'None':
+        env_vars = f'{env_vars}' \
+                   f'export PETSC={spack_view}\n' \
+                   f'export USE_PETSC=true\n'
 
     return spack_branch_base, spack_script, env_vars
 
@@ -770,7 +813,7 @@ def main():
             activ_path, conda_env_path, conda_env_name, activate_env, \
             spack_env = get_env_setup(args, config, machine, compiler, mpi,
                                       env_type, source_path, conda_base,
-                                      args.env_name, compass_version)
+                                      args.env_name, compass_version, logger)
 
         build_dir = f'conda/build{activ_suffix}'
 
@@ -807,9 +850,6 @@ def main():
 
             if env_type != 'dev':
                 permissions_dirs.append(conda_base)
-
-        if not args.with_albany:
-            config.set('deploy', 'albany', 'None')
 
         spack_script = ''
         if compiler is not None:

@@ -82,7 +82,8 @@ If you are on one of the :ref:`dev_supported_machines`, run:
 .. code-block:: bash
 
     ./conda/configure_compass_env.py --conda <base_path_to_install_or_update_conda> \
-        -c <compiler> [--mpi <mpi>] [-m <machine>] [--with_albany]
+        -c <compiler> [--mpi <mpi>] [-m <machine>] [--with_albany] \
+        [--with_netlib_lapack] [--with_petsc]
 
 The ``<base_path_to_install_or_update_conda>`` is typically ``~/miniconda3``.
 This is the location where you would like to install Miniconda3 or where it is
@@ -102,6 +103,9 @@ machine you are on.  You can supply the machine name with ``-m <machine>`` if
 you run into trouble with the automatic recognition (e.g. if you're setting
 up the environment on a compute node, which is not recommended).
 
+Environments with Albany
+~~~~~~~~~~~~~~~~~~~~~~~~
+
 If you are working with MALI, you should specify ``--with_albany``.  This will
 ensure that the Albany and Trilinos libraries are included among those built
 with system compilers and MPI libraries, a requirement for many MAlI test
@@ -111,6 +115,15 @@ It is safe to add the ``--with_albany`` flag for MPAS-Ocean but it is not
 recommended unless a user wants to be able to run both models with the same
 conda/spack environment.  The main downside is simply that unneeded libraries
 will be linked in to MPAS-Ocean.
+
+Environments with PETSc and Netlib-LAPACK
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you are working with MPAS-Ocean test cases that need PETSC and
+Netlib-LAPACK, you should specify ``--with_petsc --with_netlib_lapack`` to
+point to Spack environments where these libraries are included.  Appropriate
+environment variables for pointing to these libraries will be build into the
+resulting load script (see below).
 
 Unknown machines
 ~~~~~~~~~~~~~~~~
@@ -157,18 +170,27 @@ this script will also:
   so changes you make to the repo are immediately reflected in the conda
   environment.
 
-* uses Spack to build several libraries with system compilers and MPI library,
-  including: `SCORPIO <https://github.com/E3SM-Project/scorpio>`_ (parallel
-  i/o for MPAS components) and `ESMF <https://earthsystemmodeling.org/>`_
-  (making mapping files in parallel).
+* with the ``--update_speck`` flag on supported machines, installs or
+  reinstalls a spack environment with various system libraries.  The
+  ``--spack`` flag can be used to point to a location for the spack repo to be
+  checked out.  Without this flag, a default location is used. Spack is used to
+  build several libraries with system compilers and MPI library, including:
+  `SCORPIO <https://github.com/E3SM-Project/scorpio>`_ (parallel i/o for MPAS
+  components) `ESMF <https://earthsystemmodeling.org/>`_ (making mapping files
+  in parallel), `Trilinos <https://trilinos.github.io/>`_,
+  `Albany <https://github.com/sandialabs/Albany>`_,
+  `Netlib-LAPACK <http://www.netlib.org/lapack/>`_ and
+  `PETSc <https://petsc.org/>`_.
 
-* optionally (with the ``--with_albany`` flag) use Spack to install
-  `Trilinos <https://trilinos.github.io/>`_ and
-  `Albany <https://github.com/sandialabs/Albany>`_ libraries.
+* with the ``--with_albany`` flag, creates or uses an existing Spack
+  environment that includes Albany and Trilinos.
+
+* with the ``--with_petsc --with_netlib_lapack`` flags, creates or uses an
+  existing Spack environment that includes PETSc and Netlib-LAPACK.
 
 * make an activation script called ``load_*.sh``, where the details of the
-  name encode the conda environment name, the machine, compilers and MPI
-  libraries, e.g.
+  name encode the conda environment name, the machine, compilers, MPI
+  libraries, and optional libraries,  e.g.
   ``load_dev_compass_<version>_<machine>_<compiler>_<mpi>.sh`` (``<version>``
   is the compass version, ``<machine>`` is the name of the
   machine, ``<compiler>`` is the compiler name, and ``mpi`` is the MPI flavor).

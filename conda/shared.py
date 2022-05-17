@@ -57,11 +57,19 @@ def parse_args(bootstrap):
                         action='store_true',
                         help="Whether to include albany in the spack "
                              "environment")
+    parser.add_argument("--with_netlib_lapack", dest="with_netlib_lapack",
+                        action='store_true',
+                        help="Whether to include Netlib-LAPACK in the spack "
+                             "environment")
+    parser.add_argument("--with_petsc", dest="with_petsc",
+                        action='store_true',
+                        help="Whether to include PETSc in the spack "
+                             "environment")
     parser.add_argument("--without_openmp", dest="without_openmp",
                         action='store_true',
-                        help="If this flag is included, OPENMP=true will not "
+                        help="If this flag is included, OPENMP=false will "
                              "be added to the load script.  By default, MPAS "
-                             "builds will be with OpenMP.")
+                             "builds will be with OpenMP (OPENMP=true).")
     if bootstrap:
         parser.add_argument("--local_conda_build", dest="local_conda_build",
                             type=str,
