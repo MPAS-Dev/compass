@@ -164,7 +164,7 @@ def _get_metadata(dsInit, config):
                 'MPAS_Mesh_Pull_Request': pull_request,
                 '{}_Revision'.format(prefix): mesh_revision,
                 '{}_Version_Author'.format(prefix): author,
-                '{}_Version_Author_E-mail'.format(prefix): email,
+                '{}_Version_Author_Email'.format(prefix): email,
                 '{}_Version_Creation_Date'.format(prefix): creation_date,
                 '{}_Minimum_Resolution_km'.format(prefix): min_res,
                 '{}_Maximum_Resolution_km'.format(prefix): max_res,
@@ -181,7 +181,7 @@ def _get_metadata(dsInit, config):
         metadata['MPAS_Mesh_Biogeochemistry'] = descriptions['bgc']
 
     packages = {'compass': 'compass', 'JIGSAW': 'jigsaw',
-                'JIGSAW-Python': 'jigsawpy', 'MPAS-Tools': 'mpas_tools',
+                'JIGSAW_Python': 'jigsawpy', 'MPAS_Tools': 'mpas_tools',
                 'NCO': 'nco', 'ESMF': 'esmf',
                 'geometric_features': 'geometric_features',
                 'Metis': 'metis', 'pyremap': 'pyremap'}
