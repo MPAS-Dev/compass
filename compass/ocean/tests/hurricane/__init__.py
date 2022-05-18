@@ -17,11 +17,12 @@ class Hurricane(TestGroup):
         super().__init__(mpas_core=mpas_core,
                          name='hurricane')
 
+        storm = 'sandy'
         mesh_name = 'DEQU120at30cr10rr2'
         mesh = Mesh(test_group=self, mesh_name=mesh_name)
         self.add_test_case(mesh)
 
-        init = Init(test_group=self, mesh=mesh)
+        init = Init(test_group=self, mesh=mesh, storm=storm)
         self.add_test_case(init)
 
         # storm = 'sandy'
