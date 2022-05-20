@@ -1,0 +1,132 @@
+<streams>
+
+<immutable_stream name="input"
+                  type="input"
+                  filename_template="{{ input_file_ais }}"
+                  input_interval="initial_only"/>
+
+<immutable_stream name="restart"
+                  type="input;output"
+                  filename_template="rst.$Y.nc"
+                  filename_interval="output_interval"
+                  output_interval="0100-00-00_00:00:00"
+                  reference_time="1995-01-01_00:00:00"
+                  clobber_mode="truncate"
+                  precision="double"
+                  input_interval="initial_only"/>
+
+<stream name="regionsInput"
+        type="input"
+        mode="forward;analysis"
+        filename_template="regionMasks.nc"
+        input_interval="initial_only"
+        runtime_format="single_file">
+        <var name="regionCellMasks"/>
+
+</stream>
+
+<stream name="ismip6"
+        type="input"
+        mode="forward;analysis"
+        filename_template="{{ file_ais_TF_forcing }}"
+    input_interval="0001-00-00_00:00:00"
+    record_interval="0001-00-00_00:00:00"
+                  reference_time="1950-01-01_00:00:00"
+        runtime_format="single_file">
+        <var name="ismip6shelfMelt_3dThermalForcing"/>
+        <var name="ismip6shelfMelt_zOcean"/>
+</stream>
+
+<stream name="ismip6_2"
+        type="input"
+        mode="forward;analysis"
+        filename_template="{{ file_ais_basal_param }}"
+        input_interval="initial_only"
+        runtime_format="single_file">
+        <var name="ismip6shelfMelt_deltaT"/>
+        <var name="ismip6shelfMelt_basin"/>
+        <var name="ismip6shelfMelt_gamma0"/>
+</stream>
+
+<stream name="ismip6_3"
+        type="input"
+        mode="forward;analysis"
+        filename_template="{{ file_ais_shelf_melt_offset }}"
+        input_interval="initial_only"
+        runtime_format="single_file">
+        <var name="ismip6shelfMelt_offset"/>
+</stream>
+
+<stream name="ismip6_smb"
+        type="input"
+        mode="forward;analysis"
+        filename_template="{{ file_ais_SMB_forcing }}"
+    input_interval="0001-00-00_00:00:00"
+    record_interval="0001-00-00_00:00:00"
+                  reference_time="1950-01-01_00:00:00"
+        runtime_format="single_file">
+        <var name="sfcMassBal"/>
+</stream>
+
+<stream name="output"
+        type="output"
+        filename_template="output.nc"
+        output_interval="0000-00-01_00:00:00"
+        reference_time="1950-01-01_00:00:00"
+        clobber_mode="truncate">
+
+    <stream name="basicmesh"/>
+    <var name="xtime"/>
+    <var name="thickness"/>
+    <var name="bedTopography"/>
+    <var name="daysSinceStart"/>
+    <var name="surfaceSpeed"/>
+    <var name="temperature"/>
+    <var name="lowerSurface"/>
+    <var name="upperSurface"/>
+    <var name="uReconstructX"/>
+    <var name="uReconstructY"/>
+    <var name="cellMask"/>
+    <var name="edgeMask"/>
+
+</stream>
+
+<stream name="globalStatsOutput"
+        type="output"
+        filename_template="globalStats.nc"
+        filename_interval="none"
+        clobber_mode="overwrite"
+        output_interval="0000-00-00_01:00:00"
+        reference_time="2007-01-01_00:00:00"
+        packages="globalStatsAMPKG"
+        runtime_format="single_file">
+    <stream name="globalStatsOutput"/>
+    <var name="xtime"/>
+    <var name="daysSinceStart"/>
+    <var name="deltat"/>
+    <var name="allowableDtACFL"/>
+    <var name="allowableDtDCFL"/>
+    <var_struct name="globalStatsAM"/>
+</stream>
+
+<stream name="regionalStatsOutput"
+        type="output"
+        filename_template="output/regionalStats.nc"
+        filename_interval="none"
+        clobber_mode="overwrite"
+                  reference_time="1950-01-01_00:00:00"
+        output_interval="0000-00-00_01:00:00"
+        packages="regionalStatsAMPKG"
+        runtime_format="single_file">
+
+    <stream name="regionalStatsOutput"/>
+    <var_struct name="regionalStatsAM"/>
+    <var name="xtime"/>
+    <var name="daysSinceStart"/>
+    <var name="deltat"/>
+    <var name="allowableDtACFL"/>
+    <var name="allowableDtDCFL"/>
+
+</stream>
+
+</streams>
