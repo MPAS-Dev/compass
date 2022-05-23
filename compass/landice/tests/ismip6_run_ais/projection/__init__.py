@@ -1,17 +1,11 @@
 from compass.testcase import TestCase
-from compass.landice.tests.ismip6_run_ais import RunModel
+from compass.landice.tests.ismip6_run_ais.run_model import RunModel
 from compass.validate import compare_variables
 
 
 class Projection(TestCase):
     """
-    Todo: fix the doc string
-    Todo: humboldt doc string is wrong. should be fixed (trevor)
-    A test case for performing two MALI runs of a humboldt setup, one with one
-    core and one with four.  The test case verifies that the results of the
-    two runs are identical or close to identical.  The FO velocity solver is
-    not bit for bit across decompositions, so identical results are not
-    expected when it is used.
+    A test case for performing forward MALI runs of ISMIP6 Antaractic setup
     """
 
     def __init__(self, test_group, mesh_type):

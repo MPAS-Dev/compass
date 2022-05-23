@@ -1,12 +1,11 @@
+import os
 from compass.model import run_model, make_graph_file
 from compass.step import Step
 
 
 class RunModel(Step):
     """
-    Todo: fix doc string
     Todo: set up cores and min cores dictionary for different res mesh file
-    Todo: hard code the filenames in stream.landice
     A step for performing forward MALI runs as part of Antarctica test cases.
 
     Attributes
@@ -39,6 +38,7 @@ class RunModel(Step):
     def setup(self, velo_solver="FO"):
         config = self.config
         section = config['ismip6_run_ais']
+        base_path_mali=section.get('base_path_mali')
         calving_law = section.get('calving_law')
         damage = section.get('damage')
         procs = section.get('procs')
@@ -62,12 +62,16 @@ class RunModel(Step):
         self.add_output_file(filename='output.nc')
 
         if self.mesh_type == 'high':
-            self.mesh_file = 'Antarctic_1to10km_20220407.nc'
+            self.mesh_file = 'Antarctic_1to10km.nc'
         elif self.mesh_type == 'mid':
             self.mesh_file = 'Antarctic_8to80km_20220407.nc'
 
-        self.add_input_file(filename=self.mesh_file, target=self.mesh_file,
-                            database='')
+        self.add_input_file(filename=self.mesh_file,
+                            target=os.path.join(base_path_mali,
+                                                self.mesh_file))
+
+#        self.add_input_file(filename=self.mesh_file, target=self.mesh_file,
+#                            database='')
 
         self.add_namelist_file(
             'compass.landice.tests.ismip6_run_ais', 'namelist.landice',
@@ -91,11 +95,13 @@ class RunModel(Step):
         fname_basal_coeff = section.get('fname_basal_coeff')
 
         target = f'{base_path_forcing}/ocean_forcing/thermal_forcing/' \
-                 f'{model}_{scenario}/1995-{period_endyear}'
+                 f'{model}_{scenario}/1995-{period_endyear}/' \
+                 f'processed_TF_{model}_{scenario}_{period_endyear}.nc'
         self.add_input_file(filename='thermal_forcing.nc',
                             target=target)
         target = f'{base_path_forcing}/atmosphere_forcing/' \
-                 f'{model}_{scenario}/1995-{period_endyear}'
+                 f'{model}_{scenario}/1995-{period_endyear}/' \
+                 f'processed_SMB_{model}_{scenario}_{period_endyear}.nc'
         self.add_input_file(filename='smb.nc',
                             target=target)
         target = f'{base_path_forcing}/ocean_forcing/basal_melt/' \
@@ -103,7 +109,8 @@ class RunModel(Step):
         self.add_input_file(filename='basal_coeff.nc',
                             target=target)
         target = f'{base_path_forcing}/ocean_forcing/shelf_melt_offset/' \
-                 f'{model}_{scenario}/1995-{period_endyear}'
+                 f'{model}_{scenario}/1995-{period_endyear}/' \
+                 f'processed_shelfmelt_offset_{model}_{scenario}.nc'
         self.add_input_file(filename='shelf_melt_offset.nc',
                             target=target)
 

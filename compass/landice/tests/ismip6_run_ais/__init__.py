@@ -3,8 +3,6 @@ from compass.landice.tests.ismip6_run_ais.projection import Projection
 
 class Ismip6RunAIS(TestGroup):
     """
-    Todo: add 'high' in mesh_type
-    Todo: add the attributes, fix doc string
     A test group for Antarctica forward simulation testcases
 
     Attributes
@@ -18,11 +16,11 @@ class Ismip6RunAIS(TestGroup):
         """
         super().__init__(mpas_core=mpas_core, name='ismip6_run_ais')
 
-        self.mishdirs = {
-            'mid': 'Antarctic_8to80km',
-            'high': 'Antarctic_1to10km'
+        self.meshdirs = {
+            'mid': 'Antarctica_8to80km',
+            'high': 'Antarctica_1to10km'
         }
 
-        for mesh_type in ['mid']:
+        for mesh_type in ['mid','high']:
             self.add_test_case(
                 Projection(test_group=self, mesh_type=mesh_type))
