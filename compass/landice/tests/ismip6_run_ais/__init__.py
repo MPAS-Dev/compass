@@ -1,6 +1,7 @@
 from compass.testgroup import TestGroup
 from compass.landice.tests.ismip6_run_ais.projection import Projection
 
+
 class Ismip6RunAIS(TestGroup):
     """
     A test group for Antarctica forward simulation testcases
@@ -21,6 +22,6 @@ class Ismip6RunAIS(TestGroup):
             'high': 'Antarctica_1to10km'
         }
 
-        for mesh_type in ['mid','high']:
+        for mesh_type in ['mid', 'high']:
             self.add_test_case(
                 Projection(test_group=self, mesh_type=mesh_type))

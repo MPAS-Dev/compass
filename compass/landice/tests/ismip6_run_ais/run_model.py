@@ -38,7 +38,7 @@ class RunModel(Step):
     def setup(self, velo_solver="FO"):
         config = self.config
         section = config['ismip6_run_ais']
-        base_path_mali=section.get('base_path_mali')
+        base_path_mali = section.get('base_path_mali')
         calving_law = section.get('calving_law')
         damage = section.get('damage')
         procs = section.get('procs')
@@ -48,8 +48,8 @@ class RunModel(Step):
                                'von_Mises_stress',
                                'damagecalving', 'ismip6_retreat']:
             raise ValueError("Value of calving_law must be one of {'none', "
-                             "'floating', " \
-                             "'eigencalving', 'specified_calving_velocity', " \
+                             "'floating', "
+                             "'eigencalving', 'specified_calving_velocity', "
                              "'von_Mises_stress', 'damagecalving', "
                              "'ismip6_retreat'}")
 
@@ -134,4 +134,4 @@ class RunModel(Step):
         make_graph_file(mesh_filename=self.mesh_file,
                         graph_filename='graph.info')
         run_model(step=self, namelist='namelist.landice',
-                    streams='streams.landice')
+                  streams='streams.landice')
