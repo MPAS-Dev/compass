@@ -388,6 +388,9 @@ class IcosahedralMeshStep(SphericalBaseStep):
         """
         super().__init__(test_case=test_case, name=name, subdir=subdir,
                          cores=cores, min_cores=min_cores, threads=threads)
+        # run as a subprocess so output goes to a log file
+        self.run_as_subprocess = True
+
         self.cell_width = cell_width
         self.subdivisions = subdivisions
 
