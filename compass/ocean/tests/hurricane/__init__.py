@@ -2,7 +2,7 @@ from compass.testgroup import TestGroup
 
 from compass.ocean.tests.hurricane.mesh import Mesh
 from compass.ocean.tests.hurricane.init import Init
-# from compass.ocean.tests.hurricane.default import Default
+from compass.ocean.tests.hurricane.forward import Forward
 
 
 class Hurricane(TestGroup):
@@ -25,8 +25,7 @@ class Hurricane(TestGroup):
         init = Init(test_group=self, mesh=mesh, storm=storm)
         self.add_test_case(init)
 
-        # storm = 'sandy'
-        # self.add_test_case(Default(test_group=self,
-        #                            mesh=mesh,
-        #                            storm=strom,
-        #                            init=init))
+        self.add_test_case(Forward(test_group=self,
+                                   mesh=mesh,
+                                   storm=storm,
+                                   init=init))
