@@ -1,5 +1,6 @@
 from compass.testcase import TestCase
 from compass.ocean.tests.hurricane.forward.forward import ForwardStep
+from compass.ocean.tests.hurricane.analysis import Analysis 
 from compass.ocean.tests.global_ocean.configure import configure_global_ocean
 import os
 
@@ -40,6 +41,9 @@ class Forward(TestCase):
 
         step.add_output_file(filename='output.nc')  
         step.add_output_file(filename='pointwiseStats.nc')  
+        self.add_step(step)
+
+        step = Analysis(test_case=self,storm=storm)
         self.add_step(step)
 
     def configure(self):
