@@ -5,7 +5,6 @@ from compass.step import Step
 
 class RunModel(Step):
     """
-    Todo: set up cores and min cores dictionary for different res mesh file
     A step for performing forward MALI runs as part of Antarctica test cases.
 
     Attributes
@@ -61,15 +60,27 @@ class RunModel(Step):
 
         self.add_output_file(filename='output.nc')
 
-        if self.mesh_type == 'high':
-            self.mesh_file = 'Antarctic_1to10km.nc'
-        elif self.mesh_type == 'mid':
-            self.mesh_file = 'Antarctic_8to80km_20220407.nc'
+        # Todo: confirm the number of cores needed for the high mesh
+        # We estimate that 200-1000 cells should be allocated for one core
+        res_param = {
+                'high': {'mesh_file': 'Antarctic_1to10km.nc',
+                         'cores': 25000,
+                         'min_cores': 5000},
+                'mid': {'mesh_file': 'Antarctic_8to80km_20220407.nc',
+                        'cores': 400,
+                        'min_cores': 80}
+                }
+
+        res_param = res_param[self.mesh_type]
+        self.mesh_file = res_param['mesh_file']
+        self.cores = res_param['cores']
+        self.min_cores = res_param['min_cores']
 
         self.add_input_file(filename=self.mesh_file,
                             target=os.path.join(base_path_mali,
                                                 self.mesh_file))
 
+        # Todo: upload the AIS meshes to the database
 #        self.add_input_file(filename=self.mesh_file, target=self.mesh_file,
 #                            database='')
 
