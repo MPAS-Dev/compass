@@ -2,7 +2,7 @@ import os
 import shutil
 import subprocess
 import xarray as xr
-from compass.landice.tests.ismip6_forcing.ocean_thermal.create_mapfile \
+from compass.landice.tests.ismip6_forcing.create_mapfile \
     import build_mapping_file
 from mpas_tools.io import write_netcdf
 from compass.step import Step
