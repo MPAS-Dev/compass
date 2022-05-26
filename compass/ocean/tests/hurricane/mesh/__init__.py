@@ -1,5 +1,4 @@
 from compass.testcase import TestCase
-from compass.validate import compare_variables
 from compass.ocean.tests.hurricane.mesh.dequ120at30cr10rr2 \
     import DEQU120at30cr10rr2Mesh
 
@@ -10,7 +9,7 @@ class Mesh(TestCase):
 
     Attributes
     ----------
-    mesh_step : compass.ocean.tests.hurricane.mesh.mesh.MeshStep
+    mesh_step : compass.ocean.tests.global_ocean.mesh.mesh.MeshStep
         The step for creating the mesh
     """
     def __init__(self, test_group, mesh_name):
@@ -19,8 +18,8 @@ class Mesh(TestCase):
 
         Parameters
         ----------
-        test_group : compass.ocean.tests.global_ocean.GlobalOcean
-            The global ocean test group that this test case belongs to
+        test_group : compass.ocean.tests.hurricane.Hurricane
+            The test group that this test case belongs to
 
         mesh_name : str
             The name of the mesh
@@ -39,8 +38,6 @@ class Mesh(TestCase):
                                  preserve_floodplain=True)
         self.add_step(self.mesh_step)
 
-        self.with_ice_shelf_cavities = False
-
     def configure(self):
         """
         Modify the configuration options for this test case
@@ -55,18 +52,10 @@ class Mesh(TestCase):
         """
         step = self.mesh_step
         config = self.config
+
         # get the these properties from the config options
-        step.cores = config.getint('global_ocean', 'mesh_cores')
-        step.min_cores = config.getint('global_ocean', 'mesh_min_cores')
+        step.cores = config.getint('hurricane', 'mesh_cores')
+        step.min_cores = config.getint('hurricane', 'mesh_min_cores')
 
         # run the step
         super().run()
-
-    def validate(self):
-        """
-        Test cases can override this method to perform validation of variables
-        and timers
-        """
-        variables = ['xCell', 'yCell', 'zCell']
-        compare_variables(test_case=self, variables=variables,
-                          filename1='mesh/culled_mesh.nc')

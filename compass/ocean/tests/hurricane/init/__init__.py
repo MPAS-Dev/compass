@@ -6,7 +6,7 @@ from compass.ocean.tests.hurricane.init.create_pointstats_file \
     import CreatePointstatsFile
 from compass.ocean.tests.hurricane.init.interpolate_atm_forcing \
     import InterpolateAtmForcing
-from compass.ocean.tests.global_ocean.configure import configure_global_ocean
+from compass.ocean.tests.hurricane.configure import configure_hurricane
 
 
 class Init(TestCase):
@@ -17,7 +17,6 @@ class Init(TestCase):
     ----------
     mesh : compass.ocean.tests.hurricane.mesh.Mesh
         The test case that creates the mesh used by this test case
-
     """
     def __init__(self, test_group, mesh, storm):
         """
@@ -31,6 +30,8 @@ class Init(TestCase):
         mesh : compass.ocean.tests.hurricane.mesh.Mesh
             The test case that creates the mesh used by this test case
 
+        storm : str
+            The name of the storm to be run
         """
         name = 'init'
         mesh_name = mesh.mesh_name
@@ -38,7 +39,6 @@ class Init(TestCase):
         super().__init__(test_group=test_group, name=name, subdir=subdir)
 
         self.mesh = mesh
-        self.name = name
 
         self.add_step(InitialState(test_case=self, mesh=mesh))
         self.add_step(InterpolateAtmForcing(test_case=self, mesh=mesh,
@@ -46,14 +46,11 @@ class Init(TestCase):
         self.add_step(CreatePointstatsFile(test_case=self, mesh=mesh,
                                            storm=storm))
 
-        self.initial_condition = 'PHC'
-        self.with_bgc = False
-
     def configure(self):
         """
         Modify the configuration options for this test case
         """
-        configure_global_ocean(test_case=self, mesh=self.mesh, init=self)
+        configure_hurricane(test_case=self, mesh=self.mesh, init=self)
 
     def run(self):
         """

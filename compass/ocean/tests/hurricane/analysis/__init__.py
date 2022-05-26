@@ -13,9 +13,39 @@ plt.switch_backend('agg')
 
 
 class Analysis(Step):
+    """
+    A step for producing ssh validation plots at observation stations
 
+    Attributes
+    ----------
+    frmt : str
+        Format for datetimes
+
+    min_date : str
+        Beginning of time period to plot in frmt format
+
+    max_data : str
+        End of time period to plot in frmt format
+
+    pointstats_file : dict
+        Dictionary of pointwiseStats outputs to plot. Dictionary key
+        becomes the lable in the legend.
+
+    observation : dict
+        Dictionary of stations belonging to a certain data product
+    """
     def __init__(self, test_case, storm):
+        """
+        Create the step
 
+        Parameters
+        ----------
+        test_case : compass.ocean.tests.hurricane.forward.Forward
+            The test case this step belongs to
+
+        storm : str
+            The name of the storm to be plotted
+        """
         super().__init__(test_case=test_case, name='analysis')
 
         self.add_input_file(filename='pointwiseStats.nc',
@@ -26,7 +56,6 @@ class Analysis(Step):
         if storm == 'sandy':
             self.min_date = '2012 10 24 00 00'
             self.max_date = '2012 11 04 00 00'
-            self.year = '2012'
             self.pointstats_file = {'MPAS-O': './pointwiseStats.nc'}
             self.observations = {'NOAA-COOPS': [
                                                '8519483',
@@ -211,7 +240,9 @@ class Analysis(Step):
                         database='hurricane')
 
     def read_pointstats(self, pointstats_file):
-
+        """
+        Read the pointwiseStats data from the MPAS-Ocean run
+        """
         pointstats_nc = netCDF4.Dataset('pointwiseStats.nc', 'r')
         data = {}
         data['date'] = pointstats_nc.variables['xtime'][:]
@@ -233,7 +264,9 @@ class Analysis(Step):
         return data
 
     def read_station_data(self, obs_file, obs_type, min_date, max_date):
-
+        """
+        Read the observed ssh timeseries data for a given station
+        """
         # Initialize variable for observation data
         obs_data = {}
         obs_data['ssh'] = []
@@ -278,8 +311,9 @@ class Analysis(Step):
         return obs_data
 
     def read_station_file(self, station_file):
-
-        # Initialize stations dictionary
+        """
+        Read file containing station locations and names
+        """
         stations = {}
         stations['name'] = []
         stations['lon'] = []
@@ -299,7 +333,9 @@ class Analysis(Step):
         return stations
 
     def run(self):
-
+        """
+        Run this step of the test case
+        """
         # Read in model point output data and create kd-tree
         data = {}
         tree = {}

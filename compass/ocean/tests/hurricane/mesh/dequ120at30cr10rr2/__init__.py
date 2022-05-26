@@ -19,8 +19,8 @@ class DEQU120at30cr10rr2Mesh(MeshStep):
         mesh_name : str
             The name of the mesh
 
-        with_ice_shelf_cavities : bool
-            Whether the mesh includes ice-shelf cavities
+        preserve_floodplain : bool
+            Whether the mesh includes land cells
         """
 
         with_ice_shelf_cavities = False
@@ -56,7 +56,7 @@ class DEQU120at30cr10rr2Mesh(MeshStep):
 
         params = ct.default_params
 
-        print("****QU 120 background mesh and enhanced Atlantic (30km)****")
+        # QU 120 background mesh and enhanced Atlantic (30km)
         params["mesh_type"] = "QU"
         params["dx_max_global"] = 120.0 * km
         params["region_box"] = ct.Atlantic
@@ -68,7 +68,7 @@ class DEQU120at30cr10rr2Mesh(MeshStep):
 
         cell_width, lon, lat = ct.coastal_refined_mesh(params)
 
-        print("****Northeast refinement (10km)***")
+        # Northeast refinement (10km)
         params["region_box"] = ct.Delaware_Bay
         params["plot_box"] = ct.Western_Atlantic
         params["dx_min_coastal"] = 10.0 * km
@@ -78,7 +78,7 @@ class DEQU120at30cr10rr2Mesh(MeshStep):
         cell_width, lon, lat = ct.coastal_refined_mesh(
             params, cell_width, lon, lat)
 
-        print("****Delaware regional refinement (5km)****")
+        # Delaware regional refinement (6km)
         params["region_box"] = ct.Delaware_Region
         params["plot_box"] = ct.Delaware
         params["dx_min_coastal"] = 5.0 * km
@@ -88,7 +88,7 @@ class DEQU120at30cr10rr2Mesh(MeshStep):
         cell_width, lon, lat = ct.coastal_refined_mesh(
             params, cell_width, lon, lat)
 
-        print("****Delaware Bay high-resolution (2km)****")
+        # Delaware Bay high-resolution (2km)
         params["region_box"] = ct.Delaware_Bay
         params["plot_box"] = ct.Delaware
         params["restrict_box"] = ct.Delaware_restrict

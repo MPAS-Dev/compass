@@ -8,9 +8,37 @@ plt.switch_backend('agg')
 
 
 class CreatePointstatsFile(Step):
+    """
+    A step for creating the input file for the pointwiseStats
+    analysis member
 
+    Attributes
+    ----------
+    mesh_file : str
+       Name of mesh file
+
+    station_files : str
+        Files containing location of observation stations
+
+    pointstats_file : str
+        Name of output file contiaining pointstats information
+
+    """
     def __init__(self, test_case, mesh, storm):
+        """
+        Create the step
 
+        Parameters
+        ----------
+        test_case : compass.ocean.tests.hurricane.init.Init
+            The test case this step belongs to
+
+        mesh :  compass.ocean.tests.global_ocean.mesh.Mesh
+            The test case that creates the mesh used by this test case
+
+        storm : str
+            The name of the storm used
+        """
         super().__init__(test_case=test_case, name='pointstats',
                          cores=1, min_cores=1, threads=1)
 
@@ -35,7 +63,10 @@ class CreatePointstatsFile(Step):
         self.add_output_file(filename=self.pointstats_file)
 
     def create_pointstats_file(self, mesh_file, stations_files):
-
+        """
+        Find grid points nearest to observation stations
+        and create pointwiseStats file
+        """
         # Read in station locations
         lon = []
         lat = []
@@ -92,5 +123,7 @@ class CreatePointstatsFile(Step):
         data_nc.close()
 
     def run(self):
-
+        """
+        Run this step of the testcase
+        """
         self.create_pointstats_file(self.mesh_file, self.station_files)

@@ -1,12 +1,10 @@
-
-from compass.ocean.tests.global_ocean.configure import configure_global_ocean
 from compass.model import run_model
 from compass.step import Step
 
 
 class ForwardStep(Step):
     """
-    A step for performing forward MPAS-Ocean runs as part of global ocean test
+    A step for performing forward MPAS-Ocean runs as part of hurricane test
     cases.
 
     Attributes
@@ -14,7 +12,7 @@ class ForwardStep(Step):
     mesh : compass.ocean.tests.global_ocean.mesh.Mesh
         The test case that produces the mesh for this run
 
-    init : compass.ocean.tests.global_ocean.init.Init
+    init : compass.ocean.tests.hurricane.init.Init
         The test case that produces the initial condition for this run
 
     cores_from_config : bool
@@ -33,13 +31,13 @@ class ForwardStep(Step):
 
         Parameters
         ----------
-        test_case : compass.TestCase
+        test_case : compass.ocean.tests.hurricane.forward.Forward
             The test case this step belongs to
 
         mesh : compass.ocean.tests.global_ocean.mesh.Mesh
             The test case that produces the mesh for this run
 
-        init : compass.ocean.tests.global_ocean.init.Init
+        init : compass.ocean.tests.hurricane.init.Init
             The test case that produces the initial condition for this run
 
         name : str, optional
@@ -78,7 +76,6 @@ class ForwardStep(Step):
 
         mesh_package = mesh.mesh_step.package
         self.add_namelist_file(mesh_package, 'namelist.ocean')
-        # self.add_streams_file(mesh_package, 'streams.ocean')
 
         initial_state_target = \
             f'{init.path}/initial_state/ocean.nc'
@@ -103,13 +100,13 @@ class ForwardStep(Step):
         """
         if self.cores_from_config:
             self.cores = self.config.getint(
-                'global_ocean', 'forward_cores')
+                'hurricane', 'forward_cores')
         if self.min_cores_from_config:
             self.min_cores = self.config.getint(
-                'global_ocean', 'forward_min_cores')
+                'hurricane', 'forward_min_cores')
         if self.threads_from_config:
             self.threads = self.config.getint(
-                'global_ocean', 'forward_threads')
+                'hurricane', 'forward_threads')
 
     def run(self):
         """

@@ -1,7 +1,6 @@
 from compass.step import Step
 from mpas_tools.mesh.interpolation import interp_bilin
 from mpas_tools.logging import check_call
-from scipy import interpolate
 
 import netCDF4
 import matplotlib.pyplot as plt
@@ -14,9 +13,47 @@ import cartopy.feature as cfeature
 
 
 class InterpolateAtmForcing(Step):
+    """
+    A step for interpolating the atmospheric wind velocities
+    and pressure onto the MPAS-Ocean mesh to be used as time
+    varying forcing in the forward run
 
+    Attributes
+    ----------
+    plot : bool
+        Whether to produce plots of interpolated atmospheric data
+
+    plot_interval : int
+        Number of time snaps between plots
+
+    wind_file : str
+        Name of file for wind velocity data
+
+    pres_file : str
+        Name of file for pressure data
+
+    forcing_file : str
+        Output file with interpolated atmospheric data
+
+    self.grid_file : str
+        Name of mesh file
+
+    """
     def __init__(self, test_case, mesh, storm):
+        """
+        Create the step
 
+        Parameters
+        ----------
+        test_case : compass.ocean.tests.hurricane.init.Init
+            The test case this step belongs to
+
+        mesh : compass.ocean.tests.global_ocean.mesh.Mesh
+            The test case that creates the mesh used by this test case
+
+        storm : str
+            The name of the storm to setup
+        """
         super().__init__(test_case=test_case, name='interpolate',
                          cores=1, min_cores=1, threads=1)
 
@@ -47,6 +84,9 @@ class InterpolateAtmForcing(Step):
         self.add_output_file(filename=self.forcing_file)
 
     def interpolate_data_to_grid(self, grid_file, data_file, var):
+        """
+        Interpolate time snaps of gridded data field to MPAS mesh
+        """
 
         # Open files
         data_nc = netCDF4.Dataset(data_file, 'r')
@@ -81,15 +121,9 @@ class InterpolateAtmForcing(Step):
             data[i, :, 0:-1] = np.flipud(data_nc.variables[var][i, :, :])
             data[i, :, -1] = data[i, :, 0]
 
-            interpolator = interpolate.RegularGridInterpolator(
-                (lon_data, lat_data),
-                data[i, :, :].T,
-                bounds_error=False,
-                fill_value=0.0)
-            interp_data[i, :] = interpolator(grid_points)
-            # interp_data[i, :] = interp_bilin(lon_data, lat_data,
-            #                                  data[i, :, :],
-            #                                  lon_grid, lat_grid)
+            interp_data[i, :] = interp_bilin(lon_data, lat_data,
+                                             data[i, :, :],
+                                             lon_grid, lat_grid)
 
         # Deal with time
         ref_date = data_nc.variables['time'].getncattr('units')
@@ -102,11 +136,14 @@ class InterpolateAtmForcing(Step):
         xtime = np.array(xtime, 'S64')
 
         return (lon_grid, lat_grid, interp_data), \
-               (lon_data, lat_data, data), \
-               xtime
+            (lon_data, lat_data, data), \
+            xtime
 
     def plot_interp_data(self, orig_data, interp_data,
                          var_label, var_abrev, time):
+        """
+        Plot original gridded data and interpolated fields
+        """
 
         plt.switch_backend('agg')
 
@@ -158,6 +195,9 @@ class InterpolateAtmForcing(Step):
                 plt.close()
 
     def write_to_file(self, filename, data, var, xtime):
+        """
+        Write data to netCDF file
+        """
 
         if os.path.isfile(filename):
             data_nc = netCDF4.Dataset(filename, 'a',
@@ -185,7 +225,9 @@ class InterpolateAtmForcing(Step):
         data_nc.close()
 
     def run(self):
-
+        """
+        Run this step of the test case
+        """
         # Interpolation of u and v velocities
         u_interp, u_data, xtime = self.interpolate_data_to_grid(
             self.grid_file,
