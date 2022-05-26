@@ -38,7 +38,7 @@ class ProcessThermalForcing(Step):
         scenario = section.get("scenario")
 
         section = config['ismip6_ais_ocean_thermal']
-        process_obs_data = section.get("process_obs_data")
+        process_obs_data = section.getboolean("process_obs_data")
 
         if period_endyear == "NotAvailable":
             raise ValueError("You need to supply a user config file, which "
@@ -57,7 +57,7 @@ class ProcessThermalForcing(Step):
                             target=os.path.join(base_path_mali,
                                                 mali_mesh_file))
 
-        if process_obs_data == "True":
+        if process_obs_data:
             input_file = self._file_obs
             output_file = f"processed_obs_TF_1995-2017_8km_x_60m.nc"
         else:
@@ -85,9 +85,9 @@ class ProcessThermalForcing(Step):
 
         section = config['ismip6_ais_ocean_thermal']
         method_remap = section.get('method_remap')
-        process_obs_data = section.get('process_obs_data')
+        process_obs_data = section.getboolean('process_obs_data')
 
-        if process_obs_data == "True":
+        if process_obs_data:
             input_file_list = self._file_obs
             output_file = f'processed_obs_TF_1995-2017_8km_x_60m.nc'
             output_path = f'{output_base_path}/ocean_thermal_forcing/'\
@@ -197,7 +197,7 @@ class ProcessThermalForcing(Step):
         ds = ds.drop_vars('z')  # dropping 'z' while it's still called 'z'
 
         # build dictionary for ismip6 variables that MALI takes in
-        if process_obs_data == "True":
+        if process_obs_data:
             ismip6_to_mali_dims = dict(
                 z="nISMIP6OceanLayers",
                 ncol="nCells")
