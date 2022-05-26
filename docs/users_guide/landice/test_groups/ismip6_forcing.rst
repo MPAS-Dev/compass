@@ -1,11 +1,12 @@
 .. _landice_ismip6_forcing:
 
-hydro_radial
+ismip6_forcing
 ============
 
 The ``landice/ismip6_forcing`` test group implements processing of atmospheric
 and ocean forcing data of the Ice Sheet Model Intercomparison for CMIP6
-(ISMIP6) protocol.
+(ISMIP6) protocol. The ISMIP6 source data can be obtained by directly
+contacting the authors. Reference: https://www.climate-cryosphere.org/wiki/index.php?title=ISMIP6-Projections2300-Antarctica#A2.2_Retrieving_datasets_and_uploading_your_model_output
 
 The test group includes 3 test cases, ``atmosphere``, ``ocean_thermal`` and
 ``ocean_basal``. All test cases are made up of a single main step,
@@ -15,7 +16,9 @@ renaming the original ismip6 data to the format that MALI can incorporate in
 its forward simulations. In remapping the data, all test cases import the
 method ``build_mapping_file`` to create or use scrip files
 of the source (ISMIP6) and destination (MALI) mesh depending on the existence
-of a mapping file.
+of a mapping file. Approximated time for processing a single forcing file
+on Cori (single core) is 2, 1, and 5 minutes for the atmosphere, ocean basal,
+and ocean thermal testcase, respectively.
 
 config options
 --------------
@@ -25,7 +28,7 @@ All three test cases share some set of default config options under the section
 
 .. code-block:: cfg
 
-    # config options for ismip6 antarctic ice sheet SMB forcing data set
+    # config options for ismip6 antarctic ice sheet data set
     [ismip6_ais]
 
     # Base path to the input ismip6 ocean and smb forcing files. User has to supply.
@@ -43,10 +46,11 @@ All three test cases share some set of default config options under the section
     model = NorESM1-M
 
     # Scenarios used by climate model. User has to supply.
-    # Available scenarios are the following: RCP26, RCP85, SSP126, SSP585
+    # Available scenarios are the following: RCP26, RCP26-repeat, RCP85, SSP126, SSP585
     scenario = RCP26-repeat
 
-    # name of the mali mesh used to name mapping files (e,g. Antarctica_8to80km). User has to supply.
+    # name of the mali mesh. User has to supply. Note: It is used to name mapping files
+    # (e,g. 'map_ismip6_8km_to_{mali_mesh_name}_{method_remap}.nc').
     mali_mesh_name = Antarctica_8to80km
 
     # MALI mesh file to be used to build mapping file (netCDF format). User has to supply.
@@ -59,29 +63,23 @@ All three test cases share some set of default config options under the section
     # Remapping method used in building a mapping file. Options include: bilinear, neareststod, conserve
     method_remap = bilinear
 
-    # Path to which processed output SMB data is saved. User has to supply.
-    output_path = /Users/hollyhan/Desktop/Data/ISMIP6-Projections-Forcing-2300/AIS_Processed/Atmospheric_Forcing/
-
-
     # config options for ismip6 ocean thermal forcing data test cases
     [ismip6_ais_ocean_thermal]
 
     # Remapping method used in building a mapping file. Options include: bilinear, neareststod, conserve
     method_remap = bilinear
 
-    # Path to which processed output thermal forcing data is saved. User has to supply.
-    output_path = /Users/hollyhan/Desktop/Data/ISMIP6-Projections-Forcing-2300/AIS_Processed/Ocean_Forcing/
+    # Set to True if the want to process observational thermal forcing data. Set to False if want to process model thermal forcing data.
+    # Note: when set True, the ['ismip6_ais'] config options 'period_endyear', 'model' and 'scenario' will be ignored.
+    process_obs_data = False
 
 
     # config options for ismip6 ocean basal test case
     [ismip6_ais_ocean_basal]
 
-    # Remapping method used in building a mapping file. Options include: bilinear, neareststod, conserve
+    # Remapping method used in building a mapping file. Ocean basal testcase will always want to
+    # use neareststod method.
     method_remap = neareststod
-
-    # Path to which processed output basal param coeff data is saved. User has to supply.
-    output_path = /Users/hollyhan/Desktop/Data/ISMIP6-Projections-Forcing-2300/AIS_Processed/Ocean_Forcing/parametrizations/
-
 
 atmosphere
 ----------
