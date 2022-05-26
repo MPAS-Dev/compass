@@ -113,7 +113,8 @@ class ProcessSMB(Step):
         self.rename_ismip6smb_to_mali_vars(remapped_file_temp, output_file)
 
         # correct the SMB anomaly field with mali base SMB field
-        logger.info("Correcting the SMB anomaly field with MALI base SMB...")
+        logger.info("Correcting the SMB anomaly field with MALI base SMB "
+                    "from file {mali_mesh_file}...")
         self.correct_SMB_anomaly_for_baseSMB(output_file, mali_mesh_file)
 
         logger.info("Processing done successfully. "
@@ -135,8 +136,6 @@ class ProcessSMB(Step):
 
         src = os.path.join(os.getcwd(), output_file)
         dst = os.path.join(output_path, output_file)
-        print(src)
-        print(dst)
         shutil.copy(src, dst)
 
     def remap_ismip6smb_to_mali(self, input_file, output_file, mali_mesh_name,
@@ -163,6 +162,8 @@ class ProcessSMB(Step):
 
         if not os.path.exists(mapping_file):
             # build a mapping file if it doesn't already exist
+            self.logger.info("Creating a mapping file. "
+                             "Mapping method used: {method_remap}")
             build_mapping_file(input_file, mapping_file, mali_mesh_file,
                                method_remap)
         else:
@@ -240,8 +241,7 @@ class ProcessSMB(Step):
         ds_base = xr.open_dataset(mali_mesh_file)
         # get the first time index
         ref_smb = ds_base["sfcMassBal"].isel(Time=0)
-        # broadcast so time is the same size as in ds
-        ref_smb = ref_smb.broadcast(ds["sfcMassBal"])
+        # correct for the reference smb
         ds["sfcMassBal"] = ds["sfcMassBal"] + ref_smb
 
         # write to a new netCDF file
@@ -249,6 +249,8 @@ class ProcessSMB(Step):
         ds.close()
 
     # create a nested dictionary for the ISMIP6 original forcing files including relative path
+    # Note: these files needed to be explicitly listed because of inconsistencies that are
+    # present in file naming conventions in the ISMIP6 source dataset.
     _files = {
         "2100": {
             "CCSM4": {
