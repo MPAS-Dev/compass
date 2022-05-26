@@ -9,11 +9,6 @@ class Atmosphere(TestCase):
     The test case builds a mapping file for interpolation between the
     ISMIP6 8km polarstereo grid and MALI mesh, regrids the forcing data
     and rename the ISMIP6 variables to corresponding MALI variables.
-
-    Attributes
-    ----------
-    mesh_type : str >>>>>>> what kind of attributes would we have?
-        The resolution or type of mesh of the test case
     """
 
     def __init__(self, test_group):
