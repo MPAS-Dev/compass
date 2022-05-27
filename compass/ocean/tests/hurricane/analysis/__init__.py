@@ -8,7 +8,10 @@ import numpy as np
 import datetime
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
+from importlib import resources
 from scipy import spatial
+import json
+import os
 plt.switch_backend('agg')
 
 
@@ -52,191 +55,33 @@ class Analysis(Step):
                             target='../forward/pointwiseStats.nc')
 
         self.frmt = '%Y %m %d %H %M'
+        self.storm = storm
 
-        if storm == 'sandy':
+    def setup(self):
+        """
+        Setup test case and download data
+        """
+        package = self.__module__
+
+        if self.storm == 'sandy':
             self.min_date = '2012 10 24 00 00'
             self.max_date = '2012 11 04 00 00'
             self.pointstats_file = {'MPAS-O': './pointwiseStats.nc'}
-            self.observations = {'NOAA-COOPS': [
-                                               '8519483',
-                                               '8516945',
-                                               '8510560',
-                                               '8518750',
-                                               '8534720',
-                                               '8539094',
-                                               '8536110',
-                                               '8537121',
-                                               '8538886',
-                                               '8551762',
-                                               '8557380',
-                                               '8551910',
-                                               '8575512',
-                                               '8574680',
-                                               '8571421',
-                                               '8571892',
-                                               '8573927',
-                                               '8570283',
-                                               '8577330',
-                                               '8573364',
-                                               '8638863',
-                                               '8632200',
-                                               '8635750',
-                                               '8639348',
-                                               '8638610',
-                                               '8631044',
-                                               '8636580',
-                                               '8637689'],
-                                 'USGS': [
-                                         'SSS-CT-FFD-001WL',
-                                         'SSS-CT-FFD-003WL',
-                                         'SSS-CT-FFD-005WL',
-                                         'SSS-CT-FFD-006WL',
-                                         'SSS-CT-FFD-009WL',
-                                         'SSS-CT-FFD-010WL',
-                                         'SSS-CT-FFD-012WL',
-                                         'SSS-CT-MSX-018WL',
-                                         'SSS-CT-MSX-019WL',
-                                         'SSS-CT-MSX-020WL',
-                                         'SSS-CT-NHV-013WL',
-                                         'SSS-CT-NHV-014WL',
-                                         'SSS-CT-NHV-015WL',
-                                         'SSS-CT-NHV-018WL',
-                                         'SSS-CT-NHV-019WL',
-                                         'SSS-CT-NHV-020WL',
-                                         'SSS-CT-NLD-015WL',
-                                         'SSS-CT-NLD-016WL',
-                                         'SSS-CT-NLD-018WL',
-                                         'SSS-CT-NLD-019WL',
-                                         'SSS-CT-NLD-022WL',
-                                         'SSS-CT-NLD-023WL',
-                                         'SSS-CT-NLD-025WL',
-                                         'SSS-CT-NLD-026WL',
-                                         'SSS-CT-NLD-027WL',
-                                         'SSS-CT-NLD-029WL',
-                                         'SSS-CT-NLD-030WL',
-                                         'SSS-DE-KEN-051WL',
-                                         'SSS-DE-KEN-053WL',
-                                         'SSS-DE-NEW-001WL',
-                                         'SSS-DE-SUS-008WL',
-                                         'SSS-DE-SUS-010WL',
-                                         'SSS-DE-SUS-014WL',
-                                         'SSS-DE-SUS-015WL',
-                                         'SSS-DE-SUS-030WL',
-                                         'SSS-DE-SUS-032WL',
-                                         'SSS-DE-SUS-033WL',
-                                         'SSS-DE-SUS-057WL',
-                                         'SSS-ME-CUM-002WL',
-                                         'SSS-ME-YOR-002WL',
-                                         'SSS-MD-ANN-001WL',
-                                         'SSS-MD-ANN-003WL',
-                                         'SSS-MD-BAL-001WL',
-                                         'SSS-MA-BAR-023WL',
-                                         'SSS-MA-BAR-024WL',
-                                         'SSS-MA-BAR-025WL',
-                                         'SSS-MA-BAR-026WL',
-                                         'SSS-MA-BAR-027WL',
-                                         'SSS-MA-BAR-028WL',
-                                         'SSS-MA-BAR-031WL',
-                                         'SSS-MA-BRI-016WL',
-                                         'SSS-MA-BRI-017WL',
-                                         'SSS-MA-ESS-037WL',
-                                         'SSS-MA-ESS-038WL',
-                                         'SSS-MA-ESS-039WL',
-                                         'SSS-MA-ESS-040WL',
-                                         'SSS-MA-ESS-041WL',
-                                         'SSS-MA-NOR-036WL',
-                                         'SSS-MA-PLY-018WL',
-                                         'SSS-MA-PLY-019WL',
-                                         'SSS-MA-PLY-021WL',
-                                         'SSS-MA-PLY-032WL',
-                                         'SSS-MA-PLY-033WL',
-                                         'SSS-MA-PLY-034WL',
-                                         'SSS-MA-PLY-035WL',
-                                         'SSS-NH-ROC-004WL',
-                                         'SSS-NH-ROC-005WL',
-                                         'SSS-NJ-ATL-005WL',
-                                         'SSS-NJ-CPM-010WL',
-                                         'SSS-NJ-CPM-035WL',
-                                         'SSS-NJ-CPM-035WV',
-                                         'SSS-NJ-CUM-020WL',
-                                         'SSS-NJ-CUM-025WL',
-                                         'SSS-NJ-HUD-002WL',
-                                         'SSS-NJ-MID-001WL',
-                                         'SSS-NJ-UNI-001WL',
-                                         'SSS-NJ-UNI-002WL',
-                                         'SSS-NY-KIN-001WL',
-                                         'SSS-NY-KIN-002WL',
-                                         'SSS-NY-KIN-003WL',
-                                         'SSS-NY-NAS-001WL',
-                                         'SSS-NY-NAS-004WL',
-                                         'SSS-NY-NAS-005WL',
-                                         'SSS-NY-NAS-006WL',
-                                         'SSS-NY-NAS-007WL',
-                                         'SSS-NY-NAS-008WL',
-                                         'SSS-NY-NEW-001WL',
-                                         'SSS-NY-QUE-001WL',
-                                         'SSS-NY-QUE-002WL',
-                                         'SSS-NY-QUE-004WL',
-                                         'SSS-NY-QUE-005WL',
-                                         'SSS-NY-RIC-001WL',
-                                         'SSS-NY-RIC-003WL',
-                                         'SSS-NY-RIC-004WL',
-                                         'SSS-NY-SUF-001WL',
-                                         'SSS-NY-SUF-002WL',
-                                         'SSS-NY-SUF-003WL',
-                                         'SSS-NY-SUF-004WL',
-                                         'SSS-NY-SUF-005WL',
-                                         'SSS-NY-SUF-006WL',
-                                         'SSS-NY-SUF-008WL',
-                                         'SSS-NY-SUF-009WL',
-                                         'SSS-NY-SUF-011WL',
-                                         'SSS-NY-SUF-014WL',
-                                         'SSS-NY-SUF-015WL',
-                                         'SSS-NY-SUF-018WL',
-                                         'SSS-NY-SUF-019WL',
-                                         'SSS-NY-SUF-021WL',
-                                         'SSS-NY-SUF-022WL',
-                                         'SSS-NY-SUF-024WL',
-                                         'SSS-NY-SUF-026WL',
-                                         'SSS-NY-SUF-027WL',
-                                         'SSS-NY-WES-001WL',
-                                         'SSS-NY-WES-003WL',
-                                         'SSS-NY-WES-100WL',
-                                         'SSS-PA-DEL-003WL',
-                                         'SSS-PA-DEL-005WL',
-                                         'SSS-PA-DEL-006WL',
-                                         'SSS-PA-PHI-014WL',
-                                         'SSS-PA-PHI-016WL',
-                                         'SSS-RI-BRI-013WL',
-                                         'SSS-RI-NEW-014WL',
-                                         'SSS-RI-NEW-015WL',
-                                         'SSS-RI-WAS-001WL',
-                                         'SSS-RI-WAS-003WL',
-                                         'SSS-RI-WAS-005WL',
-                                         'SSS-RI-WAS-007WL',
-                                         'SSS-RI-WAS-008WL',
-                                         'SSS-RI-WAS-012WL',
-                                         'SSS-VA-ACC-001WL',
-                                         'SSS-VA-ACC-002WL',
-                                         'SSS-VA-ACC-003WL',
-                                         'SSS-VA-HAM-002WL',
-                                         'SSS-VA-MAT-001WL',
-                                         'SSS-VA-NOR-001WL',
-                                         'SSS-VA-NOR-003WL',
-                                         'SSS-VA-NOR-004WL',
-                                         'SSS-VA-VAB-001WL',
-                                         'SSS-VA-YOR-003WL',
-                                         'SSS-NY-SUF-017WL']}
+            
+            with resources.path(package,f'{self.storm}_stations.json') as path:
+                with open(path) as stations_file:
+                    self.observations = json.load(stations_file)
 
             for obs in self.observations:
+                os.makedirs(f'{self.work_dir}/{obs}_data',exist_ok=True)
                 self.add_input_file(
                     filename=f'{obs}_stations.txt',
-                    target=f'{storm}_stations/{obs}_stations.txt',
+                    target=f'{self.storm}_stations/{obs}_stations.txt',
                     database='hurricane')
                 for sta in self.observations[obs]:
                     self.add_input_file(
-                        filename=f'{sta}.txt',
-                        target=f'{storm}_validation/{obs}_stations/{sta}.txt',
+                        filename=f'{obs}_data/{sta}.txt',
+                        target=f'{self.storm}_validation/{obs}_stations/{sta}.txt',
                         database='hurricane')
 
     def read_pointstats(self, pointstats_file):
@@ -346,6 +191,7 @@ class Analysis(Step):
             tree[run] = spatial.KDTree(points)
 
         for obs in self.observations:
+            os.makedirs(f'{self.work_dir}/{obs}_plots', exist_ok=True)
 
             # Read in station file
             stations = self.read_station_file(f'{obs}_stations.txt')
@@ -355,7 +201,7 @@ class Analysis(Step):
                 i = stations['name'].index(sta)
 
                 # Read in observed data and get coordinates
-                obs_data = self.read_station_data(f'{sta}.txt', obs,
+                obs_data = self.read_station_data(f'{obs}_data/{sta}.txt', obs,
                                                   self.min_date, self.max_date)
                 sta_lon = stations['lon'][i]
                 sta_lat = stations['lat'][i]
@@ -422,6 +268,6 @@ class Analysis(Step):
                                  ncol=3, fancybox=False, edgecolor='k')
                 st = plt.suptitle('Station '+sta, y=1.025, fontsize=16)
                 fig.tight_layout()
-                fig.savefig(sta+'.png', bbox_inches='tight',
+                fig.savefig(f'{obs}_plots/{sta}.png', bbox_inches='tight',
                             bbox_extra_artists=(lgd, st,))
                 plt.close()
