@@ -10,7 +10,7 @@
                   filename_template="rst.$Y.nc"
                   filename_interval="output_interval"
                   output_interval="0001-00-00_00:00:00"
-                  reference_time="1995-01-01_00:00:00"
+                  reference_time="2015-01-01_00:00:00"
                   clobber_mode="truncate"
                   precision="double"
                   input_interval="initial_only"/>
@@ -18,7 +18,7 @@
 <stream name="regionsInput"
         type="input"
         mode="forward;analysis"
-        filename_template="regionMasks.nc"
+        filename_template="{{ input_file_region_mask }}"
         input_interval="initial_only"
         runtime_format="single_file">
         <var name="regionCellMasks"/>
@@ -31,7 +31,7 @@
         filename_template="{{ file_ais_TF_forcing }}"
     input_interval="0001-00-00_00:00:00"
     record_interval="0001-00-00_00:00:00"
-                  reference_time="1950-01-01_00:00:00"
+                  reference_time="2015-01-01_00:00:00"
         runtime_format="single_file">
         <var name="ismip6shelfMelt_3dThermalForcing"/>
         <var name="ismip6shelfMelt_zOcean"/>
@@ -63,7 +63,7 @@
         filename_template="{{ file_ais_SMB_forcing }}"
     input_interval="0001-00-00_00:00:00"
     record_interval="0001-00-00_00:00:00"
-                  reference_time="1950-01-01_00:00:00"
+                  reference_time="2015-01-01_00:00:00"
         runtime_format="single_file">
         <var name="sfcMassBal"/>
 </stream>
@@ -72,7 +72,7 @@
         type="output"
         filename_template="output.nc"
         output_interval="0000-00-01_00:00:00"
-        reference_time="1950-01-01_00:00:00"
+        reference_time="2015-01-01_00:00:00"
         clobber_mode="truncate">
 
     <stream name="basicmesh"/>
@@ -97,7 +97,7 @@
         filename_interval="none"
         clobber_mode="overwrite"
         output_interval="0000-00-00_01:00:00"
-        reference_time="2007-01-01_00:00:00"
+        reference_time="2015-01-01_00:00:00"
         packages="globalStatsAMPKG"
         runtime_format="single_file">
     <stream name="globalStatsOutput"/>
@@ -106,6 +106,7 @@
     <var name="deltat"/>
     <var name="allowableDtACFL"/>
     <var name="allowableDtDCFL"/>
+    <var name="calvingCFLdt"/>
     <var_struct name="globalStatsAM"/>
 </stream>
 
@@ -114,7 +115,7 @@
         filename_template="output/regionalStats.nc"
         filename_interval="none"
         clobber_mode="overwrite"
-                  reference_time="1950-01-01_00:00:00"
+                  reference_time="2015-01-01_00:00:00"
         output_interval="0000-00-00_01:00:00"
         packages="regionalStatsAMPKG"
         runtime_format="single_file">
