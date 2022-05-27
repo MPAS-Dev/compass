@@ -23,10 +23,6 @@ def build_mapping_file(ismip6_grid_file, mapping_file, mali_mesh_file=None,
         Remapping method used in building a mapping file
     """
 
-    if os.path.exists(mapping_file):
-        print("Mapping file exists. Not building a new one.")
-        return
-
     if mali_mesh_file is None:
         raise ValueError("Mapping file does not exist. To build one, Mali "
                          "mesh file with '-f' should be provided. "
@@ -34,7 +30,6 @@ def build_mapping_file(ismip6_grid_file, mapping_file, mali_mesh_file=None,
 
     ismip6_scripfile = "temp_ismip6_8km_scrip.nc"
     mali_scripfile = "temp_mali_scrip.nc"
-    ismip6_projection = "ais-bedmap2"
 
     # create the ismip6 scripfile if mapping file does not exist
     # this is the projection of ismip6 data for Antarctica
@@ -44,14 +39,6 @@ def build_mapping_file(ismip6_grid_file, mapping_file, mali_mesh_file=None,
 
     # create a scripfile for the atmosphere forcing data
     create_atm_scrip(ismip6_grid_file, ismip6_scripfile)
-
-    # create a MALI mesh scripfile if mapping file does not exist
-    # make sure the mali mesh file uses the longitude convention of [0 2pi]
-    args = ["set_lat_lon_fields_in_planar_grid.py",
-            "--file", mali_mesh_file,
-            "--proj", ismip6_projection]
-
-    subprocess.check_call(args)
 
     # create a MALI mesh scripfile if mapping file does not exist
     scrip_from_mpas(mali_mesh_file, mali_scripfile)
@@ -79,7 +66,6 @@ def build_mapping_file(ismip6_grid_file, mapping_file, mali_mesh_file=None,
     print("Removing the temporary scripfiles...")
     os.remove(ismip6_scripfile)
     os.remove(mali_scripfile)
-
 
 def create_atm_scrip(ismip6_grid_file, ismip6_scripfile):
     """
