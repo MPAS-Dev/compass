@@ -64,15 +64,18 @@ class RunModel(Step):
         # We estimate that 200-1000 cells should be allocated for one core
         res_param = {
                 'high': {'mesh_file': 'Antarctic_1to10km.nc',
+                         'mask_file': 'regionMask_AIS_1to10km.nc',
                          'cores': 25000,
                          'min_cores': 5000},
                 'mid': {'mesh_file': 'Antarctic_8to80km_20220407.nc',
+                        'mask_file': 'regionMask_AIS_8to10km.nc',
                         'cores': 400,
                         'min_cores': 80}
                 }
 
         res_param = res_param[self.mesh_type]
         self.mesh_file = res_param['mesh_file']
+        self.mask_file = res_param['mask_file']
         self.cores = res_param['cores']
         self.min_cores = res_param['min_cores']
 
@@ -83,6 +86,10 @@ class RunModel(Step):
         # Todo: upload the AIS meshes to the database
 #        self.add_input_file(filename=self.mesh_file, target=self.mesh_file,
 #                            database='')
+
+        # Todo: create a region mask file in the AIS mesh test group
+#        self.add_input_file(filename='regionMask.nc', target=self.mask_file,
+#                             database='')
 
         self.add_namelist_file(
             'compass.landice.tests.ismip6_run_ais', 'namelist.landice',
@@ -126,6 +133,7 @@ class RunModel(Step):
                             target=target)
 
         stream_replacements = {'input_file_ais': self.mesh_file,
+                               'input_file_region_mask': self.mask_file,
                                'file_ais_TF_forcing': 'thermal_forcing.nc',
                                'file_ais_SMB_forcing': 'smb.nc',
                                'file_ais_basal_param': 'basal_coeff.nc',
