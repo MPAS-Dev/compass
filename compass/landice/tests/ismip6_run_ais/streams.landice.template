@@ -10,7 +10,7 @@
                   filename_template="rst.$Y.nc"
                   filename_interval="output_interval"
                   output_interval="0001-00-00_00:00:00"
-                  reference_time="2015-01-01_00:00:00"
+                  reference_time="1995-01-01_00:00:00"
                   clobber_mode="truncate"
                   precision="double"
                   input_interval="initial_only"/>
@@ -31,7 +31,7 @@
         filename_template="{{ file_ais_TF_forcing }}"
     input_interval="0001-00-00_00:00:00"
     record_interval="0001-00-00_00:00:00"
-                  reference_time="2015-01-01_00:00:00"
+                  reference_time="1995-01-01_00:00:00"
         runtime_format="single_file">
         <var name="ismip6shelfMelt_3dThermalForcing"/>
         <var name="ismip6shelfMelt_zOcean"/>
@@ -63,7 +63,7 @@
         filename_template="{{ file_ais_SMB_forcing }}"
     input_interval="0001-00-00_00:00:00"
     record_interval="0001-00-00_00:00:00"
-                  reference_time="2015-01-01_00:00:00"
+                  reference_time="1995-01-01_00:00:00"
         runtime_format="single_file">
         <var name="sfcMassBal"/>
 </stream>
@@ -71,24 +71,50 @@
 <stream name="output"
         type="output"
         filename_template="output.nc"
-        output_interval="0000-00-01_00:00:00"
-        reference_time="2015-01-01_00:00:00"
+        output_interval="0001-00-00_00:00:00"
+        reference_time="1995-01-01_00:00:00"
         clobber_mode="truncate">
 
     <stream name="basicmesh"/>
     <var name="xtime"/>
     <var name="thickness"/>
-    <var name="bedTopography"/>
-    <var name="daysSinceStart"/>
-    <var name="surfaceSpeed"/>
-    <var name="temperature"/>
-    <var name="lowerSurface"/>
     <var name="upperSurface"/>
+    <var name="lowerSurface"/>
+    <var name="bedTopography"/>
     <var name="uReconstructX"/>
     <var name="uReconstructY"/>
+    <var name="xvelmean"/>
+    <var name="yvelmean"/>
+    <var name="surfaceTemperature"/>
+    <var name="basalTemperature">
+    <var name="daysSinceStart"/>
+    <var name="surfaceSpeed"/>
     <var name="cellMask"/>
     <var name="edgeMask"/>
 
+</stream>
+
+<stream name="outputFL"
+         type="output"
+         filename_template="FL_outputs/outputFL.$Y.nc"
+         filename_interval="0000-00-00_01:00:00"
+         precision="double"
+                  reference_time="1995-01-01_00:00:00"
+         clobber_mode="truncate"
+         output_interval="0001-00-01_00:00:00">
+
+    <var name="xtime"/>
+    <var name="deltat"/>
+    <var name="daysSinceStart"/>
+    <var name="basalHeatFlux"/>
+    <var name="sfcMassBalApplied"/>
+    <var name="groundedBasalMassBalApplied"/>
+    <var name="floatingBasalMassBalApplied"/>
+    <var name="dHdt"/>
+    <var name="calvingThickness"/>
+    <var name="fluxAcrossGroundingLine"/>
+    <var name="edgeMask"/>
+    <var name="cellMask"/>
 </stream>
 
 <stream name="globalStatsOutput"
@@ -97,7 +123,7 @@
         filename_interval="none"
         clobber_mode="overwrite"
         output_interval="0000-00-00_01:00:00"
-        reference_time="2015-01-01_00:00:00"
+        reference_time="1995-01-01_00:00:00"
         packages="globalStatsAMPKG"
         runtime_format="single_file">
     <stream name="globalStatsOutput"/>
@@ -115,7 +141,7 @@
         filename_template="output/regionalStats.nc"
         filename_interval="none"
         clobber_mode="overwrite"
-                  reference_time="2015-01-01_00:00:00"
+                  reference_time="1995-01-01_00:00:00"
         output_interval="0000-00-00_01:00:00"
         packages="regionalStatsAMPKG"
         runtime_format="single_file">
