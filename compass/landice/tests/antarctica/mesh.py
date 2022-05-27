@@ -11,6 +11,7 @@ from mpas_tools.mesh.conversion import convert, cull
 from mpas_tools.planar_hex import make_planar_hex_mesh
 from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
+from mpas_tools.scrip.from_mpas import scrip_from_mpas
 
 from compass.step import Step
 from compass.model import make_graph_file
@@ -59,7 +60,8 @@ class Mesh(Step):
         logger = self.logger
         config = self.config
         section = config['antarctica']
-
+        data_path = '/usr/projects/climate/trhille/data/'
+        nProcs = section.get('nProcs')
         logger.info('calling build_cell_width')
         cell_width, x1, y1, geom_points, geom_edges, floodFillMask = \
             self.build_cell_width()
@@ -73,7 +75,7 @@ class Mesh(Step):
         dsMesh = convert(dsMesh, logger=logger)
         logger.info('writing grid_converted.nc')
         write_netcdf(dsMesh, 'grid_converted.nc')
-        
+
         levels = section.get('levels')
         logger.info('calling create_landice_grid_from_generic_MPAS_grid.py')
         args = ['create_landice_grid_from_generic_MPAS_grid.py',
@@ -92,8 +94,8 @@ class Mesh(Step):
         gg.variables['vy'][0, :, :] *= floodFillMask
         gg.close()
 
-        # Now deal with the peculiarities of the AIS dataset. This section
-        # could be separated into its own function
+       # Now deal with the peculiarities of the AIS dataset. This section
+       # could be separated into its own function
         copyfile('antarctica_8km_2020_10_20_floodFillMask.nc',
                 'antarctica_8km_2020_10_20_floodFillMask_filledFields.nc')
         data = netCDF4.Dataset(
@@ -166,7 +168,19 @@ class Mesh(Step):
         data.renameVariable('dhdt', 'dHdt')
         data.renameVariable('thkerr', 'topgerr')
 
+        data.createVariable('x', 'f', ('x1'))
+        data.createVariable('y', 'f', ('y1'))
+        data.variables['x'][:] = x1
+        data.variables['y'][:] = y1
+
         data.close()
+
+        logger.info('creating scrip file for gridded dataset')
+        args = ['create_SCRIP_file_from_planar_rectangular_grid.py',
+                '-i', 'antarctica_8km_2020_10_20_floodFillMask_filledFields.nc',
+                '-s', 'antarctica_8km_2020_10_20_floodFillMask_filledFields.scrip.nc',
+                '-p', 'ais-bedmap2', '-r', '2']
+        check_call(args, logger=logger)
 
         logger.info('calling interpolate_to_mpasli_grid.py')
         args = ['interpolate_to_mpasli_grid.py', '-s',
@@ -217,21 +231,87 @@ class Mesh(Step):
         data.variables['iceMask'][:] = 0.
         data.close()
 
-        # Must add iceMask to interpolation script.
-        logger.info('calling interpolate_to_mpasli_grid.py')
-        args = ['interpolate_to_mpasli_grid.py', '-s',
-                'antarctica_8km_2020_10_20_floodFillMask_filledFields.nc',
-                '-d', 'Antarctica.nc', '-m', 'b']
+        logger.info('creating scrip file for BedMachine dataset')
+        args = ['create_SCRIP_file_from_planar_rectangular_grid.py',
+                '-i', data_path+'BedMachineAntarctica_2020-07-15_v02.nc',
+                '-s', 'BedMachineAntarctica_2020-07-15_v02.scrip.nc',
+                '-p', 'ais-bedmap2', '-r', '2']
         check_call(args, logger=logger)
 
-        logger.info('Marking domain boundaries dirichlet')
-        args = ['mark_domain_boundaries_dirichlet.py',
-                '-f', 'Antarctica.nc']
+        logger.info('creating scrip file for velocity dataset')
+        args = ['create_SCRIP_file_from_planar_rectangular_grid.py',
+                '-i', data_path+'antarctica_ice_velocity_450m_v2_edits.nc',
+                '-s', 'antarctica_ice_velocity_450m_v2.scrip.nc',
+                '-p', 'ais-bedmap2', '-r', '2']
         check_call(args, logger=logger)
 
         logger.info('calling set_lat_lon_fields_in_planar_grid.py')
         args = ['set_lat_lon_fields_in_planar_grid.py', '-f',
                 'Antarctica.nc', '-p', 'ais-bedmap2']
+        check_call(args, logger=logger)
+
+        logger.info('creating scrip file for destination mesh')
+        scrip_from_mpas('Antarctica.nc', 'Antarctica.scrip.nc')
+        args = ['create_SCRIP_file_from_MPAS_mesh.py',
+                '-m', 'Antarctica.nc',
+                '-s', 'Antarctica.scrip.nc']
+        check_call(args, logger=logger)
+        # Testing shows 10 badger/grizzly nodes works well. 2 nodes is too few.
+        # I have tested anything in betwee.
+        logger.info('generating gridded dataset -> MPAS weights')
+        args = ['srun', '-n', nProcs, 'ESMF_RegridWeightGen', '--source',
+                'BedMachineAntarctica_2020-07-15_v02.scrip.nc',
+                '--destination',
+                'Antarctica.scrip.nc',
+                '--weight', 'BedMachine_to_MPAS_weights.nc',
+                '--method', 'conserve',
+                "-i", "-64bit_offset",
+                "--dst_regional", "--src_regional", '--netcdf4']
+        check_call(args, logger=logger)
+
+        logger.info('generating gridded dataset -> MPAS weights')
+        args = ['srun', '-n', nProcs, 'ESMF_RegridWeightGen', '--source',
+                'antarctica_ice_velocity_450m_v2.scrip.nc',
+                '--destination',
+                'Antarctica.scrip.nc',
+                '--weight', 'measures_to_MPAS_weights.nc',
+                '--method', 'conserve',
+                "-i", "-64bit_offset", '--netcdf4',
+                "--dst_regional", "--src_regional", '--ignore_unmapped']
+        check_call(args, logger=logger)
+        # Must add iceMask to interpolation script.
+        # interpolate fields from composite dataset
+        logger.info('calling interpolate_to_mpasli_grid.py')
+        args = ['interpolate_to_mpasli_grid.py', '-s',
+                'antarctica_8km_2020_10_20_floodFillMask_filledFields.nc',
+                '-d', 'Antarctica.nc', '-m', 'd', '-v',
+                'floatingBasalMassBal', 'basalHeatFlux', 'sfcMassBal',
+                'surfaceAirTemperature', 'observedThicknessTendency',
+                 'observedThicknessTendencyUncertainty']
+        check_call(args, logger=logger)
+
+        # interpoalte fields from BedMachine and Measures
+        # Using conservative remapping
+        logger.info('calling interpolate_to_mpasli_grid.py')
+        args = ['interpolate_to_mpasli_grid.py', '-s',
+                data_path+'BedMachineAntarctica_2020-07-15_v02_edits.nc',
+                '-d', 'Antarctica.nc', '-m', 'e',
+                 '-w', 'BedMachine_to_MPAS_weights.nc']
+        check_call(args, logger=logger)
+
+        logger.info('calling interpolate_to_mpasli_grid.py')
+        args = ['interpolate_to_mpasli_grid.py', '-s',
+                data_path+'antarctica_ice_velocity_450m_v2_edits.nc',
+                '-d', 'Antarctica.nc', '-m', 'e',
+                '-w', 'measures_to_MPAS_weights.nc',
+                '-v', 'observedSurfaceVelocityX',
+                'observedSurfaceVelocityY',
+                'observedSurfaceVelocityUncertainty']
+        check_call(args, logger=logger)
+
+        logger.info('Marking domain boundaries dirichlet')
+        args = ['mark_domain_boundaries_dirichlet.py',
+                '-f', 'Antarctica.nc']
         check_call(args, logger=logger)
 
         logger.info('creating graph.info')
@@ -243,7 +323,7 @@ class Mesh(Step):
         data.set_auto_mask(False)
         data.variables['thickness'][:] *= (data.variables['iceMask'][:] > 0.5)
         
-        mask = np.where(data.variables['thickness'][:] == 0.0)
+        mask = np.where(np.isnan(data.variables['observedSurfaceVelocityUncertainty'][:]))
         data.variables['observedSurfaceVelocityUncertainty'][mask] = 1.0
         data.close()
 
