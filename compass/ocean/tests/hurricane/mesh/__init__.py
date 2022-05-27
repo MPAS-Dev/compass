@@ -54,8 +54,8 @@ class Mesh(TestCase):
         config = self.config
 
         # get the these properties from the config options
-        step.cores = config.getint('hurricane', 'mesh_cores')
-        step.min_cores = config.getint('hurricane', 'mesh_min_cores')
+        step.cores = config.getint('global_ocean', 'mesh_cores')
+        step.min_cores = config.getint('global_ocean', 'mesh_min_cores')
 
         # run the step
         super().run()

@@ -67,13 +67,13 @@ class Analysis(Step):
             self.min_date = '2012 10 24 00 00'
             self.max_date = '2012 11 04 00 00'
             self.pointstats_file = {'MPAS-O': './pointwiseStats.nc'}
-            
-            with resources.path(package,f'{self.storm}_stations.json') as path:
-                with open(path) as stations_file:
-                    self.observations = json.load(stations_file)
+
+            path = resources.path(package, f'{self.storm}_stations.json')
+            with open(path) as stations_file:
+                self.observations = json.load(stations_file)
 
             for obs in self.observations:
-                os.makedirs(f'{self.work_dir}/{obs}_data',exist_ok=True)
+                os.makedirs(f'{self.work_dir}/{obs}_data', exist_ok=True)
                 self.add_input_file(
                     filename=f'{obs}_stations.txt',
                     target=f'{self.storm}_stations/{obs}_stations.txt',
@@ -81,7 +81,8 @@ class Analysis(Step):
                 for sta in self.observations[obs]:
                     self.add_input_file(
                         filename=f'{obs}_data/{sta}.txt',
-                        target=f'{self.storm}_validation/{obs}_stations/{sta}.txt',
+                        target=f'{self.storm}_validation/'
+                               f'{obs}_stations/{sta}.txt',
                         database='hurricane')
 
     def read_pointstats(self, pointstats_file):
