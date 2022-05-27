@@ -48,13 +48,6 @@ def build_mapping_file(ismip6_grid_file, mapping_file, mali_mesh_file=None,
 
     subprocess.check_call(args)
 
-    # make sure the input file uses the longitude convention of [0 2pi]
-    args = ["set_lat_lon_fields_in_planar_grid.py",
-            "--file", mali_mesh_file,
-            "--proj", ismip6_projection]
-
-    subprocess.check_call(args)
-
     # create a MALI mesh scripfile if mapping file does not exist
     scrip_from_mpas(mali_mesh_file, mali_scripfile)
 
