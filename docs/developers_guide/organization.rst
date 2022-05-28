@@ -854,6 +854,13 @@ Some attributes are available after calling the base class' constructor
     Whether to get all of the outputs for the step from the database of
     cached outputs for the MPAS core that this step belongs to
 
+``self.run_as_subprocess``
+    Whether to run this step as a subprocess, rather than just running
+    it directly from the test case.  It is useful to run a step as a
+    subprocess if there is not a good way to redirect output to a log
+    file (e.g. if the step calls external code that, in turn, calls
+    additional subprocesses).
+
 Another set of attributes is not useful until ``setup()`` is called by the
 ``compass`` framework:
 
