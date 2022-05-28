@@ -175,13 +175,6 @@ class Mesh(Step):
 
         data.close()
 
-        logger.info('creating scrip file for gridded dataset')
-        args = ['create_SCRIP_file_from_planar_rectangular_grid.py',
-                '-i', 'antarctica_8km_2020_10_20_floodFillMask_filledFields.nc',
-                '-s', 'antarctica_8km_2020_10_20_floodFillMask_filledFields.scrip.nc',
-                '-p', 'ais-bedmap2', '-r', '2']
-        check_call(args, logger=logger)
-
         logger.info('calling interpolate_to_mpasli_grid.py')
         args = ['interpolate_to_mpasli_grid.py', '-s',
                 'antarctica_8km_2020_10_20_floodFillMask.nc', '-d',
@@ -189,15 +182,12 @@ class Mesh(Step):
 
         check_call(args, logger=logger)
 
-        # Cull a certain distance from the ice margin
-        cullDistance = section.get('cull_distance')
-        if float(cullDistance) > 0.:
-            logger.info('calling define_cullMask.py')
-            args = ['define_cullMask.py', '-f',
-                    'ais_8km_preCull.nc', '-m',
-                    'distance', '-d', cullDistance]
-
-        check_call(args, logger=logger)
+       # Cull a certain distance from the ice margin
+        cullCells = section.get('cull_cells')
+        logger.info('calling define_cullMask.py')
+        args = ['define_cullMask.py', '-f',
+                'ais_8km_preCull.nc', '-m',
+                'numCells', '-n', cullCells]
 
         check_call(args, logger=logger)
 
@@ -327,7 +317,7 @@ class Mesh(Step):
                 np.isnan(
                     data.variables['observedSurfaceVelocityUncertainty'][:]),
                 data.variables['thickness'][:] < 1.0)
-        data.variables['observedSurfaceVelocityUncertainty'][mask] = 1.0
+        data.variables['observedSurfaceVelocityUncertainty'][0,mask[0,:]] = 1.0
         data.close()
 
     def build_cell_width(self):
