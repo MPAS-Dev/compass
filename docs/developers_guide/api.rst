@@ -191,6 +191,33 @@ logging
 
    log_method_call
 
+mesh
+^^^^
+
+.. currentmodule:: compass.mesh
+
+.. autosummary::
+   :toctree: generated/
+
+   spherical.SphericalBaseStep
+   spherical.SphericalBaseStep.setup
+   spherical.SphericalBaseStep.run
+   spherical.SphericalBaseStep.save_and_plot_cell_width
+
+   QuasiUniformSphericalMeshStep
+   QuasiUniformSphericalMeshStep.setup
+   QuasiUniformSphericalMeshStep.run
+   QuasiUniformSphericalMeshStep.build_cell_width_lat_lon
+   QuasiUniformSphericalMeshStep.make_jigsaw_mesh
+
+   IcosahedralMeshStep
+   IcosahedralMeshStep.setup
+   IcosahedralMeshStep.run
+   IcosahedralMeshStep.make_jigsaw_mesh
+   IcosahedralMeshStep.build_subdivisions_cell_width_lat_lon
+   IcosahedralMeshStep.get_subdivisions
+   IcosahedralMeshStep.get_cell_width
+
 model
 ^^^^^
 
