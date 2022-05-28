@@ -40,7 +40,7 @@ Note that meshes and test cases may modify these options, as noted below.
 
     ## config options related to the mesh step
     # number of cores to use
-    mesh_cores = 1
+    mesh_cores = 18
     # minimum of cores, below which the step fails
     mesh_min_cores = 1
     # maximum memory usage allowed (in MB)
@@ -104,6 +104,13 @@ Note that meshes and test cases may modify these options, as noted below.
     email = autodetect
     # The URL of the pull request documenting the creation of the mesh
     pull_request = <<<Missing>>>
+
+
+    # config options related to dynamic adjustment
+    [dynamic_adjustment]
+
+    # the maximum allowed value of temperatureMax in global statistics
+    temperature_max = 33.0
 
 
     # config options related to initial condition and diagnostics support files
