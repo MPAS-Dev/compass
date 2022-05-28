@@ -296,7 +296,7 @@ class Mesh(Step):
         args = ['interpolate_to_mpasli_grid.py', '-s',
                 data_path+'BedMachineAntarctica_2020-07-15_v02_edits.nc',
                 '-d', 'Antarctica.nc', '-m', 'e',
-                 '-w', 'BedMachine_to_MPAS_weights.nc']
+                '-w', 'BedMachine_to_MPAS_weights.nc']
         check_call(args, logger=logger)
 
         logger.info('calling interpolate_to_mpasli_grid.py')
@@ -321,9 +321,12 @@ class Mesh(Step):
         # Clean up: trim to iceMask
         data = netCDF4.Dataset('Antarctica.nc', 'r+')
         data.set_auto_mask(False)
-        data.variables['thickness'][:] *= (data.variables['iceMask'][:] > 0.5)
+        #data.variables['thickness'][:] *= (data.variables['iceMask'][:] > 0.5)
         
-        mask = np.where(np.isnan(data.variables['observedSurfaceVelocityUncertainty'][:]))
+        mask = np.logical_or(
+                np.isnan(
+                    data.variables['observedSurfaceVelocityUncertainty'][:]),
+                data.variables['thickness'][:] < 1.0)
         data.variables['observedSurfaceVelocityUncertainty'][mask] = 1.0
         data.close()
 
