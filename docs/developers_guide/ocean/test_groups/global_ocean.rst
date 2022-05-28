@@ -266,40 +266,32 @@ to improve model efficiency.
 
 A :py:class:`compass.ocean.tests.global_ocean.mesh.Mesh` object is constructed
 with the ``mesh_name`` as one of its arguments.  Based on this argument, it
-determines the appropriate child class of
-:py:class:`compass.ocean.tests.global_ocean.mesh.mesh.MeshStep` to create.
+determines the appropriate base mesh step to add (always a subclass of
+:py:class:`compass.mesh.spherical.SphericalBaseStep`).
 
-.. _dev_ocean_global_ocean_mesh_step:
+.. _dev_ocean_global_ocean_base_mesh_step:
 
-mesh step
-^^^^^^^^^
+base_mesh step
+^^^^^^^^^^^^^^
 
-The parent class :py:class:`compass.ocean.tests.global_ocean.mesh.mesh.MeshStep`
-defines a method
-:py:meth:`compass.ocean.tests.global_ocean.mesh.mesh.MeshStep.build_cell_width_lat_lon()`
-that a child class for each mesh type must override to define the size of
-MPAS cells as a function of longitude and latitude.
+The ``base_mesh`` step creates a spherical mesh as described in
+:ref:`dev_spherical_meshes`.  If the mesh has uniform resolution, it may be
+created by either :py:class:`compass.mesh.QuasiUniformSphericalMeshStep` or
+:py:class:`compass.mesh.IcosahedralMeshStep`.  If it has non-uniform
+resolution, it will be created from a subclass of
+:py:class:`compass.mesh.QuasiUniformSphericalMeshStep` that defines a global
+map of the the desired resolution by overriding the
+:py:meth:`compass.mesh.QuasiUniformSphericalMeshStep.build_cell_width_lat_lon()`
+method.
 
-This class also takes care of defining the output from the step and storing
-attributes:
+.. _dev_ocean_global_ocean_cull_mesh_step:
 
-``self.mesh_name``
-    the name of the mesh
+cull_mesh step
+^^^^^^^^^^^^^^
 
-``self.with_ice_shelf_cavities``
-    whether the mesh should include ice-shelf cavities
-
-``self.package``
-    the module (package) where the config options, namelist and streams files
-    specific to the mesh can be found
-
-``self.mesh_config_filename``
-    the name of the config file with mesh-specific config options
-
-In its ``run()`` method, ``MeshStep`` calls the ``build_cell_width_lat_lon()``
-method to get the desired mesh resolution, then creates the mesh by calling
-:py:func:`mpas_tools.ocean.build_mesh.build_spherical_mesh()` culls out land
-cells by calling :py:func:`compass.ocean.tests.global_ocean.mesh.cull.cull_mesh()`.
+The class :py:class:`compass.ocean.tests.global_ocean.mesh.cull.CullMeshStep`
+defines a step that culls a base mesh to remove the land cells by calling
+:py:func:`compass.ocean.tests.global_ocean.mesh.cull.cull_mesh()`.
 
 ``cull_mesh()`` uses a number of capabilities from
 `MPAS-Tools <http://mpas-dev.github.io/MPAS-Tools/stable/>`_
@@ -334,7 +326,7 @@ to cull the mesh.  It performs the following steps:
 meshes
 ^^^^^^
 
-``global_ocean`` currently defines 5 meshes, with more to come.
+``global_ocean`` currently defines 7 meshes, with more to come.
 
 .. _dev_ocean_global_ocean_qu240:
 
@@ -344,9 +336,9 @@ QU240 and QUwISC240
 The ``QU240`` mesh is a quasi-uniform mesh with 240-km resolution. The
 ``QUwISC240`` mesh is identical except that it includes the cavities below ice
 shelves in the ocean domain. The class
-:py:class:`compass.ocean.tests.global_ocean.mesh.qu240.QU240Mesh` defines the
-resolution for both meshes. The ``compass.ocean.tests.global_ocean.mesh.qu240``
-module includes namelist options appropriate for forward simulations with both
+:py:class:`compass.mesh.QuasiUniformSphericalMeshStep` is used to define both
+base meshes. The ``compass.ocean.tests.global_ocean.mesh.qu240``
+package includes namelist options appropriate for forward simulations with both
 RK4 and split-explicit time integration on this mesh.  These set the time step
 and default run duration for short runs with this mesh.
 
@@ -419,6 +411,23 @@ The default config options for this mesh are:
 The vertical grid is a ``tanh_dz`` profile (see :ref:`dev_ocean_framework_vertical`)
 with 16 vertical levels ranging in thickness from 3 to 500 m.
 
+.. _dev_ocean_global_ocean_icos240:
+
+Icos240 and IcoswISC240
++++++++++++++++++++++++
+
+The ``Icos240`` mesh is an icosahedral mesh with 240-km resolution. The
+``IcoswISC240`` mesh is identical except that it includes the cavities below
+ice shelves in the ocean domain. The class
+:py:class:`compass.mesh.IcosahedralMeshStep` is used to define both base
+meshes.
+
+Other than this distinction, test cases and steps involving the ``Icos240``
+and ``IcoswISC240`` are identical to those for the ``QU240`` and
+``QUwISC240`` meshes, respectively, including the same config options, namelist
+options, etc. from the ``compass.ocean.tests.global_ocean.mesh.qu240``
+package.
+
 .. _dev_ocean_global_ocean_ec30to60:
 
 EC30to60 and ECwISC30to60
@@ -433,7 +442,7 @@ ocean domain.
 The class
 :py:class:`compass.ocean.tests.global_ocean.mesh.ec30to60.EC30to60Mesh` defines
 the resolution for both meshes. The ``compass.ocean.tests.global_ocean.mesh.ec30to60``
-module includes  namelist options appropriate for forward simulations with
+package includes  namelist options appropriate for forward simulations with
 split-explicit (but not RK4) time integration on this mesh.  These set the time
 step and default run duration for short runs with this mesh.
 
@@ -507,7 +516,7 @@ in the North Pacific, and 35-km resolution in the Arctic.
 The class
 :py:class:`compass.ocean.tests.global_ocean.mesh.so12to60.SO12to60Mesh` defines
 the resolution for the mesh. The ``compass.ocean.tests.global_ocean.mesh.so12to60``
-module includes namelist options appropriate for forward simulations with
+package includes namelist options appropriate for forward simulations with
 split-explicit (but not RK4) time integration on this mesh.  These set the time
 step and default run duration for short runs with this mesh.
 
@@ -585,7 +594,7 @@ with a band of 30-km resolution around the equator.
 
 The class :py:class:`compass.ocean.tests.global_ocean.mesh.wc14.WC14Mesh`
 defines the resolution for the mesh. The
-``compass.ocean.tests.global_ocean.mesh.wc14`` module includes namelist options
+``compass.ocean.tests.global_ocean.mesh.wc14`` package includes namelist options
 appropriate for forward simulations with split-explicit (but not RK4) time
 integration on this mesh.  These set the time step and default run duration for
 short runs with this mesh.

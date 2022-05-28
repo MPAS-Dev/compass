@@ -99,10 +99,6 @@ cosine_bell
    CosineBell.configure
    CosineBell.run
 
-   mesh.Mesh
-   mesh.Mesh.run
-   mesh.Mesh.build_cell_width_lat_lon
-
    init.Init
    init.Init.run
 
@@ -170,32 +166,30 @@ test cases and steps
    mesh.Mesh
    mesh.Mesh.configure
    mesh.Mesh.run
-   mesh.cull.cull_mesh
-   mesh.mesh.MeshStep
-   mesh.mesh.MeshStep.setup
-   mesh.mesh.MeshStep.run
-   mesh.mesh.MeshStep.build_cell_width_lat_lon
 
-   mesh.ec30to60.EC30to60Mesh
-   mesh.ec30to60.EC30to60Mesh.build_cell_width_lat_lon
+   mesh.cull.CullMeshStep
+   mesh.cull.CullMeshStep.setup
+   mesh.cull.CullMeshStep.run
+   mesh.cull.cull_mesh
+
+   mesh.ec30to60.EC30to60BaseMesh
+   mesh.ec30to60.EC30to60BaseMesh.build_cell_width_lat_lon
    mesh.ec30to60.dynamic_adjustment.EC30to60DynamicAdjustment
    mesh.ec30to60.dynamic_adjustment.EC30to60DynamicAdjustment.configure
    mesh.ec30to60.dynamic_adjustment.EC30to60DynamicAdjustment.run
 
-   mesh.qu240.QU240Mesh
-   mesh.qu240.QU240Mesh.build_cell_width_lat_lon
    mesh.qu240.dynamic_adjustment.QU240DynamicAdjustment
    mesh.qu240.dynamic_adjustment.QU240DynamicAdjustment.configure
    mesh.qu240.dynamic_adjustment.QU240DynamicAdjustment.run
 
-   mesh.so12to60.SO12to60Mesh
-   mesh.so12to60.SO12to60Mesh.build_cell_width_lat_lon
+   mesh.so12to60.SO12to60BaseMesh
+   mesh.so12to60.SO12to60BaseMesh.build_cell_width_lat_lon
    mesh.so12to60.dynamic_adjustment.SO12to60DynamicAdjustment
    mesh.so12to60.dynamic_adjustment.SO12to60DynamicAdjustment.configure
    mesh.so12to60.dynamic_adjustment.SO12to60DynamicAdjustment.run
 
-   mesh.wc14.WC14Mesh
-   mesh.wc14.WC14Mesh.build_cell_width_lat_lon
+   mesh.wc14.WC14BaseMesh
+   mesh.wc14.WC14BaseMesh.build_cell_width_lat_lon
    mesh.wc14.dynamic_adjustment.WC14DynamicAdjustment
    mesh.wc14.dynamic_adjustment.WC14DynamicAdjustment.configure
    mesh.wc14.dynamic_adjustment.WC14DynamicAdjustment.run
