@@ -285,7 +285,8 @@ def compass_setup(script_name, setup_command, mpas_path, mpas_model, work_base,
 
     work_dir = '{}/{}'.format(work_base, suffix)
 
-    args = 'source {}; ' \
+    args = 'export NO_COMPASS_REINSTALL=true;' \
+           'source {}; ' \
            '{} ' \
            '-p {} ' \
            '-w {} ' \

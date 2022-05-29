@@ -502,7 +502,8 @@ def write_load_compass(template_path, activ_path, conda_base, env_type,
     if env_type == 'dev':
         update_compass = \
             """
-            if [[ -f "./setup.py" && -d "compass" ]]; then
+            if [[ -z "${NO_COMPASS_REINSTALL}" && -f "./setup.py" && \\
+                  -d "compass" ]]; then
                # safe to assume we're in the compass repo
                # update the compass installation to point here
                mkdir -p conda/logs
