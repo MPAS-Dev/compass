@@ -109,8 +109,6 @@ class Mesh(Step):
             logger.info('cullDistance <= 0 in config file. '
                         'Will not cull by distance to margin. \n')
 
-        check_call(args, logger=logger)
-
         dsMesh = xarray.open_dataset('ais_8km_preCull.nc')
         dsMesh = cull(dsMesh, logger=logger)
         write_netcdf(dsMesh, 'antarctica_culled.nc')
