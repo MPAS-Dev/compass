@@ -106,7 +106,7 @@
   <h1>Source code for compass.testcase</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">os</span>
 
-<span class="kn">from</span> <span class="nn">mpas_tools.logging</span> <span class="kn">import</span> <span class="n">LoggingContext</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.logging</span> <span class="kn">import</span> <span class="n">LoggingContext</span><span class="p">,</span> <span class="n">check_call</span>
 <span class="kn">from</span> <span class="nn">compass.parallel</span> <span class="kn">import</span> <span class="n">get_available_cores_and_nodes</span>
 <span class="kn">from</span> <span class="nn">compass.logging</span> <span class="kn">import</span> <span class="n">log_method_call</span>
 
@@ -159,7 +159,7 @@
 <span class="sd">        The base work directory</span>
 
 <span class="sd">    baseline_dir : str, optional</span>
-<span class="sd">        Location of the same test case within the basesline work directory,</span>
+<span class="sd">        Location of the same test case within the baseline work directory,</span>
 <span class="sd">        for use in comparing variables and timers</span>
 
 <span class="sd">    stdout_logger : logging.Logger</span>
@@ -264,8 +264,12 @@
                 <span class="n">step</span><span class="o">.</span><span class="n">log_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_filename</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">_print_to_stdout</span><span class="p">(</span><span class="s1">&#39;  * step: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step_name</span><span class="p">))</span>
+
             <span class="k">try</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_run_step</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_step_log_file</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">step</span><span class="o">.</span><span class="n">run_as_subprocess</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_run_step_as_subprocess</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_step_log_file</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_run_step</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_step_log_file</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_print_to_stdout</span><span class="p">(</span><span class="s1">&#39;      Failed&#39;</span><span class="p">)</span>
                 <span class="k">raise</span>
@@ -392,7 +396,36 @@
             <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span>
                 <span class="s1">&#39;output file(s) missing in step </span><span class="si">{}</span><span class="s1"> of </span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                     <span class="n">step</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">step</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">step</span><span class="o">.</span><span class="n">test_group</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-                    <span class="n">step</span><span class="o">.</span><span class="n">test_case</span><span class="o">.</span><span class="n">subdir</span><span class="p">,</span> <span class="n">missing_files</span><span class="p">))</span></div>
+                    <span class="n">step</span><span class="o">.</span><span class="n">test_case</span><span class="o">.</span><span class="n">subdir</span><span class="p">,</span> <span class="n">missing_files</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_run_step_as_subprocess</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">new_log_file</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Run the requested step as a subprocess</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        step : compass.Step</span>
+<span class="sd">            The step to run</span>
+
+<span class="sd">        new_log_file : bool</span>
+<span class="sd">            Whether to log to a new log file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
+        <span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+        <span class="n">test_name</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">new_log_file</span><span class="p">:</span>
+            <span class="n">log_filename</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.log&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cwd</span><span class="p">,</span> <span class="n">step</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">step</span><span class="o">.</span><span class="n">log_filename</span> <span class="o">=</span> <span class="n">log_filename</span>
+            <span class="n">step_logger</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">step_logger</span> <span class="o">=</span> <span class="n">logger</span>
+            <span class="n">log_filename</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">with</span> <span class="n">LoggingContext</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">test_name</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">step_logger</span><span class="p">,</span>
+                            <span class="n">log_filename</span><span class="o">=</span><span class="n">log_filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">step_logger</span><span class="p">:</span>
+
+            <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">step</span><span class="o">.</span><span class="n">work_dir</span><span class="p">)</span>
+            <span class="n">step_args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;compass&#39;</span><span class="p">,</span> <span class="s1">&#39;run&#39;</span><span class="p">,</span> <span class="s1">&#39;--step_is_subprocess&#39;</span><span class="p">]</span>
+            <span class="n">check_call</span><span class="p">(</span><span class="n">step_args</span><span class="p">,</span> <span class="n">step_logger</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

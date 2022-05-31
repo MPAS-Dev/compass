@@ -856,7 +856,7 @@ large number of attributes that are useful at different stages (init, setup and
 run) of the step.</p>
 <p>Some attributes are available after calling the base class’ constructor
 <code class="docutils literal notranslate"><span class="pre">super().__init__()</span></code>.  These include:</p>
-<dl class="simple">
+<dl>
 <dt><code class="docutils literal notranslate"><span class="pre">self.name</span></code></dt><dd><p>the name of the test case</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">self.test_case</span></code></dt><dd><p>The test case this step belongs to</p>
@@ -882,6 +882,25 @@ than this number of cores, the step will fail</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">self.cached</span></code></dt><dd><p>Whether to get all of the outputs for the step from the database of
 cached outputs for the MPAS core that this step belongs to</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">self.run_as_subprocess</span></code></dt><dd><p>Whether to run this step as a subprocess, rather than just running
+it directly from the test case.  It is useful to run a step as a
+subprocess if there is not a good way to redirect output to a log
+file (e.g. if the step calls external code that, in turn, calls
+additional subprocesses).</p>
+<p>The default behavior when python code calls one of the <code class="docutils literal notranslate"><span class="pre">subprocess</span></code>
+functions is that the output goes to <code class="docutils literal notranslate"><span class="pre">stdout</span></code>/<code class="docutils literal notranslate"><span class="pre">stderr</span></code>
+(i.e. the terminal).  When python code outside of compass
+(e.g. <code class="docutils literal notranslate"><span class="pre">jigsawpy</span></code>) calls a <code class="docutils literal notranslate"><span class="pre">subprocess</span></code> function (e.g. to call
+JIGSAW), that output goes to the terminal rather than a log file.
+For most output to <code class="docutils literal notranslate"><span class="pre">stdout</span></code>/<code class="docutils literal notranslate"><span class="pre">stderr</span></code> like <code class="docutils literal notranslate"><span class="pre">print()</span></code> statements,
+<code class="docutils literal notranslate"><span class="pre">check_call()</span></code> in MPAS-Tools employs a “trick” to redirect that
+output to a log file instead.  But that doesn’t work with
+<code class="docutils literal notranslate"><span class="pre">subprocess</span></code> calls.  They continue to go to the terminal.  However,
+if we call a given compass step as a subprocess while redirecting its
+output to a log file, we can prevent unwanted output from ending up
+in the terminal (the “outer” subprocess call gets redirected to a log
+file even when the inner one does not).</p>
 </dd>
 </dl>
 <p>Another set of attributes is not useful until <code class="docutils literal notranslate"><span class="pre">setup()</span></code> is called by the

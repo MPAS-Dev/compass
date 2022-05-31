@@ -329,15 +329,23 @@
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="run_step"><a class="viewcode-back" href="../../../developers_guide/generated/compass.run.serial.run_step.html#compass.run.serial.run_step">[docs]</a><span class="k">def</span> <span class="nf">run_step</span><span class="p">():</span>
+<div class="viewcode-block" id="run_step"><a class="viewcode-back" href="../../../developers_guide/generated/compass.run.serial.run_step.html#compass.run.serial.run_step">[docs]</a><span class="k">def</span> <span class="nf">run_step</span><span class="p">(</span><span class="n">step_is_subprocess</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Used by the framework to run a step when ``compass run`` gets called in the</span>
 <span class="sd">    step&#39;s work directory</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    step_is_subprocess : bool, optional</span>
+<span class="sd">        Whether the step is being run as a subprocess of a test case or suite</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;step.pickle&#39;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
         <span class="n">test_case</span><span class="p">,</span> <span class="n">step</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
     <span class="n">test_case</span><span class="o">.</span><span class="n">steps_to_run</span> <span class="o">=</span> <span class="p">[</span><span class="n">step</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
     <span class="n">test_case</span><span class="o">.</span><span class="n">new_step_log_file</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">if</span> <span class="n">step_is_subprocess</span><span class="p">:</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">run_as_subprocess</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="n">config</span> <span class="o">=</span> <span class="n">CompassConfigParser</span><span class="p">()</span>
     <span class="n">config</span><span class="o">.</span><span class="n">add_from_file</span><span class="p">(</span><span class="n">step</span><span class="o">.</span><span class="n">config_filename</span><span class="p">)</span>
@@ -359,10 +367,13 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
         <span class="n">test_case</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-        <span class="n">log_method_call</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="n">test_case</span><span class="o">.</span><span class="n">validate</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-        <span class="n">test_case</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span></div>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">step_is_subprocess</span><span class="p">:</span>
+            <span class="c1"># only perform validation if the step is being run by a user on its</span>
+            <span class="c1"># own</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="n">log_method_call</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="n">test_case</span><span class="o">.</span><span class="n">validate</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="n">test_case</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span></div>
 
 
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
@@ -382,6 +393,10 @@
                              <span class="s2">&quot;output as the test suite progresses.  Has no &quot;</span>
                              <span class="s2">&quot;effect when running test cases or steps on &quot;</span>
                              <span class="s2">&quot;their own.&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--step_is_subprocess&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;step_is_subprocess&quot;</span><span class="p">,</span>
+                        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Used internally by compass to indicate that&quot;</span>
+                             <span class="s2">&quot;a step is being run as a subprocess.&quot;</span><span class="p">)</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">suite</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">run_tests</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">suite</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">quiet</span><span class="p">)</span>
@@ -389,7 +404,7 @@
         <span class="n">run_tests</span><span class="p">(</span><span class="n">suite_name</span><span class="o">=</span><span class="s1">&#39;test_case&#39;</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">quiet</span><span class="p">,</span> <span class="n">is_test_case</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                   <span class="n">steps_to_run</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">steps</span><span class="p">,</span> <span class="n">steps_not_to_run</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">no_steps</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;step.pickle&#39;</span><span class="p">):</span>
-        <span class="n">run_step</span><span class="p">()</span>
+        <span class="n">run_step</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">step_is_subprocess</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">pickles</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*.pickle&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pickles</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
