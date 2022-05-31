@@ -860,6 +860,20 @@ Some attributes are available after calling the base class' constructor
     subprocess if there is not a good way to redirect output to a log
     file (e.g. if the step calls external code that, in turn, calls
     additional subprocesses).
+    
+    The default behavior when python code calls one of the ``subprocess``
+    functions is that the output goes to ``stdout``/``stderr`` 
+    (i.e. the terminal).  When python code outside of compass 
+    (e.g. ``jigsawpy``) calls a ``subprocess`` function (e.g. to call
+    JIGSAW), that output goes to the terminal rather than a log file.  
+    For most output to ``stdout``/``stderr`` like ``print()`` statements,
+    ``check_call()`` in MPAS-Tools employs a "trick" to redirect that
+    output to a log file instead.  But that doesn't work with 
+    ``subprocess`` calls.  They continue to go to the terminal.  However,
+    if we call a given compass step as a subprocess while redirecting its
+    output to a log file, we can prevent unwanted output from ending up
+    in the terminal (the "outer" subprocess call gets redirected to a log
+    file even when the inner one does not).
 
 Another set of attributes is not useful until ``setup()`` is called by the
 ``compass`` framework:
