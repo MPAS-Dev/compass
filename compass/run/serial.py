@@ -223,15 +223,23 @@ def run_tests(suite_name, quiet=False, is_test_case=False, steps_to_run=None,
             sys.exit(1)
 
 
-def run_step():
+def run_step(step_is_subprocess=False):
     """
     Used by the framework to run a step when ``compass run`` gets called in the
     step's work directory
+
+    Parameters
+    ----------
+    step_is_subprocess : bool, optional
+        Whether the step is being run as a subprocess of a test case or suite
     """
     with open('step.pickle', 'rb') as handle:
         test_case, step = pickle.load(handle)
     test_case.steps_to_run = [step.name]
     test_case.new_step_log_file = False
+
+    if step_is_subprocess:
+        step.run_as_subprocess = False
 
     config = CompassConfigParser()
     config.add_from_file(step.config_filename)
@@ -253,10 +261,13 @@ def run_step():
         logger.info('')
         test_case.run()
 
-        logger.info('')
-        log_method_call(method=test_case.validate, logger=logger)
-        logger.info('')
-        test_case.validate()
+        if not step_is_subprocess:
+            # only perform validation if the step is being run by a user on its
+            # own
+            logger.info('')
+            log_method_call(method=test_case.validate, logger=logger)
+            logger.info('')
+            test_case.validate()
 
 
 def main():
@@ -276,6 +287,10 @@ def main():
                              "output as the test suite progresses.  Has no "
                              "effect when running test cases or steps on "
                              "their own.")
+    parser.add_argument("--step_is_subprocess", dest="step_is_subprocess",
+                        action="store_true",
+                        help="Used internally by compass to indicate that"
+                             "a step is being run as a subprocess.")
     args = parser.parse_args(sys.argv[2:])
     if args.suite is not None:
         run_tests(args.suite, quiet=args.quiet)
@@ -283,7 +298,7 @@ def main():
         run_tests(suite_name='test_case', quiet=args.quiet, is_test_case=True,
                   steps_to_run=args.steps, steps_not_to_run=args.no_steps)
     elif os.path.exists('step.pickle'):
-        run_step()
+        run_step(args.step_is_subprocess)
     else:
         pickles = glob.glob('*.pickle')
         if len(pickles) == 1:

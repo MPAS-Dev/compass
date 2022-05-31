@@ -121,10 +121,18 @@ class Step(ABC):
     cached : bool
         Whether to get all of the outputs for the step from the database of
         cached outputs for this MPAS core
+
+    run_as_subprocess : bool
+        Whether to run this step as a subprocess, rather than just running
+        it directly from the test case.  It is useful to run a step as a
+        subprocess if there is not a good way to redirect output to a log
+        file (e.g. if the step calls external code that, in turn, calls
+        additional subprocesses).
     """
 
     def __init__(self, test_case, name, subdir=None, cores=1, min_cores=1,
-                 threads=1, max_memory=1000, max_disk=1000, cached=False):
+                 threads=1, max_memory=1000, max_disk=1000, cached=False,
+                 run_as_subprocess=False):
         """
         Create a new test case
 
@@ -164,6 +172,13 @@ class Step(ABC):
         cached : bool, optional
             Whether to get all of the outputs for the step from the database of
             cached outputs for this MPAS core
+
+        run_as_subprocess : bool
+            Whether to run this step as a subprocess, rather than just running
+            it directly from the test case.  It is useful to run a step as a
+            subprocess if there is not a good way to redirect output to a log
+            file (e.g. if the step calls external code that, in turn, calls
+            additional subprocesses).
         """
         self.name = name
         self.test_case = test_case
@@ -182,6 +197,8 @@ class Step(ABC):
 
         self.path = os.path.join(self.mpas_core.name, self.test_group.name,
                                  test_case.subdir, self.subdir)
+
+        self.run_as_subprocess = run_as_subprocess
 
         # child steps (or test cases) will add to these
         self.input_data = list()
