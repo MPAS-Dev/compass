@@ -14,6 +14,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -115,7 +116,7 @@
            <div itemprop="articleBody">
              
   <section id="developer-tutorial-adding-a-parameter-study">
-<span id="dev-tutorial-add-param-study"></span><h1>Developer Tutorial: Adding a parameter study<a class="headerlink" href="#developer-tutorial-adding-a-parameter-study" title="Permalink to this headline">¶</a></h1>
+<span id="dev-tutorial-add-param-study"></span><h1>Developer Tutorial: Adding a parameter study<a class="headerlink" href="#developer-tutorial-adding-a-parameter-study" title="Permalink to this heading">¶</a></h1>
 <p>This tutorial presents a step-by-step guide to adding a parameter study, a
 test case in which different steps run MPAS cores with different parameter
 values, typically followed by an analysis step that compares the results as
@@ -140,14 +141,14 @@ other test case within a test group.  Please refer to the companion tutorial
 in this tutorial. Here, we will focus almost entirely the process that is
 specific to a parameter study.</p>
 <section id="getting-started">
-<h2>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<h2>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this heading">¶</a></h2>
 <p>Please see <a class="reference internal" href="dev_add_test_group.html#dev-tutorial-add-test-group-getting-started"><span class="std std-ref">Getting started</span></a> for the tutorial
 on adding a new test group.  The procedure is the same for this tutorial except
 that the example branch name will be <cite>add_cosine_bell</cite> instead of
 <cite>add_baroclinic_channel</cite>.</p>
 </section>
 <section id="making-a-new-test-group-and-cosine-bell-test-case">
-<h2>Making a new test group and “cosine_bell” test case<a class="headerlink" href="#making-a-new-test-group-and-cosine-bell-test-case" title="Permalink to this headline">¶</a></h2>
+<h2>Making a new test group and “cosine_bell” test case<a class="headerlink" href="#making-a-new-test-group-and-cosine-bell-test-case" title="Permalink to this heading">¶</a></h2>
 <p>If your parameter study fits well in an existing test group, you don’t need
 to create a new one.  If the existing test groups aren’t a good fit, you will
 want to follow the step for <a class="reference internal" href="dev_add_test_group.html#dev-tutorial-add-test-group-make-test-group"><span class="std std-ref">Making a new test group</span></a>
@@ -159,7 +160,7 @@ the procedure described in <a class="reference internal" href="dev_add_test_grou
 get started.</p>
 </section>
 <section id="adding-mesh-init-and-forward-steps">
-<h2>Adding “mesh”, “init” and “forward” steps<a class="headerlink" href="#adding-mesh-init-and-forward-steps" title="Permalink to this headline">¶</a></h2>
+<h2>Adding “mesh”, “init” and “forward” steps<a class="headerlink" href="#adding-mesh-init-and-forward-steps" title="Permalink to this heading">¶</a></h2>
 <p>Our test case will be made up of 3 steps at each resolution, followed a final
 <code class="docutils literal notranslate"><span class="pre">analysis</span></code> step that combines data from each mesh resolution.  The 3 steps
 for each mesh resolution are: <code class="docutils literal notranslate"><span class="pre">mesh</span></code>, which creates a horizontal mesh of a
@@ -202,7 +203,7 @@ description in <a class="reference internal" href="dev_add_test_group.html#dev-t
 tutorial for more details.</p>
 </section>
 <section id="adding-an-analysis-step">
-<h2>Adding an “analysis” step<a class="headerlink" href="#adding-an-analysis-step" title="Permalink to this headline">¶</a></h2>
+<h2>Adding an “analysis” step<a class="headerlink" href="#adding-an-analysis-step" title="Permalink to this heading">¶</a></h2>
 <p>Many parameter studies will perform some kind of analysis that brings together
 output from runs with different parameter values.  In our example, the
 <code class="docutils literal notranslate"><span class="pre">analysis</span></code> step is used to plot the error as a function of resolution.  This
@@ -243,7 +244,7 @@ case so we won’t go into them in this tutorial.  But feel free to have a look:
 <a class="reference external" href="https://github.com/MPAS-Dev/compass/blob/master/compass/ocean/tests/global_convergence/cosine_bell/analysis.py">analysis.py</a>.</p>
 </section>
 <section id="adding-the-steps-to-the-test-case">
-<h2>Adding the steps to the test case<a class="headerlink" href="#adding-the-steps-to-the-test-case" title="Permalink to this headline">¶</a></h2>
+<h2>Adding the steps to the test case<a class="headerlink" href="#adding-the-steps-to-the-test-case" title="Permalink to this heading">¶</a></h2>
 <p>The initial design for <code class="docutils literal notranslate"><span class="pre">cosine_bell</span></code> was that steps were only added to the
 test case in the <code class="docutils literal notranslate"><span class="pre">configure()</span></code> method, which gets run when the test case gets
 set up.  This design was because the particular parameter values that will be
@@ -333,7 +334,7 @@ mimic this behavior so that the default steps can be listed with
 <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">list</span> <span class="pre">--verbose</span></code> as well.</p>
 </section>
 <section id="setting-the-number-of-cores">
-<h2>Setting the number of cores<a class="headerlink" href="#setting-the-number-of-cores" title="Permalink to this headline">¶</a></h2>
+<h2>Setting the number of cores<a class="headerlink" href="#setting-the-number-of-cores" title="Permalink to this heading">¶</a></h2>
 <p>For some parameter studies, particularly those where resolution is the
 parameter, it can be important to specify the target and minimum number of
 cores for a given step as a function of the parameter.</p>
@@ -400,7 +401,7 @@ steps.</p>
 </div>
 </section>
 <section id="documentation">
-<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this heading">¶</a></h2>
 <p>Please document the test case within its test group as described in the
 companion tutorial in its <a class="reference internal" href="dev_add_test_group.html#dev-tutorial-add-test-group-docs"><span class="std std-ref">Documentation</span></a> section.</p>
 </section>

@@ -14,6 +14,7 @@
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -120,14 +121,14 @@
            <div itemprop="articleBody">
              
   <section id="test-suites">
-<span id="landice-suites"></span><h1>Test suites<a class="headerlink" href="#test-suites" title="Permalink to this headline">¶</a></h1>
+<span id="landice-suites"></span><h1>Test suites<a class="headerlink" href="#test-suites" title="Permalink to this heading">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">landice</span></code> core currently includes a number of
 <a class="reference internal" href="../test_suites.html#test-suites"><span class="std std-ref">Test Suites</span></a> that can be used
 to run a series of land-ice test cases and optionally compare them against a
 baseline run of the same tests.  The test suites are described in order of
 typical usage.</p>
 <section id="sia-integration-test-suite">
-<span id="landice-suite-sia-integration"></span><h2>sia_integration test suite<a class="headerlink" href="#sia-integration-test-suite" title="Permalink to this headline">¶</a></h2>
+<span id="landice-suite-sia-integration"></span><h2>sia_integration test suite<a class="headerlink" href="#sia-integration-test-suite" title="Permalink to this heading">¶</a></h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass suite -c landice -t sia_integration ...
 </pre></div>
 </div>
@@ -161,7 +162,7 @@ for a long run or a shorter continuation run from a restart file
 it is run on different numbers of cores (<code class="docutils literal notranslate"><span class="pre">decomposition_test</span></code>).</p>
 </section>
 <section id="fo-integration-test-suite">
-<span id="landice-suite-fo-integration"></span><h2>fo_integration test suite<a class="headerlink" href="#fo-integration-test-suite" title="Permalink to this headline">¶</a></h2>
+<span id="landice-suite-fo-integration"></span><h2>fo_integration test suite<a class="headerlink" href="#fo-integration-test-suite" title="Permalink to this heading">¶</a></h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass suite -c landice -t fo_integration ...
 </pre></div>
 </div>
@@ -182,13 +183,13 @@ landice/humboldt/mesh-3km_restart_test/velo-fo_calving-von_mises_stress_damage-t
 with the Albany library.</p>
 </section>
 <section id="full-integration-test-suite">
-<span id="landice-suite-full-integration"></span><h2>full_integration test suite<a class="headerlink" href="#full-integration-test-suite" title="Permalink to this headline">¶</a></h2>
+<span id="landice-suite-full-integration"></span><h2>full_integration test suite<a class="headerlink" href="#full-integration-test-suite" title="Permalink to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">full_integration</span></code> test suite is a combination of the <code class="docutils literal notranslate"><span class="pre">sia_integration</span></code>
 and <code class="docutils literal notranslate"><span class="pre">fo_integration</span></code> test suites.  This is the suite that should primarily
 be used for testing and integration of MALI Pull Requests.</p>
 </section>
 <section id="humboldt-calving-tests">
-<span id="landice-suite-humboldt-calving-tests"></span><h2>humboldt_calving_tests<a class="headerlink" href="#humboldt-calving-tests" title="Permalink to this headline">¶</a></h2>
+<span id="landice-suite-humboldt-calving-tests"></span><h2>humboldt_calving_tests<a class="headerlink" href="#humboldt-calving-tests" title="Permalink to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">humboldt_calving_tests</span></code> test suite provide complete coverage of all
 calving laws currently support by MALI applied to a 3 km resolution
 Humboldt Glacier domain.
@@ -216,7 +217,7 @@ landice/humboldt/mesh-3km_restart_test/velo-none_calving-von_mises_stress_damage
 </div>
 </section>
 <section id="humboldt-calving-tests-fo">
-<span id="landice-suite-humboldt-calving-tests-fo"></span><h2>humboldt_calving_tests_fo<a class="headerlink" href="#humboldt-calving-tests-fo" title="Permalink to this headline">¶</a></h2>
+<span id="landice-suite-humboldt-calving-tests-fo"></span><h2>humboldt_calving_tests_fo<a class="headerlink" href="#humboldt-calving-tests-fo" title="Permalink to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">humboldt_calving_tests_fo</span></code> test suite is identical to
 <code class="docutils literal notranslate"><span class="pre">humboldt_calving_tests</span></code> but with the FO solver enabled.
 In this case decomposition tests are not required to be bit-for-bit to pass but
@@ -243,7 +244,7 @@ landice/humboldt/mesh-3km_restart_test/velo-fo_calving-von_mises_stress_damage-t
 </div>
 </section>
 <section id="calving-dt-convergence">
-<span id="calving-dt-convergence-txt"></span><h2>calving_dt_convergence<a class="headerlink" href="#calving-dt-convergence" title="Permalink to this headline">¶</a></h2>
+<span id="calving-dt-convergence-txt"></span><h2>calving_dt_convergence<a class="headerlink" href="#calving-dt-convergence" title="Permalink to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">calving_dt_convergence</span></code> test suite runs timestep convergence tests for
 calving physics for a number of different model meshes, calving laws, and
 velocity solver options.  The tests with “none” velocity solver use data

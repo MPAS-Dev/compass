@@ -14,6 +14,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -125,9 +126,9 @@
            <div itemprop="articleBody">
              
   <section id="quick-start-for-developers">
-<span id="dev-quick-start"></span><h1>Quick Start for Developers<a class="headerlink" href="#quick-start-for-developers" title="Permalink to this headline">¶</a></h1>
+<span id="dev-quick-start"></span><h1>Quick Start for Developers<a class="headerlink" href="#quick-start-for-developers" title="Permalink to this heading">¶</a></h1>
 <section id="unix-shell">
-<span id="dev-shell"></span><h2>Unix Shell<a class="headerlink" href="#unix-shell" title="Permalink to this headline">¶</a></h2>
+<span id="dev-shell"></span><h2>Unix Shell<a class="headerlink" href="#unix-shell" title="Permalink to this heading">¶</a></h2>
 <p>Currently, compass only supports <code class="docutils literal notranslate"><span class="pre">bash</span></code> and related unix shells (such as
 <code class="docutils literal notranslate"><span class="pre">ksh</span></code> on the Mac).  We do not support <code class="docutils literal notranslate"><span class="pre">csh</span></code>, <code class="docutils literal notranslate"><span class="pre">tcsh</span></code> or other variants of
 <code class="docutils literal notranslate"><span class="pre">csh</span></code>.  An activation script for those shells will not be created.</p>
@@ -135,7 +136,7 @@
 switch to bash by calling <code class="docutils literal notranslate"><span class="pre">/bin/bash</span></code> each time you want to use compass.</p>
 </section>
 <section id="set-up-a-compass-repository-for-beginners">
-<span id="dev-compass-repo"></span><h2>Set up a compass repository: for beginners<a class="headerlink" href="#set-up-a-compass-repository-for-beginners" title="Permalink to this headline">¶</a></h2>
+<span id="dev-compass-repo"></span><h2>Set up a compass repository: for beginners<a class="headerlink" href="#set-up-a-compass-repository-for-beginners" title="Permalink to this heading">¶</a></h2>
 <p>To begin, obtain the master branch of the
 <a class="reference external" href="https://github.com/MPAS-Dev/compass">compass repository</a> with:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone git@github.com:MPAS-Dev/compass.git
@@ -147,7 +148,7 @@ git submodule update --init --recursive
 the compass repository.</p>
 </section>
 <section id="compass-conda-environment-compilers-and-system-modules">
-<span id="dev-conda-env"></span><h2>compass conda environment, compilers and system modules<a class="headerlink" href="#compass-conda-environment-compilers-and-system-modules" title="Permalink to this headline">¶</a></h2>
+<span id="dev-conda-env"></span><h2>compass conda environment, compilers and system modules<a class="headerlink" href="#compass-conda-environment-compilers-and-system-modules" title="Permalink to this heading">¶</a></h2>
 <p>As a developer, you will need your own environment with the latest dependencies
 for compass and a development installation of <code class="docutils literal notranslate"><span class="pre">compass</span></code> from the branch
 you’re working on.</p>
@@ -180,7 +181,7 @@ letting <code class="docutils literal notranslate"><span class="pre">configure_c
 you if you don’t already have it installed.</p>
 </div>
 <section id="supported-machines">
-<h3>Supported machines<a class="headerlink" href="#supported-machines" title="Permalink to this headline">¶</a></h3>
+<h3>Supported machines<a class="headerlink" href="#supported-machines" title="Permalink to this heading">¶</a></h3>
 <p>If you are on one of the <a class="reference internal" href="machines/index.html#dev-supported-machines"><span class="std std-ref">Supported Machines</span></a>, run:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./conda/configure_compass_env.py --conda &lt;base_path_to_install_or_update_conda&gt; <span class="se">\</span>
     -c &lt;compiler&gt; <span class="o">[</span>--mpi &lt;mpi&gt;<span class="o">]</span> <span class="o">[</span>-m &lt;machine&gt;<span class="o">]</span> <span class="o">[</span>--with_albany<span class="o">]</span> <span class="se">\</span>
@@ -204,7 +205,7 @@ you run into trouble with the automatic recognition (e.g. if you’re setting
 up the environment on a compute node, which is not recommended).</p>
 </section>
 <section id="environments-with-albany">
-<h3>Environments with Albany<a class="headerlink" href="#environments-with-albany" title="Permalink to this headline">¶</a></h3>
+<h3>Environments with Albany<a class="headerlink" href="#environments-with-albany" title="Permalink to this heading">¶</a></h3>
 <p>If you are working with MALI, you should specify <code class="docutils literal notranslate"><span class="pre">--with_albany</span></code>.  This will
 ensure that the Albany and Trilinos libraries are included among those built
 with system compilers and MPI libraries, a requirement for many MAlI test
@@ -215,7 +216,7 @@ conda/spack environment.  The main downside is simply that unneeded libraries
 will be linked in to MPAS-Ocean.</p>
 </section>
 <section id="environments-with-petsc-and-netlib-lapack">
-<h3>Environments with PETSc and Netlib-LAPACK<a class="headerlink" href="#environments-with-petsc-and-netlib-lapack" title="Permalink to this headline">¶</a></h3>
+<h3>Environments with PETSc and Netlib-LAPACK<a class="headerlink" href="#environments-with-petsc-and-netlib-lapack" title="Permalink to this heading">¶</a></h3>
 <p>If you are working with MPAS-Ocean test cases that need PETSC and
 Netlib-LAPACK, you should specify <code class="docutils literal notranslate"><span class="pre">--with_petsc</span> <span class="pre">--with_netlib_lapack</span></code> to
 point to Spack environments where these libraries are included.  Appropriate
@@ -223,7 +224,7 @@ environment variables for pointing to these libraries will be build into the
 resulting load script (see below).</p>
 </section>
 <section id="unknown-machines">
-<h3>Unknown machines<a class="headerlink" href="#unknown-machines" title="Permalink to this headline">¶</a></h3>
+<h3>Unknown machines<a class="headerlink" href="#unknown-machines" title="Permalink to this heading">¶</a></h3>
 <p>If your are on an “unknown” machine, typically a Mac or Linux laptop or
 workstation, you will need to specify which flavor of MPI you want to use
 (<code class="docutils literal notranslate"><span class="pre">mpich</span></code> or <code class="docutils literal notranslate"><span class="pre">openmpi</span></code>):</p>
@@ -252,7 +253,7 @@ with the developers.</p>
 </div>
 </section>
 <section id="what-the-script-does">
-<h3>What the script does<a class="headerlink" href="#what-the-script-does" title="Permalink to this headline">¶</a></h3>
+<h3>What the script does<a class="headerlink" href="#what-the-script-does" title="Permalink to this heading">¶</a></h3>
 <p>In addition to installing Miniconda and creating the conda environment for you,
 this script will also:</p>
 <ul class="simple">
@@ -285,7 +286,7 @@ the expected packages are available.</p></li>
 </ul>
 </section>
 <section id="optional-flags">
-<h3>Optional flags<a class="headerlink" href="#optional-flags" title="Permalink to this headline">¶</a></h3>
+<h3>Optional flags<a class="headerlink" href="#optional-flags" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">--check</span></code></dt><dd><p>Check to make sure expected commands are present</p>
 </dd>
@@ -301,7 +302,7 @@ compilers)</p>
 </dl>
 </section>
 <section id="activating-the-environment">
-<h3>Activating the environment<a class="headerlink" href="#activating-the-environment" title="Permalink to this headline">¶</a></h3>
+<h3>Activating the environment<a class="headerlink" href="#activating-the-environment" title="Permalink to this heading">¶</a></h3>
 <p>Each time you want to work with compass, you will need to run:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> ./load_dev_compass_&lt;version&gt;_&lt;machine&gt;_&lt;compiler&gt;_&lt;mpi&gt;.sh
 </pre></div>
@@ -361,7 +362,7 @@ pointing to a version of the MPAS model that was compiled with the correct
 compiler.</p>
 </section>
 <section id="troubleshooting">
-<h3>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h3>
+<h3>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this heading">¶</a></h3>
 <p>If you run into trouble with the environment or just want a clean start, you
 can run:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./conda/configure_compass_env.py --conda &lt;conda_path&gt; -c &lt;compiler&gt; --recreate
@@ -372,7 +373,7 @@ scratch.  This takes just a little extra time.</p>
 </section>
 </section>
 <section id="creating-updating-only-the-compass-environment">
-<span id="dev-creating-only-env"></span><h2>Creating/updating only the compass environment<a class="headerlink" href="#creating-updating-only-the-compass-environment" title="Permalink to this headline">¶</a></h2>
+<span id="dev-creating-only-env"></span><h2>Creating/updating only the compass environment<a class="headerlink" href="#creating-updating-only-the-compass-environment" title="Permalink to this heading">¶</a></h2>
 <p>For some workflows (e.g. for MALI development wih the Albany library), you may
 only want to create the conda environment and not build SCORPIO, ESMF or
 include any system modules or environment variables in your activation script.
@@ -408,7 +409,7 @@ be safe.</p>
 </div>
 </section>
 <section id="building-mpas-components">
-<span id="dev-build-mpas"></span><h2>Building MPAS components<a class="headerlink" href="#building-mpas-components" title="Permalink to this headline">¶</a></h2>
+<span id="dev-build-mpas"></span><h2>Building MPAS components<a class="headerlink" href="#building-mpas-components" title="Permalink to this heading">¶</a></h2>
 <p>The MPAS repository is a submodule of the compass repository.  For example, to
 compile MPAS-Ocean:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> ./load_dev_compass_&lt;version&gt;_&lt;machine&gt;_&lt;compiler&gt;_&lt;mpi&gt;.sh
@@ -436,7 +437,7 @@ and complete instructions will be added here in the future.</p>
 <code class="docutils literal notranslate"><span class="pre">&lt;mpas_make_target&gt;</span></code> command for each machine and compiler.</p>
 </section>
 <section id="running-compass-from-the-repo">
-<span id="dev-working-with-compass"></span><h2>Running compass from the repo<a class="headerlink" href="#running-compass-from-the-repo" title="Permalink to this headline">¶</a></h2>
+<span id="dev-working-with-compass"></span><h2>Running compass from the repo<a class="headerlink" href="#running-compass-from-the-repo" title="Permalink to this heading">¶</a></h2>
 <p>If you follow the procedure above, you can run compass with the <code class="docutils literal notranslate"><span class="pre">compass</span></code>
 command-line tool exactly like described in the User’s Guide <a class="reference internal" href="../users_guide/quick_start.html#quick-start"><span class="std std-ref">Quick Start for Users</span></a>
 and as detailed in <a class="reference internal" href="command_line.html#dev-command-line"><span class="std std-ref">Command-line interface</span></a>.</p>
@@ -473,7 +474,7 @@ up the suite or test case (<code class="docutils literal notranslate"><span clas
 activation script you sourced before setting up the suite or test case).</p>
 </section>
 <section id="set-up-a-compass-repository-with-worktrees-for-advanced-users">
-<span id="dev-compass-repo-advanced"></span><h2>Set up a compass repository with worktrees: for advanced users<a class="headerlink" href="#set-up-a-compass-repository-with-worktrees-for-advanced-users" title="Permalink to this headline">¶</a></h2>
+<span id="dev-compass-repo-advanced"></span><h2>Set up a compass repository with worktrees: for advanced users<a class="headerlink" href="#set-up-a-compass-repository-with-worktrees-for-advanced-users" title="Permalink to this heading">¶</a></h2>
 <p>This section uses <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">worktree</span></code>, which provides more flexibility but is more
 complicated. See the beginner section above for the simpler version. In the
 worktree version, you will have many unix directories, and each corresponds to

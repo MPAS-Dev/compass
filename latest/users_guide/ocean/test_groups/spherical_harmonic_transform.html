@@ -14,6 +14,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -131,7 +132,7 @@
            <div itemprop="articleBody">
              
   <section id="spherical-harmonic-transform">
-<span id="ocean-spherical-harmonic-transform"></span><h1>spherical_harmonic_transform<a class="headerlink" href="#spherical-harmonic-transform" title="Permalink to this headline">¶</a></h1>
+<span id="ocean-spherical-harmonic-transform"></span><h1>spherical_harmonic_transform<a class="headerlink" href="#spherical-harmonic-transform" title="Permalink to this heading">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">spherical_harmonic_transform</span></code> test group implements test cases
 for the spherical harmonic transformation implementations in
 MPAS-Ocean. These tests involve computing the forward and inverse spherical
@@ -169,12 +170,12 @@ generates a convergence plot which will look like the image below:</p></li>
 </ul>
 <a class="reference internal image-reference" href="../../../_images/spherical_harmonic_transform_convergence.png"><img alt="../../../_images/spherical_harmonic_transform_convergence.png" class="align-center" src="../../../_images/spherical_harmonic_transform_convergence.png" style="width: 500px;" /></a>
 <section id="qu-convergence">
-<span id="ocean-spherical-harmonic-transform-qu-convergence"></span><h2>qu_convergence<a class="headerlink" href="#qu-convergence" title="Permalink to this headline">¶</a></h2>
+<span id="ocean-spherical-harmonic-transform-qu-convergence"></span><h2>qu_convergence<a class="headerlink" href="#qu-convergence" title="Permalink to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">qu_convergence</span></code> test case uses quasi-uniform meshes and an analyitical
 function that is a sprial:</p>
 <a class="reference internal image-reference" href="../../../_images/spherical_harmonic_transform_qu_function.png"><img alt="../../../_images/spherical_harmonic_transform_qu_function.png" class="align-center" src="../../../_images/spherical_harmonic_transform_qu_function.png" style="width: 500px;" /></a>
 <section id="config-options">
-<h3>config options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h3>
+<h3>config options<a class="headerlink" href="#config-options" title="Permalink to this heading">¶</a></h3>
 <p>Here, we give config options for the <code class="docutils literal notranslate"><span class="pre">qu_convergence</span></code> test case.</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># options for the QU mesh convergence test case for spherical harmonic transforms</span><span class="w"></span>
 <span class="k">[qu_convergence]</span><span class="w"></span>
@@ -191,7 +192,7 @@ function that is a sprial:</p>
 </div>
 </section>
 <section id="resolutions">
-<h3>resolutions<a class="headerlink" href="#resolutions" title="Permalink to this headline">¶</a></h3>
+<h3>resolutions<a class="headerlink" href="#resolutions" title="Permalink to this heading">¶</a></h3>
 <p>To alter the resolutions used in this test, you will need to create your own
 config file (or add a <code class="docutils literal notranslate"><span class="pre">qu_convergence</span></code> section to a config file if you’re
 already using one).  The resolutions are a comma-separated list of the
@@ -201,14 +202,14 @@ resolutions.  (If you alter <code class="docutils literal notranslate"><span cla
 the work directory, nothing will happen.)</p>
 </section>
 <section id="parallel-n">
-<h3>parallel_N<a class="headerlink" href="#parallel-n" title="Permalink to this headline">¶</a></h3>
+<h3>parallel_N<a class="headerlink" href="#parallel-n" title="Permalink to this heading">¶</a></h3>
 <p>For each resolution, the spherial harmonic orders for the parallel algorithm
 are specified as a comma separated list for the <code class="docutils literal notranslate"><span class="pre">parallel_N</span></code> option.
 You can alter this before setup (in a user config file)
 or before running the test case (in the config file in the work directory).</p>
 </section>
 <section id="serial-nlat">
-<h3>serial_nLat<a class="headerlink" href="#serial-nlat" title="Permalink to this headline">¶</a></h3>
+<h3>serial_nLat<a class="headerlink" href="#serial-nlat" title="Permalink to this heading">¶</a></h3>
 <p>For each resolution, the number of latitudes in the Gaussian grid for
 the serial algorithm are specified as a comma separated list for the
 <code class="docutils literal notranslate"><span class="pre">serial_nLat</span></code> option.  This is related to the spherical harmonic order

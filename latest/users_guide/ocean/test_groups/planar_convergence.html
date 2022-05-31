@@ -14,6 +14,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -135,12 +136,12 @@
            <div itemprop="articleBody">
              
   <section id="planar-convergence">
-<span id="ocean-planar-convergence"></span><h1>planar_convergence<a class="headerlink" href="#planar-convergence" title="Permalink to this headline">¶</a></h1>
+<span id="ocean-planar-convergence"></span><h1>planar_convergence<a class="headerlink" href="#planar-convergence" title="Permalink to this heading">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">planar_convergence</span></code> test group implements convergence studies for
 doubly periodic, planar meshes.  Currently, the only test case is the
 horizontal advection of a Gaussian tracer.</p>
 <section id="shared-config-options">
-<h2>shared config options<a class="headerlink" href="#shared-config-options" title="Permalink to this headline">¶</a></h2>
+<h2>shared config options<a class="headerlink" href="#shared-config-options" title="Permalink to this heading">¶</a></h2>
 <p>Config options shared by all test cases include:</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span><span class="w"></span>
 <span class="k">[vertical_grid]</span><span class="w"></span>
@@ -191,7 +192,7 @@ horizontal advection of a Gaussian tracer.</p>
 </div>
 </section>
 <section id="resolutions">
-<h2>resolutions<a class="headerlink" href="#resolutions" title="Permalink to this headline">¶</a></h2>
+<h2>resolutions<a class="headerlink" href="#resolutions" title="Permalink to this heading">¶</a></h2>
 <p>To alter the resolutions used in this test, you will need to create your own
 config file (or add a <code class="docutils literal notranslate"><span class="pre">planar_convergence</span></code> section to a config file if you’re
 already using one).  The resolutions are a comma-separated list of the
@@ -201,14 +202,14 @@ requested resolutions.  (If you alter <code class="docutils literal notranslate"
 file in the work directory, nothing will happen.)</p>
 </section>
 <section id="time-step">
-<h2>time step<a class="headerlink" href="#time-step" title="Permalink to this headline">¶</a></h2>
+<h2>time step<a class="headerlink" href="#time-step" title="Permalink to this heading">¶</a></h2>
 <p>The time step for forward integration is determined by multiplying the
 resolution by <code class="docutils literal notranslate"><span class="pre">dt_1km</span></code>, so that coarser meshes have longer time steps.
 You can alter this before setup (in a user config file) or before running the
 test case (in the config file in the work directory).</p>
 </section>
 <section id="cores">
-<h2>cores<a class="headerlink" href="#cores" title="Permalink to this headline">¶</a></h2>
+<h2>cores<a class="headerlink" href="#cores" title="Permalink to this heading">¶</a></h2>
 <p>The number of cores (and the minimum) is proportional to the number of cells,
 so that the number of cells per core is roughly constant.  You can alter how
 many cells are allocated to each core with <code class="docutils literal notranslate"><span class="pre">goal_cells_per_core</span></code>.  You can
@@ -217,7 +218,7 @@ core (before the test case will fail) with <code class="docutils literal notrans
 aren’t enough processors to handle the finest resolution, you will see that
 the step (and therefore the test case) has failed.</p>
 <section id="horizontal-advection">
-<span id="ocean-planar-convergence-horizontal-advection"></span><h3>horizontal_advection<a class="headerlink" href="#horizontal-advection" title="Permalink to this headline">¶</a></h3>
+<span id="ocean-planar-convergence-horizontal-advection"></span><h3>horizontal_advection<a class="headerlink" href="#horizontal-advection" title="Permalink to this heading">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">horizontal_advection</span></code> test case implements horizontal advection in a
 constant velocity field of a Gaussian tracer.  The domain is periodic in both
 x and y, and the flow field is designed to return the tracer to its original
@@ -230,7 +231,7 @@ following showing convergence as a function of the number of cells:</p>
 </section>
 </section>
 <section id="config-options">
-<h2>config options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
+<h2>config options<a class="headerlink" href="#config-options" title="Permalink to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">horizontal_advection</span></code> config options include:</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># options for planar horizontal advection test case</span><span class="w"></span>
 <span class="k">[horizontal_advection]</span><span class="w"></span>

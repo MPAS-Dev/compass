@@ -14,6 +14,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -129,21 +130,21 @@
            <div itemprop="articleBody">
              
   <section id="calving-dt-convergence">
-<span id="dev-landice-calving-dt-convergence"></span><h1>calving_dt_convergence<a class="headerlink" href="#calving-dt-convergence" title="Permalink to this headline">¶</a></h1>
+<span id="dev-landice-calving-dt-convergence"></span><h1>calving_dt_convergence<a class="headerlink" href="#calving-dt-convergence" title="Permalink to this heading">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">calving_dt_convergence</span></code> test group
 (<a class="reference internal" href="../generated/compass.landice.tests.calving_dt_convergence.CalvingDtConvergence.html#compass.landice.tests.calving_dt_convergence.CalvingDtConvergence" title="compass.landice.tests.calving_dt_convergence.CalvingDtConvergence"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.calving_dt_convergence.CalvingDtConvergence</span></code></a>)
 implements tests for assessing timestep convergence of calving physics
 (see <a class="reference internal" href="../../../users_guide/landice/test_groups/calving_dt_convergence.html#landice-calving-dt-convergence"><span class="std std-ref">calving_dt_convergence</span></a>). Here,
 we describe the shared framework for this test group.</p>
 <section id="framework">
-<span id="dev-landice-calving-dt-convergence-framework"></span><h2>framework<a class="headerlink" href="#framework" title="Permalink to this headline">¶</a></h2>
+<span id="dev-landice-calving-dt-convergence-framework"></span><h2>framework<a class="headerlink" href="#framework" title="Permalink to this heading">¶</a></h2>
 <p>Additionally, the test group has a shared <code class="docutils literal notranslate"><span class="pre">namelist.landice</span></code> file with
 appropriate namelist options, and a <code class="docutils literal notranslate"><span class="pre">streams.landice.template</span></code> file that
 defines <code class="docutils literal notranslate"><span class="pre">input</span></code>, <code class="docutils literal notranslate"><span class="pre">restart</span></code>, <code class="docutils literal notranslate"><span class="pre">output</span></code>, and <code class="docutils literal notranslate"><span class="pre">globalStats</span></code> streams.
 The <code class="docutils literal notranslate"><span class="pre">input</span></code> stream uses a template to fill in the appropriate input file
 for each mesh available.</p>
 <section id="dtconvergencetest">
-<h3>DtConvergenceTest<a class="headerlink" href="#dtconvergencetest" title="Permalink to this headline">¶</a></h3>
+<h3>DtConvergenceTest<a class="headerlink" href="#dtconvergencetest" title="Permalink to this heading">¶</a></h3>
 <p>The class
 <code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.calving_dt_convergence.DtConvergenceTest</span></code>
 defines a procedure for setting up a series of runs with different values for
@@ -159,7 +160,7 @@ case, that is fine, but if it becomes a problem, the analysis could be moved
 to a separate step.</p>
 </section>
 <section id="runmodel">
-<h3>RunModel<a class="headerlink" href="#runmodel" title="Permalink to this headline">¶</a></h3>
+<h3>RunModel<a class="headerlink" href="#runmodel" title="Permalink to this heading">¶</a></h3>
 <p>The class
 <a class="reference internal" href="../generated/compass.landice.tests.calving_dt_convergence.run_model.RunModel.html#compass.landice.tests.calving_dt_convergence.run_model.RunModel" title="compass.landice.tests.calving_dt_convergence.run_model.RunModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.calving_dt_convergence.run_model.RunModel</span></code></a>
 defines a step for running MALI for each value of

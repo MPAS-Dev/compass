@@ -14,6 +14,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -133,7 +134,7 @@
            <div itemprop="articleBody">
              
   <section id="eismint2">
-<span id="landice-eismint2"></span><h1>eismint2<a class="headerlink" href="#eismint2" title="Permalink to this headline">¶</a></h1>
+<span id="landice-eismint2"></span><h1>eismint2<a class="headerlink" href="#eismint2" title="Permalink to this heading">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">landice/eismint2</span></code> test group implements variants of the EISMINT2 test
 cases from <a class="reference external" href="https://doi.org/10.3189/172756500781832891">Payne et al. (2000)</a>.</p>
 <p>The domain is approximately rectangular with a circularly symmetric ice sheet
@@ -145,7 +146,7 @@ case implements EISMINT2 experiments A, B, C, D, F and G (but not E).  The
 remaining 4 test cases are for regression testing: decomposition and restart
 tests with either the <cite>temperature</cite> or the <cite>enthalpy</cite> thermal solver.</p>
 <section id="config-options">
-<h2>config options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
+<h2>config options<a class="headerlink" href="#config-options" title="Permalink to this heading">¶</a></h2>
 <p>All 3 test cases share the same set of default config options:</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># config options for EISMINT2 test cases</span><span class="w"></span>
 <span class="k">[eismint2]</span><span class="w"></span>
@@ -180,7 +181,7 @@ tests with either the <cite>temperature</cite> or the <cite>enthalpy</cite> ther
 </div>
 </section>
 <section id="standard-experiments">
-<h2>standard_experiments<a class="headerlink" href="#standard-experiments" title="Permalink to this headline">¶</a></h2>
+<h2>standard_experiments<a class="headerlink" href="#standard-experiments" title="Permalink to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">landice/eismint2/standard_experiments</span></code> implements 6 of the EISMINT2
 experiments: A, B, C, D, F and G (but not E).</p>
 <table class="docutils align-default">
@@ -228,7 +229,7 @@ is plotted but this can be changed with the <code class="docutils literal notran
 <code class="docutils literal notranslate"><span class="pre">[exismint2_viz]</span></code> sections.</p>
 </section>
 <section id="decomposition-test-and-enthalpy-decomposition-test">
-<h2>decomposition_test and enthalpy_decomposition_test<a class="headerlink" href="#decomposition-test-and-enthalpy-decomposition-test" title="Permalink to this headline">¶</a></h2>
+<h2>decomposition_test and enthalpy_decomposition_test<a class="headerlink" href="#decomposition-test-and-enthalpy-decomposition-test" title="Permalink to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">landice/eismint2/decomposition_test</span></code> and
 <code class="docutils literal notranslate"><span class="pre">landice/eismint2/enthalpy_decomposition_test</span></code> run shorter (3,000-year)
 integrations of experiment F forward in time on 1 (<code class="docutils literal notranslate"><span class="pre">1proc_run</span></code> step) and then
@@ -236,7 +237,7 @@ on 4 cores (<code class="docutils literal notranslate"><span class="pre">4proc_r
 are bit-for-bit identical between the two runs.</p>
 </section>
 <section id="restart-test-and-enthalpy-restart-test">
-<h2>restart_test and enthalpy_restart_test<a class="headerlink" href="#restart-test-and-enthalpy-restart-test" title="Permalink to this headline">¶</a></h2>
+<h2>restart_test and enthalpy_restart_test<a class="headerlink" href="#restart-test-and-enthalpy-restart-test" title="Permalink to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">landice/eismint2/restart_test</span></code> and <code class="docutils literal notranslate"><span class="pre">landice/eismint2/enthalpy_restart_test</span></code>
 first run a shorter (3,000-year) integration of experiment F forward in time
 (<code class="docutils literal notranslate"><span class="pre">full_run</span></code> step).  Then, a second step (<code class="docutils literal notranslate"><span class="pre">restart_run</span></code>) performs a

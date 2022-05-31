@@ -14,6 +14,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -133,7 +134,7 @@
            <div itemprop="articleBody">
              
   <section id="humboldt">
-<span id="landice-humboldt"></span><h1>humboldt<a class="headerlink" href="#humboldt" title="Permalink to this headline">¶</a></h1>
+<span id="landice-humboldt"></span><h1>humboldt<a class="headerlink" href="#humboldt" title="Permalink to this heading">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">landice/humboldt</span></code> test group includes a test case for creating a
 mesh for Humboldt Glacier, Greenland, and a series of tests for running
 simulations on a Humboldt Glacier mesh.  Note that the tests that run MALI do
@@ -156,7 +157,7 @@ faster 3 km mesh.</p>
 </figcaption>
 </figure>
 <section id="config-options">
-<h2>config options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
+<h2>config options<a class="headerlink" href="#config-options" title="Permalink to this heading">¶</a></h2>
 <p>The test group uses the following default config options.  At this point only
 the mesh generation options are adjusted through the config file.</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[humboldt_mesh]</span><span class="w"></span>
@@ -191,12 +192,12 @@ the mesh generation options are adjusted through the config file.</p>
 </div>
 </section>
 <section id="mesh-gen">
-<h2>mesh_gen<a class="headerlink" href="#mesh-gen" title="Permalink to this headline">¶</a></h2>
+<h2>mesh_gen<a class="headerlink" href="#mesh-gen" title="Permalink to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">landice/humboldt/default</span></code> creates a 1-10km variable resolution mesh.
 There is no model integration step.</p>
 </section>
 <section id="decomposition-tests">
-<h2>decomposition_tests<a class="headerlink" href="#decomposition-tests" title="Permalink to this headline">¶</a></h2>
+<h2>decomposition_tests<a class="headerlink" href="#decomposition-tests" title="Permalink to this heading">¶</a></h2>
 <p>There are a number of variants of a decomposition test that runs a 5-year
 simulation on 16 (16proc_run step) and then on 32 cores (32proc_run step)
 to make sure key prognostic variables are either bit-fot-bit (without the
@@ -215,7 +216,7 @@ this test faster for the integration test suite, it uses a 6-month time step
 instead of 4 months.</p>
 </section>
 <section id="restart-tests">
-<h2>restart_tests<a class="headerlink" href="#restart-tests" title="Permalink to this headline">¶</a></h2>
+<h2>restart_tests<a class="headerlink" href="#restart-tests" title="Permalink to this heading">¶</a></h2>
 <p>There are a number of variants of a restart test that runs a 3-year simulation
 compared to a 2-year simulation followed by a restart for an additional
 1 year.  Results should be bit-for-bit identical.

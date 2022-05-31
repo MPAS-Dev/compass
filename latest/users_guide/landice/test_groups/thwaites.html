@@ -14,6 +14,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -133,7 +134,7 @@
            <div itemprop="articleBody">
              
   <section id="thwaites">
-<span id="landice-thwaites"></span><h1>thwaites<a class="headerlink" href="#thwaites" title="Permalink to this headline">¶</a></h1>
+<span id="landice-thwaites"></span><h1>thwaites<a class="headerlink" href="#thwaites" title="Permalink to this heading">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">landice/thwaites</span></code> test group runs tests with a coarse (4-14-km)
 <a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-albany-landice/thwaites.4km.210608.nc">Thwaites Glacier mesh</a>.
 The purpose of this test group is to provide a realistic glacier that
@@ -158,7 +159,7 @@ can only be run with the FO velocity solvers. Running with the FO solver require
 a build of MALI that includes Albany. There is no integration step for the test
 case <code class="docutils literal notranslate"><span class="pre">high_res_mesh</span></code>.</p>
 <section id="config-options">
-<h2>config options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
+<h2>config options<a class="headerlink" href="#config-options" title="Permalink to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">high_res_mesh</span></code> test case uses the default config options below.
 The other test cases do not use config options.</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[high_res_mesh]</span><span class="w"></span>
@@ -193,14 +194,14 @@ The other test cases do not use config options.</p>
 </div>
 </section>
 <section id="decomposition-test">
-<h2>decomposition_test<a class="headerlink" href="#decomposition-test" title="Permalink to this headline">¶</a></h2>
+<h2>decomposition_test<a class="headerlink" href="#decomposition-test" title="Permalink to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">landice/thwaites/decomposition_test</span></code> runs short (2-day) integrations of the
 model forward in time on 16 (<code class="docutils literal notranslate"><span class="pre">16proc_run</span></code> step) and then on 32 cores
 (<code class="docutils literal notranslate"><span class="pre">32proc_run</span></code> step) to make sure the resulting prognostic variables are
 bit-for-bit identical between the two runs.</p>
 </section>
 <section id="restart-test">
-<h2>restart_test<a class="headerlink" href="#restart-test" title="Permalink to this headline">¶</a></h2>
+<h2>restart_test<a class="headerlink" href="#restart-test" title="Permalink to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">landice/thwaites/restart_test</span></code> first runs a short (5-day) integration
 of the model forward in time (<code class="docutils literal notranslate"><span class="pre">full_run</span></code> step).  Then, a second step
 (<code class="docutils literal notranslate"><span class="pre">restart_run</span></code>) performs two subsequent 2 and 3 day integrations, where the
@@ -209,7 +210,7 @@ are compared between the “full” and “restart” runs to make sure they are
 bit-for-bit identical.</p>
 </section>
 <section id="high-res-mesh">
-<h2>high_res_mesh<a class="headerlink" href="#high-res-mesh" title="Permalink to this headline">¶</a></h2>
+<h2>high_res_mesh<a class="headerlink" href="#high-res-mesh" title="Permalink to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">landice/thwaites/high_res_mesh</span></code> creates a variable resolution mesh based
 on the the config options listed above. This will not be the same as the
 pre-generated 4-14km mesh used in <code class="docutils literal notranslate"><span class="pre">decomposition_test</span></code> and <code class="docutils literal notranslate"><span class="pre">restart_test</span></code>

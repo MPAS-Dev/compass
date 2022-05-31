@@ -14,6 +14,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -122,7 +123,7 @@
            <div itemprop="articleBody">
              
   <section id="overview">
-<span id="dev-overview"></span><h1>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h1>
+<span id="dev-overview"></span><h1>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">¶</a></h1>
 <p><code class="docutils literal notranslate"><span class="pre">compass</span></code> is a <a class="reference external" href="https://docs.python.org/3/tutorial/modules.html#packages">python package</a>.
 All of the code in the package can be accessed in one of two ways.  The first
 is the command-line interface with commands like <a class="reference internal" href="command_line.html#dev-compass-list"><span class="std std-ref">compass list</span></a> and
@@ -137,7 +138,7 @@ is the command-line interface with commands like <a class="reference internal" h
 infrastructure for <code class="docutils literal notranslate"><span class="pre">compass</span></code>, we first give a little bit of background on
 the design philosophy behind the package.</p>
 <section id="code-style">
-<span id="dev-style"></span><h2>Code Style<a class="headerlink" href="#code-style" title="Permalink to this headline">¶</a></h2>
+<span id="dev-style"></span><h2>Code Style<a class="headerlink" href="#code-style" title="Permalink to this heading">¶</a></h2>
 <p>All code is required to adhere fairly strictly to the
 <a class="reference external" href="https://www.python.org/dev/peps/pep-0008/">PEP8 style guide</a>.  A bot will
 flag any PEP8 violations as part of each pull request to
@@ -160,7 +161,7 @@ recommended you run flake8 from the command line or the vim plugin before
 committing your code changes.</p>
 </section>
 <section id="packages-and-modules">
-<span id="dev-packages"></span><h2>Packages and Modules<a class="headerlink" href="#packages-and-modules" title="Permalink to this headline">¶</a></h2>
+<span id="dev-packages"></span><h2>Packages and Modules<a class="headerlink" href="#packages-and-modules" title="Permalink to this heading">¶</a></h2>
 <p>Why a python package?  That sounds complicated.</p>
 <p>Some of the main advantages of <code class="docutils literal notranslate"><span class="pre">compass</span></code> being a package instead of a group
 of scripts (as was the case for <a class="reference internal" href="../index.html#legacy-compass"><span class="std std-ref">Legacy COMPASS</span></a>) are that:</p>
@@ -180,7 +181,7 @@ any “downstream” packages that use <code class="docutils literal notranslate
 modules and classes but we know most developers won’t be too clued in on these
 concepts so here’s a short intro.</p>
 <section id="packages">
-<h3>Packages<a class="headerlink" href="#packages" title="Permalink to this headline">¶</a></h3>
+<h3>Packages<a class="headerlink" href="#packages" title="Permalink to this heading">¶</a></h3>
 <p>A python package is a directory that has a file called <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code>.  That
 file can be empty or it can have code in it.  If it has functions or classes
 inside of it, they act like they’re directly in the package.  As an example,
@@ -216,7 +217,7 @@ way from the root (<code class="docutils literal notranslate"><span class="pre">
 It’s similar to the <code class="docutils literal notranslate"><span class="pre">/</span></code> characters in a unix directory.</p>
 </section>
 <section id="modules">
-<h3>Modules<a class="headerlink" href="#modules" title="Permalink to this headline">¶</a></h3>
+<h3>Modules<a class="headerlink" href="#modules" title="Permalink to this heading">¶</a></h3>
 <p>Modules are just python files that aren’t scripts.  Since you can often treat
 scripts like modules, even that distinction isn’t that exact.  But for the
 purposes of the <code class="docutils literal notranslate"><span class="pre">compass</span></code> package, every single file ending in <code class="docutils literal notranslate"><span class="pre">.py</span></code> in the
@@ -252,7 +253,7 @@ or visa versa (by renaming <code class="docutils literal notranslate"><span clas
 a directory, and deleting the subdirectory).</p>
 </section>
 <section id="classes">
-<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h3>
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this heading">¶</a></h3>
 <p>In the process of developing
 <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/">MPAS-Analysis</a>, we found that
 many of our developers were not very comfortable with
@@ -286,7 +287,7 @@ that the examples currently in the package can provide a starting point.</p>
 </section>
 </section>
 <section id="code-sharing">
-<span id="dev-code-sharing"></span><h2>Code sharing<a class="headerlink" href="#code-sharing" title="Permalink to this headline">¶</a></h2>
+<span id="dev-code-sharing"></span><h2>Code sharing<a class="headerlink" href="#code-sharing" title="Permalink to this heading">¶</a></h2>
 <p>Very nearly all of the code in <a class="reference internal" href="../index.html#legacy-compass"><span class="std std-ref">Legacy COMPASS</span></a> was in the form of python
 scripts.  A significant amount of external code was also in this form.  A test
 case was composed of XML files, and python scripts parsed these XML files to
@@ -301,7 +302,7 @@ it will be more broadly applicable than those required for
 <a class="reference internal" href="../index.html#legacy-compass"><span class="std std-ref">Legacy COMPASS</span></a>. In developing <code class="docutils literal notranslate"><span class="pre">compass</span></code> we endeavor to increase code
 readability and code sharing in a number of ways.</p>
 <section id="in-compass-framework">
-<h3>In compass framework<a class="headerlink" href="#in-compass-framework" title="Permalink to this headline">¶</a></h3>
+<h3>In compass framework<a class="headerlink" href="#in-compass-framework" title="Permalink to this heading">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">compass</span></code> framework (modules and packages not in the MPAS-core packages)
 has a lot of code that is shared across existing test cases and could be very
 useful for future ones.</p>
@@ -322,7 +323,7 @@ included in 4 very long scripts in <a class="reference internal" href="../index.
 the number of total cores and nodes available for running steps.</p>
 </section>
 <section id="within-an-mpas-core">
-<h3>Within an MPAS core<a class="headerlink" href="#within-an-mpas-core" title="Permalink to this headline">¶</a></h3>
+<h3>Within an MPAS core<a class="headerlink" href="#within-an-mpas-core" title="Permalink to this heading">¶</a></h3>
 <p><a class="reference internal" href="../index.html#legacy-compass"><span class="std std-ref">Legacy COMPASS</span></a> shared functionality within a MPAS core by having scripts
 at the core level that were linked within test cases and which took
 command-line arguments that function roughly the same way as function
@@ -335,7 +336,7 @@ accomplished for several of the idealized test cases included in <code class="do
 <a class="reference internal" href="ocean/framework.html#dev-ocean-framework"><span class="std std-ref">Ocean framework</span></a>.</p>
 </section>
 <section id="within-a-test-group">
-<h3>Within a test group<a class="headerlink" href="#within-a-test-group" title="Permalink to this headline">¶</a></h3>
+<h3>Within a test group<a class="headerlink" href="#within-a-test-group" title="Permalink to this heading">¶</a></h3>
 <p>So far, the most common type of shared code within test group are modules
 defining steps that are used in multiple test cases.  For example, the
 <a class="reference internal" href="ocean/test_groups/baroclinic_channel.html#dev-ocean-baroclinic-channel"><span class="std std-ref">baroclinic_channel</span></a> configuration uses shared modules to define
@@ -358,7 +359,7 @@ the same conceptual test (e.g. restart) can be defined:</p>
 </div></blockquote>
 </section>
 <section id="within-a-test-case">
-<h3>Within a test case<a class="headerlink" href="#within-a-test-case" title="Permalink to this headline">¶</a></h3>
+<h3>Within a test case<a class="headerlink" href="#within-a-test-case" title="Permalink to this heading">¶</a></h3>
 <p>The main way code is currently reused with a test case is when the same module
 for a step gets used multiple times within a test case.  For example,
 the <a class="reference internal" href="ocean/test_groups/baroclinic_channel.html#dev-ocean-baroclinic-channel-rpe-test"><span class="std std-ref">rpe_test</span></a> test case uses the same

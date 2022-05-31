@@ -14,6 +14,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -138,7 +139,7 @@
            <div itemprop="articleBody">
              
   <section id="global-ocean">
-<span id="ocean-global-ocean"></span><h1>global_ocean<a class="headerlink" href="#global-ocean" title="Permalink to this headline">¶</a></h1>
+<span id="ocean-global-ocean"></span><h1>global_ocean<a class="headerlink" href="#global-ocean" title="Permalink to this heading">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">ocean/global_ocean</span></code> test group defines meshes,
 initial conditions, testing, and spin-up for global, realistic ocean domains.
 Currently, two mesh resolutions—<a class="reference internal" href="#global-ocean-mesh-qu240"><span class="std std-ref">QU240</span></a> and
@@ -156,7 +157,7 @@ incorporation into E3SM.  (compass does <em>not</em> provide the tools for
 creating many of the files needed for full E3SM coupling, a process that
 requires expert help from the E3SM development team.)</p>
 <section id="shared-config-options">
-<h2>Shared config options<a class="headerlink" href="#shared-config-options" title="Permalink to this headline">¶</a></h2>
+<h2>Shared config options<a class="headerlink" href="#shared-config-options" title="Permalink to this heading">¶</a></h2>
 <p>All <code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> test cases start the following shared config options.
 Note that meshes and test cases may modify these options, as noted below.</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># options for global ocean testcases</span><span class="w"></span>
@@ -278,7 +279,7 @@ based on the mesh and initial condition of the particular test case.</p>
 <p>The final group are used in the <a class="reference internal" href="#global-ocean-files-for-e3sm"><span class="std std-ref">files_for_e3sm test case</span></a>.</p>
 </section>
 <section id="metadata">
-<span id="global-ocean-metadata"></span><h2>Metadata<a class="headerlink" href="#metadata" title="Permalink to this headline">¶</a></h2>
+<span id="global-ocean-metadata"></span><h2>Metadata<a class="headerlink" href="#metadata" title="Permalink to this heading">¶</a></h2>
 <p>Most <code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> test cases produce output files in NetCDF format.  The
 MPAS development team <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Model/pull/507">decided in April 2020</a>
 to add a standardized set of metadata to these files to document the mesh and
@@ -335,7 +336,7 @@ you may wish to set:</p>
 </div>
 </section>
 <section id="meshes">
-<span id="global-ocean-meshes"></span><h2>Meshes<a class="headerlink" href="#meshes" title="Permalink to this headline">¶</a></h2>
+<span id="global-ocean-meshes"></span><h2>Meshes<a class="headerlink" href="#meshes" title="Permalink to this heading">¶</a></h2>
 <p>The process for creating global ocean meshes is described below in the
 <a class="reference internal" href="#global-ocean-mesh"><span class="std std-ref">mesh test case</span></a>.  compass currently supports 5 meshes.  Two are at
 such coarse horizontal resolution (240 km) that they are mostly useful for
@@ -344,7 +345,7 @@ in resolution between 30 and 60 km, are used as the lowest resolution meshes
 in E3SM’s <a class="reference external" href="https://e3sm.org/research/science-campaigns/">science campaigns</a>.
 The final mesh has resolution focused in the Southern Ocean around Antarctica.</p>
 <section id="qu240">
-<span id="global-ocean-mesh-qu240"></span><h3>QU240<a class="headerlink" href="#qu240" title="Permalink to this headline">¶</a></h3>
+<span id="global-ocean-mesh-qu240"></span><h3>QU240<a class="headerlink" href="#qu240" title="Permalink to this heading">¶</a></h3>
 <p>The quasi-uniform 240-km (QU240) mesh, is a global mesh with approximately
 240-km horizontal resolution everywhere (as the name implies).
 <a class="reference internal" href="#global-ocean-ice-shelf-cavities"><span class="std std-ref">Ice-shelf cavities</span></a> around Antarctica are excluded from the
@@ -354,7 +355,7 @@ configuration.  This mesh is also being used in studies of
 <a class="reference external" href="https://e3sm.org/can-we-switch-computers-an-application-of-e3sm-climate-reproducibility-tests/">climate reproducibility</a>.</p>
 </section>
 <section id="quwisc240">
-<span id="global-ocean-mesh-quwisc240"></span><h3>QUwISC240<a class="headerlink" href="#quwisc240" title="Permalink to this headline">¶</a></h3>
+<span id="global-ocean-mesh-quwisc240"></span><h3>QUwISC240<a class="headerlink" href="#quwisc240" title="Permalink to this heading">¶</a></h3>
 <p>The quasi-uniform 240-km mesh with ice-shelf cavities (QUwISC240) is nearly
 identical to the <a class="reference internal" href="#global-ocean-mesh-qu240"><span class="std std-ref">QU240</span></a> except that it includes the
 <a class="reference internal" href="#global-ocean-ice-shelf-cavities"><span class="std std-ref">Ice-shelf cavities</span></a> around Antarctica in the ocean domain.</p>
@@ -368,7 +369,7 @@ functionality related to ice-shelf cavities and sub-ice-shelf freshwater
 fluxes.</p>
 </section>
 <section id="ec30to60">
-<span id="global-ocean-mesh-ec30to60"></span><h3>EC30to60<a class="headerlink" href="#ec30to60" title="Permalink to this headline">¶</a></h3>
+<span id="global-ocean-mesh-ec30to60"></span><h3>EC30to60<a class="headerlink" href="#ec30to60" title="Permalink to this heading">¶</a></h3>
 <p>The eddy-closure 30- to 60-km (EC30to60) mesh is the coarsest MPAS-Ocean mesh
 used for scientific simulations.  It is coarse enough that it requires the
 <cite>Gent-McWilliams eddy closure &lt;https://doi.org/10.1175/1520-0485(1990)020&lt;0150:IMIOCM&gt;2.0.CO;2&gt;</cite>
@@ -381,7 +382,7 @@ resolutions as a function of latitude: ~30 km at around the equator, ~60 km
 at mid-latitudes and ~35 km near the the poles.</p>
 </section>
 <section id="ecwisc30to60">
-<span id="global-ocean-mesh-ecwisc30to60"></span><h3>ECwISC30to60<a class="headerlink" href="#ecwisc30to60" title="Permalink to this headline">¶</a></h3>
+<span id="global-ocean-mesh-ecwisc30to60"></span><h3>ECwISC30to60<a class="headerlink" href="#ecwisc30to60" title="Permalink to this heading">¶</a></h3>
 <p>The eddy-closure 30- to 60-km mesh with ice-shelf cavities (ECwISC30to60) is
 nearly identical to the <a class="reference internal" href="#global-ocean-mesh-ec30to60"><span class="std std-ref">EC30to60</span></a> except that it
 includes the <a class="reference internal" href="#global-ocean-ice-shelf-cavities"><span class="std std-ref">Ice-shelf cavities</span></a> around Antarctica in the
@@ -391,7 +392,7 @@ ocean domain.</p>
 the <a class="reference external" href="https://e3sm.org/research/cryosphere-ocean/v1-cryosphere-ocean/">E3SM v1 Cryosphere Campaign</a>.</p>
 </section>
 <section id="sowisc12to60">
-<span id="global-ocean-mesh-sowisc12to60"></span><h3>SOwISC12to60<a class="headerlink" href="#sowisc12to60" title="Permalink to this headline">¶</a></h3>
+<span id="global-ocean-mesh-sowisc12to60"></span><h3>SOwISC12to60<a class="headerlink" href="#sowisc12to60" title="Permalink to this heading">¶</a></h3>
 <p>The Southern Ocean 12- to 60-km mesh with ice-shelf cavities (SOwISC12to60),
 sometimes called the Southern Ocean regionally refined mesh (SORRM) is intended
 to be the main simulation mesh for the
@@ -403,7 +404,7 @@ in the North Pacific, and 35 km in the Arctic.  The mesh includes the
 <a class="reference internal image-reference" href="../../../_images/sowisc12to60.png"><img alt="../../../_images/sowisc12to60.png" class="align-center" src="../../../_images/sowisc12to60.png" style="width: 500px;" /></a>
 </section>
 <section id="wc14">
-<h3>WC14<a class="headerlink" href="#wc14" title="Permalink to this headline">¶</a></h3>
+<h3>WC14<a class="headerlink" href="#wc14" title="Permalink to this heading">¶</a></h3>
 <p>The Water Cycle 14- to 60-km mesh (WC14) is intended to be the main regionally
 refined simulation mesh for the
 <a class="reference external" href="https://e3sm.org/research/water-cycle/v2-water-cycle-research//">E3SM v2 Water Cycle Science Campaign</a>.</p>
@@ -414,7 +415,7 @@ equator, and 35 km around Antarctica.</p>
 </section>
 </section>
 <section id="ice-shelf-cavities">
-<span id="global-ocean-ice-shelf-cavities"></span><h2>Ice-shelf cavities<a class="headerlink" href="#ice-shelf-cavities" title="Permalink to this headline">¶</a></h2>
+<span id="global-ocean-ice-shelf-cavities"></span><h2>Ice-shelf cavities<a class="headerlink" href="#ice-shelf-cavities" title="Permalink to this heading">¶</a></h2>
 <p>As discussed in <a class="reference internal" href="../framework/ice_shelf.html#ocean-ice-shelf-cavities"><span class="std std-ref">Ice shelf-cavities</span></a>, the inclusion of ice-shelf
 cavities and melt rates below ice shelves around Antarctica is a major objective
 of the
@@ -434,11 +435,11 @@ update the pressure from the ice shelf to be in dynamic balance with the ice
 draft.</p>
 </section>
 <section id="biogeochemsitry">
-<span id="global-ocean-bgc"></span><h2>Biogeochemsitry<a class="headerlink" href="#biogeochemsitry" title="Permalink to this headline">¶</a></h2>
+<span id="global-ocean-bgc"></span><h2>Biogeochemsitry<a class="headerlink" href="#biogeochemsitry" title="Permalink to this heading">¶</a></h2>
 <p>&lt;&lt;&lt;I need help here!!!&gt;&gt;&gt;</p>
 </section>
 <section id="forward-step">
-<span id="global-ocean-forward"></span><h2>Forward step<a class="headerlink" href="#forward-step" title="Permalink to this headline">¶</a></h2>
+<span id="global-ocean-forward"></span><h2>Forward step<a class="headerlink" href="#forward-step" title="Permalink to this heading">¶</a></h2>
 <p>The only step shared across many <code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> test cases is <code class="docutils literal notranslate"><span class="pre">forward</span></code>
 (though I doesn’t always go by that name), which integrates the MPAS-Ocean
 model in time in “forward” mode.</p>
@@ -455,11 +456,11 @@ allowed, the number of threads, and (in the future) the maximum memory and disk
 usage.</p>
 </section>
 <section id="test-cases">
-<span id="global-ocean-test-cases"></span><h2>Test cases<a class="headerlink" href="#test-cases" title="Permalink to this headline">¶</a></h2>
+<span id="global-ocean-test-cases"></span><h2>Test cases<a class="headerlink" href="#test-cases" title="Permalink to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> includes 9 types of test cases (each with different versions
 for different meshes, initial conditions, time integrators, etc.).</p>
 <section id="mesh-test-case">
-<span id="global-ocean-mesh"></span><h3>mesh test case<a class="headerlink" href="#mesh-test-case" title="Permalink to this headline">¶</a></h3>
+<span id="global-ocean-mesh"></span><h3>mesh test case<a class="headerlink" href="#mesh-test-case" title="Permalink to this heading">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/&lt;mesh&gt;/mesh</span></code> test case (where <code class="docutils literal notranslate"><span class="pre">&lt;mesh&gt;</span></code> is the name
 of a mesh, e.g. <a class="reference internal" href="#global-ocean-mesh-qu240"><span class="std std-ref">QU240</span></a>) creates a “base” horizontal
 mesh covering the globe with a distribution of resolution according to the
@@ -490,7 +491,7 @@ ensure that all parts of the global ocean are connected to one another by at
 least one neighboring cell.</p>
 </section>
 <section id="init-test-case">
-<span id="global-ocean-init"></span><h3>init test case<a class="headerlink" href="#init-test-case" title="Permalink to this headline">¶</a></h3>
+<span id="global-ocean-init"></span><h3>init test case<a class="headerlink" href="#init-test-case" title="Permalink to this heading">¶</a></h3>
 <p>Once the horizontal mesh has been created, the next step is to create a
 vertical mesh and and initial condition.</p>
 <p>The default vertical coordinate depends on the mesh being used, as described
@@ -522,7 +523,7 @@ associate with each initial condition for a given <code class="docutils literal 
 </ul>
 </section>
 <section id="performance-test-test-case">
-<span id="global-ocean-performance-test"></span><h3>performance_test test case<a class="headerlink" href="#performance-test-test-case" title="Permalink to this headline">¶</a></h3>
+<span id="global-ocean-performance-test"></span><h3>performance_test test case<a class="headerlink" href="#performance-test-test-case" title="Permalink to this heading">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">performance_test</span></code> test case runs a short forward integration, then
 performs validation of prognostic variables (layer thickness, velocity,
 temperature and salinity) and, if applicable, variables related to fluxes
@@ -543,7 +544,7 @@ more of these versions of the <code class="docutils literal notranslate"><span c
 necessarily for all combinations of initial conditions and time integrators.</p>
 </section>
 <section id="restart-test-test-case">
-<span id="global-ocean-restart-test"></span><h3>restart_test test case<a class="headerlink" href="#restart-test-test-case" title="Permalink to this headline">¶</a></h3>
+<span id="global-ocean-restart-test"></span><h3>restart_test test case<a class="headerlink" href="#restart-test-test-case" title="Permalink to this heading">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">restart_test</span></code> test case runs a short forward integration, saving an
 intermediate restart file.  Then, in a second forward step, the test continues
 the run from the restart file.  Output from the two steps (<code class="docutils literal notranslate"><span class="pre">full_run</span></code> and
@@ -562,7 +563,7 @@ or more of these versions of the <code class="docutils literal notranslate"><spa
 </ul>
 </section>
 <section id="decomp-test-test-case">
-<span id="global-ocean-decomp-test"></span><h3>decomp_test test case<a class="headerlink" href="#decomp-test-test-case" title="Permalink to this headline">¶</a></h3>
+<span id="global-ocean-decomp-test"></span><h3>decomp_test test case<a class="headerlink" href="#decomp-test-test-case" title="Permalink to this heading">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">decomp_test</span></code> test case runs a short forward integration with 4 cores
 (<code class="docutils literal notranslate"><span class="pre">4proc</span></code>) and then performs the same run again in another step with 8 cores
 (<code class="docutils literal notranslate"><span class="pre">8proc</span></code>).  Prognostic variables (layer thickness, velocity, temperature and
@@ -580,7 +581,7 @@ or more of these versions of the <code class="docutils literal notranslate"><spa
 </ul>
 </section>
 <section id="threads-test-test-case">
-<span id="global-ocean-threads-test"></span><h3>threads_test test case<a class="headerlink" href="#threads-test-test-case" title="Permalink to this headline">¶</a></h3>
+<span id="global-ocean-threads-test"></span><h3>threads_test test case<a class="headerlink" href="#threads-test-test-case" title="Permalink to this heading">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">threads_test</span></code> test case runs a short forward integration with 1 thread
 and 4 cores (<code class="docutils literal notranslate"><span class="pre">1thread</span></code>) and then performs the same run again in another step
 with 2 threads and 4 cores (<code class="docutils literal notranslate"><span class="pre">2thread</span></code>).  Prognostic variables (layer
@@ -599,7 +600,7 @@ or more of these versions of the <code class="docutils literal notranslate"><spa
 </ul>
 </section>
 <section id="analysis-test-test-case">
-<span id="global-ocean-analysis-test"></span><h3>analysis_test test case<a class="headerlink" href="#analysis-test-test-case" title="Permalink to this headline">¶</a></h3>
+<span id="global-ocean-analysis-test"></span><h3>analysis_test test case<a class="headerlink" href="#analysis-test-test-case" title="Permalink to this heading">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">analysis_test</span></code> is used to test the proper function and validate the
 output from a large number of MPAS-Ocean’s “analysis members”.  Analysis
 members allow MPAS-Ocean to compute analysis during the model run, meaning
@@ -639,7 +640,7 @@ or more of these versions of the <code class="docutils literal notranslate"><spa
 </ul>
 </section>
 <section id="daily-output-test-test-case">
-<span id="global-ocean-daily-output-test"></span><h3>daily_output_test test case<a class="headerlink" href="#daily-output-test-test-case" title="Permalink to this headline">¶</a></h3>
+<span id="global-ocean-daily-output-test"></span><h3>daily_output_test test case<a class="headerlink" href="#daily-output-test-test-case" title="Permalink to this heading">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">daily_output_test</span></code> is similar to the <a class="reference internal" href="#global-ocean-analysis-test"><span class="std std-ref">analysis_test test case</span></a>:
 it is used to run and validate the <code class="docutils literal notranslate"><span class="pre">timeSeriesStatsDaily</span></code> analysis member.
 The reason for a separate test is that the <code class="docutils literal notranslate"><span class="pre">daily_output_test</span></code> must run for
@@ -665,7 +666,7 @@ or more of these versions of the <code class="docutils literal notranslate"><spa
 </ul>
 </section>
 <section id="dynamic-adjustment-test-case">
-<span id="global-ocean-dynamic-adjustment"></span><h3>dynamic_adjustment test case<a class="headerlink" href="#dynamic-adjustment-test-case" title="Permalink to this headline">¶</a></h3>
+<span id="global-ocean-dynamic-adjustment"></span><h3>dynamic_adjustment test case<a class="headerlink" href="#dynamic-adjustment-test-case" title="Permalink to this heading">¶</a></h3>
 <p>One of the main purposes of compass is to provide a way of spinning up
 MPAS-Ocean initial conditions to dissipate transients that result from starting
 the simulation from rest.  Particularly for high resolution meshes, surface
@@ -699,7 +700,7 @@ dynamic-adjustment test cases for each mesh along with the related
 <a class="reference internal" href="#global-ocean-files-for-e3sm"><span class="std std-ref">files_for_e3sm test case</span></a>.</p>
 </section>
 <section id="files-for-e3sm-test-case">
-<span id="global-ocean-files-for-e3sm"></span><h3>files_for_e3sm test case<a class="headerlink" href="#files-for-e3sm-test-case" title="Permalink to this headline">¶</a></h3>
+<span id="global-ocean-files-for-e3sm"></span><h3>files_for_e3sm test case<a class="headerlink" href="#files-for-e3sm-test-case" title="Permalink to this heading">¶</a></h3>
 <p>After running the <a class="reference internal" href="#global-ocean-dynamic-adjustment"><span class="std std-ref">dynamic_adjustment test case</span></a>, users may be interested in
 preparing a number of files needed for including a new mesh in E3SM.  These
 files include: MPAS-Ocean and MPAS-Seaice initial conditions (including
@@ -719,7 +720,7 @@ there is not a way to use new meshes in E3SM without help from an expert from
 the E3SM team.</p>
 </section>
 <section id="make-diagnostic-files-test-case">
-<span id="global-ocean-make-diagnostic-files"></span><h3>make_diagnostic_files test case<a class="headerlink" href="#make-diagnostic-files-test-case" title="Permalink to this headline">¶</a></h3>
+<span id="global-ocean-make-diagnostic-files"></span><h3>make_diagnostic_files test case<a class="headerlink" href="#make-diagnostic-files-test-case" title="Permalink to this heading">¶</a></h3>
 <p>Sometimes, we already have an E3SM initial condition but the diagnostics files
 for <a class="reference external" href="https://mpas-dev.github.io/MPAS-Analysis/stable/">MPAS-Analysis</a>
 either weren’t created with the initial condition or they are out of date.</p>

@@ -14,6 +14,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -130,19 +131,19 @@
            <div itemprop="articleBody">
              
   <section id="circular-shelf">
-<span id="dev-landice-circular-shelf"></span><h1>circular_shelf<a class="headerlink" href="#circular-shelf" title="Permalink to this headline">¶</a></h1>
+<span id="dev-landice-circular-shelf"></span><h1>circular_shelf<a class="headerlink" href="#circular-shelf" title="Permalink to this heading">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">circular_shelf</span></code> test group (<a class="reference internal" href="../generated/compass.landice.tests.circular_shelf.CircularShelf.html#compass.landice.tests.circular_shelf.CircularShelf" title="compass.landice.tests.circular_shelf.CircularShelf"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.circular_shelf.CircularShelf</span></code></a>)
 implements variants a circular_shelf test case (see <a class="reference internal" href="../../../users_guide/landice/test_groups/circular_shelf.html#landice-circular-shelf"><span class="std std-ref">circular_shelf</span></a>). Here,
 we describe the shared framework for this test group.</p>
 <section id="framework">
-<span id="dev-landice-circular-shelf-framework"></span><h2>framework<a class="headerlink" href="#framework" title="Permalink to this headline">¶</a></h2>
+<span id="dev-landice-circular-shelf-framework"></span><h2>framework<a class="headerlink" href="#framework" title="Permalink to this heading">¶</a></h2>
 <p>The shared config options for the <code class="docutils literal notranslate"><span class="pre">circular_shelf</span></code> test group are described
 in <a class="reference internal" href="../../../users_guide/landice/test_groups/circular_shelf.html#landice-circular-shelf"><span class="std std-ref">circular_shelf</span></a> in the User’s Guide.</p>
 <p>Additionally, the test group has a shared <code class="docutils literal notranslate"><span class="pre">namelist.landice</span></code> file with
 appropriate namelist options, and a <code class="docutils literal notranslate"><span class="pre">streams.landice</span></code> file that defines
 <code class="docutils literal notranslate"><span class="pre">input</span></code>, <code class="docutils literal notranslate"><span class="pre">restart</span></code>, and <code class="docutils literal notranslate"><span class="pre">output</span></code> streams.</p>
 <section id="setupmesh">
-<h3>SetupMesh<a class="headerlink" href="#setupmesh" title="Permalink to this headline">¶</a></h3>
+<h3>SetupMesh<a class="headerlink" href="#setupmesh" title="Permalink to this heading">¶</a></h3>
 <p>The class <a class="reference internal" href="../generated/compass.landice.tests.circular_shelf.setup_mesh.SetupMesh.html#compass.landice.tests.circular_shelf.setup_mesh.SetupMesh" title="compass.landice.tests.circular_shelf.setup_mesh.SetupMesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.circular_shelf.setup_mesh.SetupMesh</span></code></a> defines a
 step for setting up the mesh for the test case.</p>
 <p>The horizontal mesh is
@@ -155,12 +156,12 @@ to partition the mesh before the model run.</p>
 <code class="docutils literal notranslate"><span class="pre">_setup_circular_shelf_initial_conditions()</span></code>.</p>
 </section>
 <section id="runmodel">
-<h3>RunModel<a class="headerlink" href="#runmodel" title="Permalink to this headline">¶</a></h3>
+<h3>RunModel<a class="headerlink" href="#runmodel" title="Permalink to this heading">¶</a></h3>
 <p>The class <a class="reference internal" href="../generated/compass.landice.tests.circular_shelf.run_model.RunModel.html#compass.landice.tests.circular_shelf.run_model.RunModel" title="compass.landice.tests.circular_shelf.run_model.RunModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.circular_shelf.run_model.RunModel</span></code></a> defines a
 step for running MALI from the initial condition produced in <code class="docutils literal notranslate"><span class="pre">SetupMesh</span></code>.</p>
 </section>
 <section id="visualize">
-<h3>Visualize<a class="headerlink" href="#visualize" title="Permalink to this headline">¶</a></h3>
+<h3>Visualize<a class="headerlink" href="#visualize" title="Permalink to this heading">¶</a></h3>
 <p>The <a class="reference internal" href="../generated/compass.landice.tests.circular_shelf.visualize.Visualize.html#compass.landice.tests.circular_shelf.visualize.Visualize" title="compass.landice.tests.circular_shelf.visualize.Visualize"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.circular_shelf.visualize.Visualize</span></code></a> step is optional
 in each test case and can be run manually to plot the results of the test case.
 It is control by the config options in the <code class="docutils literal notranslate"><span class="pre">circular_shelf_viz</span></code> section.</p>
@@ -172,7 +173,7 @@ It is control by the config options in the <code class="docutils literal notrans
 </section>
 </section>
 <section id="decompositiontest">
-<span id="dev-landice-circular-shelf-smoke-test"></span><h2>DecompositionTest<a class="headerlink" href="#decompositiontest" title="Permalink to this headline">¶</a></h2>
+<span id="dev-landice-circular-shelf-smoke-test"></span><h2>DecompositionTest<a class="headerlink" href="#decompositiontest" title="Permalink to this heading">¶</a></h2>
 <p>The <a class="reference internal" href="../generated/compass.landice.tests.circular_shelf.decomposition_test.DecompositionTest.html#compass.landice.tests.circular_shelf.decomposition_test.DecompositionTest" title="compass.landice.tests.circular_shelf.decomposition_test.DecompositionTest"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.circular_shelf.decomposition_test.DecompositionTest</span></code></a>
 performs a 200-year run once on 1 core and once on 4 cores.  It ensures that
 <code class="docutils literal notranslate"><span class="pre">normalVelocity</span></code>, <code class="docutils literal notranslate"><span class="pre">uReconstructX</span></code>, and <code class="docutils literal notranslate"><span class="pre">uReconstructY</span></code> are within a

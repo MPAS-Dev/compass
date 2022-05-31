@@ -14,6 +14,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -133,30 +134,30 @@
            <div itemprop="articleBody">
              
   <section id="humboldt">
-<span id="dev-landice-humboldt"></span><h1>humboldt<a class="headerlink" href="#humboldt" title="Permalink to this headline">¶</a></h1>
+<span id="dev-landice-humboldt"></span><h1>humboldt<a class="headerlink" href="#humboldt" title="Permalink to this heading">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">humboldt</span></code> test group (<a class="reference internal" href="../generated/compass.landice.tests.humboldt.Humboldt.html#compass.landice.tests.humboldt.Humboldt" title="compass.landice.tests.humboldt.Humboldt"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.humboldt.Humboldt</span></code></a>)
 creates a variable resolution 1-10 km mesh for a regional domain of Humboldt Glacier
 (see <a class="reference internal" href="../../../users_guide/landice/test_groups/humboldt.html#landice-humboldt"><span class="std std-ref">humboldt</span></a>), and includes a number of tests running MALI on a
 pre-generated mesh.  Here, we describe the shared framework for this test group.</p>
 <section id="framework">
-<span id="dev-landice-humboldt-framework"></span><h2>framework<a class="headerlink" href="#framework" title="Permalink to this headline">¶</a></h2>
+<span id="dev-landice-humboldt-framework"></span><h2>framework<a class="headerlink" href="#framework" title="Permalink to this heading">¶</a></h2>
 <p>The shared config options for the <code class="docutils literal notranslate"><span class="pre">humboldt</span></code> test group are described
 in <a class="reference internal" href="../../../users_guide/landice/test_groups/humboldt.html#landice-humboldt"><span class="std std-ref">humboldt</span></a> in the User’s Guide.</p>
 <section id="mesh">
-<h3>mesh<a class="headerlink" href="#mesh" title="Permalink to this headline">¶</a></h3>
+<h3>mesh<a class="headerlink" href="#mesh" title="Permalink to this heading">¶</a></h3>
 <p>The class <a class="reference internal" href="../generated/compass.landice.tests.humboldt.mesh.Mesh.html#compass.landice.tests.humboldt.mesh.Mesh" title="compass.landice.tests.humboldt.mesh.Mesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.humboldt.mesh.Mesh</span></code></a>
 defines a step for creating a variable resolution Humboldt Glacier mesh.
 This is used by the <code class="docutils literal notranslate"><span class="pre">mesh_gen</span></code> test case.</p>
 </section>
 </section>
 <section id="mesh-gen">
-<h2>mesh_gen<a class="headerlink" href="#mesh-gen" title="Permalink to this headline">¶</a></h2>
+<h2>mesh_gen<a class="headerlink" href="#mesh-gen" title="Permalink to this heading">¶</a></h2>
 <p>The <a class="reference internal" href="../generated/compass.landice.tests.humboldt.mesh_gen.MeshGen.html#compass.landice.tests.humboldt.mesh_gen.MeshGen" title="compass.landice.tests.humboldt.mesh_gen.MeshGen"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.humboldt.mesh_gen.MeshGen</span></code></a>
 calls the <a class="reference internal" href="../generated/compass.landice.tests.humboldt.mesh.Mesh.html#compass.landice.tests.humboldt.mesh.Mesh" title="compass.landice.tests.humboldt.mesh.Mesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.humboldt.mesh.Mesh</span></code></a> to create
 the 1-10 km variable resolution Humboldt Glacier mesh.</p>
 </section>
 <section id="run-model">
-<h2>run_model<a class="headerlink" href="#run-model" title="Permalink to this headline">¶</a></h2>
+<h2>run_model<a class="headerlink" href="#run-model" title="Permalink to this heading">¶</a></h2>
 <p>The <a class="reference internal" href="../generated/compass.landice.tests.humboldt.run_model.RunModel.html#compass.landice.tests.humboldt.run_model.RunModel" title="compass.landice.tests.humboldt.run_model.RunModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.humboldt.run_model.RunModel</span></code></a> defines
 the process for setting up and running a MALI simulation for the humboldt
 configuration.  It is called by
@@ -165,13 +166,13 @@ and
 <code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.humboldt.restartn_test.RestartTest</span></code>.</p>
 </section>
 <section id="decomposition-test">
-<h2>decomposition_test<a class="headerlink" href="#decomposition-test" title="Permalink to this headline">¶</a></h2>
+<h2>decomposition_test<a class="headerlink" href="#decomposition-test" title="Permalink to this heading">¶</a></h2>
 <p>The compass.landice.tests.humboldt.decomposition_test.DecompositionTest
 performs the same simulation on different numbers of cores. It ensures
 relevant variables are identical or have expected differences.</p>
 </section>
 <section id="restart-test">
-<h2>restart_test<a class="headerlink" href="#restart-test" title="Permalink to this headline">¶</a></h2>
+<h2>restart_test<a class="headerlink" href="#restart-test" title="Permalink to this heading">¶</a></h2>
 <p>The compass.landice.tests.humboldt.restart_test.RestartTest performs a
 run of a full specified duration followed by a short run plus a restart
 to equal the same total duration.  It checks that relevant variables

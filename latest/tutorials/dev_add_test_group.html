@@ -14,6 +14,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -138,7 +139,7 @@
            <div itemprop="articleBody">
              
   <section id="developer-tutorial-adding-a-new-test-group">
-<span id="dev-tutorial-add-test-group"></span><h1>Developer Tutorial: Adding a new test group<a class="headerlink" href="#developer-tutorial-adding-a-new-test-group" title="Permalink to this headline">¶</a></h1>
+<span id="dev-tutorial-add-test-group"></span><h1>Developer Tutorial: Adding a new test group<a class="headerlink" href="#developer-tutorial-adding-a-new-test-group" title="Permalink to this heading">¶</a></h1>
 <p>This tutorial presents a step-by-step guide to adding a new test group to the
 <code class="docutils literal notranslate"><span class="pre">compass</span></code> python package (see the <a class="reference internal" href="../glossary.html#glossary"><span class="std std-ref">Glossary</span></a> for definitions of these
 terms).  In this tutorial, I will use the <a class="reference internal" href="../developers_guide/ocean/test_groups/baroclinic_channel.html#dev-ocean-baroclinic-channel"><span class="std std-ref">baroclinic_channel</span></a>
@@ -146,7 +147,7 @@ as an example.  This test group was actually ported from <a class="reference int
 roughly in the manner described in <a class="reference internal" href="dev_porting_legacy.html#dev-tutorial-porting-legacy"><span class="std std-ref">Developer Tutorial: Porting a legacy COMPASS test group</span></a>.  But we
 will use it to describe the process for creating a test group from scratch.</p>
 <section id="getting-started">
-<span id="dev-tutorial-add-test-group-getting-started"></span><h2>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<span id="dev-tutorial-add-test-group-getting-started"></span><h2>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this heading">¶</a></h2>
 <p>To begin with, you will need to check out the compass repo and create  a new
 branch from <code class="docutils literal notranslate"><span class="pre">master</span></code> for developing the new test group.  For this purpose, we
 will stick with the simpler approach in <a class="reference internal" href="../developers_guide/quick_start.html#dev-compass-repo"><span class="std std-ref">Set up a compass repository: for beginners</span></a> here, but feel
@@ -210,7 +211,7 @@ for your machine.</p>
 <p>Now, we’re ready to start developing!</p>
 </section>
 <section id="making-a-new-test-group">
-<span id="dev-tutorial-add-test-group-make-test-group"></span><h2>Making a new test group<a class="headerlink" href="#making-a-new-test-group" title="Permalink to this headline">¶</a></h2>
+<span id="dev-tutorial-add-test-group-make-test-group"></span><h2>Making a new test group<a class="headerlink" href="#making-a-new-test-group" title="Permalink to this heading">¶</a></h2>
 <p>Use any method you like for editing code.  If you haven’t settled on a method
 and are working on your own laptop or desktop, you may want to try an
 integrated development environment (<a class="reference external" href="https://www.jetbrains.com/pycharm/">PyCharm</a>
@@ -298,7 +299,7 @@ it to the <code class="docutils literal notranslate"><span class="pre">Ocean</sp
 <code class="docutils literal notranslate"><span class="pre">compass</span></code> knows about the test group.</p>
 </section>
 <section id="adding-a-default-test-case">
-<span id="dev-tutorial-add-test-group-add-default"></span><h2>Adding a “default” test case<a class="headerlink" href="#adding-a-default-test-case" title="Permalink to this headline">¶</a></h2>
+<span id="dev-tutorial-add-test-group-add-default"></span><h2>Adding a “default” test case<a class="headerlink" href="#adding-a-default-test-case" title="Permalink to this heading">¶</a></h2>
 <p>We’ll add a test case called <code class="docutils literal notranslate"><span class="pre">default</span></code> to <code class="docutils literal notranslate"><span class="pre">baroclinic_channel</span></code> by making a
 <code class="docutils literal notranslate"><span class="pre">default</span></code> package within <code class="docutils literal notranslate"><span class="pre">compass/ocean/tests/baroclinic_channel</span></code>.  First,
 we make the directory <code class="docutils literal notranslate"><span class="pre">compass/ocean/tests/baroclinic_channel/default</span></code>, then
@@ -335,7 +336,7 @@ this test case belongs to on to the base class’s constructor
 (<code class="docutils literal notranslate"><span class="pre">super().__init__()</span></code>) and give the test case a name, <code class="docutils literal notranslate"><span class="pre">default</span></code>.</p>
 </section>
 <section id="varying-resolution-or-other-parameters">
-<h2>Varying resolution (or other parameters)<a class="headerlink" href="#varying-resolution-or-other-parameters" title="Permalink to this headline">¶</a></h2>
+<h2>Varying resolution (or other parameters)<a class="headerlink" href="#varying-resolution-or-other-parameters" title="Permalink to this heading">¶</a></h2>
 <p>The test cases in the baroclinic channel test group support multiple
 resolutions.  In test groups like this one, it is typically convenient to
 define multiple versions of the test case by passing the resolution as a
@@ -429,7 +430,7 @@ see how the resolution will be specified.  We add the following to the file
 for regression testing and will only be run at the coarsest resolution, 10 km.</p>
 </section>
 <section id="adding-the-initial-state-step">
-<h2>Adding the initial_state step<a class="headerlink" href="#adding-the-initial-state-step" title="Permalink to this headline">¶</a></h2>
+<h2>Adding the initial_state step<a class="headerlink" href="#adding-the-initial-state-step" title="Permalink to this heading">¶</a></h2>
 <p>In <code class="docutils literal notranslate"><span class="pre">compass</span></code>, steps are defined in python modules in classes that descend
 from the <a class="reference internal" href="../developers_guide/generated/compass.Step.html#compass.Step" title="compass.step.Step"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.step.Step</span></code></a> base class.  The modules can be defined
 within the test case package (if they are unique to the test case) or in the
@@ -479,7 +480,7 @@ subdirectory name, possibly with multiple levels of directories.  This is
 particularly important for parameter studies, an example of which can be seen
 in the <code class="docutils literal notranslate"><span class="pre">compass/ocean/tests/global_convergence/cosine_bell</span></code> test case.</p>
 <section id="creating-a-horizontal-mesh">
-<h3>Creating a horizontal mesh<a class="headerlink" href="#creating-a-horizontal-mesh" title="Permalink to this headline">¶</a></h3>
+<h3>Creating a horizontal mesh<a class="headerlink" href="#creating-a-horizontal-mesh" title="Permalink to this heading">¶</a></h3>
 <p>While <a class="reference internal" href="../index.html#legacy-compass"><span class="std std-ref">Legacy COMPASS</span></a> typically used MPAS-Ocean itself to define initial
 conditions for test cases (by running the model “init” mode), we have found
 that it is usually much easier to set up a mesh and define an initial condition
@@ -531,7 +532,7 @@ direction but not in y. The number of cells in mesh comes from config options
 discussing how to test the config options used to generate the horizontal mesh.</p>
 </section>
 <section id="setting-config-options-based-on-resolution">
-<h3>Setting config options based on resolution<a class="headerlink" href="#setting-config-options-based-on-resolution" title="Permalink to this headline">¶</a></h3>
+<h3>Setting config options based on resolution<a class="headerlink" href="#setting-config-options-based-on-resolution" title="Permalink to this heading">¶</a></h3>
 <p>We need a way to get the number of mesh cells and the size of these cells for
 a given resolution.  We could add these to the test case directly but it is
 often a good idea to add them to a config file instead.  This way, a user
@@ -586,7 +587,7 @@ up in the config file that gets put in the test case’s work directory and
 symlinked into each steps work directory.</p>
 </section>
 <section id="creating-a-vertical-coordinate">
-<h3>Creating a vertical coordinate<a class="headerlink" href="#creating-a-vertical-coordinate" title="Permalink to this headline">¶</a></h3>
+<h3>Creating a vertical coordinate<a class="headerlink" href="#creating-a-vertical-coordinate" title="Permalink to this heading">¶</a></h3>
 <p>This step is specific to test groups in the <code class="docutils literal notranslate"><span class="pre">ocean</span></code> MPAS core.  Those in the
 <code class="docutils literal notranslate"><span class="pre">landice</span></code> core use a different approach to creating vertical coordinates.
 Returning to the <code class="docutils literal notranslate"><span class="pre">run()</span></code> method in the <code class="docutils literal notranslate"><span class="pre">initial_state</span></code> step, the code
@@ -647,7 +648,7 @@ the config file for each test case as part of setup:</p>
 </div>
 </section>
 <section id="creating-an-initial-condition">
-<h3>Creating an initial condition<a class="headerlink" href="#creating-an-initial-condition" title="Permalink to this headline">¶</a></h3>
+<h3>Creating an initial condition<a class="headerlink" href="#creating-an-initial-condition" title="Permalink to this heading">¶</a></h3>
 <p>The final part of the <code class="docutils literal notranslate"><span class="pre">run()</span></code> method in the <code class="docutils literal notranslate"><span class="pre">initial_state</span></code> step is to
 define the initial condition:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">xarray</span>
@@ -779,7 +780,7 @@ them in the test case so that users can more easily alter the test case and
 also to provide a relatively obvious place to document these parameters.</p>
 </section>
 <section id="adding-step-outputs">
-<h3>Adding step outputs<a class="headerlink" href="#adding-step-outputs" title="Permalink to this headline">¶</a></h3>
+<h3>Adding step outputs<a class="headerlink" href="#adding-step-outputs" title="Permalink to this heading">¶</a></h3>
 <p>Now that we’ve written the full <code class="docutils literal notranslate"><span class="pre">run()</span></code> method for the step, we know what
 the output files will be.  It is a very good idea to define the outputs
 explicitly.  For one, compass will check to make sure they are created as
@@ -803,7 +804,7 @@ explicitly including other outputs is not a problem.</p>
 </section>
 </section>
 <section id="adding-the-forward-step">
-<h2>Adding the forward step<a class="headerlink" href="#adding-the-forward-step" title="Permalink to this headline">¶</a></h2>
+<h2>Adding the forward step<a class="headerlink" href="#adding-the-forward-step" title="Permalink to this heading">¶</a></h2>
 <p>Now, we will add a <code class="docutils literal notranslate"><span class="pre">forward</span></code> step for running the MPAS-Ocean model forward
 in time from the initial condition created in <code class="docutils literal notranslate"><span class="pre">initial_state</span></code>.  <code class="docutils literal notranslate"><span class="pre">forward</span></code>
 is conceptually similar to <code class="docutils literal notranslate"><span class="pre">initial_state</span></code> in that we make a <code class="docutils literal notranslate"><span class="pre">Forward</span></code>
@@ -885,7 +886,7 @@ case.</p>
 </pre></div>
 </div>
 <section id="defining-namelist-options">
-<h3>Defining namelist options<a class="headerlink" href="#defining-namelist-options" title="Permalink to this headline">¶</a></h3>
+<h3>Defining namelist options<a class="headerlink" href="#defining-namelist-options" title="Permalink to this heading">¶</a></h3>
 <p>MPAS components require both namelist and streams files to work properly.  An
 important part of compass’ functionality is that it takes the default namelist
 options from a given build of an MPAS component and modifies only those
@@ -955,7 +956,7 @@ into the constructor (if it is not <code class="docutils literal notranslate"><s
 </div>
 </section>
 <section id="defining-streams">
-<h3>Defining streams<a class="headerlink" href="#defining-streams" title="Permalink to this headline">¶</a></h3>
+<h3>Defining streams<a class="headerlink" href="#defining-streams" title="Permalink to this heading">¶</a></h3>
 <p>Similarly, it is convenient to define input and output streams for MPAS-Ocean
 using a streams file, very similar to what you will see when the test case
 is set up. In the <code class="docutils literal notranslate"><span class="pre">baroclinic_channel</span></code> test group, we add a
@@ -1012,7 +1013,7 @@ step, the stream <code class="docutils literal notranslate"><span class="pre">me
 streams file can be found, and the second is the file name.</p>
 </section>
 <section id="defining-the-run-method">
-<h3>Defining the run method<a class="headerlink" href="#defining-the-run-method" title="Permalink to this headline">¶</a></h3>
+<h3>Defining the run method<a class="headerlink" href="#defining-the-run-method" title="Permalink to this heading">¶</a></h3>
 <p>With these inputs, outputs, namelists and streams files defined, we can
 implement the <code class="docutils literal notranslate"><span class="pre">run()</span></code> method:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">run_model</span>
@@ -1035,7 +1036,7 @@ how many cores and threads to run on, which namelist and streams files to use,
 which MPAS core this test case belongs to, and so on.</p>
 </section>
 <section id="adding-the-steps-to-the-test-case">
-<h3>Adding the steps to the test case<a class="headerlink" href="#adding-the-steps-to-the-test-case" title="Permalink to this headline">¶</a></h3>
+<h3>Adding the steps to the test case<a class="headerlink" href="#adding-the-steps-to-the-test-case" title="Permalink to this heading">¶</a></h3>
 <p>Returning to the <code class="docutils literal notranslate"><span class="pre">default</span></code> test case, we are now ready to add
 <code class="docutils literal notranslate"><span class="pre">initial_state</span></code> and <code class="docutils literal notranslate"><span class="pre">forward</span></code> steps to the test case.  In
 <code class="docutils literal notranslate"><span class="pre">compass/ocean/tests/baroclinic_channel/default/__init.py</span></code>, we add:</p>
@@ -1087,7 +1088,7 @@ not pass a viscosity (meaning it will use the default value from
 </section>
 </section>
 <section id="adding-an-rpe-test-test-case">
-<h2>Adding an “rpe_test” test case<a class="headerlink" href="#adding-an-rpe-test-test-case" title="Permalink to this headline">¶</a></h2>
+<h2>Adding an “rpe_test” test case<a class="headerlink" href="#adding-an-rpe-test-test-case" title="Permalink to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">baroclinic_channel</span></code> test group contains several test cases in addition
 to <code class="docutils literal notranslate"><span class="pre">default</span></code>.  The <code class="docutils literal notranslate"><span class="pre">restart_test</span></code> checks whether running the model for one
 times step, writing out a restart file, loading the model state from the
@@ -1182,7 +1183,7 @@ tet case. We add the following to the file <code class="docutils literal notrans
 <p>The <code class="docutils literal notranslate"><span class="pre">rpe_test</span></code> test case, unlike all the other test cases in this group, can
 be run at all three supported resolutions.</p>
 <section id="id1">
-<h3>Adding the steps to the test case<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<h3>Adding the steps to the test case<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
 <p>We are now ready to add the <code class="docutils literal notranslate"><span class="pre">initial_state</span></code> step and variants of the
 <code class="docutils literal notranslate"><span class="pre">forward</span></code> step to the test case.  In
 <code class="docutils literal notranslate"><span class="pre">compass/ocean/tests/baroclinic_channel/rpe_test/__init.py</span></code>, we add:</p>
@@ -1280,7 +1281,7 @@ test case is the only one to use the <code class="docutils literal notranslate">
 </div>
 </section>
 <section id="defining-namelist-options-and-streams-files">
-<h3>Defining namelist options and streams files<a class="headerlink" href="#defining-namelist-options-and-streams-files" title="Permalink to this headline">¶</a></h3>
+<h3>Defining namelist options and streams files<a class="headerlink" href="#defining-namelist-options-and-streams-files" title="Permalink to this heading">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">rpe_test</span></code> requires a few specific namelist options and streams to
 accommodate the longer run and to modify the variables that are written out.
 We add these namelist options within <code class="docutils literal notranslate"><span class="pre">namelist.forward</span></code> in the test case’s
@@ -1315,7 +1316,7 @@ analysis step.</p>
 </section>
 </section>
 <section id="adding-the-analysis-step">
-<h2>Adding the analysis step<a class="headerlink" href="#adding-the-analysis-step" title="Permalink to this headline">¶</a></h2>
+<h2>Adding the analysis step<a class="headerlink" href="#adding-the-analysis-step" title="Permalink to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">rpe_test</span></code> includes another step, <code class="docutils literal notranslate"><span class="pre">analysis</span></code> that plots results from
 each simulation.  The full analysis step looks like this:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -1448,7 +1449,7 @@ that it writes out.</p>
 </span></pre></div>
 </div>
 <section id="id2">
-<h3>Setting config options based on resolution<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<h3>Setting config options based on resolution<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h3>
 <p>It turns out that we need a <code class="docutils literal notranslate"><span class="pre">configure()</span></code> method that is identical to that in
 the <code class="docutils literal notranslate"><span class="pre">Default</span></code> test case.  We could copy the code but we have a strong
 preference for code reuse when possible in <code class="docutils literal notranslate"><span class="pre">compass</span></code>.  For this reason, it
@@ -1527,14 +1528,14 @@ the function but give it a new name:</p>
 </section>
 </section>
 <section id="set-up-and-run">
-<h2>Set up and run<a class="headerlink" href="#set-up-and-run" title="Permalink to this headline">¶</a></h2>
+<h2>Set up and run<a class="headerlink" href="#set-up-and-run" title="Permalink to this heading">¶</a></h2>
 <p>You’re all set!  You should be able to see your new test cases when you run
 <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">list</span></code>, set them up by running <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">setup</span></code>, and run them by
 calling <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span></code> within the work directory.  See <a class="reference internal" href="../developers_guide/command_line.html#dev-command-line"><span class="std std-ref">Command-line interface</span></a>
 for details.</p>
 </section>
 <section id="documentation">
-<span id="dev-tutorial-add-test-group-docs"></span><h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<span id="dev-tutorial-add-test-group-docs"></span><h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this heading">¶</a></h2>
 <p>Make sure to add some documentation of your new test group.  You need to add
 all of the functions, classes and methods to the API documentation in
 <code class="docutils literal notranslate"><span class="pre">docs/developers_guide/&lt;core&gt;/api.rst</span></code>, following the examples for other

@@ -14,6 +14,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -136,7 +137,7 @@
            <div itemprop="articleBody">
              
   <section id="baroclinic-channel">
-<span id="ocean-baroclinic-channel"></span><h1>baroclinic_channel<a class="headerlink" href="#baroclinic-channel" title="Permalink to this headline">¶</a></h1>
+<span id="ocean-baroclinic-channel"></span><h1>baroclinic_channel<a class="headerlink" href="#baroclinic-channel" title="Permalink to this heading">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">ocean/baroclinic_channel</span></code> test group implements variants of the
 Baroclinic Eddies test case from
 <a class="reference external" href="https://doi.org/10.1016/j.ocemod.2011.10.003">Ilicak et al. (2012)</a>.</p>
@@ -154,7 +155,7 @@ thickness.</p>
 and <code class="docutils literal notranslate"><span class="pre">forward</span></code> (given another name in many test cases to distinguish multiple
 forward runs), which performs time integration of the model.</p>
 <section id="config-options">
-<h2>config options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
+<h2>config options<a class="headerlink" href="#config-options" title="Permalink to this heading">¶</a></h2>
 <p>All 5 test cases share the same set of config options:</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span><span class="w"></span>
 <span class="k">[vertical_grid]</span><span class="w"></span>
@@ -213,14 +214,14 @@ forward runs), which performs time integration of the model.</p>
 <p>All units are mks, with temperature in degrees Celsius and salinity in PSU.</p>
 </section>
 <section id="default">
-<h2>default<a class="headerlink" href="#default" title="Permalink to this headline">¶</a></h2>
+<h2>default<a class="headerlink" href="#default" title="Permalink to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">ocean/baroclinic_channel/10km/default</span></code> is the default version of the
 baroclinic eddies test case for a short (15 min) test run and validation of
 prognostic variables for regression testing.  Currently, only 10-km horizontal
 resolution is supported.</p>
 </section>
 <section id="decomp-test">
-<h2>decomp_test<a class="headerlink" href="#decomp-test" title="Permalink to this headline">¶</a></h2>
+<h2>decomp_test<a class="headerlink" href="#decomp-test" title="Permalink to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">ocean/baroclinic_channel/10km/decomp_test</span></code> runs a short (15 min) integration
 of the model forward in time on 4 (<code class="docutils literal notranslate"><span class="pre">4proc</span></code> step) and then on 8 processors
 (<code class="docutils literal notranslate"><span class="pre">8proc</span></code> step) to make sure the resulting prognostic variables are
@@ -228,7 +229,7 @@ bit-for-bit identical between the two runs. Currently, only 10-km horizontal
 resolution is supported.</p>
 </section>
 <section id="thread-test">
-<h2>thread_test<a class="headerlink" href="#thread-test" title="Permalink to this headline">¶</a></h2>
+<h2>thread_test<a class="headerlink" href="#thread-test" title="Permalink to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">ocean/baroclinic_channel/10km/thread_test</span></code> runs a short (15 min) integration
 of the model forward in time on 1 threads per processor (<code class="docutils literal notranslate"><span class="pre">1thread</span></code> step) and
 then on 2 threads (<code class="docutils literal notranslate"><span class="pre">2thread</span></code> step) to make sure the resulting prognostic
@@ -236,7 +237,7 @@ variables are bit-for-bit identical between the two runs. Currently, only 10-km
 horizontal resolution is supported.</p>
 </section>
 <section id="restart-test">
-<h2>restart_test<a class="headerlink" href="#restart-test" title="Permalink to this headline">¶</a></h2>
+<h2>restart_test<a class="headerlink" href="#restart-test" title="Permalink to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">ocean/baroclinic_channel/10km/restart_test</span></code> runs a short (10 min)
 integration of the model forward in time (<code class="docutils literal notranslate"><span class="pre">full_run</span></code> step), saving a restart
 file every 5 minutes.  Then, a second run (<code class="docutils literal notranslate"><span class="pre">restart_run</span></code> step) is performed
@@ -246,7 +247,7 @@ they are bit-for-bit identical. Currently, only 10-km horizontal resolution is
 supported.</p>
 </section>
 <section id="rpe-test">
-<h2>rpe_test<a class="headerlink" href="#rpe-test" title="Permalink to this headline">¶</a></h2>
+<h2>rpe_test<a class="headerlink" href="#rpe-test" title="Permalink to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">ocean/baroclinic_channel/1km/rpe_test</span></code>,
 <code class="docutils literal notranslate"><span class="pre">ocean/baroclinic_channel/4km/rpe_test</span></code>, and
 <code class="docutils literal notranslate"><span class="pre">ocean/baroclinic_channel/10km/rpe_test</span></code> perform longer (20 day) integration

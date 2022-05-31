@@ -14,6 +14,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -132,13 +133,13 @@
            <div itemprop="articleBody">
              
   <section id="thwaites">
-<span id="dev-landice-thwaites"></span><h1>thwaites<a class="headerlink" href="#thwaites" title="Permalink to this headline">¶</a></h1>
+<span id="dev-landice-thwaites"></span><h1>thwaites<a class="headerlink" href="#thwaites" title="Permalink to this heading">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">thwaites</span></code> test group (<a class="reference internal" href="../generated/compass.landice.tests.thwaites.Thwaites.html#compass.landice.tests.thwaites.Thwaites" title="compass.landice.tests.thwaites.Thwaites"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.thwaites.Thwaites</span></code></a>)
 performs short (5-day) forward runs on a coarse (4-14 km) thwaites mesh
 (see <a class="reference internal" href="../../../users_guide/landice/test_groups/thwaites.html#landice-thwaites"><span class="std std-ref">thwaites</span></a>).  Here, we describe the shared framework for
 this test group and the 2 test cases.</p>
 <section id="framework">
-<span id="dev-landice-thwaites-framework"></span><h2>framework<a class="headerlink" href="#framework" title="Permalink to this headline">¶</a></h2>
+<span id="dev-landice-thwaites-framework"></span><h2>framework<a class="headerlink" href="#framework" title="Permalink to this heading">¶</a></h2>
 <p>There are no shared config options for the <code class="docutils literal notranslate"><span class="pre">thwaites</span></code> test group.</p>
 <p>The Thwaites test can only be run with the FO velocity solver.
 Running with the FO solver requires building MALI with the Albany
@@ -148,7 +149,7 @@ a few common namelist options related to time step, run duration and calving,
 and a shared <code class="docutils literal notranslate"><span class="pre">streams.landice</span></code> file that defines <code class="docutils literal notranslate"><span class="pre">input</span></code>, <code class="docutils literal notranslate"><span class="pre">restart</span></code>, and
 <code class="docutils literal notranslate"><span class="pre">output</span></code> streams.</p>
 <section id="run-model">
-<h3>run_model<a class="headerlink" href="#run-model" title="Permalink to this headline">¶</a></h3>
+<h3>run_model<a class="headerlink" href="#run-model" title="Permalink to this heading">¶</a></h3>
 <p>The class <a class="reference internal" href="../generated/compass.landice.tests.thwaites.run_model.RunModel.html#compass.landice.tests.thwaites.run_model.RunModel" title="compass.landice.tests.thwaites.run_model.RunModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.thwaites.run_model.RunModel</span></code></a>
 defines a step for running MALI an initial condition downloaded from
 <a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-albany-landice/thwaites.4km.210608.nc">thwaites.4km.210608.nc</a>.
@@ -160,7 +161,7 @@ is just <code class="docutils literal notranslate"><span class="pre">landice</sp
 </section>
 </section>
 <section id="decomposition-test">
-<span id="dev-landice-thwaites-decomposition-test"></span><h2>decomposition_test<a class="headerlink" href="#decomposition-test" title="Permalink to this headline">¶</a></h2>
+<span id="dev-landice-thwaites-decomposition-test"></span><h2>decomposition_test<a class="headerlink" href="#decomposition-test" title="Permalink to this heading">¶</a></h2>
 <p>The <a class="reference internal" href="../generated/compass.landice.tests.thwaites.decomposition_test.DecompositionTest.html#compass.landice.tests.thwaites.decomposition_test.DecompositionTest" title="compass.landice.tests.thwaites.decomposition_test.DecompositionTest"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.thwaites.decomposition_test.DecompositionTest</span></code></a>
 performs a 5-day run once on 1 core and once on 4 cores.  It ensures that
 <code class="docutils literal notranslate"><span class="pre">thickness</span></code> and <code class="docutils literal notranslate"><span class="pre">surfaceSpeed</span></code> are identical at the end of the two runs
@@ -168,7 +169,7 @@ performs a 5-day run once on 1 core and once on 4 cores.  It ensures that
 <a class="reference internal" href="../../command_line.html#dev-compass-setup"><span class="std std-ref">compass setup</span></a>).</p>
 </section>
 <section id="restart-test">
-<span id="dev-landice-thwaites-restart-test"></span><h2>restart_test<a class="headerlink" href="#restart-test" title="Permalink to this headline">¶</a></h2>
+<span id="dev-landice-thwaites-restart-test"></span><h2>restart_test<a class="headerlink" href="#restart-test" title="Permalink to this heading">¶</a></h2>
 <p>The <a class="reference internal" href="../generated/compass.landice.tests.thwaites.restart_test.RestartTest.html#compass.landice.tests.thwaites.restart_test.RestartTest" title="compass.landice.tests.thwaites.restart_test.RestartTest"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.thwaites.restart_test.RestartTest</span></code></a>
 performs a 5-day run once on 4 cores, then a sequence of a 3-day and a 2-day
 run on 4 cores.  It ensures that <code class="docutils literal notranslate"><span class="pre">thickness</span></code> and <code class="docutils literal notranslate"><span class="pre">surfaceSpeed</span></code> are
@@ -179,14 +180,14 @@ one each with <code class="docutils literal notranslate"><span class="pre">landi
 the suffix.  The former perform a 3-day run from the initial condition, while
 the latter perform a 2-day restart run beginning with the end of the first.</p>
 <section id="mesh">
-<h3>mesh<a class="headerlink" href="#mesh" title="Permalink to this headline">¶</a></h3>
+<h3>mesh<a class="headerlink" href="#mesh" title="Permalink to this heading">¶</a></h3>
 <p>The class <code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.thwaites.mesh.Mesh</span></code>
 defines a step for creating a variable resolution Thwaites Glacier mesh.
 This is used by the <code class="docutils literal notranslate"><span class="pre">high_res_mesh</span></code> test case.</p>
 </section>
 </section>
 <section id="high-res-mesh">
-<h2>high_res_mesh<a class="headerlink" href="#high-res-mesh" title="Permalink to this headline">¶</a></h2>
+<h2>high_res_mesh<a class="headerlink" href="#high-res-mesh" title="Permalink to this heading">¶</a></h2>
 <p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.thwaites.high_res_mesh.HighResMesh</span></code>
 calls the <code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.thwaites.mesh.Mesh</span></code> to create
 the variable resolution Thwaites Glacier mesh.</p>

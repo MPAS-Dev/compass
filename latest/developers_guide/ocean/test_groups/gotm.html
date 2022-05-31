@@ -14,6 +14,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -130,13 +131,13 @@
            <div itemprop="articleBody">
              
   <section id="gotm">
-<span id="dev-ocean-gotm"></span><h1>gotm<a class="headerlink" href="#gotm" title="Permalink to this headline">¶</a></h1>
+<span id="dev-ocean-gotm"></span><h1>gotm<a class="headerlink" href="#gotm" title="Permalink to this heading">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">gotm</span></code> test group (<a class="reference internal" href="../generated/compass.ocean.tests.gotm.Gotm.html#compass.ocean.tests.gotm.Gotm" title="compass.ocean.tests.gotm.Gotm"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.gotm.Gotm</span></code></a>)
 implements a test case for validating the General Ocean Turbulence Model
 (<a class="reference external" href="https://gotm.net/portfolio/">GOTM</a>) within MPAS-Ocean. See
 <a class="reference internal" href="../../../users_guide/ocean/test_groups/gotm.html#ocean-gotm"><span class="std std-ref">gotm</span></a> for more details.</p>
 <section id="default">
-<span id="dev-ocean-gotm-default"></span><h2>default<a class="headerlink" href="#default" title="Permalink to this headline">¶</a></h2>
+<span id="dev-ocean-gotm-default"></span><h2>default<a class="headerlink" href="#default" title="Permalink to this heading">¶</a></h2>
 <p>The <a class="reference internal" href="../generated/compass.ocean.tests.gotm.default.Default.html#compass.ocean.tests.gotm.default.Default" title="compass.ocean.tests.gotm.default.Default"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.gotm.default.Default</span></code></a> test implements a
 single column test case from Section 5.1 of
 <a class="reference external" href="https://doi.org/10.1016/j.ocemod.2020.101619">Kärnä, 2020</a>.  The test runs
@@ -144,7 +145,7 @@ for 12 hours, after which the velocity and viscosity are compared against an
 analytic solution.  See <a class="reference internal" href="../../../users_guide/ocean/test_groups/gotm.html#ocean-gotm-default"><span class="std std-ref">default</span></a> for config options and more
 details on the test case.</p>
 <section id="init">
-<h3>init<a class="headerlink" href="#init" title="Permalink to this headline">¶</a></h3>
+<h3>init<a class="headerlink" href="#init" title="Permalink to this heading">¶</a></h3>
 <p>The class <a class="reference internal" href="../generated/compass.ocean.tests.gotm.default.init.Init.html#compass.ocean.tests.gotm.default.init.Init" title="compass.ocean.tests.gotm.default.init.Init"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.gotm.default.init.Init</span></code></a>
 defines a step for setting up the mesh and initial state for the test case. It
 simply creates a small (4 x 4 cell, doubly periodic) mesh with 2.5 km
@@ -153,14 +154,14 @@ into 250 layers of 6 cm thickness each.  Velocity, temperature and
 salinity are not initialized (and are therefore zero).</p>
 </section>
 <section id="forward">
-<h3>forward<a class="headerlink" href="#forward" title="Permalink to this headline">¶</a></h3>
+<h3>forward<a class="headerlink" href="#forward" title="Permalink to this heading">¶</a></h3>
 <p>The class <a class="reference internal" href="../generated/compass.ocean.tests.gotm.default.forward.Forward.html#compass.ocean.tests.gotm.default.forward.Forward" title="compass.ocean.tests.gotm.default.forward.Forward"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.gotm.default.forward.Forward</span></code></a>
 defines a step for running MPAS-Ocean from the initial condition produced in
 the <code class="docutils literal notranslate"><span class="pre">init</span></code> step.  The model runs for 12 hours with 25-s time steps, writing
 output ever 10 minutes.</p>
 </section>
 <section id="analysis">
-<h3>analysis<a class="headerlink" href="#analysis" title="Permalink to this headline">¶</a></h3>
+<h3>analysis<a class="headerlink" href="#analysis" title="Permalink to this heading">¶</a></h3>
 <p>The class <a class="reference internal" href="../generated/compass.ocean.tests.gotm.default.analysis.Analysis.html#compass.ocean.tests.gotm.default.analysis.Analysis" title="compass.ocean.tests.gotm.default.analysis.Analysis"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.gotm.default.analysis.Analysis</span></code></a>
 defines a step for plotting the velocity and viscosity profiles after 12 hours,
 and comparing them with an analytic solution.</p>

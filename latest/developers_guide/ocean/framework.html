@@ -14,6 +14,7 @@
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -120,11 +121,11 @@
            <div itemprop="articleBody">
              
   <section id="ocean-framework">
-<span id="dev-ocean-framework"></span><h1>Ocean framework<a class="headerlink" href="#ocean-framework" title="Permalink to this headline">¶</a></h1>
+<span id="dev-ocean-framework"></span><h1>Ocean framework<a class="headerlink" href="#ocean-framework" title="Permalink to this heading">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">ocean</span></code> core contains a small amount of shared framework code that we
 expect to expand in the future as new test cases are added.</p>
 <section id="namelist-replacements-and-streams-files">
-<h2>Namelist replacements and streams files<a class="headerlink" href="#namelist-replacements-and-streams-files" title="Permalink to this headline">¶</a></h2>
+<h2>Namelist replacements and streams files<a class="headerlink" href="#namelist-replacements-and-streams-files" title="Permalink to this heading">¶</a></h2>
 <p>The modules <code class="docutils literal notranslate"><span class="pre">compass.ocean.namelists</span></code> and <code class="docutils literal notranslate"><span class="pre">compass.ocean.streams</span></code> contain
 namelist replacements and streams files that are similar to core-level
 templates in <a class="reference internal" href="../../index.html#legacy-compass"><span class="std std-ref">Legacy COMPASS</span></a>.  Current templates are for adjusting sea
@@ -132,7 +133,7 @@ surface height in ice-shelf cavities, and outputting variables related to
 frazil ice and land-ice fluxes.</p>
 </section>
 <section id="vertical-coordinate">
-<span id="dev-ocean-framework-vertical"></span><h2>Vertical coordinate<a class="headerlink" href="#vertical-coordinate" title="Permalink to this headline">¶</a></h2>
+<span id="dev-ocean-framework-vertical"></span><h2>Vertical coordinate<a class="headerlink" href="#vertical-coordinate" title="Permalink to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">compass.ocean.vertical</span></code> module provides support for computing general
 vertical coordinates for MPAS-Ocean test cases.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">compass.ocean.vertical.grid_1d</span></code> module provides 1D vertical
@@ -149,7 +150,7 @@ and <code class="docutils literal notranslate"><span class="pre">restingThicknes
 as config options from <code class="docutils literal notranslate"><span class="pre">vertical_grid</span></code>.</p>
 </section>
 <section id="haney-number">
-<span id="dev-ocean-framework-haney"></span><h2>Haney number<a class="headerlink" href="#haney-number" title="Permalink to this headline">¶</a></h2>
+<span id="dev-ocean-framework-haney"></span><h2>Haney number<a class="headerlink" href="#haney-number" title="Permalink to this heading">¶</a></h2>
 <p>The module <code class="docutils literal notranslate"><span class="pre">compass.ocean.haney</span></code> defines a function
 <a class="reference internal" href="generated/compass.ocean.haney.compute_haney_number.html#compass.ocean.haney.compute_haney_number" title="compass.ocean.haney.compute_haney_number"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.haney.compute_haney_number()</span></code></a> for computing the Haney
 number (<a class="reference external" href="https://doi.org/10.1175/1520-0485(1991)021%3C0610:OTPGFO%3E2.0.CO;2">Haney 1991</a>).
@@ -174,7 +175,7 @@ Haney number (and the horizontal pressure-gradient force).</span><a class="heade
 </figure>
 </section>
 <section id="ice-shelf-cavities">
-<span id="dev-ocean-framework-iceshelf"></span><h2>Ice-shelf cavities<a class="headerlink" href="#ice-shelf-cavities" title="Permalink to this headline">¶</a></h2>
+<span id="dev-ocean-framework-iceshelf"></span><h2>Ice-shelf cavities<a class="headerlink" href="#ice-shelf-cavities" title="Permalink to this heading">¶</a></h2>
 <p>The module <code class="docutils literal notranslate"><span class="pre">compass.ocean.iceshelf</span></code> defines two functions that are used to
 set up domains with ice-shelf cavities.</p>
 <p><a class="reference internal" href="generated/compass.ocean.iceshelf.compute_land_ice_pressure_and_draft.html#compass.ocean.iceshelf.compute_land_ice_pressure_and_draft" title="compass.ocean.iceshelf.compute_land_ice_pressure_and_draft"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.iceshelf.compute_land_ice_pressure_and_draft()</span></code></a>
@@ -196,7 +197,7 @@ procedure is also largely agnostic to the equation of state being used or the
 method for implementing the horizontal pressure-gradient force.</p>
 </section>
 <section id="particles">
-<span id="dev-ocean-framework-particles"></span><h2>Particles<a class="headerlink" href="#particles" title="Permalink to this headline">¶</a></h2>
+<span id="dev-ocean-framework-particles"></span><h2>Particles<a class="headerlink" href="#particles" title="Permalink to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">compass.ocean.particles</span></code> module contains functionality for initializing
 particles for the <a class="reference external" href="https://doi.org/10.1175/JPO-D-14-0260.1">LIGHT framework</a>.</p>
 <p><a class="reference internal" href="generated/compass.ocean.particles.write.html#compass.ocean.particles.write" title="compass.ocean.particles.write"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.particles.write()</span></code></a> creates an initial condition for
@@ -215,7 +216,7 @@ onto a new grid decomposition.  This might be useful, for example, if you wish
 to change the number of cores that a particle initial condition should run on.</p>
 </section>
 <section id="plotting">
-<span id="dev-ocean-framework-plot"></span><h2>Plotting<a class="headerlink" href="#plotting" title="Permalink to this headline">¶</a></h2>
+<span id="dev-ocean-framework-plot"></span><h2>Plotting<a class="headerlink" href="#plotting" title="Permalink to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">compass.ocean.plot</span></code> contains functionality for plotting the initial
 state and 1D vertical grid.</p>
 <p><a class="reference internal" href="generated/compass.ocean.plot.plot_initial_state.html#compass.ocean.plot.plot_initial_state" title="compass.ocean.plot.plot_initial_state"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.plot.plot_initial_state()</span></code></a> creates histogram plots of

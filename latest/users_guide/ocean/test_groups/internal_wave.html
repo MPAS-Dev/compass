@@ -14,6 +14,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -134,7 +135,7 @@
            <div itemprop="articleBody">
              
   <section id="internal-wave">
-<span id="ocean-internal-wave"></span><h1>internal_wave<a class="headerlink" href="#internal-wave" title="Permalink to this headline">¶</a></h1>
+<span id="ocean-internal-wave"></span><h1>internal_wave<a class="headerlink" href="#internal-wave" title="Permalink to this heading">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">ocean/internal_wave</span></code> test group induces internal wave propagation and is documented in
 <a class="reference external" href="https://doi.org/10.1016/j.ocemod.2011.10.003">Ilicak et al. (2012)</a>.</p>
 <p>The domain is periodic on the zonal boundaries and solid on the meridional boundaries.
@@ -153,7 +154,7 @@ and <code class="docutils literal notranslate"><span class="pre">forward</span><
 forward runs), which performs time integration of the model. There is an optional <code class="docutils literal notranslate"><span class="pre">viz</span></code>
 step which performs visualization of vertical cross-sections through the center of the domain.</p>
 <section id="config-options">
-<h2>config options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
+<h2>config options<a class="headerlink" href="#config-options" title="Permalink to this heading">¶</a></h2>
 <p>All 3 test cases share the same set of config options:</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span><span class="w"></span>
 <span class="k">[vertical_grid]</span><span class="w"></span>
@@ -243,13 +244,13 @@ step which performs visualization of vertical cross-sections through the center 
 <p>All units are mks, with temperature in degrees Celsius and salinity in PSU.</p>
 </section>
 <section id="default">
-<h2>default<a class="headerlink" href="#default" title="Permalink to this headline">¶</a></h2>
+<h2>default<a class="headerlink" href="#default" title="Permalink to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">ocean/internal_wave/default</span></code> is the default version of the
 internal wave test case for a short (15 min) test run and validation of
 prognostic variables for regression testing.</p>
 </section>
 <section id="rpe-test">
-<h2>rpe_test<a class="headerlink" href="#rpe-test" title="Permalink to this headline">¶</a></h2>
+<h2>rpe_test<a class="headerlink" href="#rpe-test" title="Permalink to this heading">¶</a></h2>
 <p>Since mixing is a strong function of horizontal viscosity, this test case performs
 20-day integrations of the model forward in time at 5 different values of the viscosity (with steps
 named <code class="docutils literal notranslate"><span class="pre">rpe_test_1_nu_1</span></code>, <code class="docutils literal notranslate"><span class="pre">rpe_test_2_nu_5</span></code>, etc.)
@@ -260,7 +261,7 @@ energy (RPE) than POP, MOM and MITgcm models
 (<a class="reference external" href="https://doi.org/10.1016/j.ocemod.2014.12.004">Petersen et al. 2015</a>).</p>
 </section>
 <section id="ten-day-test">
-<h2>ten_day_test<a class="headerlink" href="#ten-day-test" title="Permalink to this headline">¶</a></h2>
+<h2>ten_day_test<a class="headerlink" href="#ten-day-test" title="Permalink to this heading">¶</a></h2>
 <p>This test is identical to <code class="docutils literal notranslate"><span class="pre">ocean/internal_wave/default</span></code> except that the duration is 10 days.</p>
 </section>
 </section>

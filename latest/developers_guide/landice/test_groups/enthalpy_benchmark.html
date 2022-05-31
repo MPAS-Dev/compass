@@ -14,6 +14,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -131,7 +132,7 @@
            <div itemprop="articleBody">
              
   <section id="enthalpy-benchmark">
-<span id="dev-landice-enthalpy-benchmark"></span><h1>enthalpy_benchmark<a class="headerlink" href="#enthalpy-benchmark" title="Permalink to this headline">¶</a></h1>
+<span id="dev-landice-enthalpy-benchmark"></span><h1>enthalpy_benchmark<a class="headerlink" href="#enthalpy-benchmark" title="Permalink to this heading">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">enthalpy_benchmark</span></code> test group
 (<a class="reference internal" href="../generated/compass.landice.tests.enthalpy_benchmark.EnthalpyBenchmark.html#compass.landice.tests.enthalpy_benchmark.EnthalpyBenchmark" title="compass.landice.tests.enthalpy_benchmark.EnthalpyBenchmark"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.enthalpy_benchmark.EnthalpyBenchmark</span></code></a>)
 implements variants of the enthalpy benchmark from
@@ -141,7 +142,7 @@ implements variants of the enthalpy benchmark from
 steps, <code class="docutils literal notranslate"><span class="pre">setup_mesh</span></code>, <code class="docutils literal notranslate"><span class="pre">run_model</span></code> (possibly run multiple times), and
 <code class="docutils literal notranslate"><span class="pre">visualize</span></code>.</p>
 <section id="framework">
-<span id="dev-landice-enthalpy-benchmark-framework"></span><h2>framework<a class="headerlink" href="#framework" title="Permalink to this headline">¶</a></h2>
+<span id="dev-landice-enthalpy-benchmark-framework"></span><h2>framework<a class="headerlink" href="#framework" title="Permalink to this heading">¶</a></h2>
 <p>The shared config options are described in <a class="reference internal" href="../../../users_guide/landice/test_groups/enthalpy_benchmark.html#landice-enthalpy-benchmark"><span class="std std-ref">enthalpy_benchmark</span></a> in
 the User’s Guide.</p>
 <p>Additionally, the test group has a shared <code class="docutils literal notranslate"><span class="pre">namelist.landice</span></code> file with
@@ -149,7 +150,7 @@ several common namelist options, such as the time step, run duration, and
 thermal solver; and a shared <code class="docutils literal notranslate"><span class="pre">streams.landice</span></code> file that defines the
 <code class="docutils literal notranslate"><span class="pre">input</span></code>, <code class="docutils literal notranslate"><span class="pre">restart</span></code>, and <code class="docutils literal notranslate"><span class="pre">output</span></code> streams.</p>
 <section id="setup-mesh">
-<h3>setup_mesh<a class="headerlink" href="#setup-mesh" title="Permalink to this headline">¶</a></h3>
+<h3>setup_mesh<a class="headerlink" href="#setup-mesh" title="Permalink to this heading">¶</a></h3>
 <p>The class <a class="reference internal" href="../generated/compass.landice.tests.enthalpy_benchmark.setup_mesh.SetupMesh.html#compass.landice.tests.enthalpy_benchmark.setup_mesh.SetupMesh" title="compass.landice.tests.enthalpy_benchmark.setup_mesh.SetupMesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.enthalpy_benchmark.setup_mesh.SetupMesh</span></code></a>
 defines a step for setting up the mesh for each test case.</p>
 <p>The horizontal mesh is constructed at runtime (using
@@ -160,7 +161,7 @@ and a graph file is created to partition the mesh before the model run.</p>
 <code class="docutils literal notranslate"><span class="pre">_setup_dome_initial_conditions()</span></code>.</p>
 </section>
 <section id="run-model">
-<h3>run_model<a class="headerlink" href="#run-model" title="Permalink to this headline">¶</a></h3>
+<h3>run_model<a class="headerlink" href="#run-model" title="Permalink to this heading">¶</a></h3>
 <p>The class <a class="reference internal" href="../generated/compass.landice.tests.enthalpy_benchmark.run_model.RunModel.html#compass.landice.tests.enthalpy_benchmark.run_model.RunModel" title="compass.landice.tests.enthalpy_benchmark.run_model.RunModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.enthalpy_benchmark.run_model.RunModel</span></code></a>
 defines a step for running MALI from the initial condition produced in the
 <code class="docutils literal notranslate"><span class="pre">setup_mesh</span></code> step or from a restart file produced by a previous <code class="docutils literal notranslate"><span class="pre">run_model</span></code>
@@ -169,7 +170,7 @@ restart runs as described below.</p>
 </section>
 </section>
 <section id="a">
-<span id="dev-landice-enthalpy-benchmark-a"></span><h2>A<a class="headerlink" href="#a" title="Permalink to this headline">¶</a></h2>
+<span id="dev-landice-enthalpy-benchmark-a"></span><h2>A<a class="headerlink" href="#a" title="Permalink to this heading">¶</a></h2>
 <p>The <a class="reference internal" href="../generated/compass.landice.tests.enthalpy_benchmark.A.A.html#compass.landice.tests.enthalpy_benchmark.A.A" title="compass.landice.tests.enthalpy_benchmark.A.A"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.enthalpy_benchmark.A.A</span></code></a> test case includes
 the following config options :</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># namelist options for enthalpy benchmark test cases</span><span class="w"></span>
@@ -212,7 +213,7 @@ for plotting the results and comparing them to analytic results in a <code class
 file.</p>
 </section>
 <section id="b">
-<span id="dev-landice-enthalpy-benchmark-b"></span><h2>B<a class="headerlink" href="#b" title="Permalink to this headline">¶</a></h2>
+<span id="dev-landice-enthalpy-benchmark-b"></span><h2>B<a class="headerlink" href="#b" title="Permalink to this heading">¶</a></h2>
 <p>The <a class="reference internal" href="../generated/compass.landice.tests.enthalpy_benchmark.B.B.html#compass.landice.tests.enthalpy_benchmark.B.B" title="compass.landice.tests.enthalpy_benchmark.B.B"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.enthalpy_benchmark.B.B</span></code></a> test case includes
 the following config options :</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># namelist options for enthalpy benchmark test cases</span><span class="w"></span>

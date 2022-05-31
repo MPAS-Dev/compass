@@ -14,6 +14,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -134,7 +135,7 @@
            <div itemprop="articleBody">
              
   <section id="sphere-transport">
-<span id="ocean-sphere-transport"></span><h1>sphere_transport<a class="headerlink" href="#sphere-transport" title="Permalink to this headline">¶</a></h1>
+<span id="ocean-sphere-transport"></span><h1>sphere_transport<a class="headerlink" href="#sphere-transport" title="Permalink to this heading">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">sphere_transport</span></code> test group implements 4 test cases for standard
 transport schemes.   The test cases are convergence studies on the full globe,
 similar to <a class="reference internal" href="global_convergence.html#ocean-global-convergence"><span class="std std-ref">global_convergence</span></a>. Most tests are from
@@ -151,12 +152,12 @@ except CorrelatedTracers2D (discussed below), the 3 tracers are:</p>
 </ul>
 <a class="reference internal image-reference" href="../../../_images/sphere_transport.png"><img alt="../../../_images/sphere_transport.png" class="align-center" src="../../../_images/sphere_transport.png" style="width: 500px;" /></a>
 <section id="rotation-2d">
-<span id="ocean-sphere-transport-rotation-2d"></span><h2>rotation_2d<a class="headerlink" href="#rotation-2d" title="Permalink to this headline">¶</a></h2>
+<span id="ocean-sphere-transport-rotation-2d"></span><h2>rotation_2d<a class="headerlink" href="#rotation-2d" title="Permalink to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">rotation_2d</span></code> test case has the simplest velocity field: rigid rotation
 about an axis offset from the z-axis of the sphere.  It is the only test case
 not from Lauritzen et al. (2012).</p>
 <section id="config-options">
-<h3>config options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h3>
+<h3>config options<a class="headerlink" href="#config-options" title="Permalink to this heading">¶</a></h3>
 <p>Here, we give config options for the <code class="docutils literal notranslate"><span class="pre">rotation_2d</span></code> test case.  Config options
 for the other test cases are nearly identical:</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># options for rotation2D convergence test case</span><span class="w"></span>
@@ -186,7 +187,7 @@ for the other test cases are nearly identical:</p>
 </div>
 </section>
 <section id="resolutions">
-<h3>resolutions<a class="headerlink" href="#resolutions" title="Permalink to this headline">¶</a></h3>
+<h3>resolutions<a class="headerlink" href="#resolutions" title="Permalink to this heading">¶</a></h3>
 <p>To alter the resolutions used in this test, you will need to create your own
 config file (or add a <code class="docutils literal notranslate"><span class="pre">rotation_2d</span></code> section to a config file if you’re
 already using one).  The resolutions are a comma-separated list of the
@@ -196,7 +197,7 @@ resolutions.  (If you alter <code class="docutils literal notranslate"><span cla
 the work directory, nothing will happen.)</p>
 </section>
 <section id="time-step">
-<h3>time step<a class="headerlink" href="#time-step" title="Permalink to this headline">¶</a></h3>
+<h3>time step<a class="headerlink" href="#time-step" title="Permalink to this heading">¶</a></h3>
 <p>For each resolution, the time step in minutes is provided in
 <code class="docutils literal notranslate"><span class="pre">timestep_minutes</span></code>.  You can alter this before setup (in a user config file)
 or before running the test case (in the config file in the work directory).</p>
@@ -204,7 +205,7 @@ or before running the test case (in the config file in the work directory).</p>
 (<cite>RK4</cite>) or split-explicit (<cite>split_explicit</cite>) time integration is performed.</p>
 </section>
 <section id="cores">
-<h3>cores<a class="headerlink" href="#cores" title="Permalink to this headline">¶</a></h3>
+<h3>cores<a class="headerlink" href="#cores" title="Permalink to this heading">¶</a></h3>
 <p>The number of cores (and the minimum) is proportional to the number of cells,
 so that the number of cells per core is roughly constant.  You can alter how
 many cells are allocated to each core with <code class="docutils literal notranslate"><span class="pre">goal_cells_per_core</span></code>.  You can
@@ -214,7 +215,7 @@ aren’t enough processors to handle the finest resolution, you will see that
 the step (and therefore the test case) has failed.</p>
 </section>
 <section id="convergence-thresholds">
-<h3>convergence thresholds<a class="headerlink" href="#convergence-thresholds" title="Permalink to this headline">¶</a></h3>
+<h3>convergence thresholds<a class="headerlink" href="#convergence-thresholds" title="Permalink to this heading">¶</a></h3>
 <p>The three convergence thresholds are used to determine if the error in each of
 the tracers converges at the expected rate.  If a linear fit to the error as
 a function of resolution has a slope that is shallower than the specified
@@ -225,18 +226,18 @@ these thresholds.</p>
 </section>
 </section>
 <section id="nondivergent-2d">
-<span id="ocean-sphere-transport-nondivergent-2d"></span><h2>nondivergent_2d<a class="headerlink" href="#nondivergent-2d" title="Permalink to this headline">¶</a></h2>
+<span id="ocean-sphere-transport-nondivergent-2d"></span><h2>nondivergent_2d<a class="headerlink" href="#nondivergent-2d" title="Permalink to this heading">¶</a></h2>
 <p>Results from the <code class="docutils literal notranslate"><span class="pre">nondivergent_2d</span></code> test case also include the “filament norm”
 and over-/under-shoot analysis.  The reversing deformational flow in this
 test case explores large-scale to small-scale transport.</p>
 </section>
 <section id="divergent-2d">
-<span id="ocean-sphere-transport-divergent-2d"></span><h2>divergent_2d<a class="headerlink" href="#divergent-2d" title="Permalink to this headline">¶</a></h2>
+<span id="ocean-sphere-transport-divergent-2d"></span><h2>divergent_2d<a class="headerlink" href="#divergent-2d" title="Permalink to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">divergent_2d</span></code> test case analyzes transport scheme with a velocity field
 that has nonzero divergence.</p>
 </section>
 <section id="correlated-tracers-2d">
-<span id="ocean-sphere-transport-correlated-tracers-2d"></span><h2>correlated_tracers_2d<a class="headerlink" href="#correlated-tracers-2d" title="Permalink to this headline">¶</a></h2>
+<span id="ocean-sphere-transport-correlated-tracers-2d"></span><h2>correlated_tracers_2d<a class="headerlink" href="#correlated-tracers-2d" title="Permalink to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">correlated_tracers_2d</span></code> test case uses the velocity as
 <a class="reference internal" href="#ocean-sphere-transport-nondivergent-2d"><span class="std std-ref">nondivergent_2d</span></a>, but instead of slotted cylinders
 in the 3rd tracer, adds a second pair of cosine bells that are nonlinearly

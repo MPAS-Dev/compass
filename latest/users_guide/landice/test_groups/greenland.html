@@ -14,6 +14,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -134,7 +135,7 @@
            <div itemprop="articleBody">
              
   <section id="greenland">
-<span id="landice-greenland"></span><h1>greenland<a class="headerlink" href="#greenland" title="Permalink to this headline">¶</a></h1>
+<span id="landice-greenland"></span><h1>greenland<a class="headerlink" href="#greenland" title="Permalink to this heading">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">landice/greenland</span></code> test group runs tests with a coarse (20-km)
 <a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-albany-landice/gis20km.210608.nc">Greenland mesh</a>.</p>
 <figure class="align-center" id="id1">
@@ -154,7 +155,7 @@ Albany, but the SIA variant of the test can be run without Albany.  The FO
 version uses no-slip basal boundary condition. There is no integration step
 for the test case <code class="docutils literal notranslate"><span class="pre">high_res_mesh</span></code>.</p>
 <section id="config-options">
-<h2>config options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
+<h2>config options<a class="headerlink" href="#config-options" title="Permalink to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">high_res_mesh</span></code> test case uses the default config options below.
 The other test cases do not use config options.</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[high_res_mesh]</span><span class="w"></span>
@@ -189,19 +190,19 @@ The other test cases do not use config options.</p>
 </div>
 </section>
 <section id="smoke-test">
-<h2>smoke_test<a class="headerlink" href="#smoke-test" title="Permalink to this headline">¶</a></h2>
+<h2>smoke_test<a class="headerlink" href="#smoke-test" title="Permalink to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">landice/greenland/smoke_test</span></code> is the default version of the greenland test
 case for a short (5-day) test run.</p>
 </section>
 <section id="decomposition-test">
-<h2>decomposition_test<a class="headerlink" href="#decomposition-test" title="Permalink to this headline">¶</a></h2>
+<h2>decomposition_test<a class="headerlink" href="#decomposition-test" title="Permalink to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">landice/greenland/decomposition_test</span></code> runs short (5-day) integrations of the
 model forward in time on 1 (<code class="docutils literal notranslate"><span class="pre">1proc_run</span></code> step) and then on 4 cores
 (<code class="docutils literal notranslate"><span class="pre">4proc_run</span></code> step) to make sure the resulting prognostic variables are
 bit-for-bit identical between the two runs.</p>
 </section>
 <section id="restart-test">
-<h2>restart_test<a class="headerlink" href="#restart-test" title="Permalink to this headline">¶</a></h2>
+<h2>restart_test<a class="headerlink" href="#restart-test" title="Permalink to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">landice/greenland/2000m/restart_test</span></code> first run a short (5-day) integration
 of the model forward in time (<code class="docutils literal notranslate"><span class="pre">full_run</span></code> step).  Then, a second step
 (<code class="docutils literal notranslate"><span class="pre">restart_run</span></code>) performs a 3-day, then a 2-day run, where the second begins
@@ -210,7 +211,7 @@ between the “full” and “restart” runs at year 2 to make sure they are
 bit-for-bit identical.</p>
 </section>
 <section id="high-res-mesh">
-<h2>high_res_mesh<a class="headerlink" href="#high-res-mesh" title="Permalink to this headline">¶</a></h2>
+<h2>high_res_mesh<a class="headerlink" href="#high-res-mesh" title="Permalink to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">landice/greenland/high_res_mesh</span></code> creates a variable resolution mesh based
 on the the config options listed above. This will not be the same as the
 pre-generated 20 km mesh used in the other three test cases because it uses
