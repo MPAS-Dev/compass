@@ -274,12 +274,12 @@ def main():
     parser = argparse.ArgumentParser(
         description='Run a test suite, test case or step',
         prog='compass run')
-    parser.add_argument("suite", nargs='?', default=None,
+    parser.add_argument("suite", nargs='?',
                         help="The name of a test suite to run. Can exclude "
                         "or include the .pickle filename suffix.")
-    parser.add_argument("--steps", dest="steps", nargs='+', default=None,
+    parser.add_argument("--steps", dest="steps", nargs='+',
                         help="The steps of a test case to run")
-    parser.add_argument("--no-steps", dest="no_steps", nargs='+', default=None,
+    parser.add_argument("--no-steps", dest="no_steps", nargs='+',
                         help="The steps of a test case not to run, see "
                              "steps_to_run in the config file for defaults.")
     parser.add_argument("-q", "--quiet", dest="quiet", action="store_true",
