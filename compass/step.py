@@ -64,11 +64,6 @@ class Step(ABC):
         This is currently just a placeholder for later use with task
         parallelism
 
-    max_disk : int
-        the amount of disk space that the step is allowed to use in MB.
-        This is currently just a placeholder for later use with task
-        parallelism
-
     input_data : list of dict
         a list of dict used to define input files typically to be
         downloaded to a database and/or symlinked in the work directory
@@ -131,7 +126,7 @@ class Step(ABC):
     """
 
     def __init__(self, test_case, name, subdir=None, cores=1, min_cores=1,
-                 threads=1, max_memory=1000, max_disk=1000, cached=False,
+                 threads=1, max_memory=1000, cached=False,
                  run_as_subprocess=False):
         """
         Create a new test case
@@ -164,11 +159,6 @@ class Step(ABC):
             This is currently just a placeholder for later use with task
             parallelism
 
-        max_disk : int, optional
-            the amount of disk space that the step is allowed to use in MB.
-            This is currently just a placeholder for later use with task
-            parallelism
-
         cached : bool, optional
             Whether to get all of the outputs for the step from the database of
             cached outputs for this MPAS core
@@ -193,7 +183,6 @@ class Step(ABC):
         self.min_cores = min_cores
         self.threads = threads
         self.max_memory = max_memory
-        self.max_disk = max_disk
 
         self.path = os.path.join(self.mpas_core.name, self.test_group.name,
                                  test_case.subdir, self.subdir)
