@@ -158,7 +158,10 @@ def set_cell_width(self, section, thk, vx=None, vy=None,
     high_dist = float(section.get('high_dist'))
     low_dist = float(section.get('low_dist'))
     # convert km to m
-    cull_distance = float(section.get('cull_distance')) * 1.e3
+    try:
+        cull_distance = float(section.get('cull_distance')) * 1.e3
+    except:
+        cull_distance = float(section.get('cull_cells')) * min_spac * 1.e3
 
     # Make cell spacing function mapping from log speed to cell spacing
     if section.get('use_speed') == 'True':
@@ -209,12 +212,12 @@ def set_cell_width(self, section, thk, vx=None, vy=None,
     cell_width = np.minimum(cell_width, spacing3)
 
     # Set large cell_width in areas we are going to cull anyway (speeds up
-    # whole process). Use 10x the cull_distance to avoid this affecting
+    # whole process). Use 3x the cull_distance to avoid this affecting
     # cell size in the final mesh. There may be a more rigorous way to set
     # that distance.
     if dist_to_edge is not None:
         mask = np.logical_and(
-            thk == 0.0, dist_to_edge > (10. * cull_distance))
+            thk == 0.0, dist_to_edge > (3. * cull_distance))
         cell_width[mask] = max_spac
 
     return cell_width

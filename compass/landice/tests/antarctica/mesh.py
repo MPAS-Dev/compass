@@ -246,8 +246,8 @@ class Mesh(Step):
                 '-m', 'Antarctica.nc',
                 '-s', 'Antarctica.scrip.nc']
         check_call(args, logger=logger)
-        # Testing shows 10 badger/grizzly nodes works well. 2 nodes is too few.
-        # I have tested anything in betwee.
+        # Testing shows 5 to 10 badger/grizzly nodes works well.
+        # 2 nodes is too few. I have not tested anything in between.
         logger.info('generating gridded dataset -> MPAS weights')
         args = ['srun', '-n', nProcs, 'ESMF_RegridWeightGen', '--source',
                 'BedMachineAntarctica_2020-07-15_v02.scrip.nc',
@@ -284,14 +284,14 @@ class Mesh(Step):
         # Using conservative remapping
         logger.info('calling interpolate_to_mpasli_grid.py')
         args = ['interpolate_to_mpasli_grid.py', '-s',
-                data_path+'BedMachineAntarctica_2020-07-15_v02_edits.nc',
+                data_path+'BedMachineAntarctica_2020-07-15_v02_edits_floodFill_extrap.nc',
                 '-d', 'Antarctica.nc', '-m', 'e',
                 '-w', 'BedMachine_to_MPAS_weights.nc']
         check_call(args, logger=logger)
 
         logger.info('calling interpolate_to_mpasli_grid.py')
         args = ['interpolate_to_mpasli_grid.py', '-s',
-                data_path+'antarctica_ice_velocity_450m_v2_edits.nc',
+                data_path+'antarctica_ice_velocity_450m_v2_edits_extrap.nc',
                 '-d', 'Antarctica.nc', '-m', 'e',
                 '-w', 'measures_to_MPAS_weights.nc',
                 '-v', 'observedSurfaceVelocityX',
@@ -308,15 +308,22 @@ class Mesh(Step):
         make_graph_file(mesh_filename='Antarctica.nc',
                         graph_filename='graph.info')
 
-        # Clean up: trim to iceMask
+        # Create a backup in case clean-up goes awry
+        copyfile('Antarctica.nc', 'Antarctica_backup.nc')
+
+        # Clean up: trim to iceMask and set large velocity
+        # uncertainties where appropriate.
         data = netCDF4.Dataset('Antarctica.nc', 'r+')
         data.set_auto_mask(False)
-        #data.variables['thickness'][:] *= (data.variables['iceMask'][:] > 0.5)
+        data.variables['thickness'][:] *= (data.variables['iceMask'][:] > 1.5)
         
         mask = np.logical_or(
                 np.isnan(
                     data.variables['observedSurfaceVelocityUncertainty'][:]),
                 data.variables['thickness'][:] < 1.0)
+        mask = np.logical_or(
+                mask,
+                data.variables['observedSurfaceVelocityUncertainty'][:] == 0.0)
         data.variables['observedSurfaceVelocityUncertainty'][0,mask[0,:]] = 1.0
         data.close()
 
