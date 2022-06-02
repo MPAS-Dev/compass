@@ -60,7 +60,7 @@ class Mesh(Step):
         logger = self.logger
         config = self.config
         section = config['antarctica']
-        data_path = '/usr/projects/climate/trhille/data/'
+        data_path = section.get('data_path')
         nProcs = section.get('nProcs')
         logger.info('calling build_cell_width')
         cell_width, x1, y1, geom_points, geom_edges, floodFillMask = \
