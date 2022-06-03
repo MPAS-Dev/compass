@@ -7,6 +7,7 @@ Test groups
 .. toctree::
    :titlesonly:
 
+   antarctica
    calving_dt_convergence
    circular_shelf
    dome

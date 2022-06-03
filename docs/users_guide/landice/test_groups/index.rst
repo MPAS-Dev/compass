@@ -12,6 +12,7 @@ physics but that are not run routinely.
 .. toctree::
    :titlesonly:
 
+   antarctica
    calving_dt_convergence
    circular_shelf
    dome
