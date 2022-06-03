@@ -221,19 +221,20 @@ class Mesh(Step):
         data.variables['iceMask'][:] = 0.
         data.close()
 
-        logger.info('creating scrip file for BedMachine dataset')
-        args = ['create_SCRIP_file_from_planar_rectangular_grid.py',
-                '-i', data_path+'BedMachineAntarctica_2020-07-15_v02.nc',
-                '-s', 'BedMachineAntarctica_2020-07-15_v02.scrip.nc',
-                '-p', 'ais-bedmap2', '-r', '2']
-        check_call(args, logger=logger)
+        # Uncomment below if you need to create scrip files.
+        #logger.info('creating scrip file for BedMachine dataset')
+        #args = ['create_SCRIP_file_from_planar_rectangular_grid.py',
+        #        '-i', data_path+'BedMachineAntarctica_2020-07-15_v02_edits_floodFill_extrap_fillVostok.nc',
+        #        '-s', data_paht+'BedMachineAntarctica_2020-07-15_v02.scrip.nc',
+        #        '-p', 'ais-bedmap2', '-r', '2']
+        #check_call(args, logger=logger)
 
-        logger.info('creating scrip file for velocity dataset')
-        args = ['create_SCRIP_file_from_planar_rectangular_grid.py',
-                '-i', data_path+'antarctica_ice_velocity_450m_v2_edits.nc',
-                '-s', 'antarctica_ice_velocity_450m_v2.scrip.nc',
-                '-p', 'ais-bedmap2', '-r', '2']
-        check_call(args, logger=logger)
+        #logger.info('creating scrip file for velocity dataset')
+        #args = ['create_SCRIP_file_from_planar_rectangular_grid.py',
+        #        '-i', data_path+'antarctica_ice_velocity_450m_v2_edits_extrap.nc',
+        #        '-s', data_path+'antarctica_ice_velocity_450m_v2.scrip.nc',
+        #        '-p', 'ais-bedmap2', '-r', '2']
+        #check_call(args, logger=logger)
 
         logger.info('calling set_lat_lon_fields_in_planar_grid.py')
         args = ['set_lat_lon_fields_in_planar_grid.py', '-f',
@@ -246,11 +247,11 @@ class Mesh(Step):
                 '-m', 'Antarctica.nc',
                 '-s', 'Antarctica.scrip.nc']
         check_call(args, logger=logger)
-        # Testing shows 5 to 10 badger/grizzly nodes works well.
+        # Testing shows 5 badger/grizzly nodes works well.
         # 2 nodes is too few. I have not tested anything in between.
         logger.info('generating gridded dataset -> MPAS weights')
         args = ['srun', '-n', nProcs, 'ESMF_RegridWeightGen', '--source',
-                'BedMachineAntarctica_2020-07-15_v02.scrip.nc',
+                data_path+'BedMachineAntarctica_2020-07-15_v02.scrip.nc',
                 '--destination',
                 'Antarctica.scrip.nc',
                 '--weight', 'BedMachine_to_MPAS_weights.nc',
@@ -261,7 +262,7 @@ class Mesh(Step):
 
         logger.info('generating gridded dataset -> MPAS weights')
         args = ['srun', '-n', nProcs, 'ESMF_RegridWeightGen', '--source',
-                'antarctica_ice_velocity_450m_v2.scrip.nc',
+                data_path+'antarctica_ice_velocity_450m_v2.scrip.nc',
                 '--destination',
                 'Antarctica.scrip.nc',
                 '--weight', 'measures_to_MPAS_weights.nc',
@@ -284,7 +285,7 @@ class Mesh(Step):
         # Using conservative remapping
         logger.info('calling interpolate_to_mpasli_grid.py')
         args = ['interpolate_to_mpasli_grid.py', '-s',
-                data_path+'BedMachineAntarctica_2020-07-15_v02_edits_floodFill_extrap.nc',
+                data_path+'BedMachineAntarctica_2020-07-15_v02_edits_floodFill_extrap_fillVostok.nc',
                 '-d', 'Antarctica.nc', '-m', 'e',
                 '-w', 'BedMachine_to_MPAS_weights.nc']
         check_call(args, logger=logger)
