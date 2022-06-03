@@ -170,11 +170,6 @@
 <span class="sd">        This is currently just a placeholder for later use with task</span>
 <span class="sd">        parallelism</span>
 
-<span class="sd">    max_disk : int</span>
-<span class="sd">        the amount of disk space that the step is allowed to use in MB.</span>
-<span class="sd">        This is currently just a placeholder for later use with task</span>
-<span class="sd">        parallelism</span>
-
 <span class="sd">    input_data : list of dict</span>
 <span class="sd">        a list of dict used to define input files typically to be</span>
 <span class="sd">        downloaded to a database and/or symlinked in the work directory</span>
@@ -237,7 +232,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="Step.__init__"><a class="viewcode-back" href="../../developers_guide/generated/compass.Step.html#compass.Step.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                 <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_memory</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">max_disk</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">cached</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_memory</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">cached</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                  <span class="n">run_as_subprocess</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new test case</span>
@@ -270,11 +265,6 @@
 <span class="sd">            This is currently just a placeholder for later use with task</span>
 <span class="sd">            parallelism</span>
 
-<span class="sd">        max_disk : int, optional</span>
-<span class="sd">            the amount of disk space that the step is allowed to use in MB.</span>
-<span class="sd">            This is currently just a placeholder for later use with task</span>
-<span class="sd">            parallelism</span>
-
 <span class="sd">        cached : bool, optional</span>
 <span class="sd">            Whether to get all of the outputs for the step from the database of</span>
 <span class="sd">            cached outputs for this MPAS core</span>
@@ -299,7 +289,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">min_cores</span> <span class="o">=</span> <span class="n">min_cores</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">threads</span> <span class="o">=</span> <span class="n">threads</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_memory</span> <span class="o">=</span> <span class="n">max_memory</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">max_disk</span> <span class="o">=</span> <span class="n">max_disk</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_group</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
                                  <span class="n">test_case</span><span class="o">.</span><span class="n">subdir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">subdir</span><span class="p">)</span>
