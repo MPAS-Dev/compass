@@ -25,7 +25,8 @@ class ProcessSMB(Step):
         input_file : file name of ismip6 forcing data processed by this step
         """
         self.input_file = input_file
-        super().__init__(test_case=test_case, name='process_smb')
+        super().__init__(test_case=test_case, name='process_smb', cores=4,
+                         min_cores=1)
 
     def setup(self):
         """
@@ -151,7 +152,8 @@ class ProcessSMB(Step):
             # build a mapping file if it doesn't already exist
             self.logger.info("Creating a mapping file. "
                              "Mapping method used: {method_remap}")
-            build_mapping_file(input_file, mapping_file, mali_mesh_file,
+            build_mapping_file(self.config, self.cores, self.logger,
+                               input_file, mapping_file, mali_mesh_file,
                                method_remap)
         else:
             self.logger.info("Mapping file exists. "
