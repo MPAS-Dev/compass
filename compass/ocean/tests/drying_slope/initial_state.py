@@ -49,12 +49,14 @@ class InitialState(Step):
 
         config = self.config
         section = config['vertical_grid']
-        if self.coord_type == 'single_layer':
+        coord_type = self.coord_type
+        if coord_type == 'single_layer':
             options = {'config_tidal_boundary_vert_levels': '1'}
             self.update_namelist_at_runtime(options)
         else:
             vert_levels = section.get('vert_levels')
-            options = {'config_tidal_boundary_vert_levels': f'{vert_levels}'}
+            options = {'config_tidal_boundary_vert_levels': f'{vert_levels}',
+                       'config_tidal_boundary_layer_type': f"'{coord_type}'"}
             self.update_namelist_at_runtime(options)
 
         section = config['drying_slope']
