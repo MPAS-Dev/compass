@@ -63,7 +63,6 @@ class Default(TestCase):
         Modify the configuration options for this test case.
         """
 
-        coord_type = self.coord_type
         resolution = self.resolution
         config = self.config
         ny = round(28 / resolution)
@@ -75,6 +74,3 @@ class Default(TestCase):
                    'mesh cells in the y direction')
         config.set('drying_slope', 'dc', f'{dc}', comment='the distance '
                    'between adjacent cell centers')
-        config.set('vertical_grid', 'coordinate_type', f'{coord_type}')
-        if coord_type == 'single_layer':
-            config.set('vertical_grid', 'vert_levels', '1')

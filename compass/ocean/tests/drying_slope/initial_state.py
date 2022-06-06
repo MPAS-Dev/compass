@@ -26,10 +26,10 @@ class InitialState(Step):
         super().__init__(test_case=test_case, name='initial_state', cores=1,
                          min_cores=1, threads=1)
 
+        self.coord_type = coord_type
+
         self.add_namelist_file('compass.ocean.tests.drying_slope',
                                'namelist.init', mode='init')
-        self.add_namelist_file('compass.ocean.tests.drying_slope',
-                               f'namelist.{coord_type}.init', mode='init')
 
         self.add_streams_file('compass.ocean.tests.drying_slope',
                               'streams.init', mode='init')
@@ -46,6 +46,16 @@ class InitialState(Step):
         """
         config = self.config
         logger = self.logger
+
+        config = self.config
+        section = config['vertical_grid']
+        if self.coord_type == 'single_layer':
+            options = {'config_tidal_boundary_vert_levels': '1'}
+            self.update_namelist_at_runtime(options)
+        else:
+            vert_levels = section.get('vert_levels')
+            options = {'config_tidal_boundary_vert_levels': f'{vert_levels}'}
+            self.update_namelist_at_runtime(options)
 
         section = config['drying_slope']
         nx = section.getint('nx')
