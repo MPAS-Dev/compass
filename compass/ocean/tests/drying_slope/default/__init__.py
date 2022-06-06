@@ -2,6 +2,7 @@ from compass.testcase import TestCase
 from compass.ocean.tests.drying_slope.initial_state import InitialState
 from compass.ocean.tests.drying_slope.forward import Forward
 from compass.ocean.tests.drying_slope.viz import Viz
+from compass.validate import compare_variables
 
 
 class Default(TestCase):
@@ -56,6 +57,7 @@ class Default(TestCase):
                                       cores=4, threads=1,
                                       damping_coeff=damping_coeff,
                                       coord_type=coord_type))
+        self.damping_coeffs = damping_coeffs
         self.add_step(Viz(test_case=self, damping_coeffs=damping_coeffs))
 
     def configure(self):
@@ -74,3 +76,18 @@ class Default(TestCase):
                    'mesh cells in the y direction')
         config.set('drying_slope', 'dc', f'{dc}', comment='the distance '
                    'between adjacent cell centers')
+
+    def validate(self):
+        """
+        Validate variables against a baseline
+        """
+        damping_coeffs = self.damping_coeffs
+        variables = ['layerThickness', 'normalVelocity']
+        if damping_coeffs is not None:
+            for damping_coeff in damping_coeffs:
+                compare_variables(test_case=self, variables=variables,
+                                  filename1=f'forward_{damping_coeff}/'
+                                            'output.nc')
+        else:
+            compare_variables(test_case=self, variables=variables,
+                              filename1='forward/output.nc')
