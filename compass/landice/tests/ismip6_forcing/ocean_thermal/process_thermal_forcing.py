@@ -40,19 +40,6 @@ class ProcessThermalForcing(Step):
         section = config['ismip6_ais_ocean_thermal']
         process_obs_data = section.getboolean("process_obs_data")
 
-        if period_endyear == "NotAvailable":
-            raise ValueError("You need to supply a user config file, which "
-                             "should contain the ismip6_ais "
-                             "section with the period_endyear option")
-        if model == "NotAvailable":
-            raise ValueError("You need to supply a user config file, which "
-                             "should contain the ismip6_ais "
-                             "section with the model option")
-        if scenario == "NotAvailable":
-            raise ValueError("You need to supply a user config file, which "
-                             "should contain the ismip6_ais "
-                             "section with the scenario option")
-
         self.add_input_file(filename=mali_mesh_file,
                             target=os.path.join(base_path_mali,
                                                 mali_mesh_file))
