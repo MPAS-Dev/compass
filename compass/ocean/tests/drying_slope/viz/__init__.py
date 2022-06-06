@@ -139,18 +139,18 @@ class Viz(Step):
         locs = 0.92 - numpy.divide(locs, 11.)
 
         damping_coeffs = self.damping_coeffs
+        times = self.times
+        datatypes = self.datatypes
+
         if damping_coeffs is None:
             naxes = 1
             nhandles = 1
             ncFilename = ['output.nc']
         else:
             naxes = len(damping_coeffs)
-            nhandles = naxes + 2
+            nhandles = len(datatypes) + 1
             ncFilename = [f'output_{damping_coeff}.nc'
                           for damping_coeff in damping_coeffs]
-
-        times = self.times
-        datatypes = self.datatypes
 
         xBed = numpy.linspace(0, 25, 100)
         yBed = 10.0/25.0*xBed
