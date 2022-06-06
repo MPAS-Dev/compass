@@ -1,4 +1,6 @@
 import os
+import shutil
+import subprocess
 import netCDF4
 import xarray as xr
 from mpas_tools.scrip.from_mpas import scrip_from_mpas
@@ -37,6 +39,7 @@ def build_mapping_file(config, cores, logger, ismip6_grid_file,
 
     ismip6_scripfile = "temp_ismip6_8km_scrip.nc"
     mali_scripfile = "temp_mali_scrip.nc"
+    ismip6_projection = "ais-bedmap2"
 
     # create the ismip6 scripfile if mapping file does not exist
     # this is the projection of ismip6 data for Antarctica
@@ -48,7 +51,21 @@ def build_mapping_file(config, cores, logger, ismip6_grid_file,
     create_atm_scrip(ismip6_grid_file, ismip6_scripfile)
 
     # create a MALI mesh scripfile if mapping file does not exist
-    scrip_from_mpas(mali_mesh_file, mali_scripfile)
+    # make sure the mali mesh file uses the longitude convention of [0 2pi]
+    # make changes on a duplicated file to avoid making changes to the
+    # original mesh file
+
+    mali_mesh_copy = f"{mali_mesh_file}_copy"
+    shutil.copy(mali_mesh_file, f"{mali_mesh_file}_copy")
+
+    args = ["set_lat_lon_fields_in_planar_grid.py",
+            "--file", mali_mesh_copy,
+            "--proj", ismip6_projection]
+
+    subprocess.check_call(args)
+
+    # create a MALI mesh scripfile if mapping file does not exist
+    scrip_from_mpas(mali_mesh_copy, mali_scripfile)
 
     # create a mapping file using ESMF weight gen
     print(f"Creating a mapping file. Mapping method used: {method_remap}")
@@ -73,9 +90,11 @@ def build_mapping_file(config, cores, logger, ismip6_grid_file,
     check_call(args, logger)
 
     # remove the temporary scripfiles once the mapping file is generated
-    print("Removing the temporary scripfiles...")
+    print("Removing the temporary mesh and scripfiles...")
     os.remove(ismip6_scripfile)
     os.remove(mali_scripfile)
+    os.remove(mali_mesh_copy)
+
 
 def create_atm_scrip(ismip6_grid_file, ismip6_scripfile):
     """
