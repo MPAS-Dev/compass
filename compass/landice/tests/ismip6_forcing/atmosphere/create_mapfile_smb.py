@@ -1,18 +1,25 @@
 import os
-import subprocess
 import netCDF4
 import xarray as xr
 from mpas_tools.scrip.from_mpas import scrip_from_mpas
+from mpas_tools.logging import check_call
 
 
 # function that creates a mapping file from ismip6 grid to mali mesh
-def build_mapping_file(ismip6_grid_file, mapping_file, mali_mesh_file=None,
+def build_mapping_file(config, cores, logger, ismip6_grid_file,
+                       mapping_file, mali_mesh_file=None,
                        method_remap=None):
     """
     Build a mapping file if it does not exist.
 
     Parameters
     ----------
+    config : compass.config.CompassConfigParser
+        Configuration options for a ismip6 forcing test case
+    cores : int
+        the number of cores for the ESMF_RegridWeightGen
+    logger : logging.Logger
+        A logger for output from the step
     ismip6_grid_file : str
         ismip6 grid file
     mapping_file : str
@@ -51,16 +58,19 @@ def build_mapping_file(ismip6_grid_file, mapping_file, mali_mesh_file=None,
                          "--method. Available options are 'bilinear',"
                          "'neareststod', 'conserve'.")
 
-    args = ["ESMF_RegridWeightGen",
-            "-s", ismip6_scripfile,
-            "-d", mali_scripfile,
-            "-w", mapping_file,
-            "-m", method_remap,
-            "-i", "-64bit_offset",
-            "--dst_regional", "--src_regional"]
+    parallel_executable = config.get('parallel', 'parallel_executable')
+    # split the parallel executable into constituents in case it includes flags
+    args = parallel_executable.split(' ')
+    args.extend(["-n", f"{cores}",
+                 "ESMF_RegridWeightGen",
+                 "-s", ismip6_scripfile,
+                 "-d", mali_scripfile,
+                 "-w", mapping_file,
+                 "-m", method_remap,
+                 "-i", "-64bit_offset",
+                 "--dst_regional", "--src_regional"])
 
-    # include flag and input and output file names
-    subprocess.check_call(args)
+    check_call(args, logger)
 
     # remove the temporary scripfiles once the mapping file is generated
     print("Removing the temporary scripfiles...")

@@ -22,7 +22,8 @@ class ProcessThermalForcing(Step):
                     OceanThermal
             The test case this step belongs to
         """
-        super().__init__(test_case=test_case, name='process_thermal_forcing')
+        super().__init__(test_case=test_case, name='process_thermal_forcing',
+                         cores=4, min_cores=1)
 
     def setup(self):
         """
@@ -145,7 +146,8 @@ class ProcessThermalForcing(Step):
 
         if not os.path.exists(mapping_file):
             # build a mapping file if it doesn't already exist
-            build_mapping_file(input_file, mapping_file, mali_mesh_file,
+            build_mapping_file(self.config, self.cores, self.logger,
+                               input_file, mapping_file, mali_mesh_file,
                                method_remap)
         else:
             print("Mapping file exists. Remapping the input data...")
