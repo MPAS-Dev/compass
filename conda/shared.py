@@ -171,7 +171,7 @@ def install_miniconda(conda_base, activate_base, logger):
     commands = '{}; ' \
                'conda config --add channels conda-forge; ' \
                'conda config --set channel_priority strict; ' \
-               'conda install -y mamba boa; ' \
+               'conda install -y "mamba>=0.24.0" boa; ' \
                'conda update -y --all'.format(activate_base)
 
     check_call(commands, logger=logger)
