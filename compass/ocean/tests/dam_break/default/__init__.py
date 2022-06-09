@@ -2,6 +2,7 @@ from math import floor
 from compass.testcase import TestCase
 from compass.ocean.tests.dam_break.initial_state import InitialState
 from compass.ocean.tests.dam_break.forward import Forward
+from compass.ocean.tests.dam_break.viz import Viz
 
 
 class Default(TestCase):
@@ -42,6 +43,7 @@ class Default(TestCase):
         self.add_step(InitialState(test_case=self))
         self.add_step(Forward(test_case=self, resolution=resolution,
                               cores=4, threads=1))
+        self.add_step(Viz(test_case=self))
 
     def configure(self):
         """
