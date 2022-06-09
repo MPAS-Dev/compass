@@ -45,14 +45,10 @@ class Forward(Step):
         super().__init__(test_case=test_case, name=name, subdir=subdir,
                          cores=cores, min_cores=min_cores, threads=threads)
 
+        self.resolution = resolution
+
         self.add_namelist_file('compass.ocean.tests.dam_break',
                                'namelist.forward')
-        if resolution < 1.:
-            res_name = f'{int(resolution*1e3)}m'
-        else:
-            res_name = f'{int(resolution)}km'
-        self.add_namelist_file('compass.ocean.tests.dam_break',
-                               f'namelist.{res_name}.forward')
         self.add_streams_file('compass.ocean.tests.dam_break',
                               'streams.forward')
 
@@ -79,8 +75,8 @@ class Forward(Step):
 
         resolution = self.resolution
         if resolution == 0.04:
-            self.update_namelist_at_runtime({'config_dt': "'0000_00:00:00.01'"})
+            self.update_namelist_at_runtime({'config_dt': "'0000_00:00:00.0001'"})
         elif resolution == 0.12:
-            self.update_namelist_at_runtime({'config_dt': "'0000_00:00:00.03'"})
+            self.update_namelist_at_runtime({'config_dt': "'0000_00:00:00.0003'"})
         run_model(self)
 
