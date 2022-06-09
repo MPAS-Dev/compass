@@ -77,5 +77,10 @@ class Forward(Step):
         Run this step of the test case
         """
 
+        resolution = self.resolution
+        if resolution == 0.04:
+            self.update_namelist_at_runtime({'config_dt': "'0000_00:00:00.01'"})
+        elif resolution == 0.12:
+            self.update_namelist_at_runtime({'config_dt': "'0000_00:00:00.03'"})
         run_model(self)
 

@@ -1,3 +1,4 @@
+from math import floor
 from compass.testcase import TestCase
 from compass.ocean.tests.dam_break.initial_state import InitialState
 from compass.ocean.tests.dam_break.forward import Forward
@@ -24,16 +25,16 @@ class Default(TestCase):
             The test group that this test case belongs to
 
         resolution : float
-            The resolution of the test case in km
+            The resolution of the test case in m
 
         """
         name = 'default'
 
         self.resolution = resolution
         if resolution < 1.:
-            res_name = f'{int(resolution*1e3)}m'
+            res_name = f'{int(resolution*1e3)}cm'
         else:
-            res_name = f'{int(resolution)}km'
+            res_name = f'{int(resolution)}m'
         subdir = f'{res_name}/{name}'
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
@@ -42,3 +43,22 @@ class Default(TestCase):
         self.add_step(Forward(test_case=self, resolution=resolution,
                               cores=4, threads=1))
 
+    def configure(self):
+        """
+        Modify the configuration options for this test case.
+        """
+
+        resolution = self.resolution
+        config = self.config
+        dc = resolution  # cell width in m
+        dx = 13          # width of the domain in m
+        dy = 28          # length of the domain in m
+        nx = round(dx/dc)
+        ny = int(2*floor(dy/(2*dc)))  # guarantee that ny is even
+
+        config.set('dam_break', 'nx', f'{nx}', comment='the number of '
+                   'mesh cells in the x direction')
+        config.set('dam_break', 'ny', f'{ny}', comment='the number of '
+                   'mesh cells in the y direction')
+        config.set('dam_break', 'dc', f'{dc}', comment='the distance '
+                   'between adjacent cell centers')

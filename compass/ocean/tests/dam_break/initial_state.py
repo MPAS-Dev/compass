@@ -50,8 +50,11 @@ class InitialState(Step):
         ny = section.getint('ny')
         dc = section.getfloat('dc')
 
+        self.update_namelist_at_runtime(
+           {'config_dam_break_dc': f'{dc}'})
+
         logger.info(' * Make planar hex mesh')
-        dsMesh = make_planar_hex_mesh(nx=nx, ny=ny, dc=dc, nonperiodic_x=False,
+        dsMesh = make_planar_hex_mesh(nx=nx, ny=ny, dc=dc, nonperiodic_x=True,
                                       nonperiodic_y=True)
         logger.info(' * Completed Make planar hex mesh')
         write_netcdf(dsMesh, 'base_mesh.nc')

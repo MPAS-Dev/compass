@@ -14,7 +14,7 @@ class DamBreak(TestGroup):
         """
         super().__init__(mpas_core=mpas_core, name='dam_break')
 
-        for resolution in [0.004, 0.012]:
+        for resolution in [0.04, 0.12]:
             for coord_type in ['sigma']:
                 self.add_test_case(
                     Default(test_group=self, resolution=resolution))
