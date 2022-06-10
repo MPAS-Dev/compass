@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Developer Tutorial: Porting a legacy COMPASS test group &mdash; compass 1.1.0-rc.2 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Glossary" href="../glossary.html" />
+    <link rel="prev" title="Developer Tutorial: Adding a parameter study" href="dev_add_param_study.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> compass
+          </a>
+              <div class="version">
+                1.1.0-rc.2
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Developer Tutorial: Porting a legacy COMPASS test group</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#getting-started">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-legacy-compass-test-group">The legacy COMPASS test group</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#making-a-new-test-group">Making a new test group</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-a-test-case">Adding a test case</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#varying-resolution-or-other-parameters">Varying resolution (or other parameters)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-the-init-step">Adding the init step</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#defining-namelist-options">Defining namelist options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#defining-streams">Defining streams</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#defining-config-options">Defining config options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#defining-the-run-method">Defining the run method</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-the-forward-step">Adding the forward step</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-the-analysis-step">Adding the analysis step</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#updating-the-test-case-and-test-group">Updating the test case and test group</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-validation">Adding validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#set-up-and-run">Set up and run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#documentation">Documentation</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Developer Tutorial: Porting a legacy COMPASS test group</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorials/dev_porting_legacy.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="developer-tutorial-porting-a-legacy-compass-test-group">
+<span id="dev-tutorial-porting-legacy"></span><h1>Developer Tutorial: Porting a legacy COMPASS test group<a class="headerlink" href="#developer-tutorial-porting-a-legacy-compass-test-group" title="Permalink to this heading">¶</a></h1>
+<p>This tutorial presents a step-by-step guide to porting a legacy COMPASS test
+group to the <code class="docutils literal notranslate"><span class="pre">compass</span></code> python package (see the <a class="reference internal" href="../glossary.html#glossary"><span class="std std-ref">Glossary</span></a> for
+definitions of these terms). The tutorial uses the legacy COMPASS test group
+<code class="docutils literal notranslate"><span class="pre">ocean/gotm</span></code> as an example.  We will build a new python package
+<code class="docutils literal notranslate"><span class="pre">compass.ocean.tests.gotm</span></code> for the test group in <code class="docutils literal notranslate"><span class="pre">compass</span></code>.  The example
+test group creates a tiny (4 x 4 cell) doubly periodic mesh and uses it to
+test MPAS-Ocean calls to the <a class="reference external" href="https://gotm.net/">General Ocean Turbulence Model (GOTM)</a>.</p>
+<section id="getting-started">
+<h2>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this heading">¶</a></h2>
+<p>To begin with, you will need to check out two different branches of compass.
+First, you will need the <code class="docutils literal notranslate"><span class="pre">legacy</span></code> branch.  Since we will simply be looking
+at the code and copying it as needed, you can simply browse the branch directly
+on GitHub: <a class="reference external" href="https://github.com/MPAS-Dev/compass/tree/legacy/ocean/gotm/2.5km/default">https://github.com/MPAS-Dev/compass/tree/legacy/ocean/gotm/2.5km/default</a>.
+If you prefer, you can use either of the approaches described in
+<a class="reference internal" href="../developers_guide/quick_start.html#dev-compass-repo"><span class="std std-ref">Set up a compass repository: for beginners</span></a> or <a class="reference internal" href="../developers_guide/quick_start.html#dev-compass-repo-advanced"><span class="std std-ref">Set up a compass repository with worktrees: for advanced users</span></a> to clone the repo
+and check out the <code class="docutils literal notranslate"><span class="pre">legacy</span></code> branch.</p>
+<p>Next, you will need to create a new branch from <code class="docutils literal notranslate"><span class="pre">master</span></code> for developing the
+new test group.  For this purpose, we will stick with the simpler approach in
+<a class="reference internal" href="../developers_guide/quick_start.html#dev-compass-repo"><span class="std std-ref">Set up a compass repository: for beginners</span></a> here, but feel free to use the <code class="docutils literal notranslate"><span class="pre">worktree</span></code> approach
+instead if you are comfortable with it.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone git@github.com:MPAS-Dev/compass.git add_gotm
+<span class="nb">cd</span> add_gotm
+</pre></div>
+</div>
+<p>Now, you will need to create a conda environment for developing compass, as
+described in <a class="reference internal" href="../developers_guide/quick_start.html#dev-conda-env"><span class="std std-ref">compass conda environment, compilers and system modules</span></a>.  We will assume a simple situation where
+you are working on a “supported” machine and using the default compilers and
+MPI libraries, but consult the documentation to make an environment to suit
+your needs.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># this one will take a while the first time</span>
+./conda/create_compass_env.py --conda <span class="nv">$HOME</span>/miniconda3
+</pre></div>
+</div>
+<p>If all goes well, you will have a file named <code class="docutils literal notranslate"><span class="pre">load_dev_compass_1.0.0*.sh</span></code>, where
+the details of the <code class="docutils literal notranslate"><span class="pre">*</span></code> depend on your specific machine and compilers.  For
+example, on Chrysalis, you will have <code class="docutils literal notranslate"><span class="pre">load_dev_compass_1.0.0_chrysalis_intel_impi.sh</span></code>,
+which will be the example used here:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> load_dev_compass_1.0.0_chrysalis_intel_impi.sh
+</pre></div>
+</div>
+<p>Now, we’re ready to get the MPAS-Ocean source code from the E3SM repository and
+build the MPAS-Ocean executable:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get the E3SM code -- this one takes a while every time</span>
+git submodule update --init --recursive
+<span class="nb">cd</span> E3SM-Project/components/mpas-ocean/
+make intel-mpi
+<span class="nb">cd</span> ../../..
+</pre></div>
+</div>
+<p>The make target will be different depending on the machine and compilers, see
+<a class="reference internal" href="../developers_guide/machines/index.html#dev-supported-machines"><span class="std std-ref">Supported Machines</span></a> or <a class="reference internal" href="../developers_guide/machines/index.html#dev-other-machines"><span class="std std-ref">Other Machines</span></a> for the right one
+for your machine.</p>
+<p>Now, we’re ready to start developing!</p>
+</section>
+<section id="the-legacy-compass-test-group">
+<h2>The legacy COMPASS test group<a class="headerlink" href="#the-legacy-compass-test-group" title="Permalink to this heading">¶</a></h2>
+<p>…But before we get started, a little background on legacy COMPASS for those
+who haven’t used it extensively.  In legacy COMPASS, the test group is just a
+directory with multiple test cases and, optionally, templates and other files
+in it.  Test cases are made up of XML config and template files, and sometimes
+additional files like python scripts, python config files, namelist files, and
+geojson files.</p>
+<p>All test cases have a driver, <code class="docutils literal notranslate"><span class="pre">config_driver.xml</span></code>, that lists the steps in
+the test case.  The <code class="docutils literal notranslate"><span class="pre">gotm</span></code> test group that we are using as an example has a
+single test case, <code class="docutils literal notranslate"><span class="pre">ocean/gotm/2.5km/default</span></code>.  Its <code class="docutils literal notranslate"><span class="pre">config_driver.xml</span></code>
+looks like this:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;driver_script</span> <span class="na">name=</span><span class="s">&quot;run_test.py&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;case</span> <span class="na">name=</span><span class="s">&quot;init&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;step</span> <span class="na">executable=</span><span class="s">&quot;./run.py&quot;</span> <span class="na">quiet=</span><span class="s">&quot;true&quot;</span> <span class="na">pre_message=</span><span class="s">&quot; * Running init&quot;</span> <span class="na">post_message=</span><span class="s">&quot;     Complete&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/case&gt;</span>
+    <span class="nt">&lt;case</span> <span class="na">name=</span><span class="s">&quot;forward&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;step</span> <span class="na">executable=</span><span class="s">&quot;./run.py&quot;</span> <span class="na">quiet=</span><span class="s">&quot;true&quot;</span> <span class="na">pre_message=</span><span class="s">&quot; * Running forward&quot;</span> <span class="na">post_message=</span><span class="s">&quot;     Complete&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/case&gt;</span>
+    <span class="nt">&lt;case</span> <span class="na">name=</span><span class="s">&quot;analysis&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;step</span> <span class="na">executable=</span><span class="s">&quot;./run.py&quot;</span> <span class="na">quiet=</span><span class="s">&quot;true&quot;</span> <span class="na">pre_message=</span><span class="s">&quot; * Running analysis&quot;</span> <span class="na">post_message=</span><span class="s">&quot;     Complete&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/case&gt;</span>
+<span class="nt">&lt;/driver_script&gt;</span>
+</pre></div>
+</div>
+<p>The test case is made up of 3 steps, <code class="docutils literal notranslate"><span class="pre">init</span></code>, <code class="docutils literal notranslate"><span class="pre">forward</span></code> and <code class="docutils literal notranslate"><span class="pre">analysis</span></code>.
+Each has its own XML file.  For example, <code class="docutils literal notranslate"><span class="pre">config_init.xml</span></code> looks like this:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot;?&gt;</span>
+<span class="nt">&lt;config</span> <span class="na">case=</span><span class="s">&quot;init&quot;</span><span class="nt">&gt;</span>
+
+    <span class="nt">&lt;add_executable</span> <span class="na">source=</span><span class="s">&quot;model&quot;</span> <span class="na">dest=</span><span class="s">&quot;ocean_model&quot;</span><span class="nt">/&gt;</span>
+
+    <span class="nt">&lt;namelist</span> <span class="na">name=</span><span class="s">&quot;namelist.ocean&quot;</span> <span class="na">mode=</span><span class="s">&quot;init&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_init_configuration&quot;</span><span class="nt">&gt;</span>&#39;periodic_planar&#39;<span class="nt">&lt;/option&gt;</span>
+        <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_vert_levels&quot;</span><span class="nt">&gt;</span>-1<span class="nt">&lt;/option&gt;</span>
+        <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_periodic_planar_vert_levels&quot;</span><span class="nt">&gt;</span>250<span class="nt">&lt;/option&gt;</span>
+        <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_periodic_planar_bottom_depth&quot;</span><span class="nt">&gt;</span>15.0<span class="nt">&lt;/option&gt;</span>
+        <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_periodic_planar_velocity_strength&quot;</span><span class="nt">&gt;</span>0.0<span class="nt">&lt;/option&gt;</span>
+        <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_ocean_run_mode&quot;</span><span class="nt">&gt;</span>&#39;init&#39;<span class="nt">&lt;/option&gt;</span>
+        <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_write_cull_cell_mask&quot;</span><span class="nt">&gt;</span>.false.<span class="nt">&lt;/option&gt;</span>
+        <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_vertical_grid&quot;</span><span class="nt">&gt;</span>&#39;uniform&#39;<span class="nt">&lt;/option&gt;</span>
+    <span class="nt">&lt;/namelist&gt;</span>
+
+    <span class="nt">&lt;streams</span> <span class="na">name=</span><span class="s">&quot;streams.ocean&quot;</span> <span class="na">keep=</span><span class="s">&quot;immutable&quot;</span> <span class="na">mode=</span><span class="s">&quot;init&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;stream</span> <span class="na">name=</span><span class="s">&quot;input_init&quot;</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;filename_template&quot;</span><span class="nt">&gt;</span>mesh.nc<span class="nt">&lt;/attribute&gt;</span>
+        <span class="nt">&lt;/stream&gt;</span>
+        <span class="nt">&lt;stream</span> <span class="na">name=</span><span class="s">&quot;output_init&quot;</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;type&quot;</span><span class="nt">&gt;</span>output<span class="nt">&lt;/attribute&gt;</span>
+            <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;output_interval&quot;</span><span class="nt">&gt;</span>0000_00:00:01<span class="nt">&lt;/attribute&gt;</span>
+            <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;clobber_mode&quot;</span><span class="nt">&gt;</span>truncate<span class="nt">&lt;/attribute&gt;</span>
+            <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;filename_template&quot;</span><span class="nt">&gt;</span>ocean.nc<span class="nt">&lt;/attribute&gt;</span>
+            <span class="nt">&lt;add_contents&gt;</span>
+                <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;input_init&quot;</span> <span class="na">type=</span><span class="s">&quot;stream&quot;</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;layerThickness&quot;</span> <span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;restingThickness&quot;</span> <span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;refBottomDepth&quot;</span> <span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;bottomDepth&quot;</span> <span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;maxLevelCell&quot;</span> <span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;vertCoordMovementWeights&quot;</span> <span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
+                <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;edgeMask&quot;</span> <span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;/add_contents&gt;</span>
+    <span class="nt">&lt;/stream&gt;</span>
+    <span class="nt">&lt;/streams&gt;</span>
+
+    <span class="nt">&lt;run_script</span> <span class="na">name=</span><span class="s">&quot;run.py&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;step</span> <span class="na">executable=</span><span class="s">&quot;planar_hex&quot;</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;argument</span> <span class="na">flag=</span><span class="s">&quot;--nx&quot;</span><span class="nt">&gt;</span>4<span class="nt">&lt;/argument&gt;</span>
+            <span class="nt">&lt;argument</span> <span class="na">flag=</span><span class="s">&quot;--ny&quot;</span><span class="nt">&gt;</span>4<span class="nt">&lt;/argument&gt;</span>
+            <span class="nt">&lt;argument</span> <span class="na">flag=</span><span class="s">&quot;--dc&quot;</span><span class="nt">&gt;</span>2500.0<span class="nt">&lt;/argument&gt;</span>
+            <span class="nt">&lt;argument</span> <span class="na">flag=</span><span class="s">&quot;-o&quot;</span><span class="nt">&gt;</span>grid.nc<span class="nt">&lt;/argument&gt;</span>
+        <span class="nt">&lt;/step&gt;</span>
+        <span class="nt">&lt;step</span> <span class="na">executable=</span><span class="s">&quot;MpasCellCuller.x&quot;</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;argument</span> <span class="na">flag=</span><span class="s">&quot;&quot;</span><span class="nt">&gt;</span>grid.nc<span class="nt">&lt;/argument&gt;</span>
+            <span class="nt">&lt;argument</span> <span class="na">flag=</span><span class="s">&quot;&quot;</span><span class="nt">&gt;</span>culled_mesh.nc<span class="nt">&lt;/argument&gt;</span>
+        <span class="nt">&lt;/step&gt;</span>
+        <span class="nt">&lt;step</span> <span class="na">executable=</span><span class="s">&quot;MpasMeshConverter.x&quot;</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;argument</span> <span class="na">flag=</span><span class="s">&quot;&quot;</span><span class="nt">&gt;</span>culled_mesh.nc<span class="nt">&lt;/argument&gt;</span>
+            <span class="nt">&lt;argument</span> <span class="na">flag=</span><span class="s">&quot;&quot;</span><span class="nt">&gt;</span>mesh.nc<span class="nt">&lt;/argument&gt;</span>
+        <span class="nt">&lt;/step&gt;</span>
+        <span class="nt">&lt;model_run</span> <span class="na">procs=</span><span class="s">&quot;1&quot;</span> <span class="na">threads=</span><span class="s">&quot;1&quot;</span> <span class="na">namelist=</span><span class="s">&quot;namelist.ocean&quot;</span> <span class="na">streams=</span><span class="s">&quot;streams.ocean&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/run_script&gt;</span>
+
+<span class="nt">&lt;/config&gt;</span>
+</pre></div>
+</div>
+<p>The XML files for the other steps look similar.  We will go through these files
+in detail later in the tutorial.</p>
+<p>The example test case also has a namelist file used by GOTM (<code class="docutils literal notranslate"><span class="pre">gotmturb.nml</span></code>)
+and a python script for plotting the results compared to analytic solutions
+(<code class="docutils literal notranslate"><span class="pre">plot_profile.py</span></code>).</p>
+</section>
+<section id="making-a-new-test-group">
+<h2>Making a new test group<a class="headerlink" href="#making-a-new-test-group" title="Permalink to this heading">¶</a></h2>
+<p>Okay, with those details as a reference point from legacy COMPASS, let’s jump
+into developing the new test group in <code class="docutils literal notranslate"><span class="pre">compass</span></code>.  Use any method you like
+for editing code.  If you haven’t settled on a method and are working on your
+own laptop or desktop, you may want to try an integrated development
+environment (<a class="reference external" href="https://www.jetbrains.com/pycharm/">PyCharm</a> is a really nice
+one).  They have features to make sure your code adheres to the style required
+for compass (see <a class="reference internal" href="../developers_guide/overview.html#dev-style"><span class="std std-ref">Code Style</span></a>).  <code class="docutils literal notranslate"><span class="pre">vim</span></code> or a similar tool will work fine
+on supercomputers.</p>
+<p>In <code class="docutils literal notranslate"><span class="pre">compass</span></code>, the <code class="docutils literal notranslate"><span class="pre">gotm</span></code> test group will be a new python package.  We will
+make a new <code class="docutils literal notranslate"><span class="pre">gotm</span></code> directory in <code class="docutils literal notranslate"><span class="pre">compass/ocean/tests</span></code>.  In that directory,
+we will make a new, initially empty file <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code>.  Now, <code class="docutils literal notranslate"><span class="pre">gotm</span></code> is a
+new package in <code class="docutils literal notranslate"><span class="pre">compass</span></code> that could be imported as</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.ocean.tests</span> <span class="kn">import</span> <span class="n">gotm</span>
+</pre></div>
+</div>
+<p>Next, let’s make a new class for the <code class="docutils literal notranslate"><span class="pre">gotm</span></code> test group in <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.testgroup</span> <span class="kn">import</span> <span class="n">TestGroup</span>
+
+
+<span class="k">class</span> <span class="nc">Gotm</span><span class="p">(</span><span class="n">TestGroup</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A test group for General Ocean Turbulence Model (GOTM) test cases</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpas_core</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        mpas_core : compass.MpasCore</span>
+<span class="sd">            the MPAS core that this test group belongs to</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="n">mpas_core</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;gotm&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The method (a function for a class) called <code class="docutils literal notranslate"><span class="pre">__init__()</span></code> is the constructor
+used to make an instance (an object) representing the test group.  It needs
+to know what MPAS Core it belongs to so that is passed in as the <code class="docutils literal notranslate"><span class="pre">mpas_core</span></code>
+argument.  The only thing that happens so far is that the constructor for the
+base class <code class="docutils literal notranslate"><span class="pre">TestGroup</span></code> gets called.  In the process, we give the test group
+the name <code class="docutils literal notranslate"><span class="pre">gotm</span></code>.  You can take a look at the base class <code class="docutils literal notranslate"><span class="pre">TestGroup</span></code> in
+<code class="docutils literal notranslate"><span class="pre">compass/testgroup.py</span></code> if you want.  That’s not necessary for the tutorial,
+but some new developers have found reading the base class code to be
+highly instructive.</p>
+<p>Naming conventions in python are that we use
+<a class="reference external" href="https://en.wikipedia.org/wiki/Camel_case">CamelCase</a> for classes, which
+always start with a capital letter, and all lowercase, possibly with
+underscores, for variable, module, package and function names.  We avoid
+all-caps like <code class="docutils literal notranslate"><span class="pre">GOTM</span></code> or <code class="docutils literal notranslate"><span class="pre">MPAS</span></code>, even though these might seem preferable.
+(We use <code class="docutils literal notranslate"><span class="pre">E3SM</span></code> in a few places because <code class="docutils literal notranslate"><span class="pre">E3sm</span></code> was simply too much for us to
+bear.)</p>
+<p>Our new <code class="docutils literal notranslate"><span class="pre">Gotm</span></code> class defines the test group, but so far it doesn’t have any
+test cases in it.  We’ll come back and add them later in the tutorial.  Before
+we add a test case, let’s make <code class="docutils literal notranslate"><span class="pre">compass</span></code> aware that the test group exists.
+To do that, we need to open <code class="docutils literal notranslate"><span class="pre">compass/ocean/__init__.py</span></code>, add an import for
+the new test group, and add an instance of the test group to the list of test
+groups in the ocean core:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.mpas_core</span> <span class="kn">import</span> <span class="n">MpasCore</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.baroclinic_channel</span> <span class="kn">import</span> <span class="n">BaroclinicChannel</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_convergence</span> <span class="kn">import</span> <span class="n">GlobalConvergence</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean</span> <span class="kn">import</span> <span class="n">GlobalOcean</span>
+<span class="hll"><span class="kn">from</span> <span class="nn">compass.ocean.tests.gotm</span> <span class="kn">import</span> <span class="n">Gotm</span>
+</span><span class="kn">from</span> <span class="nn">compass.ocean.tests.ice_shelf_2d</span> <span class="kn">import</span> <span class="n">IceShelf2d</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.ziso</span> <span class="kn">import</span> <span class="n">Ziso</span>
+
+
+<span class="k">class</span> <span class="nc">Ocean</span><span class="p">(</span><span class="n">MpasCore</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A test group for General Ocean Turbulence Model (GOTM) test cases</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct the collection of MPAS-Ocean test cases</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_group</span><span class="p">(</span><span class="n">BaroclinicChannel</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_group</span><span class="p">(</span><span class="n">GlobalConvergence</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_group</span><span class="p">(</span><span class="n">GlobalOcean</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
+<span class="hll">        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_group</span><span class="p">(</span><span class="n">Gotm</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
+</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_group</span><span class="p">(</span><span class="n">IceShelf2d</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_group</span><span class="p">(</span><span class="n">Ziso</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>We make an instance of the <code class="docutils literal notranslate"><span class="pre">Gotm</span></code> class and we immediately add it to the
+<code class="docutils literal notranslate"><span class="pre">Ocean</span></code> core’s list of test groups.  That’s all we need to do.  Now
+<code class="docutils literal notranslate"><span class="pre">compass</span></code> knows about the test group.</p>
+</section>
+<section id="adding-a-test-case">
+<h2>Adding a test case<a class="headerlink" href="#adding-a-test-case" title="Permalink to this heading">¶</a></h2>
+<p>We’ll add a test case called <code class="docutils literal notranslate"><span class="pre">default</span></code> to <code class="docutils literal notranslate"><span class="pre">gotm</span></code>.  Unlike in legacy
+COMPASS, we don’t need to specify the resolution of the test case.  We want
+to encourage as much <a class="reference internal" href="../developers_guide/overview.html#dev-code-sharing"><span class="std std-ref">Code sharing</span></a> as can reasonably be achieved,
+and that typically means that the code for a single test case support multiple
+resolutions.</p>
+<p>We’ll make a <code class="docutils literal notranslate"><span class="pre">default</span></code> package within <code class="docutils literal notranslate"><span class="pre">compass/ocean/tests/gotm</span></code>, again
+with an <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> file in it.  As we build out this file, it will play
+the same role as <code class="docutils literal notranslate"><span class="pre">config_driver.xml</span></code> played in legacy COMPASS, adding the
+steps in the test case and running them.</p>
+<p>As a starting point, we’ll create a new <code class="docutils literal notranslate"><span class="pre">Default</span></code> class in this file that
+descends from the <code class="docutils literal notranslate"><span class="pre">TestCase</span></code> base class (take a look at
+<code class="docutils literal notranslate"><span class="pre">compass/testcase.py</span></code> if you want to see the contents of
+<a class="reference internal" href="../developers_guide/generated/compass.TestCase.html#compass.TestCase" title="compass.testcase.TestCase"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.testcase.TestCase</span></code></a> if you’re interested).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
+
+
+<span class="k">class</span> <span class="nc">Default</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The default test case for the General Ocean Turbulence Model (GOTM) test</span>
+<span class="sd">    group creates an initial condition on a 4 x 4 cell, doubly periodic grid,</span>
+<span class="sd">    performs a short simulation, then vertical plots of the velocity and</span>
+<span class="sd">    viscosity.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create the test case</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_group : compass.ocean.tests.gotm.Gotm</span>
+<span class="sd">            The test group that this test case belongs to</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>As a starting point, we just pass along the test group (<code class="docutils literal notranslate"><span class="pre">Gotm</span></code>) this test
+case belongs to on to the base class’s constructor (<code class="docutils literal notranslate"><span class="pre">super().__init__()</span></code>)
+and give the test case a name, <code class="docutils literal notranslate"><span class="pre">default</span></code>.</p>
+</section>
+<section id="varying-resolution-or-other-parameters">
+<h2>Varying resolution (or other parameters)<a class="headerlink" href="#varying-resolution-or-other-parameters" title="Permalink to this heading">¶</a></h2>
+<p>Since the <code class="docutils literal notranslate"><span class="pre">Gotm</span></code> test group only has one test case at one resolution (and the
+resolution isn’t an important property of the setup—-it’s using multiple
+horizontal grid cells but it’s acting like a single column), we will just
+hard-code the resolution into this particular test case.  Other test cases,
+like those in the baroclinic channel test group, do support multiple
+resolutions.  It is typically convenient to define multiple versions of the
+test case by passing the resolutions as a parameter to the constructor.</p>
+<p>This tutorial won’t describe how to do a parameter study.  There will be a
+separate tutorial for that purpose.  Instead, what is described here is how to
+make different variants of a test case with a list of parameter values.  So
+far, this is mostly used to create test cases at different resolutions in
+<code class="docutils literal notranslate"><span class="pre">compass</span></code> but the <code class="docutils literal notranslate"><span class="pre">ocean/global_ocean</span></code> test group includes a number of
+test cases that vary base on:</p>
+<ul class="simple">
+<li><p>whether ice-shelf cavities are included in the ocean domain</p></li>
+<li><p>which initial condition is used</p></li>
+<li><p>whether biogeochemistry is included in the initial condition</p></li>
+<li><p>which time integrator (RK4 or split-explicit) to use</p></li>
+</ul>
+<p>The details here are not important.  The point is that there is little
+restriction on what types of parameters can be used to create variants of
+test cases.</p>
+<p>Here is an example of how resolution is used in the
+<code class="docutils literal notranslate"><span class="pre">barotropic_channel/default</span></code> test case.  This is just an excerpt:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
+
+
+<span class="k">class</span> <span class="nc">Default</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The default test case for the baroclinic channel test group simply creates</span>
+<span class="sd">    the mesh and initial condition, then performs a short forward run on 4</span>
+<span class="sd">    cores.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    resolution : str</span>
+<span class="sd">        The resolution of the test case</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create the test case</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_group : compass.ocean.tests.baroclinic_channel.BaroclinicChannel</span>
+<span class="sd">            The test group that this test case belongs to</span>
+
+<span class="sd">        resolution : str</span>
+<span class="sd">            The resolution of the test case</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;default&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
+        <span class="n">subdir</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                         <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In this test case, we make a subdirectory that includes the resolution as well
+as the name of the test case, and we store the <code class="docutils literal notranslate"><span class="pre">resolution</span></code> in the test case
+object itself.  Later on, we can access it with <code class="docutils literal notranslate"><span class="pre">self.resolution</span></code> whenever
+we need it.  For example, we can use it to determine other parameters of the
+simulation.  In the following example, we use nested python dictionaries to
+give different parameters for different resolution.  We use the resolution to
+pick the right inner dictionary, and then set config options (see
+<a class="reference internal" href="../users_guide/config_files.html#config-files"><span class="std std-ref">Config Files</span></a>).  This example is a slight modification of
+<code class="docutils literal notranslate"><span class="pre">baroclinic_channel/default</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Modify the configuration options for this test case.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">resolution</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+
+    <span class="n">res_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;10km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nx&#39;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
+                           <span class="s1">&#39;ny&#39;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
+                           <span class="s1">&#39;dc&#39;</span><span class="p">:</span> <span class="mf">10e3</span><span class="p">},</span>
+                  <span class="s1">&#39;4km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nx&#39;</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span>
+                          <span class="s1">&#39;ny&#39;</span><span class="p">:</span> <span class="mi">126</span><span class="p">,</span>
+                          <span class="s1">&#39;dc&#39;</span><span class="p">:</span> <span class="mf">4e3</span><span class="p">},</span>
+                  <span class="s1">&#39;1km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nx&#39;</span><span class="p">:</span> <span class="mi">160</span><span class="p">,</span>
+                          <span class="s1">&#39;ny&#39;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+                          <span class="s1">&#39;dc&#39;</span><span class="p">:</span> <span class="mf">1e3</span><span class="p">}}</span>
+
+    <span class="k">if</span> <span class="n">resolution</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">res_params</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unsupported resolution </span><span class="si">{}</span><span class="s1">. Supported values are: &#39;</span>
+                         <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">res_params</span><span class="p">)))</span>
+    <span class="n">res_params</span> <span class="o">=</span> <span class="n">res_params</span><span class="p">[</span><span class="n">resolution</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">res_params</span><span class="p">:</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;baroclinic_channel&#39;</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">res_params</span><span class="p">[</span><span class="n">param</span><span class="p">]))</span>
+</pre></div>
+</div>
+</section>
+<section id="adding-the-init-step">
+<h2>Adding the init step<a class="headerlink" href="#adding-the-init-step" title="Permalink to this heading">¶</a></h2>
+<p>In legacy COMPASS, the other <code class="docutils literal notranslate"><span class="pre">config_*.xml</span></code> files besides <code class="docutils literal notranslate"><span class="pre">config_driver.xml</span></code>
+define the step in the test case.  In <code class="docutils literal notranslate"><span class="pre">compass</span></code>, these are defined in classes
+that descend from the <code class="docutils literal notranslate"><span class="pre">Step</span></code> base class in modules.  The modules can be
+defined within the test case package (if they are unique to the test case)
+or in the test group (if they are shared among several test cases).  In this
+example, there is only one test case, so we will just put the steps in that
+test case’s package.  You can browse other <code class="docutils literal notranslate"><span class="pre">ocean</span></code> and <code class="docutils literal notranslate"><span class="pre">landice</span></code> test cases
+to see examples of steps shared across test cases.  The <code class="docutils literal notranslate"><span class="pre">baroclinic_channel</span></code>
+test group is a good place to start.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">gotm/default</span></code> test case has 3 steps: <code class="docutils literal notranslate"><span class="pre">init</span></code>, <code class="docutils literal notranslate"><span class="pre">forward</span></code> and
+<code class="docutils literal notranslate"><span class="pre">analysis</span></code>.  We’ll start with <code class="docutils literal notranslate"><span class="pre">init</span></code>, which creates the grid and calls
+MPAS-Ocean in “init” mode to create the initial condition.  To start with,
+we’ll just create a new <code class="docutils literal notranslate"><span class="pre">Init</span></code> class that descends from <code class="docutils literal notranslate"><span class="pre">Step</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
+
+
+<span class="k">class</span> <span class="nc">Init</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A step for creating a mesh and initial condition for General Ocean</span>
+<span class="sd">    Turbulence Model (GOTM) test cases</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create the step</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_case : compass.ocean.tests.gotm.default.Default</span>
+<span class="sd">            The test case this step belongs to</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                         <span class="n">min_cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This pattern is probably starting to look familiar.  The step takes the test
+case it belongs to as an input to its constructor, and passes that along to
+the base class’ version of the constructor, along with the name of the step.
+By default, the subdirectory for the step is the same as the step name, but
+just like for a test case, you can give the step a more complicated
+subdirectory name, possibly with multiple levels of directories.  See the
+steps in the <code class="docutils literal notranslate"><span class="pre">ocean/global_convergence/cosine_bell</span></code> test case for examples
+of this.  The <code class="docutils literal notranslate"><span class="pre">init</span></code> step runs on one core (so <code class="docutils literal notranslate"><span class="pre">cores</span></code> and <code class="docutils literal notranslate"><span class="pre">min_cores</span></code>
+are both 1) and one thread.</p>
+<p>The next step is to define the namelist, streams file, outputs from the step:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">min_cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="hll"><span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.gotm.default&#39;</span><span class="p">,</span>
+</span><span class="hll">                       <span class="s1">&#39;namelist.init&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>
+</span>
+<span class="hll"><span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.gotm.default&#39;</span><span class="p">,</span>
+</span><span class="hll">                      <span class="s1">&#39;streams.init&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>
+</span>
+<span class="hll"><span class="bp">self</span><span class="o">.</span><span class="n">add_model_as_input</span><span class="p">()</span>
+</span>
+<span class="hll"><span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;mesh.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;graph.info&#39;</span><span class="p">,</span> <span class="s1">&#39;ocean.nc&#39;</span><span class="p">]:</span>
+</span><span class="hll">    <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+</span></pre></div>
+</div>
+<p>We will discuss the contents of the namelist and streams files below. By
+calling <a class="reference internal" href="../developers_guide/generated/compass.Step.add_model_as_input.html#compass.Step.add_model_as_input" title="compass.Step.add_model_as_input"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.add_model_as_input()</span></code></a>, we add the MPAS-Ocean
+executable as an input to the step (meaning that a symlink to the executable
+will be made in the step’s work directory, and that the step will fail right
+away if the model hasn’t been built yet).</p>
+<p>Finally, we add outputs from the step.  The outputs are any files produced by
+this step that any other step should be allowed to use as inputs.  In this
+case, the <code class="docutils literal notranslate"><span class="pre">forward</span></code> step needs all three of these files as inputs, which is
+how we decided which of the outputs from the test case to include in this list.
+<code class="docutils literal notranslate"><span class="pre">mesh.nc</span></code> is the mesh, <code class="docutils literal notranslate"><span class="pre">graph.info</span></code> is the graph file used by
+<a class="reference external" href="http://glaros.dtc.umn.edu/gkhome/metis/metis/overview">Metis</a> to partition
+the mesh across processors, and <code class="docutils literal notranslate"><span class="pre">ocean.nc</span></code> is the initial condition.</p>
+<section id="defining-namelist-options">
+<h3>Defining namelist options<a class="headerlink" href="#defining-namelist-options" title="Permalink to this heading">¶</a></h3>
+<p>In <code class="docutils literal notranslate"><span class="pre">compass</span></code>, there are two main ways to set namelist options for MPAS model
+runs and we will demonstrate both in this test case.  First, you can define a
+namelist file with the desired values.  This is useful for namelist options that
+are always the same for this test case and can’t be changed based on config
+options from the config file (see above).</p>
+<p>The original <code class="docutils literal notranslate"><span class="pre">config_init.xml</span></code> contained:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;namelist</span> <span class="na">name=</span><span class="s">&quot;namelist.ocean&quot;</span> <span class="na">mode=</span><span class="s">&quot;init&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_init_configuration&quot;</span><span class="nt">&gt;</span>&#39;periodic_planar&#39;<span class="nt">&lt;/option&gt;</span>
+    <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_vert_levels&quot;</span><span class="nt">&gt;</span>-1<span class="nt">&lt;/option&gt;</span>
+    <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_periodic_planar_vert_levels&quot;</span><span class="nt">&gt;</span>250<span class="nt">&lt;/option&gt;</span>
+    <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_periodic_planar_bottom_depth&quot;</span><span class="nt">&gt;</span>15.0<span class="nt">&lt;/option&gt;</span>
+    <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_periodic_planar_velocity_strength&quot;</span><span class="nt">&gt;</span>0.0<span class="nt">&lt;/option&gt;</span>
+    <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_ocean_run_mode&quot;</span><span class="nt">&gt;</span>&#39;init&#39;<span class="nt">&lt;/option&gt;</span>
+    <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_write_cull_cell_mask&quot;</span><span class="nt">&gt;</span>.false.<span class="nt">&lt;/option&gt;</span>
+    <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_vertical_grid&quot;</span><span class="nt">&gt;</span>&#39;uniform&#39;<span class="nt">&lt;/option&gt;</span>
+<span class="nt">&lt;/namelist&gt;</span>
+</pre></div>
+</div>
+<p>In <code class="docutils literal notranslate"><span class="pre">compass</span></code> the formatting is much more similar to the resulting namelist
+file.  Here is the <code class="docutils literal notranslate"><span class="pre">namelist.init</span></code> file from our example <code class="docutils literal notranslate"><span class="pre">gotm/default</span></code>
+test case:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>config_init_configuration = &#39;periodic_planar&#39;
+config_vert_levels = -1
+config_periodic_planar_velocity_strength = 0.0
+config_write_cull_cell_mask = .false.
+config_vertical_grid = &#39;uniform&#39;
+</pre></div>
+</div>
+<p>We do not need to specify <code class="docutils literal notranslate"><span class="pre">config_ocean_run_mode</span> <span class="pre">=</span> <span class="pre">'init'</span></code> because this will
+be taken care of because we specified <code class="docutils literal notranslate"><span class="pre">mode='init'</span></code> when we added the
+namelist to the step above.</p>
+<p>Though it would be possible, users are not intended to change these to
+customize this step of the test case.</p>
+<p>Another way to set namelist options is to use a python dictionary and to call
+<a class="reference internal" href="../developers_guide/generated/compass.Step.add_namelist_options.html#compass.Step.add_namelist_options" title="compass.Step.add_namelist_options"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.add_namelist_options()</span></code></a>.  This is the way to handle
+namelist options that depend on parameters (such as resolution) that are not
+known in advance.</p>
+<p>We will show later on that there is yet another way to handle namelist options
+that can come from config options, using
+<a class="reference internal" href="../developers_guide/generated/compass.Step.update_namelist_at_runtime.html#compass.Step.update_namelist_at_runtime" title="compass.Step.update_namelist_at_runtime"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.update_namelist_at_runtime()</span></code></a>.  This is why we haven’t
+yet included the <code class="docutils literal notranslate"><span class="pre">config_periodic_planar_vert_levels</span></code> and
+<code class="docutils literal notranslate"><span class="pre">config_periodic_planar_bottom_depth</span></code> options from the legacy test case.</p>
+</section>
+<section id="defining-streams">
+<h3>Defining streams<a class="headerlink" href="#defining-streams" title="Permalink to this heading">¶</a></h3>
+<p>Similarly, it is convenient to define input and output streams for MPAS-Ocean
+using a streams file, very similar to what you will see when the test case
+is set up.  The syntax in <code class="docutils literal notranslate"><span class="pre">compass</span></code> for defining streams is a lot simpler
+than in legacy COMPASS (where a different XML convention was used to define
+streams than the XML of the streams files themselves).  In legacy COMPASS,
+the streams for the <code class="docutils literal notranslate"><span class="pre">init</span></code> step are defined in <code class="docutils literal notranslate"><span class="pre">config_init.xml</span></code> as:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;streams</span> <span class="na">name=</span><span class="s">&quot;streams.ocean&quot;</span> <span class="na">keep=</span><span class="s">&quot;immutable&quot;</span> <span class="na">mode=</span><span class="s">&quot;init&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;stream</span> <span class="na">name=</span><span class="s">&quot;input_init&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;filename_template&quot;</span><span class="nt">&gt;</span>mesh.nc<span class="nt">&lt;/attribute&gt;</span>
+    <span class="nt">&lt;/stream&gt;</span>
+    <span class="nt">&lt;stream</span> <span class="na">name=</span><span class="s">&quot;output_init&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;type&quot;</span><span class="nt">&gt;</span>output<span class="nt">&lt;/attribute&gt;</span>
+        <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;output_interval&quot;</span><span class="nt">&gt;</span>0000_00:00:01<span class="nt">&lt;/attribute&gt;</span>
+        <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;clobber_mode&quot;</span><span class="nt">&gt;</span>truncate<span class="nt">&lt;/attribute&gt;</span>
+        <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;filename_template&quot;</span><span class="nt">&gt;</span>ocean.nc<span class="nt">&lt;/attribute&gt;</span>
+        <span class="nt">&lt;add_contents&gt;</span>
+            <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;input_init&quot;</span> <span class="na">type=</span><span class="s">&quot;stream&quot;</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;layerThickness&quot;</span> <span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;restingThickness&quot;</span> <span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;refBottomDepth&quot;</span> <span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;bottomDepth&quot;</span> <span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;maxLevelCell&quot;</span> <span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;vertCoordMovementWeights&quot;</span> <span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;edgeMask&quot;</span> <span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/add_contents&gt;</span>
+    <span class="nt">&lt;/stream&gt;</span>
+<span class="nt">&lt;/streams&gt;</span>
+</pre></div>
+</div>
+<p>In <code class="docutils literal notranslate"><span class="pre">compass</span></code>, we add a <code class="docutils literal notranslate"><span class="pre">streams.init</span></code> file to the <code class="docutils literal notranslate"><span class="pre">default</span></code> test case:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;streams&gt;</span>
+
+<span class="nt">&lt;immutable_stream</span> <span class="na">name=</span><span class="s">&quot;input_init&quot;</span>
+                  <span class="na">filename_template=</span><span class="s">&quot;mesh.nc&quot;</span><span class="nt">/&gt;</span>
+
+<span class="nt">&lt;stream</span> <span class="na">name=</span><span class="s">&quot;output_init&quot;</span>
+        <span class="na">type=</span><span class="s">&quot;output&quot;</span>
+        <span class="na">output_interval=</span><span class="s">&quot;0000_00:00:01&quot;</span>
+        <span class="na">clobber_mode=</span><span class="s">&quot;truncate&quot;</span>
+        <span class="na">filename_template=</span><span class="s">&quot;ocean.nc&quot;</span><span class="nt">&gt;</span>
+
+    <span class="nt">&lt;stream</span> <span class="na">name=</span><span class="s">&quot;input_init&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;layerThickness&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;restingThickness&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;refBottomDepth&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;bottomDepth&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;maxLevelCell&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;vertCoordMovementWeights&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;edgeMask&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/stream&gt;</span>
+
+<span class="nt">&lt;/streams&gt;</span>
+</pre></div>
+</div>
+<p>As in legacy COMPASS, streams that are already defined like <code class="docutils literal notranslate"><span class="pre">input_init</span></code>
+will use the default attributes defined by the MPAS component unless they are
+explicitly replaced in the streams file.  On setting up the test case, the
+stream in the <code class="docutils literal notranslate"><span class="pre">streams.ocean</span></code> file becomes:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;immutable_stream</span> <span class="na">name=</span><span class="s">&quot;input_init&quot;</span>
+                  <span class="na">type=</span><span class="s">&quot;input&quot;</span>
+                  <span class="na">filename_template=</span><span class="s">&quot;mesh.nc&quot;</span>
+                  <span class="na">input_interval=</span><span class="s">&quot;initial_only&quot;</span><span class="nt">/&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="defining-config-options">
+<h3>Defining config options<a class="headerlink" href="#defining-config-options" title="Permalink to this heading">¶</a></h3>
+<p>The remainder of the <code class="docutils literal notranslate"><span class="pre">init</span></code> step will consist of defining the <code class="docutils literal notranslate"><span class="pre">run()</span></code>
+method that does the real work of the step.  To make it easier for users to
+modify the test case a little bit to suit their needs, we may want to include
+parameters in the config file for the test case.  To do this, we can make a
+config file with the test group’s package, the test case’s package, or both.
+In our example, we will just add a config file <code class="docutils literal notranslate"><span class="pre">defaults.cfg</span></code> to the
+<code class="docutils literal notranslate"><span class="pre">defaults</span></code> test case:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># config options for General Ocean Turbulence Model (GOTM) test cases</span><span class="w"></span>
+<span class="k">[gotm]</span><span class="w"></span>
+
+<span class="c1"># the number of grid cells in x and y</span><span class="w"></span>
+<span class="na">nx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span><span class="w"></span>
+<span class="na">ny</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span><span class="w"></span>
+
+<span class="c1"># the size of grid cells (m)</span><span class="w"></span>
+<span class="na">dc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2500.0</span><span class="w"></span>
+
+<span class="c1"># the number of vertical levels</span><span class="w"></span>
+<span class="na">vert_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">250</span><span class="w"></span>
+
+<span class="c1"># the depth of the sea floor (m)</span><span class="w"></span>
+<span class="na">bottom_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">15.0</span><span class="w"></span>
+</pre></div>
+</div>
+<p>By default, the domain is 4 x 4 horizontal cells, each 2.5 km in size.  The
+ocean is 15 m deep, divided over 250 uniformly spaced levels.  A user could
+change any of these parameters before running the <code class="docutils literal notranslate"><span class="pre">init</span></code> step to modify
+the initial condition (and therefore the rest of the test case).</p>
+<p>Since the config file has the same name (<code class="docutils literal notranslate"><span class="pre">default</span></code>) as the test case, it will
+be included automatically when the config file is produced when the test case gets
+set up.</p>
+</section>
+<section id="defining-the-run-method">
+<h3>Defining the run method<a class="headerlink" href="#defining-the-run-method" title="Permalink to this heading">¶</a></h3>
+<p>With these config options, namelists and streams files defined, we will
+implement the <code class="docutils literal notranslate"><span class="pre">run()</span></code> method of the <code class="docutils literal notranslate"><span class="pre">init</span></code> step to do the rest of the work
+for this step.  In legacy COMPASS, the XML for defining the run scrip was:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;run_script</span> <span class="na">name=</span><span class="s">&quot;run.py&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;step</span> <span class="na">executable=</span><span class="s">&quot;planar_hex&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;argument</span> <span class="na">flag=</span><span class="s">&quot;--nx&quot;</span><span class="nt">&gt;</span>4<span class="nt">&lt;/argument&gt;</span>
+        <span class="nt">&lt;argument</span> <span class="na">flag=</span><span class="s">&quot;--ny&quot;</span><span class="nt">&gt;</span>4<span class="nt">&lt;/argument&gt;</span>
+        <span class="nt">&lt;argument</span> <span class="na">flag=</span><span class="s">&quot;--dc&quot;</span><span class="nt">&gt;</span>2500.0<span class="nt">&lt;/argument&gt;</span>
+        <span class="nt">&lt;argument</span> <span class="na">flag=</span><span class="s">&quot;-o&quot;</span><span class="nt">&gt;</span>grid.nc<span class="nt">&lt;/argument&gt;</span>
+    <span class="nt">&lt;/step&gt;</span>
+    <span class="nt">&lt;step</span> <span class="na">executable=</span><span class="s">&quot;MpasCellCuller.x&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;argument</span> <span class="na">flag=</span><span class="s">&quot;&quot;</span><span class="nt">&gt;</span>grid.nc<span class="nt">&lt;/argument&gt;</span>
+        <span class="nt">&lt;argument</span> <span class="na">flag=</span><span class="s">&quot;&quot;</span><span class="nt">&gt;</span>culled_mesh.nc<span class="nt">&lt;/argument&gt;</span>
+    <span class="nt">&lt;/step&gt;</span>
+    <span class="nt">&lt;step</span> <span class="na">executable=</span><span class="s">&quot;MpasMeshConverter.x&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;argument</span> <span class="na">flag=</span><span class="s">&quot;&quot;</span><span class="nt">&gt;</span>culled_mesh.nc<span class="nt">&lt;/argument&gt;</span>
+        <span class="nt">&lt;argument</span> <span class="na">flag=</span><span class="s">&quot;&quot;</span><span class="nt">&gt;</span>mesh.nc<span class="nt">&lt;/argument&gt;</span>
+    <span class="nt">&lt;/step&gt;</span>
+    <span class="nt">&lt;model_run</span> <span class="na">procs=</span><span class="s">&quot;1&quot;</span> <span class="na">threads=</span><span class="s">&quot;1&quot;</span> <span class="na">namelist=</span><span class="s">&quot;namelist.ocean&quot;</span> <span class="na">streams=</span><span class="s">&quot;streams.ocean&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/run_script&gt;</span>
+</pre></div>
+</div>
+<p>In <code class="docutils literal notranslate"><span class="pre">compass</span></code>,  the equivalent <code class="docutils literal notranslate"><span class="pre">run()</span></code> method is:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mpas_tools.planar_hex</span> <span class="kn">import</span> <span class="n">make_planar_hex_mesh</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.mesh.conversion</span> <span class="kn">import</span> <span class="n">convert</span><span class="p">,</span> <span class="n">cull</span>
+
+<span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">run_model</span>
+
+<span class="o">...</span>
+
+<span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Run this step of the test case</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
+
+    <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;gotm&#39;</span><span class="p">]</span>
+    <span class="n">nx</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;nx&#39;</span><span class="p">)</span>
+    <span class="n">ny</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;ny&#39;</span><span class="p">)</span>
+    <span class="n">dc</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;dc&#39;</span><span class="p">)</span>
+
+    <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">make_planar_hex_mesh</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="o">=</span><span class="n">ny</span><span class="p">,</span> <span class="n">dc</span><span class="o">=</span><span class="n">dc</span><span class="p">,</span> <span class="n">nonperiodic_x</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                  <span class="n">nonperiodic_y</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">&#39;grid.nc&#39;</span><span class="p">)</span>
+
+    <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">cull</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+    <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">convert</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">graphInfoFileName</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span>
+                     <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+    <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="s1">&#39;mesh.nc&#39;</span><span class="p">)</span>
+
+    <span class="n">replacements</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="n">replacements</span><span class="p">[</span><span class="s1">&#39;config_periodic_planar_vert_levels&#39;</span><span class="p">]</span> <span class="o">=</span> \
+        <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;gotm&#39;</span><span class="p">,</span> <span class="s1">&#39;vert_levels&#39;</span><span class="p">)</span>
+    <span class="n">replacements</span><span class="p">[</span><span class="s1">&#39;config_periodic_planar_bottom_depth&#39;</span><span class="p">]</span> <span class="o">=</span> \
+        <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;gotm&#39;</span><span class="p">,</span> <span class="s1">&#39;bottom_depth&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">update_namelist_at_runtime</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">replacements</span><span class="p">)</span>
+
+    <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>First, we make a doubly periodic mesh.  Rather than hard-coding the mesh size,
+we get the relevant config options.  Legacy COMPASS used the command-line
+tool <code class="docutils literal notranslate"><span class="pre">planar_hex</span></code>, but <code class="docutils literal notranslate"><span class="pre">compass</span></code> will typically use the
+<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.planar_hex.make_planar_hex_mesh.html#mpas_tools.planar_hex.make_planar_hex_mesh" title="(in mpas_tools vstable)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_tools.planar_hex.make_planar_hex_mesh()</span></code></a> function instead to
+avoid the complexity of <code class="docutils literal notranslate"><span class="pre">subprocess</span></code> calls and unnecessary file I/O.  The
+result is an <a class="reference external" href="https://xarray.pydata.org/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v2022.3.1.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">xarray.Dataset</span></code></a> containing the mesh.</p>
+<p>Second, we make sure any land cells are culled by calling the cell culler.
+In legacy COMPASS, this is done with the command-line tool <code class="docutils literal notranslate"><span class="pre">MpasCellCuller.x</span></code>
+but in <code class="docutils literal notranslate"><span class="pre">compass</span></code>, the same can be achieved with
+<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.mesh.conversion.cull.html#mpas_tools.mesh.conversion.cull" title="(in mpas_tools vstable)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_tools.mesh.conversion.cull()</span></code></a> (which is a wrapper around a
+<code class="docutils literal notranslate"><span class="pre">subprocess`</span></code> call to <code class="docutils literal notranslate"><span class="pre">MpasCellCuller.x</span></code>).  <code class="docutils literal notranslate"><span class="pre">cull()</span></code> has
+<a class="reference external" href="https://xarray.pydata.org/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v2022.3.1.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">xarray.Dataset</span></code></a> objects as its input an return value, and also
+takes a “logger” where it can write output (sometimes a log file and sometimes
+directly to the terminal via stdout).  You should always pass <code class="docutils literal notranslate"><span class="pre">self.logger</span></code>
+so <code class="docutils literal notranslate"><span class="pre">compass</span></code> can figure out whether a file or stdout is the right place for
+output to go.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In this particular test case, there are no land cells defined and
+the mesh is doubly periodic, so the call to the cell culler is probably
+not needed, but it has been retained because many test cases <em>will</em> need
+it.</p>
+</div>
+<p>Third, we call <a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.mesh.conversion.convert.html#mpas_tools.mesh.conversion.convert" title="(in mpas_tools vstable)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_tools.mesh.conversion.convert()</span></code></a> to ensure that the
+mesh conforms to the MPAS conventions.  In the legacy COMPASS version, the
+equivalent is achieved with a call to <code class="docutils literal notranslate"><span class="pre">MpasMeshConverter.x</span></code>.  Then, we write
+out the mesh to a file <code class="docutils literal notranslate"><span class="pre">mesh.nc</span></code>.</p>
+<p>Fourth, we use <code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.update_namelist_at_runtime()`to</span> <span class="pre">update</span>
+<span class="pre">the</span> <span class="pre">``config_periodic_planar_vert_levels`()</span></code> and
+<code class="docutils literal notranslate"><span class="pre">config_periodic_planar_bottom_depth</span></code> namelist options based on the
+<code class="docutils literal notranslate"><span class="pre">vert_levels</span></code> and <code class="docutils literal notranslate"><span class="pre">bottom_depth</span></code> config options.  Since config options come
+from a config file in the test case’s work directory (symlinked into each
+step’s work directory), a user may have decided to change these config options
+before running the test case so we update the namelist file right before
+running the model.</p>
+<p>Finally, we run MPAS-Ocean by calling <a class="reference internal" href="../developers_guide/generated/compass.model.run_model.html#compass.model.run_model" title="compass.model.run_model"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.model.run_model()</span></code></a>.
+We pass the step itself as an argument because this is how <code class="docutils literal notranslate"><span class="pre">compass</span></code> knows
+how many cores and threads to run on, which namelist and streams files to use,
+which MPAS core this test case belongs to, and so on.</p>
+</section>
+</section>
+<section id="adding-the-forward-step">
+<h2>Adding the forward step<a class="headerlink" href="#adding-the-forward-step" title="Permalink to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">Forward</span></code> step will be conceptually similar to the <code class="docutils literal notranslate"><span class="pre">Init</span></code> step.  Again,
+we make a <code class="docutils literal notranslate"><span class="pre">Forward</span></code> class that descends from <code class="docutils literal notranslate"><span class="pre">Step</span></code> with a constructor that
+calls the base constructor with the name of the step as well as the requested
+number of cores, minimum number of cores, and number of threads:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
+
+
+<span class="k">class</span> <span class="nc">Forward</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A step for performing forward MPAS-Ocean runs as part of General Ocean</span>
+<span class="sd">    Turbulence Model (GOTM) test cases.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a new test case</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_case : compass.ocean.tests.gotm.default.Default</span>
+<span class="sd">            The test case this step belongs to</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                         <span class="n">min_cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The following XML from legacy COMPASS:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;add_link</span> <span class="na">source=</span><span class="s">&quot;../init/ocean.nc&quot;</span> <span class="na">dest=</span><span class="s">&quot;init.nc&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;add_link</span> <span class="na">source=</span><span class="s">&quot;../init/mesh.nc&quot;</span> <span class="na">dest=</span><span class="s">&quot;mesh.nc&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;add_link</span> <span class="na">source=</span><span class="s">&quot;../init/graph.info&quot;</span> <span class="na">dest=</span><span class="s">&quot;graph.info&quot;</span><span class="nt">/&gt;</span>
+</pre></div>
+</div>
+<p>is replaced by these method calls within the step’s constructor in <code class="docutils literal notranslate"><span class="pre">compass</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;mesh.nc&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../init/mesh.nc&#39;</span><span class="p">)</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;init.nc&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../init/ocean.nc&#39;</span><span class="p">)</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../init/graph.info&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>As in <code class="docutils literal notranslate"><span class="pre">Init</span></code>, we want to make a link to the MPAS-Ocean executable.  The
+legacy COMPASS version of this was:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;add_executable</span> <span class="na">source=</span><span class="s">&quot;model&quot;</span> <span class="na">dest=</span><span class="s">&quot;ocean_model&quot;</span><span class="nt">/&gt;</span>
+</pre></div>
+</div>
+<p>and the <code class="docutils literal notranslate"><span class="pre">compass</span></code> version is:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">add_model_as_input</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This step also needs to make a link to a namelist file that is specific to the
+GOTM library called from within MPAS-Ocean (i.e. a different namelist than the
+MPAS-Ocean <code class="docutils literal notranslate"><span class="pre">namelist.ocean</span></code> file).  In legacy COMPASS, a symlink from the
+script test directory to the working directory was accomplished with:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;copy_file</span> <span class="na">source_path=</span><span class="s">&quot;script_test_dir&quot;</span> <span class="na">source=</span><span class="s">&quot;gotmturb.nml&quot;</span> <span class="na">dest=</span><span class="s">&quot;gotmturb.nml&quot;</span><span class="nt">/&gt;</span>
+</pre></div>
+</div>
+<p>In <code class="docutils literal notranslate"><span class="pre">compass</span></code>, this becomes:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;gotmturb.nml&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;gotmturb.nml&#39;</span><span class="p">,</span>
+                    <span class="n">package</span><span class="o">=</span><span class="s1">&#39;compass.ocean.tests.gotm.default&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The target is the file <code class="docutils literal notranslate"><span class="pre">gotmturb.nml</span></code> that we will place in the <code class="docutils literal notranslate"><span class="pre">default</span></code>
+package that we’re currently working on.</p>
+<p>Finally, we’ll add an output file, appropriately enough called <code class="docutils literal notranslate"><span class="pre">output.nc</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;output.nc&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The complete constructor looks like:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a new test case</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    test_case : compass.ocean.tests.gotm.default.Default</span>
+<span class="sd">        The test case this step belongs to</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                     <span class="n">min_cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.gotm.default&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;namelist.forward&#39;</span><span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.gotm.default&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;streams.forward&#39;</span><span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;mesh.nc&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../init/mesh.nc&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;init.nc&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../init/ocean.nc&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../init/graph.info&#39;</span><span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;gotmturb.nml&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;gotmturb.nml&#39;</span><span class="p">,</span>
+                        <span class="n">package</span><span class="o">=</span><span class="s1">&#39;compass.ocean.tests.gotm.default&#39;</span><span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_model_as_input</span><span class="p">()</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;output.nc&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We will just copy the file <code class="docutils literal notranslate"><span class="pre">gotmturb.nml</span></code> from the legacy test case as it
+is.</p>
+<p>The MPAS-Ocean namelist file <code class="docutils literal notranslate"><span class="pre">namelist.forward</span></code> contains the same contents
+as the legacy XML:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;namelist</span> <span class="na">name=</span><span class="s">&quot;namelist.ocean&quot;</span> <span class="na">mode=</span><span class="s">&quot;forward&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_ocean_run_mode&quot;</span><span class="nt">&gt;</span>&#39;forward&#39;<span class="nt">&lt;/option&gt;</span>
+    <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_dt&quot;</span><span class="nt">&gt;</span>&#39;000:00:25&#39;<span class="nt">&lt;/option&gt;</span>
+    <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_btr_dt&quot;</span><span class="nt">&gt;</span>&#39;000:00:25&#39;<span class="nt">&lt;/option&gt;</span>
+    <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_time_integrator&quot;</span><span class="nt">&gt;</span>&#39;split_explicit&#39;<span class="nt">&lt;/option&gt;</span>
+    <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_run_duration&quot;</span><span class="nt">&gt;</span>&#39;0000_12:00:00&#39;<span class="nt">&lt;/option&gt;</span>
+    <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_zonal_ssh_grad&quot;</span><span class="nt">&gt;</span>-1.0e-5<span class="nt">&lt;/option&gt;</span>
+    <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_pressure_gradient_type&quot;</span><span class="nt">&gt;</span>&#39;constant_forced&#39;<span class="nt">&lt;/option&gt;</span>
+    <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_use_cvmix&quot;</span><span class="nt">&gt;</span>.false.<span class="nt">&lt;/option&gt;</span>
+    <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_use_gotm&quot;</span><span class="nt">&gt;</span>.true.<span class="nt">&lt;/option&gt;</span>
+    <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_gotm_namelist_file&quot;</span><span class="nt">&gt;</span>&#39;gotmturb.nml&#39;<span class="nt">&lt;/option&gt;</span>
+    <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_gotm_constant_bottom_drag_coeff&quot;</span><span class="nt">&gt;</span>1.73e-2<span class="nt">&lt;/option&gt;</span>
+    <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_use_implicit_bottom_drag&quot;</span><span class="nt">&gt;</span>.true.<span class="nt">&lt;/option&gt;</span>
+    <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_implicit_bottom_drag_coeff&quot;</span><span class="nt">&gt;</span>1.73e-2<span class="nt">&lt;/option&gt;</span>
+<span class="nt">&lt;/namelist&gt;</span>
+</pre></div>
+</div>
+<p>but in a simpler, more readable form in <code class="docutils literal notranslate"><span class="pre">namelist.forward</span></code> in the
+<code class="docutils literal notranslate"><span class="pre">gotm/default</span></code> test case in <code class="docutils literal notranslate"><span class="pre">compass</span></code>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>config_dt = &#39;000:00:25&#39;
+config_btr_dt = &#39;000:00:25&#39;
+config_time_integrator = &#39;split_explicit&#39;
+config_run_duration = &#39;0000_12:00:00&#39;
+config_zonal_ssh_grad = -1.0e-5
+config_pressure_gradient_type = &#39;constant_forced&#39;
+config_use_cvmix = .false.
+config_use_gotm = .true.
+config_gotm_namelist_file = &#39;gotmturb.nml&#39;
+config_gotm_constant_bottom_drag_coeff = 1.73e-2
+config_use_implicit_bottom_drag = .true.
+config_implicit_bottom_drag_coeff = 1.73e-2
+</pre></div>
+</div>
+<p>We omit <code class="docutils literal notranslate"><span class="pre">config_ocean_run_mode</span> <span class="pre">=</span> <span class="pre">'forward'</span></code> because this is taken care of
+by <code class="docutils literal notranslate"><span class="pre">compass</span></code> when we add a namelist with the keyword argument
+<code class="docutils literal notranslate"><span class="pre">mode='forward'</span></code> (which is the default mode).</p>
+<p>Similarly, the legacy definition of the streams:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;streams</span> <span class="na">name=</span><span class="s">&quot;streams.ocean&quot;</span> <span class="na">keep=</span><span class="s">&quot;immutable&quot;</span> <span class="na">mode=</span><span class="s">&quot;forward&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;stream</span> <span class="na">name=</span><span class="s">&quot;mesh&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;filename_template&quot;</span><span class="nt">&gt;</span>mesh.nc<span class="nt">&lt;/attribute&gt;</span>
+    <span class="nt">&lt;/stream&gt;</span>
+    <span class="nt">&lt;stream</span> <span class="na">name=</span><span class="s">&quot;input&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;filename_template&quot;</span><span class="nt">&gt;</span>init.nc<span class="nt">&lt;/attribute&gt;</span>
+    <span class="nt">&lt;/stream&gt;</span>
+    <span class="nt">&lt;stream</span> <span class="na">name=</span><span class="s">&quot;output&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;type&quot;</span><span class="nt">&gt;</span>output<span class="nt">&lt;/attribute&gt;</span>
+        <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;filename_template&quot;</span><span class="nt">&gt;</span>output.nc<span class="nt">&lt;/attribute&gt;</span>
+        <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;output_interval&quot;</span><span class="nt">&gt;</span>0000-00-00_00:10:00<span class="nt">&lt;/attribute&gt;</span>
+        <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;clobber_mode&quot;</span><span class="nt">&gt;</span>truncate<span class="nt">&lt;/attribute&gt;</span>
+        <span class="nt">&lt;add_contents&gt;</span>
+            <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;velocityZonal&quot;</span> <span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;velocityMeridional&quot;</span> <span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;vertViscTopOfCell&quot;</span> <span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;mesh&quot;</span> <span class="na">type=</span><span class="s">&quot;stream&quot;</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;xtime&quot;</span> <span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;normalVelocity&quot;</span> <span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;layerThickness&quot;</span> <span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/add_contents&gt;</span>
+    <span class="nt">&lt;/stream&gt;</span>
+<span class="nt">&lt;/streams&gt;</span>
+</pre></div>
+</div>
+<p>takes this simpler form in <code class="docutils literal notranslate"><span class="pre">streams.forward</span></code> in <code class="docutils literal notranslate"><span class="pre">compass</span></code> that is nearly
+identical to the full streams file in the work directory:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;streams&gt;</span>
+
+<span class="nt">&lt;immutable_stream</span> <span class="na">name=</span><span class="s">&quot;mesh&quot;</span>
+                  <span class="na">filename_template=</span><span class="s">&quot;mesh.nc&quot;</span><span class="nt">/&gt;</span>
+
+<span class="nt">&lt;immutable_stream</span> <span class="na">name=</span><span class="s">&quot;input&quot;</span>
+                  <span class="na">filename_template=</span><span class="s">&quot;init.nc&quot;</span><span class="nt">/&gt;</span>
+
+<span class="nt">&lt;stream</span> <span class="na">name=</span><span class="s">&quot;output&quot;</span>
+        <span class="na">type=</span><span class="s">&quot;output&quot;</span>
+        <span class="na">filename_template=</span><span class="s">&quot;output.nc&quot;</span>
+        <span class="na">output_interval=</span><span class="s">&quot;0000-00-00_00:10:00&quot;</span>
+        <span class="na">clobber_mode=</span><span class="s">&quot;truncate&quot;</span><span class="nt">&gt;</span>
+
+    <span class="nt">&lt;stream</span> <span class="na">name=</span><span class="s">&quot;mesh&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;velocityZonal&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;velocityMeridional&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;vertViscTopOfCell&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;xtime&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;normalVelocity&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;layerThickness&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/stream&gt;</span>
+
+<span class="nt">&lt;/streams&gt;</span>
+</pre></div>
+</div>
+<p>The run script from the legacy test case:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;run_script</span> <span class="na">name=</span><span class="s">&quot;run.py&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;model_run</span> <span class="na">procs=</span><span class="s">&quot;1&quot;</span> <span class="na">threads=</span><span class="s">&quot;1&quot;</span> <span class="na">namelist=</span><span class="s">&quot;namelist.ocean&quot;</span> <span class="na">streams=</span><span class="s">&quot;streams.ocean&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/run_script&gt;</span>
+</pre></div>
+</div>
+<p>becomes:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">run_model</span>
+
+<span class="o">...</span>
+
+<span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Run this step of the test case</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="adding-the-analysis-step">
+<h2>Adding the analysis step<a class="headerlink" href="#adding-the-analysis-step" title="Permalink to this heading">¶</a></h2>
+<p>The legacy <code class="docutils literal notranslate"><span class="pre">analysis</span></code> step is defined like this:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;config</span> <span class="na">case=</span><span class="s">&quot;analysis&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;add_link</span> <span class="na">source=</span><span class="s">&quot;../forward/output.nc&quot;</span> <span class="na">dest=</span><span class="s">&quot;output.nc&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;add_link</span> <span class="na">source_path=</span><span class="s">&quot;script_test_dir&quot;</span> <span class="na">source=</span><span class="s">&quot;plot_profile.py&quot;</span> <span class="na">dest=</span><span class="s">&quot;plot_profile.py&quot;</span><span class="nt">/&gt;</span>
+
+    <span class="nt">&lt;run_script</span> <span class="na">name=</span><span class="s">&quot;run.py&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;step</span> <span class="na">executable=</span><span class="s">&quot;./plot_profile.py&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;/step&gt;</span>
+    <span class="nt">&lt;/run_script&gt;</span>
+<span class="nt">&lt;/config&gt;</span>
+</pre></div>
+</div>
+<p>Symlinks are created to a plotting script and the output from the <code class="docutils literal notranslate"><span class="pre">forward</span></code>
+step, and then the plot script is run.</p>
+<p>An identical approach could be used in <code class="docutils literal notranslate"><span class="pre">compass</span></code> but it is not the preferred
+approach.  Instead, we prefer to use function calls in place of calling
+python scripts via subprocesses whenever possible.  One major reason for this
+is that having python scripts within a python package is confusing – there is
+not a clear way to know that they aren’t python modules within the package,
+but instead are meant to be symlinked and run elsewhere.  Another is that
+these scripts typically don’t reuse code very well, nor is it easy to use
+config options from the test case within them. For all these reasons, we will
+demonstrate how to convert the <code class="docutils literal notranslate"><span class="pre">plot_profile.py</span></code> script into a function
+instead.</p>
+<p>We start out with the same structure as in the other two steps:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
+
+
+<span class="k">class</span> <span class="nc">Analysis</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A step for plotting the results of the default General Ocean Turbulence</span>
+<span class="sd">    Model (GOTM) test case</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a new test case</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_case : compass.ocean.tests.gotm.default.Default</span>
+<span class="sd">            The test case this step belongs to</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;analysis&#39;</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                         <span class="n">min_cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>As before, we will define the inputs and outputs.  There will be no namelists
+or streams files, nor an MPAS executable because we will not be calling
+MPAS-Ocean in this step:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;output.nc&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../forward/output.nc&#39;</span><span class="p">)</span>
+
+<span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;velocity_profile.png&#39;</span><span class="p">)</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;viscosity_profile.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Next, we will put the contents of the original <code class="docutils literal notranslate"><span class="pre">plot_profile.py</span></code> into the
+<code class="docutils literal notranslate"><span class="pre">run()</span></code> method:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="o">...</span>
+
+<span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Run this step of the test case</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># render statically by default</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">switch_backend</span><span class="p">(</span><span class="s1">&#39;agg&#39;</span><span class="p">)</span>
+
+    <span class="c1"># constants</span>
+    <span class="n">kappa</span> <span class="o">=</span> <span class="mf">0.4</span>
+    <span class="n">z0b</span> <span class="o">=</span> <span class="mf">1.5e-3</span>
+    <span class="n">gssh</span> <span class="o">=</span> <span class="mf">1e-5</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="mf">9.81</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="mi">15</span>
+    <span class="c1"># load output</span>
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;output.nc&#39;</span><span class="p">)</span>
+    <span class="c1"># velocity</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">velocityZonal</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">nCells</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+    <span class="c1"># viscosity</span>
+    <span class="n">nu</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">vertViscTopOfCell</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">nCells</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+    <span class="c1"># depth</span>
+    <span class="n">bottom_depth</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">refBottomDepth</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">bottom_depth</span><span class="p">)</span>
+    <span class="n">z</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">bottom_depth</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">z</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">bottom_depth</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">bottom_depth</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+    <span class="n">zi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">bottom_depth</span><span class="o">.</span><span class="n">size</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">zi</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">zi</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="o">-</span><span class="n">bottom_depth</span><span class="p">[</span><span class="mi">0</span><span class="p">:]</span>
+    <span class="c1"># analytical solution</span>
+    <span class="n">ustarb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">g</span><span class="o">*</span><span class="n">h</span><span class="o">*</span><span class="n">gssh</span><span class="p">)</span>
+    <span class="n">u_a</span> <span class="o">=</span> <span class="n">ustarb</span><span class="o">/</span><span class="n">kappa</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">((</span><span class="n">z0b</span><span class="o">+</span><span class="n">z</span><span class="o">+</span><span class="n">h</span><span class="p">)</span><span class="o">/</span><span class="n">z0b</span><span class="p">)</span>
+    <span class="n">nu_a</span> <span class="o">=</span> <span class="o">-</span><span class="n">ustarb</span><span class="o">/</span><span class="n">h</span><span class="o">*</span><span class="n">kappa</span><span class="o">*</span><span class="p">(</span><span class="n">z0b</span><span class="o">+</span><span class="n">z</span><span class="o">+</span><span class="n">h</span><span class="p">)</span><span class="o">*</span><span class="n">z</span>
+    <span class="c1"># infered drag coefficient</span>
+    <span class="n">cd</span> <span class="o">=</span> <span class="n">ustarb</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">u_a</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;C_d = </span><span class="si">{:6.4g}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cd</span><span class="p">))</span>
+    <span class="c1"># plot velocity</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">u_a</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="s1">&#39;k--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Analytical&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="s1">&#39;k-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;GOTM&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Velocity (m/s)&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Depth (m)&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;velocity_profile.png&#39;</span><span class="p">)</span>
+    <span class="c1"># plot viscosity</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">nu_a</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="s1">&#39;k--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Analytical&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">nu</span><span class="p">,</span> <span class="n">zi</span><span class="p">,</span> <span class="s1">&#39;k-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;GOTM&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Viscosity (m$^2$/s)&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Depth (m)&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;viscosity_profile.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This particular function doesn’t need it, but we could access config options
+from <code class="docutils literal notranslate"><span class="pre">self.config</span></code> if they would be useful in the analysis.  <code class="docutils literal notranslate"><span class="pre">print()</span></code>
+statements should generally be replaced with <code class="docutils literal notranslate"><span class="pre">self.logger.info()</span></code> or other
+logger calls (but <code class="docutils literal notranslate"><span class="pre">print()</span></code> statements are still okay, and will be captured
+in log files rather than going to the terminal when multiple steps or test
+cases are running).</p>
+</section>
+<section id="updating-the-test-case-and-test-group">
+<h2>Updating the test case and test group<a class="headerlink" href="#updating-the-test-case-and-test-group" title="Permalink to this heading">¶</a></h2>
+<p>The nearly final steps are to add the steps to the test case, and then the test
+case to the test group:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
+<span class="hll"><span class="kn">from</span> <span class="nn">compass.ocean.tests.gotm.default.init</span> <span class="kn">import</span> <span class="n">Init</span>
+</span><span class="hll"><span class="kn">from</span> <span class="nn">compass.ocean.tests.gotm.default.forward</span> <span class="kn">import</span> <span class="n">Forward</span>
+</span><span class="hll"><span class="kn">from</span> <span class="nn">compass.ocean.tests.gotm.default.analysis</span> <span class="kn">import</span> <span class="n">Analysis</span>
+</span>
+
+<span class="k">class</span> <span class="nc">Default</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The default test case for the General Ocean Turbulence Model (GOTM) test</span>
+<span class="sd">    group creates an initial condition on a 4 x 4 cell, doubly periodic grid,</span>
+<span class="sd">    performs a short simulation, then vertical plots of the velocity and</span>
+<span class="sd">    viscosity.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create the test case</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_group : compass.ocean.tests.gotm.Gotm</span>
+<span class="sd">            The test group that this test case belongs to</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">)</span>
+
+<span class="hll">        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">Init</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
+</span><span class="hll">        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">Forward</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
+</span><span class="hll">        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">Analysis</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
+</span></pre></div>
+</div>
+<p>and then</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.testgroup</span> <span class="kn">import</span> <span class="n">TestGroup</span>
+<span class="hll"><span class="kn">from</span> <span class="nn">compass.ocean.tests.gotm.default</span> <span class="kn">import</span> <span class="n">Default</span>
+</span>
+
+<span class="k">class</span> <span class="nc">Gotm</span><span class="p">(</span><span class="n">TestGroup</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A test group for General Ocean Turbulence Model (GOTM) test cases</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpas_core</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        mpas_core : compass.MpasCore</span>
+<span class="sd">            the MPAS core that this test group belongs to</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="n">mpas_core</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;gotm&#39;</span><span class="p">)</span>
+
+<span class="hll">        <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">Default</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
+</span></pre></div>
+</div>
+</section>
+<section id="adding-validation">
+<h2>Adding validation<a class="headerlink" href="#adding-validation" title="Permalink to this heading">¶</a></h2>
+<p>The legacy <code class="docutils literal notranslate"><span class="pre">gotm/2.5km/default</span></code> test case didn’t include any
+<a class="reference internal" href="../developers_guide/framework.html#dev-validation"><span class="std std-ref">Validation</span></a> but it is a very good idea to include some.  This way,
+the test case can be used as part of a regression suite to determine if
+unexpected changes have been introduced into the code it tests.  To perform
+validation, we override the <code class="docutils literal notranslate"><span class="pre">validate</span></code> method from the base <code class="docutils literal notranslate"><span class="pre">TestCase</span></code>
+class in <code class="docutils literal notranslate"><span class="pre">Default</span></code> as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.validate</span> <span class="kn">import</span> <span class="n">compare_variables</span>
+
+<span class="o">...</span>
+
+<span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Validate variables against a baseline</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                      <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;layerThickness&#39;</span><span class="p">,</span> <span class="s1">&#39;normalVelocity&#39;</span><span class="p">],</span>
+                      <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;forward/output.nc&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If the user ran the <code class="docutils literal notranslate"><span class="pre">forward</span></code> step as part of this test case (sometimes they
+might run only some of the steps), the call to
+<code class="xref py py-func docutils literal notranslate"><span class="pre">from</span> <span class="pre">compass.validate.compare_variables()</span></code> will check whether
+variables <code class="docutils literal notranslate"><span class="pre">layerThickness</span></code> and <code class="docutils literal notranslate"><span class="pre">normalVelocity</span></code> are exactly the same in
+this run as they were in a previous run if a baseline run was provided when the
+test case got set up (see <a class="reference internal" href="../users_guide/test_suites.html#test-suites"><span class="std std-ref">Test Suites</span></a>).</p>
+</section>
+<section id="set-up-and-run">
+<h2>Set up and run<a class="headerlink" href="#set-up-and-run" title="Permalink to this heading">¶</a></h2>
+<p>You’re all set!  You should be able to see your new test case when you run
+<code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">list</span></code>, set it up by running <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">setup</span></code>, and run it by running
+<code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span></code> within the work directory.  See <a class="reference internal" href="../developers_guide/command_line.html#dev-command-line"><span class="std std-ref">Command-line interface</span></a> for
+more on that process.</p>
+</section>
+<section id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this heading">¶</a></h2>
+<p>Make sure to add some documentation of your new test group.  You need to add
+all of the functions, classes and methods to the API documentation in
+<code class="docutils literal notranslate"><span class="pre">docs/developers_guide/&lt;core&gt;/api.rst</span></code>, following the examples for other
+test groups.  You also need to add a file to both the user’s guide and the
+developer’s guide describing the test group and its test cases and steps.</p>
+<p>For the user’s guide, create a file
+<code class="docutils literal notranslate"><span class="pre">docs/users_guide/&lt;core&gt;/test_groups/&lt;test_group&gt;.rst</span></code>.  In that file, you
+should describe what the test group and what its test cases do in a way that would
+be relevant for a user wanting to run the test case and look at the output.
+This file should include a section giving the config options for the test case
+and describing what they are used for, so that users know how to modify them
+if they want to.  Add <code class="docutils literal notranslate"><span class="pre">&lt;test_group&gt;</span></code> in the appropriate place (in
+alphabetical order) in the list of test groups in the file
+<code class="docutils literal notranslate"><span class="pre">docs/users_guide/&lt;core&gt;/test_groups/index.rst</span></code>.</p>
+<p>For the developer’s guide, create a file
+<code class="docutils literal notranslate"><span class="pre">docs/developers_guide/&lt;core&gt;/test_groups/&lt;test_group&gt;.rst</span></code>. In this file,
+you will describe the test group, its test cases and steps in a way that is
+relevant to developers who might want to modify the code or use it as an
+example for developing their own test cases.  Currently, the descriptions are
+brief in part because of the daunting task of documenting nearly 100 test cases
+but should be fleshed out as time goes on.  It would help new developers if
+newly added test cases are documented well. Add <code class="docutils literal notranslate"><span class="pre">&lt;test_group&gt;</span></code> in the
+appropriate place (in alphabetical order) in the list of test groups in
+<code class="docutils literal notranslate"><span class="pre">docs/developers_guide/&lt;core&gt;/test_groups/index.rst</span></code>.</p>
+<p>At this point, you are ready to make a pull request with the ported test group!</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="dev_add_param_study.html" class="btn btn-neutral float-left" title="Developer Tutorial: Adding a parameter study" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../glossary.html" class="btn btn-neutral float-right" title="Glossary" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

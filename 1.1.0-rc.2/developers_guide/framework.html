@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Framework &mdash; compass 1.1.0-rc.2 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Machines" href="machines/index.html" />
+    <link rel="prev" title="Ocean framework" href="ocean/framework.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> compass
+          </a>
+              <div class="version">
+                1.1.0-rc.2
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Framework</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#list-module">list module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#setup-module">setup module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#clean-module">clean module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#suite-module">suite module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#run-serial-module">run.serial module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cache-module">cache module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#config-files">Config files</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#comments-in-config-files">Comments in config files</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#logging">Logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#io">IO</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#symlinks">Symlinks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#download">Download</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#model">Model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#running-mpas">Running MPAS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#partitioning-the-mesh">Partitioning the mesh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#updating-pio-namelist-options">Updating PIO namelist options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#making-a-graph-file">Making a graph file</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#validation">Validation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#validating-variables">Validating variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#norms">Norms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#validating-timers">Validating timers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#provenance">Provenance</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Framework</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/developers_guide/framework.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="framework">
+<span id="dev-framework"></span><h1>Framework<a class="headerlink" href="#framework" title="Permalink to this heading">¶</a></h1>
+<p>All of the <a class="reference internal" href="overview.html#dev-packages"><span class="std std-ref">Packages and Modules</span></a> that are not in the two cores (<code class="docutils literal notranslate"><span class="pre">landice</span></code> and
+<code class="docutils literal notranslate"><span class="pre">ocean</span></code>) belong to the <code class="docutils literal notranslate"><span class="pre">compass</span></code> framework.  Some of these
+modules and packages are used by the <a class="reference internal" href="command_line.html#dev-command-line"><span class="std std-ref">Command-line interface</span></a>, while others are
+meant to be called within test cases and steps to simplify tasks like adding
+input and output files, downloading data sets, building up config files,
+namelists and streams files, setting up and running the MPAS model, and
+verifying the output by comparing steps with one another or against a baseline.</p>
+<section id="list-module">
+<span id="dev-list"></span><h2>list module<a class="headerlink" href="#list-module" title="Permalink to this heading">¶</a></h2>
+<p>The <a class="reference internal" href="generated/compass.list.list_cases.html#compass.list.list_cases" title="compass.list.list_cases"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.list.list_cases()</span></code></a>, <a class="reference internal" href="generated/compass.list.list_machines.html#compass.list.list_machines" title="compass.list.list_machines"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.list.list_machines()</span></code></a>
+and <a class="reference internal" href="generated/compass.list.list_suites.html#compass.list.list_suites" title="compass.list.list_suites"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.list.list_suites()</span></code></a> functions are used by the
+<code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">list</span></code> command to list test cases, supported machines and test
+suites, respectively.  These functions are not currently used anywhere else
+in <code class="docutils literal notranslate"><span class="pre">compass</span></code>.</p>
+<section id="setup-module">
+<span id="dev-setup"></span><h3>setup module<a class="headerlink" href="#setup-module" title="Permalink to this heading">¶</a></h3>
+<p>The <a class="reference internal" href="generated/compass.setup.setup_cases.html#compass.setup.setup_cases" title="compass.setup.setup_cases"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.setup.setup_cases()</span></code></a> and <a class="reference internal" href="generated/compass.setup.setup_case.html#compass.setup.setup_case" title="compass.setup.setup_case"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.setup.setup_case()</span></code></a>
+functions are used by <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">setup</span></code> and <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">suite</span></code> to set up a list
+of test cases and a single test case, respectively, in a work directory.
+Subdirectories will be created for each test case and its steps; input,
+namelist and streams files will be downloaded, symlinked and/or generated
+in the setup process. A <a class="reference external" href="https://docs.python.org/3/library/pickle.html">pickle file</a>
+called <code class="docutils literal notranslate"><span class="pre">test_case.pickle</span></code> will be written to each test case directory
+containing the test-case object for later use in calls to <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span></code>.
+Similarly, a file <code class="docutils literal notranslate"><span class="pre">step.pickle</span></code> containing both the step and test-case
+objects will be written to each step directory, allowing the step to be run
+on its own with <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span></code>.  In contrast to <a class="reference internal" href="../users_guide/config_files.html#config-files"><span class="std std-ref">Config Files</span></a>, these
+pickle files are not intended for users (or developers) to read or modify.
+Properties of the test-case and step objects are not intended to change between
+setting up and running a test suite, test case or step.</p>
+</section>
+<section id="clean-module">
+<span id="dev-clean"></span><h3>clean module<a class="headerlink" href="#clean-module" title="Permalink to this heading">¶</a></h3>
+<p>The <a class="reference internal" href="generated/compass.clean.clean_cases.html#compass.clean.clean_cases" title="compass.clean.clean_cases"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.clean.clean_cases()</span></code></a> function is used by
+<code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">clean</span></code> and <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">suite</span></code> to delete the constants of a test-case
+subdirectory in the work directory.</p>
+</section>
+<section id="suite-module">
+<span id="dev-suite"></span><h3>suite module<a class="headerlink" href="#suite-module" title="Permalink to this heading">¶</a></h3>
+<p>The <a class="reference internal" href="generated/compass.suite.setup_suite.html#compass.suite.setup_suite" title="compass.suite.setup_suite"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.suite.setup_suite()</span></code></a> and <a class="reference internal" href="generated/compass.suite.clean_suite.html#compass.suite.clean_suite" title="compass.suite.clean_suite"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.suite.clean_suite()</span></code></a>
+functions are used by <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">suite</span></code> to set up or clean up a test suite in a
+work directory.  Setting up a test suite includes setting up the test cases
+(see <a class="reference internal" href="#dev-setup"><span class="std std-ref">setup module</span></a>), writing out a <a class="reference internal" href="#dev-provenance"><span class="std std-ref">Provenance</span></a> file, and saving
+a pickle file containing a python dictionary that defines the test suite for
+later use by <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span></code>.  The “target” and “minimum” number of cores
+required for running the test suite are displayed.  The “target” is the maximum
+of the <code class="docutils literal notranslate"><span class="pre">cores</span></code> attribute of all steps in the test suite.  This is the number
+of cores to run on to complete the test suite as quickly as possible, with the
+caveat that many cores may sit idle for some fraction of the runtime.  The
+“minimum” number of cores is the maximum of the <code class="docutils literal notranslate"><span class="pre">min_cores</span></code> attribute for
+all steps int he suite, indicating the fewest cores that the test may be run
+with before at least some steps in the suite will fail.</p>
+</section>
+<section id="run-serial-module">
+<span id="dev-run"></span><h3>run.serial module<a class="headerlink" href="#run-serial-module" title="Permalink to this heading">¶</a></h3>
+<p>The function <a class="reference internal" href="generated/compass.run.serial.run_tests.html#compass.run.serial.run_tests" title="compass.run.serial.run_tests"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.run.serial.run_tests()</span></code></a> is used to run a
+test suite or test case and <a class="reference internal" href="generated/compass.run.serial.run_step.html#compass.run.serial.run_step" title="compass.run.serial.run_step"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.run.serial.run_step()</span></code></a> is used to
+run a step using <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span></code>.  Suites run from the base work directory
+with a pickle file starting with the suite name, or <code class="docutils literal notranslate"><span class="pre">custom.pickle</span></code> if a
+suite name was not given. Test cases or steps run from their respective
+subdirectories with a <code class="docutils literal notranslate"><span class="pre">testcase.pickle</span></code> or <code class="docutils literal notranslate"><span class="pre">step.pickle</span></code> file in them.
+Both of these functions reads the local pickle file to retrieve information
+about the test suite, test case and/or step that was stored during setup.</p>
+<p>If <a class="reference internal" href="generated/compass.run.serial.run_tests.html#compass.run.serial.run_tests" title="compass.run.serial.run_tests"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.run.serial.run_tests()</span></code></a> is used for a test suite, it will
+run each test case in the test suite in the order that they are given in the
+text file defining the suite (<code class="docutils literal notranslate"><span class="pre">compass/&lt;mpas_core&gt;/suites/&lt;suite_name&gt;.txt</span></code>).
+Output from test cases and their steps are stored in log files in the
+<code class="docutils literal notranslate"><span class="pre">case_output</span></code> subdirectory of the base work directory. If the function is
+used for a single test case, it will run the steps of that test case, writing
+output for each step to a log file starting with the step’s name. In either
+case (suite or individual test), it displays a <code class="docutils literal notranslate"><span class="pre">PASS</span></code> or <code class="docutils literal notranslate"><span class="pre">FAIL</span></code> message for
+the test execution, as well as similar messages for validation involving output
+within the test case or suite and validation against a baseline (depending on
+the implementation of the <code class="docutils literal notranslate"><span class="pre">validate()</span></code> method in the test case and whether a
+baseline was provided during setup).</p>
+<p><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.run.run_step()</span></code> runs only the selected step from a given
+test case, skipping any others, displaying the output in the terminal window
+rather than a log file.</p>
+</section>
+<section id="cache-module">
+<span id="dev-cache"></span><h3>cache module<a class="headerlink" href="#cache-module" title="Permalink to this heading">¶</a></h3>
+<p>The <a class="reference internal" href="generated/compass.cache.update_cache.html#compass.cache.update_cache" title="compass.cache.update_cache"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.cache.update_cache()</span></code></a> function is used by
+<code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">cache</span></code> to copy step outputs to the <code class="docutils literal notranslate"><span class="pre">compass_cache</span></code> database on
+the LCRC server and to update <code class="docutils literal notranslate"><span class="pre">&lt;mpas_core&gt;_cached_files.json</span></code> files that
+contain a mapping between these cached files and the original outputs.  This
+functionality enables running steps with <a class="reference internal" href="organization.html#dev-step-cached-output"><span class="std std-ref">Cached output files</span></a>, which
+can be used to skip time-consuming initialization steps for faster development
+and debugging.</p>
+</section>
+</section>
+<section id="config-files">
+<span id="dev-config"></span><h2>Config files<a class="headerlink" href="#config-files" title="Permalink to this heading">¶</a></h2>
+<p>The primary documentation for the config parser is in
+<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/config.html">MPAS-Tools config parser</a>.
+Here, we include some specific details relevant to using the
+<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.config.MpasConfigParser.html#mpas_tools.config.MpasConfigParser" title="(in mpas_tools vstable)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mpas_tools.config.MpasConfigParser</span></code></a> in compass.</p>
+<p>Here, we provide the <a class="reference internal" href="generated/compass.config.CompassConfigParser.html#compass.config.CompassConfigParser" title="compass.config.CompassConfigParser"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.config.CompassConfigParser</span></code></a> that has
+almost the same functionality but also ensures that certain relative paths are
+converted automatically to absolute paths.</p>
+<p>The <a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.config.MpasConfigParser.add_from_package.html#mpas_tools.config.MpasConfigParser.add_from_package" title="(in mpas_tools vstable)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">mpas_tools.config.MpasConfigParser.add_from_package()</span></code></a> method can
+be used to add the contents of a config file within a package to the config
+options. Examples of this can be found in many test cases as well as
+<a class="reference internal" href="generated/compass.setup.setup_case.html#compass.setup.setup_case" title="compass.setup.setup_case"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.setup.setup_case()</span></code></a>. Here is a typical example from
+<code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.make_diagnostics_files.MakeDiagnosticsFiles.configure()</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Modify the configuration options for this test case</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span>
+       <span class="s1">&#39;compass.ocean.tests.global_ocean.make_diagnostics_files&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;make_diagnostics_files.cfg&#39;</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The first and second arguments are the name of a package containing the config
+file and the name of the config file itself, respectively.  You can see that
+the file is in the path <code class="docutils literal notranslate"><span class="pre">compass/ocean/tests/global_ocean/make_diagnostics_files</span></code>
+(replacing the <code class="docutils literal notranslate"><span class="pre">.</span></code> in the module name with <code class="docutils literal notranslate"><span class="pre">/</span></code>).  In this case, we know
+that the config file should always exist, so we would like the code to raise
+an exception (<code class="docutils literal notranslate"><span class="pre">exception=True</span></code>) if the file is not found.  This is the
+default behavior.  In some cases, you would like the code to add the config
+options if the config file exists and do nothing if it does not.  This can
+be useful if a common configure function is being used for all test
+cases in a configuration, as in this example from
+<code class="xref py py-func docutils literal notranslate"><span class="pre">setup.setup_case()</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># add the config options for the test group (if defined)</span>
+<span class="n">test_group</span> <span class="o">=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">test_group</span><span class="o">.</span><span class="n">name</span>
+<span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;compass.</span><span class="si">{</span><span class="n">mpas_core</span><span class="si">}</span><span class="s1">.tests.</span><span class="si">{</span><span class="n">test_group</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                        <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">test_group</span><span class="si">}</span><span class="s1">.cfg&#39;</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If a test group doesn’t have any config options, nothing will happen.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">MpasConfigParser</span></code> class also includes methods for adding a user
+config file and other config files by file name, but these are largely intended
+for use by the framework rather than individual test cases.</p>
+<p>Other methods for the <code class="docutils literal notranslate"><span class="pre">MpasConfigParser</span></code> are similar to those for
+<a class="reference external" href="https://docs.python.org/3/library/configparser.html#configparser.ConfigParser" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">configparser.ConfigParser</span></code></a>.  In addition to <code class="docutils literal notranslate"><span class="pre">get()</span></code>,
+<code class="docutils literal notranslate"><span class="pre">getinteger()</span></code>, <code class="docutils literal notranslate"><span class="pre">getfloat()</span></code> and <code class="docutils literal notranslate"><span class="pre">getboolean()</span></code> methods, this class
+implements <a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.config.MpasConfigParser.getlist.html#mpas_tools.config.MpasConfigParser.getlist" title="(in mpas_tools vstable)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">mpas_tools.config.MpasConfigParser.getlist()</span></code></a>, which
+can be used to parse a config value separated by spaces and/or commas into
+a list of strings, floats, integers, booleans, etc. Another useful method
+is <a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.config.MpasConfigParser.getexpression.html#mpas_tools.config.MpasConfigParser.getexpression" title="(in mpas_tools vstable)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">mpas_tools.config.MpasConfigParser.getexpression()</span></code></a>, which can
+be used to get python dictionaries, lists and tuples as well as a small set
+of functions (<code class="docutils literal notranslate"><span class="pre">range()</span></code>, <code class="xref py py-meth docutils literal notranslate"><span class="pre">numpy.linspace()</span></code>,
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">numpy.arange()</span></code>, and <code class="xref py py-meth docutils literal notranslate"><span class="pre">numpy.array()</span></code>)</p>
+<section id="comments-in-config-files">
+<h3>Comments in config files<a class="headerlink" href="#comments-in-config-files" title="Permalink to this heading">¶</a></h3>
+<p>One of the main advantages of <a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.config.MpasConfigParser.html#mpas_tools.config.MpasConfigParser" title="(in mpas_tools vstable)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mpas_tools.config.MpasConfigParser</span></code></a>
+over <a class="reference external" href="https://docs.python.org/3/library/configparser.html#configparser.ConfigParser" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">configparser.ConfigParser</span></code></a> is that it keeps track of comments
+that are associated with config sections and options.</p>
+<p>See <a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/config.html#config_comments">comments in config files</a>
+in MPAS-Tools for more details.</p>
+</section>
+</section>
+<section id="logging">
+<span id="dev-logging"></span><h2>Logging<a class="headerlink" href="#logging" title="Permalink to this heading">¶</a></h2>
+<p>Compass does not have its own module for logging, instead making use of
+<code class="docutils literal notranslate"><span class="pre">mpas_tools.logging</span></code>.  This is because a common strategy for logging to
+either stdout/stderr or to a log file is needed between <code class="docutils literal notranslate"><span class="pre">compass</span></code> and
+<code class="docutils literal notranslate"><span class="pre">mpas_tools</span></code>.  To get details on how this module works in general, see
+<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/logging.html">MPAS-Tools’ Logging</a>
+as well as the APIs for <a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.logging.LoggingContext.html#mpas_tools.logging.LoggingContext" title="(in mpas_tools vstable)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mpas_tools.logging.LoggingContext</span></code></a> and
+<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.logging.check_call.html#mpas_tools.logging.check_call" title="(in mpas_tools vstable)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_tools.logging.check_call()</span></code></a>.</p>
+<p>For the most part, the <code class="docutils literal notranslate"><span class="pre">compass</span></code> framework handles logging for you, so
+test-case developers won’t have to create their own <code class="docutils literal notranslate"><span class="pre">logger</span></code> objects.  They
+are arguments to the test case’s <a class="reference internal" href="organization.html#dev-test-case-run"><span class="std std-ref">run()</span></a> or step’s
+<a class="reference internal" href="organization.html#dev-step-run"><span class="std std-ref">run()</span></a>.  If you run a step on its own, no log file is created
+and logging happens to <code class="docutils literal notranslate"><span class="pre">stdout</span></code>/<code class="docutils literal notranslate"><span class="pre">stderr</span></code>.  If you run the full test case,
+each step gets logged to its own log file within the test case’s work
+directory.  If you run a test suite, each test case and its steps get logged
+to a file in the <code class="docutils literal notranslate"><span class="pre">case_output</span></code> directory of the suite’s work directory.</p>
+<p>Although the logger will capture <code class="docutils literal notranslate"><span class="pre">print</span></code> statements, anywhere with a
+<code class="docutils literal notranslate"><span class="pre">run()</span></code> function or the functions called inside that function, it is a good
+idea to call <code class="docutils literal notranslate"><span class="pre">logger.info</span></code> instead of <code class="docutils literal notranslate"><span class="pre">print</span></code> to be explicit about the
+expectation that the output may go to a log file.</p>
+<p>Even more important, subprocesses that produce output should always be called
+with <a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.logging.check_call.html#mpas_tools.logging.check_call" title="(in mpas_tools vstable)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_tools.logging.check_call()</span></code></a>, passing in the <code class="docutils literal notranslate"><span class="pre">logger</span></code> that
+is an argument to the <code class="docutils literal notranslate"><span class="pre">run()</span></code> function.  Otherwise, output will go to
+<code class="docutils literal notranslate"><span class="pre">stdout</span></code>/<code class="docutils literal notranslate"><span class="pre">stderr</span></code> even when the intention is to write all output to a
+log file.  Whereas logging can capture <code class="docutils literal notranslate"><span class="pre">stdout</span></code>/<code class="docutils literal notranslate"><span class="pre">stderr</span></code> to make sure that
+the <code class="docutils literal notranslate"><span class="pre">print</span></code> statements actually go to log files when desired, there is no
+similar trick for automatically capturing the output from direct calls to
+<code class="docutils literal notranslate"><span class="pre">subprocess</span></code> functions.  Here is a code snippet from
+<a class="reference internal" href="landice/generated/compass.landice.tests.dome.setup_mesh.SetupMesh.run.html#compass.landice.tests.dome.setup_mesh.SetupMesh.run" title="compass.landice.tests.dome.setup_mesh.SetupMesh.run"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.landice.tests.dome.setup_mesh.SetupMesh.run()</span></code></a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mpas_tools.logging</span> <span class="kn">import</span> <span class="n">check_call</span>
+
+
+<span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="o">...</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;dome&#39;</span><span class="p">]</span>
+    <span class="o">...</span>
+    <span class="n">levels</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;levels&#39;</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;create_landice_grid_from_generic_MPAS_grid.py&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;mpas_grid.nc&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;landice_grid.nc&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;-l&#39;</span><span class="p">,</span> <span class="n">levels</span><span class="p">]</span>
+
+    <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>This example calls the script <code class="docutils literal notranslate"><span class="pre">create_landice_grid_from_generic_MPAS_grid.py</span></code>
+from <code class="docutils literal notranslate"><span class="pre">mpas_tools</span></code> with several arguments, making use of the <code class="docutils literal notranslate"><span class="pre">logger</span></code>.</p>
+</section>
+<section id="io">
+<span id="dev-io"></span><h2>IO<a class="headerlink" href="#io" title="Permalink to this heading">¶</a></h2>
+<p>A lot of I/O related tasks are handled internally in the step class
+<a class="reference internal" href="generated/compass.Step.html#compass.Step" title="compass.Step"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.Step</span></code></a>.  Some of the lower level functions can be called
+directly if need be.</p>
+<section id="symlinks">
+<span id="dev-io-symlink"></span><h3>Symlinks<a class="headerlink" href="#symlinks" title="Permalink to this heading">¶</a></h3>
+<p>You can create your own symlinks that aren’t input files (e.g. for a
+README file that the user might want to have available) using
+<a class="reference internal" href="generated/compass.io.symlink.html#compass.io.symlink" title="compass.io.symlink"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.io.symlink()</span></code></a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">importlib.resources</span> <span class="kn">import</span> <span class="n">path</span>
+
+<span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">symlink</span>
+
+
+<span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="n">testcase</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+    <span class="o">...</span>
+    <span class="k">with</span> <span class="n">path</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.global_ocean.files_for_e3sm&#39;</span><span class="p">,</span> <span class="s1">&#39;README&#39;</span><span class="p">)</span> <span class="k">as</span> \
+            <span class="n">target</span><span class="p">:</span>
+        <span class="n">symlink</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">target</span><span class="p">),</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/README&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;work_dir&#39;</span><span class="p">]))</span>
+</pre></div>
+</div>
+<p>In this example, we get the path to a README file within <code class="docutils literal notranslate"><span class="pre">compass</span></code> and make
+a local symlink to it in the test case’s work directory.  We did this with
+<code class="docutils literal notranslate"><span class="pre">symlink()</span></code> rather than <code class="docutils literal notranslate"><span class="pre">add_input_file()</span></code> because we want this link to
+be within the test case’s work directory, not the step’s work directory.  We
+must do this in <code class="docutils literal notranslate"><span class="pre">configure()</span></code> rather than <code class="docutils literal notranslate"><span class="pre">collect()</span></code> because we do not
+know if the test case will be set up at all (or in what work directory) during
+<code class="docutils literal notranslate"><span class="pre">collect()</span></code>.</p>
+</section>
+<section id="download">
+<span id="dev-io-download"></span><h3>Download<a class="headerlink" href="#download" title="Permalink to this heading">¶</a></h3>
+<p>You can download files more directly if you need to using
+<a class="reference internal" href="generated/compass.io.download.html#compass.io.download" title="compass.io.download"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.io.download()</span></code></a>, though we recommend using
+<a class="reference internal" href="generated/compass.Step.add_input_file.html#compass.Step.add_input_file" title="compass.Step.add_input_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.add_input_file()</span></code></a> whenever possible because it is more
+flexible and takes care of more of the details of symlinking the local file
+and adding it as an input to the step.  No current test cases use
+<code class="docutils literal notranslate"><span class="pre">download()</span></code> directly, but an example might look like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">symlink</span><span class="p">,</span> <span class="n">download</span>
+
+<span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+    <span class="n">step_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span>
+    <span class="n">database_root</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="s1">&#39;ocean_database_root&#39;</span><span class="p">)</span>
+    <span class="n">download_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">database_root</span><span class="p">,</span> <span class="s1">&#39;bathymetry_database&#39;</span><span class="p">)</span>
+
+    <span class="n">remote_filename</span> <span class="o">=</span> \
+        <span class="s1">&#39;BedMachineAntarctica_and_GEBCO_2019_0.05_degree.200128.nc&#39;</span>
+    <span class="n">local_filename</span> <span class="o">=</span> <span class="s1">&#39;topography.nc&#39;</span>
+
+    <span class="n">download</span><span class="p">(</span>
+        <span class="n">file_name</span><span class="o">=</span><span class="n">remote_filename</span><span class="p">,</span>
+        <span class="n">url</span><span class="o">=</span><span class="s1">&#39;https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/&#39;</span>
+            <span class="s1">&#39;mpas-ocean/bathymetry_database&#39;</span><span class="p">,</span>
+        <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">dest_path</span><span class="o">=</span><span class="n">download_path</span><span class="p">)</span>
+
+    <span class="n">symlink</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">download_path</span><span class="p">,</span> <span class="n">remote_filename</span><span class="p">),</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">step_dir</span><span class="p">,</span> <span class="s1">&#39;topography.nc&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>In this example, the remote file
+<a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-ocean/bathymetry_databaseBedMachineAntarctica_and_GEBCO_2019_0.05_degree.200128.nc">BedMachineAntarctica_and_GEBCO_2019_0.05_degree.200128.nc</a>
+gets downloaded into the bathymetry database (if it’s not already there).
+Then, we create a local symlink called <code class="docutils literal notranslate"><span class="pre">topography.nc</span></code> to the file in the
+bathymetry database.</p>
+</section>
+</section>
+<section id="model">
+<span id="dev-model"></span><h2>Model<a class="headerlink" href="#model" title="Permalink to this heading">¶</a></h2>
+<section id="running-mpas">
+<h3>Running MPAS<a class="headerlink" href="#running-mpas" title="Permalink to this heading">¶</a></h3>
+<p>Steps that run the MPAS model should call the
+<a class="reference internal" href="generated/compass.Step.add_model_as_input.html#compass.Step.add_model_as_input" title="compass.Step.add_model_as_input"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.add_model_as_input()</span></code></a> method from
+their <code class="docutils literal notranslate"><span class="pre">__init__()</span></code> method.</p>
+<p>To run MPAS, call <a class="reference internal" href="generated/compass.model.run_model.html#compass.model.run_model" title="compass.model.run_model"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.model.run_model()</span></code></a>.  By default, this
+function first updates the namelist options associated with the
+<a class="reference external" href="https://ncar.github.io/ParallelIO/">PIO library</a> and partitions the mesh
+across MPI tasks, as we will discuss in a moment, before running the model.
+You can provide non-default names for the graph, namelist and streams files.
+The number of cores and threads is determined from the <code class="docutils literal notranslate"><span class="pre">cores</span></code>, <code class="docutils literal notranslate"><span class="pre">min_cores</span></code>
+and <code class="docutils literal notranslate"><span class="pre">threads</span></code> attributes of the step object, set in its
+constructor or <a class="reference internal" href="organization.html#dev-step-setup"><span class="std std-ref">setup()</span></a> method (i.e. before calling
+<a class="reference internal" href="organization.html#dev-step-run"><span class="std std-ref">run()</span></a>) so that the <code class="docutils literal notranslate"><span class="pre">compass</span></code> framework can ensure that the
+required resources are available.</p>
+</section>
+<section id="partitioning-the-mesh">
+<h3>Partitioning the mesh<a class="headerlink" href="#partitioning-the-mesh" title="Permalink to this heading">¶</a></h3>
+<p>The function <a class="reference internal" href="generated/compass.model.partition.html#compass.model.partition" title="compass.model.partition"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.model.partition()</span></code></a> calls the graph partitioning
+executable (<a class="reference external" href="https://arc.vt.edu/userguide/metis/">gpmetis</a> by default) to
+divide up the MPAS mesh across cores.  If you call
+<a class="reference internal" href="generated/compass.model.run_model.html#compass.model.run_model" title="compass.model.run_model"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.model.run_model()</span></code></a> with <cite>partition_graph=True</cite> (the default),
+this function is called automatically.</p>
+<p>In some circumstances, a step may need to partition the mesh separately from
+running the model.  Typically, this applies to cases where the model is run
+multiple times with the same partition and we don’t want to waste time
+creating the same partition over and over.  For such cases, you can call
+<a class="reference internal" href="generated/compass.model.partition.html#compass.model.partition" title="compass.model.partition"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.model.partition()</span></code></a> and then provide <cite>partition_graph=False</cite>
+to later calls to <a class="reference internal" href="generated/compass.model.run_model.html#compass.model.run_model" title="compass.model.run_model"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.model.run_model()</span></code></a>.</p>
+</section>
+<section id="updating-pio-namelist-options">
+<h3>Updating PIO namelist options<a class="headerlink" href="#updating-pio-namelist-options" title="Permalink to this heading">¶</a></h3>
+<p>You can use <code class="xref py py-func docutils literal notranslate"><span class="pre">compass.model.update_namelist_pio()</span></code> to automatically set
+the MPAS namelist options <code class="docutils literal notranslate"><span class="pre">config_pio_num_iotasks</span></code> and <code class="docutils literal notranslate"><span class="pre">config_pio_stride</span></code>
+such that there is 1 PIO task per node of the MPAS run.  This is particularly
+useful for PIO v1, which we have found performs much better in this
+configuration than when there is 1 PIO task per core, the MPAS default.  When
+running with PIO v2, we have found little performance difference between the
+MPAS default and the <code class="docutils literal notranslate"><span class="pre">compass</span></code> default of one task per node, so we feel this
+is a safe default.</p>
+<p>By default, this function is called within <a class="reference internal" href="generated/compass.model.run_model.html#compass.model.run_model" title="compass.model.run_model"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.model.run_model()</span></code></a>.
+If the same namelist file is used for multiple model runs, it may be useful to
+update the number of PIO tasks only once.  In this case, use
+<code class="docutils literal notranslate"><span class="pre">update_pio=False</span></code> when calling <code class="docutils literal notranslate"><span class="pre">run_model()</span></code>, then call
+<code class="xref py py-func docutils literal notranslate"><span class="pre">compass.model.update_namelist_pio()</span></code> yourself.</p>
+<p>If you wish to use the MPAS default behavior of 1 PIO task per core, or wish to
+set <code class="docutils literal notranslate"><span class="pre">config_pio_num_iotasks</span></code> and <code class="docutils literal notranslate"><span class="pre">config_pio_stride</span></code> yourself, simply
+use <code class="docutils literal notranslate"><span class="pre">update_pio=False</span></code> when calling <code class="docutils literal notranslate"><span class="pre">run_model()</span></code>.</p>
+</section>
+<section id="making-a-graph-file">
+<h3>Making a graph file<a class="headerlink" href="#making-a-graph-file" title="Permalink to this heading">¶</a></h3>
+<p>Some <code class="docutils literal notranslate"><span class="pre">compass</span></code> test cases take advantage of the fact that the
+<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/mesh_conversion.html#cell-culler">MPAS-Tools cell culler</a>
+can produce a graph file as part of the process of culling cells from an
+MPAS mesh.  In test cases that do not require cells to be culled, you can
+call <a class="reference internal" href="generated/compass.model.make_graph_file.html#compass.model.make_graph_file" title="compass.model.make_graph_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.model.make_graph_file()</span></code></a> to produce a graph file from
+an MPAS mesh file.  Optionally, you can provide the name of an MPAS field on
+cells in the mesh file that gives different weight to different cells
+(<code class="docutils literal notranslate"><span class="pre">weight_field</span></code>) in the partitioning process.</p>
+</section>
+</section>
+<section id="validation">
+<span id="dev-validation"></span><h2>Validation<a class="headerlink" href="#validation" title="Permalink to this heading">¶</a></h2>
+<p>Test cases should typically include validation of variables and/or timers.
+This validation is a critical part of running test suites and comparing them
+to baselines.</p>
+<section id="validating-variables">
+<h3>Validating variables<a class="headerlink" href="#validating-variables" title="Permalink to this heading">¶</a></h3>
+<p>The function <a class="reference internal" href="generated/compass.validate.compare_variables.html#compass.validate.compare_variables" title="compass.validate.compare_variables"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.validate.compare_variables()</span></code></a> can be used to
+compare variables in a file with a given relative path (<code class="docutils literal notranslate"><span class="pre">filename1</span></code>) with
+the same variables in another file (<code class="docutils literal notranslate"><span class="pre">filename2</span></code>) and/or against a baseline.</p>
+<p>As a simple example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;salinity&#39;</span><span class="p">,</span> <span class="s1">&#39;layerThickness&#39;</span><span class="p">,</span> <span class="s1">&#39;normalVelocity&#39;</span><span class="p">]</span>
+<span class="n">compare_variables</span><span class="p">(</span><span class="n">variables</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">work_dir</span><span class="o">=</span><span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;work_dir&#39;</span><span class="p">],</span>
+                  <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;forward/output.nc&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In this case, comparison will only take place if a baseline run is provided
+when the test case is set up (see <a class="reference internal" href="command_line.html#dev-compass-setup"><span class="std std-ref">compass setup</span></a> or
+<a class="reference internal" href="command_line.html#dev-compass-suite"><span class="std std-ref">compass suite</span></a>), since the keyword argument <code class="docutils literal notranslate"><span class="pre">filename2</span></code> was not
+provided.  If a baseline is provided, the 4 prognostic variables are compared
+between the file <code class="docutils literal notranslate"><span class="pre">forward/output.nc</span></code> and the same file in the corresponding
+location within the baseline.</p>
+<p>Here is a slightly more complex example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;salinity&#39;</span><span class="p">,</span> <span class="s1">&#39;layerThickness&#39;</span><span class="p">,</span> <span class="s1">&#39;normalVelocity&#39;</span><span class="p">]</span>
+<span class="n">compare_variables</span><span class="p">(</span><span class="n">variables</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">work_dir</span><span class="o">=</span><span class="n">testcase</span><span class="p">[</span><span class="s1">&#39;work_dir&#39;</span><span class="p">],</span>
+                  <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;4proc/output.nc&#39;</span><span class="p">,</span>
+                  <span class="n">filename2</span><span class="o">=</span><span class="s1">&#39;8proc/output.nc&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In this case, we compare the 4 prognostic variables in <code class="docutils literal notranslate"><span class="pre">4proc/output.nc</span></code>
+with the same in <code class="docutils literal notranslate"><span class="pre">8proc/output.nc</span></code> to make sure they are identical.  If
+a baseline directory was provided, these 4 variables in each file will also be
+compared with those in the corresponding files in the baseline.</p>
+<p>By default, the comparison will only be performed if both the <code class="docutils literal notranslate"><span class="pre">4proc</span></code> and
+<code class="docutils literal notranslate"><span class="pre">8proc</span></code> steps have been run (otherwise, we cannot be sure the data we want
+will be available).  If one of the steps was not run (if the user is running
+steps one at a time or has altered the <code class="docutils literal notranslate"><span class="pre">steps_to_run</span></code> config option to remove
+some steps), the function will skip validation, logging a message that
+validation was not performed because of the missing step(s).  You can pass
+the keyword argument <code class="docutils literal notranslate"><span class="pre">skip_if_step_not_run=False</span></code> to force validation to run
+(and possibly to fail because the output is not available) even if the user did
+not run the step involved in the validation.</p>
+<p>In any of these cases, if comparison fails, the failure is stored in the
+<code class="docutils literal notranslate"><span class="pre">validation</span></code> attribute of the test case, and a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> will be raised
+later by the framework, terminating execution of the test case.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">quiet=False</span></code>, typical output will look like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Beginning variable comparisons for all time levels of field &#39;temperature&#39;. Note any time levels reported are 0-based.
+    Pass thresholds are:
+       L1: 0.00000000000000e+00
+       L2: 0.00000000000000e+00
+       L_Infinity: 0.00000000000000e+00
+0:  l1: 0.00000000000000e+00  l2: 0.00000000000000e+00  linf: 0.00000000000000e+00
+1:  l1: 0.00000000000000e+00  l2: 0.00000000000000e+00  linf: 0.00000000000000e+00
+2:  l1: 0.00000000000000e+00  l2: 0.00000000000000e+00  linf: 0.00000000000000e+00
+ ** PASS Comparison of temperature between /home/xylar/data/mpas/test_nightly_latest/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc and
+    /home/xylar/data/mpas/test_nightly_latest/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
+Beginning variable comparisons for all time levels of field &#39;salinity&#39;. Note any time levels reported are 0-based.
+    Pass thresholds are:
+       L1: 0.00000000000000e+00
+       L2: 0.00000000000000e+00
+       L_Infinity: 0.00000000000000e+00
+0:  l1: 0.00000000000000e+00  l2: 0.00000000000000e+00  linf: 0.00000000000000e+00
+1:  l1: 0.00000000000000e+00  l2: 0.00000000000000e+00  linf: 0.00000000000000e+00
+2:  l1: 0.00000000000000e+00  l2: 0.00000000000000e+00  linf: 0.00000000000000e+00
+ ** PASS Comparison of salinity between /home/xylar/data/mpas/test_nightly_latest/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc and
+    /home/xylar/data/mpas/test_nightly_latest/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
+Beginning variable comparisons for all time levels of field &#39;layerThickness&#39;. Note any time levels reported are 0-based.
+    Pass thresholds are:
+       L1: 0.00000000000000e+00
+       L2: 0.00000000000000e+00
+       L_Infinity: 0.00000000000000e+00
+0:  l1: 0.00000000000000e+00  l2: 0.00000000000000e+00  linf: 0.00000000000000e+00
+1:  l1: 0.00000000000000e+00  l2: 0.00000000000000e+00  linf: 0.00000000000000e+00
+2:  l1: 0.00000000000000e+00  l2: 0.00000000000000e+00  linf: 0.00000000000000e+00
+ ** PASS Comparison of layerThickness between /home/xylar/data/mpas/test_nightly_latest/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc and
+    /home/xylar/data/mpas/test_nightly_latest/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
+Beginning variable comparisons for all time levels of field &#39;normalVelocity&#39;. Note any time levels reported are 0-based.
+    Pass thresholds are:
+       L1: 0.00000000000000e+00
+       L2: 0.00000000000000e+00
+       L_Infinity: 0.00000000000000e+00
+0:  l1: 0.00000000000000e+00  l2: 0.00000000000000e+00  linf: 0.00000000000000e+00
+1:  l1: 0.00000000000000e+00  l2: 0.00000000000000e+00  linf: 0.00000000000000e+00
+2:  l1: 0.00000000000000e+00  l2: 0.00000000000000e+00  linf: 0.00000000000000e+00
+ ** PASS Comparison of normalVelocity between /home/xylar/data/mpas/test_nightly_latest/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc and
+    /home/xylar/data/mpas/test_nightly_latest/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
+</pre></div>
+</div>
+<p>If <code class="docutils literal notranslate"><span class="pre">quiet=True</span></code> (the default), there is only an indication that the
+comparison passed for each variable:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>temperature          Time index: 0, 1, 2
+  PASS /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc
+
+       /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
+
+salinity             Time index: 0, 1, 2
+  PASS /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc
+
+       /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
+
+layerThickness       Time index: 0, 1, 2
+  PASS /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc
+
+       /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
+
+normalVelocity       Time index: 0, 1, 2
+  PASS /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc
+
+       /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
+
+temperature          Time index: 0, 1, 2
+  PASS /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc
+
+       /home/xylar/data/mpas/test_20210616/baseline/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc
+
+salinity             Time index: 0, 1, 2
+  PASS /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc
+
+       /home/xylar/data/mpas/test_20210616/baseline/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc
+
+layerThickness       Time index: 0, 1, 2
+  PASS /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc
+
+       /home/xylar/data/mpas/test_20210616/baseline/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc
+
+normalVelocity       Time index: 0, 1, 2
+  PASS /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc
+
+       /home/xylar/data/mpas/test_20210616/baseline/ocean/baroclinic_channel/10km/threads_test/1thread/output.nc
+
+temperature          Time index: 0, 1, 2
+  PASS /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
+
+       /home/xylar/data/mpas/test_20210616/baseline/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
+
+salinity             Time index: 0, 1, 2
+  PASS /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
+
+       /home/xylar/data/mpas/test_20210616/baseline/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
+
+layerThickness       Time index: 0, 1, 2
+  PASS /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
+
+       /home/xylar/data/mpas/test_20210616/baseline/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
+
+normalVelocity       Time index: 0, 1, 2
+  PASS /home/xylar/data/mpas/test_20210616/further_validation/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
+
+       /home/xylar/data/mpas/test_20210616/baseline/ocean/baroclinic_channel/10km/threads_test/2thread/output.nc
+</pre></div>
+</div>
+<p>By default, the function checks to make sure <code class="docutils literal notranslate"><span class="pre">filename1</span></code> and, if provided,
+<code class="docutils literal notranslate"><span class="pre">filename2</span></code> are output from one of the steps in the test case.  In general,
+validation should be performed on outputs of the steps in this test case that
+are explicitly added with <a class="reference internal" href="generated/compass.Step.add_output_file.html#compass.Step.add_output_file" title="compass.Step.add_output_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.add_output_file()</span></code></a>.  This
+check can be disabled by setting <code class="docutils literal notranslate"><span class="pre">check_outputs=False</span></code>.</p>
+</section>
+<section id="norms">
+<h3>Norms<a class="headerlink" href="#norms" title="Permalink to this heading">¶</a></h3>
+<p>In the unlikely circumstance that you would like to allow comparison to pass
+with non-zero differences between variables, you can supply keyword arguments
+<code class="docutils literal notranslate"><span class="pre">l1_norm</span></code>, <code class="docutils literal notranslate"><span class="pre">l2_norm</span></code> and/or <code class="docutils literal notranslate"><span class="pre">linf_norm</span></code> to give the desired maximum
+values for these norms, above which the comparison will fail, raising a
+<code class="docutils literal notranslate"><span class="pre">ValueError</span></code>.  These norms only affect the comparison between <code class="docutils literal notranslate"><span class="pre">filename1</span></code>
+and <code class="docutils literal notranslate"><span class="pre">filename2</span></code>, not with the baseline (which always uses 0.0 for these
+norms).  If you do want certain norms checked, you can pass their value as
+<code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<p>If you want different nonzero norm values for different variables,
+the easiest solution is to call <a class="reference internal" href="generated/compass.validate.compare_variables.html#compass.validate.compare_variables" title="compass.validate.compare_variables"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.validate.compare_variables()</span></code></a>
+separately for each variable and  with different norm values specified.
+<a class="reference internal" href="generated/compass.validate.compare_variables.html#compass.validate.compare_variables" title="compass.validate.compare_variables"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.validate.compare_variables()</span></code></a> can safely be called multiple
+times without clobbering a previous result.  When you specify a nonzero norm,
+you may want compass to print the norm values it is using for comparison
+when the results are printed.  To do so, use the optional <code class="docutils literal notranslate"><span class="pre">quiet=False</span></code>
+argument.</p>
+</section>
+<section id="validating-timers">
+<h3>Validating timers<a class="headerlink" href="#validating-timers" title="Permalink to this heading">¶</a></h3>
+<p>Timer validation is qualitatively similar to variable validation except that
+no errors are raised, meaning that the user must manually look at the
+comparison and make a judgment call about whether any changes in timing are
+large enough to indicate performance problems.</p>
+<p>Calls to <a class="reference internal" href="generated/compass.validate.compare_timers.html#compass.validate.compare_timers" title="compass.validate.compare_timers"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.validate.compare_timers()</span></code></a> include a list of MPAS
+timers to compare and at least 1 directory where MPAS has been run and timers
+for the run are available.</p>
+<p>Here is a typical call:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">timers</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;time integration&#39;</span><span class="p">]</span>
+<span class="n">compare_timers</span><span class="p">(</span><span class="n">timers</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">work_dir</span><span class="p">,</span> <span class="n">rundir1</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Typical output will look like:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Comparing timer time integration:
+             Base: 0.92264
+          Compare: 0.82317
+   Percent Change: -10.781019682649793%
+          Speedup: 1.1208377370409515
+</pre></div>
+</div>
+</section>
+</section>
+<section id="provenance">
+<span id="dev-provenance"></span><h2>Provenance<a class="headerlink" href="#provenance" title="Permalink to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">compass.provenance</span></code> module defines a function
+<a class="reference internal" href="generated/compass.provenance.write.html#compass.provenance.write" title="compass.provenance.write"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.provenance.write()</span></code></a> for creating a file in the base work
+directory with provenance, such as the git version, conda packages, compass
+commands, and test cases.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ocean/framework.html" class="btn btn-neutral float-left" title="Ocean framework" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="machines/index.html" class="btn btn-neutral float-right" title="Machines" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

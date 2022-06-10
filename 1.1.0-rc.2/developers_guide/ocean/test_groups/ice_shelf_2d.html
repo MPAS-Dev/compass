@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ice_shelf_2d &mdash; compass 1.1.0-rc.2 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="internal_wave" href="internal_wave.html" />
+    <link rel="prev" title="gotm" href="gotm.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> compass
+          </a>
+              <div class="version">
+                1.1.0-rc.2
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../landice/index.html">Landice core</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Ocean core</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Test groups</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="baroclinic_channel.html">baroclinic_channel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="drying_slope.html">drying_slope</a></li>
+<li class="toctree-l3"><a class="reference internal" href="global_convergence.html">global_convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="global_ocean.html">global_ocean</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gotm.html">gotm</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ice_shelf_2d</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#framework">framework</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#default">default</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#restart-test">restart_test</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="internal_wave.html">internal_wave</a></li>
+<li class="toctree-l3"><a class="reference internal" href="isomip_plus.html">isomip_plus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="planar_convergence.html">planar_convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soma.html">soma</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sphere_transport.html">sphere_transport</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ziso.html">ziso</a></li>
+<li class="toctree-l3"><a class="reference internal" href="spherical_harmonic_transform.html">spherical_harmonic_transform</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../framework.html">Ocean framework</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Ocean core</a> &raquo;</li>
+          <li><a href="index.html">Test groups</a> &raquo;</li>
+      <li>ice_shelf_2d</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/developers_guide/ocean/test_groups/ice_shelf_2d.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="ice-shelf-2d">
+<span id="dev-ocean-ice-shelf-2d"></span><h1>ice_shelf_2d<a class="headerlink" href="#ice-shelf-2d" title="Permalink to this heading">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">ice_shelf_2d</span></code> test group
+(<a class="reference internal" href="../generated/compass.ocean.tests.ice_shelf_2d.IceShelf2d.html#compass.ocean.tests.ice_shelf_2d.IceShelf2d" title="compass.ocean.tests.ice_shelf_2d.IceShelf2d"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.ice_shelf_2d.IceShelf2d</span></code></a>)
+implements a very simplified ice-shelf cavity that is invariant in the x
+direction (see <a class="reference internal" href="../../../users_guide/ocean/test_groups/ice_shelf_2d.html#ocean-ice-shelf-2d"><span class="std std-ref">ice_shelf_2d</span></a>). Here, we describe the shared
+framework for this test group and the 2 test cases.</p>
+<section id="framework">
+<h2>framework<a class="headerlink" href="#framework" title="Permalink to this heading">¶</a></h2>
+<p>The shared config options for the <code class="docutils literal notranslate"><span class="pre">ice_shelf_2d</span></code> test group
+are described in <a class="reference internal" href="../../../users_guide/ocean/test_groups/ice_shelf_2d.html#ocean-ice-shelf-2d"><span class="std std-ref">ice_shelf_2d</span></a> in the User’s Guide.</p>
+<p>Additionally, the test group has a shared <code class="docutils literal notranslate"><span class="pre">namelist.forward</span></code> file with
+a few common namelist options related to run duration, time step, equation of
+state, land-ice fluxes and horizontal viscosity, as well as a shared
+<code class="docutils literal notranslate"><span class="pre">streams.forward</span></code> file that defines <code class="docutils literal notranslate"><span class="pre">mesh</span></code>, <code class="docutils literal notranslate"><span class="pre">input</span></code>, <code class="docutils literal notranslate"><span class="pre">restart</span></code>,
+<code class="docutils literal notranslate"><span class="pre">output</span></code> and <code class="docutils literal notranslate"><span class="pre">globalStatsOutput</span></code> streams.</p>
+<section id="initial-state">
+<h3>initial_state<a class="headerlink" href="#initial-state" title="Permalink to this heading">¶</a></h3>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.ice_shelf_2d.initial_state.InitialState.html#compass.ocean.tests.ice_shelf_2d.initial_state.InitialState" title="compass.ocean.tests.ice_shelf_2d.initial_state.InitialState"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.ice_shelf_2d.initial_state.InitialState</span></code></a>
+defines a step for setting up the initial state for each test case.</p>
+<p>First, a mesh appropriate for the resolution is generated using
+<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.planar_hex.make_planar_hex_mesh.html#mpas_tools.planar_hex.make_planar_hex_mesh" title="(in mpas_tools vstable)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_tools.planar_hex.make_planar_hex_mesh()</span></code></a>.  Then, the mesh is
+culled to remove periodicity in the y direction.  A vertical grid is generated,
+with 20 layers of 100-m thickness each by default.  Then, the 1D grid is either
+“squashed” down so the sea-surface height corresponds to the location of the
+ice-ocean interface (ice draft) using a z-star <a class="reference internal" href="../framework.html#dev-ocean-framework-vertical"><span class="std std-ref">Vertical coordinate</span></a>
+or top layers are removed where there is an ice shelf using a z-level
+coordinate. Finally, the initial salinity profile is computed along with
+uniform temperature and zero initial velocity.</p>
+</section>
+<section id="ssh-adjustment">
+<h3>ssh_adjustment<a class="headerlink" href="#ssh-adjustment" title="Permalink to this heading">¶</a></h3>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.ice_shelf_2d.ssh_adjustment.SshAdjustment.html#compass.ocean.tests.ice_shelf_2d.ssh_adjustment.SshAdjustment" title="compass.ocean.tests.ice_shelf_2d.ssh_adjustment.SshAdjustment"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.ice_shelf_2d.ssh_adjustment.SshAdjustment</span></code></a>
+performs sea-surface height adjustment described
+<a class="reference internal" href="../framework.html#dev-ocean-framework-iceshelf"><span class="std std-ref">Ice-shelf cavities</span></a>.  Starting from the initial condition
+from <code class="docutils literal notranslate"><span class="pre">initial_state</span></code>, a number of iterations of forward simulation followed
+by adjustment of the land-ice pressure field are performed.  The number of
+iterations depend on the test case.</p>
+</section>
+<section id="forward">
+<h3>forward<a class="headerlink" href="#forward" title="Permalink to this heading">¶</a></h3>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.ice_shelf_2d.forward.Forward.html#compass.ocean.tests.ice_shelf_2d.forward.Forward" title="compass.ocean.tests.ice_shelf_2d.forward.Forward"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.ice_shelf_2d.forward.Forward</span></code></a>
+defines a step for running MPAS-Ocean from the initial condition produced in
+the <code class="docutils literal notranslate"><span class="pre">initial_state</span></code> step. A link to the MPAS-Ocean executable is created
+during <code class="docutils literal notranslate"><span class="pre">setup()</span></code> and the MPAS-Ocean is run (including updating PIO namelist
+options and generating a graph partition) in <code class="docutils literal notranslate"><span class="pre">run()</span></code>.</p>
+<p>A few namelist options are set and streams are added when frazil is included:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">with_frazil</span><span class="p">:</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_use_frazil_ice_formation&#39;</span><span class="p">:</span> <span class="s1">&#39;.true.&#39;</span><span class="p">,</span>
+               <span class="s1">&#39;config_frazil_maximum_depth&#39;</span><span class="p">:</span> <span class="s1">&#39;2000.0&#39;</span><span class="p">}</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.streams&#39;</span><span class="p">,</span> <span class="s1">&#39;streams.frazil&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="viz">
+<h3>viz<a class="headerlink" href="#viz" title="Permalink to this heading">¶</a></h3>
+<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.ice_shelf_2d.viz.Viz.html#compass.ocean.tests.ice_shelf_2d.viz.Viz" title="compass.ocean.tests.ice_shelf_2d.viz.Viz"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.ice_shelf_2d.viz.Viz</span></code></a> does a
+quick-and-dirty visualization of the vertical coordinate (z-star or z-level).</p>
+</section>
+</section>
+<section id="default">
+<span id="dev-ocean-ice-shelf-2d-default"></span><h2>default<a class="headerlink" href="#default" title="Permalink to this heading">¶</a></h2>
+<p>The <a class="reference internal" href="../generated/compass.ocean.tests.ice_shelf_2d.default.Default.html#compass.ocean.tests.ice_shelf_2d.default.Default" title="compass.ocean.tests.ice_shelf_2d.default.Default"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.ice_shelf_2d.default.Default</span></code></a> test case
+includes the following default config options:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options relate to adjusting the sea-surface height or land-ice pressure</span><span class="w"></span>
+<span class="c1"># below ice shelves to they are dynamically consistent with one another</span><span class="w"></span>
+<span class="k">[ssh_adjustment]</span><span class="w"></span>
+
+<span class="c1"># the number of iterations of ssh adjustment to perform</span><span class="w"></span>
+<span class="na">iterations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">15</span><span class="w"></span>
+</pre></div>
+</div>
+<p>The test creates and mesh and initial condition, performs 15 iterations of
+SSH adjustment to make sure the SSH is as close as possible to being in
+dynamic balance with the land-ice pressure.  Then, it performs a 10-minute
+(2-time-step) forward simulation. If a baseline is provided when calling
+<a class="reference internal" href="../../command_line.html#dev-compass-setup"><span class="std std-ref">compass setup</span></a>, a large number of variables (both prognostic and
+related to land-ice fluxes) are checked to make sure they match the baseline.</p>
+</section>
+<section id="restart-test">
+<span id="dev-ocean-ice-shelf-2d-restart-test"></span><h2>restart_test<a class="headerlink" href="#restart-test" title="Permalink to this heading">¶</a></h2>
+<p>The <a class="reference internal" href="../generated/compass.ocean.tests.ice_shelf_2d.restart_test.RestartTest.html#compass.ocean.tests.ice_shelf_2d.restart_test.RestartTest" title="compass.ocean.tests.ice_shelf_2d.restart_test.RestartTest"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.ice_shelf_2d.restart_test.RestartTest</span></code></a>
+includes the following default config options:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options relate to adjusting the sea-surface height or land-ice pressure</span><span class="w"></span>
+<span class="c1"># below ice shelves to they are dynamically consistent with one another</span><span class="w"></span>
+<span class="k">[ssh_adjustment]</span><span class="w"></span>
+
+<span class="c1"># the number of iterations of ssh adjustment to perform</span><span class="w"></span>
+<span class="na">iterations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2</span><span class="w"></span>
+</pre></div>
+</div>
+<p>The test creates and mesh and initial condition, performs 2 iterations of
+SSH adjustment to make sure the SSH is not too far from dynamic balance with
+the land-ice pressure.  (Fewer iterations are performed in this test case
+to cut down on total runtime.)</p>
+<p>Then, this test performs a 10-minute run once on 4 cores, saving restart files
+every time step (every 5 minutes), then it performs a restart run starting at
+minute 5 for 5 more minutes.  It ensures that a large number of variables
+(prognostic, related to land-ice fluxes, and related to frazil ice formation)
+are identical at the end of the two runs (as well as with a baseline if one is
+provided when calling <a class="reference internal" href="../../command_line.html#dev-compass-setup"><span class="std std-ref">compass setup</span></a>).</p>
+<p>Restart files are saved at the test-case level in the <code class="docutils literal notranslate"><span class="pre">restarts</span></code> directory,
+rather than within each step, since they will be used across both the <code class="docutils literal notranslate"><span class="pre">full</span></code>
+and <code class="docutils literal notranslate"><span class="pre">restart</span></code> steps.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">namelist.full</span></code> and <code class="docutils literal notranslate"><span class="pre">streams.full</span></code> files are used to set up the run
+duration and restart frequency of the full run, while <code class="docutils literal notranslate"><span class="pre">namelist.restart</span></code> and
+<code class="docutils literal notranslate"><span class="pre">streams.restart</span></code> make sure that the restart step begins with a restart at
+minute 5 and runs for 5 more minutes.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="gotm.html" class="btn btn-neutral float-left" title="gotm" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="internal_wave.html" class="btn btn-neutral float-right" title="internal_wave" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

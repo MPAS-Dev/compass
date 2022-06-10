@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>global_ocean &mdash; compass 1.1.0-rc.2 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="gotm" href="gotm.html" />
+    <link rel="prev" title="global_convergence" href="global_convergence.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> compass
+          </a>
+              <div class="version">
+                1.1.0-rc.2
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../landice/index.html">Landice core</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Ocean core</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Test groups</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="baroclinic_channel.html">baroclinic_channel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="drying_slope.html">drying_slope</a></li>
+<li class="toctree-l3"><a class="reference internal" href="global_convergence.html">global_convergence</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">global_ocean</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#shared-config-options">Shared config options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#metadata">Metadata</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#meshes">Meshes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ice-shelf-cavities">Ice-shelf cavities</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#biogeochemsitry">Biogeochemsitry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#forward-step">Forward step</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#test-cases">Test cases</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="gotm.html">gotm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ice_shelf_2d.html">ice_shelf_2d</a></li>
+<li class="toctree-l3"><a class="reference internal" href="internal_wave.html">internal_wave</a></li>
+<li class="toctree-l3"><a class="reference internal" href="isomip_plus.html">isomip_plus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="planar_convergence.html">planar_convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soma.html">soma</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sphere_transport.html">sphere_transport</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ziso.html">ziso</a></li>
+<li class="toctree-l3"><a class="reference internal" href="spherical_harmonic_transform.html">spherical_harmonic_transform</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../framework/index.html">Framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../suites.html">Test suites</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Ocean core</a> &raquo;</li>
+          <li><a href="index.html">Test groups</a> &raquo;</li>
+      <li>global_ocean</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/users_guide/ocean/test_groups/global_ocean.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="global-ocean">
+<span id="ocean-global-ocean"></span><h1>global_ocean<a class="headerlink" href="#global-ocean" title="Permalink to this heading">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">ocean/global_ocean</span></code> test group defines meshes,
+initial conditions, testing, and spin-up for global, realistic ocean domains.
+Currently, two mesh resolutions—<a class="reference internal" href="#global-ocean-mesh-qu240"><span class="std std-ref">QU240</span></a> and
+<a class="reference internal" href="#global-ocean-mesh-ec30to60"><span class="std std-ref">EC30to60</span></a>, along with their variants with
+<a class="reference internal" href="#global-ocean-ice-shelf-cavities"><span class="std std-ref">Ice-shelf cavities</span></a>—have been ported from COMPASS legacy,
+with many more to follow in the coming months.</p>
+<a class="reference internal image-reference" href="../../../_images/qu240.png"><img alt="../../../_images/qu240.png" class="align-center" src="../../../_images/qu240.png" style="width: 500px;" /></a>
+<p>compass will be the tool used to create ocean meshes and initial conditions for
+future versions of <a class="reference external" href="https://e3sm.org/">E3SM</a>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> test group a test case for creating each mesh, test
+cases for creating each of the 4 supported initial-conditions variants using
+that mesh, a number of test cases aimed at regression testing, and a spin-up
+test case for each mesh that produces an initial condition appropriate for
+incorporation into E3SM.  (compass does <em>not</em> provide the tools for
+creating many of the files needed for full E3SM coupling, a process that
+requires expert help from the E3SM development team.)</p>
+<section id="shared-config-options">
+<h2>Shared config options<a class="headerlink" href="#shared-config-options" title="Permalink to this heading">¶</a></h2>
+<p>All <code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> test cases start the following shared config options.
+Note that meshes and test cases may modify these options, as noted below.</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># options for global ocean testcases</span><span class="w"></span>
+<span class="k">[global_ocean]</span><span class="w"></span>
+
+<span class="c1">## each mesh should replace these with appropriate values in its config file</span><span class="w"></span>
+
+<span class="c1">## config options related to the mesh step</span><span class="w"></span>
+<span class="c1"># number of cores to use</span><span class="w"></span>
+<span class="na">mesh_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
+<span class="c1"># minimum of cores, below which the step fails</span><span class="w"></span>
+<span class="na">mesh_min_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
+<span class="c1"># maximum memory usage allowed (in MB)</span><span class="w"></span>
+<span class="na">mesh_max_memory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
+<span class="c1"># maximum disk usage allowed (in MB)</span><span class="w"></span>
+<span class="na">mesh_max_disk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
+
+<span class="c1">## config options related to the initial_state step</span><span class="w"></span>
+<span class="c1"># number of cores to use</span><span class="w"></span>
+<span class="na">init_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span><span class="w"></span>
+<span class="c1"># minimum of cores, below which the step fails</span><span class="w"></span>
+<span class="na">init_min_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
+<span class="c1"># maximum memory usage allowed (in MB)</span><span class="w"></span>
+<span class="na">init_max_memory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
+<span class="c1"># maximum disk usage allowed (in MB)</span><span class="w"></span>
+<span class="na">init_max_disk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
+<span class="c1"># number of threads</span><span class="w"></span>
+<span class="na">init_threads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
+
+<span class="c1">## config options related to the forward steps</span><span class="w"></span>
+<span class="c1"># number of cores to use</span><span class="w"></span>
+<span class="na">forward_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span><span class="w"></span>
+<span class="c1"># minimum of cores, below which the step fails</span><span class="w"></span>
+<span class="na">forward_min_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
+<span class="c1"># number of threads</span><span class="w"></span>
+<span class="na">forward_threads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
+<span class="c1"># maximum memory usage allowed (in MB)</span><span class="w"></span>
+<span class="na">forward_max_memory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
+<span class="c1"># maximum disk usage allowed (in MB)</span><span class="w"></span>
+<span class="na">forward_max_disk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
+
+<span class="c1">## metadata related to the mesh</span><span class="w"></span>
+<span class="c1"># whether to add metadata to output files</span><span class="w"></span>
+<span class="na">add_metadata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span><span class="w"></span>
+<span class="c1"># the prefix (e.g. QU, EC, WC, SO)</span><span class="w"></span>
+<span class="na">prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">PREFIX</span><span class="w"></span>
+<span class="c1"># a description of the mesh</span><span class="w"></span>
+<span class="na">mesh_description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;&lt;&lt;Missing&gt;&gt;&gt;</span><span class="w"></span>
+<span class="c1"># a description of the bathymetry</span><span class="w"></span>
+<span class="na">bathy_description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;&lt;&lt;Missing&gt;&gt;&gt;</span><span class="w"></span>
+<span class="c1"># a description of the mesh with ice-shelf cavities</span><span class="w"></span>
+<span class="na">init_description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;&lt;&lt;Missing&gt;&gt;&gt;</span><span class="w"></span>
+<span class="c1"># E3SM version that the mesh is intended for</span><span class="w"></span>
+<span class="na">e3sm_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2</span><span class="w"></span>
+<span class="c1"># The revision number of the mesh, which should be incremented each time the</span><span class="w"></span>
+<span class="c1"># mesh is revised</span><span class="w"></span>
+<span class="na">mesh_revision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;&lt;Missing&gt;&gt;</span><span class="w"></span>
+<span class="c1"># the minimum (finest) resolution in the mesh</span><span class="w"></span>
+<span class="na">min_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;&lt;&lt;Missing&gt;&gt;&gt;</span><span class="w"></span>
+<span class="c1"># the maximum (coarsest) resolution in the mesh, can be the same as min_res</span><span class="w"></span>
+<span class="na">max_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;&lt;&lt;Missing&gt;&gt;&gt;</span><span class="w"></span>
+<span class="c1"># the maximum depth of the ocean, always detected automatically</span><span class="w"></span>
+<span class="na">max_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span><span class="w"></span>
+<span class="c1"># the number of vertical levels, always detected automatically</span><span class="w"></span>
+<span class="na">levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span><span class="w"></span>
+
+<span class="c1"># the date the mesh was created as YYMMDD, typically detected automatically</span><span class="w"></span>
+<span class="na">creation_date</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span><span class="w"></span>
+<span class="c1"># The following options are detected from .gitconfig if not explicitly entered</span><span class="w"></span>
+<span class="na">author</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span><span class="w"></span>
+<span class="na">email</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span><span class="w"></span>
+<span class="c1"># The URL of the pull request documenting the creation of the mesh</span><span class="w"></span>
+<span class="na">pull_request</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;&lt;&lt;Missing&gt;&gt;&gt;</span><span class="w"></span>
+
+
+<span class="c1"># config options related to initial condition and diagnostics support files</span><span class="w"></span>
+<span class="c1"># for E3SM</span><span class="w"></span>
+<span class="k">[files_for_e3sm]</span><span class="w"></span>
+
+<span class="c1"># whether to generate an ocean initial condition in E3SM</span><span class="w"></span>
+<span class="na">enable_ocean_initial_condition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span><span class="w"></span>
+<span class="c1"># whether to generate graph partitions for different numbers of ocean cores in</span><span class="w"></span>
+<span class="c1"># E3SM</span><span class="w"></span>
+<span class="na">enable_ocean_graph_partition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span><span class="w"></span>
+<span class="c1"># whether to generate a sea-ice initial condition in E3SM</span><span class="w"></span>
+<span class="na">enable_seaice_initial_condition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span><span class="w"></span>
+<span class="c1"># whether to generate SCRIP files for later use in creating E3SM mapping files</span><span class="w"></span>
+<span class="na">enable_scrip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span><span class="w"></span>
+<span class="c1"># whether to generate region masks, transects and mapping files for use in both</span><span class="w"></span>
+<span class="c1"># online analysis members and offline with MPAS-Analysis</span><span class="w"></span>
+<span class="na">enable_diagnostics_files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span><span class="w"></span>
+
+<span class="c1">## the following relate to the comparison grids in MPAS-Analysis to generate</span><span class="w"></span>
+<span class="c1">## mapping files for.  The default values are also the defaults in</span><span class="w"></span>
+<span class="c1">## MPAS-Analysis.  Coarser or finer resolution may be desirable for some MPAS</span><span class="w"></span>
+<span class="c1">## meshes.</span><span class="w"></span>
+
+<span class="c1"># The comparison lat/lon grid resolution in degrees</span><span class="w"></span>
+<span class="na">comparisonLatResolution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.5</span><span class="w"></span>
+<span class="na">comparisonLonResolution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.5</span><span class="w"></span>
+
+<span class="c1"># The comparison Antarctic polar stereographic grid size and resolution in km</span><span class="w"></span>
+<span class="na">comparisonAntarcticStereoWidth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">6000.</span><span class="w"></span>
+<span class="na">comparisonAntarcticStereoResolution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10.</span><span class="w"></span>
+
+<span class="c1"># The comparison Arctic polar stereographic grid size and resolution in km</span><span class="w"></span>
+<span class="na">comparisonArcticStereoWidth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">6000.</span><span class="w"></span>
+<span class="na">comparisonArcticStereoResolution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10.</span><span class="w"></span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">mesh_*</span></code>, <code class="docutils literal notranslate"><span class="pre">init_*</span></code> and <code class="docutils literal notranslate"><span class="pre">forward:*</span></code> config options are used to specify
+the resources used in in the <code class="docutils literal notranslate"><span class="pre">mesh</span></code> step of the <a class="reference internal" href="#global-ocean-mesh"><span class="std std-ref">mesh test case</span></a>,
+the <code class="docutils literal notranslate"><span class="pre">initial_state</span></code> step of the <a class="reference internal" href="#global-ocean-init"><span class="std std-ref">init test case</span></a> and the
+<a class="reference internal" href="#global-ocean-forward"><span class="std std-ref">Forward step</span></a>, respectively.  These values will differ between
+test cases and meshes.</p>
+<p>The next group of config options (<code class="docutils literal notranslate"><span class="pre">add_metadata</span></code> to <code class="docutils literal notranslate"><span class="pre">pull_request</span></code>) specify
+metadata related to the mesh and initial condition.  These will be filled in
+based on the mesh and initial condition of the particular test case.</p>
+<p>The final group are used in the <a class="reference internal" href="#global-ocean-files-for-e3sm"><span class="std std-ref">files_for_e3sm test case</span></a>.</p>
+</section>
+<section id="metadata">
+<span id="global-ocean-metadata"></span><h2>Metadata<a class="headerlink" href="#metadata" title="Permalink to this heading">¶</a></h2>
+<p>Most <code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> test cases produce output files in NetCDF format.  The
+MPAS development team <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Model/pull/507">decided in April 2020</a>
+to add a standardized set of metadata to these files to document the mesh and
+initial condition, and to provide provenance describing the environment used to
+create the mesh.</p>
+<p>compass adds the following fields to most NetCDF files (those related to the
+initial condition are not added to mesh files, because the initial condition
+is not yet known at the time of mesh creation):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>:MPAS_Mesh_Short_Name = &quot;QU240E2r1&quot; ;
+:MPAS_Mesh_Long_Name = &quot;QU240kmL16E3SMv2r1&quot; ;
+:MPAS_Mesh_Prefix = &quot;QU&quot; ;
+:MPAS_Mesh_E3SM_Version = &quot;2&quot; ;
+:MPAS_Mesh_Pull_Request = &quot;https://github.com/MPAS-Dev/compass/pull/28&quot; ;
+:MPAS_Mesh_QU_Revision = &quot;1&quot; ;
+:MPAS_Mesh_QU_Version_Author = &quot;Xylar Asay-Davis&quot; ;
+:MPAS_Mesh_QU_Version_Author_E-mail = &quot;xylar@lanl.gov&quot; ;
+:MPAS_Mesh_QU_Version_Creation_Date = &quot;210116&quot; ;
+:MPAS_Mesh_QU_Minimum_Resolution_km = &quot;240&quot; ;
+:MPAS_Mesh_QU_Maximum_Resolution_km = &quot;240&quot; ;
+:MPAS_Mesh_QU_Maximum_Depth_m = &quot;3000.0&quot; ;
+:MPAS_Mesh_QU_Number_of_Levels = &quot;16&quot; ;
+:MPAS_Mesh_Description = &quot;MPAS quasi-uniform mesh for E3SM version 2 at 240-km global resolution with 16 vertical level&quot; ;
+:MPAS_Mesh_Bathymetry = &quot;Bathymetry is from GEBCO 2019, combined with BedMachine Antarctica around Antarctica.&quot; ;
+:MPAS_Initial_Condition = &quot;Polar science center Hydrographic Climatology (PHC)&quot; ;
+:MPAS_Mesh_COMPASS_Version = &quot;1.0.0&quot; ;
+:MPAS_Mesh_JIGSAW_Version = &quot;0.9.12&quot; ;
+:MPAS_Mesh_JIGSAW-Python_Version = &quot;0.2.1&quot; ;
+:MPAS_Mesh_MPAS-Tools_Version = &quot;0.2.0&quot; ;
+:MPAS_Mesh_NCO_Version = &quot;4.9.7&quot; ;
+:MPAS_Mesh_ESMF_Version = &quot;8.0.1&quot; ;
+:MPAS_Mesh_geometric_features_Version = &quot;0.1.13&quot; ;
+:MPAS_Mesh_Metis_Version = &quot;5.1.0&quot; ;
+:MPAS_Mesh_pyremap_Version = &quot;0.0.8&quot; ;
+</pre></div>
+</div>
+<p>Most of these options can be modified by the user by editing config options.
+The most convenient way to do this is to add them to the user config file
+when you are <a class="reference internal" href="../../quick_start.html#setup-overview"><span class="std std-ref">Setting up test cases</span></a> or <a class="reference internal" href="../../quick_start.html#suite-overview"><span class="std std-ref">Test Suites</span></a>.  In particular,
+you may wish to set:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># options for global ocean testcases</span><span class="w"></span>
+<span class="k">[global_ocean]</span><span class="w"></span>
+
+<span class="c1">## metadata related to the mesh</span><span class="w"></span>
+<span class="c1"># whether to add metadata to output files</span><span class="w"></span>
+<span class="na">add_metadata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span><span class="w"></span>
+<span class="c1"># the date the mesh was created as YYMMDD, typically detected automatically</span><span class="w"></span>
+<span class="na">creation_date</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span><span class="w"></span>
+<span class="c1"># The following options are detected from .gitconfig if not explicitly entered</span><span class="w"></span>
+<span class="na">author</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span><span class="w"></span>
+<span class="na">email</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span><span class="w"></span>
+<span class="c1"># The URL of the pull request documenting the creation of the mesh</span><span class="w"></span>
+<span class="na">pull_request</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;&lt;&lt;Missing&gt;&gt;&gt;</span><span class="w"></span>
+</pre></div>
+</div>
+</section>
+<section id="meshes">
+<span id="global-ocean-meshes"></span><h2>Meshes<a class="headerlink" href="#meshes" title="Permalink to this heading">¶</a></h2>
+<p>The process for creating global ocean meshes is described below in the
+<a class="reference internal" href="#global-ocean-mesh"><span class="std std-ref">mesh test case</span></a>.  compass currently supports 5 meshes.  Two are at
+such coarse horizontal resolution (240 km) that they are mostly useful for
+testing purposes, not scientific simulations.  Two more meshes, which vary
+in resolution between 30 and 60 km, are used as the lowest resolution meshes
+in E3SM’s <a class="reference external" href="https://e3sm.org/research/science-campaigns/">science campaigns</a>.
+The final mesh has resolution focused in the Southern Ocean around Antarctica.</p>
+<section id="qu240">
+<span id="global-ocean-mesh-qu240"></span><h3>QU240<a class="headerlink" href="#qu240" title="Permalink to this heading">¶</a></h3>
+<p>The quasi-uniform 240-km (QU240) mesh, is a global mesh with approximately
+240-km horizontal resolution everywhere (as the name implies).
+<a class="reference internal" href="#global-ocean-ice-shelf-cavities"><span class="std std-ref">Ice-shelf cavities</span></a> around Antarctica are excluded from the
+mesh.  This mesh is used as part of the <a class="reference internal" href="../suites.html#ocean-suite-nightly"><span class="std std-ref">nightly test suite</span></a> to perform
+regression and performance testing in a coarse but realistic model
+configuration.  This mesh is also being used in studies of
+<a class="reference external" href="https://e3sm.org/can-we-switch-computers-an-application-of-e3sm-climate-reproducibility-tests/">climate reproducibility</a>.</p>
+</section>
+<section id="quwisc240">
+<span id="global-ocean-mesh-quwisc240"></span><h3>QUwISC240<a class="headerlink" href="#quwisc240" title="Permalink to this heading">¶</a></h3>
+<p>The quasi-uniform 240-km mesh with ice-shelf cavities (QUwISC240) is nearly
+identical to the <a class="reference internal" href="#global-ocean-mesh-qu240"><span class="std std-ref">QU240</span></a> except that it includes the
+<a class="reference internal" href="#global-ocean-ice-shelf-cavities"><span class="std std-ref">Ice-shelf cavities</span></a> around Antarctica in the ocean domain.</p>
+<p>MPAS-Ocean’s treatment of ice-shelf cavities requires and iterative adjustment
+step to make the <code class="docutils literal notranslate"><span class="pre">landIcePressure</span></code> compatible with the <code class="docutils literal notranslate"><span class="pre">ssh</span></code> (see
+<a class="reference internal" href="../framework/ice_shelf.html#ocean-ssh-adjustment"><span class="std std-ref">Sea surface height adjustment</span></a>).  This process is relatively time consuming,
+requiring a short forward run for each iteration, meaning that QUwISC240 is
+less efficient for regression and performance testing than QU240.  However,
+it is useful for low-resolution testing that exercises compass and MPAS-Ocean
+functionality related to ice-shelf cavities and sub-ice-shelf freshwater
+fluxes.</p>
+</section>
+<section id="ec30to60">
+<span id="global-ocean-mesh-ec30to60"></span><h3>EC30to60<a class="headerlink" href="#ec30to60" title="Permalink to this heading">¶</a></h3>
+<p>The eddy-closure 30- to 60-km (EC30to60) mesh is the coarsest MPAS-Ocean mesh
+used for scientific simulations.  It is coarse enough that it requires the
+<cite>Gent-McWilliams eddy closure &lt;https://doi.org/10.1175/1520-0485(1990)020&lt;0150:IMIOCM&gt;2.0.CO;2&gt;</cite>
+as a parameterization of mixing from mesoscale ocean eddies.</p>
+<a class="reference internal image-reference" href="../../../_images/ec30to60.png"><img alt="../../../_images/ec30to60.png" class="align-center" src="../../../_images/ec30to60.png" style="width: 500px;" /></a>
+<p>The image above shows the resolution (as measured by <span class="math notranslate nohighlight">\(\sqrt{A_c}\)</span>, where
+<span class="math notranslate nohighlight">\(A_c\)</span> is the area of a cell in the mesh).  The resolution is
+approximately zonally invariant and transitions smoothly between three target
+resolutions as a function of latitude: ~30 km at around the equator, ~60 km
+at mid-latitudes and ~35 km near the the poles.</p>
+</section>
+<section id="ecwisc30to60">
+<span id="global-ocean-mesh-ecwisc30to60"></span><h3>ECwISC30to60<a class="headerlink" href="#ecwisc30to60" title="Permalink to this heading">¶</a></h3>
+<p>The eddy-closure 30- to 60-km mesh with ice-shelf cavities (ECwISC30to60) is
+nearly identical to the <a class="reference internal" href="#global-ocean-mesh-ec30to60"><span class="std std-ref">EC30to60</span></a> except that it
+includes the <a class="reference internal" href="#global-ocean-ice-shelf-cavities"><span class="std std-ref">Ice-shelf cavities</span></a> around Antarctica in the
+ocean domain.</p>
+<a class="reference internal image-reference" href="../../../_images/ecwisc30to60.png"><img alt="../../../_images/ecwisc30to60.png" class="align-center" src="../../../_images/ecwisc30to60.png" style="width: 500px;" /></a>
+<p>A variant of this mesh has been used for low resolution simulations as part of
+the <a class="reference external" href="https://e3sm.org/research/cryosphere-ocean/v1-cryosphere-ocean/">E3SM v1 Cryosphere Campaign</a>.</p>
+</section>
+<section id="sowisc12to60">
+<span id="global-ocean-mesh-sowisc12to60"></span><h3>SOwISC12to60<a class="headerlink" href="#sowisc12to60" title="Permalink to this heading">¶</a></h3>
+<p>The Southern Ocean 12- to 60-km mesh with ice-shelf cavities (SOwISC12to60),
+sometimes called the Southern Ocean regionally refined mesh (SORRM) is intended
+to be the main simulation mesh for the
+<a class="reference external" href="https://e3sm.org/research/cryosphere-ocean/v2-cryosphere-research/">E3SM v2 Cryosphere Science Campaign</a>.</p>
+<p>The mesh has 12 km resolution around Antarctica, tapering to 45 km in mid
+Southern latitudes, 30 km at the equator and in the North Atlantic, 60 km
+in the North Pacific, and 35 km in the Arctic.  The mesh includes the
+<a class="reference internal" href="#global-ocean-ice-shelf-cavities"><span class="std std-ref">Ice-shelf cavities</span></a> around Antarctica in the ocean domain.</p>
+<a class="reference internal image-reference" href="../../../_images/sowisc12to60.png"><img alt="../../../_images/sowisc12to60.png" class="align-center" src="../../../_images/sowisc12to60.png" style="width: 500px;" /></a>
+</section>
+<section id="wc14">
+<h3>WC14<a class="headerlink" href="#wc14" title="Permalink to this heading">¶</a></h3>
+<p>The Water Cycle 14- to 60-km mesh (WC14) is intended to be the main regionally
+refined simulation mesh for the
+<a class="reference external" href="https://e3sm.org/research/water-cycle/v2-water-cycle-research//">E3SM v2 Water Cycle Science Campaign</a>.</p>
+<p>The mesh has 14 km resolution around the continental US, Arctic Ocean and parts
+of the North Atlantic, tapering to 60 km in mid latitudes, 30 km at the
+equator, and 35 km around Antarctica.</p>
+<a class="reference internal image-reference" href="../../../_images/wc14.png"><img alt="../../../_images/wc14.png" class="align-center" src="../../../_images/wc14.png" style="width: 500px;" /></a>
+</section>
+</section>
+<section id="ice-shelf-cavities">
+<span id="global-ocean-ice-shelf-cavities"></span><h2>Ice-shelf cavities<a class="headerlink" href="#ice-shelf-cavities" title="Permalink to this heading">¶</a></h2>
+<p>As discussed in <a class="reference internal" href="../framework/ice_shelf.html#ocean-ice-shelf-cavities"><span class="std std-ref">Ice shelf-cavities</span></a>, the inclusion of ice-shelf
+cavities and melt rates below ice shelves around Antarctica is a major objective
+of the
+<a class="reference external" href="https://e3sm.org/research/cryosphere-ocean/v1-cryosphere-ocean/">E3SM Cryosphere Campaign</a>.</p>
+<p>Each of the <code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> <a class="reference internal" href="#global-ocean-meshes"><span class="std std-ref">Meshes</span></a> can support a variant
+with ice-shelf cavities along with one without.  Meshes with cavities include
+the <code class="docutils literal notranslate"><span class="pre">wISC</span></code> suffix for “with ice-shelf cavities” attached to the mesh prefix
+(e.g. <code class="docutils literal notranslate"><span class="pre">QU</span></code> or <code class="docutils literal notranslate"><span class="pre">EC</span></code>).  Currently all meshes include both variants but we
+anticipate that future meshes may include only the variant with or without
+cavities.</p>
+<p>Around Antarctica, the topographic data currently used to construct initial
+conditions in compass comes from
+<a class="reference external" href="https://sites.uci.edu/morlighem/dataproducts/bedmachine-antarctica/">BedMachineAntarctica</a>.
+Because this data set provides the ice draft, rather than the weight of the
+overlying ice shelf, we use the method for <a class="reference internal" href="../framework/ice_shelf.html#ocean-ssh-adjustment"><span class="std std-ref">Sea surface height adjustment</span></a> to
+update the pressure from the ice shelf to be in dynamic balance with the ice
+draft.</p>
+</section>
+<section id="biogeochemsitry">
+<span id="global-ocean-bgc"></span><h2>Biogeochemsitry<a class="headerlink" href="#biogeochemsitry" title="Permalink to this heading">¶</a></h2>
+<p>&lt;&lt;&lt;I need help here!!!&gt;&gt;&gt;</p>
+</section>
+<section id="forward-step">
+<span id="global-ocean-forward"></span><h2>Forward step<a class="headerlink" href="#forward-step" title="Permalink to this heading">¶</a></h2>
+<p>The only step shared across many <code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> test cases is <code class="docutils literal notranslate"><span class="pre">forward</span></code>
+(though I doesn’t always go by that name), which integrates the MPAS-Ocean
+model in time in “forward” mode.</p>
+<p>As a user, your main way of altering forward runs is by changing namelist
+options directly in <code class="docutils literal notranslate"><span class="pre">namelist.ocean</span></code> or modifying streams in
+<code class="docutils literal notranslate"><span class="pre">streams.ocean</span></code>.  However, there are a few parameters related to forward runs
+you can change in the config file for a test case.  Since some test cases like
+<a class="reference internal" href="#global-ocean-restart-test"><span class="std std-ref">restart_test test case</span></a> and :ref`global_ocean_dynamic_adjustment` have
+more than one forward run, it is convenient to change options like
+<code class="docutils literal notranslate"><span class="pre">forward_cores</span></code> once in the config file, knowing that this will change the
+target number of cores of all forward model runs in the test case.  The same
+applies to the other <code class="docutils literal notranslate"><span class="pre">forward_*</span></code> config options that change the minimum cores
+allowed, the number of threads, and (in the future) the maximum memory and disk
+usage.</p>
+</section>
+<section id="test-cases">
+<span id="global-ocean-test-cases"></span><h2>Test cases<a class="headerlink" href="#test-cases" title="Permalink to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> includes 9 types of test cases (each with different versions
+for different meshes, initial conditions, time integrators, etc.).</p>
+<section id="mesh-test-case">
+<span id="global-ocean-mesh"></span><h3>mesh test case<a class="headerlink" href="#mesh-test-case" title="Permalink to this heading">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/&lt;mesh&gt;/mesh</span></code> test case (where <code class="docutils literal notranslate"><span class="pre">&lt;mesh&gt;</span></code> is the name
+of a mesh, e.g. <a class="reference internal" href="#global-ocean-mesh-qu240"><span class="std std-ref">QU240</span></a>) creates a “base” horizontal
+mesh covering the globe with a distribution of resolution according to the
+specifications of the mesh.  The base mesh is created using the
+<a class="reference external" href="https://github.com/dengwirda/jigsaw">JIGSAW</a> and
+<a class="reference external" href="https://github.com/dengwirda/jigsaw-python">JIGSAW-Python</a> tools.  Then, a
+mask for “land” (i.e. non-ocean) cells is created and the mesh is culled so
+that only ocean cells are retained. The data set determining which cells are
+land vs. ocean depends on whether ice-shelf cavities are included in the mesh
+or not (see <a class="reference internal" href="#global-ocean-ice-shelf-cavities"><span class="std std-ref">Ice-shelf cavities</span></a>).  A coastline from
+<a class="reference external" href="https://www.naturalearthdata.com/downloads/110m-physical-vectors/110m-coastline/">Natural Earth</a>
+is combined with either the edge of Antarctic Ice Sheet (AIS) or the edge of the
+grounded portion of the AIS from
+<a class="reference external" href="https://sites.uci.edu/morlighem/dataproducts/bedmachine-antarctica/">BedMachineAntarctica</a>.
+These coastlines come from the
+<a class="reference external" href="https://github.com/MPAS-Dev/geometric_features">geometric_features</a> package.</p>
+<p>For most meshes, tools and data sets from the
+<code class="docutils literal notranslate"><span class="pre">geometric_features</span></code> and from the
+<a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Tools">mpas_tools</a> package are used to
+ensure that some transects such the thin opening at Gibraltar connecting the
+Mediterranean Sea to the Atlantic Ocean (so-called “critical passages”) are
+represented by contiguous ocean cells while others such as the Antarctic
+Peninsula (so-called “critical land blockages”) are blocked by land with no
+ocean connectivity.</p>
+<p>As part of culling the mesh, adding critical passages, and removing critical
+land blockages, there is also a step in which a “flood fill” is performed to
+ensure that all parts of the global ocean are connected to one another by at
+least one neighboring cell.</p>
+</section>
+<section id="init-test-case">
+<span id="global-ocean-init"></span><h3>init test case<a class="headerlink" href="#init-test-case" title="Permalink to this heading">¶</a></h3>
+<p>Once the horizontal mesh has been created, the next step is to create a
+vertical mesh and and initial condition.</p>
+<p>The default vertical coordinate depends on the mesh being used, as described
+in <a class="reference internal" href="#global-ocean-meshes"><span class="std std-ref">Meshes</span></a>.  Possible grid types are described in
+<a class="reference internal" href="../framework/vertical.html#ocean-vertical"><span class="std std-ref">Vertical coordinate</span></a> and include <code class="docutils literal notranslate"><span class="pre">uniform</span></code>, <code class="docutils literal notranslate"><span class="pre">tanh_dz</span></code>, <code class="docutils literal notranslate"><span class="pre">60layerPHC</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">100layerE3SMv1</span></code>.</p>
+<p>compass supports two different types of initial conditions.  One is derived
+from the Polar science center Hydrographic Climatology
+(<a class="reference external" href="http://psc.apl.washington.edu/nonwp_projects/PHC/Climatology.html">PHC</a>).
+The other is the UK MetOffice’s EN4 estimated climatology for the year 1900
+(<a class="reference external" href="https://www.metoffice.gov.uk/hadobs/en4/download-en4-2-0.html">EN4_1900</a>).</p>
+<p>Either initial condition can also be combined with ecosystem tracers used in
+simulations with active <a class="reference internal" href="#global-ocean-bgc"><span class="std std-ref">Biogeochemsitry</span></a> if ocean biogeochemsitry is
+enabled.  This dataset is from &lt;&lt;&lt;need some help here!!!&gt;&gt;&gt;.</p>
+<p>Thus, there are 4 combinations of initial conditions, <code class="docutils literal notranslate"><span class="pre">PHC</span></code>, <code class="docutils literal notranslate"><span class="pre">PHC_BGC</span></code>,
+<code class="docutils literal notranslate"><span class="pre">EN4_1900</span></code> and <code class="docutils literal notranslate"><span class="pre">EN4_1900_BGC</span></code>.  All subsequent tests
+(<a class="reference internal" href="#global-ocean-performance-test"><span class="std std-ref">performance_test test case</span></a>, <a class="reference internal" href="#global-ocean-restart-test"><span class="std std-ref">restart_test test case</span></a>, etc.)
+could potentially start from any of these initial conditions, meaning that
+a performance test starting from PHC should be thought of as a different test
+from one starting from EN4_1900.  Therefore, it is convenient to house both
+the <code class="docutils literal notranslate"><span class="pre">init</span></code> test case and all subsequent test cases that depend on it within
+a subdirectory with the name of the initial condition.  The relative paths
+associate with each initial condition for a given <code class="docutils literal notranslate"><span class="pre">&lt;mesh&gt;</span></code> are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/&lt;mesh&gt;/PHC/init</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/&lt;mesh&gt;/PHC_BGC/init</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/&lt;mesh&gt;/EN4_1900/init</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/&lt;mesh&gt;/EN4_1900_BGC/init</span></code></p></li>
+</ul>
+</section>
+<section id="performance-test-test-case">
+<span id="global-ocean-performance-test"></span><h3>performance_test test case<a class="headerlink" href="#performance-test-test-case" title="Permalink to this heading">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">performance_test</span></code> test case runs a short forward integration, then
+performs validation of prognostic variables (layer thickness, velocity,
+temperature and salinity) and, if applicable, variables related to fluxes
+below ice shelves and those associated with <a class="reference internal" href="#global-ocean-bgc"><span class="std std-ref">Biogeochemsitry</span></a>. The
+duration of the forward run depends on the mesh and the time integrator.</p>
+<p>Depending on the mesh, versions of the test may exist with both or either of
+the split-explict (base on <a class="reference external" href="https://doi.org/10.1016/j.jcp.2004.12.011">Higdon 2005</a>)
+or the 4th-order Runge-Kutta
+(<a class="reference external" href="https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods">RK4</a>) time
+integrator. Each of these possible variants is given its own subdirectory.
+Thus, for a given mesh <code class="docutils literal notranslate"><span class="pre">&lt;mesh&gt;</span></code> and initial condition <code class="docutils literal notranslate"><span class="pre">&lt;ic&gt;</span></code>, one or
+more of these versions of the <code class="docutils literal notranslate"><span class="pre">performance_test</span></code> will be available:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/&lt;mesh&gt;/&lt;ic&gt;/performance_test/split_explicit</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/&lt;mesh&gt;/&lt;ic&gt;/performance_test/RK4</span></code></p></li>
+</ul>
+<p>Versions of this test cases is currently available for all meshes, but not
+necessarily for all combinations of initial conditions and time integrators.</p>
+</section>
+<section id="restart-test-test-case">
+<span id="global-ocean-restart-test"></span><h3>restart_test test case<a class="headerlink" href="#restart-test-test-case" title="Permalink to this heading">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">restart_test</span></code> test case runs a short forward integration, saving an
+intermediate restart file.  Then, in a second forward step, the test continues
+the run from the restart file.  Output from the two steps (<code class="docutils literal notranslate"><span class="pre">full_run</span></code> and
+<code class="docutils literal notranslate"><span class="pre">restart_run</span></code>) are compared to make sure prognostic variables (layer
+thickness, velocity, temperature and salinity) are unchanged.</p>
+<p>As with the <a class="reference internal" href="#global-ocean-performance-test"><span class="std std-ref">performance_test test case</span></a>, <code class="docutils literal notranslate"><span class="pre">restart_test</span></code> can
+be run with either or both of the split-explicit or RK4 time integrator. Thus,
+for a the <a class="reference internal" href="#global-ocean-mesh-qu240"><span class="std std-ref">QU240</span></a> or <a class="reference internal" href="#global-ocean-mesh-quwisc240"><span class="std std-ref">QUwISC240</span></a>
+mesh (currently the only supported meshes) and initial condition <code class="docutils literal notranslate"><span class="pre">&lt;ic&gt;</span></code>, one
+or more of these versions of the <code class="docutils literal notranslate"><span class="pre">restart_test</span></code> will be available:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/QU240/&lt;ic&gt;/restart_test/split_explicit</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/QU240/&lt;ic&gt;/restart_test/RK4</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/QUwISC240/&lt;ic&gt;/restart_test/split_explicit</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/QUwISC240/&lt;ic&gt;/restart_test/RK4</span></code></p></li>
+</ul>
+</section>
+<section id="decomp-test-test-case">
+<span id="global-ocean-decomp-test"></span><h3>decomp_test test case<a class="headerlink" href="#decomp-test-test-case" title="Permalink to this heading">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">decomp_test</span></code> test case runs a short forward integration with 4 cores
+(<code class="docutils literal notranslate"><span class="pre">4proc</span></code>) and then performs the same run again in another step with 8 cores
+(<code class="docutils literal notranslate"><span class="pre">8proc</span></code>).  Prognostic variables (layer thickness, velocity, temperature and
+salinity) are compared to make sure they are unchanged.</p>
+<p>As with the <a class="reference internal" href="#global-ocean-performance-test"><span class="std std-ref">performance_test test case</span></a>, <code class="docutils literal notranslate"><span class="pre">decomp_test</span></code> can
+be run with either or both of the split-explicit or RK4 time integrator. Thus,
+for a the <a class="reference internal" href="#global-ocean-mesh-qu240"><span class="std std-ref">QU240</span></a> or <a class="reference internal" href="#global-ocean-mesh-quwisc240"><span class="std std-ref">QUwISC240</span></a>
+mesh (currently the only supported meshes) and initial condition <code class="docutils literal notranslate"><span class="pre">&lt;ic&gt;</span></code>, one
+or more of these versions of the <code class="docutils literal notranslate"><span class="pre">decomp_test</span></code> will be available:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/QU240/&lt;ic&gt;/decomp_test/split_explicit</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/QU240/&lt;ic&gt;/decomp_test/RK4</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/QUwISC240/&lt;ic&gt;/decomp_test/split_explicit</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/QUwISC240/&lt;ic&gt;/decomp_test/RK4</span></code></p></li>
+</ul>
+</section>
+<section id="threads-test-test-case">
+<span id="global-ocean-threads-test"></span><h3>threads_test test case<a class="headerlink" href="#threads-test-test-case" title="Permalink to this heading">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">threads_test</span></code> test case runs a short forward integration with 1 thread
+and 4 cores (<code class="docutils literal notranslate"><span class="pre">1thread</span></code>) and then performs the same run again in another step
+with 2 threads and 4 cores (<code class="docutils literal notranslate"><span class="pre">2thread</span></code>).  Prognostic variables (layer
+thickness, velocity, temperature and salinity) are compared to make sure they
+are unchanged.</p>
+<p>As with the <a class="reference internal" href="#global-ocean-performance-test"><span class="std std-ref">performance_test test case</span></a>, <code class="docutils literal notranslate"><span class="pre">threads_test</span></code> can
+be run with either or both of the split-explicit or RK4 time integrator. Thus,
+for a the <a class="reference internal" href="#global-ocean-mesh-qu240"><span class="std std-ref">QU240</span></a> or <a class="reference internal" href="#global-ocean-mesh-quwisc240"><span class="std std-ref">QUwISC240</span></a>
+mesh (currently the only supported meshes) and initial condition <code class="docutils literal notranslate"><span class="pre">&lt;ic&gt;</span></code>, one
+or more of these versions of the <code class="docutils literal notranslate"><span class="pre">threads_test</span></code> will be available:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/QU240/&lt;ic&gt;/threads_test/split_explicit</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/QU240/&lt;ic&gt;/threads_test/RK4</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/QUwISC240/&lt;ic&gt;/threads_test/split_explicit</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/QUwISC240/&lt;ic&gt;/threads_test/RK4</span></code></p></li>
+</ul>
+</section>
+<section id="analysis-test-test-case">
+<span id="global-ocean-analysis-test"></span><h3>analysis_test test case<a class="headerlink" href="#analysis-test-test-case" title="Permalink to this heading">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">analysis_test</span></code> is used to test the proper function and validate the
+output from a large number of MPAS-Ocean’s “analysis members”.  Analysis
+members allow MPAS-Ocean to compute analysis during the model run, meaning
+much of the same infrastructure and functionality used in the forward model
+can also be used for analysis.  Analysis members are also useful for analysis
+that is too large or time consuming to perform after the simulation has
+completed, or where storing the required data to disk would be infeasible.</p>
+<p>The analysis members tested in this test case are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">globalStats</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">surfaceAreaWeightedAverages</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">waterMassCensus</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">layerVolumeWeightedAverage</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">zonalMean</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">okuboWeiss</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">meridionalHeatTransport</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">highFrequencyOutput</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">eliassenPalm</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mixedLayerDepths</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">debugDiagnostics</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">eddyProductVariables</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">oceanHeatContent</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mixedLayerHeatBudget</span></code></p></li>
+</ul>
+<p>For more information on these analysis members, see the
+<a class="reference external" href="https://doi.org/10.5281/zenodo.1246893">MPAS-Ocean user’s guide</a>.</p>
+<p>As with the <a class="reference internal" href="#global-ocean-performance-test"><span class="std std-ref">performance_test test case</span></a>, <code class="docutils literal notranslate"><span class="pre">analysis_test</span></code> can
+be run with either or both of the split-explicit or RK4 time integrator. Thus,
+for a the <a class="reference internal" href="#global-ocean-mesh-qu240"><span class="std std-ref">QU240</span></a> or <a class="reference internal" href="#global-ocean-mesh-quwisc240"><span class="std std-ref">QUwISC240</span></a>
+mesh (currently the only supported meshes) and initial condition <code class="docutils literal notranslate"><span class="pre">&lt;ic&gt;</span></code>, one
+or more of these versions of the <code class="docutils literal notranslate"><span class="pre">analysis_test</span></code> will be available:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/QU240/&lt;ic&gt;/analysis_test/split_explicit</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/QU240/&lt;ic&gt;/analysis_test/RK4</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/QUwISC240/&lt;ic&gt;/analysis_test/split_explicit</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/QUwISC240/&lt;ic&gt;/analysis_test/RK4</span></code></p></li>
+</ul>
+</section>
+<section id="daily-output-test-test-case">
+<span id="global-ocean-daily-output-test"></span><h3>daily_output_test test case<a class="headerlink" href="#daily-output-test-test-case" title="Permalink to this heading">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">daily_output_test</span></code> is similar to the <a class="reference internal" href="#global-ocean-analysis-test"><span class="std std-ref">analysis_test test case</span></a>:
+it is used to run and validate the <code class="docutils literal notranslate"><span class="pre">timeSeriesStatsDaily</span></code> analysis member.
+The reason for a separate test is that the <code class="docutils literal notranslate"><span class="pre">daily_output_test</span></code> must run for
+a full day to produce useful output, significantly longer than the
+<a class="reference internal" href="#global-ocean-analysis-test"><span class="std std-ref">analysis_test test case</span></a>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">timeSeriesStatsDaily</span></code> performs daily averages of a large number of
+model variables.  The variables in this test are kept in sync with the default
+output of the <code class="docutils literal notranslate"><span class="pre">timeSeriesStatsMonthly</span></code> analysis member used in E3SM.  This
+test is used to gain confidence that E3SM output from MPAS-Ocean will have the
+expected variables and formatting.  For example, the test is currently being
+used in an effort to improve compliance to the
+<cite>CF Conventions &lt;https://cfconventions.org/&gt;</cite> in the output metadata.</p>
+<p>As with the <a class="reference internal" href="#global-ocean-performance-test"><span class="std std-ref">performance_test test case</span></a>, <code class="docutils literal notranslate"><span class="pre">daily_output_test</span></code> can
+be run with either or both of the split-explicit or RK4 time integrator. Thus,
+for a the <a class="reference internal" href="#global-ocean-mesh-qu240"><span class="std std-ref">QU240</span></a> or <a class="reference internal" href="#global-ocean-mesh-quwisc240"><span class="std std-ref">QUwISC240</span></a>
+mesh (currently the only supported meshes) and initial condition <code class="docutils literal notranslate"><span class="pre">&lt;ic&gt;</span></code>, one
+or more of these versions of the <code class="docutils literal notranslate"><span class="pre">daily_output_test</span></code> will be available:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/QU240/&lt;ic&gt;/daily_output_test/split_explicit</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/QU240/&lt;ic&gt;/daily_output_test/RK4</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/QUwISC240/&lt;ic&gt;/daily_output_test/split_explicit</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/QUwISC240/&lt;ic&gt;/daily_output_test/RK4</span></code></p></li>
+</ul>
+</section>
+<section id="dynamic-adjustment-test-case">
+<span id="global-ocean-dynamic-adjustment"></span><h3>dynamic_adjustment test case<a class="headerlink" href="#dynamic-adjustment-test-case" title="Permalink to this heading">¶</a></h3>
+<p>One of the main purposes of compass is to provide a way of spinning up
+MPAS-Ocean initial conditions to dissipate transients that result from starting
+the simulation from rest.  Particularly for high resolution meshes, surface
+waves with fast time scales and large amplitude must be damped (by applying
+Rayleigh friction), first aggressively, then more gently, before damping is
+disabled.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">dynamic_adjustment</span></code> test case is implemented differently for each of the
+<a class="reference internal" href="#global-ocean-meshes"><span class="std std-ref">Meshes</span></a>.  For example, for the <a class="reference internal" href="#global-ocean-mesh-qu240"><span class="std std-ref">QU240</span></a>
+and ref:<cite>global_ocean_mesh_quwisc240</cite> meshes, we perform only 1 day of damping
+(and even this is likely unnecessary), followed by a 1-day simulation without
+damping.  In contrast, for the <a class="reference internal" href="#global-ocean-mesh-ec30to60"><span class="std std-ref">EC30to60</span></a>
+and ref:<cite>global_ocean_mesh_ecwisc30to60</cite> meshes, we perform a 10-day spin-up
+with aggressive damping, followed by 10 more days without damping. Higher
+resolution meshes in <a class="reference internal" href="../../../index.html#legacy-compass"><span class="std std-ref">Legacy COMPASS</span></a> require several stages of damping,
+each over several days before damping can be removed.</p>
+<p>As with the <a class="reference internal" href="#global-ocean-performance-test"><span class="std std-ref">performance_test test case</span></a>, <code class="docutils literal notranslate"><span class="pre">dynamic_adjustment</span></code> can
+be run with either or both of the split-explicit or RK4 time integrator.
+Thus, for a given mesh <code class="docutils literal notranslate"><span class="pre">&lt;mesh&gt;</span></code> and initial condition <code class="docutils literal notranslate"><span class="pre">&lt;ic&gt;</span></code>, one or
+more of these versions of the <code class="docutils literal notranslate"><span class="pre">performance_test</span></code> will be available:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/&lt;mesh&gt;/&lt;ic&gt;/dynamic_adjustment/split_explicit</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/&lt;mesh&gt;/&lt;ic&gt;/dynamic_adjustment/RK4</span></code></p></li>
+</ul>
+<p>Versions of this test cases is currently available for all meshes, but not
+necessarily for all combinations of initial conditions and time integrators.</p>
+<p>The <a class="reference internal" href="../suites.html#ocean-suite-qu240-for-e3sm"><span class="std std-ref">qu240_for_e3sm test suite</span></a>, <a class="reference internal" href="../suites.html#ocean-suite-quwisc240-for-e3sm"><span class="std std-ref">quwisc240_for_e3sm test suite</span></a>,
+<a class="reference internal" href="../suites.html#ocean-suite-ec30to60"><span class="std std-ref">ec30to60 test suite</span></a> and <a class="reference internal" href="../suites.html#ocean-suite-ecwisc30to60"><span class="std std-ref">ecwisc30to60 test suite</span></a> are
+<a class="reference internal" href="../suites.html#ocean-suites"><span class="std std-ref">Test suites</span></a> designed to make it easier to run the standard
+dynamic-adjustment test cases for each mesh along with the related
+<a class="reference internal" href="#global-ocean-mesh"><span class="std std-ref">mesh test case</span></a>, <a class="reference internal" href="#global-ocean-init"><span class="std std-ref">init test case</span></a>, and
+<a class="reference internal" href="#global-ocean-files-for-e3sm"><span class="std std-ref">files_for_e3sm test case</span></a>.</p>
+</section>
+<section id="files-for-e3sm-test-case">
+<span id="global-ocean-files-for-e3sm"></span><h3>files_for_e3sm test case<a class="headerlink" href="#files-for-e3sm-test-case" title="Permalink to this heading">¶</a></h3>
+<p>After running the <a class="reference internal" href="#global-ocean-dynamic-adjustment"><span class="std std-ref">dynamic_adjustment test case</span></a>, users may be interested in
+preparing a number of files needed for including a new mesh in E3SM.  These
+files include: MPAS-Ocean and MPAS-Seaice initial conditions (including
+<a class="reference internal" href="#global-ocean-metadata"><span class="std std-ref">Metadata</span></a>);
+<a class="reference external" href="https://earthsystemmodeling.org/docs/release/ESMF_8_0_1/ESMF_refdoc/node3.html#SECTION03028100000000000000">SCRIP files</a>;
+partition files, created with
+<a class="reference external" href="http://glaros.dtc.umn.edu/gkhome/metis/metis/overview">gpmetis</a>, for
+splitting the mesh across a number of possible core counts; a mask file for
+MPAS-Ocean’s <code class="docutils literal notranslate"><span class="pre">mocStreamfunction</span></code> analysis member; and mask and mapping files
+for <a class="reference external" href="https://mpas-dev.github.io/MPAS-Analysis/stable/">MPAS-Analysis</a>.</p>
+<p>The resulting files are symlinked in a subdirectory of the test case called
+<code class="docutils literal notranslate"><span class="pre">assembled_files</span></code>.  This directory contains subdirectories with the same
+structure as the <a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/">E3SM data server</a>.
+For new meshes, these files can be uploaded by an expert from the E3SM team
+along with additional files required for full E3SM integration.  Currently,
+there is not a way to use new meshes in E3SM without help from an expert from
+the E3SM team.</p>
+</section>
+<section id="make-diagnostic-files-test-case">
+<span id="global-ocean-make-diagnostic-files"></span><h3>make_diagnostic_files test case<a class="headerlink" href="#make-diagnostic-files-test-case" title="Permalink to this heading">¶</a></h3>
+<p>Sometimes, we already have an E3SM initial condition but the diagnostics files
+for <a class="reference external" href="https://mpas-dev.github.io/MPAS-Analysis/stable/">MPAS-Analysis</a>
+either weren’t created with the initial condition or they are out of date.</p>
+<p>The user should create a local symlink to an E3SM initial condition for
+MPAS-Ocean ofr the desired mesh.  Then, the config options in
+<cite>make_diagnostics_files.cfg</cite> should be edited.  In this example, we have
+created a local link to the <cite>ocean.WCAtl12to45E2r4.210318.nc</cite> initial condition
+in the test case directory.  The mesh name has also been set to the E3SM short
+name for this mesh <cite>WCAtl12to45E2r4</cite>.  We use all 36 cores on a node (this
+test case can’t use multiple nodes for most steps).  We indicate that the mesh
+does not include ice-shelf cavities, which means we don’t compute masks for
+ice-shelf melt rates.</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[make_diagnostics_files]</span><span class="w"></span>
+<span class="na">mesh_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">WCAtl12to45E2r4</span><span class="w"></span>
+<span class="na">mesh_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">ocean.WCAtl12to45E2r4.210318.nc</span><span class="w"></span>
+<span class="na">cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">36</span><span class="w"></span>
+<span class="na">with_ice_shelf_cavities</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span><span class="w"></span>
+</pre></div>
+</div>
+<p>The resulting files are symlinked in a subdirectory of the test case called
+<code class="docutils literal notranslate"><span class="pre">assembled_files</span></code>.  This directory contains subdirectories with the same
+structure as the <a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/">E3SM data server</a>.
+These files can be uploaded by an expert from the E3SM team.  We ask that
+users not try to upload the files themselves without consulting an expert from
+the team.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="global_convergence.html" class="btn btn-neutral float-left" title="global_convergence" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="gotm.html" class="btn btn-neutral float-right" title="gotm" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

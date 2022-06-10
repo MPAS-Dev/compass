@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Command-line interface &mdash; compass 1.1.0-rc.2 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Organization of Tests" href="organization.html" />
+    <link rel="prev" title="Overview" href="overview.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> compass
+          </a>
+              <div class="version">
+                1.1.0-rc.2
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Command-line interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#compass-list">compass list</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#compass-setup">compass setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#compass-clean">compass clean</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#compass-suite">compass suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#compass-run">compass run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#compass-cache">compass cache</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Command-line interface</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/developers_guide/command_line.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="command-line-interface">
+<span id="dev-command-line"></span><h1>Command-line interface<a class="headerlink" href="#command-line-interface" title="Permalink to this heading">¶</a></h1>
+<p>The command-line interface for <code class="docutils literal notranslate"><span class="pre">compass</span></code> acts essentially like 5 independent
+scripts: <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">list</span></code>, <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">setup</span></code>, <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">clean</span></code> and
+<code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">suite</span></code>, and <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span></code>.  These are the primary user interface
+to the package, as described below.</p>
+<p>When the <code class="docutils literal notranslate"><span class="pre">compass</span></code> package is installed into your conda environment, you can
+run these commands as above.  If you are developing <code class="docutils literal notranslate"><span class="pre">compass</span></code> from a local
+branch off of <a class="reference external" href="https://github.com/MPAS-Dev/compass">https://github.com/MPAS-Dev/compass</a>, you will need to create a
+conda environment appropriate for development (see <a class="reference internal" href="quick_start.html#dev-conda-env"><span class="std std-ref">compass conda environment, compilers and system modules</span></a>).
+If you do, <code class="docutils literal notranslate"><span class="pre">compass</span></code> will be installed in the environment in “development”
+mode, meaning you can make changes to the branch and they will be reflected
+when you call the <code class="docutils literal notranslate"><span class="pre">compass</span></code> command-line tool.</p>
+<section id="compass-list">
+<span id="dev-compass-list"></span><h2>compass list<a class="headerlink" href="#compass-list" title="Permalink to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">list</span></code> command is used to list test cases, test suites, and
+supported machines.  The command-line options are:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>compass list [-h] [-t TEST] [-n NUMBER] [--machines] [--suites] [-v]
+</pre></div>
+</div>
+<p>By default, all test cases are listed:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ compass list
+Testcases:
+   0: examples/example_compact/1km/test1
+   1: examples/example_compact/1km/test2
+...
+</pre></div>
+</div>
+<p>The number of each test case is displayed, followed by the relative path that
+will be used for the test case in the work directory.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">-h</span></code> or <code class="docutils literal notranslate"><span class="pre">--help</span></code> options will display the help message describing the
+command-line options.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">-t</span></code> or <code class="docutils literal notranslate"><span class="pre">--test_expr</span></code> flag can be used to supply a substring or regular
+expression that can be used to list a subset of the tests.  Think of this as
+as search expression within the default list of test-case relative paths.</p>
+<p>The flags <code class="docutils literal notranslate"><span class="pre">-n</span></code> or <code class="docutils literal notranslate"><span class="pre">--number</span></code> are used to list the name (relative path) of
+a single test case with the given number.</p>
+<p>Instead of listing test cases, you can list all the supported machines that can
+be passed to the <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">setup</span></code> and <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">suite</span></code> by using the
+<code class="docutils literal notranslate"><span class="pre">--machines</span></code> flag.</p>
+<p>Similarly, you can list all the available test suites for all <a class="reference internal" href="organization.html#dev-cores"><span class="std std-ref">MPAS Cores</span></a>
+by using the <code class="docutils literal notranslate"><span class="pre">--suites</span></code> flag.  The result are the flags that would be passed
+to <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">suite</span></code> as part of setting up this test suite.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">-v</span></code> or <code class="docutils literal notranslate"><span class="pre">--verbose</span></code> flag lists more detail about each test case,
+including its description, short name, core, configuration, subdirectory within
+the configuration and the names of its steps:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ compass list -n 0 -v
+path:          examples/example_compact/1km/test1
+description:   Tempate 1km test1
+name:          test1
+core:          examples
+configuration: example_compact
+subdir:        1km/test1
+steps:
+ - step1
+ - step2
+</pre></div>
+</div>
+<p>See <a class="reference internal" href="framework.html#dev-list"><span class="std std-ref">list module</span></a> for more about the underlying framework.</p>
+</section>
+<section id="compass-setup">
+<span id="dev-compass-setup"></span><h2>compass setup<a class="headerlink" href="#compass-setup" title="Permalink to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">setup</span></code> command is used to set up one or more test cases.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You must have built the executable for the standalone MPAS component you
+want to run before setting up a compass test case.</p>
+</div>
+<p>The command-line options are:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>compass setup [-h] [-t PATH] [-n NUM [NUM ...]] [-f FILE] [-m MACH]
+              [-w PATH] [-b PATH] [-p PATH] [--suite_name SUITE]
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">-h</span></code> or <code class="docutils literal notranslate"><span class="pre">--help</span></code> options will display the help message describing the
+command-line options.</p>
+<p>The test cases to set up can be specified either by relative path or by number.
+The <code class="docutils literal notranslate"><span class="pre">-t</span></code> or <code class="docutils literal notranslate"><span class="pre">--test</span></code> flag is used to pass the relative path of the test
+case within the resulting work directory.  The is the path given by
+<a class="reference internal" href="#dev-compass-list"><span class="std std-ref">compass list</span></a>.  Only one test case at a time can be supplied to
+<code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">setup</span></code> this way.</p>
+<p>Alternatively, you can supply the test numbers of any number of test cases to
+the <code class="docutils literal notranslate"><span class="pre">-n</span></code> or <code class="docutils literal notranslate"><span class="pre">--case_number</span></code> flag.  Multiple test numbers are separated by
+spaces (not commas like in <a class="reference internal" href="../index.html#legacy-compass"><span class="std std-ref">Legacy COMPASS</span></a>).  These are the test numbers
+given by <a class="reference internal" href="#dev-compass-list"><span class="std std-ref">compass list</span></a>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">setup</span></code> requires a few basic pieces of information to be able to set
+up a test case.  These include places to download and cache some data files
+used in the test cases and the location where you built the MPAS model.  There
+are a few ways to to supply these.  The <code class="docutils literal notranslate"><span class="pre">-m</span></code> -r <code class="docutils literal notranslate"><span class="pre">--machine</span></code> option is used
+to tell <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">setup</span></code> which supported machine you’re running on (leave this
+off if you’re working on an “unknown” machine).  See <a class="reference internal" href="#dev-compass-list"><span class="std std-ref">compass list</span></a>
+above for how to list the supported machines.</p>
+<p>You can supply the directory where you have built the MPAS component with the
+<code class="docutils literal notranslate"><span class="pre">-p</span></code> or <code class="docutils literal notranslate"><span class="pre">--mpas_model</span></code> flag.  This can be a relative or absolute path.  The
+default for the <code class="docutils literal notranslate"><span class="pre">landice</span></code> core is <code class="docutils literal notranslate"><span class="pre">MALI-Dev/components/mpas-albany-landice</span></code>
+and the default for the <code class="docutils literal notranslate"><span class="pre">ocean</span></code> core is
+<code class="docutils literal notranslate"><span class="pre">E3SM-Project/components/mpas-ocean</span></code>.</p>
+<p>You can also supply a config file with config options pointing to the
+directories for cached data files, the location of the MPAS component, and much
+more (see <a class="reference internal" href="../users_guide/config_files.html#config-files"><span class="std std-ref">Config Files</span></a> and <a class="reference internal" href="../users_guide/quick_start.html#setup-overview"><span class="std std-ref">Setting up test cases</span></a>).  Point to your config
+file using the <code class="docutils literal notranslate"><span class="pre">-f</span></code> or <code class="docutils literal notranslate"><span class="pre">--config_file</span></code> flag.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">-w</span></code> or <code class="docutils literal notranslate"><span class="pre">--work_dir</span></code> flags point to a relative or absolute path that
+is the base path where the test case(s) should be set up.  The default is the
+current directory.  It is recommended that you supply a work directory in
+another location such as a temp or scratch directory to avoid confusing the
+compass code with test cases setups and output within the branch.</p>
+<p>To compare test cases with a previous run of the same test cases, use the
+<code class="docutils literal notranslate"><span class="pre">-b</span></code> or <code class="docutils literal notranslate"><span class="pre">--baseline_dir</span></code> flag to point to the work directory of the
+previous run.  Many test cases validate variables to make sure they are
+identical between runs, compare timers to see how much performance has changed,
+or both.  See <a class="reference internal" href="framework.html#dev-validation"><span class="std std-ref">Validation</span></a>.</p>
+<p>The test cases will be included in a “custom” test suite in the order they are
+named or numbered.  You can give this suite a name with <code class="docutils literal notranslate"><span class="pre">--suite_name</span></code> or
+leave it with the default name <code class="docutils literal notranslate"><span class="pre">custom</span></code>.  You can run this test suite with
+<code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span> <span class="pre">[suite_name]</span></code> as with the predefined test suites (see
+<a class="reference internal" href="#dev-compass-suite"><span class="std std-ref">compass suite</span></a>).</p>
+<p>Test cases within the custom suite are run in the order they are supplied to
+<code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">setup</span></code>, so keep this in mind when providing the list.  Any test
+cases that depend on the output of other test cases must run afther their
+dependencies.</p>
+<p>See <a class="reference internal" href="framework.html#dev-setup"><span class="std std-ref">setup module</span></a> for more about the underlying framework.</p>
+</section>
+<section id="compass-clean">
+<span id="dev-compass-clean"></span><h2>compass clean<a class="headerlink" href="#compass-clean" title="Permalink to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">clean</span></code> command is used to clean up one or more test cases,
+removing the contents of their directories so there are no old files left
+behind before a fresh call to <a class="reference internal" href="#dev-compass-setup"><span class="std std-ref">compass setup</span></a>. The command-line
+options are:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>compass clean [-h] [-t PATH] [-n NUM [NUM ...]] [-w PATH]
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">-h</span></code> or <code class="docutils literal notranslate"><span class="pre">--help</span></code> options will display the help message describing the
+command-line options.</p>
+<p>As with <a class="reference internal" href="#dev-compass-setup"><span class="std std-ref">compass setup</span></a>, the test cases to cleaned up can be specified
+either by relative path or by number. The meanings of the <code class="docutils literal notranslate"><span class="pre">-t</span></code> or <code class="docutils literal notranslate"><span class="pre">--test</span></code>,
+<code class="docutils literal notranslate"><span class="pre">-n</span></code> or <code class="docutils literal notranslate"><span class="pre">--case_number</span></code>, and <code class="docutils literal notranslate"><span class="pre">-w</span></code> or <code class="docutils literal notranslate"><span class="pre">--work_dir</span></code> flags are the same
+as in <a class="reference internal" href="#dev-compass-setup"><span class="std std-ref">compass setup</span></a>.</p>
+<p>See <a class="reference internal" href="framework.html#dev-clean"><span class="std std-ref">clean module</span></a> for more about the underlying framework.</p>
+</section>
+<section id="compass-suite">
+<span id="dev-compass-suite"></span><h2>compass suite<a class="headerlink" href="#compass-suite" title="Permalink to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">suite</span></code> command is used to set up a test suite. The command-line
+options are:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>compass suite [-h] -c CORE -t SUITE [-f FILE] [-s] [--clean] [-v]
+              [-m MACH] [-b PATH] [-w PATH] [-p PATH]
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">-h</span></code> or <code class="docutils literal notranslate"><span class="pre">--help</span></code> options will display the help message describing the
+command-line options.</p>
+<p>The required argument are <code class="docutils literal notranslate"><span class="pre">-c</span></code> or <code class="docutils literal notranslate"><span class="pre">--core</span></code>, one of the <a class="reference internal" href="organization.html#dev-cores"><span class="std std-ref">MPAS Cores</span></a>,
+where the test suite and its test cases reside; and <code class="docutils literal notranslate"><span class="pre">-t</span></code> or <code class="docutils literal notranslate"><span class="pre">--test_suite</span></code>,
+the name of the test suite.  These are the options listed when you run
+<code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">list</span> <span class="pre">--suites</span></code>.</p>
+<p>You must also specify whether you would like to set up the test suite
+(<code class="docutils literal notranslate"><span class="pre">-s</span></code> or <code class="docutils literal notranslate"><span class="pre">--setup</span></code>), clean it up (<code class="docutils literal notranslate"><span class="pre">--clean</span></code>) or both.  If you choose to
+clean up, the contents of each test case will be removed one by one before
+(optionally) setting up each test case again.  Provenance for the test suite
+such as previous output and the <code class="docutils literal notranslate"><span class="pre">provenance</span></code> file are retained and new
+output is appended.  Manually delete the entire work directory if you would
+like to start completely fresh.</p>
+<p>As in <a class="reference internal" href="#dev-compass-setup"><span class="std std-ref">compass setup</span></a>, you can supply one or more of: a supported
+machine with <code class="docutils literal notranslate"><span class="pre">-m</span></code> or <code class="docutils literal notranslate"><span class="pre">--machine</span></code>; a path where you build MPAS model via
+<code class="docutils literal notranslate"><span class="pre">-p</span></code> or <code class="docutils literal notranslate"><span class="pre">--mpas_model</span></code>; and a config file containing config options to
+override the defaults with <code class="docutils literal notranslate"><span class="pre">-f</span></code> or <code class="docutils literal notranslate"><span class="pre">--config_file</span></code>.  As with
+<a class="reference internal" href="#dev-compass-setup"><span class="std std-ref">compass setup</span></a>, you may optionally supply a work directory with
+<code class="docutils literal notranslate"><span class="pre">-w</span></code> or <code class="docutils literal notranslate"><span class="pre">--work_dir</span></code> and/or a baseline directory for comparison with
+<code class="docutils literal notranslate"><span class="pre">-b</span></code> or <code class="docutils literal notranslate"><span class="pre">--baseline_dir</span></code>.  If supplied, each test case in the suite that
+includes <a class="reference internal" href="framework.html#dev-validation"><span class="std std-ref">Validation</span></a> will be validated against the previous run in
+the baseline.</p>
+<p>See <a class="reference internal" href="framework.html#dev-suite"><span class="std std-ref">suite module</span></a> for more about the underlying framework.</p>
+</section>
+<section id="compass-run">
+<span id="dev-compass-run"></span><h2>compass run<a class="headerlink" href="#compass-run" title="Permalink to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span></code> command is used to run a test suite, test case or step
+that has been set up in the current directory:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>compass run [-h] [--steps STEPS [STEPS ...]]
+                 [--no-steps NO_STEPS [NO_STEPS ...]]
+                 [suite]
+</pre></div>
+</div>
+<p>Whereas other <code class="docutils literal notranslate"><span class="pre">compass</span></code> commands are typically run in the local clone of the
+compass repo, <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span></code> needs to be run in the appropriate work
+directory. If you are running a test suite, you may need to provide the name
+of the test suite if more than one suite has been set up in the same work
+directory.  You can provide either just the suite name or
+<code class="docutils literal notranslate"><span class="pre">&lt;suite_name&gt;.pickle</span></code> (the latter is convenient for tab completion).  If you
+are in the work directory for a test case or step, you do not need to provide
+any arguments.</p>
+<p>If you want to explicitly select which steps in a test case you want to run,
+you have two options.  You can either edit the <code class="docutils literal notranslate"><span class="pre">steps_to_run</span></code> config options
+in the config file:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[test_case]</span><span class="w"></span>
+<span class="na">steps_to_run</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">initial_state full_run restart_run</span><span class="w"></span>
+</pre></div>
+</div>
+<p>Or you can use <code class="docutils literal notranslate"><span class="pre">--steps</span></code> to supply a list of steps to run, or <code class="docutils literal notranslate"><span class="pre">--no-steps</span></code>
+to supply a list of steps you do not want to run (from the defaults given in
+the config file).  For example,</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>python -m compass run --steps initial_state full_run
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>python -m compass run --no-steps restart_run
+</pre></div>
+</div>
+<p>Would both accomplish the same thing in this example – skipping the
+<code class="docutils literal notranslate"><span class="pre">restart_run</span></code> step of the test case.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If changes are made to <code class="docutils literal notranslate"><span class="pre">steps_to_run</span></code> in the config file and <code class="docutils literal notranslate"><span class="pre">--steps</span></code>
+is provided on the command line, the command-line flags take precedence
+over the config option.</p>
+</div>
+<p>To see which steps are are available in a given test case, you need to run
+<a class="reference internal" href="#dev-compass-list"><span class="std std-ref">compass list</span></a> with the <code class="docutils literal notranslate"><span class="pre">-v</span></code> or <code class="docutils literal notranslate"><span class="pre">--verbose</span></code> flag.</p>
+<p>See <a class="reference internal" href="framework.html#dev-run"><span class="std std-ref">run.serial module</span></a> for more about the underlying framework.</p>
+</section>
+<section id="compass-cache">
+<span id="dev-compass-cache"></span><h2>compass cache<a class="headerlink" href="#compass-cache" title="Permalink to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">compass</span></code> supports caching outputs from any step in a special database
+called <code class="docutils literal notranslate"><span class="pre">compass_cache</span></code> (see <a class="reference internal" href="organization.html#dev-step-input-download"><span class="std std-ref">Downloading and symlinking input files</span></a>). Files in this
+database have a directory structure similar to the work directory (but without
+the MPAS core subdirectory, which is redundant). The files include a date stamp
+so that new revisions can be added without removing older ones (supported by
+older compass versions).  See <a class="reference internal" href="organization.html#dev-step-cached-output"><span class="std std-ref">Cached output files</span></a> for more details.</p>
+<p>A new command, <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">cache</span></code> has been added to aid in updating the file
+<code class="docutils literal notranslate"><span class="pre">cached_files.json</span></code> within an MPAS core.  This command is only available on
+Anvil and Chrysalis, since developers can only copy files from a compass work
+directory onto the LCRC server from these two machines.  Developers run
+<code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">cache</span></code> from the base work directory, giving the relative paths of
+the step whose outputs should be cached:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass cache -i ocean/global_ocean/QU240/mesh/mesh <span class="se">\</span>
+    ocean/global_ocean/QU240/PHC/init/initial_state
+</pre></div>
+</div>
+<p>This will:</p>
+<ol class="arabic simple">
+<li><p>copy the output files from the steps directories into the appropriate
+<code class="docutils literal notranslate"><span class="pre">compass_cache</span></code> location on the LCRC server and</p></li>
+<li><p>add these files to a local <code class="docutils literal notranslate"><span class="pre">ocean_cached_files.json</span></code> that can then be
+copied to <code class="docutils literal notranslate"><span class="pre">compass/ocean</span></code> as part of a PR to add a cached version of a
+step.</p></li>
+</ol>
+<p>The resulting <code class="docutils literal notranslate"><span class="pre">ocean_cached_files.json</span></code> will look something like:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;ocean/global_ocean/QU240/mesh/mesh/culled_mesh.nc&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;global_ocean/QU240/mesh/mesh/culled_mesh.210803.nc&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;ocean/global_ocean/QU240/mesh/mesh/culled_graph.info&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;global_ocean/QU240/mesh/mesh/culled_graph.210803.info&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;ocean/global_ocean/QU240/mesh/mesh/critical_passages_mask_final.nc&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;global_ocean/QU240/mesh/mesh/critical_passages_mask_final.210803.nc&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;ocean/global_ocean/QU240/PHC/init/initial_state/initial_state.nc&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;global_ocean/QU240/PHC/init/initial_state/initial_state.210803.nc&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;ocean/global_ocean/QU240/PHC/init/initial_state/init_mode_forcing_data.nc&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;global_ocean/QU240/PHC/init/initial_state/init_mode_forcing_data.210803.nc&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+<p>An optional flag <code class="docutils literal notranslate"><span class="pre">--date_string</span></code> lets the developer set the date string to
+a date they choose.  The default is today’s date.</p>
+<p>The flag <code class="docutils literal notranslate"><span class="pre">--dry_run</span></code> can be used to sanity check the resulting <code class="docutils literal notranslate"><span class="pre">json</span></code> file
+and the list of files printed to stdout without actually copying the files to
+the LCRC server.</p>
+<p>See <a class="reference internal" href="framework.html#dev-cache"><span class="std std-ref">cache module</span></a> for more about the underlying framework.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="overview.html" class="btn btn-neutral float-left" title="Overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="organization.html" class="btn btn-neutral float-right" title="Organization of Tests" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
