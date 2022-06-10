@@ -67,7 +67,7 @@ def get_compilers_mpis(config, machine, compilers, mpis, source_path):
         all_compilers = ['gfortran']
         all_mpis = ['mpich', 'openmpi']
     elif machine == 'conda-osx':
-        all_compilers = ['gfortran-clang']
+        all_compilers = ['clang']
         all_mpis = ['mpich', 'openmpi']
     else:
         machine_info = MachineInfo(machine)
