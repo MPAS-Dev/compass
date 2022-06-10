@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>isomip_plus &mdash; compass 1.1.0-rc.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="planar_convergence" href="planar_convergence.html" />
+    <link rel="prev" title="internal_wave" href="internal_wave.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> compass
+          </a>
+              <div class="version">
+                1.1.0-rc.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../landice/index.html">Landice core</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Ocean core</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Test groups</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="baroclinic_channel.html">baroclinic_channel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="drying_slope.html">drying_slope</a></li>
+<li class="toctree-l3"><a class="reference internal" href="global_convergence.html">global_convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="global_ocean.html">global_ocean</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gotm.html">gotm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ice_shelf_2d.html">ice_shelf_2d</a></li>
+<li class="toctree-l3"><a class="reference internal" href="internal_wave.html">internal_wave</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">isomip_plus</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#shared-config-options">shared config options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ocean0">Ocean0</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ocean1">Ocean1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ocean2">Ocean2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#time-varying-ocean0">time_varying_Ocean0</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#performance-run">Performance run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#simulation-run">Simulation run</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="planar_convergence.html">planar_convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soma.html">soma</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sphere_transport.html">sphere_transport</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ziso.html">ziso</a></li>
+<li class="toctree-l3"><a class="reference internal" href="spherical_harmonic_transform.html">spherical_harmonic_transform</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../framework/index.html">Framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../suites.html">Test suites</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Ocean core</a> &raquo;</li>
+          <li><a href="index.html">Test groups</a> &raquo;</li>
+      <li>isomip_plus</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/users_guide/ocean/test_groups/isomip_plus.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="isomip-plus">
+<span id="ocean-isomip-plus"></span><h1>isomip_plus<a class="headerlink" href="#isomip-plus" title="Permalink to this heading">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">ocean/isomip_plus</span></code> test group includes variants of the Ice Sheet-Ocean
+Model Intercomparison Project, second phase (ISOMIP+) experiments from
+<a class="reference external" href="https://doi.org/10.5194/gmd-9-2471-2016">Asay-Davis et al. (2016)</a>.  These
+experiments use <a class="reference external" href="https://doi.org/10.5880/PIK.2016.002">idealized ice-shelf geometry</a>
+from the Marine Ice SheetModel Intercomparison Project, third phase (MISMIP+;
+see <a class="reference external" href="https://doi.org/10.5194/tc-14-2283-2020">Cornford et al. 2020</a>)
+performed with the BISICLES ice-sheet model.</p>
+<p>Currently, only the Ocean0 experiment is supported but the plan is to add the
+Ocean1 and Ocean2 experiments in the next few months, and the Ocean3 and Ocean4
+experiments at a later date, once MPAS-Ocean supports moving grounding lines.</p>
+<p>By default, the test case is available at 2 km and 5 km horizontal resolution
+with a z-star <a class="reference internal" href="../../../developers_guide/ocean/framework.html#dev-ocean-framework-vertical"><span class="std std-ref">Vertical coordinate</span></a>.  The test case has 36
+vertical layers, each of 20-m thickness outside of the ice-shelf cavity.</p>
+<p>The initial temperature for the whole domain is constant (1 degree Celsius),
+while salinity varies linearly with depth from 34.5 PSU at the sea surface
+to 34.7 PSU at the sea floor, which is at a constant at 2000 m depth.  The
+conceptual overlying ice shelf depresses the sea surface height buy as much as
+1990 m (leaving a 10-m water column) for the first 30 km in y.  Over the next
+30 km, it rises to 1490 m, then fairly abruptly to zero over the next 15 km,
+where it remains for the second half of the domain.  The ice shelf occupies
+these first 75 km of the domain: fluxes from ice-shelf melting are only applied
+in this region.</p>
+<figure class="align-center" id="id1">
+<a class="reference internal image-reference" href="../../../_images/isomip_plus.png"><img alt="../../../_images/isomip_plus.png" src="../../../_images/isomip_plus.png" style="width: 500px;" /></a>
+<figcaption>
+<p><span class="caption-text">A cross section through the center (y = 40 km) of the ISOMIP+ Ocean0 test
+case at 5 km resolution, showing potential temperature averaged over month
+9 of the simulation.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>The <code class="docutils literal notranslate"><span class="pre">isomip_plus</span></code> test cases are composed of 3 steps that run by default:
+<code class="docutils literal notranslate"><span class="pre">initial_state</span></code>, which defines the mesh, interpolates the ice geometry, and
+computes the initial conditions for the model; <code class="docutils literal notranslate"><span class="pre">ssh_adjustment</span></code>, which
+modifies the <code class="docutils literal notranslate"><span class="pre">landIcePressure</span></code> field to balance the <code class="docutils literal notranslate"><span class="pre">ssh</span></code> field, see
+<a class="reference internal" href="../framework/ice_shelf.html#ocean-ssh-adjustment"><span class="std std-ref">Sea surface height adjustment</span></a>; and <code class="docutils literal notranslate"><span class="pre">performance</span></code>, which performs a 1-hour time
+integration of the model and compares the results with a baseline if one is
+provided.</p>
+<p>Four additional steps can optionally be run: <code class="docutils literal notranslate"><span class="pre">simulation</span></code>, which performs
+one month of simulation, then updates the “evaporative” fluxes used in the test
+case to prevent sea level from rising significantly due to meltwater inflow at
+the ice-shelf base; <code class="docutils literal notranslate"><span class="pre">streamfunction</span></code>, which computes the barotropic
+(vertically integrated) and overturning streamfunctions; <code class="docutils literal notranslate"><span class="pre">viz</span></code>, which plots
+time series and movies of various variables of interest; and <code class="docutils literal notranslate"><span class="pre">misomip</span></code>, which
+interpolates the results to the MISOMIP comparison grid.</p>
+<section id="shared-config-options">
+<h2>shared config options<a class="headerlink" href="#shared-config-options" title="Permalink to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">isomip_plus</span></code> test cases share the following config options:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span><span class="w"></span>
+<span class="k">[vertical_grid]</span><span class="w"></span>
+
+<span class="c1"># the type of vertical grid</span><span class="w"></span>
+<span class="na">grid_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">uniform</span><span class="w"></span>
+
+<span class="c1"># Number of vertical levels</span><span class="w"></span>
+<span class="na">vert_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">36</span><span class="w"></span>
+
+<span class="c1"># Depth of the bottom of the ocean</span><span class="w"></span>
+<span class="na">bottom_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">720.0</span><span class="w"></span>
+
+<span class="c1"># The type of vertical coordinate (e.g. z-level, z-star)</span><span class="w"></span>
+<span class="na">coord_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">z-star</span><span class="w"></span>
+
+<span class="c1"># Whether to use &quot;partial&quot; or &quot;full&quot;, or &quot;None&quot; to not alter the topography</span><span class="w"></span>
+<span class="na">partial_cell_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">None</span><span class="w"></span>
+
+<span class="c1"># The minimum fraction of a layer for partial cells</span><span class="w"></span>
+<span class="na">min_pc_fraction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.1</span><span class="w"></span>
+
+<span class="c1"># Options relate to adjusting the sea-surface height or land-ice pressure</span><span class="w"></span>
+<span class="c1"># below ice shelves to they are dynamically consistent with one another</span><span class="w"></span>
+<span class="k">[ssh_adjustment]</span><span class="w"></span>
+
+<span class="c1"># the number of iterations of ssh adjustment to perform</span><span class="w"></span>
+<span class="na">iterations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10</span><span class="w"></span>
+
+
+<span class="c1"># config options for ISOMIP+ test cases</span><span class="w"></span>
+<span class="k">[isomip_plus]</span><span class="w"></span>
+
+<span class="c1"># number of cells over which to smooth topography</span><span class="w"></span>
+<span class="na">topo_smoothing</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.0</span><span class="w"></span>
+
+<span class="c1"># minimum thickness of the ice shelf, below which it is removed (&quot;calved&quot;)</span><span class="w"></span>
+<span class="na">min_ice_thickness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">100.0</span><span class="w"></span>
+
+<span class="c1"># a scalar by which the ice draft will be scaled (squashed).  This is</span><span class="w"></span>
+<span class="c1"># convenient for testing vertical coordinates</span><span class="w"></span>
+<span class="na">draft_scaling</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.0</span><span class="w"></span>
+
+<span class="c1"># Minimum number of vertical levels in a column</span><span class="w"></span>
+<span class="na">minimum_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span><span class="w"></span>
+
+<span class="c1"># Minimum thickness of the initial ocean column (to prevent &#39;drying&#39;)</span><span class="w"></span>
+<span class="na">min_column_thickness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10.0</span><span class="w"></span>
+
+<span class="c1"># Minimum fraction of a cell that contains ocean (as opposed to land or</span><span class="w"></span>
+<span class="c1"># grounded land ice) in order for it to be an active ocean cell.</span><span class="w"></span>
+<span class="na">min_ocean_fraction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.5</span><span class="w"></span>
+
+<span class="c1"># Threshold used to determine how far from the ice-shelf the sea-surface height</span><span class="w"></span>
+<span class="c1"># can be adjusted to keep the Haney number under control</span><span class="w"></span>
+<span class="na">min_smoothed_draft_mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.01</span><span class="w"></span>
+
+<span class="c1"># Minimum fraction of a cell that contains land ice in order for it to be</span><span class="w"></span>
+<span class="c1"># considered a land-ice cell by MPAS-Ocean (landIceMask == 1).</span><span class="w"></span>
+<span class="na">min_land_ice_fraction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.5</span><span class="w"></span>
+
+<span class="c1"># the initial temperature at the sea surface</span><span class="w"></span>
+<span class="na">init_top_temp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">-1.9</span><span class="w"></span>
+<span class="c1"># the initial temperature at the sea floor</span><span class="w"></span>
+<span class="na">init_bot_temp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.0</span><span class="w"></span>
+<span class="c1"># the initial salinity at the sea surface</span><span class="w"></span>
+<span class="na">init_top_sal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">33.8</span><span class="w"></span>
+<span class="c1"># the initial salinity at the sea floor</span><span class="w"></span>
+<span class="na">init_bot_sal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">34.7</span><span class="w"></span>
+
+<span class="c1"># the restoring temperature at the sea surface</span><span class="w"></span>
+<span class="na">restore_top_temp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">-1.9</span><span class="w"></span>
+<span class="c1"># the restoring temperature at the sea floor</span><span class="w"></span>
+<span class="na">restore_bot_temp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.0</span><span class="w"></span>
+<span class="c1"># the restoring salinity at the sea surface</span><span class="w"></span>
+<span class="na">restore_top_sal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">33.8</span><span class="w"></span>
+<span class="c1"># the restoring salinity at the sea floor</span><span class="w"></span>
+<span class="na">restore_bot_sal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">34.7</span><span class="w"></span>
+
+<span class="c1"># restoring rate (1/days) at the open-ocean boundary</span><span class="w"></span>
+<span class="na">restore_rate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10.0</span><span class="w"></span>
+
+<span class="c1"># the &quot;evaporation&quot; rate  (m/yr) near the open-ocean boundary used to keep sea</span><span class="w"></span>
+<span class="c1"># level from rising</span><span class="w"></span>
+<span class="na">restore_evap_rate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">200.0</span><span class="w"></span>
+
+<span class="c1"># southern boundary of restoring region (m)</span><span class="w"></span>
+<span class="na">restore_xmin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">790e3</span><span class="w"></span>
+<span class="c1"># northern boundary of restoring region (m)</span><span class="w"></span>
+<span class="na">restore_xmax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">800e3</span><span class="w"></span>
+
+<span class="c1"># Coriolis parameter (1/s) for entire domain</span><span class="w"></span>
+<span class="na">coriolis_parameter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">-1.409e-4</span><span class="w"></span>
+
+<span class="c1"># initial value for the effective density (kg/m^3) of seawater for entire</span><span class="w"></span>
+<span class="c1"># domain</span><span class="w"></span>
+<span class="na">effective_density</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1026.</span><span class="w"></span>
+
+<span class="c1"># config options for ISOMIP+ time-varying land-ice forcing</span><span class="w"></span>
+<span class="k">[isomip_plus_forcing]</span><span class="w"></span>
+
+<span class="c1"># the forcing dates</span><span class="w"></span>
+<span class="na">dates</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0001-01-01_00:00:00, 0002-01-01_00:00:00, 0003-01-01_00:00:00</span><span class="w"></span>
+
+<span class="c1"># the amount by which the initial landIcePressure and landIceDraft are scaled</span><span class="w"></span>
+<span class="c1"># at each date</span><span class="w"></span>
+<span class="na">scales</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.1, 1.0, 1.0</span><span class="w"></span>
+
+<span class="c1"># config options for computing ISOMIP+ streamfunctions</span><span class="w"></span>
+<span class="k">[isomip_plus_streamfunction]</span><span class="w"></span>
+
+<span class="c1"># the resolution of the overturning streamfunction in m</span><span class="w"></span>
+<span class="na">osf_dx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2e3</span><span class="w"></span>
+<span class="na">osf_dz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5.</span><span class="w"></span>
+
+<span class="c1"># config options for visualizing ISOMIP+ ouptut</span><span class="w"></span>
+<span class="k">[isomip_plus_viz]</span><span class="w"></span>
+
+<span class="c1"># whether to plot the Haney number</span><span class="w"></span>
+<span class="na">plot_haney</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span><span class="w"></span>
+
+<span class="c1"># whether to plot the barotropic and overturning streamfunctions</span><span class="w"></span>
+<span class="na">plot_streamfunctions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span><span class="w"></span>
+
+<span class="c1"># frames per second for movies</span><span class="w"></span>
+<span class="na">frames_per_second</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">30</span><span class="w"></span>
+
+<span class="c1"># movie format</span><span class="w"></span>
+<span class="na">movie_format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">mp4</span><span class="w"></span>
+
+<span class="c1"># the y value at which a cross-section is plotted (in m)</span><span class="w"></span>
+<span class="na">section_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">40e3</span><span class="w"></span>
+</pre></div>
+</div>
+<p>You can modify the horizontal mesh, vertical grid, geometry, and initial
+temperature and salinity of the test case by altering these options.</p>
+</section>
+<section id="ocean0">
+<span id="ocean-isomip-plus-ocean0"></span><h2>Ocean0<a class="headerlink" href="#ocean0" title="Permalink to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">ocean/isomip_plus/2km/z-star/Ocean0</span></code> and
+<code class="docutils literal notranslate"><span class="pre">ocean/isomip_plus/5km/z-star/Ocean0</span></code></p>
+<p>This test case is initialized with “warm” ocean conditions: 1 degree C at the
+sea floor, decreasing to -1.9 degrees C at the ocean surface.  These conditions
+are approximately similar to those in the warmest waters on the Antarctic
+continental shelf in the Amundsen and Bellingshausen Seas.  At the northern
+boundary, the temperature is restored to the same warm profile, leading to a
+vigorous circulation under the ice shelf that continually supplies heat and
+produces relatively high melt rates.  Because of the rigorous flow, the
+simulation reaches a quasi-steady state in 2-3 years.</p>
+</section>
+<section id="ocean1">
+<span id="ocean-isomip-plus-ocean1"></span><h2>Ocean1<a class="headerlink" href="#ocean1" title="Permalink to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">ocean/isomip_plus/2km/z-star/Ocean1</span></code> and
+<code class="docutils literal notranslate"><span class="pre">ocean/isomip_plus/5km/z-star/Ocean1</span></code></p>
+<p>This test case is initialized with “cold” ocean conditions: -1.9 degree C
+throughout the water column.  These conditions are similar to cold-shelf
+regions such as the Antarctic continental shelf in the Weddell and Ross Seas.
+At the northern boundary, the temperature is restored to the same warm profile
+as in Ocean0.  The initially cold cavity has low melt rates and a weak flow, so
+that warm water from the northern boundary may take about a decade to reach the
+ice-shelf base.  At this point, the melting and flow rapidly increase,
+eventually (in the coarse of ~20 years) leading to the same quasi-steady-state
+as in Ocean0.  The ISOMIP+ protocol suggests running this simulation for 20
+years.</p>
+</section>
+<section id="ocean2">
+<span id="ocean-isomip-plus-ocean2"></span><h2>Ocean2<a class="headerlink" href="#ocean2" title="Permalink to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">ocean/isomip_plus/2km/z-star/Ocean2</span></code> and
+<code class="docutils literal notranslate"><span class="pre">ocean/isomip_plus/5km/z-star/Ocean2</span></code></p>
+<p>This test case is initialized with “warm” ocean conditions as in Ocean0.  At
+the northern boundary, the temperature is restored to the cold profile used for
+the initial condition in Ocean1: -1.9 degree C throughout the water column.
+Thus, where Ocean1 transitions from cold to warm cavity conditions, Ocean2
+makes the opposite transition from warm to cold.  The geometry is also taken
+from a different stage of the BISICLES MISIMP+ run than Ocean0 and Ocean1 in
+which the ice shelf has undergone significant thinning and retreat.  The
+initially warm cavity has high melt rates and a strong flow, so that cold water
+water from the northern boundary will reach the ice-shelf base within a few
+years.  At this point, the melting and flow exponentially decrease, approaching
+a new quasi-steady state.  The ISOMIP+ protocol suggests running this
+simulation for 20 years, which is not long enough to reach quasi-steady state.</p>
+</section>
+<section id="time-varying-ocean0">
+<span id="ocean-isomip-plus-time-varying-ocean0"></span><h2>time_varying_Ocean0<a class="headerlink" href="#time-varying-ocean0" title="Permalink to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">ocean/isomip_plus/2km/z-star/time_varying_Ocean0</span></code> and
+<code class="docutils literal notranslate"><span class="pre">ocean/isomip_plus/5km/z-star/time_varying_Ocean0</span></code></p>
+<p>This test case is identical to <code class="docutils literal notranslate"><span class="pre">Ocean0</span></code> except that the land-ice pressure
+and land-ice draft are prescribed to evolve in a very simple way in time.
+By default, the these 2 fields start out at year 0001 with 10% of their normal
+value (so the ice shelf is 10% of its thickness in a normal <code class="docutils literal notranslate"><span class="pre">Ocean0</span></code> run).
+Then, over the course of a year, both fields increase to 100% of their normal
+value and stay there for another year.  This test case is a simple way of
+exploring changing ice thickness without the need to support a changing
+grounding line (which remains fixed in time).</p>
+<p>Users can modify the test case by adding or modifying entries in these config
+options before running the test case:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># config options for ISOMIP+ time-varying land-ice forcing</span><span class="w"></span>
+<span class="k">[isomip_plus_forcing]</span><span class="w"></span>
+
+<span class="c1"># the forcing dates</span><span class="w"></span>
+<span class="na">dates</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0001-01-01_00:00:00, 0002-01-01_00:00:00, 0003-01-01_00:00:00</span><span class="w"></span>
+
+<span class="c1"># the amount by which the initial landIcePressure and landIceDraft are scaled</span><span class="w"></span>
+<span class="c1"># at each date</span><span class="w"></span>
+<span class="na">scales</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.1, 1.0, 1.0</span><span class="w"></span>
+</pre></div>
+</div>
+<p>Dates do not have to be the beginnings of years, they could be any list that is
+monotonic in time. Scales can be any fraction between 0.0 and 1.0.</p>
+</section>
+<section id="performance-run">
+<h2>Performance run<a class="headerlink" href="#performance-run" title="Permalink to this heading">¶</a></h2>
+<p>By default, <code class="docutils literal notranslate"><span class="pre">isomip_plus</span></code> test cases are configured for “performance” runs.
+The initial condition is created, the the sea surface height and ice-shelf
+pressure are adjusted to be in balance.  Then, a simulation is performed for
+only 1 simulated hour (appropriate for regression testing).  Finally,
+potential temperature and salinity are plotted at the top and bottom of the
+ocean and along a cross section of through the middle (y = 40 km) of the
+domain.</p>
+</section>
+<section id="simulation-run">
+<h2>Simulation run<a class="headerlink" href="#simulation-run" title="Permalink to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">isomip_plus</span></code> test cases can be manually configured for longer simulation
+runs.  First, do a performance run as described above (the default when you
+just do <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span></code> in the test case work directory).</p>
+<p>Then, edit the config file in the work directory (e.g. <code class="docutils literal notranslate"><span class="pre">Ocean0.cfg</span></code>) to set
+<code class="docutils literal notranslate"><span class="pre">setup_to_run</span> <span class="pre">=</span> <span class="pre">simulation</span> <span class="pre">streamfunction</span> <span class="pre">viz</span></code> in the <code class="docutils literal notranslate"><span class="pre">[test_case]</span></code> section
+at the very top.  With this setting, one month of simulation will be performed,
+then the streamfunctions will be computed based on the latest results in the
+<code class="docutils literal notranslate"><span class="pre">streamfunction</span></code> step and time series plots and movies will be updated in
+the <code class="docutils literal notranslate"><span class="pre">viz</span></code> step.  You can manually keep running <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span></code> in the test
+case directory to run a month at a time, or you can create a job script to
+run <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span></code> repeatedly (say 240 times for a 20-year simulation) inside
+a for-loop.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="internal_wave.html" class="btn btn-neutral float-left" title="internal_wave" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="planar_convergence.html" class="btn btn-neutral float-right" title="planar_convergence" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
