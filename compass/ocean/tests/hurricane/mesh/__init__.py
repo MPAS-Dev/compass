@@ -32,10 +32,13 @@ class Mesh(TestCase):
             self.mesh_step = DEQU120at30cr10rr2Mesh(
                                  self, mesh_name,
                                  preserve_floodplain=False)
-        if mesh_name == 'DEQU120at30cr10rr2WD':
+        elif mesh_name == 'DEQU120at30cr10rr2WD':
             self.mesh_step = DEQU120at30cr10rr2Mesh(
                                  self, mesh_name,
                                  preserve_floodplain=True)
+        else:
+            raise ValueError(f'Unexpected mesh name {mesh_name}')
+
         self.add_step(self.mesh_step)
 
     def configure(self):

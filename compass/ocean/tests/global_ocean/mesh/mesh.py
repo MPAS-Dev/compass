@@ -26,8 +26,7 @@ class MeshStep(Step):
     """
     def __init__(self, test_case, mesh_name, with_ice_shelf_cavities,
                  package, mesh_config_filename, name='mesh', subdir=None,
-                 do_inject_bathymetry=False, preserve_floodplain=False,
-                 floodplain_elevation=10.0):
+                 do_inject_bathymetry=False, preserve_floodplain=False):
         """
         Create a new step
 
@@ -53,6 +52,14 @@ class MeshStep(Step):
 
         subdir : str, optional
             the subdirectory for the step.  The default is ``name``
+
+        do_inject_bathymetry : bool, optional
+            Whether to interpolate bathymetry from a data file so it
+            can be used as a culling criteria
+
+        preserve_floodplain : bool, optional
+            Whether to leave land cells in the mesh based on bathymetry
+            specified by do_inject_bathymetry
         """
         super().__init__(test_case, name=name, subdir=subdir, cores=None,
                          min_cores=None, threads=None)
@@ -66,7 +73,6 @@ class MeshStep(Step):
         self.mesh_config_filename = mesh_config_filename
         self.do_inject_bathymetry = do_inject_bathymetry
         self.preserve_floodplain = preserve_floodplain
-        self.floodplain_elevation = floodplain_elevation
 
     def setup(self):
         """
@@ -77,6 +83,9 @@ class MeshStep(Step):
         config = self.config
         self.cores = config.getint('global_ocean', 'mesh_cores')
         self.min_cores = config.getint('global_ocean', 'mesh_min_cores')
+        self.floodplain_elevation = config.getfloat(
+            'global_ocean',
+            'floodplain_elevation')
 
     def run(self):
         """

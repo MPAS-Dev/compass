@@ -12,7 +12,6 @@ from importlib import resources
 from scipy import spatial
 import json
 import os
-plt.switch_backend('agg')
 
 
 class Analysis(Step):
@@ -68,8 +67,8 @@ class Analysis(Step):
             self.max_date = '2012 11 04 00 00'
             self.pointstats_file = {'MPAS-O': './pointwiseStats.nc'}
 
-            path = resources.path(package, f'{self.storm}_stations.json')
-            with open(path) as stations_file:
+            filename = f'{self.storm}_stations.json'
+            with resources.open_text(package, filename)as stations_file:
                 self.observations = json.load(stations_file)
 
             for obs in self.observations:
@@ -182,6 +181,8 @@ class Analysis(Step):
         """
         Run this step of the test case
         """
+        plt.switch_backend('agg')
+
         # Read in model point output data and create kd-tree
         data = {}
         tree = {}

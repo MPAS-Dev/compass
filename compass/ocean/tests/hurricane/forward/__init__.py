@@ -41,7 +41,6 @@ class Forward(TestCase):
                          subdir=subdir,
                          name=storm)
         self.mesh = mesh
-        self.init = init
 
         step = ForwardStep(test_case=self, mesh=mesh, init=init)
 
@@ -56,7 +55,7 @@ class Forward(TestCase):
         """
         Modify the configuration options for this test case
         """
-        configure_hurricane(test_case=self, mesh=self.mesh, init=self.init)
+        configure_hurricane(test_case=self, mesh=self.mesh)
 
     def run(self):
         """

@@ -4,7 +4,6 @@ import netCDF4
 import numpy as np
 from scipy import spatial
 import matplotlib.pyplot as plt
-plt.switch_backend('agg')
 
 
 class CreatePointstatsFile(Step):
@@ -67,6 +66,8 @@ class CreatePointstatsFile(Step):
         Find grid points nearest to observation stations
         and create pointwiseStats file
         """
+        plt.switch_backend('agg')
+
         # Read in station locations
         lon = []
         lat = []

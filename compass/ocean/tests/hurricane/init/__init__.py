@@ -50,7 +50,7 @@ class Init(TestCase):
         """
         Modify the configuration options for this test case
         """
-        configure_hurricane(test_case=self, mesh=self.mesh, init=self)
+        configure_hurricane(test_case=self, mesh=self.mesh)
 
     def run(self):
         """

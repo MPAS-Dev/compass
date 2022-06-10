@@ -14,18 +14,8 @@ class ForwardStep(Step):
 
     init : compass.ocean.tests.hurricane.init.Init
         The test case that produces the initial condition for this run
-
-    cores_from_config : bool
-        Whether to get ``cores`` from the config file
-
-    min_cores_from_config : bool
-        Whether to get ``min_cores`` from the config file
-
-    threads_from_config : bool
-        Whether to get ``threads`` from the config file
     """
-    def __init__(self, test_case, mesh, init, name='forward',
-                 subdir=None, cores=None, min_cores=None, threads=None):
+    def __init__(self, test_case, mesh, init, name='forward', subdir=None):
         """
         Create a new step
 
@@ -45,29 +35,10 @@ class ForwardStep(Step):
 
         subdir : str, optional
             the subdirectory for the step.  The default is ``name``
-
-        cores : int, optional
-            the number of cores the step would ideally use.  If fewer cores
-            are available on the system, the step will run on all available
-            cores as long as this is not below ``min_cores``
-
-        min_cores : int, optional
-            the number of cores the step requires.  If the system has fewer
-            than this number of cores, the step will fail
-
-        threads : int, optional
-            the number of threads the step will use
         """
         self.mesh = mesh
         self.init = init
-        if min_cores is None:
-            min_cores = cores
-        super().__init__(test_case=test_case, name=name, subdir=subdir,
-                         cores=cores, min_cores=min_cores, threads=threads)
-
-        self.cores_from_config = cores is None
-        self.min_cores_from_config = min_cores is None
-        self.threads_from_config = threads is None
+        super().__init__(test_case=test_case, name=name)
 
         self.add_namelist_file(
             'compass.ocean.tests.hurricane.forward', 'namelist.ocean')
@@ -98,15 +69,9 @@ class ForwardStep(Step):
         Set up the test case in the work directory, including downloading any
         dependencies
         """
-        if self.cores_from_config:
-            self.cores = self.config.getint(
-                'hurricane', 'forward_cores')
-        if self.min_cores_from_config:
-            self.min_cores = self.config.getint(
-                'hurricane', 'forward_min_cores')
-        if self.threads_from_config:
-            self.threads = self.config.getint(
-                'hurricane', 'forward_threads')
+        self.cores = self.config.getint('hurricane', 'forward_cores')
+        self.min_cores = self.config.getint('hurricane', 'forward_min_cores')
+        self.threads = self.config.getint('hurricane', 'forward_threads')
 
     def run(self):
         """
