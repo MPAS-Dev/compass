@@ -1,6 +1,8 @@
 from compass.testcase import TestCase
 from compass.landice.tests.ismip6_forcing.atmosphere.process_smb \
     import ProcessSMB
+from compass.landice.tests.ismip6_forcing.atmosphere.process_smb_racmo \
+    import ProcessSmbRacmo
 from compass.landice.tests.ismip6_forcing.configure import configure as \
     configure_testgroup
 
@@ -28,9 +30,13 @@ class Atmosphere(TestCase):
 
         step = ProcessSMB(test_case=self)
         self.add_step(step)
+        step = ProcessSmbRacmo(test_case=self)
+        self.add_step(step)
 
     def configure(self):
         """
         Configures test case
         """
-        configure_testgroup(config=self.config, check_model_options=True)
+
+        configure_testgroup(config=self.config,
+                            check_model_options=True)

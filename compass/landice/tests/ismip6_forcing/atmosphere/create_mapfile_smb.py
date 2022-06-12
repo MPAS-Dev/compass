@@ -1,16 +1,17 @@
 import os
+import numpy as np
 import shutil
 import subprocess
 import netCDF4
 import xarray as xr
 from mpas_tools.scrip.from_mpas import scrip_from_mpas
 from mpas_tools.logging import check_call
+from pyremap.descriptor import interp_extrap_corners_2d
 
 
 # function that creates a mapping file from ismip6 grid to mali mesh
 def build_mapping_file(config, cores, logger, ismip6_grid_file,
-                       mapping_file, mali_mesh_file=None,
-                       method_remap=None):
+                       mapping_file, mali_mesh_file=None, method_remap=None):
     """
     Build a mapping file if it does not exist.
 
@@ -27,30 +28,35 @@ def build_mapping_file(config, cores, logger, ismip6_grid_file,
     mapping_file : str
         weights for interpolation from ismip6_grid_file to mali_mesh_file
     mali_mesh_file : str, optional
-        The MALI mesh file if mapping file does not exist
+        The MALI mesh file is used if mapping file does not exist
     method_remap : str, optional
         Remapping method used in building a mapping file
     """
+
+    if os.path.exists(mapping_file):
+        print("Mapping file exists. Not building a new one.")
+        return
+
+    # create the scrip files if mapping file does not exist
+    print("Mapping file does not exist. Building one based on the "
+          "input/ouptut meshes")
+    print("Creating temporary scrip files for source and destination grids...")
 
     if mali_mesh_file is None:
         raise ValueError("Mapping file does not exist. To build one, Mali "
                          "mesh file with '-f' should be provided. "
                          "Type --help for info")
 
-    ismip6_scripfile = "temp_ismip6_8km_scrip.nc"
+    # name temporary scrip files that will be used to build mapping file
+    source_grid_scripfile = "temp_source_scrip.nc"
     mali_scripfile = "temp_mali_scrip.nc"
+    # this is the projection of ismip6 data for Antarctica
     ismip6_projection = "ais-bedmap2"
 
-    # create the ismip6 scripfile if mapping file does not exist
-    # this is the projection of ismip6 data for Antarctica
-    print("Mapping file does not exist. Building one based on the "
-          "input/ouptut meshes")
-    print("Creating temporary scripfiles for ismip6 grid and mali mesh...")
-
     # create a scripfile for the atmosphere forcing data
-    create_atm_scrip(ismip6_grid_file, ismip6_scripfile)
+    create_atm_scrip(ismip6_grid_file, source_grid_scripfile)
 
-    # create a MALI mesh scripfile if mapping file does not exist
+    # create a MALI mesh scripfile
     # make sure the mali mesh file uses the longitude convention of [0 2pi]
     # make changes on a duplicated file to avoid making changes to the
     # original mesh file
@@ -77,26 +83,36 @@ def build_mapping_file(config, cores, logger, ismip6_grid_file,
 
     parallel_executable = config.get('parallel', 'parallel_executable')
     # split the parallel executable into constituents in case it includes flags
-    args = parallel_executable.split(' ')
-    args.extend(["-n", f"{cores}",
-                 "ESMF_RegridWeightGen",
-                 "-s", ismip6_scripfile,
-                 "-d", mali_scripfile,
-                 "-w", mapping_file,
-                 "-m", method_remap,
-                 "-i", "-64bit_offset",
-                 "--dst_regional", "--src_regional"])
+    # args = parallel_executable.split(' ')
+    # args.extend(["-n", f"{cores}",
+    #              "ESMF_RegridWeightGen",
+    #              "-s", source_grid_scripfile,
+    #              "-d", mali_scripfile,
+    #              "-w", mapping_file,
+    #              "-m", method_remap,
+    #              "-i", "-64bit_offset",
+    #              "--dst_regional", "--src_regional"])
+    #
+    # check_call(args, logger)
 
-    check_call(args, logger)
+    args = ["ESMF_RegridWeightGen",
+            "-s", source_grid_scripfile,
+            "-d", mali_scripfile,
+            "-w", mapping_file,
+            "-m", method_remap,
+            "-i", "-64bit_offset",
+            "--dst_regional", "--src_regional"]
+
+    subprocess.check_call(args)
 
     # remove the temporary scripfiles once the mapping file is generated
     print("Removing the temporary mesh and scripfiles...")
-    os.remove(ismip6_scripfile)
+    # os.remove(source_grid_scripfile)
     os.remove(mali_scripfile)
     os.remove(mali_mesh_copy)
 
 
-def create_atm_scrip(ismip6_grid_file, ismip6_scripfile):
+def create_atm_scrip(source_grid_file, source_grid_scripfile):
     """
     create a scripfile for the ismip6 atmospheric forcing data.
     Note: the atmospheric forcing data do not have 'x' and 'y' coordinates and
@@ -105,18 +121,22 @@ def create_atm_scrip(ismip6_grid_file, ismip6_scripfile):
 
     Parameters
     ----------
-    ismip6_grid_file : str
-        input ismip6 grid file
+    source_grid_file : str
+        input smb grid file
 
-    ismip6_scripfile : str
-        outputput ismip6 scrip file
+    source_grid_scripfile : str
+        output scrip file of the input smb data
     """
 
-    ds = xr.open_dataset(ismip6_grid_file)
-    out_file = netCDF4.Dataset(ismip6_scripfile, 'w')
+    ds = xr.open_dataset(source_grid_file)
+    out_file = netCDF4.Dataset(source_grid_scripfile, 'w')
 
-    nx = ds.sizes["x"]
-    ny = ds.sizes["y"]
+    if "rlon" in ds and "rlat" in ds:  # this is for RACMO's rotated-pole grid
+        nx = ds.sizes["rlon"]
+        ny = ds.sizes["rlat"]
+    else:
+        nx = ds.sizes["x"]
+        ny = ds.sizes["y"]
     units = 'degrees'
 
     grid_size = nx * ny
@@ -147,19 +167,38 @@ def create_atm_scrip(ismip6_grid_file, ismip6_scripfile):
     out_file.variables['grid_dims'][:] = [nx, ny]
     out_file.variables['grid_imask'][:] = 1
 
-    lat_corner = ds.lat_bnds
-    if "time" in lat_corner.dims:
-        lat_corner = lat_corner.isel(time=0)
+    if 'lat_bnds' in ds and 'lon_bnds' in ds:
+        lat_corner = ds.lat_bnds
+        if "time" in lat_corner.dims:
+            lat_corner = lat_corner.isel(time=0)
 
-    grid_corner_lat = lat_corner.values.reshape((grid_size, 4))
+        lon_corner = ds.lon_bnds
+        if "time" in lon_corner.dims:
+            lon_corner = lon_corner.isel(time=0)
 
-    lon_corner = ds.lon_bnds
-    if "time" in lon_corner.dims:
-        lon_corner = lon_corner.isel(time=0)
+        lat_corner = lat_corner.values
+        lon_corner = lon_corner.values
+    else:  # this part is used for RACMO as it does not have lat_bnds & lon_bnds
+        lat_corner = _unwrap_corners(interp_extrap_corners_2d(ds.lat.values))
+        lon_corner = _unwrap_corners(interp_extrap_corners_2d(ds.lon.values))
 
-    grid_corner_lon = lon_corner.values.reshape((grid_size, 4))
+    grid_corner_lat = lat_corner.reshape((grid_size, 4))
+    grid_corner_lon = lon_corner.reshape((grid_size, 4))
 
     out_file.variables['grid_corner_lat'][:] = grid_corner_lat
     out_file.variables['grid_corner_lon'][:] = grid_corner_lon
 
     out_file.close()
+
+
+def _unwrap_corners(in_field):
+    """Turn a 2D array of corners into an array of rectangular mesh elements"""
+    out_field = np.zeros(((in_field.shape[0] - 1) *
+                          (in_field.shape[1] - 1), 4))
+    # corners are counterclockwise
+    out_field[:, 0] = in_field[0:-1, 0:-1].flat
+    out_field[:, 1] = in_field[0:-1, 1:].flat
+    out_field[:, 2] = in_field[1:, 1:].flat
+    out_field[:, 3] = in_field[1:, 0:-1].flat
+
+    return out_field

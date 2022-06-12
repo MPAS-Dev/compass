@@ -36,6 +36,7 @@ class ProcessSMB(Step):
         section = config['ismip6_ais']
         base_path_ismip6 = section.get('base_path_ismip6')
         base_path_mali = section.get('base_path_mali')
+        output_base_path = section.get('output_base_path')
         mali_mesh_file = section.get('mali_mesh_file')
         period_endyear = section.get("period_endyear")
         model = section.get("model")
@@ -47,13 +48,31 @@ class ProcessSMB(Step):
 
         input_file_list = self._files[period_endyear][model][scenario]
         for file in input_file_list:
-            print(base_path_ismip6)
-            print(os.path.join(base_path_ismip6, file))
             self.add_input_file(filename=os.path.basename(file),
-                                target=os.path.join(base_path_ismip6, file))
+                                target=os.path.join(base_path_ismip6,
+                                                    file))
 
-        output_file = f"processed_SMB_{model}_{scenario}_{period_endyear}.nc"
-        self.add_output_file(filename=output_file)
+        output_file_esm = f"processed_SMB_{model}_{scenario}_" \
+                          f"{period_endyear}.nc"
+        self.add_output_file(filename=output_file_esm)
+
+        # add processed racmo data as input as it is needed for smb correction
+        racmo_clim_file = f"processed_RACMO2.3p2_ANT27" \
+                     f"_smb_climatology_1995-2017.nc"
+        racmo_path = f'{output_base_path}/atmosphere_forcing/' \
+                      f'RACMO_climatology_1995-2017'
+
+        # check if the processed racmo input file exists
+        racmo_clim_file_final = os.path.join(racmo_path, racmo_clim_file)
+        if not os.path.exists(racmo_clim_file_final):
+            raise ValueError ("Processed RACMO data does not exist, "
+                              "but it is required as an input file "
+                              "to run this step. Please run `ProcessSmbRacmo` "
+                              "tep prior to running this step.")
+
+        self.add_input_file(filename=racmo_clim_file,
+                            target=os.path.join(racmo_path,
+                                                racmo_clim_file))
 
     def run(self):
         """
@@ -73,6 +92,22 @@ class ProcessSMB(Step):
         section = config['ismip6_ais_atmosphere']
         method_remap = section.get('method_remap')
 
+        # define file names needed
+        # input racmo climotology file
+        racmo_clim_file = f"processed_RACMO2.3p2_ANT27" \
+                            f"_smb_climatology_1995-2017.nc"
+        # temporary remapped climatology and anomaly files
+        clim_ismip6_temp = "clim_ismip6.nc"
+        remapped_clim_ismip6_temp = "remapped_clim.nc"
+        remapped_anomaly_ismip6_temp = "remapped_anomaly.nc"
+        # renamed remapped climatology and anomaly files (final outputs)
+        output_clim_ismip6 = f"processed_SMB_climatology_1995-2017_" \
+                             f"{model}_{scenario}.nc"
+        output_anomaly_ismip6 = f"processed_SMB_{model}_{scenario}_" \
+                                f"{period_endyear}.nc"
+
+        # combine ismip6 forcing data covering different periods
+        # into a single file
         input_file_list = self._files[period_endyear][model][scenario]
         i = 0
         for file in input_file_list:
@@ -86,72 +121,100 @@ class ProcessSMB(Step):
         combined_file_temp = "combined.nc"
         write_netcdf(input_file_combined, combined_file_temp)
 
-        # interpolate and rename the ismip6 thermal forcing data
-        remapped_file_temp = "remapped.nc"  # temporary file name
+        # create smb climatology data over 1995-2017
+        # take the time average over the period 1995-2017
+        # note: make sure to have the correct time indexing for each
+        # smb anomaly files on which climatology is calculated.
+        logger.info(f"Calculating climatology for {model}_{scenario} forcing"
+                    f"over 1995-2017")
+        args = [f"ncra", "-O", "-F", "-d", "time,1,23",
+                f"{combined_file_temp}",
+                f"{clim_ismip6_temp}"]
 
-        # call the function that reads in, remap and rename the file.
-        logger.info("Calling a remapping function...")
-        self.remap_ismip6smb_to_mali(combined_file_temp, remapped_file_temp,
-                                     mali_mesh_name, mali_mesh_file,
-                                     method_remap)
+        subprocess.check_call(args)
 
-        # call the function that renames the ismip6 variables to MALI variables
+        # remap and rename the ismip6 smb climatology
+        logger.info("Remapping ismip6 climatology onto MALI mesh...")
+        self.remap_ismip6_smb_to_mali(clim_ismip6_temp,
+                                      remapped_clim_ismip6_temp,
+                                      mali_mesh_name,
+                                      mali_mesh_file,
+                                      method_remap)
+
+        # rename the ismip6 variables to MALI variables
         logger.info("Renaming the ismip6 variables to mali variable names...")
-        output_file = f"processed_SMB_{model}_{scenario}_{period_endyear}.nc"
-        self.rename_ismip6smb_to_mali_vars(remapped_file_temp, output_file)
+        self.rename_ismip6_smb_to_mali_vars(remapped_clim_ismip6_temp,
+                                            output_clim_ismip6)
+
+        # remap and rename ismip6 smb anomaly
+        logger.info(f"Remapping the {model}_{scenario} SMB anomaly onto "
+                    f"MALI mesh")
+        self.remap_ismip6_smb_to_mali(combined_file_temp,
+                                      remapped_anomaly_ismip6_temp,
+                                      mali_mesh_name,
+                                      mali_mesh_file,
+                                      method_remap)
+
+        # rename the ismip6 variables to MALI variables
+        logger.info("Renaming the ismip6 variables to mali variable names...")
+        self.rename_ismip6_smb_to_mali_vars(remapped_anomaly_ismip6_temp,
+                                            output_anomaly_ismip6)
 
         # correct the SMB anomaly field with mali base SMB field
-        logger.info("Correcting the SMB anomaly field with MALI base SMB "
-                    "from file {mali_mesh_file}...")
-        self.correct_SMB_anomaly_for_baseSMB(output_file, mali_mesh_file)
+        logger.info("Correcting the SMB anomaly field for the base SMB "
+                    "climatology 1995-2017 ")
+        self.correct_smb_anomaly_for_climatology(racmo_clim_file,
+                                                 output_clim_ismip6,
+                                                 output_anomaly_ismip6)
 
         logger.info("Processing done successfully. "
                     "Removing the temporary files 'remapped.nc' and "
                     "'combined.nc'...")
         # remove the temporary remapped and combined files
-        os.remove(remapped_file_temp)
+        os.remove(remapped_clim_ismip6_temp)
+        os.remove(remapped_anomaly_ismip6_temp)
         os.remove(combined_file_temp)
+        os.remove(clim_ismip6_temp)
+        os.remove(output_clim_ismip6)
 
         # place the output file in appropriate directory
-        if output_base_path == "NotAvailable":
-            return
-
         output_path = f'{output_base_path}/atmosphere_forcing/' \
                       f'{model}_{scenario}/1995-{period_endyear}'
         if not os.path.exists(output_path):
             print("Creating a new directory for the output data")
             os.makedirs(output_path)
 
-        src = os.path.join(os.getcwd(), output_file)
-        dst = os.path.join(output_path, output_file)
+        src = os.path.join(os.getcwd(), output_anomaly_ismip6)
+        dst = os.path.join(output_path, output_anomaly_ismip6)
         shutil.copy(src, dst)
 
-    def remap_ismip6smb_to_mali(self, input_file, output_file, mali_mesh_name,
-                                mali_mesh_file, method_remap):
+    def remap_ismip6_smb_to_mali(self, input_file, output_file, mali_mesh_name,
+                                 mali_mesh_file, method_remap):
         """
-        Remap the input ismip6 thermal forcing data onto mali mesh
+        Remap the input ismip6 smb forcing data onto mali mesh
 
         Parameters
         ----------
         input_file: str
-            ismip6 smb data on its native polarstereo 8km grid
+            input smb data on its native polarstereo 8km grid
         output_file : str
-            ismip6 data remapped on mali mesh
+            smb data remapped on mali mesh
         mali_mesh_name : str
             name of the mali mesh used to name mapping files
         mali_mesh_file : str, optional
             The MALI mesh file if mapping file does not exist
         method_remap : str, optional
             Remapping method used in building a mapping file
+
         """
+        mapping_file = f"map_ismip6_8km_to_" \
+                       f"{mali_mesh_name}_{method_remap}.nc"
 
-        # check if a mapfile exists
-        mapping_file = f"map_ismip6_8km_to_{mali_mesh_name}_{method_remap}.nc"
-
+        # check if mapfile exists
         if not os.path.exists(mapping_file):
             # build a mapping file if it doesn't already exist
-            self.logger.info("Creating a mapping file. "
-                             "Mapping method used: {method_remap}")
+            self.logger.info(f"Creating a mapping file. "
+                             f"Mapping method used: {method_remap}")
             build_mapping_file(self.config, self.cores, self.logger,
                                input_file, mapping_file, mali_mesh_file,
                                method_remap)
@@ -168,9 +231,9 @@ class ProcessSMB(Step):
 
         subprocess.check_call(args)
 
-    def rename_ismip6smb_to_mali_vars(self, remapped_file_temp, output_file):
+    def rename_ismip6_smb_to_mali_vars(self, remapped_file_temp, output_file):
         """
-        Rename variables in the remapped ismip6 input data
+        Rename variables in the remapped source input data
         to the ones that MALI uses.
 
         Parameters
@@ -214,27 +277,37 @@ class ProcessSMB(Step):
         write_netcdf(ds, output_file)
         ds.close()
 
-    def correct_SMB_anomaly_for_baseSMB(self, output_file, mali_mesh_file):
+    def correct_smb_anomaly_for_climatology(self,
+                                            racmo_clim_file,
+                                            output_clim_ismip6_file,
+                                            output_file_final):
+
         """
         Apply the MALI base SMB to the ismip6 SMB anomaly field
 
         Parameters
         ----------
-        output_file : str
-            remapped ismip6 data renamed on mali mesh
-        mali_mesh_file : str
-            initialized MALI mesh file in which the base SMB field exists
+        racmo_clim_file : str
+            RACMO climatology file (1995-2017)
+        output_clim_ismip6_file : str
+            remapped and renamed ismip6 climatology file
+        output_file_final : str
+             climatology-corrected, final ismip6 smb anomaly file
         """
 
-        ds = xr.open_dataset(output_file)
-        ds_base = xr.open_dataset(mali_mesh_file)
-        # get the first time index
-        ref_smb = ds_base["sfcMassBal"].isel(Time=0)
-        # correct for the reference smb
-        ds["sfcMassBal"] = ds["sfcMassBal"] + ref_smb
+        ds = xr.open_dataset(output_file_final)
+        ds_racmo_clim = xr.open_dataset(racmo_clim_file)
+        ds_ismip6_clim = xr.open_dataset(output_clim_ismip6_file)
+
+        # calculate the climatology correction
+        corr_clim = ds_racmo_clim["sfcMassBal"].isel(Time=0) \
+                    - ds_ismip6_clim["sfcMassBal"].isel(Time=0)
+
+        # correct the ismip6 smb anomaly
+        ds["sfcMassBal"] = ds["sfcMassBal"] + corr_clim
 
         # write to a new netCDF file
-        write_netcdf(ds, output_file)
+        write_netcdf(ds, output_file_final)
         ds.close()
 
     # create a nested dictionary for the ISMIP6 original forcing files including relative path
