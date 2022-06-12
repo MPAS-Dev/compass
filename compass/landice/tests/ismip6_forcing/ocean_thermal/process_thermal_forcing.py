@@ -110,9 +110,6 @@ class ProcessThermalForcing(Step):
         os.remove(remapped_file_temp)
 
         # place the output file in appropriate directory
-        if output_base_path == "NotAvailable":
-            return
-
         if not os.path.exists(output_path):
             print("Creating a new directory for the output data")
             os.makedirs(output_path)

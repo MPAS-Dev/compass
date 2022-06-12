@@ -103,10 +103,7 @@ class ProcessBasalMelt(Step):
             os.remove(combined_file_temp)
             os.remove(remapped_file_temp)
 
-            # place the output file in appropriate directory
-            if output_base_path == "NotAvailable":
-                return
-
+            # place the output file in appropriate director
             output_path = f'{output_base_path}/basal_melt/parametrizations/'
             if not os.path.exists(output_path):
                 print("Creating a new directory for the output data")
@@ -115,8 +112,6 @@ class ProcessBasalMelt(Step):
             src = os.path.join(os.getcwd(), output_file)
             dst = os.path.join(output_path, output_file)
             shutil.copy(src, dst)
-
-            print("")
 
     def combine_ismip6_inputfiles(self, basin_file, coeff_gamma0_deltaT_file,
                                   combined_file_temp):
