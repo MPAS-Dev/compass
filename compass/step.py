@@ -134,6 +134,9 @@ class Step:
         subprocess if there is not a good way to redirect output to a log
         file (e.g. if the step calls external code that, in turn, calls
         additional subprocesses).
+
+    args : {list of str, None}
+        A list of command-line arguments to call in parallel
     """
 
     def __init__(self, test_case, name, subdir=None, cpus_per_task=1,
@@ -221,6 +224,7 @@ class Step:
         self.outputs = list()
         self.namelist_data = dict()
         self.streams_data = dict()
+        self.args = None
 
         # these will be set later during setup
         self.config = None
