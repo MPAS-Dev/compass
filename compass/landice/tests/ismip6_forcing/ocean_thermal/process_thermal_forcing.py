@@ -173,7 +173,7 @@ class ProcessThermalForcing(Step):
 
         config = self.config
         section = config['ismip6_ais_ocean_thermal']
-        process_obs_data = section.get('process_obs_data')
+        process_obs_data = section.getboolean('process_obs_data')
 
         # open dataset in 20 years chunk
         ds = xr.open_dataset(remapped_file_temp, chunks=dict(time=20),
@@ -187,6 +187,10 @@ class ProcessThermalForcing(Step):
             ismip6_to_mali_dims = dict(
                 z="nISMIP6OceanLayers",
                 ncol="nCells")
+            ds["xtime"] = ("Time", ["1995-01-01_00:00:00".ljust(64)])
+            ds["xtime"] = ds.xtime.astype('S')
+            ds["thermal_forcing"] = ds["thermal_forcing"].\
+                                    expand_dims(dim="Time", axis=0)
             ds = ds.rename(ismip6_to_mali_dims)
         else:
             ismip6_to_mali_dims = dict(

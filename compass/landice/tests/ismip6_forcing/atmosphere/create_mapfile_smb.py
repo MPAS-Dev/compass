@@ -107,7 +107,7 @@ def build_mapping_file(config, cores, logger, ismip6_grid_file,
 
     # remove the temporary scripfiles once the mapping file is generated
     print("Removing the temporary mesh and scripfiles...")
-    # os.remove(source_grid_scripfile)
+    os.remove(source_grid_scripfile)
     os.remove(mali_scripfile)
     os.remove(mali_mesh_copy)
 

@@ -137,8 +137,8 @@ class ProcessSmbRacmo(Step):
                     "Removing the temporary files...")
         # remove the temporary remapped and combined files
         os.remove(remapped_file_temp)
-        #  os.remove(racmo_file_temp1)
-        #  os.remove(racmo_file_temp2)
+        os.remove(racmo_file_temp1)
+        os.remove(racmo_file_temp2)
 
         # place the output file in appropriate directory
         output_path = f'{output_base_path}/atmosphere_forcing/' \
@@ -217,14 +217,7 @@ class ProcessSmbRacmo(Step):
         ds = ds.rename(ismip6_to_mali_dims)
 
         # add xtime variable
-        xtime = []
-        for t_index in range(ds.sizes["Time"]):
-            date = ds.Time[t_index]
-            date = date.dt.strftime("%Y-%m-%d_00:00:00")
-            date = str(date.values).ljust(64)
-            xtime.append(date)
-
-        ds["xtime"] = ("Time", xtime)
+        ds["xtime"] = ("Time", ["1995-01-01_00:00:00".ljust(64)])
         ds["xtime"] = ds.xtime.astype('S')
 
         # drop unnecessary variables
