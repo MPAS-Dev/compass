@@ -2,10 +2,13 @@ import os
 import shutil
 import subprocess
 import xarray as xr
-from compass.landice.tests.ismip6_forcing.atmosphere.create_mapfile_smb \
-    import build_mapping_file
+import warnings
 from mpas_tools.io import write_netcdf
 from compass.step import Step
+from compass.landice.tests.ismip6_forcing.atmosphere.create_mapfile_smb \
+    import build_mapping_file
+
+
 
 
 class ProcessSmbRacmo(Step):
@@ -54,6 +57,11 @@ class ProcessSmbRacmo(Step):
                           f"_smb_climatology_1995-2017.nc"
 
             self.add_output_file(filename=output_file)
+        else:
+            warnings.warn(f"'process_smb_racmo' is set to 'False'. This step"
+                          f" will not run unless set 'True' in the"
+                          f" config file.")
+
 
     def run(self):
         """

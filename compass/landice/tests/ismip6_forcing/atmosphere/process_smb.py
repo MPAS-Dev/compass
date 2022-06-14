@@ -62,14 +62,6 @@ class ProcessSMB(Step):
         racmo_path = f'{output_base_path}/atmosphere_forcing/' \
                       f'RACMO_climatology_1995-2017'
 
-        # check if the processed racmo input file exists
-        racmo_clim_file_final = os.path.join(racmo_path, racmo_clim_file)
-        if not os.path.exists(racmo_clim_file_final):
-            raise ValueError ("Processed RACMO data does not exist, "
-                              "but it is required as an input file "
-                              "to run this step. Please run `ProcessSmbRacmo` "
-                              "tep prior to running this step.")
-
         self.add_input_file(filename=racmo_clim_file,
                             target=os.path.join(racmo_path,
                                                 racmo_clim_file))
@@ -96,10 +88,20 @@ class ProcessSMB(Step):
         # input racmo climotology file
         racmo_clim_file = f"processed_RACMO2.3p2_ANT27" \
                             f"_smb_climatology_1995-2017.nc"
+        racmo_path = f'{output_base_path}/atmosphere_forcing/' \
+                      f'RACMO_climatology_1995-2017'
+        # check if the processed racmo input file exists
+        racmo_clim_file_final = os.path.join(racmo_path, racmo_clim_file)
+        if not os.path.exists(racmo_clim_file_final):
+            raise ValueError ("Processed RACMO data does not exist, "
+                              "but it is required as an input file "
+                              "to run this step. Please run `ProcessSmbRacmo` "
+                              "tep prior to running this step.")
+
         # temporary remapped climatology and anomaly files
         clim_ismip6_temp = "clim_ismip6.nc"
-        remapped_clim_ismip6_temp = "remapped_clim.nc"
-        remapped_anomaly_ismip6_temp = "remapped_anomaly.nc"
+        remapped_clim_ismip6_temp = "remapped_clim_ismip6.nc"
+        remapped_anomaly_ismip6_temp = "remapped_anomaly_ismip6.nc"
         # renamed remapped climatology and anomaly files (final outputs)
         output_clim_ismip6 = f"processed_SMB_climatology_1995-2017_" \
                              f"{model}_{scenario}.nc"
@@ -168,8 +170,7 @@ class ProcessSMB(Step):
                                                  output_anomaly_ismip6)
 
         logger.info("Processing done successfully. "
-                    "Removing the temporary files 'remapped.nc' and "
-                    "'combined.nc'...")
+                    "Removing the temporary files...")
         # remove the temporary remapped and combined files
         os.remove(remapped_clim_ismip6_temp)
         os.remove(remapped_anomaly_ismip6_temp)
