@@ -9,7 +9,7 @@ import inspect
 from mpas_tools.logging import LoggingContext, check_call
 import mpas_tools.io
 from compass.parallel import check_parallel_system, set_cores_per_node, \
-    get_available_cores_and_nodes
+    get_available_cores_and_nodes, run_command
 from compass.logging import log_method_call, log_function_call
 from compass.config import CompassConfigParser
 
@@ -406,7 +406,6 @@ def _run_step(test_case, step, new_log_file):
     config = test_case.config
     cwd = os.getcwd()
     available_cores, _ = get_available_cores_and_nodes(config)
-    step.constrain_resources(available_cores)
 
     missing_files = list()
     for input_file in step.inputs:
@@ -431,10 +430,28 @@ def _run_step(test_case, step, new_log_file):
                         log_filename=log_filename) as step_logger:
         step.logger = step_logger
         os.chdir(step.work_dir)
+
         step_logger.info('')
-        log_method_call(method=step.run, logger=step_logger)
+        log_method_call(method=step.constrain_resources, logger=step_logger)
         step_logger.info('')
-        step.run()
+        step.constrain_resources(available_cores)
+
+        # this function will perform small tasks that require knowing the
+        # resources of the task before the step runs (such as creating
+        # graph partitions)
+        step_logger.info('')
+        log_method_call(method=step.runtime_setup, logger=step_logger)
+        step_logger.info('')
+        step.runtime_setup()
+
+        if step.args is not None:
+            run_command(step.args, step.cpus_per_task, step.ntasks,
+                        step.openmp_threads, step.config, step.logger)
+        else:
+            step_logger.info('')
+            log_method_call(method=step.run, logger=step_logger)
+            step_logger.info('')
+            step.run()
 
     missing_files = list()
     for output_file in step.outputs:
