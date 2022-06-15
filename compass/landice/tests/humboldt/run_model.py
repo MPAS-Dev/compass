@@ -37,8 +37,8 @@ class RunModel(Step):
                  calving_law=None,
                  damage=None,
                  face_melt=False,
-                 subdir=None, cores=1,
-                 min_cores=None, threads=1, suffixes=None):
+                 subdir=None, ntasks=1,
+                 min_tasks=None, openmp_threads=1, suffixes=None):
         """
         Create a new test case
 
@@ -71,17 +71,17 @@ class RunModel(Step):
         subdir : str, optional
             the subdirectory for the step.  The default is ``name``
 
-        cores : int, optional
-            the number of cores the step would ideally use.  If fewer cores
+        ntasks : int, optional
+            the number of tasks the step would ideally use.  If fewer tasks
             are available on the system, the step will run on all available
-            cores as long as this is not below ``min_cores``
+            tasks as long as this is not below ``min_tasks``
 
-        min_cores : int, optional
-            the number of cores the step requires.  If the system has fewer
-            than this number of cores, the step will fail
+        min_tasks : int, optional
+            the number of tasks the step requires.  If the system has fewer
+            than this number of tasks, the step will fail
 
-        threads : int, optional
-            the number of threads the step will use
+        openmp_threads : int, optional
+            the number of OpenMP threads the step will use
 
         suffixes : list of str, optional
             a list of suffixes for namelist and streams files produced
@@ -113,10 +113,11 @@ class RunModel(Step):
         if suffixes is None:
             suffixes = ['landice']
         self.suffixes = suffixes
-        if min_cores is None:
-            min_cores = cores
+        if min_tasks is None:
+            min_tasks = ntasks
         super().__init__(test_case=test_case, name=name, subdir=subdir,
-                         cores=cores, min_cores=min_cores, threads=threads)
+                         ntasks=ntasks, min_tasks=min_tasks,
+                         openmp_threads=openmp_threads)
 
         # download and link one of the premade meshes and forcing files
         if self.mesh_type == '1km':
