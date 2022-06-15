@@ -246,12 +246,7 @@ class TestCase:
         config = self.config
         cwd = os.getcwd()
         available_cores, _ = get_available_cores_and_nodes(config)
-        step.cores = min(step.cores, available_cores)
-        if step.min_cores is not None:
-            if step.cores < step.min_cores:
-                raise ValueError(
-                    'Available cores ({}) is below the minimum of {}'
-                    ''.format(step.cores, step.min_cores))
+        step.constrain_resources(available_cores)
 
         missing_files = list()
         for input_file in step.inputs:
