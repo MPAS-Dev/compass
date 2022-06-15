@@ -41,7 +41,8 @@ class DecompositionTest(TestCase):
         for procs in [1, 4]:
             name = '{}proc_run'.format(procs)
             step = RunExperiment(test_case=self, name=name, subdir=name,
-                                 cores=procs, threads=1, experiment=experiment)
+                                 ntasks=procs, openmp_threads=1,
+                                 experiment=experiment)
 
             step.add_namelist_options(options)
 
