@@ -6,14 +6,13 @@ import numpy
 import stat
 import grp
 import progressbar
-from abc import ABC, abstractmethod
 
 from compass.io import download, symlink
 import compass.namelist
 import compass.streams
 
 
-class Step(ABC):
+class Step:
     """
     The base class for a step of a test cases, such as setting up a mesh,
     creating an initial condition, or running the MPAS core forward in time.
@@ -47,17 +46,29 @@ class Step(ABC):
         ``mpas_core``, ``test_group``, the test case's ``subdir`` and the
         step's ``subdir``
 
-    cores : int
-        the number of cores the step would ideally use.  If fewer cores
-        are available on the system, the step will run on all available
-        cores as long as this is not below ``min_cores``
+    cpus_per_task : int, optional
+        the number of cores per task the step would ideally use.  If
+        fewer cores per node are available on the system, the step will
+        run on all available cores as long as this is not below
+        ``min_cpus_per_task``
 
-    min_cores : int
-        the number of cores the step requires.  If the system has fewer
-        than this number of cores, the step will fail
+    min_cpus_per_task : int, optional
+        the number of cores per task the step requires.  If the system
+        has fewer than this number of cores per node, the step will fail
 
-    threads : int
-        the number of threads the step will use
+    ntasks : int, optional
+        the number of tasks the step would ideally use.  If too few
+        cores are available on the system to accommodate the number of
+        tasks and the number of cores per task, the step will run on
+        fewer tasks as long as as this is not below ``min_tasks``
+
+    min_tasks : int, optional
+        the number of tasks the step requires.  If the system has too
+        few cores to accommodate the number of tasks and cores per task,
+        the step will fail
+
+    openmp_threads : int
+        the number of OpenMP threads to use
 
     max_memory : int
         the amount of memory that the step is allowed to use in MB.
@@ -125,8 +136,9 @@ class Step(ABC):
         additional subprocesses).
     """
 
-    def __init__(self, test_case, name, subdir=None, cores=1, min_cores=1,
-                 threads=1, max_memory=1000, cached=False,
+    def __init__(self, test_case, name, subdir=None, cpus_per_task=1,
+                 min_cpus_per_task=1, ntasks=1, min_tasks=1,
+                 openmp_threads=1, max_memory=None, cached=False,
                  run_as_subprocess=False):
         """
         Create a new test case
@@ -142,17 +154,29 @@ class Step(ABC):
         subdir : str, optional
             the subdirectory for the step.  The default is ``name``
 
-        cores : int, optional
-            the number of cores the step would ideally use.  If fewer cores
-            are available on the system, the step will run on all available
-            cores as long as this is not below ``min_cores``
+        cpus_per_task : int, optional
+            the number of cores per task the step would ideally use.  If
+            fewer cores per node are available on the system, the step will
+            run on all available cores as long as this is not below
+            ``min_cpus_per_task``
 
-        min_cores : int, optional
-            the number of cores the step requires.  If the system has fewer
-            than this number of cores, the step will fail
+        min_cpus_per_task : int, optional
+            the number of cores per task the step requires.  If the system
+            has fewer than this number of cores per node, the step will fail
 
-        threads : int, optional
-            the number of threads the step will use
+        ntasks : int, optional
+            the number of tasks the step would ideally use.  If too few
+            cores are available on the system to accommodate the number of
+            tasks and the number of cores per task, the step will run on
+            fewer tasks as long as as this is not below ``min_tasks``
+
+        min_tasks : int, optional
+            the number of tasks the step requires.  If the system has too
+            few cores to accommodate the number of tasks and cores per task,
+            the step will fail
+
+        openmp_threads : int
+            the number of OpenMP threads to use
 
         max_memory : int, optional
             the amount of memory that the step is allowed to use in MB.
@@ -179,9 +203,11 @@ class Step(ABC):
         else:
             self.subdir = name
 
-        self.cores = cores
-        self.min_cores = min_cores
-        self.threads = threads
+        self.cpus_per_task = cpus_per_task
+        self.min_cpus_per_task = min_cpus_per_task
+        self.ntasks = ntasks
+        self.min_tasks = min_tasks
+        self.openmp_threads = openmp_threads
         self.max_memory = max_memory
 
         self.path = os.path.join(self.mpas_core.name, self.test_group.name,
@@ -210,6 +236,88 @@ class Step(ABC):
         # output caching
         self.cached = cached
 
+    def set_resources(self, cpus_per_task=None, min_cpus_per_task=None,
+                      ntasks=None, min_tasks=None, openmp_threads=None,
+                      max_memory=None):
+        """
+        Update the resources for the subtask.  This can be done within init,
+        ``setup()`` or ``runtime_setup()`` of this step, or init,
+        ``configure()`` or ``run()`` for the test case that this step belongs
+        to.
+
+        Parameters
+        ----------
+        cpus_per_task : int, optional
+            the number of cores per task the step would ideally use.  If
+            fewer cores per node are available on the system, the step will
+            run on all available cores as long as this is not below
+            ``min_cpus_per_task``
+
+        min_cpus_per_task : int, optional
+            the number of cores per task the step requires.  If the system
+            has fewer than this number of cores per node, the step will fail
+
+        ntasks : int, optional
+            the number of tasks the step would ideally use.  If too few
+            cores are available on the system to accommodate the number of
+            tasks and the number of cores per task, the step will run on
+            fewer tasks as long as as this is not below ``min_tasks``
+
+        min_tasks : int, optional
+            the number of tasks the step requires.  If the system has too
+            few cores to accommodate the number of tasks and cores per task,
+            the step will fail
+
+        openmp_threads : int, optional
+            the number of OpenMP threads to use
+
+        max_memory : int, optional
+            the amount of memory that the step is allowed to use in MB.
+            This is currently just a placeholder for later use with task
+            parallelism
+        """
+        if cpus_per_task is not None:
+            self.cpus_per_task = cpus_per_task
+        if min_cpus_per_task is not None:
+            self.min_cpus_per_task = min_cpus_per_task
+        if ntasks is not None:
+            self.ntasks = ntasks
+        if min_tasks is not None:
+            self.min_tasks = min_tasks
+        if openmp_threads is not None:
+            self.openmp_threads = openmp_threads
+        if max_memory is not None:
+            self.max_memory = max_memory
+
+    def constrain_resources(self, available_cores):
+        """
+        Constrain ``cpus_per_task`` and ``ntasks`` based on the number of
+        cores available to this step
+
+        Parameters
+        ----------
+        available_cores : int
+            The total number of cores available to the step
+        """
+        if self.ntasks == 1:
+            # just one task so only need to worry about cpus_per_task
+            self.cpus_per_task = min(self.cpus_per_task, available_cores)
+            cores = self.cpus_per_task
+        elif self.cpus_per_task == self.min_cpus_per_task:
+            available_tasks = available_cores // self.cpus_per_task
+            self.ntasks = min(self.ntasks, available_tasks)
+            cores = self.ntasks * self.cpus_per_task
+        else:
+            raise ValueError('Unsupported step configuration in which '
+                             'ntasks > 1 and  '
+                             'cpus_per_task != min_cpus_per_task')
+
+        min_cores = self.min_cpus_per_task * self.min_tasks
+        if cores < min_cores:
+            raise ValueError(
+                f'Available cores ({cores}) is below the minimum of '
+                f'{min_cores} for step {self.name}')
+
     def setup(self):
         """
         Set up the test case in the work directory, including downloading any
@@ -219,7 +327,18 @@ class Step(ABC):
         """
         pass
 
-    @abstractmethod
+    def runtime_setup(self):
+        """
+        Update attributes of the step at runtime before calling the ``run()``
+        method.  The most common reason to override this method is to
+        determine the number of cores and threads to run with.  It may also
+        be useful for performing small (python) tasks such as creating
+        graph and partition files before running a parallel command. When
+        running with parallel tasks in the future, this method will be called
+        for each step in serial before steps are run in task parallel.
+        """
+        pass
+
     def run(self):
         """
         Run the step.  Every child class must override this method to perform
@@ -328,7 +447,7 @@ class Step(ABC):
             The mode that the model will run in
         """
         if out_name is None:
-            out_name = 'namelist.{}'.format(self.mpas_core.name)
+            out_name = f'namelist.{self.mpas_core.name}'
 
         if out_name not in self.namelist_data:
             self.namelist_data[out_name] = list()
@@ -357,7 +476,7 @@ class Step(ABC):
             The mode that the model will run in
         """
         if out_name is None:
-            out_name = 'namelist.{}'.format(self.mpas_core.name)
+            out_name = f'namelist.{self.mpas_core.name}'
 
         if out_name not in self.namelist_data:
             self.namelist_data[out_name] = list()
@@ -412,24 +531,24 @@ class Step(ABC):
             default
         """
         config = self.config
-        cores = self.cores
+        cores = self.ntasks * self.cpus_per_task
 
         if out_name is None:
-            out_name = 'namelist.{}'.format(self.mpas_core.name)
+            out_name = f'namelist.{self.mpas_core.name}'
 
         cores_per_node = config.getint('parallel', 'cores_per_node')
 
         # update PIO tasks based on the machine settings and the available
         # number or cores
         pio_num_iotasks = int(numpy.ceil(cores / cores_per_node))
-        pio_stride = cores // pio_num_iotasks
+        pio_stride = self.ntasks // pio_num_iotasks
         if pio_stride > cores_per_node:
-            raise ValueError('Not enough nodes for the number of cores.  '
-                             'cores: {}, cores per node: {}'.format(
-                                 cores, cores_per_node))
+            raise ValueError(f'Not enough nodes for the number of cores.  '
+                             f'cores: {cores}, cores per node: '
+                             f'{cores_per_node}')
 
-        replacements = {'config_pio_num_iotasks': '{}'.format(pio_num_iotasks),
-                        'config_pio_stride': '{}'.format(pio_stride)}
+        replacements = {'config_pio_num_iotasks': f'{pio_num_iotasks}',
+                        'config_pio_stride': f'{pio_stride}'}
 
         self.update_namelist_at_runtime(options=replacements,
                                         out_name=out_name)
@@ -460,7 +579,7 @@ class Step(ABC):
             The mode that the model will run in
         """
         if out_name is None:
-            out_name = 'streams.{}'.format(self.mpas_core.name)
+            out_name = f'streams.{self.mpas_core.name}'
 
         if out_name not in self.streams_data:
             self.streams_data[out_name] = list()
@@ -578,12 +697,12 @@ class Step(ABC):
                 if url is None:
                     base_url = config.get('download', 'server_base_url')
                     core_path = config.get('download', 'core_path')
-                    url = '{}/{}/{}'.format(base_url, core_path, database)
+                    url = f'{base_url}/{core_path}/{database}'
 
-                    url = '{}/{}'.format(url, target)
+                    url = f'{url}/{target}'
 
                 database_root = config.get(
-                    'paths', '{}_database_root'.format(mpas_core))
+                    'paths', f'{mpas_core}_database_root')
                 download_path = os.path.join(database_root, database,
                                              download_target)
                 if not os.path.exists(download_path):
@@ -654,7 +773,7 @@ class Step(ABC):
                 replacements.update(options)
 
             defaults_filename = config.get('namelists', mode)
-            out_filename = '{}/{}'.format(step_work_dir, out_name)
+            out_filename = f'{step_work_dir}/{out_name}'
 
             namelist = compass.namelist.ingest(defaults_filename)
 
@@ -693,7 +812,7 @@ class Step(ABC):
                     replacements=entry['replacements'], tree=tree)
 
             defaults_filename = config.get('streams', mode)
-            out_filename = '{}/{}'.format(step_work_dir, out_name)
+            out_filename = f'{step_work_dir}/{out_name}'
 
             defaults_tree = etree.parse(defaults_filename)
 
