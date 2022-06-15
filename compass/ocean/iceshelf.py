@@ -56,7 +56,7 @@ def adjust_ssh(variable, iteration_count, step):
     step : compass.Step
         the step for performing SSH or land-ice pressure adjustment
     """
-    cores = step.cores
+    ntasks = step.ntasks
     config = step.config
     logger = step.logger
     out_filename = None
@@ -65,7 +65,7 @@ def adjust_ssh(variable, iteration_count, step):
         raise ValueError("Unknown variable to modify: {}".format(variable))
 
     step.update_namelist_pio('namelist.ocean')
-    partition(cores, config, logger)
+    partition(ntasks, config, logger)
 
     for iterIndex in range(iteration_count):
         logger.info(" * Iteration {}/{}".format(iterIndex + 1,
