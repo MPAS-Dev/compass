@@ -36,8 +36,9 @@ class A(TestCase):
                              '../phase2/restart.150000.nc']
         for index, restart_filename in enumerate(restart_filenames):
             name = 'phase{}'.format(index+1)
-            step = RunModel(test_case=self, cores=1, threads=1, name=name,
-                            subdir=name, restart_filename=restart_filename)
+            step = RunModel(test_case=self, ntasks=1, openmp_threads=1,
+                            name=name, subdir=name,
+                            restart_filename=restart_filename)
 
             suffix = 'landice{}'.format(index+1)
             step.add_namelist_file(module, 'namelist.{}'.format(suffix))

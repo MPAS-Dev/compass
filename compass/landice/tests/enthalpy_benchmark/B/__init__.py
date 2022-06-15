@@ -29,7 +29,8 @@ class B(TestCase):
         self.add_step(
             SetupMesh(test_case=self))
         self.add_step(
-            RunModel(test_case=self, name='run_model', cores=1, threads=1))
+            RunModel(test_case=self, name='run_model', ntasks=1,
+                     openmp_threads=1))
         self.add_step(
             Visualize(test_case=self))
 
