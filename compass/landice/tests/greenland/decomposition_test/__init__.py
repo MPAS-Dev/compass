@@ -38,8 +38,8 @@ class DecompositionTest(TestCase):
             name = '{}proc_run'.format(procs)
             self.add_step(
                 RunModel(test_case=self, velo_solver=velo_solver, name=name,
-                         subdir=name, cores=procs, min_cores=procs,
-                         threads=1))
+                         subdir=name, ntasks=procs, min_tasks=procs,
+                         openmp_threads=1))
 
     # no configure() method is needed
 
