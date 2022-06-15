@@ -33,8 +33,8 @@ class DtConvergenceTest(TestCase):
         subdir = f'{mesh}.{calving}.{velo}'
         super().__init__(test_group=test_group, name=self.name, subdir=subdir)
 
-        cores = 36
-        min_cores = 4
+        ntasks = 36
+        min_tasks = 4
 
         # Do fewer runs if FO solver
         if velo == 'FO':
@@ -49,7 +49,8 @@ class DtConvergenceTest(TestCase):
                             calving=calving,
                             velo=velo,
                             calv_dt_frac=frac,
-                            cores=cores, min_cores=min_cores, threads=1)
+                            ntasks=ntasks, min_tasks=min_tasks,
+                            openmp_threads=1)
             self.add_step(step)
 
     # no configure() method is needed
