@@ -28,8 +28,8 @@ class RestartTest(TestCase):
             SetupMesh(test_case=self, initial_condition='zero'))
 
         name = 'full_run'
-        step = RunModel(test_case=self, name=name, subdir=name, cores=4,
-                        threads=1)
+        step = RunModel(test_case=self, name=name, subdir=name, ntasks=4,
+                        openmp_threads=1)
         # modify the namelist options and streams file
         step.add_namelist_file(
             'compass.landice.tests.hydro_radial.restart_test',
@@ -46,8 +46,8 @@ class RestartTest(TestCase):
         self.add_step(step, run_by_default=False)
 
         name = 'restart_run'
-        step = RunModel(test_case=self, name=name, subdir=name, cores=4,
-                        threads=1,
+        step = RunModel(test_case=self, name=name, subdir=name, ntasks=4,
+                        openmp_threads=1,
                         suffixes=['landice', 'landice.rst'])
 
         # modify the namelist options and streams file
