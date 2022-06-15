@@ -45,8 +45,8 @@ class DecompositionTest(TestCase):
         for procs in [1, 4]:
             name = '{}proc_run'.format(procs)
             self.add_step(
-                RunModel(test_case=self, name=name, subdir=name, cores=procs,
-                         threads=1, velo_solver=velo_solver,
+                RunModel(test_case=self, name=name, subdir=name, ntasks=procs,
+                         openmp_threads=1, velo_solver=velo_solver,
                          mesh_type=mesh_type))
 
             input_dir = name

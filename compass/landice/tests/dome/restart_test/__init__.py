@@ -43,8 +43,8 @@ class RestartTest(TestCase):
             SetupMesh(test_case=self, mesh_type=mesh_type))
 
         name = 'full_run'
-        step = RunModel(test_case=self, name=name, subdir=name, cores=4,
-                        threads=1, velo_solver=velo_solver,
+        step = RunModel(test_case=self, name=name, subdir=name, ntasks=4,
+                        openmp_threads=1, velo_solver=velo_solver,
                         mesh_type=mesh_type)
         # modify the namelist options and streams file
         step.add_namelist_file(
@@ -62,8 +62,8 @@ class RestartTest(TestCase):
         self.add_step(step, run_by_default=False)
 
         name = 'restart_run'
-        step = RunModel(test_case=self, name=name, subdir=name, cores=4,
-                        threads=1, velo_solver=velo_solver,
+        step = RunModel(test_case=self, name=name, subdir=name, ntasks=4,
+                        openmp_threads=1, velo_solver=velo_solver,
                         mesh_type=mesh_type,
                         suffixes=['landice', 'landice.rst'])
 
