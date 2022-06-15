@@ -11,11 +11,11 @@ cyclone events and tides. The meshes contain refined regions in order
 to resolve coastal estuaries, making it possible to simulate the
 storm surge that results from a given hurricane event.   
 Currently, one mesh resolution and one storm, Hurricane Sandy, are supported.
-More mesh reolutions will be supported in the future.
+More mesh resolutions will be supported in the future.
 
 These test are configured to use the barotropic, single layer configuration
 of MPAS-Ocean. Each mesh can optionally be created to contain the floodplain
-which can be used to simluate coastal inundation using MPAS-Ocean's 
+which can be used to simulate coastal inundation using MPAS-Ocean's 
 wetting and drying scheme.
 
 Shared config options
@@ -130,5 +130,5 @@ are ramped to their full value to avoid shocking the system.
 analysis step
 ^^^^^^^^^^^^^
 The analysis step plots the timeseries data at each observation station
-to compare the modeled and observed data. Both NOAA and UGS station data
+to compare the modeled and observed data. Both NOAA and USGS station data
 is used for the validation.
