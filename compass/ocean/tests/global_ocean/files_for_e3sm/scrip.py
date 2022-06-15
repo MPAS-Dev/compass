@@ -31,8 +31,8 @@ class Scrip(Step):
             Whether the mesh includes ice-shelf cavities
         """
 
-        super().__init__(test_case, name='scrip', cores=1,
-                         min_cores=1, threads=1)
+        super().__init__(test_case, name='scrip', ntasks=1,
+                         min_tasks=1, openmp_threads=1)
 
         self.add_input_file(filename='README', target='../README')
         self.add_input_file(filename='restart.nc',

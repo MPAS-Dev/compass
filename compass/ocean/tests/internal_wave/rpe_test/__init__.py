@@ -36,8 +36,8 @@ class RpeTest(TestCase):
         for index, nu in enumerate(nus):
             name = 'rpe_test_{}_nu_{:g}'.format(index + 1, nu)
             step = Forward(
-                test_case=self, name=name, subdir=name, cores=4,
-                threads=1, nu=float(nu))
+                test_case=self, name=name, subdir=name, ntasks=4,
+                openmp_threads=1, nu=float(nu))
 
             step.add_namelist_file(
                 'compass.ocean.tests.internal_wave.rpe_test',

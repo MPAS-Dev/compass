@@ -40,13 +40,13 @@ class InitialState(Step):
         self.resolution = resolution
 
         res_params = {'32km': {'cores': 4,
-                               'min_cores': 1},
+                               'min_tasks': 1},
                       '16km': {'cores': 10,
-                               'min_cores': 1},
+                               'min_tasks': 1},
                       '8km': {'cores': 40,
-                              'min_cores': 1},
+                              'min_tasks': 1},
                       '4km': {'cores': 160,
-                              'min_cores': 1}}
+                              'min_tasks': 1}}
 
         if resolution not in res_params:
             raise ValueError(
@@ -56,8 +56,8 @@ class InitialState(Step):
         res_params = res_params[resolution]
 
         super().__init__(test_case=test_case, name='initial_state',
-                         cores=res_params['cores'],
-                         min_cores=res_params['min_cores'])
+                         ntasks=res_params['cores'],
+                         min_tasks=res_params['min_tasks'])
 
         mesh_filenames = {'32km': 'SOMA_32km_grid.161202.nc',
                           '16km': 'SOMA_16km_grid.161202.nc',

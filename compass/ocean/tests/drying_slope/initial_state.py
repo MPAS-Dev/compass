@@ -23,8 +23,8 @@ class InitialState(Step):
         test_case : compass.ocean.tests.drying_slope.default.Default
             The test case this step belongs to
         """
-        super().__init__(test_case=test_case, name='initial_state', cores=1,
-                         min_cores=1, threads=1)
+        super().__init__(test_case=test_case, name='initial_state', ntasks=1,
+                         min_tasks=1, openmp_threads=1)
 
         self.coord_type = coord_type
 

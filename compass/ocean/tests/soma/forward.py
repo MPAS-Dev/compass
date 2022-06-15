@@ -45,25 +45,25 @@ class Forward(Step):
         self.resolution = resolution
         self.with_particles = with_particles
         res_params = {'32km': {'cores': 25,
-                               'min_cores': 3,
+                               'min_tasks': 3,
                                'dt': "'00:24:00'",
                                'btr_dt': "'0000_00:00:48'",
                                'mom_del4': "2.0e11",
                                'run_duration': "'0000_02:00:00'"},
                       '16km': {'cores': 100,
-                               'min_cores': 10,
+                               'min_tasks': 10,
                                'dt': "'00:12:00'",
                                'btr_dt': "'0000_00:00:24'",
                                'mom_del4': "2.0e10 ",
                                'run_duration': "'0000_01:00:00'"},
                       '8km': {'cores': 400,
-                              'min_cores': 40,
+                              'min_tasks': 40,
                               'dt': "'00:06:00'",
                               'btr_dt': "'0000_00:00:12'",
                               'mom_del4': "2.0e9",
                               'run_duration': "'0000_00:30:00'"},
                       '4km': {'cores': 1600,
-                              'min_cores': 160,
+                              'min_tasks': 160,
                               'dt': "'00:03:00'",
                               'btr_dt': "'0000_00:00:06'",
                               'mom_del4': "4.0e8",
@@ -77,8 +77,8 @@ class Forward(Step):
         res_params = res_params[resolution]
 
         super().__init__(test_case=test_case, name='forward', subdir=None,
-                         cores=res_params['cores'],
-                         min_cores=res_params['min_cores'])
+                         ntasks=res_params['cores'],
+                         min_tasks=res_params['min_tasks'])
         # make sure output is double precision
         self.add_streams_file('compass.ocean.streams', 'streams.output')
 
@@ -141,8 +141,8 @@ class Forward(Step):
         """
         Run this step of the test case
         """
-        cores = self.cores
-        partition(cores, self.config, self.logger)
+        ntasks = self.ntasks
+        partition(ntasks, self.config, self.logger)
 
         if self.with_particles:
             section = self.config['soma']
@@ -151,7 +151,7 @@ class Forward(Step):
             nsurf = section.getint('surface_count')
             build_particle_simple(
                 f_grid='mesh.nc', f_name='particles.nc',
-                f_decomp='graph.info.part.{}'.format(cores),
+                f_decomp=f'graph.info.part.{ntasks}',
                 buoySurf=np.linspace(min_den, max_den, nsurf))
 
         run_model(self, partition_graph=False)

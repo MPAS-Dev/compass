@@ -31,8 +31,8 @@ class OceanGraphPartition(Step):
             use as the basis for an E3SM initial condition
         """
 
-        super().__init__(test_case, name='ocean_graph_partition', cores=1,
-                         min_cores=1, threads=1)
+        super().__init__(test_case, name='ocean_graph_partition', ntasks=1,
+                         min_tasks=1, openmp_threads=1)
 
         self.add_input_file(filename='README', target='../README')
         self.add_input_file(filename='restart.nc',

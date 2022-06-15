@@ -147,11 +147,11 @@ class OceanTest(TestCase):
 
         approx_cells = 30e3 / resolution ** 2
         # round to the nearest 4 cores
-        cores = max(1, 4 * round(approx_cells / 200 / 4))
-        min_cores = max(1, round(approx_cells / 2000))
+        ntasks = max(1, 4 * round(approx_cells / 200 / 4))
+        min_tasks = max(1, round(approx_cells / 2000))
 
-        config.set('isomip_plus', 'forward_cores', '{}'.format(cores))
-        config.set('isomip_plus', 'forward_min_cores', '{}'.format(min_cores))
+        config.set('isomip_plus', 'forward_ntasks', f'{ntasks}')
+        config.set('isomip_plus', 'forward_min_tasks', f'{min_tasks}')
         config.set('isomip_plus', 'forward_threads', '1')
 
         config.set('vertical_grid', 'coord_type', vertical_coordinate)
@@ -159,9 +159,9 @@ class OceanTest(TestCase):
         for step_name in self.steps:
             if step_name in ['ssh_adjustment', 'performance', 'simulation']:
                 step = self.steps[step_name]
-                step.cores = cores
-                step.min_cores = min_cores
-                step.threads = 1
+                step.ntasks = ntasks
+                step.min_tasks = min_tasks
+                step.openmp_threads = 1
 
     def run(self):
         """
@@ -173,10 +173,11 @@ class OceanTest(TestCase):
             if step_name in ['ssh_adjustment', 'performance', 'simulation']:
                 step = self.steps[step_name]
                 # get the these properties from the config options
-                step.cores = config.getint('isomip_plus', 'forward_cores')
-                step.min_cores = config.getint('isomip_plus',
-                                               'forward_min_cores')
-                step.threads = config.getint('isomip_plus', 'forward_threads')
+                step.ntasks = config.getint('isomip_plus', 'forward_ntasks')
+                step.min_tasks = config.getint('isomip_plus',
+                                               'forward_min_tasks')
+                step.openmp_threads = config.getint('isomip_plus',
+                                                    'forward_threads')
 
         # run the steps
         super().run()

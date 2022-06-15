@@ -42,7 +42,7 @@ class RestartTest(ForwardTestCase):
             name = '{}_run'.format(part)
             step = ForwardStep(test_case=self, mesh=mesh, init=init,
                                time_integrator=time_integrator, name=name,
-                               subdir=name, cores=4, threads=1)
+                               subdir=name, ntasks=4, openmp_threads=1)
 
             suffix = '{}.{}'.format(time_integrator.lower(), part)
             step.add_namelist_file(module, 'namelist.{}'.format(suffix))

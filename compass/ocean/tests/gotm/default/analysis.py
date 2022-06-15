@@ -20,8 +20,8 @@ class Analysis(Step):
             The test case this step belongs to
 
         """
-        super().__init__(test_case=test_case, name='analysis', cores=1,
-                         min_cores=1, threads=1)
+        super().__init__(test_case=test_case, name='analysis', ntasks=1,
+                         min_tasks=1, openmp_threads=1)
 
         self.add_input_file(filename='output.nc',
                             target='../forward/output.nc')

@@ -7,7 +7,8 @@ class SshAdjustment(Step):
     A step for iteratively adjusting the pressure from the weight of the ice
     shelf to match the sea-surface height as part of ice-shelf 2D test cases
     """
-    def __init__(self, test_case, cores=None, min_cores=None, threads=None):
+    def __init__(self, test_case, ntasks=None, min_tasks=None,
+                 openmp_threads=None):
         """
         Create the step
 
@@ -16,23 +17,24 @@ class SshAdjustment(Step):
         test_case : compass.ocean.tests.global_ocean.init.Init
             The test case this step belongs to
 
-        cores : int, optional
-            the number of cores the step would ideally use.  If fewer cores
+        ntasks : int, optional
+            the number of tasks the step would ideally use.  If fewer tasks
             are available on the system, the step will run on all available
-            cores as long as this is not below ``min_cores``
+            tasks as long as this is not below ``min_tasks``
 
-        min_cores : int, optional
-            the number of cores the step requires.  If the system has fewer
-            than this number of cores, the step will fail
+        min_tasks : int, optional
+            the number of tasks the step requires.  If the system has fewer
+            than this number of tasks, the step will fail
 
-        threads : int, optional
-            the number of threads the step will use
+        openmp_threads : int, optional
+            the number of OpenMP threads the step will use
 
         """
-        if min_cores is None:
-            min_cores = cores
+        if min_tasks is None:
+            min_tasks = ntasks
         super().__init__(test_case=test_case, name='ssh_adjustment',
-                         cores=cores, min_cores=min_cores, threads=threads)
+                         ntasks=ntasks, min_tasks=min_tasks,
+                         openmp_threads=openmp_threads)
 
         # make sure output is double precision
         self.add_streams_file('compass.ocean.streams', 'streams.output')
@@ -69,14 +71,14 @@ class SshAdjustment(Step):
         Set up the test case in the work directory, including downloading any
         dependencies
         """
-        if self.cores is None:
-            self.cores = self.config.getint(
-                'global_ocean', 'forward_cores')
-        if self.min_cores is None:
-            self.min_cores = self.config.getint(
-                'global_ocean', 'forward_min_cores')
-        if self.threads is None:
-            self.threads = self.config.getint(
+        if self.ntasks is None:
+            self.ntasks = self.config.getint(
+                'global_ocean', 'forward_ntasks')
+        if self.min_tasks is None:
+            self.min_tasks = self.config.getint(
+                'global_ocean', 'forward_min_tasks')
+        if self.openmp_threads is None:
+            self.openmp_threads = self.config.getint(
                 'global_ocean', 'forward_threads')
 
     def run(self):

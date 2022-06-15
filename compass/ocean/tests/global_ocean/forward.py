@@ -25,17 +25,18 @@ class ForwardStep(Step):
     time_integrator : {'split_explicit', 'RK4'}
         The time integrator to use for the forward run
 
-    cores_from_config : bool
-        Whether to get ``cores`` from the config file
+    ntasks_from_config : bool
+        Whether to get ``ntasks`` from the config file
 
-    min_cores_from_config : bool
-        Whether to get ``min_cores`` from the config file
+    min_tasks_from_config : bool
+        Whether to get ``min_tasks`` from the config file
 
     threads_from_config : bool
         Whether to get ``threads`` from the config file
     """
     def __init__(self, test_case, mesh, init, time_integrator, name='forward',
-                 subdir=None, cores=None, min_cores=None, threads=None):
+                 subdir=None, ntasks=None, min_tasks=None,
+                 openmp_threads=None):
         """
         Create a new step
 
@@ -59,29 +60,30 @@ class ForwardStep(Step):
         subdir : str, optional
             the subdirectory for the step.  The default is ``name``
 
-        cores : int, optional
-            the number of cores the step would ideally use.  If fewer cores
+        ntasks : int, optional
+            the number of tasks the step would ideally use.  If fewer tasks
             are available on the system, the step will run on all available
-            cores as long as this is not below ``min_cores``
+            tasks as long as this is not below ``min_tasks``
 
-        min_cores : int, optional
-            the number of cores the step requires.  If the system has fewer
-            than this number of cores, the step will fail
+        min_tasks : int, optional
+            the number of tasks the step requires.  If the system has fewer
+            than this number of tasks, the step will fail
 
-        threads : int, optional
-            the number of threads the step will use
+        openmp_threads : int, optional
+            the number of OpenMP threads the step will use
         """
         self.mesh = mesh
         self.init = init
         self.time_integrator = time_integrator
-        if min_cores is None:
-            min_cores = cores
+        if min_tasks is None:
+            min_tasks = ntasks
         super().__init__(test_case=test_case, name=name, subdir=subdir,
-                         cores=cores, min_cores=min_cores, threads=threads)
+                         ntasks=ntasks, min_tasks=min_tasks,
+                         openmp_threads=openmp_threads)
 
-        self.cores_from_config = cores is None
-        self.min_cores_from_config = min_cores is None
-        self.threads_from_config = threads is None
+        self.ntasks_from_config = ntasks is None
+        self.min_tasks_from_config = min_tasks is None
+        self.threads_from_config = openmp_threads is None
 
         # make sure output is double precision
         self.add_streams_file('compass.ocean.streams', 'streams.output')
@@ -138,14 +140,14 @@ class ForwardStep(Step):
         Set up the test case in the work directory, including downloading any
         dependencies
         """
-        if self.cores_from_config:
-            self.cores = self.config.getint(
-                'global_ocean', 'forward_cores')
-        if self.min_cores_from_config:
-            self.min_cores = self.config.getint(
-                'global_ocean', 'forward_min_cores')
+        if self.ntasks_from_config:
+            self.ntasks = self.config.getint(
+                'global_ocean', 'forward_ntasks')
+        if self.min_tasks_from_config:
+            self.min_tasks = self.config.getint(
+                'global_ocean', 'forward_min_tasks')
         if self.threads_from_config:
-            self.threads = self.config.getint(
+            self.openmp_threads = self.config.getint(
                 'global_ocean', 'forward_threads')
 
     def run(self):
@@ -214,12 +216,12 @@ class ForwardTestCase(TestCase):
         for step_name in self.steps_to_run:
             step = self.steps[step_name]
             if isinstance(step, ForwardStep):
-                if step.cores_from_config:
-                    step.cores = config.getint('global_ocean',
-                                               'forward_cores')
-                if step.min_cores_from_config:
-                    step.min_cores = config.getint('global_ocean',
-                                                   'forward_min_cores')
+                if step.ntasks_from_config:
+                    step.ntasks = config.getint('global_ocean',
+                                                'forward_ntasks')
+                if step.min_tasks_from_config:
+                    step.min_tasks = config.getint('global_ocean',
+                                                   'forward_min_tasks')
                 if step.threads_from_config:
                     step.threads = config.getint('global_ocean',
                                                  'forward_threads')

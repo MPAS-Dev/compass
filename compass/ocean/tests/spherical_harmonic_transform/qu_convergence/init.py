@@ -31,7 +31,7 @@ class Init(Step):
         super().__init__(test_case=test_case,
                          name=f'QU{resolution}_init_{algorithm}_{order}',
                          subdir=f'QU{resolution}/init/{algorithm}/{order}',
-                         cores=36, min_cores=1)
+                         ntasks=36, min_tasks=1)
 
         package = \
             'compass.ocean.tests.spherical_harmonic_transform.qu_convergence'

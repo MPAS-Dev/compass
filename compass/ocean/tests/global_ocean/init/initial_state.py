@@ -141,9 +141,9 @@ class InitialState(Step):
         """
         # get the these properties from the config options
         config = self.config
-        self.cores = config.getint('global_ocean', 'init_cores')
-        self.min_cores = config.getint('global_ocean', 'init_min_cores')
-        self.threads = config.getint('global_ocean', 'init_threads')
+        self.ntasks = config.getint('global_ocean', 'init_ntasks')
+        self.min_tasks = config.getint('global_ocean', 'init_min_tasks')
+        self.openmp_threads = config.getint('global_ocean', 'init_threads')
 
     def run(self):
         """

@@ -17,8 +17,8 @@ class Forward(Step):
             The test case this step belongs to
 
         """
-        super().__init__(test_case=test_case, name='forward', cores=1,
-                         min_cores=1, threads=1)
+        super().__init__(test_case=test_case, name='forward', ntasks=1,
+                         min_tasks=1, openmp_threads=1)
         # make sure output is double precision
         self.add_streams_file('compass.ocean.streams', 'streams.output')
 

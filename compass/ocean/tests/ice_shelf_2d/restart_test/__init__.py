@@ -47,12 +47,13 @@ class RestartTest(TestCase):
         self.add_step(
             InitialState(test_case=self, resolution=resolution))
         self.add_step(
-            SshAdjustment(test_case=self, cores=4, threads=1))
+            SshAdjustment(test_case=self, ntasks=4, openmp_threads=1))
 
         for part in ['full', 'restart']:
             name = '{}_run'.format(part)
-            step = Forward(test_case=self, name=name, subdir=name, cores=4,
-                           threads=1, resolution=resolution, with_frazil=True)
+            step = Forward(test_case=self, name=name, subdir=name, ntasks=4,
+                           openmp_threads=1, resolution=resolution,
+                           with_frazil=True)
 
             step.add_namelist_file(
                 'compass.ocean.tests.ice_shelf_2d.restart_test',

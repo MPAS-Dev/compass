@@ -54,34 +54,34 @@ class Forward(Step):
         self.resolution = resolution
         self.with_analysis = with_analysis
         self.with_frazil = with_frazil
-        res_params = {'20km': {'cores': 20,
-                               'min_cores': 2,
-                               'cores_with_particles': 32,
-                               'min_cores_with_particles': 12,
+        res_params = {'20km': {'ntasks': 20,
+                               'min_tasks': 2,
+                               'ntasks_with_particles': 32,
+                               'min_tasks_with_particles': 12,
                                'dt': "'00:12:00'",
                                'btr_dt': "'00:00:36'",
                                'mom_del4': "5.0e10",
                                'run_duration': "'0000_00:36:00'"},
-                      '10km': {'cores': 80,
-                               'min_cores': 8,
-                               'cores_with_particles': 130,
-                               'min_cores_with_particles': 50,
+                      '10km': {'ntasks': 80,
+                               'min_tasks': 8,
+                               'ntasks_with_particles': 130,
+                               'min_tasks_with_particles': 50,
                                'dt': "'00:06:00'",
                                'btr_dt': "'00:00:18'",
                                'mom_del4': "6.25e9",
                                'run_duration': "'0000_00:18:00'"},
-                      '5km': {'cores': 300,
-                              'min_cores': 30,
-                              'cores_with_particles': 500,
-                              'min_cores_with_particles': 200,
+                      '5km': {'ntasks': 300,
+                              'min_tasks': 30,
+                              'ntasks_with_particles': 500,
+                              'min_tasks_with_particles': 200,
                               'dt': "'00:03:00'",
                               'btr_dt': "'00:00:09'",
                               'mom_del4': "7.8e8",
                               'run_duration': "'0000_00:09:00'"},
-                      '2.5km': {'cores': 1200,
-                                'min_cores': 120,
-                                'cores_with_particles': 2100,
-                                'min_cores_with_particles': 900,
+                      '2.5km': {'ntasks': 1200,
+                                'min_tasks': 120,
+                                'ntasks_with_particles': 2100,
+                                'min_tasks_with_particles': 900,
                                 'dt': "'00:01:30'",
                                 'btr_dt': "'00:00:04'",
                                 'mom_del4': "9.8e7",
@@ -95,14 +95,14 @@ class Forward(Step):
         res_params = res_params[resolution]
 
         if with_particles:
-            cores = res_params['cores_with_particles']
-            min_cores = res_params['min_cores_with_particles']
+            ntasks = res_params['ntasks_with_particles']
+            min_tasks = res_params['min_tasks_with_particles']
         else:
-            cores = res_params['cores']
-            min_cores = res_params['min_cores']
+            ntasks = res_params['ntasks']
+            min_tasks = res_params['min_tasks']
 
         super().__init__(test_case=test_case, name=name, subdir=subdir,
-                         cores=cores, min_cores=min_cores, threads=1)
+                         ntasks=ntasks, min_tasks=min_tasks, openmp_threads=1)
 
         # make sure output is double precision
         self.add_streams_file('compass.ocean.streams', 'streams.output')
@@ -169,11 +169,11 @@ class Forward(Step):
         Run this step of the test case
         """
         if self.with_particles:
-            cores = self.cores
-            partition(cores, self.config, self.logger)
+            ntasks = self.ntasks
+            partition(ntasks, self.config, self.logger)
             particles.write(init_filename='init.nc',
                             particle_filename='particles.nc',
-                            graph_filename='graph.info.part.{}'.format(cores),
+                            graph_filename=f'graph.info.part.{ntasks}',
                             types='buoyancy')
             run_model(self, partition_graph=False)
         else:

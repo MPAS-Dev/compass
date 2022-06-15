@@ -22,7 +22,7 @@ class Init(Step):
         super().__init__(test_case=test_case,
                          name=f'{mesh_name}_init',
                          subdir=f'{mesh_name}/init',
-                         cores=36, min_cores=1)
+                         ntasks=36, min_tasks=1)
 
         package = 'compass.ocean.tests.global_convergence.cosine_bell'
 
