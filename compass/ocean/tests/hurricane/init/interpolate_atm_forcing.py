@@ -1,6 +1,5 @@
 from compass.step import Step
 from mpas_tools.mesh.interpolation import interp_bilin
-from mpas_tools.logging import check_call
 
 import netCDF4
 import matplotlib.pyplot as plt
@@ -96,29 +95,26 @@ class InterpolateAtmForcing(Step):
         lon_data = data_nc.variables['lon'][:]
         lon_data = np.append(lon_data, 360.0)
         lat_data = np.flipud(data_nc.variables['lat'][:])
+        lat_data = np.append(lat_data, 180.0-lat_data[-1])
         time = data_nc.variables['time'][:]
         nsnaps = time.size
         nlon = lon_data.size
         nlat = lat_data.size
         data = np.zeros((nsnaps, nlat, nlon))
-        print(data.shape)
 
         # Get grid from grid file
         lon_grid = grid_nc.variables['lonCell'][:]*180.0/np.pi
         lat_grid = grid_nc.variables['latCell'][:]*180.0/np.pi
-        grid_points = np.column_stack((lon_grid, lat_grid))
         ncells = lon_grid.size
         interp_data = np.zeros((nsnaps, ncells))
-        print(interp_data.shape)
-        print(np.amin(lon_grid), np.amax(lon_grid))
-        print(np.amin(lat_grid), np.amax(lat_grid))
 
         # Interpolate timesnaps
         for i, t in enumerate(time):
             print(f'Interpolating {var}: {i}')
 
             # Get data to interpolate
-            data[i, :, 0:-1] = np.flipud(data_nc.variables[var][i, :, :])
+            data[i, 0:-1, 0:-1] = np.flipud(data_nc.variables[var][i, :, :])
+            data[i, -1, :] = data[i, -2, ::-1]
             data[i, :, -1] = data[i, :, 0]
 
             interp_data[i, :] = interp_bilin(lon_data, lat_data,
