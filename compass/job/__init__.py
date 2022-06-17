@@ -82,7 +82,7 @@ def write_job_script(config, machine, target_cores, min_cores, work_dir,
     wall_time = config.get('job', 'wall_time')
 
     template = Template(resources.read_text(
-        'compass.job', 'template.sh'))
+        'compass.job', 'job_script.template'))
 
     text = template.render(job_name=job_name, account=account,
                            nodes=f'{nodes}', wall_time=wall_time, qos=qos,
