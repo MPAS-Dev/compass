@@ -16,6 +16,8 @@ from compass.ocean.tests.global_ocean.decomp_test import DecompTest
 from compass.ocean.tests.global_ocean.threads_test import ThreadsTest
 from compass.ocean.tests.global_ocean.analysis_test import AnalysisTest
 from compass.ocean.tests.global_ocean.daily_output_test import DailyOutputTest
+from compass.ocean.tests.global_ocean.monthly_output_test import \
+    MonthlyOutputTest
 from compass.ocean.tests.global_ocean.files_for_e3sm import FilesForE3SM
 from compass.ocean.tests.global_ocean.make_diagnostics_files import \
     MakeDiagnosticsFiles
@@ -66,6 +68,10 @@ class GlobalOcean(TestGroup):
                     time_integrator=time_integrator))
             self.add_test_case(
                 DailyOutputTest(
+                    test_group=self, mesh=mesh, init=init,
+                    time_integrator=time_integrator))
+            self.add_test_case(
+                MonthlyOutputTest(
                     test_group=self, mesh=mesh, init=init,
                     time_integrator=time_integrator))
 
