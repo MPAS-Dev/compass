@@ -456,8 +456,8 @@ we'll just create a new ``Init`` class that descends from ``Step``:
             test_case : compass.ocean.tests.gotm.default.Default
                 The test case this step belongs to
             """
-            super().__init__(test_case=test_case, name='init', cores=1,
-                             min_cores=1, threads=1)
+            super().__init__(test_case=test_case, name='forward', ntasks=1,
+                             min_tasks=1, openmp_threads=1)
 
 This pattern is probably starting to look familiar.  The step takes the test
 case it belongs to as an input to its constructor, and passes that along to
@@ -466,7 +466,7 @@ By default, the subdirectory for the step is the same as the step name, but
 just like for a test case, you can give the step a more complicated
 subdirectory name, possibly with multiple levels of directories.  See the
 steps in the ``ocean/global_convergence/cosine_bell`` test case for examples
-of this.  The ``init`` step runs on one core (so ``cores`` and ``min_cores``
+of this.  The ``init`` step runs on one core (so ``ntasks`` and ``min_tasks``
 are both 1) and one thread.
 
 The next step is to define the namelist, streams file, outputs from the step:
@@ -474,8 +474,8 @@ The next step is to define the namelist, streams file, outputs from the step:
 .. code-block:: python
     :emphasize-lines: 4, 5, 7, 8, 10, 12, 13
 
-    super().__init__(test_case=test_case, name='init', cores=1,
-                     min_cores=1, threads=1)
+    super().__init__(test_case=test_case, name='forward', ntasks=1,
+                     min_tasks=1, openmp_threads=1)
 
     self.add_namelist_file('compass.ocean.tests.gotm.default',
                            'namelist.init', mode='init')
@@ -808,8 +808,8 @@ number of cores, minimum number of cores, and number of threads:
                 The test case this step belongs to
 
             """
-            super().__init__(test_case=test_case, name='forward', cores=1,
-                             min_cores=1, threads=1)
+            super().__init__(test_case=test_case, name='forward', ntasks=1,
+                             min_tasks=1, openmp_threads=1)
 
 The following XML from legacy COMPASS:
 
@@ -879,8 +879,8 @@ The complete constructor looks like:
             The test case this step belongs to
 
         """
-        super().__init__(test_case=test_case, name='forward', cores=1,
-                         min_cores=1, threads=1)
+        super().__init__(test_case=test_case, name='forward', ntasks=1,
+                         min_tasks=1, openmp_threads=1)
         self.add_namelist_file('compass.ocean.tests.gotm.default',
                                'namelist.forward')
 
@@ -1078,8 +1078,8 @@ We start out with the same structure as in the other two steps:
                 The test case this step belongs to
 
             """
-            super().__init__(test_case=test_case, name='analysis', cores=1,
-                             min_cores=1, threads=1)
+            super().__init__(test_case=test_case, name='analysis', ntasks=1,
+                             min_tasks=1, openmp_threads=1)
 
 As before, we will define the inputs and outputs.  There will be no namelists
 or streams files, nor an MPAS executable because we will not be calling
