@@ -140,7 +140,8 @@ def run_command(args, cpus_per_task, ntasks, openmp_threads, config, logger):
     command_line_args = parallel_executable.split(' ')
     parallel_system = config.get('parallel', 'system')
     if parallel_system == 'slurm':
-        command_line_args.extend(['-c', f'{cpus_per_task}', '-n', f'{ntasks}'])
+        command_line_args.extend(['-c', f'{cpus_per_task}', '-n', f'{ntasks}',
+                                  '--exclusive'])
     elif parallel_system == 'single_node':
         if ntasks > 1:
             command_line_args.extend(['-n', f'{ntasks}'])
