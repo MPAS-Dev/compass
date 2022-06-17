@@ -2,7 +2,6 @@ from compass.testcase import TestCase
 from compass.ocean.tests.internal_wave.initial_state import InitialState
 from compass.ocean.tests.internal_wave.forward import Forward
 from compass.ocean.tests.internal_wave.rpe_test.analysis import Analysis
-from compass.ocean.tests import internal_wave
 
 
 class RpeTest(TestCase):
@@ -10,11 +9,6 @@ class RpeTest(TestCase):
     The reference potential energy (RPE) test case for the internal wave
     test group performs a 20-day integration of the model forward in time at
     5 different values of the viscosity at the given resolution.
-
-    Attributes
-    ----------
-    resolution : str
-        The resolution of the test case
     """
 
     def __init__(self, test_group):
