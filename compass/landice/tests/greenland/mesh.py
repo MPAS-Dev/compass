@@ -62,6 +62,10 @@ class Mesh(Step):
         logger = self.logger
         mesh_name = 'GIS.nc'
         section_name = 'mesh'
+        config = self.config
+        section = config[section_name]
+        data_path = section.get('data_path')
+        nProcs = section.get('nProcs')
 
         logger.info('calling build_cell_width')
         cell_width, x1, y1, geom_points, geom_edges, floodMask = \
