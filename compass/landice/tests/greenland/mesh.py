@@ -2,6 +2,7 @@ import numpy as np
 import netCDF4
 import xarray
 from matplotlib import pyplot as plt
+from os.path import exists
 
 from mpas_tools.mesh.creation import build_planar_mesh
 from mpas_tools.mesh.conversion import convert, cull
@@ -80,89 +81,25 @@ class Mesh(Step):
             gridded_dataset='greenland_1km_2024_01_29.epsg3413.icesheetonly.nc',  # noqa
             projection='gis-gimp', geojson_file=None)
 
-        # create scrip files.
-=======
-#
-#        logger.info('calling build_cell_wdith')
-#        cell_width, x1, y1, geom_points, geom_edges = self.build_cell_width()
-#        logger.info('calling build_planar_mesh')
-#        build_planar_mesh(cell_width, x1, y1, geom_points,
-#                          geom_edges, logger=logger)
-#        dsMesh = xarray.open_dataset('base_mesh.nc')
-#        logger.info('culling mesh')
-#        dsMesh = cull(dsMesh, logger=logger)
-#        logger.info('converting to MPAS mesh')
-#        dsMesh = convert(dsMesh, logger=logger)
-#        logger.info('writing grid_converted.nc')
-#        write_netcdf(dsMesh, 'grid_converted.nc')
-#
-        levels = section.get('levels')
-#        logger.info('calling create_landice_grid_from_generic_MPAS_grid.py')
-#        args = ['create_landice_grid_from_generic_MPAS_grid.py',
-#                '-i', 'grid_converted.nc',
-#                '-o', 'gis_1km_preCull.nc',
-#                '-l', levels, '-v', 'glimmer']
-#        check_call(args, logger=logger)
-#
-#        logger.info('calling interpolate_to_mpasli_grid.py')
-#        args = ['interpolate_to_mpasli_grid.py', '-s',
-#                'greenland_1km_2020_04_20.epsg3413.icesheetonly.nc', '-d',
-#                'gis_1km_preCull.nc', '-m', 'b', '-t']
-#
-#        check_call(args, logger=logger)
-#
-#        cullDistance = section.get('cull_distance')
-#        logger.info('calling define_cullMask.py')
-#        args = ['define_cullMask.py', '-f',
-#                'gis_1km_preCull.nc', '-m'
-#                'distance', '-d', cullDistance]
-#
-#        check_call(args, logger=logger)
-#
-#        dsMesh = xarray.open_dataset('gis_1km_preCull.nc')
-#        dsMesh = cull(dsMesh, logger=logger)
-#        write_netcdf(dsMesh, 'greenland_culled.nc')
-#
-#        logger.info('Marking horns for culling')
-#        args = ['mark_horns_for_culling.py', '-f', 'greenland_culled.nc']
-#        check_call(args, logger=logger)
-#
-#        logger.info('culling and converting')
-#        dsMesh = xarray.open_dataset('greenland_culled.nc')
-#        dsMesh = cull(dsMesh, logger=logger)
-#        dsMesh = convert(dsMesh, logger=logger)
-#        write_netcdf(dsMesh, 'greenland_dehorned.nc')
-#
-#        logger.info('calling create_landice_grid_from_generic_MPAS_grid.py')
-#        args = ['create_landice_grid_from_generic_MPAS_grid.py', '-i',
-#                'greenland_dehorned.nc', '-o',
-#                'GIS.nc', '-l', levels, '-v', 'glimmer',
-#                '--beta', '--thermal', '--obs', '--diri']
-#
-#        check_call(args, logger=logger)
-#
-#        # Add iceMask for later trimming. Could be added to
-#        # calling create_landice_grid_from_generic_MPAS_grid.py
-#        # if we want to make this a typical feature.
-#        data = netCDF4.Dataset('GIS.nc', 'r+')
-#        data.createVariable('iceMask', 'f', ('Time', 'nCells'))
-#        data.variables['iceMask'][:] = 0.
-#        data.close()
-#
-        # Uncomment below if you need to create scrip files.
-        logger.info('creating scrip file for BedMachine dataset')
-        args = ['create_SCRIP_file_from_planar_rectangular_grid.py',
-                '-i', data_path+"/"+'BedMachineGreenland-2021-04-20_edits_floodFill_extrap.nc',
-                '-s', data_path+"/"+'BedMachineGreenland-2021-04-20.scrip.nc',
-                '-p', 'gis-gimp', '-r', '2']
-        check_call(args, logger=logger)
-
-        logger.info('creating scrip file for 2006-2010 velocity dataset')
-        args = ['create_SCRIP_file_from_planar_rectangular_grid.py',
-                '-i', data_path+"/"+'greenland_vel_mosaic500_extrap.nc',
-                '-s', data_path+"/"+'greenland_vel_mosaic500.scrip.nc',
-                '-p', 'gis-gimp', '-r', '2']
-        check_call(args, logger=logger)
+        # Create scrip files if they don't already exist
+        if exists(data_path+"/"+'BedMachineGreenland-2021-04-20.scrip.nc'):
+            logger.info('BedMachine script file exists; skipping file creation')
+        else:
+            logger.info('creating scrip file for BedMachine dataset')
+            args = ['create_SCRIP_file_from_planar_rectangular_grid.py',
+                    '-i', data_path+"/"+'BedMachineGreenland-2021-04-20_edits_floodFill_extrap.nc',
+                    '-s', data_path+"/"+'BedMachineGreenland-2021-04-20.scrip.nc',
+                    '-p', 'gis-gimp', '-r', '2']
+            check_call(args, logger=logger)
+        if exists(data_path+"/"+'greenland_vel_mosaic500.scrip.nc'):
+            logger.info('Measures script file exists; skipping file creation')
+        else:
+            logger.info('creating scrip file for 2006-2010 velocity dataset')
+            args = ['create_SCRIP_file_from_planar_rectangular_grid.py',
+                    '-i', data_path+"/"+'greenland_vel_mosaic500_extrap.nc',
+                    '-s', data_path+"/"+'greenland_vel_mosaic500.scrip.nc',
+                    '-p', 'gis-gimp', '-r', '2']
+            check_call(args, logger=logger)
 
         logger.info('calling set_lat_lon_fields_in_planar_grid.py')
         args = ['set_lat_lon_fields_in_planar_grid.py', '-f',
@@ -179,8 +116,8 @@ class Mesh(Step):
         # Testing shows 5 badger/grizzly nodes works well.
         # 2 nodes is too few. I have not tested anything in between.
         logger.info('generating gridded dataset -> MPAS weights')
-        args = ['srun', '-n', nProcs, 'ESMF_RegridWeightGen', '--source',
-                data_path+"/"+'BedMachineGreenland-2021-04-20.scrip.nc',
+        args = ['ESMF_RegridWeightGen', '--source',
+                data_path+'BedMachineGreenland-2021-04-20.scrip.nc',
                 '--destination',
                 'GIS.scrip.nc',
                 '--weight', 'BedMachine_to_MPAS_weights.nc',
@@ -190,8 +127,8 @@ class Mesh(Step):
         check_call(args, logger=logger)
 
         logger.info('generating gridded dataset -> MPAS weights')
-        args = ['srun', '-n', nProcs, 'ESMF_RegridWeightGen', '--source',
-                data_path+"/"+'greenland_vel_mosaic500.scrip.nc',
+        args = ['ESMF_RegridWeightGen', '--source',
+                data_path+'greenland_vel_mosaic500.scrip.nc',
                 '--destination',
                 'GIS.scrip.nc',
                 '--weight', 'measures_to_MPAS_weights.nc',
