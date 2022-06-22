@@ -1,4 +1,5 @@
 import os
+import numpy as np
 import shutil
 import subprocess
 import xarray as xr
@@ -263,8 +264,13 @@ class ProcessSMB(Step):
         xtime = []
         for t_index in range(ds.sizes["Time"]):
             date = ds.Time[t_index]
-            date = date.dt.strftime("%Y-%m-%d_00:00:00")
-            date = str(date.values).ljust(64)
+            # forcing files do not all match even years, so round up the years
+            # pandas round function does not work for years, so do it manually
+            yr = date.dt.year.values
+            mo = date.dt.month.values
+            dy = date.dt.day.values
+            dec_yr = np.around(yr + (30 * (mo - 1) + dy) / 365.0) # approximate ok
+            date = f"{dec_yr.astype(int)}-01-01_00:00:00".ljust(64)
             xtime.append(date)
 
         ds["xtime"] = ("Time", xtime)
