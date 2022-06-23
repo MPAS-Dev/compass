@@ -201,3 +201,16 @@ class Mesh(Step):
                                 'southGreenland',
                                 'southWestGreenland',
                                 'westCentralGreenland'])
+
+        # Ensure basalHeatFlux is positive
+        data.variables['basalHeatFlux'][:] = np.abs(data.variables['basalHeatFlux'][:])
+        # Ensure reasonable dHdt values
+        dHdt = data.variables["observedThicknessTendency"][:]
+        dHdtErr = data.variables["observedThicknessTendencyUncertainty"][:]
+        dHdtErr = np.abs(dHdt) * 0.05 # Arbitrary 5% uncertainty; improve this later
+        dHdtErr[np.abs(dHdt)>1.0] = 1.0 # large uncertainty where data is missing
+        dHdt[np.abs(dHdt)>1.0] = 0.0 # Remove ridiculous values
+        data.variables["observedThicknessTendency"][:] = dHdt
+        data.variables["observedThicknessTendencyUncertainty"][:] = dHdtErr
+        
+        data.close()
