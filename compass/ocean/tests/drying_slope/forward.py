@@ -1,8 +1,7 @@
-from compass.model import run_model
-from compass.step import Step
+from compass.model import ModelStep
 
 
-class Forward(Step):
+class Forward(ModelStep):
     """
     A step for performing forward MPAS-Ocean runs as part of drying slope
     test cases.
@@ -70,28 +69,17 @@ class Forward(Step):
         self.add_streams_file('compass.ocean.tests.drying_slope',
                               'streams.forward')
 
-        input_path = '../initial_state'
         self.add_input_file(filename='mesh.nc',
-                            target=f'{input_path}/culled_mesh.nc')
+                            target=f'../mesh/culled_mesh.nc')
 
+        self.add_input_file(filename='graph.info',
+                            target=f'../mesh/culled_graph.info')
+
+        input_path = '../initial_state'
         self.add_input_file(filename='init.nc',
                             target=f'{input_path}/ocean.nc')
 
         self.add_input_file(filename='forcing.nc',
                             target=f'{input_path}/init_mode_forcing_data.nc')
 
-        self.add_input_file(filename='graph.info',
-                            target=f'{input_path}/culled_graph.info')
-
-        self.add_model_as_input()
-
         self.add_output_file(filename='output.nc')
-
-    # no setup() is needed
-
-    def run(self):
-        """
-        Run this step of the test case
-        """
-
-        run_model(self)

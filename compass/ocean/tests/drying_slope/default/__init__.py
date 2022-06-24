@@ -1,4 +1,5 @@
 from compass.testcase import TestCase
+from compass.ocean.tests.drying_slope.mesh import Mesh
 from compass.ocean.tests.drying_slope.initial_state import InitialState
 from compass.ocean.tests.drying_slope.forward import Forward
 from compass.ocean.tests.drying_slope.viz import Viz
@@ -14,8 +15,8 @@ class Default(TestCase):
     resolution : float
         The resolution of the test case in km
 
-    coord_type : str
-        The type of vertical coordinate (``sigma``, ``single_layer``, etc.)
+    coord_type : {'sigma', 'single_layer'}
+        The type of vertical coordinate
     """
 
     def __init__(self, test_group, resolution, coord_type):
@@ -30,8 +31,8 @@ class Default(TestCase):
         resolution : float
             The resolution of the test case in km
 
-        coord_type : str
-            The type of vertical coordinate (``sigma``, ``single_layer``)
+        coord_type : {'sigma', 'single_layer'}
+            The type of vertical coordinate
         """
         name = 'default'
 
@@ -44,6 +45,8 @@ class Default(TestCase):
         subdir = f'{res_name}/{coord_type}/{name}'
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
+
+        self.add_step(Mesh(test_case=self, coord_type=coord_type))
         self.add_step(InitialState(test_case=self, coord_type=coord_type))
         if coord_type == 'single_layer':
             self.add_step(Forward(test_case=self, resolution=resolution,
