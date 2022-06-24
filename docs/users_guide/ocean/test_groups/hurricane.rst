@@ -59,8 +59,6 @@ Note that meshes and test cases may modify these options, as noted below.
    init_min_cores = 8 
    # maximum memory usage allowed (in MB)
    init_max_memory = 1000
-   # maximum disk usage allowed (in MB)
-   init_max_disk = 1000
    # number of threads
    init_threads = 1 
    
@@ -71,12 +69,10 @@ Note that meshes and test cases may modify these options, as noted below.
    forward_min_cores = 36
    # maximum memory usage allowed (in MB)
    forward_max_memory = 1000
-   # maximum disk usage allowed (in MB)
-   forward_max_disk = 1000
    # number of threads
    forward_threads = 1 
 
-.. _global_ocean_mesh:
+.. _hurricane_mesh:
 
 mesh test case
 --------------
@@ -88,6 +84,8 @@ topography in the floodplain is used to set a mask for the cell culling
 process. The land cells above the ``floodplain_elevation`` are then culled
 from the mesh. Finally, the bathymetry is re-interpolated onto the mesh
 since this data is not carried over from the cell culling process. 
+
+.. _hurricane_init:
 
 init test case
 --------------
@@ -115,6 +113,8 @@ is recored at mesh cell centers which are closest to observation stations.
 This set reads in the observation station locations and finds the cells 
 closest to them. A file is created that is the input to the
 pointWiseStats analysis member for the forward run.
+
+.. _hurricane_sandy:
 
 sandy test case
 ---------------
