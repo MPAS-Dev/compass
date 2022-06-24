@@ -1,4 +1,5 @@
 from compass.testcase import TestCase
+from compass.ocean.tests.gotm.default.mesh import Mesh
 from compass.ocean.tests.gotm.default.init import Init
 from compass.ocean.tests.gotm.default.forward import Forward
 from compass.ocean.tests.gotm.default.analysis import Analysis
@@ -24,6 +25,7 @@ class Default(TestCase):
         """
         super().__init__(test_group=test_group, name='default')
 
+        self.add_step(Mesh(test_case=self))
         self.add_step(Init(test_case=self))
         self.add_step(Forward(test_case=self))
         self.add_step(Analysis(test_case=self))
