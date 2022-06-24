@@ -1,5 +1,6 @@
 from compass.step import Step
 from mpas_tools.mesh.interpolation import interp_bilin
+from mpas_tools.logging import check_call
 
 import netCDF4
 import matplotlib.pyplot as plt
@@ -136,7 +137,7 @@ class InterpolateAtmForcing(Step):
             xtime
 
     def plot_interp_data(self, orig_data, interp_data,
-                         var_label, var_abrev, time):
+                         var_label, var_abrev, time, i):
         """
         Plot original gridded data and interpolated fields
         """
@@ -151,44 +152,41 @@ class InterpolateAtmForcing(Step):
         lon_grid = interp_data[0]
         lat_grid = interp_data[1]
 
-        for i in range(len(time)):
-            if i % self.plot_interval == 0:
+        data = orig_data[2]
+        interp = interp_data[2]
 
-                data = orig_data[2][i, :, :]
-                interp = interp_data[2][i, :]
+        # Plot data
+        fig = plt.figure()
+        levels = np.linspace(np.amin(data), np.amax(data), 100)
+        ax0 = fig.add_subplot(2, 1, 1, projection=ccrs.PlateCarree())
+        cf = ax0.contourf(lon_data, lat_data, orig_data, levels=levels,
+                          transform=ccrs.PlateCarree())
+        ax0.set_extent([0, 359.9, -90, 90], crs=ccrs.PlateCarree())
+        ax0.add_feature(cfeature.LAND, zorder=100)
+        ax0.add_feature(cfeature.LAKES, alpha=0.5, zorder=101)
+        ax0.add_feature(cfeature.COASTLINE, zorder=101)
+        ax0.set_title('data '+time.strip().decode())
+        cbar = fig.colorbar(cf, ax=ax0)
+        cbar.set_label(var_label)
 
-                # Plot data
-                fig = plt.figure()
-                levels = np.linspace(np.amin(data), np.amax(data), 100)
-                ax0 = fig.add_subplot(2, 1, 1, projection=ccrs.PlateCarree())
-                cf = ax0.contourf(lon_data, lat_data, data, levels=levels,
-                                  transform=ccrs.PlateCarree())
-                ax0.set_extent([0, 359.9, -90, 90], crs=ccrs.PlateCarree())
-                ax0.add_feature(cfeature.LAND, zorder=100)
-                ax0.add_feature(cfeature.LAKES, alpha=0.5, zorder=101)
-                ax0.add_feature(cfeature.COASTLINE, zorder=101)
-                ax0.set_title('data '+time[i].strip().decode())
-                cbar = fig.colorbar(cf, ax=ax0)
-                cbar.set_label(var_label)
+        # Plot interpolated data
+        ax1 = fig.add_subplot(2, 1, 2, projection=ccrs.PlateCarree())
+        levels = np.linspace(np.amin(interp), np.amax(interp), 100)
+        cf = ax1.tricontourf(lon_grid, lat_grid, interp_data, levels=levels,
+                             transform=ccrs.PlateCarree())
+        ax1.set_extent([0, 359.9, -90, 90], crs=ccrs.PlateCarree())
+        ax1.add_feature(cfeature.LAND, zorder=100)
+        ax1.add_feature(cfeature.LAKES, alpha=0.5, zorder=101)
+        ax1.add_feature(cfeature.COASTLINE, zorder=101)
+        ax1.set_title('interpolated data '+time.strip().decode())
+        cbar = fig.colorbar(cf, ax=ax1)
+        cbar.set_label(var_label)
 
-                # Plot interpolated data
-                ax1 = fig.add_subplot(2, 1, 2, projection=ccrs.PlateCarree())
-                levels = np.linspace(np.amin(interp), np.amax(interp), 100)
-                cf = ax1.tricontourf(lon_grid, lat_grid, interp, levels=levels,
-                                     transform=ccrs.PlateCarree())
-                ax1.set_extent([0, 359.9, -90, 90], crs=ccrs.PlateCarree())
-                ax1.add_feature(cfeature.LAND, zorder=100)
-                ax1.add_feature(cfeature.LAKES, alpha=0.5, zorder=101)
-                ax1.add_feature(cfeature.COASTLINE, zorder=101)
-                ax1.set_title('interpolated data '+time[i].strip().decode())
-                cbar = fig.colorbar(cf, ax=ax1)
-                cbar.set_label(var_label)
-
-                # Save figure
-                fig.tight_layout()
-                fig.savefig(var_abrev+'_'+str(i).zfill(4)+'.png',
-                            box_inches='tight')
-                plt.close()
+        # Save figure
+        fig.tight_layout()
+        fig.savefig(var_abrev+'_'+str(i).zfill(4)+'.png',
+                    box_inches='tight')
+        plt.close()
 
     def write_to_file(self, filename, data, var, xtime):
         """
@@ -224,18 +222,16 @@ class InterpolateAtmForcing(Step):
         """
         Run this step of the test case
         """
+        check_call(['rm', self.forcing_file], logger=self.logger)
+
         # Interpolation of u and v velocities
         u_interp, u_data, xtime = self.interpolate_data_to_grid(
             self.grid_file,
             self.wind_file,
             'U_GRD_L103')
-
-        # Write to NetCDF file
-        subprocess.call(['rm', self.forcing_file])
-        # check_call(['rm', self.forcing_file], logger=logger)
-
         self.write_to_file(self.forcing_file, u_interp[2],
                            'windSpeedU', xtime)
+
         v_interp,  v_data, xtime = self.interpolate_data_to_grid(
             self.grid_file,
             self.wind_file,
@@ -243,14 +239,18 @@ class InterpolateAtmForcing(Step):
         self.write_to_file(self.forcing_file, v_interp[2],
                            'windSpeedV', xtime)
 
-        vel_interp = u_interp
-        vel_interp[2][:] = np.sqrt(np.square(u_interp[2][:]) +
-                                   np.square(v_interp[2][:]))
-        vel_data = u_data
-        vel_data[2][:] = np.sqrt(np.square(u_data[2][:]) +
-                                 np.square(v_data[2][:]))
-        self.plot_interp_data(vel_data, vel_interp,
-                              'velocity magnitude', 'vel', xtime)
+        # Plot wind velocity
+        for i in range(len(xtime)):
+            if i % self.plot_interval == 0:
+                vel_interp = (u_interp[0], u_interp[1], u_interp[2][i, :])
+                vel_interp[2][:] = np.sqrt(np.square(u_interp[2][i, :]) +
+                                           np.square(v_interp[2][i, :]))
+                vel_data = (u_data[0], u_data[1], u_data[2][i, :, :])
+                vel_data[2][:] = np.sqrt(np.square(u_data[2][i, :, :]) +
+                                         np.square(v_data[2][i, :, :]))
+                self.plot_interp_data(vel_data, vel_interp,
+                                      'velocity magnitude', 'vel',
+                                      xtime[i], i)
 
         # Interpolation of atmospheric pressure
         p_interp, p_data, xtime = self.interpolate_data_to_grid(
@@ -261,5 +261,8 @@ class InterpolateAtmForcing(Step):
                            'atmosPressure', xtime)
 
         # Plot atmopheric pressure
-        self.plot_interp_data(p_data,  p_interp,
-                              'atmospheric pressure', 'pres', xtime)
+        for i in range(len(time)):
+            if i % self.plot_interval == 0:
+                self.plot_interp_data(p_data,  p_interp,
+                                      'atmospheric pressure', 'pres',
+                                      xtime[i], i)
