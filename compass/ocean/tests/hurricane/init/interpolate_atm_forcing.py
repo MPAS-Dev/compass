@@ -159,7 +159,7 @@ class InterpolateAtmForcing(Step):
         fig = plt.figure()
         levels = np.linspace(np.amin(data), np.amax(data), 100)
         ax0 = fig.add_subplot(2, 1, 1, projection=ccrs.PlateCarree())
-        cf = ax0.contourf(lon_data, lat_data, orig_data, levels=levels,
+        cf = ax0.contourf(lon_data, lat_data, data, levels=levels,
                           transform=ccrs.PlateCarree())
         ax0.set_extent([0, 359.9, -90, 90], crs=ccrs.PlateCarree())
         ax0.add_feature(cfeature.LAND, zorder=100)
@@ -172,7 +172,7 @@ class InterpolateAtmForcing(Step):
         # Plot interpolated data
         ax1 = fig.add_subplot(2, 1, 2, projection=ccrs.PlateCarree())
         levels = np.linspace(np.amin(interp), np.amax(interp), 100)
-        cf = ax1.tricontourf(lon_grid, lat_grid, interp_data, levels=levels,
+        cf = ax1.tricontourf(lon_grid, lat_grid, interp, levels=levels,
                              transform=ccrs.PlateCarree())
         ax1.set_extent([0, 359.9, -90, 90], crs=ccrs.PlateCarree())
         ax1.add_feature(cfeature.LAND, zorder=100)
@@ -222,7 +222,8 @@ class InterpolateAtmForcing(Step):
         """
         Run this step of the test case
         """
-        check_call(['rm', self.forcing_file], logger=self.logger)
+        if os.path.isfile(self.forcing_file):
+            check_call(['rm', self.forcing_file], logger=self.logger)
 
         # Interpolation of u and v velocities
         u_interp, u_data, xtime = self.interpolate_data_to_grid(
@@ -261,8 +262,10 @@ class InterpolateAtmForcing(Step):
                            'atmosPressure', xtime)
 
         # Plot atmopheric pressure
-        for i in range(len(time)):
+        for i in range(len(xtime)):
             if i % self.plot_interval == 0:
-                self.plot_interp_data(p_data,  p_interp,
+                press_data = (p_data[0], p_data[1], p_data[2][i,:])
+                press_interp = (p_interp[0], p_interp[1], p_interp[2][i,:])
+                self.plot_interp_data(press_data,  press_interp,
                                       'atmospheric pressure', 'pres',
                                       xtime[i], i)
