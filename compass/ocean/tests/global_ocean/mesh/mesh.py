@@ -1,6 +1,6 @@
 from mpas_tools.ocean import build_spherical_mesh
 from mpas_tools.ocean import inject_bathymetry
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 
 from compass.ocean.tests.global_ocean.mesh.cull import cull_mesh
 from compass.step import Step
@@ -111,7 +111,8 @@ class MeshStep(Step):
         cull_mesh(with_critical_passages=True, logger=logger,
                   use_progress_bar=use_progress_bar,
                   preserve_floodplain=preserve_floodplain,
-                  with_cavities=with_ice_shelf_cavities)
+                  with_cavities=with_ice_shelf_cavities,
+                  process_count=self.cores)
 
         if do_inject_bathymetry:
             inject_bathymetry(mesh_file='culled_mesh.nc')
