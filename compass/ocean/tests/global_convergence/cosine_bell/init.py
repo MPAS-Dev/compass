@@ -1,8 +1,7 @@
-from compass.model import run_model
-from compass.step import Step
+from compass.model import ModelStep
 
 
-class Init(Step):
+class Init(ModelStep):
     """
     A step for an initial condition for for the cosine bell test case
     """
@@ -22,7 +21,7 @@ class Init(Step):
         super().__init__(test_case=test_case,
                          name=f'{mesh_name}_init',
                          subdir=f'{mesh_name}/init',
-                         ntasks=36, min_tasks=1)
+                         ntasks=36, min_tasks=1, openmp_threads=1)
 
         package = 'compass.ocean.tests.global_convergence.cosine_bell'
 
@@ -33,13 +32,5 @@ class Init(Step):
 
         self.add_input_file(filename='graph.info', target='../mesh/graph.info')
 
-        self.add_model_as_input()
-
         self.add_output_file(filename='namelist.ocean')
         self.add_output_file(filename='initial_state.nc')
-
-    def run(self):
-        """
-        Run this step of the testcase
-        """
-        run_model(self)

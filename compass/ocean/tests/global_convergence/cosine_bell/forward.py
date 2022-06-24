@@ -1,10 +1,9 @@
 import time
 
-from compass.model import run_model
-from compass.step import Step
+from compass.model import ModelStep
 
 
-class Forward(Step):
+class Forward(ModelStep):
     """
     A step for performing forward MPAS-Ocean runs as part of the cosine bell
     test case
@@ -32,7 +31,8 @@ class Forward(Step):
         """
         super().__init__(test_case=test_case,
                          name=f'{mesh_name}_forward',
-                         subdir=f'{mesh_name}/forward')
+                         subdir=f'{mesh_name}/forward',
+                         openmp_threads=1)
 
         self.resolution = resolution
 
@@ -51,28 +51,47 @@ class Forward(Step):
         self.add_input_file(filename='graph.info',
                             target='../mesh/graph.info')
 
-        self.add_model_as_input()
-
         self.add_output_file(filename='output.nc')
 
     def setup(self):
         """
         Set namelist options base on config options
         """
+        super().setup()
         dt = self.get_dt()
         self.add_namelist_options({'config_dt': dt})
 
-    def run(self):
+    def constrain_resources(self, available_cores):
         """
-        Run this step of the testcase
+        Before we constrain the resources, we'll update the target and minimum
+        number of tasks from config options
+
+        Parameters
+        ----------
+        available_cores : int
+            The total number of cores available to the step
         """
+        config = self.config
+        resolution = self.resolution
+
+        ntasks = config.getint('cosine_bell', f'QU{resolution}_ntasks')
+        min_tasks = config.getint('cosine_bell', f'QU{resolution}_min_tasks')
+        self.ntasks = ntasks
+        self.min_tasks = min_tasks
+
+        super().constrain_resources(available_cores)
+
+    def runtime_setup(self):
+        """
+        Update the resources and time step in case the user has update config
+        options
+        """
+        super().runtime_setup()
 
         # update dt in case the user has changed dt_per_km
         dt = self.get_dt()
         self.update_namelist_at_runtime(options={'config_dt': dt},
                                         out_name='namelist.ocean')
-
-        run_model(self)
 
     def get_dt(self):
         """
