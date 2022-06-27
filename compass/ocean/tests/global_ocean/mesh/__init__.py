@@ -1,7 +1,7 @@
 from compass.testcase import TestCase
 from compass.ocean.tests.global_ocean.mesh.qu240 import QU240Mesh
 from compass.ocean.tests.global_ocean.mesh.ec30to60 import EC30to60Mesh
-from compass.ocean.tests.global_ocean.mesh.arm10to60 import ARM10to60Mesh
+from compass.ocean.tests.global_ocean.mesh.arrm10to60 import ARRM10to60Mesh
 from compass.ocean.tests.global_ocean.mesh.so12to60 import SO12to60Mesh
 from compass.ocean.tests.global_ocean.mesh.wc14 import WC14Mesh
 from compass.ocean.tests.global_ocean.configure import configure_global_ocean
@@ -47,9 +47,9 @@ class Mesh(TestCase):
         elif mesh_name in 'ECwISC30to60':
             self.mesh_step = EC30to60Mesh(self, mesh_name,
                                           with_ice_shelf_cavities=True)
-        elif mesh_name in 'ARM10to60':
-            self.mesh_step = ARM10to60Mesh(self, mesh_name,
-                                           with_ice_shelf_cavities=False)
+        elif mesh_name in 'ARRM10to60':
+            self.mesh_step = ARRM10to60Mesh(self, mesh_name,
+                                            with_ice_shelf_cavities=False)
         elif mesh_name in 'SOwISC12to60':
             self.mesh_step = SO12to60Mesh(self, mesh_name,
                                           with_ice_shelf_cavities=True)

@@ -5,8 +5,8 @@ from compass.ocean.tests.global_ocean.mesh.qu240.dynamic_adjustment import \
     QU240DynamicAdjustment
 from compass.ocean.tests.global_ocean.mesh.ec30to60.dynamic_adjustment import \
     EC30to60DynamicAdjustment
-from compass.ocean.tests.global_ocean.mesh.arm10to60.dynamic_adjustment \
-    import ARM10to60DynamicAdjustment
+from compass.ocean.tests.global_ocean.mesh.arrm10to60.dynamic_adjustment \
+    import ARRM10to60DynamicAdjustment
 from compass.ocean.tests.global_ocean.mesh.so12to60.dynamic_adjustment import \
     SO12to60DynamicAdjustment
 from compass.ocean.tests.global_ocean.mesh.wc14.dynamic_adjustment import \
@@ -151,8 +151,8 @@ class GlobalOcean(TestGroup):
                     test_group=self, mesh=mesh, init=init,
                     dynamic_adjustment=dynamic_adjustment))
 
-        # ARM10to60: just the version without cavities
-        for mesh_name in ['ARM10to60']:
+        # ARRM10to60: just the version without cavities
+        for mesh_name in ['ARRM10to60']:
             mesh = Mesh(test_group=self, mesh_name=mesh_name)
             self.add_test_case(mesh)
 
@@ -165,7 +165,7 @@ class GlobalOcean(TestGroup):
                 PerformanceTest(
                     test_group=self, mesh=mesh, init=init,
                     time_integrator=time_integrator))
-            dynamic_adjustment = ARM10to60DynamicAdjustment(
+            dynamic_adjustment = ARRM10to60DynamicAdjustment(
                 test_group=self, mesh=mesh, init=init,
                 time_integrator=time_integrator)
             self.add_test_case(dynamic_adjustment)

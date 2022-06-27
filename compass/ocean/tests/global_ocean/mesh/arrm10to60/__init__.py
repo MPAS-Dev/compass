@@ -13,7 +13,7 @@ from mpas_tools.viz.colormaps import register_sci_viz_colormaps
 from compass.ocean.tests.global_ocean.mesh.mesh import MeshStep
 
 
-class ARM10to60Mesh(MeshStep):
+class ARRM10to60Mesh(MeshStep):
     """
     A step for creating SOwISC12to60 meshes
     """
@@ -35,7 +35,7 @@ class ARM10to60Mesh(MeshStep):
 
         super().__init__(test_case, mesh_name, with_ice_shelf_cavities,
                          package=self.__module__,
-                         mesh_config_filename='arm10to60.cfg')
+                         mesh_config_filename='arrm10to60.cfg')
 
         inputs = ['Americas_land_mask.geojson',
                   'Atlantic_region.geojson',
