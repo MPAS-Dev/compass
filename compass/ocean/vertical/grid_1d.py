@@ -36,7 +36,7 @@ def generate_1d_grid(config):
                                           min_layer_thickness,
                                           max_layer_thickness)
 
-    elif grid_type in ['60layerPHC', '100layerE3SMv1']:
+    elif grid_type in ['60layerPHC', '80layerE3SMv1', '100layerE3SMv1']:
         interfaces = _read_json(grid_type)
     else:
         raise ValueError('Unexpected grid type: {}'.format(grid_type))
