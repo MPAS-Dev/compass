@@ -1,5 +1,6 @@
 import xarray
 import numpy
+import matplotlib.pyplot as plt
 
 from mpas_tools.planar_hex import make_planar_hex_mesh
 from mpas_tools.io import write_netcdf
@@ -59,12 +60,25 @@ class InitialState(Step):
         logger.info(' * Completed Make planar hex mesh')
         write_netcdf(dsMesh, 'base_mesh.nc')
 
-        logger.info(' * Cull mesh')
+        logger.info(' * Cull mesh boundaries')
         dsMesh = cull(dsMesh, logger=logger)
         logger.info(' * Convert mesh')
         dsMesh = convert(dsMesh, graphInfoFileName='culled_graph.info',
                          logger=logger)
         logger.info(' * Completed Convert mesh')
         write_netcdf(dsMesh, 'culled_mesh.nc')
+
+        run_model(self, namelist='namelist.ocean',
+                  streams='streams.ocean')
+
+        postrun_data = xarray.open_dataset('ocean.nc')
+        logger.info(' * Cull mesh dam boundaries')
+        postrun_data_cull = cull(postrun_data, logger=logger)
+        logger.info(' * Convert mesh')
+        postrun_data_cull = convert(postrun_data_cull,
+                                    graphInfoFileName='culled_graph.info',
+                                    logger=logger)
+        write_netcdf(postrun_data_cull, 'culled_mesh.nc')
+
         run_model(self, namelist='namelist.ocean',
                   streams='streams.ocean')
