@@ -75,8 +75,9 @@ class Forward(Step):
 
         resolution = self.resolution
         if resolution == 0.04:
-            self.update_namelist_at_runtime({'config_dt': "'0000_00:00:00.0001'"})
+            self.update_namelist_at_runtime({'config_dt':
+                                             "'0000_00:00:00.001'"})
         elif resolution == 0.12:
-            self.update_namelist_at_runtime({'config_dt': "'0000_00:00:00.0003'"})
+            self.update_namelist_at_runtime({'config_dt':
+                                             "'0000_00:00:00.003'"})
         run_model(self)
-
