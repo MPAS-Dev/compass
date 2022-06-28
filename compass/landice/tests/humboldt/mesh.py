@@ -212,7 +212,7 @@ class Mesh(Step):
         # plt.pcolor(distToEdge/1000.0); plt.colorbar(); plt.show()
 
         # Set cell widths based on mesh parameters set in config file
-        cell_width = set_cell_width(self, section='humboldt_mesh', x=x1, y=y1,
+        cell_width = set_cell_width(self, section='humboldt_mesh',
                                     thk=thk, bed=topg, vx=vx, vy=vy,
                                     dist_to_edge=distToEdge,
                                     dist_to_grounding_line=None)

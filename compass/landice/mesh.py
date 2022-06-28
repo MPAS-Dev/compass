@@ -1,7 +1,7 @@
 import numpy as np
 import jigsawpy
 import time
-from scipy.interpolate import griddata
+
 
 def gridded_flood_fill(field):
     """
@@ -105,7 +105,7 @@ def set_rectangular_geom_points_and_edges(xmin, xmax, ymin, ymax):
     return geom_points, geom_edges
 
 
-def set_cell_width(self, section, x, y, thk, bed=None, vx=None, vy=None,
+def set_cell_width(self, section, thk, bed=None, vx=None, vy=None,
                    dist_to_edge=None, dist_to_grounding_line=None):
     """
     Set cell widths based on settings in config file to pass to
@@ -119,10 +119,6 @@ def set_cell_width(self, section, x, y, thk, bed=None, vx=None, vy=None,
     ----------
     section : str
         Section of the config file from which to read parameters
-    x : numpy.ndarray
-        x coordinates from gridded dataset
-    y : numpy.ndarray
-        y coordinates from gridded dataset
     thk : numpy.ndarray
         Ice thickness field from gridded dataset,
         usually after trimming to flood fill mask
@@ -173,26 +169,23 @@ def set_cell_width(self, section, x, y, thk, bed=None, vx=None, vy=None,
 
     # Cell spacking function based on union of masks
     if section.get('use_bed') == 'True':
-        bed_mask_high_res = np.logical_and(
-                                bed <= low_bed, dist_to_edge <= low_dist_bed)
-        bed_mask_low_res = np.logical_or(
-                                bed >= high_bed, dist_to_edge >= high_dist_bed)
+        logger.info('Using bed elevation for spacing')
+        spacing_bed = np.interp(bed, [low_bed, high_bed], [min_spac, max_spac],
+                                left=min_spac, right=max_spac)
+        # We only want bed topography to influence spacing within high_dist_bed
+        # from the ice margin.
+        spacing_bed[dist_to_edge >= high_dist_bed] = max_spac
     else:
-        bed_mask_high_res = np.zeros_like(thk)
-        bed_mask_low_res = np.zeros_like(thk)
-
+        spacing_bed = max_spac * np.ones_like(thk)
+                                                                                         
     # Make cell spacing function mapping from log speed to cell spacing
     if section.get('use_speed') == 'True':
         logger.info('Using speed for cell spacing')
         speed = (vx ** 2 + vy ** 2) ** 0.5
         lspd = np.log10(speed)
-
-        speed_mask_high_res = (lspd >= high_log_speed)
-        speed_mask_low_res = (lspd <= low_log_speed)
-
-#        spacing = np.interp(lspd, [low_log_speed, high_log_speed],
-#                            [max_spac, min_spac], left=max_spac,
-#                            right=min_spac)
+        spacing_speed = np.interp(lspd, [low_log_speed, high_log_speed],
+                            [max_spac, min_spac], left=max_spac,
+                            right=min_spac)
 
         # Clean up where we have missing velocities. These are usually nans
         # or the default netCDF _FillValue of ~10.e36
@@ -200,74 +193,39 @@ def set_cell_width(self, section, x, y, thk, bed=None, vx=None, vy=None,
                                np.logical_or(np.isnan(vx), np.isnan(vy)),
                                np.logical_or(np.abs(vx) > 1.e5,
                                              np.abs(vy) > 1.e5))
-        speed_mask_high_res[missing_data_mask] = 0
-        speed_mask_low_res[missing_data_mask] = 1
-        
+        spacing_speed[missing_data_mask] = max_spac
         logger.info(f'Found {np.sum(missing_data_mask)} points in input '
                     f'dataset with missing velocity values. Setting '
                     f'velocity-based spacing to maximum value.')
 
-#        spacing[thk == 0.0] = min_spac
+        spacing_speed[thk == 0.0] = min_spac
     else:
-#        spacing = max_spac * np.ones_like(thk)
-        speed_mask_high_res = np.zeros_like(thk)
-        speed_mask_low_res = np.zeros_like(thk)
+        spacing_speed = max_spac * np.ones_like(thk)
 
     # Make cell spacing function mapping from distance to ice edge
     if section.get('use_dist_to_edge') == 'True':
         logger.info('Using distance to ice edge for cell spacing')
-        dist_to_edge_mask_high_res = (dist_to_edge <= low_dist)
-        dist_to_edge_mask_low_res = (dist_to_edge >= high_dist)
-#        spacing2 = np.interp(dist_to_edge, [low_dist, high_dist],
-#                             [min_spac, max_spac], left=min_spac,
-#                             right=max_spac)
-#        spacing2[thk == 0.0] = min_spac
+        spacing_edge = np.interp(dist_to_edge, [low_dist, high_dist],
+                             [min_spac, max_spac], left=min_spac,
+                             right=max_spac)
+        spacing_edge[thk == 0.0] = min_spac
     else:
-#        spacing2 = max_spac * np.ones_like(thk)
-        dist_to_edge_mask_high_res = np.zeros_like(thk)
-        dist_to_edge_mask_low_res = np.zeros_like(thk)
+        spacing_edge = max_spac * np.ones_like(thk)
 
     # Make cell spacing function mapping from distance to grounding line
     if section.get('use_dist_to_grounding_line') == 'True':
         logger.info('Using distance to grounding line for cell spacing')
-        dist_to_grounding_line_mask_high_res = (dist_to_grounding_line
-                                                <= low_dist)
-        dist_to_grounding_line_mask_low_res = (dist_to_grounding_line
-                                               >= high_dist)
-#        spacing3 = np.interp(dist_to_grounding_line, [low_dist, high_dist],
-#                             [min_spac, max_spac], left=min_spac,
-#                             right=max_spac)
-#        spacing3[thk == 0.0] = min_spac
+        spacing_gl = np.interp(dist_to_grounding_line, [low_dist, high_dist],
+                             [min_spac, max_spac], left=min_spac,
+                             right=max_spac)
+        spacing_gl[thk == 0.0] = min_spac
     else:
-#        spacing3 = max_spac * np.ones_like(thk)
-        dist_to_grounding_line_mask_high_res = np.zeros_like(thk)
-        dist_to_grounding_line_mask_low_res = np.zeros_like(thk)
+        spacing_gl = max_spac * np.ones_like(thk)
 
-    # Merge cell spacing masks
-    mask_high_res = np.logical_or(
-                        bed_mask_high_res,
-                        np.logical_or(
-                            speed_mask_high_res,
-                            np.logical_or(
-                                dist_to_edge_mask_high_res,
-                                dist_to_grounding_line_mask_high_res)))
-
-    mask_low_res = np.logical_or(
-                        bed_mask_low_res,
-                        np.logical_or(
-                            speed_mask_low_res,
-                            np.logical_or(
-                                dist_to_edge_mask_low_res,
-                                dist_to_grounding_line_mask_low_res)))
-    # Now use high and low resolution masks to create cell spacing
-    x_grid, y_grid = np.meshgrid(x, y)
-    mask_exists = np.logical_or(mask_high_res, mask_low_res).ravel()
-    cell_width = griddata( (x_grid.ravel()[mask_exists],
-                            y_grid.ravel()[mask_exists]),
-                           (mask_high_res * min_spac + mask_low_res *
-                            max_spac).ravel()[mask_exists],
-                           (x_grid, y_grid),
-                           method='linear' )
+    # Merge cell spacing methods
+    cell_width = max_spac * np.ones_like(thk)
+    for width in [spacing_bed, spacing_speed, spacing_edge, spacing_gl]:
+        cell_width = np.minimum(cell_width, width)
 
     # Set large cell_width in areas we are going to cull anyway (speeds up
     # whole process). Use 10x the cull_distance to avoid this affecting
@@ -277,6 +235,7 @@ def set_cell_width(self, section, x, y, thk, bed=None, vx=None, vy=None,
         mask = np.logical_and(
             thk == 0.0, dist_to_edge > (10. * cull_distance))
         cell_width[mask] = max_spac
+
     return cell_width
 
 
