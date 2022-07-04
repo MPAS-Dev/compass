@@ -8,7 +8,8 @@ class Forward(Step):
     test cases.
     """
     def __init__(self, test_case, resolution, name='forward', subdir=None,
-                 cores=1, min_cores=None, threads=1, damping_coeff=None):
+                 cores=1, min_cores=None, threads=1, damping_coeff=None,
+                 coord_type='sigma'):
         """
         Create a new test case
 
@@ -58,6 +59,8 @@ class Forward(Step):
             res_name = f'{int(resolution)}km'
         self.add_namelist_file('compass.ocean.tests.drying_slope',
                                f'namelist.{res_name}.forward')
+        self.add_namelist_file('compass.ocean.tests.drying_slope',
+                               f'namelist.{coord_type}.forward')
         if damping_coeff is not None:
             # update the Rayleigh damping coeff to the requested value
             options = {'config_Rayleigh_damping_coeff': f'{damping_coeff}'}
