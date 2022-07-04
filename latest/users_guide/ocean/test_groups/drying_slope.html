@@ -152,11 +152,14 @@ degC and 35 PSU, respectively. Two different linear drag bottom roughness
 factors of 0.0025 and 0.01 are applied in separate simulations.</p>
 <p>By default, there are 10 vertical layers. The sigma vertical coordinate is
 used. Horizontal resolution of 250m and 1 km are available.</p>
-<p>The test group includes 1 test case.  The test case has 4 steps,
-<code class="docutils literal notranslate"><span class="pre">initial_state</span></code>, which defines the mesh and initial conditions for the model,
-two <code class="docutils literal notranslate"><span class="pre">forward</span></code> steps, one for each Rayleigh damping coefficient, and a <code class="docutils literal notranslate"><span class="pre">viz</span></code>
-which performs visualization of the ssh field and comparison with the analytical
-solution as well as the solution from the ROMS model.</p>
+<p>The test group includes 1 test case.  The test case has 4 steps. The
+<code class="docutils literal notranslate"><span class="pre">initial_state</span></code> defines the mesh and initial conditions for the model. For
+the <code class="docutils literal notranslate"><span class="pre">sigma</span></code> vertical coordiante, two <code class="docutils literal notranslate"><span class="pre">forward</span></code> steps are run, one for each
+Rayleigh damping coefficient; for the <code class="docutils literal notranslate"><span class="pre">single_layer</span></code> case, one <code class="docutils literal notranslate"><span class="pre">forward</span></code>
+step is run at one value of the explicit bottom drag coefficient. The <code class="docutils literal notranslate"><span class="pre">viz</span></code>
+step performs visualization of the ssh field. For the <code class="docutils literal notranslate"><span class="pre">sigma</span></code> case, the
+<code class="docutils literal notranslate"><span class="pre">viz</span></code> step also produces a comparison plot with the analytical solution as
+well as the solution from the ROMS model.</p>
 <a class="reference internal image-reference" href="../../../_images/drying_slope_validation.png"><img alt="../../../_images/drying_slope_validation.png" class="align-center" src="../../../_images/drying_slope_validation.png" style="width: 500px;" /></a>
 <section id="config-options">
 <h2>config options<a class="headerlink" href="#config-options" title="Permalink to this heading">¶</a></h2>
