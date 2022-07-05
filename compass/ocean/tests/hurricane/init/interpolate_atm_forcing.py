@@ -264,8 +264,8 @@ class InterpolateAtmForcing(Step):
         # Plot atmopheric pressure
         for i in range(len(xtime)):
             if i % self.plot_interval == 0:
-                press_data = (p_data[0], p_data[1], p_data[2][i,:])
-                press_interp = (p_interp[0], p_interp[1], p_interp[2][i,:])
+                press_data = (p_data[0], p_data[1], p_data[2][i, :])
+                press_interp = (p_interp[0], p_interp[1], p_interp[2][i, :])
                 self.plot_interp_data(press_data,  press_interp,
                                       'atmospheric pressure', 'pres',
                                       xtime[i], i)
