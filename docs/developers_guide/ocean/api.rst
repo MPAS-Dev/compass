@@ -267,6 +267,55 @@ default
    analysis.Analysis
    analysis.Analysis.run
 
+hurricane
+~~~~~~~~~
+
+test cases and steps
+''''''''''''''''''''
+
+.. currentmodule:: compass.ocean.tests.hurricane
+
+.. autosummary::
+   :toctree: generated/
+
+   Hurricane
+   configure
+
+   mesh.Mesh
+   mesh.Mesh.configure
+   mesh.Mesh.run
+   
+   mesh.dequ120at30cr10rr2.DEQU120at30cr10rr2Mesh
+   mesh.dequ120at30cr10rr2.DEQU120at30cr10rr2Mesh.build_cell_width_lat_lon
+
+   init.Init
+   init.Init.configure
+   init.Init.run
+   init.create_pointstats_file.CreatePointstatsFile
+   init.create_pointstats_file.CreatePointstatsFile.create_pointstats_file
+   init.create_pointstats_file.CreatePointstatsFile.run
+   init.initial_state.InitialState
+   init.initial_state.InitialState.setup
+   init.initial_state.InitialState.run
+   init.interpolate_atm_forcing.InterpolateAtmForcing
+   init.interpolate_atm_forcing.InterpolateAtmForcing.interpolate_data_to_grid
+   init.interpolate_atm_forcing.InterpolateAtmForcing.plot_interp_data
+   init.interpolate_atm_forcing.InterpolateAtmForcing.write_to_file
+   init.interpolate_atm_forcing.InterpolateAtmForcing.run
+
+   forward.Forward
+   forward.Forward.configure
+   forward.Forward.run
+   forward.forward.ForwardStep
+   forward.forward.ForwardStep.setup
+   forward.forward.ForwardStep.run
+   
+   analysis.Analysis
+   analysis.Analysis.setup
+   analysis.Analysis.read_pointstats
+   analysis.Analysis.read_station_data
+   analysis.Analysis.read_station_file
+   analysis.Analysis.run
 
 ice_shelf_2d
 ~~~~~~~~~~~~

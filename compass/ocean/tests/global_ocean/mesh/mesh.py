@@ -1,4 +1,5 @@
 from mpas_tools.ocean import build_spherical_mesh
+from mpas_tools.ocean import inject_bathymetry
 from abc import ABC, abstractmethod
 
 from compass.ocean.tests.global_ocean.mesh.cull import cull_mesh
@@ -24,7 +25,8 @@ class MeshStep(Step):
         The name of the mesh config file
     """
     def __init__(self, test_case, mesh_name, with_ice_shelf_cavities,
-                 package, mesh_config_filename, name='mesh', subdir=None):
+                 package, mesh_config_filename, name='mesh', subdir=None,
+                 do_inject_bathymetry=False, preserve_floodplain=False):
         """
         Create a new step
 
@@ -50,6 +52,14 @@ class MeshStep(Step):
 
         subdir : str, optional
             the subdirectory for the step.  The default is ``name``
+
+        do_inject_bathymetry : bool, optional
+            Whether to interpolate bathymetry from a data file so it
+            can be used as a culling criteria
+
+        preserve_floodplain : bool, optional
+            Whether to leave land cells in the mesh based on bathymetry
+            specified by do_inject_bathymetry
         """
         super().__init__(test_case, name=name, subdir=subdir, cores=None,
                          min_cores=None, threads=None)
@@ -61,6 +71,8 @@ class MeshStep(Step):
         self.with_ice_shelf_cavities = with_ice_shelf_cavities
         self.package = package
         self.mesh_config_filename = mesh_config_filename
+        self.do_inject_bathymetry = do_inject_bathymetry
+        self.preserve_floodplain = preserve_floodplain
 
     def setup(self):
         """
@@ -71,6 +83,9 @@ class MeshStep(Step):
         config = self.config
         self.cores = config.getint('global_ocean', 'mesh_cores')
         self.min_cores = config.getint('global_ocean', 'mesh_min_cores')
+        self.floodplain_elevation = config.getfloat(
+            'global_ocean',
+            'floodplain_elevation')
 
     def run(self):
         """
@@ -78,6 +93,9 @@ class MeshStep(Step):
         """
         with_ice_shelf_cavities = self.with_ice_shelf_cavities
         logger = self.logger
+        do_inject_bathymetry = self.do_inject_bathymetry
+        preserve_floodplain = self.preserve_floodplain
+        floodplain_elevation = self.floodplain_elevation
 
         # only use progress bars if we're not writing to a log file
         use_progress_bar = self.log_filename is None
@@ -85,11 +103,18 @@ class MeshStep(Step):
         # create the base mesh
         cellWidth, lon, lat = self.build_cell_width_lat_lon()
         build_spherical_mesh(cellWidth, lon, lat, out_filename='base_mesh.nc',
-                             logger=logger, use_progress_bar=use_progress_bar)
+                             logger=logger, use_progress_bar=use_progress_bar,
+                             do_inject_bathymetry=do_inject_bathymetry,
+                             preserve_floodplain=preserve_floodplain,
+                             floodplain_elevation=floodplain_elevation)
 
         cull_mesh(with_critical_passages=True, logger=logger,
                   use_progress_bar=use_progress_bar,
+                  preserve_floodplain=preserve_floodplain,
                   with_cavities=with_ice_shelf_cavities)
+
+        if do_inject_bathymetry:
+            inject_bathymetry(mesh_file='culled_mesh.nc')
 
     @abstractmethod
     def build_cell_width_lat_lon(self):
