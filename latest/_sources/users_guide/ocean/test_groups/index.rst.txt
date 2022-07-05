@@ -16,6 +16,7 @@ coming months.
    global_convergence
    global_ocean
    gotm
+   hurricane
    ice_shelf_2d
    internal_wave
    isomip_plus
