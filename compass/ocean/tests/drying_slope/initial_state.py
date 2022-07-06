@@ -14,7 +14,7 @@ class InitialState(Step):
     A step for creating a mesh and initial condition for drying slope test
     cases
     """
-    def __init__(self, test_case):
+    def __init__(self, test_case, coord_type='sigma'):
         """
         Create the step
 
@@ -25,6 +25,8 @@ class InitialState(Step):
         """
         super().__init__(test_case=test_case, name='initial_state', cores=1,
                          min_cores=1, threads=1)
+
+        self.coord_type = coord_type
 
         self.add_namelist_file('compass.ocean.tests.drying_slope',
                                'namelist.init', mode='init')
@@ -44,6 +46,18 @@ class InitialState(Step):
         """
         config = self.config
         logger = self.logger
+
+        config = self.config
+        section = config['vertical_grid']
+        coord_type = self.coord_type
+        if coord_type == 'single_layer':
+            options = {'config_tidal_boundary_vert_levels': '1'}
+            self.update_namelist_at_runtime(options)
+        else:
+            vert_levels = section.get('vert_levels')
+            options = {'config_tidal_boundary_vert_levels': f'{vert_levels}',
+                       'config_tidal_boundary_layer_type': f"'{coord_type}'"}
+            self.update_namelist_at_runtime(options)
 
         section = config['drying_slope']
         nx = section.getint('nx')

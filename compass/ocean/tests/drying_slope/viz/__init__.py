@@ -26,7 +26,7 @@ class Viz(Step):
     datatypes : list of str
         The sources of data for comparison to the MPAS-Ocean run
     """
-    def __init__(self, test_case):
+    def __init__(self, test_case, damping_coeffs=None):
         """
         Create the step
 
@@ -37,22 +37,25 @@ class Viz(Step):
         """
         super().__init__(test_case=test_case, name='viz')
 
-        damping_coeffs = [0.0025, 0.01]
         times = ['0.05', '0.15', '0.25', '0.30', '0.40', '0.50']
         datatypes = ['analytical', 'ROMS']
         self.damping_coeffs = damping_coeffs
         self.times = times
         self.datatypes = datatypes
 
-        for damping_coeff in damping_coeffs:
-            self.add_input_file(filename=f'output_{damping_coeff}.nc',
-                                target=f'../forward_{damping_coeff}/output.nc')
-            for time in times:
-                for datatype in datatypes:
-                    filename = f'r{damping_coeff}d{time}-{datatype.lower()}'\
-                               '.csv'
-                    self.add_input_file(filename=filename, target=filename,
-                                        database='drying_slope')
+        if damping_coeffs is None:
+            self.add_input_file(filename='output.nc',
+                                target='../forward/output.nc')
+        else:
+            for coeff in damping_coeffs:
+                self.add_input_file(filename=f'output_{coeff}.nc',
+                                    target=f'../forward_{coeff}/output.nc')
+                for time in times:
+                    for datatype in datatypes:
+                        filename = f'r{coeff}d{time}-{datatype.lower()}'\
+                                   '.csv'
+                        self.add_input_file(filename=filename, target=filename,
+                                            database='drying_slope')
 
     def run(self):
         """
@@ -60,6 +63,8 @@ class Viz(Step):
         """
         section = self.config['paths']
         datapath = section.get('ocean_database_root')
+        section = self.config['vertical_grid']
+        vert_levels = section.get('vert_levels')
         section = self.config['drying_slope_viz']
         generate_movie = section.getboolean('generate_movie')
 
@@ -93,27 +98,35 @@ class Viz(Step):
         markersize = 20
 
         damping_coeffs = self.damping_coeffs
-        fig1, ax1 = plt.subplots(nrows=len(damping_coeffs), ncols=1,
-                                 figsize=figsize, dpi=100)
-        for i, damping_coeff in enumerate(damping_coeffs):
-            ds = xarray.open_dataset(f'output_{damping_coeff}.nc')
+        if damping_coeffs is None:
+            naxes = 1
+            ncFilename = ['output.nc']
+        else:
+            naxes = len(damping_coeffs)
+            ncFilename = [f'output_{damping_coeff}.nc'
+                          for damping_coeff in damping_coeffs]
+        fig, _ = plt.subplots(nrows=naxes, ncols=1, figsize=figsize, dpi=100)
+
+        for i in range(naxes):
+            ax = plt.subplot(naxes, 1, i+1)
+            ds = xarray.open_dataset(ncFilename[i])
             ssh = ds.ssh
             ympas = ds.ssh.where(ds.tidalInputMask).mean('nCells').values
             xmpas = numpy.linspace(0, 1.0, len(ds.xtime))*12.0
-            ax1[i].plot(xmpas, ympas, marker='o', label='MPAS-O forward',
-                        color=colors['MPAS-O'])
-            ax1[i].plot(xSsh, ySsh, lw=3, label='analytical',
-                        color=colors['analytical'])
-            ax1[i].set_ylabel('Tidal amplitude (m)')
+            ax.plot(xmpas, ympas, marker='o', label='MPAS-O forward',
+                    color=colors['MPAS-O'])
+            ax.plot(xSsh, ySsh, lw=3, label='analytical',
+                    color=colors['analytical'])
+            ax.set_ylabel('Tidal amplitude (m)')
+            ax.set_xlabel('Time (hrs)')
+            ax.legend(frameon=False)
+            ax.label_outer()
             ds.close()
 
-        ax1[0].legend(frameon=False)
-        ax1[1].set_xlabel('Time (hrs)')
+        fig.suptitle('Tidal amplitude forcing (right side)')
+        fig.savefig(f'{outFolder}/ssh_t.png', bbox_inches='tight', dpi=200)
 
-        fig1.suptitle('Tidal amplitude forcing (right side)')
-        fig1.savefig(f'{outFolder}/ssh_t.png', bbox_inches='tight', dpi=200)
-
-        plt.close(fig1)
+        plt.close(fig)
 
     def _plot_ssh_validation(self, outFolder='.'):
         """
@@ -125,31 +138,38 @@ class Viz(Step):
         locs = [7.2, 2.2, 0.2, 1.2, 4.2, 9.3]
         locs = 0.92 - numpy.divide(locs, 11.)
 
-        times = self.times
         damping_coeffs = self.damping_coeffs
+        times = self.times
         datatypes = self.datatypes
 
-        fig2, ax2 = plt.subplots(nrows=len(damping_coeffs), ncols=1,
-                                 sharex=True, sharey=True)
-        fig2.text(0.04, 0.5, 'Channel depth (m)', va='center',
-                  rotation='vertical')
-        fig2.text(0.5, 0.02, 'Along channel distance (km)', ha='center')
+        if damping_coeffs is None:
+            naxes = 1
+            nhandles = 1
+            ncFilename = ['output.nc']
+        else:
+            naxes = len(damping_coeffs)
+            nhandles = len(datatypes) + 1
+            ncFilename = [f'output_{damping_coeff}.nc'
+                          for damping_coeff in damping_coeffs]
 
         xBed = numpy.linspace(0, 25, 100)
         yBed = 10.0/25.0*xBed
 
-        for i, damping_coeff in enumerate(damping_coeffs):
-            ds = xarray.open_dataset(f'output_{damping_coeff}.nc')
+        fig, _ = plt.subplots(nrows=naxes, ncols=1, sharex=True)
+
+        for i in range(naxes):
+            ax = plt.subplot(naxes, 1, i+1)
+            ds = xarray.open_dataset(ncFilename[i])
             ds = ds.drop_vars(numpy.setdiff1d([j for j in ds.variables],
                                               ['yCell', 'ssh']))
 
-            ax2[i].plot(xBed, yBed, '-k', lw=3)
-            ax2[i].text(0.5, 5, 'r = ' + str(damping_coeff))
-            ax2[i].set_xlim(0, 25)
-            ax2[i].set_ylim(-1, 11)
-            ax2[i].invert_yaxis()
-            ax2[i].spines['top'].set_visible(False)
-            ax2[i].spines['right'].set_visible(False)
+            ax.plot(xBed, yBed, '-k', lw=3)
+            ax.set_xlim(0, 25)
+            ax.set_ylim(-1, 11)
+            ax.invert_yaxis()
+            ax.spines['top'].set_visible(False)
+            ax.spines['right'].set_visible(False)
+            ax.label_outer()
 
             for atime, ay in zip(times, locs):
 
@@ -162,28 +182,32 @@ class Viz(Step):
                 x = ymean.yCell.values/1000.0
                 y = ymean.ssh.values
 
-                mpas = ax2[i].plot(x, -y, label='MPAS-O',
-                                   color=colors['MPAS-O'])
-                ax2[i].text(1, ay, atime + ' days', size=8,
-                            transform=ax2[i].transAxes)
-
-                # Plot comparison data
-                for datatype in datatypes:
-                    datafile = f'./r{damping_coeff}d{atime}-'\
-                               f'{datatype.lower()}.csv'
-                    data = pd.read_csv(datafile, header=None)
-                    ax2[i].scatter(data[0], data[1], marker='.',
+                mpas = ax.plot(x, -y, label='MPAS-O', color=colors['MPAS-O'])
+                ax.text(1, ay, atime + ' days', size=8,
+                        transform=ax.transAxes)
+                if damping_coeffs is not None:
+                    ax.text(0.5, 5, 'r = ' + str(damping_coeffs[i]))
+                    # Plot comparison data
+                    for datatype in datatypes:
+                        datafile = f'./r{damping_coeffs[i]}d{atime}-'\
+                                   f'{datatype.lower()}.csv'
+                        data = pd.read_csv(datafile, header=None)
+                        ax.scatter(data[0], data[1], marker='.',
                                    color=colors[datatype], label=datatype)
+            ax.legend(frameon=False, loc='lower left')
 
             ds.close()
 
-        h, l0 = ax2[0].get_legend_handles_labels()
-        ax2[0].legend(h[0:3], l0[0:3], frameon=False, loc='lower left')
-        h, l1 = ax2[1].get_legend_handles_labels()
-        ax2[1].legend(h[0:3], l1[0:3], frameon=False, loc='lower left')
+            h, l0 = ax.get_legend_handles_labels()
+            ax.legend(h[:nhandles], l0[:nhandles], frameon=False,
+                      loc='lower left')
 
-        fig2.savefig(f'{outFolder}/ssh_depth_section.png', dpi=200)
-        plt.close(fig2)
+        fig.text(0.04, 0.5, 'Channel depth (m)', va='center',
+                 rotation='vertical')
+        fig.text(0.5, 0.02, 'Along channel distance (km)', ha='center')
+
+        fig.savefig(f'{outFolder}/ssh_depth_section.png', dpi=200)
+        plt.close(fig)
 
     def _plot_ssh_validation_for_movie(self, outFolder='.'):
         """
@@ -199,8 +223,18 @@ class Viz(Step):
         locs = [7.2, 2.2, 0.2, 1.2, 4.2, 9.3]
         locs = 0.92 - numpy.divide(locs, 11.)
 
-        times = self.times
         damping_coeffs = self.damping_coeffs
+        if damping_coeffs is None:
+            naxes = 1
+            nhandles = 1
+            ncFilename = ['output.nc']
+        else:
+            naxes = len(damping_coeffs)
+            nhandles = naxes + 2
+            ncFilename = [f'output_{damping_coeff}.nc'
+                          for damping_coeff in damping_coeffs]
+
+        times = self.times
         datatypes = self.datatypes
 
         xBed = numpy.linspace(0, 25, 100)
@@ -212,16 +246,11 @@ class Viz(Step):
 
             plottime = int((float(itime)/0.2 + 1e-16)*24.0)
 
-            fig2, ax2 = plt.subplots(nrows=len(damping_coeffs), ncols=1,
-                                     sharex=True, sharey=True)
-            ax2[0].set_title(f't = {itime:.3f} days')
-            fig2.text(0.04, 0.5, 'Channel depth (m)', va='center',
-                      rotation='vertical')
-            fig2.text(0.5, 0.02, 'Along channel distance (km)', ha='center')
+            fig, _ = plt.subplots(nrows=naxes, ncols=1, sharex=True)
 
-            for i, damping_coeff in enumerate(damping_coeffs):
-
-                ds = xarray.open_dataset(f'output_{damping_coeff}.nc')
+            for i in range(naxes):
+                ax = plt.subplot(naxes, 1, i+1)
+                ds = xarray.open_dataset(ncFilename[i])
                 ds = ds.drop_vars(numpy.setdiff1d([j for j in ds.variables],
                                                   ['yCell', 'ssh']))
 
@@ -232,39 +261,44 @@ class Viz(Step):
                                 dim=xarray.ALL_DIMS)
                 x = ymean.yCell.values/1000.0
                 y = ymean.ssh.values
-                ax2[i].plot(xBed, yBed, '-k', lw=3)
-                mpas = ax2[i].plot(x, -y, label='MPAS-O',
-                                   color=colors['MPAS-O'])
+                ax.plot(xBed, yBed, '-k', lw=3)
+                mpas = ax.plot(x, -y, label='MPAS-O', color=colors['MPAS-O'])
 
-                ax2[i].text(0.5, 5, 'r = ' + str(damping_coeff))
-                ax2[i].set_ylim(-1, 11)
-                ax2[i].set_xlim(0, 25)
-                ax2[i].invert_yaxis()
-                ax2[i].spines['top'].set_visible(False)
-                ax2[i].spines['right'].set_visible(False)
+                ax.set_ylim(-1, 11)
+                ax.set_xlim(0, 25)
+                ax.invert_yaxis()
+                ax.spines['top'].set_visible(False)
+                ax.spines['right'].set_visible(False)
+                ax.legend(frameon=False, loc='lower left')
+                ax.set_title(f't = {itime:.3f} days')
+                if damping_coeffs is not None:
+                    ax.text(0.5, 5, 'r = ' + str(damping_coeffs[i]))
+                    # Plot comparison data
+                    for atime, ay in zip(times, locs):
+                        ax.text(1, ay, f'{atime} days', size=8,
+                                transform=ax.transAxes)
 
-                # Plot comparison data
-                for atime, ay in zip(times, locs):
-                    ax2[i].text(1, ay, f'{atime} days', size=8,
-                                transform=ax2[i].transAxes)
-
-                    for datatype in datatypes:
-                        datafile = f'./r{damping_coeff}d{atime}-'\
-                                   f'{datatype.lower()}.csv'
-                        data = pd.read_csv(datafile, header=None)
-                        ax2[i].scatter(data[0], data[1], marker='.',
+                        for datatype in datatypes:
+                            datafile = f'./r{damping_coeffs[i]}d{atime}-'\
+                                       f'{datatype.lower()}.csv'
+                            data = pd.read_csv(datafile, header=None)
+                            ax.scatter(data[0], data[1], marker='.',
                                        color=colors[datatype], label=datatype)
+
+                h, l0 = ax.get_legend_handles_labels()
+                ax.legend(h[0:nhandles], l0[0:nhandles], frameon=False,
+                          loc='lower left')
+                ax.set_title(f't = {itime:.3f} days')
 
                 ds.close()
 
-            h, l0 = ax2[0].get_legend_handles_labels()
-            ax2[0].legend(h[0:3], l0[0:3], frameon=False, loc='lower left')
-            h, l1 = ax2[1].get_legend_handles_labels()
-            ax2[1].legend(h[0:3], l1[0:3], frameon=False, loc='lower left')
+            fig.text(0.04, 0.5, 'Channel depth (m)', va='center',
+                     rotation='vertical')
+            fig.text(0.5, 0.02, 'Along channel distance (km)', ha='center')
 
-            fig2.savefig(f'{outFolder}/ssh_depth_section_{ii:03d}.png',
-                         dpi=200)
-            plt.close(fig2)
+            fig.savefig(f'{outFolder}/ssh_depth_section_{ii:03d}.png', dpi=200)
+
+            plt.close(fig)
             ii += 1
 
     def _images_to_movies(self, outFolder='.', framesPerSecond=30,
