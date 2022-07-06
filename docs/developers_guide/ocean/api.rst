@@ -54,6 +54,29 @@ baroclinic_channel
    initial_state.InitialState.run
 
 
+dam_break
+~~~~~~~~~
+
+.. currentmodule:: compass.ocean.tests.dam_break
+
+.. autosummary::
+   :toctree: generated/
+
+   DamBreak
+
+   default.Default
+   default.Default.configure
+
+   forward.Forward
+   forward.Forward.run
+
+   initial_state.InitialState
+   initial_state.InitialState.run
+
+   viz.Viz
+   viz.Viz.run
+
+
 drying_slope
 ~~~~~~~~~~~~
 
