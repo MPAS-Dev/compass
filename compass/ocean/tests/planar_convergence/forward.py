@@ -2,11 +2,10 @@ import time
 from datetime import datetime, timedelta
 from importlib.resources import contents
 
-from compass.model import run_model
-from compass.step import Step
+from compass.model import ModelStep
 
 
-class Forward(Step):
+class Forward(ModelStep):
     """
     A step for performing forward MPAS-Ocean runs as part of a planar
     convergence test case
@@ -29,9 +28,9 @@ class Forward(Step):
         resolution : int
             The resolution of the (uniform) mesh in km
         """
-        super().__init__(test_case=test_case,
-                         name='{}km_forward'.format(resolution),
-                         subdir='{}km/forward'.format(resolution))
+        super().__init__(test_case=test_case, openmp_threads=1,
+                         name=f'{resolution}km_forward',
+                         subdir=f'{resolution}km/forward')
 
         self.resolution = resolution
 
@@ -53,14 +52,13 @@ class Forward(Step):
         self.add_input_file(filename='graph.info',
                             target='../init/graph.info')
 
-        self.add_model_as_input()
-
         self.add_output_file(filename='output.nc')
 
     def setup(self):
         """
         Set namelist options base on config options
         """
+        super().setup()
 
         namelist_options, stream_replacements = self.get_dt_duration()
         self.add_namelist_options(namelist_options)
@@ -69,10 +67,13 @@ class Forward(Step):
                               'streams.template',
                               template_replacements=stream_replacements)
 
-    def run(self):
+    def runtime_setup(self):
         """
-        Run this step of the testcase
+        Update the resources and time step in case the user has update config
+        options
         """
+        super().runtime_setup()
+
         namelist_options, stream_replacements = self.get_dt_duration()
         self.update_namelist_at_runtime(
             options=namelist_options,
@@ -82,8 +83,6 @@ class Forward(Step):
             'compass.ocean.tests.planar_convergence',
             'streams.template', template_replacements=stream_replacements,
             out_name='streams.ocean')
-
-        run_model(self)
 
     def get_dt_duration(self):
         """
