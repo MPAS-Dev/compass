@@ -158,7 +158,7 @@ def run_tests(suite_name, quiet=False, is_test_case=False, steps_to_run=None,
                             internal_status = pass_str
                         else:
                             internal_status = fail_str
-                            test_logger.exception(
+                            test_logger.error(
                                 'Internal test case validation failed')
                             test_pass = False
 
@@ -167,7 +167,7 @@ def run_tests(suite_name, quiet=False, is_test_case=False, steps_to_run=None,
                             baseline_status = pass_str
                         else:
                             baseline_status = fail_str
-                            test_logger.exception('Baseline validation failed')
+                            test_logger.error('Baseline validation failed')
                             test_pass = False
 
                 status = '  test execution:      {}'.format(run_status)
