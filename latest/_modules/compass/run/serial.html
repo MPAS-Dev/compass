@@ -264,7 +264,7 @@
                             <span class="n">internal_status</span> <span class="o">=</span> <span class="n">pass_str</span>
                         <span class="k">else</span><span class="p">:</span>
                             <span class="n">internal_status</span> <span class="o">=</span> <span class="n">fail_str</span>
-                            <span class="n">test_logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span>
+                            <span class="n">test_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
                                 <span class="s1">&#39;Internal test case validation failed&#39;</span><span class="p">)</span>
                             <span class="n">test_pass</span> <span class="o">=</span> <span class="kc">False</span>
 
@@ -273,7 +273,7 @@
                             <span class="n">baseline_status</span> <span class="o">=</span> <span class="n">pass_str</span>
                         <span class="k">else</span><span class="p">:</span>
                             <span class="n">baseline_status</span> <span class="o">=</span> <span class="n">fail_str</span>
-                            <span class="n">test_logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Baseline validation failed&#39;</span><span class="p">)</span>
+                            <span class="n">test_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Baseline validation failed&#39;</span><span class="p">)</span>
                             <span class="n">test_pass</span> <span class="o">=</span> <span class="kc">False</span>
 
                 <span class="n">status</span> <span class="o">=</span> <span class="s1">&#39;  test execution:      </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">run_status</span><span class="p">)</span>
