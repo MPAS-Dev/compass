@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>hurricane &mdash; compass 1.1.0-rc.4 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="ice_shelf_2d" href="ice_shelf_2d.html" />
+    <link rel="prev" title="gotm" href="gotm.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> compass
+          </a>
+              <div class="version">
+                1.1.0-rc.4
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../landice/index.html">Landice core</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Ocean core</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Test groups</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="baroclinic_channel.html">baroclinic_channel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="drying_slope.html">drying_slope</a></li>
+<li class="toctree-l3"><a class="reference internal" href="global_convergence.html">global_convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="global_ocean.html">global_ocean</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gotm.html">gotm</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">hurricane</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#shared-config-options">Shared config options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mesh-test-case">mesh test case</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#init-test-case">init test case</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sandy-test-case">sandy test case</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ice_shelf_2d.html">ice_shelf_2d</a></li>
+<li class="toctree-l3"><a class="reference internal" href="internal_wave.html">internal_wave</a></li>
+<li class="toctree-l3"><a class="reference internal" href="isomip_plus.html">isomip_plus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="planar_convergence.html">planar_convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soma.html">soma</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sphere_transport.html">sphere_transport</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ziso.html">ziso</a></li>
+<li class="toctree-l3"><a class="reference internal" href="spherical_harmonic_transform.html">spherical_harmonic_transform</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../framework/index.html">Framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../suites.html">Test suites</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Ocean core</a> &raquo;</li>
+          <li><a href="index.html">Test groups</a> &raquo;</li>
+      <li>hurricane</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/users_guide/ocean/test_groups/hurricane.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="hurricane">
+<span id="ocean-hurricane"></span><h1>hurricane<a class="headerlink" href="#hurricane" title="Permalink to this heading">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">ocean/hurricane</span></code> test group defines meshes,
+initial conditions, forward simulations, and validation for global,
+realistic ocean domains with regional refinement. These simulations
+are forced with time-varying atmospheric reanalysis data for tropical
+cyclone events and tides. The meshes contain refined regions in order
+to resolve coastal estuaries, making it possible to simulate the
+storm surge that results from a given hurricane event.
+Currently, one mesh resolution and one storm, Hurricane Sandy, are supported.
+More mesh resolutions will be supported in the future.</p>
+<p>These test are configured to use the barotropic, single layer configuration
+of MPAS-Ocean. Each mesh can optionally be created to contain the floodplain
+which can be used to simulate coastal inundation using MPAS-Ocean’s
+wetting and drying scheme.</p>
+<section id="shared-config-options">
+<h2>Shared config options<a class="headerlink" href="#shared-config-options" title="Permalink to this heading">¶</a></h2>
+<p>All <code class="docutils literal notranslate"><span class="pre">hurricane</span></code> test cases start the following shared config options.
+Note that meshes and test cases may modify these options, as noted below.</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># options for global ocean testcases</span><span class="w"></span>
+<span class="k">[global_ocean]</span><span class="w"></span>
+
+<span class="c1">## config options related to the mesh step</span><span class="w"></span>
+<span class="c1"># number of cores to use</span><span class="w"></span>
+<span class="na">mesh_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
+<span class="c1"># minimum of cores, below which the step fails</span><span class="w"></span>
+<span class="na">mesh_min_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
+
+<span class="c1"># The following options are detected from .gitconfig if not explicitly entered</span><span class="w"></span>
+<span class="na">author</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span><span class="w"></span>
+<span class="na">email</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span><span class="w"></span>
+
+<span class="c1"># Elevation threshold to use for including land cells</span><span class="w"></span>
+<span class="na">floodplain_elevation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10.0</span><span class="w"></span>
+
+
+<span class="c1"># options for hurricane testcases</span><span class="w"></span>
+<span class="k">[hurricane]</span><span class="w"></span>
+
+<span class="c1">## config options related to the mesh step</span><span class="w"></span>
+<span class="c1"># number of cores to use</span><span class="w"></span>
+<span class="na">mesh_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
+<span class="c1"># minimum of cores, below which the step fails</span><span class="w"></span>
+<span class="na">mesh_min_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
+
+<span class="c1">## config options related to the initial_state step</span><span class="w"></span>
+<span class="c1"># number of cores to use</span><span class="w"></span>
+<span class="na">init_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">36</span><span class="w"></span>
+<span class="c1"># minimum of cores, below which the step fails</span><span class="w"></span>
+<span class="na">init_min_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8</span><span class="w"></span>
+<span class="c1"># maximum memory usage allowed (in MB)</span><span class="w"></span>
+<span class="na">init_max_memory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
+<span class="c1"># number of threads</span><span class="w"></span>
+<span class="na">init_threads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
+
+<span class="c1">## config options related to the forward steps</span><span class="w"></span>
+<span class="c1"># number of cores to use</span><span class="w"></span>
+<span class="na">forward_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">128</span><span class="w"></span>
+<span class="c1"># minimum of cores, below which the step fails</span><span class="w"></span>
+<span class="na">forward_min_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">36</span><span class="w"></span>
+<span class="c1"># maximum memory usage allowed (in MB)</span><span class="w"></span>
+<span class="na">forward_max_memory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
+<span class="c1"># number of threads</span><span class="w"></span>
+<span class="na">forward_threads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
+</pre></div>
+</div>
+</section>
+<section id="mesh-test-case">
+<span id="hurricane-mesh"></span><h2>mesh test case<a class="headerlink" href="#mesh-test-case" title="Permalink to this heading">¶</a></h2>
+<p>The mesh test case uses the mesh step from the global ocean test group.
+First, it generates the global mesh based on a specified mesh resolution
+function. Next, bathymetry/topography data is interpolated on the mesh from the
+STRM15+ data product. This interpolation step is necessary, because the
+topography in the floodplain is used to set a mask for the cell culling
+process. The land cells above the <code class="docutils literal notranslate"><span class="pre">floodplain_elevation</span></code> are then culled
+from the mesh. Finally, the bathymetry is re-interpolated onto the mesh
+since this data is not carried over from the cell culling process.</p>
+</section>
+<section id="init-test-case">
+<span id="hurricane-init"></span><h2>init test case<a class="headerlink" href="#init-test-case" title="Permalink to this heading">¶</a></h2>
+<p>The init test performs steps to set up the vertical mesh, initial conditions,
+atmospheric forcing, and prepares the station locations for timeseries output.</p>
+<section id="initial-state-step">
+<h3>initial state step<a class="headerlink" href="#initial-state-step" title="Permalink to this heading">¶</a></h3>
+<p>The initial state step runs MPAS-Ocean in init mode to create the initial
+condition file for the forward run. The vertical mesh is setup for a
+single layer case and the ssh with a thin layer on land for wetting and
+drying cases.</p>
+</section>
+<section id="interpolate-atmosphere-forcing-step">
+<h3>interpolate atmosphere forcing step<a class="headerlink" href="#interpolate-atmosphere-forcing-step" title="Permalink to this heading">¶</a></h3>
+<p>The CFSv2 reanalysis wind vector components and atmospheric pressure fields
+for the storm event are interpolated onto the horizontal mesh at hourly
+intervals. These are read in and used to update the atmospheric forcing in the
+forward run.</p>
+</section>
+<section id="create-pointstats-file-step">
+<h3>create pointstats file step<a class="headerlink" href="#create-pointstats-file-step" title="Permalink to this heading">¶</a></h3>
+<p>In order to perform validation of the forward simulation, timeseries data
+is recored at mesh cell centers which are closest to observation stations.
+This set reads in the observation station locations and finds the cells
+closest to them. A file is created that is the input to the
+pointWiseStats analysis member for the forward run.</p>
+</section>
+</section>
+<section id="sandy-test-case">
+<span id="hurricane-sandy"></span><h2>sandy test case<a class="headerlink" href="#sandy-test-case" title="Permalink to this heading">¶</a></h2>
+<p>The sandy test case is responsible for the forward model simulation and
+analysis.</p>
+<section id="forward-step">
+<h3>forward step<a class="headerlink" href="#forward-step" title="Permalink to this heading">¶</a></h3>
+<p>The forward step runs the model simulation of the storm. The simulation
+begins with a spinup period, where the tides and atmospheric forcing
+are ramped to their full value to avoid shocking the system.</p>
+</section>
+<section id="analysis-step">
+<h3>analysis step<a class="headerlink" href="#analysis-step" title="Permalink to this heading">¶</a></h3>
+<p>The analysis step plots the timeseries data at each observation station
+to compare the modeled and observed data. Both NOAA and USGS station data
+is used for the validation.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="gotm.html" class="btn btn-neutral float-left" title="gotm" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ice_shelf_2d.html" class="btn btn-neutral float-right" title="ice_shelf_2d" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

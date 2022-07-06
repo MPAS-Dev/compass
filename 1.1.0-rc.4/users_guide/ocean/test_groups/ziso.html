@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ziso &mdash; compass 1.1.0-rc.4 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="spherical_harmonic_transform" href="spherical_harmonic_transform.html" />
+    <link rel="prev" title="sphere_transport" href="sphere_transport.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> compass
+          </a>
+              <div class="version">
+                1.1.0-rc.4
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../landice/index.html">Landice core</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Ocean core</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Test groups</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="baroclinic_channel.html">baroclinic_channel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="drying_slope.html">drying_slope</a></li>
+<li class="toctree-l3"><a class="reference internal" href="global_convergence.html">global_convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="global_ocean.html">global_ocean</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gotm.html">gotm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hurricane.html">hurricane</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ice_shelf_2d.html">ice_shelf_2d</a></li>
+<li class="toctree-l3"><a class="reference internal" href="internal_wave.html">internal_wave</a></li>
+<li class="toctree-l3"><a class="reference internal" href="isomip_plus.html">isomip_plus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="planar_convergence.html">planar_convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soma.html">soma</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sphere_transport.html">sphere_transport</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ziso</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#shared-config-options">shared config options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#default">default</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#long">long</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#particles">particles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#with-frazil">with_frazil</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="spherical_harmonic_transform.html">spherical_harmonic_transform</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../framework/index.html">Framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../suites.html">Test suites</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Ocean core</a> &raquo;</li>
+          <li><a href="index.html">Test groups</a> &raquo;</li>
+      <li>ziso</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/users_guide/ocean/test_groups/ziso.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="ziso">
+<span id="ocean-ziso"></span><h1>ziso<a class="headerlink" href="#ziso" title="Permalink to this heading">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">ocean/ziso</span></code> test group implements variants of the Zonally Idealized
+Southern Ocean (ZISO) test case from
+<a class="reference external" href="https://doi.org/10.1175/JPO-D-16-0096.1">Ringler et al. (2016)</a>.  From that
+paper:</p>
+<blockquote>
+<div><p>The test case is zonally uniform with respect to all boundary conditions
+and forcing. The 1000 km spanned in the zonal direction <span class="math notranslate nohighlight">\(L_x\)</span> is
+periodic, and the 2000 km spanned in the meridional direction <span class="math notranslate nohighlight">\(L_y\)</span>
+is bounded by walls with a no-slip boundary condition.</p>
+<p>The bathymetry <span class="math notranslate nohighlight">\(h(y)\)</span> is specified as:</p>
+<div class="math notranslate nohighlight">
+\[h(y) = H_s + \frac{1}{2}(H - H_s)\left[1 +
+       \mathrm{tanh}\left( \frac{y - Y_s}{W_s}\right)\right],\]</div>
+<p>where <span class="math notranslate nohighlight">\(H = 2500\)</span> m is the maximum depth, <span class="math notranslate nohighlight">\(H_s = 500\)</span> m is the
+shelf depth, <span class="math notranslate nohighlight">\(Y_s = 250\)</span> km is the center y position of the shelf,
+and <span class="math notranslate nohighlight">\(W_s = 500\)</span> km is the center y position of the shelf break.</p>
+</div></blockquote>
+<p>See that paper for more details on the test case.</p>
+<p>The implementation of <code class="docutils literal notranslate"><span class="pre">ziso</span></code> in <code class="docutils literal notranslate"><span class="pre">compass</span></code> includes two test cases,
+<code class="docutils literal notranslate"><span class="pre">default</span></code> and <code class="docutils literal notranslate"><span class="pre">with_frazil</span></code>.  Both test cases have 2 steps,
+<code class="docutils literal notranslate"><span class="pre">initial_state</span></code>, which defines the mesh and initial conditions for the model,
+and <code class="docutils literal notranslate"><span class="pre">forward</span></code>, which performs time integration of the model.</p>
+<p>Currently, the only version of the test case is at 20-km horizontal resolution,
+but versions of the test case at finer horizontal resolution are expected to
+be ported form <a class="reference internal" href="../../../index.html#legacy-compass"><span class="std std-ref">Legacy COMPASS</span></a> in the coming months.</p>
+<section id="shared-config-options">
+<h2>shared config options<a class="headerlink" href="#shared-config-options" title="Permalink to this heading">¶</a></h2>
+<p>Both <code class="docutils literal notranslate"><span class="pre">ziso</span></code> test cases share the following config options:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span><span class="w"></span>
+<span class="k">[vertical_grid]</span><span class="w"></span>
+
+<span class="c1"># the type of vertical grid</span><span class="w"></span>
+<span class="na">grid_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">100layerE3SMv1</span><span class="w"></span>
+
+<span class="c1"># Depth of the bottom of the ocean</span><span class="w"></span>
+<span class="na">bottom_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2500.0</span><span class="w"></span>
+
+<span class="c1"># The type of vertical coordinate (e.g. z-level, z-star)</span><span class="w"></span>
+<span class="na">coord_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">z-star</span><span class="w"></span>
+
+<span class="c1"># Whether to use &quot;partial&quot; or &quot;full&quot;, or &quot;None&quot; to not alter the topography</span><span class="w"></span>
+<span class="na">partial_cell_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">full</span><span class="w"></span>
+
+<span class="c1"># The minimum fraction of a layer for partial cells</span><span class="w"></span>
+<span class="na">min_pc_fraction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.1</span><span class="w"></span>
+
+
+<span class="c1"># config options for Zonally periodic Idealized Southern Ocean (ZISO)</span><span class="w"></span>
+<span class="c1"># testcases</span><span class="w"></span>
+<span class="k">[ziso]</span><span class="w"></span>
+
+<span class="c1"># meridional position where wind stress switches to easterly</span><span class="w"></span>
+<span class="na">wind_transition_position</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">800000.0</span><span class="w"></span>
+
+<span class="c1"># meridional extent over which the easterly wind stress is applied&quot;</span><span class="w"></span>
+<span class="na">antarctic_shelf_front_width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">600000</span><span class="w"></span>
+
+<span class="c1"># Maximum zonal wind stress value in the shelf front region, following Stewart</span><span class="w"></span>
+<span class="c1"># et al. (2013)</span><span class="w"></span>
+<span class="na">wind_stress_shelf_front_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">-0.05</span><span class="w"></span>
+
+<span class="c1"># Meridional extent of the domain</span><span class="w"></span>
+<span class="na">meridional_extent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2.0e6</span><span class="w"></span>
+
+<span class="c1"># Shelf depth in the domain</span><span class="w"></span>
+<span class="na">shelf_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">500.0</span><span class="w"></span>
+
+<span class="c1"># Shelf half width</span><span class="w"></span>
+<span class="na">slope_half_width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.0e5</span><span class="w"></span>
+
+<span class="c1"># Slope center position</span><span class="w"></span>
+<span class="na">slope_center_position</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5.0e5</span><span class="w"></span>
+
+<span class="c1"># Reference coriolis parameter</span><span class="w"></span>
+<span class="na">reference_coriolis</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">-1e-4</span><span class="w"></span>
+
+<span class="c1"># Meridional gradient of coriolis parameter</span><span class="w"></span>
+<span class="na">coriolis_gradient</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1e-11</span><span class="w"></span>
+
+<span class="c1"># Maximum zonal wind stress value</span><span class="w"></span>
+<span class="na">wind_stress_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.2</span><span class="w"></span>
+
+<span class="c1"># Mean restoring temperature</span><span class="w"></span>
+<span class="na">mean_restoring_temp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3.0</span><span class="w"></span>
+
+<span class="c1"># Tanh coefficient in restoring temperature</span><span class="w"></span>
+<span class="na">restoring_temp_dev_ta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2.0</span><span class="w"></span>
+
+<span class="c1"># Linear coefficient in restoring temperature</span><span class="w"></span>
+<span class="na">restoring_temp_dev_tb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2.0</span><span class="w"></span>
+
+<span class="c1"># Time scale for interior restoring of temperature</span><span class="w"></span>
+<span class="na">restoring_temp_tau</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">30.0</span><span class="w"></span>
+
+<span class="c1"># Restoring piston velocity for surface temperature</span><span class="w"></span>
+<span class="na">restoring_temp_piston_vel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.93e-5</span><span class="w"></span>
+
+<span class="c1"># Vertical e-folding scale in restoring temperature for northern wall</span><span class="w"></span>
+<span class="na">restoring_temp_ze</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1250.0</span><span class="w"></span>
+
+<span class="c1"># E-folding distance parameter for the sponge vertical temperature profile</span><span class="w"></span>
+<span class="na">restoring_sponge_l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8.0e4</span><span class="w"></span>
+
+<span class="c1"># Initial temperature profile constant</span><span class="w"></span>
+<span class="na">initial_temp_t1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">6.0</span><span class="w"></span>
+
+<span class="c1"># Initial temperature profile tanh coefficient</span><span class="w"></span>
+<span class="na">initial_temp_t2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3.6</span><span class="w"></span>
+
+<span class="c1"># Initial temperature profile tanh length scale</span><span class="w"></span>
+<span class="na">initial_temp_h1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">300.0</span><span class="w"></span>
+
+<span class="c1"># Initial temperature profile linear coefficient</span><span class="w"></span>
+<span class="na">initial_temp_mt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">7.5e-5</span><span class="w"></span>
+
+<span class="c1"># Temperature anomaly to produce frazil</span><span class="w"></span>
+<span class="na">frazil_temperature_anomaly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">-3.0</span><span class="w"></span>
+</pre></div>
+</div>
+<p>They use a vertical coordinate that has 100, non-uniform layers distributed
+in the functional form given by the <code class="docutils literal notranslate"><span class="pre">100layerE3SMv1</span></code> grid type (with much
+higher vertical resolution at the surface than at depth) but renormalized so
+that the maximum depth is 2500 m.</p>
+<p>The parameters can be altered to change the domain geometry or the initial
+condition.</p>
+</section>
+<section id="default">
+<h2>default<a class="headerlink" href="#default" title="Permalink to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">ocean/ziso/20km/default</span></code> is the default version of the ZISO
+test case from <a class="reference external" href="https://doi.org/10.1175/JPO-D-16-0096.1">Ringler et al. (2016)</a>.
+The <code class="docutils literal notranslate"><span class="pre">default</span></code> test case also includes particles from the Lagrangian, in Situ,
+Global, High-Performance Particle Tracking (LIGHT;
+<a class="reference external" href="https://doi.org/10.1175/JPO-D-14-0260.1">Wolfram et al. 2015</a>) framework.</p>
+<p>The initial salinity is constant at 34 PSU and the initial temperature is warm
+at the surface and cooler at depth:</p>
+<a class="reference internal image-reference" href="../../../_images/ziso.png"><img alt="../../../_images/ziso.png" class="align-center" src="../../../_images/ziso.png" style="width: 500px;" /></a>
+<p>The test case includes a very short (3 time step) test run and validation of
+prognostic and particle-relate variables for regression testing.</p>
+</section>
+<section id="long">
+<h2>long<a class="headerlink" href="#long" title="Permalink to this heading">¶</a></h2>
+<p>Results in Ringler et al. (2016) are shown from longer simulations.  The
+<code class="docutils literal notranslate"><span class="pre">ocean/ziso/&lt;resolution&gt;/long</span></code> test cases provide a variant on these original
+simulations. As in the <code class="docutils literal notranslate"><span class="pre">default</span></code> test, this test not include particle
+dynamics. Unlike <code class="docutils literal notranslate"><span class="pre">default</span></code>, this test case is configured for a longer
+simulation (10 day) that demonstrates how to use the configuration might be
+used for for scientific work.</p>
+</section>
+<section id="particles">
+<h2>particles<a class="headerlink" href="#particles" title="Permalink to this heading">¶</a></h2>
+<p>These ZISO test cases include particles from the Lagrangian, In situ, Global,
+High-Performance Particle Tracking (LIGHT) framework for regression testing.
+Otherwise, the <code class="docutils literal notranslate"><span class="pre">particles</span></code> tests are identical to <code class="docutils literal notranslate"><span class="pre">default</span></code>.
+Particle-relate variables are also included in the test-case validation.</p>
+</section>
+<section id="with-frazil">
+<h2>with_frazil<a class="headerlink" href="#with-frazil" title="Permalink to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">ocean/ziso/20km/with_frazil</span></code> uses an different initial
+temperature field that is cold enough to produce frazil ice:</p>
+<a class="reference internal image-reference" href="../../../_images/ziso_frazil.png"><img alt="../../../_images/ziso_frazil.png" class="align-center" src="../../../_images/ziso_frazil.png" style="width: 500px;" /></a>
+<p>The config options that control this initial state are:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># namelist options for Zonally periodic Idealized Southern Ocean (ZISO)</span><span class="w"></span>
+<span class="c1"># testcases</span><span class="w"></span>
+<span class="k">[ziso]</span><span class="w"></span>
+
+<span class="c1"># Initial temperature profile constant</span><span class="w"></span>
+<span class="na">initial_temp_t1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.0</span><span class="w"></span>
+
+<span class="c1"># Initial temperature profile tanh coefficient</span><span class="w"></span>
+<span class="na">initial_temp_t2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">-1.0</span><span class="w"></span>
+
+<span class="c1"># Initial temperature profile tanh length scale</span><span class="w"></span>
+<span class="na">initial_temp_h1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">300.0</span><span class="w"></span>
+
+<span class="c1"># Initial temperature profile linear coefficient</span><span class="w"></span>
+<span class="na">initial_temp_mt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.0</span><span class="w"></span>
+</pre></div>
+</div>
+<p>MPAS-Ocean’s capability for producing frazil ice is enabled in this test case,
+whereas this test case does not include lagrangian particles from LIGHT.</p>
+<p>The test case includes a very short (1 min 30 sec) test run, the results of
+which are used to check prognostic and frazil-related variables during
+regression testing.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="sphere_transport.html" class="btn btn-neutral float-left" title="sphere_transport" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="spherical_harmonic_transform.html" class="btn btn-neutral float-right" title="spherical_harmonic_transform" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
