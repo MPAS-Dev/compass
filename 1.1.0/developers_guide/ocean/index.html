@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ocean core &mdash; compass 1.1.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Test groups" href="test_groups/index.html" />
+    <link rel="prev" title="Land-ice Framework" href="../landice/framework.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> compass
+          </a>
+              <div class="version">
+                1.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../landice/index.html">Landice core</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Ocean core</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="test_groups/index.html">Test groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="framework.html">Ocean framework</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Ocean core</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/developers_guide/ocean/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="ocean-core">
+<span id="dev-ocean"></span><h1>Ocean core<a class="headerlink" href="#ocean-core" title="Permalink to this heading">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">ocean</span></code> core is defined by the <a class="reference internal" href="generated/compass.ocean.Ocean.html#compass.ocean.Ocean" title="compass.ocean.Ocean"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.Ocean</span></code></a>
+class. All test cases in the <code class="docutils literal notranslate"><span class="pre">ocean</span></code> core share the following set of
+default config options:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># This config file has default config options for the ocean core</span><span class="w"></span>
+
+<span class="c1"># The paths section points compass to external paths</span><span class="w"></span>
+<span class="k">[paths]</span><span class="w"></span>
+
+<span class="c1"># the relative or absolute path to the root of a branch where MPAS-Ocean</span><span class="w"></span>
+<span class="c1"># has been built</span><span class="w"></span>
+<span class="na">mpas_model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">E3SM-Project/components/mpas-ocean</span><span class="w"></span>
+
+<span class="c1"># The namelists section defines paths to example_compact namelists that will be used</span><span class="w"></span>
+<span class="c1"># to generate specific namelists. By default, these point to the forward and</span><span class="w"></span>
+<span class="c1"># init namelists in the default_inputs directory after a successful build of</span><span class="w"></span>
+<span class="c1"># the ocean model.  Change these in a custom config file if you need a different</span><span class="w"></span>
+<span class="c1"># example_compact.</span><span class="w"></span>
+<span class="k">[namelists]</span><span class="w"></span>
+<span class="na">forward</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">${paths:mpas_model}/default_inputs/namelist.ocean.forward</span><span class="w"></span>
+<span class="na">init</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s">${paths:mpas_model}/default_inputs/namelist.ocean.init</span><span class="w"></span>
+
+<span class="c1"># The streams section defines paths to example_compact streams files that will be used</span><span class="w"></span>
+<span class="c1"># to generate specific streams files. By default, these point to the forward and</span><span class="w"></span>
+<span class="c1"># init streams files in the default_inputs directory after a successful build of</span><span class="w"></span>
+<span class="c1"># the ocean model. Change these in a custom config file if you need a different</span><span class="w"></span>
+<span class="c1"># example_compact.</span><span class="w"></span>
+<span class="k">[streams]</span><span class="w"></span>
+<span class="na">forward</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">${paths:mpas_model}/default_inputs/streams.ocean.forward</span><span class="w"></span>
+<span class="na">init</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s">${paths:mpas_model}/default_inputs/streams.ocean.init</span><span class="w"></span>
+
+
+<span class="c1"># The executables section defines paths to required executables. These</span><span class="w"></span>
+<span class="c1"># executables are provided for use by specific test cases.  Most tools that</span><span class="w"></span>
+<span class="c1"># compass needs should be in the conda environment, so this is only the path</span><span class="w"></span>
+<span class="c1"># to the MPAS-Ocean executable by default.</span><span class="w"></span>
+<span class="k">[executables]</span><span class="w"></span>
+<span class="na">model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">${paths:mpas_model}/ocean_model</span><span class="w"></span>
+
+
+<span class="c1"># Options related to downloading files</span><span class="w"></span>
+<span class="k">[download]</span><span class="w"></span>
+
+<span class="c1"># the path on the server for MPAS-Ocean</span><span class="w"></span>
+<span class="na">core_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">mpas-ocean</span><span class="w"></span>
+
+
+<span class="c1"># Options relate to adjusting the sea-surface height or land-ice pressure</span><span class="w"></span>
+<span class="c1"># below ice shelves to they are dynamically consistent with one another</span><span class="w"></span>
+<span class="k">[ssh_adjustment]</span><span class="w"></span>
+
+<span class="c1"># the number of iterations of ssh adjustment to perform</span><span class="w"></span>
+<span class="na">iterations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10</span><span class="w"></span>
+</pre></div>
+</div>
+<p>The default location for MPAS-Ocean is in the
+<a class="reference external" href="https://git-scm.com/book/en/v2/Git-Tools-Submodules">git submodule</a>
+<code class="docutils literal notranslate"><span class="pre">E3SM-Project</span></code> in the directory <code class="docutils literal notranslate"><span class="pre">components/mpas-ocean</span></code>.  The submodule
+may not point to the latest MPAS-Ocean code in on the E3SM
+<a class="reference external" href="https://github.com/E3SM-Project/E3SM/tree/master">master</a>
+branch but the plan is to update the submodule frequently.  The current version
+of the submodule should always be guaranteed to be compatible with the
+corresponding version of <code class="docutils literal notranslate"><span class="pre">compass</span></code>.</p>
+<p>To make sure the code in the submodule has been cloned and is up-to-date, you
+should run</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git submodule update --init --recursive
+</pre></div>
+</div>
+<p>in the base directory of your local clone of the compass repo.  Then, you can
+<code class="docutils literal notranslate"><span class="pre">cd</span></code> into <code class="docutils literal notranslate"><span class="pre">E3SM-Project/components/mpas-ocean</span></code> and build the code as
+appropriate for whichever of the <a class="reference internal" href="../../users_guide/machines/index.html#machines"><span class="std std-ref">Machines</span></a> you are using.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="test_groups/index.html">Test groups</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="test_groups/baroclinic_channel.html">baroclinic_channel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_groups/drying_slope.html">drying_slope</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_groups/global_convergence.html">global_convergence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_groups/global_ocean.html">global_ocean</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_groups/gotm.html">gotm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_groups/hurricane.html">hurricane</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_groups/ice_shelf_2d.html">ice_shelf_2d</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_groups/internal_wave.html">internal_wave</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_groups/isomip_plus.html">isomip_plus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_groups/planar_convergence.html">planar_convergence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_groups/soma.html">soma</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_groups/sphere_transport.html">sphere_transport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_groups/ziso.html">ziso</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_groups/spherical_harmonic_transform.html">spherical_harmonic_transform</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="framework.html">Ocean framework</a></li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../landice/framework.html" class="btn btn-neutral float-left" title="Land-ice Framework" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="test_groups/index.html" class="btn btn-neutral float-right" title="Test groups" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

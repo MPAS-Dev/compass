@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Test suites &mdash; compass 1.1.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Framework" href="framework/index.html" />
+    <link rel="prev" title="thwaites" href="test_groups/thwaites.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> compass
+          </a>
+              <div class="version">
+                1.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../test_suites.html">Test Suites</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Landice core</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="test_groups/index.html">Test Groups</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Test suites</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#sia-integration-test-suite">sia_integration test suite</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fo-integration-test-suite">fo_integration test suite</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#full-integration-test-suite">full_integration test suite</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#humboldt-calving-tests">humboldt_calving_tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#humboldt-calving-tests-fo">humboldt_calving_tests_fo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#calving-dt-convergence">calving_dt_convergence</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="framework/index.html">Framework</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Landice core</a> &raquo;</li>
+      <li>Test suites</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/users_guide/landice/suites.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="test-suites">
+<span id="landice-suites"></span><h1>Test suites<a class="headerlink" href="#test-suites" title="Permalink to this heading">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">landice</span></code> core currently includes a number of
+<a class="reference internal" href="../test_suites.html#test-suites"><span class="std std-ref">Test Suites</span></a> that can be used
+to run a series of land-ice test cases and optionally compare them against a
+baseline run of the same tests.  The test suites are described in order of
+typical usage.</p>
+<section id="sia-integration-test-suite">
+<span id="landice-suite-sia-integration"></span><h2>sia_integration test suite<a class="headerlink" href="#sia-integration-test-suite" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass suite -c landice -t sia_integration ...
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">sia_integration</span></code> test suite includes the following test cases:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>landice/dome/2000m/sia_restart_test
+landice/dome/2000m/sia_decomposition_test
+landice/dome/variable_resolution/sia_restart_test
+landice/dome/variable_resolution/sia_decomposition_test
+landice/enthalpy_benchmark/A
+landice/eismint2/decomposition_test
+landice/eismint2/enthalpy_decomposition_test
+landice/eismint2/restart_test
+landice/eismint2/enthalpy_restart_test
+landice/greenland/restart_test
+landice/greenland/decomposition_test
+landice/hydro_radial/restart_test
+landice/hydro_radial/decomposition_test
+</pre></div>
+</div>
+<p>These are all meant to be short tests that are appropriate for regression
+testing with the part of the MALI code that uses the shallow ice approximation
+(SIA) and therefore does not require the Albany library.
+These tests should expose problems with the tools for creating
+meshes and initial conditions as well as unexpected changes in any operations,
+such as advection and diffusion, that affect the 2 main prognostic variables,
+ice thickness and velocity, as well as other fields related to ice
+thermodynamics.</p>
+<p>Several additional tests determine that the model behavior is exactly the same
+for a long run or a shorter continuation run from a restart file
+(<code class="docutils literal notranslate"><span class="pre">restart_test</span></code>). Others ensure that the code produces the same result when
+it is run on different numbers of cores (<code class="docutils literal notranslate"><span class="pre">decomposition_test</span></code>).</p>
+</section>
+<section id="fo-integration-test-suite">
+<span id="landice-suite-fo-integration"></span><h2>fo_integration test suite<a class="headerlink" href="#fo-integration-test-suite" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>compass suite -c landice -t fo_integration ...
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">fo_integration</span></code> test suite includes the following test cases:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>landice/circular_shelf/decomposition_test
+landice/dome/2000m/fo_decomposition_test
+landice/dome/2000m/fo_restart_test
+landice/dome/variable_resolution/fo_restart_test
+landice/dome/variable_resolution/fo_decomposition_test
+landice/greenland/fo_decomposition_test
+landice/greenland/fo_restart_test
+landice/thwaites/decomposition_test
+landice/thwaites/restart_test
+landice/humboldt/mesh-3km_restart_test/velo-fo_calving-von_mises_stress_damage-threshold_faceMelting
+</pre></div>
+</div>
+<p>All of these tests use the FO velocity solver and require that MALI be compiled
+with the Albany library.</p>
+</section>
+<section id="full-integration-test-suite">
+<span id="landice-suite-full-integration"></span><h2>full_integration test suite<a class="headerlink" href="#full-integration-test-suite" title="Permalink to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">full_integration</span></code> test suite is a combination of the <code class="docutils literal notranslate"><span class="pre">sia_integration</span></code>
+and <code class="docutils literal notranslate"><span class="pre">fo_integration</span></code> test suites.  This is the suite that should primarily
+be used for testing and integration of MALI Pull Requests.</p>
+</section>
+<section id="humboldt-calving-tests">
+<span id="landice-suite-humboldt-calving-tests"></span><h2>humboldt_calving_tests<a class="headerlink" href="#humboldt-calving-tests" title="Permalink to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">humboldt_calving_tests</span></code> test suite provide complete coverage of all
+calving laws currently support by MALI applied to a 3 km resolution
+Humboldt Glacier domain.
+For the tests in this suite, the velocity solver is disabled, and the velocity
+field comes from an input field, allowing for rapid testing and for testing
+bit-for-bit behavior of the calving physics implementations.
+The suite includes:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>landice/humboldt/mesh-3km_decomposition_test/velo-none_calving-none
+landice/humboldt/mesh-3km_decomposition_test/velo-none_calving-floating
+landice/humboldt/mesh-3km_decomposition_test/velo-none_calving-eigencalving
+landice/humboldt/mesh-3km_decomposition_test/velo-none_calving-specified_calving_velocity
+landice/humboldt/mesh-3km_decomposition_test/velo-none_calving-von_mises_stress
+landice/humboldt/mesh-3km_decomposition_test/velo-none_calving-damagecalving
+landice/humboldt/mesh-3km_decomposition_test/velo-none_calving-ismip6_retreat
+landice/humboldt/mesh-3km_decomposition_test/velo-none_calving-von_mises_stress_damage-threshold_faceMelting
+landice/humboldt/mesh-3km_restart_test/velo-none_calving-none
+landice/humboldt/mesh-3km_restart_test/velo-none_calving-floating
+landice/humboldt/mesh-3km_restart_test/velo-none_calving-eigencalving
+landice/humboldt/mesh-3km_restart_test/velo-none_calving-specified_calving_velocity
+landice/humboldt/mesh-3km_restart_test/velo-none_calving-von_mises_stress
+landice/humboldt/mesh-3km_restart_test/velo-none_calving-damagecalving
+landice/humboldt/mesh-3km_restart_test/velo-none_calving-ismip6_retreat
+landice/humboldt/mesh-3km_restart_test/velo-none_calving-von_mises_stress_damage-threshold_faceMelting
+</pre></div>
+</div>
+</section>
+<section id="humboldt-calving-tests-fo">
+<span id="landice-suite-humboldt-calving-tests-fo"></span><h2>humboldt_calving_tests_fo<a class="headerlink" href="#humboldt-calving-tests-fo" title="Permalink to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">humboldt_calving_tests_fo</span></code> test suite is identical to
+<code class="docutils literal notranslate"><span class="pre">humboldt_calving_tests</span></code> but with the FO solver enabled.
+In this case decomposition tests are not required to be bit-for-bit to pass but
+instead use a small tolerance to account for expected differences of the FO
+solver on differing numbers of processor.
+The suite includes:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>landice/humboldt/mesh-3km_decomposition_test/velo-fo_calving-none
+landice/humboldt/mesh-3km_decomposition_test/velo-fo_calving-floating
+landice/humboldt/mesh-3km_decomposition_test/velo-fo_calving-eigencalving
+landice/humboldt/mesh-3km_decomposition_test/velo-fo_calving-specified_calving_velocity
+landice/humboldt/mesh-3km_decomposition_test/velo-fo_calving-von_mises_stress
+landice/humboldt/mesh-3km_decomposition_test/velo-fo_calving-damagecalving
+landice/humboldt/mesh-3km_decomposition_test/velo-fo_calving-ismip6_retreat
+landice/humboldt/mesh-3km_decomposition_test/velo-fo_calving-von_mises_stress_damage-threshold_faceMelting
+landice/humboldt/mesh-3km_restart_test/velo-fo_calving-none
+landice/humboldt/mesh-3km_restart_test/velo-fo_calving-floating
+landice/humboldt/mesh-3km_restart_test/velo-fo_calving-eigencalving
+landice/humboldt/mesh-3km_restart_test/velo-fo_calving-specified_calving_velocity
+landice/humboldt/mesh-3km_restart_test/velo-fo_calving-von_mises_stress
+landice/humboldt/mesh-3km_restart_test/velo-fo_calving-damagecalving
+landice/humboldt/mesh-3km_restart_test/velo-fo_calving-ismip6_retreat
+landice/humboldt/mesh-3km_restart_test/velo-fo_calving-von_mises_stress_damage-threshold_faceMelting
+</pre></div>
+</div>
+</section>
+<section id="calving-dt-convergence">
+<span id="calving-dt-convergence-txt"></span><h2>calving_dt_convergence<a class="headerlink" href="#calving-dt-convergence" title="Permalink to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">calving_dt_convergence</span></code> test suite runs timestep convergence tests for
+calving physics for a number of different model meshes, calving laws, and
+velocity solver options.  The tests with “none” velocity solver use data
+velocity fields, and collectively take about 15 minutes.  The tests with FO
+velocity solver each take about 100 minutes and one may prefer to run them in
+individual jobs (which is why they are listed last in the test suite).
+Each test generates a .png image summarizing the results.
+The suite includes:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>landice/calving_dt_convergence/mismip+.specified_calving_velocity.none
+landice/calving_dt_convergence/mismip+.von_Mises_stress.none
+landice/calving_dt_convergence/humboldt.specified_calving_velocity.none
+landice/calving_dt_convergence/humboldt.von_Mises_stress.none
+landice/calving_dt_convergence/thwaites.specified_calving_velocity.none
+landice/calving_dt_convergence/thwaites.von_Mises_stress.none
+landice/calving_dt_convergence/mismip+.von_Mises_stress.FO
+landice/calving_dt_convergence/humboldt.von_Mises_stress.FO
+landice/calving_dt_convergence/thwaites.von_Mises_stress.FO
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="test_groups/thwaites.html" class="btn btn-neutral float-left" title="thwaites" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="framework/index.html" class="btn btn-neutral float-right" title="Framework" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
