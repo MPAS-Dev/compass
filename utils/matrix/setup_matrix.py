@@ -36,7 +36,8 @@ all_build_targets = {
         ('intel', 'openmpi'): 'ifort',
         ('gnu', 'openmpi'): 'gfortran'},
     'compy': {
-        ('intel', 'impi'): 'intel-mpi'},
+        ('intel', 'impi'): 'intel-mpi',
+        ('gnu', 'openmpi'): 'gfortran'},
     'cori-haswell': {
         ('intel', 'mpt'): 'intel-nersc',
         ('gnu', 'mpt'): 'gnu-nersc'},
