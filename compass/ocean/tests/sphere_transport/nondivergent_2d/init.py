@@ -1,8 +1,7 @@
-from compass.model import run_model
-from compass.step import Step
+from compass.model import ModelStep
 
 
-class Init(Step):
+class Init(ModelStep):
     """
     A step for an initial condition for for the cosine bell test case
     """
@@ -21,9 +20,9 @@ class Init(Step):
         """
 
         super().__init__(test_case=test_case,
-                         name='QU{}_init'.format(resolution),
-                         subdir='QU{}/init'.format(resolution),
-                         ntasks=36, min_tasks=1)
+                         name=f'QU{resolution}_init',
+                         subdir=f'QU{resolution}/init',
+                         ntasks=36, min_tasks=1, openmp_threads=1)
 
         package = 'compass.ocean.tests.sphere_transport.nondivergent_2d'
 
@@ -38,9 +37,3 @@ class Init(Step):
 
         self.add_output_file(filename='namelist.ocean')
         self.add_output_file(filename='initial_state.nc')
-
-    def run(self):
-        """
-        Run this step of the testcase
-        """
-        run_model(self)

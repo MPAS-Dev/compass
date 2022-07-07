@@ -1,11 +1,8 @@
-import time
-
-from compass.model import run_model
-from compass.step import Step
+from compass.model import ModelStep
 from datetime import timedelta
 
 
-class Forward(Step):
+class Forward(ModelStep):
     """
     A step for performing forward MPAS-Ocean runs as part of the
       nondivergent_2d test case.
@@ -30,9 +27,9 @@ class Forward(Step):
         dt_minutes : int
             The time step size in minutes.  **must divide 1 day (24*60)**
         """
-        super().__init__(test_case=test_case,
-                         name='QU{}_forward'.format(resolution),
-                         subdir='QU{}/forward'.format(resolution))
+        super().__init__(test_case=test_case, openmp_threads=1,
+                         name=f'QU{resolution}_forward',
+                         subdir=f'QU{resolution}/forward')
 
         self.resolution = resolution
         self.dt_minutes = dt_minutes
@@ -61,10 +58,12 @@ class Forward(Step):
                                    'config_time_integrator': config.get(
                                        'nondivergent_2d', 'time_integrator')})
 
-    def run(self):
+    def runtime_setup(self):
         """
-        Run this step of the testcase
+        Update the resources and time step in case the user has update config
+        options
         """
+        super().runtime_setup()
         config = self.config
         dt = self.get_timestep_str()
         self.update_namelist_at_runtime(
@@ -74,8 +73,6 @@ class Forward(Step):
                     'nondivergent_2d',
                     'time_integrator')},
             out_name='namelist.ocean')
-
-        run_model(self)
 
     def get_timestep_str(self):
         """
