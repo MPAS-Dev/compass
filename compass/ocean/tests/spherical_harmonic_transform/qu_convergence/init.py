@@ -1,11 +1,10 @@
-from compass.model import run_model
-from compass.step import Step
+from compass.model import ModelStep
 
 
-class Init(Step):
+class Init(ModelStep):
     """
     A step for running a spherical harmonic transformation
-    for the shperical_harmonic_transfrom test case
+    for the spherical_harmonic_transform test case
     """
     def __init__(self, test_case, resolution, algorithm, order):
         """
@@ -23,7 +22,7 @@ class Init(Step):
             Use either the 'parallel' or 'serial' algorithm
 
         order : int
-            - For algorithm = 'parallel', the order of the shperical
+            - For algorithm = 'parallel', the order of the spherical
               harmonic transform
             - For algorithm = 'serial', the number of latitudes in the
               Gaussian grid
@@ -31,7 +30,7 @@ class Init(Step):
         super().__init__(test_case=test_case,
                          name=f'QU{resolution}_init_{algorithm}_{order}',
                          subdir=f'QU{resolution}/init/{algorithm}/{order}',
-                         ntasks=36, min_tasks=1)
+                         ntasks=36, min_tasks=1, openmp_threads=1)
 
         package = \
             'compass.ocean.tests.spherical_harmonic_transform.qu_convergence'
@@ -44,8 +43,6 @@ class Init(Step):
 
         self.add_input_file(filename='graph.info',
                             target='../../../mesh/graph.info')
-
-        self.add_model_as_input()
 
         self.add_output_file(filename='initial_state.nc')
 
@@ -69,10 +66,3 @@ class Init(Step):
                 target=f'../../../mesh/grid_to_mpas_{order}.nc')
 
         self.add_namelist_options(options=init_options, mode='init')
-
-    def run(self):
-        """
-        Run this step of the testcase
-        """
-
-        run_model(self)
