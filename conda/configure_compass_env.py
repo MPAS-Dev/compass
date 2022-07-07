@@ -53,7 +53,7 @@ def setup_install_env(env_name, activate_base, use_local, logger, recreate,
         channels = '--use-local'
     else:
         channels = ''
-    packages = 'progressbar2 jinja2 "mache=1.4.1"'
+    packages = 'progressbar2 jinja2 "mache=1.5.0"'
     if recreate or not os.path.exists(env_path):
         print('Setting up a conda environment for installing compass\n')
         commands = '{}; ' \
