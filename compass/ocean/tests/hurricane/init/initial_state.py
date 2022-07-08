@@ -60,9 +60,9 @@ class InitialState(Step):
         """
         # get the these properties from the config options
         config = self.config
-        self.cores = config.getint('hurricane', 'init_cores')
-        self.min_cores = config.getint('hurricane', 'init_min_cores')
-        self.threads = config.getint('hurricane', 'init_threads')
+        self.ntasks = config.getint('hurricane', 'init_ntasks')
+        self.min_tasks = config.getint('hurricane', 'init_min_tasks')
+        self.openmp_threads = config.getint('hurricane', 'init_threads')
 
     def run(self):
         """

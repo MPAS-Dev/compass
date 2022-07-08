@@ -39,7 +39,7 @@ class CreatePointstatsFile(Step):
             The name of the storm used
         """
         super().__init__(test_case=test_case, name='pointstats',
-                         cores=1, min_cores=1, threads=1)
+                         ntasks=1, min_tasks=1, openmp_threads=1)
 
         self.mesh_file = 'mesh.nc'
         if storm == 'sandy':
