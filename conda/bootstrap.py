@@ -888,7 +888,9 @@ def main():
         if args.check:
             check_env(script_filename, conda_env_name, logger)
 
-        if env_type == 'release':
+        if env_type == 'release' and not (args.with_albany or
+                                          args.with_netlib_lapack or
+                                          args.with_petsc):
             # make a symlink to the activation script
             link = os.path.join(activ_path,
                                 f'load_latest_compass_{compiler}_{mpi}.sh')
