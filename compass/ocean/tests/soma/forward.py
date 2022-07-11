@@ -1,11 +1,10 @@
 import numpy as np
 
-from compass.step import Step
-from compass.model import partition, run_model
+from compass.model import ModelStep
 from compass.ocean.particles import build_particle_simple
 
 
-class Forward(Step):
+class Forward(ModelStep):
     """
     A step for performing forward MPAS-Ocean runs as part of SOMA test cases.
 
@@ -78,7 +77,8 @@ class Forward(Step):
 
         super().__init__(test_case=test_case, name='forward', subdir=None,
                          ntasks=res_params['cores'],
-                         min_tasks=res_params['min_tasks'])
+                         min_tasks=res_params['min_tasks'],
+                         openmp_threads=1)
         # make sure output is double precision
         self.add_streams_file('compass.ocean.streams', 'streams.output')
 
@@ -121,13 +121,13 @@ class Forward(Step):
         self.add_namelist_options(options=options)
 
         self.add_input_file(filename='mesh.nc',
-                            target='../initial_state/culled_mesh.nc')
+                            target='../culled_mesh/culled_mesh.nc')
+        self.add_input_file(filename='graph.info',
+                            target='../culled_mesh/culled_graph.info')
         self.add_input_file(filename='init.nc',
                             target='../initial_state/initial_state.nc')
         self.add_input_file(filename='forcing.nc',
                             target='../initial_state/forcing.nc')
-        self.add_input_file(filename='graph.info',
-                            target='../initial_state/graph.info')
 
         self.add_model_as_input()
 
@@ -137,21 +137,24 @@ class Forward(Step):
             self.add_output_file(
                 filename='analysis_members/lagrPartTrack.0001-01-01_00.00.00.nc')
 
-    def run(self):
+    def runtime_setup(self):
         """
-        Run this step of the test case
+        Write particles initial condition if requested
         """
-        ntasks = self.ntasks
-        partition(ntasks, self.config, self.logger)
+        # we need to partition the graph file first in the
+        # ModelStep.runtime_setup() method, since we need that info for
+        # particles
+        super().runtime_setup()
 
         if self.with_particles:
+            ntasks = self.ntasks
             section = self.config['soma']
             min_den = section.getfloat('min_particle_density')
             max_den = section.getfloat('max_particle_density')
             nsurf = section.getint('surface_count')
+            # todo: This might be better a separate step rather than runtime
+            #       setup depending on how time consuming it is
             build_particle_simple(
                 f_grid='mesh.nc', f_name='particles.nc',
                 f_decomp=f'graph.info.part.{ntasks}',
                 buoySurf=np.linspace(min_den, max_den, nsurf))
-
-        run_model(self, partition_graph=False)

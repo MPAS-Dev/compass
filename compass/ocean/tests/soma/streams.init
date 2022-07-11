@@ -2,18 +2,18 @@
 
 <immutable_stream name="mesh"
                   type="input"
-                  filename_template="{{ mesh_filename }}"
+                  filename_template="mesh.nc"
                   input_interval="initial_only" />
 
 <immutable_stream name="input_init"
-        filename_template="{{ mesh_filename }}">
+        filename_template="mesh.nc">
 </immutable_stream>
 
 <stream name="output_init"
         type="output"
         output_interval="0000_00:00:01"
         clobber_mode="truncate"
-        filename_template="{{ init_filename }}">
+        filename_template="initial_state.nc">
 
     <stream name="input_init"/>
     <var_struct name="tracers"/>
@@ -38,7 +38,7 @@
         type="output"
         output_interval="0000_00:00:01"
         clobber_mode="truncate"
-        filename_template="{{ forcing_filename }}">
+        filename_template="forcing.nc">
 
     <var_array name="activeTracersPistonVelocity"/>
     <var_array name="activeTracersSurfaceRestoringValue"/>

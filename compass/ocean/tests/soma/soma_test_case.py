@@ -1,4 +1,6 @@
 from compass.testcase import TestCase
+from compass.ocean.tests.soma.base_mesh import BaseMesh
+from compass.ocean.tests.soma.culled_mesh import CulledMesh
 from compass.ocean.tests.soma.initial_state import InitialState
 from compass.ocean.tests.soma.forward import Forward
 from compass.ocean.tests.soma.analysis import Analysis
@@ -89,10 +91,22 @@ class SomaTestCase(TestCase):
 
         super().__init__(test_group=test_group, name=name, subdir=subdir)
 
+        self.add_step(BaseMesh(
+            test_case=self, resolution=resolution))
+
         self.add_step(InitialState(
             test_case=self, resolution=resolution,
             with_surface_restoring=with_surface_restoring,
-            three_layer=three_layer))
+            three_layer=three_layer, mark_land=True))
+
+        self.add_step(CulledMesh(
+            test_case=self))
+
+        self.add_step(InitialState(
+            test_case=self, resolution=resolution,
+            with_surface_restoring=with_surface_restoring,
+            three_layer=three_layer, mark_land=False))
+
         options = dict()
         if with_surface_restoring:
             options['config_use_activeTracers_surface_restoring'] = '.true.'
