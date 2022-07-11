@@ -1,9 +1,8 @@
-from compass.step import Step
-from compass.model import partition, run_model
+from compass.model import ModelStep
 from compass.ocean import particles
 
 
-class Forward(Step):
+class Forward(ModelStep):
     """
     A step for performing forward MPAS-Ocean runs as part of ZISO test cases.
 
@@ -154,27 +153,26 @@ class Forward(Step):
         self.add_input_file(filename='graph.info',
                             target='../initial_state/culled_graph.info')
 
-        self.add_model_as_input()
-
         self.add_output_file(filename='output/output.0001-01-01_00.00.00.nc')
 
         if with_analysis and with_particles:
             self.add_output_file(
                 filename='analysis_members/lagrPartTrack.0001-01-01_00.00.00.nc')
 
-    # no setup() is needed
+    def runtime_setup(self):
+        """
+        Write particles initial condition if requested
+        """
+        # we need to partition the graph file first in the
+        # ModelStep.runtime_setup() method, since we need that info for
+        # particles
+        super().runtime_setup()
 
-    def run(self):
-        """
-        Run this step of the test case
-        """
         if self.with_particles:
             ntasks = self.ntasks
-            partition(ntasks, self.config, self.logger)
+            # todo: This might be better a separate step rather than runtime
+            #       setup depending on how time consuming it is
             particles.write(init_filename='init.nc',
                             particle_filename='particles.nc',
                             graph_filename=f'graph.info.part.{ntasks}',
                             types='buoyancy')
-            run_model(self, partition_graph=False)
-        else:
-            run_model(self, partition_graph=True)
