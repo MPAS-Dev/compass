@@ -1,8 +1,7 @@
-from compass.model import run_model
-from compass.step import Step
+from compass.model import ModelStep
 
 
-class ForwardStep(Step):
+class ForwardStep(ModelStep):
     """
     A step for performing forward MPAS-Ocean runs as part of hurricane test
     cases.
@@ -38,7 +37,7 @@ class ForwardStep(Step):
         """
         self.mesh = mesh
         self.init = init
-        super().__init__(test_case=test_case, name=name)
+        super().__init__(test_case=test_case, name=name, openmp_threads=1)
 
         self.add_namelist_file(
             'compass.ocean.tests.hurricane.forward', 'namelist.ocean')
@@ -62,8 +61,6 @@ class ForwardStep(Step):
             filename='graph.info',
             work_dir_target=f'{init.path}/initial_state/graph.info')
 
-        self.add_model_as_input()
-
     def setup(self):
         """
         Set up the test case in the work directory, including downloading any
@@ -73,9 +70,3 @@ class ForwardStep(Step):
         self.min_tasks = self.config.getint('hurricane', 'forward_min_tasks')
         self.openmp_threads = self.config.getint('hurricane',
                                                  'forward_threads')
-
-    def run(self):
-        """
-        Run this step of the testcase
-        """
-        run_model(self)
