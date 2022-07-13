@@ -43,20 +43,20 @@ def run_tests(suite_name, quiet=False, is_test_case=False, steps_to_run=None,
     start_pass = '\033[92m'
     start_time_color = '\033[94m'
     end = '\033[0m'
-    pass_str = '{}PASS{}'.format(start_pass, end)
-    success_str = '{}SUCCESS{}'.format(start_pass, end)
-    fail_str = '{}FAIL{}'.format(start_fail, end)
-    error_str = '{}ERROR{}'.format(start_fail, end)
+    pass_str = f'{start_pass}PASS{end}'
+    success_str = f'{start_pass}SUCCESS{end}'
+    fail_str = f'{start_fail}FAIL{end}'
+    error_str = f'{start_fail}ERROR{end}'
 
     # Allow a suite name to either include or not the .pickle suffix
     if suite_name.endswith('.pickle'):
         # code below assumes no suffix, so remove it
         suite_name = suite_name[:-len('.pickle')]
     # Now open the the suite's pickle file
-    if not os.path.exists('{}.pickle'.format(suite_name)):
-        raise ValueError('The suite "{}" doesn\'t appear to have been set up '
-                         'here.'.format(suite_name))
-    with open('{}.pickle'.format(suite_name), 'rb') as handle:
+    if not os.path.exists(f'{suite_name}.pickle'):
+        raise ValueError(f'The suite "{suite_name}" doesn\'t appear to have '
+                         f'been set up here.')
+    with open(f'{suite_name}.pickle', 'rb') as handle:
         test_suite = pickle.load(handle)
 
     # get the config file for the first test case in the suite
@@ -86,14 +86,14 @@ def run_tests(suite_name, quiet=False, is_test_case=False, steps_to_run=None,
         for test_name in test_suite['test_cases']:
             test_case = test_suite['test_cases'][test_name]
 
-            logger.info('{}'.format(test_name))
+            logger.info(f'{test_name}')
 
             test_name = test_case.path.replace('/', '_')
             if is_test_case:
                 log_filename = None
                 test_logger = logger
             else:
-                log_filename = '{}/case_outputs/{}.log'.format(cwd, test_name)
+                log_filename = f'{cwd}/case_outputs/{test_name}.log'
                 test_logger = None
             with LoggingContext(test_name, logger=test_logger,
                                 log_filename=log_filename) as test_logger:
@@ -170,21 +170,21 @@ def run_tests(suite_name, quiet=False, is_test_case=False, steps_to_run=None,
                             test_logger.error('Baseline validation failed')
                             test_pass = False
 
-                status = '  test execution:      {}'.format(run_status)
+                status = f'  test execution:      {run_status}'
                 if internal_status is not None:
-                    status = '{}\n  test validation:     {}'.format(
-                        status, internal_status)
+                    status = f'{status}\n' \
+                             f'  test validation:     {internal_status}'
                 if baseline_status is not None:
-                    status = '{}\n  baseline comparison: {}'.format(
-                        status, baseline_status)
+                    status = f'{status}\n' \
+                             f'  baseline comparison: {baseline_status}'
 
                 if test_pass:
                     logger.info(status)
                     success[test_name] = pass_str
                 else:
                     logger.error(status)
-                    logger.error('  see: case_outputs/{}.log'.format(
-                        test_name))
+                    if not is_test_case:
+                        logger.error(f'  see: case_outputs/{test_name}.log')
                     success[test_name] = fail_str
                     failures += 1
 
@@ -205,12 +205,12 @@ def run_tests(suite_name, quiet=False, is_test_case=False, steps_to_run=None,
             secs = round(test_time)
             mins = secs // 60
             secs -= 60 * mins
-            logger.info('{:02d}:{:02d} {} {}'.format(
-                mins, secs, success[test_name], test_name))
+            logger.info(f'{mins:02d}:{secs:02d} {success[test_name]} '
+                        f'{test_name}')
         secs = round(suite_time)
         mins = secs // 60
         secs -= 60 * mins
-        logger.info('Total runtime {:02d}:{:02d}'.format(mins, secs))
+        logger.info(f'Total runtime {mins:02d}:{secs:02d}')
 
         if failures == 0:
             logger.info('PASS: All passed successfully!')
@@ -218,8 +218,8 @@ def run_tests(suite_name, quiet=False, is_test_case=False, steps_to_run=None,
             if failures == 1:
                 message = '1 test'
             else:
-                message = '{} tests'.format(failures)
-            logger.error('FAIL: {} failed, see above.'.format(message))
+                message = f'{failures} tests'
+            logger.error(f'FAIL: {message} failed, see above.')
             sys.exit(1)
 
 
@@ -320,16 +320,17 @@ def _update_steps_to_run(steps_to_run, steps_not_to_run, config, steps):
     for step in steps_to_run:
         if step not in steps:
             raise ValueError(
-                'A step "{}" was requested but is not one of the steps in '
-                'this test case:\n{}'.format(step, list(steps)))
+                f'A step "{step}" was requested but is not one of the steps '
+                f'in this test case:'
+                f'\n{list(steps)}')
 
     if steps_not_to_run is not None:
         for step in steps_not_to_run:
             if step not in steps:
                 raise ValueError(
-                    'A step "{}" was flagged not to run but is not one of the '
-                    'steps in this test case:'
-                    '\n{}'.format(step, list(steps)))
+                    f'A step "{step}" was flagged not to run but is not one '
+                    f'of the steps in this test case:'
+                    f'\n{list(steps)}')
 
         steps_to_run = [step for step in steps_to_run if step not in
                         steps_not_to_run]
