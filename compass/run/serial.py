@@ -183,7 +183,8 @@ def run_tests(suite_name, quiet=False, is_test_case=False, steps_to_run=None,
                     success[test_name] = pass_str
                 else:
                     logger.error(status)
-                    logger.error(f'  see: case_outputs/{test_name}.log')
+                    if not is_test_case:
+                        logger.error(f'  see: case_outputs/{test_name}.log')
                     success[test_name] = fail_str
                     failures += 1
 
