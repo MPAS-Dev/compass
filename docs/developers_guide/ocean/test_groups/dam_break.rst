@@ -62,7 +62,7 @@ default
 -------
 
 The :py:class:`compass.ocean.tests.dam_break.default.Default`
-test performs one 10-minute run on 4 cores. It doesn't contain any
+test performs one 10-minute run on 40 cores. It doesn't contain any
 :ref:`dev_validation`. This class accepts resolution as an argument. The domain
 is configured to have a 1 m by 1 m dammed region matching the experimental
 setup and a ~12 m by ~12 m flood plain to minimize reflections off the
