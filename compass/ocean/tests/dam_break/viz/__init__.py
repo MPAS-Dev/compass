@@ -1,10 +1,7 @@
-import os
-import glob
 import xarray
 import numpy
 import matplotlib.pyplot as plt
 import pandas as pd
-import subprocess
 from scipy import spatial
 from PIL import Image
 from collections import OrderedDict
@@ -61,40 +58,40 @@ class Viz(Step):
         """
         # read output.nc
         data = xarray.open_dataset('output.nc')
-        xCell = data.xCell.values
-        yCell = data.yCell.values
+        x_cell = data.xCell.values
+        y_cell = data.yCell.values
         ssh = data.ssh.values
         ssh = ssh + 0.6
         dt = 0.3  # output interval in seconds
         nt, _ = numpy.shape(ssh)  # number of output times
 
         # read station coordinates
-        StaData = pd.read_csv('stationCoords.csv', header=None)
-        StaName = StaData.iloc[:, 0].values
-        StaCoord = StaData.iloc[:, 1:]
+        station_data = pd.read_csv('stationCoords.csv', header=None)
+        station_name = station_data.iloc[:, 0].values
+        station_coord = station_data.iloc[:, 1:]
 
         # Identify MPAS-O cells nearest observations
         # - coordinate shift from MPAS-O grid to dam break case
-        xCell = 13 - xCell
-        yCell = 13 - yCell
+        x_cell = 13 - x_cell
+        y_cell = 13 - y_cell
 
         # - find the nearest cell of each station
-        matrix = numpy.array([xCell, yCell])
+        matrix = numpy.array([x_cell, y_cell])
         tree = spatial.KDTree(list(zip(*matrix)))
-        StaCell = tree.query(StaCoord)[1]
+        station_cell = tree.query(station_coord)[1]
 
         # - cells representing station locations
-        Station = OrderedDict(list(zip(StaName, StaCell)))
+        station = OrderedDict(list(zip(station_name, station_cell)))
 
         ii = 0
 
         fig = plt.figure()
-        for cell in Station:
+        for cell in station:
             ii += 1
             ax = plt.subplot(3, 2, ii+1)
 
             # MPAS-O simulation results
-            mpaso = plt.plot(numpy.arange(0, dt*nt, dt), ssh[:, Station[cell]],
+            mpaso = plt.plot(numpy.arange(0, dt*nt, dt), ssh[:, station[cell]],
                              color='#228B22', linewidth=2, alpha=0.6)
 
             # Measured data
@@ -103,8 +100,9 @@ class Viz(Step):
                                    marker='o', color='k')
 
             # ROMS simulation results (Warner et al., 2013)
-            sim = pd.read_csv(cell+'-sim.csv', header=None)
-            roms = plt.scatter(sim[0], sim[1], 4, marker='v', color='b')
+            roms_data = pd.read_csv(cell+'-sim.csv', header=None)
+            roms = plt.scatter(roms_data[0], roms_data[1], 4,
+                               marker='v', color='b')
 
             plt.xlim(0, 10)
             plt.xticks(numpy.arange(0, 11, 2))
