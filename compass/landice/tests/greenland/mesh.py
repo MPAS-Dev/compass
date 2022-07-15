@@ -182,7 +182,7 @@ class Mesh(Step):
         cell_width = set_cell_width(self, section='high_res_GIS_mesh', thk=thk,
                                     bed=topg, vx=vx, vy=vy,
                                     dist_to_edge=distToEdge,
-                                    dist_to_grounding_line=None)
+                                    dist_to_grounding_line=distToGL)
         # plt.pcolor(cell_width); plt.colorbar(); plt.show()
 
         return (cell_width.astype('float64'), x1.astype('float64'),

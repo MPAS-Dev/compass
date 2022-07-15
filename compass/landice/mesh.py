@@ -177,14 +177,15 @@ def set_cell_width(self, section, thk, bed=None, vx=None, vy=None,
         # We only want bed topography to influence spacing within high_dist_bed
         # from the ice margin. In the region between high_dist_bed and low_dist_bed,
         # use a linear ramp to damp influence of bed topo.
-        spacing_bed[dist_to_edge >= low_dist_bed] = (
-                ( 1.0 - (dist_to_edge[dist_to_edge >= low_dist_bed] 
-                  - low_dist_bed) / (high_dist_bed - low_dist_bed) ) *
-                spacing_bed[dist_to_edge >= low_dist_bed] +
-                (dist_to_edge[dist_to_edge >= low_dist_bed] - low_dist_bed) /
-                (high_dist_bed - low_dist_bed) * max_spac )
-        spacing_bed[dist_to_edge >= high_dist_bed] = max_spac
-        logger.info(np.min(spacing_bed))
+        spacing_bed[dist_to_grounding_line >= low_dist_bed] = (
+            ( 1.0 - (dist_to_grounding_line[
+             dist_to_grounding_line >= low_dist_bed] 
+             - low_dist_bed) / (high_dist_bed - low_dist_bed) ) *
+            spacing_bed[dist_to_grounding_line >= low_dist_bed] +
+            (dist_to_grounding_line[dist_to_grounding_line >= 
+             low_dist_bed] - low_dist_bed) /
+            (high_dist_bed - low_dist_bed) * max_spac )
+        spacing_bed[dist_to_grounding_line >= high_dist_bed] = max_spac
     else:
         spacing_bed = max_spac * np.ones_like(thk)
                                                                                          
