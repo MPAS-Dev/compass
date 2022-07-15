@@ -206,8 +206,9 @@ class Mesh(Step):
 
         # Calculate distance from each grid point to ice edge
         # and grounding line, for use in cell spacing functions.
-        distToEdge, distToGL = get_dist_to_edge_and_GL(self, thk, topg, x1,
-                                                       y1, window_size=1.e5)
+        distToEdge, distToGL = get_dist_to_edge_and_GL(
+                                            self, thk, topg, x1,
+                                            y1, section='humboldt_mesh')
         # optional - plot distance calculation
         # plt.pcolor(distToEdge/1000.0); plt.colorbar(); plt.show()
 
