@@ -2,7 +2,6 @@ import numpy as np
 import jigsawpy
 import time
 
-
 def gridded_flood_fill(field, iStart=None, jStart=None):
     """
     Generic flood-fill routine to create mask of connected elements
@@ -188,7 +187,7 @@ def set_cell_width(self, section, thk, bed=None, vx=None, vy=None,
         spacing_bed[dist_to_grounding_line >= high_dist_bed] = max_spac
     else:
         spacing_bed = max_spac * np.ones_like(thk)
-                                                                                         
+
     # Make cell spacing function mapping from log speed to cell spacing
     if section.get('use_speed') == 'True':
         logger.info('Using speed for cell spacing')
@@ -250,7 +249,7 @@ def set_cell_width(self, section, thk, bed=None, vx=None, vy=None,
     return cell_width
 
 
-def get_dist_to_edge_and_GL(self, thk, topg, x, y, window_size=1.e5):
+def get_dist_to_edge_and_GL(self, thk, topg, x, y, section, window_size=None):
     """
     Calculate distance from each point to ice edge and grounding line,
     to be used in mesh density functions in
@@ -272,7 +271,10 @@ def get_dist_to_edge_and_GL(self, thk, topg, x, y, window_size=1.e5):
         Size (in meters) of a search 'box' (one-directional) to use
         to calculate the distance from each cell to the ice margin.
         Bigger number makes search slower, but if too small, the transition
-        zone could get truncated.
+        zone could get truncated. We usually want this calculated as the maximum
+        of high_dist and high_dist_bed, but there may be cases in which it is useful
+        to set it manually. However, it should never be smaller than either high_dist
+        or high_dist_bed.
 
     Returns
     -------
@@ -282,7 +284,20 @@ def get_dist_to_edge_and_GL(self, thk, topg, x, y, window_size=1.e5):
         Distance from each cell to the grounding line
     """
     logger = self.logger
+    section = self.config[section]
     tic = time.time()
+
+    high_dist = float(section.get('high_dist'))
+    high_dist_bed = float(section.get('high_dist_bed'))
+
+    if window_size is None:
+        window_size = max(high_dist, high_dist_bed)
+    elif window_size < min(high_dist, high_dist_bed):
+        logger.info('WARNING: window_size was set to a value smaller'
+                    ' than high_dist and/or high_dist_bed. Resetting'
+                    f' window_size to {max(high_dist, high_dist_bed)},'
+                    ' which is  max(high_dist, high_dist_bed)')
+        window_size = max(high_dist, high_dist_bed)
 
     dx = x[1] - x[0]  # assumed constant and equal in x and y
     nx = len(x)
