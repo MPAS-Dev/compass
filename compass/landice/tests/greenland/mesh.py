@@ -180,7 +180,8 @@ class Mesh(Step):
 
         # Set cell widths based on mesh parameters set in config file
         cell_width = set_cell_width(self, section='high_res_GIS_mesh', thk=thk,
-                                    vx=vx, vy=vy, dist_to_edge=distToEdge,
+                                    bed=topg, vx=vx, vy=vy,
+                                    dist_to_edge=distToEdge,
                                     dist_to_grounding_line=None)
         # plt.pcolor(cell_width); plt.colorbar(); plt.show()
 

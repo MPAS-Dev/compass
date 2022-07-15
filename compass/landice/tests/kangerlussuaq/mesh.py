@@ -147,7 +147,7 @@ class Mesh(Step):
         logger.info('calling interpolate_to_mpasli_grid.py')
         args = ['interpolate_to_mpasli_grid.py', '-s',
                 'greenland_1km_2020_04_20.epsg3413.icesheetonly.nc',
-                '-d', 'Kangerlussuaq.nc', '-m', 'b', '-t']
+                '-d', 'Kangerlussuaq.nc', '-m', 'b']
         check_call(args, logger=logger)
 
         logger.info('Marking domain boundaries dirichlet')
@@ -208,7 +208,7 @@ class Mesh(Step):
         # Set cell widths based on mesh parameters set in config file
         cell_width = set_cell_width(self,
                                     section='high_res_Kangerlussuaq_mesh',
-                                    thk=thk, vx=vx, vy=vy,
+                                    thk=thk, bed=topg, vx=vx, vy=vy,
                                     dist_to_edge=distToEdge,
                                     dist_to_grounding_line=None)
         # plt.pcolor(cell_width); plt.colorbar(); plt.show()
