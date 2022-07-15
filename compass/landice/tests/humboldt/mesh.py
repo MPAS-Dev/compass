@@ -151,7 +151,7 @@ class Mesh(Step):
         logger.info('calling interpolate_to_mpasli_grid.py')
         args = ['interpolate_to_mpasli_grid.py', '-s',
                 'humboldt_1km_2020_04_20.epsg3413.icesheetonly.nc',
-                '-d', 'Humboldt_1to10km.nc', '-m', 'b', '-t']
+                '-d', 'Humboldt_1to10km.nc', '-m', 'b']
         check_call(args, logger=logger)
 
         logger.info('Marking domain boundaries dirichlet')

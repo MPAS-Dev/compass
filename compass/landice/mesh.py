@@ -3,7 +3,7 @@ import jigsawpy
 import time
 
 
-def gridded_flood_fill(field):
+def gridded_flood_fill(field, iStart=None, jStart=None):
     """
     Generic flood-fill routine to create mask of connected elements
     in the desired input array (field) from a gridded dataset. This
@@ -170,11 +170,21 @@ def set_cell_width(self, section, thk, bed=None, vx=None, vy=None,
     # Cell spacking function based on union of masks
     if section.get('use_bed') == 'True':
         logger.info('Using bed elevation for spacing')
-        spacing_bed = np.interp(bed, [low_bed, high_bed], [min_spac, max_spac],
-                                left=min_spac, right=max_spac)
+        # Use a logistics curve for bed topography spacing.
+        k = 0.05  # This works well, but could try other values
+        spacing_bed = min_spac + (max_spac - min_spac) / (1.0 + np.exp(
+                      -k * ( bed - np.mean([high_bed, low_bed]) ) ) )
         # We only want bed topography to influence spacing within high_dist_bed
-        # from the ice margin.
+        # from the ice margin. In the region between high_dist_bed and low_dist_bed,
+        # use a linear ramp to damp influence of bed topo.
+        spacing_bed[dist_to_edge >= low_dist_bed] = (
+                ( 1.0 - (dist_to_edge[dist_to_edge >= low_dist_bed] 
+                  - low_dist_bed) / (high_dist_bed - low_dist_bed) ) *
+                spacing_bed[dist_to_edge >= low_dist_bed] +
+                (dist_to_edge[dist_to_edge >= low_dist_bed] - low_dist_bed) /
+                (high_dist_bed - low_dist_bed) * max_spac )
         spacing_bed[dist_to_edge >= high_dist_bed] = max_spac
+        logger.info(np.min(spacing_bed))
     else:
         spacing_bed = max_spac * np.ones_like(thk)
                                                                                          
