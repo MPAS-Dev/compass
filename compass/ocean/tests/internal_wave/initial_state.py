@@ -27,10 +27,10 @@ class InitialState(Step):
                          min_cores=1, threads=1)
 
         self.add_namelist_file('compass.ocean.tests.internal_wave',
-                               'namelist.init')
+                               'namelist.init', mode='init')
 
         self.add_streams_file('compass.ocean.tests.internal_wave',
-                              'streams.init')
+                              'streams.init', mode='init')
 
         for file in ['base_mesh.nc', 'culled_mesh.nc', 'culled_graph.info',
                      'ocean.nc']:
@@ -45,9 +45,9 @@ class InitialState(Step):
 
         replacements = dict()
         replacements['config_periodic_planar_vert_levels'] = \
-            config.getfloat('vertical_grid', 'vert_levels')
+            config.get('vertical_grid', 'vert_levels')
         replacements['config_periodic_planar_bottom_depth'] = \
-            config.getfloat('vertical_grid', 'bottom_depth')
+            config.get('vertical_grid', 'bottom_depth')
         self.update_namelist_at_runtime(options=replacements)
 
         section = config['vertical_grid']
