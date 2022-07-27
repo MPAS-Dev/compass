@@ -123,6 +123,8 @@
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.threads_test</span> <span class="kn">import</span> <span class="n">ThreadsTest</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.analysis_test</span> <span class="kn">import</span> <span class="n">AnalysisTest</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.daily_output_test</span> <span class="kn">import</span> <span class="n">DailyOutputTest</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.monthly_output_test</span> <span class="kn">import</span> \
+    <span class="n">MonthlyOutputTest</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm</span> <span class="kn">import</span> <span class="n">FilesForE3SM</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.make_diagnostics_files</span> <span class="kn">import</span> \
     <span class="n">MakeDiagnosticsFiles</span>
@@ -173,6 +175,10 @@
                     <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
                 <span class="n">DailyOutputTest</span><span class="p">(</span>
+                    <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
+                    <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
+                <span class="n">MonthlyOutputTest</span><span class="p">(</span>
                     <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
                     <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">))</span>
 
