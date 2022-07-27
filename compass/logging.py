@@ -78,7 +78,7 @@ def log_function_call(function, logger):
         The function that will be run immediately following this call
 
     logger: logging.Logger
-        The logger to log the method path and file path to
+        The logger to log the function path and file path to
     """
     if not inspect.isfunction(function):
         raise ValueError('The "function" argument must be a function')
