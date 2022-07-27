@@ -5,10 +5,11 @@ import pickle
 import time
 import glob
 
-from mpas_tools.logging import LoggingContext
+from mpas_tools.logging import LoggingContext, check_call
 import mpas_tools.io
-from compass.parallel import check_parallel_system, set_cores_per_node
-from compass.logging import log_method_call
+from compass.parallel import check_parallel_system, set_cores_per_node, \
+    get_available_cores_and_nodes
+from compass.logging import log_method_call, log_function_call
 from compass.config import CompassConfigParser
 
 
@@ -122,18 +123,18 @@ def run_tests(suite_name, quiet=False, is_test_case=False, steps_to_run=None,
                     steps_to_run, steps_not_to_run, config, test_case.steps)
 
                 test_start = time.time()
-                log_method_call(method=test_case.run, logger=test_logger)
+                log_function_call(function=_run_test, logger=test_logger)
                 test_logger.info('')
                 test_list = ', '.join(test_case.steps_to_run)
                 test_logger.info(f'Running steps: {test_list}')
                 try:
-                    test_case.run()
+                    _run_test(test_case)
                     run_status = success_str
                     test_pass = True
                 except BaseException:
                     run_status = error_str
                     test_pass = False
-                    test_logger.exception('Exception raised in run()')
+                    test_logger.exception('Exception raised in run_tests()')
 
                 if test_pass:
                     test_logger.info('')
@@ -223,7 +224,7 @@ def run_tests(suite_name, quiet=False, is_test_case=False, steps_to_run=None,
             sys.exit(1)
 
 
-def run_step(step_is_subprocess=False):
+def run_single_step(step_is_subprocess=False):
     """
     Used by the framework to run a step when ``compass run`` gets called in the
     step's work directory
@@ -257,9 +258,9 @@ def run_step(step_is_subprocess=False):
     with LoggingContext(name=test_name) as logger:
         test_case.logger = logger
         test_case.stdout_logger = None
-        log_method_call(method=test_case.run, logger=logger)
+        log_function_call(function=_run_test, logger=logger)
         logger.info('')
-        test_case.run()
+        _run_test(test_case)
 
         if not step_is_subprocess:
             # only perform validation if the step is being run by a user on its
@@ -298,7 +299,7 @@ def main():
         run_tests(suite_name='test_case', quiet=args.quiet, is_test_case=True,
                   steps_to_run=args.steps, steps_not_to_run=args.no_steps)
     elif os.path.exists('step.pickle'):
-        run_step(args.step_is_subprocess)
+        run_single_step(args.step_is_subprocess)
     else:
         pickles = glob.glob('*.pickle')
         if len(pickles) == 1:
@@ -336,3 +337,139 @@ def _update_steps_to_run(steps_to_run, steps_not_to_run, config, steps):
                         steps_not_to_run]
 
     return steps_to_run
+
+
+def _print_to_stdout(test_case, message):
+    """
+    write out a message to stdout if we're not running a single step on its
+    own
+    """
+    if test_case.stdout_logger is not None:
+        test_case.stdout_logger.info(message)
+        if test_case.logger != test_case.stdout_logger:
+            # also write it to the log file
+            test_case.logger.info(message)
+
+
+def _run_test(test_case):
+    """
+    Run each step of the test case.  Test cases can override this method
+    to perform additional operations in addition to running the test case's
+    steps
+    Developers need to make sure they call ``super().run()`` at some point
+    in the overridden ``run()`` method to actually call the steps of the
+    run.  The developer will need to decide where in the overridden method
+    to make the call to ``super().run()``, after any updates to steps
+    based on config options, typically at the end of the new method.
+    """
+    logger = test_case.logger
+    cwd = os.getcwd()
+    for step_name in test_case.steps_to_run:
+        step = test_case.steps[step_name]
+        if step.cached:
+            logger.info(f'  * Cached step: {step_name}')
+            continue
+        step.config = test_case.config
+        if test_case.log_filename is not None:
+            step.log_filename = test_case.log_filename
+
+        _print_to_stdout(test_case, f'  * step: {step_name}')
+
+        try:
+            if step.run_as_subprocess:
+                _run_step_as_subprocess(
+                    test_case, step, test_case.new_step_log_file)
+            else:
+                _run_step(test_case, step, test_case.new_step_log_file)
+        except BaseException:
+            _print_to_stdout(test_case, '      Failed')
+            raise
+        os.chdir(cwd)
+
+
+def _run_step(test_case, step, new_log_file):
+    """
+    Run the requested step
+
+    Parameters
+    ----------
+    step : compass.Step
+        The step to run
+
+    new_log_file : bool
+        Whether to log to a new log file
+    """
+    logger = test_case.logger
+    config = test_case.config
+    cwd = os.getcwd()
+    available_cores, _ = get_available_cores_and_nodes(config)
+    step.constrain_resources(available_cores)
+
+    missing_files = list()
+    for input_file in step.inputs:
+        if not os.path.exists(input_file):
+            missing_files.append(input_file)
+
+    if len(missing_files) > 0:
+        raise OSError(
+            f'input file(s) missing in step {step.name} of '
+            f'{step.mpas_core.name}/{step.test_group.name}/'
+            f'{step.test_case.subdir}: {missing_files}')
+
+    test_name = step.path.replace('/', '_')
+    if new_log_file:
+        log_filename = f'{cwd}/{step.name}.log'
+        step.log_filename = log_filename
+        step_logger = None
+    else:
+        step_logger = logger
+        log_filename = None
+    with LoggingContext(name=test_name, logger=step_logger,
+                        log_filename=log_filename) as step_logger:
+        step.logger = step_logger
+        os.chdir(step.work_dir)
+        step_logger.info('')
+        log_method_call(method=step.run, logger=step_logger)
+        step_logger.info('')
+        step.run()
+
+    missing_files = list()
+    for output_file in step.outputs:
+        if not os.path.exists(output_file):
+            missing_files.append(output_file)
+
+    if len(missing_files) > 0:
+        raise OSError(
+            f'output file(s) missing in step {step.name} of '
+            f'{step.mpas_core.name}/{step.test_group.name}/'
+            f'{step.test_case.subdir}: {missing_files}')
+
+
+def _run_step_as_subprocess(test_case, step, new_log_file):
+    """
+    Run the requested step as a subprocess
+
+    Parameters
+    ----------
+    step : compass.Step
+        The step to run
+
+    new_log_file : bool
+        Whether to log to a new log file
+    """
+    logger = test_case.logger
+    cwd = os.getcwd()
+    test_name = step.path.replace('/', '_')
+    if new_log_file:
+        log_filename = f'{cwd}/{step.name}.log'
+        step.log_filename = log_filename
+        step_logger = None
+    else:
+        step_logger = logger
+        log_filename = None
+    with LoggingContext(name=test_name, logger=step_logger,
+                        log_filename=log_filename) as step_logger:
+
+        os.chdir(step.work_dir)
+        step_args = ['compass', 'run', '--step_is_subprocess']
+        check_call(step_args, step_logger)
