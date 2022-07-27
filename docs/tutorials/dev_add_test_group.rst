@@ -34,7 +34,7 @@ your needs.
 .. code-block:: bash
 
   # this one will take a while the first time
-  ./conda/create_compass_env.py --conda $HOME/miniconda3
+  ./conda/configure_compass_env.py --conda $HOME/miniconda3
 
 If you don't already have Miniconda3 installed in the directory pointed to by
 ``--conda``, it will be installed automatically for you.  If all goes well, you
