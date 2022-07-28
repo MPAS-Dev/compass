@@ -123,18 +123,32 @@ def run_tests(suite_name, quiet=False, is_test_case=False, steps_to_run=None,
                     steps_to_run, steps_not_to_run, config, test_case.steps)
 
                 test_start = time.time()
-                log_function_call(function=_run_test, logger=test_logger)
+                log_method_call(method=test_case.run, logger=test_logger)
                 test_logger.info('')
-                test_list = ', '.join(test_case.steps_to_run)
-                test_logger.info(f'Running steps: {test_list}')
                 try:
-                    _run_test(test_case)
+                    test_case.run()
                     run_status = success_str
                     test_pass = True
                 except BaseException:
                     run_status = error_str
                     test_pass = False
-                    test_logger.exception('Exception raised in run_tests()')
+                    test_logger.exception('Exception raised in the test '
+                                          'case\'s run() method')
+
+                if test_pass:
+                    log_function_call(function=_run_test, logger=test_logger)
+                    test_logger.info('')
+                    test_list = ', '.join(test_case.steps_to_run)
+                    test_logger.info(f'Running steps: {test_list}')
+                    try:
+                        _run_test(test_case)
+                        run_status = success_str
+                        test_pass = True
+                    except BaseException:
+                        run_status = error_str
+                        test_pass = False
+                        test_logger.exception('Exception raised while running '
+                                              'the steps of the test case')
 
                 if test_pass:
                     test_logger.info('')
@@ -146,7 +160,8 @@ def run_tests(suite_name, quiet=False, is_test_case=False, steps_to_run=None,
                     except BaseException:
                         run_status = error_str
                         test_pass = False
-                        test_logger.exception('Exception raised in validate()')
+                        test_logger.exception('Exception raised in the test '
+                                              'case\'s validate() method')
 
                 baseline_status = None
                 internal_status = None

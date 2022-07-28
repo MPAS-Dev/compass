@@ -130,6 +130,14 @@ class TestCase:
         """
         pass
 
+    def run(self):
+        """
+        Run the test case.  This can be used to configure steps (e.g.,
+        setting ``ntasks`` or ``cpus_per_task``) before running them.
+        """
+        self.logger.warn('The testcase run() method is deprecated, please use '
+                         'step.runtime_setup()')
+
     def validate(self):
         """
         Test cases can override this method to perform validation of variables
