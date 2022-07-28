@@ -180,6 +180,11 @@ class InitialState(Step):
 
         init_vertical_coord(config, ds)
 
+        maxLevelCell = ds['maxLevelCell']
+        ssh = ds['ssh']
+        print(f'max(maxLevelCell) = {numpy.max(maxLevelCell.values)}')
+        print(f'min(ssh) = {numpy.min(ssh.values)}')
+        print(f'max(ssh) = {numpy.max(ssh.values)}')
         ds['modifyLandIcePressureMask'] = \
             (ds['landIceFraction'] > 0.01).astype(int)
 
@@ -224,6 +229,23 @@ class InitialState(Step):
                                sectionY=section_y, dsMesh=ds, ds=ds,
                                showProgress=show_progress)
 
+        ds['landIcePressure'] = ds['landIcePressure'].expand_dims(dim='Time', axis=0)
+        ds['bottomDepth'] = ds['bottomDepth'].expand_dims(dim='Time', axis=0)
+        ds['totalColThickness'] = ds['ssh']
+        ds['totalColThickness'].values = numpy.sum(ds['layerThickness'].values, axis=2)
+        print(f'shape(totalColThickness)={numpy.shape(ds.totalColThickness.values)}')
+        plotter.plot_horiz_series(ds.landIcePressure,
+                                  'landIcePressure', 'landIcePressure',
+                                  True)
+        plotter.plot_horiz_series(ds.ssh,
+                                  'ssh', 'ssh',
+                                  True, vmin=-700, vmax=0)
+        plotter.plot_horiz_series(ds.ssh + ds.bottomDepth,
+                                  'H', 'H',
+                                  True, vmin=1e-3+1e-10, vmax=700, cmap_set_under='r')
+        plotter.plot_horiz_series(ds.totalColThickness,
+                                  'totalColThickness', 'totalColThickness',
+                                  True, vmin=1e-3+1e-10, vmax=700, cmap_set_under='r')
         plotter.plot_layer_interfaces()
 
         plotter.plot_3d_field_top_bot_section(
