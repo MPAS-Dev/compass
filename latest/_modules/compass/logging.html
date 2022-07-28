@@ -105,7 +105,6 @@
              
   <h1>Source code for compass.logging</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">inspect</span>
-<span class="kn">import</span> <span class="nn">functools</span>
 
 
 <div class="viewcode-block" id="log_method_call"><a class="viewcode-back" href="../../developers_guide/generated/compass.logging.log_method_call.html#compass.logging.log_method_call">[docs]</a><span class="k">def</span> <span class="nf">log_method_call</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
@@ -170,6 +169,32 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  inherited from: </span><span class="si">{</span><span class="n">actual_location</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">method_name</span><span class="si">}</span><span class="s1">()&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">class_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  in </span><span class="si">{</span><span class="n">class_file</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">log_function_call</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Log the module path and file path of a call to a function, e.g.::</span>
+
+<span class="sd">      compass calling: compass.parallel.set_cores_per_node()</span>
+<span class="sd">        in /home/xylar/code/compass/compass/compass/parallel.py</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    function : function</span>
+<span class="sd">        The function that will be run immediately following this call</span>
+
+<span class="sd">    logger: logging.Logger</span>
+<span class="sd">        The logger to log the function path and file path to</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isfunction</span><span class="p">(</span><span class="n">function</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The &quot;function&quot; argument must be a function&#39;</span><span class="p">)</span>
+
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getfile</span><span class="p">(</span><span class="n">function</span><span class="p">)</span>
+
+    <span class="c1"># log what we found out</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;compass calling: &#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">function</span><span class="o">.</span><span class="vm">__module__</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">function</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">()&#39;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  in </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 </pre></div>
 
            </div>
