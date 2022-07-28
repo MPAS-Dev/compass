@@ -1,5 +1,4 @@
 import inspect
-import functools
 
 
 def log_method_call(method, logger):
@@ -64,3 +63,29 @@ def log_method_call(method, logger):
         logger.info(f'  inherited from: {actual_location}.{method_name}()')
     if class_file is not None:
         logger.info(f'  in {class_file}')
+
+
+def log_function_call(function, logger):
+    """
+    Log the module path and file path of a call to a function, e.g.::
+
+      compass calling: compass.parallel.set_cores_per_node()
+        in /home/xylar/code/compass/compass/compass/parallel.py
+
+    Parameters
+    ----------
+    function : function
+        The function that will be run immediately following this call
+
+    logger: logging.Logger
+        The logger to log the function path and file path to
+    """
+    if not inspect.isfunction(function):
+        raise ValueError('The "function" argument must be a function')
+
+    filename = inspect.getfile(function)
+
+    # log what we found out
+    logger.info(f'compass calling: '
+                f'{function.__module__}.{function.__name__}()')
+    logger.info(f'  in {filename}')
