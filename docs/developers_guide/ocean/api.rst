@@ -99,10 +99,6 @@ cosine_bell
    CosineBell.configure
    CosineBell.run
 
-   mesh.Mesh
-   mesh.Mesh.run
-   mesh.Mesh.build_cell_width_lat_lon
-
    init.Init
    init.Init.run
 
@@ -284,7 +280,7 @@ test cases and steps
    mesh.Mesh
    mesh.Mesh.configure
    mesh.Mesh.run
-   
+
    mesh.dequ120at30cr10rr2.DEQU120at30cr10rr2Mesh
    mesh.dequ120at30cr10rr2.DEQU120at30cr10rr2Mesh.build_cell_width_lat_lon
 
@@ -309,7 +305,7 @@ test cases and steps
    forward.forward.ForwardStep
    forward.forward.ForwardStep.setup
    forward.forward.ForwardStep.run
-   
+
    analysis.Analysis
    analysis.Analysis.setup
    analysis.Analysis.read_pointstats
