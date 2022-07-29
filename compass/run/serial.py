@@ -329,6 +329,9 @@ def main():
 
 
 def _update_steps_to_run(steps_to_run, steps_not_to_run, config, steps):
+    """
+    Update the steps to run
+    """
     if steps_to_run is None:
         steps_to_run = config.get('test_case',
                                   'steps_to_run').replace(',', ' ').split()
@@ -356,8 +359,7 @@ def _update_steps_to_run(steps_to_run, steps_not_to_run, config, steps):
 
 def _print_to_stdout(test_case, message):
     """
-    write out a message to stdout if we're not running a single step on its
-    own
+    Write out a message to stdout if we're not running a single step
     """
     if test_case.stdout_logger is not None:
         test_case.stdout_logger.info(message)
@@ -368,14 +370,7 @@ def _print_to_stdout(test_case, message):
 
 def _run_test(test_case):
     """
-    Run each step of the test case.  Test cases can override this method
-    to perform additional operations in addition to running the test case's
-    steps
-    Developers need to make sure they call ``super().run()`` at some point
-    in the overridden ``run()`` method to actually call the steps of the
-    run.  The developer will need to decide where in the overridden method
-    to make the call to ``super().run()``, after any updates to steps
-    based on config options, typically at the end of the new method.
+    Run each step of the test case
     """
     logger = test_case.logger
     cwd = os.getcwd()
@@ -405,14 +400,6 @@ def _run_test(test_case):
 def _run_step(test_case, step, new_log_file):
     """
     Run the requested step
-
-    Parameters
-    ----------
-    step : compass.Step
-        The step to run
-
-    new_log_file : bool
-        Whether to log to a new log file
     """
     logger = test_case.logger
     config = test_case.config
@@ -463,14 +450,6 @@ def _run_step(test_case, step, new_log_file):
 def _run_step_as_subprocess(test_case, step, new_log_file):
     """
     Run the requested step as a subprocess
-
-    Parameters
-    ----------
-    step : compass.Step
-        The step to run
-
-    new_log_file : bool
-        Whether to log to a new log file
     """
     logger = test_case.logger
     cwd = os.getcwd()
