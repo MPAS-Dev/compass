@@ -167,9 +167,6 @@ following showing convergence as a function of the number of cells:</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># options for cosine bell convergence test case</span><span class="w"></span>
 <span class="k">[cosine_bell]</span><span class="w"></span>
 
-<span class="c1"># a list of resolutions (km) to test</span><span class="w"></span>
-<span class="na">resolutions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">60, 90, 120, 150, 180, 210, 240</span><span class="w"></span>
-
 <span class="c1"># the number of cells per core to aim for</span><span class="w"></span>
 <span class="na">goal_cells_per_core</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">300</span><span class="w"></span>
 
@@ -200,6 +197,18 @@ following showing convergence as a function of the number of cells:</p>
 
 <span class="c1"># time (days) for bell to transit equator once</span><span class="w"></span>
 <span class="na">vel_pd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">24.0</span><span class="w"></span>
+
+<span class="c1"># convergence threshold below which the test fails for QU meshes</span><span class="w"></span>
+<span class="na">qu_conv_thresh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.8</span><span class="w"></span>
+
+<span class="c1"># Convergence rate above which a warning is issued for QU meshes</span><span class="w"></span>
+<span class="na">qu_conv_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2.2</span><span class="w"></span>
+
+<span class="c1"># convergence threshold below which the test fails for icosahedral meshes</span><span class="w"></span>
+<span class="na">icos_conv_thresh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.8</span><span class="w"></span>
+
+<span class="c1"># Convergence rate above which a warning is issued for icosahedral meshes</span><span class="w"></span>
+<span class="na">icos_conv_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2.2</span><span class="w"></span>
 </pre></div>
 </div>
 <p>The last 7 options are used to control properties of the cosine bell and the
@@ -207,13 +216,24 @@ background properties.  The first 4 options are discussed below.</p>
 </section>
 <section id="resolutions">
 <h3>resolutions<a class="headerlink" href="#resolutions" title="Permalink to this heading">¶</a></h3>
+<p>The default resolutions used in the test case depends on the mesh type. For
+the <code class="docutils literal notranslate"><span class="pre">qu</span></code> mesh type, the defaults are:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">resolutions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">60, 120, 240, 480</span><span class="w"></span>
+</pre></div>
+</div>
+<p>for the <code class="docutils literal notranslate"><span class="pre">icos</span></code> mesh type, they are:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">resolutions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">60, 90, 120, 150, 180, 210, 240</span><span class="w"></span>
+</pre></div>
+</div>
 <p>To alter the resolutions used in this test, you will need to create your own
 config file (or add a <code class="docutils literal notranslate"><span class="pre">cosine_bell</span></code> section to a config file if you’re
 already using one).  The resolutions are a comma-separated list of the
-quasi-uniform resolution of the mesh in km.  If you specify a different list
+resolution of the mesh in km.  If you specify a different list
 before setting up <code class="docutils literal notranslate"><span class="pre">cosine_bell</span></code>, steps will be generated with the requested
 resolutions.  (If you alter <code class="docutils literal notranslate"><span class="pre">resolutions</span></code> in the test case’s config file in
-the work directory, nothing will happen.)</p>
+the work directory, nothing will happen.)  For <code class="docutils literal notranslate"><span class="pre">icos</span></code> meshes, make sure you
+use a resolution close to those listed in <a class="reference internal" href="../../../developers_guide/framework.html#dev-spherical-meshes"><span class="std std-ref">Spherical Meshes</span></a>.  Each
+resolution will be rounded to the nearest allowed icosahedral resolution.</p>
 </section>
 <section id="time-step">
 <h3>time step<a class="headerlink" href="#time-step" title="Permalink to this heading">¶</a></h3>

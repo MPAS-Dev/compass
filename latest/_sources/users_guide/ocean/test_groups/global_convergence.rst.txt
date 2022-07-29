@@ -51,9 +51,6 @@ The ``cosine_bell`` config options include:
     # options for cosine bell convergence test case
     [cosine_bell]
 
-    # a list of resolutions (km) to test
-    resolutions = 60, 90, 120, 150, 180, 210, 240
-
     # the number of cells per core to aim for
     goal_cells_per_core = 300
 
@@ -85,19 +82,47 @@ The ``cosine_bell`` config options include:
     # time (days) for bell to transit equator once
     vel_pd = 24.0
 
+    # convergence threshold below which the test fails for QU meshes
+    qu_conv_thresh = 1.8
+
+    # Convergence rate above which a warning is issued for QU meshes
+    qu_conv_max = 2.2
+
+    # convergence threshold below which the test fails for icosahedral meshes
+    icos_conv_thresh = 1.8
+
+    # Convergence rate above which a warning is issued for icosahedral meshes
+    icos_conv_max = 2.2
+
+
 The last 7 options are used to control properties of the cosine bell and the
 background properties.  The first 4 options are discussed below.
 
 resolutions
 ~~~~~~~~~~~
 
+The default resolutions used in the test case depends on the mesh type. For
+the ``qu`` mesh type, the defaults are:
+
+.. code-block:: cfg
+
+    resolutions = 60, 120, 240, 480
+
+for the ``icos`` mesh type, they are:
+
+.. code-block:: cfg
+
+    resolutions = 60, 90, 120, 150, 180, 210, 240
+
 To alter the resolutions used in this test, you will need to create your own
 config file (or add a ``cosine_bell`` section to a config file if you're
 already using one).  The resolutions are a comma-separated list of the
-quasi-uniform resolution of the mesh in km.  If you specify a different list
+resolution of the mesh in km.  If you specify a different list
 before setting up ``cosine_bell``, steps will be generated with the requested
 resolutions.  (If you alter ``resolutions`` in the test case's config file in
-the work directory, nothing will happen.)
+the work directory, nothing will happen.)  For ``icos`` meshes, make sure you
+use a resolution close to those listed in :ref:`dev_spherical_meshes`.  Each
+resolution will be rounded to the nearest allowed icosahedral resolution.
 
 time step
 ~~~~~~~~~

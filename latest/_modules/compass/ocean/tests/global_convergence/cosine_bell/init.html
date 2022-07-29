@@ -115,7 +115,7 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A step for an initial condition for for the cosine bell test case</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="Init.__init__"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_convergence.cosine_bell.init.Init.html#compass.ocean.tests.global_convergence.cosine_bell.init.Init.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
+<div class="viewcode-block" id="Init.__init__"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_convergence.cosine_bell.init.Init.html#compass.ocean.tests.global_convergence.cosine_bell.init.Init.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the step</span>
 
@@ -124,13 +124,13 @@
 <span class="sd">        test_case : compass.ocean.tests.global_convergence.cosine_bell.CosineBell</span>
 <span class="sd">            The test case this step belongs to</span>
 
-<span class="sd">        resolution : int</span>
-<span class="sd">            The resolution of the (uniform) mesh in km</span>
+<span class="sd">        mesh_name : str</span>
+<span class="sd">            The name of the mesh</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span>
-                         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;QU</span><span class="si">{}</span><span class="s1">_init&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">),</span>
-                         <span class="n">subdir</span><span class="o">=</span><span class="s1">&#39;QU</span><span class="si">{}</span><span class="s1">/init&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">),</span>
+                         <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_name</span><span class="si">}</span><span class="s1">_init&#39;</span><span class="p">,</span>
+                         <span class="n">subdir</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_name</span><span class="si">}</span><span class="s1">/init&#39;</span><span class="p">,</span>
                          <span class="n">cores</span><span class="o">=</span><span class="mi">36</span><span class="p">,</span> <span class="n">min_cores</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
         <span class="n">package</span> <span class="o">=</span> <span class="s1">&#39;compass.ocean.tests.global_convergence.cosine_bell&#39;</span>

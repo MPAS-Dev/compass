@@ -8,6 +8,19 @@ The ``global_convergence`` test group
 implements convergence studies on the full globe. Currently, the only test case
 is the advection of a cosine bell.
 
+.. _dev_ocean_global_convergence_mesh_types:
+
+mesh types
+----------
+
+The global convergence test cases support two types of meshes: ``qu`` meshes
+created with the :py:class:`compass.mesh.QuasiUniformSphericalMeshStep` step
+and ``icos`` meshes created with
+:py:class:`compass.mesh.IcosahedralMeshStep`.  In general, the ``icos`` meshes
+are more uniform but the ``qu`` meshes are more flexible.  The ``icos`` meshes
+only support a fixed set of resolutions described in
+:ref:`dev_spherical_meshes`.
+
 .. _dev_ocean_global_convergence_cosine_bell:
 
 cosine_bell
@@ -23,9 +36,8 @@ for config options and more details on the test case.
 mesh
 ~~~~
 
-The class :py:class:`compass.ocean.tests.global_convergence.cosine_bell.mesh.Mesh`
-defines a step for building a global mesh with uniform resolution using
-:py:func:`mpas_tools.ocean.build_mesh.build_spherical_mesh()`.
+This step builds a global mesh with uniform resolution. The type of mesh
+depends on the mesh type (``qu`` or ``icos``).
 
 init
 ~~~~

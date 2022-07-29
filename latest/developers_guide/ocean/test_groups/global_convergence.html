@@ -63,6 +63,7 @@
 <li class="toctree-l3"><a class="reference internal" href="baroclinic_channel.html">baroclinic_channel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drying_slope.html">drying_slope</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">global_convergence</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#mesh-types">mesh types</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#cosine-bell">cosine_bell</a></li>
 </ul>
 </li>
@@ -137,6 +138,16 @@
 (<a class="reference internal" href="../generated/compass.ocean.tests.global_convergence.GlobalConvergence.html#compass.ocean.tests.global_convergence.GlobalConvergence" title="compass.ocean.tests.global_convergence.GlobalConvergence"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_convergence.GlobalConvergence</span></code></a>)
 implements convergence studies on the full globe. Currently, the only test case
 is the advection of a cosine bell.</p>
+<section id="mesh-types">
+<span id="dev-ocean-global-convergence-mesh-types"></span><h2>mesh types<a class="headerlink" href="#mesh-types" title="Permalink to this heading">¶</a></h2>
+<p>The global convergence test cases support two types of meshes: <code class="docutils literal notranslate"><span class="pre">qu</span></code> meshes
+created with the <a class="reference internal" href="../../generated/compass.mesh.QuasiUniformSphericalMeshStep.html#compass.mesh.QuasiUniformSphericalMeshStep" title="compass.mesh.QuasiUniformSphericalMeshStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.mesh.QuasiUniformSphericalMeshStep</span></code></a> step
+and <code class="docutils literal notranslate"><span class="pre">icos</span></code> meshes created with
+<a class="reference internal" href="../../generated/compass.mesh.IcosahedralMeshStep.html#compass.mesh.IcosahedralMeshStep" title="compass.mesh.IcosahedralMeshStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.mesh.IcosahedralMeshStep</span></code></a>.  In general, the <code class="docutils literal notranslate"><span class="pre">icos</span></code> meshes
+are more uniform but the <code class="docutils literal notranslate"><span class="pre">qu</span></code> meshes are more flexible.  The <code class="docutils literal notranslate"><span class="pre">icos</span></code> meshes
+only support a fixed set of resolutions described in
+<a class="reference internal" href="../../framework.html#dev-spherical-meshes"><span class="std std-ref">Spherical Meshes</span></a>.</p>
+</section>
 <section id="cosine-bell">
 <span id="dev-ocean-global-convergence-cosine-bell"></span><h2>cosine_bell<a class="headerlink" href="#cosine-bell" title="Permalink to this heading">¶</a></h2>
 <p>The <a class="reference internal" href="../generated/compass.ocean.tests.global_convergence.cosine_bell.CosineBell.html#compass.ocean.tests.global_convergence.cosine_bell.CosineBell" title="compass.ocean.tests.global_convergence.cosine_bell.CosineBell"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_convergence.cosine_bell.CosineBell</span></code></a>
@@ -147,9 +158,8 @@ determine the rate of convergence.  See <a class="reference internal" href="../.
 for config options and more details on the test case.</p>
 <section id="mesh">
 <h3>mesh<a class="headerlink" href="#mesh" title="Permalink to this heading">¶</a></h3>
-<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.global_convergence.cosine_bell.mesh.Mesh.html#compass.ocean.tests.global_convergence.cosine_bell.mesh.Mesh" title="compass.ocean.tests.global_convergence.cosine_bell.mesh.Mesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_convergence.cosine_bell.mesh.Mesh</span></code></a>
-defines a step for building a global mesh with uniform resolution using
-<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.ocean.build_mesh.build_spherical_mesh.html#mpas_tools.ocean.build_mesh.build_spherical_mesh" title="(in mpas_tools vstable)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_tools.ocean.build_mesh.build_spherical_mesh()</span></code></a>.</p>
+<p>This step builds a global mesh with uniform resolution. The type of mesh
+depends on the mesh type (<code class="docutils literal notranslate"><span class="pre">qu</span></code> or <code class="docutils literal notranslate"><span class="pre">icos</span></code>).</p>
 </section>
 <section id="init">
 <h3>init<a class="headerlink" href="#init" title="Permalink to this heading">¶</a></h3>

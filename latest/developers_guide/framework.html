@@ -78,6 +78,10 @@
 <li class="toctree-l3"><a class="reference internal" href="#download">Download</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#mesh">Mesh</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#spherical-meshes">Spherical Meshes</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#model">Model</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#running-mpas">Running MPAS</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#partitioning-the-mesh">Partitioning the mesh</a></li>
@@ -410,6 +414,105 @@ and adding it as an input to the step.  No current test cases use
 gets downloaded into the bathymetry database (if it’s not already there).
 Then, we create a local symlink called <code class="docutils literal notranslate"><span class="pre">topography.nc</span></code> to the file in the
 bathymetry database.</p>
+</section>
+</section>
+<section id="mesh">
+<span id="dev-mesh"></span><h2>Mesh<a class="headerlink" href="#mesh" title="Permalink to this heading">¶</a></h2>
+<section id="spherical-meshes">
+<span id="dev-spherical-meshes"></span><h3>Spherical Meshes<a class="headerlink" href="#spherical-meshes" title="Permalink to this heading">¶</a></h3>
+<p>Test cases that use global, spherical meshes can add either
+<a class="reference internal" href="generated/compass.mesh.QuasiUniformSphericalMeshStep.html#compass.mesh.QuasiUniformSphericalMeshStep" title="compass.mesh.QuasiUniformSphericalMeshStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.mesh.QuasiUniformSphericalMeshStep</span></code></a> or
+<a class="reference internal" href="generated/compass.mesh.IcosahedralMeshStep.html#compass.mesh.IcosahedralMeshStep" title="compass.mesh.IcosahedralMeshStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.mesh.IcosahedralMeshStep</span></code></a> in order to creating a base mesh,
+using <a class="reference external" href="https://github.com/dengwirda/jigsaw">JIGSAW</a>.  Alternatively, they can
+use <a class="reference internal" href="generated/compass.mesh.QuasiUniformSphericalMeshStep.html#compass.mesh.QuasiUniformSphericalMeshStep" title="compass.mesh.QuasiUniformSphericalMeshStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.mesh.QuasiUniformSphericalMeshStep</span></code></a> as the base class
+for creating a more complex mesh by overriding the
+<a class="reference internal" href="generated/compass.mesh.QuasiUniformSphericalMeshStep.build_cell_width_lat_lon.html#compass.mesh.QuasiUniformSphericalMeshStep.build_cell_width_lat_lon" title="compass.mesh.QuasiUniformSphericalMeshStep.build_cell_width_lat_lon"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.mesh.QuasiUniformSphericalMeshStep.build_cell_width_lat_lon()</span></code></a>
+method.</p>
+<p>A developer can also customize the options data structure passed on to JIGSAW
+either by modifying the <code class="docutils literal notranslate"><span class="pre">opts</span></code> attribute of either of these classes or by
+overriding the <a class="reference internal" href="generated/compass.mesh.IcosahedralMeshStep.make_jigsaw_mesh.html#compass.mesh.IcosahedralMeshStep.make_jigsaw_mesh" title="compass.mesh.IcosahedralMeshStep.make_jigsaw_mesh"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.mesh.IcosahedralMeshStep.make_jigsaw_mesh()</span></code></a>
+or <a class="reference internal" href="generated/compass.mesh.QuasiUniformSphericalMeshStep.make_jigsaw_mesh.html#compass.mesh.QuasiUniformSphericalMeshStep.make_jigsaw_mesh" title="compass.mesh.QuasiUniformSphericalMeshStep.make_jigsaw_mesh"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.mesh.QuasiUniformSphericalMeshStep.make_jigsaw_mesh()</span></code></a>
+methods.</p>
+<p>Icosahedral meshes will be significantly more uniform and smooth in cell size
+than quasi-uniform spherical meshes.  On the other hand, icosahedral meshes are
+restricted to resolutions that are an integer number of subdivisions of an
+icosahedron.  The following table shows the approximate resolution of a mesh
+with a given number of subdivisions:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 45%" />
+<col style="width: 55%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>subdivisions</p></th>
+<th class="head"><p>cell width (km)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>5</p></td>
+<td><p>240</p></td>
+</tr>
+<tr class="row-odd"><td><p>6</p></td>
+<td><p>120</p></td>
+</tr>
+<tr class="row-even"><td><p>7</p></td>
+<td><p>60</p></td>
+</tr>
+<tr class="row-odd"><td><p>8</p></td>
+<td><p>30</p></td>
+</tr>
+<tr class="row-even"><td><p>9</p></td>
+<td><p>15</p></td>
+</tr>
+<tr class="row-odd"><td><p>10</p></td>
+<td><p>7.5</p></td>
+</tr>
+<tr class="row-even"><td><p>11</p></td>
+<td><p>3.8</p></td>
+</tr>
+<tr class="row-odd"><td><p>12</p></td>
+<td><p>1.9</p></td>
+</tr>
+<tr class="row-even"><td><p>13</p></td>
+<td><p>0.94</p></td>
+</tr>
+</tbody>
+</table>
+<p>The following config options are associated with spherical meshes:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># config options related to spherical meshes</span><span class="w"></span>
+<span class="k">[spherical_mesh]</span><span class="w"></span>
+
+<span class="c1"># for icosahedral meshes, whether to use cell_width to determine the number of</span><span class="w"></span>
+<span class="c1"># subdivisions or to use subdivisions directly</span><span class="w"></span>
+<span class="na">icosahedral_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">cell_width</span><span class="w"></span>
+
+<span class="c1"># output file names</span><span class="w"></span>
+<span class="na">jigsaw_mesh_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">mesh.msh</span><span class="w"></span>
+<span class="na">jigsaw_geom_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">geom.msh</span><span class="w"></span>
+<span class="na">jigsaw_jcfg_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">opts.jig</span><span class="w"></span>
+<span class="na">jigsaw_hfun_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">spac.msh</span><span class="w"></span>
+<span class="na">triangles_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">mesh_triangles.nc</span><span class="w"></span>
+<span class="na">mpas_mesh_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">base_mesh.nc</span><span class="w"></span>
+
+<span class="c1"># options related to writing out and plotting cell widths</span><span class="w"></span>
+<span class="na">plot_cell_width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span><span class="w"></span>
+<span class="na">cell_width_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">cellWidthVsLatLon.nc</span><span class="w"></span>
+<span class="na">cell_width_image_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">cellWidthGlobal.png</span><span class="w"></span>
+<span class="na">cell_width_colormap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;3Wbgy5&#39;</span><span class="w"></span>
+
+<span class="c1"># whether to add the mesh density to the file</span><span class="w"></span>
+<span class="na">add_mesh_density</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span><span class="w"></span>
+
+<span class="c1"># convert the mesh to vtk format for visualization</span><span class="w"></span>
+<span class="na">convert_to_vtk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span><span class="w"></span>
+
+<span class="c1"># the subdirectory for the vtk output</span><span class="w"></span>
+<span class="na">vtk_dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">base_mesh_vtk</span><span class="w"></span>
+
+<span class="c1"># whether to extract the vtk output in lat/lon space, rather than on the sphere</span><span class="w"></span>
+<span class="na">vtk_lat_lon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span><span class="w"></span>
+</pre></div>
+</div>
 </section>
 </section>
 <section id="model">
