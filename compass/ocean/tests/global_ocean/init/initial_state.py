@@ -80,7 +80,7 @@ class InitialState(Step):
 
         self.add_input_file(
             filename='topography.nc',
-            target='BedMachineAntarctica_and_GEBCO_2019_0.05_degree.200128.nc',
+            target='BedMachineAntarctica_v2_and_GEBCO_2022_0.05_degree_20220729.nc',
             database='bathymetry_database')
 
         self.add_input_file(

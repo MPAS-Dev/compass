@@ -38,8 +38,8 @@ def configure_global_ocean(test_case, mesh, init=None):
 
     # a description of the bathymetry
     config.set('global_ocean', 'bathy_description',
-               'Bathymetry is from GEBCO 2019, combined with BedMachine '
-               'Antarctica around Antarctica.')
+               'Bathymetry is from GEBCO 2022, combined with BedMachine '
+               'Antarctica v2 around Antarctica.')
 
     if init is not None and init.with_bgc:
         # todo: this needs to be filled in!
