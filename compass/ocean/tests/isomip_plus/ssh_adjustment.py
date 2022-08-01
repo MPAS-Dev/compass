@@ -9,7 +9,8 @@ class SshAdjustment(Step):
     shelf to match the sea-surface height as part of ice-shelf 2D test cases
     """
     def __init__(self, test_case, resolution, ntasks=1, min_tasks=None,
-                 openmp_threads=1):
+                 openmp_threads=1, vertical_coordinate='z-star',
+                 thin_film_present=False):
         """
         Create the step
 
@@ -44,6 +45,12 @@ class SshAdjustment(Step):
         # start with the same namelist settings as the forward run
         self.add_namelist_file('compass.ocean.tests.isomip_plus',
                                'namelist.forward_and_ssh_adjust')
+        if vertical_coordinate=='single_layer':
+            self.add_namelist_file('compass.ocean.tests.isomip_plus',
+                                   'namelist.single_layer.forward_and_ssh_adjust')
+        if thin_film_present:
+            self.add_namelist_file('compass.ocean.tests.isomip_plus',
+                                   'namelist.thin_film.forward_and_ssh_adjust')
 
         # we don't want the global stats AM for this run
         options = get_time_steps(resolution)

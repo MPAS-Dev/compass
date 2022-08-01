@@ -25,7 +25,8 @@ class Forward(Step):
 
     """
     def __init__(self, test_case, resolution, experiment, name='forward',
-                 subdir=None, run_duration=None, time_varying_forcing=False):
+                 subdir=None, run_duration=None, vertical_coordinate='z-star',
+                 time_varying_forcing=False, thin_film_present=False):
         """
         Create a new test case
 
@@ -80,6 +81,16 @@ class Forward(Step):
                               'streams.forward.template',
                               template_replacements=template_replacements)
 
+        if vertical_coordinate == 'single_layer':
+            self.add_namelist_file('compass.ocean.tests.isomip_plus',
+                                   'namelist.single_layer.forward_and_ssh_adjust')
+            if not time_varying_forcing:
+                self.add_namelist_file('compass.ocean.tests.isomip_plus',
+                                       'namelist.single_layer.forward')
+
+        if thin_film_present:
+            self.add_namelist_file('compass.ocean.tests.isomip_plus',
+                                   'namelist.thin_film.forward_and_ssh_adjust')
         if time_varying_forcing:
             self.add_namelist_file('compass.ocean.tests.isomip_plus',
                                    'namelist.time_varying_forcing')
