@@ -1,4 +1,5 @@
 import xarray
+import os
 
 from geometric_features import GeometricFeatures, FeatureCollection, \
     read_feature_collection
@@ -6,10 +7,126 @@ from mpas_tools.mesh.conversion import cull
 from mpas_tools.mesh.mask import compute_mpas_flood_fill_mask
 import mpas_tools.io
 from mpas_tools.io import write_netcdf
+from mpas_tools.ocean import inject_bathymetry
 from mpas_tools.ocean.coastline_alteration import widen_transect_edge_masks, \
     add_critical_land_blockages, add_land_locked_cells_to_mask
 from mpas_tools.viz.paraview_extractor import extract_vtk
 from mpas_tools.logging import LoggingContext, check_call
+
+from compass.step import Step
+
+
+class CullMeshStep(Step):
+    """
+    A step for culling a global MPAS-Ocean mesh
+
+    Attributes
+    ----------
+    base_mesh_step : compass.mesh.spherical.SphericalBaseStep
+        The base mesh step containing input files to this step
+
+    with_ice_shelf_cavities : bool
+        Whether the mesh includes ice-shelf cavities
+
+    do_inject_bathymetry : bool
+        Whether to interpolate bathymetry from a data file so it
+        can be used as a culling criteria
+
+    preserve_floodplain : bool
+        Whether to leave land cells in the mesh based on bathymetry
+        specified by do_inject_bathymetry
+    """
+
+    def __init__(self, test_case, base_mesh_step, with_ice_shelf_cavities,
+                 name='cull_mesh', subdir=None, do_inject_bathymetry=False,
+                 preserve_floodplain=False):
+        """
+        Create a new step
+
+        Parameters
+        ----------
+        test_case : compass.ocean.tests.global_ocean.mesh.Mesh
+            The test case this step belongs to
+
+        base_mesh_step : compass.mesh.spherical.SphericalBaseStep
+            The base mesh step containing input files to this step
+
+        with_ice_shelf_cavities : bool
+            Whether the mesh includes ice-shelf cavities
+
+        name : str, optional
+            the name of the step
+
+        subdir : str, optional
+            the subdirectory for the step.  The default is ``name``
+
+        do_inject_bathymetry : bool, optional
+            Whether to interpolate bathymetry from a data file so it
+            can be used as a culling criteria
+
+        preserve_floodplain : bool, optional
+            Whether to leave land cells in the mesh based on bathymetry
+            specified by do_inject_bathymetry
+        """
+        super().__init__(test_case, name=name, subdir=subdir,
+                         cpus_per_task=None, min_cpus_per_task=None)
+        self.base_mesh_step = base_mesh_step
+
+        for file in ['culled_mesh.nc', 'culled_graph.info',
+                     'critical_passages_mask_final.nc']:
+            self.add_output_file(filename=file)
+
+        self.with_ice_shelf_cavities = with_ice_shelf_cavities
+        self.do_inject_bathymetry = do_inject_bathymetry
+        self.preserve_floodplain = preserve_floodplain
+
+    def setup(self):
+        """
+        Set up the test case in the work directory, including downloading any
+        dependencies.
+        """
+        super().setup()
+        if self.do_inject_bathymetry:
+            self.add_input_file(
+                filename='earth_relief_15s.nc',
+                target='SRTM15_plus_earth_relief_15s.nc',
+                database='bathymetry_database')
+
+        # get the these properties from the config options
+        config = self.config
+        # todo: move to constrain_resources()
+        self.cpus_per_task = config.getint('spherical_mesh',
+                                           'cull_mesh_cpus_per_task')
+        self.min_cpus_per_task = config.getint('spherical_mesh',
+                                               'cull_mesh_min_cpus_per_task')
+
+        base_path = self.base_mesh_step.path
+        base_filename = self.base_mesh_step.config.get(
+            'spherical_mesh', 'mpas_mesh_filename')
+        target = os.path.join(base_path, base_filename)
+        self.add_input_file(filename='base_mesh.nc', work_dir_target=target)
+
+    def run(self):
+        """
+        Run this step of the test case
+        """
+        with_ice_shelf_cavities = self.with_ice_shelf_cavities
+        logger = self.logger
+
+        # only use progress bars if we're not writing to a log file
+        use_progress_bar = self.log_filename is None
+
+        do_inject_bathymetry = self.do_inject_bathymetry
+        preserve_floodplain = self.preserve_floodplain
+
+        cull_mesh(with_critical_passages=True, logger=logger,
+                  use_progress_bar=use_progress_bar,
+                  preserve_floodplain=preserve_floodplain,
+                  with_cavities=with_ice_shelf_cavities,
+                  process_count=self.cpus_per_task)
+
+        if do_inject_bathymetry:
+            inject_bathymetry(mesh_file='culled_mesh.nc')
 
 
 def cull_mesh(with_cavities=False, with_critical_passages=False,
