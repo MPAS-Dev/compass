@@ -103,7 +103,7 @@ class ForwardStep(Step):
             self.add_streams_file(
                 'compass.ocean.tests.global_ocean', 'streams.bgc')
 
-        mesh_package = mesh.mesh_step.package
+        mesh_package = mesh.package
         mesh_package_contents = list(contents(mesh_package))
         mesh_namelists = ['namelist.forward',
                           f'namelist.{time_integrator.lower()}']

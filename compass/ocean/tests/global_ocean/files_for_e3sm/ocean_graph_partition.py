@@ -38,7 +38,7 @@ class OceanGraphPartition(Step):
         self.add_input_file(filename='restart.nc',
                             target='../{}'.format(restart_filename))
 
-        mesh_path = mesh.mesh_step.path
+        mesh_path = mesh.get_cull_mesh_path()
         self.add_input_file(
             filename='graph.info',
             work_dir_target='{}/culled_graph.info'.format(mesh_path))
