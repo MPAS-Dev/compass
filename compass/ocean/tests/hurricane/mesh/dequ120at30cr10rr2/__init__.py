@@ -1,41 +1,12 @@
 import mpas_tools.ocean.coastal_tools as ct
 
-from compass.ocean.tests.global_ocean.mesh.mesh import MeshStep
+from compass.ocean.mesh.floodplain import FloodplainMeshStep
 
 
-class DEQU120at30cr10rr2Mesh(MeshStep):
+class DEQU120at30cr10rr2BaseMesh(FloodplainMeshStep):
     """
     A step for creating DEQU120at30cr10rr2 meshes
     """
-    def __init__(self, test_case, mesh_name, preserve_floodplain):
-        """
-        Create a new step
-
-        Parameters
-        ----------
-        test_case : compass.TestCase
-            The test case this step belongs to
-
-        mesh_name : str
-            The name of the mesh
-
-        preserve_floodplain : bool
-            Whether the mesh includes land cells
-        """
-
-        with_ice_shelf_cavities = False
-
-        super().__init__(test_case, mesh_name, with_ice_shelf_cavities,
-                         package=self.__module__,
-                         mesh_config_filename='dequ120at30cr10rr2.cfg',
-                         do_inject_bathymetry=True,
-                         preserve_floodplain=preserve_floodplain)
-
-        self.add_input_file(
-            filename='earth_relief_15s.nc',
-            target='SRTM15_plus_earth_relief_15s.nc',
-            database='bathymetry_database')
-
     def build_cell_width_lat_lon(self):
         """
         Create cell width array for this mesh on a regular latitude-longitude

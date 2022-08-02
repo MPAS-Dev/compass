@@ -75,7 +75,7 @@ class InterpolateAtmForcing(Step):
             target=f'{storm}_prmsl.nc',
             database='initial_condition_database')
 
-        mesh_path = mesh.mesh_step.path
+        mesh_path = mesh.steps['cull_mesh'].path
 
         self.add_input_file(
             filename='mesh.nc',

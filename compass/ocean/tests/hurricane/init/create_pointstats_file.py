@@ -47,7 +47,7 @@ class CreatePointstatsFile(Step):
                                   'USGS_stations.txt']
         self.pointstats_file = 'points.nc'
 
-        mesh_path = mesh.mesh_step.path
+        mesh_path = mesh.steps['cull_mesh'].path
 
         self.add_input_file(
             filename=self.mesh_file,

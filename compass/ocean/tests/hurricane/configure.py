@@ -13,13 +13,11 @@ def configure_hurricane(test_case, mesh):
 
     mesh : compass.ocean.tests.global_ocean.mesh.Mesh
         The test case that produces the mesh for this run
-
-    init : compass.ocean.tests.global_ocean.init.Init, optional
-        The test case that produces the initial condition for this run
     """
     config = test_case.config
-    mesh_step = mesh.mesh_step
-    config.add_from_package(mesh_step.package, mesh_step.mesh_config_filename,
+
+    config.add_from_package('compass.mesh', 'mesh.cfg')
+    config.add_from_package(mesh.package, mesh.mesh_config_filename,
                             exception=True)
 
     get_author_and_email_from_git(config)
