@@ -241,35 +241,35 @@ class Mesh(Step):
                 'Antarctica.nc', '-p', 'ais-bedmap2']
         check_call(args, logger=logger)
 
-#        logger.info('creating scrip file for destination mesh')
-#        scrip_from_mpas('Antarctica.nc', 'Antarctica.scrip.nc')
-#        args = ['create_SCRIP_file_from_MPAS_mesh.py',
-#                '-m', 'Antarctica.nc',
-#                '-s', 'Antarctica.scrip.nc']
-#        check_call(args, logger=logger)
-#        # Testing shows 5 badger/grizzly nodes works well.
-#        # 2 nodes is too few. I have not tested anything in between.
-#        logger.info('generating gridded dataset -> MPAS weights')
-#        args = ['srun', '-n', nProcs, 'ESMF_RegridWeightGen', '--source',
-#                data_path+'BedMachineAntarctica_2020-07-15_v02.scrip.nc',
-#                '--destination',
-#                'Antarctica.scrip.nc',
-#                '--weight', 'BedMachine_to_MPAS_weights.nc',
-#                '--method', 'conserve',
-#                "-i", "-64bit_offset",
-#                "--dst_regional", "--src_regional", '--netcdf4']
-#        check_call(args, logger=logger)
-#
-#        logger.info('generating gridded dataset -> MPAS weights')
-#        args = ['srun', '-n', nProcs, 'ESMF_RegridWeightGen', '--source',
-#                data_path+'antarctica_ice_velocity_450m_v2.scrip.nc',
-#                '--destination',
-#                'Antarctica.scrip.nc',
-#                '--weight', 'measures_to_MPAS_weights.nc',
-#                '--method', 'conserve',
-#                "-i", "-64bit_offset", '--netcdf4',
-#                "--dst_regional", "--src_regional", '--ignore_unmapped']
-#        check_call(args, logger=logger)
+        logger.info('creating scrip file for destination mesh')
+        scrip_from_mpas('Antarctica.nc', 'Antarctica.scrip.nc')
+        args = ['create_SCRIP_file_from_MPAS_mesh.py',
+                '-m', 'Antarctica.nc',
+                '-s', 'Antarctica.scrip.nc']
+        check_call(args, logger=logger)
+        # Testing shows 5 badger/grizzly nodes works well.
+        # 2 nodes is too few. I have not tested anything in between.
+        logger.info('generating gridded dataset -> MPAS weights')
+        args = ['srun', '-n', nProcs, 'ESMF_RegridWeightGen', '--source',
+                data_path+'BedMachineAntarctica_2020-07-15_v02.scrip.nc',
+                '--destination',
+                'Antarctica.scrip.nc',
+                '--weight', 'BedMachine_to_MPAS_weights.nc',
+                '--method', 'conserve',
+                "-i", "-64bit_offset",
+                "--dst_regional", "--src_regional", '--netcdf4']
+        check_call(args, logger=logger)
+
+        logger.info('generating gridded dataset -> MPAS weights')
+        args = ['srun', '-n', nProcs, 'ESMF_RegridWeightGen', '--source',
+                data_path+'antarctica_ice_velocity_450m_v2.scrip.nc',
+                '--destination',
+                'Antarctica.scrip.nc',
+                '--weight', 'measures_to_MPAS_weights.nc',
+                '--method', 'conserve',
+                "-i", "-64bit_offset", '--netcdf4',
+                "--dst_regional", "--src_regional", '--ignore_unmapped']
+        check_call(args, logger=logger)
         # Must add iceMask to interpolation script.
         # interpolate fields from composite dataset
         logger.info('calling interpolate_to_mpasli_grid.py')
@@ -281,25 +281,25 @@ class Mesh(Step):
                  'observedThicknessTendencyUncertainty', 'thickness']
         check_call(args, logger=logger)
 
-#        # interpoalte fields from BedMachine and Measures
-#        # Using conservative remapping
-#        logger.info('calling interpolate_to_mpasli_grid.py')
-#        args = ['interpolate_to_mpasli_grid.py', '-s',
-#                data_path+'BedMachineAntarctica_2020-07-15_v02_edits_floodFill_extrap_fillVostok.nc',
-#                '-d', 'Antarctica.nc', '-m', 'e',
-#                '-w', 'BedMachine_to_MPAS_weights.nc']
-#        check_call(args, logger=logger)
-#
-#        logger.info('calling interpolate_to_mpasli_grid.py')
-#        args = ['interpolate_to_mpasli_grid.py', '-s',
-#                data_path+'antarctica_ice_velocity_450m_v2_edits_extrap.nc',
-#                '-d', 'Antarctica.nc', '-m', 'e',
-#                '-w', 'measures_to_MPAS_weights.nc',
-#                '-v', 'observedSurfaceVelocityX',
-#                'observedSurfaceVelocityY',
-#                'observedSurfaceVelocityUncertainty']
-#        check_call(args, logger=logger)
-#
+        # interpoalte fields from BedMachine and Measures
+        # Using conservative remapping
+        logger.info('calling interpolate_to_mpasli_grid.py')
+        args = ['interpolate_to_mpasli_grid.py', '-s',
+                data_path+'BedMachineAntarctica_2020-07-15_v02_edits_floodFill_extrap_fillVostok.nc',
+                '-d', 'Antarctica.nc', '-m', 'e',
+                '-w', 'BedMachine_to_MPAS_weights.nc']
+        check_call(args, logger=logger)
+
+        logger.info('calling interpolate_to_mpasli_grid.py')
+        args = ['interpolate_to_mpasli_grid.py', '-s',
+                data_path+'antarctica_ice_velocity_450m_v2_edits_extrap.nc',
+                '-d', 'Antarctica.nc', '-m', 'e',
+                '-w', 'measures_to_MPAS_weights.nc',
+                '-v', 'observedSurfaceVelocityX',
+                'observedSurfaceVelocityY',
+                'observedSurfaceVelocityUncertainty']
+        check_call(args, logger=logger)
+
         logger.info('Marking domain boundaries dirichlet')
         args = ['mark_domain_boundaries_dirichlet.py',
                 '-f', 'Antarctica.nc']
@@ -314,19 +314,19 @@ class Mesh(Step):
 
         # Clean up: trim to iceMask and set large velocity
         # uncertainties where appropriate.
-#        data = netCDF4.Dataset('Antarctica.nc', 'r+')
-#        data.set_auto_mask(False)
-#        data.variables['thickness'][:] *= (data.variables['iceMask'][:] > 1.5)
-#        
-#        mask = np.logical_or(
-#                np.isnan(
-#                    data.variables['observedSurfaceVelocityUncertainty'][:]),
-#                data.variables['thickness'][:] < 1.0)
-#        mask = np.logical_or(
-#                mask,
-#                data.variables['observedSurfaceVelocityUncertainty'][:] == 0.0)
-#        data.variables['observedSurfaceVelocityUncertainty'][0,mask[0,:]] = 1.0
-#        data.close()
+        data = netCDF4.Dataset('Antarctica.nc', 'r+')
+        data.set_auto_mask(False)
+        data.variables['thickness'][:] *= (data.variables['iceMask'][:] > 1.5)
+        
+        mask = np.logical_or(
+                np.isnan(
+                    data.variables['observedSurfaceVelocityUncertainty'][:]),
+                data.variables['thickness'][:] < 1.0)
+        mask = np.logical_or(
+                mask,
+                data.variables['observedSurfaceVelocityUncertainty'][:] == 0.0)
+        data.variables['observedSurfaceVelocityUncertainty'][0,mask[0,:]] = 1.0
+        data.close()
 
     def build_cell_width(self):
         """
