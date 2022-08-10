@@ -104,7 +104,7 @@ class ProcessBasalMelt(Step):
             os.remove(remapped_file_temp)
 
             # place the output file in appropriate director
-            output_path = f'{output_base_path}/basal_melt/parametrizations/'
+            output_path = f'{output_base_path}/basal_melt/parameterizations/'
             if not os.path.exists(output_path):
                 print("Creating a new directory for the output data")
                 os.makedirs(output_path)
@@ -213,15 +213,15 @@ class ProcessBasalMelt(Step):
     # input files: input uniform melt rate coefficient (gamma0)
     # and temperature correction per basin
     _file_basin = "AIS/Ocean_Forcing/imbie2/imbie2_basin_numbers_8km.nc"
-    _files_coeff = {"AIS/Ocean_Forcing/parametrizations/coeff_gamma0_DeltaT_quadratic_local_5th_pct_PIGL_gamma_calibration.nc",
-                    "AIS/Ocean_Forcing/parametrizations/coeff_gamma0_DeltaT_quadratic_local_5th_percentile.nc",
-                    "AIS/Ocean_Forcing/parametrizations/coeff_gamma0_DeltaT_quadratic_local_95th_pct_PIGL_gamma_calibration.nc",
-                    "AIS/Ocean_Forcing/parametrizations/coeff_gamma0_DeltaT_quadratic_local_95th_percentile.nc",
-                    "AIS/Ocean_Forcing/parametrizations/coeff_gamma0_DeltaT_quadratic_local_median_PIGL_gamma_calibration.nc",
-                    "AIS/Ocean_Forcing/parametrizations/coeff_gamma0_DeltaT_quadratic_local_median.nc",
-                    "AIS/Ocean_Forcing/parametrizations/coeff_gamma0_DeltaT_quadratic_non_local_5th_pct_PIGL_gamma_calibration.nc",
-                    "AIS/Ocean_Forcing/parametrizations/coeff_gamma0_DeltaT_quadratic_non_local_5th_percentile.nc",
-                    "AIS/Ocean_Forcing/parametrizations/coeff_gamma0_DeltaT_quadratic_non_local_95th_pct_PIGL_gamma_calibration.nc",
-                    "AIS/Ocean_Forcing/parametrizations/coeff_gamma0_DeltaT_quadratic_non_local_95th_percentile.nc",
-                    "AIS/Ocean_Forcing/parametrizations/coeff_gamma0_DeltaT_quadratic_non_local_median_PIGL_gamma_calibration.nc",
-                    "AIS/Ocean_Forcing/parametrizations/coeff_gamma0_DeltaT_quadratic_non_local_median.nc"}
+    _files_coeff = {"AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_5th_pct_PIGL_gamma_calibration.nc",
+                    "AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_5th_percentile.nc",
+                    "AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_95th_pct_PIGL_gamma_calibration.nc",
+                    "AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_95th_percentile.nc",
+                    "AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_median_PIGL_gamma_calibration.nc",
+                    "AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_median.nc",
+                    "AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_5th_pct_PIGL_gamma_calibration.nc",
+                    "AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_5th_percentile.nc",
+                    "AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_95th_pct_PIGL_gamma_calibration.nc",
+                    "AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_95th_percentile.nc",
+                    "AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_median_PIGL_gamma_calibration.nc",
+                    "AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_median.nc"}
