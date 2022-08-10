@@ -1,4 +1,5 @@
 import os
+import numpy as np
 import shutil
 import subprocess
 import xarray as xr
@@ -189,8 +190,8 @@ class ProcessThermalForcing(Step):
                 ncol="nCells")
             ds["xtime"] = ("Time", ["2015-01-01_00:00:00".ljust(64)])
             ds["xtime"] = ds.xtime.astype('S')
-            ds["thermal_forcing"] = ds["thermal_forcing"].\
-                                    expand_dims(dim="Time", axis=0)
+            ds["thermal_forcing"] = ds["thermal_forcing"].expand_dims(
+                dim="Time", axis=0)
             ds = ds.rename(ismip6_to_mali_dims)
         else:
             ismip6_to_mali_dims = dict(
@@ -222,6 +223,10 @@ class ProcessThermalForcing(Step):
         # drop unnecessary variables
         ds = ds.drop_vars(["z_bnds", "lat_vertices", "area",
                            "lon_vertices", "lat", "lon"])
+
+        # transpose dimension
+        ds["thermal_forcing"] = ds["thermal_forcing"].transpose(
+            "Time", "nCells", "nISMIP6OceanLayers")
 
         # write to a new netCDF file
         write_netcdf(ds, output_file)
