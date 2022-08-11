@@ -707,59 +707,12 @@ Test cases that don't need to change config options don't need to override
 run()
 ^^^^^
 
-The base class's :py:meth:`compass.TestCase.run()` performs some
-framework-level operations like creating a log file and figuring out the number
-of tasks and CPUs per task for each step, then it calls each step's ``run()``
-method.  It is important that child classes remember to call the base class'
-version of the method with ``super().run()`` as part of overriding the
-``run()`` method. Test case that just need to run their steps don't need to
-override the ``run()`` method at all.
-
-In some circumstances, it will be appropriate to update properties of the steps
-in the test case based on config options that the user may have changed.  This
-should only be necessary for config options related to the resources used by
-the step: the target number of tasks, the minimum number of tasks, the
-target number of CPUs per task, the minimum number of CPUs per task, and the
-number of OpenMP threads.  Other config options can simply be read in from
-within the step's ``run()`` function as needed, but these performance-related
-config options affect how the step runs and must be set *before* the step can
-run.
-
-In :py:meth:`compass.ocean.tests.global_ocean.init.Init.run()`, we see examples
-of updating the steps' attributes based on config options:
-
-.. code-block:: python
-
-    def run(self):
-        """
-        Run each step of the testcase
-        """
-        config = self.config
-        steps = self.steps_to_run
-        if 'initial_state' in steps:
-            step = self.steps['initial_state']
-            # get the these properties from the config options
-            step.ntasks = config.getint('global_ocean', 'init_ntasks')
-            step.min_tasks = config.getint('global_ocean', 'init_min_tasks')
-            step.threads = config.getint('global_ocean', 'init_threads')
-
-        if 'ssh_adjustment' in steps:
-            step = self.steps['ssh_adjustment']
-            # get the these properties from the config options
-            step.ntasks = config.getint('global_ocean', 'forward_ntasks')
-            step.min_tasks = config.getint('global_ocean', 'forward_min_tasks')
-            step.threads = config.getint('global_ocean', 'forward_threads')
-
-        # run the steps
-        super().run()
-
-As mentioned in :ref:`dev_test_case_class`, the ``self.steps_to_run`` attribute
-may either be the full list of steps that would typically be run to complete
-the test case (the value given to it at init) or it may be a single test case
-because the user is running the steps manually, one at a time.  For this
-reason, it is always a good idea to check if a given step is being run before
-altering the entries any of its attributes based on config options, as shown
-in the example.
+The functionality of :py:meth:`compass.TestCase.run()` has been moved to the
+:py:func:`compass.run.serial.run_tests()` function.  The ``run`` method is now
+deprecated and should not be used to modify runtime processes;
+:py:meth:`compass.Step.constrain_resources()` and
+:py:meth:`compass.Step.runtime_setup()` should be used instead.  These methods
+are further explained in :ref:`dev_steps`.
 
 .. _dev_test_case_validate:
 
@@ -1136,6 +1089,26 @@ for later processing).
 
 Finally, two input and one output file are added.
 
+.. _dev_step_constrain_resources:
+
+constrain_resources()
+^^^^^^^^^^^^^^^^^^^^^
+
+The ``constrain_resources()`` method is used to update the ``ntasks``,
+``min_tasks``, ``cpus_per_task``, and ``min_cpus_per_task`` attributes prior to
+running the step, in case the user has modified these in the config options.
+These performance-related attributes affect how the step runs and must be set
+prior to runtime, whereas other options can be set within ``runtime_setup()``.
+
+``constrain_resources()`` is called within
+:py:func:`compass.run.serial.run_tests()`, but can be overridden if desired.
+The typical reason to override this function would be to get config options for
+``ntasks``, ``min_tasks``, ``cpus_per_task``, etc. and set the corresponding
+attributes.  Another reason might be to set these attributes using an algorithm
+(e.g. based on the number of cells in the mesh used in the step.)
+When overriding ``constrain_resources``, it is important to also call the base
+class' version of the method with ``super().constrain_resources()``.
+
 .. _dev_step_setup:
 
 setup()
@@ -1185,15 +1158,6 @@ As an example, here is
 Some parts of the mesh computation (creating masks for culling) are done using
 python multiprocessing, so the ``cpus_per_task`` and ``min_cpus_per_task``
 attributes are set to appropriate values based on config options.
-
-.. _dev_step_constrain_resources:
-
-constrain_resources()
-^^^^^^^^^^^^^^^^^^^^^
-
-The ``constrain_resources()`` method is used to update the ``ntasks``,
-``min_tasks``, ``cpus_per_task``, and ``min_cpus_per_task`` when these options
-are set in the config file.
 
 .. _dev_step_runtime_setup:
 

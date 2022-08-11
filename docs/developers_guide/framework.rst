@@ -79,12 +79,16 @@ run.serial module
 
 The function :py:func:`compass.run.serial.run_tests()` is used to run a
 test suite or test case and :py:func:`compass.run.serial.run_single_step()` is
-used to run a single step using ``compass run``.  Suites run from the base work
-directory with a pickle file starting with the suite name, or ``custom.pickle``
-if a suite name was not given. Test cases or steps run from their respective
-subdirectories with a ``testcase.pickle`` or ``step.pickle`` file in them.
-Both of these functions reads the local pickle file to retrieve information
-about the test suite, test case and/or step that was stored during setup.
+used to run a single step using ``compass run``.  ``run_tests()`` performs
+setup operations like creating a log file and figuring out the number of tasks
+and CPUs per task for each step, then it calls each step's ``run()`` method.
+
+Suites run from the base work directory with a pickle file starting with the
+suite name, or ``custom.pickle`` if a suite name was not given. Test cases or
+steps run from their respective subdirectories with a ``testcase.pickle`` or
+``step.pickle`` file in them. Both of these functions reads the local pickle
+file to retrieve information about the test suite, test case and/or step that
+was stored during setup.
 
 If :py:func:`compass.run.serial.run_tests()` is used for a test suite, it will
 run each test case in the test suite in the order that they are given in the
