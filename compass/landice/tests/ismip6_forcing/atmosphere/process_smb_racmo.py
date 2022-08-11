@@ -216,10 +216,6 @@ class ProcessSmbRacmo(Step):
             ncol="nCells")
         ds = ds.rename(ismip6_to_mali_dims)
 
-        # add xtime variable
-        ds["xtime"] = ("Time", ["2015-01-01_00:00:00".ljust(64)])
-        ds["xtime"] = ds.xtime.astype('S')
-
         # drop unnecessary variables
         ds = ds.drop_vars(["height"])
 
