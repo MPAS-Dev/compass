@@ -358,8 +358,14 @@ A test case can be a module but is usually a python package so it can
 incorporate modules for its steps and/or config files, namelists, and streams
 files.  The test case must include a class that descends from
 :py:class:`compass.TestCase`.  In addition to a constructor (``__init__()``),
-the class will often override the ``configure()``, ``run()`` and ``validate()``
-methods of the base class, as described below.
+the class will often override the ``configure()`` and ``validate()`` methods of
+the base class, as described below.
+
+The ``run()`` method in :py:class:`compass.TestCase` is deprecated; behaviors
+at runtime can instead be handled by individual steps by overriding the
+:py:meth:`compass.Step.constrain_resources()` and
+:py:meth:`compass.Step.runtime_setup()` methods.  Details about these methods
+are described further in :ref:`dev_steps`.
 
 .. _dev_test_case_class:
 
@@ -396,10 +402,10 @@ case:
     A dictionary of steps in the test case with step names as keys
 
 ``self.steps_to_run``
-    A list of the steps to run when ``run()`` gets called.  This list
-    includes all steps by default but can be replaced with a list of only
-    those tests that should run by default if some steps are optional and
-    should be run manually by the user.
+    A list of the steps to run when :py:func:`compass.run.serial.run_tests()`
+    gets called.  This list includes all steps by default but can be replaced
+    with a list of only those tests that should run by default if some steps
+    are optional and should be run manually by the user.
 
 Another set of attributes is not useful until ``configure()`` is called by the
 ``compass`` framework:
@@ -422,11 +428,12 @@ Another set of attributes is not useful until ``configure()`` is called by the
 These can be used to make further alterations to the config options or to add
 symlinks files in the test case's work directory.
 
-Finally, one attribute is available only when the ``run()`` method gets called
-by the framework:
+Finally, one attribute is available only when the
+:py:func:`compass.run.serial.run_tests()` function gets called by the
+framework:
 
 ``self.logger``
-    A logger for output from the test case.  This gets passed on to other
+    A logger for output from the test case.  This gets accessed by other
     methods and functions that use the logger to write their output to the log
     file.
 
@@ -690,8 +697,7 @@ as in :py:meth:`compass.ocean.tests.global_ocean.files_for_e3sm.FilesForE3SM.con
 
 The ``configure()`` method is not the right place for adding or modifying steps
 that belong to a test case.  Steps should be added during init and altered only
-in their own ``setup()`` method or at the beginning of the test case's
-``run()`` method before running the steps themselves.
+in their own ``setup()`` or ``runtime_setup()`` methods.
 
 Test cases that don't need to change config options don't need to override
 ``configure()`` at all.
@@ -1179,6 +1185,23 @@ As an example, here is
 Some parts of the mesh computation (creating masks for culling) are done using
 python multiprocessing, so the ``cpus_per_task`` and ``min_cpus_per_task``
 attributes are set to appropriate values based on config options.
+
+.. _dev_step_constrain_resources:
+
+constrain_resources()
+^^^^^^^^^^^^^^^^^^^^^
+
+The ``constrain_resources()`` method is used to update the ``ntasks``,
+``min_tasks``, ``cpus_per_task``, and ``min_cpus_per_task`` when these options
+are set in the config file.
+
+.. _dev_step_runtime_setup:
+
+runtime_setup()
+^^^^^^^^^^^^^^^
+
+The ``runtime_setup()`` method is used to modify any behaviors of the step at
+runtime, in the way that :py:meth:`compass.TestCase.run()` was previously used.
 
 .. _dev_step_run:
 
