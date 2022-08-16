@@ -29,8 +29,8 @@ class DecompositionTest(TestCase):
         for procs in [1, 3]:
             name = '{}proc_run'.format(procs)
             self.add_step(
-                RunModel(test_case=self, name=name, subdir=name, cores=procs,
-                         threads=1))
+                RunModel(test_case=self, name=name, subdir=name, ntasks=procs,
+                         openmp_threads=1))
 
             input_dir = name
             name = 'visualize_{}'.format(name)

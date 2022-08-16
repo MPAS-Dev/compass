@@ -31,7 +31,7 @@ class RestartTest(TestCase):
 
         Parameters
         ----------
-        test_group : compass.landice.tests.humboldt
+        test_group : compass.landice.tests.humboldt.Humboldt
             The test group that this test case belongs to
 
         velo_solver : {'sia', 'FO'}
@@ -70,8 +70,8 @@ class RestartTest(TestCase):
                          subdir=subdir)
 
         name = 'full_run'
-        step = RunModel(test_case=self, name=name, subdir=name, cores=32,
-                        threads=1, velo_solver=velo_solver,
+        step = RunModel(test_case=self, name=name, subdir=name, ntasks=32,
+                        openmp_threads=1, velo_solver=velo_solver,
                         calving_law=self.calving_law,
                         damage=self.damage,
                         face_melt=self.face_melt,
@@ -86,8 +86,8 @@ class RestartTest(TestCase):
         self.add_step(step)
 
         name = 'restart_run'
-        step = RunModel(test_case=self, name=name, subdir=name, cores=32,
-                        threads=1, velo_solver=velo_solver,
+        step = RunModel(test_case=self, name=name, subdir=name, ntasks=32,
+                        openmp_threads=1, velo_solver=velo_solver,
                         calving_law=self.calving_law,
                         damage=self.damage,
                         face_melt=self.face_melt,

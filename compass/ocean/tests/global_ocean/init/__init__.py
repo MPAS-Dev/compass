@@ -65,7 +65,7 @@ class Init(TestCase):
 
         if mesh.with_ice_shelf_cavities:
             self.add_step(
-                SshAdjustment(test_case=self, cores=4))
+                SshAdjustment(test_case=self, ntasks=4))
 
     def configure(self):
         """
@@ -82,15 +82,15 @@ class Init(TestCase):
         if 'initial_state' in steps:
             step = self.steps['initial_state']
             # get the these properties from the config options
-            step.cores = config.getint('global_ocean', 'init_cores')
-            step.min_cores = config.getint('global_ocean', 'init_min_cores')
+            step.ntasks = config.getint('global_ocean', 'init_ntasks')
+            step.min_tasks = config.getint('global_ocean', 'init_min_tasks')
             step.threads = config.getint('global_ocean', 'init_threads')
 
         if 'ssh_adjustment' in steps:
             step = self.steps['ssh_adjustment']
             # get the these properties from the config options
-            step.cores = config.getint('global_ocean', 'forward_cores')
-            step.min_cores = config.getint('global_ocean', 'forward_min_cores')
+            step.ntasks = config.getint('global_ocean', 'forward_ntasks')
+            step.min_tasks = config.getint('global_ocean', 'forward_min_tasks')
             step.threads = config.getint('global_ocean', 'forward_threads')
 
         # run the steps

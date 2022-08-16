@@ -38,8 +38,8 @@ class RestartTest(TestCase):
         experiment = 'f'
 
         name = 'full_run'
-        step = RunExperiment(test_case=self, name=name, subdir=name, cores=4,
-                             threads=1, experiment=experiment)
+        step = RunExperiment(test_case=self, name=name, subdir=name, ntasks=4,
+                             openmp_threads=1, experiment=experiment)
 
         options = {'config_thermal_solver': "'{}'".format(thermal_solver)}
 
@@ -54,8 +54,8 @@ class RestartTest(TestCase):
         self.add_step(step)
 
         name = 'restart_run'
-        step = RunExperiment(test_case=self, name=name, subdir=name, cores=4,
-                             threads=1, experiment=experiment,
+        step = RunExperiment(test_case=self, name=name, subdir=name, ntasks=4,
+                             openmp_threads=1, experiment=experiment,
                              suffixes=['landice', 'landice.rst'])
 
         # modify the namelist options and streams file

@@ -23,7 +23,7 @@ class Init(Step):
         super().__init__(test_case=test_case,
                          name='QU{}_init'.format(resolution),
                          subdir='QU{}/init'.format(resolution),
-                         cores=36, min_cores=1)
+                         ntasks=36, min_tasks=1)
 
         package = 'compass.ocean.tests.sphere_transport.nondivergent_2d'
 

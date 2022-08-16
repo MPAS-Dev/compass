@@ -21,11 +21,11 @@ class SmokeTest(TestCase):
         name = 'smoke_test'
         super().__init__(test_group=test_group, name=name)
 
-        cores = 36
-        min_cores = 4
+        ntasks = 36
+        min_tasks = 4
 
         step = RunModel(test_case=self, name=name, subdir='simulation',
-                        cores=cores, min_cores=min_cores, threads=1)
+                        ntasks=ntasks, min_tasks=min_tasks, openmp_threads=1)
         self.add_step(step)
 
     # no configure() method is needed

@@ -29,8 +29,7 @@ class SphericalBaseStep(Step):
     opts : jigsawpy.jigsaw_jig_t
         JIGSAW options for creating the mesh
     """
-    def __init__(self, test_case, name, subdir, cores=1, min_cores=1,
-                 threads=1):
+    def __init__(self, test_case, name, subdir):
         """
         Create a new step
 
@@ -44,21 +43,8 @@ class SphericalBaseStep(Step):
 
         subdir : {str, None}
             the subdirectory for the step.  The default is ``name``
-
-        cores : int, optional
-            the number of cores the step would ideally use.  If fewer cores
-            are available on the system, the step will run on all available
-            cores as long as this is not below ``min_cores``
-
-        min_cores : int, optional
-            the number of cores the step requires.  If the system has fewer
-            than this number of cores, the step will fail
-
-        threads : int, optional
-            the number of threads the step will use
         """
-        super().__init__(test_case, name=name, subdir=subdir, cores=cores,
-                         min_cores=min_cores, threads=threads)
+        super().__init__(test_case, name=name, subdir=subdir)
 
         # setup files for JIGSAW
         self.opts = jigsawpy.jigsaw_jig_t()
@@ -199,7 +185,7 @@ class QuasiUniformSphericalMeshStep(SphericalBaseStep):
     """
 
     def __init__(self, test_case, name='base_mesh', subdir=None,
-                 cell_width=None, cores=1, min_cores=1, threads=1):
+                 cell_width=None):
         """
         Create a new step
 
@@ -216,21 +202,8 @@ class QuasiUniformSphericalMeshStep(SphericalBaseStep):
 
         cell_width : float, optional
             The approximate cell width in km of the mesh if constant resolution
-
-        cores : int, optional
-            the number of cores the step would ideally use.  If fewer cores
-            are available on the system, the step will run on all available
-            cores as long as this is not below ``min_cores``
-
-        min_cores : int, optional
-            the number of cores the step requires.  If the system has fewer
-            than this number of cores, the step will fail
-
-        threads : int, optional
-            the number of threads the step will use
         """
-        super().__init__(test_case=test_case, name=name, subdir=subdir,
-                         cores=cores, min_cores=min_cores, threads=threads)
+        super().__init__(test_case=test_case, name=name, subdir=subdir)
         self.cell_width = cell_width
 
         # build mesh via JIGSAW!
@@ -352,8 +325,7 @@ class IcosahedralMeshStep(SphericalBaseStep):
     """
 
     def __init__(self, test_case, name='base_mesh', subdir=None,
-                 cell_width=None, subdivisions=None, cores=1, min_cores=1,
-                 threads=1):
+                 cell_width=None, subdivisions=None):
         """
         Create a new step
 
@@ -373,21 +345,8 @@ class IcosahedralMeshStep(SphericalBaseStep):
 
         subdivisions : int, optional
             The number of subdivisions of the icosahedral mesh to perform
-
-        cores : int, optional
-            the number of cores the step would ideally use.  If fewer cores
-            are available on the system, the step will run on all available
-            cores as long as this is not below ``min_cores``
-
-        min_cores : int, optional
-            the number of cores the step requires.  If the system has fewer
-            than this number of cores, the step will fail
-
-        threads : int, optional
-            the number of threads the step will use
         """
-        super().__init__(test_case=test_case, name=name, subdir=subdir,
-                         cores=cores, min_cores=min_cores, threads=threads)
+        super().__init__(test_case=test_case, name=name, subdir=subdir)
 
         # run as a subprocess so output goes to a log file
         self.run_as_subprocess = True

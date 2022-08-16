@@ -243,23 +243,26 @@ It is likely that other test cases supporting parameter studies will want to
 mimic this behavior so that the default steps can be listed with
 ``compass list --verbose`` as well.
 
-Setting the number of cores
----------------------------
+Setting the number of tasks and CPUs per task
+---------------------------------------------
 
 For some parameter studies, particularly those where resolution is the
 parameter, it can be important to specify the target and minimum number of
-cores for a given step as a function of the parameter.
+MPI tasks for a given step as a function of the parameter.  If a given step
+runs with python threading or multiprocessing instead, the number of CPUs per
+task will, instead, be the important parameter (the number of tasks,
+``ntasks``, is always 1).
 
-In the following example, we set both the attribute of the steps ``step.cores``
-and a config option (``QU<res>_core``, where ``<res>`` is the resolution) to
-a target number of cores that is a heuristic function of the resolution.
-Similarly, we set the minimum number of cores (below which the step will
-refuse to run) based on another heuristic function.
+In the following example, we set both the attribute of the steps
+``step.ntasks`` and a config option (``QU<res>_ntasks``, where ``<res>`` is the
+resolution) to a target number of tasks that is a heuristic function of the
+resolution. Similarly, we set the minimum number of tasks (below which the step
+will refuse to run) based on another heuristic function.
 
 .. code-block:: python
 
     def update_cores(self):
-        """ Update the number of cores and min_cores for each forward step """
+        """ Update the number of cores and min_tasks for each forward step """
 
         config = self.config
 
@@ -273,29 +276,30 @@ refuse to run) based on another heuristic function.
             approx_cells = 6e8 / resolution**2
             # ideally, about 300 cells per core
             # (make it a multiple of 4 because...it looks better?)
-            cores = max(1,
+            ntasks = max(1,
                         4*round(approx_cells / (4 * goal_cells_per_core)))
             # In a pinch, about 3000 cells per core
-            min_cores = max(1,
+            min_tasks = max(1,
                             round(approx_cells / max_cells_per_core))
-            step = self.steps['QU{}_forward'.format(resolution)]
-            step.cores = cores
-            step.min_cores = min_cores
+            step = self.steps[f'QU{resolution}_forward']
+            step.ntasks = ntasks
+            step.min_tasks = min_tasks
 
-            config.set('cosine_bell', 'QU{}_cores'.format(resolution),
-                       str(cores))
-            config.set('cosine_bell', 'QU{}_min_cores'.format(resolution),
-                       str(min_cores))
+            config.set('cosine_bell', f'QU{resolution}_ntasks', str(ntasks),
+                       comment=f'Target core count for {resolution} km mesh')
+            config.set('cosine_bell', f'QU{resolution}_min_tasks',
+                       str(min_tasks),
+                       comment=f'Minimum core count for {resolution} km mesh')
 
 This method is called in the ``configure()`` method of the test case when it
-is getting set up.  It is important to set the ``cores`` and ``min_cores``
+is getting set up.  It is important to set the ``ntasks`` and ``min_tasks``
 attributes of the step because this will be used as part of determining how
 many cores are needed for a test suite using this test case.
 
 Later on, when the test case gets run, we want to use the config options again
-to set ``step.cores`` and ``step.min_cores``, in case a user has modified these
-config options before running the test case.  We do this before we run the
-steps.
+to set ``step.ntasks`` and ``step.min_tasks``, in case a user has modified
+these config options before running the test case.  We do this before we run
+the steps.
 
 .. code-block:: python
 
@@ -306,13 +310,12 @@ steps.
         """
         config = self.config
         for resolution in self.resolutions:
-            cores = config.getint('cosine_bell',
-                                  'QU{}_cores'.format(resolution))
-            min_cores = config.getint('cosine_bell',
-                                      'QU{}_min_cores'.format(resolution))
-            step = self.steps['QU{}_forward'.format(resolution)]
-            step.cores = cores
-            step.min_cores = min_cores
+            ntasks = config.getint('cosine_bell', f'QU{resolution}_ntasks')
+            min_tasks = config.getint('cosine_bell',
+                                      f'QU{resolution}_min_tasks')
+            step = self.steps[f'QU{resolution}_forward']
+            step.ntasks = ntasks
+            step.min_tasks = min_tasks
 
         # run the step
         super().run()

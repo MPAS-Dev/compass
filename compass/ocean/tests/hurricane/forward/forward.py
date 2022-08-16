@@ -69,9 +69,10 @@ class ForwardStep(Step):
         Set up the test case in the work directory, including downloading any
         dependencies
         """
-        self.cores = self.config.getint('hurricane', 'forward_cores')
-        self.min_cores = self.config.getint('hurricane', 'forward_min_cores')
-        self.threads = self.config.getint('hurricane', 'forward_threads')
+        self.ntasks = self.config.getint('hurricane', 'forward_ntasks')
+        self.min_tasks = self.config.getint('hurricane', 'forward_min_tasks')
+        self.openmp_threads = self.config.getint('hurricane',
+                                                 'forward_threads')
 
     def run(self):
         """

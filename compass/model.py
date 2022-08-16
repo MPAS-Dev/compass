@@ -2,12 +2,13 @@ import os
 import xarray
 
 from mpas_tools.logging import check_call
+from compass.parallel import run_command
 
 
 def run_model(step, update_pio=True, partition_graph=True,
               graph_file='graph.info', namelist=None, streams=None):
     """
-    Run the model after determining the number of cores
+    Run the model after determining the number of tasks and threads
 
     Parameters
     ----------
@@ -16,11 +17,11 @@ def run_model(step, update_pio=True, partition_graph=True,
 
     update_pio : bool, optional
         Whether to modify the namelist so the number of PIO tasks and the
-        stride between them is consistent with the number of nodes and cores
+        stride between them is consistent with the number of nodes and tasks
         (one PIO task per node).
 
     partition_graph : bool, optional
-        Whether to partition the domain for the requested number of cores.  If
+        Whether to partition the domain for the requested number of tasks.  If
         so, the partitioning executable is taken from the ``partition`` option
         of the ``[executables]`` config section.
 
@@ -28,53 +29,45 @@ def run_model(step, update_pio=True, partition_graph=True,
         The name of the graph file to partition
 
     namelist : str, optional
-        The name of the namelist file, default is ``namelist.<core>``
+        The name of the namelist file, default is ``namelist.<mpas_core>``
 
     streams : str, optional
-        The name of the streams file, default is ``streams.<core>``
+        The name of the streams file, default is ``streams.<mpas_core>``
     """
     mpas_core = step.mpas_core.name
-    cores = step.cores
-    threads = step.threads
+    ntasks = step.ntasks
+    cpus_per_task = step.cpus_per_task
+    openmp_threads = step.openmp_threads
     config = step.config
     logger = step.logger
 
     if namelist is None:
-        namelist = 'namelist.{}'.format(mpas_core)
+        namelist = f'namelist.{mpas_core}'
 
     if streams is None:
-        streams = 'streams.{}'.format(mpas_core)
+        streams = f'streams.{mpas_core}'
 
     if update_pio:
         step.update_namelist_pio(namelist)
 
     if partition_graph:
-        partition(cores, config, logger, graph_file=graph_file)
+        partition(ntasks, config, logger, graph_file=graph_file)
 
-    os.environ['OMP_NUM_THREADS'] = '{}'.format(threads)
-
-    parallel_executable = config.get('parallel', 'parallel_executable')
     model = config.get('executables', 'model')
     model_basename = os.path.basename(model)
-
-    # split the parallel executable into constituents in case it includes flags
-    args = parallel_executable.split(' ')
-    args.extend(['-n', '{}'.format(cores),
-                 './{}'.format(model_basename),
-                 '-n', namelist,
-                 '-s', streams])
-
-    check_call(args, logger)
+    args = [f'./{model_basename}', '-n', namelist, '-s', streams]
+    run_command(args=args, cpus_per_task=cpus_per_task, ntasks=ntasks,
+                openmp_threads=openmp_threads, config=config, logger=logger)
 
 
-def partition(cores, config, logger, graph_file='graph.info'):
+def partition(ntasks, config, logger, graph_file='graph.info'):
     """
-    Partition the domain for the requested number of cores
+    Partition the domain for the requested number of tasks
 
     Parameters
     ----------
-    cores : int
-        The number of cores that the model should be run on
+    ntasks : int
+        The number of tasks that the model should be run on
 
     config : compass.config.CompassConfigParser
         Configuration options for the test case, used to get the partitioning
@@ -87,9 +80,9 @@ def partition(cores, config, logger, graph_file='graph.info'):
         The name of the graph file to partition
 
     """
-    if cores > 1:
+    if ntasks > 1:
         executable = config.get('parallel', 'partition_executable')
-        args = [executable, graph_file, '{}'.format(cores)]
+        args = [executable, graph_file, f'{ntasks}']
         check_call(args, logger)
 
 

@@ -82,17 +82,17 @@ class CosineBell(TestCase):
                 mesh_name = f'Icos{resolution}'
             else:
                 mesh_name = f'QU{resolution}'
-            cores = config.getint('cosine_bell', f'{mesh_name}_cores')
-            min_cores = config.getint('cosine_bell', f'{mesh_name}_min_cores')
+            ntasks = config.getint('cosine_bell', f'{mesh_name}_ntasks')
+            min_tasks = config.getint('cosine_bell', f'{mesh_name}_min_tasks')
             step = self.steps[f'{mesh_name}_forward']
-            step.cores = cores
-            step.min_cores = min_cores
+            step.ntasks = ntasks
+            step.min_tasks = min_tasks
 
         # run the step
         super().run()
 
     def update_cores(self):
-        """ Update the number of cores and min_cores for each forward step """
+        """ Update the number of cores and min_tasks for each forward step """
 
         config = self.config
 
@@ -110,19 +110,19 @@ class CosineBell(TestCase):
             approx_cells = 6e8 / resolution**2
             # ideally, about 300 cells per core
             # (make it a multiple of 4 because...it looks better?)
-            cores = max(1,
-                        4*round(approx_cells / (4 * goal_cells_per_core)))
+            ntasks = max(1,
+                         4*round(approx_cells / (4 * goal_cells_per_core)))
             # In a pinch, about 3000 cells per core
-            min_cores = max(1,
+            min_tasks = max(1,
                             round(approx_cells / max_cells_per_core))
             step = self.steps[f'{mesh_name}_forward']
-            step.cores = cores
-            step.min_cores = min_cores
+            step.ntasks = ntasks
+            step.min_tasks = min_tasks
 
-            config.set('cosine_bell', f'{mesh_name}_cores', str(cores),
+            config.set('cosine_bell', f'{mesh_name}_ntasks', str(ntasks),
                        comment=f'Target core count for {resolution} km mesh')
-            config.set('cosine_bell', f'{mesh_name}_min_cores',
-                       str(min_cores),
+            config.set('cosine_bell', f'{mesh_name}_min_tasks',
+                       str(min_tasks),
                        comment=f'Minimum core count for {resolution} km mesh')
 
     def _setup_steps(self, config):

@@ -118,14 +118,14 @@ a python dictionary:
 
 .. code-block:: python
 
-    res_params = {'1km': {'cores': 144, 'min_cores': 36},
-                  '4km': {'cores': 36, 'min_cores': 8},
-                  '10km': {'cores': 8, 'min_cores': 4}}
+    res_params = {'1km': {'ntasks': 144, 'min_tasks': 36},
+                  '4km': {'ntasks': 36, 'min_tasks': 8},
+                  '10km': {'ntasks': 8, 'min_tasks': 4}}
 
     if resolution not in res_params:
         raise ValueError(
-            'Unsupported resolution {}. Supported values are: '
-            '{}'.format(resolution, list(res_params)))
+            f'Unsupported resolution {resolution}. Supported values are: '
+            f'{list(res_params)}')
 
     params = res_params[resolution]
 
@@ -134,12 +134,12 @@ constructors when they are added to the test case:
 
 .. code-block:: python
 
-            step = Forward(
-                test_case=self, name=name, subdir=name, cores=params['cores'],
-                min_cores=params['min_cores'], resolution=resolution,
-                nu=float(nu))
-            ...
-            self.add_step(step)
+        step = Forward(
+            test_case=self, name=name, subdir=name,
+            ntasks=params['ntasks'], min_tasks=params['min_tasks'],
+            resolution=resolution, nu=float(nu))
+        ...
+        self.add_step(step)
 
 The ``analysis`` step defined by
 :py:class:`compass.ocean.tests.baroclinic_channel.rpe_test.analysis.Analysis`

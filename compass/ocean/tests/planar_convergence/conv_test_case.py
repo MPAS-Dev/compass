@@ -50,19 +50,19 @@ class ConvTestCase(TestCase):
         """
         config = self.config
         for resolution in self.resolutions:
-            cores = config.getint('planar_convergence',
-                                  '{}km_cores'.format(resolution))
-            min_cores = config.getint('planar_convergence',
-                                      '{}km_min_cores'.format(resolution))
+            ntasks = config.getint(f'planar_convergence',
+                                   f'{resolution}km_ntasks')
+            min_tasks = config.getint(f'planar_convergence',
+                                      f'{resolution}km_min_tasks')
             step = self.steps['{}km_forward'.format(resolution)]
-            step.cores = cores
-            step.min_cores = min_cores
+            step.ntasks = ntasks
+            step.min_tasks = min_tasks
 
         # run the step
         super().run()
 
     def update_cores(self):
-        """ Update the number of cores and min_cores for each forward step """
+        """ Update the number of cores and min_tasks for each forward step """
 
         config = self.config
 
@@ -82,18 +82,17 @@ class ConvTestCase(TestCase):
             cell_count = nx*ny
             # ideally, about 300 cells per core
             # (make it a multiple of 4 because...it looks better?)
-            cores = max(1, 4*round(cell_count / (4 * goal_cells_per_core)))
+            ntasks = max(1, 4*round(cell_count / (4 * goal_cells_per_core)))
             # In a pinch, about 3000 cells per core
-            min_cores = max(1, round(cell_count / max_cells_per_core))
-            step = self.steps['{}km_forward'.format(resolution)]
-            step.cores = cores
-            step.min_cores = min_cores
+            min_tasks = max(1, round(cell_count / max_cells_per_core))
+            step = self.steps[f'{resolution}km_forward']
+            step.ntasks = ntasks
+            step.min_tasks = min_tasks
 
-            config.set('planar_convergence', '{}km_cores'.format(resolution),
-                       str(cores))
-            config.set('planar_convergence',
-                       '{}km_min_cores'.format(resolution),
-                       str(min_cores))
+            config.set('planar_convergence', f'{resolution}km_ntasks',
+                       str(ntasks))
+            config.set('planar_convergence', f'{resolution}km_min_tasks',
+                       str(min_tasks))
 
     def _setup_steps(self, config):
         """

@@ -55,7 +55,7 @@ class InterpolateAtmForcing(Step):
             The name of the storm to setup
         """
         super().__init__(test_case=test_case, name='interpolate',
-                         cores=1, min_cores=1, threads=1)
+                         ntasks=1, min_tasks=1, openmp_threads=1)
 
         self.plot = True
         self.plot_interval = 100

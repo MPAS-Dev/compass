@@ -26,18 +26,18 @@ class RestartTest(TestCase):
         subdir = '{}_{}'.format(velo_solver.lower(), name)
         super().__init__(test_group=test_group, name=name, subdir=subdir)
 
-        cores = 36
+        ntasks = 36
         if velo_solver == 'sia':
-            min_cores = 1
+            min_tasks = 1
         elif velo_solver == 'FO':
-            min_cores = 4
+            min_tasks = 4
         else:
             raise ValueError('Unexpected velo_solver {}'.format(velo_solver))
 
         name = 'full_run'
         step = RunModel(test_case=self, velo_solver=velo_solver, name=name,
-                        subdir=name, cores=cores, min_cores=min_cores,
-                        threads=1)
+                        subdir=name, ntasks=ntasks, min_tasks=min_tasks,
+                        openmp_threads=1)
         # modify the namelist options and streams file
         step.add_namelist_file(
             'compass.landice.tests.greenland.restart_test',
@@ -49,8 +49,8 @@ class RestartTest(TestCase):
 
         name = 'restart_run'
         step = RunModel(test_case=self, velo_solver=velo_solver, name=name,
-                        subdir=name, cores=cores, min_cores=min_cores,
-                        threads=1, suffixes=['landice', 'landice.rst'])
+                        subdir=name, ntasks=ntasks, min_tasks=min_tasks,
+                        openmp_threads=1, suffixes=['landice', 'landice.rst'])
 
         # modify the namelist options and streams file
         step.add_namelist_file(

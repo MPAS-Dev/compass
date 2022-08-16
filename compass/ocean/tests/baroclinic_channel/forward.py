@@ -13,7 +13,7 @@ class Forward(Step):
         The resolution of the test case
     """
     def __init__(self, test_case, resolution, name='forward', subdir=None,
-                 cores=1, min_cores=None, threads=1, nu=None):
+                 ntasks=1, min_tasks=None, openmp_threads=1, nu=None):
         """
         Create a new test case
 
@@ -31,26 +31,27 @@ class Forward(Step):
         subdir : str, optional
             the subdirectory for the step.  The default is ``name``
 
-        cores : int, optional
-            the number of cores the step would ideally use.  If fewer cores
+        ntasks : int, optional
+            the number of tasks the step would ideally use.  If fewer tasks
             are available on the system, the step will run on all available
-            cores as long as this is not below ``min_cores``
+            tasks as long as this is not below ``min_tasks``
 
-        min_cores : int, optional
-            the number of cores the step requires.  If the system has fewer
-            than this number of cores, the step will fail
+        min_tasks : int, optional
+            the number of tasks the step requires.  If the system has fewer
+            than this number of tasks, the step will fail
 
-        threads : int, optional
-            the number of threads the step will use
+        openmp_threads : int, optional
+            the number of OpenMP threads the step will use
 
         nu : float, optional
             the viscosity (if different from the default for the test group)
         """
         self.resolution = resolution
-        if min_cores is None:
-            min_cores = cores
+        if min_tasks is None:
+            min_tasks = ntasks
         super().__init__(test_case=test_case, name=name, subdir=subdir,
-                         cores=cores, min_cores=min_cores, threads=threads)
+                         ntasks=ntasks, min_tasks=min_tasks,
+                         openmp_threads=openmp_threads)
         self.add_namelist_file('compass.ocean.tests.baroclinic_channel',
                                'namelist.forward')
         self.add_namelist_file('compass.ocean.tests.baroclinic_channel',

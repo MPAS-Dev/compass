@@ -40,7 +40,7 @@ class DecompositionTest(TestCase):
 
         Parameters
         ----------
-        test_group : compass.landice.tests.humboldt
+        test_group : compass.landice.tests.humboldt.Humboldt
             The test group that this test case belongs to
 
         velo_solver : {'sia', 'FO'}
@@ -85,8 +85,8 @@ class DecompositionTest(TestCase):
         for procs in self.proc_list:
             name = '{}proc_run'.format(procs)
             self.add_step(
-                RunModel(test_case=self, name=name, subdir=name, cores=procs,
-                         threads=1, velo_solver=self.velo_solver,
+                RunModel(test_case=self, name=name, subdir=name, ntasks=procs,
+                         openmp_threads=1, velo_solver=self.velo_solver,
                          calving_law=self.calving_law,
                          damage=self.damage,
                          face_melt=self.face_melt,

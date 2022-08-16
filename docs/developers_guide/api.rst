@@ -148,7 +148,10 @@ step
    :toctree: generated/
 
    Step
+   Step.set_resources
+   Step.constrain_resources
    Step.setup
+   Step.runtime_setup
    Step.run
    Step.add_input_file
    Step.add_output_file
@@ -249,6 +252,9 @@ parallel
    :toctree: generated/
 
    get_available_cores_and_nodes
+   check_parallel_system
+   set_cores_per_node
+   run_command
 
 provenance
 ^^^^^^^^^^

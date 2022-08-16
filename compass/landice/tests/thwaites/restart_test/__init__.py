@@ -23,12 +23,12 @@ class RestartTest(TestCase):
         name = 'restart_test'
         super().__init__(test_group=test_group, name=name)
 
-        cores = 36
-        min_cores = 4
+        ntasks = 36
+        min_tasks = 4
 
         name = 'full_run'
-        step = RunModel(test_case=self, name=name, cores=cores,
-                        min_cores=min_cores, threads=1)
+        step = RunModel(test_case=self, name=name, ntasks=ntasks,
+                        min_tasks=min_tasks, openmp_threads=1)
         # modify the namelist options and streams file
         step.add_namelist_file(
             'compass.landice.tests.thwaites.restart_test',
@@ -39,8 +39,8 @@ class RestartTest(TestCase):
         self.add_step(step)
 
         name = 'restart_run'
-        step = RunModel(test_case=self, name=name, cores=cores,
-                        min_cores=min_cores, threads=1,
+        step = RunModel(test_case=self, name=name, ntasks=ntasks,
+                        min_tasks=min_tasks, openmp_threads=1,
                         suffixes=['landice', 'landice.rst'])
 
         # modify the namelist options and streams file

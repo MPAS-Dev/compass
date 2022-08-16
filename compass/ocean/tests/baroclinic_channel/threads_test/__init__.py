@@ -37,11 +37,11 @@ class ThreadsTest(TestCase):
         self.add_step(
             InitialState(test_case=self, resolution=resolution))
 
-        for threads in [1, 2]:
-            name = '{}thread'.format(threads)
+        for openmp_threads in [1, 2]:
+            name = f'{openmp_threads}thread'
             self.add_step(
-                Forward(test_case=self, name=name, subdir=name, cores=4,
-                        threads=threads, resolution=resolution))
+                Forward(test_case=self, name=name, subdir=name, ntasks=4,
+                        openmp_threads=openmp_threads, resolution=resolution))
 
     def configure(self):
         """

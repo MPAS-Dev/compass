@@ -61,19 +61,19 @@ class Nondivergent2D(TestCase):
         """
         config = self.config
         for resolution in self.resolutions:
-            cores = config.getint('nondivergent_2d',
-                                  'QU{}_cores'.format(resolution))
-            min_cores = config.getint('nondivergent_2d',
-                                      'QU{}_min_cores'.format(resolution))
-            step = self.steps['QU{}_forward'.format(resolution)]
-            step.cores = cores
-            step.min_cores = min_cores
+            ntasks = config.getint('nondivergent_2d',
+                                   f'QU{resolution}_ntasks')
+            min_tasks = config.getint('nondivergent_2d',
+                                      f'QU{resolution}_min_tasks')
+            step = self.steps[f'QU{resolution}_forward']
+            step.ntasks = ntasks
+            step.min_tasks = min_tasks
 
         # run the step
         super().run()
 
     def update_cores(self):
-        """ Update the number of cores and min_cores for each forward step """
+        """ Update the number of cores and min_tasks for each forward step """
 
         config = self.config
 
@@ -87,16 +87,16 @@ class Nondivergent2D(TestCase):
             approx_cells = 6e8 / resolution**2
             # ideally, about 300 cells per core
             # (make it a multiple of 4 because...it looks better?)
-            cores = max(1,
-                        4 * round(approx_cells / (4 * goal_cells_per_core)))
+            ntasks = max(1,
+                         4 * round(approx_cells / (4 * goal_cells_per_core)))
             # In a pinch, about 3000 cells per core
-            min_cores = max(1,
+            min_tasks = max(1,
                             round(approx_cells / max_cells_per_core))
-            step = self.steps['QU{}_forward'.format(resolution)]
-            step.cores = cores
-            step.min_cores = min_cores
+            step = self.steps[f'QU{resolution}_forward']
+            step.ntasks = ntasks
+            step.min_tasks = min_tasks
 
-            config.set('nondivergent_2d', 'QU{}_cores'.format(resolution),
-                       str(cores))
-            config.set('nondivergent_2d', 'QU{}_min_cores'.format(resolution),
-                       str(min_cores))
+            config.set('nondivergent_2d', f'QU{resolution}_ntasks',
+                       str(ntasks))
+            config.set('nondivergent_2d', f'QU{resolution}_min_tasks',
+                       str(min_tasks))

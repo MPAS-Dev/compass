@@ -13,6 +13,9 @@ class SmokeTest(TestCase):
     ----------
     mesh_type : str
         The resolution or type of mesh of the test case
+
+    velo_solver : {'sia', 'FO'}
+        The velocity solver to use for the test case
     """
 
     def __init__(self, test_group, velo_solver, mesh_type):
@@ -40,8 +43,9 @@ class SmokeTest(TestCase):
         self.add_step(
             SetupMesh(test_case=self, mesh_type=mesh_type))
 
-        step = RunModel(test_case=self, cores=4, threads=1, name='run_step',
-                        velo_solver=velo_solver, mesh_type=mesh_type)
+        step = RunModel(test_case=self, ntasks=4, openmp_threads=1,
+                        name='run_step', velo_solver=velo_solver,
+                        mesh_type=mesh_type)
         if velo_solver == 'sia':
             step.add_namelist_options(
                 {'config_run_duration': "'0200-00-00_00:00:00'"})

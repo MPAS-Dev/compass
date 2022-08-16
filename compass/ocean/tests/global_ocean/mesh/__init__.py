@@ -73,8 +73,10 @@ class Mesh(TestCase):
         step = self.mesh_step
         config = self.config
         # get the these properties from the config options
-        step.cores = config.getint('global_ocean', 'mesh_cores')
-        step.min_cores = config.getint('global_ocean', 'mesh_min_cores')
+        step.cpus_per_task = config.getint(
+            'global_ocean', 'mesh_cpus_per_task')
+        step.min_cpus_per_task = config.getint(
+            'global_ocean', 'mesh_min_cpus_per_task')
 
         # run the step
         super().run()

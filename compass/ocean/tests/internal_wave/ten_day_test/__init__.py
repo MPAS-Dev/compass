@@ -23,7 +23,7 @@ class TenDayTest(TestCase):
         super().__init__(test_group=test_group, name=name)
         self.add_step(InitialState(test_case=self))
 
-        step = Forward(test_case=self, cores=4, threads=1)
+        step = Forward(test_case=self, ntasks=4, openmp_threads=1)
         step.add_namelist_file(
             'compass.ocean.tests.internal_wave.ten_day_test',
             'namelist.forward')

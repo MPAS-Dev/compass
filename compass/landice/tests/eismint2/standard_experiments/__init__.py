@@ -31,8 +31,8 @@ class StandardExperiments(TestCase):
         for experiment in ['a', 'b', 'c', 'd', 'f', 'g']:
             name = 'experiment_{}'.format(experiment)
             self.add_step(
-                RunExperiment(test_case=self, name=name, subdir=name, cores=4,
-                              threads=1, experiment=experiment))
+                RunExperiment(test_case=self, name=name, subdir=name, ntasks=4,
+                              openmp_threads=1, experiment=experiment))
 
         self.add_step(
             Visualize(test_case=self))

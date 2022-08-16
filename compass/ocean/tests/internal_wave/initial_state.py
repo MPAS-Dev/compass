@@ -20,11 +20,11 @@ class InitialState(Step):
 
         Parameters
         ----------
-        test_case : compass.ocean.tests.internal_wave.default.Default
+        test_case : compass.testcase.Testcase
             The test case this step belongs to
         """
-        super().__init__(test_case=test_case, name='initial_state', cores=1,
-                         min_cores=1, threads=1)
+        super().__init__(test_case=test_case, name='initial_state', ntasks=1,
+                         min_tasks=1, openmp_threads=1)
 
         self.add_namelist_file('compass.ocean.tests.internal_wave',
                                'namelist.init', mode='init')

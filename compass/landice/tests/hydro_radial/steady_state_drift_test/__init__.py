@@ -24,7 +24,7 @@ class SteadyStateDriftTest(TestCase):
         self.add_step(
             SetupMesh(test_case=self, initial_condition='exact'))
         self.add_step(
-            RunModel(test_case=self, cores=4, threads=1))
+            RunModel(test_case=self, ntasks=4, openmp_threads=1))
         step = Visualize(test_case=self)
         self.add_step(step, run_by_default=False)
 

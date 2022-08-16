@@ -39,7 +39,8 @@ class MakeDiagnosticsFiles(TestCase):
         """
 
         step = self.steps['diagnostics_files']
-        step.cores = self.config.getint('make_diagnostics_files', 'cores')
+        step.cpus_per_task = self.config.getint(
+            'make_diagnostics_files', 'cores')
 
         # run the step
         super().run()

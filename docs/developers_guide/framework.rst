@@ -3,8 +3,8 @@
 Framework
 =========
 
-All of the :ref:`dev_packages` that are not in the two cores (``landice`` and
-``ocean``) belong to the ``compass`` framework.  Some of these
+All of the :ref:`dev_packages` that are not in the two MPAS cores (``landice``
+and ``ocean``) belong to the ``compass`` framework.  Some of these
 modules and packages are used by the :ref:`dev_command_line`, while others are
 meant to be called within test cases and steps to simplify tasks like adding
 input and output files, downloading data sets, building up config files,
@@ -62,13 +62,15 @@ work directory.  Setting up a test suite includes setting up the test cases
 (see :ref:`dev_setup`), writing out a :ref:`dev_provenance` file, and saving
 a pickle file containing a python dictionary that defines the test suite for
 later use by ``compass run``.  The "target" and "minimum" number of cores
-required for running the test suite are displayed.  The "target" is the maximum
-of the ``cores`` attribute of all steps in the test suite.  This is the number
-of cores to run on to complete the test suite as quickly as possible, with the
+required for running the test suite are displayed.  The "target" is determined
+based on the maximum product of the ``ntasks`` and ``cpus_per_task``
+attributes of each step in the test suite.  This is the number of cores to run
+on to complete the test suite as quickly as possible, with the
 caveat that many cores may sit idle for some fraction of the runtime.  The
-"minimum" number of cores is the maximum of the ``min_cores`` attribute for
-all steps int he suite, indicating the fewest cores that the test may be run
-with before at least some steps in the suite will fail.
+"minimum" number of cores is the maximum of the product of the ``min_tasks``
+and ``min_cpus_per_task``` attribute for all steps in the suite, indicating the
+fewest cores that the test may be run with before at least some steps in the
+suite will fail.
 
 .. _dev_run:
 
@@ -429,9 +431,9 @@ function first updates the namelist options associated with the
 `PIO library <https://ncar.github.io/ParallelIO/>`_ and partitions the mesh
 across MPI tasks, as we will discuss in a moment, before running the model.
 You can provide non-default names for the graph, namelist and streams files.
-The number of cores and threads is determined from the ``cores``, ``min_cores``
-and ``threads`` attributes of the step object, set in its
-constructor or :ref:`dev_step_setup` method (i.e. before calling
+The number of cores and threads is determined from the ``ntasks``,
+``min_tasks``, ``cpus_per_task``, `min_cpus_per_task`` and ``openmp_threads``
+attributes of the step object, set in its constructor or :ref:`dev_step_setup` method (i.e. before calling
 :ref:`dev_step_run`) so that the ``compass`` framework can ensure that the
 required resources are available.
 
@@ -440,7 +442,7 @@ Partitioning the mesh
 
 The function :py:func:`compass.model.partition()` calls the graph partitioning
 executable (`gpmetis <https://arc.vt.edu/userguide/metis/>`_ by default) to
-divide up the MPAS mesh across cores.  If you call
+divide up the MPAS mesh across MPI tasks.  If you call
 :py:func:`compass.model.run_model()` with `partition_graph=True` (the default),
 this function is called automatically.
 

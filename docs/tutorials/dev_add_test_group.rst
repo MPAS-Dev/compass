@@ -769,7 +769,7 @@ number of cores, minimum number of cores, and number of threads (the
             The resolution of the test case
         """
         def __init__(self, test_case, resolution, name='forward', subdir=None,
-                     cores=1, min_cores=None, threads=1, nu=None):
+                     ntasks=1, min_tasks=None, openmp_threads=1, nu=None):
             """
             Create a new test case
 
@@ -787,33 +787,34 @@ number of cores, minimum number of cores, and number of threads (the
             subdir : str, optional
                 the subdirectory for the step.  The default is ``name``
 
-            cores : int, optional
-                the number of cores the step would ideally use.  If fewer cores
+            ntasks : int, optional
+                the number of tasks the step would ideally use.  If fewer tasks
                 are available on the system, the step will run on all available
-                cores as long as this is not below ``min_cores``
+                tasks as long as this is not below ``min_tasks``
 
-            min_cores : int, optional
-                the number of cores the step requires.  If the system has fewer
-                than this number of cores, the step will fail
+            min_tasks : int, optional
+                the number of tasks the step requires.  If the system has fewer
+                than this number of tasks, the step will fail
 
-            threads : int, optional
-                the number of threads the step will use
+            openmp_threads : int, optional
+                the number of OpenMP threads the step will use
 
             nu : float, optional
                 the viscosity (if different from the default for the test group)
             """
             self.resolution = resolution
-            if min_cores is None:
-                min_cores = cores
+            if min_tasks is None:
+                min_tasks = ntasks
             super().__init__(test_case=test_case, name=name, subdir=subdir,
-                             cores=cores, min_cores=min_cores, threads=threads)
+                             ntasks=ntasks, min_tasks=min_tasks,
+                             openmp_threads=openmp_threads)
 
 
-The default number of cores and threads is 1, and the default minimum number
-of cores (``min_cores``) is the same as the number of cores (so also 1 if
-``cores`` isn't specified).  See :ref:`dev_steps` for more details.  There is
-also a parameter ``nu``, the viscosity, which will be set depending on the test
-case.
+The default number of MPI tasks and threads is 1, and the default minimum
+number of MPI tasks (``min_tasks``) is the same as the number of tasks (so
+also 1 if ``ntasks`` isn't specified).  See :ref:`dev_steps` for more details.
+There is also a parameter ``nu``, the viscosity, which will be set depending on
+the test case.
 
 Next, we add inputs that are outputs from the ``initial_state`` test case:
 .. code-block:: python
@@ -875,8 +876,8 @@ In the ``forward`` step, we add these namelists as follows:
     ...
     class Forward(Step):
         ...
-        def __init__(self, test_case, resolution, name='forward', subdir=None,
-                     cores=1, min_cores=None, threads=1, nu=None):
+    def __init__(self, test_case, resolution, name='forward', subdir=None,
+                 ntasks=1, min_tasks=None, openmp_threads=1, nu=None):
             ...
 
             self.add_namelist_file('compass.ocean.tests.baroclinic_channel',
@@ -901,8 +902,8 @@ into the constructor (if it is not ``None``, indicating that it was not set).
     ...
     class Forward(Step):
         ...
-        def __init__(self, test_case, resolution, name='forward', subdir=None,
-                     cores=1, min_cores=None, threads=1, nu=None):
+    def __init__(self, test_case, resolution, name='forward', subdir=None,
+                 ntasks=1, min_tasks=None, openmp_threads=1, nu=None):
             ...
 
             if nu is not None:
@@ -963,8 +964,8 @@ In the ``forward`` step, we add these streams file as follows:
     ...
     class Forward(Step):
         ...
-        def __init__(self, test_case, resolution, name='forward', subdir=None,
-                     cores=1, min_cores=None, threads=1, nu=None):
+    def __init__(self, test_case, resolution, name='forward', subdir=None,
+                 ntasks=1, min_tasks=None, openmp_threads=1, nu=None):
             ...
 
             self.add_streams_file('compass.ocean.tests.baroclinic_channel',
@@ -1201,20 +1202,20 @@ We are now ready to add the ``initial_state`` step and variants of the
                 The resolution of the test case
             """
             name = 'rpe_test'
-            subdir = '{}/{}'.format(resolution, name)
+            subdir = f'{resolution}/{name}'
             super().__init__(test_group=test_group, name=name,
                              subdir=subdir)
 
             nus = [1, 5, 10, 20, 200]
 
-            res_params = {'1km': {'cores': 144, 'min_cores': 36},
-                          '4km': {'cores': 36, 'min_cores': 8},
-                          '10km': {'cores': 8, 'min_cores': 4}}
+            res_params = {'1km': {'ntasks': 144, 'min_tasks': 36},
+                          '4km': {'ntasks': 36, 'min_tasks': 8},
+                          '10km': {'ntasks': 8, 'min_tasks': 4}}
 
             if resolution not in res_params:
                 raise ValueError(
-                    'Unsupported resolution {}. Supported values are: '
-                    '{}'.format(resolution, list(res_params)))
+                    f'Unsupported resolution {resolution}. Supported values are: '
+                    f'{list(res_params)}')
 
             params = res_params[resolution]
 
@@ -1226,9 +1227,9 @@ We are now ready to add the ``initial_state`` step and variants of the
             for index, nu in enumerate(nus):
                 name = 'rpe_test_{}_nu_{}'.format(index + 1, nu)
                 step = Forward(
-                    test_case=self, name=name, subdir=name, cores=params['cores'],
-                    min_cores=params['min_cores'], resolution=resolution,
-                    nu=float(nu))
+                    test_case=self, name=name, subdir=name,
+                    ntasks=params['ntasks'], min_tasks=params['min_tasks'],
+                    resolution=resolution, nu=float(nu))
 
                 step.add_namelist_file(
                     'compass.ocean.tests.baroclinic_channel.rpe_test',
@@ -1237,6 +1238,9 @@ We are now ready to add the ``initial_state`` step and variants of the
                     'compass.ocean.tests.baroclinic_channel.rpe_test',
                     'streams.forward')
                 self.add_step(step)
+
+            self.add_step(
+                Analysis(test_case=self, resolution=resolution, nus=nus))
 
 Here, we use nested python dictionaries ``res_params`` to determine the target
 number of cores and the minimum allowed cores for each resolution of the test
@@ -1247,7 +1251,7 @@ The list ``nus`` contains the viscosities for each forward step in the test
 case.  We create a different forward run with a different name for each
 viscosity, passing ``nu`` to the ``Forward`` step's constructor so it will
 be used to set the appropriate config option.  Alternatively, given that this
-test case is the only one to use the ``nu`` parameter, we would have left the
+test case is the only one to use the ``nu`` parameter, we could have left the
 ``nu`` parameter out of ``Forward`` and set it here instead, as follows:
 
 .. code-block:: python
@@ -1257,9 +1261,10 @@ test case is the only one to use the ``nu`` parameter, we would have left the
             for index, nu in enumerate(nus):
                 name = 'rpe_test_{}_nu_{}'.format(index + 1, nu)
                 step = Forward(
-                    test_case=self, name=name, subdir=name, cores=params['cores'],
-                    min_cores=params['min_cores'], resolution=resolution)
-                options = {'config_mom_del2': '{}'.format(nu)}
+                    test_case=self, name=name, subdir=name,
+                    ntasks=params['ntasks'], min_tasks=params['min_tasks'],
+                    resolution=resolution)
+                options = {'config_mom_del2': f'{nu}'}
                 step.add_namelist_options(options)
 
                 ...

@@ -43,8 +43,8 @@ class DiagnosticsFiles(Step):
             Whether the mesh includes ice-shelf cavities
         """
 
-        super().__init__(test_case, name='diagnostics_files', cores=18,
-                         min_cores=1, threads=1)
+        super().__init__(test_case, name='diagnostics_files', cpus_per_task=18,
+                         min_cpus_per_task=1, openmp_threads=1)
 
         self.add_input_file(filename='README', target='../README')
         self.add_input_file(filename='restart.nc',
@@ -64,7 +64,8 @@ class DiagnosticsFiles(Step):
             mesh_short_name = ds.attrs['MPAS_Mesh_Short_Name']
 
         make_diagnostics_files(self.config, self.logger, mesh_short_name,
-                               self.with_ice_shelf_cavities, self.cores)
+                               self.with_ice_shelf_cavities,
+                               self.cpus_per_task)
 
 
 def make_diagnostics_files(config, logger, mesh_short_name,

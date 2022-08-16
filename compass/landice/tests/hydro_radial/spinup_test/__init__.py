@@ -24,7 +24,7 @@ class SpinupTest(TestCase):
 
         self.add_step(
             SetupMesh(test_case=self, initial_condition='zero'))
-        step = RunModel(test_case=self, cores=4, threads=1)
+        step = RunModel(test_case=self, ntasks=4, openmp_threads=1)
         step.add_namelist_file(
             'compass.landice.tests.hydro_radial.spinup_test',
             'namelist.landice')

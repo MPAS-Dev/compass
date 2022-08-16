@@ -40,7 +40,8 @@ class Mesh(Step):
         super().__init__(test_case=test_case,
                          name=f'QU{resolution}_mesh',
                          subdir=f'QU{resolution}/mesh',
-                         cores=18, min_cores=1, threads=1)
+                         cpus_per_task=18, min_cpus_per_task=1,
+                         openmp_threads=1)
         for file in ['mesh.nc', 'graph.info']:
             self.add_output_file(filename=file)
 
@@ -102,12 +103,12 @@ class Mesh(Step):
 
         parallel_executable = self.config.get('parallel',
                                               'parallel_executable')
-        cores = self.cores
+        ntasks = self.ntasks
         parallel_args = parallel_executable.split(' ')
         if 'srun' in parallel_args:
-            parallel_args.extend(['-n', '{}'.format(cores)])
+            parallel_args.extend(['-n', f'{ntasks}'])
         else:  # presume mpirun syntax
-            parallel_args.extend(['-np', '{}'.format(cores)])
+            parallel_args.extend(['-np', f'{ntasks}'])
 
         if not os.path.exists('mpas_mesh_scrip.nc'):
             args = ['scrip_from_mpas',

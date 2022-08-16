@@ -433,7 +433,7 @@ by the framework:
 You can add other attributes to the child class that keeps track of information
 that the test case or its steps will need.  As an example,
 :py:class:`compass.landice.tests.dome.smoke_test.SmokeTest` keeps track of the
-mesh type as an attribute:
+mesh type and the velocity solver an attributes:
 
 .. code-block:: python
 
@@ -446,9 +446,12 @@ mesh type as an attribute:
         ----------
         mesh_type : str
             The resolution or type of mesh of the test case
+
+        velo_solver : {'sia', 'FO'}
+            The velocity solver to use for the test case
         """
 
-        def __init__(self, test_group, mesh_type):
+        def __init__(self, test_group, velo_solver, mesh_type):
             """
             Create the test case
 
@@ -457,19 +460,30 @@ mesh type as an attribute:
             test_group : compass.landice.tests.dome.Dome
                 The test group that this test case belongs to
 
+            velo_solver : {'sia', 'FO'}
+                The velocity solver to use for the test case
+
             mesh_type : str
                 The resolution or type of mesh of the test case
             """
             name = 'smoke_test'
             self.mesh_type = mesh_type
-            subdir = '{}/{}'.format(mesh_type, name)
+            self.velo_solver = velo_solver
+            subdir = '{}/{}_{}'.format(mesh_type, velo_solver.lower(), name)
             super().__init__(test_group=test_group, name=name,
                              subdir=subdir)
 
             self.add_step(
                 SetupMesh(test_case=self, mesh_type=mesh_type))
-            self.add_step(
-                RunModel(test_case=self, cores=4, threads=1, mesh_type=mesh_type))
+
+            step = RunModel(test_case=self, ntasks=4, openmp_threads=1,
+                            name='run_step', velo_solver=velo_solver,
+                            mesh_type=mesh_type)
+            if velo_solver == 'sia':
+                step.add_namelist_options(
+                    {'config_run_duration': "'0200-00-00_00:00:00'"})
+            self.add_step(step)
+
             step = Visualize(test_case=self, mesh_type=mesh_type)
             self.add_step(step, run_by_default=False)
 
@@ -515,7 +529,6 @@ As an example, here is the constructor from
     from compass.ocean.tests.baroclinic_channel.forward import Forward
     from compass.ocean.tests.baroclinic_channel.rpe_test.analysis import Analysis
 
-
     class RpeTest(TestCase):
         """
         The reference potential energy (RPE) test case for the baroclinic channel
@@ -541,20 +554,20 @@ As an example, here is the constructor from
                 The resolution of the test case
             """
             name = 'rpe_test'
-            subdir = '{}/{}'.format(resolution, name)
+            subdir = f'{resolution}/{name}'
             super().__init__(test_group=test_group, name=name,
                              subdir=subdir)
 
             nus = [1, 5, 10, 20, 200]
 
-            res_params = {'1km': {'cores': 144, 'min_cores': 36},
-                          '4km': {'cores': 36, 'min_cores': 8},
-                          '10km': {'cores': 8, 'min_cores': 4}}
+            res_params = {'1km': {'ntasks': 144, 'min_tasks': 36},
+                          '4km': {'ntasks': 36, 'min_tasks': 8},
+                          '10km': {'ntasks': 8, 'min_tasks': 4}}
 
             if resolution not in res_params:
                 raise ValueError(
-                    'Unsupported resolution {}. Supported values are: '
-                    '{}'.format(resolution, list(res_params)))
+                    f'Unsupported resolution {resolution}. Supported values are: '
+                    f'{list(res_params)}')
 
             params = res_params[resolution]
 
@@ -566,9 +579,9 @@ As an example, here is the constructor from
             for index, nu in enumerate(nus):
                 name = 'rpe_test_{}_nu_{}'.format(index + 1, nu)
                 step = Forward(
-                    test_case=self, name=name, subdir=name, cores=params['cores'],
-                    min_cores=params['min_cores'], resolution=resolution,
-                    nu=float(nu))
+                    test_case=self, name=name, subdir=name,
+                    ntasks=params['ntasks'], min_tasks=params['min_tasks'],
+                    resolution=resolution, nu=float(nu))
 
                 step.add_namelist_file(
                     'compass.ocean.tests.baroclinic_channel.rpe_test',
@@ -608,7 +621,7 @@ The same ``Forward`` step is included in the test case 5 times with a different
 viscosity parameter ``nu`` for each.  The value of
 ``nu`` is passed to the step's constructor, along with
 the unique ``name``, ``subdir``, and several other parameters:
-``resolution``, ``cores``, and ``min_cores``. In this example, the steps are
+``resolution``, ``ntasks``, and ``min_tasks``. In this example, the steps are
 given rather clumsy names -- ``rpe_test_1_nu_1``, ``rpe_test_2_nu_5``, etc. --
 but these could be any unique names.
 
@@ -690,19 +703,21 @@ run()
 
 The base class's :py:meth:`compass.TestCase.run()` performs some
 framework-level operations like creating a log file and figuring out the number
-of cores for each step, then it calls each step's ``run()`` method.  It is
-important that child classes remember to call the base class' version of the
-method with ``super().run()`` as part of overriding the ``run()`` method.
-Test case that just need to run their steps don't need to override the
-``run()`` method at all.
+of tasks and CPUs per task for each step, then it calls each step's ``run()``
+method.  It is important that child classes remember to call the base class'
+version of the method with ``super().run()`` as part of overriding the
+``run()`` method. Test case that just need to run their steps don't need to
+override the ``run()`` method at all.
 
 In some circumstances, it will be appropriate to update properties of the steps
 in the test case based on config options that the user may have changed.  This
 should only be necessary for config options related to the resources used by
-the step: the target number of cores, the minimum number of cores, and the
-number of threads.  Other config options can simply be read in from within the
-step's ``run()`` function as needed, but these performance-related config
-options affect how the step runs and must be set *before* the step can run.
+the step: the target number of tasks, the minimum number of tasks, the
+target number of CPUs per task, the minimum number of CPUs per task, and the
+number of OpenMP threads.  Other config options can simply be read in from
+within the step's ``run()`` function as needed, but these performance-related
+config options affect how the step runs and must be set *before* the step can
+run.
 
 In :py:meth:`compass.ocean.tests.global_ocean.init.Init.run()`, we see examples
 of updating the steps' attributes based on config options:
@@ -715,19 +730,18 @@ of updating the steps' attributes based on config options:
         """
         config = self.config
         steps = self.steps_to_run
-        work_dir = self.work_dir
         if 'initial_state' in steps:
             step = self.steps['initial_state']
             # get the these properties from the config options
-            step.cores = config.getint('global_ocean', 'init_cores')
-            step.min_cores = config.getint('global_ocean', 'init_min_cores')
+            step.ntasks = config.getint('global_ocean', 'init_ntasks')
+            step.min_tasks = config.getint('global_ocean', 'init_min_tasks')
             step.threads = config.getint('global_ocean', 'init_threads')
 
         if 'ssh_adjustment' in steps:
             step = self.steps['ssh_adjustment']
             # get the these properties from the config options
-            step.cores = config.getint('global_ocean', 'forward_cores')
-            step.min_cores = config.getint('global_ocean', 'forward_min_cores')
+            step.ntasks = config.getint('global_ocean', 'forward_ntasks')
+            step.min_tasks = config.getint('global_ocean', 'forward_min_tasks')
             step.threads = config.getint('global_ocean', 'forward_threads')
 
         # run the steps
@@ -838,17 +852,29 @@ Some attributes are available after calling the base class' constructor
     ``mpas_core``, ``test_group``, the test case's ``subdir`` and the
     step's ``subdir``
 
-``self.cores``
-    the number of cores the step would ideally use.  If fewer cores
-    are available on the system, the step will run on all available
-    cores as long as this is not below ``min_cores``
+``self.ntasks``
+    the number of parallel (MPI) tasks the step would ideally use.  Too few
+    cores are available on the system to run ``ntasks * cpus_per_task``, the
+    step will run on all available cores as long as this is not below
+    ``min_tasks * min_cpus_per_task``
 
-``self.min_cores``
-    the number of cores the step requires.  If the system has fewer
-    than this number of cores, the step will fail
+``self.min_tasks``
+    the number of MPI tasks the step requires.  If the system fewer than
+    ``min_tasks * min_cpus_per_task`` cores, the step will fail
 
-``self.threads``
-    the number of threads the step will use
+``self.cpus_per_task``
+    The number of CPUs that each task runs with, or the total number of CPUs
+    the step would ideally run with if python threading or multiprocessing is
+    being used, in which case ``ntasks = 1``
+
+``self.min_cpus_per_task``
+    The minimum number of CPUs that each task runs with, or the minimum total
+    number of CPUs required for the step if python threading or multiprocessing
+    is being used, in which case ``ntasks = 1``.  If ``ntasks > 1``,
+    ``min_cpus_per_task`` much be the same as ``cpus_per_task``.
+
+``self.openmp_threads``
+    the number of OpenMP threads the step will use
 
 ``self.cached``
     Whether to get all of the outputs for the step from the database of
@@ -860,15 +886,15 @@ Some attributes are available after calling the base class' constructor
     subprocess if there is not a good way to redirect output to a log
     file (e.g. if the step calls external code that, in turn, calls
     additional subprocesses).
-    
+
     The default behavior when python code calls one of the ``subprocess``
-    functions is that the output goes to ``stdout``/``stderr`` 
-    (i.e. the terminal).  When python code outside of compass 
+    functions is that the output goes to ``stdout``/``stderr``
+    (i.e. the terminal).  When python code outside of compass
     (e.g. ``jigsawpy``) calls a ``subprocess`` function (e.g. to call
-    JIGSAW), that output goes to the terminal rather than a log file.  
+    JIGSAW), that output goes to the terminal rather than a log file.
     For most output to ``stdout``/``stderr`` like ``print()`` statements,
     ``check_call()`` in MPAS-Tools employs a "trick" to redirect that
-    output to a log file instead.  But that doesn't work with 
+    output to a log file instead.  But that doesn't work with
     ``subprocess`` calls.  They continue to go to the terminal.  However,
     if we call a given compass step as a subprocess while redirecting its
     output to a log file, we can prevent unwanted output from ending up
@@ -977,9 +1003,10 @@ constructor
 The step's constructor (``__init__()`` method) should call the base case's
 constructor with ``super().__init__()``, passing the name of the step, the
 test case it belongs to, and possibly several optional arguments: the
-subdirectory for the step (if not the same as the name), number of cores,
-the minimum number of core, the number of threads, and (currently as
-placeholders) the amount of memory and disk space the step is allowed to use.
+subdirectory for the step (if not the same as the name), number of MPI tasks,
+the minimum number of MPI tasks, the number of CPUs per task, the minimum
+number of CPUs per task, the number of OpenMP threads, and (currently as
+placeholders) the amount of memory the step is allowed to use.
 
 Then, the step can add :ref:`dev_step_inputs_outputs` as well as
 :ref:`dev_step_namelists_and_streams`, as described below.
@@ -1025,7 +1052,7 @@ The following is from
             The resolution of the test case
         """
         def __init__(self, test_case, resolution, name='forward', subdir=None,
-                     cores=1, min_cores=None, threads=1, nu=None):
+                     ntasks=1, min_tasks=None, openmp_threads=1, nu=None):
             """
             Create a new test case
 
@@ -1043,26 +1070,27 @@ The following is from
             subdir : str, optional
                 the subdirectory for the step.  The default is ``name``
 
-            cores : int, optional
-                the number of cores the step would ideally use.  If fewer cores
+            ntasks : int, optional
+                the number of tasks the step would ideally use.  If fewer tasks
                 are available on the system, the step will run on all available
-                cores as long as this is not below ``min_cores``
+                tasks as long as this is not below ``min_tasks``
 
-            min_cores : int, optional
-                the number of cores the step requires.  If the system has fewer
-                than this number of cores, the step will fail
+            min_tasks : int, optional
+                the number of tasks the step requires.  If the system has fewer
+                than this number of tasks, the step will fail
 
-            threads : int, optional
-                the number of threads the step will use
+            openmp_threads : int, optional
+                the number of OpenMP threads the step will use
 
             nu : float, optional
                 the viscosity (if different from the default for the test group)
             """
             self.resolution = resolution
-            if min_cores is None:
-                min_cores = cores
+            if min_tasks is None:
+                min_tasks = ntasks
             super().__init__(test_case=test_case, name=name, subdir=subdir,
-                             cores=cores, min_cores=min_cores, threads=threads)
+                             ntasks=ntasks, min_tasks=min_tasks,
+                             openmp_threads=openmp_threads)
             self.add_namelist_file('compass.ocean.tests.baroclinic_channel',
                                    'namelist.forward')
             self.add_namelist_file('compass.ocean.tests.baroclinic_channel',
@@ -1072,6 +1100,9 @@ The following is from
                 options = {'config_mom_del2': '{}'.format(nu)}
                 self.add_namelist_options(options)
 
+            # make sure output is double precision
+            self.add_streams_file('compass.ocean.streams', 'streams.output')
+
             self.add_streams_file('compass.ocean.tests.baroclinic_channel',
                                   'streams.forward')
 
@@ -1080,12 +1111,15 @@ The following is from
             self.add_input_file(filename='graph.info',
                                 target='../initial_state/culled_graph.info')
 
+            self.add_model_as_input()
+
             self.add_output_file(filename='output.nc')
 
 
 Several parameters are passed into the constructor (with defaults if they
 are not included) and then passed on to the base class' constructor: ``name``,
-``subdir``, ``cores``, ``min_cores``, and ``threads``.
+``subdir``, ``ntasks``, ``min_tasks``, ``cpus_per_task``,
+``min_cpus_per_task``, and ``openmp_threads``.
 
 Then, two files with modifications to the namelist options are added (for
 later processing), and an additional config option is set manually via
@@ -1137,10 +1171,14 @@ As an example, here is
         """
         # get the these properties from the config options
         config = self.config
-        self.cores = config.getint('global_ocean', 'mesh_cores')
-        self.min_cores = config.getint('global_ocean', 'mesh_min_cores')
+        self.cpus_per_task = config.getint('global_ocean',
+                                           'mesh_cpus_per_task')
+        self.min_cpus_per_task = config.getint('global_ocean',
+                                               'mesh_min_cpus_per_task')
 
-The model's executable is linked (and included among the ``inputs``).
+Some parts of the mesh computation (creating masks for culling) are done using
+python multiprocessing, so the ``cpus_per_task`` and ``min_cpus_per_task``
+attributes are set to appropriate values based on config options.
 
 .. _dev_step_run:
 
@@ -1310,8 +1348,8 @@ like this:
 
 the :py:func:`compass.model.run_model()` function takes care of updating the
 namelist options for the test case to make sure the PIO tasks and stride are
-consistent with the requested number of cores, creates a graph partition for
-the requested number of cores, and runs the model.
+consistent with the requested number of MPI tasks, creates a graph partition
+for the requested number of tasks, and runs the model.
 
 To get a feel for different types of ``run()`` methods, it may be best to
 explore different steps.
@@ -1509,8 +1547,8 @@ slated for later downloaded from
 The file will be stored in the subdirectory ``bathymetry_database`` of the path
 in the ``ocean_database_root`` config option in the ``paths`` section of the
 config file.  The ``ocean_database_root`` option (or the equivalent for other
-cores) is set either by selecting one of the :ref:`supported_machines` or in
-the user's config file.
+MPAS cores) is set either by selecting one of the :ref:`supported_machines` or
+in the user's config file.
 
 It is also possible to download files directly from a URL and store them in
 the step's working directory:
@@ -1764,8 +1802,8 @@ Updating namelist options at runtime
 It is sometimes useful to update namelist options after a namelist has already
 been generated as part of setting up.  This typically happens within a step's
 ``run()`` method for options that cannot be known beforehand, particularly
-options related to the number of cores and threads.  In such cases, call
-:py:meth:`compass.Step.update_namelist_at_runtime()`:
+options related to the number of MPI tasks, CPUs per task, and OpenMP threads.
+In such cases, call :py:meth:`compass.Step.update_namelist_at_runtime()`:
 
 .. code-block:: python
 

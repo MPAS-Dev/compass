@@ -55,7 +55,7 @@ class Forward(Step):
         self.resolution = resolution
         self.experiment = experiment
         super().__init__(test_case=test_case, name=name, subdir=subdir,
-                         cores=None, min_cores=None, threads=None)
+                         ntasks=None, min_tasks=None, openmp_threads=1)
 
         # make sure output is double precision
         self.add_streams_file('compass.ocean.streams', 'streams.output')

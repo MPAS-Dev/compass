@@ -5,7 +5,7 @@ from compass.landice.tests.greenland.run_model import RunModel
 class SmokeTest(TestCase):
     """
     The default test case for the Greenland test group simply downloads the
-    mesh and initial condition, then performs a short forward run on 4 cores.
+    mesh and initial condition, then performs a short forward run on 36 cores.
     """
 
     def __init__(self, test_group, velo_solver):
@@ -25,17 +25,17 @@ class SmokeTest(TestCase):
         subdir = '{}_{}'.format(velo_solver.lower(), name)
         super().__init__(test_group=test_group, name=name, subdir=subdir)
 
-        cores = 36
+        ntasks = 36
         if velo_solver == 'sia':
-            min_cores = 1
+            min_tasks = 1
         elif velo_solver == 'FO':
-            min_cores = 1
+            min_tasks = 1
         else:
             raise ValueError('Unexpected velo_solver {}'.format(velo_solver))
 
         self.add_step(
-            RunModel(test_case=self, velo_solver=velo_solver, cores=cores,
-                     min_cores=min_cores, threads=1))
+            RunModel(test_case=self, velo_solver=velo_solver, ntasks=ntasks,
+                     min_tasks=min_tasks, openmp_threads=1))
 
     # no configure() method is needed because we will use the default dome
     # config options

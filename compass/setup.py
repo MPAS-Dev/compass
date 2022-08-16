@@ -384,11 +384,18 @@ def _get_required_cores(test_cases):
     for test_case in test_cases.values():
         for step_name in test_case.steps_to_run:
             step = test_case.steps[step_name]
-            if step.cores is None:
-                raise ValueError(f'The number of cores was never set for '
-                                 f'{test_case.path} step {step_name}')
-            max_cores = max(max_cores, step.cores)
-            max_of_min_cores = max(max_of_min_cores, step.min_cores)
+            if step.ntasks is None:
+                raise ValueError(
+                    f'The number of tasks (ntasks) was never set for '
+                    f'{test_case.path} step {step_name}')
+            if step.cpus_per_task is None:
+                raise ValueError(
+                    f'The number of CPUs per task (cpus_per_task) was never '
+                    f'set for {test_case.path} step {step_name}')
+            cores = step.cpus_per_task*step.ntasks
+            min_cores = step.min_cpus_per_task*step.min_tasks
+            max_cores = max(max_cores, cores)
+            max_of_min_cores = max(max_of_min_cores, min_cores)
 
     return max_cores, max_of_min_cores
 

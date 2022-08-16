@@ -47,14 +47,14 @@ class Default(TestCase):
         self.add_step(InitialState(test_case=self, coord_type=coord_type))
         if coord_type == 'single_layer':
             self.add_step(Forward(test_case=self, resolution=resolution,
-                                  cores=4, threads=1,
+                                  ntasks=4, openmp_threads=1,
                                   coord_type=coord_type))
             damping_coeffs = None
         else:
             damping_coeffs = [0.0025, 0.01]
             for damping_coeff in damping_coeffs:
                 self.add_step(Forward(test_case=self, resolution=resolution,
-                                      cores=4, threads=1,
+                                      ntasks=4, openmp_threads=1,
                                       damping_coeff=damping_coeff,
                                       coord_type=coord_type))
         self.damping_coeffs = damping_coeffs
