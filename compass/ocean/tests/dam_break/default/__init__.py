@@ -36,15 +36,16 @@ class Default(TestCase):
             res_name = f'{int(resolution*1e3)}cm'
         else:
             res_name = f'{int(resolution)}m'
-        min_cores = int(40/(resolution/0.04)**2)
-        cores = 10*min_cores
+        min_tasks = int(40/(resolution/0.04)**2)
+        ntasks = 10*min_tasks
         subdir = f'{res_name}/{name}'
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
 
         self.add_step(InitialState(test_case=self))
         self.add_step(Forward(test_case=self, resolution=resolution,
-                              cores=cores, min_cores=min_cores, threads=1))
+                              ntasks=ntasks, min_tasks=min_tasks,
+                              openmp_threads=1))
         self.add_step(Viz(test_case=self))
 
     def configure(self):
