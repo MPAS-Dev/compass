@@ -222,9 +222,9 @@ time integrator (``split-explicit`` or ``RK4``).  Here is an example from the
 As in the example above, these are typically passed along from the arguments
 to the the test case's own constructor.
 
-Performance-related parameters---``cores``, ``min_cores``, and
-``threads``---can be passed as optional arguments, but they are more typically
-read from the corresponding ``forward_<param>`` config options in the
+Performance-related parameters---``ntasks``, ``min_tasks``, and
+``openmp_threads``---can be passed as optional arguments, but they are more
+typically read from the corresponding ``forward_<param>`` config options in the
 ``global_ocean`` section of the config file.  This lets users update these
 values as appropriate if the machine and/or mesh defaults aren't quite right
 for them.
@@ -236,11 +236,12 @@ namelist replacements and streams files can be added in the test case
 before adding the step, as in the example above.
 
 The MPAS model is linked in as in input to the step in the ``setup()`` method,
-which also updates the ``self.cores``, ``self.min_cores`` and ``self.threads``
-attributes from config options if they have not been set explicitly in the
-constructor.  Then, in the ``run()`` method, it runs MPAS-Ocean (including
-updating PIO namelist options and generating a graph partition), then
-:ref:`global_ocean_metadata` is added to the output NetCDF files.
+which also updates the ``self.ntasks``, ``self.min_tasks`` and
+``self.openmp_threads`` attributes from config options if they have not been
+set explicitly in the constructor.  Then, in the ``run()`` method, it runs
+MPAS-Ocean (including updating PIO namelist options and generating a graph
+partition), then :ref:`global_ocean_metadata` is added to the output NetCDF
+files.
 
 .. _dev_ocean_global_ocean_testcases:
 

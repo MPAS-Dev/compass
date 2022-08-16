@@ -321,9 +321,9 @@ time integrator (<code class="docutils literal notranslate"><span class="pre">sp
 </div>
 <p>As in the example above, these are typically passed along from the arguments
 to the the test case’s own constructor.</p>
-<p>Performance-related parameters—<code class="docutils literal notranslate"><span class="pre">cores</span></code>, <code class="docutils literal notranslate"><span class="pre">min_cores</span></code>, and
-<code class="docutils literal notranslate"><span class="pre">threads</span></code>—can be passed as optional arguments, but they are more typically
-read from the corresponding <code class="docutils literal notranslate"><span class="pre">forward_&lt;param&gt;</span></code> config options in the
+<p>Performance-related parameters—<code class="docutils literal notranslate"><span class="pre">ntasks</span></code>, <code class="docutils literal notranslate"><span class="pre">min_tasks</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">openmp_threads</span></code>—can be passed as optional arguments, but they are more
+typically read from the corresponding <code class="docutils literal notranslate"><span class="pre">forward_&lt;param&gt;</span></code> config options in the
 <code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> section of the config file.  This lets users update these
 values as appropriate if the machine and/or mesh defaults aren’t quite right
 for them.</p>
@@ -333,11 +333,12 @@ ice-shelf cavities and the initial condition includes biogeochemistry. Further
 namelist replacements and streams files can be added in the test case
 before adding the step, as in the example above.</p>
 <p>The MPAS model is linked in as in input to the step in the <code class="docutils literal notranslate"><span class="pre">setup()</span></code> method,
-which also updates the <code class="docutils literal notranslate"><span class="pre">self.cores</span></code>, <code class="docutils literal notranslate"><span class="pre">self.min_cores</span></code> and <code class="docutils literal notranslate"><span class="pre">self.threads</span></code>
-attributes from config options if they have not been set explicitly in the
-constructor.  Then, in the <code class="docutils literal notranslate"><span class="pre">run()</span></code> method, it runs MPAS-Ocean (including
-updating PIO namelist options and generating a graph partition), then
-<a class="reference internal" href="../../../users_guide/ocean/test_groups/global_ocean.html#global-ocean-metadata"><span class="std std-ref">Metadata</span></a> is added to the output NetCDF files.</p>
+which also updates the <code class="docutils literal notranslate"><span class="pre">self.ntasks</span></code>, <code class="docutils literal notranslate"><span class="pre">self.min_tasks</span></code> and
+<code class="docutils literal notranslate"><span class="pre">self.openmp_threads</span></code> attributes from config options if they have not been
+set explicitly in the constructor.  Then, in the <code class="docutils literal notranslate"><span class="pre">run()</span></code> method, it runs
+MPAS-Ocean (including updating PIO namelist options and generating a graph
+partition), then <a class="reference internal" href="../../../users_guide/ocean/test_groups/global_ocean.html#global-ocean-metadata"><span class="std std-ref">Metadata</span></a> is added to the output NetCDF
+files.</p>
 </section>
 </section>
 <section id="test-cases">
@@ -952,7 +953,7 @@ Otherwise, only one file is symlinked, and it is named
 <dt><a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.files_for_e3sm.diagnostics_files.DiagnosticsFiles.html#compass.ocean.tests.global_ocean.files_for_e3sm.diagnostics_files.DiagnosticsFiles" title="compass.ocean.tests.global_ocean.files_for_e3sm.diagnostics_files.DiagnosticsFiles"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.files_for_e3sm.diagnostics_files.DiagnosticsFiles</span></code></a></dt><dd><p>creates mapping files and regions masks for E3SM analysis members and
 <a class="reference external" href="https://mpas-dev.github.io/MPAS-Analysis/stable/">MPAS-Analysis</a>.</p>
 <p>Region masks are created using
-<a class="reference external" href="http://mpas-dev.github.io/geometric_features/stable/generated/geometric_features.aggregation.get_aggregator_by_name.html#geometric_features.aggregation.get_aggregator_by_name" title="(in geometric_features v0.6.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">geometric_features.aggregation.get_aggregator_by_name()</span></code></a> for
+<a class="reference external" href="http://mpas-dev.github.io/geometric_features/stable/generated/geometric_features.aggregation.get_aggregator_by_name.html#geometric_features.aggregation.get_aggregator_by_name" title="(in geometric_features v0.7.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">geometric_features.aggregation.get_aggregator_by_name()</span></code></a> for
 the following region groups:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">region_groups</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Antarctic Regions&#39;</span><span class="p">,</span> <span class="s1">&#39;Arctic Ocean Regions&#39;</span><span class="p">,</span>
                  <span class="s1">&#39;Arctic Sea Ice Regions&#39;</span><span class="p">,</span> <span class="s1">&#39;Ocean Basins&#39;</span><span class="p">,</span>

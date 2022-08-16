@@ -153,25 +153,25 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">with_particles</span> <span class="o">=</span> <span class="n">with_particles</span>
         <span class="n">res_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;32km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span>
-                               <span class="s1">&#39;min_cores&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+                               <span class="s1">&#39;min_tasks&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
                                <span class="s1">&#39;dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:24:00&#39;&quot;</span><span class="p">,</span>
                                <span class="s1">&#39;btr_dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;0000_00:00:48&#39;&quot;</span><span class="p">,</span>
                                <span class="s1">&#39;mom_del4&#39;</span><span class="p">:</span> <span class="s2">&quot;2.0e11&quot;</span><span class="p">,</span>
                                <span class="s1">&#39;run_duration&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;0000_02:00:00&#39;&quot;</span><span class="p">},</span>
                       <span class="s1">&#39;16km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
-                               <span class="s1">&#39;min_cores&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+                               <span class="s1">&#39;min_tasks&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
                                <span class="s1">&#39;dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:12:00&#39;&quot;</span><span class="p">,</span>
                                <span class="s1">&#39;btr_dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;0000_00:00:24&#39;&quot;</span><span class="p">,</span>
                                <span class="s1">&#39;mom_del4&#39;</span><span class="p">:</span> <span class="s2">&quot;2.0e10 &quot;</span><span class="p">,</span>
                                <span class="s1">&#39;run_duration&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;0000_01:00:00&#39;&quot;</span><span class="p">},</span>
                       <span class="s1">&#39;8km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="mi">400</span><span class="p">,</span>
-                              <span class="s1">&#39;min_cores&#39;</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span>
+                              <span class="s1">&#39;min_tasks&#39;</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span>
                               <span class="s1">&#39;dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:06:00&#39;&quot;</span><span class="p">,</span>
                               <span class="s1">&#39;btr_dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;0000_00:00:12&#39;&quot;</span><span class="p">,</span>
                               <span class="s1">&#39;mom_del4&#39;</span><span class="p">:</span> <span class="s2">&quot;2.0e9&quot;</span><span class="p">,</span>
                               <span class="s1">&#39;run_duration&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;0000_00:30:00&#39;&quot;</span><span class="p">},</span>
                       <span class="s1">&#39;4km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="mi">1600</span><span class="p">,</span>
-                              <span class="s1">&#39;min_cores&#39;</span><span class="p">:</span> <span class="mi">160</span><span class="p">,</span>
+                              <span class="s1">&#39;min_tasks&#39;</span><span class="p">:</span> <span class="mi">160</span><span class="p">,</span>
                               <span class="s1">&#39;dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;00:03:00&#39;&quot;</span><span class="p">,</span>
                               <span class="s1">&#39;btr_dt&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;0000_00:00:06&#39;&quot;</span><span class="p">,</span>
                               <span class="s1">&#39;mom_del4&#39;</span><span class="p">:</span> <span class="s2">&quot;4.0e8&quot;</span><span class="p">,</span>
@@ -185,8 +185,8 @@
         <span class="n">res_params</span> <span class="o">=</span> <span class="n">res_params</span><span class="p">[</span><span class="n">resolution</span><span class="p">]</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                         <span class="n">cores</span><span class="o">=</span><span class="n">res_params</span><span class="p">[</span><span class="s1">&#39;cores&#39;</span><span class="p">],</span>
-                         <span class="n">min_cores</span><span class="o">=</span><span class="n">res_params</span><span class="p">[</span><span class="s1">&#39;min_cores&#39;</span><span class="p">])</span>
+                         <span class="n">ntasks</span><span class="o">=</span><span class="n">res_params</span><span class="p">[</span><span class="s1">&#39;cores&#39;</span><span class="p">],</span>
+                         <span class="n">min_tasks</span><span class="o">=</span><span class="n">res_params</span><span class="p">[</span><span class="s1">&#39;min_tasks&#39;</span><span class="p">])</span>
         <span class="c1"># make sure output is double precision</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.streams&#39;</span><span class="p">,</span> <span class="s1">&#39;streams.output&#39;</span><span class="p">)</span>
 
@@ -249,8 +249,8 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run this step of the test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">cores</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cores</span>
-        <span class="n">partition</span><span class="p">(</span><span class="n">cores</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
+        <span class="n">ntasks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span>
+        <span class="n">partition</span><span class="p">(</span><span class="n">ntasks</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_particles</span><span class="p">:</span>
             <span class="n">section</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;soma&#39;</span><span class="p">]</span>
@@ -259,7 +259,7 @@
             <span class="n">nsurf</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;surface_count&#39;</span><span class="p">)</span>
             <span class="n">build_particle_simple</span><span class="p">(</span>
                 <span class="n">f_grid</span><span class="o">=</span><span class="s1">&#39;mesh.nc&#39;</span><span class="p">,</span> <span class="n">f_name</span><span class="o">=</span><span class="s1">&#39;particles.nc&#39;</span><span class="p">,</span>
-                <span class="n">f_decomp</span><span class="o">=</span><span class="s1">&#39;graph.info.part.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cores</span><span class="p">),</span>
+                <span class="n">f_decomp</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;graph.info.part.</span><span class="si">{</span><span class="n">ntasks</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
                 <span class="n">buoySurf</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">min_den</span><span class="p">,</span> <span class="n">max_den</span><span class="p">,</span> <span class="n">nsurf</span><span class="p">))</span>
 
         <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">partition_graph</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div></div>

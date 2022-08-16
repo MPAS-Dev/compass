@@ -148,13 +148,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
 
         <span class="n">res_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;32km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-                               <span class="s1">&#39;min_cores&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+                               <span class="s1">&#39;min_tasks&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
                       <span class="s1">&#39;16km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
-                               <span class="s1">&#39;min_cores&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+                               <span class="s1">&#39;min_tasks&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
                       <span class="s1">&#39;8km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span>
-                              <span class="s1">&#39;min_cores&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+                              <span class="s1">&#39;min_tasks&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
                       <span class="s1">&#39;4km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="mi">160</span><span class="p">,</span>
-                              <span class="s1">&#39;min_cores&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}}</span>
+                              <span class="s1">&#39;min_tasks&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}}</span>
 
         <span class="k">if</span> <span class="n">resolution</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">res_params</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
@@ -164,8 +164,8 @@
         <span class="n">res_params</span> <span class="o">=</span> <span class="n">res_params</span><span class="p">[</span><span class="n">resolution</span><span class="p">]</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;initial_state&#39;</span><span class="p">,</span>
-                         <span class="n">cores</span><span class="o">=</span><span class="n">res_params</span><span class="p">[</span><span class="s1">&#39;cores&#39;</span><span class="p">],</span>
-                         <span class="n">min_cores</span><span class="o">=</span><span class="n">res_params</span><span class="p">[</span><span class="s1">&#39;min_cores&#39;</span><span class="p">])</span>
+                         <span class="n">ntasks</span><span class="o">=</span><span class="n">res_params</span><span class="p">[</span><span class="s1">&#39;cores&#39;</span><span class="p">],</span>
+                         <span class="n">min_tasks</span><span class="o">=</span><span class="n">res_params</span><span class="p">[</span><span class="s1">&#39;min_tasks&#39;</span><span class="p">])</span>
 
         <span class="n">mesh_filenames</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;32km&#39;</span><span class="p">:</span> <span class="s1">&#39;SOMA_32km_grid.161202.nc&#39;</span><span class="p">,</span>
                           <span class="s1">&#39;16km&#39;</span><span class="p">:</span> <span class="s1">&#39;SOMA_16km_grid.161202.nc&#39;</span><span class="p">,</span>

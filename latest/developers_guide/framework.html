@@ -146,8 +146,8 @@
              
   <section id="framework">
 <span id="dev-framework"></span><h1>Framework<a class="headerlink" href="#framework" title="Permalink to this heading">¶</a></h1>
-<p>All of the <a class="reference internal" href="overview.html#dev-packages"><span class="std std-ref">Packages and Modules</span></a> that are not in the two cores (<code class="docutils literal notranslate"><span class="pre">landice</span></code> and
-<code class="docutils literal notranslate"><span class="pre">ocean</span></code>) belong to the <code class="docutils literal notranslate"><span class="pre">compass</span></code> framework.  Some of these
+<p>All of the <a class="reference internal" href="overview.html#dev-packages"><span class="std std-ref">Packages and Modules</span></a> that are not in the two MPAS cores (<code class="docutils literal notranslate"><span class="pre">landice</span></code>
+and <code class="docutils literal notranslate"><span class="pre">ocean</span></code>) belong to the <code class="docutils literal notranslate"><span class="pre">compass</span></code> framework.  Some of these
 modules and packages are used by the <a class="reference internal" href="command_line.html#dev-command-line"><span class="std std-ref">Command-line interface</span></a>, while others are
 meant to be called within test cases and steps to simplify tasks like adding
 input and output files, downloading data sets, building up config files,
@@ -191,13 +191,15 @@ work directory.  Setting up a test suite includes setting up the test cases
 (see <a class="reference internal" href="#dev-setup"><span class="std std-ref">setup module</span></a>), writing out a <a class="reference internal" href="#dev-provenance"><span class="std std-ref">Provenance</span></a> file, and saving
 a pickle file containing a python dictionary that defines the test suite for
 later use by <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span></code>.  The “target” and “minimum” number of cores
-required for running the test suite are displayed.  The “target” is the maximum
-of the <code class="docutils literal notranslate"><span class="pre">cores</span></code> attribute of all steps in the test suite.  This is the number
-of cores to run on to complete the test suite as quickly as possible, with the
+required for running the test suite are displayed.  The “target” is determined
+based on the maximum product of the <code class="docutils literal notranslate"><span class="pre">ntasks</span></code> and <code class="docutils literal notranslate"><span class="pre">cpus_per_task</span></code>
+attributes of each step in the test suite.  This is the number of cores to run
+on to complete the test suite as quickly as possible, with the
 caveat that many cores may sit idle for some fraction of the runtime.  The
-“minimum” number of cores is the maximum of the <code class="docutils literal notranslate"><span class="pre">min_cores</span></code> attribute for
-all steps int he suite, indicating the fewest cores that the test may be run
-with before at least some steps in the suite will fail.</p>
+“minimum” number of cores is the maximum of the product of the <code class="docutils literal notranslate"><span class="pre">min_tasks</span></code>
+and <code class="docutils literal notranslate"><span class="pre">min_cpus_per_task`</span></code> attribute for all steps in the suite, indicating the
+fewest cores that the test may be run with before at least some steps in the
+suite will fail.</p>
 </section>
 <section id="run-serial-module">
 <span id="dev-run"></span><h3>run.serial module<a class="headerlink" href="#run-serial-module" title="Permalink to this heading">¶</a></h3>
@@ -527,9 +529,9 @@ function first updates the namelist options associated with the
 <a class="reference external" href="https://ncar.github.io/ParallelIO/">PIO library</a> and partitions the mesh
 across MPI tasks, as we will discuss in a moment, before running the model.
 You can provide non-default names for the graph, namelist and streams files.
-The number of cores and threads is determined from the <code class="docutils literal notranslate"><span class="pre">cores</span></code>, <code class="docutils literal notranslate"><span class="pre">min_cores</span></code>
-and <code class="docutils literal notranslate"><span class="pre">threads</span></code> attributes of the step object, set in its
-constructor or <a class="reference internal" href="organization.html#dev-step-setup"><span class="std std-ref">setup()</span></a> method (i.e. before calling
+The number of cores and threads is determined from the <code class="docutils literal notranslate"><span class="pre">ntasks</span></code>,
+<code class="docutils literal notranslate"><span class="pre">min_tasks</span></code>, <code class="docutils literal notranslate"><span class="pre">cpus_per_task</span></code>, <cite>min_cpus_per_task`</cite> and <code class="docutils literal notranslate"><span class="pre">openmp_threads</span></code>
+attributes of the step object, set in its constructor or <a class="reference internal" href="organization.html#dev-step-setup"><span class="std std-ref">setup()</span></a> method (i.e. before calling
 <a class="reference internal" href="organization.html#dev-step-run"><span class="std std-ref">run()</span></a>) so that the <code class="docutils literal notranslate"><span class="pre">compass</span></code> framework can ensure that the
 required resources are available.</p>
 </section>
@@ -537,7 +539,7 @@ required resources are available.</p>
 <h3>Partitioning the mesh<a class="headerlink" href="#partitioning-the-mesh" title="Permalink to this heading">¶</a></h3>
 <p>The function <a class="reference internal" href="generated/compass.model.partition.html#compass.model.partition" title="compass.model.partition"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.model.partition()</span></code></a> calls the graph partitioning
 executable (<a class="reference external" href="https://arc.vt.edu/userguide/metis/">gpmetis</a> by default) to
-divide up the MPAS mesh across cores.  If you call
+divide up the MPAS mesh across MPI tasks.  If you call
 <a class="reference internal" href="generated/compass.model.run_model.html#compass.model.run_model" title="compass.model.run_model"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.model.run_model()</span></code></a> with <cite>partition_graph=True</cite> (the default),
 this function is called automatically.</p>
 <p>In some circumstances, a step may need to partition the mesh separately from

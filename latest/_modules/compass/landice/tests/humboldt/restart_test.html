@@ -139,7 +139,7 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        test_group : compass.landice.tests.humboldt</span>
+<span class="sd">        test_group : compass.landice.tests.humboldt.Humboldt</span>
 <span class="sd">            The test group that this test case belongs to</span>
 
 <span class="sd">        velo_solver : {&#39;sia&#39;, &#39;FO&#39;}</span>
@@ -178,8 +178,8 @@
                          <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
         <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;full_run&#39;</span>
-        <span class="n">step</span> <span class="o">=</span> <span class="n">RunModel</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
-                        <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">velo_solver</span><span class="o">=</span><span class="n">velo_solver</span><span class="p">,</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="n">RunModel</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
+                        <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">velo_solver</span><span class="o">=</span><span class="n">velo_solver</span><span class="p">,</span>
                         <span class="n">calving_law</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">calving_law</span><span class="p">,</span>
                         <span class="n">damage</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">damage</span><span class="p">,</span>
                         <span class="n">face_melt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">face_melt</span><span class="p">,</span>
@@ -194,8 +194,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
 
         <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;restart_run&#39;</span>
-        <span class="n">step</span> <span class="o">=</span> <span class="n">RunModel</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
-                        <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">velo_solver</span><span class="o">=</span><span class="n">velo_solver</span><span class="p">,</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="n">RunModel</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
+                        <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">velo_solver</span><span class="o">=</span><span class="n">velo_solver</span><span class="p">,</span>
                         <span class="n">calving_law</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">calving_law</span><span class="p">,</span>
                         <span class="n">damage</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">damage</span><span class="p">,</span>
                         <span class="n">face_melt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">face_melt</span><span class="p">,</span>

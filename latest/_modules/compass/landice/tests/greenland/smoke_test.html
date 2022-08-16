@@ -113,7 +113,7 @@
 <div class="viewcode-block" id="SmokeTest"><a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.greenland.smoke_test.SmokeTest.html#compass.landice.tests.greenland.smoke_test.SmokeTest">[docs]</a><span class="k">class</span> <span class="nc">SmokeTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The default test case for the Greenland test group simply downloads the</span>
-<span class="sd">    mesh and initial condition, then performs a short forward run on 4 cores.</span>
+<span class="sd">    mesh and initial condition, then performs a short forward run on 36 cores.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="SmokeTest.__init__"><a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.greenland.smoke_test.SmokeTest.html#compass.landice.tests.greenland.smoke_test.SmokeTest.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">velo_solver</span><span class="p">):</span>
@@ -133,17 +133,17 @@
         <span class="n">subdir</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">velo_solver</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">name</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
-        <span class="n">cores</span> <span class="o">=</span> <span class="mi">36</span>
+        <span class="n">ntasks</span> <span class="o">=</span> <span class="mi">36</span>
         <span class="k">if</span> <span class="n">velo_solver</span> <span class="o">==</span> <span class="s1">&#39;sia&#39;</span><span class="p">:</span>
-            <span class="n">min_cores</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">min_tasks</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="k">elif</span> <span class="n">velo_solver</span> <span class="o">==</span> <span class="s1">&#39;FO&#39;</span><span class="p">:</span>
-            <span class="n">min_cores</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">min_tasks</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unexpected velo_solver </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">velo_solver</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
-            <span class="n">RunModel</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">velo_solver</span><span class="o">=</span><span class="n">velo_solver</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="n">cores</span><span class="p">,</span>
-                     <span class="n">min_cores</span><span class="o">=</span><span class="n">min_cores</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span></div></div>
+            <span class="n">RunModel</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">velo_solver</span><span class="o">=</span><span class="n">velo_solver</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="n">ntasks</span><span class="p">,</span>
+                     <span class="n">min_tasks</span><span class="o">=</span><span class="n">min_tasks</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span></div></div>
 
     <span class="c1"># no configure() method is needed because we will use the default dome</span>
     <span class="c1"># config options</span>

@@ -136,8 +136,8 @@
         <span class="k">for</span> <span class="n">procs</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cores_set</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">proc_run&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">procs</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
-                <span class="n">RunModel</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="n">procs</span><span class="p">,</span>
-                         <span class="n">min_cores</span><span class="o">=</span><span class="n">procs</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span></div>
+                <span class="n">RunModel</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="n">procs</span><span class="p">,</span>
+                         <span class="n">min_tasks</span><span class="o">=</span><span class="n">procs</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span></div>
 
     <span class="c1"># no configure() method is needed</span>
 

@@ -523,7 +523,7 @@ file.</p>
 <p>You can add other attributes to the child class that keeps track of information
 that the test case or its steps will need.  As an example,
 <a class="reference internal" href="landice/generated/compass.landice.tests.dome.smoke_test.SmokeTest.html#compass.landice.tests.dome.smoke_test.SmokeTest" title="compass.landice.tests.dome.smoke_test.SmokeTest"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.landice.tests.dome.smoke_test.SmokeTest</span></code></a> keeps track of the
-mesh type as an attribute:</p>
+mesh type and the velocity solver an attributes:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">SmokeTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The default test case for the dome test group simply creates the mesh and</span>
@@ -533,9 +533,12 @@ mesh type as an attribute:</p>
 <span class="sd">    ----------</span>
 <span class="sd">    mesh_type : str</span>
 <span class="sd">        The resolution or type of mesh of the test case</span>
+
+<span class="sd">    velo_solver : {&#39;sia&#39;, &#39;FO&#39;}</span>
+<span class="sd">        The velocity solver to use for the test case</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">mesh_type</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">velo_solver</span><span class="p">,</span> <span class="n">mesh_type</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the test case</span>
 
@@ -544,19 +547,30 @@ mesh type as an attribute:</p>
 <span class="sd">        test_group : compass.landice.tests.dome.Dome</span>
 <span class="sd">            The test group that this test case belongs to</span>
 
+<span class="sd">        velo_solver : {&#39;sia&#39;, &#39;FO&#39;}</span>
+<span class="sd">            The velocity solver to use for the test case</span>
+
 <span class="sd">        mesh_type : str</span>
 <span class="sd">            The resolution or type of mesh of the test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;smoke_test&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh_type</span> <span class="o">=</span> <span class="n">mesh_type</span>
-        <span class="n">subdir</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_type</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">velo_solver</span> <span class="o">=</span> <span class="n">velo_solver</span>
+        <span class="n">subdir</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_type</span><span class="p">,</span> <span class="n">velo_solver</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">name</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                          <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
             <span class="n">SetupMesh</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_type</span><span class="o">=</span><span class="n">mesh_type</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
-            <span class="n">RunModel</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">mesh_type</span><span class="o">=</span><span class="n">mesh_type</span><span class="p">))</span>
+
+        <span class="n">step</span> <span class="o">=</span> <span class="n">RunModel</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;run_step&#39;</span><span class="p">,</span> <span class="n">velo_solver</span><span class="o">=</span><span class="n">velo_solver</span><span class="p">,</span>
+                        <span class="n">mesh_type</span><span class="o">=</span><span class="n">mesh_type</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">velo_solver</span> <span class="o">==</span> <span class="s1">&#39;sia&#39;</span><span class="p">:</span>
+            <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span>
+                <span class="p">{</span><span class="s1">&#39;config_run_duration&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;0200-00-00_00:00:00&#39;&quot;</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
+
         <span class="n">step</span> <span class="o">=</span> <span class="n">Visualize</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_type</span><span class="o">=</span><span class="n">mesh_type</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">run_by_default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
@@ -592,7 +606,6 @@ associated with these steps until the point where the step is being set up in</p
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.baroclinic_channel.forward</span> <span class="kn">import</span> <span class="n">Forward</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.baroclinic_channel.rpe_test.analysis</span> <span class="kn">import</span> <span class="n">Analysis</span>
 
-
 <span class="k">class</span> <span class="nc">RpeTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The reference potential energy (RPE) test case for the baroclinic channel</span>
@@ -618,20 +631,20 @@ associated with these steps until the point where the step is being set up in</p
 <span class="sd">            The resolution of the test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;rpe_test&#39;</span>
-        <span class="n">subdir</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="n">subdir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                          <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
         <span class="n">nus</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">200</span><span class="p">]</span>
 
-        <span class="n">res_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;1km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="mi">144</span><span class="p">,</span> <span class="s1">&#39;min_cores&#39;</span><span class="p">:</span> <span class="mi">36</span><span class="p">},</span>
-                      <span class="s1">&#39;4km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="mi">36</span><span class="p">,</span> <span class="s1">&#39;min_cores&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">},</span>
-                      <span class="s1">&#39;10km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span> <span class="s1">&#39;min_cores&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}}</span>
+        <span class="n">res_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;1km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;ntasks&#39;</span><span class="p">:</span> <span class="mi">144</span><span class="p">,</span> <span class="s1">&#39;min_tasks&#39;</span><span class="p">:</span> <span class="mi">36</span><span class="p">},</span>
+                      <span class="s1">&#39;4km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;ntasks&#39;</span><span class="p">:</span> <span class="mi">36</span><span class="p">,</span> <span class="s1">&#39;min_tasks&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">},</span>
+                      <span class="s1">&#39;10km&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;ntasks&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span> <span class="s1">&#39;min_tasks&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}}</span>
 
         <span class="k">if</span> <span class="n">resolution</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">res_params</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s1">&#39;Unsupported resolution </span><span class="si">{}</span><span class="s1">. Supported values are: &#39;</span>
-                <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">res_params</span><span class="p">)))</span>
+                <span class="sa">f</span><span class="s1">&#39;Unsupported resolution </span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">. Supported values are: &#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">res_params</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
         <span class="n">params</span> <span class="o">=</span> <span class="n">res_params</span><span class="p">[</span><span class="n">resolution</span><span class="p">]</span>
 
@@ -643,9 +656,9 @@ associated with these steps until the point where the step is being set up in</p
         <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">nu</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">nus</span><span class="p">):</span>
             <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;rpe_test_</span><span class="si">{}</span><span class="s1">_nu_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nu</span><span class="p">)</span>
             <span class="n">step</span> <span class="o">=</span> <span class="n">Forward</span><span class="p">(</span>
-                <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;cores&#39;</span><span class="p">],</span>
-                <span class="n">min_cores</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;min_cores&#39;</span><span class="p">],</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
-                <span class="n">nu</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">nu</span><span class="p">))</span>
+                <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">ntasks</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;ntasks&#39;</span><span class="p">],</span> <span class="n">min_tasks</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;min_tasks&#39;</span><span class="p">],</span>
+                <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span> <span class="n">nu</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">nu</span><span class="p">))</span>
 
             <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
                 <span class="s1">&#39;compass.ocean.tests.baroclinic_channel.rpe_test&#39;</span><span class="p">,</span>
@@ -683,7 +696,7 @@ unique subdirectory each resolution: <code class="docutils literal notranslate">
 viscosity parameter <code class="docutils literal notranslate"><span class="pre">nu</span></code> for each.  The value of
 <code class="docutils literal notranslate"><span class="pre">nu</span></code> is passed to the step’s constructor, along with
 the unique <code class="docutils literal notranslate"><span class="pre">name</span></code>, <code class="docutils literal notranslate"><span class="pre">subdir</span></code>, and several other parameters:
-<code class="docutils literal notranslate"><span class="pre">resolution</span></code>, <code class="docutils literal notranslate"><span class="pre">cores</span></code>, and <code class="docutils literal notranslate"><span class="pre">min_cores</span></code>. In this example, the steps are
+<code class="docutils literal notranslate"><span class="pre">resolution</span></code>, <code class="docutils literal notranslate"><span class="pre">ntasks</span></code>, and <code class="docutils literal notranslate"><span class="pre">min_tasks</span></code>. In this example, the steps are
 given rather clumsy names – <code class="docutils literal notranslate"><span class="pre">rpe_test_1_nu_1</span></code>, <code class="docutils literal notranslate"><span class="pre">rpe_test_2_nu_5</span></code>, etc. –
 but these could be any unique names.</p>
 </section>
@@ -748,18 +761,20 @@ in their own <code class="docutils literal notranslate"><span class="pre">setup(
 <span id="dev-test-case-run"></span><h3>run()<a class="headerlink" href="#run" title="Permalink to this heading">¶</a></h3>
 <p>The base class’s <a class="reference internal" href="generated/compass.TestCase.run.html#compass.TestCase.run" title="compass.TestCase.run"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.TestCase.run()</span></code></a> performs some
 framework-level operations like creating a log file and figuring out the number
-of cores for each step, then it calls each step’s <code class="docutils literal notranslate"><span class="pre">run()</span></code> method.  It is
-important that child classes remember to call the base class’ version of the
-method with <code class="docutils literal notranslate"><span class="pre">super().run()</span></code> as part of overriding the <code class="docutils literal notranslate"><span class="pre">run()</span></code> method.
-Test case that just need to run their steps don’t need to override the
-<code class="docutils literal notranslate"><span class="pre">run()</span></code> method at all.</p>
+of tasks and CPUs per task for each step, then it calls each step’s <code class="docutils literal notranslate"><span class="pre">run()</span></code>
+method.  It is important that child classes remember to call the base class’
+version of the method with <code class="docutils literal notranslate"><span class="pre">super().run()</span></code> as part of overriding the
+<code class="docutils literal notranslate"><span class="pre">run()</span></code> method. Test case that just need to run their steps don’t need to
+override the <code class="docutils literal notranslate"><span class="pre">run()</span></code> method at all.</p>
 <p>In some circumstances, it will be appropriate to update properties of the steps
 in the test case based on config options that the user may have changed.  This
 should only be necessary for config options related to the resources used by
-the step: the target number of cores, the minimum number of cores, and the
-number of threads.  Other config options can simply be read in from within the
-step’s <code class="docutils literal notranslate"><span class="pre">run()</span></code> function as needed, but these performance-related config
-options affect how the step runs and must be set <em>before</em> the step can run.</p>
+the step: the target number of tasks, the minimum number of tasks, the
+target number of CPUs per task, the minimum number of CPUs per task, and the
+number of OpenMP threads.  Other config options can simply be read in from
+within the step’s <code class="docutils literal notranslate"><span class="pre">run()</span></code> function as needed, but these performance-related
+config options affect how the step runs and must be set <em>before</em> the step can
+run.</p>
 <p>In <a class="reference internal" href="ocean/generated/compass.ocean.tests.global_ocean.init.Init.run.html#compass.ocean.tests.global_ocean.init.Init.run" title="compass.ocean.tests.global_ocean.init.Init.run"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.init.Init.run()</span></code></a>, we see examples
 of updating the steps’ attributes based on config options:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -768,19 +783,18 @@ of updating the steps’ attributes based on config options:</p>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
     <span class="n">steps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps_to_run</span>
-    <span class="n">work_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span>
     <span class="k">if</span> <span class="s1">&#39;initial_state&#39;</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">:</span>
         <span class="n">step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">&#39;initial_state&#39;</span><span class="p">]</span>
         <span class="c1"># get the these properties from the config options</span>
-        <span class="n">step</span><span class="o">.</span><span class="n">cores</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;init_cores&#39;</span><span class="p">)</span>
-        <span class="n">step</span><span class="o">.</span><span class="n">min_cores</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;init_min_cores&#39;</span><span class="p">)</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;init_ntasks&#39;</span><span class="p">)</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;init_min_tasks&#39;</span><span class="p">)</span>
         <span class="n">step</span><span class="o">.</span><span class="n">threads</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;init_threads&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="s1">&#39;ssh_adjustment&#39;</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">:</span>
         <span class="n">step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">&#39;ssh_adjustment&#39;</span><span class="p">]</span>
         <span class="c1"># get the these properties from the config options</span>
-        <span class="n">step</span><span class="o">.</span><span class="n">cores</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;forward_cores&#39;</span><span class="p">)</span>
-        <span class="n">step</span><span class="o">.</span><span class="n">min_cores</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;forward_min_cores&#39;</span><span class="p">)</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;forward_ntasks&#39;</span><span class="p">)</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;forward_min_tasks&#39;</span><span class="p">)</span>
         <span class="n">step</span><span class="o">.</span><span class="n">threads</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;forward_threads&#39;</span><span class="p">)</span>
 
     <span class="c1"># run the steps</span>
@@ -871,14 +885,24 @@ run) of the step.</p>
 <code class="docutils literal notranslate"><span class="pre">mpas_core</span></code>, <code class="docutils literal notranslate"><span class="pre">test_group</span></code>, the test case’s <code class="docutils literal notranslate"><span class="pre">subdir</span></code> and the
 step’s <code class="docutils literal notranslate"><span class="pre">subdir</span></code></p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">self.cores</span></code></dt><dd><p>the number of cores the step would ideally use.  If fewer cores
-are available on the system, the step will run on all available
-cores as long as this is not below <code class="docutils literal notranslate"><span class="pre">min_cores</span></code></p>
+<dt><code class="docutils literal notranslate"><span class="pre">self.ntasks</span></code></dt><dd><p>the number of parallel (MPI) tasks the step would ideally use.  Too few
+cores are available on the system to run <code class="docutils literal notranslate"><span class="pre">ntasks</span> <span class="pre">*</span> <span class="pre">cpus_per_task</span></code>, the
+step will run on all available cores as long as this is not below
+<code class="docutils literal notranslate"><span class="pre">min_tasks</span> <span class="pre">*</span> <span class="pre">min_cpus_per_task</span></code></p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">self.min_cores</span></code></dt><dd><p>the number of cores the step requires.  If the system has fewer
-than this number of cores, the step will fail</p>
+<dt><code class="docutils literal notranslate"><span class="pre">self.min_tasks</span></code></dt><dd><p>the number of MPI tasks the step requires.  If the system fewer than
+<code class="docutils literal notranslate"><span class="pre">min_tasks</span> <span class="pre">*</span> <span class="pre">min_cpus_per_task</span></code> cores, the step will fail</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">self.threads</span></code></dt><dd><p>the number of threads the step will use</p>
+<dt><code class="docutils literal notranslate"><span class="pre">self.cpus_per_task</span></code></dt><dd><p>The number of CPUs that each task runs with, or the total number of CPUs
+the step would ideally run with if python threading or multiprocessing is
+being used, in which case <code class="docutils literal notranslate"><span class="pre">ntasks</span> <span class="pre">=</span> <span class="pre">1</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">self.min_cpus_per_task</span></code></dt><dd><p>The minimum number of CPUs that each task runs with, or the minimum total
+number of CPUs required for the step if python threading or multiprocessing
+is being used, in which case <code class="docutils literal notranslate"><span class="pre">ntasks</span> <span class="pre">=</span> <span class="pre">1</span></code>.  If <code class="docutils literal notranslate"><span class="pre">ntasks</span> <span class="pre">&gt;</span> <span class="pre">1</span></code>,
+<code class="docutils literal notranslate"><span class="pre">min_cpus_per_task</span></code> much be the same as <code class="docutils literal notranslate"><span class="pre">cpus_per_task</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">self.openmp_threads</span></code></dt><dd><p>the number of OpenMP threads the step will use</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">self.cached</span></code></dt><dd><p>Whether to get all of the outputs for the step from the database of
 cached outputs for the MPAS core that this step belongs to</p>
@@ -992,9 +1016,10 @@ mesh type as an attribute:</p>
 <p>The step’s constructor (<code class="docutils literal notranslate"><span class="pre">__init__()</span></code> method) should call the base case’s
 constructor with <code class="docutils literal notranslate"><span class="pre">super().__init__()</span></code>, passing the name of the step, the
 test case it belongs to, and possibly several optional arguments: the
-subdirectory for the step (if not the same as the name), number of cores,
-the minimum number of core, the number of threads, and (currently as
-placeholders) the amount of memory and disk space the step is allowed to use.</p>
+subdirectory for the step (if not the same as the name), number of MPI tasks,
+the minimum number of MPI tasks, the number of CPUs per task, the minimum
+number of CPUs per task, the number of OpenMP threads, and (currently as
+placeholders) the amount of memory the step is allowed to use.</p>
 <p>Then, the step can add <a class="reference internal" href="#dev-step-inputs-outputs"><span class="std std-ref">inputs and outputs</span></a> as well as
 <a class="reference internal" href="#dev-step-namelists-and-streams"><span class="std std-ref">Adding namelist and streams files</span></a>, as described below.</p>
 <p>As with the test case’s <a class="reference internal" href="#dev-test-case-init"><span class="std std-ref">constructor</span></a>, it is important that the
@@ -1030,7 +1055,7 @@ set up, so each takes a negligible amount of time.</p>
 <span class="sd">        The resolution of the test case</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_cores</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nu</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                 <span class="n">ntasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nu</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new test case</span>
 
@@ -1048,26 +1073,27 @@ set up, so each takes a negligible amount of time.</p>
 <span class="sd">        subdir : str, optional</span>
 <span class="sd">            the subdirectory for the step.  The default is ``name``</span>
 
-<span class="sd">        cores : int, optional</span>
-<span class="sd">            the number of cores the step would ideally use.  If fewer cores</span>
+<span class="sd">        ntasks : int, optional</span>
+<span class="sd">            the number of tasks the step would ideally use.  If fewer tasks</span>
 <span class="sd">            are available on the system, the step will run on all available</span>
-<span class="sd">            cores as long as this is not below ``min_cores``</span>
+<span class="sd">            tasks as long as this is not below ``min_tasks``</span>
 
-<span class="sd">        min_cores : int, optional</span>
-<span class="sd">            the number of cores the step requires.  If the system has fewer</span>
-<span class="sd">            than this number of cores, the step will fail</span>
+<span class="sd">        min_tasks : int, optional</span>
+<span class="sd">            the number of tasks the step requires.  If the system has fewer</span>
+<span class="sd">            than this number of tasks, the step will fail</span>
 
-<span class="sd">        threads : int, optional</span>
-<span class="sd">            the number of threads the step will use</span>
+<span class="sd">        openmp_threads : int, optional</span>
+<span class="sd">            the number of OpenMP threads the step will use</span>
 
 <span class="sd">        nu : float, optional</span>
 <span class="sd">            the viscosity (if different from the default for the test group)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
-        <span class="k">if</span> <span class="n">min_cores</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">min_cores</span> <span class="o">=</span> <span class="n">cores</span>
+        <span class="k">if</span> <span class="n">min_tasks</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">min_tasks</span> <span class="o">=</span> <span class="n">ntasks</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">,</span>
-                         <span class="n">cores</span><span class="o">=</span><span class="n">cores</span><span class="p">,</span> <span class="n">min_cores</span><span class="o">=</span><span class="n">min_cores</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="n">threads</span><span class="p">)</span>
+                         <span class="n">ntasks</span><span class="o">=</span><span class="n">ntasks</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="n">min_tasks</span><span class="p">,</span>
+                         <span class="n">openmp_threads</span><span class="o">=</span><span class="n">openmp_threads</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.baroclinic_channel&#39;</span><span class="p">,</span>
                                <span class="s1">&#39;namelist.forward&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.baroclinic_channel&#39;</span><span class="p">,</span>
@@ -1077,6 +1103,9 @@ set up, so each takes a negligible amount of time.</p>
             <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_mom_del2&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nu</span><span class="p">)}</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
 
+        <span class="c1"># make sure output is double precision</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.streams&#39;</span><span class="p">,</span> <span class="s1">&#39;streams.output&#39;</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.baroclinic_channel&#39;</span><span class="p">,</span>
                               <span class="s1">&#39;streams.forward&#39;</span><span class="p">)</span>
 
@@ -1085,12 +1114,15 @@ set up, so each takes a negligible amount of time.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span>
                             <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../initial_state/culled_graph.info&#39;</span><span class="p">)</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_model_as_input</span><span class="p">()</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;output.nc&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Several parameters are passed into the constructor (with defaults if they
 are not included) and then passed on to the base class’ constructor: <code class="docutils literal notranslate"><span class="pre">name</span></code>,
-<code class="docutils literal notranslate"><span class="pre">subdir</span></code>, <code class="docutils literal notranslate"><span class="pre">cores</span></code>, <code class="docutils literal notranslate"><span class="pre">min_cores</span></code>, and <code class="docutils literal notranslate"><span class="pre">threads</span></code>.</p>
+<code class="docutils literal notranslate"><span class="pre">subdir</span></code>, <code class="docutils literal notranslate"><span class="pre">ntasks</span></code>, <code class="docutils literal notranslate"><span class="pre">min_tasks</span></code>, <code class="docutils literal notranslate"><span class="pre">cpus_per_task</span></code>,
+<code class="docutils literal notranslate"><span class="pre">min_cpus_per_task</span></code>, and <code class="docutils literal notranslate"><span class="pre">openmp_threads</span></code>.</p>
 <p>Then, two files with modifications to the namelist options are added (for
 later processing), and an additional config option is set manually via
 a python dictionary of namelist options.</p>
@@ -1127,11 +1159,15 @@ other than downloading files.  Time-consuming work should be saved for
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># get the these properties from the config options</span>
     <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">cores</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;mesh_cores&#39;</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">min_cores</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;mesh_min_cores&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span>
+                                       <span class="s1">&#39;mesh_cpus_per_task&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">min_cpus_per_task</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span>
+                                           <span class="s1">&#39;mesh_min_cpus_per_task&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The model’s executable is linked (and included among the <code class="docutils literal notranslate"><span class="pre">inputs</span></code>).</p>
+<p>Some parts of the mesh computation (creating masks for culling) are done using
+python multiprocessing, so the <code class="docutils literal notranslate"><span class="pre">cpus_per_task</span></code> and <code class="docutils literal notranslate"><span class="pre">min_cpus_per_task</span></code>
+attributes are set to appropriate values based on config options.</p>
 </section>
 <section id="dev-step-run">
 <span id="id2"></span><h3>run()<a class="headerlink" href="#dev-step-run" title="Permalink to this heading">¶</a></h3>
@@ -1274,7 +1310,7 @@ is quite involved:</p>
 </div>
 <p>Without going into all the details of this method, it creates a mesh that
 is periodic in x (but not y), then adds a vertical grid and an initial
-condition to an <a class="reference external" href="https://xarray.pydata.org/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v2022.6.1.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">xarray.Dataset</span></code></a>, which is then written out to
+condition to an <a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v2022.6.1.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">xarray.Dataset</span></code></a>, which is then written out to
 the file <code class="docutils literal notranslate"><span class="pre">ocean.nc</span></code>.</p>
 <p>In the example step we’ve been using,
 <a class="reference internal" href="ocean/generated/compass.ocean.tests.baroclinic_channel.forward.Forward.run.html#compass.ocean.tests.baroclinic_channel.forward.Forward.run" title="compass.ocean.tests.baroclinic_channel.forward.Forward.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.tests.baroclinic_channel.forward.Forward.run()</span></code></a> looks
@@ -1291,8 +1327,8 @@ like this:</p>
 </div>
 <p>the <a class="reference internal" href="generated/compass.model.run_model.html#compass.model.run_model" title="compass.model.run_model"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.model.run_model()</span></code></a> function takes care of updating the
 namelist options for the test case to make sure the PIO tasks and stride are
-consistent with the requested number of cores, creates a graph partition for
-the requested number of cores, and runs the model.</p>
+consistent with the requested number of MPI tasks, creates a graph partition
+for the requested number of tasks, and runs the model.</p>
 <p>To get a feel for different types of <code class="docutils literal notranslate"><span class="pre">run()</span></code> methods, it may be best to
 explore different steps.</p>
 </section>
@@ -1454,8 +1490,8 @@ slated for later downloaded from
 The file will be stored in the subdirectory <code class="docutils literal notranslate"><span class="pre">bathymetry_database</span></code> of the path
 in the <code class="docutils literal notranslate"><span class="pre">ocean_database_root</span></code> config option in the <code class="docutils literal notranslate"><span class="pre">paths</span></code> section of the
 config file.  The <code class="docutils literal notranslate"><span class="pre">ocean_database_root</span></code> option (or the equivalent for other
-cores) is set either by selecting one of the <a class="reference internal" href="../users_guide/machines/index.html#supported-machines"><span class="std std-ref">Supported Machines</span></a> or in
-the user’s config file.</p>
+MPAS cores) is set either by selecting one of the <a class="reference internal" href="../users_guide/machines/index.html#supported-machines"><span class="std std-ref">Supported Machines</span></a> or
+in the user’s config file.</p>
 <p>It is also possible to download files directly from a URL and store them in
 the step’s working directory:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">step</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
@@ -1652,8 +1688,8 @@ convert a numerical value to a string.</p>
 <p>It is sometimes useful to update namelist options after a namelist has already
 been generated as part of setting up.  This typically happens within a step’s
 <code class="docutils literal notranslate"><span class="pre">run()</span></code> method for options that cannot be known beforehand, particularly
-options related to the number of cores and threads.  In such cases, call
-<a class="reference internal" href="generated/compass.Step.update_namelist_at_runtime.html#compass.Step.update_namelist_at_runtime" title="compass.Step.update_namelist_at_runtime"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.update_namelist_at_runtime()</span></code></a>:</p>
+options related to the number of MPI tasks, CPUs per task, and OpenMP threads.
+In such cases, call <a class="reference internal" href="generated/compass.Step.update_namelist_at_runtime.html#compass.Step.update_namelist_at_runtime" title="compass.Step.update_namelist_at_runtime"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.Step.update_namelist_at_runtime()</span></code></a>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
 
 <span class="n">replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_pio_num_iotasks&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pio_num_iotasks</span><span class="p">),</span>

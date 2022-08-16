@@ -133,17 +133,18 @@
 <span class="sd">    time_integrator : {&#39;split_explicit&#39;, &#39;RK4&#39;}</span>
 <span class="sd">        The time integrator to use for the forward run</span>
 
-<span class="sd">    cores_from_config : bool</span>
-<span class="sd">        Whether to get ``cores`` from the config file</span>
+<span class="sd">    ntasks_from_config : bool</span>
+<span class="sd">        Whether to get ``ntasks`` from the config file</span>
 
-<span class="sd">    min_cores_from_config : bool</span>
-<span class="sd">        Whether to get ``min_cores`` from the config file</span>
+<span class="sd">    min_tasks_from_config : bool</span>
+<span class="sd">        Whether to get ``min_tasks`` from the config file</span>
 
 <span class="sd">    threads_from_config : bool</span>
 <span class="sd">        Whether to get ``threads`` from the config file</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="ForwardStep.__init__"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.forward.ForwardStep.html#compass.ocean.tests.global_ocean.forward.ForwardStep.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">time_integrator</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">,</span>
-                 <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_cores</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                 <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">openmp_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new step</span>
 
@@ -167,29 +168,30 @@
 <span class="sd">        subdir : str, optional</span>
 <span class="sd">            the subdirectory for the step.  The default is ``name``</span>
 
-<span class="sd">        cores : int, optional</span>
-<span class="sd">            the number of cores the step would ideally use.  If fewer cores</span>
+<span class="sd">        ntasks : int, optional</span>
+<span class="sd">            the number of tasks the step would ideally use.  If fewer tasks</span>
 <span class="sd">            are available on the system, the step will run on all available</span>
-<span class="sd">            cores as long as this is not below ``min_cores``</span>
+<span class="sd">            tasks as long as this is not below ``min_tasks``</span>
 
-<span class="sd">        min_cores : int, optional</span>
-<span class="sd">            the number of cores the step requires.  If the system has fewer</span>
-<span class="sd">            than this number of cores, the step will fail</span>
+<span class="sd">        min_tasks : int, optional</span>
+<span class="sd">            the number of tasks the step requires.  If the system has fewer</span>
+<span class="sd">            than this number of tasks, the step will fail</span>
 
-<span class="sd">        threads : int, optional</span>
-<span class="sd">            the number of threads the step will use</span>
+<span class="sd">        openmp_threads : int, optional</span>
+<span class="sd">            the number of OpenMP threads the step will use</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="n">mesh</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">init</span> <span class="o">=</span> <span class="n">init</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">time_integrator</span> <span class="o">=</span> <span class="n">time_integrator</span>
-        <span class="k">if</span> <span class="n">min_cores</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">min_cores</span> <span class="o">=</span> <span class="n">cores</span>
+        <span class="k">if</span> <span class="n">min_tasks</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">min_tasks</span> <span class="o">=</span> <span class="n">ntasks</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">,</span>
-                         <span class="n">cores</span><span class="o">=</span><span class="n">cores</span><span class="p">,</span> <span class="n">min_cores</span><span class="o">=</span><span class="n">min_cores</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="n">threads</span><span class="p">)</span>
+                         <span class="n">ntasks</span><span class="o">=</span><span class="n">ntasks</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="n">min_tasks</span><span class="p">,</span>
+                         <span class="n">openmp_threads</span><span class="o">=</span><span class="n">openmp_threads</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">cores_from_config</span> <span class="o">=</span> <span class="n">cores</span> <span class="ow">is</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">min_cores_from_config</span> <span class="o">=</span> <span class="n">min_cores</span> <span class="ow">is</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">threads_from_config</span> <span class="o">=</span> <span class="n">threads</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ntasks_from_config</span> <span class="o">=</span> <span class="n">ntasks</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks_from_config</span> <span class="o">=</span> <span class="n">min_tasks</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">threads_from_config</span> <span class="o">=</span> <span class="n">openmp_threads</span> <span class="ow">is</span> <span class="kc">None</span>
 
         <span class="c1"># make sure output is double precision</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.streams&#39;</span><span class="p">,</span> <span class="s1">&#39;streams.output&#39;</span><span class="p">)</span>
@@ -246,14 +248,14 @@
 <span class="sd">        Set up the test case in the work directory, including downloading any</span>
 <span class="sd">        dependencies</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cores_from_config</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">cores</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span>
-                <span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;forward_cores&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_cores_from_config</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">min_cores</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span>
-                <span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;forward_min_cores&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntasks_from_config</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span>
+                <span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;forward_ntasks&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks_from_config</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span>
+                <span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;forward_min_tasks&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">threads_from_config</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">threads</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">openmp_threads</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span>
                 <span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;forward_threads&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ForwardStep.run"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.forward.ForwardStep.run.html#compass.ocean.tests.global_ocean.forward.ForwardStep.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -322,12 +324,12 @@
         <span class="k">for</span> <span class="n">step_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps_to_run</span><span class="p">:</span>
             <span class="n">step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">step_name</span><span class="p">]</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">ForwardStep</span><span class="p">):</span>
-                <span class="k">if</span> <span class="n">step</span><span class="o">.</span><span class="n">cores_from_config</span><span class="p">:</span>
-                    <span class="n">step</span><span class="o">.</span><span class="n">cores</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span>
-                                               <span class="s1">&#39;forward_cores&#39;</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">step</span><span class="o">.</span><span class="n">min_cores_from_config</span><span class="p">:</span>
-                    <span class="n">step</span><span class="o">.</span><span class="n">min_cores</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span>
-                                                   <span class="s1">&#39;forward_min_cores&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">step</span><span class="o">.</span><span class="n">ntasks_from_config</span><span class="p">:</span>
+                    <span class="n">step</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span>
+                                                <span class="s1">&#39;forward_ntasks&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">step</span><span class="o">.</span><span class="n">min_tasks_from_config</span><span class="p">:</span>
+                    <span class="n">step</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;forward_min_tasks&#39;</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">step</span><span class="o">.</span><span class="n">threads_from_config</span><span class="p">:</span>
                     <span class="n">step</span><span class="o">.</span><span class="n">threads</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span>
                                                  <span class="s1">&#39;forward_threads&#39;</span><span class="p">)</span>

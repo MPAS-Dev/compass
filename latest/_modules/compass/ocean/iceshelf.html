@@ -163,7 +163,7 @@
 <span class="sd">    step : compass.Step</span>
 <span class="sd">        the step for performing SSH or land-ice pressure adjustment</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">cores</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">cores</span>
+    <span class="n">ntasks</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">ntasks</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">config</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">logger</span>
     <span class="n">out_filename</span> <span class="o">=</span> <span class="kc">None</span>
@@ -172,7 +172,7 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown variable to modify: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">variable</span><span class="p">))</span>
 
     <span class="n">step</span><span class="o">.</span><span class="n">update_namelist_pio</span><span class="p">(</span><span class="s1">&#39;namelist.ocean&#39;</span><span class="p">)</span>
-    <span class="n">partition</span><span class="p">(</span><span class="n">cores</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+    <span class="n">partition</span><span class="p">(</span><span class="n">ntasks</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">iterIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">iteration_count</span><span class="p">):</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot; * Iteration </span><span class="si">{}</span><span class="s2">/</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iterIndex</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>

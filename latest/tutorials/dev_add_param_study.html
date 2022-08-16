@@ -76,7 +76,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#adding-mesh-init-and-forward-steps">Adding “mesh”, “init” and “forward” steps</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#adding-an-analysis-step">Adding an “analysis” step</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#adding-the-steps-to-the-test-case">Adding the steps to the test case</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#setting-the-number-of-cores">Setting the number of cores</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#setting-the-number-of-tasks-and-cpus-per-task">Setting the number of tasks and CPUs per task</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#documentation">Documentation</a></li>
 </ul>
 </li>
@@ -333,18 +333,21 @@ reasonable way to set up steps with the default parameter values during setup.</
 mimic this behavior so that the default steps can be listed with
 <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">list</span> <span class="pre">--verbose</span></code> as well.</p>
 </section>
-<section id="setting-the-number-of-cores">
-<h2>Setting the number of cores<a class="headerlink" href="#setting-the-number-of-cores" title="Permalink to this heading">¶</a></h2>
+<section id="setting-the-number-of-tasks-and-cpus-per-task">
+<h2>Setting the number of tasks and CPUs per task<a class="headerlink" href="#setting-the-number-of-tasks-and-cpus-per-task" title="Permalink to this heading">¶</a></h2>
 <p>For some parameter studies, particularly those where resolution is the
 parameter, it can be important to specify the target and minimum number of
-cores for a given step as a function of the parameter.</p>
-<p>In the following example, we set both the attribute of the steps <code class="docutils literal notranslate"><span class="pre">step.cores</span></code>
-and a config option (<code class="docutils literal notranslate"><span class="pre">QU&lt;res&gt;_core</span></code>, where <code class="docutils literal notranslate"><span class="pre">&lt;res&gt;</span></code> is the resolution) to
-a target number of cores that is a heuristic function of the resolution.
-Similarly, we set the minimum number of cores (below which the step will
-refuse to run) based on another heuristic function.</p>
+MPI tasks for a given step as a function of the parameter.  If a given step
+runs with python threading or multiprocessing instead, the number of CPUs per
+task will, instead, be the important parameter (the number of tasks,
+<code class="docutils literal notranslate"><span class="pre">ntasks</span></code>, is always 1).</p>
+<p>In the following example, we set both the attribute of the steps
+<code class="docutils literal notranslate"><span class="pre">step.ntasks</span></code> and a config option (<code class="docutils literal notranslate"><span class="pre">QU&lt;res&gt;_ntasks</span></code>, where <code class="docutils literal notranslate"><span class="pre">&lt;res&gt;</span></code> is the
+resolution) to a target number of tasks that is a heuristic function of the
+resolution. Similarly, we set the minimum number of tasks (below which the step
+will refuse to run) based on another heuristic function.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">update_cores</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Update the number of cores and min_cores for each forward step &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot; Update the number of cores and min_tasks for each forward step &quot;&quot;&quot;</span>
 
     <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
 
@@ -358,42 +361,42 @@ refuse to run) based on another heuristic function.</p>
         <span class="n">approx_cells</span> <span class="o">=</span> <span class="mf">6e8</span> <span class="o">/</span> <span class="n">resolution</span><span class="o">**</span><span class="mi">2</span>
         <span class="c1"># ideally, about 300 cells per core</span>
         <span class="c1"># (make it a multiple of 4 because...it looks better?)</span>
-        <span class="n">cores</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">ntasks</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span>
                     <span class="mi">4</span><span class="o">*</span><span class="nb">round</span><span class="p">(</span><span class="n">approx_cells</span> <span class="o">/</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">goal_cells_per_core</span><span class="p">)))</span>
         <span class="c1"># In a pinch, about 3000 cells per core</span>
-        <span class="n">min_cores</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">min_tasks</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span>
                         <span class="nb">round</span><span class="p">(</span><span class="n">approx_cells</span> <span class="o">/</span> <span class="n">max_cells_per_core</span><span class="p">))</span>
-        <span class="n">step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">&#39;QU</span><span class="si">{}</span><span class="s1">_forward&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">)]</span>
-        <span class="n">step</span><span class="o">.</span><span class="n">cores</span> <span class="o">=</span> <span class="n">cores</span>
-        <span class="n">step</span><span class="o">.</span><span class="n">min_cores</span> <span class="o">=</span> <span class="n">min_cores</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;QU</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">_forward&#39;</span><span class="p">]</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="n">ntasks</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="n">min_tasks</span>
 
-        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;cosine_bell&#39;</span><span class="p">,</span> <span class="s1">&#39;QU</span><span class="si">{}</span><span class="s1">_cores&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">),</span>
-                   <span class="nb">str</span><span class="p">(</span><span class="n">cores</span><span class="p">))</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;cosine_bell&#39;</span><span class="p">,</span> <span class="s1">&#39;QU</span><span class="si">{}</span><span class="s1">_min_cores&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">),</span>
-                   <span class="nb">str</span><span class="p">(</span><span class="n">min_cores</span><span class="p">))</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;cosine_bell&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;QU</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">_ntasks&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">ntasks</span><span class="p">),</span>
+                   <span class="n">comment</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Target core count for </span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1"> km mesh&#39;</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;cosine_bell&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;QU</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">_min_tasks&#39;</span><span class="p">,</span>
+                   <span class="nb">str</span><span class="p">(</span><span class="n">min_tasks</span><span class="p">),</span>
+                   <span class="n">comment</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Minimum core count for </span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1"> km mesh&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This method is called in the <code class="docutils literal notranslate"><span class="pre">configure()</span></code> method of the test case when it
-is getting set up.  It is important to set the <code class="docutils literal notranslate"><span class="pre">cores</span></code> and <code class="docutils literal notranslate"><span class="pre">min_cores</span></code>
+is getting set up.  It is important to set the <code class="docutils literal notranslate"><span class="pre">ntasks</span></code> and <code class="docutils literal notranslate"><span class="pre">min_tasks</span></code>
 attributes of the step because this will be used as part of determining how
 many cores are needed for a test suite using this test case.</p>
 <p>Later on, when the test case gets run, we want to use the config options again
-to set <code class="docutils literal notranslate"><span class="pre">step.cores</span></code> and <code class="docutils literal notranslate"><span class="pre">step.min_cores</span></code>, in case a user has modified these
-config options before running the test case.  We do this before we run the
-steps.</p>
+to set <code class="docutils literal notranslate"><span class="pre">step.ntasks</span></code> and <code class="docutils literal notranslate"><span class="pre">step.min_tasks</span></code>, in case a user has modified
+these config options before running the test case.  We do this before we run
+the steps.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Run each step of the testcase</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
     <span class="k">for</span> <span class="n">resolution</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span><span class="p">:</span>
-        <span class="n">cores</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;cosine_bell&#39;</span><span class="p">,</span>
-                              <span class="s1">&#39;QU</span><span class="si">{}</span><span class="s1">_cores&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">))</span>
-        <span class="n">min_cores</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;cosine_bell&#39;</span><span class="p">,</span>
-                                  <span class="s1">&#39;QU</span><span class="si">{}</span><span class="s1">_min_cores&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">))</span>
-        <span class="n">step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">&#39;QU</span><span class="si">{}</span><span class="s1">_forward&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">)]</span>
-        <span class="n">step</span><span class="o">.</span><span class="n">cores</span> <span class="o">=</span> <span class="n">cores</span>
-        <span class="n">step</span><span class="o">.</span><span class="n">min_cores</span> <span class="o">=</span> <span class="n">min_cores</span>
+        <span class="n">ntasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;cosine_bell&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;QU</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">_ntasks&#39;</span><span class="p">)</span>
+        <span class="n">min_tasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;cosine_bell&#39;</span><span class="p">,</span>
+                                  <span class="sa">f</span><span class="s1">&#39;QU</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">_min_tasks&#39;</span><span class="p">)</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;QU</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s1">_forward&#39;</span><span class="p">]</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="n">ntasks</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="n">min_tasks</span>
 
     <span class="c1"># run the step</span>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>

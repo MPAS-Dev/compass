@@ -68,8 +68,8 @@ constructors when they are added to the test case:
 .. code-block:: python
 
             step = Forward(
-                test_case=self, name=name, subdir=name, cores=cores,
-                min_cores=min_cores, nu=float(nu))
+                test_case=self, name=name, subdir=name, ntasks=4,
+                openmp_threads=1, nu=float(nu))
             ...
             self.add_step(step)
 

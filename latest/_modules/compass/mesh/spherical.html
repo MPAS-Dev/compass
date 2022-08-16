@@ -135,8 +135,7 @@
 <span class="sd">    opts : jigsawpy.jigsaw_jig_t</span>
 <span class="sd">        JIGSAW options for creating the mesh</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="SphericalBaseStep.__init__"><a class="viewcode-back" href="../../../developers_guide/generated/compass.mesh.spherical.SphericalBaseStep.html#compass.mesh.SphericalBaseStep.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                 <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="SphericalBaseStep.__init__"><a class="viewcode-back" href="../../../developers_guide/generated/compass.mesh.spherical.SphericalBaseStep.html#compass.mesh.SphericalBaseStep.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new step</span>
 
@@ -150,21 +149,8 @@
 
 <span class="sd">        subdir : {str, None}</span>
 <span class="sd">            the subdirectory for the step.  The default is ``name``</span>
-
-<span class="sd">        cores : int, optional</span>
-<span class="sd">            the number of cores the step would ideally use.  If fewer cores</span>
-<span class="sd">            are available on the system, the step will run on all available</span>
-<span class="sd">            cores as long as this is not below ``min_cores``</span>
-
-<span class="sd">        min_cores : int, optional</span>
-<span class="sd">            the number of cores the step requires.  If the system has fewer</span>
-<span class="sd">            than this number of cores, the step will fail</span>
-
-<span class="sd">        threads : int, optional</span>
-<span class="sd">            the number of threads the step will use</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="n">cores</span><span class="p">,</span>
-                         <span class="n">min_cores</span><span class="o">=</span><span class="n">min_cores</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="n">threads</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
         <span class="c1"># setup files for JIGSAW</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">opts</span> <span class="o">=</span> <span class="n">jigsawpy</span><span class="o">.</span><span class="n">jigsaw_jig_t</span><span class="p">()</span></div>
@@ -305,7 +291,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="QuasiUniformSphericalMeshStep.__init__"><a class="viewcode-back" href="../../../developers_guide/generated/compass.mesh.QuasiUniformSphericalMeshStep.html#compass.mesh.QuasiUniformSphericalMeshStep.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;base_mesh&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">cell_width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+                 <span class="n">cell_width</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new step</span>
 
@@ -322,21 +308,8 @@
 
 <span class="sd">        cell_width : float, optional</span>
 <span class="sd">            The approximate cell width in km of the mesh if constant resolution</span>
-
-<span class="sd">        cores : int, optional</span>
-<span class="sd">            the number of cores the step would ideally use.  If fewer cores</span>
-<span class="sd">            are available on the system, the step will run on all available</span>
-<span class="sd">            cores as long as this is not below ``min_cores``</span>
-
-<span class="sd">        min_cores : int, optional</span>
-<span class="sd">            the number of cores the step requires.  If the system has fewer</span>
-<span class="sd">            than this number of cores, the step will fail</span>
-
-<span class="sd">        threads : int, optional</span>
-<span class="sd">            the number of threads the step will use</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">,</span>
-                         <span class="n">cores</span><span class="o">=</span><span class="n">cores</span><span class="p">,</span> <span class="n">min_cores</span><span class="o">=</span><span class="n">min_cores</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="n">threads</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cell_width</span> <span class="o">=</span> <span class="n">cell_width</span>
 
         <span class="c1"># build mesh via JIGSAW!</span>
@@ -458,8 +431,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="IcosahedralMeshStep.__init__"><a class="viewcode-back" href="../../../developers_guide/generated/compass.mesh.IcosahedralMeshStep.html#compass.mesh.IcosahedralMeshStep.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;base_mesh&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">cell_width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">subdivisions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                 <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+                 <span class="n">cell_width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">subdivisions</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new step</span>
 
@@ -479,21 +451,8 @@
 
 <span class="sd">        subdivisions : int, optional</span>
 <span class="sd">            The number of subdivisions of the icosahedral mesh to perform</span>
-
-<span class="sd">        cores : int, optional</span>
-<span class="sd">            the number of cores the step would ideally use.  If fewer cores</span>
-<span class="sd">            are available on the system, the step will run on all available</span>
-<span class="sd">            cores as long as this is not below ``min_cores``</span>
-
-<span class="sd">        min_cores : int, optional</span>
-<span class="sd">            the number of cores the step requires.  If the system has fewer</span>
-<span class="sd">            than this number of cores, the step will fail</span>
-
-<span class="sd">        threads : int, optional</span>
-<span class="sd">            the number of threads the step will use</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">,</span>
-                         <span class="n">cores</span><span class="o">=</span><span class="n">cores</span><span class="p">,</span> <span class="n">min_cores</span><span class="o">=</span><span class="n">min_cores</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="n">threads</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
         <span class="c1"># run as a subprocess so output goes to a log file</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">run_as_subprocess</span> <span class="o">=</span> <span class="kc">True</span>

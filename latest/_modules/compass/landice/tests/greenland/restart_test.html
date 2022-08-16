@@ -134,18 +134,18 @@
         <span class="n">subdir</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">velo_solver</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">name</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
-        <span class="n">cores</span> <span class="o">=</span> <span class="mi">36</span>
+        <span class="n">ntasks</span> <span class="o">=</span> <span class="mi">36</span>
         <span class="k">if</span> <span class="n">velo_solver</span> <span class="o">==</span> <span class="s1">&#39;sia&#39;</span><span class="p">:</span>
-            <span class="n">min_cores</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">min_tasks</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="k">elif</span> <span class="n">velo_solver</span> <span class="o">==</span> <span class="s1">&#39;FO&#39;</span><span class="p">:</span>
-            <span class="n">min_cores</span> <span class="o">=</span> <span class="mi">4</span>
+            <span class="n">min_tasks</span> <span class="o">=</span> <span class="mi">4</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unexpected velo_solver </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">velo_solver</span><span class="p">))</span>
 
         <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;full_run&#39;</span>
         <span class="n">step</span> <span class="o">=</span> <span class="n">RunModel</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">velo_solver</span><span class="o">=</span><span class="n">velo_solver</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
-                        <span class="n">subdir</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="n">cores</span><span class="p">,</span> <span class="n">min_cores</span><span class="o">=</span><span class="n">min_cores</span><span class="p">,</span>
-                        <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                        <span class="n">subdir</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="n">ntasks</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="n">min_tasks</span><span class="p">,</span>
+                        <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="c1"># modify the namelist options and streams file</span>
         <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>
             <span class="s1">&#39;compass.landice.tests.greenland.restart_test&#39;</span><span class="p">,</span>
@@ -157,8 +157,8 @@
 
         <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;restart_run&#39;</span>
         <span class="n">step</span> <span class="o">=</span> <span class="n">RunModel</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">velo_solver</span><span class="o">=</span><span class="n">velo_solver</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
-                        <span class="n">subdir</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="n">cores</span><span class="p">,</span> <span class="n">min_cores</span><span class="o">=</span><span class="n">min_cores</span><span class="p">,</span>
-                        <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">suffixes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;landice&#39;</span><span class="p">,</span> <span class="s1">&#39;landice.rst&#39;</span><span class="p">])</span>
+                        <span class="n">subdir</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="n">ntasks</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="n">min_tasks</span><span class="p">,</span>
+                        <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">suffixes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;landice&#39;</span><span class="p">,</span> <span class="s1">&#39;landice.rst&#39;</span><span class="p">])</span>
 
         <span class="c1"># modify the namelist options and streams file</span>
         <span class="n">step</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span>

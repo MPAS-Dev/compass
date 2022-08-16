@@ -112,14 +112,13 @@
 <span class="kn">import</span> <span class="nn">stat</span>
 <span class="kn">import</span> <span class="nn">grp</span>
 <span class="kn">import</span> <span class="nn">progressbar</span>
-<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
 
 <span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">download</span><span class="p">,</span> <span class="n">symlink</span>
 <span class="kn">import</span> <span class="nn">compass.namelist</span>
 <span class="kn">import</span> <span class="nn">compass.streams</span>
 
 
-<div class="viewcode-block" id="Step"><a class="viewcode-back" href="../../developers_guide/generated/compass.Step.html#compass.Step">[docs]</a><span class="k">class</span> <span class="nc">Step</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<div class="viewcode-block" id="Step"><a class="viewcode-back" href="../../developers_guide/generated/compass.Step.html#compass.Step">[docs]</a><span class="k">class</span> <span class="nc">Step</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The base class for a step of a test cases, such as setting up a mesh,</span>
 <span class="sd">    creating an initial condition, or running the MPAS core forward in time.</span>
@@ -153,17 +152,29 @@
 <span class="sd">        ``mpas_core``, ``test_group``, the test case&#39;s ``subdir`` and the</span>
 <span class="sd">        step&#39;s ``subdir``</span>
 
-<span class="sd">    cores : int</span>
-<span class="sd">        the number of cores the step would ideally use.  If fewer cores</span>
-<span class="sd">        are available on the system, the step will run on all available</span>
-<span class="sd">        cores as long as this is not below ``min_cores``</span>
+<span class="sd">    cpus_per_task : int, optional</span>
+<span class="sd">        the number of cores per task the step would ideally use.  If</span>
+<span class="sd">        fewer cores per node are available on the system, the step will</span>
+<span class="sd">        run on all available cores as long as this is not below</span>
+<span class="sd">        ``min_cpus_per_task``</span>
 
-<span class="sd">    min_cores : int</span>
-<span class="sd">        the number of cores the step requires.  If the system has fewer</span>
-<span class="sd">        than this number of cores, the step will fail</span>
+<span class="sd">    min_cpus_per_task : int, optional</span>
+<span class="sd">        the number of cores per task the step requires.  If the system</span>
+<span class="sd">        has fewer than this number of cores per node, the step will fail</span>
 
-<span class="sd">    threads : int</span>
-<span class="sd">        the number of threads the step will use</span>
+<span class="sd">    ntasks : int, optional</span>
+<span class="sd">        the number of tasks the step would ideally use.  If too few</span>
+<span class="sd">        cores are available on the system to accommodate the number of</span>
+<span class="sd">        tasks and the number of cores per task, the step will run on</span>
+<span class="sd">        fewer tasks as long as as this is not below ``min_tasks``</span>
+
+<span class="sd">    min_tasks : int, optional</span>
+<span class="sd">        the number of tasks the step requires.  If the system has too</span>
+<span class="sd">        few cores to accommodate the number of tasks and cores per task,</span>
+<span class="sd">        the step will fail</span>
+
+<span class="sd">    openmp_threads : int</span>
+<span class="sd">        the number of OpenMP threads to use</span>
 
 <span class="sd">    max_memory : int</span>
 <span class="sd">        the amount of memory that the step is allowed to use in MB.</span>
@@ -231,8 +242,9 @@
 <span class="sd">        additional subprocesses).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Step.__init__"><a class="viewcode-back" href="../../developers_guide/generated/compass.Step.html#compass.Step.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                 <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_memory</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">cached</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<div class="viewcode-block" id="Step.__init__"><a class="viewcode-back" href="../../developers_guide/generated/compass.Step.html#compass.Step.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cpus_per_task</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">min_cpus_per_task</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_memory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cached</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                  <span class="n">run_as_subprocess</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new test case</span>
@@ -248,17 +260,29 @@
 <span class="sd">        subdir : str, optional</span>
 <span class="sd">            the subdirectory for the step.  The default is ``name``</span>
 
-<span class="sd">        cores : int, optional</span>
-<span class="sd">            the number of cores the step would ideally use.  If fewer cores</span>
-<span class="sd">            are available on the system, the step will run on all available</span>
-<span class="sd">            cores as long as this is not below ``min_cores``</span>
+<span class="sd">        cpus_per_task : int, optional</span>
+<span class="sd">            the number of cores per task the step would ideally use.  If</span>
+<span class="sd">            fewer cores per node are available on the system, the step will</span>
+<span class="sd">            run on all available cores as long as this is not below</span>
+<span class="sd">            ``min_cpus_per_task``</span>
 
-<span class="sd">        min_cores : int, optional</span>
-<span class="sd">            the number of cores the step requires.  If the system has fewer</span>
-<span class="sd">            than this number of cores, the step will fail</span>
+<span class="sd">        min_cpus_per_task : int, optional</span>
+<span class="sd">            the number of cores per task the step requires.  If the system</span>
+<span class="sd">            has fewer than this number of cores per node, the step will fail</span>
 
-<span class="sd">        threads : int, optional</span>
-<span class="sd">            the number of threads the step will use</span>
+<span class="sd">        ntasks : int, optional</span>
+<span class="sd">            the number of tasks the step would ideally use.  If too few</span>
+<span class="sd">            cores are available on the system to accommodate the number of</span>
+<span class="sd">            tasks and the number of cores per task, the step will run on</span>
+<span class="sd">            fewer tasks as long as as this is not below ``min_tasks``</span>
+
+<span class="sd">        min_tasks : int, optional</span>
+<span class="sd">            the number of tasks the step requires.  If the system has too</span>
+<span class="sd">            few cores to accommodate the number of tasks and cores per task,</span>
+<span class="sd">            the step will fail</span>
+
+<span class="sd">        openmp_threads : int</span>
+<span class="sd">            the number of OpenMP threads to use</span>
 
 <span class="sd">        max_memory : int, optional</span>
 <span class="sd">            the amount of memory that the step is allowed to use in MB.</span>
@@ -285,9 +309,11 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">subdir</span> <span class="o">=</span> <span class="n">name</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">cores</span> <span class="o">=</span> <span class="n">cores</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">min_cores</span> <span class="o">=</span> <span class="n">min_cores</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">threads</span> <span class="o">=</span> <span class="n">threads</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span> <span class="o">=</span> <span class="n">cpus_per_task</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_cpus_per_task</span> <span class="o">=</span> <span class="n">min_cpus_per_task</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="n">ntasks</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="n">min_tasks</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">openmp_threads</span> <span class="o">=</span> <span class="n">openmp_threads</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_memory</span> <span class="o">=</span> <span class="n">max_memory</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_group</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
@@ -316,6 +342,88 @@
         <span class="c1"># output caching</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cached</span> <span class="o">=</span> <span class="n">cached</span></div>
 
+<div class="viewcode-block" id="Step.set_resources"><a class="viewcode-back" href="../../developers_guide/generated/compass.Step.set_resources.html#compass.Step.set_resources">[docs]</a>    <span class="k">def</span> <span class="nf">set_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpus_per_task</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_cpus_per_task</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                      <span class="n">ntasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                      <span class="n">max_memory</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the resources for the subtask.  This can be done within init,</span>
+<span class="sd">        ``setup()`` or ``runtime_setup()`` of this step, or init,</span>
+<span class="sd">        ``configure()`` or ``run()`` for the test case that this step belongs</span>
+<span class="sd">        to.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        cpus_per_task : int, optional</span>
+<span class="sd">            the number of cores per task the step would ideally use.  If</span>
+<span class="sd">            fewer cores per node are available on the system, the step will</span>
+<span class="sd">            run on all available cores as long as this is not below</span>
+<span class="sd">            ``min_cpus_per_task``</span>
+
+<span class="sd">        min_cpus_per_task : int, optional</span>
+<span class="sd">            the number of cores per task the step requires.  If the system</span>
+<span class="sd">            has fewer than this number of cores per node, the step will fail</span>
+
+<span class="sd">        ntasks : int, optional</span>
+<span class="sd">            the number of tasks the step would ideally use.  If too few</span>
+<span class="sd">            cores are available on the system to accommodate the number of</span>
+<span class="sd">            tasks and the number of cores per task, the step will run on</span>
+<span class="sd">            fewer tasks as long as as this is not below ``min_tasks``</span>
+
+<span class="sd">        min_tasks : int, optional</span>
+<span class="sd">            the number of tasks the step requires.  If the system has too</span>
+<span class="sd">            few cores to accommodate the number of tasks and cores per task,</span>
+<span class="sd">            the step will fail</span>
+
+<span class="sd">        openmp_threads : int, optional</span>
+<span class="sd">            the number of OpenMP threads to use</span>
+
+<span class="sd">        max_memory : int, optional</span>
+<span class="sd">            the amount of memory that the step is allowed to use in MB.</span>
+<span class="sd">            This is currently just a placeholder for later use with task</span>
+<span class="sd">            parallelism</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">cpus_per_task</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span> <span class="o">=</span> <span class="n">cpus_per_task</span>
+        <span class="k">if</span> <span class="n">min_cpus_per_task</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">min_cpus_per_task</span> <span class="o">=</span> <span class="n">min_cpus_per_task</span>
+        <span class="k">if</span> <span class="n">ntasks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="n">ntasks</span>
+        <span class="k">if</span> <span class="n">min_tasks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span> <span class="o">=</span> <span class="n">min_tasks</span>
+        <span class="k">if</span> <span class="n">openmp_threads</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">openmp_threads</span> <span class="o">=</span> <span class="n">openmp_threads</span>
+        <span class="k">if</span> <span class="n">max_memory</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">max_memory</span> <span class="o">=</span> <span class="n">max_memory</span></div>
+
+<div class="viewcode-block" id="Step.constrain_resources"><a class="viewcode-back" href="../../developers_guide/generated/compass.Step.constrain_resources.html#compass.Step.constrain_resources">[docs]</a>    <span class="k">def</span> <span class="nf">constrain_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">available_cores</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constrain ``cpus_per_task`` and ``ntasks`` based on the number of</span>
+<span class="sd">        cores available to this step</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        available_cores : int</span>
+<span class="sd">            The total number of cores available to the step</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># just one task so only need to worry about cpus_per_task</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span><span class="p">,</span> <span class="n">available_cores</span><span class="p">)</span>
+            <span class="n">cores</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_cpus_per_task</span><span class="p">:</span>
+            <span class="n">available_tasks</span> <span class="o">=</span> <span class="n">available_cores</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span><span class="p">,</span> <span class="n">available_tasks</span><span class="p">)</span>
+            <span class="n">cores</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unsupported step configuration in which &#39;</span>
+                             <span class="s1">&#39;ntasks &gt; 1 and  &#39;</span>
+                             <span class="s1">&#39;cpus_per_task != min_cpus_per_task&#39;</span><span class="p">)</span>
+
+        <span class="n">min_cores</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_cpus_per_task</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_tasks</span>
+        <span class="k">if</span> <span class="n">cores</span> <span class="o">&lt;</span> <span class="n">min_cores</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;Available cores (</span><span class="si">{</span><span class="n">cores</span><span class="si">}</span><span class="s1">) is below the minimum of &#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">min_cores</span><span class="si">}</span><span class="s1"> for step </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="Step.setup"><a class="viewcode-back" href="../../developers_guide/generated/compass.Step.setup.html#compass.Step.setup">[docs]</a>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set up the test case in the work directory, including downloading any</span>
@@ -325,8 +433,19 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="Step.run"><a class="viewcode-back" href="../../developers_guide/generated/compass.Step.run.html#compass.Step.run">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Step.runtime_setup"><a class="viewcode-back" href="../../developers_guide/generated/compass.Step.runtime_setup.html#compass.Step.runtime_setup">[docs]</a>    <span class="k">def</span> <span class="nf">runtime_setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update attributes of the step at runtime before calling the ``run()``</span>
+<span class="sd">        method.  The most common reason to override this method is to</span>
+<span class="sd">        determine the number of cores and threads to run with.  It may also</span>
+<span class="sd">        be useful for performing small (python) tasks such as creating</span>
+<span class="sd">        graph and partition files before running a parallel command. When</span>
+<span class="sd">        running with parallel tasks in the future, this method will be called</span>
+<span class="sd">        for each step in serial before steps are run in task parallel.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="Step.run"><a class="viewcode-back" href="../../developers_guide/generated/compass.Step.run.html#compass.Step.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run the step.  Every child class must override this method to perform</span>
 <span class="sd">        the main work.</span>
@@ -434,7 +553,7 @@
 <span class="sd">            The mode that the model will run in</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">out_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">out_name</span> <span class="o">=</span> <span class="s1">&#39;namelist.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">out_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;namelist.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
 
         <span class="k">if</span> <span class="n">out_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist_data</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">namelist_data</span><span class="p">[</span><span class="n">out_name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
@@ -463,7 +582,7 @@
 <span class="sd">            The mode that the model will run in</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">out_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">out_name</span> <span class="o">=</span> <span class="s1">&#39;namelist.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">out_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;namelist.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
 
         <span class="k">if</span> <span class="n">out_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist_data</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">namelist_data</span><span class="p">[</span><span class="n">out_name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
@@ -518,24 +637,24 @@
 <span class="sd">            default</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="n">cores</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cores</span>
+        <span class="n">cores</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">cpus_per_task</span>
 
         <span class="k">if</span> <span class="n">out_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">out_name</span> <span class="o">=</span> <span class="s1">&#39;namelist.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">out_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;namelist.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
 
         <span class="n">cores_per_node</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;parallel&#39;</span><span class="p">,</span> <span class="s1">&#39;cores_per_node&#39;</span><span class="p">)</span>
 
         <span class="c1"># update PIO tasks based on the machine settings and the available</span>
         <span class="c1"># number or cores</span>
         <span class="n">pio_num_iotasks</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">cores</span> <span class="o">/</span> <span class="n">cores_per_node</span><span class="p">))</span>
-        <span class="n">pio_stride</span> <span class="o">=</span> <span class="n">cores</span> <span class="o">//</span> <span class="n">pio_num_iotasks</span>
+        <span class="n">pio_stride</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntasks</span> <span class="o">//</span> <span class="n">pio_num_iotasks</span>
         <span class="k">if</span> <span class="n">pio_stride</span> <span class="o">&gt;</span> <span class="n">cores_per_node</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Not enough nodes for the number of cores.  &#39;</span>
-                             <span class="s1">&#39;cores: </span><span class="si">{}</span><span class="s1">, cores per node: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                                 <span class="n">cores</span><span class="p">,</span> <span class="n">cores_per_node</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Not enough nodes for the number of cores.  &#39;</span>
+                             <span class="sa">f</span><span class="s1">&#39;cores: </span><span class="si">{</span><span class="n">cores</span><span class="si">}</span><span class="s1">, cores per node: &#39;</span>
+                             <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cores_per_node</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
-        <span class="n">replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_pio_num_iotasks&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pio_num_iotasks</span><span class="p">),</span>
-                        <span class="s1">&#39;config_pio_stride&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pio_stride</span><span class="p">)}</span>
+        <span class="n">replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;config_pio_num_iotasks&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">pio_num_iotasks</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;config_pio_stride&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">pio_stride</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">}</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">update_namelist_at_runtime</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">replacements</span><span class="p">,</span>
                                         <span class="n">out_name</span><span class="o">=</span><span class="n">out_name</span><span class="p">)</span></div>
@@ -566,7 +685,7 @@
 <span class="sd">            The mode that the model will run in</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">out_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">out_name</span> <span class="o">=</span> <span class="s1">&#39;streams.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">out_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;streams.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
 
         <span class="k">if</span> <span class="n">out_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">streams_data</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">streams_data</span><span class="p">[</span><span class="n">out_name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
@@ -684,12 +803,12 @@
                 <span class="k">if</span> <span class="n">url</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">base_url</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;download&#39;</span><span class="p">,</span> <span class="s1">&#39;server_base_url&#39;</span><span class="p">)</span>
                     <span class="n">core_path</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;download&#39;</span><span class="p">,</span> <span class="s1">&#39;core_path&#39;</span><span class="p">)</span>
-                    <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">base_url</span><span class="p">,</span> <span class="n">core_path</span><span class="p">,</span> <span class="n">database</span><span class="p">)</span>
+                    <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">base_url</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">core_path</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">database</span><span class="si">}</span><span class="s1">&#39;</span>
 
-                    <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+                    <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s1">&#39;</span>
 
                 <span class="n">database_root</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-                    <span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_database_root&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mpas_core</span><span class="p">))</span>
+                    <span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mpas_core</span><span class="si">}</span><span class="s1">_database_root&#39;</span><span class="p">)</span>
                 <span class="n">download_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">database_root</span><span class="p">,</span> <span class="n">database</span><span class="p">,</span>
                                              <span class="n">download_target</span><span class="p">)</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">download_path</span><span class="p">):</span>
@@ -760,7 +879,7 @@
                 <span class="n">replacements</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
 
             <span class="n">defaults_filename</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;namelists&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
-            <span class="n">out_filename</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step_work_dir</span><span class="p">,</span> <span class="n">out_name</span><span class="p">)</span>
+            <span class="n">out_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">step_work_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">out_name</span><span class="si">}</span><span class="s1">&#39;</span>
 
             <span class="n">namelist</span> <span class="o">=</span> <span class="n">compass</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">ingest</span><span class="p">(</span><span class="n">defaults_filename</span><span class="p">)</span>
 
@@ -799,7 +918,7 @@
                     <span class="n">replacements</span><span class="o">=</span><span class="n">entry</span><span class="p">[</span><span class="s1">&#39;replacements&#39;</span><span class="p">],</span> <span class="n">tree</span><span class="o">=</span><span class="n">tree</span><span class="p">)</span>
 
             <span class="n">defaults_filename</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;streams&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
-            <span class="n">out_filename</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step_work_dir</span><span class="p">,</span> <span class="n">out_name</span><span class="p">)</span>
+            <span class="n">out_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">step_work_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">out_name</span><span class="si">}</span><span class="s1">&#39;</span>
 
             <span class="n">defaults_tree</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">defaults_filename</span><span class="p">)</span>
 

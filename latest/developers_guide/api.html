@@ -96,7 +96,10 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#step">step</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="generated/compass.Step.html">compass.Step</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/compass.Step.set_resources.html">compass.Step.set_resources</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/compass.Step.constrain_resources.html">compass.Step.constrain_resources</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/compass.Step.setup.html">compass.Step.setup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/compass.Step.runtime_setup.html">compass.Step.runtime_setup</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/compass.Step.run.html">compass.Step.run</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/compass.Step.add_input_file.html">compass.Step.add_input_file</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/compass.Step.add_output_file.html">compass.Step.add_output_file</a></li>
@@ -153,6 +156,9 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#parallel">parallel</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="generated/compass.parallel.get_available_cores_and_nodes.html">compass.parallel.get_available_cores_and_nodes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/compass.parallel.check_parallel_system.html">compass.parallel.check_parallel_system</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/compass.parallel.set_cores_per_node.html">compass.parallel.set_cores_per_node</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/compass.parallel.run_command.html">compass.parallel.run_command</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#provenance">provenance</a><ul>
@@ -409,40 +415,49 @@ documentation.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.Step.html#compass.Step" title="compass.Step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step</span></code></a>(test_case, name[, subdir, cores, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.Step.html#compass.Step" title="compass.Step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step</span></code></a>(test_case, name[, subdir, ...])</p></td>
 <td><p>The base class for a step of a test cases, such as setting up a mesh, creating an initial condition, or running the MPAS core forward in time.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.Step.set_resources.html#compass.Step.set_resources" title="compass.Step.set_resources"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step.set_resources</span></code></a>([cpus_per_task, ...])</p></td>
+<td><p>Update the resources for the subtask.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.Step.constrain_resources.html#compass.Step.constrain_resources" title="compass.Step.constrain_resources"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step.constrain_resources</span></code></a>(available_cores)</p></td>
+<td><p>Constrain <code class="docutils literal notranslate"><span class="pre">cpus_per_task</span></code> and <code class="docutils literal notranslate"><span class="pre">ntasks</span></code> based on the number of cores available to this step</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compass.Step.setup.html#compass.Step.setup" title="compass.Step.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step.setup</span></code></a>()</p></td>
 <td><p>Set up the test case in the work directory, including downloading any dependencies.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.Step.run.html#compass.Step.run" title="compass.Step.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step.run</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.Step.runtime_setup.html#compass.Step.runtime_setup" title="compass.Step.runtime_setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step.runtime_setup</span></code></a>()</p></td>
+<td><p>Update attributes of the step at runtime before calling the <code class="docutils literal notranslate"><span class="pre">run()</span></code> method.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.Step.run.html#compass.Step.run" title="compass.Step.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step.run</span></code></a>()</p></td>
 <td><p>Run the step.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.Step.add_input_file.html#compass.Step.add_input_file" title="compass.Step.add_input_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step.add_input_file</span></code></a>([filename, target, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.Step.add_input_file.html#compass.Step.add_input_file" title="compass.Step.add_input_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step.add_input_file</span></code></a>([filename, target, ...])</p></td>
 <td><p>Add an input file to the step (but not necessarily to the MPAS model).</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.Step.add_output_file.html#compass.Step.add_output_file" title="compass.Step.add_output_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step.add_output_file</span></code></a>(filename)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.Step.add_output_file.html#compass.Step.add_output_file" title="compass.Step.add_output_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step.add_output_file</span></code></a>(filename)</p></td>
 <td><p>Add the output file that must be produced by this step and may be made available as an input to steps, perhaps in other test cases.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.Step.add_model_as_input.html#compass.Step.add_model_as_input" title="compass.Step.add_model_as_input"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step.add_model_as_input</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.Step.add_model_as_input.html#compass.Step.add_model_as_input" title="compass.Step.add_model_as_input"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step.add_model_as_input</span></code></a>()</p></td>
 <td><p>make a link to the model executable and add it to the inputs</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.Step.add_namelist_file.html#compass.Step.add_namelist_file" title="compass.Step.add_namelist_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step.add_namelist_file</span></code></a>(package, namelist[, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.Step.add_namelist_file.html#compass.Step.add_namelist_file" title="compass.Step.add_namelist_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step.add_namelist_file</span></code></a>(package, namelist[, ...])</p></td>
 <td><p>Add a file with updates to namelist options to the step to be parsed when generating a complete namelist file if and when the step gets set up.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.Step.add_namelist_options.html#compass.Step.add_namelist_options" title="compass.Step.add_namelist_options"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step.add_namelist_options</span></code></a>(options[, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.Step.add_namelist_options.html#compass.Step.add_namelist_options" title="compass.Step.add_namelist_options"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step.add_namelist_options</span></code></a>(options[, ...])</p></td>
 <td><p>Add the namelist replacements to be parsed when generating a namelist file if and when the step gets set up.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.Step.update_namelist_at_runtime.html#compass.Step.update_namelist_at_runtime" title="compass.Step.update_namelist_at_runtime"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step.update_namelist_at_runtime</span></code></a>(options[, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.Step.update_namelist_at_runtime.html#compass.Step.update_namelist_at_runtime" title="compass.Step.update_namelist_at_runtime"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step.update_namelist_at_runtime</span></code></a>(options[, ...])</p></td>
 <td><p>Update an existing namelist file with additional options.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.Step.update_namelist_pio.html#compass.Step.update_namelist_pio" title="compass.Step.update_namelist_pio"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step.update_namelist_pio</span></code></a>([out_name])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.Step.update_namelist_pio.html#compass.Step.update_namelist_pio" title="compass.Step.update_namelist_pio"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step.update_namelist_pio</span></code></a>([out_name])</p></td>
 <td><p>Modify the namelist so the number of PIO tasks and the stride between them consistent with the number of nodes and cores (one PIO task per node).</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.Step.add_streams_file.html#compass.Step.add_streams_file" title="compass.Step.add_streams_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step.add_streams_file</span></code></a>(package, streams[, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.Step.add_streams_file.html#compass.Step.add_streams_file" title="compass.Step.add_streams_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step.add_streams_file</span></code></a>(package, streams[, ...])</p></td>
 <td><p>Add a streams file to the step to be parsed when generating a complete streams file if and when the step gets set up.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.Step.update_streams_at_runtime.html#compass.Step.update_streams_at_runtime" title="compass.Step.update_streams_at_runtime"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step.update_streams_at_runtime</span></code></a>(package, ...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.Step.update_streams_at_runtime.html#compass.Step.update_streams_at_runtime" title="compass.Step.update_streams_at_runtime"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step.update_streams_at_runtime</span></code></a>(package, ...)</p></td>
 <td><p>Update the streams files during the run phase of this step using the given template and replacements.</p></td>
 </tr>
 </tbody>
@@ -561,10 +576,10 @@ documentation.</p>
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.model.run_model.html#compass.model.run_model" title="compass.model.run_model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_model</span></code></a>(step[, update_pio, ...])</p></td>
-<td><p>Run the model after determining the number of cores</p></td>
+<td><p>Run the model after determining the number of tasks and threads</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.model.partition.html#compass.model.partition" title="compass.model.partition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">partition</span></code></a>(cores, config, logger[, graph_file])</p></td>
-<td><p>Partition the domain for the requested number of cores</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.model.partition.html#compass.model.partition" title="compass.model.partition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">partition</span></code></a>(ntasks, config, logger[, graph_file])</p></td>
+<td><p>Partition the domain for the requested number of tasks</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.model.make_graph_file.html#compass.model.make_graph_file" title="compass.model.make_graph_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_graph_file</span></code></a>(mesh_filename[, ...])</p></td>
 <td><p>Make a graph file from the MPAS mesh for use in the Metis graph partitioning software</p></td>
@@ -596,6 +611,15 @@ documentation.</p>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.parallel.get_available_cores_and_nodes.html#compass.parallel.get_available_cores_and_nodes" title="compass.parallel.get_available_cores_and_nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_available_cores_and_nodes</span></code></a>(config)</p></td>
 <td><p>Get the number of total cores and nodes available for running steps</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.parallel.check_parallel_system.html#compass.parallel.check_parallel_system" title="compass.parallel.check_parallel_system"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_parallel_system</span></code></a>(config)</p></td>
+<td><p>Check whether we are in an appropriate state for the given queuing system.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compass.parallel.set_cores_per_node.html#compass.parallel.set_cores_per_node" title="compass.parallel.set_cores_per_node"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_cores_per_node</span></code></a>(config)</p></td>
+<td><p>If the system has Slurm, find out the <code class="docutils literal notranslate"><span class="pre">cpus_per_node</span></code> and set the config option accordingly.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compass.parallel.run_command.html#compass.parallel.run_command" title="compass.parallel.run_command"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_command</span></code></a>(args, cpus_per_task, ntasks, ...)</p></td>
+<td><p>Run a subprocess with the given command-line arguments and resources</p></td>
 </tr>
 </tbody>
 </table>

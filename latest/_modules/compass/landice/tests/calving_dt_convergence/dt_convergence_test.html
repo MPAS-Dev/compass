@@ -141,8 +141,8 @@
         <span class="n">subdir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">calving</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">velo</span><span class="si">}</span><span class="s1">&#39;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
 
-        <span class="n">cores</span> <span class="o">=</span> <span class="mi">36</span>
-        <span class="n">min_cores</span> <span class="o">=</span> <span class="mi">4</span>
+        <span class="n">ntasks</span> <span class="o">=</span> <span class="mi">36</span>
+        <span class="n">min_tasks</span> <span class="o">=</span> <span class="mi">4</span>
 
         <span class="c1"># Do fewer runs if FO solver</span>
         <span class="k">if</span> <span class="n">velo</span> <span class="o">==</span> <span class="s1">&#39;FO&#39;</span><span class="p">:</span>
@@ -157,7 +157,8 @@
                             <span class="n">calving</span><span class="o">=</span><span class="n">calving</span><span class="p">,</span>
                             <span class="n">velo</span><span class="o">=</span><span class="n">velo</span><span class="p">,</span>
                             <span class="n">calv_dt_frac</span><span class="o">=</span><span class="n">frac</span><span class="p">,</span>
-                            <span class="n">cores</span><span class="o">=</span><span class="n">cores</span><span class="p">,</span> <span class="n">min_cores</span><span class="o">=</span><span class="n">min_cores</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                            <span class="n">ntasks</span><span class="o">=</span><span class="n">ntasks</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="n">min_tasks</span><span class="p">,</span>
+                            <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span></div>
 
     <span class="c1"># no configure() method is needed</span>

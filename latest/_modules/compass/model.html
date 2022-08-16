@@ -108,12 +108,13 @@
 <span class="kn">import</span> <span class="nn">xarray</span>
 
 <span class="kn">from</span> <span class="nn">mpas_tools.logging</span> <span class="kn">import</span> <span class="n">check_call</span>
+<span class="kn">from</span> <span class="nn">compass.parallel</span> <span class="kn">import</span> <span class="n">run_command</span>
 
 
 <div class="viewcode-block" id="run_model"><a class="viewcode-back" href="../../developers_guide/generated/compass.model.run_model.html#compass.model.run_model">[docs]</a><span class="k">def</span> <span class="nf">run_model</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">update_pio</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">partition_graph</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
               <span class="n">graph_file</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span> <span class="n">namelist</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">streams</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Run the model after determining the number of cores</span>
+<span class="sd">    Run the model after determining the number of tasks and threads</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -122,11 +123,11 @@
 
 <span class="sd">    update_pio : bool, optional</span>
 <span class="sd">        Whether to modify the namelist so the number of PIO tasks and the</span>
-<span class="sd">        stride between them is consistent with the number of nodes and cores</span>
+<span class="sd">        stride between them is consistent with the number of nodes and tasks</span>
 <span class="sd">        (one PIO task per node).</span>
 
 <span class="sd">    partition_graph : bool, optional</span>
-<span class="sd">        Whether to partition the domain for the requested number of cores.  If</span>
+<span class="sd">        Whether to partition the domain for the requested number of tasks.  If</span>
 <span class="sd">        so, the partitioning executable is taken from the ``partition`` option</span>
 <span class="sd">        of the ``[executables]`` config section.</span>
 
@@ -134,53 +135,45 @@
 <span class="sd">        The name of the graph file to partition</span>
 
 <span class="sd">    namelist : str, optional</span>
-<span class="sd">        The name of the namelist file, default is ``namelist.&lt;core&gt;``</span>
+<span class="sd">        The name of the namelist file, default is ``namelist.&lt;mpas_core&gt;``</span>
 
 <span class="sd">    streams : str, optional</span>
-<span class="sd">        The name of the streams file, default is ``streams.&lt;core&gt;``</span>
+<span class="sd">        The name of the streams file, default is ``streams.&lt;mpas_core&gt;``</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">mpas_core</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span>
-    <span class="n">cores</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">cores</span>
-    <span class="n">threads</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">threads</span>
+    <span class="n">ntasks</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">ntasks</span>
+    <span class="n">cpus_per_task</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">cpus_per_task</span>
+    <span class="n">openmp_threads</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">openmp_threads</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">config</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">logger</span>
 
     <span class="k">if</span> <span class="n">namelist</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">namelist</span> <span class="o">=</span> <span class="s1">&#39;namelist.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mpas_core</span><span class="p">)</span>
+        <span class="n">namelist</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;namelist.</span><span class="si">{</span><span class="n">mpas_core</span><span class="si">}</span><span class="s1">&#39;</span>
 
     <span class="k">if</span> <span class="n">streams</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">streams</span> <span class="o">=</span> <span class="s1">&#39;streams.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mpas_core</span><span class="p">)</span>
+        <span class="n">streams</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;streams.</span><span class="si">{</span><span class="n">mpas_core</span><span class="si">}</span><span class="s1">&#39;</span>
 
     <span class="k">if</span> <span class="n">update_pio</span><span class="p">:</span>
         <span class="n">step</span><span class="o">.</span><span class="n">update_namelist_pio</span><span class="p">(</span><span class="n">namelist</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">partition_graph</span><span class="p">:</span>
-        <span class="n">partition</span><span class="p">(</span><span class="n">cores</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">graph_file</span><span class="o">=</span><span class="n">graph_file</span><span class="p">)</span>
+        <span class="n">partition</span><span class="p">(</span><span class="n">ntasks</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">graph_file</span><span class="o">=</span><span class="n">graph_file</span><span class="p">)</span>
 
-    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;OMP_NUM_THREADS&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">threads</span><span class="p">)</span>
-
-    <span class="n">parallel_executable</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parallel&#39;</span><span class="p">,</span> <span class="s1">&#39;parallel_executable&#39;</span><span class="p">)</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;executables&#39;</span><span class="p">,</span> <span class="s1">&#39;model&#39;</span><span class="p">)</span>
     <span class="n">model_basename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-
-    <span class="c1"># split the parallel executable into constituents in case it includes flags</span>
-    <span class="n">args</span> <span class="o">=</span> <span class="n">parallel_executable</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
-    <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;-n&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cores</span><span class="p">),</span>
-                 <span class="s1">&#39;./</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model_basename</span><span class="p">),</span>
-                 <span class="s1">&#39;-n&#39;</span><span class="p">,</span> <span class="n">namelist</span><span class="p">,</span>
-                 <span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="n">streams</span><span class="p">])</span>
-
-    <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span></div>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;./</span><span class="si">{</span><span class="n">model_basename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;-n&#39;</span><span class="p">,</span> <span class="n">namelist</span><span class="p">,</span> <span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="n">streams</span><span class="p">]</span>
+    <span class="n">run_command</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">,</span> <span class="n">cpus_per_task</span><span class="o">=</span><span class="n">cpus_per_task</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="n">ntasks</span><span class="p">,</span>
+                <span class="n">openmp_threads</span><span class="o">=</span><span class="n">openmp_threads</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="partition"><a class="viewcode-back" href="../../developers_guide/generated/compass.model.partition.html#compass.model.partition">[docs]</a><span class="k">def</span> <span class="nf">partition</span><span class="p">(</span><span class="n">cores</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">graph_file</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="partition"><a class="viewcode-back" href="../../developers_guide/generated/compass.model.partition.html#compass.model.partition">[docs]</a><span class="k">def</span> <span class="nf">partition</span><span class="p">(</span><span class="n">ntasks</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">graph_file</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Partition the domain for the requested number of cores</span>
+<span class="sd">    Partition the domain for the requested number of tasks</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    cores : int</span>
-<span class="sd">        The number of cores that the model should be run on</span>
+<span class="sd">    ntasks : int</span>
+<span class="sd">        The number of tasks that the model should be run on</span>
 
 <span class="sd">    config : compass.config.CompassConfigParser</span>
 <span class="sd">        Configuration options for the test case, used to get the partitioning</span>
@@ -193,9 +186,9 @@
 <span class="sd">        The name of the graph file to partition</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">cores</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">ntasks</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">executable</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parallel&#39;</span><span class="p">,</span> <span class="s1">&#39;partition_executable&#39;</span><span class="p">)</span>
-        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="n">executable</span><span class="p">,</span> <span class="n">graph_file</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cores</span><span class="p">)]</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="n">executable</span><span class="p">,</span> <span class="n">graph_file</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ntasks</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span>
         <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span></div>
 
 
