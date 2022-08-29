@@ -125,6 +125,7 @@ class OceanTest(TestCase):
 
         resolution = self.resolution
         vertical_coordinate = self.vertical_coordinate
+        thin_film_present = self.thin_film_present
         config = self.config
         experiment = self.experiment
 
@@ -134,6 +135,8 @@ class OceanTest(TestCase):
         # Width of the thin film region
         nx_thin_film = 10
 
+        if experiment in ['thin_film_Ocean0']:
+            config.set('isomip_plus', 'min_column_thickness', '1e-3')
 
         if experiment in ['Ocean0', 'Ocean2', 'Ocean3']:
             # warm initial conditions
