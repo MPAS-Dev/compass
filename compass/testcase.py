@@ -135,8 +135,7 @@ class TestCase:
         This method is deprecated. Use ``step.constrain_resources()`` and
         ``step.runtime_setup()`` instead
         """
-        self.logger.warn('The testcase run() method is deprecated, please use '
-                         'step.runtime_setup()')
+        pass
 
     def validate(self):
         """

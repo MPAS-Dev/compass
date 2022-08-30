@@ -4,6 +4,7 @@ import os
 import pickle
 import time
 import glob
+import inspect
 
 from mpas_tools.logging import LoggingContext, check_call
 import mpas_tools.io
@@ -55,7 +56,7 @@ def run_tests(suite_name, quiet=False, is_test_case=False, steps_to_run=None,
         suite_name = suite_name[:-len('.pickle')]
     # Now open the the suite's pickle file
     if not os.path.exists(f'{suite_name}.pickle'):
-        raise ValueError(f'The suite "{suite_name}" doesn\'t appear to have '
+        raise ValueError(f'The suite "{suite_name}" does not appear to have '
                          f'been set up here.')
     with open(f'{suite_name}.pickle', 'rb') as handle:
         test_suite = pickle.load(handle)
@@ -126,7 +127,7 @@ def run_tests(suite_name, quiet=False, is_test_case=False, steps_to_run=None,
                 log_method_call(method=test_case.run, logger=test_logger)
                 test_logger.info('')
                 try:
-                    test_case.run()
+                    _test_case_run_deprecated(test_case)
                     run_status = success_str
                     test_pass = True
                 except BaseException:
@@ -467,3 +468,38 @@ def _run_step_as_subprocess(test_case, step, new_log_file):
         os.chdir(step.work_dir)
         step_args = ['compass', 'run', '--step_is_subprocess']
         check_call(step_args, step_logger)
+
+
+def _test_case_run_deprecated(test_case):
+    method = test_case.run
+
+    # get the "child" class and its location (import sequence) from the method
+    child_class = method.__self__.__class__
+
+    # iterate over the classes that the child class descends from to find the
+    # first one that actually implements the given method.
+    actual_class = None
+    # inspect.getmro() returns a list of classes the child class descends from,
+    # starting with the child class itself and going "back" to the "object"
+    # class that all python classes descend from.
+    for cls in inspect.getmro(child_class):
+        if method.__name__ in cls.__dict__:
+            actual_class = cls
+            break
+
+    if actual_class is None:
+        raise ValueError('We could not find test_case.run(). Something is '
+                         'buggy!')
+
+    if actual_class.__name__ != 'TestCase':
+        # the run() method has been overridden.  We need to give the user a
+        # deprecation warning.
+        actual_location = f'{actual_class.__module__}.{actual_class.__name__}'
+        test_case.logger.warn(
+            f'\nWARNING: Overriding the TestCase.run() method is deprecated.\n'
+            f'  Please move the contents of\n'
+            f'  {actual_location}.run() \n'
+            f'  to the runtime_setup() or constrain_resources() methods of '
+            f'its steps.\n')
+
+    test_case.run()
