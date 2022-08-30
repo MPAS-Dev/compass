@@ -2,6 +2,7 @@ from compass.testcase import TestCase
 from compass.ocean.tests.baroclinic_channel.initial_state import InitialState
 from compass.ocean.tests.baroclinic_channel.forward import Forward
 from compass.ocean.tests import baroclinic_channel
+from compass.validate import compare_variables
 
 
 class Default(TestCase):
@@ -47,3 +48,13 @@ class Default(TestCase):
         baroclinic_channel.configure(self.resolution, self.config)
 
     # no run() is needed because we're doing the default: running all steps
+
+    def validate(self):
+        """
+        Compare ``temperature``, ``salinity``, ``layerThickness`` and
+        ``normalVelocity`` with a baseline if one was provided.
+        """
+        variables = ['temperature', 'salinity', 'layerThickness',
+                     'normalVelocity']
+        compare_variables(test_case=self, variables=variables,
+                          filename1='forward/output.nc')
