@@ -110,6 +110,7 @@
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.baroclinic_channel.initial_state</span> <span class="kn">import</span> <span class="n">InitialState</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.baroclinic_channel.forward</span> <span class="kn">import</span> <span class="n">Forward</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests</span> <span class="kn">import</span> <span class="n">baroclinic_channel</span>
+<span class="kn">from</span> <span class="nn">compass.validate</span> <span class="kn">import</span> <span class="n">compare_variables</span>
 
 
 <div class="viewcode-block" id="Default"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.baroclinic_channel.default.Default.html#compass.ocean.tests.baroclinic_channel.default.Default">[docs]</a><span class="k">class</span> <span class="nc">Default</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
@@ -152,9 +153,19 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Modify the configuration options for this test case.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">baroclinic_channel</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span></div></div>
+        <span class="n">baroclinic_channel</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span></div>
 
     <span class="c1"># no run() is needed because we&#39;re doing the default: running all steps</span>
+
+    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compare ``temperature``, ``salinity``, ``layerThickness`` and</span>
+<span class="sd">        ``normalVelocity`` with a baseline if one was provided.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;salinity&#39;</span><span class="p">,</span> <span class="s1">&#39;layerThickness&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;normalVelocity&#39;</span><span class="p">]</span>
+        <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
+                          <span class="n">filename1</span><span class="o">=</span><span class="s1">&#39;forward/output.nc&#39;</span><span class="p">)</span></div>
 </pre></div>
 
            </div>
