@@ -10,32 +10,17 @@ from geometric_features import read_feature_collection
 from mpas_tools.cime.constants import constants
 from mpas_tools.viz.colormaps import register_sci_viz_colormaps
 
-from compass.ocean.tests.global_ocean.mesh.mesh import MeshStep
+from compass.mesh import QuasiUniformSphericalMeshStep
 
 
-class WC14Mesh(MeshStep):
+class WC14BaseMesh(QuasiUniformSphericalMeshStep):
     """
     A step for creating SOwISC12to60 meshes
     """
-    def __init__(self, test_case, mesh_name, with_ice_shelf_cavities):
+    def setup(self):
         """
-        Create a new step
-
-        Parameters
-        ----------
-        test_case : compass.ocean.tests.global_ocean.Mesh
-            The test case this step belongs to
-
-        mesh_name : str
-            The name of the mesh
-
-        with_ice_shelf_cavities : bool
-            Whether the mesh includes ice-shelf cavities
+        Add some input files
         """
-
-        super().__init__(test_case, mesh_name, with_ice_shelf_cavities,
-                         package=self.__module__,
-                         mesh_config_filename='wc14.cfg')
 
         inputs = ['coastline_CUSP.geojson',
                   'land_mask_Kamchatka.geojson',
@@ -50,6 +35,8 @@ class WC14Mesh(MeshStep):
         for filename in inputs:
             self.add_input_file(filename=filename,
                                 package=self.__module__)
+
+        super().setup()
 
     def build_cell_width_lat_lon(self):
         """

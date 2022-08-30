@@ -113,7 +113,7 @@ class InitialState(Step):
                        '1timeLevel.nc',
                 database='initial_condition_database')
 
-        mesh_path = mesh.mesh_step.path
+        mesh_path = self.mesh.get_cull_mesh_path()
 
         self.add_input_file(
             filename='mesh.nc',
@@ -123,7 +123,7 @@ class InitialState(Step):
             filename='graph.info',
             work_dir_target=f'{mesh_path}/culled_graph.info')
 
-        if mesh.with_ice_shelf_cavities:
+        if self.mesh.with_ice_shelf_cavities:
             self.add_input_file(
                 filename='land_ice_mask.nc',
                 work_dir_target=f'{mesh_path}/land_ice_mask.nc')

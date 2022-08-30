@@ -37,6 +37,86 @@ and ``restingThickness`` variables for :ref:`ocean_z_level` and
 :ref:`ocean_z_star` coordinates using the ``ssh`` and ``bottomDepth`` as well
 as config options from ``vertical_grid``.
 
+.. _dev_ocean_framework_mesh:
+
+Mesh
+----
+
+The ``compass.ocean.mesh`` package includes modules for spherical ocean meshes
+shared across test groups.
+
+
+.. _dev_ocean_framework_cull_mesh:
+
+Culling Meshes
+~~~~~~~~~~~~~~
+
+The ``compass.ocean.mesh.cull`` module is for culling land cells from
+global ocean meshes.
+
+The class :py:class:`compass.ocean.mesh.cull.CullMeshStep` culls out land
+cells by calling ``cull_mesh()``.
+
+:py:func:`compass.ocean.mesh.cull.cull_mesh()` uses a number of
+capabilities from `MPAS-Tools <http://mpas-dev.github.io/MPAS-Tools/stable/>`_
+and `geometric_features <http://mpas-dev.github.io/geometric_features/stable/>`_
+to cull the mesh.  It performs the following steps:
+
+1. combining Natural Earth land coverage north of 60S with Antarctic
+   ice coverage or grounded ice coverage from BedMachineAntarctica
+
+2. combining transects defining critical passages (if
+   ``with_critical_passages=True``)
+
+3. combining points used to seed a flood fill of the global ocean.
+
+4. create masks from land coverage
+
+5. add land-locked cells to land coverage mask.
+
+6. create masks from transects (if ``with_critical_passages=True``)
+
+7. cull cells based on land coverage but with transects present
+
+8. create flood-fill mask based on seeds
+
+9. cull cells based on flood-fill mask
+
+10. create masks from transects on the final culled mesh (if
+    ``with_critical_passages=True``)
+
+
+.. _dev_ocean_framework_floodplain:
+
+Including a Floodplain
+~~~~~~~~~~~~~~~~~~~~~~
+
+The ``compass.ocean.mesh.floodplain`` module is for adding support for a
+floodplain to a base global ocean mesh.
+
+The class :py:class:`compass.ocean.mesh.floodplain.FloodplainMeshStep`
+descends from :py:class:`compass.mesh.QuasiUniformSphericalMeshStep`, adding
+an attribute:
+
+``self.preserve_floodplain``
+    A ``bool`` defining whether the mesh includes land cells
+
+and including topography in the base mesh from the
+`SRTM15_plus_earth_relief_15s.nc` file in the `bathymetry_database`.  The
+``run()`` method uses the config option:
+
+.. code-block:: ini
+
+    # options for spherical meshes
+    [spherical_mesh]
+
+    # Elevation threshold to use for including land cells
+    floodplain_elevation = 10.0
+
+to determine the elevation of the floodplain to maintain above sea level.
+The bathymetry and the floodplain are added to the mesh using
+:py:func:`mpas_tools.ocean.inject_bathymetry()` and
+:py:func:`mpas_tools.ocean.inject_preserve_floodplain()`, respectively.
 
 .. _dev_ocean_framework_haney:
 

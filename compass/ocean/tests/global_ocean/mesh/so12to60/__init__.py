@@ -6,38 +6,25 @@ from mpas_tools.mesh.creation.signed_distance import \
 from geometric_features import read_feature_collection
 from mpas_tools.cime.constants import constants
 
-from compass.ocean.tests.global_ocean.mesh.mesh import MeshStep
+from compass.mesh import QuasiUniformSphericalMeshStep
 
 
-class SO12to60Mesh(MeshStep):
+class SO12to60BaseMesh(QuasiUniformSphericalMeshStep):
     """
     A step for creating SOwISC12to60 meshes
     """
-    def __init__(self, test_case, mesh_name, with_ice_shelf_cavities):
+    def setup(self):
         """
-        Create a new step
-
-        Parameters
-        ----------
-        test_case : compass.TestCase
-            The test case this step belongs to
-
-        mesh_name : str
-            The name of the mesh
-
-        with_ice_shelf_cavities : bool
-            Whether the mesh includes ice-shelf cavities
+        Add some input files
         """
-
-        super().__init__(test_case, mesh_name, with_ice_shelf_cavities,
-                         package=self.__module__,
-                         mesh_config_filename='so12to60.cfg')
 
         self.add_input_file(filename='atlantic.geojson',
                             package=self.__module__)
 
         self.add_input_file(filename='high_res_region.geojson',
                             package=self.__module__)
+
+        super().setup()
 
     def build_cell_width_lat_lon(self):
         """

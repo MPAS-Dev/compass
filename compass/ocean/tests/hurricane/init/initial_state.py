@@ -38,7 +38,7 @@ class InitialState(Step):
         # generate the streams file
         self.add_streams_file(package, 'streams.init', mode='init')
 
-        mesh_path = mesh.mesh_step.path
+        mesh_path = mesh.steps['cull_mesh'].path
 
         self.add_input_file(
             filename='mesh.nc',
