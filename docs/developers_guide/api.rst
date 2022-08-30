@@ -86,7 +86,7 @@ run
    :toctree: generated/
 
    run_tests
-   run_step
+   run_single_step
 
 
 cache
