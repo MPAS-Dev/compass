@@ -1,9 +1,5 @@
 import os
 
-from mpas_tools.logging import LoggingContext, check_call
-from compass.parallel import get_available_cores_and_nodes
-from compass.logging import log_method_call
-
 
 class TestCase:
     """
@@ -136,38 +132,10 @@ class TestCase:
 
     def run(self):
         """
-        Run each step of the test case.  Test cases can override this method
-        to perform additional operations in addition to running the test case's
-        steps
-
-        Developers need to make sure they call ``super().run()`` at some point
-        in the overridden ``run()`` method to actually call the steps of the
-        run.  The developer will need to decide where in the overridden method
-        to make the call to ``super().run()``, after any updates to steps
-        based on config options, typically at the end of the new method.
+        This method is deprecated. Use ``step.constrain_resources()`` and
+        ``step.runtime_setup()`` instead
         """
-        logger = self.logger
-        cwd = os.getcwd()
-        for step_name in self.steps_to_run:
-            step = self.steps[step_name]
-            if step.cached:
-                logger.info('  * Cached step: {}'.format(step_name))
-                continue
-            step.config = self.config
-            if self.log_filename is not None:
-                step.log_filename = self.log_filename
-
-            self._print_to_stdout('  * step: {}'.format(step_name))
-
-            try:
-                if step.run_as_subprocess:
-                    self._run_step_as_subprocess(step, self.new_step_log_file)
-                else:
-                    self._run_step(step, self.new_step_log_file)
-            except BaseException:
-                self._print_to_stdout('      Failed')
-                raise
-            os.chdir(cwd)
+        pass
 
     def validate(self):
         """
@@ -218,100 +186,3 @@ class TestCase:
 
             if both_pass:
                 raise ValueError('Comparison failed, see above.')
-
-    def _print_to_stdout(self, message):
-        """
-        write out a message to stdout if we're not running a single step on its
-        own
-        """
-        if self.stdout_logger is not None:
-            self.stdout_logger.info(message)
-            if self.logger != self.stdout_logger:
-                # also write it to the log file
-                self.logger.info(message)
-
-    def _run_step(self, step, new_log_file):
-        """
-        Run the requested step
-
-        Parameters
-        ----------
-        step : compass.Step
-            The step to run
-
-        new_log_file : bool
-            Whether to log to a new log file
-        """
-        logger = self.logger
-        config = self.config
-        cwd = os.getcwd()
-        available_cores, _ = get_available_cores_and_nodes(config)
-        step.constrain_resources(available_cores)
-
-        missing_files = list()
-        for input_file in step.inputs:
-            if not os.path.exists(input_file):
-                missing_files.append(input_file)
-
-        if len(missing_files) > 0:
-            raise OSError(
-                'input file(s) missing in step {} of {}/{}/{}: {}'.format(
-                    step.name, step.mpas_core.name, step.test_group.name,
-                    step.test_case.subdir, missing_files))
-
-        test_name = step.path.replace('/', '_')
-        if new_log_file:
-            log_filename = '{}/{}.log'.format(cwd, step.name)
-            step.log_filename = log_filename
-            step_logger = None
-        else:
-            step_logger = logger
-            log_filename = None
-        with LoggingContext(name=test_name, logger=step_logger,
-                            log_filename=log_filename) as step_logger:
-            step.logger = step_logger
-            os.chdir(step.work_dir)
-            step_logger.info('')
-            log_method_call(method=step.run, logger=step_logger)
-            step_logger.info('')
-            step.run()
-
-        missing_files = list()
-        for output_file in step.outputs:
-            if not os.path.exists(output_file):
-                missing_files.append(output_file)
-
-        if len(missing_files) > 0:
-            raise OSError(
-                'output file(s) missing in step {} of {}/{}/{}: {}'.format(
-                    step.name, step.mpas_core.name, step.test_group.name,
-                    step.test_case.subdir, missing_files))
-
-    def _run_step_as_subprocess(self, step, new_log_file):
-        """
-        Run the requested step as a subprocess
-
-        Parameters
-        ----------
-        step : compass.Step
-            The step to run
-
-        new_log_file : bool
-            Whether to log to a new log file
-        """
-        logger = self.logger
-        cwd = os.getcwd()
-        test_name = step.path.replace('/', '_')
-        if new_log_file:
-            log_filename = '{}/{}.log'.format(cwd, step.name)
-            step.log_filename = log_filename
-            step_logger = None
-        else:
-            step_logger = logger
-            log_filename = None
-        with LoggingContext(name=test_name, logger=step_logger,
-                            log_filename=log_filename) as step_logger:
-
-            os.chdir(step.work_dir)
-            step_args = ['compass', 'run', '--step_is_subprocess']
-            check_call(step_args, step_logger)

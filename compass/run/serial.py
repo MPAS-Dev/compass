@@ -4,11 +4,13 @@ import os
 import pickle
 import time
 import glob
+import inspect
 
-from mpas_tools.logging import LoggingContext
+from mpas_tools.logging import LoggingContext, check_call
 import mpas_tools.io
-from compass.parallel import check_parallel_system, set_cores_per_node
-from compass.logging import log_method_call
+from compass.parallel import check_parallel_system, set_cores_per_node, \
+    get_available_cores_and_nodes
+from compass.logging import log_method_call, log_function_call
 from compass.config import CompassConfigParser
 
 
@@ -54,7 +56,7 @@ def run_tests(suite_name, quiet=False, is_test_case=False, steps_to_run=None,
         suite_name = suite_name[:-len('.pickle')]
     # Now open the the suite's pickle file
     if not os.path.exists(f'{suite_name}.pickle'):
-        raise ValueError(f'The suite "{suite_name}" doesn\'t appear to have '
+        raise ValueError(f'The suite "{suite_name}" does not appear to have '
                          f'been set up here.')
     with open(f'{suite_name}.pickle', 'rb') as handle:
         test_suite = pickle.load(handle)
@@ -124,16 +126,30 @@ def run_tests(suite_name, quiet=False, is_test_case=False, steps_to_run=None,
                 test_start = time.time()
                 log_method_call(method=test_case.run, logger=test_logger)
                 test_logger.info('')
-                test_list = ', '.join(test_case.steps_to_run)
-                test_logger.info(f'Running steps: {test_list}')
                 try:
-                    test_case.run()
+                    _test_case_run_deprecated(test_case)
                     run_status = success_str
                     test_pass = True
                 except BaseException:
                     run_status = error_str
                     test_pass = False
-                    test_logger.exception('Exception raised in run()')
+                    test_logger.exception('Exception raised in the test '
+                                          'case\'s run() method')
+
+                if test_pass:
+                    log_function_call(function=_run_test, logger=test_logger)
+                    test_logger.info('')
+                    test_list = ', '.join(test_case.steps_to_run)
+                    test_logger.info(f'Running steps: {test_list}')
+                    try:
+                        _run_test(test_case)
+                        run_status = success_str
+                        test_pass = True
+                    except BaseException:
+                        run_status = error_str
+                        test_pass = False
+                        test_logger.exception('Exception raised while running '
+                                              'the steps of the test case')
 
                 if test_pass:
                     test_logger.info('')
@@ -145,7 +161,8 @@ def run_tests(suite_name, quiet=False, is_test_case=False, steps_to_run=None,
                     except BaseException:
                         run_status = error_str
                         test_pass = False
-                        test_logger.exception('Exception raised in validate()')
+                        test_logger.exception('Exception raised in the test '
+                                              'case\'s validate() method')
 
                 baseline_status = None
                 internal_status = None
@@ -223,7 +240,7 @@ def run_tests(suite_name, quiet=False, is_test_case=False, steps_to_run=None,
             sys.exit(1)
 
 
-def run_step(step_is_subprocess=False):
+def run_single_step(step_is_subprocess=False):
     """
     Used by the framework to run a step when ``compass run`` gets called in the
     step's work directory
@@ -257,9 +274,9 @@ def run_step(step_is_subprocess=False):
     with LoggingContext(name=test_name) as logger:
         test_case.logger = logger
         test_case.stdout_logger = None
-        log_method_call(method=test_case.run, logger=logger)
+        log_function_call(function=_run_test, logger=logger)
         logger.info('')
-        test_case.run()
+        _run_test(test_case)
 
         if not step_is_subprocess:
             # only perform validation if the step is being run by a user on its
@@ -298,7 +315,7 @@ def main():
         run_tests(suite_name='test_case', quiet=args.quiet, is_test_case=True,
                   steps_to_run=args.steps, steps_not_to_run=args.no_steps)
     elif os.path.exists('step.pickle'):
-        run_step(args.step_is_subprocess)
+        run_single_step(args.step_is_subprocess)
     else:
         pickles = glob.glob('*.pickle')
         if len(pickles) == 1:
@@ -313,6 +330,9 @@ def main():
 
 
 def _update_steps_to_run(steps_to_run, steps_not_to_run, config, steps):
+    """
+    Update the steps to run
+    """
     if steps_to_run is None:
         steps_to_run = config.get('test_case',
                                   'steps_to_run').replace(',', ' ').split()
@@ -336,3 +356,150 @@ def _update_steps_to_run(steps_to_run, steps_not_to_run, config, steps):
                         steps_not_to_run]
 
     return steps_to_run
+
+
+def _print_to_stdout(test_case, message):
+    """
+    Write out a message to stdout if we're not running a single step
+    """
+    if test_case.stdout_logger is not None:
+        test_case.stdout_logger.info(message)
+        if test_case.logger != test_case.stdout_logger:
+            # also write it to the log file
+            test_case.logger.info(message)
+
+
+def _run_test(test_case):
+    """
+    Run each step of the test case
+    """
+    logger = test_case.logger
+    cwd = os.getcwd()
+    for step_name in test_case.steps_to_run:
+        step = test_case.steps[step_name]
+        if step.cached:
+            logger.info(f'  * Cached step: {step_name}')
+            continue
+        step.config = test_case.config
+        if test_case.log_filename is not None:
+            step.log_filename = test_case.log_filename
+
+        _print_to_stdout(test_case, f'  * step: {step_name}')
+
+        try:
+            if step.run_as_subprocess:
+                _run_step_as_subprocess(
+                    test_case, step, test_case.new_step_log_file)
+            else:
+                _run_step(test_case, step, test_case.new_step_log_file)
+        except BaseException:
+            _print_to_stdout(test_case, '      Failed')
+            raise
+        os.chdir(cwd)
+
+
+def _run_step(test_case, step, new_log_file):
+    """
+    Run the requested step
+    """
+    logger = test_case.logger
+    config = test_case.config
+    cwd = os.getcwd()
+    available_cores, _ = get_available_cores_and_nodes(config)
+    step.constrain_resources(available_cores)
+
+    missing_files = list()
+    for input_file in step.inputs:
+        if not os.path.exists(input_file):
+            missing_files.append(input_file)
+
+    if len(missing_files) > 0:
+        raise OSError(
+            f'input file(s) missing in step {step.name} of '
+            f'{step.mpas_core.name}/{step.test_group.name}/'
+            f'{step.test_case.subdir}: {missing_files}')
+
+    test_name = step.path.replace('/', '_')
+    if new_log_file:
+        log_filename = f'{cwd}/{step.name}.log'
+        step.log_filename = log_filename
+        step_logger = None
+    else:
+        step_logger = logger
+        log_filename = None
+    with LoggingContext(name=test_name, logger=step_logger,
+                        log_filename=log_filename) as step_logger:
+        step.logger = step_logger
+        os.chdir(step.work_dir)
+        step_logger.info('')
+        log_method_call(method=step.run, logger=step_logger)
+        step_logger.info('')
+        step.run()
+
+    missing_files = list()
+    for output_file in step.outputs:
+        if not os.path.exists(output_file):
+            missing_files.append(output_file)
+
+    if len(missing_files) > 0:
+        raise OSError(
+            f'output file(s) missing in step {step.name} of '
+            f'{step.mpas_core.name}/{step.test_group.name}/'
+            f'{step.test_case.subdir}: {missing_files}')
+
+
+def _run_step_as_subprocess(test_case, step, new_log_file):
+    """
+    Run the requested step as a subprocess
+    """
+    logger = test_case.logger
+    cwd = os.getcwd()
+    test_name = step.path.replace('/', '_')
+    if new_log_file:
+        log_filename = f'{cwd}/{step.name}.log'
+        step.log_filename = log_filename
+        step_logger = None
+    else:
+        step_logger = logger
+        log_filename = None
+    with LoggingContext(name=test_name, logger=step_logger,
+                        log_filename=log_filename) as step_logger:
+
+        os.chdir(step.work_dir)
+        step_args = ['compass', 'run', '--step_is_subprocess']
+        check_call(step_args, step_logger)
+
+
+def _test_case_run_deprecated(test_case):
+    method = test_case.run
+
+    # get the "child" class and its location (import sequence) from the method
+    child_class = method.__self__.__class__
+
+    # iterate over the classes that the child class descends from to find the
+    # first one that actually implements the given method.
+    actual_class = None
+    # inspect.getmro() returns a list of classes the child class descends from,
+    # starting with the child class itself and going "back" to the "object"
+    # class that all python classes descend from.
+    for cls in inspect.getmro(child_class):
+        if method.__name__ in cls.__dict__:
+            actual_class = cls
+            break
+
+    if actual_class is None:
+        raise ValueError('We could not find test_case.run(). Something is '
+                         'buggy!')
+
+    if actual_class.__name__ != 'TestCase':
+        # the run() method has been overridden.  We need to give the user a
+        # deprecation warning.
+        actual_location = f'{actual_class.__module__}.{actual_class.__name__}'
+        test_case.logger.warn(
+            f'\nWARNING: Overriding the TestCase.run() method is deprecated.\n'
+            f'  Please move the contents of\n'
+            f'  {actual_location}.run() \n'
+            f'  to the runtime_setup() or constrain_resources() methods of '
+            f'its steps.\n')
+
+    test_case.run()
