@@ -268,21 +268,10 @@ to improve model efficiency.
 A :py:class:`compass.ocean.tests.global_ocean.mesh.Mesh` object is constructed
 with the ``mesh_name`` as one of its arguments.  Based on this argument, it
 determines the appropriate child class of
-:py:class:`compass.ocean.tests.global_ocean.mesh.mesh.MeshStep` to create.
+:py:class:`compass.mesh.spherical.SphericalBaseStep` to create the base mesh
+and adds a :py:class:`compass.ocean.mesh.cull.CullMeshStep`.
 
-.. _dev_ocean_global_ocean_mesh_step:
-
-mesh step
-^^^^^^^^^
-
-The parent class :py:class:`compass.ocean.tests.global_ocean.mesh.mesh.MeshStep`
-defines a method
-:py:meth:`compass.ocean.tests.global_ocean.mesh.mesh.MeshStep.build_cell_width_lat_lon()`
-that a child class for each mesh type must override to define the size of
-MPAS cells as a function of longitude and latitude.
-
-This class also takes care of defining the output from the step and storing
-attributes:
+This class also stores attributes:
 
 ``self.mesh_name``
     the name of the mesh
@@ -296,39 +285,6 @@ attributes:
 
 ``self.mesh_config_filename``
     the name of the config file with mesh-specific config options
-
-In its ``run()`` method, ``MeshStep`` calls the ``build_cell_width_lat_lon()``
-method to get the desired mesh resolution, then creates the mesh by calling
-:py:func:`mpas_tools.ocean.build_mesh.build_spherical_mesh()` culls out land
-cells by calling :py:func:`compass.ocean.tests.global_ocean.mesh.cull.cull_mesh()`.
-
-``cull_mesh()`` uses a number of capabilities from
-`MPAS-Tools <http://mpas-dev.github.io/MPAS-Tools/stable/>`_
-and `geometric_features <http://mpas-dev.github.io/geometric_features/stable/>`_
-to cull the mesh.  It performs the following steps:
-
-1. combining Natural Earth land coverage north of 60S with Antarctic
-   ice coverage or grounded ice coverage from BedMachineAntarctica
-
-2. combining transects defining critical passages (if
-   ``with_critical_passages=True``)
-
-3. combining points used to seed a flood fill of the global ocean.
-
-4. create masks from land coverage
-
-5. add land-locked cells to land coverage mask.
-
-6. create masks from transects (if ``with_critical_passages=True``)
-
-7. cull cells based on land coverage but with transects present
-
-8. create flood-fill mask based on seeds
-
-9. cull cells based on flood-fill mask
-
-10. create masks from transects on the final culled mesh (if
-    ``with_critical_passages=True``)
 
 .. _dev_ocean_global_ocean_meshes:
 
@@ -344,12 +300,12 @@ QU240 and QUwISC240
 
 The ``QU240`` mesh is a quasi-uniform mesh with 240-km resolution. The
 ``QUwISC240`` mesh is identical except that it includes the cavities below ice
-shelves in the ocean domain. The class
-:py:class:`compass.ocean.tests.global_ocean.mesh.qu240.QU240Mesh` defines the
-resolution for both meshes. The ``compass.ocean.tests.global_ocean.mesh.qu240``
-module includes namelist options appropriate for forward simulations with both
-RK4 and split-explicit time integration on this mesh.  These set the time step
-and default run duration for short runs with this mesh.
+shelves in the ocean domain. The mesh is defined by
+:py:class:`compass.mesh.QuasiUniformSphericalMeshStep`.  The
+``compass.ocean.tests.global_ocean.mesh.qu240`` module includes namelist
+options appropriate for forward simulations with both RK4 and split-explicit
+time integration on this mesh.  These set the time step and default run
+duration for short runs with this mesh.
 
 The default config options for this mesh are:
 
@@ -379,23 +335,19 @@ The default config options for this mesh are:
 
     ## config options related to the initial_state step
     # number of cores to use
-    init_cores = 4
+    init_ntasks = 4
     # minimum of cores, below which the step fails
-    init_min_cores = 1
+    init_min_tasks = 1
     # maximum memory usage allowed (in MB)
     init_max_memory = 1000
-    # maximum disk usage allowed (in MB)
-    init_max_disk = 1000
 
     ## config options related to the forward steps
     # number of cores to use
-    forward_cores = 4
+    forward_ntasks = 4
     # minimum of cores, below which the step fails
-    forward_min_cores = 1
+    forward_min_tasks = 1
     # maximum memory usage allowed (in MB)
     forward_max_memory = 1000
-    # maximum disk usage allowed (in MB)
-    forward_max_disk = 1000
 
     ## metadata related to the mesh
     # the prefix (e.g. QU, EC, WC, SO)
@@ -419,6 +371,17 @@ The default config options for this mesh are:
 
 The vertical grid is a ``tanh_dz`` profile (see :ref:`dev_ocean_framework_vertical`)
 with 16 vertical levels ranging in thickness from 3 to 500 m.
+
+.. _dev_ocean_global_ocean_isco240:
+
+Icos240 and IcoswISC240
++++++++++++++++++++++++
+
+The ``Icos240`` mesh is a subdivided icosahedral mesh with 240-km resolution
+using the :py:class:`compass.mesh.IcosahedralMeshStep` class. The
+``IcoswISC240`` mesh is identical except that it includes the cavities below
+ice shelves in the ocean domain. Aside from the base mesh, these are identical
+to :ref:`dev_ocean_global_ocean_qu240`.
 
 .. _dev_ocean_global_ocean_ec30to60:
 
@@ -454,23 +417,19 @@ The default config options for this mesh are:
 
     ## config options related to the initial_state step
     # number of cores to use
-    init_cores = 36
+    init_ntasks = 36
     # minimum of cores, below which the step fails
-    init_min_cores = 8
+    init_min_tasks = 8
     # maximum memory usage allowed (in MB)
     init_max_memory = 1000
-    # maximum disk usage allowed (in MB)
-    init_max_disk = 1000
 
     ## config options related to the forward steps
     # number of cores to use
-    forward_cores = 128
+    forward_ntasks = 128
     # minimum of cores, below which the step fails
-    forward_min_cores = 36
+    forward_min_tasks = 36
     # maximum memory usage allowed (in MB)
     forward_max_memory = 1000
-    # maximum disk usage allowed (in MB)
-    forward_max_disk = 1000
 
     ## metadata related to the mesh
     # the prefix (e.g. QU, EC, WC, SO)
@@ -528,23 +487,19 @@ The default config options for this mesh are:
 
     ## config options related to the initial_state step
     # number of cores to use
-    init_cores = 36
+    init_ntasks = 36
     # minimum of cores, below which the step fails
-    init_min_cores = 8
+    init_min_tasks = 8
     # maximum memory usage allowed (in MB)
     init_max_memory = 1000
-    # maximum disk usage allowed (in MB)
-    init_max_disk = 1000
 
     ## config options related to the forward steps
     # number of cores to use
-    forward_cores = 1296
+    forward_ntasks = 1296
     # minimum of cores, below which the step fails
-    forward_min_cores = 128
+    forward_min_tasks = 128
     # maximum memory usage allowed (in MB)
     forward_max_memory = 1000
-    # maximum disk usage allowed (in MB)
-    forward_max_disk = 1000
 
     ## metadata related to the mesh
     # the prefix (e.g. QU, EC, WC, SO)
@@ -607,23 +562,19 @@ The default config options for this mesh are:
 
     ## config options related to the initial_state step
     # number of cores to use
-    init_cores = 36
+    init_ntasks = 36
     # minimum of cores, below which the step fails
-    init_min_cores = 8
+    init_min_tasks = 8
     # maximum memory usage allowed (in MB)
     init_max_memory = 1000
-    # maximum disk usage allowed (in MB)
-    init_max_disk = 1000
 
     ## config options related to the forward steps
     # number of cores to use
-    forward_cores = 720
+    forward_ntasks = 720
     # minimum of cores, below which the step fails
-    forward_min_cores = 144
+    forward_min_tasks = 144
     # maximum memory usage allowed (in MB)
     forward_max_memory = 1000
-    # maximum disk usage allowed (in MB)
-    forward_max_disk = 1000
 
     ## metadata related to the mesh
     # the prefix (e.g. QU, EC, WC, SO)

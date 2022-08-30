@@ -358,16 +358,9 @@ to improve model efficiency.</p>
 <p>A <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.mesh.Mesh.html#compass.ocean.tests.global_ocean.mesh.Mesh" title="compass.ocean.tests.global_ocean.mesh.Mesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.Mesh</span></code></a> object is constructed
 with the <code class="docutils literal notranslate"><span class="pre">mesh_name</span></code> as one of its arguments.  Based on this argument, it
 determines the appropriate child class of
-<a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.mesh.mesh.MeshStep.html#compass.ocean.tests.global_ocean.mesh.mesh.MeshStep" title="compass.ocean.tests.global_ocean.mesh.mesh.MeshStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.mesh.MeshStep</span></code></a> to create.</p>
-<section id="mesh-step">
-<span id="dev-ocean-global-ocean-mesh-step"></span><h4>mesh step<a class="headerlink" href="#mesh-step" title="Permalink to this heading">¶</a></h4>
-<p>The parent class <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.mesh.mesh.MeshStep.html#compass.ocean.tests.global_ocean.mesh.mesh.MeshStep" title="compass.ocean.tests.global_ocean.mesh.mesh.MeshStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.mesh.MeshStep</span></code></a>
-defines a method
-<a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.mesh.mesh.MeshStep.build_cell_width_lat_lon.html#compass.ocean.tests.global_ocean.mesh.mesh.MeshStep.build_cell_width_lat_lon" title="compass.ocean.tests.global_ocean.mesh.mesh.MeshStep.build_cell_width_lat_lon"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.mesh.MeshStep.build_cell_width_lat_lon()</span></code></a>
-that a child class for each mesh type must override to define the size of
-MPAS cells as a function of longitude and latitude.</p>
-<p>This class also takes care of defining the output from the step and storing
-attributes:</p>
+<a class="reference internal" href="../../generated/compass.mesh.spherical.SphericalBaseStep.html#compass.mesh.spherical.SphericalBaseStep" title="compass.mesh.spherical.SphericalBaseStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.mesh.spherical.SphericalBaseStep</span></code></a> to create the base mesh
+and adds a <a class="reference internal" href="../generated/compass.ocean.mesh.cull.CullMeshStep.html#compass.ocean.mesh.cull.CullMeshStep" title="compass.ocean.mesh.cull.CullMeshStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.mesh.cull.CullMeshStep</span></code></a>.</p>
+<p>This class also stores attributes:</p>
 <dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">self.mesh_name</span></code></dt><dd><p>the name of the mesh</p>
 </dd>
@@ -379,30 +372,6 @@ specific to the mesh can be found</p>
 <dt><code class="docutils literal notranslate"><span class="pre">self.mesh_config_filename</span></code></dt><dd><p>the name of the config file with mesh-specific config options</p>
 </dd>
 </dl>
-<p>In its <code class="docutils literal notranslate"><span class="pre">run()</span></code> method, <code class="docutils literal notranslate"><span class="pre">MeshStep</span></code> calls the <code class="docutils literal notranslate"><span class="pre">build_cell_width_lat_lon()</span></code>
-method to get the desired mesh resolution, then creates the mesh by calling
-<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.ocean.build_mesh.build_spherical_mesh.html#mpas_tools.ocean.build_mesh.build_spherical_mesh" title="(in mpas_tools vstable)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_tools.ocean.build_mesh.build_spherical_mesh()</span></code></a> culls out land
-cells by calling <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.mesh.cull.cull_mesh.html#compass.ocean.tests.global_ocean.mesh.cull.cull_mesh" title="compass.ocean.tests.global_ocean.mesh.cull.cull_mesh"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.cull.cull_mesh()</span></code></a>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">cull_mesh()</span></code> uses a number of capabilities from
-<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/">MPAS-Tools</a>
-and <a class="reference external" href="http://mpas-dev.github.io/geometric_features/stable/">geometric_features</a>
-to cull the mesh.  It performs the following steps:</p>
-<ol class="arabic simple">
-<li><p>combining Natural Earth land coverage north of 60S with Antarctic
-ice coverage or grounded ice coverage from BedMachineAntarctica</p></li>
-<li><p>combining transects defining critical passages (if
-<code class="docutils literal notranslate"><span class="pre">with_critical_passages=True</span></code>)</p></li>
-<li><p>combining points used to seed a flood fill of the global ocean.</p></li>
-<li><p>create masks from land coverage</p></li>
-<li><p>add land-locked cells to land coverage mask.</p></li>
-<li><p>create masks from transects (if <code class="docutils literal notranslate"><span class="pre">with_critical_passages=True</span></code>)</p></li>
-<li><p>cull cells based on land coverage but with transects present</p></li>
-<li><p>create flood-fill mask based on seeds</p></li>
-<li><p>cull cells based on flood-fill mask</p></li>
-<li><p>create masks from transects on the final culled mesh (if
-<code class="docutils literal notranslate"><span class="pre">with_critical_passages=True</span></code>)</p></li>
-</ol>
-</section>
 <section id="meshes">
 <span id="dev-ocean-global-ocean-meshes"></span><h4>meshes<a class="headerlink" href="#meshes" title="Permalink to this heading">¶</a></h4>
 <p><code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> currently defines 5 meshes, with more to come.</p>
@@ -410,12 +379,12 @@ ice coverage or grounded ice coverage from BedMachineAntarctica</p></li>
 <span id="dev-ocean-global-ocean-qu240"></span><h5>QU240 and QUwISC240<a class="headerlink" href="#qu240-and-quwisc240" title="Permalink to this heading">¶</a></h5>
 <p>The <code class="docutils literal notranslate"><span class="pre">QU240</span></code> mesh is a quasi-uniform mesh with 240-km resolution. The
 <code class="docutils literal notranslate"><span class="pre">QUwISC240</span></code> mesh is identical except that it includes the cavities below ice
-shelves in the ocean domain. The class
-<a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.mesh.qu240.QU240Mesh.html#compass.ocean.tests.global_ocean.mesh.qu240.QU240Mesh" title="compass.ocean.tests.global_ocean.mesh.qu240.QU240Mesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.qu240.QU240Mesh</span></code></a> defines the
-resolution for both meshes. The <code class="docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.qu240</span></code>
-module includes namelist options appropriate for forward simulations with both
-RK4 and split-explicit time integration on this mesh.  These set the time step
-and default run duration for short runs with this mesh.</p>
+shelves in the ocean domain. The mesh is defined by
+<a class="reference internal" href="../../generated/compass.mesh.QuasiUniformSphericalMeshStep.html#compass.mesh.QuasiUniformSphericalMeshStep" title="compass.mesh.QuasiUniformSphericalMeshStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.mesh.QuasiUniformSphericalMeshStep</span></code></a>.  The
+<code class="docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.qu240</span></code> module includes namelist
+options appropriate for forward simulations with both RK4 and split-explicit
+time integration on this mesh.  These set the time step and default run
+duration for short runs with this mesh.</p>
 <p>The default config options for this mesh are:</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span><span class="w"></span>
 <span class="k">[vertical_grid]</span><span class="w"></span>
@@ -441,23 +410,19 @@ and default run duration for short runs with this mesh.</p>
 
 <span class="c1">## config options related to the initial_state step</span><span class="w"></span>
 <span class="c1"># number of cores to use</span><span class="w"></span>
-<span class="na">init_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span><span class="w"></span>
+<span class="na">init_ntasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span><span class="w"></span>
 <span class="c1"># minimum of cores, below which the step fails</span><span class="w"></span>
-<span class="na">init_min_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
+<span class="na">init_min_tasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
 <span class="c1"># maximum memory usage allowed (in MB)</span><span class="w"></span>
 <span class="na">init_max_memory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
-<span class="c1"># maximum disk usage allowed (in MB)</span><span class="w"></span>
-<span class="na">init_max_disk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
 
 <span class="c1">## config options related to the forward steps</span><span class="w"></span>
 <span class="c1"># number of cores to use</span><span class="w"></span>
-<span class="na">forward_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span><span class="w"></span>
+<span class="na">forward_ntasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span><span class="w"></span>
 <span class="c1"># minimum of cores, below which the step fails</span><span class="w"></span>
-<span class="na">forward_min_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
+<span class="na">forward_min_tasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
 <span class="c1"># maximum memory usage allowed (in MB)</span><span class="w"></span>
 <span class="na">forward_max_memory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
-<span class="c1"># maximum disk usage allowed (in MB)</span><span class="w"></span>
-<span class="na">forward_max_disk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
 
 <span class="c1">## metadata related to the mesh</span><span class="w"></span>
 <span class="c1"># the prefix (e.g. QU, EC, WC, SO)</span><span class="w"></span>
@@ -483,6 +448,14 @@ and default run duration for short runs with this mesh.</p>
 <p>The vertical grid is a <code class="docutils literal notranslate"><span class="pre">tanh_dz</span></code> profile (see <a class="reference internal" href="../framework.html#dev-ocean-framework-vertical"><span class="std std-ref">Vertical coordinate</span></a>)
 with 16 vertical levels ranging in thickness from 3 to 500 m.</p>
 </section>
+<section id="icos240-and-icoswisc240">
+<span id="dev-ocean-global-ocean-isco240"></span><h5>Icos240 and IcoswISC240<a class="headerlink" href="#icos240-and-icoswisc240" title="Permalink to this heading">¶</a></h5>
+<p>The <code class="docutils literal notranslate"><span class="pre">Icos240</span></code> mesh is a subdivided icosahedral mesh with 240-km resolution
+using the <a class="reference internal" href="../../generated/compass.mesh.IcosahedralMeshStep.html#compass.mesh.IcosahedralMeshStep" title="compass.mesh.IcosahedralMeshStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.mesh.IcosahedralMeshStep</span></code></a> class. The
+<code class="docutils literal notranslate"><span class="pre">IcoswISC240</span></code> mesh is identical except that it includes the cavities below
+ice shelves in the ocean domain. Aside from the base mesh, these are identical
+to <a class="reference internal" href="#dev-ocean-global-ocean-qu240"><span class="std std-ref">QU240 and QUwISC240</span></a>.</p>
+</section>
 <section id="ec30to60-and-ecwisc30to60">
 <span id="dev-ocean-global-ocean-ec30to60"></span><h5>EC30to60 and ECwISC30to60<a class="headerlink" href="#ec30to60-and-ecwisc30to60" title="Permalink to this heading">¶</a></h5>
 <p>The <code class="docutils literal notranslate"><span class="pre">EC30to60</span></code> mesh is an “eddy-closure” mesh with 30-km resolution at the
@@ -491,7 +464,7 @@ The mesh resolution is purely a function of latitude. The <code class="docutils 
 is identical except that it includes the cavities below ice shelves in the
 ocean domain.</p>
 <p>The class
-<a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.mesh.ec30to60.EC30to60Mesh.html#compass.ocean.tests.global_ocean.mesh.ec30to60.EC30to60Mesh" title="compass.ocean.tests.global_ocean.mesh.ec30to60.EC30to60Mesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.ec30to60.EC30to60Mesh</span></code></a> defines
+<code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.ec30to60.EC30to60Mesh</span></code> defines
 the resolution for both meshes. The <code class="docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.ec30to60</span></code>
 module includes  namelist options appropriate for forward simulations with
 split-explicit (but not RK4) time integration on this mesh.  These set the time
@@ -509,23 +482,19 @@ step and default run duration for short runs with this mesh.</p>
 
 <span class="c1">## config options related to the initial_state step</span><span class="w"></span>
 <span class="c1"># number of cores to use</span><span class="w"></span>
-<span class="na">init_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">36</span><span class="w"></span>
+<span class="na">init_ntasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">36</span><span class="w"></span>
 <span class="c1"># minimum of cores, below which the step fails</span><span class="w"></span>
-<span class="na">init_min_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8</span><span class="w"></span>
+<span class="na">init_min_tasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8</span><span class="w"></span>
 <span class="c1"># maximum memory usage allowed (in MB)</span><span class="w"></span>
 <span class="na">init_max_memory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
-<span class="c1"># maximum disk usage allowed (in MB)</span><span class="w"></span>
-<span class="na">init_max_disk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
 
 <span class="c1">## config options related to the forward steps</span><span class="w"></span>
 <span class="c1"># number of cores to use</span><span class="w"></span>
-<span class="na">forward_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">128</span><span class="w"></span>
+<span class="na">forward_ntasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">128</span><span class="w"></span>
 <span class="c1"># minimum of cores, below which the step fails</span><span class="w"></span>
-<span class="na">forward_min_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">36</span><span class="w"></span>
+<span class="na">forward_min_tasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">36</span><span class="w"></span>
 <span class="c1"># maximum memory usage allowed (in MB)</span><span class="w"></span>
 <span class="na">forward_max_memory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
-<span class="c1"># maximum disk usage allowed (in MB)</span><span class="w"></span>
-<span class="na">forward_max_disk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
 
 <span class="c1">## metadata related to the mesh</span><span class="w"></span>
 <span class="c1"># the prefix (e.g. QU, EC, WC, SO)</span><span class="w"></span>
@@ -558,7 +527,7 @@ with 60 vertical levels ranging in thickness from 10 to 250 m.</p>
 mid-latitudes, 30-km at the equator and in the North Atlantic, 60-km resolution
 in the North Pacific, and 35-km resolution in the Arctic.</p>
 <p>The class
-<a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.mesh.so12to60.SO12to60Mesh.html#compass.ocean.tests.global_ocean.mesh.so12to60.SO12to60Mesh" title="compass.ocean.tests.global_ocean.mesh.so12to60.SO12to60Mesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.so12to60.SO12to60Mesh</span></code></a> defines
+<code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.so12to60.SO12to60Mesh</span></code> defines
 the resolution for the mesh. The <code class="docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.so12to60</span></code>
 module includes namelist options appropriate for forward simulations with
 split-explicit (but not RK4) time integration on this mesh.  These set the time
@@ -576,23 +545,19 @@ step and default run duration for short runs with this mesh.</p>
 
 <span class="c1">## config options related to the initial_state step</span><span class="w"></span>
 <span class="c1"># number of cores to use</span><span class="w"></span>
-<span class="na">init_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">36</span><span class="w"></span>
+<span class="na">init_ntasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">36</span><span class="w"></span>
 <span class="c1"># minimum of cores, below which the step fails</span><span class="w"></span>
-<span class="na">init_min_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8</span><span class="w"></span>
+<span class="na">init_min_tasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8</span><span class="w"></span>
 <span class="c1"># maximum memory usage allowed (in MB)</span><span class="w"></span>
 <span class="na">init_max_memory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
-<span class="c1"># maximum disk usage allowed (in MB)</span><span class="w"></span>
-<span class="na">init_max_disk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
 
 <span class="c1">## config options related to the forward steps</span><span class="w"></span>
 <span class="c1"># number of cores to use</span><span class="w"></span>
-<span class="na">forward_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1296</span><span class="w"></span>
+<span class="na">forward_ntasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1296</span><span class="w"></span>
 <span class="c1"># minimum of cores, below which the step fails</span><span class="w"></span>
-<span class="na">forward_min_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">128</span><span class="w"></span>
+<span class="na">forward_min_tasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">128</span><span class="w"></span>
 <span class="c1"># maximum memory usage allowed (in MB)</span><span class="w"></span>
 <span class="na">forward_max_memory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
-<span class="c1"># maximum disk usage allowed (in MB)</span><span class="w"></span>
-<span class="na">forward_max_disk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
 
 <span class="c1">## metadata related to the mesh</span><span class="w"></span>
 <span class="c1"># the prefix (e.g. QU, EC, WC, SO)</span><span class="w"></span>
@@ -629,7 +594,7 @@ has higher resolution (~14-km) around the continental US, the Arctic Ocean,
 and a section of the North Atlantic containing the Gulf Stream. The resolution
 elsewhere varies between 35 km at the South Pole to 60 km at mid latitudes,
 with a band of 30-km resolution around the equator.</p>
-<p>The class <a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.mesh.wc14.WC14Mesh.html#compass.ocean.tests.global_ocean.mesh.wc14.WC14Mesh" title="compass.ocean.tests.global_ocean.mesh.wc14.WC14Mesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.wc14.WC14Mesh</span></code></a>
+<p>The class <code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.wc14.WC14Mesh</span></code>
 defines the resolution for the mesh. The
 <code class="docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.mesh.wc14</span></code> module includes namelist options
 appropriate for forward simulations with split-explicit (but not RK4) time
@@ -648,23 +613,19 @@ short runs with this mesh.</p>
 
 <span class="c1">## config options related to the initial_state step</span><span class="w"></span>
 <span class="c1"># number of cores to use</span><span class="w"></span>
-<span class="na">init_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">36</span><span class="w"></span>
+<span class="na">init_ntasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">36</span><span class="w"></span>
 <span class="c1"># minimum of cores, below which the step fails</span><span class="w"></span>
-<span class="na">init_min_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8</span><span class="w"></span>
+<span class="na">init_min_tasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8</span><span class="w"></span>
 <span class="c1"># maximum memory usage allowed (in MB)</span><span class="w"></span>
 <span class="na">init_max_memory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
-<span class="c1"># maximum disk usage allowed (in MB)</span><span class="w"></span>
-<span class="na">init_max_disk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
 
 <span class="c1">## config options related to the forward steps</span><span class="w"></span>
 <span class="c1"># number of cores to use</span><span class="w"></span>
-<span class="na">forward_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">720</span><span class="w"></span>
+<span class="na">forward_ntasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">720</span><span class="w"></span>
 <span class="c1"># minimum of cores, below which the step fails</span><span class="w"></span>
-<span class="na">forward_min_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">144</span><span class="w"></span>
+<span class="na">forward_min_tasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">144</span><span class="w"></span>
 <span class="c1"># maximum memory usage allowed (in MB)</span><span class="w"></span>
 <span class="na">forward_max_memory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
-<span class="c1"># maximum disk usage allowed (in MB)</span><span class="w"></span>
-<span class="na">forward_max_disk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
 
 <span class="c1">## metadata related to the mesh</span><span class="w"></span>
 <span class="c1"># the prefix (e.g. QU, EC, WC, SO)</span><span class="w"></span>

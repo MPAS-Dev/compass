@@ -115,40 +115,27 @@
 <span class="kn">from</span> <span class="nn">geometric_features</span> <span class="kn">import</span> <span class="n">read_feature_collection</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.cime.constants</span> <span class="kn">import</span> <span class="n">constants</span>
 
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.mesh</span> <span class="kn">import</span> <span class="n">MeshStep</span>
+<span class="kn">from</span> <span class="nn">compass.mesh</span> <span class="kn">import</span> <span class="n">QuasiUniformSphericalMeshStep</span>
 
 
-<div class="viewcode-block" id="SO12to60Mesh"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.mesh.so12to60.SO12to60Mesh.html#compass.ocean.tests.global_ocean.mesh.so12to60.SO12to60Mesh">[docs]</a><span class="k">class</span> <span class="nc">SO12to60Mesh</span><span class="p">(</span><span class="n">MeshStep</span><span class="p">):</span>
+<div class="viewcode-block" id="SO12to60BaseMesh"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.mesh.so12to60.SO12to60BaseMesh.html#compass.ocean.tests.global_ocean.mesh.so12to60.SO12to60BaseMesh">[docs]</a><span class="k">class</span> <span class="nc">SO12to60BaseMesh</span><span class="p">(</span><span class="n">QuasiUniformSphericalMeshStep</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A step for creating SOwISC12to60 meshes</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="SO12to60Mesh.__init__"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.mesh.so12to60.SO12to60Mesh.html#compass.ocean.tests.global_ocean.mesh.so12to60.SO12to60Mesh.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span> <span class="n">with_ice_shelf_cavities</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Create a new step</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        test_case : compass.TestCase</span>
-<span class="sd">            The test case this step belongs to</span>
-
-<span class="sd">        mesh_name : str</span>
-<span class="sd">            The name of the mesh</span>
-
-<span class="sd">        with_ice_shelf_cavities : bool</span>
-<span class="sd">            Whether the mesh includes ice-shelf cavities</span>
+<span class="sd">        Add some input files</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span> <span class="n">with_ice_shelf_cavities</span><span class="p">,</span>
-                         <span class="n">package</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span><span class="p">,</span>
-                         <span class="n">mesh_config_filename</span><span class="o">=</span><span class="s1">&#39;so12to60.cfg&#39;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;atlantic.geojson&#39;</span><span class="p">,</span>
                             <span class="n">package</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;high_res_region.geojson&#39;</span><span class="p">,</span>
-                            <span class="n">package</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span><span class="p">)</span></div>
+                            <span class="n">package</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span><span class="p">)</span>
 
-<div class="viewcode-block" id="SO12to60Mesh.build_cell_width_lat_lon"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.mesh.so12to60.SO12to60Mesh.build_cell_width_lat_lon.html#compass.ocean.tests.global_ocean.mesh.so12to60.SO12to60Mesh.build_cell_width_lat_lon">[docs]</a>    <span class="k">def</span> <span class="nf">build_cell_width_lat_lon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
+
+<div class="viewcode-block" id="SO12to60BaseMesh.build_cell_width_lat_lon"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.mesh.so12to60.SO12to60BaseMesh.build_cell_width_lat_lon.html#compass.ocean.tests.global_ocean.mesh.so12to60.SO12to60BaseMesh.build_cell_width_lat_lon">[docs]</a>    <span class="k">def</span> <span class="nf">build_cell_width_lat_lon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create cell width array for this mesh on a regular latitude-longitude</span>
 <span class="sd">        grid</span>

@@ -161,44 +161,42 @@ requires expert help from the E3SM development team.)</p>
 <h2>Shared config options<a class="headerlink" href="#shared-config-options" title="Permalink to this heading">¶</a></h2>
 <p>All <code class="docutils literal notranslate"><span class="pre">global_ocean</span></code> test cases start the following shared config options.
 Note that meshes and test cases may modify these options, as noted below.</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># options for global ocean testcases</span><span class="w"></span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># options for spherical meshes</span><span class="w"></span>
+<span class="k">[spherical_mesh]</span><span class="w"></span>
+
+<span class="c1">## config options related to the step for culling land from the mesh</span><span class="w"></span>
+<span class="c1"># number of cores to use</span><span class="w"></span>
+<span class="na">cull_mesh_cpus_per_task</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">18</span><span class="w"></span>
+<span class="c1"># minimum of cores, below which the step fails</span><span class="w"></span>
+<span class="na">cull_mesh_min_cpus_per_task</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
+<span class="c1"># maximum memory usage allowed (in MB)</span><span class="w"></span>
+<span class="na">cull_mesh_max_memory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
+
+
+<span class="c1"># options for global ocean testcases</span><span class="w"></span>
 <span class="k">[global_ocean]</span><span class="w"></span>
 
 <span class="c1">## each mesh should replace these with appropriate values in its config file</span><span class="w"></span>
 
-<span class="c1">## config options related to the mesh step</span><span class="w"></span>
-<span class="c1"># number of cores to use</span><span class="w"></span>
-<span class="na">mesh_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
-<span class="c1"># minimum of cores, below which the step fails</span><span class="w"></span>
-<span class="na">mesh_min_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
-<span class="c1"># maximum memory usage allowed (in MB)</span><span class="w"></span>
-<span class="na">mesh_max_memory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
-<span class="c1"># maximum disk usage allowed (in MB)</span><span class="w"></span>
-<span class="na">mesh_max_disk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
-
 <span class="c1">## config options related to the initial_state step</span><span class="w"></span>
 <span class="c1"># number of cores to use</span><span class="w"></span>
-<span class="na">init_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span><span class="w"></span>
+<span class="na">init_ntasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span><span class="w"></span>
 <span class="c1"># minimum of cores, below which the step fails</span><span class="w"></span>
-<span class="na">init_min_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
+<span class="na">init_min_tasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
 <span class="c1"># maximum memory usage allowed (in MB)</span><span class="w"></span>
 <span class="na">init_max_memory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
-<span class="c1"># maximum disk usage allowed (in MB)</span><span class="w"></span>
-<span class="na">init_max_disk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
 <span class="c1"># number of threads</span><span class="w"></span>
 <span class="na">init_threads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
 
 <span class="c1">## config options related to the forward steps</span><span class="w"></span>
 <span class="c1"># number of cores to use</span><span class="w"></span>
-<span class="na">forward_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span><span class="w"></span>
+<span class="na">forward_ntasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span><span class="w"></span>
 <span class="c1"># minimum of cores, below which the step fails</span><span class="w"></span>
-<span class="na">forward_min_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
+<span class="na">forward_min_tasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
 <span class="c1"># number of threads</span><span class="w"></span>
 <span class="na">forward_threads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
 <span class="c1"># maximum memory usage allowed (in MB)</span><span class="w"></span>
 <span class="na">forward_max_memory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
-<span class="c1"># maximum disk usage allowed (in MB)</span><span class="w"></span>
-<span class="na">forward_max_disk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
 
 <span class="c1">## metadata related to the mesh</span><span class="w"></span>
 <span class="c1"># whether to add metadata to output files</span><span class="w"></span>
@@ -232,6 +230,16 @@ Note that meshes and test cases may modify these options, as noted below.</p>
 <span class="na">email</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span><span class="w"></span>
 <span class="c1"># The URL of the pull request documenting the creation of the mesh</span><span class="w"></span>
 <span class="na">pull_request</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;&lt;&lt;Missing&gt;&gt;&gt;</span><span class="w"></span>
+
+<span class="c1"># Elevation threshold for including land cells</span><span class="w"></span>
+<span class="na">floodplain_elevation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10.0</span><span class="w"></span>
+
+
+<span class="c1"># config options related to dynamic adjustment</span><span class="w"></span>
+<span class="k">[dynamic_adjustment]</span><span class="w"></span>
+
+<span class="c1"># the maximum allowed value of temperatureMax in global statistics</span><span class="w"></span>
+<span class="na">temperature_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">33.0</span><span class="w"></span>
 
 
 <span class="c1"># config options related to initial condition and diagnostics support files</span><span class="w"></span>
@@ -269,8 +277,8 @@ Note that meshes and test cases may modify these options, as noted below.</p>
 <span class="na">comparisonArcticStereoResolution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10.</span><span class="w"></span>
 </pre></div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">mesh_*</span></code>, <code class="docutils literal notranslate"><span class="pre">init_*</span></code> and <code class="docutils literal notranslate"><span class="pre">forward:*</span></code> config options are used to specify
-the resources used in in the <code class="docutils literal notranslate"><span class="pre">mesh</span></code> step of the <a class="reference internal" href="#global-ocean-mesh"><span class="std std-ref">mesh test case</span></a>,
+<p>The <code class="docutils literal notranslate"><span class="pre">cull_mesh_*</span></code>, <code class="docutils literal notranslate"><span class="pre">init_*</span></code> and <code class="docutils literal notranslate"><span class="pre">forward:*</span></code> config options are used to
+specify the resources used in in the <code class="docutils literal notranslate"><span class="pre">mesh</span></code> step of the <a class="reference internal" href="#global-ocean-mesh"><span class="std std-ref">mesh test case</span></a>,
 the <code class="docutils literal notranslate"><span class="pre">initial_state</span></code> step of the <a class="reference internal" href="#global-ocean-init"><span class="std std-ref">init test case</span></a> and the
 <a class="reference internal" href="#global-ocean-forward"><span class="std std-ref">Forward step</span></a>, respectively.  These values will differ between
 test cases and meshes.</p>
@@ -450,7 +458,7 @@ options directly in <code class="docutils literal notranslate"><span class="pre"
 you can change in the config file for a test case.  Since some test cases like
 <a class="reference internal" href="#global-ocean-restart-test"><span class="std std-ref">restart_test test case</span></a> and :ref`global_ocean_dynamic_adjustment` have
 more than one forward run, it is convenient to change options like
-<code class="docutils literal notranslate"><span class="pre">forward_cores</span></code> once in the config file, knowing that this will change the
+<code class="docutils literal notranslate"><span class="pre">forward_ntasks</span></code> once in the config file, knowing that this will change the
 target number of cores of all forward model runs in the test case.  The same
 applies to the other <code class="docutils literal notranslate"><span class="pre">forward_*</span></code> config options that change the minimum cores
 allowed, the number of threads, and (in the future) the maximum memory and disk

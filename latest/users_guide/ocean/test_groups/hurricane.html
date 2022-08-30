@@ -154,21 +154,27 @@ wetting and drying scheme.</p>
 <h2>Shared config options<a class="headerlink" href="#shared-config-options" title="Permalink to this heading">¶</a></h2>
 <p>All <code class="docutils literal notranslate"><span class="pre">hurricane</span></code> test cases start the following shared config options.
 Note that meshes and test cases may modify these options, as noted below.</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># options for global ocean testcases</span><span class="w"></span>
-<span class="k">[global_ocean]</span><span class="w"></span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># options for spherical meshes</span><span class="w"></span>
+<span class="k">[spherical_mesh]</span><span class="w"></span>
 
-<span class="c1">## config options related to the mesh step</span><span class="w"></span>
+<span class="c1">## config options related to the step for culling land from the mesh</span><span class="w"></span>
 <span class="c1"># number of cores to use</span><span class="w"></span>
-<span class="na">mesh_ntasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
+<span class="na">cull_mesh_cpus_per_task</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">18</span><span class="w"></span>
 <span class="c1"># minimum of cores, below which the step fails</span><span class="w"></span>
-<span class="na">mesh_min_tasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
+<span class="na">cull_mesh_min_cpus_per_task</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
+<span class="c1"># maximum memory usage allowed (in MB)</span><span class="w"></span>
+<span class="na">cull_mesh_max_memory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span><span class="w"></span>
+
+<span class="c1"># Elevation threshold to use for including land cells</span><span class="w"></span>
+<span class="na">floodplain_elevation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10.0</span><span class="w"></span>
+
+
+<span class="c1"># options for global ocean testcases</span><span class="w"></span>
+<span class="k">[global_ocean]</span><span class="w"></span>
 
 <span class="c1"># The following options are detected from .gitconfig if not explicitly entered</span><span class="w"></span>
 <span class="na">author</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span><span class="w"></span>
 <span class="na">email</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span><span class="w"></span>
-
-<span class="c1"># Elevation threshold to use for including land cells</span><span class="w"></span>
-<span class="na">floodplain_elevation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10.0</span><span class="w"></span>
 
 
 <span class="c1"># options for hurricane testcases</span><span class="w"></span>

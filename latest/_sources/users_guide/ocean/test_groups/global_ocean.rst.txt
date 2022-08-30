@@ -33,44 +33,42 @@ Note that meshes and test cases may modify these options, as noted below.
 
 .. code-block:: cfg
 
+    # options for spherical meshes
+    [spherical_mesh]
+
+    ## config options related to the step for culling land from the mesh
+    # number of cores to use
+    cull_mesh_cpus_per_task = 18
+    # minimum of cores, below which the step fails
+    cull_mesh_min_cpus_per_task = 1
+    # maximum memory usage allowed (in MB)
+    cull_mesh_max_memory = 1000
+
+
     # options for global ocean testcases
     [global_ocean]
 
     ## each mesh should replace these with appropriate values in its config file
 
-    ## config options related to the mesh step
-    # number of cores to use
-    mesh_cores = 1
-    # minimum of cores, below which the step fails
-    mesh_min_cores = 1
-    # maximum memory usage allowed (in MB)
-    mesh_max_memory = 1000
-    # maximum disk usage allowed (in MB)
-    mesh_max_disk = 1000
-
     ## config options related to the initial_state step
     # number of cores to use
-    init_cores = 4
+    init_ntasks = 4
     # minimum of cores, below which the step fails
-    init_min_cores = 1
+    init_min_tasks = 1
     # maximum memory usage allowed (in MB)
     init_max_memory = 1000
-    # maximum disk usage allowed (in MB)
-    init_max_disk = 1000
     # number of threads
     init_threads = 1
 
     ## config options related to the forward steps
     # number of cores to use
-    forward_cores = 4
+    forward_ntasks = 4
     # minimum of cores, below which the step fails
-    forward_min_cores = 1
+    forward_min_tasks = 1
     # number of threads
     forward_threads = 1
     # maximum memory usage allowed (in MB)
     forward_max_memory = 1000
-    # maximum disk usage allowed (in MB)
-    forward_max_disk = 1000
 
     ## metadata related to the mesh
     # whether to add metadata to output files
@@ -104,6 +102,16 @@ Note that meshes and test cases may modify these options, as noted below.
     email = autodetect
     # The URL of the pull request documenting the creation of the mesh
     pull_request = <<<Missing>>>
+
+    # Elevation threshold for including land cells
+    floodplain_elevation = 10.0
+
+
+    # config options related to dynamic adjustment
+    [dynamic_adjustment]
+
+    # the maximum allowed value of temperatureMax in global statistics
+    temperature_max = 33.0
 
 
     # config options related to initial condition and diagnostics support files
@@ -140,8 +148,8 @@ Note that meshes and test cases may modify these options, as noted below.
     comparisonArcticStereoWidth = 6000.
     comparisonArcticStereoResolution = 10.
 
-The ``mesh_*``, ``init_*`` and ``forward:*`` config options are used to specify
-the resources used in in the ``mesh`` step of the :ref:`global_ocean_mesh`,
+The ``cull_mesh_*``, ``init_*`` and ``forward:*`` config options are used to
+specify the resources used in in the ``mesh`` step of the :ref:`global_ocean_mesh`,
 the ``initial_state`` step of the :ref:`global_ocean_init` and the
 :ref:`global_ocean_forward`, respectively.  These values will differ between
 test cases and meshes.
@@ -378,7 +386,7 @@ options directly in ``namelist.ocean`` or modifying streams in
 you can change in the config file for a test case.  Since some test cases like
 :ref:`global_ocean_restart_test` and :ref`global_ocean_dynamic_adjustment` have
 more than one forward run, it is convenient to change options like
-``forward_cores`` once in the config file, knowing that this will change the
+``forward_ntasks`` once in the config file, knowing that this will change the
 target number of cores of all forward model runs in the test case.  The same
 applies to the other ``forward_*`` config options that change the minimum cores
 allowed, the number of threads, and (in the future) the maximum memory and disk

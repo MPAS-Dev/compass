@@ -64,6 +64,11 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Ocean framework</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#namelist-replacements-and-streams-files">Namelist replacements and streams files</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#vertical-coordinate">Vertical coordinate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mesh">Mesh</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#culling-meshes">Culling Meshes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#including-a-floodplain">Including a Floodplain</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#haney-number">Haney number</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#ice-shelf-cavities">Ice-shelf cavities</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#particles">Particles</a></li>
@@ -148,6 +153,63 @@ this section of the config file. The function
 and <code class="docutils literal notranslate"><span class="pre">restingThickness</span></code> variables for <a class="reference internal" href="../../users_guide/ocean/framework/vertical.html#ocean-z-level"><span class="std std-ref">z-level</span></a> and
 <a class="reference internal" href="../../users_guide/ocean/framework/vertical.html#ocean-z-star"><span class="std std-ref">z-star</span></a> coordinates using the <code class="docutils literal notranslate"><span class="pre">ssh</span></code> and <code class="docutils literal notranslate"><span class="pre">bottomDepth</span></code> as well
 as config options from <code class="docutils literal notranslate"><span class="pre">vertical_grid</span></code>.</p>
+</section>
+<section id="mesh">
+<span id="dev-ocean-framework-mesh"></span><h2>Mesh<a class="headerlink" href="#mesh" title="Permalink to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">compass.ocean.mesh</span></code> package includes modules for spherical ocean meshes
+shared across test groups.</p>
+<section id="culling-meshes">
+<span id="dev-ocean-framework-cull-mesh"></span><h3>Culling Meshes<a class="headerlink" href="#culling-meshes" title="Permalink to this heading">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">compass.ocean.mesh.cull</span></code> module is for culling land cells from
+global ocean meshes.</p>
+<p>The class <a class="reference internal" href="generated/compass.ocean.mesh.cull.CullMeshStep.html#compass.ocean.mesh.cull.CullMeshStep" title="compass.ocean.mesh.cull.CullMeshStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.mesh.cull.CullMeshStep</span></code></a> culls out land
+cells by calling <code class="docutils literal notranslate"><span class="pre">cull_mesh()</span></code>.</p>
+<p><a class="reference internal" href="generated/compass.ocean.mesh.cull.cull_mesh.html#compass.ocean.mesh.cull.cull_mesh" title="compass.ocean.mesh.cull.cull_mesh"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.mesh.cull.cull_mesh()</span></code></a> uses a number of
+capabilities from <a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/">MPAS-Tools</a>
+and <a class="reference external" href="http://mpas-dev.github.io/geometric_features/stable/">geometric_features</a>
+to cull the mesh.  It performs the following steps:</p>
+<ol class="arabic simple">
+<li><p>combining Natural Earth land coverage north of 60S with Antarctic
+ice coverage or grounded ice coverage from BedMachineAntarctica</p></li>
+<li><p>combining transects defining critical passages (if
+<code class="docutils literal notranslate"><span class="pre">with_critical_passages=True</span></code>)</p></li>
+<li><p>combining points used to seed a flood fill of the global ocean.</p></li>
+<li><p>create masks from land coverage</p></li>
+<li><p>add land-locked cells to land coverage mask.</p></li>
+<li><p>create masks from transects (if <code class="docutils literal notranslate"><span class="pre">with_critical_passages=True</span></code>)</p></li>
+<li><p>cull cells based on land coverage but with transects present</p></li>
+<li><p>create flood-fill mask based on seeds</p></li>
+<li><p>cull cells based on flood-fill mask</p></li>
+<li><p>create masks from transects on the final culled mesh (if
+<code class="docutils literal notranslate"><span class="pre">with_critical_passages=True</span></code>)</p></li>
+</ol>
+</section>
+<section id="including-a-floodplain">
+<span id="dev-ocean-framework-floodplain"></span><h3>Including a Floodplain<a class="headerlink" href="#including-a-floodplain" title="Permalink to this heading">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">compass.ocean.mesh.floodplain</span></code> module is for adding support for a
+floodplain to a base global ocean mesh.</p>
+<p>The class <a class="reference internal" href="generated/compass.ocean.mesh.floodplain.FloodplainMeshStep.html#compass.ocean.mesh.floodplain.FloodplainMeshStep" title="compass.ocean.mesh.floodplain.FloodplainMeshStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.mesh.floodplain.FloodplainMeshStep</span></code></a>
+descends from <a class="reference internal" href="../generated/compass.mesh.QuasiUniformSphericalMeshStep.html#compass.mesh.QuasiUniformSphericalMeshStep" title="compass.mesh.QuasiUniformSphericalMeshStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.mesh.QuasiUniformSphericalMeshStep</span></code></a>, adding
+an attribute:</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">self.preserve_floodplain</span></code></dt><dd><p>A <code class="docutils literal notranslate"><span class="pre">bool</span></code> defining whether the mesh includes land cells</p>
+</dd>
+</dl>
+<p>and including topography in the base mesh from the
+<cite>SRTM15_plus_earth_relief_15s.nc</cite> file in the <cite>bathymetry_database</cite>.  The
+<code class="docutils literal notranslate"><span class="pre">run()</span></code> method uses the config option:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="c1"># options for spherical meshes</span><span class="w"></span>
+<span class="k">[spherical_mesh]</span><span class="w"></span>
+
+<span class="c1"># Elevation threshold to use for including land cells</span><span class="w"></span>
+<span class="na">floodplain_elevation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10.0</span><span class="w"></span>
+</pre></div>
+</div>
+<p>to determine the elevation of the floodplain to maintain above sea level.
+The bathymetry and the floodplain are added to the mesh using
+<code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_tools.ocean.inject_bathymetry()</span></code> and
+<code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_tools.ocean.inject_preserve_floodplain()</span></code>, respectively.</p>
+</section>
 </section>
 <section id="haney-number">
 <span id="dev-ocean-framework-haney"></span><h2>Haney number<a class="headerlink" href="#haney-number" title="Permalink to this heading">¶</a></h2>
