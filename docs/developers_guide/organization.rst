@@ -1166,6 +1166,12 @@ runtime_setup()
 
 The ``runtime_setup()`` method is used to modify any behaviors of the step at
 runtime, in the way that :py:meth:`compass.TestCase.run()` was previously used.
+This includes things like partitioning an MPAS mesh across processors and
+computing a times step based on config options that might have been modified
+by the user.  It must not include modifying the ``ntasks``, ``min_tasks``,
+``cpus_per_task``, ``min_cpus_per_task`` or ``openmp_threads`` attributes.
+These attributes must be altered by overriding
+:ref:`dev_step_constrain_resources`.
 
 .. _dev_step_run:
 
