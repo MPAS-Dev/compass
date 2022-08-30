@@ -110,11 +110,13 @@
 <span class="kn">import</span> <span class="nn">pickle</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
 
-<span class="kn">from</span> <span class="nn">mpas_tools.logging</span> <span class="kn">import</span> <span class="n">LoggingContext</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.logging</span> <span class="kn">import</span> <span class="n">LoggingContext</span><span class="p">,</span> <span class="n">check_call</span>
 <span class="kn">import</span> <span class="nn">mpas_tools.io</span>
-<span class="kn">from</span> <span class="nn">compass.parallel</span> <span class="kn">import</span> <span class="n">check_parallel_system</span><span class="p">,</span> <span class="n">set_cores_per_node</span>
-<span class="kn">from</span> <span class="nn">compass.logging</span> <span class="kn">import</span> <span class="n">log_method_call</span>
+<span class="kn">from</span> <span class="nn">compass.parallel</span> <span class="kn">import</span> <span class="n">check_parallel_system</span><span class="p">,</span> <span class="n">set_cores_per_node</span><span class="p">,</span> \
+    <span class="n">get_available_cores_and_nodes</span>
+<span class="kn">from</span> <span class="nn">compass.logging</span> <span class="kn">import</span> <span class="n">log_method_call</span><span class="p">,</span> <span class="n">log_function_call</span>
 <span class="kn">from</span> <span class="nn">compass.config</span> <span class="kn">import</span> <span class="n">CompassConfigParser</span>
 
 
@@ -160,7 +162,7 @@
         <span class="n">suite_name</span> <span class="o">=</span> <span class="n">suite_name</span><span class="p">[:</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="s1">&#39;.pickle&#39;</span><span class="p">)]</span>
     <span class="c1"># Now open the the suite&#39;s pickle file</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">suite_name</span><span class="si">}</span><span class="s1">.pickle&#39;</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;The suite &quot;</span><span class="si">{</span><span class="n">suite_name</span><span class="si">}</span><span class="s1">&quot; doesn</span><span class="se">\&#39;</span><span class="s1">t appear to have &#39;</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;The suite &quot;</span><span class="si">{</span><span class="n">suite_name</span><span class="si">}</span><span class="s1">&quot; does not appear to have &#39;</span>
                          <span class="sa">f</span><span class="s1">&#39;been set up here.&#39;</span><span class="p">)</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">suite_name</span><span class="si">}</span><span class="s1">.pickle&#39;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
         <span class="n">test_suite</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
@@ -230,16 +232,30 @@
                 <span class="n">test_start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
                 <span class="n">log_method_call</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="n">test_case</span><span class="o">.</span><span class="n">run</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">test_logger</span><span class="p">)</span>
                 <span class="n">test_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-                <span class="n">test_list</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">test_case</span><span class="o">.</span><span class="n">steps_to_run</span><span class="p">)</span>
-                <span class="n">test_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Running steps: </span><span class="si">{</span><span class="n">test_list</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
                 <span class="k">try</span><span class="p">:</span>
-                    <span class="n">test_case</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+                    <span class="n">_test_case_run_deprecated</span><span class="p">(</span><span class="n">test_case</span><span class="p">)</span>
                     <span class="n">run_status</span> <span class="o">=</span> <span class="n">success_str</span>
                     <span class="n">test_pass</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
                     <span class="n">run_status</span> <span class="o">=</span> <span class="n">error_str</span>
                     <span class="n">test_pass</span> <span class="o">=</span> <span class="kc">False</span>
-                    <span class="n">test_logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Exception raised in run()&#39;</span><span class="p">)</span>
+                    <span class="n">test_logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Exception raised in the test &#39;</span>
+                                          <span class="s1">&#39;case</span><span class="se">\&#39;</span><span class="s1">s run() method&#39;</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">test_pass</span><span class="p">:</span>
+                    <span class="n">log_function_call</span><span class="p">(</span><span class="n">function</span><span class="o">=</span><span class="n">_run_test</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">test_logger</span><span class="p">)</span>
+                    <span class="n">test_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+                    <span class="n">test_list</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">test_case</span><span class="o">.</span><span class="n">steps_to_run</span><span class="p">)</span>
+                    <span class="n">test_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Running steps: </span><span class="si">{</span><span class="n">test_list</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">_run_test</span><span class="p">(</span><span class="n">test_case</span><span class="p">)</span>
+                        <span class="n">run_status</span> <span class="o">=</span> <span class="n">success_str</span>
+                        <span class="n">test_pass</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
+                        <span class="n">run_status</span> <span class="o">=</span> <span class="n">error_str</span>
+                        <span class="n">test_pass</span> <span class="o">=</span> <span class="kc">False</span>
+                        <span class="n">test_logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Exception raised while running &#39;</span>
+                                              <span class="s1">&#39;the steps of the test case&#39;</span><span class="p">)</span>
 
                 <span class="k">if</span> <span class="n">test_pass</span><span class="p">:</span>
                     <span class="n">test_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
@@ -251,7 +267,8 @@
                     <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
                         <span class="n">run_status</span> <span class="o">=</span> <span class="n">error_str</span>
                         <span class="n">test_pass</span> <span class="o">=</span> <span class="kc">False</span>
-                        <span class="n">test_logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Exception raised in validate()&#39;</span><span class="p">)</span>
+                        <span class="n">test_logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Exception raised in the test &#39;</span>
+                                              <span class="s1">&#39;case</span><span class="se">\&#39;</span><span class="s1">s validate() method&#39;</span><span class="p">)</span>
 
                 <span class="n">baseline_status</span> <span class="o">=</span> <span class="kc">None</span>
                 <span class="n">internal_status</span> <span class="o">=</span> <span class="kc">None</span>
@@ -329,7 +346,7 @@
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="run_step"><a class="viewcode-back" href="../../../developers_guide/generated/compass.run.serial.run_step.html#compass.run.serial.run_step">[docs]</a><span class="k">def</span> <span class="nf">run_step</span><span class="p">(</span><span class="n">step_is_subprocess</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="run_single_step"><a class="viewcode-back" href="../../../developers_guide/generated/compass.run.serial.run_single_step.html#compass.run.serial.run_single_step">[docs]</a><span class="k">def</span> <span class="nf">run_single_step</span><span class="p">(</span><span class="n">step_is_subprocess</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Used by the framework to run a step when ``compass run`` gets called in the</span>
 <span class="sd">    step&#39;s work directory</span>
@@ -363,9 +380,9 @@
     <span class="k">with</span> <span class="n">LoggingContext</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">test_name</span><span class="p">)</span> <span class="k">as</span> <span class="n">logger</span><span class="p">:</span>
         <span class="n">test_case</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
         <span class="n">test_case</span><span class="o">.</span><span class="n">stdout_logger</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">log_method_call</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="n">test_case</span><span class="o">.</span><span class="n">run</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+        <span class="n">log_function_call</span><span class="p">(</span><span class="n">function</span><span class="o">=</span><span class="n">_run_test</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-        <span class="n">test_case</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+        <span class="n">_run_test</span><span class="p">(</span><span class="n">test_case</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">step_is_subprocess</span><span class="p">:</span>
             <span class="c1"># only perform validation if the step is being run by a user on its</span>
@@ -404,7 +421,7 @@
         <span class="n">run_tests</span><span class="p">(</span><span class="n">suite_name</span><span class="o">=</span><span class="s1">&#39;test_case&#39;</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">quiet</span><span class="p">,</span> <span class="n">is_test_case</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                   <span class="n">steps_to_run</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">steps</span><span class="p">,</span> <span class="n">steps_not_to_run</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">no_steps</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;step.pickle&#39;</span><span class="p">):</span>
-        <span class="n">run_step</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">step_is_subprocess</span><span class="p">)</span>
+        <span class="n">run_single_step</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">step_is_subprocess</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">pickles</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*.pickle&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pickles</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
@@ -419,6 +436,9 @@
 
 
 <span class="k">def</span> <span class="nf">_update_steps_to_run</span><span class="p">(</span><span class="n">steps_to_run</span><span class="p">,</span> <span class="n">steps_not_to_run</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">steps</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Update the steps to run</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">steps_to_run</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">steps_to_run</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;test_case&#39;</span><span class="p">,</span>
                                   <span class="s1">&#39;steps_to_run&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
@@ -442,6 +462,153 @@
                         <span class="n">steps_not_to_run</span><span class="p">]</span>
 
     <span class="k">return</span> <span class="n">steps_to_run</span>
+
+
+<span class="k">def</span> <span class="nf">_print_to_stdout</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Write out a message to stdout if we&#39;re not running a single step</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">test_case</span><span class="o">.</span><span class="n">stdout_logger</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">test_case</span><span class="o">.</span><span class="n">stdout_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">test_case</span><span class="o">.</span><span class="n">logger</span> <span class="o">!=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">stdout_logger</span><span class="p">:</span>
+            <span class="c1"># also write it to the log file</span>
+            <span class="n">test_case</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_run_test</span><span class="p">(</span><span class="n">test_case</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Run each step of the test case</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">logger</span>
+    <span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">step_name</span> <span class="ow">in</span> <span class="n">test_case</span><span class="o">.</span><span class="n">steps_to_run</span><span class="p">:</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">step_name</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">step</span><span class="o">.</span><span class="n">cached</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  * Cached step: </span><span class="si">{</span><span class="n">step_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">continue</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">config</span>
+        <span class="k">if</span> <span class="n">test_case</span><span class="o">.</span><span class="n">log_filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">step</span><span class="o">.</span><span class="n">log_filename</span> <span class="o">=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">log_filename</span>
+
+        <span class="n">_print_to_stdout</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;  * step: </span><span class="si">{</span><span class="n">step_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">step</span><span class="o">.</span><span class="n">run_as_subprocess</span><span class="p">:</span>
+                <span class="n">_run_step_as_subprocess</span><span class="p">(</span>
+                    <span class="n">test_case</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">test_case</span><span class="o">.</span><span class="n">new_step_log_file</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">_run_step</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">test_case</span><span class="o">.</span><span class="n">new_step_log_file</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
+            <span class="n">_print_to_stdout</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="s1">&#39;      Failed&#39;</span><span class="p">)</span>
+            <span class="k">raise</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">cwd</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_run_step</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">new_log_file</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Run the requested step</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">logger</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">config</span>
+    <span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+    <span class="n">available_cores</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_available_cores_and_nodes</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+    <span class="n">step</span><span class="o">.</span><span class="n">constrain_resources</span><span class="p">(</span><span class="n">available_cores</span><span class="p">)</span>
+
+    <span class="n">missing_files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">input_file</span> <span class="ow">in</span> <span class="n">step</span><span class="o">.</span><span class="n">inputs</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">input_file</span><span class="p">):</span>
+            <span class="n">missing_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">missing_files</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;input file(s) missing in step </span><span class="si">{</span><span class="n">step</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1"> of &#39;</span>
+            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">step</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">step</span><span class="o">.</span><span class="n">test_group</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">/&#39;</span>
+            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">step</span><span class="o">.</span><span class="n">test_case</span><span class="o">.</span><span class="n">subdir</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">missing_files</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="n">test_name</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">new_log_file</span><span class="p">:</span>
+        <span class="n">log_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cwd</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">step</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">.log&#39;</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">log_filename</span> <span class="o">=</span> <span class="n">log_filename</span>
+        <span class="n">step_logger</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">step_logger</span> <span class="o">=</span> <span class="n">logger</span>
+        <span class="n">log_filename</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">with</span> <span class="n">LoggingContext</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">test_name</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">step_logger</span><span class="p">,</span>
+                        <span class="n">log_filename</span><span class="o">=</span><span class="n">log_filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">step_logger</span><span class="p">:</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">step_logger</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">step</span><span class="o">.</span><span class="n">work_dir</span><span class="p">)</span>
+        <span class="n">step_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">log_method_call</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="n">step</span><span class="o">.</span><span class="n">run</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">step_logger</span><span class="p">)</span>
+        <span class="n">step_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+
+    <span class="n">missing_files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">output_file</span> <span class="ow">in</span> <span class="n">step</span><span class="o">.</span><span class="n">outputs</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_file</span><span class="p">):</span>
+            <span class="n">missing_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output_file</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">missing_files</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;output file(s) missing in step </span><span class="si">{</span><span class="n">step</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1"> of &#39;</span>
+            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">step</span><span class="o">.</span><span class="n">mpas_core</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">step</span><span class="o">.</span><span class="n">test_group</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">/&#39;</span>
+            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">step</span><span class="o">.</span><span class="n">test_case</span><span class="o">.</span><span class="n">subdir</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">missing_files</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_run_step_as_subprocess</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">new_log_file</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Run the requested step as a subprocess</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">logger</span>
+    <span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+    <span class="n">test_name</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">new_log_file</span><span class="p">:</span>
+        <span class="n">log_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cwd</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">step</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">.log&#39;</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">log_filename</span> <span class="o">=</span> <span class="n">log_filename</span>
+        <span class="n">step_logger</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">step_logger</span> <span class="o">=</span> <span class="n">logger</span>
+        <span class="n">log_filename</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">with</span> <span class="n">LoggingContext</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">test_name</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">step_logger</span><span class="p">,</span>
+                        <span class="n">log_filename</span><span class="o">=</span><span class="n">log_filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">step_logger</span><span class="p">:</span>
+
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">step</span><span class="o">.</span><span class="n">work_dir</span><span class="p">)</span>
+        <span class="n">step_args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;compass&#39;</span><span class="p">,</span> <span class="s1">&#39;run&#39;</span><span class="p">,</span> <span class="s1">&#39;--step_is_subprocess&#39;</span><span class="p">]</span>
+        <span class="n">check_call</span><span class="p">(</span><span class="n">step_args</span><span class="p">,</span> <span class="n">step_logger</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_test_case_run_deprecated</span><span class="p">(</span><span class="n">test_case</span><span class="p">):</span>
+    <span class="n">method</span> <span class="o">=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">run</span>
+
+    <span class="c1"># get the &quot;child&quot; class and its location (import sequence) from the method</span>
+    <span class="n">child_class</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="vm">__self__</span><span class="o">.</span><span class="vm">__class__</span>
+
+    <span class="c1"># iterate over the classes that the child class descends from to find the</span>
+    <span class="c1"># first one that actually implements the given method.</span>
+    <span class="n">actual_class</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="c1"># inspect.getmro() returns a list of classes the child class descends from,</span>
+    <span class="c1"># starting with the child class itself and going &quot;back&quot; to the &quot;object&quot;</span>
+    <span class="c1"># class that all python classes descend from.</span>
+    <span class="k">for</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getmro</span><span class="p">(</span><span class="n">child_class</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">method</span><span class="o">.</span><span class="vm">__name__</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">:</span>
+            <span class="n">actual_class</span> <span class="o">=</span> <span class="bp">cls</span>
+            <span class="k">break</span>
+
+    <span class="k">if</span> <span class="n">actual_class</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;We could not find test_case.run(). Something is &#39;</span>
+                         <span class="s1">&#39;buggy!&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">actual_class</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">!=</span> <span class="s1">&#39;TestCase&#39;</span><span class="p">:</span>
+        <span class="c1"># the run() method has been overridden.  We need to give the user a</span>
+        <span class="c1"># deprecation warning.</span>
+        <span class="n">actual_location</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">actual_class</span><span class="o">.</span><span class="vm">__module__</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">actual_class</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">test_case</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">WARNING: Overriding the TestCase.run() method is deprecated.</span><span class="se">\n</span><span class="s1">&#39;</span>
+            <span class="sa">f</span><span class="s1">&#39;  Please move the contents of</span><span class="se">\n</span><span class="s1">&#39;</span>
+            <span class="sa">f</span><span class="s1">&#39;  </span><span class="si">{</span><span class="n">actual_location</span><span class="si">}</span><span class="s1">.run() </span><span class="se">\n</span><span class="s1">&#39;</span>
+            <span class="sa">f</span><span class="s1">&#39;  to the runtime_setup() or constrain_resources() methods of &#39;</span>
+            <span class="sa">f</span><span class="s1">&#39;its steps.</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="n">test_case</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 </pre></div>
 
            </div>

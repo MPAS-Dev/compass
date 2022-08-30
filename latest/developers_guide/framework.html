@@ -204,13 +204,16 @@ suite will fail.</p>
 <section id="run-serial-module">
 <span id="dev-run"></span><h3>run.serial module<a class="headerlink" href="#run-serial-module" title="Permalink to this heading">¶</a></h3>
 <p>The function <a class="reference internal" href="generated/compass.run.serial.run_tests.html#compass.run.serial.run_tests" title="compass.run.serial.run_tests"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.run.serial.run_tests()</span></code></a> is used to run a
-test suite or test case and <a class="reference internal" href="generated/compass.run.serial.run_step.html#compass.run.serial.run_step" title="compass.run.serial.run_step"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.run.serial.run_step()</span></code></a> is used to
-run a step using <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span></code>.  Suites run from the base work directory
-with a pickle file starting with the suite name, or <code class="docutils literal notranslate"><span class="pre">custom.pickle</span></code> if a
-suite name was not given. Test cases or steps run from their respective
-subdirectories with a <code class="docutils literal notranslate"><span class="pre">testcase.pickle</span></code> or <code class="docutils literal notranslate"><span class="pre">step.pickle</span></code> file in them.
-Both of these functions reads the local pickle file to retrieve information
-about the test suite, test case and/or step that was stored during setup.</p>
+test suite or test case and <a class="reference internal" href="generated/compass.run.serial.run_single_step.html#compass.run.serial.run_single_step" title="compass.run.serial.run_single_step"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.run.serial.run_single_step()</span></code></a> is
+used to run a single step using <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">run</span></code>.  <code class="docutils literal notranslate"><span class="pre">run_tests()</span></code> performs
+setup operations like creating a log file and figuring out the number of tasks
+and CPUs per task for each step, then it calls each step’s <code class="docutils literal notranslate"><span class="pre">run()</span></code> method.</p>
+<p>Suites run from the base work directory with a pickle file starting with the
+suite name, or <code class="docutils literal notranslate"><span class="pre">custom.pickle</span></code> if a suite name was not given. Test cases or
+steps run from their respective subdirectories with a <code class="docutils literal notranslate"><span class="pre">testcase.pickle</span></code> or
+<code class="docutils literal notranslate"><span class="pre">step.pickle</span></code> file in them. Both of these functions reads the local pickle
+file to retrieve information about the test suite, test case and/or step that
+was stored during setup.</p>
 <p>If <a class="reference internal" href="generated/compass.run.serial.run_tests.html#compass.run.serial.run_tests" title="compass.run.serial.run_tests"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.run.serial.run_tests()</span></code></a> is used for a test suite, it will
 run each test case in the test suite in the order that they are given in the
 text file defining the suite (<code class="docutils literal notranslate"><span class="pre">compass/&lt;mpas_core&gt;/suites/&lt;suite_name&gt;.txt</span></code>).
@@ -223,9 +226,9 @@ the test execution, as well as similar messages for validation involving output
 within the test case or suite and validation against a baseline (depending on
 the implementation of the <code class="docutils literal notranslate"><span class="pre">validate()</span></code> method in the test case and whether a
 baseline was provided during setup).</p>
-<p><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.run.run_step()</span></code> runs only the selected step from a given
-test case, skipping any others, displaying the output in the terminal window
-rather than a log file.</p>
+<p><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.run.run_single_step()</span></code> runs only the selected step from a
+given test case, skipping any others, displaying the output in the terminal
+window rather than a log file.</p>
 </section>
 <section id="cache-module">
 <span id="dev-cache"></span><h3>cache module<a class="headerlink" href="#cache-module" title="Permalink to this heading">¶</a></h3>
@@ -312,24 +315,24 @@ as well as the APIs for <a class="reference external" href="http://mpas-dev.gith
 <a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.logging.check_call.html#mpas_tools.logging.check_call" title="(in mpas_tools vstable)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_tools.logging.check_call()</span></code></a>.</p>
 <p>For the most part, the <code class="docutils literal notranslate"><span class="pre">compass</span></code> framework handles logging for you, so
 test-case developers won’t have to create their own <code class="docutils literal notranslate"><span class="pre">logger</span></code> objects.  They
-are arguments to the test case’s <a class="reference internal" href="organization.html#dev-test-case-run"><span class="std std-ref">run()</span></a> or step’s
-<a class="reference internal" href="organization.html#dev-step-run"><span class="std std-ref">run()</span></a>.  If you run a step on its own, no log file is created
-and logging happens to <code class="docutils literal notranslate"><span class="pre">stdout</span></code>/<code class="docutils literal notranslate"><span class="pre">stderr</span></code>.  If you run the full test case,
-each step gets logged to its own log file within the test case’s work
-directory.  If you run a test suite, each test case and its steps get logged
-to a file in the <code class="docutils literal notranslate"><span class="pre">case_output</span></code> directory of the suite’s work directory.</p>
+are attributes that belong to the step or test case.  If you run a step on its
+own, no log file is created and logging happens to <code class="docutils literal notranslate"><span class="pre">stdout</span></code>/<code class="docutils literal notranslate"><span class="pre">stderr</span></code>.  If
+you run a full test case, each step gets logged to its own log file within the
+test case’s work directory.  If you run a test suite, each test case and its
+steps get logged to a file in the <code class="docutils literal notranslate"><span class="pre">case_output</span></code> directory of the suite’s work
+directory.</p>
 <p>Although the logger will capture <code class="docutils literal notranslate"><span class="pre">print</span></code> statements, anywhere with a
 <code class="docutils literal notranslate"><span class="pre">run()</span></code> function or the functions called inside that function, it is a good
 idea to call <code class="docutils literal notranslate"><span class="pre">logger.info</span></code> instead of <code class="docutils literal notranslate"><span class="pre">print</span></code> to be explicit about the
 expectation that the output may go to a log file.</p>
 <p>Even more important, subprocesses that produce output should always be called
 with <a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.logging.check_call.html#mpas_tools.logging.check_call" title="(in mpas_tools vstable)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_tools.logging.check_call()</span></code></a>, passing in the <code class="docutils literal notranslate"><span class="pre">logger</span></code> that
-is an argument to the <code class="docutils literal notranslate"><span class="pre">run()</span></code> function.  Otherwise, output will go to
-<code class="docutils literal notranslate"><span class="pre">stdout</span></code>/<code class="docutils literal notranslate"><span class="pre">stderr</span></code> even when the intention is to write all output to a
-log file.  Whereas logging can capture <code class="docutils literal notranslate"><span class="pre">stdout</span></code>/<code class="docutils literal notranslate"><span class="pre">stderr</span></code> to make sure that
-the <code class="docutils literal notranslate"><span class="pre">print</span></code> statements actually go to log files when desired, there is no
-similar trick for automatically capturing the output from direct calls to
-<code class="docutils literal notranslate"><span class="pre">subprocess</span></code> functions.  Here is a code snippet from
+belongs to the step.  Otherwise, output will go to <code class="docutils literal notranslate"><span class="pre">stdout</span></code>/<code class="docutils literal notranslate"><span class="pre">stderr</span></code> even
+when the intention is to write all output to a log file.  Whereas logging can
+capture <code class="docutils literal notranslate"><span class="pre">stdout</span></code>/<code class="docutils literal notranslate"><span class="pre">stderr</span></code> to make sure that the <code class="docutils literal notranslate"><span class="pre">print</span></code> statements
+actually go to log files when desired, there is no similar trick for
+automatically capturing the output from direct calls to <code class="docutils literal notranslate"><span class="pre">subprocess</span></code>
+functions.  Here is a code snippet from
 <a class="reference internal" href="landice/generated/compass.landice.tests.dome.setup_mesh.SetupMesh.run.html#compass.landice.tests.dome.setup_mesh.SetupMesh.run" title="compass.landice.tests.dome.setup_mesh.SetupMesh.run"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compass.landice.tests.dome.setup_mesh.SetupMesh.run()</span></code></a>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mpas_tools.logging</span> <span class="kn">import</span> <span class="n">check_call</span>
 
