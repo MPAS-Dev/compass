@@ -57,7 +57,7 @@ class AnalysisTest(ForwardTestCase):
             'analysis_members/highFrequencyOutput.0001-01-01.nc':
                 ['temperatureAt250m'],
             'analysis_members/mixedLayerDepths.0001-01-01.nc':
-                ['dThreshMLD', 'tThreshMLD'],
+                ['tThreshMLD'],
             'analysis_members/waterMassCensus.0001-01-01_00.00.00.nc':
                 ['waterMassCensusTemperatureValues'],
             'analysis_members/eliassenPalm.0001-01-01.nc':
