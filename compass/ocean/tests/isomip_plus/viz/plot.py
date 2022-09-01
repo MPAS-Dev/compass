@@ -746,9 +746,9 @@ class MoviePlotter(object):
             localPatches.set_array(field[self.cavityMask])
 
         localPatches.set_edgecolor('face')
-        localPatches.set_clim(vmin=vmin, vmax=vmax)
         if cmap is not None:
             localPatches.set_cmap(cmap)
+        localPatches.set_clim(vmin=vmin, vmax=vmax)
 
         plt.figure(figsize=figsize)
         ax = plt.subplot(111)
