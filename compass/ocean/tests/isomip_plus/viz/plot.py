@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 import cmocean
 from matplotlib.patches import Polygon
 from matplotlib.collections import PatchCollection
+from matplotlib.colors import LogNorm
 
 
 class TimeSeriesPlotter(object):
@@ -452,7 +453,7 @@ class MoviePlotter(object):
 
     def plot_horiz_series(self, da, nameInTitle, prefix, oceanDomain,
                           units=None, vmin=None, vmax=None, cmap=None,
-                          cmap_set_under=None):
+                          cmap_set_under=None, cmap_scale='linear'):
         """
         Plot a series of image of a given variable
 
@@ -502,7 +503,8 @@ class MoviePlotter(object):
                 title = '{} ({})'.format(nameInTitle, units)
             self._plot_horiz_field(field, title=title, outFileName=outFileName,
                                    oceanDomain=oceanDomain, vmin=vmin,
-                                   vmax=vmax, cmap=cmap, cmap_set_under=cmap_set_under)
+                                   vmax=vmax, cmap=cmap, cmap_set_under=cmap_set_under,
+                                   cmap_scale=cmap_scale)
             if self.showProgress:
                 bar.update(tIndex+1)
         if self.showProgress:
@@ -738,11 +740,12 @@ class MoviePlotter(object):
         xtime = ''.join(str(xtime.astype('U'))).strip()
         year = xtime[0:4]
         month = xtime[5:7]
-        self.date = '{}-{}'.format(year, month)
+        day = xtime[8:10]
+        self.date = '{}-{}-{}'.format(year, month, day)
 
     def _plot_horiz_field(self, field, title, outFileName, oceanDomain=True,
                           vmin=None, vmax=None, figsize=(9, 3), cmap=None,
-                          cmap_set_under=None):
+                          cmap_set_under=None, cmap_scale='linear'):
 
         try:
             os.makedirs(os.path.dirname(outFileName))
@@ -764,6 +767,8 @@ class MoviePlotter(object):
             localPatches.set_cmap(cmap)
         localPatches.set_clim(vmin=vmin, vmax=vmax)
 
+        if cmap_scale == 'log':
+            localPatches.set_norm(LogNorm(vmin=max(1e-3,vmin),vmax=vmax,clip=False))
         plt.figure(figsize=figsize)
         ax = plt.subplot(111)
         ax.add_collection(localPatches)

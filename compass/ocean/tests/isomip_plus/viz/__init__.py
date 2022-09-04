@@ -54,6 +54,9 @@ class Viz(Step):
         movie_format = section.get('movie_format')
         section_y = section.getfloat('section_y')
 
+        section = config['isomip_plus']
+        min_column_thickness = section.getfloat('min_column_thickness')
+
         # show progress only if we're not writing to a log file
         show_progress = self.log_filename is None
 
@@ -81,7 +84,8 @@ class Viz(Step):
         plotter.plot_horiz_series(dsOut.velocityY[:,:,0], 'v', 'v', True,
                                   cmap='cmo.balance')
         plotter.plot_horiz_series(dsOut.ssh + dsMesh.bottomDepth, 'H', 'H', True,
-                                  vmin=3e-3+1e-10, vmax=10, cmap_set_under='r')
+                                  vmin=min_column_thickness, vmax=700,
+                                  cmap_set_under='r', cmap_scale='log')
         plotter.plot_horiz_series(delssh, 'delssh', 'delssh', True,
                                   cmap='cmo.curl', vmin=-1, vmax=1)
         delice = dsOut.landIcePressure-dsOut.landIcePressure[0,:]
