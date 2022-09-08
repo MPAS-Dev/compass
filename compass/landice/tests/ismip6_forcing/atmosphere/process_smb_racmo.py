@@ -9,8 +9,6 @@ from compass.landice.tests.ismip6_forcing.atmosphere.create_mapfile_smb \
     import build_mapping_file
 
 
-
-
 class ProcessSmbRacmo(Step):
     """
     A step for processing the regional RACMO surface mass balance data
@@ -29,7 +27,7 @@ class ProcessSmbRacmo(Step):
         """
         self.input_file = input_file
         super().__init__(test_case=test_case, name='process_smb_racmo',
-                         cores=4, min_cores=1)
+                         ntasks=4, min_tasks=1)
 
     def setup(self):
         """
@@ -61,7 +59,6 @@ class ProcessSmbRacmo(Step):
             warnings.warn(f"'process_smb_racmo' is set to 'False'. This step"
                           f" will not run unless set 'True' in the"
                           f" config file.")
-
 
     def run(self):
         """
@@ -178,7 +175,7 @@ class ProcessSmbRacmo(Step):
             # build a mapping file if it doesn't already exist
             self.logger.info(f"Creating a mapping file. "
                              f"Mapping method used: {method_remap}")
-            build_mapping_file(self.config, self.cores, self.logger,
+            build_mapping_file(self.config, self.ntasks, self.logger,
                                input_file, mapping_file, mali_mesh_file,
                                method_remap)
         else:
@@ -250,4 +247,4 @@ class ProcessSmbRacmo(Step):
         ds.close()
 
     # create a dictionary for the regional climate RACMO dataset and the
-    _files= ["RACMO2.3p2_ANT27_smb_yearly_1979_2018.nc"]
+    _files = ["RACMO2.3p2_ANT27_smb_yearly_1979_2018.nc"]

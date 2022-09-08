@@ -24,7 +24,7 @@ class ProcessBasalMelt(Step):
             The test case this step belongs to
         """
         super().__init__(test_case=test_case, name='process_basal_melt',
-                         cores=4, min_cores=1)
+                         ntasks=4, min_tasks=1)
 
     def setup(self):
         """
@@ -164,7 +164,7 @@ class ProcessBasalMelt(Step):
 
         if not os.path.exists(mapping_file):
             # build a mapping file if it doesn't already exist
-            build_mapping_file(self.config, self.cores, self.logger,
+            build_mapping_file(self.config, self.ntasks, self.logger,
                                input_file, mapping_file, mali_mesh_file,
                                method_remap)
         else:
