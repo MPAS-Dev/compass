@@ -2,7 +2,7 @@ import os
 import pandas as pd
 import subprocess
 import xarray as xr
-from compass.landice.tests.ismip6_forcing.ocean.create_mapfile \
+from compass.landice.tests.ismip6_forcing.ocean_thermal.create_mapfile \
     import build_mapping_file
 from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
@@ -19,7 +19,8 @@ class ProcessThermalForcing(Step):
 
         Parameters
         ----------
-        test_case : compass.landice.tests.ismip6_forcing.ocean.Ocean
+        test_case : compass.landice.tests.ismip6_forcing.ocean_thermal.
+                    OceanThermal
             The test case this step belongs to
         """
         super().__init__(test_case=test_case, name='process_thermal_forcing')
@@ -45,7 +46,7 @@ class ProcessThermalForcing(Step):
         """
         Run this step of the test case
         """
-        # logger = self.logger
+        #logger = self.logger
         config = self.config
         section = config['ismip6_ais_ocean']
 

@@ -1,10 +1,9 @@
 import os
 import subprocess
 import xarray as xr
-from compass.landice.tests.ismip6_forcing.ocean.create_mapfile \
+from compass.landice.tests.ismip6_forcing.ocean_basal.create_mapfile \
     import build_mapping_file
 from mpas_tools.io import write_netcdf
-from mpas_tools.logging import check_call
 from compass.step import Step
 
 
@@ -20,7 +19,7 @@ class ProcessBasalMelt(Step):
 
         Parameters
         ----------
-        test_case : compass.landice.tests.ismip6_forcing.ocean.Ocean
+        test_case : compass.landice.tests.ismip6_forcing.ocean_basal.OceanBasal
             The test case this step belongs to
         """
         super().__init__(test_case=test_case, name='process_basal_melt')
@@ -30,20 +29,20 @@ class ProcessBasalMelt(Step):
         Set up this step of the test case
         """
         config = self.config
-        section = config['ismip6_ais_ocean']
-
-        input_path = section.get('input_path')
-        basin_file = section.get('basin_file')
-        self.add_input_file(filename=basin_file,
-                            target=os.path.join(input_path,
-                                                basin_file))
-        coeff_file = section.get('coeff_file')
-        self.add_input_file(filename=coeff_file,
-                            target=os.path.join(input_path,
-                                                coeff_file))
+        section = config['ismip6_ais']
+        base_path = section.get('base_path')
         mali_mesh_file = section.get('mali_mesh_file')
+        section = config['ismip6_ais_ocean_basal']
+        basin_file = section.get('basin_file')
+        coeff_file = section.get('coeff_file')
+        self.add_input_file(filename=basin_file,
+                            target=os.path.join(base_path,
+                                                basin_file))
+        self.add_input_file(filename=coeff_file,
+                            target=os.path.join(base_path,
+                                                coeff_file))
         self.add_input_file(filename=mali_mesh_file,
-                            target=os.path.join(input_path, mali_mesh_file))
+                            target=os.path.join(base_path, mali_mesh_file))
         self.add_output_file(filename=f"output_basin_and_{coeff_file}")
 
     def run(self):
@@ -52,12 +51,12 @@ class ProcessBasalMelt(Step):
         """
         # logger = self.logger
         config = self.config
-        section = config['ismip6_ais_ocean']
-
-        basin_file = section.get('basin_file')
-        coeff_file = section.get('coeff_file')
+        section = config['ismip6_ais']
         mali_mesh_name = section.get('mali_mesh_name')
         mali_mesh_file = section.get('mali_mesh_file')
+        section = config['ismip6_ais_ocean_basal']
+        basin_file = section.get('basin_file')
+        coeff_file = section.get('coeff_file')
         method_remap = section.get('method_remap')
         output_file = f"output_basin_and_{coeff_file}"
 
@@ -132,7 +131,7 @@ class ProcessBasalMelt(Step):
             Remapping method used in building a mapping file
         """
 
-        # check if a mapfile
+        # check if mapfile exists
         mapping_file = f"map_ismip6_8km_to_{mali_mesh_name}_{method_remap}.nc"
 
         if not os.path.exists(mapping_file):
