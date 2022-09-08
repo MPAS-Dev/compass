@@ -67,16 +67,19 @@ class ProcessBasalMelt(Step):
 
         # combine, interpolate and rename the basin file and deltaT0_gamma0
         # ismip6 input files
-        combined_file_temp = "combined.nc"  # temporary file names
-        remapped_file_temp = "remapped.nc"
 
         # call the function that combines data
         # logger.info = ('calling combine_ismip6_inputfiles')
         input_file_list = self._files_coeff
-        i = 0
-        for file in input_file_list:
+
+        for i, file in enumerate(input_file_list):
             print(f"processing the input file {os.path.basename(file)}")
-            i += 1
+            # temporary file names. Note: The counter 'i' seems to be necessary
+            # for 'ncremap' to correctly interpolate the gamma0 values for an
+            # unknown reason.
+            combined_file_temp = f"combined_{i}.nc"
+            remapped_file_temp = f"remapped_{i}.nc"
+
             self.combine_ismip6_inputfiles(os.path.basename(self._file_basin),
                                            os.path.basename(file),
                                            combined_file_temp)
@@ -213,7 +216,7 @@ class ProcessBasalMelt(Step):
     # input files: input uniform melt rate coefficient (gamma0)
     # and temperature correction per basin
     _file_basin = "AIS/Ocean_Forcing/imbie2/imbie2_basin_numbers_8km.nc"
-    _files_coeff = {"AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_5th_pct_PIGL_gamma_calibration.nc",
+    _files_coeff = ["AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_5th_pct_PIGL_gamma_calibration.nc",
                     "AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_5th_percentile.nc",
                     "AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_95th_pct_PIGL_gamma_calibration.nc",
                     "AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_95th_percentile.nc",
@@ -224,4 +227,4 @@ class ProcessBasalMelt(Step):
                     "AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_95th_pct_PIGL_gamma_calibration.nc",
                     "AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_95th_percentile.nc",
                     "AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_median_PIGL_gamma_calibration.nc",
-                    "AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_median.nc"}
+                    "AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_median.nc"]
