@@ -1,10 +1,10 @@
 import os
 import shutil
-import subprocess
 import xarray as xr
 from compass.landice.tests.ismip6_forcing.create_mapfile \
     import build_mapping_file
 from mpas_tools.io import write_netcdf
+from mpas_tools.logging import check_call
 from compass.step import Step
 
 
@@ -55,7 +55,7 @@ class ProcessBasalMelt(Step):
         """
         Run this step of the test case
         """
-        # logger = self.logger
+        logger = self.logger
         config = self.config
         section = config["ismip6_ais"]
         mali_mesh_name = section.get("mali_mesh_name")
@@ -69,11 +69,13 @@ class ProcessBasalMelt(Step):
         # ismip6 input files
 
         # call the function that combines data
-        # logger.info = ('calling combine_ismip6_inputfiles')
+        logger.info(f"Combining the ismip6 input files")
         input_file_list = self._files_coeff
 
         for i, file in enumerate(input_file_list):
-            print(f"processing the input file {os.path.basename(file)}")
+            logger.info(f"!---Start processing the current file---!")
+            logger.info(f"processing the input file "
+                        f"'{os.path.basename(file)}'")
             # temporary file names. Note: The counter 'i' seems to be necessary
             # for 'ncremap' to correctly interpolate the gamma0 values for an
             # unknown reason.
@@ -85,7 +87,7 @@ class ProcessBasalMelt(Step):
                                            combined_file_temp)
 
             # remap the input forcing file.
-            print("Calling the remapping function...")
+            logger.info(f"Calling the remapping function...")
             self.remap_ismip6_basal_melt_to_mali_vars(combined_file_temp,
                                                       remapped_file_temp,
                                                       mali_mesh_name,
@@ -95,12 +97,13 @@ class ProcessBasalMelt(Step):
             output_file = f"processed_basin_and_{os.path.basename(file)}"
 
             # rename the ismip6 variables to MALI variables
-            print("Renaming the ismip6 variables to mali variable names...")
+            logger.info(f"Renaming the ismip6 variables to "
+                        f"mali variable names...")
             self.rename_ismip6_basal_melt_to_mali_vars(remapped_file_temp,
                                                        output_file)
 
-            print("Remapping and renamping process done successfully. "
-                  "Removing the temporary files...")
+            logger.info(f"Remapping and renamping process done successfully. "
+                        f"Removing the temporary files...")
 
             # remove the temporary combined file
             os.remove(combined_file_temp)
@@ -109,12 +112,16 @@ class ProcessBasalMelt(Step):
             # place the output file in appropriate director
             output_path = f"{output_base_path}/basal_melt/parameterizations/"
             if not os.path.exists(output_path):
-                print("Creating a new directory for the output data")
+                logger.info("Creating a new directory for the output data...")
                 os.makedirs(output_path)
 
             src = os.path.join(os.getcwd(), output_file)
             dst = os.path.join(output_path, output_file)
             shutil.copy(src, dst)
+
+            logger.info(f"!---Done processing the current file---!")
+            logger.info(f"")
+            logger.info(f"")
 
     def combine_ismip6_inputfiles(self, basin_file, coeff_gamma0_deltaT_file,
                                   combined_file_temp):
@@ -168,7 +175,8 @@ class ProcessBasalMelt(Step):
                                input_file, mapping_file, mali_mesh_file,
                                method_remap)
         else:
-            print("Mapping file exists. Remapping the input data...")
+            self.logger.info(f"Mapping file exists. "
+                             f"Remapping the input data...")
 
         # remap the input data
         args = ["ncremap",
@@ -176,7 +184,7 @@ class ProcessBasalMelt(Step):
                 "-o", output_file,
                 "-m", mapping_file]
 
-        subprocess.check_call(args)
+        check_call(args, logger=self.logger)
 
     def rename_ismip6_basal_melt_to_mali_vars(self, remapped_file_temp,
                                               output_file):

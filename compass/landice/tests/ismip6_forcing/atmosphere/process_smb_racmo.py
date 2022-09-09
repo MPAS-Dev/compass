@@ -1,9 +1,9 @@
 import os
 import shutil
-import subprocess
 import xarray as xr
 import warnings
 from mpas_tools.io import write_netcdf
+from mpas_tools.logging import check_call
 from compass.step import Step
 from compass.landice.tests.ismip6_forcing.atmosphere.create_mapfile_smb \
     import build_mapping_file
@@ -84,8 +84,9 @@ class ProcessSmbRacmo(Step):
         output_file_final = os.path.join(output_base_path, output_file)
 
         if os.path.exists(output_file_final):
-            print("Processed RACMO SMB data already exists in the output path"
-                  f"{output_base_path}. Not processing the source data...")
+            logger.info("Processed RACMO SMB data already exists in the "
+                        "output path {output_base_path}. "
+                        "Not processing the source data...")
             return
 
         input_file_list = self._files
@@ -94,13 +95,13 @@ class ProcessSmbRacmo(Step):
                 f"{input_file_list[0]}",
                 f"{racmo_file_temp1}"]
 
-        subprocess.check_call(args)
+        check_call(args, logger=logger)
 
         # interpolate the racmo smb data
         remapped_file_temp = "remapped.nc"  # temporary file name
 
         # call the function that reads in, remap and rename the file.
-        logger.info("Calling a remapping function...")
+        logger.info("Calling the remapping function...")
         self.remap_source_smb_to_mali(f"{racmo_file_temp1}",
                                       remapped_file_temp,
                                       mali_mesh_name,
@@ -114,14 +115,14 @@ class ProcessSmbRacmo(Step):
                 f"{remapped_file_temp}",
                 f"{racmo_file_temp2}"]
 
-        subprocess.check_call(args)
+        check_call(args, logger=logger)
 
         # change the unit attribute to kg/m^2/s
         args = ["ncatted", "-O", "-a",
                 "units,sfcMassBal,m,c,'kg m-2 s-1'",
                 f"{racmo_file_temp2}"]
 
-        subprocess.check_call(args)
+        check_call(args, logger=logger)
 
         # call the function that renames the ismip6 variables to MALI variables
         logger.info("Renaming source variables to mali variable names...")
@@ -139,12 +140,14 @@ class ProcessSmbRacmo(Step):
         output_path = f"{output_base_path}/atmosphere_forcing/" \
                       f"RACMO_climatology_1995-2017"
         if not os.path.exists(output_path):
-            print("Creating a new directory for the output data")
+            logger.info("Creating a new directory for the output data")
             os.makedirs(output_path)
 
         src = os.path.join(os.getcwd(), output_file)
         dst = os.path.join(output_path, output_file)
         shutil.copy(src, dst)
+
+        logger.info(f"!---Done processing the file---!")
 
     def remap_source_smb_to_mali(self, input_file, output_file, mali_mesh_name,
                                  mali_mesh_file, method_remap):
@@ -186,7 +189,7 @@ class ProcessSmbRacmo(Step):
                 "-m", mapping_file,
                 "-v", "smb"]
 
-        subprocess.check_call(args)
+        check_call(args, logger=self.logger)
 
     def rename_source_smb_to_mali_vars(self, remapped_file_temp, output_file):
         """

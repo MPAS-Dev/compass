@@ -32,7 +32,7 @@ def build_mapping_file(config, cores, logger, ismip6_grid_file,
     """
 
     if os.path.exists(mapping_file):
-        print("Mapping file exists. Not building a new one.")
+        logger.info(f"Mapping file exists. Not building a new one.")
         return
 
     if mali_mesh_file is None:
@@ -46,9 +46,10 @@ def build_mapping_file(config, cores, logger, ismip6_grid_file,
 
     # create the ismip6 scripfile if mapping file does not exist
     # this is the projection of ismip6 data for Antarctica
-    print("Mapping file does not exist. Building one based on the "
-          "input/ouptut meshes")
-    print("Creating temporary scripfiles for ismip6 grid and mali mesh...")
+    logger.info(f"Mapping file does not exist. Building one based on "
+                f"the input/ouptut meshes")
+    logger.info(f"Creating temporary scripfiles "
+                f"for ismip6 grid and mali mesh...")
 
     args = ["create_SCRIP_file_from_planar_rectangular_grid.py",
             "--input", ismip6_grid_file,
@@ -56,7 +57,7 @@ def build_mapping_file(config, cores, logger, ismip6_grid_file,
             "--proj", ismip6_projection,
             "--rank", "2"]
 
-    subprocess.check_call(args)
+    check_call(args, logger=logger)
 
     # create a MALI mesh scripfile if mapping file does not exist
     # make sure the mali mesh file uses the longitude convention of [0 2pi]
@@ -70,12 +71,13 @@ def build_mapping_file(config, cores, logger, ismip6_grid_file,
             "--file", mali_mesh_copy,
             "--proj", ismip6_projection]
 
-    subprocess.check_call(args)
+    check_call(args, logger=logger)
 
     scrip_from_mpas(mali_mesh_file, mali_scripfile)
 
     # create a mapping file using ESMF weight gen
-    print(f"Creating a mapping file. Mapping method used: {method_remap}")
+    logger.info(f"Creating a mapping file... "
+                f"Mapping method used: {method_remap}")
 
     if method_remap is None:
         raise ValueError("Desired remapping option should be provided with "
@@ -97,7 +99,7 @@ def build_mapping_file(config, cores, logger, ismip6_grid_file,
     check_call(args, logger)
 
     # remove the temporary scripfiles once the mapping file is generated
-    print("Removing the temporary mesh and scripfiles...")
+    logger.info(f"Removing the temporary mesh and scripfiles...")
     os.remove(ismip6_scripfile)
     os.remove(mali_scripfile)
     os.remove(mali_mesh_copy)

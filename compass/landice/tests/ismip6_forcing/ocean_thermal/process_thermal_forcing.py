@@ -6,6 +6,7 @@ import xarray as xr
 from compass.landice.tests.ismip6_forcing.create_mapfile \
     import build_mapping_file
 from mpas_tools.io import write_netcdf
+from mpas_tools.logging import check_call
 from compass.step import Step
 
 
@@ -96,7 +97,7 @@ class ProcessThermalForcing(Step):
         remapped_file_temp = "remapped.nc"  # temporary file name
 
         # call the function that reads in, remap and rename the file.
-        print("Calling a remapping function...")
+        logger.info("Calling the remapping function...")
         self.remap_ismip6_thermal_forcing_to_mali_vars(input_file,
                                                        remapped_file_temp,
                                                        mali_mesh_name,
@@ -104,24 +105,26 @@ class ProcessThermalForcing(Step):
                                                        method_remap)
 
         # call the function that renames the ismip6 variables to MALI variables
-        print("Renaming the ismip6 variables to mali variable names...")
+        logger.info(f"Renaming the ismip6 variables to mali variable names...")
         self.rename_ismip6_thermal_forcing_to_mali_vars(remapped_file_temp,
                                                         output_file)
 
-        print("Remapping and renamping process done successfully. "
-              "Removing the temporary file 'remapped.nc'...")
+        logger.info(f"Remapping and renamping process done successfully. "
+                    f"Removing the temporary file 'remapped.nc'...")
 
         # remove the temporary combined file
         os.remove(remapped_file_temp)
 
         # place the output file in appropriate directory
         if not os.path.exists(output_path):
-            print("Creating a new directory for the output data...")
+            logger.info(f"Creating a new directory for the output data...")
             os.makedirs(output_path)
 
         src = os.path.join(os.getcwd(), output_file)
         dst = os.path.join(output_path, output_file)
         shutil.copy(src, dst)
+
+        logger.info(f"!---Done processing the file---!")
 
     def remap_ismip6_thermal_forcing_to_mali_vars(self,
                                                   input_file,
@@ -155,7 +158,8 @@ class ProcessThermalForcing(Step):
                                input_file, mapping_file, mali_mesh_file,
                                method_remap)
         else:
-            print("Mapping file exists. Remapping the input data...")
+            self.logger.info(f"Mapping file exists. "
+                             f"Remapping the input data...")
 
         # remap the input data
         args = ["ncremap",
@@ -163,7 +167,7 @@ class ProcessThermalForcing(Step):
                 "-o", output_file,
                 "-m", mapping_file]
 
-        subprocess.check_call(args)
+        check_call(args, logger=self.logger)
 
     def rename_ismip6_thermal_forcing_to_mali_vars(self,
                                                    remapped_file_temp,

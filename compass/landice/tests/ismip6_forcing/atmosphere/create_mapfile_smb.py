@@ -1,7 +1,6 @@
 import os
 import numpy as np
 import shutil
-import subprocess
 import netCDF4
 import xarray as xr
 from mpas_tools.scrip.from_mpas import scrip_from_mpas
@@ -35,13 +34,14 @@ def build_mapping_file(config, cores, logger, ismip6_grid_file,
     """
 
     if os.path.exists(mapping_file):
-        print("Mapping file exists. Not building a new one.")
+        logger.info(f"Mapping file exists. Not building a new one.")
         return
 
     # create the scrip files if mapping file does not exist
-    print("Mapping file does not exist. Building one based on the "
-          "input/ouptut meshes")
-    print("Creating temporary scrip files for source and destination grids...")
+    logger.info(f"Mapping file does not exist. Building one based on the"
+                f" input/ouptut meshes")
+    logger.info(f"Creating temporary scrip files for source and "
+                f"destination grids...")
 
     if mali_mesh_file is None:
         raise ValueError("Mapping file does not exist. To build one, Mali "
@@ -69,7 +69,7 @@ def build_mapping_file(config, cores, logger, ismip6_grid_file,
             "--file", mali_mesh_copy,
             "--proj", ismip6_projection]
 
-    subprocess.check_call(args)
+    check_call(args, logger=logger)
 
     # create a MALI mesh scripfile if mapping file does not exist
     scrip_from_mpas(mali_mesh_copy, mali_scripfile)
@@ -94,10 +94,10 @@ def build_mapping_file(config, cores, logger, ismip6_grid_file,
                  "-i", "-64bit_offset",
                  "--dst_regional", "--src_regional"])
 
-    check_call(args, logger)
+    check_call(args, logger=logger)
 
     # remove the temporary scripfiles once the mapping file is generated
-    print("Removing the temporary mesh and scripfiles...")
+    logger.info(f"Removing the temporary mesh and scripfiles...")
     os.remove(source_grid_scripfile)
     os.remove(mali_scripfile)
     os.remove(mali_mesh_copy)
