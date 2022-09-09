@@ -201,15 +201,18 @@ class ProcessSMB(Step):
         ----------
         input_file: str
             input smb data on its native polarstereo 8km grid
+
         output_file : str
             smb data remapped on mali mesh
+
         mali_mesh_name : str
             name of the mali mesh used to name mapping files
+
         mali_mesh_file : str, optional
             The MALI mesh file if mapping file does not exist
+
         method_remap : str, optional
             Remapping method used in building a mapping file
-
         """
         mapping_file = f"map_ismip6_8km_to_" \
                        f"{mali_mesh_name}_{method_remap}.nc"
@@ -244,6 +247,7 @@ class ProcessSMB(Step):
         ----------
         remapped_file_temp : str
             temporary ismip6 data remapped on mali mesh
+
         output_file : str
             remapped ismip6 data renamed on mali mesh
         """
@@ -298,8 +302,10 @@ class ProcessSMB(Step):
         ----------
         racmo_clim_file : str
             RACMO climatology file (1995-2017)
+
         output_clim_ismip6_file : str
             remapped and renamed ismip6 climatology file
+
         output_file_final : str
              climatology-corrected, final ismip6 smb anomaly file
         """
@@ -309,8 +315,8 @@ class ProcessSMB(Step):
         ds_ismip6_clim = xr.open_dataset(output_clim_ismip6_file)
 
         # calculate the climatology correction
-        corr_clim = ds_racmo_clim["sfcMassBal"].isel(Time=0) \
-                    - ds_ismip6_clim["sfcMassBal"].isel(Time=0)
+        corr_clim = (ds_racmo_clim["sfcMassBal"].isel(Time=0) -
+                     ds_ismip6_clim["sfcMassBal"].isel(Time=0))
 
         # correct the ismip6 smb anomaly
         ds["sfcMassBal"] = ds["sfcMassBal"] + corr_clim

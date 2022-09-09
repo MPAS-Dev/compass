@@ -17,16 +17,22 @@ def build_mapping_file(config, cores, logger, ismip6_grid_file,
     ----------
     config : compass.config.CompassConfigParser
         Configuration options for a ismip6 forcing test case
+
     cores : int
         the number of cores for the ESMF_RegridWeightGen
+
     logger : logging.Logger
         A logger for output from the step
+
     ismip6_grid_file : str
         ismip6 grid file
+
     mapping_file : str
         weights for interpolation from ismip6_grid_file to mali_mesh_file
+
     mali_mesh_file : str, optional
         The MALI mesh file if mapping file does not exist
+
     method_remap : str, optional
         Remapping method used in building a mapping file
     """

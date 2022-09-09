@@ -10,7 +10,6 @@ def configure(config, check_model_options):
 
     check_model_options : bool
         Whether we check ``model``, ``scenario``, ``period_endyear``
-
     """
 
     section = "ismip6_ais"

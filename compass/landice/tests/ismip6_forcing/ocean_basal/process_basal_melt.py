@@ -123,7 +123,7 @@ class ProcessBasalMelt(Step):
             logger.info(f"")
             logger.info(f"")
 
-    def combine_ismip6_inputfiles(self, basin_file, coeff_gamma0_deltaT_file,
+    def combine_ismip6_inputfiles(self, basin_file, coeff_gamma0_deltat_file,
                                   combined_file_temp):
         """
         Combine ismip6 input files before regridding onto mali mesh
@@ -132,15 +132,17 @@ class ProcessBasalMelt(Step):
         ----------
         basin_file : str
             imbie2 basin numbers in ismip6 grid
-        coeff_gamma0_deltaT_file : str
+
+        coeff_gamma0_deltat_file : str
             uniform melt rate coefficient (gamma0) and temperature
             correction per basin
+
         combined_file_temp : str
             temporary output file that has all the variables combined
         """
 
         ds_basin = xr.open_dataset(basin_file, engine="netcdf4")
-        ds = xr.open_dataset(coeff_gamma0_deltaT_file, engine="netcdf4")
+        ds = xr.open_dataset(coeff_gamma0_deltat_file, engine="netcdf4")
 
         ds["ismip6shelfMelt_basin"] = ds_basin.basinNumber
         write_netcdf(ds, combined_file_temp)
@@ -156,12 +158,16 @@ class ProcessBasalMelt(Step):
         input_file: str
             temporary output file that has all the variables combined
             combined_file_temp generated in the above function
+
         output_file : str
             ismip6 data remapped on mali mesh
+
         mali_mesh_name : str
             name of the mali mesh used to name mapping files
+
         mali_mesh_file : str, optional
             The MALI mesh file if mapping file does not exist
+
         method_remap : str, optional
             Remapping method used in building a mapping file
         """
@@ -196,6 +202,7 @@ class ProcessBasalMelt(Step):
         ----------
         remapped_file_temp : str
             temporary ismip6 data remapped on mali mesh
+
         output_file : str
             remapped ismip6 data renamed on mali mesh
         """

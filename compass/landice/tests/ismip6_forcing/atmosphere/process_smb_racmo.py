@@ -157,16 +157,19 @@ class ProcessSmbRacmo(Step):
         Parameters
         ----------
         input_file: str
-            input racmo smb data on its native rotaed pole grid
+            input racmo smb data on its native rotated pole grid
+
         output_file : str
             smb data remapped on mali mesh
+
         mali_mesh_name : str
             name of the mali mesh used to name mapping files
+
         mali_mesh_file : str, optional
             The MALI mesh file if mapping file does not exist
+
         method_remap : str, optional
             Remapping method used in building a mapping file
-
         """
         mapping_file = f"map_racmo_24km_to_" \
                        f"{mali_mesh_name}_{method_remap}.nc"
@@ -200,6 +203,7 @@ class ProcessSmbRacmo(Step):
         ----------
         remapped_file_temp : str
             temporary ismip6 data remapped on mali mesh
+
         output_file : str
             remapped ismip6 data renamed on mali mesh
         """
@@ -232,6 +236,7 @@ class ProcessSmbRacmo(Step):
         ----------
         output_file : str
             remapped ismip6 data renamed on mali mesh
+
         mali_mesh_file : str
             initialized MALI mesh file in which the base SMB field exists
         """

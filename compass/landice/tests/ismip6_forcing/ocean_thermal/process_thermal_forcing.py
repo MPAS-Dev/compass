@@ -139,12 +139,16 @@ class ProcessThermalForcing(Step):
         ----------
         input_file: str
             ismip6 thermal forcing data on its native polarstereo 8km grid
+
         output_file : str
             ismip6 data remapped on mali mesh
+
         mali_mesh_name : str
             name of the mali mesh used to name mapping files
+
         mali_mesh_file : str, optional
             The MALI mesh file if mapping file does not exist
+
         method_remap : str, optional
             Remapping method used in building a mapping file
         """
@@ -180,6 +184,7 @@ class ProcessThermalForcing(Step):
         ----------
         remapped_file_temp : str
             temporary ismip6 data remapped on mali mesh
+
         output_file : str
             remapped ismip6 data renamed on mali mesh
         """
