@@ -5,12 +5,13 @@ from mpas_tools.scrip.from_mpas import scrip_from_mpas
 from mpas_tools.logging import check_call
 
 
-# function that creates a mapping file from ismip6 grid to mali
 def build_mapping_file(config, cores, logger, ismip6_grid_file,
                        mapping_file, mali_mesh_file=None,
                        method_remap=None):
     """
     Build a mapping file if it does not exist.
+    Mapping file is then used to remap the ismip6 source file in polarstero
+    coordinate to unstructured mali mesh
 
     Parameters
     ----------

@@ -9,11 +9,12 @@ from mpas_tools.logging import check_call
 from pyremap.descriptor import interp_extrap_corners_2d
 
 
-# function that creates a mapping file from ismip6 grid to mali mesh
 def build_mapping_file(config, cores, logger, ismip6_grid_file,
                        mapping_file, mali_mesh_file=None, method_remap=None):
     """
     Build a mapping file if it does not exist.
+    Mapping file is then used to remap the ismip6 source file in polarstero
+    coordinate to unstructured mali mesh
 
     Parameters
     ----------
@@ -83,27 +84,17 @@ def build_mapping_file(config, cores, logger, ismip6_grid_file,
 
     parallel_executable = config.get('parallel', 'parallel_executable')
     # split the parallel executable into constituents in case it includes flags
-    # args = parallel_executable.split(' ')
-    # args.extend(["-n", f"{cores}",
-    #              "ESMF_RegridWeightGen",
-    #              "-s", source_grid_scripfile,
-    #              "-d", mali_scripfile,
-    #              "-w", mapping_file,
-    #              "-m", method_remap,
-    #              "-i", "-64bit_offset",
-    #              "--dst_regional", "--src_regional"])
-    #
-    # check_call(args, logger)
+    args = parallel_executable.split(' ')
+    args.extend(["-n", f"{cores}",
+                 "ESMF_RegridWeightGen",
+                 "-s", source_grid_scripfile,
+                 "-d", mali_scripfile,
+                 "-w", mapping_file,
+                 "-m", method_remap,
+                 "-i", "-64bit_offset",
+                 "--dst_regional", "--src_regional"])
 
-    args = ["ESMF_RegridWeightGen",
-            "-s", source_grid_scripfile,
-            "-d", mali_scripfile,
-            "-w", mapping_file,
-            "-m", method_remap,
-            "-i", "-64bit_offset",
-            "--dst_regional", "--src_regional"]
-
-    subprocess.check_call(args)
+    check_call(args, logger)
 
     # remove the temporary scripfiles once the mapping file is generated
     print("Removing the temporary mesh and scripfiles...")
