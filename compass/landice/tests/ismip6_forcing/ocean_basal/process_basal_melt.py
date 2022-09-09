@@ -23,7 +23,7 @@ class ProcessBasalMelt(Step):
         test_case : compass.landice.tests.ismip6_forcing.ocean_basal.OceanBasal
             The test case this step belongs to
         """
-        super().__init__(test_case=test_case, name='process_basal_melt',
+        super().__init__(test_case=test_case, name="process_basal_melt",
                          ntasks=4, min_tasks=1)
 
     def setup(self):
@@ -31,12 +31,12 @@ class ProcessBasalMelt(Step):
         Set up this step of the test case
         """
         config = self.config
-        section = config['ismip6_ais']
-        base_path_ismip6 = section.get('base_path_ismip6')
-        base_path_mali = section.get('base_path_mali')
-        mali_mesh_file = section.get('mali_mesh_file')
+        section = config["ismip6_ais"]
+        base_path_ismip6 = section.get("base_path_ismip6")
+        base_path_mali = section.get("base_path_mali")
+        mali_mesh_file = section.get("mali_mesh_file")
 
-        section = config['ismip6_ais_ocean_basal']
+        section = config["ismip6_ais_ocean_basal"]
         self.add_input_file(filename=mali_mesh_file,
                             target=os.path.join(base_path_mali,
                                                 mali_mesh_file))
@@ -57,13 +57,13 @@ class ProcessBasalMelt(Step):
         """
         # logger = self.logger
         config = self.config
-        section = config['ismip6_ais']
-        mali_mesh_name = section.get('mali_mesh_name')
-        mali_mesh_file = section.get('mali_mesh_file')
-        output_base_path = section.get('output_base_path')
+        section = config["ismip6_ais"]
+        mali_mesh_name = section.get("mali_mesh_name")
+        mali_mesh_file = section.get("mali_mesh_file")
+        output_base_path = section.get("output_base_path")
 
-        section = config['ismip6_ais_ocean_basal']
-        method_remap = section.get('method_remap')
+        section = config["ismip6_ais_ocean_basal"]
+        method_remap = section.get("method_remap")
 
         # combine, interpolate and rename the basin file and deltaT0_gamma0
         # ismip6 input files
@@ -86,28 +86,28 @@ class ProcessBasalMelt(Step):
 
             # remap the input forcing file.
             print("Calling the remapping function...")
-            self.remap_ismip6BasalMelt_to_mali(combined_file_temp,
-                                               remapped_file_temp,
-                                               mali_mesh_name,
-                                               mali_mesh_file, method_remap)
+            self.remap_ismip6_basal_melt_to_mali_vars(combined_file_temp,
+                                                      remapped_file_temp,
+                                                      mali_mesh_name,
+                                                      mali_mesh_file,
+                                                      method_remap)
 
             output_file = f"processed_basin_and_{os.path.basename(file)}"
 
             # rename the ismip6 variables to MALI variables
             print("Renaming the ismip6 variables to mali variable names...")
-            self.rename_ismip6BasalMelt_to_mali_vars(remapped_file_temp,
-                                                     output_file)
+            self.rename_ismip6_basal_melt_to_mali_vars(remapped_file_temp,
+                                                       output_file)
 
             print("Remapping and renamping process done successfully. "
-                  "Removing the temporary files 'combined.nc' "
-                  "and 'remapped.nc'")
+                  "Removing the temporary files...")
 
             # remove the temporary combined file
             os.remove(combined_file_temp)
             os.remove(remapped_file_temp)
 
             # place the output file in appropriate director
-            output_path = f'{output_base_path}/basal_melt/parameterizations/'
+            output_path = f"{output_base_path}/basal_melt/parameterizations/"
             if not os.path.exists(output_path):
                 print("Creating a new directory for the output data")
                 os.makedirs(output_path)
@@ -138,9 +138,9 @@ class ProcessBasalMelt(Step):
         ds["ismip6shelfMelt_basin"] = ds_basin.basinNumber
         write_netcdf(ds, combined_file_temp)
 
-    def remap_ismip6BasalMelt_to_mali(self, input_file, output_file,
-                                      mali_mesh_name, mali_mesh_file,
-                                      method_remap):
+    def remap_ismip6_basal_melt_to_mali_vars(self, input_file, output_file,
+                                             mali_mesh_name, mali_mesh_file,
+                                             method_remap):
         """
         Remap the input ismip6 basal melt data onto mali mesh
 
@@ -178,8 +178,8 @@ class ProcessBasalMelt(Step):
 
         subprocess.check_call(args)
 
-    def rename_ismip6BasalMelt_to_mali_vars(self, remapped_file_temp,
-                                            output_file):
+    def rename_ismip6_basal_melt_to_mali_vars(self, remapped_file_temp,
+                                              output_file):
         """
         Rename variables in the remapped ismip6 input data
         to the ones that MALI uses.

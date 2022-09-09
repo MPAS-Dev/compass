@@ -34,11 +34,11 @@ class ProcessSmbRacmo(Step):
         Set up this step of the test case
         """
         config = self.config
-        section = config['ismip6_ais']
-        base_path_mali = section.get('base_path_mali')
-        mali_mesh_file = section.get('mali_mesh_file')
+        section = config["ismip6_ais"]
+        base_path_mali = section.get("base_path_mali")
+        mali_mesh_file = section.get("mali_mesh_file")
 
-        section = config['ismip6_ais_atmosphere']
+        section = config["ismip6_ais_atmosphere"]
         process_smb_racmo = section.getboolean("process_smb_racmo")
 
         self.add_input_file(filename=mali_mesh_file,
@@ -74,9 +74,7 @@ class ProcessSmbRacmo(Step):
 
         section = config["ismip6_ais_atmosphere"]
         method_remap = section.get("method_remap")
-        process_modern_smb = section.getboolean("process_smb_racmo")
 
-        input_file_list = self._files
         racmo_file_temp1 = "RACMO2.3p2_smb_climatology_1995_2017.nc"
         racmo_file_temp2 = "RACMO2.3p2_smb_climatology_1995_2017_" \
                            "correct_unit.nc"
@@ -138,8 +136,8 @@ class ProcessSmbRacmo(Step):
         os.remove(racmo_file_temp2)
 
         # place the output file in appropriate directory
-        output_path = f'{output_base_path}/atmosphere_forcing/' \
-                      f'RACMO_climatology_1995-2017'
+        output_path = f"{output_base_path}/atmosphere_forcing/" \
+                      f"RACMO_climatology_1995-2017"
         if not os.path.exists(output_path):
             print("Creating a new directory for the output data")
             os.makedirs(output_path)
@@ -223,7 +221,7 @@ class ProcessSmbRacmo(Step):
         write_netcdf(ds, output_file)
         ds.close()
 
-    def correct_SMB_anomaly_for_baseSMB(self, output_file, mali_mesh_file):
+    def correct_smb_anomaly_for_base_smb(self, output_file, mali_mesh_file):
         """
         Apply the MALI base SMB to the ismip6 SMB anomaly field
 

@@ -26,7 +26,7 @@ class ProcessSMB(Step):
         input_file : file name of ismip6 forcing data processed by this step
         """
         self.input_file = input_file
-        super().__init__(test_case=test_case, name='process_smb', ntasks=4,
+        super().__init__(test_case=test_case, name="process_smb", ntasks=4,
                          min_tasks=1)
 
     def setup(self):
@@ -34,11 +34,11 @@ class ProcessSMB(Step):
         Set up this step of the test case
         """
         config = self.config
-        section = config['ismip6_ais']
-        base_path_ismip6 = section.get('base_path_ismip6')
-        base_path_mali = section.get('base_path_mali')
-        output_base_path = section.get('output_base_path')
-        mali_mesh_file = section.get('mali_mesh_file')
+        section = config["ismip6_ais"]
+        base_path_ismip6 = section.get("base_path_ismip6")
+        base_path_mali = section.get("base_path_mali")
+        output_base_path = section.get("output_base_path")
+        mali_mesh_file = section.get("mali_mesh_file")
         period_endyear = section.get("period_endyear")
         model = section.get("model")
         scenario = section.get("scenario")
@@ -59,9 +59,9 @@ class ProcessSMB(Step):
 
         # add processed racmo data as input as it is needed for smb correction
         racmo_clim_file = f"processed_RACMO2.3p2_ANT27" \
-                     f"_smb_climatology_1995-2017.nc"
-        racmo_path = f'{output_base_path}/atmosphere_forcing/' \
-                      f'RACMO_climatology_1995-2017'
+                          f"_smb_climatology_1995-2017.nc"
+        racmo_path = f"{output_base_path}/atmosphere_forcing/" \
+                     f"RACMO_climatology_1995-2017"
 
         self.add_input_file(filename=racmo_clim_file,
                             target=os.path.join(racmo_path,
@@ -74,30 +74,30 @@ class ProcessSMB(Step):
         logger = self.logger
         config = self.config
 
-        section = config['ismip6_ais']
-        mali_mesh_name = section.get('mali_mesh_name')
-        mali_mesh_file = section.get('mali_mesh_file')
+        section = config["ismip6_ais"]
+        mali_mesh_name = section.get("mali_mesh_name")
+        mali_mesh_file = section.get("mali_mesh_file")
         period_endyear = section.get("period_endyear")
         model = section.get("model")
         scenario = section.get("scenario")
-        output_base_path = section.get('output_base_path')
+        output_base_path = section.get("output_base_path")
 
-        section = config['ismip6_ais_atmosphere']
-        method_remap = section.get('method_remap')
+        section = config["ismip6_ais_atmosphere"]
+        method_remap = section.get("method_remap")
 
         # define file names needed
         # input racmo climotology file
         racmo_clim_file = f"processed_RACMO2.3p2_ANT27" \
-                            f"_smb_climatology_1995-2017.nc"
-        racmo_path = f'{output_base_path}/atmosphere_forcing/' \
-                      f'RACMO_climatology_1995-2017'
+                          f"_smb_climatology_1995-2017.nc"
+        racmo_path = f"{output_base_path}/atmosphere_forcing/" \
+                     f"RACMO_climatology_1995-2017"
         # check if the processed racmo input file exists
         racmo_clim_file_final = os.path.join(racmo_path, racmo_clim_file)
         if not os.path.exists(racmo_clim_file_final):
-            raise ValueError ("Processed RACMO data does not exist, "
-                              "but it is required as an input file "
-                              "to run this step. Please run `ProcessSmbRacmo` "
-                              "tep prior to running this step.")
+            raise ValueError("Processed RACMO data does not exist, "
+                             "but it is required as an input file "
+                             "to run this step. Please run `ProcessSmbRacmo` "
+                             "step prior to running this step.")
 
         # temporary remapped climatology and anomaly files
         clim_ismip6_temp = "clim_ismip6.nc"
@@ -165,7 +165,7 @@ class ProcessSMB(Step):
 
         # correct the SMB anomaly field with mali base SMB field
         logger.info("Correcting the SMB anomaly field for the base SMB "
-                    "climatology 1995-2017 ")
+                    "climatology 1995-2017...")
         self.correct_smb_anomaly_for_climatology(racmo_clim_file,
                                                  output_clim_ismip6,
                                                  output_anomaly_ismip6)
@@ -180,10 +180,10 @@ class ProcessSMB(Step):
         os.remove(output_clim_ismip6)
 
         # place the output file in appropriate directory
-        output_path = f'{output_base_path}/atmosphere_forcing/' \
-                      f'{model}_{scenario}/1995-{period_endyear}'
+        output_path = f"{output_base_path}/atmosphere_forcing/" \
+                      f"{model}_{scenario}/1995-{period_endyear}"
         if not os.path.exists(output_path):
-            print("Creating a new directory for the output data")
+            print("Creating a new directory for the output data...")
             os.makedirs(output_path)
 
         src = os.path.join(os.getcwd(), output_anomaly_ismip6)
@@ -269,7 +269,7 @@ class ProcessSMB(Step):
             yr = date.dt.year.values
             mo = date.dt.month.values
             dy = date.dt.day.values
-            dec_yr = np.around(yr + (30 * (mo - 1) + dy) / 365.0) # approximate ok
+            dec_yr = np.around(yr + (30 * (mo - 1) + dy) / 365.0)
             date = f"{dec_yr.astype(int)}-01-01_00:00:00".ljust(64)
             xtime.append(date)
 

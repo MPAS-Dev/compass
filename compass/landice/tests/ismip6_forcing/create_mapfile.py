@@ -82,7 +82,7 @@ def build_mapping_file(config, cores, logger, ismip6_grid_file,
                          "--method. Available options are 'bilinear',"
                          "'neareststod', 'conserve'.")
 
-    parallel_executable = config.get('parallel', 'parallel_executable')
+    parallel_executable = config.get("parallel", "parallel_executable")
     # split the parallel executable into constituents in case it includes flags
     args = parallel_executable.split(' ')
     args.extend(["-n", f"{cores}",

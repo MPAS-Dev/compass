@@ -23,7 +23,7 @@ class ProcessThermalForcing(Step):
                     OceanThermal
             The test case this step belongs to
         """
-        super().__init__(test_case=test_case, name='process_thermal_forcing',
+        super().__init__(test_case=test_case, name="process_thermal_forcing",
                          ntasks=4, min_tasks=1)
 
     def setup(self):
@@ -31,15 +31,15 @@ class ProcessThermalForcing(Step):
         Set up this step of the test case
         """
         config = self.config
-        section = config['ismip6_ais']
-        base_path_ismip6 = section.get('base_path_ismip6')
-        base_path_mali = section.get('base_path_mali')
-        mali_mesh_file = section.get('mali_mesh_file')
+        section = config["ismip6_ais"]
+        base_path_ismip6 = section.get("base_path_ismip6")
+        base_path_mali = section.get("base_path_mali")
+        mali_mesh_file = section.get("mali_mesh_file")
         period_endyear = section.get("period_endyear")
         model = section.get("model")
         scenario = section.get("scenario")
 
-        section = config['ismip6_ais_ocean_thermal']
+        section = config["ismip6_ais_ocean_thermal"]
         process_obs_data = section.getboolean("process_obs_data")
 
         self.add_input_file(filename=mali_mesh_file,
@@ -51,10 +51,12 @@ class ProcessThermalForcing(Step):
             output_file = f"processed_obs_TF_1995-2017_8km_x_60m.nc"
         else:
             input_file = self._files[period_endyear][model][scenario]
-            output_file = f"processed_TF_{model}_{scenario}_{period_endyear}.nc"
+            output_file = f"processed_TF_{model}_{scenario}_" \
+                          f"{period_endyear}.nc"
 
         self.add_input_file(filename=os.path.basename(input_file[0]),
-                            target=os.path.join(base_path_ismip6, input_file[0]))
+                            target=os.path.join(base_path_ismip6,
+                            input_file[0]))
         self.add_output_file(filename=output_file)
 
     def run(self):
@@ -64,28 +66,29 @@ class ProcessThermalForcing(Step):
         logger = self.logger
         config = self.config
 
-        section = config['ismip6_ais']
-        mali_mesh_name = section.get('mali_mesh_name')
-        mali_mesh_file = section.get('mali_mesh_file')
+        section = config["ismip6_ais"]
+        mali_mesh_name = section.get("mali_mesh_name")
+        mali_mesh_file = section.get("mali_mesh_file")
         period_endyear = section.get("period_endyear")
         model = section.get("model")
         scenario = section.get("scenario")
-        output_base_path = section.get('output_base_path')
+        output_base_path = section.get("output_base_path")
 
-        section = config['ismip6_ais_ocean_thermal']
-        method_remap = section.get('method_remap')
-        process_obs_data = section.getboolean('process_obs_data')
+        section = config["ismip6_ais_ocean_thermal"]
+        method_remap = section.get("method_remap")
+        process_obs_data = section.getboolean("process_obs_data")
 
         if process_obs_data:
             input_file_list = self._file_obs
-            output_file = f'processed_obs_TF_1995-2017_8km_x_60m.nc'
-            output_path = f'{output_base_path}/ocean_thermal_forcing/'\
-                          f'obs'
+            output_file = f"processed_obs_TF_1995-2017_8km_x_60m.nc"
+            output_path = f"{output_base_path}/ocean_thermal_forcing/"\
+                          f"obs"
         else:
             input_file_list = self._files[period_endyear][model][scenario]
-            output_file = f'processed_TF_{model}_{scenario}_{period_endyear}.nc'
-            output_path = f'{output_base_path}/ocean_thermal_forcing/' \
-                          f'{model}_{scenario}/1995-{period_endyear}'
+            output_file = f"processed_TF_" \
+                          f"{model}_{scenario}_{period_endyear}.nc"
+            output_path = f"{output_base_path}/ocean_thermal_forcing/" \
+                          f"{model}_{scenario}/1995-{period_endyear}"
 
         input_file = os.path.basename(input_file_list[0])
 
@@ -94,34 +97,38 @@ class ProcessThermalForcing(Step):
 
         # call the function that reads in, remap and rename the file.
         print("Calling a remapping function...")
-        self.remap_ismip6thermalforcing_to_mali(input_file,
-                                                remapped_file_temp,
-                                                mali_mesh_name,
-                                                mali_mesh_file, method_remap)
+        self.remap_ismip6_thermal_forcing_to_mali_vars(input_file,
+                                                       remapped_file_temp,
+                                                       mali_mesh_name,
+                                                       mali_mesh_file,
+                                                       method_remap)
 
         # call the function that renames the ismip6 variables to MALI variables
         print("Renaming the ismip6 variables to mali variable names...")
-        self.rename_ismip6thermalforcing_to_mali_vars(remapped_file_temp,
-                                                      output_file)
+        self.rename_ismip6_thermal_forcing_to_mali_vars(remapped_file_temp,
+                                                        output_file)
 
         print("Remapping and renamping process done successfully. "
-              "Removing the temporary file 'remapped.nc'")
+              "Removing the temporary file 'remapped.nc'...")
 
         # remove the temporary combined file
         os.remove(remapped_file_temp)
 
         # place the output file in appropriate directory
         if not os.path.exists(output_path):
-            print("Creating a new directory for the output data")
+            print("Creating a new directory for the output data...")
             os.makedirs(output_path)
 
         src = os.path.join(os.getcwd(), output_file)
         dst = os.path.join(output_path, output_file)
         shutil.copy(src, dst)
 
-    def remap_ismip6thermalforcing_to_mali(self, input_file,
-                                           output_file, mali_mesh_name,
-                                           mali_mesh_file, method_remap):
+    def remap_ismip6_thermal_forcing_to_mali_vars(self,
+                                                  input_file,
+                                                  output_file,
+                                                  mali_mesh_name,
+                                                  mali_mesh_file,
+                                                  method_remap):
         """
         Remap the input ismip6 thermal forcing data onto mali mesh
 
@@ -158,8 +165,9 @@ class ProcessThermalForcing(Step):
 
         subprocess.check_call(args)
 
-    def rename_ismip6thermalforcing_to_mali_vars(self, remapped_file_temp,
-                                                 output_file):
+    def rename_ismip6_thermal_forcing_to_mali_vars(self,
+                                                   remapped_file_temp,
+                                                   output_file):
         """
         Rename variables in the remapped ismip6 input data
         to the ones that MALI uses.
@@ -173,15 +181,15 @@ class ProcessThermalForcing(Step):
         """
 
         config = self.config
-        section = config['ismip6_ais_ocean_thermal']
-        process_obs_data = section.getboolean('process_obs_data')
+        section = config["ismip6_ais_ocean_thermal"]
+        process_obs_data = section.getboolean("process_obs_data")
 
         # open dataset in 20 years chunk
         ds = xr.open_dataset(remapped_file_temp, chunks=dict(time=20),
                              engine="netcdf4")
 
         ds["ismip6shelfMelt_zOcean"] = ds.z
-        ds = ds.drop_vars('z')  # dropping 'z' while it's still called 'z'
+        ds = ds.drop_vars("z")  # dropping 'z' while it's still called 'z'
 
         # build dictionary for ismip6 variables that MALI takes in
         if process_obs_data:
@@ -189,7 +197,7 @@ class ProcessThermalForcing(Step):
                 z="nISMIP6OceanLayers",
                 ncol="nCells")
             ds["xtime"] = ("Time", ["2015-01-01_00:00:00".ljust(64)])
-            ds["xtime"] = ds.xtime.astype('S')
+            ds["xtime"] = ds.xtime.astype("S")
             ds["thermal_forcing"] = ds["thermal_forcing"].expand_dims(
                 dim="Time", axis=0)
             ds = ds.rename(ismip6_to_mali_dims)
@@ -203,12 +211,14 @@ class ProcessThermalForcing(Step):
             xtime = []
             for t_index in range(ds.sizes["Time"]):
                 date = ds.Time[t_index]
-                # forcing files do not all match even years, so round up the years
-                # pandas round function does not work for years, so do it manually
+                # forcing files do not all match even years,
+                # so round up the years
+                # pandas round function does not work for years,
+                # so do it manually
                 yr = date.dt.year.values
                 mo = date.dt.month.values
                 dy = date.dt.day.values
-                dec_yr = np.around(yr + (30 * (mo - 1) + dy) / 365.0)  # approximate ok
+                dec_yr = np.around(yr + (30 * (mo - 1) + dy) / 365.0)
                 date = f"{dec_yr.astype(int)}-01-01_00:00:00".ljust(64)
                 xtime.append(date)
 
@@ -225,7 +235,8 @@ class ProcessThermalForcing(Step):
                            "lon_vertices", "lat", "lon"])
 
         # transpose dimension
-        ds["thermal_forcing"] = ds["thermal_forcing"].transpose(
+        ds["ismip6shelfMelt_3dThermalForcing"] = \
+            ds["ismip6shelfMelt_3dThermalForcing"].transpose(
             "Time", "nCells", "nISMIP6OceanLayers")
 
         # write to a new netCDF file

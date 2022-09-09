@@ -24,7 +24,7 @@ class Atmosphere(TestCase):
         test_group : compass.landice.tests.ismip6_forcing.Ismip6Forcing
             The test group that this test case belongs to
         """
-        name = 'atmosphere'
+        name = "atmosphere"
         subdir = name
         super().__init__(test_group=test_group, name=name, subdir=subdir)
 

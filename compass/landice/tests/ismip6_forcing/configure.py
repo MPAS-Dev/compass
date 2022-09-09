@@ -13,11 +13,11 @@ def configure(config, check_model_options):
 
     """
 
-    section = 'ismip6_ais'
-    options = ['base_path_ismip6', 'base_path_mali', 'mali_mesh_name',
-               'mali_mesh_file', 'output_base_path']
+    section = "ismip6_ais"
+    options = ["base_path_ismip6", "base_path_mali", "mali_mesh_name",
+               "mali_mesh_file", "output_base_path"]
     if check_model_options:
-        options = options + ['model', 'scenario', 'period_endyear']
+        options = options + ["model", "scenario", "period_endyear"]
 
     for option in options:
         value = config.get(section=section, option=option)

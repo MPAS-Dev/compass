@@ -128,7 +128,7 @@ def create_atm_scrip(source_grid_file, source_grid_scripfile):
     else:
         nx = ds.sizes["x"]
         ny = ds.sizes["y"]
-    units = 'degrees'
+    units = "degrees"
 
     grid_size = nx * ny
 
@@ -137,28 +137,28 @@ def create_atm_scrip(source_grid_file, source_grid_scripfile):
     out_file.createDimension("grid_rank", 2)
 
     # Variables
-    grid_center_lat = out_file.createVariable('grid_center_lat', 'f8',
-                                              ('grid_size',))
+    grid_center_lat = out_file.createVariable("grid_center_lat", "f8",
+                                              ("grid_size",))
     grid_center_lat.units = units
-    grid_center_lon = out_file.createVariable('grid_center_lon', 'f8',
-                                              ('grid_size',))
+    grid_center_lon = out_file.createVariable("grid_center_lon", "f8",
+                                              ("grid_size",))
     grid_center_lon.units = units
-    grid_corner_lat = out_file.createVariable('grid_corner_lat', 'f8',
-                                              ('grid_size', 'grid_corners'))
+    grid_corner_lat = out_file.createVariable("grid_corner_lat", "f8",
+                                              ("grid_size", "grid_corners"))
     grid_corner_lat.units = units
-    grid_corner_lon = out_file.createVariable('grid_corner_lon', 'f8',
-                                              ('grid_size', 'grid_corners'))
+    grid_corner_lon = out_file.createVariable("grid_corner_lon", "f8",
+                                              ("grid_size", "grid_corners"))
     grid_corner_lon.units = units
-    grid_imask = out_file.createVariable('grid_imask', 'i4', ('grid_size',))
-    grid_imask.units = 'unitless'
-    out_file.createVariable('grid_dims', 'i4', ('grid_rank',))
+    grid_imask = out_file.createVariable("grid_imask", "i4", ("grid_size",))
+    grid_imask.units = "unitless"
+    out_file.createVariable("grid_dims", "i4", ("grid_rank",))
 
-    out_file.variables['grid_center_lat'][:] = ds.lat.values.flat
-    out_file.variables['grid_center_lon'][:] = ds.lon.values.flat
-    out_file.variables['grid_dims'][:] = [nx, ny]
-    out_file.variables['grid_imask'][:] = 1
+    out_file.variables["grid_center_lat"][:] = ds.lat.values.flat
+    out_file.variables["grid_center_lon"][:] = ds.lon.values.flat
+    out_file.variables["grid_dims"][:] = [nx, ny]
+    out_file.variables["grid_imask"][:] = 1
 
-    if 'lat_bnds' in ds and 'lon_bnds' in ds:
+    if "lat_bnds" in ds and "lon_bnds" in ds:
         lat_corner = ds.lat_bnds
         if "time" in lat_corner.dims:
             lat_corner = lat_corner.isel(time=0)
@@ -169,21 +169,24 @@ def create_atm_scrip(source_grid_file, source_grid_scripfile):
 
         lat_corner = lat_corner.values
         lon_corner = lon_corner.values
-    else:  # this part is used for RACMO as it does not have lat_bnds & lon_bnds
+    else:
+        # this part is used for RACMO as it does not have lat_bnds & lon_bnds
         lat_corner = _unwrap_corners(interp_extrap_corners_2d(ds.lat.values))
         lon_corner = _unwrap_corners(interp_extrap_corners_2d(ds.lon.values))
 
     grid_corner_lat = lat_corner.reshape((grid_size, 4))
     grid_corner_lon = lon_corner.reshape((grid_size, 4))
 
-    out_file.variables['grid_corner_lat'][:] = grid_corner_lat
-    out_file.variables['grid_corner_lon'][:] = grid_corner_lon
+    out_file.variables["grid_corner_lat"][:] = grid_corner_lat
+    out_file.variables["grid_corner_lon"][:] = grid_corner_lon
 
     out_file.close()
 
 
 def _unwrap_corners(in_field):
-    """Turn a 2D array of corners into an array of rectangular mesh elements"""
+    """
+    Turn a 2D array of corners into an array of rectangular mesh elements
+    """
     out_field = np.zeros(((in_field.shape[0] - 1) *
                           (in_field.shape[1] - 1), 4))
     # corners are counterclockwise

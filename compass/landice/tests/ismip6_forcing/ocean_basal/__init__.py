@@ -22,7 +22,7 @@ class OceanBasal(TestCase):
         test_group : compass.landice.tests.ismip6_forcing.Ismip6Forcing
             The test group that this test case belongs to
         """
-        name = 'ocean_basal'
+        name = "ocean_basal"
         super().__init__(test_group=test_group, name=name)
 
         step = ProcessBasalMelt(test_case=self)
