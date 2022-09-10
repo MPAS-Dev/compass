@@ -4,9 +4,21 @@ ismip6_forcing
 ==============
 
 The ``ismip6_forcing`` test group (:py:class:`compass.landice.tests.ismip6_
-forcing.Ismip6Forcing`) processes the atmospheric and oceaninc forcing data of
-the Ice Sheet Model Intercomparison for CMIP6 (ISMIP6) protocol. Here,
-we describe the shared framework for this test group and the 3 test cases.
+forcing.Ismip6Forcing`) processes (i.e., remapping and renaming) the
+atmospheric and oceanic forcing data of the Ice Sheet Model
+Intercomparison for CMIP6 (ISMIP6) protocol from its native polarstereo grid to
+the unstructure MALI mesh. The test group includes three test cases,
+``atmosphere``, ``ocean_basal`` and ``ocean_thermal``. The ``atmosphere``
+test case has two steps: ``process_smb`` and ``process_smb_racmo``;
+the ``ocean_basal`` test case has one step, ``process_basal_melt``;
+the ``ocean_thermal`` has one step, ``process_thermal_forcing``.
+Each step has the local methods (functions) of remapping and
+renaming the original ismip6 data to the format that MALI can incorporate in
+its forward simulations. In remapping the data, all test cases import the
+method ``build_mapping_file`` to create or use scrip files
+of the source (ISMIP6) and destination (MALI) mesh depending on the existence
+of a mapping file. Below, we describe the shared framework for this
+test group and the 3 test cases.
 
 .. _dev_landice_ismip6_forcing_framework:
 
@@ -44,7 +56,7 @@ ocean_basal
 ------------
 
 The :py:class:`compass.landice.tests.ismip6_forcing.ocean_basal.OceanBasal`
-performs processing of the coefficients for the basal melt parametrization
+performs processing of the coefficients for the basal melt parameterization
 utilized by the ISMIP6 protocol. Processing data includes combining the
-IMBIE2 basin number file and parametrization coefficients and remapping onto
+IMBIE2 basin number file and parameterization coefficients and remapping onto
 the MALI mesh.

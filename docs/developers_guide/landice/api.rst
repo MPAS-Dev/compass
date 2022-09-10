@@ -240,12 +240,44 @@ ismip6_forcing
    :toctree: generated/
 
    Ismip6Forcing
+   configure.configure
+   create_mapfile.build_mapping_file
 
    atmosphere.Atmosphere
-   atmosphere.Atmosphere.run
+   atmosphere.Atmosphere.configure
+   atmosphere.create_mapfile_smb
+   atmosphere.create_mapfile_smb.build_mapping_file
+   atmosphere.create_mapfile_smb.create_atm_scrip
+   atmosphere.process_smb.ProcessSMB
+   atmosphere.process_smb.ProcessSMB.setup
+   atmosphere.process_smb.ProcessSMB.run
+   atmosphere.process_smb.ProcessSMB.remap_ismip6_smb_to_mali
+   atmosphere.process_smb.ProcessSMB.rename_ismip6_smb_to_mali_vars
+   atmosphere.process_smb.ProcessSMB.correct_smb_anomaly_for_climatology
+   atmosphere.process_smb_racmo.ProcessSmbRacmo
+   atmosphere.process_smb_racmo.ProcessSmbRacmo.setup
+   atmosphere.process_smb_racmo.ProcessSmbRacmo.run
+   atmosphere.process_smb_racmo.ProcessSmbRacmo.remap_source_smb_to_mali
+   atmosphere.process_smb_racmo.ProcessSmbRacmo.rename_source_smb_to_mali_vars
+   atmosphere.process_smb_racmo.ProcessSmbRacmo.correct_smb_anomaly_for_base_smb
+
+   ocean_basal.OceanBasal
+   ocean_basal.OceanBasal.configure
+   ocean_basal.process_basal_melt.ProcessBasalMelt
+   ocean_basal.process_basal_melt.ProcessBasalMelt.setup
+   ocean_basal.process_basal_melt.ProcessBasalMelt.run
+   ocean_basal.process_basal_melt.ProcessBasalMelt.combine_ismip6_inputfiles
+   ocean_basal.process_basal_melt.ProcessBasalMelt.remap_ismip6_basal_melt_to_mali_vars
+   ocean_basal.process_basal_melt.ProcessBasalMelt.rename_ismip6_basal_melt_to_mali_vars
 
    ocean_thermal.OceanThermal
-   ocean_thermal.OceanThermal.run
+   ocean_thermal.OceanThermal.configure
+   ocean_thermal.process_thermal_forcing.ProcessThermalForcing
+   ocean_thermal.process_thermal_forcing.ProcessThermalForcing.setup
+   ocean_thermal.process_thermal_forcing.ProcessThermalForcing.run
+   ocean_thermal.process_thermal_forcing.ProcessThermalForcing.remap_ismip6_thermal_forcing_to_mali_vars
+   ocean_thermal.process_thermal_forcing.ProcessThermalForcing.rename_ismip6_thermal_forcing_to_mali_vars
+
 
 kangerlussuaq
 ~~~~~~~~~~~~~
