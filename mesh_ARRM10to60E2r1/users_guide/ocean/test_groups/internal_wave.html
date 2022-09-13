@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>internal_wave &mdash; compass mesh_ARRM10to60E2r1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="isomip_plus" href="isomip_plus.html" />
+    <link rel="prev" title="ice_shelf_2d" href="ice_shelf_2d.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> compass
+          </a>
+              <div class="version">
+                mesh_ARRM10to60E2r1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../landice/index.html">Landice core</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Ocean core</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Test groups</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="baroclinic_channel.html">baroclinic_channel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="drying_slope.html">drying_slope</a></li>
+<li class="toctree-l3"><a class="reference internal" href="global_convergence.html">global_convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="global_ocean.html">global_ocean</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gotm.html">gotm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hurricane.html">hurricane</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ice_shelf_2d.html">ice_shelf_2d</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">internal_wave</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#config-options">config options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#default">default</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rpe-test">rpe_test</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ten-day-test">ten_day_test</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="isomip_plus.html">isomip_plus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="planar_convergence.html">planar_convergence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soma.html">soma</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sphere_transport.html">sphere_transport</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ziso.html">ziso</a></li>
+<li class="toctree-l3"><a class="reference internal" href="spherical_harmonic_transform.html">spherical_harmonic_transform</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../framework/index.html">Framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../suites.html">Test suites</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Ocean core</a> &raquo;</li>
+          <li><a href="index.html">Test groups</a> &raquo;</li>
+      <li>internal_wave</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/users_guide/ocean/test_groups/internal_wave.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="internal-wave">
+<span id="ocean-internal-wave"></span><h1>internal_wave<a class="headerlink" href="#internal-wave" title="Permalink to this heading">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">ocean/internal_wave</span></code> test group induces internal wave propagation and is documented in
+<a class="reference external" href="https://doi.org/10.1016/j.ocemod.2011.10.003">Ilicak et al. (2012)</a>.</p>
+<p>The domain is periodic on the zonal boundaries and solid on the meridional boundaries.
+Salinity is constant throughout the domain (at 35 PSU).  The initial
+temperature has a linear background stratification with a sinusoidal perturbation in the center
+of the domain. This perturbation initiates symmetric waves that propage out from the center and
+then back to the center after meeting the solid boundaries.
+with a gradient between the two halves that is sinusoidally perturbed in the
+meridional direction.  The surface temperature is also warmer than at depth.</p>
+<a class="reference internal image-reference" href="../../../_images/internal_wave.png"><img alt="../../../_images/internal_wave.png" class="align-center" src="../../../_images/internal_wave.png" style="width: 500px;" /></a>
+<p>By default, the 20 vertical layers each have 25-m uniform
+thickness. By default, all cases have a horizontal resolution of 5 km.</p>
+<p>The test group includes 3 test cases.  All test cases have 2 steps,
+<code class="docutils literal notranslate"><span class="pre">initial_state</span></code>, which defines the mesh and initial conditions for the model,
+and <code class="docutils literal notranslate"><span class="pre">forward</span></code> (given another name in many test cases to distinguish multiple
+forward runs), which performs time integration of the model. There is an optional <code class="docutils literal notranslate"><span class="pre">viz</span></code>
+step which performs visualization of vertical cross-sections through the center of the domain.</p>
+<section id="config-options">
+<h2>config options<a class="headerlink" href="#config-options" title="Permalink to this heading">¶</a></h2>
+<p>All 3 test cases share the same set of config options:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># Options related to the vertical grid</span><span class="w"></span>
+<span class="k">[vertical_grid]</span><span class="w"></span>
+
+<span class="c1"># the type of vertical grid</span><span class="w"></span>
+<span class="na">grid_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">uniform</span><span class="w"></span>
+
+<span class="c1"># Number of vertical levels</span><span class="w"></span>
+<span class="na">vert_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">20</span><span class="w"></span>
+
+<span class="c1"># Depth of the bottom of the ocean</span><span class="w"></span>
+<span class="na">bottom_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000.0</span><span class="w"></span>
+
+<span class="c1"># The type of vertical coordinate (e.g. z-level, z-star)</span><span class="w"></span>
+<span class="na">coord_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">z-level</span><span class="w"></span>
+
+<span class="c1"># Whether to use &quot;partial&quot; or &quot;full&quot;, or &quot;None&quot; to not alter the topography</span><span class="w"></span>
+<span class="na">partial_cell_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">None</span><span class="w"></span>
+
+<span class="c1"># The minimum fraction of a layer for partial cells</span><span class="w"></span>
+<span class="na">min_pc_fraction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.1</span><span class="w"></span>
+
+
+<span class="c1"># namelist options for internal wave testcases</span><span class="w"></span>
+<span class="k">[internal_wave]</span><span class="w"></span>
+
+<span class="c1"># the number of grid cells in x and y</span><span class="w"></span>
+<span class="na">nx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span><span class="w"></span>
+<span class="na">ny</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">50</span><span class="w"></span>
+
+<span class="c1"># the size of grid cells (m)</span><span class="w"></span>
+<span class="na">dc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5000.0</span><span class="w"></span>
+
+<span class="c1"># Logical flag that determines if locations of features are defined by distance</span><span class="w"></span>
+<span class="c1"># or fractions. False means fractions.</span><span class="w"></span>
+<span class="na">use_distances</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span><span class="w"></span>
+
+<span class="c1"># Temperature of the surface in the northern half of the domain.</span><span class="w"></span>
+<span class="na">surface_temperature</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">20.1</span><span class="w"></span>
+
+<span class="c1"># Temperature of the bottom in the northern half of the domain.</span><span class="w"></span>
+<span class="na">bottom_temperature</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10.1</span><span class="w"></span>
+
+<span class="c1"># Difference in the temperature field between top and bottom</span><span class="w"></span>
+<span class="na">temperature_difference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2.0</span><span class="w"></span>
+
+<span class="c1"># Fraction of domain in Y direction the temperature gradient should be linear</span><span class="w"></span>
+<span class="c1"># over.</span><span class="w"></span>
+<span class="na">amplitude_width_frac</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.33</span><span class="w"></span>
+
+<span class="c1"># Width of the temperature gradient around the center sin wave. Default value</span><span class="w"></span>
+<span class="c1"># is relative to a 500km domain in Y.</span><span class="w"></span>
+<span class="na">amplitude_width_dist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">50e3</span><span class="w"></span>
+
+<span class="c1"># Salinity of the water in the entire domain.</span><span class="w"></span>
+<span class="na">salinity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">35.0</span><span class="w"></span>
+
+<span class="c1"># Logical flag that determines if locations of features are defined by distance</span><span class="w"></span>
+<span class="c1"># or fractions. False means fractions.</span><span class="w"></span>
+<span class="na">use_distances</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span><span class="w"></span>
+
+<span class="c1"># Temperature of the surface in the northern half of the domain.</span><span class="w"></span>
+<span class="na">surface_temperature</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">13.1</span><span class="w"></span>
+
+<span class="c1"># Temperature of the bottom in the northern half of the domain.</span><span class="w"></span>
+<span class="na">bottom_temperature</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10.1</span><span class="w"></span>
+
+<span class="c1"># Difference in the temperature field between the northern and southern halves</span><span class="w"></span>
+<span class="c1"># of the domain.</span><span class="w"></span>
+<span class="na">temperature_difference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1.2</span><span class="w"></span>
+
+<span class="c1"># Fraction of domain in Y direction the temperature gradient should be linear</span><span class="w"></span>
+<span class="c1"># over.</span><span class="w"></span>
+<span class="na">gradient_width_frac</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.08</span><span class="w"></span>
+
+<span class="c1"># Width of the temperature gradient around the center sin wave. Default value</span><span class="w"></span>
+<span class="c1"># is relative to a 500km domain in Y.</span><span class="w"></span>
+<span class="na">gradient_width_dist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">40e3</span><span class="w"></span>
+
+<span class="c1"># Salinity of the water in the entire domain.</span><span class="w"></span>
+<span class="na">salinity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">35.0</span><span class="w"></span>
+
+<span class="c1"># Coriolis parameter for entire domain.</span><span class="w"></span>
+<span class="na">coriolis_parameter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">-1.2e-4</span><span class="w"></span>
+</pre></div>
+</div>
+<p>All units are mks, with temperature in degrees Celsius and salinity in PSU.</p>
+</section>
+<section id="default">
+<h2>default<a class="headerlink" href="#default" title="Permalink to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">ocean/internal_wave/default</span></code> is the default version of the
+internal wave test case for a short (15 min) test run and validation of
+prognostic variables for regression testing.</p>
+</section>
+<section id="rpe-test">
+<h2>rpe_test<a class="headerlink" href="#rpe-test" title="Permalink to this heading">¶</a></h2>
+<p>Since mixing is a strong function of horizontal viscosity, this test case performs
+20-day integrations of the model forward in time at 5 different values of the viscosity (with steps
+named <code class="docutils literal notranslate"><span class="pre">rpe_test_1_nu_1</span></code>, <code class="docutils literal notranslate"><span class="pre">rpe_test_2_nu_5</span></code>, etc.)
+<code class="docutils literal notranslate"><span class="pre">ocean/internal_wave/rpe_test</span></code>,
+Results of these tests have been used
+to show that MPAS-Ocean has lower spurious dissipation of reference potential
+energy (RPE) than POP, MOM and MITgcm models
+(<a class="reference external" href="https://doi.org/10.1016/j.ocemod.2014.12.004">Petersen et al. 2015</a>).</p>
+</section>
+<section id="ten-day-test">
+<h2>ten_day_test<a class="headerlink" href="#ten-day-test" title="Permalink to this heading">¶</a></h2>
+<p>This test is identical to <code class="docutils literal notranslate"><span class="pre">ocean/internal_wave/default</span></code> except that the duration is 10 days.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ice_shelf_2d.html" class="btn btn-neutral float-left" title="ice_shelf_2d" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="isomip_plus.html" class="btn btn-neutral float-right" title="isomip_plus" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

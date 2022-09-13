@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Developer Tutorial: Adding a parameter study &mdash; compass mesh_ARRM10to60E2r1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Developer Tutorial: Porting a legacy COMPASS test group" href="dev_porting_legacy.html" />
+    <link rel="prev" title="Developer Tutorial: Adding a new test group" href="dev_add_test_group.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> compass
+          </a>
+              <div class="version">
+                mesh_ARRM10to60E2r1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Developer Tutorial: Adding a parameter study</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#getting-started">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#making-a-new-test-group-and-cosine-bell-test-case">Making a new test group and “cosine_bell” test case</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-mesh-init-and-forward-steps">Adding “mesh”, “init” and “forward” steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-an-analysis-step">Adding an “analysis” step</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-the-steps-to-the-test-case">Adding the steps to the test case</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#setting-the-number-of-cores">Setting the number of cores</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#documentation">Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Developer Tutorial: Adding a parameter study</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorials/dev_add_param_study.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="developer-tutorial-adding-a-parameter-study">
+<span id="dev-tutorial-add-param-study"></span><h1>Developer Tutorial: Adding a parameter study<a class="headerlink" href="#developer-tutorial-adding-a-parameter-study" title="Permalink to this heading">¶</a></h1>
+<p>This tutorial presents a step-by-step guide to adding a parameter study, a
+test case in which different steps run MPAS cores with different parameter
+values, typically followed by an analysis step that compares the results as
+functions of the parameter or parameters (see the <a class="reference internal" href="../glossary.html#glossary"><span class="std std-ref">Glossary</span></a> for
+definitions of these terms).  Parameter studies differ from other test cases
+in that a user will often wish to modify the list of parameters that are being
+varied by setting config options <em>before</em> setting up the test case.  This is
+in contrast to most config options, which can be modified either before or
+after setting up the test case.  The reason for this difference is because the
+steps that will be set up depend on the parameter values.</p>
+<p>In this tutorial, I will use the <a class="reference internal" href="../developers_guide/ocean/test_groups/global_convergence.html#dev-ocean-global-convergence-cosine-bell"><span class="std std-ref">cosine_bell</span></a>
+test case as an example. Although this test case was originally developed for
+<a class="reference internal" href="../index.html#legacy-compass"><span class="std std-ref">Legacy COMPASS</span></a> and ported using an approach similar to
+<a class="reference internal" href="dev_porting_legacy.html#dev-tutorial-porting-legacy"><span class="std std-ref">Developer Tutorial: Porting a legacy COMPASS test group</span></a>, we will describe it as if it were being
+created from scratch.  In this example, the parameter that we are studying is
+the mesh resolution for a quasi-uniform (QU) mesh.  This type of parameter
+study is called a convergence study because we are analyzing how rapidly the
+error in the solution converges to zero as the resolution increases.</p>
+<p>Many of the details of creating a parameter study are similar to creating any
+other test case within a test group.  Please refer to the companion tutorial
+<a class="reference internal" href="dev_add_test_group.html#dev-tutorial-add-test-group"><span class="std std-ref">Developer Tutorial: Adding a new test group</span></a>, which will be referenced liberally
+in this tutorial. Here, we will focus almost entirely the process that is
+specific to a parameter study.</p>
+<section id="getting-started">
+<h2>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this heading">¶</a></h2>
+<p>Please see <a class="reference internal" href="dev_add_test_group.html#dev-tutorial-add-test-group-getting-started"><span class="std std-ref">Getting started</span></a> for the tutorial
+on adding a new test group.  The procedure is the same for this tutorial except
+that the example branch name will be <cite>add_cosine_bell</cite> instead of
+<cite>add_baroclinic_channel</cite>.</p>
+</section>
+<section id="making-a-new-test-group-and-cosine-bell-test-case">
+<h2>Making a new test group and “cosine_bell” test case<a class="headerlink" href="#making-a-new-test-group-and-cosine-bell-test-case" title="Permalink to this heading">¶</a></h2>
+<p>If your parameter study fits well in an existing test group, you don’t need
+to create a new one.  If the existing test groups aren’t a good fit, you will
+want to follow the step for <a class="reference internal" href="dev_add_test_group.html#dev-tutorial-add-test-group-make-test-group"><span class="std std-ref">Making a new test group</span></a>
+first, then continue here to add the new test case.  In this example, the
+test group is <code class="docutils literal notranslate"><span class="pre">global_convergence</span></code>.</p>
+<p>Within the test group, we will create a new test case in a python package
+called <code class="docutils literal notranslate"><span class="pre">cosine_bell</span></code> and with a class called <code class="docutils literal notranslate"><span class="pre">CosineBell</span></code>.  We will follow
+the procedure described in <a class="reference internal" href="dev_add_test_group.html#dev-tutorial-add-test-group-add-default"><span class="std std-ref">Adding a “default” test case</span></a> to
+get started.</p>
+</section>
+<section id="adding-mesh-init-and-forward-steps">
+<h2>Adding “mesh”, “init” and “forward” steps<a class="headerlink" href="#adding-mesh-init-and-forward-steps" title="Permalink to this heading">¶</a></h2>
+<p>Our test case will be made up of 3 steps at each resolution, followed a final
+<code class="docutils literal notranslate"><span class="pre">analysis</span></code> step that combines data from each mesh resolution.  The 3 steps
+for each mesh resolution are: <code class="docutils literal notranslate"><span class="pre">mesh</span></code>, which creates a horizontal mesh of a
+given QU resolution; <code class="docutils literal notranslate"><span class="pre">init</span></code>, which creates a vertical coordinate and an
+initial condition on the given mesh; and <code class="docutils literal notranslate"><span class="pre">forward</span></code>, which runs a simulation
+forward in time.</p>
+<p>For each step, we create a python module containing a class with the name of
+the step converted to camel case (e.g. a <code class="docutils literal notranslate"><span class="pre">Mesh</span></code> class for the <code class="docutils literal notranslate"><span class="pre">mesh</span></code> step).
+The details of these modules are not critical for this tutorial but you are
+welcome to take a closer look:
+<a class="reference external" href="https://github.com/MPAS-Dev/compass/blob/master/compass/ocean/tests/global_convergence/cosine_bell/mesh.py">mesh.py</a>,
+<a class="reference external" href="https://github.com/MPAS-Dev/compass/blob/master/compass/ocean/tests/global_convergence/cosine_bell/init.py">init.py</a>,
+and <a class="reference external" href="https://github.com/MPAS-Dev/compass/blob/master/compass/ocean/tests/global_convergence/cosine_bell/forward.py">forward.py</a>.
+One important detail is that each step take the resolution (i.e. the parameter
+value) as an input and uses that value to give the step a unique name and
+subdirectory within the test case.  For example, this is from the <code class="docutils literal notranslate"><span class="pre">mesh</span></code>
+step:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a new step</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    test_case : compass.ocean.tests.global_convergence.cosine_bell.CosineBell</span>
+<span class="sd">        The test case this step belongs to</span>
+<span class="sd">    resolution : int</span>
+<span class="sd">        The resolution of the (uniform) mesh in km</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span>
+                     <span class="n">name</span><span class="o">=</span><span class="s1">&#39;QU</span><span class="si">{}</span><span class="s1">_mesh&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">),</span>
+                     <span class="n">subdir</span><span class="o">=</span><span class="s1">&#39;QU</span><span class="si">{}</span><span class="s1">/mesh&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>This is a general requirement of test cases that support parameter studies.
+Any step or steps that are performed for each parameter value should have the
+parameter value passed in as an argument to <code class="docutils literal notranslate"><span class="pre">__init__()</span></code>, and use the
+parameter value in some way to give the test case a unique name and
+subdirectory.</p>
+<p>Much of the rest of the details of creating these steps is similar to the
+description in <a class="reference internal" href="dev_add_test_group.html#dev-tutorial-add-test-group"><span class="std std-ref">Developer Tutorial: Adding a new test group</span></a>, so I refer you to that
+tutorial for more details.</p>
+</section>
+<section id="adding-an-analysis-step">
+<h2>Adding an “analysis” step<a class="headerlink" href="#adding-an-analysis-step" title="Permalink to this heading">¶</a></h2>
+<p>Many parameter studies will perform some kind of analysis that brings together
+output from runs with different parameter values.  In our example, the
+<code class="docutils literal notranslate"><span class="pre">analysis</span></code> step is used to plot the error as a function of resolution.  This
+requires using output from all of the <code class="docutils literal notranslate"><span class="pre">init</span></code> and <code class="docutils literal notranslate"><span class="pre">forward</span></code> steps at
+different resolutions.  <code class="docutils literal notranslate"><span class="pre">analysis</span></code> differs from other steps in this test case
+in that it takes all parameter values (in this case resolutions) as an input:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolutions</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create the step</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    test_case : compass.ocean.tests.global_convergence.cosine_bell.CosineBell</span>
+<span class="sd">        The test case this step belongs to</span>
+
+<span class="sd">    resolutions : list of int</span>
+<span class="sd">        The resolutions of the meshes that have been run</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;analysis&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span> <span class="o">=</span> <span class="n">resolutions</span>
+
+    <span class="k">for</span> <span class="n">resolution</span> <span class="ow">in</span> <span class="n">resolutions</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;QU</span><span class="si">{}</span><span class="s1">_namelist.ocean&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">),</span>
+            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../QU</span><span class="si">{}</span><span class="s1">/init/namelist.ocean&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;QU</span><span class="si">{}</span><span class="s1">_init.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">),</span>
+            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../QU</span><span class="si">{}</span><span class="s1">/init/initial_state.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;QU</span><span class="si">{}</span><span class="s1">_output.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">),</span>
+            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../QU</span><span class="si">{}</span><span class="s1">/forward/output.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">))</span>
+
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>The remaining details of the analysis step are specific to this particular test
+case so we won’t go into them in this tutorial.  But feel free to have a look:
+<a class="reference external" href="https://github.com/MPAS-Dev/compass/blob/master/compass/ocean/tests/global_convergence/cosine_bell/analysis.py">analysis.py</a>.</p>
+</section>
+<section id="adding-the-steps-to-the-test-case">
+<h2>Adding the steps to the test case<a class="headerlink" href="#adding-the-steps-to-the-test-case" title="Permalink to this heading">¶</a></h2>
+<p>The initial design for <code class="docutils literal notranslate"><span class="pre">cosine_bell</span></code> was that steps were only added to the
+test case in the <code class="docutils literal notranslate"><span class="pre">configure()</span></code> method, which gets run when the test case gets
+set up.  This design was because the particular parameter values that will be
+used (the resolutions of the meshes) wasn’t known at initialization, only
+during setup.  A user could provide a custom config file with their own choice
+of resolutions as part of setting up the test case.</p>
+<p>However, it became clear that it wasn’t possible to list the steps of the
+<code class="docutils literal notranslate"><span class="pre">cosine_bell</span></code> test case using <code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">list</span> <span class="pre">--verbose</span></code>.  Before test cases
+are listed, the <code class="docutils literal notranslate"><span class="pre">__init__()</span></code> method has been called but the <code class="docutils literal notranslate"><span class="pre">configure()</span></code>
+method has not.  So the test case didn’t have any steps added to it yet.  This
+was confusing to developers.</p>
+<p>The solution we decided on was to set up the steps in the test case with the
+default parameters in <code class="docutils literal notranslate"><span class="pre">__init__()</span></code>.  Then, in <code class="docutils literal notranslate"><span class="pre">configure()</span></code>, we check if
+the parameter values have been changed from the defaults.  If so, we remove the
+old steps and add new ones with the new parameter values.  To do this, we use
+a “private” method <code class="docutils literal notranslate"><span class="pre">_setup_steps()</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_setup_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; setup steps given resolutions &quot;&quot;&quot;</span>
+    <span class="n">resolutions</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;cosine_bell&#39;</span><span class="p">,</span> <span class="s1">&#39;resolutions&#39;</span><span class="p">)</span>
+    <span class="n">resolutions</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">resolution</span><span class="p">)</span> <span class="k">for</span> <span class="n">resolution</span> <span class="ow">in</span>
+                   <span class="n">resolutions</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()]</span>
+
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span> <span class="o">==</span> <span class="n">resolutions</span><span class="p">:</span>
+        <span class="k">return</span>
+
+    <span class="c1"># start fresh with no steps</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">steps</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">steps_to_run</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span> <span class="o">=</span> <span class="n">resolutions</span>
+
+    <span class="k">for</span> <span class="n">resolution</span> <span class="ow">in</span> <span class="n">resolutions</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">Mesh</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">Init</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">Forward</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">))</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">Analysis</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolutions</span><span class="o">=</span><span class="n">resolutions</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>The resolutions are parsed from the config options.  Then, if we either haven’t
+previously stored resolutions (i.e. we’re in <code class="docutils literal notranslate"><span class="pre">__init__()</span></code>) or we have
+previous resolutions but they’re different from the ones from the config
+options, we start over, adding steps for the given resolutions.</p>
+<p>Here’s how this function is called from <code class="docutils literal notranslate"><span class="pre">__init__()</span></code> and <code class="docutils literal notranslate"><span class="pre">configure()</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create test case for creating a global MPAS-Ocean mesh</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    test_group : compass.ocean.tests.cosine_bell.GlobalOcean</span>
+<span class="sd">        The global ocean test group that this test case belongs to</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="n">test_group</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;cosine_bell&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># add the steps with default resolutions so they can be listed</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">(</span>
+        <span class="n">interpolation</span><span class="o">=</span><span class="n">configparser</span><span class="o">.</span><span class="n">ExtendedInterpolation</span><span class="p">())</span>
+    <span class="n">add_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.cfg&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_setup_steps</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set config options for the test case</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+    <span class="c1"># set up the steps again in case a user has provided new resolutions</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_setup_steps</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>During <code class="docutils literal notranslate"><span class="pre">__init__()</span></code>, the test case doesn’t have any config options yet, since
+these are typically only parsed when the test case is being set up (just before
+<code class="docutils literal notranslate"><span class="pre">configure()</span></code> gets called.  So the test case has to parse the default config
+file for the test case manually itself and pass the config options to the
+<code class="docutils literal notranslate"><span class="pre">_setup_steps()</span></code> method.  This is a little clumsy and more time consuming
+than steps we typically like to include in <code class="docutils literal notranslate"><span class="pre">__init__()</span></code> (because this method
+gets called for every single MPAS core, test group, test case and step each
+time you call any <code class="docutils literal notranslate"><span class="pre">compass</span></code> command-line tool).  But this seems the only
+reasonable way to set up steps with the default parameter values during setup.</p>
+<p>It is likely that other test cases supporting parameter studies will want to
+mimic this behavior so that the default steps can be listed with
+<code class="docutils literal notranslate"><span class="pre">compass</span> <span class="pre">list</span> <span class="pre">--verbose</span></code> as well.</p>
+</section>
+<section id="setting-the-number-of-cores">
+<h2>Setting the number of cores<a class="headerlink" href="#setting-the-number-of-cores" title="Permalink to this heading">¶</a></h2>
+<p>For some parameter studies, particularly those where resolution is the
+parameter, it can be important to specify the target and minimum number of
+cores for a given step as a function of the parameter.</p>
+<p>In the following example, we set both the attribute of the steps <code class="docutils literal notranslate"><span class="pre">step.cores</span></code>
+and a config option (<code class="docutils literal notranslate"><span class="pre">QU&lt;res&gt;_core</span></code>, where <code class="docutils literal notranslate"><span class="pre">&lt;res&gt;</span></code> is the resolution) to
+a target number of cores that is a heuristic function of the resolution.
+Similarly, we set the minimum number of cores (below which the step will
+refuse to run) based on another heuristic function.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">update_cores</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Update the number of cores and min_cores for each forward step &quot;&quot;&quot;</span>
+
+    <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+
+    <span class="n">goal_cells_per_core</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;cosine_bell&#39;</span><span class="p">,</span>
+                                          <span class="s1">&#39;goal_cells_per_core&#39;</span><span class="p">)</span>
+    <span class="n">max_cells_per_core</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;cosine_bell&#39;</span><span class="p">,</span>
+                                         <span class="s1">&#39;max_cells_per_core&#39;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">resolution</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span><span class="p">:</span>
+        <span class="c1"># a heuristic based on QU30 (65275 cells) and QU240 (10383 cells)</span>
+        <span class="n">approx_cells</span> <span class="o">=</span> <span class="mf">6e8</span> <span class="o">/</span> <span class="n">resolution</span><span class="o">**</span><span class="mi">2</span>
+        <span class="c1"># ideally, about 300 cells per core</span>
+        <span class="c1"># (make it a multiple of 4 because...it looks better?)</span>
+        <span class="n">cores</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span>
+                    <span class="mi">4</span><span class="o">*</span><span class="nb">round</span><span class="p">(</span><span class="n">approx_cells</span> <span class="o">/</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">goal_cells_per_core</span><span class="p">)))</span>
+        <span class="c1"># In a pinch, about 3000 cells per core</span>
+        <span class="n">min_cores</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span>
+                        <span class="nb">round</span><span class="p">(</span><span class="n">approx_cells</span> <span class="o">/</span> <span class="n">max_cells_per_core</span><span class="p">))</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">&#39;QU</span><span class="si">{}</span><span class="s1">_forward&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">)]</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">cores</span> <span class="o">=</span> <span class="n">cores</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">min_cores</span> <span class="o">=</span> <span class="n">min_cores</span>
+
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;cosine_bell&#39;</span><span class="p">,</span> <span class="s1">&#39;QU</span><span class="si">{}</span><span class="s1">_cores&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">),</span>
+                   <span class="nb">str</span><span class="p">(</span><span class="n">cores</span><span class="p">))</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;cosine_bell&#39;</span><span class="p">,</span> <span class="s1">&#39;QU</span><span class="si">{}</span><span class="s1">_min_cores&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">),</span>
+                   <span class="nb">str</span><span class="p">(</span><span class="n">min_cores</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>This method is called in the <code class="docutils literal notranslate"><span class="pre">configure()</span></code> method of the test case when it
+is getting set up.  It is important to set the <code class="docutils literal notranslate"><span class="pre">cores</span></code> and <code class="docutils literal notranslate"><span class="pre">min_cores</span></code>
+attributes of the step because this will be used as part of determining how
+many cores are needed for a test suite using this test case.</p>
+<p>Later on, when the test case gets run, we want to use the config options again
+to set <code class="docutils literal notranslate"><span class="pre">step.cores</span></code> and <code class="docutils literal notranslate"><span class="pre">step.min_cores</span></code>, in case a user has modified these
+config options before running the test case.  We do this before we run the
+steps.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Run each step of the testcase</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+    <span class="k">for</span> <span class="n">resolution</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolutions</span><span class="p">:</span>
+        <span class="n">cores</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;cosine_bell&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;QU</span><span class="si">{}</span><span class="s1">_cores&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">))</span>
+        <span class="n">min_cores</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;cosine_bell&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;QU</span><span class="si">{}</span><span class="s1">_min_cores&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">))</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">&#39;QU</span><span class="si">{}</span><span class="s1">_forward&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">)]</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">cores</span> <span class="o">=</span> <span class="n">cores</span>
+        <span class="n">step</span><span class="o">.</span><span class="n">min_cores</span> <span class="o">=</span> <span class="n">min_cores</span>
+
+    <span class="c1"># run the step</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this heading">¶</a></h2>
+<p>Please document the test case within its test group as described in the
+companion tutorial in its <a class="reference internal" href="dev_add_test_group.html#dev-tutorial-add-test-group-docs"><span class="std std-ref">Documentation</span></a> section.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="dev_add_test_group.html" class="btn btn-neutral float-left" title="Developer Tutorial: Adding a new test group" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="dev_porting_legacy.html" class="btn btn-neutral float-right" title="Developer Tutorial: Porting a legacy COMPASS test group" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

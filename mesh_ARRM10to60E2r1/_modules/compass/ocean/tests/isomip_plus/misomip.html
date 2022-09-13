@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>compass.ocean.tests.isomip_plus.misomip &mdash; compass mesh_ARRM10to60E2r1 documentation</title>
+      <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../_static/jquery.js"></script>
+        <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../../_static/doctools.js"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../../index.html" class="icon icon-home"> compass
+          </a>
+              <div class="version">
+                mesh_ARRM10to60E2r1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../../index.html">Module code</a> &raquo;</li>
+          <li><a href="../../../ocean.html">compass.ocean</a> &raquo;</li>
+          <li><a href="../isomip_plus.html">compass.ocean.tests.isomip_plus</a> &raquo;</li>
+      <li>compass.ocean.tests.isomip_plus.misomip</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for compass.ocean.tests.isomip_plus.misomip</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">from</span> <span class="nn">netCDF4</span> <span class="kn">import</span> <span class="n">Dataset</span>
+<span class="kn">from</span> <span class="nn">shapely.geometry</span> <span class="kn">import</span> <span class="n">Polygon</span><span class="p">,</span> <span class="n">LineString</span>
+
+<span class="kn">from</span> <span class="nn">progressbar</span> <span class="kn">import</span> <span class="n">ProgressBar</span><span class="p">,</span> <span class="n">Percentage</span><span class="p">,</span> <span class="n">Bar</span><span class="p">,</span> <span class="n">ETA</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+
+<span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
+
+
+<div class="viewcode-block" id="Misomip"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.misomip.Misomip.html#compass.ocean.tests.isomip_plus.misomip.Misomip">[docs]</a><span class="k">class</span> <span class="nc">Misomip</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A step for interpolating output to the MISOMIP1 grid from an ISOMIP+</span>
+<span class="sd">    simulation</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    resolution : float</span>
+<span class="sd">        The horizontal resolution (km) of the test case</span>
+
+<span class="sd">    experiment : {&#39;Ocean0&#39;, &#39;Ocean1&#39;, &#39;Ocean2&#39;}</span>
+<span class="sd">        The ISOMIP+ experiment</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Misomip.__init__"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.misomip.Misomip.html#compass.ocean.tests.isomip_plus.misomip.Misomip.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">experiment</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create the step</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_case : compass.TestCase</span>
+<span class="sd">            The test case this step belongs to</span>
+
+<span class="sd">        resolution : float</span>
+<span class="sd">            The horizontal resolution (km) of the test case</span>
+
+<span class="sd">        experiment : {&#39;Ocean0&#39;, &#39;Ocean1&#39;, &#39;Ocean2&#39;}</span>
+<span class="sd">            The ISOMIP+ experiment</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;misomip&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">experiment</span> <span class="o">=</span> <span class="n">experiment</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="s1">&#39;../simulation/init.nc&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
+            <span class="s1">&#39;../simulation/timeSeriesStatsMonthly.0001-01-01.nc&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="s1">&#39;../streamfunction/barotropicStreamfunction.nc&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="s1">&#39;../streamfunction/overturningStreamfunction.nc&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">resolution</span> <span class="o">==</span> <span class="mf">2.</span><span class="p">:</span>
+            <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;COM&#39;</span>
+        <span class="k">elif</span> <span class="n">resolution</span> <span class="o">==</span> <span class="mf">5.</span><span class="p">:</span>
+            <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;TYP&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unexpected resolution </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resolution</span><span class="p">))</span>
+        <span class="n">out_file_name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_MPAS-Ocean.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">experiment</span><span class="p">,</span> <span class="n">suffix</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">out_file_name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Misomip.run"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.misomip.Misomip.run.html#compass.ocean.tests.isomip_plus.misomip.Misomip.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Run this step of the test case</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">in_dir</span> <span class="o">=</span> <span class="s1">&#39;../simulation&#39;</span>
+        <span class="n">sf_dir</span> <span class="o">=</span> <span class="s1">&#39;../streamfunction&#39;</span>
+
+        <span class="c1"># show progress only if we&#39;re not writing to a log file</span>
+        <span class="n">show_progress</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_filename</span> <span class="ow">is</span> <span class="kc">None</span>
+
+        <span class="n">_compute_misomip_interp_coeffs</span><span class="p">(</span><span class="n">in_dir</span><span class="o">=</span><span class="n">in_dir</span><span class="p">,</span>
+                                       <span class="n">show_progress</span><span class="o">=</span><span class="n">show_progress</span><span class="p">)</span>
+        <span class="n">_interp_misomip</span><span class="p">(</span><span class="n">in_dir</span><span class="o">=</span><span class="n">in_dir</span><span class="p">,</span> <span class="n">sf_dir</span><span class="o">=</span><span class="n">sf_dir</span><span class="p">,</span>
+                        <span class="n">out_file_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                        <span class="n">show_progress</span><span class="o">=</span><span class="n">show_progress</span><span class="p">)</span></div></div>
+
+
+<span class="k">def</span> <span class="nf">_compute_misomip_interp_coeffs</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="n">show_progress</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">getTransectWeights</span><span class="p">(</span><span class="n">outFileName</span><span class="p">,</span> <span class="n">axis</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">show_progress</span><span class="p">:</span>
+            <span class="n">pbar</span> <span class="o">=</span> <span class="n">ProgressBar</span><span class="p">(</span>
+                <span class="n">widgets</span><span class="o">=</span><span class="p">[</span>
+                    <span class="s1">&#39;compute MPAS and MISOMIP </span><span class="si">{}</span><span class="s1"> transect &#39;</span>
+                    <span class="s1">&#39;intersections&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">axis</span><span class="p">),</span>
+                    <span class="n">Percentage</span><span class="p">(),</span>
+                    <span class="n">Bar</span><span class="p">(),</span>
+                    <span class="n">ETA</span><span class="p">()],</span>
+                <span class="n">maxval</span><span class="o">=</span><span class="n">nCells</span><span class="p">)</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">pbar</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">axis</span> <span class="o">==</span> <span class="s1">&#39;x&#39;</span><span class="p">:</span>
+            <span class="n">slicePos</span> <span class="o">=</span> <span class="n">xTransect</span>
+            <span class="n">outNOther</span> <span class="o">=</span> <span class="n">outNy</span>
+            <span class="n">outOtherAxis</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">slicePos</span> <span class="o">=</span> <span class="n">yTransect</span>
+            <span class="n">outNOther</span> <span class="o">=</span> <span class="n">outNx</span>
+            <span class="n">outOtherAxis</span> <span class="o">=</span> <span class="n">x</span>
+
+        <span class="n">sliceCount</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">outNOther</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
+        <span class="n">cellIndices</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">otherIndices</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">sliceIndices</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">iCell</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nCells</span><span class="p">):</span>
+            <span class="n">verts</span> <span class="o">=</span> <span class="n">verticesOnCell</span><span class="p">[</span><span class="n">iCell</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="n">nEdgesOnCell</span><span class="p">[</span><span class="n">iCell</span><span class="p">]]</span>
+            <span class="n">verts</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">verts</span><span class="p">,</span> <span class="n">verts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">xVert</span> <span class="o">=</span> <span class="n">xVertex</span><span class="p">[</span><span class="n">verts</span><span class="p">]</span>
+            <span class="n">yVert</span> <span class="o">=</span> <span class="n">yVertex</span><span class="p">[</span><span class="n">verts</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">axis</span> <span class="o">==</span> <span class="s1">&#39;x&#39;</span><span class="p">:</span>
+                <span class="n">sliceAxisVerts</span> <span class="o">=</span> <span class="n">xVert</span>
+                <span class="n">otherAxisVerts</span> <span class="o">=</span> <span class="n">yVert</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">sliceAxisVerts</span> <span class="o">=</span> <span class="n">yVert</span>
+                <span class="n">otherAxisVerts</span> <span class="o">=</span> <span class="n">xVert</span>
+
+            <span class="k">if</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">sliceAxisVerts</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">slicePos</span><span class="p">)</span> <span class="ow">or</span> \
+                    <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">sliceAxisVerts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">slicePos</span><span class="p">):</span>
+                <span class="c1"># this polygon doesn&#39;t intersect the slice</span>
+                <span class="k">continue</span>
+
+            <span class="n">mpasPolygon</span> <span class="o">=</span> <span class="n">Polygon</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">xVert</span><span class="p">,</span> <span class="n">yVert</span><span class="p">))</span>
+
+            <span class="n">indices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span>
+                <span class="n">outOtherAxis</span> <span class="o">&lt;</span> <span class="n">numpy</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">otherAxisVerts</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">lower</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">lower</span> <span class="o">=</span> <span class="n">indices</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+            <span class="n">indices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span>
+                <span class="n">outOtherAxis</span> <span class="o">&gt;</span> <span class="n">numpy</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">otherAxisVerts</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">upper</span> <span class="o">=</span> <span class="n">outNOther</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">upper</span> <span class="o">=</span> <span class="n">indices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="k">for</span> <span class="n">otherIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">lower</span><span class="p">,</span> <span class="n">upper</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">axis</span> <span class="o">==</span> <span class="s1">&#39;x&#39;</span><span class="p">:</span>
+                    <span class="n">vertices</span> <span class="o">=</span> <span class="p">((</span><span class="n">slicePos</span><span class="p">,</span> <span class="n">outOtherAxis</span><span class="p">[</span><span class="n">otherIndex</span><span class="p">]),</span>
+                                <span class="p">(</span><span class="n">slicePos</span><span class="p">,</span> <span class="n">outOtherAxis</span><span class="p">[</span><span class="n">otherIndex</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">vertices</span> <span class="o">=</span> <span class="p">((</span><span class="n">outOtherAxis</span><span class="p">[</span><span class="n">otherIndex</span><span class="p">],</span> <span class="n">slicePos</span><span class="p">),</span>
+                                <span class="p">(</span><span class="n">outOtherAxis</span><span class="p">[</span><span class="n">otherIndex</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">slicePos</span><span class="p">))</span>
+
+                <span class="n">line</span> <span class="o">=</span> <span class="n">LineString</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">mpasPolygon</span><span class="o">.</span><span class="n">intersects</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+                    <span class="k">continue</span>
+                <span class="n">length</span> <span class="o">=</span> <span class="n">mpasPolygon</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">line</span><span class="p">)</span><span class="o">.</span><span class="n">length</span>
+                <span class="k">if</span> <span class="n">length</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
+                <span class="n">cellIndices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">iCell</span><span class="p">)</span>
+                <span class="n">otherIndices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">otherIndex</span><span class="p">)</span>
+
+                <span class="n">weights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">length</span> <span class="o">/</span> <span class="n">outDx</span><span class="p">)</span>
+
+                <span class="n">sliceIndex</span> <span class="o">=</span> <span class="n">sliceCount</span><span class="p">[</span><span class="n">otherIndex</span><span class="p">]</span>
+                <span class="n">sliceCount</span><span class="p">[</span><span class="n">otherIndex</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">sliceIndices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sliceIndex</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">show_progress</span><span class="p">:</span>
+                <span class="n">pbar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">iCell</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">show_progress</span><span class="p">:</span>
+            <span class="n">pbar</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
+
+        <span class="n">cellIndices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">cellIndices</span><span class="p">)</span>
+        <span class="n">otherIndices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">otherIndices</span><span class="p">)</span>
+        <span class="n">sliceIndices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">sliceIndices</span><span class="p">)</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+
+        <span class="c1"># sort the intersections first by otherIndex, then by sliceIndex</span>
+        <span class="c1"># for efficiency</span>
+        <span class="n">nSlices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">sliceCount</span><span class="p">)</span>
+        <span class="n">sortedIndices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">sliceIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nSlices</span><span class="p">):</span>
+            <span class="n">intersectionsInSlice</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">sliceIndices</span> <span class="o">==</span> <span class="n">sliceIndex</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">indices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">otherIndices</span><span class="p">[</span><span class="n">intersectionsInSlice</span><span class="p">])</span>
+            <span class="n">sortedIndices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">sortedIndices</span><span class="p">,</span> <span class="n">intersectionsInSlice</span><span class="p">[</span><span class="n">indices</span><span class="p">])</span>
+
+        <span class="n">outFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">outFileName</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;NETCDF4&#39;</span><span class="p">)</span>
+        <span class="n">outFile</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">&#39;nIntersections&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">cellIndices</span><span class="p">))</span>
+        <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;cellIndices&#39;</span><span class="p">,</span> <span class="s1">&#39;i4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nIntersections&#39;</span><span class="p">,))</span>
+        <span class="k">if</span> <span class="n">axis</span> <span class="o">==</span> <span class="s1">&#39;x&#39;</span><span class="p">:</span>
+            <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;yIndices&#39;</span><span class="p">,</span> <span class="s1">&#39;i4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nIntersections&#39;</span><span class="p">,))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;xIndices&#39;</span><span class="p">,</span> <span class="s1">&#39;i4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nIntersections&#39;</span><span class="p">,))</span>
+        <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;sliceIndices&#39;</span><span class="p">,</span> <span class="s1">&#39;i4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nIntersections&#39;</span><span class="p">,))</span>
+        <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span>
+            <span class="s1">&#39;mpasToMisomipWeights&#39;</span><span class="p">,</span> <span class="s1">&#39;f8&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nIntersections&#39;</span><span class="p">,))</span>
+
+        <span class="n">outVars</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">variables</span>
+        <span class="n">outVars</span><span class="p">[</span><span class="s1">&#39;cellIndices&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">cellIndices</span><span class="p">[</span><span class="n">sortedIndices</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">axis</span> <span class="o">==</span> <span class="s1">&#39;x&#39;</span><span class="p">:</span>
+            <span class="n">outVars</span><span class="p">[</span><span class="s1">&#39;yIndices&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">otherIndices</span><span class="p">[</span><span class="n">sortedIndices</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">outVars</span><span class="p">[</span><span class="s1">&#39;xIndices&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">otherIndices</span><span class="p">[</span><span class="n">sortedIndices</span><span class="p">]</span>
+
+        <span class="n">outVars</span><span class="p">[</span><span class="s1">&#39;sliceIndices&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">sliceIndices</span><span class="p">[</span><span class="n">sortedIndices</span><span class="p">]</span>
+        <span class="n">outVars</span><span class="p">[</span><span class="s1">&#39;mpasToMisomipWeights&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">weights</span><span class="p">[</span><span class="n">sortedIndices</span><span class="p">]</span>
+
+        <span class="n">outFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="n">meshFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/init.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">in_dir</span><span class="p">)</span>
+    <span class="n">interpWeightsFileName</span> <span class="o">=</span> <span class="s1">&#39;horiz_map.nc&#39;</span>
+    <span class="n">xTransectFileName</span> <span class="o">=</span> <span class="s1">&#39;x_trans_map.nc&#39;</span>
+    <span class="n">yTransectFileName</span> <span class="o">=</span> <span class="s1">&#39;y_trans_map.nc&#39;</span>
+
+    <span class="n">outNx</span><span class="p">,</span> <span class="n">outNy</span><span class="p">,</span> <span class="n">outNz</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">xTransect</span><span class="p">,</span> <span class="n">yTransect</span><span class="p">,</span> <span class="n">outDx</span><span class="p">,</span> <span class="n">outDz</span> <span class="o">=</span> \
+        <span class="n">_get_out_grid</span><span class="p">(</span><span class="n">corners</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">inFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">meshFileName</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+
+    <span class="n">nCells</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">inFile</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;nCells&#39;</span><span class="p">])</span>
+    <span class="n">inVars</span> <span class="o">=</span> <span class="n">inFile</span><span class="o">.</span><span class="n">variables</span>
+    <span class="n">nEdgesOnCell</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;nEdgesOnCell&#39;</span><span class="p">][:]</span>
+    <span class="n">verticesOnCell</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;verticesOnCell&#39;</span><span class="p">][:,</span> <span class="p">:]</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">xVertex</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;xVertex&#39;</span><span class="p">][:]</span>
+    <span class="n">yVertex</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;yVertex&#39;</span><span class="p">][:]</span>
+
+    <span class="n">inFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">if</span><span class="p">(</span><span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">interpWeightsFileName</span><span class="p">)):</span>
+
+        <span class="n">cellIndices</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">xIndices</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">yIndices</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">sliceIndices</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">sliceCount</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">outNy</span><span class="p">,</span> <span class="n">outNx</span><span class="p">),</span> <span class="nb">int</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">show_progress</span><span class="p">:</span>
+            <span class="n">pbar</span> <span class="o">=</span> <span class="n">ProgressBar</span><span class="p">(</span>
+                <span class="n">widgets</span><span class="o">=</span><span class="p">[</span>
+                    <span class="s1">&#39;compute MPAS and MISOMIP intersections&#39;</span><span class="p">,</span>
+                    <span class="n">Percentage</span><span class="p">(),</span>
+                    <span class="n">Bar</span><span class="p">(),</span>
+                    <span class="n">ETA</span><span class="p">()],</span>
+                <span class="n">maxval</span><span class="o">=</span><span class="n">nCells</span><span class="p">)</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">pbar</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">for</span> <span class="n">iCell</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nCells</span><span class="p">):</span>
+            <span class="n">verts</span> <span class="o">=</span> <span class="n">verticesOnCell</span><span class="p">[</span><span class="n">iCell</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="n">nEdgesOnCell</span><span class="p">[</span><span class="n">iCell</span><span class="p">]]</span>
+            <span class="n">verts</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">verts</span><span class="p">,</span> <span class="n">verts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">xVert</span> <span class="o">=</span> <span class="n">xVertex</span><span class="p">[</span><span class="n">verts</span><span class="p">]</span>
+            <span class="n">yVert</span> <span class="o">=</span> <span class="n">yVertex</span><span class="p">[</span><span class="n">verts</span><span class="p">]</span>
+            <span class="n">mpasPolygon</span> <span class="o">=</span> <span class="n">Polygon</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">xVert</span><span class="p">,</span> <span class="n">yVert</span><span class="p">))</span>
+
+            <span class="c1"># find the out indices that bound the MPAS polygon</span>
+            <span class="n">indices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">numpy</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">xVert</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">xl</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">xl</span> <span class="o">=</span> <span class="n">indices</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+            <span class="n">indices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="n">numpy</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">xVert</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">xu</span> <span class="o">=</span> <span class="n">outNx</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">xu</span> <span class="o">=</span> <span class="n">indices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="n">indices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">y</span> <span class="o">&lt;</span> <span class="n">numpy</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">yVert</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">yl</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">yl</span> <span class="o">=</span> <span class="n">indices</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+            <span class="n">indices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">y</span> <span class="o">&gt;</span> <span class="n">numpy</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">yVert</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">yu</span> <span class="o">=</span> <span class="n">outNy</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">yu</span> <span class="o">=</span> <span class="n">indices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="k">for</span> <span class="n">yIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">yl</span><span class="p">,</span> <span class="n">yu</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">xIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">xl</span><span class="p">,</span> <span class="n">xu</span><span class="p">):</span>
+                    <span class="n">vertices</span> <span class="o">=</span> <span class="p">((</span><span class="n">x</span><span class="p">[</span><span class="n">xIndex</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">yIndex</span><span class="p">]),</span>
+                                <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">xIndex</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">yIndex</span><span class="p">]),</span>
+                                <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">xIndex</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">yIndex</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]),</span>
+                                <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">xIndex</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">yIndex</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]),</span>
+                                <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">xIndex</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">yIndex</span><span class="p">]))</span>
+                    <span class="n">outPoly</span> <span class="o">=</span> <span class="n">Polygon</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">mpasPolygon</span><span class="o">.</span><span class="n">intersects</span><span class="p">(</span><span class="n">outPoly</span><span class="p">):</span>
+                        <span class="k">continue</span>
+                    <span class="n">intersectionArea</span> <span class="o">=</span> <span class="n">mpasPolygon</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">outPoly</span><span class="p">)</span><span class="o">.</span><span class="n">area</span>
+                    <span class="k">if</span> <span class="n">intersectionArea</span> <span class="o">==</span> <span class="mf">0.</span><span class="p">:</span>
+                        <span class="k">continue</span>
+
+                    <span class="n">cellIndices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">iCell</span><span class="p">)</span>
+                    <span class="n">xIndices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xIndex</span><span class="p">)</span>
+                    <span class="n">yIndices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">yIndex</span><span class="p">)</span>
+
+                    <span class="n">weights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">intersectionArea</span> <span class="o">/</span> <span class="n">outDx</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+                    <span class="n">sliceIndex</span> <span class="o">=</span> <span class="n">sliceCount</span><span class="p">[</span><span class="n">yIndex</span><span class="p">,</span> <span class="n">xIndex</span><span class="p">]</span>
+                    <span class="n">sliceCount</span><span class="p">[</span><span class="n">yIndex</span><span class="p">,</span> <span class="n">xIndex</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">sliceIndices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sliceIndex</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">show_progress</span><span class="p">:</span>
+                <span class="n">pbar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">iCell</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">show_progress</span><span class="p">:</span>
+            <span class="n">pbar</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
+
+        <span class="n">cellIndices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">cellIndices</span><span class="p">)</span>
+        <span class="n">xIndices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">xIndices</span><span class="p">)</span>
+        <span class="n">yIndices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">yIndices</span><span class="p">)</span>
+        <span class="n">sliceIndices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">sliceIndices</span><span class="p">)</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+
+        <span class="c1"># sort the intersections first by xIndex, then by yIndex, then by</span>
+        <span class="c1"># sliceIndex for efficiency</span>
+        <span class="n">nSlices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">sliceCount</span><span class="p">)</span>
+        <span class="n">sortedIndices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
+        <span class="n">xyIndices</span> <span class="o">=</span> <span class="n">xIndices</span> <span class="o">+</span> <span class="n">outNx</span> <span class="o">*</span> <span class="n">yIndices</span>
+        <span class="k">for</span> <span class="n">sliceIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nSlices</span><span class="p">):</span>
+            <span class="n">intersectionsInSlice</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">sliceIndices</span> <span class="o">==</span> <span class="n">sliceIndex</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">indices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">xyIndices</span><span class="p">[</span><span class="n">intersectionsInSlice</span><span class="p">])</span>
+            <span class="n">sortedIndices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">sortedIndices</span><span class="p">,</span> <span class="n">intersectionsInSlice</span><span class="p">[</span><span class="n">indices</span><span class="p">])</span>
+
+        <span class="n">outFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">interpWeightsFileName</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;NETCDF4&#39;</span><span class="p">)</span>
+        <span class="n">outFile</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">&#39;nIntersections&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">cellIndices</span><span class="p">))</span>
+        <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;cellIndices&#39;</span><span class="p">,</span> <span class="s1">&#39;i4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nIntersections&#39;</span><span class="p">,))</span>
+        <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;xIndices&#39;</span><span class="p">,</span> <span class="s1">&#39;i4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nIntersections&#39;</span><span class="p">,))</span>
+        <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;yIndices&#39;</span><span class="p">,</span> <span class="s1">&#39;i4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nIntersections&#39;</span><span class="p">,))</span>
+        <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;sliceIndices&#39;</span><span class="p">,</span> <span class="s1">&#39;i4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nIntersections&#39;</span><span class="p">,))</span>
+        <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span>
+            <span class="s1">&#39;mpasToMisomipWeights&#39;</span><span class="p">,</span> <span class="s1">&#39;f8&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nIntersections&#39;</span><span class="p">,))</span>
+
+        <span class="n">outVars</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">variables</span>
+        <span class="n">outVars</span><span class="p">[</span><span class="s1">&#39;cellIndices&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">cellIndices</span><span class="p">[</span><span class="n">sortedIndices</span><span class="p">]</span>
+        <span class="n">outVars</span><span class="p">[</span><span class="s1">&#39;xIndices&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">xIndices</span><span class="p">[</span><span class="n">sortedIndices</span><span class="p">]</span>
+        <span class="n">outVars</span><span class="p">[</span><span class="s1">&#39;yIndices&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">yIndices</span><span class="p">[</span><span class="n">sortedIndices</span><span class="p">]</span>
+        <span class="n">outVars</span><span class="p">[</span><span class="s1">&#39;sliceIndices&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">sliceIndices</span><span class="p">[</span><span class="n">sortedIndices</span><span class="p">]</span>
+        <span class="n">outVars</span><span class="p">[</span><span class="s1">&#39;mpasToMisomipWeights&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">weights</span><span class="p">[</span><span class="n">sortedIndices</span><span class="p">]</span>
+
+        <span class="n">outFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">xTransectFileName</span><span class="p">)):</span>
+        <span class="n">getTransectWeights</span><span class="p">(</span><span class="n">xTransectFileName</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">yTransectFileName</span><span class="p">)):</span>
+        <span class="n">getTransectWeights</span><span class="p">(</span><span class="n">yTransectFileName</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_interp_misomip</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="n">sf_dir</span><span class="p">,</span> <span class="n">out_file_name</span><span class="p">,</span> <span class="n">show_progress</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">interpHoriz</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">inMask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">outFraction</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">inMask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">field</span> <span class="o">=</span> <span class="n">field</span> <span class="o">*</span> <span class="n">inMask</span>
+        <span class="n">outField</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">outNy</span><span class="p">,</span> <span class="n">outNx</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">sliceIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">xyNSlices</span><span class="p">):</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">xySliceIndices</span> <span class="o">==</span> <span class="n">sliceIndex</span>
+            <span class="n">cellsSlice</span> <span class="o">=</span> <span class="n">xyCellIndices</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+            <span class="n">fieldSlice</span> <span class="o">=</span> <span class="n">field</span><span class="p">[</span><span class="n">cellsSlice</span><span class="p">]</span>
+            <span class="n">outField</span><span class="p">[</span><span class="n">xyYIndices</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">xyXIndices</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+                     <span class="p">]</span> <span class="o">+=</span> <span class="p">(</span><span class="n">xyMpasToMisomipWeights</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">*</span> <span class="n">fieldSlice</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">outFraction</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">outFraction</span> <span class="o">&gt;</span> <span class="n">normalizationThreshold</span>
+            <span class="n">outField</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">/=</span> <span class="n">outFraction</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+            <span class="n">outField</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">mask</span><span class="p">)]</span> <span class="o">=</span> <span class="mf">0.</span>
+        <span class="k">return</span> <span class="n">outField</span>
+
+    <span class="k">def</span> <span class="nf">interpHorizOcean</span><span class="p">(</span><span class="n">field</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">interpHoriz</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">cellOceanMask</span><span class="p">,</span> <span class="n">xyOceanFraction</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">interpHorizCavity</span><span class="p">(</span><span class="n">field</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">interpHoriz</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">inCavityFraction</span><span class="p">,</span> <span class="n">outCavityFraction</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">interpXZTransect</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">outField</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">outNz</span><span class="p">,</span> <span class="n">outNx</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">sliceIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">xzNSlices</span><span class="p">):</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">xzSliceIndices</span> <span class="o">==</span> <span class="n">sliceIndex</span>
+            <span class="n">cellsSlice</span> <span class="o">=</span> <span class="n">xzCellIndices</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+            <span class="n">xIndices</span> <span class="o">=</span> <span class="n">xzXIndices</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+            <span class="n">weights</span> <span class="o">=</span> <span class="n">xzMpasToMisomipWeights</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cellsSlice</span><span class="p">)):</span>
+                <span class="n">iCell</span> <span class="o">=</span> <span class="n">cellsSlice</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+                <span class="n">xIndex</span> <span class="o">=</span> <span class="n">xIndices</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+                <span class="n">weight</span> <span class="o">=</span> <span class="n">weights</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+                <span class="n">layerThick</span> <span class="o">=</span> <span class="n">layerThickness</span><span class="p">[</span><span class="n">iCell</span><span class="p">,</span> <span class="p">:]</span>
+                <span class="n">layerThick</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">minLevelCell</span><span class="p">[</span><span class="n">iCell</span><span class="p">]]</span> <span class="o">=</span> <span class="mf">0.</span>
+                <span class="n">layerThick</span><span class="p">[</span><span class="n">maxLevelCell</span><span class="p">[</span><span class="n">iCell</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="mf">0.</span>
+                <span class="n">zInterface</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nVertLevels</span><span class="p">)</span>
+                <span class="n">fieldColumn</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nVertLevels</span><span class="p">)</span>
+                <span class="n">fieldColumn</span><span class="p">[</span><span class="mi">0</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">[</span><span class="n">iCell</span><span class="p">,</span> <span class="p">:]</span>
+                <span class="n">fieldColumn</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">[</span><span class="n">iCell</span><span class="p">,</span> <span class="p">:]</span>
+                <span class="n">zInterface</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">ssh</span><span class="p">[</span><span class="n">iCell</span><span class="p">]</span>
+                <span class="n">zInterface</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">ssh</span><span class="p">[</span><span class="n">iCell</span><span class="p">]</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">layerThick</span><span class="p">[:])</span>
+                <span class="n">zInterface</span><span class="p">[</span><span class="mi">2</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">ssh</span><span class="p">[</span><span class="n">iCell</span><span class="p">]</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">layerThick</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                <span class="n">outField</span><span class="p">[:,</span>
+                         <span class="n">xIndex</span><span class="p">]</span> <span class="o">+=</span> <span class="n">weight</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">z</span><span class="p">,</span>
+                                                          <span class="n">zInterface</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+                                                          <span class="n">fieldColumn</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+                                                          <span class="n">left</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
+                                                          <span class="n">right</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">normalize</span><span class="p">:</span>
+            <span class="n">outField</span><span class="p">[</span><span class="n">xzOceanMask</span><span class="p">]</span> <span class="o">/=</span> <span class="n">xzOceanFraction</span><span class="p">[</span><span class="n">xzOceanMask</span><span class="p">]</span>
+            <span class="n">outField</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">xzOceanMask</span><span class="p">)]</span> <span class="o">=</span> <span class="mf">0.</span>
+
+        <span class="k">return</span> <span class="n">outField</span>
+
+    <span class="k">def</span> <span class="nf">interpYZTransect</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">outField</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">outNz</span><span class="p">,</span> <span class="n">outNy</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">sliceIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">yzNSlices</span><span class="p">):</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">yzSliceIndices</span> <span class="o">==</span> <span class="n">sliceIndex</span>
+            <span class="n">cellsSlice</span> <span class="o">=</span> <span class="n">yzCellIndices</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+            <span class="n">yIndices</span> <span class="o">=</span> <span class="n">yzYIndices</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+            <span class="n">weights</span> <span class="o">=</span> <span class="n">yzMpasToMisomipWeights</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cellsSlice</span><span class="p">)):</span>
+                <span class="n">iCell</span> <span class="o">=</span> <span class="n">cellsSlice</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+                <span class="n">yIndex</span> <span class="o">=</span> <span class="n">yIndices</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+                <span class="n">weight</span> <span class="o">=</span> <span class="n">weights</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+                <span class="n">layerThick</span> <span class="o">=</span> <span class="n">layerThickness</span><span class="p">[</span><span class="n">iCell</span><span class="p">,</span> <span class="p">:]</span>
+                <span class="n">layerThick</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">minLevelCell</span><span class="p">[</span><span class="n">iCell</span><span class="p">]]</span> <span class="o">=</span> <span class="mf">0.</span>
+                <span class="n">layerThick</span><span class="p">[</span><span class="n">maxLevelCell</span><span class="p">[</span><span class="n">iCell</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="mf">0.</span>
+                <span class="n">zInterface</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nVertLevels</span><span class="p">)</span>
+                <span class="n">fieldColumn</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nVertLevels</span><span class="p">)</span>
+                <span class="n">fieldColumn</span><span class="p">[</span><span class="mi">0</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">[</span><span class="n">iCell</span><span class="p">,</span> <span class="p">:]</span>
+                <span class="n">fieldColumn</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">[</span><span class="n">iCell</span><span class="p">,</span> <span class="p">:]</span>
+                <span class="n">zInterface</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">ssh</span><span class="p">[</span><span class="n">iCell</span><span class="p">]</span>
+                <span class="n">zInterface</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">ssh</span><span class="p">[</span><span class="n">iCell</span><span class="p">]</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">layerThick</span><span class="p">[:])</span>
+                <span class="n">zInterface</span><span class="p">[</span><span class="mi">2</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">ssh</span><span class="p">[</span><span class="n">iCell</span><span class="p">]</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">layerThick</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                <span class="n">outField</span><span class="p">[:,</span>
+                         <span class="n">yIndex</span><span class="p">]</span> <span class="o">+=</span> <span class="n">weight</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">z</span><span class="p">,</span>
+                                                          <span class="n">zInterface</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+                                                          <span class="n">fieldColumn</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+                                                          <span class="n">left</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
+                                                          <span class="n">right</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">normalize</span><span class="p">:</span>
+            <span class="n">outField</span><span class="p">[</span><span class="n">yzOceanMask</span><span class="p">]</span> <span class="o">/=</span> <span class="n">yzOceanFraction</span><span class="p">[</span><span class="n">yzOceanMask</span><span class="p">]</span>
+            <span class="n">outField</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">yzOceanMask</span><span class="p">)]</span> <span class="o">=</span> <span class="mf">0.</span>
+
+        <span class="k">return</span> <span class="n">outField</span>
+
+    <span class="k">def</span> <span class="nf">writeMetric</span><span class="p">(</span><span class="n">varName</span><span class="p">,</span> <span class="n">metric</span><span class="p">):</span>
+        <span class="nb">vars</span><span class="p">[</span><span class="n">varName</span><span class="p">][</span><span class="n">tIndex</span><span class="p">]</span> <span class="o">=</span> <span class="n">metric</span>
+
+    <span class="k">def</span> <span class="nf">writeVar</span><span class="p">(</span><span class="n">varName</span><span class="p">,</span> <span class="n">varField</span><span class="p">,</span> <span class="n">varMask</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">varMask</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">maskedVar</span> <span class="o">=</span> <span class="n">varField</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">maskedVar</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">masked_array</span><span class="p">(</span><span class="n">varField</span><span class="p">,</span>
+                                              <span class="n">mask</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">varMask</span><span class="p">))</span>
+        <span class="nb">vars</span><span class="p">[</span><span class="n">varName</span><span class="p">][</span><span class="n">tIndex</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">maskedVar</span>
+
+    <span class="n">inFileNames</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/timeSeriesStatsMonthly.*.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">in_dir</span><span class="p">)))</span>
+
+    <span class="n">rho_fw</span> <span class="o">=</span> <span class="mf">1000.</span>
+    <span class="n">secPerDay</span> <span class="o">=</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span>
+
+    <span class="n">normalizationThreshold</span> <span class="o">=</span> <span class="mf">0.001</span>
+
+    <span class="n">outNx</span><span class="p">,</span> <span class="n">outNy</span><span class="p">,</span> <span class="n">outNz</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">xTransect</span><span class="p">,</span> <span class="n">yTransect</span><span class="p">,</span> <span class="n">outDx</span><span class="p">,</span> <span class="n">outDz</span> <span class="o">=</span> \
+        <span class="n">_get_out_grid</span><span class="p">(</span><span class="n">corners</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">inFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="s1">&#39;horiz_map.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">inVars</span> <span class="o">=</span> <span class="n">inFile</span><span class="o">.</span><span class="n">variables</span>
+    <span class="n">xyCellIndices</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;cellIndices&#39;</span><span class="p">][:]</span>
+    <span class="n">xyXIndices</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;xIndices&#39;</span><span class="p">][:]</span>
+    <span class="n">xyYIndices</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;yIndices&#39;</span><span class="p">][:]</span>
+    <span class="n">xySliceIndices</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;sliceIndices&#39;</span><span class="p">][:]</span>
+    <span class="n">xyMpasToMisomipWeights</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;mpasToMisomipWeights&#39;</span><span class="p">][:]</span>
+    <span class="n">inFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">xyNSlices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">xySliceIndices</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="n">inFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="s1">&#39;x_trans_map.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">inVars</span> <span class="o">=</span> <span class="n">inFile</span><span class="o">.</span><span class="n">variables</span>
+    <span class="n">yzCellIndices</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;cellIndices&#39;</span><span class="p">][:]</span>
+    <span class="n">yzYIndices</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;yIndices&#39;</span><span class="p">][:]</span>
+    <span class="n">yzSliceIndices</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;sliceIndices&#39;</span><span class="p">][:]</span>
+    <span class="n">yzMpasToMisomipWeights</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;mpasToMisomipWeights&#39;</span><span class="p">][:]</span>
+    <span class="n">inFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">yzNSlices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">yzSliceIndices</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="n">inFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="s1">&#39;y_trans_map.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">inVars</span> <span class="o">=</span> <span class="n">inFile</span><span class="o">.</span><span class="n">variables</span>
+    <span class="n">xzCellIndices</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;cellIndices&#39;</span><span class="p">][:]</span>
+    <span class="n">xzXIndices</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;xIndices&#39;</span><span class="p">][:]</span>
+    <span class="n">xzSliceIndices</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;sliceIndices&#39;</span><span class="p">][:]</span>
+    <span class="n">xzMpasToMisomipWeights</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;mpasToMisomipWeights&#39;</span><span class="p">][:]</span>
+    <span class="n">inFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">xzNSlices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">xzSliceIndices</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="n">dynamicTopo</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="n">initFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="s1">&#39;init.nc&#39;</span><span class="p">),</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">osfFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sf_dir</span><span class="p">,</span> <span class="s1">&#39;overturningStreamfunction.nc&#39;</span><span class="p">),</span>
+                      <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">bsfFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sf_dir</span><span class="p">,</span> <span class="s1">&#39;barotropicStreamfunction.nc&#39;</span><span class="p">),</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">continueOutput</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">out_file_name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">continueOutput</span><span class="p">:</span>
+        <span class="n">outFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">out_file_name</span><span class="p">,</span> <span class="s1">&#39;r+&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;NETCDF4&#39;</span><span class="p">)</span>
+        <span class="nb">vars</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">variables</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">outFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">out_file_name</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;NETCDF4&#39;</span><span class="p">)</span>
+
+        <span class="n">outFile</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">outFile</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">&#39;nx&#39;</span><span class="p">,</span> <span class="n">outNx</span><span class="p">)</span>
+        <span class="n">outFile</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">&#39;ny&#39;</span><span class="p">,</span> <span class="n">outNy</span><span class="p">)</span>
+        <span class="n">outFile</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">&#39;nz&#39;</span><span class="p">,</span> <span class="n">outNz</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">varName</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">]:</span>
+            <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="n">varName</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;n</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">varName</span><span class="p">,))</span>
+            <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;m&#39;</span>
+            <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> location of cell centers&#39;</span> <span class="o">%</span> <span class="n">varName</span>
+        <span class="nb">vars</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">variables</span>
+        <span class="nb">vars</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="nb">vars</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="nb">vars</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">z</span>
+
+        <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">,))</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;s&#39;</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;time since start of simulation&#39;</span>
+
+        <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;meanMeltRate&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">))</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;m/s&#39;</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;mean melt rate averaged over area of floating &#39;</span> \
+                          <span class="s1">&#39;ice, positive for melting&#39;</span>
+
+        <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;totalMeltFlux&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">))</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;kg/s&#39;</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;total flux of melt water summed over area of &#39;</span> \
+                          <span class="s1">&#39;floating ice, positive for melting&#39;</span>
+
+        <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;totalOceanVolume&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">))</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;m^3&#39;</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;total volume of ocean&#39;</span>
+
+        <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;meanTemperature&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">))</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;deg C&#39;</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;the potential temperature averaged over the &#39;</span> \
+                          <span class="s1">&#39;ocean volume&#39;</span>
+
+        <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;meanSalinity&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">))</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;PSU&#39;</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;the salinity averaged over the ocean volume&#39;</span>
+
+        <span class="k">if</span> <span class="n">dynamicTopo</span><span class="p">:</span>
+            <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;iceDraft&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">,</span> <span class="s1">&#39;ny&#39;</span><span class="p">,</span> <span class="s1">&#39;nx&#39;</span><span class="p">,))</span>
+            <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;bathymetry&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">,</span> <span class="s1">&#39;ny&#39;</span><span class="p">,</span> <span class="s1">&#39;nx&#39;</span><span class="p">,))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;iceDraft&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;ny&#39;</span><span class="p">,</span> <span class="s1">&#39;nx&#39;</span><span class="p">,))</span>
+            <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;bathymetry&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;ny&#39;</span><span class="p">,</span> <span class="s1">&#39;nx&#39;</span><span class="p">,))</span>
+
+        <span class="n">var</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">[</span><span class="s1">&#39;iceDraft&#39;</span><span class="p">]</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;m&#39;</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;elevation of the ice-ocean interface&#39;</span>
+
+        <span class="n">var</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">[</span><span class="s1">&#39;bathymetry&#39;</span><span class="p">]</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;m&#39;</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;elevation of the bathymetry&#39;</span>
+
+        <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;meltRate&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">,</span> <span class="s1">&#39;ny&#39;</span><span class="p">,</span> <span class="s1">&#39;nx&#39;</span><span class="p">,))</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;m/s&#39;</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;melt rate, positive for melting&#39;</span>
+
+        <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span>
+            <span class="s1">&#39;frictionVelocity&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">,</span> <span class="s1">&#39;ny&#39;</span><span class="p">,</span> <span class="s1">&#39;nx&#39;</span><span class="p">,))</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;m/s&#39;</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;friction velocity u* used in melt calculations&#39;</span>
+
+        <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span>
+            <span class="s1">&#39;thermalDriving&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">,</span> <span class="s1">&#39;ny&#39;</span><span class="p">,</span> <span class="s1">&#39;nx&#39;</span><span class="p">,))</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;deg C&#39;</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;thermal driving used in the melt calculation&#39;</span>
+
+        <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span>
+            <span class="s1">&#39;halineDriving&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">,</span> <span class="s1">&#39;ny&#39;</span><span class="p">,</span> <span class="s1">&#39;nx&#39;</span><span class="p">,))</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;PSU&#39;</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;haline driving used in the melt calculation&#39;</span>
+
+        <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span>
+            <span class="s1">&#39;uBoundaryLayer&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">,</span> <span class="s1">&#39;ny&#39;</span><span class="p">,</span> <span class="s1">&#39;nx&#39;</span><span class="p">,))</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;m/s&#39;</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;x-velocity in the boundary layer used to compute u*&#39;</span>
+
+        <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span>
+            <span class="s1">&#39;vBoundaryLayer&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">,</span> <span class="s1">&#39;ny&#39;</span><span class="p">,</span> <span class="s1">&#39;nx&#39;</span><span class="p">,))</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;m/s&#39;</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;y-velocity in the boundary layer used to compute u*&#39;</span>
+
+        <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span>
+            <span class="s1">&#39;barotropicStreamfunction&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">,</span> <span class="s1">&#39;ny&#39;</span><span class="p">,</span> <span class="s1">&#39;nx&#39;</span><span class="p">,))</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;m^3/s&#39;</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;barotropic streamfunction&#39;</span>
+
+        <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span>
+            <span class="s1">&#39;overturningStreamfunction&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">,</span> <span class="s1">&#39;nz&#39;</span><span class="p">,</span> <span class="s1">&#39;nx&#39;</span><span class="p">,))</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;m^3/s&#39;</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;overturning (meridional) streamfunction&#39;</span>
+
+        <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span>
+            <span class="s1">&#39;bottomTemperature&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">,</span> <span class="s1">&#39;ny&#39;</span><span class="p">,</span> <span class="s1">&#39;nx&#39;</span><span class="p">,))</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;deg C&#39;</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;temperature in the bottom grid cell of each &#39;</span> \
+                          <span class="s1">&#39;ocean column&#39;</span>
+
+        <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span>
+            <span class="s1">&#39;bottomSalinity&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">,</span> <span class="s1">&#39;ny&#39;</span><span class="p">,</span> <span class="s1">&#39;nx&#39;</span><span class="p">,))</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;PSU&#39;</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;salinity in the bottom grid cell of each ocean &#39;</span> \
+                          <span class="s1">&#39;column&#39;</span>
+
+        <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span>
+            <span class="s1">&#39;temperatureXZ&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">,</span> <span class="s1">&#39;nz&#39;</span><span class="p">,</span> <span class="s1">&#39;nx&#39;</span><span class="p">,))</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;deg C&#39;</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;temperature slice in x-z plane through the center&#39;</span> \
+                          <span class="s1">&#39; of the domain (y = 40 km)&#39;</span>
+
+        <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;salinityXZ&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span>
+                                     <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">,</span> <span class="s1">&#39;nz&#39;</span><span class="p">,</span> <span class="s1">&#39;nx&#39;</span><span class="p">,))</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;PSU&#39;</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;salinity slice in x-z plane through the center of&#39;</span> \
+                          <span class="s1">&#39; the domain (y = 40 km)&#39;</span>
+
+        <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span>
+            <span class="s1">&#39;temperatureYZ&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">,</span> <span class="s1">&#39;nz&#39;</span><span class="p">,</span> <span class="s1">&#39;ny&#39;</span><span class="p">,))</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;deg C&#39;</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;temperature slice in y-z plane through x = 500 km&#39;</span>
+
+        <span class="n">var</span> <span class="o">=</span> <span class="n">outFile</span><span class="o">.</span><span class="n">createVariable</span><span class="p">(</span><span class="s1">&#39;salinityYZ&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">,</span>
+                                     <span class="p">(</span><span class="s1">&#39;nTime&#39;</span><span class="p">,</span> <span class="s1">&#39;nz&#39;</span><span class="p">,</span> <span class="s1">&#39;ny&#39;</span><span class="p">,))</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;PSU&#39;</span>
+        <span class="n">var</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;salinity slice in y-z plane through x = 500 km&#39;</span>
+
+    <span class="n">nCells</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">initFile</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;nCells&#39;</span><span class="p">])</span>
+    <span class="n">nVertLevels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">initFile</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">])</span>
+    <span class="n">nTimeIn</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">inFileNames</span><span class="p">)</span>
+    <span class="n">nTimeIn</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">nTimeIn</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">bsfFile</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]))</span>
+    <span class="n">nTimeIn</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">nTimeIn</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">osfFile</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]))</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="n">continueOutput</span><span class="p">):</span>
+        <span class="n">nTimeOut</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">outFile</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;nTime&#39;</span><span class="p">])</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">nTimeOut</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">areaCell</span> <span class="o">=</span> <span class="n">initFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;areaCell&#39;</span><span class="p">][:]</span>
+    <span class="n">bathymetry</span> <span class="o">=</span> <span class="o">-</span><span class="n">initFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;bottomDepth&#39;</span><span class="p">][:]</span>
+    <span class="n">minLevelCell</span> <span class="o">=</span> <span class="n">initFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;minLevelCell&#39;</span><span class="p">][:]</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">maxLevelCell</span> <span class="o">=</span> <span class="n">initFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;maxLevelCell&#39;</span><span class="p">][:]</span> <span class="o">-</span> <span class="mi">1</span>
+
+    <span class="n">cellMask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nCells</span><span class="p">,</span> <span class="n">nVertLevels</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">iCell</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nCells</span><span class="p">):</span>
+        <span class="n">cellMask</span><span class="p">[</span><span class="n">iCell</span><span class="p">,</span> <span class="n">minLevelCell</span><span class="p">[</span><span class="n">iCell</span><span class="p">]:</span><span class="n">maxLevelCell</span><span class="p">[</span><span class="n">iCell</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+    <span class="n">cellOceanMask</span> <span class="o">=</span> <span class="n">cellMask</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="n">xyOceanFraction</span> <span class="o">=</span> <span class="n">interpHoriz</span><span class="p">(</span><span class="n">cellOceanMask</span><span class="p">)</span>
+    <span class="n">xyOceanMask</span> <span class="o">=</span> <span class="n">xyOceanFraction</span> <span class="o">&gt;</span> <span class="n">normalizationThreshold</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">dynamicTopo</span> <span class="ow">and</span> <span class="p">(</span><span class="n">nTimeOut</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="nb">vars</span><span class="p">[</span><span class="s1">&#39;iceDraft&#39;</span><span class="p">][:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">interpHorizOcean</span><span class="p">(</span>
+            <span class="n">initFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:])</span>
+        <span class="nb">vars</span><span class="p">[</span><span class="s1">&#39;bathymetry&#39;</span><span class="p">][:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">interpHorizOcean</span><span class="p">(</span><span class="n">bathymetry</span><span class="p">)</span>
+
+    <span class="n">initFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="n">daysInMonth</span> <span class="o">=</span> <span class="p">[</span><span class="mi">31</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">31</span><span class="p">]</span>
+    <span class="n">daysBeforeMonth</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">daysInMonth</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">show_progress</span><span class="p">:</span>
+        <span class="n">pbar</span> <span class="o">=</span> <span class="n">ProgressBar</span><span class="p">(</span>
+            <span class="n">widgets</span><span class="o">=</span><span class="p">[</span>
+                <span class="s1">&#39;interpolate from MPAS to MISOMIP&#39;</span><span class="p">,</span>
+                <span class="n">Percentage</span><span class="p">(),</span>
+                <span class="n">Bar</span><span class="p">(),</span>
+                <span class="n">ETA</span><span class="p">()],</span>
+            <span class="n">maxval</span><span class="o">=</span><span class="n">nTimeIn</span><span class="p">)</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">pbar</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">for</span> <span class="n">tIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nTimeOut</span><span class="p">,</span> <span class="n">nTimeIn</span><span class="p">):</span>
+        <span class="n">inFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">inFileNames</span><span class="p">[</span><span class="n">tIndex</span><span class="p">],</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        <span class="n">inVars</span> <span class="o">=</span> <span class="n">inFile</span><span class="o">.</span><span class="n">variables</span>
+        <span class="n">days</span> <span class="o">=</span> <span class="mi">365</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">tIndex</span> <span class="o">/</span> <span class="mi">12</span><span class="p">)</span> <span class="o">+</span> <span class="n">daysBeforeMonth</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">tIndex</span><span class="p">,</span> <span class="mi">12</span><span class="p">)]</span>
+        <span class="nb">vars</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">][</span><span class="n">tIndex</span><span class="p">]</span> <span class="o">=</span> <span class="n">secPerDay</span> <span class="o">*</span> <span class="n">days</span>
+
+        <span class="n">freshwaterFlux</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_landIceFreshwaterFlux&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">inCavityFraction</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_landIceFraction&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">outCavityFraction</span> <span class="o">=</span> <span class="n">interpHoriz</span><span class="p">(</span><span class="n">inCavityFraction</span><span class="p">)</span>
+        <span class="n">outCavityMask</span> <span class="o">=</span> <span class="n">outCavityFraction</span> <span class="o">&gt;</span> <span class="n">normalizationThreshold</span>
+        <span class="n">meltRate</span> <span class="o">=</span> <span class="n">freshwaterFlux</span> <span class="o">/</span> <span class="n">rho_fw</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">inCavityFraction</span> <span class="o">==</span> <span class="mf">0.</span><span class="p">):</span>
+            <span class="n">writeMetric</span><span class="p">(</span><span class="s1">&#39;meanMeltRate&#39;</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">meltRate</span> <span class="o">*</span> <span class="n">areaCell</span><span class="p">)</span>
+                        <span class="o">/</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">inCavityFraction</span> <span class="o">*</span> <span class="n">areaCell</span><span class="p">))</span>
+
+        <span class="n">writeMetric</span><span class="p">(</span><span class="s1">&#39;totalMeltFlux&#39;</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">freshwaterFlux</span> <span class="o">*</span> <span class="n">areaCell</span><span class="p">))</span>
+
+        <span class="n">ssh</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_ssh&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">columnThickness</span> <span class="o">=</span> <span class="n">ssh</span> <span class="o">-</span> <span class="n">bathymetry</span>
+
+        <span class="n">writeMetric</span><span class="p">(</span><span class="s1">&#39;totalOceanVolume&#39;</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">columnThickness</span> <span class="o">*</span> <span class="n">areaCell</span><span class="p">))</span>
+
+        <span class="n">thermalDriving</span> <span class="o">=</span> <span class="p">(</span><span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_landIceBoundaryLayerTracers&#39;</span>
+                                 <span class="s1">&#39;_landIceBoundaryLayerTemperature&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+                          <span class="o">-</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_landIceInterfaceTracers&#39;</span>
+                                   <span class="s1">&#39;_landIceInterfaceTemperature&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:])</span>
+        <span class="n">halineDriving</span> <span class="o">=</span> <span class="p">(</span><span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_landIceBoundaryLayerTracers&#39;</span>
+                                <span class="s1">&#39;_landIceBoundaryLayerSalinity&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+                         <span class="o">-</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_landIceInterfaceTracers&#39;</span>
+                                  <span class="s1">&#39;_landIceInterfaceSalinity&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:])</span>
+        <span class="n">frictionVelocity</span> <span class="o">=</span> \
+            <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_landIceFrictionVelocity&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+
+        <span class="n">bsfCell</span> <span class="o">=</span> <span class="mf">1e6</span> <span class="o">*</span> <span class="n">bsfFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;bsfCell&#39;</span><span class="p">][</span><span class="n">tIndex</span><span class="p">,</span> <span class="p">:]</span>
+
+        <span class="c1"># meltRate is already multiplied by inCavityFraction, so no in masking</span>
+        <span class="n">writeVar</span><span class="p">(</span>
+            <span class="s1">&#39;meltRate&#39;</span><span class="p">,</span>
+            <span class="n">interpHoriz</span><span class="p">(</span>
+                <span class="n">meltRate</span><span class="p">,</span>
+                <span class="n">inMask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">outFraction</span><span class="o">=</span><span class="n">outCavityFraction</span><span class="p">),</span>
+            <span class="n">outCavityMask</span><span class="p">)</span>
+        <span class="n">writeVar</span><span class="p">(</span>
+            <span class="s1">&#39;thermalDriving&#39;</span><span class="p">,</span>
+            <span class="n">interpHorizCavity</span><span class="p">(</span><span class="n">thermalDriving</span><span class="p">),</span>
+            <span class="n">outCavityMask</span><span class="p">)</span>
+        <span class="n">writeVar</span><span class="p">(</span>
+            <span class="s1">&#39;halineDriving&#39;</span><span class="p">,</span>
+            <span class="n">interpHorizCavity</span><span class="p">(</span><span class="n">halineDriving</span><span class="p">),</span>
+            <span class="n">outCavityMask</span><span class="p">)</span>
+        <span class="n">writeVar</span><span class="p">(</span><span class="s1">&#39;frictionVelocity&#39;</span><span class="p">,</span> <span class="n">interpHorizCavity</span><span class="p">(</span><span class="n">frictionVelocity</span><span class="p">),</span>
+                 <span class="n">outCavityMask</span><span class="p">)</span>
+        <span class="n">writeVar</span><span class="p">(</span><span class="s1">&#39;barotropicStreamfunction&#39;</span><span class="p">,</span> <span class="n">interpHorizOcean</span><span class="p">(</span><span class="n">bsfCell</span><span class="p">),</span>
+                 <span class="n">xyOceanMask</span><span class="p">)</span>
+
+        <span class="n">temperature</span> <span class="o">=</span> \
+            <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_activeTracers_temperature&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+        <span class="n">salinity</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_activeTracers_salinity&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+        <span class="n">layerThickness</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_layerThickness&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+
+        <span class="n">indices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nCells</span><span class="p">)</span>
+        <span class="n">bottomTemperature</span> <span class="o">=</span> <span class="n">temperature</span><span class="p">[</span><span class="n">indices</span><span class="p">,</span> <span class="n">maxLevelCell</span><span class="p">]</span>
+        <span class="n">bottomSalinity</span> <span class="o">=</span> <span class="n">salinity</span><span class="p">[</span><span class="n">indices</span><span class="p">,</span> <span class="n">maxLevelCell</span><span class="p">]</span>
+
+        <span class="n">writeVar</span><span class="p">(</span><span class="s1">&#39;bottomTemperature&#39;</span><span class="p">,</span> <span class="n">interpHorizOcean</span><span class="p">(</span><span class="n">bottomTemperature</span><span class="p">),</span>
+                 <span class="n">xyOceanMask</span><span class="p">)</span>
+        <span class="n">writeVar</span><span class="p">(</span><span class="s1">&#39;bottomSalinity&#39;</span><span class="p">,</span> <span class="n">interpHorizOcean</span><span class="p">(</span><span class="n">bottomSalinity</span><span class="p">),</span>
+                 <span class="n">xyOceanMask</span><span class="p">)</span>
+
+        <span class="n">writeMetric</span><span class="p">(</span>
+            <span class="s1">&#39;meanTemperature&#39;</span><span class="p">,</span>
+            <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+                <span class="n">cellMask</span> <span class="o">*</span>
+                <span class="n">layerThickness</span> <span class="o">*</span>
+                <span class="n">temperature</span><span class="p">)</span> <span class="o">/</span>
+            <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+                <span class="n">cellMask</span> <span class="o">*</span>
+                <span class="n">layerThickness</span><span class="p">))</span>
+        <span class="n">writeMetric</span><span class="p">(</span>
+            <span class="s1">&#39;meanSalinity&#39;</span><span class="p">,</span>
+            <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+                <span class="n">cellMask</span> <span class="o">*</span>
+                <span class="n">layerThickness</span> <span class="o">*</span>
+                <span class="n">salinity</span><span class="p">)</span> <span class="o">/</span>
+            <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+                <span class="n">cellMask</span> <span class="o">*</span>
+                <span class="n">layerThickness</span><span class="p">))</span>
+
+        <span class="n">uTop</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_velocityX&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">vTop</span> <span class="o">=</span> <span class="n">inVars</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_velocityY&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">writeVar</span><span class="p">(</span><span class="s1">&#39;uBoundaryLayer&#39;</span><span class="p">,</span> <span class="n">interpHorizCavity</span><span class="p">(</span><span class="n">uTop</span><span class="p">),</span> <span class="n">outCavityMask</span><span class="p">)</span>
+        <span class="n">writeVar</span><span class="p">(</span><span class="s1">&#39;vBoundaryLayer&#39;</span><span class="p">,</span> <span class="n">interpHorizCavity</span><span class="p">(</span><span class="n">vTop</span><span class="p">),</span> <span class="n">outCavityMask</span><span class="p">)</span>
+
+        <span class="n">osf</span> <span class="o">=</span> <span class="mf">1e6</span> <span class="o">*</span> <span class="n">osfFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;osf&#39;</span><span class="p">][</span><span class="n">tIndex</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+        <span class="n">osfX</span> <span class="o">=</span> <span class="n">osfFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">][:]</span>
+        <span class="n">osfZ</span> <span class="o">=</span> <span class="n">osfFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">][:]</span>
+        <span class="k">assert</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">osfX</span> <span class="o">==</span> <span class="n">x</span><span class="p">))</span>
+        <span class="c1"># the first and last OSF z values have been tweaked...</span>
+        <span class="k">assert</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">osfZ</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">z</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+
+        <span class="n">writeVar</span><span class="p">(</span><span class="s1">&#39;overturningStreamfunction&#39;</span><span class="p">,</span> <span class="n">osf</span><span class="p">)</span>
+
+        <span class="n">xzOceanFraction</span> <span class="o">=</span> <span class="n">interpXZTransect</span><span class="p">(</span><span class="n">cellMask</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">xzOceanMask</span> <span class="o">=</span> <span class="n">xzOceanFraction</span> <span class="o">&gt;</span> <span class="mf">0.001</span>
+
+        <span class="n">yzOceanFraction</span> <span class="o">=</span> <span class="n">interpYZTransect</span><span class="p">(</span><span class="n">cellMask</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">yzOceanMask</span> <span class="o">=</span> <span class="n">yzOceanFraction</span> <span class="o">&gt;</span> <span class="mf">0.001</span>
+
+        <span class="n">writeVar</span><span class="p">(</span><span class="s1">&#39;temperatureXZ&#39;</span><span class="p">,</span> <span class="n">interpXZTransect</span><span class="p">(</span><span class="n">temperature</span><span class="p">),</span> <span class="n">xzOceanMask</span><span class="p">)</span>
+        <span class="n">writeVar</span><span class="p">(</span><span class="s1">&#39;salinityXZ&#39;</span><span class="p">,</span> <span class="n">interpXZTransect</span><span class="p">(</span><span class="n">salinity</span><span class="p">),</span> <span class="n">xzOceanMask</span><span class="p">)</span>
+
+        <span class="n">writeVar</span><span class="p">(</span><span class="s1">&#39;temperatureYZ&#39;</span><span class="p">,</span> <span class="n">interpYZTransect</span><span class="p">(</span><span class="n">temperature</span><span class="p">),</span> <span class="n">yzOceanMask</span><span class="p">)</span>
+        <span class="n">writeVar</span><span class="p">(</span><span class="s1">&#39;salinityYZ&#39;</span><span class="p">,</span> <span class="n">interpYZTransect</span><span class="p">(</span><span class="n">salinity</span><span class="p">),</span> <span class="n">yzOceanMask</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">show_progress</span><span class="p">:</span>
+            <span class="n">pbar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">tIndex</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">show_progress</span><span class="p">:</span>
+        <span class="n">pbar</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
+
+    <span class="n">outFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">osfFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">bsfFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">_get_out_grid</span><span class="p">(</span><span class="n">corners</span><span class="p">):</span>
+
+    <span class="n">outDx</span> <span class="o">=</span> <span class="mf">2e3</span>
+    <span class="n">outX0</span> <span class="o">=</span> <span class="mf">320e3</span>
+    <span class="n">outY0</span> <span class="o">=</span> <span class="mf">0.</span>
+    <span class="n">xTransect</span> <span class="o">=</span> <span class="mf">520.01e3</span>  <span class="c1"># shifted slightly to avoid exact touching</span>
+    <span class="n">yTransect</span> <span class="o">=</span> <span class="mf">40.01e3</span>
+    <span class="n">outDz</span> <span class="o">=</span> <span class="mf">5.</span>
+
+    <span class="n">outNx</span> <span class="o">=</span> <span class="mi">240</span>
+    <span class="n">outNy</span> <span class="o">=</span> <span class="mi">40</span>
+    <span class="n">outNz</span> <span class="o">=</span> <span class="mi">144</span>
+
+    <span class="k">if</span> <span class="n">corners</span><span class="p">:</span>
+        <span class="c1"># x, y and z of corners of grid cells</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">outX0</span> <span class="o">+</span> <span class="n">outDx</span> <span class="o">*</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">outNx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">outY0</span> <span class="o">+</span> <span class="n">outDx</span> <span class="o">*</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">outNy</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="o">-</span><span class="n">outDz</span> <span class="o">*</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">outNz</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">outX0</span> <span class="o">+</span> <span class="n">outDx</span><span class="o">*</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">outNx</span><span class="p">)</span><span class="o">+</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">outY0</span> <span class="o">+</span> <span class="n">outDx</span><span class="o">*</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">outNy</span><span class="p">)</span><span class="o">+</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="o">-</span><span class="n">outDz</span><span class="o">*</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">outNz</span><span class="p">)</span><span class="o">+</span><span class="mf">0.5</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">outNx</span><span class="p">,</span> <span class="n">outNy</span><span class="p">,</span> <span class="n">outNz</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">xTransect</span><span class="p">,</span> <span class="n">yTransect</span><span class="p">,</span> <span class="n">outDx</span><span class="p">,</span> <span class="n">outDz</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
