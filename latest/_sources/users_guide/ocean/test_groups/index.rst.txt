@@ -12,6 +12,7 @@ coming months.
    :titlesonly:
 
    baroclinic_channel
+   dam_break
    drying_slope
    global_convergence
    global_ocean
