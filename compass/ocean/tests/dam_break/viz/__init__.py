@@ -61,9 +61,11 @@ class Viz(Step):
         x_cell = data.xCell.values
         y_cell = data.yCell.values
         ssh = data.ssh.values
-        ssh = ssh + 0.6
+        bottomDepth = data.bottomDepth.values
+        print('compute wct')
+        wct = ssh + bottomDepth
         dt = 0.3  # output interval in seconds
-        nt, _ = numpy.shape(ssh)  # number of output times
+        nt, _ = numpy.shape(wct)  # number of output times
 
         # read station coordinates
         station_data = pd.read_csv('stationCoords.csv', header=None)
@@ -91,7 +93,7 @@ class Viz(Step):
             ax = plt.subplot(3, 2, ii+1)
 
             # MPAS-O simulation results
-            mpaso = plt.plot(numpy.arange(0, dt*nt, dt), ssh[:, station[cell]],
+            mpaso = plt.plot(numpy.arange(0, dt*nt, dt), wct[:, station[cell]],
                              color='#228B22', linewidth=2, alpha=0.6)
 
             # Measured data
