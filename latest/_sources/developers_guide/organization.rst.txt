@@ -1529,12 +1529,12 @@ To add an input file from a database, call
 
     self.add_input_file(
         filename='topography.nc',
-        target='BedMachineAntarctica_and_GEBCO_2019_0.05_degree.200128.nc',
+        target='BedMachineAntarctica_v2_and_GEBCO_2022_0.05_degree_20220729.nc',
         database='bathymetry_database')
 
 In this example from
 :py:class:`compass.ocean.tests.global_ocean.init.initial_state.InitialState()`,
-the file ``BedMachineAntarctica_and_GEBCO_2019_0.05_degree.200128.nc`` is
+the file ``BedMachineAntarctica_v2_and_GEBCO_2022_0.05_degree_20220729.nc`` is
 slated for later downloaded from
 `MPAS-Ocean's bathymetry database <https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-ocean/bathymetry_database/>`_.
 The file will be stored in the subdirectory ``bathymetry_database`` of the path

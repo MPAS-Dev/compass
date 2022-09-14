@@ -107,7 +107,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.global_ocean.init.initial_state</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.metadata</span> <span class="kn">import</span> \
+<span></span><span class="kn">from</span> <span class="nn">importlib.resources</span> <span class="kn">import</span> <span class="n">contents</span>
+
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.metadata</span> <span class="kn">import</span> \
     <span class="n">add_mesh_and_init_metadata</span>
 <span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">run_model</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.vertical.grid_1d</span> <span class="kn">import</span> <span class="n">generate_1d_grid</span><span class="p">,</span> <span class="n">write_1d_grid</span>
@@ -175,9 +177,19 @@
         <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">&#39;streams.wisc&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>
 
+        <span class="n">mesh_package</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">package</span>
+        <span class="n">mesh_package_contents</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">contents</span><span class="p">(</span><span class="n">mesh_package</span><span class="p">))</span>
+        <span class="n">mesh_namelist</span> <span class="o">=</span> <span class="s1">&#39;namelist.init&#39;</span>
+        <span class="k">if</span> <span class="n">mesh_namelist</span> <span class="ow">in</span> <span class="n">mesh_package_contents</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="n">mesh_package</span><span class="p">,</span> <span class="n">mesh_namelist</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>
+
+        <span class="n">mesh_streams</span> <span class="o">=</span> <span class="s1">&#39;streams.init&#39;</span>
+        <span class="k">if</span> <span class="n">mesh_streams</span> <span class="ow">in</span> <span class="n">mesh_package_contents</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">mesh_package</span><span class="p">,</span> <span class="n">mesh_streams</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
             <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;topography.nc&#39;</span><span class="p">,</span>
-            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;BedMachineAntarctica_and_GEBCO_2019_0.05_degree.200128.nc&#39;</span><span class="p">,</span>
+            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;BedMachineAntarctica_v2_and_GEBCO_2022_0.05_degree_20220729.nc&#39;</span><span class="p">,</span>
             <span class="n">database</span><span class="o">=</span><span class="s1">&#39;bathymetry_database&#39;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>

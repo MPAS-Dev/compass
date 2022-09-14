@@ -191,7 +191,7 @@ is not yet known at the time of mesh creation):
     :MPAS_Mesh_QU_Maximum_Depth_m = "3000.0" ;
     :MPAS_Mesh_QU_Number_of_Levels = "16" ;
     :MPAS_Mesh_Description = "MPAS quasi-uniform mesh for E3SM version 2 at 240-km global resolution with 16 vertical level" ;
-    :MPAS_Mesh_Bathymetry = "Bathymetry is from GEBCO 2019, combined with BedMachine Antarctica around Antarctica." ;
+    :MPAS_Mesh_Bathymetry = "Bathymetry is from GEBCO 2022, combined with BedMachine Antarctica v2 around Antarctica." ;
     :MPAS_Initial_Condition = "Polar science center Hydrographic Climatology (PHC)" ;
     :MPAS_Mesh_COMPASS_Version = "1.0.0" ;
     :MPAS_Mesh_JIGSAW_Version = "0.9.12" ;
