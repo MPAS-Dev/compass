@@ -362,7 +362,7 @@ looks like:
         level
 
     # source: /home/xylar/code/compass/customize_config_parser/compass/ocean/tests/global_ocean/configure.py
-    bathy_description = Bathymetry is from GEBCO 2019, combined with BedMachine Antarctica around Antarctica.
+    bathy_description = Bathymetry is from GEBCO 2022, combined with BedMachine Antarctica v2 around Antarctica.
 
     # a description of the mesh with ice-shelf cavities
     # source: /home/xylar/code/compass/customize_config_parser/compass/ocean/tests/global_ocean/global_ocean.cfg

@@ -264,6 +264,7 @@ def _cull_mesh_with_logging(logger, with_cavities, with_critical_passages,
     dsLandMask = add_land_locked_cells_to_mask(dsLandMask, dsBaseMesh,
                                                latitude_threshold=43.0,
                                                nSweeps=20)
+    write_netcdf(dsLandMask, 'land_mask_with_land_locked_cells.nc')
 
     # create seed points for a flood fill of the ocean
     # use all points in the ocean directory, on the assumption that they are,

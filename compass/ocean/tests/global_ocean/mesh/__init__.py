@@ -2,6 +2,7 @@ from compass.testcase import TestCase
 from compass.mesh.spherical import IcosahedralMeshStep, \
     QuasiUniformSphericalMeshStep
 from compass.ocean.mesh.cull import CullMeshStep
+from compass.ocean.tests.global_ocean.mesh.arrm10to60 import ARRM10to60BaseMesh
 from compass.ocean.tests.global_ocean.mesh.ec30to60 import EC30to60BaseMesh
 from compass.ocean.tests.global_ocean.mesh.so12to60 import SO12to60BaseMesh
 from compass.ocean.tests.global_ocean.mesh.wc14 import WC14BaseMesh
@@ -37,7 +38,7 @@ class Mesh(TestCase):
             The name of the mesh
         """
         name = 'mesh'
-        subdir = '{}/{}'.format(mesh_name, name)
+        subdir = f'{mesh_name}/{name}'
         super().__init__(test_group=test_group, name=name, subdir=subdir)
 
         with_ice_shelf_cavities = 'wISC' in mesh_name
@@ -63,9 +64,11 @@ class Mesh(TestCase):
                 self, name=name, subdir=subdir, cell_width=240)
         elif mesh_name in ['EC30to60', 'ECwISC30to60']:
             base_mesh_step = EC30to60BaseMesh(self, name=name, subdir=subdir)
+        elif mesh_name in ['ARRM10to60']:
+            base_mesh_step = ARRM10to60BaseMesh(self, name=name, subdir=subdir)
         elif mesh_name in ['SOwISC12to60']:
             base_mesh_step = SO12to60BaseMesh(self, name=name, subdir=subdir)
-        elif mesh_name in 'WC14':
+        elif mesh_name in ['WC14']:
             base_mesh_step = WC14BaseMesh(self, name=name, subdir=subdir)
         else:
             raise ValueError(f'Unknown mesh name {mesh_name}')

@@ -1,3 +1,5 @@
+from importlib.resources import contents
+
 from compass.ocean.tests.global_ocean.metadata import \
     add_mesh_and_init_metadata
 from compass.model import run_model
@@ -66,9 +68,19 @@ class InitialState(Step):
         if mesh.with_ice_shelf_cavities:
             self.add_streams_file(package, 'streams.wisc', mode='init')
 
+        mesh_package = mesh.package
+        mesh_package_contents = list(contents(mesh_package))
+        mesh_namelist = 'namelist.init'
+        if mesh_namelist in mesh_package_contents:
+            self.add_namelist_file(mesh_package, mesh_namelist, mode='init')
+
+        mesh_streams = 'streams.init'
+        if mesh_streams in mesh_package_contents:
+            self.add_streams_file(mesh_package, mesh_streams, mode='init')
+
         self.add_input_file(
             filename='topography.nc',
-            target='BedMachineAntarctica_and_GEBCO_2019_0.05_degree.200128.nc',
+            target='BedMachineAntarctica_v2_and_GEBCO_2022_0.05_degree_20220729.nc',
             database='bathymetry_database')
 
         self.add_input_file(
