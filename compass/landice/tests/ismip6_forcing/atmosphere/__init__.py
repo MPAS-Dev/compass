@@ -28,9 +28,9 @@ class Atmosphere(TestCase):
         subdir = name
         super().__init__(test_group=test_group, name=name, subdir=subdir)
 
-        step = ProcessSMB(test_case=self)
-        self.add_step(step)
         step = ProcessSmbRacmo(test_case=self)
+        self.add_step(step)
+        step = ProcessSMB(test_case=self)
         self.add_step(step)
 
     def configure(self):

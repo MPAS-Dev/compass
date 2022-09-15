@@ -96,8 +96,9 @@ class ProcessSMB(Step):
         if not os.path.exists(racmo_clim_file_final):
             raise ValueError("Processed RACMO data does not exist, "
                              "but it is required as an input file "
-                             "to run this step. Please run `ProcessSmbRacmo` "
-                             "step prior to running this step.")
+                             "to run this step. Please run `process_smb_racmo`"
+                             "step prior to running this step by setting"
+                             "the config option 'process_smb_racmo' to 'True.")
 
         # temporary remapped climatology and anomaly files
         clim_ismip6_temp = "clim_ismip6.nc"
