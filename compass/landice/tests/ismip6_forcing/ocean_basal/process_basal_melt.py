@@ -61,9 +61,9 @@ class ProcessBasalMelt(Step):
         mali_mesh_name = section.get("mali_mesh_name")
         mali_mesh_file = section.get("mali_mesh_file")
         output_base_path = section.get("output_base_path")
-
-        section = config["ismip6_ais_ocean_basal"]
-        method_remap = section.get("method_remap")
+        # we always want neareststod for the remapping method because we want
+        # a single value per basin
+        method_remap = "neareststod"
 
         # combine, interpolate and rename the basin file and deltaT0_gamma0
         # ismip6 input files
