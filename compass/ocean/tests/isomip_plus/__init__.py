@@ -45,7 +45,13 @@ class IsomipPlus(TestGroup):
                         OceanTest(test_group=self, resolution=resolution,
                                   experiment=experiment,
                                   vertical_coordinate=vertical_coordinate,
-                                  time_varying_forcing=True,
+                                  time_varying_forcing=True, time_varying_load='increasing',
+                                  thin_film_present=True))
+                    self.add_test_case(
+                        OceanTest(test_group=self, resolution=resolution,
+                                  experiment=experiment,
+                                  vertical_coordinate=vertical_coordinate,
+                                  time_varying_forcing=True, time_varying_load='decreasing',
                                   thin_film_present=True))
                 for vertical_coordinate in ['single_layer']:
                     self.add_test_case(
