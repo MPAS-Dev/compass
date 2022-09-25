@@ -18,6 +18,8 @@ from compass.ocean.tests.global_ocean.decomp_test import DecompTest
 from compass.ocean.tests.global_ocean.threads_test import ThreadsTest
 from compass.ocean.tests.global_ocean.analysis_test import AnalysisTest
 from compass.ocean.tests.global_ocean.daily_output_test import DailyOutputTest
+from compass.ocean.tests.global_ocean.time_series_stats_restart_test import \
+    TimeSeriesStatsRestartTest
 from compass.ocean.tests.global_ocean.monthly_output_test import \
     MonthlyOutputTest
 from compass.ocean.tests.global_ocean.files_for_e3sm import FilesForE3SM
@@ -73,9 +75,15 @@ class GlobalOcean(TestGroup):
                     test_group=self, mesh=mesh, init=init,
                     time_integrator=time_integrator))
             self.add_test_case(
+                TimeSeriesStatsRestartTest(
+                    test_group=self, mesh=mesh, init=init, analysis='Daily'))
+            self.add_test_case(
                 MonthlyOutputTest(
                     test_group=self, mesh=mesh, init=init,
                     time_integrator=time_integrator))
+            self.add_test_case(
+                TimeSeriesStatsRestartTest(
+                    test_group=self, mesh=mesh, init=init, analysis='Monthly'))
 
             dynamic_adjustment = QU240DynamicAdjustment(
                 test_group=self, mesh=mesh, init=init,

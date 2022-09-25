@@ -1,0 +1,24 @@
+<streams>
+
+<immutable_stream name="restart"
+                  filename_template="../restarts/rst.$Y-$M-$D_$h.$m.$s.nc"
+                  filename_interval="output_interval"
+                  output_interval="{{ output_interval }}"/>
+
+<stream name="output"
+        output_interval="{{ output_interval }}">
+</stream>
+
+<immutable_stream name="timeSeriesStats{{ analysis }}Restart"
+                  filename_template="../restarts/rst.timeSeriesStats{{ analysis }}.$Y-$M-$D_$h.$m.$s.nc"/>
+
+<stream name="timeSeriesStats{{ analysis }}Output"
+        type="output"
+        precision="double"
+        filename_template="analysis_members/mpaso.hist.am.timeSeriesStats{{ analysis }}.$Y-$M-$D_$h.$m.$s.nc"
+        filename_interval="output_interval"
+        output_interval="{{ output_interval }}"
+        clobber_mode="truncate">
+</stream>
+
+</streams>
