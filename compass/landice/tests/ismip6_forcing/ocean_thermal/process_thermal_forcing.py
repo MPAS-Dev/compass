@@ -307,33 +307,33 @@ class ProcessThermalForcing(Step):
         "2300": {
             "CCSM4": {
                 "RCP85": [
-                    "AIS/Ocean_Forcing/ccsm4_RCP85/1995-2300/CCSM4_RCP85_thermal_forcing_8km_x_60m.nc"]
+                    "AIS/Ocean_forcing/ccsm4_RCP85/1995-2300/CCSM4_RCP85_thermal_forcing_8km_x_60m.nc"]
             },
             "CESM2-WACCM": {
                 "SSP585": [
-                    "AIS/Ocean_Forcing/cesm2-waccm_ssp585/1995-2299/CESM2-WACCM_SSP585_thermal_forcing_8km_x_60m.nc"],
+                    "AIS/Ocean_forcing/cesm2-waccm_ssp585/1995-2299/CESM2-WACCM_SSP585_thermal_forcing_8km_x_60m.nc"],
                 "SSP585-repeat": [
-                    "AIS/Ocean_Forcing/cesm2-waccm_ssp585-repeat/1995-2300/CESM2-WACCM_ssp585_thermal_forcing_8km_x_60m.nc"]
+                    "AIS/Ocean_forcing/cesm2-waccm_ssp585-repeat/1995-2300/CESM2-WACCM_ssp585_thermal_forcing_8km_x_60m.nc"]
             },
             "HadGEM2-ES": {
                 "RCP85": [
-                    "AIS/Ocean_Forcing/hadgem2-es_RCP85/1995-2299/HadGEM2-ES_RCP85_thermal_forcing_8km_x_60m.nc"],
+                    "AIS/Ocean_forcing/hadgem2-es_RCP85/1995-2299/HadGEM2-ES_RCP85_thermal_forcing_8km_x_60m.nc"],
                 "RCP85-repeat": [
-                    "AIS/Ocean_Forcing/hadgem2-es_RCP85-repeat/1995-2300/HadGEM2-ES_rcp85_thermal_forcing_8km_x_60m.nc"]
+                    "AIS/Ocean_forcing/hadgem2-es_RCP85-repeat/1995-2300/HadGEM2-ES_rcp85_thermal_forcing_8km_x_60m.nc"]
             },
             "NorESM1-M": {
                 "RCP26-repeat": [
-                    "AIS/Ocean_Forcing/noresm1-m_RCP26-repeat/1995-2300/NorESM1-M_RCP26_thermal_forcing_8km_x_60m.nc"],
+                    "AIS/Ocean_forcing/noresm1-m_RCP26-repeat/1995-2300/NorESM1-M_RCP26_thermal_forcing_8km_x_60m.nc"],
                 "RCP85-repeat": [
-                    "AIS/Ocean_Forcing/noresm1-m_RCP85-repeat/1995-2300/NorESM1-M_thermal_forcing_8km_x_60m.nc"]
+                    "AIS/Ocean_forcing/noresm1-m_RCP85-repeat/1995-2300/NorESM1-M_thermal_forcing_8km_x_60m.nc"]
             },
             "UKESM1-0-LL": {
                 "SSP126": [
-                    "AIS/Ocean_Forcing/ukesm1-0-ll_ssp126/1995-2300/UKESM1-0-LL_thermal_forcing_8km_x_60m.nc"],
+                    "AIS/Ocean_forcing/ukesm1-0-ll_ssp126/1995-2300/UKESM1-0-LL_thermal_forcing_8km_x_60m_v2.nc"],
                 "SSP585": [
-                    "AIS/Ocean_Forcing/ukesm1-0-ll_ssp585/1995-2300/UKESM1-0-LL_SSP585_thermal_forcing_8km_x_60m.nc"],
+                    "AIS/Ocean_forcing/ukesm1-0-ll_ssp585/1995-2300/UKESM1-0-LL_SSP585_thermal_forcing_8km_x_60m.nc"],
                 "SSP585-repeat": [
-                    "AIS/Ocean_Forcing/ukesm1-0-ll_ssp585-repeat/1995-2300/UKESM1-0-LL_ssp585_thermal_forcing_8km_x_60m.nc"]
+                    "AIS/Ocean_forcing/ukesm1-0-ll_ssp585-repeat/1995-2300/UKESM1-0-LL_ssp585_thermal_forcing_8km_x_60m.nc"]
             }
         }
     }

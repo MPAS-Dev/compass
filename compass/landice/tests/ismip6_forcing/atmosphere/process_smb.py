@@ -383,38 +383,38 @@ class ProcessSMB(Step):
         "2300": {
             "CCSM4": {
                 "RCP85": [
-                    "AIS/Atmospheric_Forcing/CCSM4_RCP85/Regridded_08km/CCSM4_8km_anomaly_1995-2100.nc",
-                    "AIS/Atmospheric_Forcing/CCSM4_RCP85/Regridded_08km/CCSM4_8km_anomaly_2101-2300.nc"]
+                    "AIS/Atmospheric_forcing/CCSM4_RCP85/Regridded_08km/CCSM4_8km_anomaly_1995-2100.nc",
+                    "AIS/Atmospheric_forcing/CCSM4_RCP85/Regridded_08km/CCSM4_8km_anomaly_2101-2300.nc"]
             },
             "CESM2-WACCM": {
                 "SSP585": [
-                    "AIS/Atmospheric_Forcing/CESM2-WACCM_ssp585/Regridded_8km/CESM2-WACCM_8km_anomaly_ssp585_1995-2100.nc",
-                    "AIS/Atmospheric_Forcing/CESM2-WACCM_ssp585/Regridded_8km/CESM2-WACCM_8km_anomaly_ssp585_2101-2299.nc"],
+                    "AIS/Atmospheric_forcing/CESM2-WACCM_ssp585/Regridded_8km/CESM2-WACCM_8km_anomaly_ssp585_1995-2100.nc",
+                    "AIS/Atmospheric_forcing/CESM2-WACCM_ssp585/Regridded_8km/CESM2-WACCM_8km_anomaly_ssp585_2101-2299.nc"],
                 "SSP585-repeat": [
-                    "AIS/Atmospheric_Forcing/CESM2-WACCM_ssp585-repeat/Regridded_8km/CESM2-WACCM_8km_anomaly_ssp585_1995-2300.nc"]
+                    "AIS/Atmospheric_forcing/CESM2-WACCM_ssp585-repeat/Regridded_8km/CESM2-WACCM_8km_anomaly_ssp585_1995-2300_v2.nc"]
             },
             "HadGEM2-ES": {
                 "RCP85": [
-                    "AIS/Atmospheric_Forcing/HadGEM2-ES_RCP85/Regridded_8km/HadGEM2-ES_8km_anomaly_rcp85_1995-2100.nc",
-                    "AIS/Atmospheric_Forcing/HadGEM2-ES_RCP85/Regridded_8km/HadGEM2-ES_8km_anomaly_rcp85_2101-2299.nc"],
+                    "AIS/Atmospheric_forcing/HadGEM2-ES_RCP85/Regridded_8km/HadGEM2-ES_8km_anomaly_rcp85_1995-2100.nc",
+                    "AIS/Atmospheric_forcing/HadGEM2-ES_RCP85/Regridded_8km/HadGEM2-ES_8km_anomaly_rcp85_2101-2299.nc"],
                 "RCP85-repeat": [
-                    "AIS/Atmospheric_Forcing/HadGEM2-ES-RCP85-repeat/Regridded_8km/HadGEM2-ES_8km_anomaly_rcp85_1995-2300.nc"]
+                    "AIS/Atmospheric_forcing/HadGEM2-ES-RCP85-repeat/Regridded_8km/HadGEM2-ES_8km_anomaly_rcp85_1995-2300_v2.nc"]
             },
             "NorESM1-M": {
                 "RCP26-repeat": [
-                    "AIS/Atmospheric_Forcing/NorESM1-M_RCP26-repeat/Regridded_8km/NorESM1-M_8km_anomaly_rcp26_1995-2300.nc"],
+                    "AIS/Atmospheric_forcing/NorESM1-M_RCP26-repeat/Regridded_8km/NorESM1-M_8km_anomaly_rcp26_1995-2300_v2.nc"],
                 "RCP85-repeat": [
-                    "AIS/Atmospheric_Forcing/NorESM1-M_RCP85-repeat/Regridded_8km/NorESM1-M_anomaly_1995-2300.nc"]
+                    "AIS/Atmospheric_forcing/NorESM1-M_RCP85-repeat/Regridded_8km/NorESM1-M_8km_anomaly_1995-2300_v2.nc"]
             },
             "UKESM1-0-LL": {
                 "SSP126": [
-                    "AIS/Atmospheric_Forcing/UKESM1-0-LL_ssp126/Regridded_8km/UKESM1-0-LL_8km_anomaly_ssp126_1995-2100.nc"
-                    "AIS/Atmospheric_Forcing/UKESM1-0-LL_ssp126/Regridded_8km/UKESM1-0-LL_8km_anomaly_ssp126_2101-2300.nc"],
+                    "AIS/Atmospheric_forcing/UKESM1-0-LL_ssp126/Regridded_8km/UKESM1-0-LL_8km_anomaly_ssp126_1995-2100.nc",
+                    "AIS/Atmospheric_forcing/UKESM1-0-LL_ssp126/Regridded_8km/UKESM1-0-LL_8km_anomaly_ssp126_2101-2300.nc"],
                 "SSP585": [
-                    "AIS/Atmospheric_Forcing/UKESM1-0-LL_ssp585/Regridding_8km/UKESM1-0-LL_8km_anomaly_ssp585_1995-2100.nc",
-                    "AIS/Atmospheric_Forcing/UKESM1-0-LL_ssp585/Regridding_8km/UKESM1-0-LL_8km_anomaly_ssp585_2101-2300.nc"],
+                    "AIS/Atmospheric_forcing/UKESM1-0-LL_ssp585/Regridding_8km/UKESM1-0-LL_8km_anomaly_ssp585_1995-2100.nc",
+                    "AIS/Atmospheric_forcing/UKESM1-0-LL_ssp585/Regridding_8km/UKESM1-0-LL_8km_anomaly_ssp585_2101-2300.nc"],
                 "SSP585-repeat": [
-                    "AIS/Atmospheric_Forcing/UKESM1-0-LL_ssp585-repeat/Regridding_8km/UKESM1-0-LL_8km_anomaly_ssp585_1995-2300.nc"]
+                    "AIS/Atmospheric_forcing/UKESM1-0-LL_ssp585-repeat/Regridding_8km/UKESM1-0-LL_8km_anomaly_ssp585_1995-2300_v2.nc"]
             }
         }
     }
