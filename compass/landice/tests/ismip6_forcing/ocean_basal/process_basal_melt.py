@@ -35,17 +35,18 @@ class ProcessBasalMelt(Step):
         base_path_ismip6 = section.get("base_path_ismip6")
         base_path_mali = section.get("base_path_mali")
         mali_mesh_file = section.get("mali_mesh_file")
+        period_endyear = section.get("period_endyear")
 
-        section = config["ismip6_ais_ocean_basal"]
+        input_file_basin = self._file_basin[period_endyear]
+        input_files_coeff = self._files_coeff[period_endyear]
         self.add_input_file(filename=mali_mesh_file,
                             target=os.path.join(base_path_mali,
                                                 mali_mesh_file))
-        self.add_input_file(filename=os.path.basename(self._file_basin),
+        self.add_input_file(filename=os.path.basename(input_file_basin),
                             target=os.path.join(base_path_ismip6,
-                                                self._file_basin))
+                                                input_file_basin))
 
-        input_file_list = self._files_coeff
-        for file in input_file_list:
+        for file in input_files_coeff:
             self.add_input_file(filename=os.path.basename(file),
                                 target=os.path.join(base_path_ismip6, file))
             self.add_output_file(filename=f"processed_basin_and_"
@@ -60,6 +61,7 @@ class ProcessBasalMelt(Step):
         section = config["ismip6_ais"]
         mali_mesh_name = section.get("mali_mesh_name")
         mali_mesh_file = section.get("mali_mesh_file")
+        period_endyear = section.get("period_endyear")
         output_base_path = section.get("output_base_path")
         # we always want neareststod for the remapping method because we want
         # a single value per basin
@@ -70,7 +72,8 @@ class ProcessBasalMelt(Step):
 
         # call the function that combines data
         logger.info(f"Combining the ismip6 input files")
-        input_file_list = self._files_coeff
+        input_file_basin = self._file_basin[period_endyear]
+        input_file_list = self._files_coeff[period_endyear]
 
         for i, file in enumerate(input_file_list):
             logger.info(f"!---Start processing the current file---!")
@@ -82,7 +85,7 @@ class ProcessBasalMelt(Step):
             combined_file_temp = f"combined_{i}.nc"
             remapped_file_temp = f"remapped_{i}.nc"
 
-            self.combine_ismip6_inputfiles(os.path.basename(self._file_basin),
+            self.combine_ismip6_inputfiles(os.path.basename(input_file_basin),
                                            os.path.basename(file),
                                            combined_file_temp)
 
@@ -230,16 +233,35 @@ class ProcessBasalMelt(Step):
 
     # input files: input uniform melt rate coefficient (gamma0)
     # and temperature correction per basin
-    _file_basin = "AIS/Ocean_Forcing/imbie2/imbie2_basin_numbers_8km.nc"
-    _files_coeff = ["AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_5th_pct_PIGL_gamma_calibration.nc",
-                    "AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_5th_percentile.nc",
-                    "AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_95th_pct_PIGL_gamma_calibration.nc",
-                    "AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_95th_percentile.nc",
-                    "AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_median_PIGL_gamma_calibration.nc",
-                    "AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_median.nc",
-                    "AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_5th_pct_PIGL_gamma_calibration.nc",
-                    "AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_5th_percentile.nc",
-                    "AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_95th_pct_PIGL_gamma_calibration.nc",
-                    "AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_95th_percentile.nc",
-                    "AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_median_PIGL_gamma_calibration.nc",
-                    "AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_median.nc"]
+    _file_basin = {
+        "2100": "AIS/Ocean_Forcing/imbie2/imbie2_basin_numbers_8km.nc",
+        "2300": "AIS/Ocean_forcing/imbie2/imbie2_basin_numbers_8km.nc"
+    }
+
+    _files_coeff = {
+        "2100": ["AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_5th_pct_PIGL_gamma_calibration.nc",
+                 "AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_5th_percentile.nc",
+                 "AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_95th_pct_PIGL_gamma_calibration.nc",
+                 "AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_95th_percentile.nc",
+                 "AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_median_PIGL_gamma_calibration.nc",
+                 "AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_median.nc",
+                 "AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_5th_pct_PIGL_gamma_calibration.nc",
+                 "AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_5th_percentile.nc",
+                 "AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_95th_pct_PIGL_gamma_calibration.nc",
+                 "AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_95th_percentile.nc",
+                 "AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_median_PIGL_gamma_calibration.nc",
+                 "AIS/Ocean_Forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_median.nc"],
+
+        "2300": ["AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_5th_pct_PIGL_gamma_calibration.nc",
+                 "AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_5th_percentile.nc",
+                 "AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_95th_pct_PIGL_gamma_calibration.nc",
+                 "AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_95th_percentile.nc",
+                 "AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_median_PIGL_gamma_calibration.nc",
+                 "AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_local_median.nc",
+                 "AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_5th_pct_PIGL_gamma_calibration.nc",
+                 "AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_5th_percentile.nc",
+                 "AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_95th_pct_PIGL_gamma_calibration.nc",
+                 "AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_95th_percentile.nc",
+                 "AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_median_PIGL_gamma_calibration.nc",
+                 "AIS/Ocean_forcing/parameterizations/coeff_gamma0_DeltaT_quadratic_non_local_median.nc"]
+    }
