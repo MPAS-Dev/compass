@@ -76,14 +76,24 @@ class GlobalOcean(TestGroup):
                     time_integrator=time_integrator))
             self.add_test_case(
                 TimeSeriesStatsRestartTest(
-                    test_group=self, mesh=mesh, init=init, analysis='Daily'))
+                    test_group=self, mesh=mesh, init=init, analysis='Daily',
+                    with_analysis_restart=True))
+            self.add_test_case(
+                TimeSeriesStatsRestartTest(
+                    test_group=self, mesh=mesh, init=init, analysis='Daily',
+                    with_analysis_restart=False))
             self.add_test_case(
                 MonthlyOutputTest(
                     test_group=self, mesh=mesh, init=init,
                     time_integrator=time_integrator))
             self.add_test_case(
                 TimeSeriesStatsRestartTest(
-                    test_group=self, mesh=mesh, init=init, analysis='Monthly'))
+                    test_group=self, mesh=mesh, init=init, analysis='Monthly',
+                    with_analysis_restart=True))
+            self.add_test_case(
+                TimeSeriesStatsRestartTest(
+                    test_group=self, mesh=mesh, init=init, analysis='Monthly',
+                    with_analysis_restart=False))
 
             dynamic_adjustment = QU240DynamicAdjustment(
                 test_group=self, mesh=mesh, init=init,

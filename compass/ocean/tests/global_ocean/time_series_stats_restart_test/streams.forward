@@ -9,8 +9,10 @@
         output_interval="{{ output_interval }}">
 </stream>
 
-<immutable_stream name="timeSeriesStats{{ analysis }}Restart"
-                  filename_template="../restarts/rst.timeSeriesStats{{ analysis }}.$Y-$M-$D_$h.$m.$s.nc"/>
+<stream name="timeSeriesStats{{ analysis }}Restart"
+        filename_template="../restarts/rst.timeSeriesStats{{ analysis }}.$Y-$M-$D_$h.$m.$s.nc"
+        input_interval="{{ analysis_restart_input_interval }}"
+        output_interval="{{ analysis_restart_output_interval }}"/>
 
 <stream name="timeSeriesStats{{ analysis }}Output"
         type="output"
