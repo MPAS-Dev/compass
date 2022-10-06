@@ -53,7 +53,9 @@ class SshAdjustment(Step):
                                    'namelist.thin_film.forward_and_ssh_adjust')
 
         # we don't want the global stats AM for this run
-        options = get_time_steps(resolution)
+        options = dict()
+        if not thin_film_present:
+            options = get_time_steps(resolution)
         options['config_AM_globalStats_enable'] = '.false.'
         self.add_namelist_options(options)
 

@@ -66,7 +66,9 @@ class Forward(Step):
         self.add_namelist_file('compass.ocean.tests.isomip_plus',
                                'namelist.forward')
 
-        options = get_time_steps(resolution)
+        options = dict()
+        if not thin_film_present:
+            options = get_time_steps(resolution)
 
         if run_duration is not None:
             options['config_run_duration'] = run_duration
