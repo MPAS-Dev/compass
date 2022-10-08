@@ -36,7 +36,7 @@ class Scrip(Step):
 
         self.add_input_file(filename='README', target='../README')
         self.add_input_file(filename='restart.nc',
-                            target='../{}'.format(restart_filename))
+                            target=f'../{restart_filename}')
 
         self.with_ice_shelf_cavities = with_ice_shelf_cavities
 
@@ -48,18 +48,19 @@ class Scrip(Step):
     def run(self):
         """
         Run this step of the testcase
-            """
+        """
         with_ice_shelf_cavities = self.with_ice_shelf_cavities
 
         with xarray.open_dataset('restart.nc') as ds:
             mesh_short_name = ds.attrs['MPAS_Mesh_Short_Name']
             mesh_prefix = ds.attrs['MPAS_Mesh_Prefix']
-            prefix = 'MPAS_Mesh_{}'.format(mesh_prefix)
-            creation_date = ds.attrs['{}_Version_Creation_Date'.format(prefix)]
+            prefix = f'MPAS_Mesh_{mesh_prefix}'
+            creation_date = ds.attrs[f'{prefix}_Version_Creation_Date']
+
+        link_dir = f'../assembled_files/inputdata/ocn/mpas-o/{mesh_short_name}'
 
         try:
-            os.makedirs('../assembled_files/inputdata/ocn/mpas-o/{}'.format(
-                mesh_short_name))
+            os.makedirs(link_dir)
         except OSError:
             pass
 
@@ -69,24 +70,20 @@ class Scrip(Step):
             nomask_str = ''
 
         local_filename = 'ocean.scrip.nc'
-        scrip_filename = 'ocean.{}{}.scrip.{}.nc'.format(
-            mesh_short_name,  nomask_str, creation_date)
+        scrip_filename = \
+            f'ocean.{mesh_short_name}{nomask_str}.scrip.{creation_date}.nc'
 
         scrip_from_mpas('restart.nc', local_filename)
 
-        symlink('../../../../../scrip/{}'.format(local_filename),
-                '../assembled_files/inputdata/ocn/mpas-o/{}/{}'.format(
-                    mesh_short_name, scrip_filename))
+        symlink(f'../../../../../scrip/{local_filename}',
+                f'{link_dir}/{scrip_filename}')
 
         if with_ice_shelf_cavities:
             local_filename = 'ocean.mask.scrip.nc'
-            scrip_mask_filename = 'ocean.{}.mask.scrip.{}.nc'.format(
-                mesh_short_name, creation_date)
+            scrip_mask_filename = \
+                f'ocean.{mesh_short_name}.mask.scrip.{creation_date}.nc'
             scrip_from_mpas('restart.nc', local_filename,
                             useLandIceMask=True)
 
-            symlink(
-                '../../../../../scrip/{}'.format(
-                    local_filename),
-                '../assembled_files/inputdata/ocn/mpas-o/{}/{}'.format(
-                    mesh_short_name, scrip_mask_filename))
+            symlink(f'../../../../../scrip/{local_filename}',
+                    f'{link_dir}/{scrip_mask_filename}')
