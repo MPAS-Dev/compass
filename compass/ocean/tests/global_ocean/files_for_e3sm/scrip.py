@@ -40,9 +40,10 @@ class Scrip(Step):
 
         self.with_ice_shelf_cavities = with_ice_shelf_cavities
 
-        # for now, we won't define any outputs because they include the mesh
-        # short name, which is not known at setup time.  Currently, this is
-        # safe because no other steps depend on the outputs of this one.
+        self.add_output_file(filename='ocean.scrip.nc')
+
+        if with_ice_shelf_cavities:
+            self.add_output_file(filename='ocean.mask.scrip.nc')
 
     def run(self):
         """
@@ -67,23 +68,25 @@ class Scrip(Step):
         else:
             nomask_str = ''
 
+        local_filename = 'ocean.scrip.nc'
         scrip_filename = 'ocean.{}{}.scrip.{}.nc'.format(
             mesh_short_name,  nomask_str, creation_date)
 
-        scrip_from_mpas('restart.nc', scrip_filename)
+        scrip_from_mpas('restart.nc', local_filename)
 
-        symlink('../../../../../scrip/{}'.format(scrip_filename),
+        symlink('../../../../../scrip/{}'.format(local_filename),
                 '../assembled_files/inputdata/ocn/mpas-o/{}/{}'.format(
                     mesh_short_name, scrip_filename))
 
         if with_ice_shelf_cavities:
+            local_filename = 'ocean.mask.scrip.nc'
             scrip_mask_filename = 'ocean.{}.mask.scrip.{}.nc'.format(
                 mesh_short_name, creation_date)
-            scrip_from_mpas('restart.nc', scrip_mask_filename,
+            scrip_from_mpas('restart.nc', local_filename,
                             useLandIceMask=True)
 
             symlink(
                 '../../../../../scrip/{}'.format(
-                    scrip_mask_filename),
+                    local_filename),
                 '../assembled_files/inputdata/ocn/mpas-o/{}/{}'.format(
                     mesh_short_name, scrip_mask_filename))
