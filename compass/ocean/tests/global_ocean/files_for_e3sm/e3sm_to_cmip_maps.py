@@ -88,7 +88,7 @@ def make_e3sm_to_cmip_maps(config, logger, mesh_short_name, creation_date,
         ``assembled_files``
     """
 
-    link_dir = f'../assembled_files/diagnostics/e3sm_to_cmip/maps'
+    link_dir = f'../assembled_files/diagnostics/maps'
 
     try:
         os.makedirs(link_dir)
