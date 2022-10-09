@@ -1,7 +1,7 @@
 import os
 import xarray
 
-from mpas_tools.scrip.from_mpas import scrip_from_mpas
+from mpas_tools.logging import check_call
 
 from compass.io import symlink
 from compass.step import Step
@@ -60,33 +60,61 @@ class E3smToCmipMaps(Step):
             prefix = f'MPAS_Mesh_{mesh_prefix}'
             creation_date = ds.attrs[f'{prefix}_Version_Creation_Date']
 
-        link_dir = f'../assembled_files/diagnostics/e3sm_to_cmip/maps'
+        make_e3sm_to_cmip_maps(self.config, self.logger, mesh_short_name,
+                               creation_date, self.subdir)
 
-        try:
-            os.makedirs(link_dir)
-        except OSError:
-            pass
 
-        src_scrip_filename = 'ocean.scrip.nc'
-        cmip6_grid_res = self.config.get('files_for_e3sm', 'cmip6_grid_res')
-        if cmip6_grid_res == '180x360':
-            dst_scrip_filename = f'cmip6_180x360_scrip.20181001.nc'
-        elif cmip6_grid_res == '720x1440':
-            dst_scrip_filename = f'cmip6_720x1440_scrip.20181001.nc'
-        else:
-            raise ValueError(f'Unexpected cmip6_grid_res: {cmip6_grid_res}')
+def make_e3sm_to_cmip_maps(config, logger, mesh_short_name, creation_date,
+                           subdir):
+    """
+    Make mapping file from the MPAS-Ocean mesh to the CMIP6 grid
 
-        map_methods = dict(aave='conserve', mono='fv2fv_flx', nco='nco')
-        for suffix, map_method in map_methods.items():
-            local_map_filename = f'map_mpas_to_cmip6_{suffix}.nc'
-            args = ['ncremap', f'--alg_typ={map_method}',
-                    f'--grd_src={src_scrip_filename}',
-                    f'--grd_dst={dst_scrip_filename}',
-                    f'--map={local_map_filename}']
-            check_call(args, logger=logger)
+    Parameters
+    ----------
+    config : compass.config.CompassConfigParser
+        Configuration options for this test case
 
-            map_filename = \
-                f'map_{mesh_short_name}_to_cmip6_{cmip6_grid_res}_{suffix}.{creation_date}.nc'
+    logger : logging.Logger
+        A logger for output from the step
 
-            symlink(f'../../../../e3sm_to_cmip_map/{local_map_filename}',
-                    f'{link_dir}/{map_filename}')
+    mesh_short_name : str
+        The E3SM short name of the mesh
+
+    creation_date : str
+        The date to append to the mapping files
+
+    subdir : str
+        The subdirectory this function is run from, for symlinking into
+        ``assembled_files``
+    """
+
+    link_dir = f'../assembled_files/diagnostics/e3sm_to_cmip/maps'
+
+    try:
+        os.makedirs(link_dir)
+    except OSError:
+        pass
+
+    src_scrip_filename = 'ocean.scrip.nc'
+    cmip6_grid_res = config.get('files_for_e3sm', 'cmip6_grid_res')
+    if cmip6_grid_res == '180x360':
+        dst_scrip_filename = f'cmip6_180x360_scrip.20181001.nc'
+    elif cmip6_grid_res == '720x1440':
+        dst_scrip_filename = f'cmip6_720x1440_scrip.20181001.nc'
+    else:
+        raise ValueError(f'Unexpected cmip6_grid_res: {cmip6_grid_res}')
+
+    map_methods = dict(aave='conserve', mono='fv2fv_flx', nco='nco')
+    for suffix, map_method in map_methods.items():
+        local_map_filename = f'map_mpas_to_cmip6_{suffix}.nc'
+        args = ['ncremap', f'--alg_typ={map_method}',
+                f'--grd_src={src_scrip_filename}',
+                f'--grd_dst={dst_scrip_filename}',
+                f'--map={local_map_filename}']
+        check_call(args, logger=logger)
+
+        map_filename = \
+            f'map_{mesh_short_name}_to_cmip6_{cmip6_grid_res}_{suffix}.{creation_date}.nc'
+
+        symlink(f'../../../{subdir}/{local_map_filename}',
+                f'{link_dir}/{map_filename}')

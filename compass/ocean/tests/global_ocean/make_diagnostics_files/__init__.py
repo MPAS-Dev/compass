@@ -1,10 +1,14 @@
 import os
+import xarray
+from datetime import datetime
 
 from compass.io import symlink
 from compass.testcase import TestCase
 from compass.step import Step
 from compass.ocean.tests.global_ocean.files_for_e3sm.diagnostics_files import \
     make_diagnostics_files
+from compass.ocean.tests.global_ocean.files_for_e3sm.e3sm_to_cmip_maps import \
+    make_e3sm_to_cmip_maps
 
 
 class MakeDiagnosticsFiles(TestCase):
@@ -67,12 +71,32 @@ class DiagnosticsFiles(Step):
         Run this step of the test case
         """
 
-        section = self.config['make_diagnostics_files']
-        mesh_name = section.get('mesh_name')
+        config = self.config
+        section = config['make_diagnostics_files']
+
         mesh_filename = section.get('mesh_filename')
         cores = section.getint('cores')
         with_ice_shelf_cavities = section.getboolean('with_ice_shelf_cavities')
 
         symlink(os.path.join('..', mesh_filename), 'restart.nc')
-        make_diagnostics_files(self.config, self.logger, mesh_name,
+
+        with xarray.open_dataset('restart.nc') as ds:
+            if 'MPAS_Mesh_Short_Name' in ds.attrs:
+                mesh_short_name = ds.attrs['MPAS_Mesh_Short_Name']
+            else:
+                mesh_short_name = section.get('mesh_name')
+            if 'MPAS_Mesh_Prefix' in ds.attrs:
+                mesh_prefix = ds.attrs['MPAS_Mesh_Prefix']
+                prefix = f'MPAS_Mesh_{mesh_prefix}'
+                creation_date = ds.attrs[f'{prefix}_Version_Creation_Date']
+            else:
+                creation_date = config.get('global_ocean', 'creation_date')
+                if creation_date == 'autodetect':
+                    now = datetime.now()
+                    creation_date = now.strftime("%y%m%d")
+
+        make_e3sm_to_cmip_maps(self.config, self.logger, mesh_short_name,
+                               creation_date, self.subdir)
+
+        make_diagnostics_files(self.config, self.logger, mesh_short_name,
                                with_ice_shelf_cavities, cores)
