@@ -35,14 +35,20 @@ class E3smToCmipMaps(Step):
 
         self.add_input_file(filename='../scrip/ocean.scrip.nc')
 
+        # add both scrip files, since we don't know in advance which to use
         self.add_input_file(
             filename='cmip6_180x360_scrip.20181001.nc',
             target='cmip6_180x360_scrip.20181001.nc',
             database='map_database')
 
-        self.add_output_file(filename='map_mpas_to_cmip6_180x360_aave.nc')
-        self.add_output_file(filename='map_mpas_to_cmip6_180x360_mono.nc')
-        self.add_output_file(filename='map_mpas_to_cmip6_180x360_nco.nc')
+        self.add_input_file(
+            filename='cmip6_720x1440_scrip.20181001.nc',
+            target='cmip6_720x1440_scrip.20181001.nc',
+            database='map_database')
+
+        self.add_output_file(filename='map_mpas_to_cmip6_aave.nc')
+        self.add_output_file(filename='map_mpas_to_cmip6_mono.nc')
+        self.add_output_file(filename='map_mpas_to_cmip6_nco.nc')
 
     def run(self):
         """
@@ -62,11 +68,17 @@ class E3smToCmipMaps(Step):
             pass
 
         src_scrip_filename = 'ocean.scrip.nc'
-        # Todo: the resolution should be a config option
-        dst_scrip_filename = 'cmip6_180x360_scrip.20181001.nc'
+        cmip6_grid_res = self.config.get('files_for_e3sm', 'cmip6_grid_res')
+        if cmip6_grid_res == '180x360':
+            dst_scrip_filename = f'cmip6_180x360_scrip.20181001.nc'
+        elif cmip6_grid_res == '720x1440':
+            dst_scrip_filename = f'cmip6_720x1440_scrip.20181001.nc'
+        else:
+            raise ValueError(f'Unexpected cmip6_grid_res: {cmip6_grid_res}')
+
         map_methods = dict(aave='conserve', mono='fv2fv_flx', nco='nco')
         for suffix, map_method in map_methods.items():
-            local_map_filename = f'map_mpas_to_cmip6_180x360_{suffix}.nc'
+            local_map_filename = f'map_mpas_to_cmip6_{suffix}.nc'
             args = ['ncremap', f'--alg_typ={map_method}',
                     f'--grd_src={src_scrip_filename}',
                     f'--grd_dst={dst_scrip_filename}',
@@ -74,7 +86,7 @@ class E3smToCmipMaps(Step):
             check_call(args, logger=logger)
 
             map_filename = \
-                f'map_{mesh_short_name}_to_cmip6_180x360_{suffix}.{creation_date}.nc'
+                f'map_{mesh_short_name}_to_cmip6_{cmip6_grid_res}_{suffix}.{creation_date}.nc'
 
             symlink(f'../../../../e3sm_to_cmip_map/{local_map_filename}',
                     f'{link_dir}/{map_filename}')
