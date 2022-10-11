@@ -26,14 +26,15 @@ class E3smToCmipMaps(Step):
             use as the basis for an E3SM initial condition
         """
 
-        super().__init__(test_case, name='e3sm_to_cmip_map', ntasks=1,
+        super().__init__(test_case, name='e3sm_to_cmip_maps', ntasks=36,
                          min_tasks=1, openmp_threads=1)
 
         self.add_input_file(filename='README', target='../README')
         self.add_input_file(filename='restart.nc',
                             target=f'../{restart_filename}')
 
-        self.add_input_file(filename='../scrip/ocean.scrip.nc')
+        self.add_input_file(filename='ocean.scrip.nc',
+                            target='../scrip/ocean.scrip.nc')
 
         # add both scrip files, since we don't know in advance which to use
         self.add_input_file(
@@ -61,11 +62,11 @@ class E3smToCmipMaps(Step):
             creation_date = ds.attrs[f'{prefix}_Version_Creation_Date']
 
         make_e3sm_to_cmip_maps(self.config, self.logger, mesh_short_name,
-                               creation_date, self.subdir)
+                               creation_date, self.subdir, self.ntasks)
 
 
 def make_e3sm_to_cmip_maps(config, logger, mesh_short_name, creation_date,
-                           subdir):
+                           subdir, ntasks):
     """
     Make mapping file from the MPAS-Ocean mesh to the CMIP6 grid
 
@@ -86,6 +87,9 @@ def make_e3sm_to_cmip_maps(config, logger, mesh_short_name, creation_date,
     subdir : str
         The subdirectory this function is run from, for symlinking into
         ``assembled_files``
+
+    ntasks : int
+        The number of parallel tasks to use for remapping
     """
 
     link_dir = f'../assembled_files/diagnostics/maps'
@@ -104,10 +108,24 @@ def make_e3sm_to_cmip_maps(config, logger, mesh_short_name, creation_date,
     else:
         raise ValueError(f'Unexpected cmip6_grid_res: {cmip6_grid_res}')
 
+    parallel_executable = config.get('parallel', 'parallel_executable')
+    # split the parallel executable into constituents in case it includes flags
+    parallel_command = parallel_executable.split(' ')
+    parallel_system = config.get('parallel', 'system')
+    if parallel_system == 'slurm':
+        parallel_command.extend(['-n', f'{ntasks}'])
+    elif parallel_system == 'single_node':
+        if ntasks > 1:
+            parallel_command.extend(['-n', f'{ntasks}'])
+    else:
+        raise ValueError(f'Unexpected parallel system: {parallel_system}')
+    parallel_command = ' '.join(parallel_command)
+
     map_methods = dict(aave='conserve', mono='fv2fv_flx', nco='nco')
     for suffix, map_method in map_methods.items():
         local_map_filename = f'map_mpas_to_cmip6_{suffix}.nc'
-        args = ['ncremap', f'--alg_typ={map_method}',
+        args = ['ncremap', f'--mpi_pfx={parallel_command}',
+                f'--alg_typ={map_method}',
                 f'--grd_src={src_scrip_filename}',
                 f'--grd_dst={dst_scrip_filename}',
                 f'--map={local_map_filename}']

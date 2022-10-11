@@ -2,6 +2,8 @@ import os
 import xarray
 from datetime import datetime
 
+from mpas_tools.scrip.from_mpas import scrip_from_mpas
+
 from compass.io import symlink
 from compass.testcase import TestCase
 from compass.step import Step
@@ -64,7 +66,8 @@ class DiagnosticsFiles(Step):
         test_case : compass.ocean.tests.global_ocean.make_diagnostics_files.MakeDiagnosticsFiles
             The test case this step belongs to
         """
-        super().__init__(test_case=test_case, name='diagnostics_files')
+        super().__init__(test_case=test_case, name='diagnostics_files',
+                         ntasks=36, min_tasks=1, openmp_threads=1)
 
     def run(self):
         """
@@ -95,8 +98,10 @@ class DiagnosticsFiles(Step):
                     now = datetime.now()
                     creation_date = now.strftime("%y%m%d")
 
+        scrip_from_mpas('restart.nc', 'ocean.scrip.nc')
+
         make_e3sm_to_cmip_maps(self.config, self.logger, mesh_short_name,
-                               creation_date, self.subdir)
+                               creation_date, self.subdir, self.ntasks)
 
         make_diagnostics_files(self.config, self.logger, mesh_short_name,
                                with_ice_shelf_cavities, cores)
