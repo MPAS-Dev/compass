@@ -16,6 +16,7 @@
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -184,12 +185,12 @@ the step will fail</p></li>
 <li><p><strong>max_memory</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – the amount of memory that the step is allowed to use in MB.
 This is currently just a placeholder for later use with task
 parallelism</p></li>
-<li><p><strong>input_data</strong> (<em>list of dict</em>) – a list of dict used to define input files typically to be
+<li><p><strong>input_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – a list of dict used to define input files typically to be
 downloaded to a database and/or symlinked in the work directory</p></li>
-<li><p><strong>inputs</strong> (<em>list of str</em>) – a list of absolute paths of input files produced from <code class="docutils literal notranslate"><span class="pre">input_data</span></code> as
+<li><p><strong>inputs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – a list of absolute paths of input files produced from <code class="docutils literal notranslate"><span class="pre">input_data</span></code> as
 part of setting up the step.  These input files must all exist at run
 time or the step will raise an exception</p></li>
-<li><p><strong>outputs</strong> (<em>list of str</em>) – a list of absolute paths of output files produced by this step (or
+<li><p><strong>outputs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – a list of absolute paths of output files produced by this step (or
 cached) and available as inputs to other test cases and steps.  These
 files must exist after the test has run or an exception will be raised</p></li>
 <li><p><strong>namelist_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – a dictionary used internally to keep track of updates to the default
