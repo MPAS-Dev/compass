@@ -146,29 +146,31 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;README&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../README&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;restart.nc&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">restart_filename</span><span class="p">))</span>
+                            <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;../</span><span class="si">{</span><span class="n">restart_filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span> <span class="o">=</span> <span class="n">with_ice_shelf_cavities</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span> <span class="o">=</span> <span class="n">with_ice_shelf_cavities</span>
 
-        <span class="c1"># for now, we won&#39;t define any outputs because they include the mesh</span>
-        <span class="c1"># short name, which is not known at setup time.  Currently, this is</span>
-        <span class="c1"># safe because no other steps depend on the outputs of this one.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;ocean.scrip.nc&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;ocean.mask.scrip.nc&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Scrip.run"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.files_for_e3sm.scrip.Scrip.run.html#compass.ocean.tests.global_ocean.files_for_e3sm.scrip.Scrip.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run this step of the testcase</span>
-<span class="sd">            &quot;&quot;&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">with_ice_shelf_cavities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span>
 
         <span class="k">with</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;restart.nc&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds</span><span class="p">:</span>
             <span class="n">mesh_short_name</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;MPAS_Mesh_Short_Name&#39;</span><span class="p">]</span>
             <span class="n">mesh_prefix</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;MPAS_Mesh_Prefix&#39;</span><span class="p">]</span>
-            <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;MPAS_Mesh_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_prefix</span><span class="p">)</span>
-            <span class="n">creation_date</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_Version_Creation_Date&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">)]</span>
+            <span class="n">prefix</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;MPAS_Mesh_</span><span class="si">{</span><span class="n">mesh_prefix</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">creation_date</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">_Version_Creation_Date&#39;</span><span class="p">]</span>
+
+        <span class="n">link_dir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;../assembled_files/inputdata/ocn/mpas-o/</span><span class="si">{</span><span class="n">mesh_short_name</span><span class="si">}</span><span class="s1">&#39;</span>
 
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s1">&#39;../assembled_files/inputdata/ocn/mpas-o/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">mesh_short_name</span><span class="p">))</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">link_dir</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
             <span class="k">pass</span>
 
@@ -177,26 +179,24 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">nomask_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
-        <span class="n">scrip_filename</span> <span class="o">=</span> <span class="s1">&#39;ocean.</span><span class="si">{}{}</span><span class="s1">.scrip.</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="n">mesh_short_name</span><span class="p">,</span>  <span class="n">nomask_str</span><span class="p">,</span> <span class="n">creation_date</span><span class="p">)</span>
+        <span class="n">local_filename</span> <span class="o">=</span> <span class="s1">&#39;ocean.scrip.nc&#39;</span>
+        <span class="n">scrip_filename</span> <span class="o">=</span> \
+            <span class="sa">f</span><span class="s1">&#39;ocean.</span><span class="si">{</span><span class="n">mesh_short_name</span><span class="si">}{</span><span class="n">nomask_str</span><span class="si">}</span><span class="s1">.scrip.</span><span class="si">{</span><span class="n">creation_date</span><span class="si">}</span><span class="s1">.nc&#39;</span>
 
-        <span class="n">scrip_from_mpas</span><span class="p">(</span><span class="s1">&#39;restart.nc&#39;</span><span class="p">,</span> <span class="n">scrip_filename</span><span class="p">)</span>
+        <span class="n">scrip_from_mpas</span><span class="p">(</span><span class="s1">&#39;restart.nc&#39;</span><span class="p">,</span> <span class="n">local_filename</span><span class="p">)</span>
 
-        <span class="n">symlink</span><span class="p">(</span><span class="s1">&#39;../../../../../scrip/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">scrip_filename</span><span class="p">),</span>
-                <span class="s1">&#39;../assembled_files/inputdata/ocn/mpas-o/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="n">mesh_short_name</span><span class="p">,</span> <span class="n">scrip_filename</span><span class="p">))</span>
+        <span class="n">symlink</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;../../../../../scrip/</span><span class="si">{</span><span class="n">local_filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">link_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">scrip_filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
-            <span class="n">scrip_mask_filename</span> <span class="o">=</span> <span class="s1">&#39;ocean.</span><span class="si">{}</span><span class="s1">.mask.scrip.</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">mesh_short_name</span><span class="p">,</span> <span class="n">creation_date</span><span class="p">)</span>
-            <span class="n">scrip_from_mpas</span><span class="p">(</span><span class="s1">&#39;restart.nc&#39;</span><span class="p">,</span> <span class="n">scrip_mask_filename</span><span class="p">,</span>
+            <span class="n">local_filename</span> <span class="o">=</span> <span class="s1">&#39;ocean.mask.scrip.nc&#39;</span>
+            <span class="n">scrip_mask_filename</span> <span class="o">=</span> \
+                <span class="sa">f</span><span class="s1">&#39;ocean.</span><span class="si">{</span><span class="n">mesh_short_name</span><span class="si">}</span><span class="s1">.mask.scrip.</span><span class="si">{</span><span class="n">creation_date</span><span class="si">}</span><span class="s1">.nc&#39;</span>
+            <span class="n">scrip_from_mpas</span><span class="p">(</span><span class="s1">&#39;restart.nc&#39;</span><span class="p">,</span> <span class="n">local_filename</span><span class="p">,</span>
                             <span class="n">useLandIceMask</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-            <span class="n">symlink</span><span class="p">(</span>
-                <span class="s1">&#39;../../../../../scrip/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="n">scrip_mask_filename</span><span class="p">),</span>
-                <span class="s1">&#39;../assembled_files/inputdata/ocn/mpas-o/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="n">mesh_short_name</span><span class="p">,</span> <span class="n">scrip_mask_filename</span><span class="p">))</span></div></div>
+            <span class="n">symlink</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;../../../../../scrip/</span><span class="si">{</span><span class="n">local_filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">link_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">scrip_mask_filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

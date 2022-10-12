@@ -119,6 +119,8 @@
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.ocean_graph_partition</span> \
     <span class="kn">import</span> <span class="nn">OceanGraphPartition</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.scrip</span> <span class="kn">import</span> <span class="n">Scrip</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.e3sm_to_cmip_maps</span> <span class="kn">import</span> \
+    <span class="n">E3smToCmipMaps</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.diagnostics_files</span> \
     <span class="kn">import</span> <span class="nn">DiagnosticsFiles</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.forward</span> <span class="kn">import</span> <span class="n">get_forward_subdir</span>
@@ -197,6 +199,10 @@
             <span class="n">Scrip</span><span class="p">(</span>
                 <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">restart_filename</span><span class="o">=</span><span class="n">restart_filename</span><span class="p">,</span>
                 <span class="n">with_ice_shelf_cavities</span><span class="o">=</span><span class="n">mesh</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
+            <span class="n">E3smToCmipMaps</span><span class="p">(</span>
+                <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">restart_filename</span><span class="o">=</span><span class="n">restart_filename</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span>
             <span class="n">DiagnosticsFiles</span><span class="p">(</span>
