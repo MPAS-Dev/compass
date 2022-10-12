@@ -29,6 +29,7 @@ class MakeDiagnosticsFiles(TestCase):
         """
         super().__init__(test_group=test_group, name='make_diagnostics_files')
 
+        self.add_step(E3smToCmpiMaps(test_case=self))
         self.add_step(DiagnosticsFiles(test_case=self))
 
     def configure(self):
@@ -43,19 +44,17 @@ class MakeDiagnosticsFiles(TestCase):
         """
         Run each step of the testcase
         """
-
-        step = self.steps['diagnostics_files']
-        step.cpus_per_task = self.config.getint(
-            'make_diagnostics_files', 'cores')
+        cores = self.config.getint( 'make_diagnostics_files', 'cores')
+        self.steps['diagnostics_files'].cpus_per_task = cores
+        self.steps['e3sm_to_cmip_maps'].ntasks = cores
 
         # run the step
         super().run()
 
 
-class DiagnosticsFiles(Step):
+class E3smToCmpiMaps(Step):
     """
-    A step for making diagnostics files (mapping files and region masks) from
-    an existing mesh.
+    A step for making e3sm_to_cmip mapping files
     """
     def __init__(self, test_case):
         """
@@ -66,8 +65,18 @@ class DiagnosticsFiles(Step):
         test_case : compass.ocean.tests.global_ocean.make_diagnostics_files.MakeDiagnosticsFiles
             The test case this step belongs to
         """
-        super().__init__(test_case=test_case, name='diagnostics_files',
-                         ntasks=36, min_tasks=1, openmp_threads=1)
+        super().__init__(test_case=test_case, name='e3sm_to_cmip_maps')
+
+        # add both scrip files, since we don't know in advance which to use
+        self.add_input_file(
+            filename='cmip6_180x360_scrip.20181001.nc',
+            target='cmip6_180x360_scrip.20181001.nc',
+            database='map_database')
+
+        self.add_input_file(
+            filename='cmip6_720x1440_scrip.20181001.nc',
+            target='cmip6_720x1440_scrip.20181001.nc',
+            database='map_database')
 
     def run(self):
         """
@@ -76,10 +85,7 @@ class DiagnosticsFiles(Step):
 
         config = self.config
         section = config['make_diagnostics_files']
-
         mesh_filename = section.get('mesh_filename')
-        cores = section.getint('cores')
-        with_ice_shelf_cavities = section.getboolean('with_ice_shelf_cavities')
 
         symlink(os.path.join('..', mesh_filename), 'restart.nc')
 
@@ -103,5 +109,41 @@ class DiagnosticsFiles(Step):
         make_e3sm_to_cmip_maps(self.config, self.logger, mesh_short_name,
                                creation_date, self.subdir, self.ntasks)
 
+
+class DiagnosticsFiles(Step):
+    """
+    A step for making diagnostics files (mapping files and region masks) from
+    an existing mesh.
+    """
+    def __init__(self, test_case):
+        """
+        Create the step
+
+        Parameters
+        ----------
+        test_case : compass.ocean.tests.global_ocean.make_diagnostics_files.MakeDiagnosticsFiles
+            The test case this step belongs to
+        """
+        super().__init__(test_case=test_case, name='diagnostics_files')
+
+    def run(self):
+        """
+        Run this step of the test case
+        """
+
+        config = self.config
+        section = config['make_diagnostics_files']
+
+        mesh_filename = section.get('mesh_filename')
+        with_ice_shelf_cavities = section.getboolean('with_ice_shelf_cavities')
+
+        symlink(os.path.join('..', mesh_filename), 'restart.nc')
+
+        with xarray.open_dataset('restart.nc') as ds:
+            if 'MPAS_Mesh_Short_Name' in ds.attrs:
+                mesh_short_name = ds.attrs['MPAS_Mesh_Short_Name']
+            else:
+                mesh_short_name = section.get('mesh_name')
+
         make_diagnostics_files(self.config, self.logger, mesh_short_name,
-                               with_ice_shelf_cavities, cores)
+                               with_ice_shelf_cavities, self.cpus_per_task)
