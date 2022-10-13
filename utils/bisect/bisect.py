@@ -51,8 +51,7 @@ def bisect(good, bad, e3sm_path, load_script, config_file, first_parent):
     else:
         flags = ''
 
-    commands = f'source {load_script}; ' \
-               f'cd {e3sm_path}; ' \
+    commands = f'cd {e3sm_path}; ' \
                f'git bisect start {flags}; ' \
                f'git bisect good {good}; ' \
                f'git bisect bad {bad}; ' \

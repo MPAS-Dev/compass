@@ -43,7 +43,6 @@ def run(launch_path, mpas_path, work_base, load_script, make_command,
     load_script = to_abs(load_script, launch_path)
 
     commands = f'cd {mpas_path}; ' \
-               f'source {load_script}; ' \
                f'git rev-parse --short HEAD'
     git_hash = subprocess.check_output(
         commands, shell=True).decode('utf-8').strip('\n')
