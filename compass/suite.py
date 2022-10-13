@@ -7,7 +7,8 @@ from compass.clean import clean_cases
 
 
 def setup_suite(mpas_core, suite_name, config_file=None, machine=None,
-                work_dir=None, baseline_dir=None, mpas_model_path=None):
+                work_dir=None, baseline_dir=None, mpas_model_path=None,
+                copy_executable=False):
     """
     Set up a test suite
 
@@ -39,6 +40,9 @@ def setup_suite(mpas_core, suite_name, config_file=None, machine=None,
     mpas_model_path : str, optional
         The relative or absolute path to the root of a branch where the MPAS
         model has been built
+
+    copy_executable : bool, optional
+        Whether to copy the MPAS executable to the work directory
     """
     text = resources.read_text('compass.{}.suites'.format(mpas_core),
                                '{}.txt'.format(suite_name))
@@ -48,7 +52,7 @@ def setup_suite(mpas_core, suite_name, config_file=None, machine=None,
     setup_cases(tests, config_file=config_file, machine=machine,
                 work_dir=work_dir, baseline_dir=baseline_dir,
                 mpas_model_path=mpas_model_path, suite_name=suite_name,
-                cached=cached)
+                cached=cached, copy_executable=copy_executable)
 
 
 def clean_suite(mpas_core, suite_name, work_dir=None):
@@ -110,6 +114,10 @@ def main():
                         help="The path to the build of the MPAS model for the "
                              "core.",
                         metavar="PATH")
+    parser.add_argument("--copy_executable", dest="copy_executable",
+                        action="store_true",
+                        help="If the MPAS executable should be copied to the "
+                             "work directory")
     args = parser.parse_args(sys.argv[2:])
 
     if not args.clean and not args.setup:
@@ -124,7 +132,8 @@ def main():
         setup_suite(mpas_core=args.core, suite_name=args.test_suite,
                     config_file=args.config_file, machine=args.machine,
                     work_dir=args.work_dir, baseline_dir=args.baseline_dir,
-                    mpas_model_path=args.mpas_model)
+                    mpas_model_path=args.mpas_model,
+                    copy_executable=args.copy_executable)
 
 
 def _parse_suite(text):

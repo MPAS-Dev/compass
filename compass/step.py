@@ -673,7 +673,26 @@ class Step:
             if filename == '<<<model>>>':
                 model = self.config.get('executables', 'model')
                 filename = os.path.basename(model)
-                target = os.path.abspath(model)
+                copy_executable = self.config.getboolean('setup',
+                                                         'copy_executable')
+                if copy_executable:
+                    # make a copy of the model executable, then link to that
+                    mpas_subdir = os.path.basename(
+                        self.config.get('paths', 'mpas_model'))
+                    mpas_workdir = os.path.join(self.base_work_dir,
+                                                mpas_subdir)
+                    target = os.path.join(mpas_workdir, filename)
+                    try:
+                        os.makedirs(mpas_workdir)
+                    except FileExistsError:
+                        pass
+
+                    try:
+                        shutil.copy(model, target)
+                    except FileExistsError:
+                        pass
+                else:
+                    target = os.path.abspath(model)
 
             if package is not None:
                 if target is None:
