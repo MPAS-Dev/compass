@@ -114,7 +114,8 @@
 
 
 <div class="viewcode-block" id="setup_suite"><a class="viewcode-back" href="../../developers_guide/generated/compass.suite.setup_suite.html#compass.suite.setup_suite">[docs]</a><span class="k">def</span> <span class="nf">setup_suite</span><span class="p">(</span><span class="n">mpas_core</span><span class="p">,</span> <span class="n">suite_name</span><span class="p">,</span> <span class="n">config_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">machine</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                <span class="n">work_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">baseline_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mpas_model_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                <span class="n">work_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">baseline_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mpas_model_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">copy_executable</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Set up a test suite</span>
 
@@ -146,6 +147,9 @@
 <span class="sd">    mpas_model_path : str, optional</span>
 <span class="sd">        The relative or absolute path to the root of a branch where the MPAS</span>
 <span class="sd">        model has been built</span>
+
+<span class="sd">    copy_executable : bool, optional</span>
+<span class="sd">        Whether to copy the MPAS executable to the work directory</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">text</span> <span class="o">=</span> <span class="n">resources</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="s1">&#39;compass.</span><span class="si">{}</span><span class="s1">.suites&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mpas_core</span><span class="p">),</span>
                                <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.txt&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suite_name</span><span class="p">))</span>
@@ -155,7 +159,7 @@
     <span class="n">setup_cases</span><span class="p">(</span><span class="n">tests</span><span class="p">,</span> <span class="n">config_file</span><span class="o">=</span><span class="n">config_file</span><span class="p">,</span> <span class="n">machine</span><span class="o">=</span><span class="n">machine</span><span class="p">,</span>
                 <span class="n">work_dir</span><span class="o">=</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">baseline_dir</span><span class="o">=</span><span class="n">baseline_dir</span><span class="p">,</span>
                 <span class="n">mpas_model_path</span><span class="o">=</span><span class="n">mpas_model_path</span><span class="p">,</span> <span class="n">suite_name</span><span class="o">=</span><span class="n">suite_name</span><span class="p">,</span>
-                <span class="n">cached</span><span class="o">=</span><span class="n">cached</span><span class="p">)</span></div>
+                <span class="n">cached</span><span class="o">=</span><span class="n">cached</span><span class="p">,</span> <span class="n">copy_executable</span><span class="o">=</span><span class="n">copy_executable</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="clean_suite"><a class="viewcode-back" href="../../developers_guide/generated/compass.suite.clean_suite.html#compass.suite.clean_suite">[docs]</a><span class="k">def</span> <span class="nf">clean_suite</span><span class="p">(</span><span class="n">mpas_core</span><span class="p">,</span> <span class="n">suite_name</span><span class="p">,</span> <span class="n">work_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -217,6 +221,10 @@
                         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The path to the build of the MPAS model for the &quot;</span>
                              <span class="s2">&quot;core.&quot;</span><span class="p">,</span>
                         <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;PATH&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--copy_executable&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;copy_executable&quot;</span><span class="p">,</span>
+                        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;If the MPAS executable should be copied to the &quot;</span>
+                             <span class="s2">&quot;work directory&quot;</span><span class="p">)</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">clean</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">setup</span><span class="p">:</span>
@@ -231,7 +239,8 @@
         <span class="n">setup_suite</span><span class="p">(</span><span class="n">mpas_core</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">core</span><span class="p">,</span> <span class="n">suite_name</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">test_suite</span><span class="p">,</span>
                     <span class="n">config_file</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">config_file</span><span class="p">,</span> <span class="n">machine</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">machine</span><span class="p">,</span>
                     <span class="n">work_dir</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">baseline_dir</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">baseline_dir</span><span class="p">,</span>
-                    <span class="n">mpas_model_path</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">mpas_model</span><span class="p">)</span>
+                    <span class="n">mpas_model_path</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">mpas_model</span><span class="p">,</span>
+                    <span class="n">copy_executable</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">copy_executable</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_parse_suite</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>

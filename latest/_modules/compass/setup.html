@@ -122,7 +122,7 @@
 
 <div class="viewcode-block" id="setup_cases"><a class="viewcode-back" href="../../developers_guide/generated/compass.setup.setup_cases.html#compass.setup.setup_cases">[docs]</a><span class="k">def</span> <span class="nf">setup_cases</span><span class="p">(</span><span class="n">tests</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numbers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">config_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">machine</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                 <span class="n">work_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">baseline_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mpas_model_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                <span class="n">suite_name</span><span class="o">=</span><span class="s1">&#39;custom&#39;</span><span class="p">,</span> <span class="n">cached</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                <span class="n">suite_name</span><span class="o">=</span><span class="s1">&#39;custom&#39;</span><span class="p">,</span> <span class="n">cached</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">copy_executable</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Set up one or more test cases</span>
 
@@ -136,7 +136,7 @@
 <span class="sd">        a suffix ``c`` to indicate that all steps in that test case should be</span>
 <span class="sd">        cached</span>
 
-<span class="sd">    config_file : str, optional</span>
+<span class="sd">    config_file : {str, None}, optional</span>
 <span class="sd">        Configuration file with custom options for setting up and running test</span>
 <span class="sd">        cases</span>
 
@@ -162,6 +162,9 @@
 <span class="sd">        For each test in ``tests``, which steps (if any) should be cached,</span>
 <span class="sd">        or a list with &quot;_all&quot; as the first entry if all steps in the test case</span>
 <span class="sd">        should be cached</span>
+
+<span class="sd">    copy_executable : bool, optional</span>
+<span class="sd">        Whether to copy the MPAS executable to the work directory</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -252,7 +255,8 @@
     <span class="k">for</span> <span class="n">path</span><span class="p">,</span> <span class="n">test_case</span> <span class="ow">in</span> <span class="n">test_cases</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">setup_case</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">config_file</span><span class="p">,</span> <span class="n">machine</span><span class="p">,</span> <span class="n">work_dir</span><span class="p">,</span>
                    <span class="n">baseline_dir</span><span class="p">,</span> <span class="n">mpas_model_path</span><span class="p">,</span>
-                   <span class="n">cached_steps</span><span class="o">=</span><span class="n">cached_steps</span><span class="p">[</span><span class="n">path</span><span class="p">])</span>
+                   <span class="n">cached_steps</span><span class="o">=</span><span class="n">cached_steps</span><span class="p">[</span><span class="n">path</span><span class="p">],</span>
+                   <span class="n">copy_executable</span><span class="o">=</span><span class="n">copy_executable</span><span class="p">)</span>
 
     <span class="n">test_suite</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">suite_name</span><span class="p">,</span>
                   <span class="s1">&#39;test_cases&#39;</span><span class="p">:</span> <span class="n">test_cases</span><span class="p">,</span>
@@ -282,7 +286,7 @@
 
 
 <div class="viewcode-block" id="setup_case"><a class="viewcode-back" href="../../developers_guide/generated/compass.setup.setup_case.html#compass.setup.setup_case">[docs]</a><span class="k">def</span> <span class="nf">setup_case</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">config_file</span><span class="p">,</span> <span class="n">machine</span><span class="p">,</span> <span class="n">work_dir</span><span class="p">,</span> <span class="n">baseline_dir</span><span class="p">,</span>
-               <span class="n">mpas_model_path</span><span class="p">,</span> <span class="n">cached_steps</span><span class="p">):</span>
+               <span class="n">mpas_model_path</span><span class="p">,</span> <span class="n">cached_steps</span><span class="p">,</span> <span class="n">copy_executable</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Set up one or more test cases</span>
 
@@ -315,6 +319,9 @@
 <span class="sd">    cached_steps : list of str</span>
 <span class="sd">        Which steps (if any) should be cached.  If all steps should be cached,</span>
 <span class="sd">         the first entry is &quot;_all&quot;</span>
+
+<span class="sd">    copy_executable : bool, optional</span>
+<span class="sd">        Whether to copy the MPAS executable to the work directory</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
@@ -327,6 +334,9 @@
     <span class="n">test_group</span> <span class="o">=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">test_group</span><span class="o">.</span><span class="n">name</span>
     <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;compass.</span><span class="si">{</span><span class="n">mpas_core</span><span class="si">}</span><span class="s1">.tests.</span><span class="si">{</span><span class="n">test_group</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
                             <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">test_group</span><span class="si">}</span><span class="s1">.cfg&#39;</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">copy_executable</span><span class="p">:</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;setup&#39;</span><span class="p">,</span> <span class="s1">&#39;copy_executable&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">)</span>
 
     <span class="c1"># add the config options for the test case (if defined)</span>
     <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="n">test_case</span><span class="o">.</span><span class="vm">__module__</span><span class="p">,</span>
@@ -467,6 +477,10 @@
                              <span class="s2">&quot;--test that should use cached outputs, or &quot;</span>
                              <span class="s2">&quot;&#39;_all&#39; if all steps should be cached&quot;</span><span class="p">,</span>
                         <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;STEP&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--copy_executable&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;copy_executable&quot;</span><span class="p">,</span>
+                        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;If the MPAS executable should be copied to the &quot;</span>
+                             <span class="s2">&quot;work directory&quot;</span><span class="p">)</span>
 
     <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span>
     <span class="n">cached</span> <span class="o">=</span> <span class="kc">None</span>
@@ -480,7 +494,7 @@
                 <span class="n">config_file</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">config_file</span><span class="p">,</span> <span class="n">machine</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">machine</span><span class="p">,</span>
                 <span class="n">work_dir</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">baseline_dir</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">baseline_dir</span><span class="p">,</span>
                 <span class="n">mpas_model_path</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">mpas_model</span><span class="p">,</span> <span class="n">suite_name</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">suite_name</span><span class="p">,</span>
-                <span class="n">cached</span><span class="o">=</span><span class="n">cached</span><span class="p">)</span>
+                <span class="n">cached</span><span class="o">=</span><span class="n">cached</span><span class="p">,</span> <span class="n">copy_executable</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">copy_executable</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_get_required_cores</span><span class="p">(</span><span class="n">test_cases</span><span class="p">):</span>

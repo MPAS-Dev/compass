@@ -780,7 +780,26 @@
             <span class="k">if</span> <span class="n">filename</span> <span class="o">==</span> <span class="s1">&#39;&lt;&lt;&lt;model&gt;&gt;&gt;&#39;</span><span class="p">:</span>
                 <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;executables&#39;</span><span class="p">,</span> <span class="s1">&#39;model&#39;</span><span class="p">)</span>
                 <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-                <span class="n">target</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+                <span class="n">copy_executable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;setup&#39;</span><span class="p">,</span>
+                                                         <span class="s1">&#39;copy_executable&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">copy_executable</span><span class="p">:</span>
+                    <span class="c1"># make a copy of the model executable, then link to that</span>
+                    <span class="n">mpas_subdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="s1">&#39;mpas_model&#39;</span><span class="p">))</span>
+                    <span class="n">mpas_workdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_work_dir</span><span class="p">,</span>
+                                                <span class="n">mpas_subdir</span><span class="p">)</span>
+                    <span class="n">target</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mpas_workdir</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">mpas_workdir</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">FileExistsError</span><span class="p">:</span>
+                        <span class="k">pass</span>
+
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">FileExistsError</span><span class="p">:</span>
+                        <span class="k">pass</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">target</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">package</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">target</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>

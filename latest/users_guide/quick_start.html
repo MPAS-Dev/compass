@@ -369,6 +369,15 @@ test suite, which is called <code class="docutils literal notranslate"><span cla
 name with the <code class="docutils literal notranslate"><span class="pre">--suite_name</span></code> flag.)  You can run all the test cases in
 sequence with one command as described in <a class="reference internal" href="#suite-overview"><span class="std std-ref">Test Suites</span></a> or run them
 one at a time as follows.</p>
+<p>If you want to copy the MPAS executable over to the work directory, you can
+use the <code class="docutils literal notranslate"><span class="pre">--copy_executable</span></code> flag or set the config option
+<code class="docutils literal notranslate"><span class="pre">copy_executable</span> <span class="pre">=</span> <span class="pre">True</span></code> in the <code class="docutils literal notranslate"><span class="pre">[setup]</span></code> section of your user config
+file.  One use of this capability for compass simulations that are used in
+a paper.  In that case, it would be better to have a copy of the executable
+that will not be changed even if the E3SM branch is modified, recompiled or
+deleted.  Another use might be to maintain a long-lived baseline test.
+Again, it is safer to have the executable used to produce the baseline
+preserved.</p>
 </section>
 <section id="running-a-test-case">
 <h2>Running a test case<a class="headerlink" href="#running-a-test-case" title="Permalink to this heading">¶</a></h2>
