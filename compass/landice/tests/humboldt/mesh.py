@@ -49,8 +49,8 @@ class Mesh(Step):
                             package='compass.landice.tests.humboldt',
                             target='Humboldt.geojson',
                             database=None)
-        self.add_input_file(filename='greenland_8km_2020_04_20.epsg3413.nc',
-                            target='greenland_8km_2020_04_20.epsg3413.nc',
+        self.add_input_file(filename='greenland_2km_2020_04_20.epsg3413.nc',
+                            target='greenland_2km_2020_04_20.epsg3413.nc',
                             database='')
 
     # no setup() method is needed
@@ -179,7 +179,7 @@ class Mesh(Step):
         functions to be reusable by multiple test groups.
         """
         # get needed fields from GIS dataset
-        f = netCDF4.Dataset('greenland_8km_2020_04_20.epsg3413.nc', 'r')
+        f = netCDF4.Dataset('greenland_2km_2020_04_20.epsg3413.nc', 'r')
         f.set_auto_mask(False)  # disable masked arrays
 
         x1 = f.variables['x1'][:]

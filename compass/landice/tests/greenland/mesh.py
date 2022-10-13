@@ -45,8 +45,8 @@ class Mesh(Step):
                 filename='greenland_1km_2020_04_20.epsg3413.icesheetonly.nc',
                 target='greenland_1km_2020_04_20.epsg3413.icesheetonly.nc',
                 database='')
-        self.add_input_file(filename='greenland_8km_2020_04_20.epsg3413.nc',
-                            target='greenland_8km_2020_04_20.epsg3413.nc',
+        self.add_input_file(filename='greenland_2km_2020_04_20.epsg3413.nc',
+                            target='greenland_2km_2020_04_20.epsg3413.nc',
                             database='')
 
     # no setup() method is needed
@@ -90,7 +90,7 @@ class Mesh(Step):
         cullDistance = section.get('cull_distance')
         logger.info('calling define_cullMask.py')
         args = ['define_cullMask.py', '-f',
-                'gis_1km_preCull.nc', '-m'
+                'gis_1km_preCull.nc', '-m',
                 'distance', '-d', cullDistance]
 
         check_call(args, logger=logger)
@@ -146,7 +146,7 @@ class Mesh(Step):
         speed and distance to the ice margin.
         """
         # get needed fields from GIS dataset
-        f = netCDF4.Dataset('greenland_8km_2020_04_20.epsg3413.nc', 'r')
+        f = netCDF4.Dataset('greenland_2km_2020_04_20.epsg3413.nc', 'r')
         f.set_auto_mask(False)  # disable masked arrays
 
         x1 = f.variables['x1'][:]
@@ -179,10 +179,13 @@ class Mesh(Step):
         # plt.pcolor(distToEdge/1000.0); plt.colorbar(); plt.show()
 
         # Set cell widths based on mesh parameters set in config file
+        # Start flood-fill for bed topography at point off central west coast
         cell_width = set_cell_width(self, section='high_res_GIS_mesh', thk=thk,
                                     bed=topg, vx=vx, vy=vy,
                                     dist_to_edge=distToEdge,
-                                    dist_to_grounding_line=distToGL)
+                                    dist_to_grounding_line=distToGL,
+                                    flood_fill_iStart=100,
+                                    flood_fill_jStart=700)
         # plt.pcolor(cell_width); plt.colorbar(); plt.show()
 
         return (cell_width.astype('float64'), x1.astype('float64'),

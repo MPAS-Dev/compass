@@ -2,6 +2,7 @@ import numpy as np
 import jigsawpy
 import time
 
+
 def gridded_flood_fill(field, iStart=None, jStart=None):
     """
     Generic flood-fill routine to create mask of connected elements
@@ -27,8 +28,9 @@ def gridded_flood_fill(field, iStart=None, jStart=None):
     sz = field.shape
     searched_mask = np.zeros(sz)
     flood_mask = np.zeros(sz)
-    iStart = sz[0] // 2
-    jStart = sz[1] // 2
+    if iStart == None and jStart == None:
+        iStart = sz[0] // 2
+        jStart = sz[1] // 2
     flood_mask[iStart, jStart] = 1
 
     neighbors = np.array([[1, 0], [-1, 0], [0, 1], [0, -1]])
@@ -45,8 +47,8 @@ def gridded_flood_fill(field, iStart=None, jStart=None):
             [i, j] = np.unravel_index(lastSearchList[iii], sz, order='F')
             # search neighbors
             for n in neighbors:
-                ii = i + n[0]
-                jj = j + n[1]  # subscripts to neighbor
+                ii = min(i + n[0], sz[0] - 1)  # don't go out of bounds
+                jj = min(j + n[1], sz[1] - 1)  # subscripts to neighbor
                 # only consider unsearched neighbors
                 if searched_mask[ii, jj] == 0:
                     searched_mask[ii, jj] = 1  # mark as searched
@@ -57,6 +59,7 @@ def gridded_flood_fill(field, iStart=None, jStart=None):
                         newSearchList = np.append(newSearchList,
                                                   np.ravel_multi_index(
                                                       [[ii], [jj]], sz,
+                                                      mode='clip',
                                                       order='F')[0])
         lastSearchList = newSearchList
 
@@ -105,7 +108,8 @@ def set_rectangular_geom_points_and_edges(xmin, xmax, ymin, ymax):
 
 
 def set_cell_width(self, section, thk, bed=None, vx=None, vy=None,
-                   dist_to_edge=None, dist_to_grounding_line=None):
+                   dist_to_edge=None, dist_to_grounding_line=None,
+                   flood_fill_iStart=None, flood_fill_jStart=None):
     """
     Set cell widths based on settings in config file to pass to
     :py:func:`mpas_tools.mesh.creation.build_mesh.build_planar_mesh()`.
@@ -140,6 +144,10 @@ def set_cell_width(self, section, thk, bed=None, vx=None, vy=None,
         Distance from each cell to grounding line, calculated in separate
         function.  Can be set to ``None`` if
         ``use_dist_to_grounding_line == False`` in config file.
+    flood_fill_iStart : int, optional
+        x-index location to start flood-fill when using bed topography
+    flood_fill_jStart : int, optional
+        y-index location to start flood-fill when using bed topography
 
     Returns
     -------
@@ -168,14 +176,29 @@ def set_cell_width(self, section, thk, bed=None, vx=None, vy=None,
 
     # Cell spacking function based on union of masks
     if section.get('use_bed') == 'True':
-        logger.info('Using bed elevation for spacing')
+        logger.info('Using bed elevation for spacing.')
+        if flood_fill_iStart is not None and flood_fill_jStart is not None:
+            logger.info('calling gridded_flood_fill to find \
+                        bedTopography <= low_bed connected to the ocean.')
+            tic = time.time()
+            # initialize mask to low bed topography
+            in_mask = (bed<=low_bed)
+            # Do not let flood fill reach further than high_dist_bed into
+            # the ice sheet interior.
+            in_mask[np.logical_and(
+                       thk>0, dist_to_grounding_line >= high_dist_bed)] = 0
+            low_bed_mask = gridded_flood_fill(in_mask,
+                                              iStart=flood_fill_iStart,
+                                              jStart=flood_fill_jStart)
+            toc = time.time()
+            logger.info(f'Flood fill finished in {toc - tic} seconds.')
         # Use a logistics curve for bed topography spacing.
         k = 0.05  # This works well, but could try other values
         spacing_bed = min_spac + (max_spac - min_spac) / (1.0 + np.exp(
                       -k * ( bed - np.mean([high_bed, low_bed]) ) ) )
         # We only want bed topography to influence spacing within high_dist_bed
-        # from the ice margin. In the region between high_dist_bed and low_dist_bed,
-        # use a linear ramp to damp influence of bed topo.
+        # from the ice margin. In the region between high_dist_bed and
+        # low_dist_bed, use a linear ramp to damp influence of bed topo.
         spacing_bed[dist_to_grounding_line >= low_dist_bed] = (
             ( 1.0 - (dist_to_grounding_line[
              dist_to_grounding_line >= low_dist_bed] 
@@ -185,6 +208,8 @@ def set_cell_width(self, section, thk, bed=None, vx=None, vy=None,
              low_dist_bed] - low_dist_bed) /
             (high_dist_bed - low_dist_bed) * max_spac )
         spacing_bed[dist_to_grounding_line >= high_dist_bed] = max_spac
+        if flood_fill_iStart is not None and flood_fill_jStart is not None:
+            spacing_bed[low_bed_mask == 0] = max_spac
     else:
         spacing_bed = max_spac * np.ones_like(thk)
 
@@ -238,12 +263,12 @@ def set_cell_width(self, section, thk, bed=None, vx=None, vy=None,
         cell_width = np.minimum(cell_width, width)
 
     # Set large cell_width in areas we are going to cull anyway (speeds up
-    # whole process). Use 10x the cull_distance to avoid this affecting
+    # whole process). Use 3x the cull_distance to avoid this affecting
     # cell size in the final mesh. There may be a more rigorous way to set
     # that distance.
     if dist_to_edge is not None:
         mask = np.logical_and(
-            thk == 0.0, dist_to_edge > (10. * cull_distance))
+            thk == 0.0, dist_to_edge > (3. * cull_distance))
         cell_width[mask] = max_spac
 
     return cell_width
