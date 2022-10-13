@@ -64,6 +64,10 @@ def run(launch_path, mpas_path, work_base, load_script, make_command,
                f'{setup_command} -p {mpas_path} -w {work_path}; ' \
                f'cd {work_path}; ' \
                f'{run_command}'
+    print('\n')
+    print(72*'-')
+    print('Biscect Step')
+    print(72*'-')
     print('\nRunning:')
     print_commands = commands.replace('; ', '\n  ')
     print(f'  {print_commands}\n\n')
@@ -114,6 +118,7 @@ def main():
         make_command=section['make_command'],
         setup_command=section['setup_command'],
         run_command=section['run_command'])
+    print ('\n')
 
 
 if __name__ == '__main__':

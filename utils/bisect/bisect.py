@@ -58,6 +58,10 @@ def bisect(good, bad, e3sm_path, load_script, config_file, first_parent):
                f'git bisect bad {bad}; ' \
                f'git bisect run {cwd}/utils/bisect/bisect_step.py' \
                f'  -f {config_file}'
+    print('\n')
+    print(72*'-')
+    print('Biscect Initialization')
+    print(72*'-')
     print('\nRunning:')
     print_commands = commands.replace('; ', '\n  ')
     print(f'  {print_commands}\n\n')
