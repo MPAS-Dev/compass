@@ -215,7 +215,7 @@ def set_cell_width(self, section, thk, bed=None, vx=None, vy=None,
             # spacing_bed[dist_to_grounding_line >= high_dist_bed] = max_spac
             in_mask2 = (bed <= low_bed)
             in_mask2[np.logical_and(
-                       thk > 0, spacing_bed > min_spac)] = 0
+                       thk > 0, spacing_bed > (2. * min_spac))] = 0
             low_bed_mask2 = gridded_flood_fill(in_mask2,
                                               iStart=flood_fill_iStart,
                                               jStart=flood_fill_jStart)
