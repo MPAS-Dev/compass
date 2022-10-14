@@ -82,13 +82,13 @@ class Mesh(Step):
             projection='gis-gimp', geojson_file=None)
 
         # Create scrip files if they don't already exist
-        if exists(data_path+"/"+'BedMachineGreenland-2021-04-20.scrip.nc'):
+        if exists(data_path+"/"+'BedMachineGreenland-v5.scrip.nc'):
             logger.info('BedMachine script file exists; skipping file creation')
         else:
             logger.info('creating scrip file for BedMachine dataset')
             args = ['create_SCRIP_file_from_planar_rectangular_grid.py',
-                    '-i', data_path+"/"+'BedMachineGreenland-2021-04-20_edits_floodFill_extrap.nc',
-                    '-s', data_path+"/"+'BedMachineGreenland-2021-04-20.scrip.nc',
+                    '-i', data_path+"/"+'BedMachineGreenland-v5_edits_floodFill_extrap.nc',
+                    '-s', data_path+"/"+'BedMachineGreenland-v5.scrip.nc',
                     '-p', 'gis-gimp', '-r', '2']
             check_call(args, logger=logger)
         if exists(data_path+"/"+'greenland_vel_mosaic500.scrip.nc'):
@@ -113,31 +113,35 @@ class Mesh(Step):
                 '-s', 'GIS.scrip.nc']
         check_call(args, logger=logger)
 
-        # Testing shows 5 badger/grizzly nodes works well.
-        # 2 nodes is too few. I have not tested anything in between.
-        logger.info('generating gridded dataset -> MPAS weights')
-        args = ['ESMF_RegridWeightGen', '--source',
-                data_path+'BedMachineGreenland-2021-04-20.scrip.nc',
-                '--destination',
-                'GIS.scrip.nc',
-                '--weight', 'BedMachine_to_MPAS_weights.nc',
-                '--method', 'conserve',
-                "-i", "-64bit_offset",
-                "--dst_regional", "--src_regional", '--netcdf4']
-        check_call(args, logger=logger)
+        # Create weight files from datasets to mesh
+        if exists('BedMachine_to_MPAS_weights.nc'):
+            logger.info('BedMachine_to_MPAS_weights.nc exists; skipping')
+        else:
+            logger.info('generating gridded dataset -> MPAS weights')
+            args = ['srun', '-n', nProcs, 'ESMF_RegridWeightGen', '--source',
+                    data_path+'BedMachineGreenland-v5.scrip.nc',
+                    '--destination',
+                    'GIS.scrip.nc',
+                    '--weight', 'BedMachine_to_MPAS_weights.nc',
+                    '--method', 'conserve',
+                    "-i", "-64bit_offset",
+                    "--dst_regional", "--src_regional", '--netcdf4']
+            check_call(args, logger=logger)
 
-        logger.info('generating gridded dataset -> MPAS weights')
-        args = ['ESMF_RegridWeightGen', '--source',
-                data_path+'greenland_vel_mosaic500.scrip.nc',
-                '--destination',
-                'GIS.scrip.nc',
-                '--weight', 'measures_to_MPAS_weights.nc',
-                '--method', 'conserve',
-                "-i", "-64bit_offset", '--netcdf4',
-                "--dst_regional", "--src_regional", '--ignore_unmapped']
-        check_call(args, logger=logger)
-
-
+        if exists('measures_to_MPAS_weights.nc'):
+            logger.info('measures_to_MPAS_weights.nc exists; skipping')
+        else:
+            logger.info('generating gridded dataset -> MPAS weights')
+            args = ['srun', '-n', nProcs, 'ESMF_RegridWeightGen', '--source',
+                    data_path+'greenland_vel_mosaic500.scrip.nc',
+                    '--destination',
+                    'GIS.scrip.nc',
+                    '--weight', 'measures_to_MPAS_weights.nc',
+                    '--method', 'conserve',
+                    "-i", "-64bit_offset", '--netcdf4',
+                    "--dst_regional", "--src_regional", '--ignore_unmapped']
+            check_call(args, logger=logger)
+        
         logger.info('calling interpolate_to_mpasli_grid.py')
         args = ['interpolate_to_mpasli_grid.py', '-s',
                 'greenland_1km_2020_04_20.epsg3413.icesheetonly.nc',
@@ -148,7 +152,7 @@ class Mesh(Step):
         # Using conservative remapping
         logger.info('calling interpolate_to_mpasli_grid.py')
         args = ['interpolate_to_mpasli_grid.py', '-s',
-                data_path+"/"+'BedMachineGreenland-2021-04-20_edits_floodFill_extrap.nc',
+                data_path+"/"+'BedMachineGreenland-v5_edits_floodFill_extrap.nc',
                 '-d', 'GIS.nc', '-m', 'e',
                 '-w', 'BedMachine_to_MPAS_weights.nc']
         check_call(args, logger=logger)
