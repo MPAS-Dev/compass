@@ -182,11 +182,11 @@ def set_cell_width(self, section, thk, bed=None, vx=None, vy=None,
                         bedTopography <= low_bed connected to the ocean.')
             tic = time.time()
             # initialize mask to low bed topography
-            in_mask = (bed<=low_bed)
+            in_mask = (bed <= low_bed)
             # Do not let flood fill reach further than high_dist_bed into
             # the ice sheet interior.
             in_mask[np.logical_and(
-                       thk>0, dist_to_grounding_line >= high_dist_bed)] = 0
+                       thk > 0, dist_to_grounding_line >= high_dist_bed)] = 0
             low_bed_mask = gridded_flood_fill(in_mask,
                                               iStart=flood_fill_iStart,
                                               jStart=flood_fill_jStart)
@@ -210,6 +210,16 @@ def set_cell_width(self, section, thk, bed=None, vx=None, vy=None,
         spacing_bed[dist_to_grounding_line >= high_dist_bed] = max_spac
         if flood_fill_iStart is not None and flood_fill_jStart is not None:
             spacing_bed[low_bed_mask == 0] = max_spac
+            # Do one more flood fill to eliminate isolated pockets
+            # of high resolution that were separated when we set
+            # spacing_bed[dist_to_grounding_line >= high_dist_bed] = max_spac
+            in_mask2 = (bed <= low_bed)
+            in_mask2[np.logical_and(
+                       thk > 0, spacing_bed > min_spac)] = 0
+            low_bed_mask2 = gridded_flood_fill(in_mask2,
+                                              iStart=flood_fill_iStart,
+                                              jStart=flood_fill_jStart)
+            spacing_bed[low_bed_mask2 == 0] = max_spac
     else:
         spacing_bed = max_spac * np.ones_like(thk)
 
