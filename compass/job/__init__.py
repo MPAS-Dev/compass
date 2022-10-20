@@ -90,9 +90,9 @@ def write_job_script(config, machine, target_cores, min_cores, work_dir,
                            suite=suite)
     text = _clean_up_whitespace(text)
     if suite == '':
-        script_filename = 'compass_job_script.sh'
+        script_filename = 'job_script.sh'
     else:
-        script_filename = f'compass_job_script.{suite}.sh'
+        script_filename = f'job_script.{suite}.sh'
     script_filename = os.path.join(work_dir, script_filename)
     with open(script_filename, 'w') as handle:
         handle.write(text)
