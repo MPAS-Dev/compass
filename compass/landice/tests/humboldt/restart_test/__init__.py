@@ -25,10 +25,14 @@ class RestartTest(TestCase):
 
     depth_integrated  : bool
         Whether the (FO) velocity model is depth integrated
+
+    hydro : bool
+        Whether to include subglacial hydrology
     """
 
     def __init__(self, test_group, velo_solver, calving_law, mesh_type,
-                 damage=None, face_melt=False, depth_integrated=False):
+                 damage=None, face_melt=False, depth_integrated=False,
+                 hydro=False):
         """
         Create the test case
 
@@ -54,6 +58,9 @@ class RestartTest(TestCase):
 
         depth_integrated  : bool
             Whether the (FO) velocity model is depth integrated
+
+        hydro : bool
+            Whether to include subglacial hydrology
         """
         name = 'restart_test'
         self.mesh_type = mesh_type
@@ -63,6 +70,7 @@ class RestartTest(TestCase):
         self.calving_law = calving_law
         self.damage = damage
         self.face_melt = face_melt
+        self.hydro = hydro
 
         # build dir name.  always include velo solver and calving law
         subdir = 'mesh-{}_restart_test/velo-{}'.format(
@@ -75,6 +83,8 @@ class RestartTest(TestCase):
             subdir += '_damage-{}'.format(damage)
         if face_melt is True:
             subdir += '_faceMelting'
+        if hydro is True:
+            subdir += '_subglacialhydro'
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
 
@@ -85,6 +95,7 @@ class RestartTest(TestCase):
                         damage=self.damage,
                         face_melt=self.face_melt,
                         depth_integrated=depth_integrated,
+                        hydro=self.hydro,
                         mesh_type=mesh_type)
         # modify the namelist options and streams file
         step.add_namelist_file(
@@ -101,6 +112,7 @@ class RestartTest(TestCase):
                         calving_law=self.calving_law,
                         damage=self.damage,
                         face_melt=self.face_melt,
+                        hydro=self.hydro,
                         mesh_type=mesh_type,
                         depth_integrated=depth_integrated,
                         suffixes=['landice', 'landice.rst'])
@@ -140,6 +152,10 @@ class RestartTest(TestCase):
 
         if self.face_melt is True:
             variables.append('faceMeltingThickness')
+
+        if self.hydro is True:
+            variables.extend(['waterThickness', 'hydropotential', 'waterFlux',
+                              'channelDischarge', 'channelArea'])
 
         compare_variables(test_case=self, variables=variables,
                           filename1='full_run/output.nc',
