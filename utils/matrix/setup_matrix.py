@@ -316,7 +316,7 @@ def compass_setup(script_name, setup_command, mpas_path, mpas_model, work_base,
             suite = 'custom'
 
         if suite is not None:
-            job_script = 'compass_job_script.{}.sh'.format(suite)
+            job_script = 'job_script.{}.sh'.format(suite)
             if not os.path.exists(os.path.join(work_dir, job_script)):
                 raise OSError('Could not find job script {} for suite '
                               '{}'.format(job_script, suite))
