@@ -126,7 +126,7 @@ def _get_metadata(dsInit, config):
     creation_date = config.get('global_ocean', 'creation_date')
     if creation_date == 'autodetect':
         now = datetime.now()
-        creation_date = now.strftime("%y%m%d")
+        creation_date = now.strftime("%Y%m%d")
         config.set('global_ocean', 'creation_date', creation_date)
 
     max_depth = dsInit.bottomDepth.max().values

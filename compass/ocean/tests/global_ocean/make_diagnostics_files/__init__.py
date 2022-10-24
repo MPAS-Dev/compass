@@ -94,15 +94,16 @@ class E3smToCmpiMaps(Step):
                 mesh_short_name = ds.attrs['MPAS_Mesh_Short_Name']
             else:
                 mesh_short_name = section.get('mesh_name')
-            if 'MPAS_Mesh_Prefix' in ds.attrs:
-                mesh_prefix = ds.attrs['MPAS_Mesh_Prefix']
-                prefix = f'MPAS_Mesh_{mesh_prefix}'
-                creation_date = ds.attrs[f'{prefix}_Version_Creation_Date']
-            else:
-                creation_date = config.get('global_ocean', 'creation_date')
-                if creation_date == 'autodetect':
+
+            creation_date = config.get('global_ocean', 'creation_date')
+            if creation_date == 'autodetect':
+                if 'MPAS_Mesh_Prefix' in ds.attrs:
+                    mesh_prefix = ds.attrs['MPAS_Mesh_Prefix']
+                    prefix = f'MPAS_Mesh_{mesh_prefix}'
+                    creation_date = ds.attrs[f'{prefix}_Version_Creation_Date']
+                else:
                     now = datetime.now()
-                    creation_date = now.strftime("%y%m%d")
+                    creation_date = now.strftime("%Y%m%d")
 
         scrip_from_mpas('restart.nc', 'ocean.scrip.nc')
 
