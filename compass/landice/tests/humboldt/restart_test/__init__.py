@@ -70,7 +70,10 @@ class RestartTest(TestCase):
         self.calving_law = calving_law
         self.damage = damage
         self.face_melt = face_melt
-        self.hydro = hydro
+        if hydro is not None:
+            self.hydro = hydro
+        else:
+            self.hydro = False
 
         # build dir name.  always include velo solver and calving law
         subdir = 'mesh-{}_restart_test/velo-{}'.format(
@@ -83,7 +86,7 @@ class RestartTest(TestCase):
             subdir += '_damage-{}'.format(damage)
         if face_melt is True:
             subdir += '_faceMelting'
-        if hydro is True:
+        if self.hydro is True:
             subdir += '_subglacialhydro'
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)

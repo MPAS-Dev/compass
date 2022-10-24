@@ -38,7 +38,7 @@ class RunModel(Step):
                  damage=None,
                  face_melt=False,
                  depth_integrated=False,
-                 hydro=True,
+                 hydro=False,
                  subdir=None, ntasks=1,
                  min_tasks=None, openmp_threads=1, suffixes=None):
         """
