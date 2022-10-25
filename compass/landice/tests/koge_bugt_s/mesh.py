@@ -64,7 +64,7 @@ class Mesh(Step):
         config = self.config
         section = config['high_res_KogeBugtS_mesh']
 
-        logger.info('calling build_cell_wdith')
+        logger.info('calling build_cell_width')
         cell_width, x1, y1, geom_points, geom_edges = self.build_cell_width()
         logger.info('calling build_planar_mesh')
         build_planar_mesh(cell_width, x1, y1, geom_points,
