@@ -12,10 +12,15 @@ ANONYMOUS:
         Regularization Value: 1.0e-4
     LandIce BCs:
       BC 0:
+        Cubature Degree: 8
         Basal Friction Coefficient:
           Type: Power Law
-          Power Exponent: 1.0
-          Effective Pressure Type: Hydrostatic
+          Power Exponent: 0.2
+          Mu Type: Field 
+          Effective Pressure Type: Constant
+          Effective Pressure: 1.0
+          # Zero Effective Pressure On Floating Ice At Nodes: true
+          Zero Beta On Floating Ice: true
 
 # Discretization Description
   Discretization:
