@@ -168,6 +168,7 @@ class InitialState(Step):
 
         section = config['isomip_plus']
 
+        min_levels = section.getint('minimum_levels')
         min_layer_thickness = section.getfloat('min_layer_thickness')
         min_column_thickness = section.getfloat('min_column_thickness')
 
