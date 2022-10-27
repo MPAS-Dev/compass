@@ -168,17 +168,17 @@ class InitialState(Step):
 
         section = config['isomip_plus']
 
-        min_levels = section.getint('minimum_levels')
-        min_layer_thickness = section.getfloat('min_layer_thickness')
+        # Deepen the bottom depth to maintain the minimum water-column thickness
         min_column_thickness = section.getfloat('min_column_thickness')
-
-        # Deepen the bottom depth to maintain the minimum water-column
-        # thickness
-        print(f'min_levels*min_layer_thickness={min_levels*min_layer_thickness}')
-        min_depth = -ds.ssh + max(min_column_thickness, min_levels*min_layer_thickness)
-
-        print(f'Adjusted bottomDepth for {numpy.sum(ds.bottomDepth.values<min_depth.values)} cells')
+        min_layer_thickness = section.getfloat('min_layer_thickness')
+        min_levels = section.getint('minimum_levels')
+        min_column_thickness = max(min_column_thickness,
+                                   min_levels*min_layer_thickness)
+        min_depth = -ds.ssh + min_column_thickness
         ds['bottomDepth'] = numpy.maximum(ds.bottomDepth, min_depth)
+        print(f'Adjusted bottomDepth for '
+              f'{numpy.sum(ds.bottomDepth.values<min_depth.values)} cells '
+              f'to achieve minimum column thickness of {min_column_thickness}')
 
         interfaces = generate_1d_grid(config)
 
@@ -186,9 +186,6 @@ class InitialState(Step):
 
         maxLevelCell = ds['maxLevelCell']
         ssh = ds['ssh']
-        print(f'max(maxLevelCell) = {numpy.max(maxLevelCell.values)}')
-        print(f'min(ssh) = {numpy.min(ssh.values)}')
-        print(f'max(ssh) = {numpy.max(ssh.values)}')
         ds['modifyLandIcePressureMask'] = \
             (ds['landIceFraction'] > 0.01).astype(int)
 
@@ -241,7 +238,6 @@ class InitialState(Step):
         ds['bottomDepth'] = ds['bottomDepth'].expand_dims(dim='Time', axis=0)
         ds['totalColThickness'] = ds['ssh']
         ds['totalColThickness'].values = numpy.sum(ds['layerThickness'].values, axis=2)
-        print(f'shape(totalColThickness)={numpy.shape(ds.totalColThickness.values)}')
         plotter.plot_horiz_series(ds.landIcePressure,
                                   'landIcePressure', 'landIcePressure',
                                   True)
@@ -249,16 +245,20 @@ class InitialState(Step):
                                   'ssh', 'ssh',
                                   True, vmin=-700, vmax=0)
         plotter.plot_horiz_series(ds.ssh + ds.bottomDepth,
-                                  'H', 'H', True, vmin=min_column_thickness, vmax=700,
+                                  'H', 'H', True,
+                                  vmin=min_column_thickness+1e-10, vmax=700,
                                   cmap_set_under='r', cmap_scale='log')
         plotter.plot_horiz_series(ds.totalColThickness,
                                   'totalColThickness', 'totalColThickness', True,
-                                  vmin=min_column_thickness, vmax=700, cmap_set_under='r')
+                                  vmin=min_column_thickness+1e-10, vmax=700,
+                                  cmap_set_under='r')
         plotter.plot_layer_interfaces()
 
         plotter.plot_3d_field_top_bot_section(
-            ds.layerThickness, nameInTitle='layerThickness', prefix='h', units='m',
-            vmin=1.1e-3, vmax=50, cmap='cmo.deep_r', cmap_set_under='r')
+            ds.layerThickness, nameInTitle='layerThickness',
+            prefix='h', units='m',
+            vmin=min_column_thickness+1e-10, vmax=50,
+            cmap='cmo.deep_r', cmap_set_under='r')
 
         plotter.plot_3d_field_top_bot_section(
             ds.zMid, nameInTitle='zMid', prefix='zmid', units='m',
