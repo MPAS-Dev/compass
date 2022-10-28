@@ -5,7 +5,7 @@
                   type="none"/>
 
 <immutable_stream name="input"
-                  filename_template="{{ input_file_ais }}"
+                  filename_template="{{ input_file_init_cond }}"
                   input_interval="initial_only"
                   type="input"/>
 
@@ -32,7 +32,7 @@
 <stream name="ismip6_smb"
         type="input"
         mode="forward;analysis"
-        filename_template="{{ file_ais_SMB_forcing }}"
+        filename_template="{{ input_file_SMB_forcing }}"
         input_interval="0001-00-00_00:00:00"
         reference_time="2000-01-01_00:00:00"
         runtime_format="single_file">
@@ -42,7 +42,7 @@
 <stream name="ismip6_TF"
         type="input"
         mode="forward;analysis"
-        filename_template="{{ file_ais_TF_forcing }}"
+        filename_template="{{ input_file_TF_forcing }}"
         input_interval="0001-00-00_00:00:00"
         reference_time="2000-01-01_00:00:00"
         runtime_format="single_file">
@@ -53,7 +53,7 @@
 <stream name="ismip6_params"
         type="input"
         mode="forward;analysis"
-        filename_template="{{ file_ais_basal_param }}"
+        filename_template="{{ input_file_melt_params }}"
         input_interval="initial_only"
         runtime_format="single_file">
         <var name="ismip6shelfMelt_deltaT"/>
@@ -110,7 +110,8 @@
     <var name="daysSinceStart"/>
     <var name="cellMask"/>
     <var name="sfcMassBalApplied"/>
-    <var name="basalMassBalApplied"/>
+    <var name="floatingBasalMassBalApplied"/>
+    <var name="groundedBasalMassBalApplied"/>
     <var name="deltat"/>
     <var name="fluxAcrossGroundingLineOnCells"/>
     <var name="xvelmean"/>

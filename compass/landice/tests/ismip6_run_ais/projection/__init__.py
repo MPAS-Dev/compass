@@ -1,5 +1,6 @@
 from compass.testcase import TestCase
-from compass.landice.tests.ismip6_run_ais.run_model import RunModel
+from compass.landice.tests.ismip6_run_ais.set_up_experiment \
+        import SetUpExperiment
 from compass.validate import compare_variables
 
 
@@ -21,15 +22,18 @@ class Projection(TestCase):
             The resolution or type of mesh of the test case
 
         """
-        name = 'projection'
-
-        # build dir name.
-        subdir = f'{test_group.meshdirs[mesh_type]}/{name}'
+        name = 'ismip6AE'
 
         super().__init__(test_group=test_group, name=name,
-                         subdir=subdir)
+                         subdir=name)
 
-        self.add_step(RunModel(test_case=self, mesh_type=mesh_type))
+        experiments = ['ctrlAE', 'expAE01', 'expAE02', 'expAE03', 'expAE04', 'expAE05', 'expAE06']
+        for exp in experiments:
+            name = f'{exp}'
+            self.add_step(
+               SetUpExperiment(test_case=self, name=name, subdir=name, exp=exp))
+
+
 
     def validate(self):
         """

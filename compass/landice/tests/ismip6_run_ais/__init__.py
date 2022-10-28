@@ -21,7 +21,8 @@ class Ismip6RunAIS(TestGroup):
             'mid': 'Antarctica_8to80km',
             'high': 'Antarctica_1to10km'
         }
+        self.mesh_types = ['8km']
 
-        for mesh_type in ['mid', 'high']:
+        for mesh_type in self.mesh_types:
             self.add_test_case(
                 Projection(test_group=self, mesh_type=mesh_type))
