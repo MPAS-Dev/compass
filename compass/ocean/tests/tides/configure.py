@@ -18,8 +18,9 @@ def configure_tides(test_case, mesh):
         The test case that produces the initial condition for this run
     """
     config = test_case.config
-    mesh_step = mesh.mesh_step
-    config.add_from_package(mesh_step.package, mesh_step.mesh_config_filename,
+
+    config.add_from_package('compass.mesh', 'mesh.cfg')
+    config.add_from_package(mesh.package, mesh.mesh_config_filename,
                             exception=True)
 
     get_author_and_email_from_git(config)

@@ -28,7 +28,7 @@ class Mesh(TestCase):
         name = 'base_mesh'
         if mesh_name == 'Icos7':
             base_mesh_step = IcosahedralMeshStep(
-                self, name=name, subdir=subdir, subdivisions=7)
+                self, name=name, subdivisions=7)
             mesh_lower = 'icos7'
         else:
             raise ValueError(f'Unexpected mesh name {mesh_name}')
