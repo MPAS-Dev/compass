@@ -119,10 +119,13 @@ class SetUpExperiment(Step):
             self.add_namelist_options(options=options,
                                       out_name='namelist.landice')
 
-        # For all projection runs, symlink the restart info for the historical run
+        # For all projection runs, symlink the restart file for the historical run
+        # don't symlink restart_timestamp or you'll have a mighty mess
         if not self.exp == 'hist':
-            os.symlink("../hist/restart_timestamp", os.path.join(self.work_dir, 'restart_timestamp'))
-            os.symlink("../hist/rst.2015-01-01.nc", os.path.join(self.work_dir, 'rst.2015-01-01.nc'))
+            os.symlink(f"../hist_{self.mesh_res}/rst.2015-01-01.nc", os.path.join(self.work_dir, 'rst.2015-01-01.nc'))
+            with open(os.path.join(self.work_dir, "restart_timestamp"), "w") as text_file:
+                text_file.write("2015-01-01_00:00:00")
+
 
         # add the albany_input.yaml file
         self.add_input_file(filename='albany_input.yaml',
