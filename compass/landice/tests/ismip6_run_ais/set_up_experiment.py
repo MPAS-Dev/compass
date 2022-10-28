@@ -2,6 +2,8 @@ import os
 from compass.model import run_model, make_graph_file
 from compass.step import Step
 import shutil, glob, sys
+from jinja2 import Template
+from importlib import resources
 
 
 class SetUpExperiment(Step):
@@ -52,6 +54,7 @@ class SetUpExperiment(Step):
         melt_params_fname = os.path.split(melt_params_path)[-1]
         region_mask_path = section.get('region_mask_path')
         region_mask_fname = os.path.split(region_mask_path)[-1]
+        graph_files_path = section.get('graph_files_path')
 
         # Copy files we'll need from local paths specified in cfg file
         if self.exp == 'hist':
@@ -120,9 +123,24 @@ class SetUpExperiment(Step):
                             package='compass.landice.tests.ismip6_run_ais',
                             copy=True)
 
-        make_graph_file(mesh_filename=init_cond_path,
-                        graph_filename='graph.info')
+        # copy graph files
+        # may be possible to use compass functionality, but wasn't working in this way
+        #make_graph_file(mesh_filename=init_cond_path,
+        #                graph_filename='graph.info')
+        graphFileList = glob.glob(os.path.join(graph_files_path, 'graph.info*'))
+        for gf in graphFileList:
+            shutil.copy(gf, self.work_dir)
 
+        # provide an example submit script
+        template = Template(resources.read_text(
+            'compass.landice.tests.ismip6_run_ais',
+            'slurm.run'))
+        slurm_replacements = {'EXP': self.exp}
+        rendered_text = template.render(slurm_replacements)
+        with open(os.path.join(self.work_dir, 'slurm.run'), "w") as fh:
+            fh.write(rendered_text)
+
+        # link in exe
         self.add_model_as_input()
 
     def run(self):
