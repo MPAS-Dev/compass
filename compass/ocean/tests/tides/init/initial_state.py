@@ -4,12 +4,12 @@ from compass.step import Step
 
 class InitialState(Step):
     """
-    A step for creating a mesh and initial condition for hurricane
+    A step for creating a mesh and initial condition for tidal
     test cases
 
     Attributes
     ----------
-    mesh : compass.ocean.tests.hurricane.mesh.mesh.MeshStep
+    mesh : compass.ocean.tests.tides.mesh.mesh.MeshStep
         The step for creating the mesh
 
     """
@@ -19,10 +19,10 @@ class InitialState(Step):
 
         Parameters
         ----------
-        test_case : compass.ocean.tests.hurricane.init.Init
+        test_case : compass.ocean.tests.tides.init.Init
             The test case this step belongs to
 
-        mesh : compass.ocean.tests.hurricane.mesh.Mesh
+        mesh : compass.ocean.tests.tides.mesh.Mesh
             The test case that creates the mesh used by this test case
 
         """
@@ -30,7 +30,7 @@ class InitialState(Step):
         super().__init__(test_case=test_case, name='initial_state')
         self.mesh = mesh
 
-        package = 'compass.ocean.tests.hurricane.init'
+        package = 'compass.ocean.tests.tides.init'
 
         # generate the namelist, replacing a few default options
         self.add_namelist_file(package, 'namelist.init', mode='init')
@@ -38,7 +38,7 @@ class InitialState(Step):
         # generate the streams file
         self.add_streams_file(package, 'streams.init', mode='init')
 
-        mesh_path = mesh.mesh_step.path
+        mesh_path = mesh.steps['cull_mesh'].path
 
         self.add_input_file(
             filename='mesh.nc',
@@ -60,9 +60,9 @@ class InitialState(Step):
         """
         # get the these properties from the config options
         config = self.config
-        self.cores = config.getint('hurricane', 'init_cores')
-        self.min_cores = config.getint('hurricane', 'init_min_cores')
-        self.threads = config.getint('hurricane', 'init_threads')
+        self.cores = config.getint('tides', 'init_cores')
+        self.min_cores = config.getint('tides', 'init_min_cores')
+        self.threads = config.getint('tides', 'init_threads')
 
     def run(self):
         """

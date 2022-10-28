@@ -1,12 +1,10 @@
 import os
 
 from compass.testcase import TestCase
-from compass.ocean.tests.hurricane.init.initial_state import InitialState
-from compass.ocean.tests.hurricane.init.create_pointstats_file \
-    import CreatePointstatsFile
-from compass.ocean.tests.hurricane.init.interpolate_atm_forcing \
-    import InterpolateAtmForcing
-from compass.ocean.tests.hurricane.configure import configure_hurricane
+from compass.ocean.tests.tides.init.interpolate_wave_drag \
+    import InterpolateWaveDrag
+from compass.ocean.tests.tides.init.initial_state import InitialState
+from compass.ocean.tests.tides.configure import configure_tides
 
 
 class Init(TestCase):
@@ -15,19 +13,19 @@ class Init(TestCase):
 
     Attributes
     ----------
-    mesh : compass.ocean.tests.hurricane.mesh.Mesh
+    mesh : compass.ocean.tests.tides.mesh.Mesh
         The test case that creates the mesh used by this test case
     """
-    def __init__(self, test_group, mesh, storm):
+    def __init__(self, test_group, mesh):
         """
         Create the test case
 
         Parameters
         ----------
-        test_group : compass.ocean.tests.hurricane.Hurricane
-            The hurricane test group that this test case belongs to
+        test_group : compass.ocean.tests.tides.Hurricane
+            The tides test group that this test case belongs to
 
-        mesh : compass.ocean.tests.hurricane.mesh.Mesh
+        mesh : compass.ocean.tests.tides.mesh.Mesh
             The test case that creates the mesh used by this test case
 
         storm : str
@@ -41,16 +39,13 @@ class Init(TestCase):
         self.mesh = mesh
 
         self.add_step(InitialState(test_case=self, mesh=mesh))
-        self.add_step(InterpolateAtmForcing(test_case=self, mesh=mesh,
-                                            storm=storm))
-        self.add_step(CreatePointstatsFile(test_case=self, mesh=mesh,
-                                           storm=storm))
+        self.add_step(InterpolateWaveDrag(test_case=self, mesh=mesh))
 
     def configure(self):
         """
         Modify the configuration options for this test case
         """
-        configure_hurricane(test_case=self, mesh=self.mesh)
+        configure_tides(test_case=self, mesh=self.mesh)
 
     def run(self):
         """

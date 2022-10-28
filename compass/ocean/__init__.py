@@ -15,6 +15,7 @@ from compass.ocean.tests.soma import Soma
 from compass.ocean.tests.sphere_transport import SphereTransport
 from compass.ocean.tests.spherical_harmonic_transform import \
     SphericalHarmonicTransform
+from compass.ocean.tests.tides import Tides
 from compass.ocean.tests.ziso import Ziso
 
 
@@ -44,4 +45,5 @@ class Ocean(MpasCore):
         self.add_test_group(Soma(mpas_core=self))
         self.add_test_group(SphereTransport(mpas_core=self))
         self.add_test_group(SphericalHarmonicTransform(mpas_core=self))
+        self.add_test_group(Tides(mpas_core=self))
         self.add_test_group(Ziso(mpas_core=self))

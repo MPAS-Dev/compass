@@ -1,16 +1,12 @@
 from compass.testcase import TestCase
-from compass.ocean.tests.hurricane.mesh.dequ120at30cr10rr2 \
-    import DEQU120at30cr10rr2Mesh
+from compass.mesh.spherical import IcosahedralMeshStep
+from compass.ocean.tests.tides.configure import configure_tides
+from compass.ocean.mesh.cull import CullMeshStep
 
 
 class Mesh(TestCase):
     """
     A test case for creating a global MPAS-Ocean mesh
-
-    Attributes
-    ----------
-    mesh_step : compass.ocean.tests.global_ocean.mesh.mesh.MeshStep
-        The step for creating the mesh
     """
     def __init__(self, test_group, mesh_name):
         """
@@ -18,7 +14,7 @@ class Mesh(TestCase):
 
         Parameters
         ----------
-        test_group : compass.ocean.tests.hurricane.Hurricane
+        test_group : compass.ocean.tests.tides.Tides
             The test group that this test case belongs to
 
         mesh_name : str
@@ -28,37 +24,26 @@ class Mesh(TestCase):
         name = 'mesh'
         subdir = '{}/{}'.format(mesh_name, name)
         super().__init__(test_group=test_group, name=name, subdir=subdir)
-        if mesh_name == 'DEQU120at30cr10rr2':
-            self.mesh_step = DEQU120at30cr10rr2Mesh(
-                                 self, mesh_name,
-                                 preserve_floodplain=False)
-        elif mesh_name == 'DEQU120at30cr10rr2WD':
-            self.mesh_step = DEQU120at30cr10rr2Mesh(
-                                 self, mesh_name,
-                                 preserve_floodplain=True)
+
+        name = 'base_mesh'
+        if mesh_name == 'Icos7':
+            base_mesh_step = IcosahedralMeshStep(
+                self, name=name, subdir=subdir, subdivisions=7)
+            mesh_lower = 'icos7'
         else:
             raise ValueError(f'Unexpected mesh name {mesh_name}')
 
-        self.add_step(self.mesh_step)
+        self.package = f'compass.ocean.tests.tides.mesh.{mesh_lower}'
+        self.mesh_config_filename = f'{mesh_lower}.cfg'
+
+        self.add_step(base_mesh_step)
+
+        self.add_step(CullMeshStep(
+            test_case=self, base_mesh_step=base_mesh_step,
+            with_ice_shelf_cavities=True))
 
     def configure(self):
         """
         Modify the configuration options for this test case
         """
-        self.config.add_from_package(self.mesh_step.package,
-                                     self.mesh_step.mesh_config_filename,
-                                     exception=True)
-
-    def run(self):
-        """
-        Run each step of the testcase
-        """
-        step = self.mesh_step
-        config = self.config
-
-        # get the these properties from the config options
-        step.cores = config.getint('global_ocean', 'mesh_cores')
-        step.min_cores = config.getint('global_ocean', 'mesh_min_cores')
-
-        # run the step
-        super().run()
+        configure_tides(test_case=self, mesh=self)

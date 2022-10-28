@@ -45,7 +45,7 @@ class ForwardStep(Step):
         self.add_streams_file(
             'compass.ocean.tests.hurricane.forward', 'streams.ocean')
 
-        mesh_package = mesh.mesh_step.package
+        mesh_package = mesh.package
         self.add_namelist_file(mesh_package, 'namelist.ocean')
 
         initial_state_target = \
