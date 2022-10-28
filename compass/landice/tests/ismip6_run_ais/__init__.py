@@ -17,12 +17,8 @@ class Ismip6RunAIS(TestGroup):
         """
         super().__init__(mpas_core=mpas_core, name='ismip6_run_ais')
 
-        self.meshdirs = {
-            'mid': 'Antarctica_8to80km',
-            'high': 'Antarctica_1to10km'
-        }
-        self.mesh_types = ['8km']
+        self.mesh_res = ['08']
 
-        for mesh_type in self.mesh_types:
+        for res in self.mesh_res:
             self.add_test_case(
-                Projection(test_group=self, mesh_type=mesh_type))
+                Projection(test_group=self, mesh_res=res))

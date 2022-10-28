@@ -9,7 +9,7 @@ class Projection(TestCase):
     A test case for performing forward MALI runs of ISMIP6 Antaractic setup
     """
 
-    def __init__(self, test_group, mesh_type):
+    def __init__(self, test_group, mesh_res):
         """
         Create the test case
 
@@ -27,13 +27,14 @@ class Projection(TestCase):
         super().__init__(test_group=test_group, name=name,
                          subdir=name)
 
-        experiments = ['hist', 'ctrlAE', 'expAE01', 'expAE02', 'expAE03', 'expAE04', 'expAE05', 'expAE06']
+        experiments = ['hist', 'ctrlAE', 'expAE01', 'expAE02', 'expAE03',
+                       'expAE04', 'expAE05', 'expAE06']
         for exp in experiments:
             name = f'{exp}'
             self.add_step(
-               SetUpExperiment(test_case=self, name=name, subdir=name, exp=exp))
-
-
+               SetUpExperiment(test_case=self, name=name,
+                              subdir=f"{exp}_{mesh_res}", exp=exp,
+                              mesh_res=mesh_res))
 
     def validate(self):
         """

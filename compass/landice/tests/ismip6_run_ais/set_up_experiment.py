@@ -19,7 +19,7 @@ class SetUpExperiment(Step):
         The resolution or mesh type of the test case
     """
 
-    def __init__(self, test_case, name, subdir, exp):
+    def __init__(self, test_case, name, subdir, exp, mesh_res):
         """
         Set up a new experiment
 
@@ -36,7 +36,9 @@ class SetUpExperiment(Step):
 
         self.exp = exp
 
-        super().__init__(test_case=test_case, name=name)
+        self.mesh_res = mesh_res
+
+        super().__init__(test_case=test_case, name=name, subdir=subdir)
 
     def setup(self):
 
