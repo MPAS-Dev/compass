@@ -37,6 +37,12 @@ class SetUpExperiment(Step):
         super().__init__(test_case=test_case, name=name)
 
     def setup(self):
+
+        if self.exp == 'hist':
+            exp_fcg = 'ctrlAE'
+        else:
+            exp_fcg = self.exp
+
         config = self.config
         section = config['ismip6_run_ais']
         forcing_basepath = section.get('forcing_basepath')
@@ -48,12 +54,13 @@ class SetUpExperiment(Step):
         region_mask_fname = os.path.split(region_mask_path)[-1]
 
         # Copy files we'll need from local paths specified in cfg file
-        shutil.copy(init_cond_path, self.work_dir)
+        if self.exp == 'hist':
+            shutil.copy(init_cond_path, self.work_dir)
         shutil.copy(melt_params_path, self.work_dir)
         shutil.copy(region_mask_path, self.work_dir)
 
         # Find and copy correct forcing files
-        smb_search_path = os.path.join(forcing_basepath, self.exp, 'processed_SMB_*_smbNeg_over_bareland.nc')
+        smb_search_path = os.path.join(forcing_basepath, exp_fcg, 'processed_SMB_*_smbNeg_over_bareland.nc')
         fcgFileList = glob.glob(smb_search_path)
         if len(fcgFileList) == 1:
             smb_path = fcgFileList[0]
@@ -62,7 +69,7 @@ class SetUpExperiment(Step):
         else:
             sys.exit(f"ERROR: Did not find exactly one matching SMB file at {smb_search_path}: {fcgFileList}")
 
-        tf_search_path = os.path.join(forcing_basepath, self.exp, 'processed_TF_*.nc')
+        tf_search_path = os.path.join(forcing_basepath, exp_fcg, 'processed_TF_*.nc')
         fcgFileList = glob.glob(tf_search_path)
         if len(fcgFileList) == 1:
             tf_path = fcgFileList[0]
@@ -73,12 +80,18 @@ class SetUpExperiment(Step):
 
         # Make stream modifications based on files that were determined above
         stream_replacements = {
-                               'input_file_init_cond': init_cond_fname ,
-                               'input_file_region_mask': region_mask_fname ,
-                               'input_file_melt_params': melt_params_fname,
                                'input_file_SMB_forcing': smb_fname,
                                'input_file_TF_forcing': tf_fname
                                }
+        if self.exp == 'hist':
+            stream_replacements['input_file_init_cond'] = init_cond_fname
+            stream_replacements['input_file_region_mask'] = region_mask_fname
+            stream_replacements['input_file_melt_params'] = melt_params_fname
+        else:
+            stream_replacements['input_file_init_cond'] = 'USE_RESTART_FILE_INSTEAD'
+            stream_replacements['input_file_region_mask'] = 'USE_RESTART_FILE_INSTEAD'
+            stream_replacements['input_file_melt_params'] = 'USE_RESTART_FILE_INSTEAD'
+
         self.add_streams_file(
             'compass.landice.tests.ismip6_run_ais', 'streams.landice.template',
             out_name='streams.landice',
@@ -88,20 +101,27 @@ class SetUpExperiment(Step):
         self.add_namelist_file(
             'compass.landice.tests.ismip6_run_ais', 'namelist.landice',
             out_name='namelist.landice')
-        #options = {'config_velocity_solver': f"'{velo_solver}'",
-        #           'config_calving': f"'{calving_law}'"}
 
-        # now add accumulated options to namelist
-        #self.add_namelist_options(options=options,
-        #                          out_name='namelist.landice')
+        if self.exp == 'hist':
+            options = {'config_do_restart': ".false.",
+                       'config_start_time': "'2000-01-01_00:00:00'",
+                       'config_stop_time': "'2015-01-01_00:00:00'"}
 
+            self.add_namelist_options(options=options,
+                                      out_name='namelist.landice')
 
+        # For all projection runs, symlink the restart info for the historical run
+        if not self.exp == 'hist':
+            os.symlink("../hist/restart_timestamp", os.path.join(self.work_dir, 'restart_timestamp'))
+            os.symlink("../hist/rst.2015-01-01.nc", os.path.join(self.work_dir, 'rst.2015-01-01.nc'))
+
+        # add the albany_input.yaml file
         self.add_input_file(filename='albany_input.yaml',
                             package='compass.landice.tests.ismip6_run_ais',
                             copy=True)
 
-        #make_graph_file(mesh_filename=self.mesh_file,
-        #                graph_filename='graph.info')
+        make_graph_file(mesh_filename=init_cond_path,
+                        graph_filename='graph.info')
 
         self.add_model_as_input()
 

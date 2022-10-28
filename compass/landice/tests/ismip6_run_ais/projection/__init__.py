@@ -27,7 +27,7 @@ class Projection(TestCase):
         super().__init__(test_group=test_group, name=name,
                          subdir=name)
 
-        experiments = ['ctrlAE', 'expAE01', 'expAE02', 'expAE03', 'expAE04', 'expAE05', 'expAE06']
+        experiments = ['hist', 'ctrlAE', 'expAE01', 'expAE02', 'expAE03', 'expAE04', 'expAE05', 'expAE06']
         for exp in experiments:
             name = f'{exp}'
             self.add_step(
