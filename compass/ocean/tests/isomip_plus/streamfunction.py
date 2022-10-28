@@ -152,7 +152,7 @@ def _compute_overturning_streamfunction(dsMesh, ds, out_dir, dx=2e3, dz=5.,
                                                  cacheFileName, show_progress)
 
 
-def _compute_barotorpic_transport(dsMesh, ds):
+def _compute_barotropic_transport(dsMesh, ds):
     """
     Compute the barotropic transport for inner edges (not on the domain
     boundary) for the given mesh and monthly-mean data set
@@ -182,7 +182,7 @@ def _compute_barotorpic_transport(dsMesh, ds):
 
 
 def _compute_barotropic_streamfunction_vertex(dsMesh, ds, show_progress):
-    innerEdges, transport = _compute_barotorpic_transport(dsMesh, ds)
+    innerEdges, transport = _compute_barotropic_transport(dsMesh, ds)
 
     nVertices = dsMesh.sizes['nVertices']
     nTime = ds.sizes['Time']
