@@ -405,7 +405,7 @@ def _run_step(test_case, step, new_log_file):
     logger = test_case.logger
     config = test_case.config
     cwd = os.getcwd()
-    available_cores, _ = get_available_cores_and_nodes(config)
+    available_cores, _, _ = get_available_cores_and_nodes(config)
     step.constrain_resources(available_cores)
 
     missing_files = list()
