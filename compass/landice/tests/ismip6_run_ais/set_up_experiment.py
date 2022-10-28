@@ -96,6 +96,10 @@ class SetUpExperiment(Step):
             stream_replacements['input_file_init_cond'] = 'USE_RESTART_FILE_INSTEAD'
             stream_replacements['input_file_region_mask'] = 'USE_RESTART_FILE_INSTEAD'
             stream_replacements['input_file_melt_params'] = 'USE_RESTART_FILE_INSTEAD'
+        if self.exp == 'hist' or self.exp == 'ctrlAE':
+            stream_replacements['forcing_interval'] = 'initial_only'
+        else:
+            stream_replacements['forcing_interval'] = '0001-00-00_00:00:00'
 
         self.add_streams_file(
             'compass.landice.tests.ismip6_run_ais', 'streams.landice.template',
