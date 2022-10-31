@@ -50,7 +50,7 @@ class DiagnosticsFiles(Step):
 
         self.add_input_file(filename='README', target='../README')
         self.add_input_file(filename='restart.nc',
-                            target='../{}'.format(restart_filename))
+                            target=f'../{restart_filename}')
 
         self.with_ice_shelf_cavities = with_ice_shelf_cavities
 
@@ -94,8 +94,7 @@ def make_diagnostics_files(config, logger, mesh_short_name,
     """
 
     for directory in [
-            '../assembled_files/inputdata/ocn/mpas-o/{}'.format(
-                mesh_short_name),
+            f'../assembled_files/inputdata/ocn/mpas-o/{mesh_short_name}',
             '../assembled_files/diagnostics/mpas_analysis/region_masks',
             '../assembled_files/diagnostics/mpas_analysis/maps']:
         try:
@@ -114,7 +113,7 @@ def make_diagnostics_files(config, logger, mesh_short_name,
 
     for region_group in region_groups:
         function, prefix, date = get_aggregator_by_name(region_group)
-        suffix = '{}{}'.format(prefix, date)
+        suffix = f'{prefix}{date}'
         fc_mask = function(gf)
         _make_region_masks(mesh_short_name, suffix=suffix, fc_mask=fc_mask,
                            logger=logger, cores=cores)
@@ -122,7 +121,7 @@ def make_diagnostics_files(config, logger, mesh_short_name,
     transect_groups = ['Transport Transects']
     for transect_group in transect_groups:
         function, prefix, date = get_aggregator_by_name(transect_group)
-        suffix = '{}{}'.format(prefix, date)
+        suffix = f'{prefix}{date}'
         fc_mask = function(gf)
         _make_transect_masks(mesh_short_name, suffix=suffix, fc_mask=fc_mask,
                              logger=logger, cores=cores)
@@ -140,15 +139,15 @@ def make_diagnostics_files(config, logger, mesh_short_name,
     # make links in output directory
     output_dir = '../assembled_files/diagnostics/mpas_analysis/maps'
     for filename in files:
-        symlink('../../../../diagnostics_files/{}'.format(filename),
-                '{}/{}'.format(output_dir, filename))
+        symlink(f'../../../../diagnostics_files/{filename}',
+                f'{output_dir}/{filename}')
 
 
 def _make_region_masks(mesh_name, suffix, fc_mask, logger, cores):
     mesh_filename = 'restart.nc'
 
-    geojson_filename = '{}.geojson'.format(suffix)
-    mask_filename = '{}_{}.nc'.format(mesh_name, suffix)
+    geojson_filename = f'{suffix}.geojson'
+    mask_filename = f'{mesh_name}_{suffix}.nc'
 
     fc_mask.to_geojson(geojson_filename)
 
@@ -162,7 +161,7 @@ def _make_region_masks(mesh_name, suffix, fc_mask, logger, cores):
             '-g', geojson_filename,
             '-o', mask_filename,
             '-t', 'cell',
-            '--process_count', '{}'.format(cores),
+            '--process_count', f'{cores}',
             '--format', netcdf_format,
             '--engine', netcdf_engine]
     check_call(args, logger=logger)
@@ -170,16 +169,16 @@ def _make_region_masks(mesh_name, suffix, fc_mask, logger, cores):
     # make links in output directory
     output_dir = '../assembled_files/diagnostics/mpas_analysis/' \
                  'region_masks'
-    symlink('../../../../diagnostics_files/{}'.format(mask_filename),
-            '{}/{}'.format(output_dir, mask_filename))
+    symlink(f'../../../../diagnostics_files/{mask_filename}',
+            f'{output_dir}/{mask_filename}')
 
 
 def _make_transect_masks(mesh_name, suffix, fc_mask, logger, cores,
                          subdivision_threshold=10e3):
     mesh_filename = 'restart.nc'
 
-    geojson_filename = '{}.geojson'.format(suffix)
-    mask_filename = '{}_{}.nc'.format(mesh_name, suffix)
+    geojson_filename = f'{suffix}.geojson'
+    mask_filename = f'{mesh_name}_{suffix}.nc'
 
     fc_mask.to_geojson(geojson_filename)
 
@@ -193,8 +192,8 @@ def _make_transect_masks(mesh_name, suffix, fc_mask, logger, cores,
             '-g', geojson_filename,
             '-o', mask_filename,
             '-t', 'edge',
-            '-s', '{}'.format(subdivision_threshold),
-            '--process_count', '{}'.format(cores),
+            '-s', f'{subdivision_threshold}',
+            '--process_count', f'{cores}',
             '--add_edge_sign',
             '--format', netcdf_format,
             '--engine', netcdf_engine]
@@ -203,8 +202,8 @@ def _make_transect_masks(mesh_name, suffix, fc_mask, logger, cores,
     # make links in output directory
     output_dir = '../assembled_files/diagnostics/mpas_analysis/' \
                  'region_masks'
-    symlink('../../../../diagnostics_files/{}'.format(mask_filename),
-            '{}/{}'.format(output_dir, mask_filename))
+    symlink(f'../../../../diagnostics_files/{mask_filename}',
+            f'{output_dir}/{mask_filename}')
 
 
 def _make_analysis_lat_lon_map(config, mesh_name, cores, logger):
@@ -327,8 +326,7 @@ def _make_mapping_file(mesh_name, out_grid_name, in_descriptor, out_descriptor,
 
     parallel_executable = config.get('parallel', 'parallel_executable')
 
-    mapping_file_name = 'map_{}_to_{}_bilinear.nc'.format(mesh_name,
-                                                          out_grid_name)
+    mapping_file_name = f'map_{mesh_name}_to_{out_grid_name}_bilinear.nc'
 
     remapper = Remapper(in_descriptor, out_descriptor, mapping_file_name)
 
@@ -345,10 +343,10 @@ def _make_moc_masks(mesh_short_name, logger, cores):
     function, prefix, date = get_aggregator_by_name('MOC Basins')
     fc_mask = function(gf)
 
-    suffix = '{}{}'.format(prefix, date)
+    suffix = f'{prefix}{date}'
 
-    geojson_filename = '{}.geojson'.format(suffix)
-    mask_filename = '{}_{}.nc'.format(mesh_short_name, suffix)
+    geojson_filename = f'{suffix}.geojson'
+    mask_filename = f'{mesh_short_name}_{suffix}.nc'
 
     fc_mask.to_geojson(geojson_filename)
 
@@ -362,13 +360,13 @@ def _make_moc_masks(mesh_short_name, logger, cores):
             '-g', geojson_filename,
             '-o', mask_filename,
             '-t', 'cell',
-            '--process_count', '{}'.format(cores),
+            '--process_count', f'{cores}',
             '--format', netcdf_format,
             '--engine', netcdf_engine]
     check_call(args, logger=logger)
 
-    mask_and_transect_filename = '{}_mocBasinsAndTransects{}.nc'.format(
-        mesh_short_name, date)
+    mask_and_transect_filename = \
+        f'{mesh_short_name}_mocBasinsAndTransects{date}.nc'
 
     ds_mesh = xarray.open_dataset(mesh_filename)
     ds_mask = xarray.open_dataset(mask_filename)
@@ -380,16 +378,13 @@ def _make_moc_masks(mesh_short_name, logger, cores):
                  char_dim_name='StrLen')
 
     # make links in output directories (both inputdata and diagnostics)
-    output_dir = '../assembled_files/inputdata/ocn/mpas-o/{}'.format(
-        mesh_short_name)
+    output_dir = f'../assembled_files/inputdata/ocn/mpas-o/{mesh_short_name}'
     symlink(
-        '../../../../../diagnostics_files/{}'.format(
-            mask_and_transect_filename),
-        '{}/{}'.format(output_dir, mask_and_transect_filename))
+        f'../../../../../diagnostics_files/{mask_and_transect_filename}',
+        f'{output_dir}/{mask_and_transect_filename}')
 
     output_dir = '../assembled_files/diagnostics/mpas_analysis/' \
                  'region_masks'
     symlink(
-        '../../../../diagnostics_files/{}'.format(
-            mask_and_transect_filename),
-        '{}/{}'.format(output_dir, mask_and_transect_filename))
+        f'../../../../diagnostics_files/{mask_and_transect_filename}',
+        f'{output_dir}/{mask_and_transect_filename}')
