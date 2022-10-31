@@ -115,16 +115,16 @@ def make_diagnostics_files(config, logger, mesh_short_name,
     for region_group in region_groups:
         function, prefix, date = get_aggregator_by_name(region_group)
         suffix = '{}{}'.format(prefix, date)
-        fcMask = function(gf)
-        _make_region_masks(mesh_short_name, suffix=suffix, fcMask=fcMask,
+        fc_mask = function(gf)
+        _make_region_masks(mesh_short_name, suffix=suffix, fc_mask=fc_mask,
                            logger=logger, cores=cores)
 
     transect_groups = ['Transport Transects']
     for transect_group in transect_groups:
         function, prefix, date = get_aggregator_by_name(transect_group)
         suffix = '{}{}'.format(prefix, date)
-        fcMask = function(gf)
-        _make_transect_masks(mesh_short_name, suffix=suffix, fcMask=fcMask,
+        fc_mask = function(gf)
+        _make_transect_masks(mesh_short_name, suffix=suffix, fc_mask=fc_mask,
                              logger=logger, cores=cores)
 
     _make_analysis_lat_lon_map(config, mesh_short_name, cores, logger)
@@ -144,13 +144,13 @@ def make_diagnostics_files(config, logger, mesh_short_name,
                 '{}/{}'.format(output_dir, filename))
 
 
-def _make_region_masks(mesh_name, suffix, fcMask, logger, cores):
+def _make_region_masks(mesh_name, suffix, fc_mask, logger, cores):
     mesh_filename = 'restart.nc'
 
     geojson_filename = '{}.geojson'.format(suffix)
     mask_filename = '{}_{}.nc'.format(mesh_name, suffix)
 
-    fcMask.to_geojson(geojson_filename)
+    fc_mask.to_geojson(geojson_filename)
 
     # these defaults may have been updated from config options -- pass them
     # along to the subprocess
@@ -174,14 +174,14 @@ def _make_region_masks(mesh_name, suffix, fcMask, logger, cores):
             '{}/{}'.format(output_dir, mask_filename))
 
 
-def _make_transect_masks(mesh_name, suffix, fcMask, logger, cores,
+def _make_transect_masks(mesh_name, suffix, fc_mask, logger, cores,
                          subdivision_threshold=10e3):
     mesh_filename = 'restart.nc'
 
     geojson_filename = '{}.geojson'.format(suffix)
     mask_filename = '{}_{}.nc'.format(mesh_name, suffix)
 
-    fcMask.to_geojson(geojson_filename)
+    fc_mask.to_geojson(geojson_filename)
 
     # these defaults may have been updated from config options -- pass them
     # along to the subprocess
@@ -210,19 +210,17 @@ def _make_transect_masks(mesh_name, suffix, fcMask, logger, cores,
 def _make_analysis_lat_lon_map(config, mesh_name, cores, logger):
     mesh_filename = 'restart.nc'
 
-    inDescriptor = MpasMeshDescriptor(mesh_filename, mesh_name)
+    in_descriptor = MpasMeshDescriptor(mesh_filename, mesh_name)
 
-    comparisonLatResolution = config.getfloat('files_for_e3sm',
-                                              'comparisonLatResolution')
-    comparisonLonResolution = config.getfloat('files_for_e3sm',
-                                              'comparisonLonResolution')
+    lat_res = config.getfloat('files_for_e3sm', 'comparisonLatResolution')
+    lon_res = config.getfloat('files_for_e3sm', 'comparisonLonResolution')
 
     # modify the resolution of the global lat-lon grid as desired
-    outDescriptor = get_lat_lon_descriptor(dLon=comparisonLatResolution,
-                                           dLat=comparisonLonResolution)
-    outGridName = outDescriptor.meshName
+    out_descriptor = get_lat_lon_descriptor(dLon=lat_res,
+                                            dLat=lon_res)
+    out_grid_name = out_descriptor.meshName
 
-    _make_mapping_file(mesh_name, outGridName, inDescriptor, outDescriptor,
+    _make_mapping_file(mesh_name, out_grid_name, in_descriptor, out_descriptor,
                        cores, config, logger)
 
 
@@ -324,14 +322,15 @@ def _make_analysis_projection_map(config, mesh_name, projection_name, cores,
                        cores, config, logger)
 
 
-def _make_mapping_file(mesh_name, outGridName, inDescriptor, outDescriptor,
+def _make_mapping_file(mesh_name, out_grid_name, in_descriptor, out_descriptor,
                        cores, config, logger):
 
     parallel_executable = config.get('parallel', 'parallel_executable')
 
-    mappingFileName = 'map_{}_to_{}_bilinear.nc'.format(mesh_name, outGridName)
+    mapping_file_name = 'map_{}_to_{}_bilinear.nc'.format(mesh_name,
+                                                          out_grid_name)
 
-    remapper = Remapper(inDescriptor, outDescriptor, mappingFileName)
+    remapper = Remapper(in_descriptor, out_descriptor, mapping_file_name)
 
     remapper.build_mapping_file(method='bilinear', mpiTasks=cores, tempdir='.',
                                 logger=logger,
@@ -344,14 +343,14 @@ def _make_moc_masks(mesh_short_name, logger, cores):
     mesh_filename = 'restart.nc'
 
     function, prefix, date = get_aggregator_by_name('MOC Basins')
-    fcMask = function(gf)
+    fc_mask = function(gf)
 
     suffix = '{}{}'.format(prefix, date)
 
     geojson_filename = '{}.geojson'.format(suffix)
     mask_filename = '{}_{}.nc'.format(mesh_short_name, suffix)
 
-    fcMask.to_geojson(geojson_filename)
+    fc_mask.to_geojson(geojson_filename)
 
     # these defaults may have been updated from config options -- pass them
     # along to the subprocess
@@ -371,13 +370,13 @@ def _make_moc_masks(mesh_short_name, logger, cores):
     mask_and_transect_filename = '{}_mocBasinsAndTransects{}.nc'.format(
         mesh_short_name, date)
 
-    dsMesh = xarray.open_dataset(mesh_filename)
-    dsMask = xarray.open_dataset(mask_filename)
+    ds_mesh = xarray.open_dataset(mesh_filename)
+    ds_mask = xarray.open_dataset(mask_filename)
 
-    dsMasksAndTransects = add_moc_southern_boundary_transects(
-        dsMask, dsMesh, logger=logger)
+    ds_masks_and_transects = add_moc_southern_boundary_transects(
+        ds_mask, ds_mesh, logger=logger)
 
-    write_netcdf(dsMasksAndTransects, mask_and_transect_filename,
+    write_netcdf(ds_masks_and_transects, mask_and_transect_filename,
                  char_dim_name='StrLen')
 
     # make links in output directories (both inputdata and diagnostics)
