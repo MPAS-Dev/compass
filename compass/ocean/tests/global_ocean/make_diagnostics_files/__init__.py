@@ -44,7 +44,7 @@ class MakeDiagnosticsFiles(TestCase):
         """
         Run each step of the testcase
         """
-        cores = self.config.getint( 'make_diagnostics_files', 'cores')
+        cores = self.config.getint('make_diagnostics_files', 'cores')
         self.steps['diagnostics_files'].cpus_per_task = cores
         self.steps['e3sm_to_cmip_maps'].ntasks = cores
 
