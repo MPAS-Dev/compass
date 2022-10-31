@@ -29,7 +29,7 @@ class MakeDiagnosticsFiles(TestCase):
         """
         super().__init__(test_group=test_group, name='make_diagnostics_files')
 
-        self.add_step(E3smToCmpiMaps(test_case=self))
+        self.add_step(E3smToCmipMaps(test_case=self))
         self.add_step(DiagnosticsFiles(test_case=self))
 
     def configure(self):
@@ -52,7 +52,7 @@ class MakeDiagnosticsFiles(TestCase):
         super().run()
 
 
-class E3smToCmpiMaps(Step):
+class E3smToCmipMaps(Step):
     """
     A step for making e3sm_to_cmip mapping files
     """
