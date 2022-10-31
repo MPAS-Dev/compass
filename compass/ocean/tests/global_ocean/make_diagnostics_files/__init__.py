@@ -29,7 +29,7 @@ class MakeDiagnosticsFiles(TestCase):
         """
         super().__init__(test_group=test_group, name='make_diagnostics_files')
 
-        self.add_step(E3smToCmpiMaps(test_case=self))
+        self.add_step(E3smToCmipMaps(test_case=self))
         self.add_step(DiagnosticsFiles(test_case=self))
 
     def configure(self):
@@ -44,7 +44,7 @@ class MakeDiagnosticsFiles(TestCase):
         """
         Run each step of the testcase
         """
-        cores = self.config.getint( 'make_diagnostics_files', 'cores')
+        cores = self.config.getint('make_diagnostics_files', 'cores')
         self.steps['diagnostics_files'].cpus_per_task = cores
         self.steps['e3sm_to_cmip_maps'].ntasks = cores
 
@@ -52,7 +52,7 @@ class MakeDiagnosticsFiles(TestCase):
         super().run()
 
 
-class E3smToCmpiMaps(Step):
+class E3smToCmipMaps(Step):
     """
     A step for making e3sm_to_cmip mapping files
     """
