@@ -1,8 +1,10 @@
 import os
 import xarray
 import glob
+import pyproj
+import numpy
 
-from pyremap import get_lat_lon_descriptor, get_polar_descriptor, \
+from pyremap import get_lat_lon_descriptor, ProjectionGridDescriptor, \
     MpasMeshDescriptor, Remapper
 from geometric_features import GeometricFeatures
 from geometric_features.aggregation import get_aggregator_by_name
@@ -126,11 +128,11 @@ def make_diagnostics_files(config, logger, mesh_short_name,
                              logger=logger, cores=cores)
 
     _make_analysis_lat_lon_map(config, mesh_short_name, cores, logger)
-    _make_analysis_polar_map(config, mesh_short_name,
-                             projection='antarctic', cores=cores,
-                             logger=logger)
-    _make_analysis_polar_map(config, mesh_short_name, projection='arctic',
-                             cores=cores, logger=logger)
+    for projection_name in ['antarctic', 'arctic', 'antarctic_extended',
+                            'arctic_extended', 'north_atlantic',
+                            'north_pacific', 'subpolar_north_atlantic']:
+        _make_analysis_projection_map(config, mesh_short_name, projection_name,
+                                      cores, logger)
 
     # make links in output directory
     files = glob.glob('map_*')
@@ -224,29 +226,101 @@ def _make_analysis_lat_lon_map(config, mesh_name, cores, logger):
                        cores, config, logger)
 
 
-def _make_analysis_polar_map(config, mesh_name, projection, cores, logger):
+# copied from MPAS-Analysis for now
+def _get_pyproj_projection(comparison_grid_name):
+    """
+    Get the projection from the comparison_grid_name.
+    Parameters
+    ----------
+    comparison_grid_name : str
+        The name of the projection comparison grid to use for remapping
+    Returns
+    -------
+    projection : pyproj.Proj
+        The projection
+    Raises
+    ------
+    ValueError
+        If comparison_grid_name does not describe a known comparison grid
+    """
+
+    if comparison_grid_name == 'latlon':
+        raise ValueError('latlon is not a projection grid.')
+    elif comparison_grid_name in ['antarctic', 'antarctic_extended']:
+        projection = pyproj.Proj(
+            '+proj=stere +lat_ts=-71.0 +lat_0=-90 +lon_0=0.0  +k_0=1.0 '
+            '+x_0=0.0 +y_0=0.0 +ellps=WGS84')
+    elif comparison_grid_name in ['arctic', 'arctic_extended']:
+        projection = pyproj.Proj(
+            '+proj=stere +lat_ts=75.0 +lat_0=90 +lon_0=0.0  +k_0=1.0 '
+            '+x_0=0.0 +y_0=0.0 +ellps=WGS84')
+    elif comparison_grid_name == 'north_atlantic':
+        projection = pyproj.Proj('+proj=lcc +lon_0=-45 +lat_0=45 +lat_1=39 '
+                                 '+lat_2=51 +x_0=0.0 +y_0=0.0 +ellps=WGS84')
+    elif comparison_grid_name == 'north_pacific':
+        projection = pyproj.Proj('+proj=lcc +lon_0=180 +lat_0=40 +lat_1=34 '
+                                 '+lat_2=46 +x_0=0.0 +y_0=0.0 +ellps=WGS84')
+    elif comparison_grid_name == 'subpolar_north_atlantic':
+        projection = pyproj.Proj('+proj=lcc +lon_0=-40 +lat_0=54 +lat_1=40 '
+                                 '+lat_2=68 +x_0=0.0 +y_0=0.0 +ellps=WGS84')
+    else:
+        raise ValueError(f'We missed one of the known comparison grids: '
+                         f'{comparison_grid_name}')
+
+    return projection
+
+
+# A lot of duplication from MPAS-Analysis for now.
+def _make_analysis_projection_map(config, mesh_name, projection_name, cores,
+                                  logger):
     mesh_filename = 'restart.nc'
+    section = 'files_for_e3sm'
 
-    upperProj = projection[0].upper() + projection[1:]
+    option_suffixes = {'antarctic': 'AntarcticStereo',
+                       'arctic': 'ArcticStereo',
+                       'antarctic_extended': 'AntarcticExtended',
+                       'arctic_extended': 'ArcticExtended',
+                       'north_atlantic': 'NorthAtlantic',
+                       'north_pacific': 'NorthPacific',
+                       'subpolar_north_atlantic': 'SubpolarNorthAtlantic'}
 
-    inDescriptor = MpasMeshDescriptor(mesh_filename, mesh_name)
+    grid_suffixes = {'antarctic': 'Antarctic_stereo',
+                     'arctic': 'Arctic_stereo',
+                     'antarctic_extended': 'Antarctic_stereo',
+                     'arctic_extended': 'Arctic_stereo',
+                     'north_atlantic': 'North_Atlantic',
+                     'north_pacific': 'North_Pacific',
+                     'subpolar_north_atlantic': 'Subpolar_North_Atlantic'}
 
-    comparisonStereoWidth = config.getfloat(
-        'files_for_e3sm', 'comparison{}StereoWidth'.format(upperProj))
-    comparisonStereoResolution = config.getfloat(
-        'files_for_e3sm', 'comparison{}StereoResolution'.format(upperProj))
+    projection = _get_pyproj_projection(projection_name)
+    option_suffix = option_suffixes[projection_name]
+    grid_suffix = grid_suffixes[projection_name]
 
-    outDescriptor = get_polar_descriptor(Lx=comparisonStereoWidth,
-                                         Ly=comparisonStereoWidth,
-                                         dx=comparisonStereoResolution,
-                                         dy=comparisonStereoResolution,
-                                         projection=projection)
+    in_descriptor = MpasMeshDescriptor(mesh_filename, mesh_name)
 
-    outGridName = '{}x{}km_{}km_{}_stereo'.format(
-        comparisonStereoWidth,  comparisonStereoWidth,
-        comparisonStereoResolution, upperProj)
+    width = config.getfloat(
+        section, f'comparison{option_suffix}Width')
+    option = f'comparison{option_suffix}Height'
+    if config.has_option(section, option):
+        height = config.getfloat(section, option)
+    else:
+        height = width
+    res = config.getfloat(
+        section, f'comparison{option_suffix}Resolution')
 
-    _make_mapping_file(mesh_name, outGridName, inDescriptor, outDescriptor,
+    xmax = 0.5 * width * 1e3
+    nx = int(width / res) + 1
+    x = numpy.linspace(-xmax, xmax, nx)
+
+    ymax = 0.5 * height * 1e3
+    ny = int(height / res) + 1
+    y = numpy.linspace(-ymax, ymax, ny)
+
+    out_grid_name = f'{width}x{height}km_{res}km_{grid_suffix}'
+    out_descriptor = ProjectionGridDescriptor.create(projection, x, y,
+                                                     mesh_name)
+
+    _make_mapping_file(mesh_name, out_grid_name, in_descriptor, out_descriptor,
                        cores, config, logger)
 
 
