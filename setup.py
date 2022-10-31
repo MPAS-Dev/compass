@@ -30,6 +30,7 @@ install_requires = \
      'numpy',
      'progressbar2',
      'pyamg',
+     'pyproj',
      'requests',
      'scipy',
      'shapely',
