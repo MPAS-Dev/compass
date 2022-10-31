@@ -504,7 +504,8 @@ class MoviePlotter(object):
                 title = '{} ({})'.format(nameInTitle, units)
             self._plot_horiz_field(field, title=title, outFileName=outFileName,
                                    oceanDomain=oceanDomain, vmin=vmin,
-                                   vmax=vmax, cmap=cmap, cmap_set_under=cmap_set_under,
+                                   vmax=vmax, cmap=cmap,
+                                   cmap_set_under=cmap_set_under,
                                    cmap_scale=cmap_scale)
             if self.showProgress:
                 bar.update(tIndex+1)
@@ -763,20 +764,22 @@ class MoviePlotter(object):
             localPatches = copy.copy(self.cavityPatches)
             localPatches.set_array(field[self.cavityMask])
 
-        localPatches.set_edgecolor('face')
         if cmap is not None:
             localPatches.set_cmap(cmap)
+        if cmap_set_under is not None:
+            current_cmap = localPatches.get_cmap()
+            current_cmap.set_under(cmap_set_under)
         localPatches.set_clim(vmin=vmin, vmax=vmax)
+        localPatches.set_edgecolor('face')
 
         if cmap_scale == 'log':
-            localPatches.set_norm(LogNorm(vmin=max(1e-3,vmin),vmax=vmax,clip=False))
+            localPatches.set_norm(LogNorm(vmin=max(1e-10, vmin),
+                                  vmax=vmax, clip=False))
+
         plt.figure(figsize=figsize)
         ax = plt.subplot(111)
         ax.add_collection(localPatches)
         plt.colorbar(localPatches, extend='both')
-        if cmap_set_under is not None:
-            current_cmap = plt.get_cmap()
-            current_cmap.set_under(cmap_set_under)
         plt.axis([0, 500, 0, 1000])
         ax.set_aspect('equal')
         ax.autoscale(tight=True)
@@ -785,8 +788,9 @@ class MoviePlotter(object):
         plt.savefig(outFileName)
         plt.close()
 
-    def _plot_vert_field(self, inX, inZ, field, title, outFileName, vmin=None,
-                         vmax=None, figsize=(9, 5), cmap=None, show_boundaries=True):
+    def _plot_vert_field(self, inX, inZ, field, title, outFileName,
+                         vmin=None, vmax=None, figsize=(9, 5), cmap=None,
+                         show_boundaries=True):
         try:
             os.makedirs(os.path.dirname(outFileName))
         except OSError:
@@ -799,29 +803,27 @@ class MoviePlotter(object):
 
         z_mask = numpy.ones(self.X.shape)
         z_mask[0:-1, 0:-1] *= numpy.where(self.sectionMask, 1., numpy.nan)
-        #z_mask[1:, 0:-1] *= numpy.where(self.sectionMask, 1., numpy.nan)
-        #z_mask[0:-1, 1:] *= numpy.where(self.sectionMask, 1., numpy.nan)
-        #z_mask[1:, 1:] *= numpy.where(self.sectionMask, 1., numpy.nan)
 
-        tIndex=0
+        tIndex = 0
         Z = numpy.array(self.Z[tIndex, :, :])
         ylim = [numpy.amin(Z), 20]
         Z *= z_mask
         X = self.X
 
-
         plt.figure(figsize=figsize)
         ax = plt.subplot(111)
         if show_boundaries:
-            plt.fill_between(1e-3 * X[0, :],self.zBotSection,y2=0,facecolor='lightsteelblue')
-            plt.fill_between(1e-3 * X[0, :],self.zBotSection,y2=-750,facecolor='grey')
+            plt.fill_between(1e-3 * X[0, :], self.zBotSection, y2=0,
+                             facecolor='lightsteelblue')
+            plt.fill_between(1e-3 * X[0, :], self.zBotSection, y2=-750,
+                             facecolor='grey')
         plt.pcolormesh(1e-3*inX, inZ, field, vmin=vmin, vmax=vmax, cmap=cmap)
         for z_index in range(1, X.shape[0]):
             plt.plot(1e-3 * X[z_index, :], Z[z_index, :], 'k')
         plt.colorbar()
         ax.autoscale(tight=True)
         plt.ylim([numpy.amin(inZ), 20])
-        plt.xlim([400,800])
+        plt.xlim([400, 800])
         plt.title('{} {}'.format(title, self.date))
         plt.tight_layout(pad=0.5)
         plt.savefig(outFileName, dpi='figure')

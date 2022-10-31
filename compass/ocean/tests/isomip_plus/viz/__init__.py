@@ -65,76 +65,81 @@ class Viz(Step):
         out_dir = '.'
         expt = self.experiment
 
-        dsMesh = xarray.open_dataset('{}/init.nc'.format(sim_dir))
-        dsOut = xarray.open_dataset('{}/output.nc'.format(sim_dir))
-        dsForcing = xarray.open_dataset('{}/forcing_data_init.nc'.format(sim_dir))
+        dsMesh = xarray.open_dataset(f'{sim_dir}/init.nc')
+        dsOut = xarray.open_dataset(f'{sim_dir}/output.nc'.format(sim_dir))
+        dsForcing = xarray.open_dataset(f'{sim_dir}/forcing_data_init.nc')
 
         plotter = MoviePlotter(inFolder=sim_dir,
-                                streamfunctionFolder=streamfunction_dir,
-                                outFolder='{}/plots'.format(out_dir),
-                                expt=expt, sectionY=section_y,
-                                dsMesh=dsMesh, ds=dsOut,
-                                showProgress=show_progress)
+                               streamfunctionFolder=streamfunction_dir,
+                               outFolder=f'{out_dir}/plots',
+                               expt=expt, sectionY=section_y,
+                               dsMesh=dsMesh, ds=dsOut,
+                               showProgress=show_progress)
 
-
-        delssh = dsOut.ssh-dsOut.ssh[0,:]
-        plotter.plot_horiz_series(dsOut.ssh, 'ssh', 'ssh', True, cmap='cmo.curl')
-        plotter.plot_horiz_series(dsOut.velocityX[:,:,0], 'u', 'u', True,
-                                  cmap='cmo.balance')
+        if 'time_varying' in expt:
+            plotter.plot_horiz_series(dsOut.ssh, 'ssh', 'ssh', True,
+                                      cmap='cmo.curl')
+            delice = dsOut.landIcePressure-dsOut.landIcePressure[0, :]
+            plotter.plot_horiz_series(delice, 'delLandIcePressure',
+                                      'delLandIcePressure', True, cmap='cmo.curl')
+        plotter.plot_horiz_series(dsOut.velocityX[:, :, 0], 'u', 'u', True,
+                                  cmap='cmo.balance', vmin=-5e-1, vmax=5e-1)
         plotter.plot_horiz_series(dsOut.velocityY[:,:,0], 'v', 'v', True,
-                                  cmap='cmo.balance')
-        plotter.plot_horiz_series(dsOut.ssh + dsMesh.bottomDepth, 'H', 'H', True,
-                                  vmin=min_column_thickness, vmax=700,
-                                  cmap_set_under='r', cmap_scale='log')
-        plotter.plot_horiz_series(delssh, 'delssh', 'delssh', True,
-                                  cmap='cmo.curl', vmin=-1, vmax=1)
-        delice = dsOut.landIcePressure-dsOut.landIcePressure[0,:]
-        plotter.plot_horiz_series(delice, 'delLandIcePressure', 'delLandIcePressure', 
-                                  True, cmap='cmo.curl')
+                                  cmap='cmo.balance', vmin=-5e-1, vmax=5e-1)
+        plotter.plot_horiz_series(dsOut.ssh + dsMesh.bottomDepth, 'H', 'H',
+                                  True, vmin=min_column_thickness+1e-10,
+                                  vmax=700, cmap_set_under='r',
+                                  cmap_scale='log')
 
-        ds = xarray.open_mfdataset(
-            '{}/timeSeriesStatsMonthly*.nc'.format(sim_dir),
-            concat_dim='Time', combine='nested')
+        if 'tidal' in expt:
+            delssh = dsOut.ssh-dsOut.ssh[0, :]
+            plotter.plot_horiz_series(delssh, 'delssh', 'delssh', True,
+                                      cmap='cmo.curl', vmin=-1, vmax=1)
 
-        if plot_haney:
-            _compute_and_write_haney_number(dsMesh, ds, out_dir,
-                                            showProgress=show_progress)
+        if os.path.exists(f'{sim_dir}/timeSeriesStatsMonthly.0001-01-01.nc'):
+            ds = xarray.open_mfdataset(
+                '{}/timeSeriesStatsMonthly*.nc'.format(sim_dir),
+                concat_dim='Time', combine='nested')
 
-        tsPlotter = TimeSeriesPlotter(inFolder=sim_dir,
-                                      outFolder='{}/plots'.format(out_dir),
-                                      expt=expt)
-        tsPlotter.plot_melt_time_series()
-        tsPlotter = TimeSeriesPlotter(
-            inFolder=sim_dir,
-            outFolder='{}/timeSeriesBelow300m'.format(out_dir),
-            expt=expt)
-        tsPlotter.plot_melt_time_series(sshMax=-300.)
+            if plot_haney:
+                _compute_and_write_haney_number(dsMesh, ds, out_dir,
+                                                showProgress=show_progress)
 
-        mPlotter = MoviePlotter(inFolder=sim_dir,
-                                streamfunctionFolder=streamfunction_dir,
-                                outFolder='{}/plots'.format(out_dir),
-                                expt=expt, sectionY=section_y,
-                                dsMesh=dsMesh, ds=ds,
-                                showProgress=show_progress)
+            tsPlotter = TimeSeriesPlotter(inFolder=sim_dir,
+                                          outFolder='{}/plots'.format(out_dir),
+                                          expt=expt)
+            tsPlotter.plot_melt_time_series()
+            tsPlotter = TimeSeriesPlotter(
+                inFolder=sim_dir,
+                outFolder='{}/timeSeriesBelow300m'.format(out_dir),
+                expt=expt)
+            tsPlotter.plot_melt_time_series(sshMax=-300.)
 
-        mPlotter.plot_layer_interfaces()
+            mPlotter = MoviePlotter(inFolder=sim_dir,
+                                    streamfunctionFolder=streamfunction_dir,
+                                    outFolder='{}/plots'.format(out_dir),
+                                    expt=expt, sectionY=section_y,
+                                    dsMesh=dsMesh, ds=ds,
+                                    showProgress=show_progress)
 
-        if plot_streamfunctions:
-            mPlotter.plot_barotropic_streamfunction()
-            mPlotter.plot_overturning_streamfunction()
+            mPlotter.plot_layer_interfaces()
 
-        if plot_haney:
-            mPlotter.plot_haney_number(haneyFolder=out_dir)
+            if plot_streamfunctions:
+                mPlotter.plot_barotropic_streamfunction()
+                mPlotter.plot_overturning_streamfunction()
 
-        mPlotter.plot_melt_rates()
-        mPlotter.plot_ice_shelf_boundary_variables()
-        mPlotter.plot_temperature()
-        mPlotter.plot_salinity()
-        mPlotter.plot_potential_density()
+            if plot_haney:
+                mPlotter.plot_haney_number(haneyFolder=out_dir)
 
-        mPlotter.images_to_movies(outFolder='{}/movies'.format(out_dir),
-                                  framesPerSecond=frames_per_second,
-                                  extension=movie_format)
+            mPlotter.plot_melt_rates()
+            mPlotter.plot_ice_shelf_boundary_variables()
+            mPlotter.plot_temperature()
+            mPlotter.plot_salinity()
+            mPlotter.plot_potential_density()
+
+            mPlotter.images_to_movies(outFolder='{}/movies'.format(out_dir),
+                                      framesPerSecond=frames_per_second,
+                                      extension=movie_format)
 
 
 def file_complete(ds, fileName):
