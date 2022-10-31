@@ -265,6 +265,10 @@
 
         <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;vertical_grid&#39;</span><span class="p">,</span> <span class="s1">&#39;coord_type&#39;</span><span class="p">,</span> <span class="n">vertical_coordinate</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">vertical_coordinate</span> <span class="o">==</span> <span class="s1">&#39;sigma&#39;</span><span class="p">:</span>
+            <span class="c1"># default to 10 vertical levels instead of 36</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;vertical_grid&#39;</span><span class="p">,</span> <span class="s1">&#39;vert_levels&#39;</span><span class="p">,</span> <span class="s1">&#39;10&#39;</span><span class="p">)</span>
+
         <span class="k">for</span> <span class="n">step_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">step_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;ssh_adjustment&#39;</span><span class="p">,</span> <span class="s1">&#39;performance&#39;</span><span class="p">,</span> <span class="s1">&#39;simulation&#39;</span><span class="p">]:</span>
                 <span class="n">step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">step_name</span><span class="p">]</span>

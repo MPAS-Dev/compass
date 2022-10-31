@@ -135,9 +135,9 @@ cases.</p>
 <li><p><strong>mesh</strong> (<a class="reference internal" href="compass.ocean.tests.global_ocean.mesh.Mesh.html#compass.ocean.tests.global_ocean.mesh.Mesh" title="compass.ocean.tests.global_ocean.mesh.Mesh"><em>compass.ocean.tests.global_ocean.mesh.Mesh</em></a>) – The test case that produces the mesh for this run</p></li>
 <li><p><strong>init</strong> (<a class="reference internal" href="compass.ocean.tests.global_ocean.init.Init.html#compass.ocean.tests.global_ocean.init.Init" title="compass.ocean.tests.global_ocean.init.Init"><em>compass.ocean.tests.global_ocean.init.Init</em></a>) – The test case that produces the initial condition for this run</p></li>
 <li><p><strong>time_integrator</strong> (<em>{'split_explicit'</em><em>, </em><em>'RK4'}</em>) – The time integrator to use for the forward run</p></li>
-<li><p><strong>ntasks_from_config</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to get <code class="docutils literal notranslate"><span class="pre">ntasks</span></code> from the config file</p></li>
-<li><p><strong>min_tasks_from_config</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to get <code class="docutils literal notranslate"><span class="pre">min_tasks</span></code> from the config file</p></li>
-<li><p><strong>threads_from_config</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to get <code class="docutils literal notranslate"><span class="pre">threads</span></code> from the config file</p></li>
+<li><p><strong>ntasks_from_config</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – Whether to get <code class="docutils literal notranslate"><span class="pre">ntasks</span></code> from the config file</p></li>
+<li><p><strong>min_tasks_from_config</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – Whether to get <code class="docutils literal notranslate"><span class="pre">min_tasks</span></code> from the config file</p></li>
+<li><p><strong>threads_from_config</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – Whether to get <code class="docutils literal notranslate"><span class="pre">threads</span></code> from the config file</p></li>
 </ul>
 </dd>
 </dl>
@@ -152,14 +152,14 @@ cases.</p>
 <li><p><strong>mesh</strong> (<a class="reference internal" href="compass.ocean.tests.global_ocean.mesh.Mesh.html#compass.ocean.tests.global_ocean.mesh.Mesh" title="compass.ocean.tests.global_ocean.mesh.Mesh"><em>compass.ocean.tests.global_ocean.mesh.Mesh</em></a>) – The test case that produces the mesh for this run</p></li>
 <li><p><strong>init</strong> (<a class="reference internal" href="compass.ocean.tests.global_ocean.init.Init.html#compass.ocean.tests.global_ocean.init.Init" title="compass.ocean.tests.global_ocean.init.Init"><em>compass.ocean.tests.global_ocean.init.Init</em></a>) – The test case that produces the initial condition for this run</p></li>
 <li><p><strong>time_integrator</strong> (<em>{'split_explicit'</em><em>, </em><em>'RK4'}</em>) – The time integrator to use for the forward run</p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – the name of the step</p></li>
-<li><p><strong>subdir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – the subdirectory for the step.  The default is <code class="docutils literal notranslate"><span class="pre">name</span></code></p></li>
-<li><p><strong>ntasks</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>optional</em>) – the number of tasks the step would ideally use.  If fewer tasks
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><em>optional</em>) – the name of the step</p></li>
+<li><p><strong>subdir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><em>optional</em>) – the subdirectory for the step.  The default is <code class="docutils literal notranslate"><span class="pre">name</span></code></p></li>
+<li><p><strong>ntasks</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>optional</em>) – the number of tasks the step would ideally use.  If fewer tasks
 are available on the system, the step will run on all available
 tasks as long as this is not below <code class="docutils literal notranslate"><span class="pre">min_tasks</span></code></p></li>
-<li><p><strong>min_tasks</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>optional</em>) – the number of tasks the step requires.  If the system has fewer
+<li><p><strong>min_tasks</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>optional</em>) – the number of tasks the step requires.  If the system has fewer
 than this number of tasks, the step will fail</p></li>
-<li><p><strong>openmp_threads</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>optional</em>) – the number of OpenMP threads the step will use</p></li>
+<li><p><strong>openmp_threads</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>optional</em>) – the number of OpenMP threads the step will use</p></li>
 </ul>
 </dd>
 </dl>

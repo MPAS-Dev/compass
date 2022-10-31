@@ -111,8 +111,10 @@
 <span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">xarray</span>
 <span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">pyproj</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
 
-<span class="kn">from</span> <span class="nn">pyremap</span> <span class="kn">import</span> <span class="n">get_lat_lon_descriptor</span><span class="p">,</span> <span class="n">get_polar_descriptor</span><span class="p">,</span> \
+<span class="kn">from</span> <span class="nn">pyremap</span> <span class="kn">import</span> <span class="n">get_lat_lon_descriptor</span><span class="p">,</span> <span class="n">ProjectionGridDescriptor</span><span class="p">,</span> \
     <span class="n">MpasMeshDescriptor</span><span class="p">,</span> <span class="n">Remapper</span>
 <span class="kn">from</span> <span class="nn">geometric_features</span> <span class="kn">import</span> <span class="n">GeometricFeatures</span>
 <span class="kn">from</span> <span class="nn">geometric_features.aggregation</span> <span class="kn">import</span> <span class="n">get_aggregator_by_name</span>
@@ -158,7 +160,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;README&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../README&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;restart.nc&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">restart_filename</span><span class="p">))</span>
+                            <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;../</span><span class="si">{</span><span class="n">restart_filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span> <span class="o">=</span> <span class="n">with_ice_shelf_cavities</span></div>
 
@@ -202,8 +204,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">for</span> <span class="n">directory</span> <span class="ow">in</span> <span class="p">[</span>
-            <span class="s1">&#39;../assembled_files/inputdata/ocn/mpas-o/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">mesh_short_name</span><span class="p">),</span>
+            <span class="sa">f</span><span class="s1">&#39;../assembled_files/inputdata/ocn/mpas-o/</span><span class="si">{</span><span class="n">mesh_short_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
             <span class="s1">&#39;../assembled_files/diagnostics/mpas_analysis/region_masks&#39;</span><span class="p">,</span>
             <span class="s1">&#39;../assembled_files/diagnostics/mpas_analysis/maps&#39;</span><span class="p">]:</span>
         <span class="k">try</span><span class="p">:</span>
@@ -222,25 +223,25 @@
 
     <span class="k">for</span> <span class="n">region_group</span> <span class="ow">in</span> <span class="n">region_groups</span><span class="p">:</span>
         <span class="n">function</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">date</span> <span class="o">=</span> <span class="n">get_aggregator_by_name</span><span class="p">(</span><span class="n">region_group</span><span class="p">)</span>
-        <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">date</span><span class="p">)</span>
-        <span class="n">fcMask</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="n">gf</span><span class="p">)</span>
-        <span class="n">_make_region_masks</span><span class="p">(</span><span class="n">mesh_short_name</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">,</span> <span class="n">fcMask</span><span class="o">=</span><span class="n">fcMask</span><span class="p">,</span>
+        <span class="n">suffix</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}{</span><span class="n">date</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">fc_mask</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="n">gf</span><span class="p">)</span>
+        <span class="n">_make_region_masks</span><span class="p">(</span><span class="n">mesh_short_name</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">,</span> <span class="n">fc_mask</span><span class="o">=</span><span class="n">fc_mask</span><span class="p">,</span>
                            <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="n">cores</span><span class="p">)</span>
 
     <span class="n">transect_groups</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Transport Transects&#39;</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">transect_group</span> <span class="ow">in</span> <span class="n">transect_groups</span><span class="p">:</span>
         <span class="n">function</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">date</span> <span class="o">=</span> <span class="n">get_aggregator_by_name</span><span class="p">(</span><span class="n">transect_group</span><span class="p">)</span>
-        <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">date</span><span class="p">)</span>
-        <span class="n">fcMask</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="n">gf</span><span class="p">)</span>
-        <span class="n">_make_transect_masks</span><span class="p">(</span><span class="n">mesh_short_name</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">,</span> <span class="n">fcMask</span><span class="o">=</span><span class="n">fcMask</span><span class="p">,</span>
+        <span class="n">suffix</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}{</span><span class="n">date</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">fc_mask</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="n">gf</span><span class="p">)</span>
+        <span class="n">_make_transect_masks</span><span class="p">(</span><span class="n">mesh_short_name</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">,</span> <span class="n">fc_mask</span><span class="o">=</span><span class="n">fc_mask</span><span class="p">,</span>
                              <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="n">cores</span><span class="p">)</span>
 
     <span class="n">_make_analysis_lat_lon_map</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">mesh_short_name</span><span class="p">,</span> <span class="n">cores</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
-    <span class="n">_make_analysis_polar_map</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">mesh_short_name</span><span class="p">,</span>
-                             <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;antarctic&#39;</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="n">cores</span><span class="p">,</span>
-                             <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
-    <span class="n">_make_analysis_polar_map</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">mesh_short_name</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;arctic&#39;</span><span class="p">,</span>
-                             <span class="n">cores</span><span class="o">=</span><span class="n">cores</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">projection_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;antarctic&#39;</span><span class="p">,</span> <span class="s1">&#39;arctic&#39;</span><span class="p">,</span> <span class="s1">&#39;antarctic_extended&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;arctic_extended&#39;</span><span class="p">,</span> <span class="s1">&#39;north_atlantic&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;north_pacific&#39;</span><span class="p">,</span> <span class="s1">&#39;subpolar_north_atlantic&#39;</span><span class="p">]:</span>
+        <span class="n">_make_analysis_projection_map</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">mesh_short_name</span><span class="p">,</span> <span class="n">projection_name</span><span class="p">,</span>
+                                      <span class="n">cores</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
 
     <span class="c1"># make links in output directory</span>
     <span class="n">files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;map_*&#39;</span><span class="p">)</span>
@@ -248,17 +249,17 @@
     <span class="c1"># make links in output directory</span>
     <span class="n">output_dir</span> <span class="o">=</span> <span class="s1">&#39;../assembled_files/diagnostics/mpas_analysis/maps&#39;</span>
     <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
-        <span class="n">symlink</span><span class="p">(</span><span class="s1">&#39;../../../../diagnostics_files/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span>
-                <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
+        <span class="n">symlink</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;../../../../diagnostics_files/</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">output_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_make_region_masks</span><span class="p">(</span><span class="n">mesh_name</span><span class="p">,</span> <span class="n">suffix</span><span class="p">,</span> <span class="n">fcMask</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">cores</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_make_region_masks</span><span class="p">(</span><span class="n">mesh_name</span><span class="p">,</span> <span class="n">suffix</span><span class="p">,</span> <span class="n">fc_mask</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">cores</span><span class="p">):</span>
     <span class="n">mesh_filename</span> <span class="o">=</span> <span class="s1">&#39;restart.nc&#39;</span>
 
-    <span class="n">geojson_filename</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.geojson&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">)</span>
-    <span class="n">mask_filename</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_name</span><span class="p">,</span> <span class="n">suffix</span><span class="p">)</span>
+    <span class="n">geojson_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">.geojson&#39;</span>
+    <span class="n">mask_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">.nc&#39;</span>
 
-    <span class="n">fcMask</span><span class="o">.</span><span class="n">to_geojson</span><span class="p">(</span><span class="n">geojson_filename</span><span class="p">)</span>
+    <span class="n">fc_mask</span><span class="o">.</span><span class="n">to_geojson</span><span class="p">(</span><span class="n">geojson_filename</span><span class="p">)</span>
 
     <span class="c1"># these defaults may have been updated from config options -- pass them</span>
     <span class="c1"># along to the subprocess</span>
@@ -270,7 +271,7 @@
             <span class="s1">&#39;-g&#39;</span><span class="p">,</span> <span class="n">geojson_filename</span><span class="p">,</span>
             <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="n">mask_filename</span><span class="p">,</span>
             <span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;cell&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cores</span><span class="p">),</span>
+            <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cores</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
             <span class="s1">&#39;--format&#39;</span><span class="p">,</span> <span class="n">netcdf_format</span><span class="p">,</span>
             <span class="s1">&#39;--engine&#39;</span><span class="p">,</span> <span class="n">netcdf_engine</span><span class="p">]</span>
     <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
@@ -278,18 +279,18 @@
     <span class="c1"># make links in output directory</span>
     <span class="n">output_dir</span> <span class="o">=</span> <span class="s1">&#39;../assembled_files/diagnostics/mpas_analysis/&#39;</span> \
                  <span class="s1">&#39;region_masks&#39;</span>
-    <span class="n">symlink</span><span class="p">(</span><span class="s1">&#39;../../../../diagnostics_files/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mask_filename</span><span class="p">),</span>
-            <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">mask_filename</span><span class="p">))</span>
+    <span class="n">symlink</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;../../../../diagnostics_files/</span><span class="si">{</span><span class="n">mask_filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">output_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">mask_filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_make_transect_masks</span><span class="p">(</span><span class="n">mesh_name</span><span class="p">,</span> <span class="n">suffix</span><span class="p">,</span> <span class="n">fcMask</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">cores</span><span class="p">,</span>
+<span class="k">def</span> <span class="nf">_make_transect_masks</span><span class="p">(</span><span class="n">mesh_name</span><span class="p">,</span> <span class="n">suffix</span><span class="p">,</span> <span class="n">fc_mask</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">cores</span><span class="p">,</span>
                          <span class="n">subdivision_threshold</span><span class="o">=</span><span class="mf">10e3</span><span class="p">):</span>
     <span class="n">mesh_filename</span> <span class="o">=</span> <span class="s1">&#39;restart.nc&#39;</span>
 
-    <span class="n">geojson_filename</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.geojson&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">)</span>
-    <span class="n">mask_filename</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_name</span><span class="p">,</span> <span class="n">suffix</span><span class="p">)</span>
+    <span class="n">geojson_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">.geojson&#39;</span>
+    <span class="n">mask_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">.nc&#39;</span>
 
-    <span class="n">fcMask</span><span class="o">.</span><span class="n">to_geojson</span><span class="p">(</span><span class="n">geojson_filename</span><span class="p">)</span>
+    <span class="n">fc_mask</span><span class="o">.</span><span class="n">to_geojson</span><span class="p">(</span><span class="n">geojson_filename</span><span class="p">)</span>
 
     <span class="c1"># these defaults may have been updated from config options -- pass them</span>
     <span class="c1"># along to the subprocess</span>
@@ -301,8 +302,8 @@
             <span class="s1">&#39;-g&#39;</span><span class="p">,</span> <span class="n">geojson_filename</span><span class="p">,</span>
             <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="n">mask_filename</span><span class="p">,</span>
             <span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;edge&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">subdivision_threshold</span><span class="p">),</span>
-            <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cores</span><span class="p">),</span>
+            <span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">subdivision_threshold</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cores</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
             <span class="s1">&#39;--add_edge_sign&#39;</span><span class="p">,</span>
             <span class="s1">&#39;--format&#39;</span><span class="p">,</span> <span class="n">netcdf_format</span><span class="p">,</span>
             <span class="s1">&#39;--engine&#39;</span><span class="p">,</span> <span class="n">netcdf_engine</span><span class="p">]</span>
@@ -311,63 +312,133 @@
     <span class="c1"># make links in output directory</span>
     <span class="n">output_dir</span> <span class="o">=</span> <span class="s1">&#39;../assembled_files/diagnostics/mpas_analysis/&#39;</span> \
                  <span class="s1">&#39;region_masks&#39;</span>
-    <span class="n">symlink</span><span class="p">(</span><span class="s1">&#39;../../../../diagnostics_files/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mask_filename</span><span class="p">),</span>
-            <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">mask_filename</span><span class="p">))</span>
+    <span class="n">symlink</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;../../../../diagnostics_files/</span><span class="si">{</span><span class="n">mask_filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">output_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">mask_filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_make_analysis_lat_lon_map</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span> <span class="n">cores</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
     <span class="n">mesh_filename</span> <span class="o">=</span> <span class="s1">&#39;restart.nc&#39;</span>
 
-    <span class="n">inDescriptor</span> <span class="o">=</span> <span class="n">MpasMeshDescriptor</span><span class="p">(</span><span class="n">mesh_filename</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">)</span>
+    <span class="n">in_descriptor</span> <span class="o">=</span> <span class="n">MpasMeshDescriptor</span><span class="p">(</span><span class="n">mesh_filename</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">)</span>
 
-    <span class="n">comparisonLatResolution</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;files_for_e3sm&#39;</span><span class="p">,</span>
-                                              <span class="s1">&#39;comparisonLatResolution&#39;</span><span class="p">)</span>
-    <span class="n">comparisonLonResolution</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;files_for_e3sm&#39;</span><span class="p">,</span>
-                                              <span class="s1">&#39;comparisonLonResolution&#39;</span><span class="p">)</span>
+    <span class="n">lat_res</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;files_for_e3sm&#39;</span><span class="p">,</span> <span class="s1">&#39;comparisonLatResolution&#39;</span><span class="p">)</span>
+    <span class="n">lon_res</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;files_for_e3sm&#39;</span><span class="p">,</span> <span class="s1">&#39;comparisonLonResolution&#39;</span><span class="p">)</span>
 
     <span class="c1"># modify the resolution of the global lat-lon grid as desired</span>
-    <span class="n">outDescriptor</span> <span class="o">=</span> <span class="n">get_lat_lon_descriptor</span><span class="p">(</span><span class="n">dLon</span><span class="o">=</span><span class="n">comparisonLatResolution</span><span class="p">,</span>
-                                           <span class="n">dLat</span><span class="o">=</span><span class="n">comparisonLonResolution</span><span class="p">)</span>
-    <span class="n">outGridName</span> <span class="o">=</span> <span class="n">outDescriptor</span><span class="o">.</span><span class="n">meshName</span>
+    <span class="n">out_descriptor</span> <span class="o">=</span> <span class="n">get_lat_lon_descriptor</span><span class="p">(</span><span class="n">dLon</span><span class="o">=</span><span class="n">lat_res</span><span class="p">,</span>
+                                            <span class="n">dLat</span><span class="o">=</span><span class="n">lon_res</span><span class="p">)</span>
+    <span class="n">out_grid_name</span> <span class="o">=</span> <span class="n">out_descriptor</span><span class="o">.</span><span class="n">meshName</span>
 
-    <span class="n">_make_mapping_file</span><span class="p">(</span><span class="n">mesh_name</span><span class="p">,</span> <span class="n">outGridName</span><span class="p">,</span> <span class="n">inDescriptor</span><span class="p">,</span> <span class="n">outDescriptor</span><span class="p">,</span>
+    <span class="n">_make_mapping_file</span><span class="p">(</span><span class="n">mesh_name</span><span class="p">,</span> <span class="n">out_grid_name</span><span class="p">,</span> <span class="n">in_descriptor</span><span class="p">,</span> <span class="n">out_descriptor</span><span class="p">,</span>
                        <span class="n">cores</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_make_analysis_polar_map</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span> <span class="n">projection</span><span class="p">,</span> <span class="n">cores</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
+<span class="c1"># copied from MPAS-Analysis for now</span>
+<span class="k">def</span> <span class="nf">_get_pyproj_projection</span><span class="p">(</span><span class="n">comparison_grid_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the projection from the comparison_grid_name.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    comparison_grid_name : str</span>
+<span class="sd">        The name of the projection comparison grid to use for remapping</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    projection : pyproj.Proj</span>
+<span class="sd">        The projection</span>
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If comparison_grid_name does not describe a known comparison grid</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">comparison_grid_name</span> <span class="o">==</span> <span class="s1">&#39;latlon&#39;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;latlon is not a projection grid.&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">comparison_grid_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;antarctic&#39;</span><span class="p">,</span> <span class="s1">&#39;antarctic_extended&#39;</span><span class="p">]:</span>
+        <span class="n">projection</span> <span class="o">=</span> <span class="n">pyproj</span><span class="o">.</span><span class="n">Proj</span><span class="p">(</span>
+            <span class="s1">&#39;+proj=stere +lat_ts=-71.0 +lat_0=-90 +lon_0=0.0  +k_0=1.0 &#39;</span>
+            <span class="s1">&#39;+x_0=0.0 +y_0=0.0 +ellps=WGS84&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">comparison_grid_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;arctic&#39;</span><span class="p">,</span> <span class="s1">&#39;arctic_extended&#39;</span><span class="p">]:</span>
+        <span class="n">projection</span> <span class="o">=</span> <span class="n">pyproj</span><span class="o">.</span><span class="n">Proj</span><span class="p">(</span>
+            <span class="s1">&#39;+proj=stere +lat_ts=75.0 +lat_0=90 +lon_0=0.0  +k_0=1.0 &#39;</span>
+            <span class="s1">&#39;+x_0=0.0 +y_0=0.0 +ellps=WGS84&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">comparison_grid_name</span> <span class="o">==</span> <span class="s1">&#39;north_atlantic&#39;</span><span class="p">:</span>
+        <span class="n">projection</span> <span class="o">=</span> <span class="n">pyproj</span><span class="o">.</span><span class="n">Proj</span><span class="p">(</span><span class="s1">&#39;+proj=lcc +lon_0=-45 +lat_0=45 +lat_1=39 &#39;</span>
+                                 <span class="s1">&#39;+lat_2=51 +x_0=0.0 +y_0=0.0 +ellps=WGS84&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">comparison_grid_name</span> <span class="o">==</span> <span class="s1">&#39;north_pacific&#39;</span><span class="p">:</span>
+        <span class="n">projection</span> <span class="o">=</span> <span class="n">pyproj</span><span class="o">.</span><span class="n">Proj</span><span class="p">(</span><span class="s1">&#39;+proj=lcc +lon_0=180 +lat_0=40 +lat_1=34 &#39;</span>
+                                 <span class="s1">&#39;+lat_2=46 +x_0=0.0 +y_0=0.0 +ellps=WGS84&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">comparison_grid_name</span> <span class="o">==</span> <span class="s1">&#39;subpolar_north_atlantic&#39;</span><span class="p">:</span>
+        <span class="n">projection</span> <span class="o">=</span> <span class="n">pyproj</span><span class="o">.</span><span class="n">Proj</span><span class="p">(</span><span class="s1">&#39;+proj=lcc +lon_0=-40 +lat_0=54 +lat_1=40 &#39;</span>
+                                 <span class="s1">&#39;+lat_2=68 +x_0=0.0 +y_0=0.0 +ellps=WGS84&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;We missed one of the known comparison grids: &#39;</span>
+                         <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">comparison_grid_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">projection</span>
+
+
+<span class="c1"># A lot of duplication from MPAS-Analysis for now.</span>
+<span class="k">def</span> <span class="nf">_make_analysis_projection_map</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span> <span class="n">projection_name</span><span class="p">,</span> <span class="n">cores</span><span class="p">,</span>
+                                  <span class="n">logger</span><span class="p">):</span>
     <span class="n">mesh_filename</span> <span class="o">=</span> <span class="s1">&#39;restart.nc&#39;</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="s1">&#39;files_for_e3sm&#39;</span>
 
-    <span class="n">upperProj</span> <span class="o">=</span> <span class="n">projection</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="n">projection</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="n">option_suffixes</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;antarctic&#39;</span><span class="p">:</span> <span class="s1">&#39;AntarcticStereo&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;arctic&#39;</span><span class="p">:</span> <span class="s1">&#39;ArcticStereo&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;antarctic_extended&#39;</span><span class="p">:</span> <span class="s1">&#39;AntarcticExtended&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;arctic_extended&#39;</span><span class="p">:</span> <span class="s1">&#39;ArcticExtended&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;north_atlantic&#39;</span><span class="p">:</span> <span class="s1">&#39;NorthAtlantic&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;north_pacific&#39;</span><span class="p">:</span> <span class="s1">&#39;NorthPacific&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;subpolar_north_atlantic&#39;</span><span class="p">:</span> <span class="s1">&#39;SubpolarNorthAtlantic&#39;</span><span class="p">}</span>
 
-    <span class="n">inDescriptor</span> <span class="o">=</span> <span class="n">MpasMeshDescriptor</span><span class="p">(</span><span class="n">mesh_filename</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">)</span>
+    <span class="n">grid_suffixes</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;antarctic&#39;</span><span class="p">:</span> <span class="s1">&#39;Antarctic_stereo&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;arctic&#39;</span><span class="p">:</span> <span class="s1">&#39;Arctic_stereo&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;antarctic_extended&#39;</span><span class="p">:</span> <span class="s1">&#39;Antarctic_stereo&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;arctic_extended&#39;</span><span class="p">:</span> <span class="s1">&#39;Arctic_stereo&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;north_atlantic&#39;</span><span class="p">:</span> <span class="s1">&#39;North_Atlantic&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;north_pacific&#39;</span><span class="p">:</span> <span class="s1">&#39;North_Pacific&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;subpolar_north_atlantic&#39;</span><span class="p">:</span> <span class="s1">&#39;Subpolar_North_Atlantic&#39;</span><span class="p">}</span>
 
-    <span class="n">comparisonStereoWidth</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span>
-        <span class="s1">&#39;files_for_e3sm&#39;</span><span class="p">,</span> <span class="s1">&#39;comparison</span><span class="si">{}</span><span class="s1">StereoWidth&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">upperProj</span><span class="p">))</span>
-    <span class="n">comparisonStereoResolution</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span>
-        <span class="s1">&#39;files_for_e3sm&#39;</span><span class="p">,</span> <span class="s1">&#39;comparison</span><span class="si">{}</span><span class="s1">StereoResolution&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">upperProj</span><span class="p">))</span>
+    <span class="n">projection</span> <span class="o">=</span> <span class="n">_get_pyproj_projection</span><span class="p">(</span><span class="n">projection_name</span><span class="p">)</span>
+    <span class="n">option_suffix</span> <span class="o">=</span> <span class="n">option_suffixes</span><span class="p">[</span><span class="n">projection_name</span><span class="p">]</span>
+    <span class="n">grid_suffix</span> <span class="o">=</span> <span class="n">grid_suffixes</span><span class="p">[</span><span class="n">projection_name</span><span class="p">]</span>
 
-    <span class="n">outDescriptor</span> <span class="o">=</span> <span class="n">get_polar_descriptor</span><span class="p">(</span><span class="n">Lx</span><span class="o">=</span><span class="n">comparisonStereoWidth</span><span class="p">,</span>
-                                         <span class="n">Ly</span><span class="o">=</span><span class="n">comparisonStereoWidth</span><span class="p">,</span>
-                                         <span class="n">dx</span><span class="o">=</span><span class="n">comparisonStereoResolution</span><span class="p">,</span>
-                                         <span class="n">dy</span><span class="o">=</span><span class="n">comparisonStereoResolution</span><span class="p">,</span>
-                                         <span class="n">projection</span><span class="o">=</span><span class="n">projection</span><span class="p">)</span>
+    <span class="n">in_descriptor</span> <span class="o">=</span> <span class="n">MpasMeshDescriptor</span><span class="p">(</span><span class="n">mesh_filename</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">)</span>
 
-    <span class="n">outGridName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">x</span><span class="si">{}</span><span class="s1">km_</span><span class="si">{}</span><span class="s1">km_</span><span class="si">{}</span><span class="s1">_stereo&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-        <span class="n">comparisonStereoWidth</span><span class="p">,</span>  <span class="n">comparisonStereoWidth</span><span class="p">,</span>
-        <span class="n">comparisonStereoResolution</span><span class="p">,</span> <span class="n">upperProj</span><span class="p">)</span>
+    <span class="n">width</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span>
+        <span class="n">section</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;comparison</span><span class="si">{</span><span class="n">option_suffix</span><span class="si">}</span><span class="s1">Width&#39;</span><span class="p">)</span>
+    <span class="n">option</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;comparison</span><span class="si">{</span><span class="n">option_suffix</span><span class="si">}</span><span class="s1">Height&#39;</span>
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">option</span><span class="p">):</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">option</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="n">width</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span>
+        <span class="n">section</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;comparison</span><span class="si">{</span><span class="n">option_suffix</span><span class="si">}</span><span class="s1">Resolution&#39;</span><span class="p">)</span>
 
-    <span class="n">_make_mapping_file</span><span class="p">(</span><span class="n">mesh_name</span><span class="p">,</span> <span class="n">outGridName</span><span class="p">,</span> <span class="n">inDescriptor</span><span class="p">,</span> <span class="n">outDescriptor</span><span class="p">,</span>
+    <span class="n">xmax</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">width</span> <span class="o">*</span> <span class="mf">1e3</span>
+    <span class="n">nx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">width</span> <span class="o">/</span> <span class="n">res</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">xmax</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">nx</span><span class="p">)</span>
+
+    <span class="n">ymax</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">height</span> <span class="o">*</span> <span class="mf">1e3</span>
+    <span class="n">ny</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">height</span> <span class="o">/</span> <span class="n">res</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">ymax</span><span class="p">,</span> <span class="n">ymax</span><span class="p">,</span> <span class="n">ny</span><span class="p">)</span>
+
+    <span class="n">out_grid_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">width</span><span class="si">}</span><span class="s1">x</span><span class="si">{</span><span class="n">height</span><span class="si">}</span><span class="s1">km_</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">km_</span><span class="si">{</span><span class="n">grid_suffix</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="n">out_descriptor</span> <span class="o">=</span> <span class="n">ProjectionGridDescriptor</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">projection</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+                                                     <span class="n">mesh_name</span><span class="p">)</span>
+
+    <span class="n">_make_mapping_file</span><span class="p">(</span><span class="n">mesh_name</span><span class="p">,</span> <span class="n">out_grid_name</span><span class="p">,</span> <span class="n">in_descriptor</span><span class="p">,</span> <span class="n">out_descriptor</span><span class="p">,</span>
                        <span class="n">cores</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_make_mapping_file</span><span class="p">(</span><span class="n">mesh_name</span><span class="p">,</span> <span class="n">outGridName</span><span class="p">,</span> <span class="n">inDescriptor</span><span class="p">,</span> <span class="n">outDescriptor</span><span class="p">,</span>
+<span class="k">def</span> <span class="nf">_make_mapping_file</span><span class="p">(</span><span class="n">mesh_name</span><span class="p">,</span> <span class="n">out_grid_name</span><span class="p">,</span> <span class="n">in_descriptor</span><span class="p">,</span> <span class="n">out_descriptor</span><span class="p">,</span>
                        <span class="n">cores</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
 
     <span class="n">parallel_executable</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parallel&#39;</span><span class="p">,</span> <span class="s1">&#39;parallel_executable&#39;</span><span class="p">)</span>
 
-    <span class="n">mappingFileName</span> <span class="o">=</span> <span class="s1">&#39;map_</span><span class="si">{}</span><span class="s1">_to_</span><span class="si">{}</span><span class="s1">_bilinear.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_name</span><span class="p">,</span> <span class="n">outGridName</span><span class="p">)</span>
+    <span class="n">mapping_file_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;map_</span><span class="si">{</span><span class="n">mesh_name</span><span class="si">}</span><span class="s1">_to_</span><span class="si">{</span><span class="n">out_grid_name</span><span class="si">}</span><span class="s1">_bilinear.nc&#39;</span>
 
-    <span class="n">remapper</span> <span class="o">=</span> <span class="n">Remapper</span><span class="p">(</span><span class="n">inDescriptor</span><span class="p">,</span> <span class="n">outDescriptor</span><span class="p">,</span> <span class="n">mappingFileName</span><span class="p">)</span>
+    <span class="n">remapper</span> <span class="o">=</span> <span class="n">Remapper</span><span class="p">(</span><span class="n">in_descriptor</span><span class="p">,</span> <span class="n">out_descriptor</span><span class="p">,</span> <span class="n">mapping_file_name</span><span class="p">)</span>
 
     <span class="n">remapper</span><span class="o">.</span><span class="n">build_mapping_file</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;bilinear&#39;</span><span class="p">,</span> <span class="n">mpiTasks</span><span class="o">=</span><span class="n">cores</span><span class="p">,</span> <span class="n">tempdir</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span>
                                 <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
@@ -380,14 +451,14 @@
     <span class="n">mesh_filename</span> <span class="o">=</span> <span class="s1">&#39;restart.nc&#39;</span>
 
     <span class="n">function</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">date</span> <span class="o">=</span> <span class="n">get_aggregator_by_name</span><span class="p">(</span><span class="s1">&#39;MOC Basins&#39;</span><span class="p">)</span>
-    <span class="n">fcMask</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="n">gf</span><span class="p">)</span>
+    <span class="n">fc_mask</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="n">gf</span><span class="p">)</span>
 
-    <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">date</span><span class="p">)</span>
+    <span class="n">suffix</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}{</span><span class="n">date</span><span class="si">}</span><span class="s1">&#39;</span>
 
-    <span class="n">geojson_filename</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.geojson&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">)</span>
-    <span class="n">mask_filename</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_short_name</span><span class="p">,</span> <span class="n">suffix</span><span class="p">)</span>
+    <span class="n">geojson_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">.geojson&#39;</span>
+    <span class="n">mask_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_short_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">.nc&#39;</span>
 
-    <span class="n">fcMask</span><span class="o">.</span><span class="n">to_geojson</span><span class="p">(</span><span class="n">geojson_filename</span><span class="p">)</span>
+    <span class="n">fc_mask</span><span class="o">.</span><span class="n">to_geojson</span><span class="p">(</span><span class="n">geojson_filename</span><span class="p">)</span>
 
     <span class="c1"># these defaults may have been updated from config options -- pass them</span>
     <span class="c1"># along to the subprocess</span>
@@ -399,37 +470,34 @@
             <span class="s1">&#39;-g&#39;</span><span class="p">,</span> <span class="n">geojson_filename</span><span class="p">,</span>
             <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="n">mask_filename</span><span class="p">,</span>
             <span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;cell&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cores</span><span class="p">),</span>
+            <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cores</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
             <span class="s1">&#39;--format&#39;</span><span class="p">,</span> <span class="n">netcdf_format</span><span class="p">,</span>
             <span class="s1">&#39;--engine&#39;</span><span class="p">,</span> <span class="n">netcdf_engine</span><span class="p">]</span>
     <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
-    <span class="n">mask_and_transect_filename</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_mocBasinsAndTransects</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-        <span class="n">mesh_short_name</span><span class="p">,</span> <span class="n">date</span><span class="p">)</span>
+    <span class="n">mask_and_transect_filename</span> <span class="o">=</span> \
+        <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_short_name</span><span class="si">}</span><span class="s1">_mocBasinsAndTransects</span><span class="si">{</span><span class="n">date</span><span class="si">}</span><span class="s1">.nc&#39;</span>
 
-    <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">mesh_filename</span><span class="p">)</span>
-    <span class="n">dsMask</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">mask_filename</span><span class="p">)</span>
+    <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">mesh_filename</span><span class="p">)</span>
+    <span class="n">ds_mask</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">mask_filename</span><span class="p">)</span>
 
-    <span class="n">dsMasksAndTransects</span> <span class="o">=</span> <span class="n">add_moc_southern_boundary_transects</span><span class="p">(</span>
-        <span class="n">dsMask</span><span class="p">,</span> <span class="n">dsMesh</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+    <span class="n">ds_masks_and_transects</span> <span class="o">=</span> <span class="n">add_moc_southern_boundary_transects</span><span class="p">(</span>
+        <span class="n">ds_mask</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
-    <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMasksAndTransects</span><span class="p">,</span> <span class="n">mask_and_transect_filename</span><span class="p">,</span>
+    <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds_masks_and_transects</span><span class="p">,</span> <span class="n">mask_and_transect_filename</span><span class="p">,</span>
                  <span class="n">char_dim_name</span><span class="o">=</span><span class="s1">&#39;StrLen&#39;</span><span class="p">)</span>
 
     <span class="c1"># make links in output directories (both inputdata and diagnostics)</span>
-    <span class="n">output_dir</span> <span class="o">=</span> <span class="s1">&#39;../assembled_files/inputdata/ocn/mpas-o/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-        <span class="n">mesh_short_name</span><span class="p">)</span>
+    <span class="n">output_dir</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;../assembled_files/inputdata/ocn/mpas-o/</span><span class="si">{</span><span class="n">mesh_short_name</span><span class="si">}</span><span class="s1">&#39;</span>
     <span class="n">symlink</span><span class="p">(</span>
-        <span class="s1">&#39;../../../../../diagnostics_files/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="n">mask_and_transect_filename</span><span class="p">),</span>
-        <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">mask_and_transect_filename</span><span class="p">))</span>
+        <span class="sa">f</span><span class="s1">&#39;../../../../../diagnostics_files/</span><span class="si">{</span><span class="n">mask_and_transect_filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">output_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">mask_and_transect_filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="n">output_dir</span> <span class="o">=</span> <span class="s1">&#39;../assembled_files/diagnostics/mpas_analysis/&#39;</span> \
                  <span class="s1">&#39;region_masks&#39;</span>
     <span class="n">symlink</span><span class="p">(</span>
-        <span class="s1">&#39;../../../../diagnostics_files/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="n">mask_and_transect_filename</span><span class="p">),</span>
-        <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">mask_and_transect_filename</span><span class="p">))</span>
+        <span class="sa">f</span><span class="s1">&#39;../../../../diagnostics_files/</span><span class="si">{</span><span class="n">mask_and_transect_filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">output_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">mask_and_transect_filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 </pre></div>
 
            </div>

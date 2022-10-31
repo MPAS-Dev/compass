@@ -144,35 +144,35 @@ restart test—that are made up of one or more steps</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the name of the test case</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – the name of the test case</p></li>
 <li><p><strong>test_group</strong> (<a class="reference internal" href="compass.TestGroup.html#compass.TestGroup" title="compass.TestGroup"><em>compass.TestGroup</em></a>) – The test group the test case belongs to</p></li>
 <li><p><strong>mpas_core</strong> (<a class="reference internal" href="compass.MpasCore.html#compass.MpasCore" title="compass.MpasCore"><em>compass.MpasCore</em></a>) – The MPAS core the test group belongs to</p></li>
-<li><p><strong>steps</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – A dictionary of steps in the test case with step names as keys</p></li>
-<li><p><strong>steps_to_run</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – A list of the steps to run when <code class="docutils literal notranslate"><span class="pre">run()</span></code> gets called.  This list
+<li><p><strong>steps</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – A dictionary of steps in the test case with step names as keys</p></li>
+<li><p><strong>steps_to_run</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a>) – A list of the steps to run when <code class="docutils literal notranslate"><span class="pre">run()</span></code> gets called.  This list
 includes all steps by default but can be replaced with a list of only
 those tests that should run by default if some steps are optional and
 should be run manually by the user.</p></li>
-<li><p><strong>subdir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the subdirectory for the test case</p></li>
-<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the path within the base work directory of the test case, made up of
+<li><p><strong>subdir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – the subdirectory for the test case</p></li>
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – the path within the base work directory of the test case, made up of
 <code class="docutils literal notranslate"><span class="pre">mpas_core</span></code>, <code class="docutils literal notranslate"><span class="pre">test_group</span></code>, and the test case’s <code class="docutils literal notranslate"><span class="pre">subdir</span></code></p></li>
 <li><p><strong>config</strong> (<a class="reference internal" href="compass.config.CompassConfigParser.html#compass.config.CompassConfigParser" title="compass.config.CompassConfigParser"><em>compass.config.CompassConfigParser</em></a>) – Configuration options for this test case, a combination of the defaults
 for the machine, core and configuration</p></li>
-<li><p><strong>config_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The local name of the config file that <code class="docutils literal notranslate"><span class="pre">config</span></code> has been written to
+<li><p><strong>config_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The local name of the config file that <code class="docutils literal notranslate"><span class="pre">config</span></code> has been written to
 during setup and read from during run</p></li>
-<li><p><strong>work_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The test case’s work directory, defined during setup as the combination
+<li><p><strong>work_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The test case’s work directory, defined during setup as the combination
 of <code class="docutils literal notranslate"><span class="pre">base_work_dir</span></code> and <code class="docutils literal notranslate"><span class="pre">path</span></code></p></li>
-<li><p><strong>base_work_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The base work directory</p></li>
-<li><p><strong>baseline_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – Location of the same test case within the baseline work directory,
+<li><p><strong>base_work_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The base work directory</p></li>
+<li><p><strong>baseline_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><em>optional</em>) – Location of the same test case within the baseline work directory,
 for use in comparing variables and timers</p></li>
-<li><p><strong>stdout_logger</strong> (<a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.10)"><em>logging.Logger</em></a>) – A logger for output from the test case that goes to stdout regardless
+<li><p><strong>stdout_logger</strong> (<a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.11)"><em>logging.Logger</em></a>) – A logger for output from the test case that goes to stdout regardless
 of whether <code class="docutils literal notranslate"><span class="pre">logger</span></code> is a log file or stdout</p></li>
-<li><p><strong>logger</strong> (<a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.10)"><em>logging.Logger</em></a>) – A logger for output from the test case</p></li>
-<li><p><strong>log_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – At run time, the name of a log file where output/errors from the test
+<li><p><strong>logger</strong> (<a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.11)"><em>logging.Logger</em></a>) – A logger for output from the test case</p></li>
+<li><p><strong>log_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – At run time, the name of a log file where output/errors from the test
 case are being logged, or <code class="docutils literal notranslate"><span class="pre">None</span></code> if output is to stdout/stderr</p></li>
-<li><p><strong>new_step_log_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to create a new log file for each step or to log output to a
+<li><p><strong>new_step_log_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – Whether to create a new log file for each step or to log output to a
 common log file for the whole test case.  The latter is used when
 running the test case as part of a test suite</p></li>
-<li><p><strong>validation</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – A dictionary with the status of internal and baseline comparisons, used
+<li><p><strong>validation</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – A dictionary with the status of internal and baseline comparisons, used
 by the <code class="docutils literal notranslate"><span class="pre">compass</span></code> framework to determine whether the test case passed
 or failed internal and baseline validation.</p></li>
 </ul>
@@ -186,8 +186,8 @@ or failed internal and baseline validation.</p></li>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>test_group</strong> (<a class="reference internal" href="compass.TestGroup.html#compass.TestGroup" title="compass.TestGroup"><em>compass.TestGroup</em></a>) – the test group that this test case belongs to</p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the name of the test case</p></li>
-<li><p><strong>subdir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – the subdirectory for the test case.  The default is <code class="docutils literal notranslate"><span class="pre">name</span></code></p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – the name of the test case</p></li>
+<li><p><strong>subdir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><em>optional</em>) – the subdirectory for the test case.  The default is <code class="docutils literal notranslate"><span class="pre">name</span></code></p></li>
 </ul>
 </dd>
 </dl>
