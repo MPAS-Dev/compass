@@ -156,6 +156,10 @@ class OceanTest(TestCase):
 
         config.set('vertical_grid', 'coord_type', vertical_coordinate)
 
+        if vertical_coordinate == 'sigma':
+            # default to 10 vertical levels instead of 36
+            config.set('vertical_grid', 'vert_levels', '10')
+
         for step_name in self.steps:
             if step_name in ['ssh_adjustment', 'performance', 'simulation']:
                 step = self.steps[step_name]

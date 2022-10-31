@@ -86,6 +86,7 @@ class InitialState(Step):
         """
         config = self.config
         logger = self.logger
+        vertical_coordinate = self.vertical_coordinate
 
         section = config['isomip_plus']
         nx = section.getint('nx')
@@ -143,14 +144,15 @@ class InitialState(Step):
         section = config['isomip_plus']
 
         min_column_thickness = section.getfloat('min_column_thickness')
-        min_levels = section.getint('minimum_levels')
 
         interfaces = generate_1d_grid(config)
 
         # Deepen the bottom depth to maintain the minimum water-column
         # thickness
-        min_depth = numpy.maximum(-ds.ssh + min_column_thickness,
-                                  interfaces[min_levels+1])
+        min_depth = -ds.ssh + min_column_thickness
+        if vertical_coordinate == 'z-star':
+            min_levels = section.getint('minimum_levels')
+            min_depth = numpy.maximum(min_depth, interfaces[min_levels+1])
         ds['bottomDepth'] = numpy.maximum(ds.bottomDepth, min_depth)
 
         init_vertical_coord(config, ds)

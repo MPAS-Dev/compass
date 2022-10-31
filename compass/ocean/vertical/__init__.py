@@ -1,6 +1,7 @@
 import numpy
 import xarray
 
+from compass.ocean.vertical.sigma import init_sigma_vertical_coord
 from compass.ocean.vertical.zlevel import init_z_level_vertical_coord
 from compass.ocean.vertical.zstar import init_z_star_vertical_coord
 
@@ -72,6 +73,8 @@ def init_vertical_coord(config, ds):
         init_z_level_vertical_coord(config, ds)
     elif coord_type == 'z-star':
         init_z_star_vertical_coord(config, ds)
+    elif coord_type == 'sigma':
+        init_sigma_vertical_coord(config, ds)
     elif coord_type == 'haney-number':
         raise ValueError('Haney Number coordinate not yet supported.')
     else:
