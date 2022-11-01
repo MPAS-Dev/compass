@@ -16,7 +16,7 @@ class IsomipPlus(TestGroup):
 
         for resolution in [2., 5.]:
             for experiment in ['Ocean0', 'Ocean1', 'Ocean2']:
-                for vertical_coordinate in ['z-star', 'single_layer']:
+                for vertical_coordinate in ['z-star']:
                     self.add_test_case(
                         OceanTest(test_group=self, resolution=resolution,
                                   experiment=experiment,
@@ -40,18 +40,26 @@ class IsomipPlus(TestGroup):
                                   experiment=experiment,
                                   vertical_coordinate=vertical_coordinate,
                                   thin_film_present=True))
+                    self.add_test_case(
+                        OceanTest(test_group=self, resolution=resolution,
+                                  experiment=experiment,
+                                  vertical_coordinate=vertical_coordinate,
+                                  time_varying_forcing=True,
+                                  thin_film_present=True))
                 for vertical_coordinate in ['sigma', 'single_layer']:
                     self.add_test_case(
                         OceanTest(test_group=self, resolution=resolution,
                                   experiment=experiment,
                                   vertical_coordinate=vertical_coordinate,
-                                  time_varying_forcing=True, time_varying_load='increasing',
+                                  time_varying_forcing=True,
+                                  time_varying_load='increasing',
                                   thin_film_present=True))
                     self.add_test_case(
                         OceanTest(test_group=self, resolution=resolution,
                                   experiment=experiment,
                                   vertical_coordinate=vertical_coordinate,
-                                  time_varying_forcing=True, time_varying_load='decreasing',
+                                  time_varying_forcing=True,
+                                  time_varying_load='decreasing',
                                   thin_film_present=True))
                 for vertical_coordinate in ['single_layer']:
                     self.add_test_case(
