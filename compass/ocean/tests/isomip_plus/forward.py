@@ -26,7 +26,8 @@ class Forward(Step):
     """
     def __init__(self, test_case, resolution, experiment, name='forward',
                  subdir=None, run_duration=None, vertical_coordinate='z-star',
-                 time_varying_forcing=False, thin_film_present=False):
+                 tidal_forcing=False, time_varying_forcing=False,
+                 thin_film_present=False):
         """
         Create a new test case
 
@@ -78,17 +79,23 @@ class Forward(Step):
         self.add_streams_file('compass.ocean.streams',
                               'streams.land_ice_fluxes')
 
-        template_replacements = {'output_interval': run_duration}
+        if tidal_forcing:
+            output_interval = "0000-00-00_02:00:00"
+        else:
+            output_interval = run_duration
+        template_replacements = {'output_interval': output_interval}
+
         self.add_streams_file('compass.ocean.tests.isomip_plus',
                               'streams.forward.template',
                               template_replacements=template_replacements)
 
         if vertical_coordinate == 'single_layer':
+            self.add_namelist_file(
+                'compass.ocean.tests.isomip_plus',
+                'namelist.single_layer.forward_and_ssh_adjust')
+        if tidal_forcing:
             self.add_namelist_file('compass.ocean.tests.isomip_plus',
-                                   'namelist.single_layer.forward_and_ssh_adjust')
-            if not time_varying_forcing:
-                self.add_namelist_file('compass.ocean.tests.isomip_plus',
-                                       'namelist.single_layer.forward')
+                                   'namelist.tidal_forcing.forward')
 
         if thin_film_present:
             self.add_namelist_file('compass.ocean.tests.isomip_plus',

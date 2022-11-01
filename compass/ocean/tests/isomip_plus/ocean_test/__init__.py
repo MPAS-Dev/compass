@@ -32,7 +32,7 @@ class OceanTest(TestCase):
 
     def __init__(self, test_group, resolution, experiment,
                  vertical_coordinate, time_varying_forcing=False,
-                 thin_film_present=False):
+                 thin_film_present=False, tidal_forcing=False):
         """
         Create the test case
 
@@ -57,6 +57,8 @@ class OceanTest(TestCase):
             Whether the run includes a thin film below grounded ice
         """
         name = experiment
+        if tidal_forcing:
+            name = f'tidal_forcing_{name}'
         if time_varying_forcing:
             name = f'time_varying_{name}'
         if thin_film_present:
@@ -86,11 +88,16 @@ class OceanTest(TestCase):
             SshAdjustment(test_case=self, resolution=resolution,
                           vertical_coordinate=vertical_coordinate,
                           thin_film_present=thin_film_present))
+        if tidal_forcing:
+            performance_run_duration = '0000-00-01_00:00:00'
+        else:
+            performance_run_duration = '0000-00-00_01:00:00'
         self.add_step(
             Forward(test_case=self, name='performance', resolution=resolution,
                     experiment=experiment,
-                    run_duration='0000-00-00_01:00:00',
+                    run_duration=performance_run_duration,
                     vertical_coordinate=vertical_coordinate,
+                    tidal_forcing=tidal_forcing,
                     time_varying_forcing=time_varying_forcing,
                     thin_film_present=thin_film_present))
 
@@ -99,6 +106,7 @@ class OceanTest(TestCase):
                     experiment=experiment,
                     run_duration='0000-01-00_00:00:00',
                     vertical_coordinate=vertical_coordinate,
+                    tidal_forcing=tidal_forcing,
                     time_varying_forcing=time_varying_forcing,
                     thin_film_present=thin_film_present),
             run_by_default=False)
@@ -109,7 +117,8 @@ class OceanTest(TestCase):
             run_by_default=False)
 
         self.add_step(
-            Viz(test_case=self, resolution=resolution, experiment=experiment),
+            Viz(test_case=self, resolution=resolution, experiment=experiment,
+                tidal_forcing=tidal_forcing),
             run_by_default=False)
 
         if resolution in [2., 5.]:

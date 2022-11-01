@@ -22,7 +22,7 @@ class Viz(Step):
     experiment : {'Ocean0', 'Ocean1', 'Ocean2'}
         The ISOMIP+ experiment
     """
-    def __init__(self, test_case, resolution, experiment):
+    def __init__(self, test_case, resolution, experiment, tidal_forcing=False):
         """
         Create the step
 
@@ -40,6 +40,7 @@ class Viz(Step):
         super().__init__(test_case=test_case, name='viz')
         self.resolution = resolution
         self.experiment = experiment
+        self.tidal_forcing = tidal_forcing
 
     def run(self):
         """
@@ -60,10 +61,13 @@ class Viz(Step):
         # show progress only if we're not writing to a log file
         show_progress = self.log_filename is None
 
-        sim_dir = '../simulation'
+        expt = self.experiment
+        if self.tidal_forcing:
+            sim_dir = '../performance'
+        else:
+            sim_dir = '../simulation'
         streamfunction_dir = '../streamfunction'
         out_dir = '.'
-        expt = self.experiment
 
         dsMesh = xarray.open_dataset(f'{sim_dir}/init.nc')
         dsOut = xarray.open_dataset(f'{sim_dir}/output.nc'.format(sim_dir))
@@ -81,10 +85,11 @@ class Viz(Step):
                                       cmap='cmo.curl')
             delice = dsOut.landIcePressure-dsOut.landIcePressure[0, :]
             plotter.plot_horiz_series(delice, 'delLandIcePressure',
-                                      'delLandIcePressure', True, cmap='cmo.curl')
+                                      'delLandIcePressure', True,
+                                      cmap='cmo.curl')
         plotter.plot_horiz_series(dsOut.velocityX[:, :, 0], 'u', 'u', True,
                                   cmap='cmo.balance', vmin=-5e-1, vmax=5e-1)
-        plotter.plot_horiz_series(dsOut.velocityY[:,:,0], 'v', 'v', True,
+        plotter.plot_horiz_series(dsOut.velocityY[:, :, 0], 'v', 'v', True,
                                   cmap='cmo.balance', vmin=-5e-1, vmax=5e-1)
         plotter.plot_horiz_series(dsOut.ssh + dsMesh.bottomDepth, 'H', 'H',
                                   True, vmin=min_column_thickness+1e-10,
