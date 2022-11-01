@@ -95,7 +95,8 @@ class OceanTest(TestCase):
             SshAdjustment(test_case=self, resolution=resolution,
                           vertical_coordinate=vertical_coordinate,
                           thin_film_present=thin_film_present))
-        if tidal_forcing:
+        if tidal_forcing or time_varying_load == 'increasing' or \
+            time_varying_load == 'decreasing':
             performance_run_duration = '0000-00-01_00:00:00'
         else:
             performance_run_duration = '0000-00-00_01:00:00'
@@ -203,8 +204,12 @@ class OceanTest(TestCase):
         config.set('vertical_grid', 'coord_type', vertical_coordinate)
 
         if vertical_coordinate == 'sigma':
-            # default to 10 vertical levels instead of 36
-            config.set('vertical_grid', 'vert_levels', '10')
+            if time_varying_load == 'increasing' or \
+                time_varying_load == 'decreasing':
+                config.set('vertical_grid', 'vert_levels', '3')
+            else:
+                # default to 10 vertical levels instead of 36
+                config.set('vertical_grid', 'vert_levels', '10')
 
         for step_name in self.steps:
             if step_name in ['ssh_adjustment', 'performance', 'simulation']:

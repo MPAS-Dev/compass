@@ -66,6 +66,8 @@ class Viz(Step):
             sim_dir = '../performance'
         else:
             sim_dir = '../simulation'
+        if not os.path.exists(f'{sim_dir}/timeSeriesStatsMonthly.0001-01-01.nc'):
+            sim_dir = '../performance'
         streamfunction_dir = '../streamfunction'
         out_dir = '.'
 
