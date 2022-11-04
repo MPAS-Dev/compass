@@ -12,35 +12,25 @@ class SetUpExperiment(Step):
 
     Attributes
     ----------
-    mesh_file : str
-        The name of the mesh file being used
-
-    mesh_type : str
-        The resolution or mesh type of the test case
     """
 
-    def __init__(self, test_case, name, subdir, exp, mesh_res):
+    def __init__(self, test_case, name, subdir, exp):
         """
         Set up a new experiment
 
         Parameters
         ----------
-        mesh_file : str
-            The name of the mesh file being used
-
-        mesh_type : {'high', 'mid'}
-            The resolution or mesh type of the test case
 
         exp : experiment
         """
 
         self.exp = exp
 
-        self.mesh_res = mesh_res
-
         super().__init__(test_case=test_case, name=name, subdir=subdir)
 
     def setup(self):
+
+        print(f"    Setting up experiment {self.exp}")
 
         if self.exp == 'hist':
             exp_fcg = 'ctrlAE'
@@ -49,6 +39,8 @@ class SetUpExperiment(Step):
 
         config = self.config
         section = config['ismip6_run_ais']
+        mesh_res = section.get('mesh_res')
+        compass_load_path = section.get('compass_load_path')
         forcing_basepath = section.get('forcing_basepath')
         init_cond_path = section.get('init_cond_path')
         init_cond_fname = os.path.split(init_cond_path)[-1]
@@ -120,18 +112,23 @@ class SetUpExperiment(Step):
             'compass.landice.tests.ismip6_run_ais', 'namelist.landice',
             out_name='namelist.landice')
 
+        if mesh_res == '04':
+            options = {'config_pio_num_iotasks': '60',
+                       'config_pio_stride': '64'}
+            self.add_namelist_options(options=options,
+                                      out_name='namelist.landice')
+
         if self.exp == 'hist':
             options = {'config_do_restart': ".false.",
                        'config_start_time': "'2000-01-01_00:00:00'",
                        'config_stop_time': "'2015-01-01_00:00:00'"}
-
             self.add_namelist_options(options=options,
                                       out_name='namelist.landice')
 
         # For all projection runs, symlink the restart file for the historical run
         # don't symlink restart_timestamp or you'll have a mighty mess
         if not self.exp == 'hist':
-            os.symlink(f"../hist_{self.mesh_res}/rst.2015-01-01.nc", os.path.join(self.work_dir, 'rst.2015-01-01.nc'))
+            os.symlink(f"../hist_{mesh_res}/rst.2015-01-01.nc", os.path.join(self.work_dir, 'rst.2015-01-01.nc'))
             with open(os.path.join(self.work_dir, "restart_timestamp"), "w") as text_file:
                 text_file.write("2015-01-01_00:00:00")
 
@@ -152,8 +149,9 @@ class SetUpExperiment(Step):
         # provide an example submit script
         template = Template(resources.read_text(
             'compass.landice.tests.ismip6_run_ais',
-            'slurm.run'))
-        slurm_replacements = {'EXP': self.exp}
+            f'slurm.{mesh_res}.run'))
+        slurm_replacements = {'EXP': self.exp,
+                              'LOAD_SCRIPT': compass_load_path}
         rendered_text = template.render(slurm_replacements)
         with open(os.path.join(self.work_dir, 'slurm.run'), "w") as fh:
             fh.write(rendered_text)

@@ -9,7 +9,7 @@ class Projection(TestCase):
     A test case for performing forward MALI runs of ISMIP6 Antaractic setup
     """
 
-    def __init__(self, test_group, mesh_res):
+    def __init__(self, test_group):
         """
         Create the test case
 
@@ -17,9 +17,6 @@ class Projection(TestCase):
         ----------
         test_group : compass.landice.tests.ismip6_run_ais.Ismip6RunAIS
             The test group that this test case belongs to
-
-        mesh_type : {'mid', 'high'}
-            The resolution or type of mesh of the test case
 
         """
         name = 'ismip6AE'
@@ -37,8 +34,7 @@ class Projection(TestCase):
             name = f'{exp}'
             self.add_step(
                SetUpExperiment(test_case=self, name=name,
-                              subdir=f"{exp}_{mesh_res}", exp=exp,
-                              mesh_res=mesh_res))
+                              subdir=f"{exp}", exp=exp))
 
     def validate(self):
         """

@@ -17,8 +17,4 @@ class Ismip6RunAIS(TestGroup):
         """
         super().__init__(mpas_core=mpas_core, name='ismip6_run_ais')
 
-        self.mesh_res = ['08']
-
-        for res in self.mesh_res:
-            self.add_test_case(
-                Projection(test_group=self, mesh_res=res))
+        self.add_test_case(Projection(test_group=self))

@@ -12,8 +12,7 @@ LOGDIR=previous_logs_`date +"%Y-%m-%d_%H-%M-%S"`
 mkdir $LOGDIR
 cp log* $LOGDIR
 
-# CHANGE THIS TO YOUR COMPASS LOAD SCRIPT!
-source /global/cscratch1/sd/hoffman2/AIS8km/compass/load_dev_compass_1.2.0-alpha.1_cori-haswell_gnu_mpt_albany.sh
+source {{ LOAD_SCRIPT }}
 date
-srun -n 320 --cpu-bind=cores --hint=nomultithread ./landice_model
+srun -n 320 --cpu-bind=cores --hint=multithread ./landice_model
 date
