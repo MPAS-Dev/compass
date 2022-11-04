@@ -58,6 +58,15 @@ class SetUpExperiment(Step):
         region_mask_fname = os.path.split(region_mask_path)[-1]
         graph_files_path = section.get('graph_files_path')
 
+        # Figure out if the forcing is in tier1 or tier2 subdir
+        if 'exp' in self.exp:
+            if int(self.exp[-2:]) >= 7:
+                forcing_basepath = os.path.join(forcing_basepath, 'tier2_experiments')
+            else:
+                forcing_basepath = os.path.join(forcing_basepath, 'tier1_experiments')
+        else:
+            forcing_basepath = os.path.join(forcing_basepath, 'tier1_experiments')
+
         # Copy files we'll need from local paths specified in cfg file
         if self.exp == 'hist':
             shutil.copy(init_cond_path, self.work_dir)
