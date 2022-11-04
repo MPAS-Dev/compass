@@ -172,7 +172,7 @@ def cell_quad(mesh, xlon, ylat, vals):
     return fbar / abar
 
 
-def dem_remap(args):
+def dem_remap(elev_file, mpas_file):
     """
     Map elevation and ice+ocn-thickness data from a "zipped" 
     RTopo data-set onto the cells in an MPAS mesh.
@@ -184,8 +184,8 @@ def dem_remap(args):
     
     print("Loading assests...")
 
-    elev = nc.Dataset(args.elev_file, "r")
-    mesh = nc.Dataset(args.mpas_file, "r+")
+    elev = nc.Dataset(elev_file, "r")
+    mesh = nc.Dataset(mpas_file, "r+")
 
 #-- Compute an approximate remapping, associating pixels in
 #-- the DEM with cells in the MPAS mesh. Since polygons are
@@ -333,4 +333,8 @@ if (__name__ == "__main__"):
         "--elev-file", dest="elev_file", type=str,
         required=True, help="Name of DEM pixel file.")
 
-    dem_remap(parser.parse_args())
+    parser.parse_args()
+    elev_file = args.elev_file
+    mpas_file = args.mpas_file
+    
+    dem_remap(elev_file, mpas_file)

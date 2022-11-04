@@ -104,7 +104,7 @@ def blend_front(e1st, i1st, e2nd, halo, sdev):
     return mask
 
 
-def rtopo_60sec(args):
+def rtopo_60sec(elev_path, save_path):
     """
     Create a zipped and pixel centred version of RTopo 2.0.4
     (60 arc-sec) to support remapping of elevation data.
@@ -114,7 +114,7 @@ def rtopo_60sec(args):
     print("Making RTopo-2.0.4 (60 arc-sec) pixel...")
 
     data = nc.Dataset(os.path.join(
-        args.elev_path, "RTopo-2.0.4_1min_data.nc"), "r")
+        elev_path, "RTopo-2.0.4_1min_data.nc"), "r")
 
     data.set_auto_maskandscale(False)  # quite valid_min/max
 
@@ -148,7 +148,7 @@ def rtopo_60sec(args):
 
     root = nc.Dataset(
         os.path.join(
-            args.save_path, "RTopo_2_0_4_60sec_pixel.nc"),
+            save_path, "RTopo_2_0_4_60sec_pixel.nc"),
         "w", format="NETCDF4")
     root.description = "A zipped RTopo-2.0.4 (60 arc-sec) " + \
         "data-set, pixel centred and compressed to int16_t."
@@ -181,7 +181,7 @@ def rtopo_60sec(args):
     root.close()
 
 
-def rtopo_30sec(args):
+def rtopo_30sec(elev_path, save_path):
     """
     Create a zipped and pixel centred version of RTopo 2.0.4
     (30 arc-sec) to support remapping of elevation data.
@@ -191,7 +191,7 @@ def rtopo_30sec(args):
     print("Making RTopo-2.0.4 (30 arc-sec) pixel...")
 
     data = nc.Dataset(os.path.join(
-        args.elev_path, 
+        elev_path, 
         "RTopo-2.0.4_30sec_bedrock_topography.nc"), "r")
     
     data.set_auto_maskandscale(False)  # quite valid_min/max
@@ -203,7 +203,7 @@ def rtopo_30sec(args):
         data["bedrock_topography"][:], dtype=np.float32)
 
     data = nc.Dataset(os.path.join(
-        args.elev_path, 
+        elev_path, 
         "RTopo-2.0.4_30sec_surface_elevation.nc"), "r")
     
     data.set_auto_maskandscale(False)  # quite valid_min/max
@@ -212,7 +212,7 @@ def rtopo_30sec(args):
         data["surface_elevation"][:], dtype=np.float32)
 
     data = nc.Dataset(os.path.join(
-        args.elev_path, 
+        elev_path, 
         "RTopo-2.0.4_30sec_ice_base_topography.nc"), "r")
 
     data.set_auto_maskandscale(False)  # quite valid_min/max
@@ -240,7 +240,7 @@ def rtopo_30sec(args):
 
     root = nc.Dataset(
         os.path.join(
-            args.save_path, "RTopo_2_0_4_30sec_pixel.nc"),
+            save_path, "RTopo_2_0_4_30sec_pixel.nc"),
         "w", format="NETCDF4")
     root.description = "A zipped RTopo-2.0.4 (30 arc-sec) " + \
         "data-set, pixel centred and compressed to int16_t."
@@ -273,7 +273,7 @@ def rtopo_30sec(args):
     root.close()
 
 
-def srtmp_60sec(args):
+def srtmp_60sec(elev_path, save_path):
     """
     Create a zipped and pixel centred version of SRTM15+V2.1
     (15 arc-sec) at 60 arc-sec.
@@ -283,7 +283,7 @@ def srtmp_60sec(args):
     print("Making SRTM15+V2.1 (60 arc-sec) pixel...")
 
     data = nc.Dataset(os.path.join(
-        args.elev_path, "SRTM15+V2.1.nc"), "r")
+        elev_path, "SRTM15+V2.1.nc"), "r")
 
     elev = np.asarray(data["z"][:], dtype=np.float32)
 
@@ -306,7 +306,7 @@ def srtmp_60sec(args):
 
     root = nc.Dataset(
         os.path.join(
-            args.save_path, "SRTM15+V2.1_60sec_pixel.nc"),
+            save_path, "SRTM15+V2.1_60sec_pixel.nc"),
         "w", format="NETCDF4")
     root.createDimension("num_lon", elev.shape[1] + 1)
     root.createDimension("num_col", elev.shape[1])    
@@ -327,7 +327,7 @@ def srtmp_60sec(args):
     root.close()
 
 
-def srtmp_30sec(args):
+def srtmp_30sec(elev_path, save_path):
     """
     Create a zipped and pixel centred version of SRTM15+V2.1
     (15 arc-sec) at 30 arc-sec.
@@ -337,7 +337,7 @@ def srtmp_30sec(args):
     print("Making SRTM15+V2.1 (30 arc-sec) pixel...")
 
     data = nc.Dataset(os.path.join(
-        args.elev_path, "SRTM15+V2.1.nc"), "r")
+        elev_path, "SRTM15+V2.1.nc"), "r")
 
     elev = np.asarray(data["z"][:], dtype=np.float32)
 
@@ -360,7 +360,7 @@ def srtmp_30sec(args):
 
     root = nc.Dataset(
         os.path.join(
-            args.save_path, "SRTM15+V2.1_30sec_pixel.nc"), 
+            save_path, "SRTM15+V2.1_30sec_pixel.nc"), 
         "w", format="NETCDF4")
     root.createDimension("num_lon", elev.shape[1] + 1)
     root.createDimension("num_col", elev.shape[1])    
@@ -381,7 +381,7 @@ def srtmp_30sec(args):
     root.close()
 
 
-def rtopo_srtmp_60sec(args):
+def rtopo_srtmp_60sec(elev_path, save_path):
     """
     Create a zipped and pixel centred 'blend' of RTopo 2.0.4
     and SRTM15+V2.1 at 60 arc-sec.
@@ -391,7 +391,7 @@ def rtopo_srtmp_60sec(args):
     print("Making RTopo-SRTM+ (60 arc-sec) blend...")
     
     data = nc.Dataset(os.path.join(
-        args.elev_path, "RTopo_2_0_4_60sec_pixel.nc"), "r")
+        elev_path, "RTopo_2_0_4_60sec_pixel.nc"), "r")
 
     e1st = np.asarray(
         data["bed_elevation"][:], dtype=np.int16)
@@ -403,7 +403,7 @@ def rtopo_srtmp_60sec(args):
         data["ocn_thickness"][:], dtype=np.int16)
 
     data = nc.Dataset(os.path.join(
-        args.elev_path, "SRTM15+V2.1_60sec_pixel.nc"), "r")
+        elev_path, "SRTM15+V2.1_60sec_pixel.nc"), "r")
 
     e2nd = np.asarray(
         data["top_elevation"][:], dtype=np.int16)
@@ -423,7 +423,7 @@ def rtopo_srtmp_60sec(args):
         -90.0, +90.0, elev.shape[0] + 1, dtype=np.float64)
 
     root = nc.Dataset(
-        os.path.join(args.save_path, 
+        os.path.join(save_path, 
             "RTopo_2_0_4_SRTM15+V2_1_60sec_pixel.nc"),
         "w", format="NETCDF4")
     root.description = "Blend of RTopo-2.0.4 (60 arc-sec) " + \
@@ -462,7 +462,7 @@ def rtopo_srtmp_60sec(args):
     root.close()
 
 
-def rtopo_srtmp_30sec(args):
+def rtopo_srtmp_30sec(elev_path, save_path):
     """
     Create a zipped and pixel centred 'blend' of RTopo 2.0.4
     and SRTM15+V2.1 at 30 arc-sec.
@@ -472,7 +472,7 @@ def rtopo_srtmp_30sec(args):
     print("Making RTopo-SRTM+ (30 arc-sec) blend...")
 
     data = nc.Dataset(os.path.join(
-        args.elev_path, "RTopo_2_0_4_30sec_pixel.nc"), "r")
+        elev_path, "RTopo_2_0_4_30sec_pixel.nc"), "r")
 
     e1st = np.asarray(
         data["bed_elevation"][:], dtype=np.int16)
@@ -484,7 +484,7 @@ def rtopo_srtmp_30sec(args):
         data["ocn_thickness"][:], dtype=np.int16)
 
     data = nc.Dataset(os.path.join(
-        args.elev_path, "SRTM15+V2.1_30sec_pixel.nc"), "r")
+        elev_path, "SRTM15+V2.1_30sec_pixel.nc"), "r")
 
     e2nd = np.asarray(
         data["top_elevation"][:], dtype=np.int16)
@@ -504,7 +504,7 @@ def rtopo_srtmp_30sec(args):
         -90.0, +90.0, elev.shape[0] + 1, dtype=np.float64)
 
     root = nc.Dataset(
-        os.path.join(args.save_path, 
+        os.path.join(save_path, 
             "RTopo_2_0_4_SRTM15+V2_1_30sec_pixel.nc"),
         "w", format="NETCDF4")
     root.description = "Blend of RTopo-2.0.4 (30 arc-sec) " + \
@@ -543,7 +543,7 @@ def rtopo_srtmp_30sec(args):
     root.close()
 
 
-def gebco_60sec(args):
+def gebco_60sec(elev_path, save_path):
     """
     Create a zipped and pixel centred version of GEBCO[2020]
     (15 arc-sec) at 60 arc-sec.
@@ -553,7 +553,7 @@ def gebco_60sec(args):
     print("Making GEBCO[2020] (60 arc-sec) pixel...")
 
     data = nc.Dataset(os.path.join(
-        args.elev_path, "GEBCO_2020.nc"), "r")
+        elev_path, "GEBCO_2020.nc"), "r")
 
     elev = np.asarray(
         data["elevation"][:], dtype=np.float32)
@@ -577,7 +577,7 @@ def gebco_60sec(args):
 
     root = nc.Dataset(
         os.path.join(
-            args.save_path, "GEBCO_v2020_60sec_pixel.nc"),
+            save_path, "GEBCO_v2020_60sec_pixel.nc"),
         "w", format="NETCDF4")
     root.createDimension("num_lon", elev.shape[1] + 1)
     root.createDimension("num_col", elev.shape[1])    
@@ -598,7 +598,7 @@ def gebco_60sec(args):
     root.close()
 
 
-def gebco_30sec(args):
+def gebco_30sec(elev_path, save_path):
     """
     Create a zipped and pixel centred version of GEBCO[2020]
     (15 arc-sec) at 30 arc-sec.
@@ -608,7 +608,7 @@ def gebco_30sec(args):
     print("Making GEBCO[2020] (30 arc-sec) pixel...")
 
     data = nc.Dataset(os.path.join(
-        args.elev_path, "GEBCO_2020.nc"), "r")
+        elev_path, "GEBCO_2020.nc"), "r")
 
     elev = np.asarray(
         data["elevation"][:], dtype=np.float32)
@@ -632,7 +632,7 @@ def gebco_30sec(args):
 
     root = nc.Dataset(
         os.path.join(
-            args.save_path, "GEBCO_v2020_30sec_pixel.nc"), 
+            save_path, "GEBCO_v2020_30sec_pixel.nc"), 
         "w", format="NETCDF4")
     root.createDimension("num_lon", elev.shape[1] + 1)
     root.createDimension("num_col", elev.shape[1])    
@@ -653,7 +653,7 @@ def gebco_30sec(args):
     root.close()
 
 
-def rtopo_gebco_60sec(args):
+def rtopo_gebco_60sec(elev_path, save_path):
     """
     Create a zipped and pixel centred 'blend' of RTopo 2.0.4
     and GEBCO[2020] at 60 arc-sec.
@@ -663,7 +663,7 @@ def rtopo_gebco_60sec(args):
     print("Making RTopo-GEBCO (60 arc-sec) blend...")
     
     data = nc.Dataset(os.path.join(
-        args.elev_path, "RTopo_2_0_4_60sec_pixel.nc"), "r")
+        elev_path, "RTopo_2_0_4_60sec_pixel.nc"), "r")
 
     e1st = np.asarray(
         data["bed_elevation"][:], dtype=np.int16)
@@ -675,7 +675,7 @@ def rtopo_gebco_60sec(args):
         data["ocn_thickness"][:], dtype=np.int16)
 
     data = nc.Dataset(os.path.join(
-        args.elev_path, "GEBCO_v2020_60sec_pixel.nc"), "r")
+        elev_path, "GEBCO_v2020_60sec_pixel.nc"), "r")
 
     e2nd = np.asarray(
         data["top_elevation"][:], dtype=np.int16)
@@ -695,7 +695,7 @@ def rtopo_gebco_60sec(args):
         -90.0, +90.0, elev.shape[0] + 1, dtype=np.float64)
 
     root = nc.Dataset(
-        os.path.join(args.save_path, 
+        os.path.join(save_path, 
             "RTopo_2_0_4_GEBCO_v2020_60sec_pixel.nc"),
         "w", format="NETCDF4")
     root.description = "Blend of RTopo-2.0.4 (60 arc-sec) " + \
@@ -734,7 +734,7 @@ def rtopo_gebco_60sec(args):
     root.close()
 
 
-def rtopo_gebco_30sec(args):
+def rtopo_gebco_30sec(elev_path, save_path):
     """
     Create a zipped and pixel centred 'blend' of RTopo 2.0.4
     and GEBCO[2020] at 30 arc-sec.
@@ -744,7 +744,7 @@ def rtopo_gebco_30sec(args):
     print("Making RTopo-GEBCO (30 arc-sec) blend...")
     
     data = nc.Dataset(os.path.join(
-        args.elev_path, "RTopo_2_0_4_30sec_pixel.nc"), "r")
+        elev_path, "RTopo_2_0_4_30sec_pixel.nc"), "r")
 
     e1st = np.asarray(
         data["bed_elevation"][:], dtype=np.int16)
@@ -756,7 +756,7 @@ def rtopo_gebco_30sec(args):
         data["ocn_thickness"][:], dtype=np.int16)
 
     data = nc.Dataset(os.path.join(
-        args.elev_path, "GEBCO_v2020_30sec_pixel.nc"), "r")
+        elev_path, "GEBCO_v2020_30sec_pixel.nc"), "r")
 
     e2nd = np.asarray(
         data["top_elevation"][:], dtype=np.int16)
@@ -776,7 +776,7 @@ def rtopo_gebco_30sec(args):
         -90.0, +90.0, elev.shape[0] + 1, dtype=np.float64)
 
     root = nc.Dataset(
-        os.path.join(args.save_path, 
+        os.path.join(save_path, 
             "RTopo_2_0_4_GEBCO_v2020_30sec_pixel.nc"),
         "w", format="NETCDF4")
     root.description = "Blend of RTopo-2.0.4 (30 arc-sec) " + \
@@ -830,22 +830,26 @@ if (__name__ == "__main__"):
         required=False, 
         default="", help="Path to store output data.")
 
-    rtopo_60sec(parser.parse_args())
-    rtopo_30sec(parser.parse_args())
+    parser.parse_args()
+    elev_path = parser.elev_path
+    save_path = parser.save_path
+
+    rtopo_60sec(elev_path, save_path)
+    rtopo_30sec(elev_path, save_path)
 
     """
     SRTM15+V2.1 data seems to include high-freq 'noise'
     near coastlines, so don't use for now...
 
-    srtmp_60sec(parser.parse_args())
-    srtmp_30sec(parser.parse_args())
+    srtmp_60sec(elev_path, save_path)
+    srtmp_30sec(elev_path, save_path)
 
-    rtopo_srtmp_60sec(parser.parse_args())
-    rtopo_srtmp_30sec(parser.parse_args())
+    rtopo_srtmp_60sec(elev_path, save_path)
+    rtopo_srtmp_30sec(elev_path, save_path)
     """    
 
-    gebco_60sec(parser.parse_args())
-    gebco_30sec(parser.parse_args())
+    gebco_60sec(elev_path, save_path)
+    gebco_30sec(elev_path, save_path)
     
-    rtopo_gebco_60sec(parser.parse_args())
-    rtopo_gebco_30sec(parser.parse_args())
+    rtopo_gebco_60sec(elev_path, save_path)
+    rtopo_gebco_30sec(elev_path, save_path)

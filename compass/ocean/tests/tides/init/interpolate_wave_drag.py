@@ -27,7 +27,7 @@ class InterpolateWaveDrag(Step):
     wave_drag_file : str
         Output file with interpolated rinv data
 
-    self.grid_file : str
+    grid_file : str
         Name of mesh file
 
     """
@@ -37,7 +37,7 @@ class InterpolateWaveDrag(Step):
 
         Parameters
         ----------
-        test_case : compass.ocean.tests.hurricane.init.Init
+        test_case : compass.ocean.tests.tides.init.Init
             The test case this step belongs to
 
         mesh : compass.ocean.tests.global_ocean.mesh.Mesh
@@ -76,20 +76,25 @@ class InterpolateWaveDrag(Step):
 
         # Get grid from data file
         lon_data = data_nc.variables['Longitude'][:]
-        lat_data = np.flipud(data_nc.variables['Latitude'][:])
+        lon_data = np.append(lon_data,180.0)
+        lon_data = np.insert(lon_data,0,-180.0)
+        lat_data = data_nc.variables['Latitude'][:]
+
         data = data_nc.variables['rinv'][:]
-        data = 1.0/data[0,:,:]
+        data = np.squeeze(data)
+        data = np.insert(data,0,data[:,0],axis=1)
+        data = np.append(data,data[:,-1][np.newaxis].T,axis=1)
+        data = 1.0/data[:,:]
 
         # Get grid from grid file
         lon_grid = np.mod(grid_nc.variables['lonEdge'][:] + np.pi, 2.0*np.pi) - np.pi
-        lon_grid = grid_nc.variables['lonEdge'][:]*180.0/np.pi
+        lon_grid = lon_grid*180.0/np.pi 
         lat_grid = grid_nc.variables['latEdge'][:]*180.0/np.pi
         nEdges = lon_grid.size
-        interp_data = np.zeros(nEdges)
 
-        # Interpolate timesnaps
+        # Interpolate 
         interp_data = interp_bilin(lon_data, lat_data,
-                                   data.T,
+                                   data,
                                    lon_grid, lat_grid)
 
         return (lon_grid, lat_grid, interp_data), \
@@ -110,7 +115,7 @@ class InterpolateWaveDrag(Step):
         lon_grid = interp_data[0]
         lat_grid = interp_data[1]
 
-        data = orig_data[2][i, :, :]
+        data = orig_data[2][:, :]
         interp = interp_data[2][ :]
 
         # Plot data
@@ -155,13 +160,13 @@ class InterpolateWaveDrag(Step):
                                   format='NETCDF3_64BIT_OFFSET')
 
         # Find dimesions
-        nEdges = data.shape[1]
+        nEdges = data.shape[0]
 
         # Declare dimensions
         data_nc.createDimension('nEdges', nEdges)
 
         # Set variables
-        data_var = data_nc.createVariable('topographic_wbave_drag', np.float64, ('nEells'))
+        data_var = data_nc.createVariable('topographic_wave_drag', np.float64, ('nEdges'))
         data_var[:] = data[:]
         data_nc.close()
 
@@ -178,4 +183,4 @@ class InterpolateWaveDrag(Step):
         self.write_to_file(interp[2])
 
         # Plot rinv field
-        self.plot_interp_data(p_data,  p_interp)
+        self.plot_interp_data(data, interp)

@@ -6,7 +6,7 @@ import argparse
 # Authors: Darren Engwirda
 
 
-def dem_trnsf(args):
+def dem_trnsf(base_mesh, part_mesh):
     """
     Transfer elevation & ice+ocn-thickness data from a full 
     sphere MPAS mesh onto a partial sub-mesh resulting from
@@ -17,8 +17,8 @@ def dem_trnsf(args):
 
     """
 
-    base = nc.Dataset(args.base_mesh, "r")
-    part = nc.Dataset(args.part_mesh, "r+")
+    base = nc.Dataset(base_mesh, "r")
+    part = nc.Dataset(part_mesh, "r+")
 
 #-- make a vector of cell-centre positions to match against
 
@@ -108,4 +108,7 @@ if (__name__ == "__main__"):
         "--part-mesh", dest="part_mesh", type=str,
         required=True, help="Name of culled MPAS mesh.")
 
-    dem_trnsf(parser.parse_args())
+    parser.parse_args()
+    base_mesh = args.base_mesh
+    part_mesh = args.part_mesh
+    dem_trnsf(base_mesh, part_mesh)
