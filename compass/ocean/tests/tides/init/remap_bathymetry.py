@@ -3,14 +3,13 @@ from compass.step import Step
 import netCDF4
 import matplotlib.pyplot as plt
 import numpy as np
-import datetime
 import os
-import subprocess
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
-import compass.ocean.tests.tides.init.dem_pixel
-import compass.ocean.tests.tides.init.dem_remap
-import compass.ocean.tests.tides.init.dem_trnsf
+
+import compass.ocean.tests.tides.init.dem_pixel as dem_pixel
+import compass.ocean.tests.tides.init.dem_remap as dem_remap
+import compass.ocean.tests.tides.init.dem_trnsf as dem_trnsf
 
 
 class RemapBathymetry(Step):
@@ -76,10 +75,14 @@ class RemapBathymetry(Step):
         Run this step of the test case
         """
 
-        init_path = test_case.steps['initial_state'].path
+        self.init_path = './'
 
-        dem_pixel.rtopo_30sec(init_path, init_path)
-        dem_pixel.gebco_30sec(init_path, init_path)
-        rtopo_gebco_30sec(init_path, init_path)
+        if not os.path.exists('RTopo_2_0_4_30sec_pixel.nc'):
+            dem_pixel.rtopo_30sec(self.init_path, self.init_path)
+        if not os.path.exists('GEBCO_v2020_30sec_pixel.nc'):
+            dem_pixel.gebco_30sec(self.init_path, self.init_path)
+        if not os.path.exists('RTopo_2_0_4_GEBCO_v2020_30sec_pixel.nc'):
+            dem_pixel.rtopo_gebco_30sec(self.init_path, self.init_path)
+
         dem_remap.dem_remap('RTopo_2_0_4_GEBCO_v2020_30sec_pixel.nc','base_mesh.nc')
-        dem_trnsf.dem_trnsf('base_mesh.nc', 'culled_mesh.nc')
+        dem_trnsf.dem_trnsf('base_mesh.nc', 'mesh.nc')

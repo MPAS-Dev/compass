@@ -29,9 +29,6 @@ class Init(TestCase):
 
         mesh : compass.ocean.tests.tides.mesh.Mesh
             The test case that creates the mesh used by this test case
-
-        storm : str
-            The name of the storm to be run
         """
         name = 'init'
         mesh_name = mesh.mesh_name
@@ -49,11 +46,3 @@ class Init(TestCase):
         Modify the configuration options for this test case
         """
         configure_tides(test_case=self, mesh=self.mesh)
-
-    def run(self):
-        """
-        Run each step of the testcase
-        """
-
-        # run the steps
-        super().run()
