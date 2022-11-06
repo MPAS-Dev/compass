@@ -93,11 +93,11 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../../index.html">Module code</a> &raquo;</li>
-          <li><a href="../../../ocean.html">compass.ocean</a> &raquo;</li>
-          <li><a href="../isomip_plus.html">compass.ocean.tests.isomip_plus</a> &raquo;</li>
-      <li>compass.ocean.tests.isomip_plus.initial_state</li>
+      <li><a href="../../../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../ocean.html">compass.ocean</a></li>
+          <li class="breadcrumb-item"><a href="../isomip_plus.html">compass.ocean.tests.isomip_plus</a></li>
+      <li class="breadcrumb-item active">compass.ocean.tests.isomip_plus.initial_state</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -195,6 +195,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
+        <span class="n">vertical_coordinate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertical_coordinate</span>
 
         <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;isomip_plus&#39;</span><span class="p">]</span>
         <span class="n">nx</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;nx&#39;</span><span class="p">)</span>
@@ -252,14 +253,15 @@
         <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;isomip_plus&#39;</span><span class="p">]</span>
 
         <span class="n">min_column_thickness</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;min_column_thickness&#39;</span><span class="p">)</span>
-        <span class="n">min_levels</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;minimum_levels&#39;</span><span class="p">)</span>
 
         <span class="n">interfaces</span> <span class="o">=</span> <span class="n">generate_1d_grid</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 
         <span class="c1"># Deepen the bottom depth to maintain the minimum water-column</span>
         <span class="c1"># thickness</span>
-        <span class="n">min_depth</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="o">-</span><span class="n">ds</span><span class="o">.</span><span class="n">ssh</span> <span class="o">+</span> <span class="n">min_column_thickness</span><span class="p">,</span>
-                                  <span class="n">interfaces</span><span class="p">[</span><span class="n">min_levels</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">min_depth</span> <span class="o">=</span> <span class="o">-</span><span class="n">ds</span><span class="o">.</span><span class="n">ssh</span> <span class="o">+</span> <span class="n">min_column_thickness</span>
+        <span class="k">if</span> <span class="n">vertical_coordinate</span> <span class="o">==</span> <span class="s1">&#39;z-star&#39;</span><span class="p">:</span>
+            <span class="n">min_levels</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;minimum_levels&#39;</span><span class="p">)</span>
+            <span class="n">min_depth</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">min_depth</span><span class="p">,</span> <span class="n">interfaces</span><span class="p">[</span><span class="n">min_levels</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
         <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;bottomDepth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">bottomDepth</span><span class="p">,</span> <span class="n">min_depth</span><span class="p">)</span>
 
         <span class="n">init_vertical_coord</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>

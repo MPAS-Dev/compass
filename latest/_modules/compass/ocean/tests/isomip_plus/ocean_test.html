@@ -93,11 +93,11 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../../index.html">Module code</a> &raquo;</li>
-          <li><a href="../../../ocean.html">compass.ocean</a> &raquo;</li>
-          <li><a href="../isomip_plus.html">compass.ocean.tests.isomip_plus</a> &raquo;</li>
-      <li>compass.ocean.tests.isomip_plus.ocean_test</li>
+      <li><a href="../../../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../ocean.html">compass.ocean</a></li>
+          <li class="breadcrumb-item"><a href="../isomip_plus.html">compass.ocean.tests.isomip_plus</a></li>
+      <li class="breadcrumb-item active">compass.ocean.tests.isomip_plus.ocean_test</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -264,6 +264,10 @@
         <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;isomip_plus&#39;</span><span class="p">,</span> <span class="s1">&#39;forward_threads&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">)</span>
 
         <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;vertical_grid&#39;</span><span class="p">,</span> <span class="s1">&#39;coord_type&#39;</span><span class="p">,</span> <span class="n">vertical_coordinate</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">vertical_coordinate</span> <span class="o">==</span> <span class="s1">&#39;sigma&#39;</span><span class="p">:</span>
+            <span class="c1"># default to 10 vertical levels instead of 36</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;vertical_grid&#39;</span><span class="p">,</span> <span class="s1">&#39;vert_levels&#39;</span><span class="p">,</span> <span class="s1">&#39;10&#39;</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">step_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">step_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;ssh_adjustment&#39;</span><span class="p">,</span> <span class="s1">&#39;performance&#39;</span><span class="p">,</span> <span class="s1">&#39;simulation&#39;</span><span class="p">]:</span>

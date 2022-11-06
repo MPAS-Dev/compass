@@ -116,8 +116,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Developer Tutorial: Porting a legacy COMPASS test group</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Developer Tutorial: Porting a legacy COMPASS test group</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/tutorials/dev_porting_legacy.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -787,13 +787,13 @@ we get the relevant config options.  Legacy COMPASS used the command-line
 tool <code class="docutils literal notranslate"><span class="pre">planar_hex</span></code>, but <code class="docutils literal notranslate"><span class="pre">compass</span></code> will typically use the
 <a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.planar_hex.make_planar_hex_mesh.html#mpas_tools.planar_hex.make_planar_hex_mesh" title="(in mpas_tools vstable)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_tools.planar_hex.make_planar_hex_mesh()</span></code></a> function instead to
 avoid the complexity of <code class="docutils literal notranslate"><span class="pre">subprocess</span></code> calls and unnecessary file I/O.  The
-result is an <a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v2022.10.1.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">xarray.Dataset</span></code></a> containing the mesh.</p>
+result is an <a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v2022.11.1.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">xarray.Dataset</span></code></a> containing the mesh.</p>
 <p>Second, we make sure any land cells are culled by calling the cell culler.
 In legacy COMPASS, this is done with the command-line tool <code class="docutils literal notranslate"><span class="pre">MpasCellCuller.x</span></code>
 but in <code class="docutils literal notranslate"><span class="pre">compass</span></code>, the same can be achieved with
 <a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.mesh.conversion.cull.html#mpas_tools.mesh.conversion.cull" title="(in mpas_tools vstable)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_tools.mesh.conversion.cull()</span></code></a> (which is a wrapper around a
 <code class="docutils literal notranslate"><span class="pre">subprocess`</span></code> call to <code class="docutils literal notranslate"><span class="pre">MpasCellCuller.x</span></code>).  <code class="docutils literal notranslate"><span class="pre">cull()</span></code> has
-<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v2022.10.1.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">xarray.Dataset</span></code></a> objects as its input an return value, and also
+<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v2022.11.1.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">xarray.Dataset</span></code></a> objects as its input an return value, and also
 takes a “logger” where it can write output (sometimes a log file and sometimes
 directly to the terminal via stdout).  You should always pass <code class="docutils literal notranslate"><span class="pre">self.logger</span></code>
 so <code class="docutils literal notranslate"><span class="pre">compass</span></code> can figure out whether a file or stdout is the right place for
