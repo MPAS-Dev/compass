@@ -1,26 +1,40 @@
 c_compiler:
 - clang
 c_compiler_version:
-- 12
+- '14'
+channel_sources:
+- conda-forge
+channel_targets:
+- conda-forge main
 cxx_compiler:
 - clangxx
 cxx_compiler_version:
-- 12
+- '14'
 fortran_compiler:
 - gfortran
 fortran_compiler_version:
-- 9
+- '11'
 hdf5:
-- 1.12.1
+- 1.12.2
 libnetcdf:
 - 4.8.1
+macos_machine:
+- x86_64-apple-darwin13.4.0
 mpi:
 - nompi
+mpich:
+- '4'
 netcdf_fortran:
-- 4.5
+- '4.6'
+openmpi:
+- '4'
 pin_run_as_build:
   python:
     min_pin: x.x
     max_pin: x.x
 python:
 - 3.9.* *_cpython
+zip_keys:
+- - c_compiler_version
+  - cxx_compiler_version
+  - fortran_compiler_version
