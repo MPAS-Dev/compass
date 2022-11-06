@@ -128,7 +128,7 @@ class SetUpExperiment(Step):
         # For all projection runs, symlink the restart file for the historical run
         # don't symlink restart_timestamp or you'll have a mighty mess
         if not self.exp == 'hist':
-            os.symlink(f"../hist_{mesh_res}/rst.2015-01-01.nc", os.path.join(self.work_dir, 'rst.2015-01-01.nc'))
+            os.symlink(f"../hist/rst.2015-01-01.nc", os.path.join(self.work_dir, 'rst.2015-01-01.nc'))
             with open(os.path.join(self.work_dir, "restart_timestamp"), "w") as text_file:
                 text_file.write("2015-01-01_00:00:00")
 
@@ -150,7 +150,7 @@ class SetUpExperiment(Step):
         template = Template(resources.read_text(
             'compass.landice.tests.ismip6_run_ais',
             f'slurm.{mesh_res}.run'))
-        slurm_replacements = {'EXP': self.exp,
+        slurm_replacements = {'EXP': f'{self.exp}_{mesh_res}',
                               'LOAD_SCRIPT': compass_load_path}
         rendered_text = template.render(slurm_replacements)
         with open(os.path.join(self.work_dir, 'slurm.run'), "w") as fh:
