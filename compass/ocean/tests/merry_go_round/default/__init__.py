@@ -1,6 +1,7 @@
 from compass.testcase import TestCase
 from compass.ocean.tests.merry_go_round.initial_state import InitialState
 from compass.ocean.tests.merry_go_round.forward import Forward
+from compass.ocean.tests.merry_go_round.viz import Viz
 from compass.ocean.tests import merry_go_round
 from compass.validate import compare_variables
 
@@ -20,8 +21,10 @@ class Default(TestCase):
         """
         super().__init__(test_group=test_group, name='default')
         self.resolution = '5m'
+        # TODO make resolution inputs consistent
         self.add_step(InitialState(test_case=self, resolution=5.))
         self.add_step(Forward(test_case=self, resolution=self.resolution, ntasks=4, openmp_threads=1))
+        self.add_step(Viz(test_case=self, resolution=self.resolution))
 
     def configure(self):
         """
