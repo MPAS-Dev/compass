@@ -8,7 +8,7 @@ for os in ['linux', 'osx']:
         template_test = f.read()
 
     template = Template(template_test)
-    for python in ['3.7', '3.8', '3.9', '3.10']:
+    for python in ['3.8', '3.9', '3.10', '3.11']:
         for mpi in ['nompi', 'mpich', 'openmpi']:
             script = template.render(python=python, mpi=mpi)
             filename = f'{os}_mpi_{mpi}_python{python}.yaml'
