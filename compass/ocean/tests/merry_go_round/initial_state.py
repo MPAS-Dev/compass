@@ -51,10 +51,6 @@ class InitialState(Step):
         logger = self.logger
 
         section = config['merry_go_round']
-        nx = section.getint('nx')
-        ny = section.getint('ny')
-        dc = section.getfloat('dc')
-
         temperature_background = section.getfloat('temperature_background')
         temperature_center = section.getfloat('temperature_center')
         salinity_background = section.getfloat('salinity_background')
