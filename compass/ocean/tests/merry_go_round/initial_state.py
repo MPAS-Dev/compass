@@ -46,6 +46,7 @@ class InitialState(Step):
         """
         Run this step of the test case
         """
+        # TODO evaluate where speed up is needed for high resolution cases
         config = self.config
         logger = self.logger
 
@@ -72,7 +73,24 @@ class InitialState(Step):
         if not (vert_coord == 'z-level' or vert_coord == 'sigma'):
             print('Vertical coordinate {vert_coord} not supported')
 
-        dsMesh = make_planar_hex_mesh(nx=nx, ny=ny, dc=dc, nonperiodic_x=True,
+        resolution = self.resolution
+        res_params = {'5m':    {'nx': 100,
+                                'ny': 4,
+                                'nz': 50,
+                                'dc': 5},
+                      '2.5m':  {'nx': 200,
+                                'ny': 4,
+                                'nz': 100,
+                                'dc': 2.5},
+                      '1.25m': {'nx': 400,
+                                'ny': 4,
+                                'nz': 200,
+                                'dc': 1.25}}
+        res_params = res_params[resolution]
+        dsMesh = make_planar_hex_mesh(nx=res_params['nx'],
+                                      ny=res_params['ny'],
+                                      dc=res_params['dc'],
+                                      nonperiodic_x=True,
                                       nonperiodic_y=False)
         write_netcdf(dsMesh, 'base_mesh.nc')
 
@@ -87,8 +105,8 @@ class InitialState(Step):
         yCell = ds.yCell
         xEdge = ds.xEdge
         xOffset = numpy.min(xEdge.values)
-        xCellAdjusted = xCell.values - xOffset
-        xEdgeAdjusted = xEdge.values - xOffset
+        xCellAdjusted = xCell - xOffset
+        xEdgeAdjusted = xEdge - xOffset
         nCells = ds['nCells'].size
         nEdges = ds['nEdges'].size
 
@@ -97,20 +115,26 @@ class InitialState(Step):
 
         # Note: machine-precision diffs in layerThickness are present from
         # legacy compass which did not use init_vertical_coord
+        config.set('vertical_grid', 'vert_levels', str(res_params['nz']))
         init_vertical_coord(config, ds)
 
         nVertLevels = ds['nVertLevels'].size
 
-        xMin = xCell.min().values
-        xMax = xCell.max().values
-        yMin = yCell.min().values
-        yMax = yCell.max().values
-
+        xMin = xCellAdjusted.min()
+        xMax = xCellAdjusted.max()
         xMid = 0.5*(xMin + xMax)
         zMid = ds.zMid.values
 
+        vertCoordMovementWeights = xarray.ones_like(ds.refZMid)
+        if (vert_coord == 'z-level'):
+            vertCoordMovementWeights[:] = 0.0
+            vertCoordMovementWeights[0] = 1.0
+        ds['vertCoordMovementWeights'] = vertCoordMovementWeights
+
         # Compute temperature
-        xCellDepth, _ = xarray.broadcast(xCell, ds.refBottomDepth)
+        xCellDepth, _ = xarray.broadcast(xCellAdjusted, ds.refBottomDepth)
+        xCellAdjusted = xCellAdjusted.values
+        xEdgeAdjusted = xEdgeAdjusted.values
         temperature = temperature_background * xarray.ones_like(xCellDepth)
         temperature = xarray.where(xCellDepth < xMid,
                                    temperature_center,
@@ -121,7 +145,7 @@ class InitialState(Step):
         ds['salinity'] = salinity_background * xarray.ones_like(temperature)
 
         # Compute normalVelocity
-        # Note: order 1e-4 diffs are present compared with legacy
+        # identical with legacy at init
         xEdgeDepth, _ = xarray.broadcast(ds.xEdge, ds.refBottomDepth)
         normalVelocity = xarray.zeros_like(xEdgeDepth)
         normalVelocity, _ = xarray.broadcast(normalVelocity, ds.refBottomDepth)
@@ -156,7 +180,7 @@ class InitialState(Step):
         # Note: order 1e-3 diffs are present compared with legacy
         for iCell in range(0, nCells):
             for k in range(0, nVertLevels):
-                psi1 = 1.0 - (((xCell[iCell] - 0.5*xMax)**4)/((0.5*xMax)**4))
+                psi1 = 1.0 - (((xCellAdjusted[iCell] - 0.5*xMax)**4)/((0.5*xMax)**4))
                 psi2 = 1.0 - (((zMid[0, iCell, k] + 0.5*bottom_depth)**2) /
                               ((0.5*bottom_depth)**2))
                 psi = psi1*psi2
