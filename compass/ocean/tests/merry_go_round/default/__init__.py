@@ -21,22 +21,18 @@ class Default(TestCase):
         """
         super().__init__(test_group=test_group, name='default')
         self.resolution = '5m'
-        # TODO make resolution inputs consistent
-        self.add_step(InitialState(test_case=self, resolution=5.))
-        self.add_step(Forward(test_case=self, resolution=self.resolution, ntasks=4, openmp_threads=1))
-        self.add_step(Viz(test_case=self, resolution=self.resolution))
-
-    def configure(self):
-        """
-        Modify the configuration options for this test case.
-        """
-        merry_go_round.configure(self.resolution, self.config)
+        self.add_step(InitialState(test_case=self, resolution=self.resolution,
+                                   name=f'initial_state_{self.resolution}'))
+        self.add_step(Forward(test_case=self, resolution=self.resolution,
+                              ntasks=4, openmp_threads=1,
+                              name=f'forward_{self.resolution}'))
+        self.add_step(Viz(test_case=self, resolution=self.resolution,
+                          name=f'viz_{self.resolution}'))
 
     def validate(self):
         """
         Validate variables against a baseline
         """
-        #TODO change to tracers
         compare_variables(test_case=self,
-                          variables=['layerThickness', 'normalVelocity'],
-                          filename1='forward/output.nc')
+                          variables=['layerThickness', 'normalVelocity', 'tracer1'],
+                          filename1=f'forward_{self.resolution}/output.nc')
