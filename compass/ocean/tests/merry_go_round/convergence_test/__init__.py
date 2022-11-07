@@ -2,7 +2,7 @@ from compass.testcase import TestCase
 from compass.ocean.tests.merry_go_round.initial_state import InitialState
 from compass.ocean.tests.merry_go_round.forward import Forward
 from compass.ocean.tests.merry_go_round.viz import Viz
-#from compass.ocean.tests.merry_go_round.analysis import Analysis
+from compass.ocean.tests.merry_go_round.convergence_test.analysis import Analysis
 from compass.ocean.tests import merry_go_round
 from compass.validate import compare_variables
 
@@ -30,7 +30,7 @@ class ConvergenceTest(TestCase):
                                   name=f'forward_{resolution}'))
             self.add_step(Viz(test_case=self, resolution=resolution,
                               name=f'viz_{resolution}'))
-        #self.add_step(Analysis(test_case=self, resolutions=resolutions))
+        self.add_step(Analysis(test_case=self, resolutions=resolutions))
 
     def configure(self):
         """
