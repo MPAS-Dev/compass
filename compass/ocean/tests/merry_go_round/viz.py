@@ -1,4 +1,4 @@
-import numpy as np
+import numpy
 import xarray
 import matplotlib.pyplot as plt
 import cmocean
@@ -80,7 +80,20 @@ def _plot(nx, ny, filename):
     var1 = ds.velocityX
     var2 = ds.vertVelocityTop
     var3 = ds.tracer1
+
     nVertLevels = ds['nVertLevels'].size
+    nCells = ds['nCells'].size
+    nx = int(nCells/4)
+
+    xCell = ds.xCell.values
+    zMid = ds.refZMid.values
+    dx = xCell[1] - xCell[0]
+    dz = zMid[0] - zMid[1]
+    xCell = xCell + dx/2.
+    x = numpy.insert(xCell[0:nx], [0], xCell[0] - dx/2.)
+    zMid = zMid - dz/2.
+    z = numpy.insert(zMid, [0], zMid[0] + dz/2.)
+    X, Z = numpy.meshgrid(x,z)
     var11 = var1[:, 0:nx, :].values
     var22 = var2[:, 0:nx, :].values
     var33 = var3[:, 0:nx, :].values
@@ -93,35 +106,44 @@ def _plot(nx, ny, filename):
         for iCell in range(nx):
             sumVert = sumVert + var22[1, iCell, k]
     
+    # TODO title does not appear, add resolution
     plt.title('merry-go-round')
+
     plt.subplot(2, 2, 1) 
-    ax = plt.imshow(var11[1, :, :].T)
-    plt.jet()
-    plt.xlabel('x, # of cells')
-    plt.ylabel('z, # of levels')
+    ax = plt.pcolormesh(X, Z, var11[1, :, :].T)
+    plt.gca().set_aspect('equal', adjustable='box')
+    plt.set_cmap('cmo.balance')
+    plt.clim([-0.008, 0.008])
+    plt.ylabel('z (m)')
     plt.colorbar(ax, shrink=0.5)
     plt.title('horizontal velocity')
     
     plt.subplot(2, 2, 2)
-    ax = plt.imshow(var22[1, :, :].T)
-    plt.jet()
-    plt.xlabel('x, # of cells')
+    ax = plt.pcolormesh(X, Z, var22[1, :, :-1].T)
+    plt.gca().set_aspect('equal', adjustable='box')
+    plt.set_cmap('cmo.balance')
+    plt.clim([-0.02, 0.02])
     plt.colorbar(ax, shrink=0.5)
     plt.title('vertical velocity')
     
     plt.subplot(2, 2, 3)
-    ax = plt.imshow(var33[0, :, :].T)
-    plt.jet()
-    plt.xlabel('x, # of cells')
-    plt.ylabel('z, # of levels')
+    ax = plt.pcolormesh(X, Z, var33[1, :, :].T)
+    plt.gca().set_aspect('equal', adjustable='box')
+    plt.set_cmap('cmo.thermal')
+    plt.xlabel('x (m)')
+    plt.ylabel('z (m)')
     plt.colorbar(ax, shrink=0.5)
     plt.title('tracer1 at t=0')
     
     plt.subplot(2, 2, 4)
-    ax = plt.imshow(var33[1, :, :].T)
-    plt.jet()
-    plt.xlabel('x, # of cells')
+    ax = plt.pcolormesh(X, Z, 
+                        numpy.subtract(var33[1, :, :].T,
+                                       var33[0, :, :].T))
+    plt.gca().set_aspect('equal', adjustable='box')
+    plt.set_cmap('cmo.curl')
+    plt.clim([-0.05, 0.05])
+    plt.xlabel('x (m)')
     plt.colorbar(ax, shrink=0.5)
-    plt.title('tracer1 at 6h')
+    plt.title('delta(tracer1) at 6h')
     
     plt.savefig(filename)
