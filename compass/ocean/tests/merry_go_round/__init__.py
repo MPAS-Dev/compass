@@ -1,5 +1,6 @@
 from compass.testgroup import TestGroup
 from compass.ocean.tests.merry_go_round.default import Default
+from compass.ocean.tests.merry_go_round.convergence_test import ConvergenceTest
 
 class MerryGoRound(TestGroup):
     """
@@ -14,6 +15,7 @@ class MerryGoRound(TestGroup):
         super().__init__(mpas_core=mpas_core, name='merry_go_round')
 
         self.add_test_case(Default(test_group=self))
+        self.add_test_case(ConvergenceTest(test_group=self))
 
 def configure(resolution, config):
     """
@@ -27,9 +29,15 @@ def configure(resolution, config):
     config : compass.config.CompassConfigParser
         Configuration options for this test case
     """
-    res_params = {'5m': {'nx': 100,
-                         'ny': 4,
-                         'dc': 5}}
+    res_params = {'5m':    {'nx': 100,
+                            'ny': 4,
+                            'dc': 5},
+                  '2.5m':  {'nx': 200,
+                            'ny': 4,
+                            'dc': 2.5},
+                  '1.25m': {'nx': 400,
+                            'ny': 4,
+                            'dc': 1.25}}
 
     comment = {'nx': 'the number of mesh cells in the x direction',
                'ny': 'the number of mesh cells in the y direction',

@@ -58,9 +58,9 @@ class Forward(Step):
                               'streams.forward')
 
         self.add_input_file(filename='init.nc',
-                            target='../initial_state/init.nc')
+                            target=f'../initial_state_{resolution}/init.nc')
         self.add_input_file(filename='graph.info',
-                            target='../initial_state/culled_graph.info')
+                            target=f'../initial_state_{resolution}/culled_graph.info')
 
         self.add_model_as_input()
 
@@ -72,4 +72,8 @@ class Forward(Step):
         """
         Run this step of the test case
         """
+        run_params = {'5m':    {'config_dt': '00:12:00'},
+                      '2.5m':  {'config_dt': '00:06:00'},
+                      '1.25m': {'config_dt': '00:03:00'}}
+        self.update_namelist_at_runtime(run_params[self.resolution])
         run_model(self)

@@ -23,7 +23,7 @@ class InitialState(Step):
     resolution : str
         The resolution of the test case
     """
-    def __init__(self, test_case, resolution):
+    def __init__(self, test_case, resolution, name='initial_state'):
         """
         Create the step
 
@@ -35,7 +35,7 @@ class InitialState(Step):
         resolution : str
             The resolution of the test case
         """
-        super().__init__(test_case=test_case, name='initial_state')
+        super().__init__(test_case=test_case, name=name)
         self.resolution = resolution
 
         for file in ['base_mesh.nc', 'culled_mesh.nc', 'culled_graph.info',

@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import cmocean
 
 from compass.step import Step
-from compass.ocean.rpe import compute_rpe
 
 
 class Viz(Step):
@@ -18,7 +17,7 @@ class Viz(Step):
         The resolution of the test case
 
     """
-    def __init__(self, test_case, resolution):
+    def __init__(self, test_case, resolution, name='viz'):
         """
         Create the step
 
@@ -30,42 +29,29 @@ class Viz(Step):
         resolution : str
             The resolution of the test case
 
-        nus : list of float
-            A list of viscosities
         """
-        super().__init__(test_case=test_case, name='viz')
+        super().__init__(test_case=test_case, name=name)
         self.resolution = resolution
 
         self.add_input_file(
             filename='initial_state.nc',
-            target='../initial_state/init.nc')
+            target=f'../initial_state_{resolution}/init.nc')
 
-        self.add_output_file(
-            filename='section_{}.png'.format(resolution))
+        self.add_output_file(filename='section.png')
 
     def run(self):
         """
         Run this step of the test case
         """
-        section = self.config['merry_go_round']
-        nx = section.getint('nx')
-        ny = section.getint('ny')
-        print(self.outputs[0])
-        _plot(nx, ny, self.outputs[0])
+        _plot(self.outputs[0], self.resolution)
 
 
-def _plot(nx, ny, filename):
+def _plot(filename, resolution):
     """
     Plot section of the merry-go-round TODO
 
     Parameters
     ----------
-    nx : int
-        The number of cells in the x direction
-
-    ny : int
-        The number of cells in the y direction (before culling)
-
     filename : str
         The output file name
 
@@ -76,7 +62,7 @@ def _plot(nx, ny, filename):
     fig = plt.gcf()
     fig.set_size_inches(8.0,10.0)
     
-    ds = xarray.open_dataset('../forward/output.nc')
+    ds = xarray.open_dataset(f'../forward_{resolution}/output.nc')
     var1 = ds.velocityX
     var2 = ds.vertVelocityTop
     var3 = ds.tracer1
