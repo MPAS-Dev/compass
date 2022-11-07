@@ -129,6 +129,8 @@ class InitialState(Step):
 
         # Compute temperature
         xCellDepth, _ = xarray.broadcast(xCellAdjusted, ds.refBottomDepth)
+        xEdgeDepth, _ = xarray.broadcast(xEdgeAdjusted, ds.refBottomDepth)
+        angleEdgeDepth, _ = xarray.broadcast(ds.angleEdge, ds.refBottomDepth)
         xCellAdjusted = xCellAdjusted.values
         xEdgeAdjusted = xEdgeAdjusted.values
         temperature = temperature_background * xarray.ones_like(xCellDepth)
@@ -142,45 +144,42 @@ class InitialState(Step):
 
         # Compute normalVelocity
         # identical with legacy at init
-        xEdgeDepth, _ = xarray.broadcast(ds.xEdge, ds.refBottomDepth)
         normalVelocity = xarray.zeros_like(xEdgeDepth)
-        normalVelocity, _ = xarray.broadcast(normalVelocity, ds.refBottomDepth)
+        zMidEdge = xarray.zeros_like(xEdgeDepth)
+        mask = xarray.zeros_like(xEdgeDepth, dtype='bool')
+        cell1 = ds.cellsOnEdge[:, 0].values - 1
+        cell2 = ds.cellsOnEdge[:, 1].values - 1
         for iEdge in range(0, nEdges):
-            cell1 = ds.cellsOnEdge[iEdge, 0].values - 1
-            cell2 = ds.cellsOnEdge[iEdge, 1].values - 1
-            for k in range(0, nVertLevels):
-                zMidEdge = 0.5*(zMid[0, cell1, k] + zMid[0, cell2, k])
-                dPsi = - (2.0*zMidEdge + bottom_depth) / (0.5*bottom_depth)**2
-                normalVelocity[iEdge, k] = (1.0 - (
-                   (xEdgeAdjusted[iEdge] - 0.5 * xMax)**4) /
-                   ((0.5*(xMax - xMin))**4)) * dPsi
-                if ((cell1 < 0.5*nCells and cell1 > 0.25*nCells - 1) and
-                    (cell2 < 0.5*nCells and cell2 > 0.25*nCells - 1)):
-                    normalVelocity[iEdge, k] = (1.0 - (
-                        ((xEdgeAdjusted[iEdge] - xMin) -
-                         0.5*(xMax + xMin))**4) /
-                        ((0.5*(xMax - xMin))**4)) * dPsi
-                if (cell1 > 0.75*nCells-1 and cell2 > 0.75*nCells-1):
-                    normalVelocity[iEdge, k] = (1.0 - (
-                        ((xEdgeAdjusted[iEdge]-xMin) -
-                         0.5*(xMax + xMin))**4) /
-                        ((0.5*(xMax - xMin))**4)) * dPsi
-            normalVelocity[iEdge, :] = \
-                normalVelocity[iEdge, :] * math.cos(angleEdge[iEdge])
-            if (xEdgeAdjusted[iEdge] <= xMin or xEdgeAdjusted[iEdge] >= xMax):
-                normalVelocity[iEdge, :] = 0.0
+            if ((cell1[iEdge] < 0.5*nCells and cell1[iEdge] > 0.25*nCells - 1) and
+                (cell2[iEdge] < 0.5*nCells and cell2[iEdge] > 0.25*nCells - 1)):
+                mask[iEdge] = True
+            elif (cell1[iEdge] > 0.75*nCells-1 and cell2[iEdge] > 0.75*nCells-1):
+                mask[iEdge] = True
+        zMidEdge = 0.5*(zMid[0, cell1, :] + zMid[0, cell2, :])
+
+        dPsi = - (2.0*zMidEdge + bottom_depth) / (0.5*bottom_depth)**2
+        den = (0.5*(xMax - xMin))**4
+        num = xarray.where(mask,
+                           (xEdgeDepth - xMin - 0.5*(xMax + xMin))**4,
+                           (xEdgeDepth - 0.5 * xMax)**4)
+        normalVelocity = (numpy.subtract(1.0, numpy.divide(num, den)) *
+                          numpy.multiply(dPsi, numpy.cos(angleEdgeDepth)))
+        normalVelocity = xarray.where(xEdgeDepth <= xMin,
+                                      0.0,
+                                      normalVelocity)
+        normalVelocity = xarray.where(xEdgeDepth >= xMax,
+                                      0.0,
+                                      normalVelocity)
         normalVelocity = normalVelocity.expand_dims(dim='Time', axis=0)
         ds['normalVelocity'] = normalVelocity
 
         tracer1 = xarray.zeros_like(temperature)
         # Note: order 1e-3 diffs are present compared with legacy
-        for iCell in range(0, nCells):
-            for k in range(0, nVertLevels):
-                psi1 = 1.0 - (((xCellAdjusted[iCell] - 0.5*xMax)**4)/((0.5*xMax)**4))
-                psi2 = 1.0 - (((zMid[0, iCell, k] + 0.5*bottom_depth)**2) /
-                              ((0.5*bottom_depth)**2))
-                psi = psi1*psi2
-                tracer1[0, iCell, k] = 0.5*(1 + math.tanh(2*psi - 1))
+        psi1 = 1.0 - (((xCellDepth - 0.5*xMax)**4)/((0.5*xMax)**4))
+        psi2 = 1.0 - (((zMid[0, :, :] + 0.5*bottom_depth)**2) /
+                      ((0.5*bottom_depth)**2))
+        psi = psi1*psi2
+        tracer1[0, :, :] = 0.5*(1 + numpy.tanh(2*psi - 1))
         ds['tracer1'] = tracer1
         ds['tracer2'] = tracer2_background * xarray.ones_like(tracer1)
         ds['tracer3'] = tracer3_background * xarray.ones_like(tracer1)
