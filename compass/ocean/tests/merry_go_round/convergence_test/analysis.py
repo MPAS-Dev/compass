@@ -58,44 +58,43 @@ def _plot(filename, resolutions):
     # Note: ny does not currently get used
     plt.switch_backend('Agg')
     fig = plt.gcf()
-    dt = [3, 6, 12] # nRefinement
-    order2 = [0.4, 1.6, 6.4]
+    dt = [3, 6, 12]
+    order2 = [0.01, 0.04, 0.16]
     operators = ['tracer1']
-    nOperators = len(operators)
 
     L2 = numpy.zeros((len(resolutions)))
 
-    for k in range(nOperators):
+    for k, operator in enumerate(operators):
         for i, resolution in enumerate(resolutions):
             ds = xarray.open_dataset(f'../forward_{resolution}/output.nc')
 
             operator = operators[k]
-            areas = ds.areaCell.values
-            sol = ds[operator][1, :, 0].values
-            ref = ds[operator][0, :, 0].values
+            areaCell = ds.areaCell.values
+            final_field = ds[operator][1, :, 0].values
+            initial_field = ds[operator][0, :, 0].values
 
-            dif = abs(sol - ref)
-            multDen = (ref**2)*areas
-            multNum = (dif**2)*areas
-            denL2 = numpy.sum(multDen[:])/numpy.sum(areas[:])
-            numL2 = numpy.sum(multNum[:])/numpy.sum(areas[:])
+            diff = abs(final_field - initial_field)
+            multDen = (initial_field**2)*areaCell
+            multNum = (diff**2)*areaCell
+            denL2 = numpy.sum(multDen)/numpy.sum(areaCell)
+            numL2 = numpy.sum(multNum)/numpy.sum(areaCell)
 
             L2[i] = numpy.sqrt(numL2)/numpy.sqrt(denL2)
 
-        order = math.log2(L2[0]/L2[1])
-        print(order)
-        order = math.log2(L2[1]/L2[2])
-        print(order)
+        print(f'Order of convergence from dt 6 min to 3 min: ',
+              f'{math.log2(L2[0]/L2[1])}')
+        print(f'Order of convergence from dt 12 min to 6 min: ',
+              f'{math.log2(L2[1]/L2[2])}')
     
-    for k in range(len(operators)):
         operator = operators[k]
-        plt.loglog(dt, L2[:], '-x', label='rate')
-    plt.loglog(dt, order2, label='slope=-2')
+        plt.loglog(dt, L2[:], '-x', label=f'Simulated {operator}')
+
+    plt.loglog(dt, order2, 'k', label='Order 2 convergence')
     plt.title('Convergence to the exact solution')
     plt.ylabel('l_2 error norm')
     plt.legend()
     plt.grid()
-    plt.xticks(dt,dt)
-    plt.xlabel('time steps (in min)')
+    plt.xticks(dt, dt)
+    plt.xlabel('time step (min)')
 
     plt.savefig(filename)
