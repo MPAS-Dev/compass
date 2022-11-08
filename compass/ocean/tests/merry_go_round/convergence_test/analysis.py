@@ -10,8 +10,8 @@ from compass.step import Step
 
 class Analysis(Step):
     """
-    A step for plotting the results of a series of TODO runs in the merry-go-
-    round test group
+    A step for plotting the convergence of the solution with resolution and
+    time step in the merry-go-round test group
 
     Attributes
     ----------
@@ -28,9 +28,11 @@ class Analysis(Step):
         test_case : compass.TestCase
             The test case this step belongs to
 
-        resolution : str
-            The resolution of the test case
+        resolutions : list of str
+            The resolutions of the test case
 
+        name: str
+            The name of the step
         """
         super().__init__(test_case=test_case, name=name)
 
@@ -54,8 +56,9 @@ def _plot(filename, resolutions):
     filename : str
         The output file name
 
+    resolutions : list of str
+        The resolutions of the test case
     """
-    # Note: ny does not currently get used
     plt.switch_backend('Agg')
     fig = plt.gcf()
     dt = [3, 6, 12]
@@ -85,7 +88,7 @@ def _plot(filename, resolutions):
               f'{math.log2(L2[0]/L2[1])}')
         print(f'Order of convergence from dt 12 min to 6 min: ',
               f'{math.log2(L2[1]/L2[2])}')
-    
+
         operator = operators[k]
         plt.loglog(dt, L2[:], '-x', label=f'Simulated {operator}')
 

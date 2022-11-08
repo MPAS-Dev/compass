@@ -34,6 +34,9 @@ class InitialState(Step):
 
         resolution : str
             The resolution of the test case
+
+        name: str
+            The name of the step
         """
         super().__init__(test_case=test_case, name=name)
         self.resolution = resolution
@@ -46,13 +49,12 @@ class InitialState(Step):
         """
         Run this step of the test case
         """
-        # TODO evaluate where speed up is needed for high resolution cases
         config = self.config
         logger = self.logger
 
         section = config['merry_go_round']
-        temperature_background = section.getfloat('temperature_background')
-        temperature_center = section.getfloat('temperature_center')
+        temperature_right = section.getfloat('temperature_right')
+        temperature_left = section.getfloat('temperature_left')
         salinity_background = section.getfloat('salinity_background')
         density_surface = section.getfloat('density_surface')
         density_vertical_gradient = \
@@ -65,7 +67,6 @@ class InitialState(Step):
         vert_coord = section.get('coord_type')
         bottom_depth = section.getfloat('bottom_depth')
 
-        # TODO consider changing this
         if not (vert_coord == 'z-level' or vert_coord == 'sigma'):
             print('Vertical coordinate {vert_coord} not supported')
 
@@ -121,13 +122,14 @@ class InitialState(Step):
         xMid = 0.5*(xMin + xMax)
         zMid = ds.zMid.values
 
+        # Only the top layer moves in this test case
         vertCoordMovementWeights = xarray.ones_like(ds.refZMid)
         if (vert_coord == 'z-level'):
             vertCoordMovementWeights[:] = 0.0
             vertCoordMovementWeights[0] = 1.0
         ds['vertCoordMovementWeights'] = vertCoordMovementWeights
 
-        # Compute temperature
+        # Initialize temperature
         xCellDepth, _ = xarray.broadcast(xCellAdjusted, ds.refBottomDepth)
         xEdgeDepth, _ = xarray.broadcast(xEdgeAdjusted, ds.refBottomDepth)
         angleEdgeDepth, _ = xarray.broadcast(ds.angleEdge, ds.refBottomDepth)
@@ -135,25 +137,28 @@ class InitialState(Step):
         xEdgeAdjusted = xEdgeAdjusted.values
         temperature = temperature_background * xarray.ones_like(xCellDepth)
         temperature = xarray.where(xCellDepth < xMid,
-                                   temperature_center,
-                                   temperature_background)
+                                   temperature_left,
+                                   temperature_right)
         temperature = temperature.expand_dims(dim='Time', axis=0)
         ds['temperature'] = temperature
 
+        # Initialize temperature
         ds['salinity'] = salinity_background * xarray.ones_like(temperature)
 
-        # Compute normalVelocity
-        # identical with legacy at init
+        # Initialize normalVelocity
         normalVelocity = xarray.zeros_like(xEdgeDepth)
         zMidEdge = xarray.zeros_like(xEdgeDepth)
         mask = xarray.zeros_like(xEdgeDepth, dtype='bool')
         cell1 = ds.cellsOnEdge[:, 0].values - 1
         cell2 = ds.cellsOnEdge[:, 1].values - 1
         for iEdge in range(0, nEdges):
-            if ((cell1[iEdge] < 0.5*nCells and cell1[iEdge] > 0.25*nCells - 1) and
-                (cell2[iEdge] < 0.5*nCells and cell2[iEdge] > 0.25*nCells - 1)):
+            if ((cell1[iEdge] < 0.5*nCells and
+                 cell1[iEdge] > 0.25*nCells - 1) and
+                (cell2[iEdge] < 0.5*nCells and
+                 cell2[iEdge] > 0.25*nCells - 1)):
                 mask[iEdge] = True
-            elif (cell1[iEdge] > 0.75*nCells-1 and cell2[iEdge] > 0.75*nCells-1):
+            elif (cell1[iEdge] > 0.75*nCells-1 and
+                  cell2[iEdge] > 0.75*nCells-1):
                 mask[iEdge] = True
         zMidEdge = 0.5*(zMid[0, cell1, :] + zMid[0, cell2, :])
 
@@ -173,8 +178,8 @@ class InitialState(Step):
         normalVelocity = normalVelocity.expand_dims(dim='Time', axis=0)
         ds['normalVelocity'] = normalVelocity
 
+        # Initialize debug tracers
         tracer1 = xarray.zeros_like(temperature)
-        # Note: order 1e-3 diffs are present compared with legacy
         psi1 = 1.0 - (((xCellDepth - 0.5*xMax)**4)/((0.5*xMax)**4))
         psi2 = 1.0 - (((zMid[0, :, :] + 0.5*bottom_depth)**2) /
                       ((0.5*bottom_depth)**2))

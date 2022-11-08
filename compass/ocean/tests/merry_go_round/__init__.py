@@ -2,6 +2,7 @@ from compass.testgroup import TestGroup
 from compass.ocean.tests.merry_go_round.default import Default
 from compass.ocean.tests.merry_go_round.convergence_test import ConvergenceTest
 
+
 class MerryGoRound(TestGroup):
     """
     A test group for tracer advection test cases "merry-go-round"

@@ -2,9 +2,11 @@ from compass.testcase import TestCase
 from compass.ocean.tests.merry_go_round.initial_state import InitialState
 from compass.ocean.tests.merry_go_round.forward import Forward
 from compass.ocean.tests.merry_go_round.viz import Viz
-from compass.ocean.tests.merry_go_round.convergence_test.analysis import Analysis
+from compass.ocean.tests.merry_go_round.convergence_test.analysis \
+    import Analysis
 from compass.ocean.tests import merry_go_round
 from compass.validate import compare_variables
+
 
 class ConvergenceTest(TestCase):
     """
@@ -31,19 +33,3 @@ class ConvergenceTest(TestCase):
             self.add_step(Viz(test_case=self, resolution=resolution,
                               name=f'viz_{resolution}'))
         self.add_step(Analysis(test_case=self, resolutions=resolutions))
-
-    def configure(self):
-        """
-        Modify the configuration options for this test case.
-        """
-        # TODO make this work for multiple resolutions
-        #merry_go_round.configure(self.resolution, self.config)
-
-    def validate(self):
-        """
-        Validate variables against a baseline
-        """
-        #TODO change to tracers
-        #compare_variables(test_case=self,
-        #                  variables=['layerThickness', 'normalVelocity'],
-        #                  filename1='forward/output.nc')

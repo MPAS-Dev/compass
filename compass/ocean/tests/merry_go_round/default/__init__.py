@@ -5,6 +5,7 @@ from compass.ocean.tests.merry_go_round.viz import Viz
 from compass.ocean.tests import merry_go_round
 from compass.validate import compare_variables
 
+
 class Default(TestCase):
     """
     The default test case for the merry-go-round test
@@ -34,5 +35,5 @@ class Default(TestCase):
         Validate variables against a baseline
         """
         compare_variables(test_case=self,
-                          variables=['layerThickness', 'normalVelocity', 'tracer1'],
+                          variables=['normalVelocity', 'tracer1'],
                           filename1=f'forward_{self.resolution}/output.nc')

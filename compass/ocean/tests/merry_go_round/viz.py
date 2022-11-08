@@ -8,8 +8,7 @@ from compass.step import Step
 
 class Viz(Step):
     """
-    A step for plotting the results of a series of TODO runs in the merry-go-
-    round test group
+    A step for plotting the results of the merry-go-round test group
 
     Attributes
     ----------
@@ -28,6 +27,9 @@ class Viz(Step):
 
         resolution : str
             The resolution of the test case
+
+        name: str
+            The name of the step
 
         """
         super().__init__(test_case=test_case, name=name)
@@ -48,20 +50,21 @@ class Viz(Step):
 
 def _plot(filename, resolution):
     """
-    Plot section of the merry-go-round TODO
+    Plot section of the merry-go-round test case properties
 
     Parameters
     ----------
     filename : str
         The output file name
 
+    resolution : str
+        The resolution of the test case
     """
 
-    # Note: ny does not currently get used
     plt.switch_backend('Agg')
     fig = plt.gcf()
-    fig.set_size_inches(8.0,10.0)
-    
+    fig.set_size_inches(8.0, 10.0)
+
     ds = xarray.open_dataset(f'../forward_{resolution}/output.nc')
     var1 = ds.velocityX
     var2 = ds.vertVelocityTop
@@ -79,23 +82,14 @@ def _plot(filename, resolution):
     x = numpy.insert(xCell[0:nx], [0], xCell[0] - dx/2.)
     zMid = zMid - dz/2.
     z = numpy.insert(zMid, [0], zMid[0] + dz/2.)
-    X, Z = numpy.meshgrid(x,z)
+    X, Z = numpy.meshgrid(x, z)
     var11 = var1[:, 0:nx, :].values
     var22 = var2[:, 0:nx, :].values
     var33 = var3[:, 0:nx, :].values
-    for iCell in range(nx):
-        sumVert = 0.0
-        for k in range(nVertLevels):
-            sumVert = sumVert + var11[1, iCell, k]
-    for k in range(nVertLevels):
-        sumVert = 0.0
-        for iCell in range(nx):
-            sumVert = sumVert + var22[1, iCell, k]
-    
-    # TODO title does not appear, add resolution
-    plt.title('merry-go-round')
 
-    plt.subplot(2, 2, 1) 
+    plt.subplot(2, 2, 1)
+    plt.suptitle(f'Merry-go-round, horizontal resolution = {resolution}')
+
     ax = plt.pcolormesh(X, Z, var11[1, :, :].T)
     plt.gca().set_aspect('equal', adjustable='box')
     plt.set_cmap('cmo.balance')
@@ -103,7 +97,7 @@ def _plot(filename, resolution):
     plt.ylabel('z (m)')
     plt.colorbar(ax, shrink=0.5)
     plt.title('horizontal velocity')
-    
+
     plt.subplot(2, 2, 2)
     ax = plt.pcolormesh(X, Z, var22[1, :, :-1].T)
     plt.gca().set_aspect('equal', adjustable='box')
@@ -111,7 +105,7 @@ def _plot(filename, resolution):
     plt.clim([-0.02, 0.02])
     plt.colorbar(ax, shrink=0.5)
     plt.title('vertical velocity')
-    
+
     plt.subplot(2, 2, 3)
     ax = plt.pcolormesh(X, Z, var33[1, :, :].T)
     plt.gca().set_aspect('equal', adjustable='box')
@@ -120,9 +114,9 @@ def _plot(filename, resolution):
     plt.ylabel('z (m)')
     plt.colorbar(ax, shrink=0.5)
     plt.title('tracer1 at t=0')
-    
+
     plt.subplot(2, 2, 4)
-    ax = plt.pcolormesh(X, Z, 
+    ax = plt.pcolormesh(X, Z,
                         numpy.subtract(var33[1, :, :].T,
                                        var33[0, :, :].T))
     plt.gca().set_aspect('equal', adjustable='box')
@@ -131,5 +125,5 @@ def _plot(filename, resolution):
     plt.xlabel('x (m)')
     plt.colorbar(ax, shrink=0.5)
     plt.title('delta(tracer1) at 6h')
-    
+
     plt.savefig(filename)

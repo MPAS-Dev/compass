@@ -12,7 +12,7 @@ class Forward(Step):
     resolution : str
         The resolution of the test case
     """
-    def __init__(self, test_case, resolution, name='forward', subdir=None,
+    def __init__(self, test_case, resolution='5m', name='forward', subdir=None,
                  ntasks=1, min_tasks=None, openmp_threads=1):
         """
         Create a new test case
@@ -53,14 +53,14 @@ class Forward(Step):
         self.add_namelist_file('compass.ocean.tests.merry_go_round',
                                'namelist.forward')
 
-        # make sure output is double precision
         self.add_streams_file('compass.ocean.tests.merry_go_round',
                               'streams.forward')
 
         self.add_input_file(filename='init.nc',
                             target=f'../initial_state_{resolution}/init.nc')
         self.add_input_file(filename='graph.info',
-                            target=f'../initial_state_{resolution}/culled_graph.info')
+                            target=f'../initial_state_{resolution}/'
+                                   'culled_graph.info')
 
         self.add_model_as_input()
 
