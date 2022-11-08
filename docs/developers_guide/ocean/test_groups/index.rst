@@ -17,6 +17,7 @@ Test groups
    ice_shelf_2d
    internal_wave
    isomip_plus
+   merry_go_round
    planar_convergence
    soma
    sphere_transport
