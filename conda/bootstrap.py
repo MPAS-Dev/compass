@@ -217,11 +217,11 @@ def get_env_setup(args, config, machine, compiler, mpi, env_type, source_path,
 
     env_path = os.path.join(conda_base, 'envs', env_name)
 
-    base_activation_script = os.path.abspath(
-        f'{conda_base}/etc/profile.d/conda.sh')
+    source_activation_scripts = \
+        f'source {conda_base}/etc/profile.d/conda.sh; ' \
+        f'source {conda_base}/etc/profile.d/mamba.sh'
 
-    activate_env = \
-        f'source {base_activation_script}; conda activate {env_name}'
+    activate_env = f'{source_activation_scripts}; conda activate {env_name}'
 
     return python, recreate, conda_mpi,  activ_suffix, env_suffix, \
         activ_path, env_path, env_name, activate_env, spack_env
@@ -781,11 +781,13 @@ def main():
     shared = (env_type != 'dev')
     conda_base = get_conda_base(args.conda_base, config, shared=shared,
                                 warn=False)
+    conda_base = os.path.abspath(conda_base)
 
-    base_activation_script = os.path.abspath(
-        '{}/etc/profile.d/conda.sh'.format(conda_base))
+    source_activation_scripts = \
+        f'source {conda_base}/etc/profile.d/conda.sh; ' \
+        f'source {conda_base}/etc/profile.d/mamba.sh'
 
-    activate_base = 'source {}; conda activate'.format(base_activation_script)
+    activate_base = f'{source_activation_scripts}; conda activate'
 
     compilers, mpis = get_compilers_mpis(config, machine, args.compilers,
                                          args.mpis, source_path)
