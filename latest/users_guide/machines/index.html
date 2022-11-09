@@ -55,7 +55,6 @@
 <li class="toctree-l2"><a class="reference internal" href="#slurm-job-queueing">Slurm job queueing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#supported-machines">Supported Machines</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="anvil.html">Anvil</a></li>
-<li class="toctree-l3"><a class="reference internal" href="badger.html">Badger</a></li>
 <li class="toctree-l3"><a class="reference internal" href="chrysalis.html">Chrysalis</a></li>
 <li class="toctree-l3"><a class="reference internal" href="compy.html">CompyMcNodeFace</a></li>
 <li class="toctree-l3"><a class="reference internal" href="cori.html">Cori</a></li>
@@ -141,15 +140,15 @@ cases are configured in a way that is appropriate for your machine.</p>
 
 <span class="c1"># The root to a location where the mesh_database, initial_condition_database,</span><span class="w"></span>
 <span class="c1"># and bathymetry_database for MPAS-Ocean will be cached</span><span class="w"></span>
-<span class="na">ocean_database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/usr/projects/regionalclimate/COMMON_MPAS/ocean/grids/</span><span class="w"></span>
+<span class="na">ocean_database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/lcrc/group/e3sm/public_html/mpas_standalonedata/mpas-ocean</span><span class="w"></span>
 
 <span class="c1"># The root to a location where the mesh_database and initial_condition_database</span><span class="w"></span>
 <span class="c1"># for MALI will be cached</span><span class="w"></span>
-<span class="na">landice_database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/usr/projects/regionalclimate/COMMON_MPAS/mpas_standalonedata/mpas-albany-landice</span><span class="w"></span>
+<span class="na">landice_database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/lcrc/group/e3sm/public_html/mpas_standalonedata/mpas-albany-landice</span><span class="w"></span>
 
 <span class="c1"># the path to the base conda environment where compass environments have</span><span class="w"></span>
 <span class="c1"># been created</span><span class="w"></span>
-<span class="na">compass_envs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/usr/projects/climate/SHARED_CLIMATE/compass/badger/base</span><span class="w"></span>
+<span class="na">compass_envs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/lcrc/soft/climate/compass/chrysalis/base</span><span class="w"></span>
 
 
 <span class="c1"># Options related to deploying a compass conda environment on supported</span><span class="w"></span>
@@ -163,14 +162,14 @@ cases are configured in a way that is appropriate for your machine.</p>
 <span class="na">mpi_intel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">impi</span><span class="w"></span>
 
 <span class="c1"># the system MPI library to use for gnu compiler</span><span class="w"></span>
-<span class="na">mpi_gnu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">mvapich</span><span class="w"></span>
+<span class="na">mpi_gnu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">openmpi</span><span class="w"></span>
 
 <span class="c1"># the base path for spack environments used by compass</span><span class="w"></span>
-<span class="na">spack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/usr/projects/climate/SHARED_CLIMATE/compass/badger/spack</span><span class="w"></span>
+<span class="na">spack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/lcrc/soft/climate/compass/chrysalis/spack</span><span class="w"></span>
 
 <span class="c1"># whether to use the same modules for hdf5, netcdf-c, netcdf-fortran and</span><span class="w"></span>
 <span class="c1"># pnetcdf as E3SM (spack modules are used otherwise)</span><span class="w"></span>
-<span class="na">use_e3sm_hdf5_netcdf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span><span class="w"></span>
+<span class="na">use_e3sm_hdf5_netcdf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span><span class="w"></span>
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">paths</span></code> section provides local paths to the root of the “databases”
@@ -241,7 +240,6 @@ to use the default MPI variant for each compiler on each machine.</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="anvil.html">Anvil</a></li>
-<li class="toctree-l1"><a class="reference internal" href="badger.html">Badger</a></li>
 <li class="toctree-l1"><a class="reference internal" href="chrysalis.html">Chrysalis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="compy.html">CompyMcNodeFace</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cori.html">Cori</a></li>

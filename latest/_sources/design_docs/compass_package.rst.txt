@@ -2207,7 +2207,6 @@ The available machines are listed with:
 
     Machines:
        anvil
-       badger
        default
        cori-haswell
        chrysalis
