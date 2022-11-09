@@ -65,6 +65,8 @@ the MPAS model.
 |              +------------+-----------+-------------------+
 |              | gnu        | mpt       | gnu-nersc         |
 +--------------+------------+-----------+-------------------+
+| pm-cpu       | gnu        | mpich     | gnu-nersc         |
++--------------+------------+-----------+-------------------+
 
 Below are specifics for each supported machine
 
@@ -75,6 +77,7 @@ Below are specifics for each supported machine
    chrysalis
    compy
    cori
+   perlmutter
 
 
 .. _dev_other_machines:

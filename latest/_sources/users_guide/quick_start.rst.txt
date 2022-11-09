@@ -44,6 +44,13 @@ Here are the commands to load the the environment for the latest
 
     source /global/cfs/cdirs/e3sm/software/compass/cori-haswell/load_latest_compass.sh
 
+* Perlmutter-CPU (coming soon):
+
+.. code-block:: bash
+
+    source /global/cfs/cdirs/e3sm/software/compass/pm-cpu/load_latest_compass.sh
+
+
 These same paths (minus ``load_latest_compass.sh``) also have load scripts for
 the latest version of compass with all the supported compiler and MPI
 combinations.  For example, on Anvil, you can get an environment appropriate
