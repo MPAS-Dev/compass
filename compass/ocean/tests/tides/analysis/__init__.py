@@ -95,13 +95,11 @@ class Analysis(Step):
             self.add_input_file(filename='TPXO_data/grid_tpxo',
                                 target=f'TPXO8/grid_tpxo8_atlas_30_v1',
                                 database='tides')
-
-
-    
-    ########################################################################
-    ########################################################################
     
     def write_coordinate_file(self):
+        """
+        Write mesh coordinates for TPXO extraction  
+        """
     
         # Read in mesh
         grid_nc = netCDF4.Dataset(self.grid_file,'r')
@@ -116,10 +114,10 @@ class Analysis(Step):
             f.write(str(lat_grid[i])+'  '+str(lon_grid[i])+'\n')
         f.close()
     
-    ########################################################################
-    ########################################################################
-    
     def setup_otps2(self):
+        """
+        Write input files for TPXO extraction
+        """
     
         for con in self.constituents:
             print('setup '+con)
@@ -156,10 +154,10 @@ class Analysis(Step):
             if not os.path.exists('outputs'):
                 os.mkdir('outputs') 
     
-    ########################################################################
-    ########################################################################
-    
     def run_otps2(self):
+        """
+        Perform TPXO extraction  
+        """
     
         ## Make the executable if necessary 
         #pwd = os.getcwd()
@@ -172,10 +170,10 @@ class Analysis(Step):
             print('run '+con)
             subprocess.call('./extract_HC < inputs/'+con+'_setup',shell=True)
     
-    ########################################################################
-    ########################################################################
-    
     def read_otps2_output(self):
+        """
+        Read TPXO extraction output 
+        """
     
         bou_AP = {}
         for con in self.constituents:
@@ -204,10 +202,10 @@ class Analysis(Step):
     
         return bou_AP
     
-    ########################################################################
-    ########################################################################
-    
     def append_tpxo_data(self,mesh_AP):
+        """
+        Inject TPXO data into harmonic analysis file 
+        """
     
         data_nc = netCDF4.Dataset(self.harmonic_analysis_file,'a', format='NETCDF3_64BIT_OFFSET')
         for con in self.constituents:
@@ -220,14 +218,12 @@ class Analysis(Step):
             phase_var.units = 'deg'
             phase_var.long_name = 'Phase of '+con.upper()+ ' tidal consitiuent at each cell center from '+self.tpxo_version+' model'
     
-    
-    ########################################################################
-    ########################################################################
-    
     def plot(self):
+        """
+        Calculate errors and plot consitituents 
+        """
+
         plt.switch_backend('agg')
-        #cartopy.config['pre_existing_data_dir'] = \
-        #    os.getenv('CARTOPY_DIR', cartopy.config.get('pre_existing_data_dir'))
         cmap_reversed = cm.get_cmap('Spectral_r')
           
         # Initialize plotting variables
@@ -287,8 +283,8 @@ class Analysis(Step):
             print(" ====== " + constituent + " Constituent ======")
             
             # Get data
-            data1[:] = data_nc.variables[constituent+'Amplitude'][-1,:]
-            data1_phase[:] = data_nc.variables[constituent+'Phase'][-1,:]*np.pi/180
+            data1[:] = data_nc.variables[constituent+'Amplitude'][:]
+            data1_phase[:] = data_nc.variables[constituent+'Phase'][:]*np.pi/180
             data2[:] = data_nc.variables[constituent+'Amplitude'+self.tpxo_version][:]  
             data2_phase[:] = data_nc.variables[constituent+'Phase'+self.tpxo_version][:]*np.pi/180
     
@@ -395,10 +391,10 @@ class Analysis(Step):
         Run this step of the test case
         """
         
-        #self.write_coordinate_file()  
-        #self.setup_otps2()
-        #self.run_otps2()
-        #mesh_AP = self.read_otps2_output()
-        #self.append_tpxo_data(mesh_AP)
+        self.write_coordinate_file()  
+        self.setup_otps2()
+        self.run_otps2()
+        mesh_AP = self.read_otps2_output()
+        self.append_tpxo_data(mesh_AP)
     
         self.plot()

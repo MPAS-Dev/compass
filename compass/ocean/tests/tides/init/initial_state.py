@@ -3,6 +3,8 @@ from compass.step import Step
 
 from compass.ocean.vertical.grid_1d import generate_1d_grid, write_1d_grid
 from compass.ocean.plot import plot_vertical_grid, plot_initial_state
+import netCDF4
+import numpy as np
 
 
 class InitialState(Step):
@@ -105,3 +107,11 @@ class InitialState(Step):
                            out_filename='vertical_grid.png')
 
         run_model(self)
+
+        init = netCDF4.Dataset("initial_state.nc", "r+")
+        init["bottomDepth"][:] = \
+            np.minimum(6000., np.maximum(1., init["bottomDepthObserved"][:]))
+
+        init["layerThickness"][0,:,0] = init["bottomDepth"][:]
+        init["restingThickness"][:,0] = init["bottomDepth"][:]
+        init.close()
