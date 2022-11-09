@@ -38,6 +38,8 @@ all_build_targets = {
     'cori-haswell': {
         ('intel', 'mpt'): 'intel-nersc',
         ('gnu', 'mpt'): 'gnu-nersc'},
+    'pm-cpu': {
+        ('gnu', 'mpich'): 'gnu-nersc'},
     'conda-linux': {
         ('gfortran', 'mpich'): 'gfortran',
         ('gfortran', 'openmpi'): 'gfortran'},
