@@ -45,19 +45,21 @@ def blend_front(e1st, i1st, e2nd, halo, sdev):
     epos = np.arange(-1, part.shape[1] - 1)
     spos = np.arange(-1, part.shape[0] - 1)
     wpos = np.arange(+1, part.shape[1] + 1)
-    
+
     Y = part.shape[0]
     X = part.shape[1]
 
-    npos[npos >= +Y] = Y - 1; spos[spos <= -1] = 0  
-    epos[epos <= -1] = X - 1; wpos[wpos >= +X] = 0
+    npos[npos >= +Y] = Y - 1
+    spos[spos <= -1] = 0
+    epos[epos <= -1] = X - 1
+    wpos[wpos >= +X] = 0
 
     part[i1st[sidx, :] > 0] = 0.
 
     for inum in range(halo):
-    
+
         print("* blending sweep:", inum)
-    
+
         part = np.minimum(part, part[npos, :] + 1.)
         part = np.minimum(part, part[spos, :] + 1.)
         part = np.minimum(part, part[:, epos] + 1.)
@@ -73,26 +75,28 @@ def blend_front(e1st, i1st, e2nd, halo, sdev):
     epos = np.arange(-1, part.shape[1] - 1)
     spos = np.arange(-1, part.shape[0] - 1)
     wpos = np.arange(+1, part.shape[1] + 1)
-    
+
     Y = part.shape[0]
     X = part.shape[1]
 
-    npos[npos >= +Y] = Y - 1; spos[spos <= -1] = 0  
-    epos[epos <= -1] = X - 1; wpos[wpos >= +X] = 0
+    npos[npos >= +Y] = Y - 1
+    spos[spos <= -1] = 0
+    epos[epos <= -1] = X - 1
+    wpos[wpos >= +X] = 0
 
     part[i1st[nidx, :] > 0] = 0.
 
     for inum in range(halo):
-    
+
         print("* blending sweep:", inum)
-    
+
         part = np.minimum(part, part[npos, :] + 1.)
         part = np.minimum(part, part[spos, :] + 1.)
         part = np.minimum(part, part[:, epos] + 1.)
         part = np.minimum(part, part[:, wpos] + 1.)
 
     mask[nidx, :] = part
- 
+
     print("* blending final.")
 
     mask /= float(halo + 1.00)
@@ -128,13 +132,13 @@ def rtopo_60sec(elev_path, save_path):
     base = np.asarray(
         data["ice_base_topography"][:], dtype=np.float32)
 
-    elev = (elev[:-1:, :-1:] + elev[+1::, :-1:] + 
+    elev = (elev[:-1:, :-1:] + elev[+1::, :-1:] +
             elev[:-1:, +1::] + elev[+1::, +1::]) / 4.
 
-    surf = (surf[:-1:, :-1:] + surf[+1::, :-1:] + 
+    surf = (surf[:-1:, :-1:] + surf[+1::, :-1:] +
             surf[:-1:, +1::] + surf[+1::, +1::]) / 4.
 
-    base = (base[:-1:, :-1:] + base[+1::, :-1:] + 
+    base = (base[:-1:, :-1:] + base[+1::, :-1:] +
             base[:-1:, +1::] + base[+1::, +1::]) / 4.
 
     elev = np.asarray(np.round(elev), dtype=np.int16)
@@ -155,7 +159,7 @@ def rtopo_60sec(elev_path, save_path):
     root.source = "RTopo-2.0.4_1min_data.nc"
     root.references = "doi.pangaea.de/10.1594/PANGAEA.905295"
     root.createDimension("num_lon", elev.shape[1] + 1)
-    root.createDimension("num_col", elev.shape[1])    
+    root.createDimension("num_col", elev.shape[1])
     root.createDimension("num_lat", elev.shape[0] + 1)
     root.createDimension("num_row", elev.shape[0])
 
@@ -191,9 +195,9 @@ def rtopo_30sec(elev_path, save_path):
     print("Making RTopo-2.0.4 (30 arc-sec) pixel...")
 
     data = nc.Dataset(os.path.join(
-        elev_path, 
+        elev_path,
         "RTopo-2.0.4_30sec_bedrock_topography.nc"), "r")
-    
+
     data.set_auto_maskandscale(False)  # quite valid_min/max
 
     xpos = np.asarray(data["lon"][:], dtype=np.float64)
@@ -203,30 +207,30 @@ def rtopo_30sec(elev_path, save_path):
         data["bedrock_topography"][:], dtype=np.float32)
 
     data = nc.Dataset(os.path.join(
-        elev_path, 
+        elev_path,
         "RTopo-2.0.4_30sec_surface_elevation.nc"), "r")
-    
+
     data.set_auto_maskandscale(False)  # quite valid_min/max
 
     surf = np.asarray(
         data["surface_elevation"][:], dtype=np.float32)
 
     data = nc.Dataset(os.path.join(
-        elev_path, 
+        elev_path,
         "RTopo-2.0.4_30sec_ice_base_topography.nc"), "r")
 
     data.set_auto_maskandscale(False)  # quite valid_min/max
-    
+
     base = np.asarray(
         data["ice_base_topography"][:], dtype=np.float32)
 
-    elev = (elev[:-1:, :-1:] + elev[+1::, :-1:] + 
+    elev = (elev[:-1:, :-1:] + elev[+1::, :-1:] +
             elev[:-1:, +1::] + elev[+1::, +1::]) / 4.
 
-    surf = (surf[:-1:, :-1:] + surf[+1::, :-1:] + 
+    surf = (surf[:-1:, :-1:] + surf[+1::, :-1:] +
             surf[:-1:, +1::] + surf[+1::, +1::]) / 4.
 
-    base = (base[:-1:, :-1:] + base[+1::, :-1:] + 
+    base = (base[:-1:, :-1:] + base[+1::, :-1:] +
             base[:-1:, +1::] + base[+1::, +1::]) / 4.
 
     elev = np.asarray(np.round(elev), dtype=np.int16)
@@ -247,7 +251,7 @@ def rtopo_30sec(elev_path, save_path):
     root.source = "RTopo-2.0.4_30sec_data.nc"
     root.references = "doi.pangaea.de/10.1594/PANGAEA.905295"
     root.createDimension("num_lon", elev.shape[1] + 1)
-    root.createDimension("num_col", elev.shape[1])    
+    root.createDimension("num_col", elev.shape[1])
     root.createDimension("num_lat", elev.shape[0] + 1)
     root.createDimension("num_row", elev.shape[0])
 
@@ -295,10 +299,10 @@ def srtmp_60sec(elev_path, save_path):
             iend = elev.shape[0] - halo + ipos + 1
             jend = elev.shape[1] - halo + jpos + 1
             z_60 += elev[ipos:iend:halo, jpos:jend:halo]
-    
+
     elev = np.asarray(
         np.round(z_60 / float(halo ** 2)), dtype=np.int16)
-    
+
     xpos = np.linspace(
         -180., +180., elev.shape[1] + 1, dtype=np.float64)
     ypos = np.linspace(
@@ -309,7 +313,7 @@ def srtmp_60sec(elev_path, save_path):
             save_path, "SRTM15+V2.1_60sec_pixel.nc"),
         "w", format="NETCDF4")
     root.createDimension("num_lon", elev.shape[1] + 1)
-    root.createDimension("num_col", elev.shape[1])    
+    root.createDimension("num_col", elev.shape[1])
     root.createDimension("num_lat", elev.shape[0] + 1)
     root.createDimension("num_row", elev.shape[0])
 
@@ -323,7 +327,7 @@ def srtmp_60sec(elev_path, save_path):
         "top_elevation", "i2", ("num_row", "num_col"))
     data.units = "m"
     data[:, :] = elev
-    
+
     root.close()
 
 
@@ -349,10 +353,10 @@ def srtmp_30sec(elev_path, save_path):
             iend = elev.shape[0] - halo + ipos + 1
             jend = elev.shape[1] - halo + jpos + 1
             z_30 += elev[ipos:iend:halo, jpos:jend:halo]
-    
+
     elev = np.asarray(
         np.round(z_30 / float(halo ** 2)), dtype=np.int16)
-    
+
     xpos = np.linspace(
         -180., +180., elev.shape[1] + 1, dtype=np.float64)
     ypos = np.linspace(
@@ -360,10 +364,10 @@ def srtmp_30sec(elev_path, save_path):
 
     root = nc.Dataset(
         os.path.join(
-            save_path, "SRTM15+V2.1_30sec_pixel.nc"), 
+            save_path, "SRTM15+V2.1_30sec_pixel.nc"),
         "w", format="NETCDF4")
     root.createDimension("num_lon", elev.shape[1] + 1)
-    root.createDimension("num_col", elev.shape[1])    
+    root.createDimension("num_col", elev.shape[1])
     root.createDimension("num_lat", elev.shape[0] + 1)
     root.createDimension("num_row", elev.shape[0])
 
@@ -377,7 +381,7 @@ def srtmp_30sec(elev_path, save_path):
         "top_elevation", "i2", ("num_row", "num_col"))
     data.units = "m"
     data[:, :] = elev
-    
+
     root.close()
 
 
@@ -389,7 +393,7 @@ def rtopo_srtmp_60sec(elev_path, save_path):
     """
 
     print("Making RTopo-SRTM+ (60 arc-sec) blend...")
-    
+
     data = nc.Dataset(os.path.join(
         elev_path, "RTopo_2_0_4_60sec_pixel.nc"), "r")
 
@@ -409,22 +413,22 @@ def rtopo_srtmp_60sec(elev_path, save_path):
         data["top_elevation"][:], dtype=np.int16)
 
     mask = blend_front(e1st, i1st, e2nd, halo=20, sdev=2.0)
-   
+
     elev = np.asarray(np.round(
-        (1. - mask) * e1st + mask * e2nd), dtype=np.int16)  
+        (1. - mask) * e1st + mask * e2nd), dtype=np.int16)
 
     iceh = i1st
     ocnh = o1st
     ocnh[i1st == 0] = np.maximum(0, -elev[i1st == 0])
-    
+
     xpos = np.linspace(
         -180., +180., elev.shape[1] + 1, dtype=np.float64)
     ypos = np.linspace(
         -90.0, +90.0, elev.shape[0] + 1, dtype=np.float64)
 
     root = nc.Dataset(
-        os.path.join(save_path, 
-            "RTopo_2_0_4_SRTM15+V2_1_60sec_pixel.nc"),
+        os.path.join(save_path,
+                     "RTopo_2_0_4_SRTM15+V2_1_60sec_pixel.nc"),
         "w", format="NETCDF4")
     root.description = "Blend of RTopo-2.0.4 (60 arc-sec) " + \
         "and SRTM15+V2.1 (60 arc-sec) - pixel centred and " + \
@@ -436,7 +440,7 @@ def rtopo_srtmp_60sec(elev_path, save_path):
         "doi.pangaea.de/10.1594/PANGAEA.905295 and " + \
         "doi.org/10.1029/2019EA000658"
     root.createDimension("num_lon", elev.shape[1] + 1)
-    root.createDimension("num_col", elev.shape[1])    
+    root.createDimension("num_col", elev.shape[1])
     root.createDimension("num_lat", elev.shape[0] + 1)
     root.createDimension("num_row", elev.shape[0])
 
@@ -458,7 +462,7 @@ def rtopo_srtmp_60sec(elev_path, save_path):
         "ocn_thickness", "i2", ("num_row", "num_col"))
     data.units = "m"
     data[:, :] = ocnh
-    
+
     root.close()
 
 
@@ -490,22 +494,22 @@ def rtopo_srtmp_30sec(elev_path, save_path):
         data["top_elevation"][:], dtype=np.int16)
 
     mask = blend_front(e1st, i1st, e2nd, halo=40, sdev=4.0)
-   
+
     elev = np.asarray(np.round(
         (1. - mask) * e1st + mask * e2nd), dtype=np.int16)
 
     iceh = i1st
     ocnh = o1st
     ocnh[i1st == 0] = np.maximum(0, -elev[i1st == 0])
-    
+
     xpos = np.linspace(
         -180., +180., elev.shape[1] + 1, dtype=np.float64)
     ypos = np.linspace(
         -90.0, +90.0, elev.shape[0] + 1, dtype=np.float64)
 
     root = nc.Dataset(
-        os.path.join(save_path, 
-            "RTopo_2_0_4_SRTM15+V2_1_30sec_pixel.nc"),
+        os.path.join(save_path,
+                     "RTopo_2_0_4_SRTM15+V2_1_30sec_pixel.nc"),
         "w", format="NETCDF4")
     root.description = "Blend of RTopo-2.0.4 (30 arc-sec) " + \
         "and SRTM15+V2.1 (30 arc-sec) - pixel centred and " + \
@@ -517,7 +521,7 @@ def rtopo_srtmp_30sec(elev_path, save_path):
         "doi.pangaea.de/10.1594/PANGAEA.905295 and " + \
         "doi.org/10.1029/2019EA000658"
     root.createDimension("num_lon", elev.shape[1] + 1)
-    root.createDimension("num_col", elev.shape[1])    
+    root.createDimension("num_col", elev.shape[1])
     root.createDimension("num_lat", elev.shape[0] + 1)
     root.createDimension("num_row", elev.shape[0])
 
@@ -539,7 +543,7 @@ def rtopo_srtmp_30sec(elev_path, save_path):
         "ocn_thickness", "i2", ("num_row", "num_col"))
     data.units = "m"
     data[:, :] = ocnh
-    
+
     root.close()
 
 
@@ -566,10 +570,10 @@ def gebco_60sec(elev_path, save_path):
             iend = elev.shape[0] - halo + ipos + 1
             jend = elev.shape[1] - halo + jpos + 1
             z_60 += elev[ipos:iend:halo, jpos:jend:halo]
-    
+
     elev = np.asarray(
         np.round(z_60 / float(halo ** 2)), dtype=np.int16)
-    
+
     xpos = np.linspace(
         -180., +180., elev.shape[1] + 1, dtype=np.float64)
     ypos = np.linspace(
@@ -580,7 +584,7 @@ def gebco_60sec(elev_path, save_path):
             save_path, "GEBCO_v2020_60sec_pixel.nc"),
         "w", format="NETCDF4")
     root.createDimension("num_lon", elev.shape[1] + 1)
-    root.createDimension("num_col", elev.shape[1])    
+    root.createDimension("num_col", elev.shape[1])
     root.createDimension("num_lat", elev.shape[0] + 1)
     root.createDimension("num_row", elev.shape[0])
 
@@ -594,7 +598,7 @@ def gebco_60sec(elev_path, save_path):
         "top_elevation", "i2", ("num_row", "num_col"))
     data.units = "m"
     data[:, :] = elev
-    
+
     root.close()
 
 
@@ -621,10 +625,10 @@ def gebco_30sec(elev_path, save_path):
             iend = elev.shape[0] - halo + ipos + 1
             jend = elev.shape[1] - halo + jpos + 1
             z_30 += elev[ipos:iend:halo, jpos:jend:halo]
-    
+
     elev = np.asarray(
         np.round(z_30 / float(halo ** 2)), dtype=np.int16)
-    
+
     xpos = np.linspace(
         -180., +180., elev.shape[1] + 1, dtype=np.float64)
     ypos = np.linspace(
@@ -632,10 +636,10 @@ def gebco_30sec(elev_path, save_path):
 
     root = nc.Dataset(
         os.path.join(
-            save_path, "GEBCO_v2020_30sec_pixel.nc"), 
+            save_path, "GEBCO_v2020_30sec_pixel.nc"),
         "w", format="NETCDF4")
     root.createDimension("num_lon", elev.shape[1] + 1)
-    root.createDimension("num_col", elev.shape[1])    
+    root.createDimension("num_col", elev.shape[1])
     root.createDimension("num_lat", elev.shape[0] + 1)
     root.createDimension("num_row", elev.shape[0])
 
@@ -649,7 +653,7 @@ def gebco_30sec(elev_path, save_path):
         "top_elevation", "i2", ("num_row", "num_col"))
     data.units = "m"
     data[:, :] = elev
-    
+
     root.close()
 
 
@@ -661,7 +665,7 @@ def rtopo_gebco_60sec(elev_path, save_path):
     """
 
     print("Making RTopo-GEBCO (60 arc-sec) blend...")
-    
+
     data = nc.Dataset(os.path.join(
         elev_path, "RTopo_2_0_4_60sec_pixel.nc"), "r")
 
@@ -681,22 +685,22 @@ def rtopo_gebco_60sec(elev_path, save_path):
         data["top_elevation"][:], dtype=np.int16)
 
     mask = blend_front(e1st, i1st, e2nd, halo=20, sdev=2.0)
-   
+
     elev = np.asarray(np.round(
-        (1. - mask) * e1st + mask * e2nd), dtype=np.int16)  
+        (1. - mask) * e1st + mask * e2nd), dtype=np.int16)
 
     iceh = i1st
     ocnh = o1st
     ocnh[i1st == 0] = np.maximum(0, -elev[i1st == 0])
-    
+
     xpos = np.linspace(
         -180., +180., elev.shape[1] + 1, dtype=np.float64)
     ypos = np.linspace(
         -90.0, +90.0, elev.shape[0] + 1, dtype=np.float64)
 
     root = nc.Dataset(
-        os.path.join(save_path, 
-            "RTopo_2_0_4_GEBCO_v2020_60sec_pixel.nc"),
+        os.path.join(save_path,
+                     "RTopo_2_0_4_GEBCO_v2020_60sec_pixel.nc"),
         "w", format="NETCDF4")
     root.description = "Blend of RTopo-2.0.4 (60 arc-sec) " + \
         "and GEBCO[2020] (15 arc-sec) - pixel centred and " + \
@@ -708,7 +712,7 @@ def rtopo_gebco_60sec(elev_path, save_path):
         "doi.pangaea.de/10.1594/PANGAEA.905295 and " + \
         "doi.org/10.5285/a29c5465-b138-234d-e053-6c86abc040b9"
     root.createDimension("num_lon", elev.shape[1] + 1)
-    root.createDimension("num_col", elev.shape[1])    
+    root.createDimension("num_col", elev.shape[1])
     root.createDimension("num_lat", elev.shape[0] + 1)
     root.createDimension("num_row", elev.shape[0])
 
@@ -730,7 +734,7 @@ def rtopo_gebco_60sec(elev_path, save_path):
         "ocn_thickness", "i2", ("num_row", "num_col"))
     data.units = "m"
     data[:, :] = ocnh
-    
+
     root.close()
 
 
@@ -742,7 +746,7 @@ def rtopo_gebco_30sec(elev_path, save_path):
     """
 
     print("Making RTopo-GEBCO (30 arc-sec) blend...")
-    
+
     data = nc.Dataset(os.path.join(
         elev_path, "RTopo_2_0_4_30sec_pixel.nc"), "r")
 
@@ -762,22 +766,22 @@ def rtopo_gebco_30sec(elev_path, save_path):
         data["top_elevation"][:], dtype=np.int16)
 
     mask = blend_front(e1st, i1st, e2nd, halo=40, sdev=4.0)
-   
+
     elev = np.asarray(np.round(
-        (1. - mask) * e1st + mask * e2nd), dtype=np.int16)  
+        (1. - mask) * e1st + mask * e2nd), dtype=np.int16)
 
     iceh = i1st
     ocnh = o1st
     ocnh[i1st == 0] = np.maximum(0, -elev[i1st == 0])
-    
+
     xpos = np.linspace(
         -180., +180., elev.shape[1] + 1, dtype=np.float64)
     ypos = np.linspace(
         -90.0, +90.0, elev.shape[0] + 1, dtype=np.float64)
 
     root = nc.Dataset(
-        os.path.join(save_path, 
-            "RTopo_2_0_4_GEBCO_v2020_30sec_pixel.nc"),
+        os.path.join(save_path,
+                     "RTopo_2_0_4_GEBCO_v2020_30sec_pixel.nc"),
         "w", format="NETCDF4")
     root.description = "Blend of RTopo-2.0.4 (30 arc-sec) " + \
         "and GEBCO[2020] (15 arc-sec) - pixel centred and " + \
@@ -789,7 +793,7 @@ def rtopo_gebco_30sec(elev_path, save_path):
         "doi.pangaea.de/10.1594/PANGAEA.905295 and " + \
         "doi.org/10.5285/a29c5465-b138-234d-e053-6c86abc040b9"
     root.createDimension("num_lon", elev.shape[1] + 1)
-    root.createDimension("num_col", elev.shape[1])    
+    root.createDimension("num_col", elev.shape[1])
     root.createDimension("num_lat", elev.shape[0] + 1)
     root.createDimension("num_row", elev.shape[0])
 
@@ -811,7 +815,7 @@ def rtopo_gebco_30sec(elev_path, save_path):
         "ocn_thickness", "i2", ("num_row", "num_col"))
     data.units = "m"
     data[:, :] = ocnh
-    
+
     root.close()
 
 
@@ -822,12 +826,12 @@ if (__name__ == "__main__"):
 
     parser.add_argument(
         "--elev-path", dest="elev_path", type=str,
-        required=False, 
+        required=False,
         default="", help="Path to raw DEM data-sets.")
 
     parser.add_argument(
         "--save-path", dest="save_path", type=str,
-        required=False, 
+        required=False,
         default="", help="Path to store output data.")
 
     parser.parse_args()
@@ -846,10 +850,10 @@ if (__name__ == "__main__"):
 
     rtopo_srtmp_60sec(elev_path, save_path)
     rtopo_srtmp_30sec(elev_path, save_path)
-    """    
+    """
 
     gebco_60sec(elev_path, save_path)
     gebco_30sec(elev_path, save_path)
-    
+
     rtopo_gebco_60sec(elev_path, save_path)
     rtopo_gebco_30sec(elev_path, save_path)

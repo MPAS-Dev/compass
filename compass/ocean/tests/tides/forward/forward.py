@@ -12,7 +12,7 @@ class ForwardStep(Step):
     mesh : compass.ocean.tests.global_ocean.mesh.Mesh
         The test case that produces the mesh for this run
 
-    init : compass.ocean.tests.hurricane.init.Init
+    init : compass.ocean.tests.tides.init.Init
         The test case that produces the initial condition for this run
     """
     def __init__(self, test_case, mesh, init, name='forward', subdir=None):
@@ -48,19 +48,22 @@ class ForwardStep(Step):
         mesh_package = mesh.package
         self.add_namelist_file(mesh_package, 'namelist.ocean')
 
-        initial_state_target = \
-            f'{init.path}/initial_state/initial_state.nc'
-        self.add_input_file(filename='initial_state.nc',
-                            work_dir_target=initial_state_target)
+        initial_state_path = f'{init.path}/initial_state'
+        interpolate_path = f'{init.path}/interpolate'
+        initial_state_target = f'{initial_state_path}/initial_state.nc'
+
+        self.add_input_file(
+            filename='initial_state.nc',
+            work_dir_target=initial_state_target)
         self.add_input_file(
             filename='forcing_data.nc',
-            work_dir_target=f'{init.path}/initial_state/init_mode_forcing_data.nc')
+            work_dir_target=f'{initial_state_path}/init_mode_forcing_data.nc')
         self.add_input_file(
             filename='topographic_wave_drag.nc',
-            work_dir_target=f'{init.path}/interpolate/topographic_wave_drag.nc')
+            work_dir_target=f'{interpolate_path}/topographic_wave_drag.nc')
         self.add_input_file(
             filename='graph.info',
-            work_dir_target=f'{init.path}/initial_state/graph.info')
+            work_dir_target=f'{initial_state_path}/graph.info')
 
         self.add_model_as_input()
 
@@ -69,7 +72,7 @@ class ForwardStep(Step):
         Set up the test case in the work directory, including downloading any
         dependencies
         """
-        self.ntasks= self.config.getint('tides', 'forward_ntasks')
+        self.ntasks = self.config.getint('tides', 'forward_ntasks')
         self.min_tasks = self.config.getint('tides', 'forward_min_tasks')
         self.threads = self.config.getint('tides', 'forward_threads')
 

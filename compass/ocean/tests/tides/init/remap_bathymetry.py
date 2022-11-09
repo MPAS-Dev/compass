@@ -1,11 +1,6 @@
 from compass.step import Step
 
-import netCDF4
-import matplotlib.pyplot as plt
-import numpy as np
 import os
-import cartopy.crs as ccrs
-import cartopy.feature as cfeature
 
 import compass.ocean.tests.tides.init.dem_pixel as dem_pixel
 import compass.ocean.tests.tides.init.dem_remap as dem_remap
@@ -68,8 +63,6 @@ class RemapBathymetry(Step):
             filename='base_mesh.nc',
             work_dir_target=f'{base_mesh_path}/base_mesh.nc')
 
-        #self.add_output_file(filename=)
-
     def run(self):
         """
         Run this step of the test case
@@ -84,5 +77,6 @@ class RemapBathymetry(Step):
         if not os.path.exists('RTopo_2_0_4_GEBCO_v2020_30sec_pixel.nc'):
             dem_pixel.rtopo_gebco_30sec(self.init_path, self.init_path)
 
-        dem_remap.dem_remap('RTopo_2_0_4_GEBCO_v2020_30sec_pixel.nc','base_mesh.nc')
+        dem_remap.dem_remap('RTopo_2_0_4_GEBCO_v2020_30sec_pixel.nc',
+                            'base_mesh.nc')
         dem_trnsf.dem_trnsf('base_mesh.nc', 'mesh.nc')

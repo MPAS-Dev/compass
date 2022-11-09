@@ -21,10 +21,10 @@ class Tides(TestGroup):
 
             mesh = Mesh(test_group=self, mesh_name=mesh_name)
             self.add_test_case(mesh)
-    
+
             init = Init(test_group=self, mesh=mesh)
             self.add_test_case(init)
-    
+
             self.add_test_case(Forward(test_group=self,
                                        mesh=mesh,
                                        init=init))

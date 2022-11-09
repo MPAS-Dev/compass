@@ -4,16 +4,13 @@ from mpas_tools.mesh.interpolation import interp_bilin
 import netCDF4
 import matplotlib.pyplot as plt
 import numpy as np
-import datetime
-import os
-import subprocess
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 
 
 class InterpolateWaveDrag(Step):
     """
-    A step for interpolating the topographic wave drag data 
+    A step for interpolating the topographic wave drag data
     onto the MPAS-Ocean mesh
 
     Attributes
@@ -76,23 +73,23 @@ class InterpolateWaveDrag(Step):
 
         # Get grid from data file
         lon_data = data_nc.variables['Longitude'][:]
-        lon_data = np.append(lon_data,180.0)
-        lon_data = np.insert(lon_data,0,-180.0)
+        lon_data = np.append(lon_data, 180.0)
+        lon_data = np.insert(lon_data, 0, -180.0)
         lat_data = data_nc.variables['Latitude'][:]
 
         data = data_nc.variables['rinv'][:]
         data = np.squeeze(data)
-        data = np.insert(data,0,data[:,0],axis=1)
-        data = np.append(data,data[:,-1][np.newaxis].T,axis=1)
-        data = 1.0/data[:,:]
+        data = np.insert(data, 0, data[:, 0], axis=1)
+        data = np.append(data, data[:, -1][np.newaxis].T, axis=1)
+        data = 1.0/data[:, :]
 
         # Get grid from grid file
-        lon_grid = np.mod(grid_nc.variables['lonEdge'][:] + np.pi, 2.0*np.pi) - np.pi
-        lon_grid = lon_grid*180.0/np.pi 
+        lon_grid = np.mod(grid_nc.variables['lonEdge'][:] + np.pi,
+                          2.0*np.pi) - np.pi
+        lon_grid = lon_grid*180.0/np.pi
         lat_grid = grid_nc.variables['latEdge'][:]*180.0/np.pi
-        nEdges = lon_grid.size
 
-        # Interpolate 
+        # Interpolate
         interp_data = interp_bilin(lon_data, lat_data,
                                    data,
                                    lon_grid, lat_grid)
@@ -116,7 +113,7 @@ class InterpolateWaveDrag(Step):
         lat_grid = interp_data[1]
 
         data = orig_data[2][:, :]
-        interp = interp_data[2][ :]
+        interp = interp_data[2][:]
 
         # Plot data
         fig = plt.figure()
@@ -166,7 +163,9 @@ class InterpolateWaveDrag(Step):
         data_nc.createDimension('nEdges', nEdges)
 
         # Set variables
-        data_var = data_nc.createVariable('topographic_wave_drag', np.float64, ('nEdges'))
+        data_var = data_nc.createVariable('topographic_wave_drag',
+                                          np.float64,
+                                          ('nEdges'))
         data_var[:] = data[:]
         data_nc.close()
 

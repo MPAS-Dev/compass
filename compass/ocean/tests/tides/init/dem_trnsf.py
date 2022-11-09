@@ -8,7 +8,7 @@ import argparse
 
 def dem_trnsf(base_mesh, part_mesh):
     """
-    Transfer elevation & ice+ocn-thickness data from a full 
+    Transfer elevation & ice+ocn-thickness data from a full
     sphere MPAS mesh onto a partial sub-mesh resulting from
     a culling operation, or equiv.
 
@@ -20,9 +20,9 @@ def dem_trnsf(base_mesh, part_mesh):
     base = nc.Dataset(base_mesh, "r")
     part = nc.Dataset(part_mesh, "r+")
 
-#-- make a vector of cell-centre positions to match against
+# -- make a vector of cell-centre positions to match against
 
-    xpos = np.vstack(( 
+    xpos = np.vstack((
         np.vstack((
             base["xCell"][:],
             base["yCell"][:],
@@ -38,15 +38,15 @@ def dem_trnsf(base_mesh, part_mesh):
             0, base.dimensions["nCells"].size),
         np.arange(
             0, part.dimensions["nCells"].size)
-    )) 
+    ))
 
-#-- culling shouldn't introduce fp round-off - but truncate 
-#-- anyway...
+# -- culling shouldn't introduce fp round-off - but truncate
+# -- anyway...
 
     xpos = np.round(xpos, decimals=8)
 
-#-- use stable sorting to bring matching cell xyz (and idx)
-#-- into "ascending" order
+# -- use stable sorting to bring matching cell xyz (and idx)
+# -- into "ascending" order
 
     imap = np.argsort(xpos[:, 2], kind="stable")
     xpos = xpos[imap, :]
@@ -61,30 +61,30 @@ def dem_trnsf(base_mesh, part_mesh):
     diff = xpos[1:, :] - xpos[:-1, :]
 
     same = np.argwhere(np.logical_and.reduce((
-        diff[:, 0] == 0, 
-        diff[:, 1] == 0, 
+        diff[:, 0] == 0,
+        diff[:, 1] == 0,
         diff[:, 2] == 0))).ravel()
 
-#-- cell inew in part matches iold in base - re-index elev.
-#-- data-sets
+# -- cell inew in part matches iold in base - re-index elev.
+# -- data-sets
 
     inew = xidx[same + 1]
     iold = xidx[same + 0]
-    
-    if ("bed_elevation" not in base.variables.keys() or 
-        "ocn_thickness" not in base.variables.keys() or
-        "ice_thickness" not in base.variables.keys()):
+
+    if ("bed_elevation" not in base.variables.keys() or
+            "ocn_thickness" not in base.variables.keys() or
+            "ice_thickness" not in base.variables.keys()):
         raise Exception("Base does not contain elev. data!")
 
     if ("bed_elevation" not in part.variables.keys()):
         part.createVariable("bed_elevation", "f8", ("nCells"))
-    
+
     if ("ocn_thickness" not in part.variables.keys()):
         part.createVariable("ocn_thickness", "f8", ("nCells"))
-    
+
     if ("ice_thickness" not in part.variables.keys()):
         part.createVariable("ice_thickness", "f8", ("nCells"))
-        
+
     part["bed_elevation"][inew] = base["bed_elevation"][iold]
     part["ocn_thickness"][inew] = base["ocn_thickness"][iold]
     part["ice_thickness"][inew] = base["ice_thickness"][iold]
@@ -108,7 +108,7 @@ if (__name__ == "__main__"):
         "--part-mesh", dest="part_mesh", type=str,
         required=True, help="Name of culled MPAS mesh.")
 
-    parser.parse_args()
+    args = parser.parse_args()
     base_mesh = args.base_mesh
     part_mesh = args.part_mesh
     dem_trnsf(base_mesh, part_mesh)

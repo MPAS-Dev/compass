@@ -1,10 +1,8 @@
 
-import os
 import time
 import numpy as np
 import netCDF4 as nc
 from scipy import spatial
-from scipy import interpolate
 from scipy.sparse import csr_matrix
 import argparse
 
@@ -13,11 +11,11 @@ import argparse
 
 def map_to_r3(mesh, xlon, ylat, head, tail):
     """
-    Map lon-lat coordinates to XYZ points. Restricted to the 
-    panel LAT[HEAD:TAIL] to manage memory use.  
+    Map lon-lat coordinates to XYZ points. Restricted to the
+    panel LAT[HEAD:TAIL] to manage memory use.
 
     """
-    
+
     sinx = np.sin(xlon * np.pi / 180.)
     cosx = np.cos(xlon * np.pi / 180.)
     siny = np.sin(ylat * np.pi / 180.)
@@ -39,10 +37,10 @@ def map_to_r3(mesh, xlon, ylat, head, tail):
 def tria_area(rs, pa, pb, pc):
     """
     Calculate areas of spherical triangles [PA, PB, PC] on a
-    sphere of radius RS.    
+    sphere of radius RS.
 
     """
-    
+
     lena = circ_dist(1., pa, pb)
     lenb = circ_dist(1., pb, pc)
     lenc = circ_dist(1., pc, pa)
@@ -62,7 +60,7 @@ def tria_area(rs, pa, pb, pc):
 def circ_dist(rs, pa, pb):
     """
     Calculate geodesic-length of great circles [PA, PB] on a
-    sphere of radius RS.    
+    sphere of radius RS.
 
     """
 
@@ -101,8 +99,9 @@ def cell_quad(mesh, xlon, ylat, vals):
     quadrature rule.
 
     """
-    
-    class base: pass
+
+    class base:
+        pass
 
     abar = np.zeros(
         (mesh.dimensions["nCells"].size, 1), dtype=np.float32)
@@ -122,7 +121,7 @@ def cell_quad(mesh, xlon, ylat, vals):
     pcel = pcel * np.pi / 180.
 
     pvrt = np.zeros(
-        (mesh.dimensions["nVertices"].size, 2), 
+        (mesh.dimensions["nVertices"].size, 2),
         dtype=np.float64)
     pvrt[:, 0] = mesh.variables["lonVertex"][:]
     pvrt[:, 1] = mesh.variables["latVertex"][:]
@@ -143,7 +142,7 @@ def cell_quad(mesh, xlon, ylat, vals):
     edge = base()
     edge.vert = np.asarray(
         mesh.variables["verticesOnEdge"][:], dtype=np.int32)
-    
+
     for epos in range(np.max(cell.topo)):
 
         mask = cell.topo > epos
@@ -174,27 +173,27 @@ def cell_quad(mesh, xlon, ylat, vals):
 
 def dem_remap(elev_file, mpas_file):
     """
-    Map elevation and ice+ocn-thickness data from a "zipped" 
+    Map elevation and ice+ocn-thickness data from a "zipped"
     RTopo data-set onto the cells in an MPAS mesh.
 
     Cell values are a blending of an approx. integral remap
     and a local quadrature rule.
 
     """
-    
+
     print("Loading assests...")
 
     elev = nc.Dataset(elev_file, "r")
     mesh = nc.Dataset(mpas_file, "r+")
 
-#-- Compute an approximate remapping, associating pixels in
-#-- the DEM with cells in the MPAS mesh. Since polygons are
-#-- Voronoi, the point-in-cell query can be computed by
-#-- finding nearest neighbours. This remapping is an approx.
-#-- as no partial pixel-cell intersection is computed.  
+# -- Compute an approximate remapping, associating pixels in
+# -- the DEM with cells in the MPAS mesh. Since polygons are
+# -- Voronoi, the point-in-cell query can be computed by
+# -- finding nearest neighbours. This remapping is an approx.
+# -- as no partial pixel-cell intersection is computed.
 
     print("Building KDtree...")
- 
+
     ppos = np.zeros(
         (mesh.dimensions["nCells"].size, 3), dtype=np.float64)
     ppos[:, 0] = mesh["xCell"][:]
@@ -228,24 +227,27 @@ def dem_remap(elev_file, mpas_file):
         __, nloc = tree.query(qpos, n_jobs=-1)
         ttoc = time.time()
         print("* built node-to-cell map:", ttoc - ttic)
-        
+
         nset.append(nloc)
 
     near = np.concatenate(nset)
-    
-    del tree; del qpos; del nset; del nloc
 
-#-- Build cell-to-pixel map as a sparse matrix, and average
-#-- RTopo pixel values within each cell.
-    
+    del tree
+    del qpos
+    del nset
+    del nloc
+
+# -- Build cell-to-pixel map as a sparse matrix, and average
+# -- RTopo pixel values within each cell.
+
     cols = np.arange(0, near.size)
     vals = np.ones(near.size, dtype=np.int8)
 
     smat = csr_matrix((vals, (near, cols)))
-    
+
     nmap = np.asarray(
         np.sum(smat, axis=1), dtype=np.float32)
-    
+
     vals = np.asarray(
         elev["bed_elevation"][:], dtype=np.float32)
     vals = np.reshape(vals, (vals.size, 1))
@@ -264,12 +266,15 @@ def dem_remap(elev_file, mpas_file):
 
     imap = (smat * vals) / np.maximum(1., nmap)
 
-    del smat; del cols; del vals; del near
+    del smat
+    del cols
+    del vals
+    del near
 
-#-- If the resolution of the mesh is greater, or comparable 
-#-- to that of the DEM, the approx. remapping (above) will 
-#-- result in a low order interpolation.
-#-- Thus, blend with a local order-2 quadrature formulation
+# -- If the resolution of the mesh is greater, or comparable
+# -- to that of the DEM, the approx. remapping (above) will
+# -- result in a low order interpolation.
+# -- Thus, blend with a local order-2 quadrature formulation
 
     print("Eval. elevation...")
 
@@ -296,26 +301,26 @@ def dem_remap(elev_file, mpas_file):
     iint = cell_quad(mesh, xlon, ylat, vals)
     ttoc = time.time()
     print("* compute cell integrals:", ttoc - ttic)
-    
+
     print("Save to dataset...")
-    
+
     ebar = (np.multiply(nmap, emap) + 6 * eint) / (6 + nmap)
     obar = (np.multiply(nmap, omap) + 6 * oint) / (6 + nmap)
     ibar = (np.multiply(nmap, imap) + 6 * iint) / (6 + nmap)
-  
+
     if ("bed_elevation" not in mesh.variables.keys()):
         mesh.createVariable("bed_elevation", "f8", ("nCells"))
-    
+
     if ("ocn_thickness" not in mesh.variables.keys()):
         mesh.createVariable("ocn_thickness", "f8", ("nCells"))
-    
+
     if ("ice_thickness" not in mesh.variables.keys()):
         mesh.createVariable("ice_thickness", "f8", ("nCells"))
 
     mesh["bed_elevation"][:] = ebar
     mesh["ocn_thickness"][:] = obar
     mesh["ice_thickness"][:] = ibar
-    
+
     elev.close()
     mesh.close()
 
@@ -333,8 +338,7 @@ if (__name__ == "__main__"):
         "--elev-file", dest="elev_file", type=str,
         required=True, help="Name of DEM pixel file.")
 
-    parser.parse_args()
+    args = parser.parse_args()
     elev_file = args.elev_file
     mpas_file = args.mpas_file
-    
     dem_remap(elev_file, mpas_file)
