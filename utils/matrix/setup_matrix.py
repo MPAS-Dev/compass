@@ -28,9 +28,6 @@ all_build_targets = {
         ('intel', 'mvapich'): 'ifort',
         ('gnu', 'openmpi'): 'gfortran',
         ('gnu', 'mvapich'): 'gfortran'},
-    'badger': {
-        ('intel', 'impi'): 'intel-mpi',
-        ('gnu', 'mvapich'): 'gfortran'},
     'chrysalis': {
         ('intel', 'impi'): 'intel-mpi',
         ('intel', 'openmpi'): 'ifort',

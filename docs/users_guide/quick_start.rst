@@ -16,7 +16,7 @@ For each ``compass`` release, we maintain a
 ``compass`` package as well as all of its dependencies and some libraries
 (currently `ESMF <https://earthsystemmodeling.org/>`_ and
 `SCORPIO <https://e3sm.org/scorpio-parallel-io-library/>`_) built with system
-MPI on our standard machines (Anvil, Badger, Chrysalis, Compy, and Cori).
+MPI on our standard machines (Anvil, Chrysalis, Compy, and Cori).
 Here are the commands to load the the environment for the latest
 ``compass`` release with the default compiler and MPI library on each machine:
 
@@ -25,12 +25,6 @@ Here are the commands to load the the environment for the latest
 .. code-block:: bash
 
     source /lcrc/soft/climate/compass/anvil/load_latest_compass.sh
-
-* Badger:
-
-.. code-block:: bash
-
-    source /usr/projects/climate/SHARED_CLIMATE/compass/badger/load_latest_compass.sh
 
 * Chrysalis:
 
@@ -224,11 +218,11 @@ can set up several test cases at once by passing test numbers separated by
 spaces: ``-n 15 16 17``.  See :ref:`dev_compass_setup` for more details.
 
 Here, ``<workdir>`` is a path, usually to your scratch space. For example, on
-Badger on LANL IC, you might use:
+Chrysalis at LCRC, you might use:
 
 .. code-block:: bash
 
-    -w /lustre/scratch4/turquoise/$USER/runs/210131_test_new_branch
+    -w /lcrc/group/e3sm/$USER/runs/210131_test_new_branch
 
 The placeholder ``<mpas>`` is the relative or absolute path where the MPAS
 component has been built (the directory, not the executable itself; see

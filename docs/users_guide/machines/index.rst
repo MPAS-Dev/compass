@@ -24,15 +24,15 @@ The config options typically defined for a machine are:
 
     # The root to a location where the mesh_database, initial_condition_database,
     # and bathymetry_database for MPAS-Ocean will be cached
-    ocean_database_root = /usr/projects/regionalclimate/COMMON_MPAS/ocean/grids/
+    ocean_database_root = /lcrc/group/e3sm/public_html/mpas_standalonedata/mpas-ocean
 
     # The root to a location where the mesh_database and initial_condition_database
     # for MALI will be cached
-    landice_database_root = /usr/projects/regionalclimate/COMMON_MPAS/mpas_standalonedata/mpas-albany-landice
+    landice_database_root = /lcrc/group/e3sm/public_html/mpas_standalonedata/mpas-albany-landice
 
     # the path to the base conda environment where compass environments have
     # been created
-    compass_envs = /usr/projects/climate/SHARED_CLIMATE/compass/badger/base
+    compass_envs = /lcrc/soft/climate/compass/chrysalis/base
 
 
     # Options related to deploying a compass conda environment on supported
@@ -46,15 +46,14 @@ The config options typically defined for a machine are:
     mpi_intel = impi
 
     # the system MPI library to use for gnu compiler
-    mpi_gnu = mvapich
+    mpi_gnu = openmpi
 
     # the base path for spack environments used by compass
-    spack = /usr/projects/climate/SHARED_CLIMATE/compass/badger/spack
+    spack = /lcrc/soft/climate/compass/chrysalis/spack
 
     # whether to use the same modules for hdf5, netcdf-c, netcdf-fortran and
     # pnetcdf as E3SM (spack modules are used otherwise)
-    use_e3sm_hdf5_netcdf = False
-
+    use_e3sm_hdf5_netcdf = True
 
 The ``paths`` section provides local paths to the root of the "databases"
 (local caches) of data files for each MPAS core.  These are generally in a
@@ -139,7 +138,6 @@ to use the default MPI variant for each compiler on each machine.
    :titlesonly:
 
    anvil
-   badger
    chrysalis
    compy
    cori

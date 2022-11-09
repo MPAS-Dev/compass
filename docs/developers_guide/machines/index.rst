@@ -51,10 +51,6 @@ the MPAS model.
 |              |            +-----------+-------------------+
 |              |            | openmpi   | gfortran          |
 +--------------+------------+-----------+-------------------+
-| badger       | intel      | impi      | intel-mpi         |
-|              +------------+-----------+-------------------+
-|              | gnu        | mvapich   | gfortran          |
-+--------------+------------+-----------+-------------------+
 | chrysalis    | intel      | impi      | intel-mpi         |
 |              |            +-----------+-------------------+
 |              |            | openmpi   | ifort             |
@@ -76,7 +72,6 @@ Below are specifics for each supported machine
    :titlesonly:
 
    anvil
-   badger
    chrysalis
    compy
    cori
