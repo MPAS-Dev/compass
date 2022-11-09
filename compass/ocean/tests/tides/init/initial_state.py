@@ -1,6 +1,9 @@
 from compass.model import run_model
 from compass.step import Step
 
+from compass.ocean.vertical.grid_1d import generate_1d_grid, write_1d_grid
+from compass.ocean.plot import plot_vertical_grid, plot_initial_state
+
 
 class InitialState(Step):
     """
@@ -48,9 +51,34 @@ class InitialState(Step):
             filename='graph.info',
             work_dir_target=f'{mesh_path}/culled_graph.info')
 
+        self.add_input_file(
+            target='PotentialTemperature.01.filled.60levels.PHC.151106.nc',
+            filename='temperature.nc',
+            database='initial_condition_database')
+
+        self.add_input_file(
+            target='Salinity.01.filled.60levels.PHC.151106.nc',
+            filename='salinity.nc',
+            database='initial_condition_database')
+
+        self.add_input_file(
+            target='windStress.ncep_1958-2000avg.interp3600x2431.151106.nc',
+            filename='wind_stress.nc',
+            database='initial_condition_database')
+
+        self.add_input_file(
+            target='chlorophyllA_monthly_averages_1deg.151201.nc',
+            filename='swData.nc',
+            database='initial_condition_database')
+
+        self.add_input_file(
+            target='BedMachineAntarctica_and_GEBCO_2019_0.05_degree.200128.nc',
+            filename='topography.nc',
+            database='bathymetry_database')
+
         self.add_model_as_input()
 
-        for file in ['ocean.nc', 'graph.info']:
+        for file in ['initial_state.nc', 'graph.info']:
             self.add_output_file(filename=file)
 
     def setup(self):
@@ -68,4 +96,12 @@ class InitialState(Step):
         """
         Run this step of the testcase
         """
+
+        config = self.config
+        interfaces = generate_1d_grid(config=config)
+
+        write_1d_grid(interfaces=interfaces, out_filename='vertical_grid.nc')
+        plot_vertical_grid(grid_filename='vertical_grid.nc', config=config,
+                           out_filename='vertical_grid.png')
+
         run_model(self)

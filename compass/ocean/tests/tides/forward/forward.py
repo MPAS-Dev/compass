@@ -4,7 +4,7 @@ from compass.step import Step
 
 class ForwardStep(Step):
     """
-    A step for performing forward MPAS-Ocean runs as part of hurricane test
+    A step for performing forward MPAS-Ocean runs as part of tides test
     cases.
 
     Attributes
@@ -21,13 +21,13 @@ class ForwardStep(Step):
 
         Parameters
         ----------
-        test_case : compass.ocean.tests.hurricane.forward.Forward
+        test_case : compass.ocean.tests.tides.forward.Forward
             The test case this step belongs to
 
         mesh : compass.ocean.tests.global_ocean.mesh.Mesh
             The test case that produces the mesh for this run
 
-        init : compass.ocean.tests.hurricane.init.Init
+        init : compass.ocean.tests.tides.init.Init
             The test case that produces the initial condition for this run
 
         name : str, optional
@@ -41,23 +41,23 @@ class ForwardStep(Step):
         super().__init__(test_case=test_case, name=name)
 
         self.add_namelist_file(
-            'compass.ocean.tests.hurricane.forward', 'namelist.ocean')
+            'compass.ocean.tests.tides.forward', 'namelist.ocean')
         self.add_streams_file(
-            'compass.ocean.tests.hurricane.forward', 'streams.ocean')
+            'compass.ocean.tests.tides.forward', 'streams.ocean')
 
         mesh_package = mesh.package
         self.add_namelist_file(mesh_package, 'namelist.ocean')
 
         initial_state_target = \
-            f'{init.path}/initial_state/ocean.nc'
-        self.add_input_file(filename='input.nc',
+            f'{init.path}/initial_state/initial_state.nc'
+        self.add_input_file(filename='initial_state.nc',
                             work_dir_target=initial_state_target)
         self.add_input_file(
-            filename='atmospheric_forcing.nc',
-            work_dir_target=f'{init.path}/interpolate/atmospheric_forcing.nc')
+            filename='forcing_data.nc',
+            work_dir_target=f'{init.path}/initial_state/init_mode_forcing_data.nc')
         self.add_input_file(
-            filename='points.nc',
-            work_dir_target=f'{init.path}/pointstats/points.nc')
+            filename='topographic_wave_drag.nc',
+            work_dir_target=f'{init.path}/interpolate/topographic_wave_drag.nc')
         self.add_input_file(
             filename='graph.info',
             work_dir_target=f'{init.path}/initial_state/graph.info')
@@ -69,9 +69,9 @@ class ForwardStep(Step):
         Set up the test case in the work directory, including downloading any
         dependencies
         """
-        self.cores = self.config.getint('hurricane', 'forward_cores')
-        self.min_cores = self.config.getint('hurricane', 'forward_min_cores')
-        self.threads = self.config.getint('hurricane', 'forward_threads')
+        self.ntasks= self.config.getint('tides', 'forward_ntasks')
+        self.min_tasks = self.config.getint('tides', 'forward_min_tasks')
+        self.threads = self.config.getint('tides', 'forward_threads')
 
     def run(self):
         """
