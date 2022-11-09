@@ -107,7 +107,6 @@ class Analysis(Step):
         lon_grid = np.degrees(grid_nc.variables['lonCell'][:])
         lat_grid = np.degrees(grid_nc.variables['latCell'][:])
         nCells = len(grid_nc.dimensions['nCells'])
-        print(nCells)
 
         # Write coordinate file for OTPS2
         f = open('lat_lon', 'w')
@@ -231,6 +230,23 @@ class Analysis(Step):
                 'consitiuent at each cell center from the ' \
                 f'{self.tpxo_version} model'
 
+        data_nc.close()
+
+    def check_tpxo_data(self):
+        """
+        Check if TPXO data exists in harmonic analysis file
+        """
+
+        data_nc = netCDF4.Dataset(self.harmonic_analysis_file, 'r',
+                                  format='NETCDF3_64BIT_OFFSET')
+        for con in self.constituents[:]:
+           if (f'{con.upper()}Amplitude{self.tpxo_version}' in data_nc.variables) \
+               and ( f'{con.upper()}Phase{self.tpxo_version}' in data_nc.variables):
+               self.constituents.remove(con)
+               print(f'{con} TPXO Constituent already exists')
+
+        data_nc.close()
+
     def plot(self):
         """
         Calculate errors and plot consitituents
@@ -252,9 +268,17 @@ class Analysis(Step):
                           2.0 * np.pi) - np.pi
         lon_grid = lon_grid*180.0/np.pi
         lat_grid = data_nc.variables['latCell'][:]*180.0/np.pi
-        depth = data_nc.variables['bottomDepth'][:]
-        area = data_nc.variables['areaCell'][:]
+
         nCells = lon_grid.size
+        data1 = np.zeros((nCells))
+        data2 = np.zeros((nCells))
+        data1_phase = np.zeros((nCells))
+        data2_phase = np.zeros((nCells))
+        depth = np.zeros((nCells))
+        area = np.zeros((nCells))
+
+        depth[:] = data_nc.variables['bottomDepth'][:]
+        area[:] = data_nc.variables['areaCell'][:]
 
         constituent_list = ['K1', 'M2', 'N2', 'O1', 'S2']
 
@@ -275,13 +299,13 @@ class Analysis(Step):
             print(" ====== " + con + " Constituent ======")
 
             # Get data
-            data1 = data_nc.variables[
+            data1[:] = data_nc.variables[
                 f'{con}Amplitude'][:]
-            data1_phase = data_nc.variables[
+            data1_phase[:] = data_nc.variables[
                 f'{con}Phase'][:]
-            data2 = data_nc.variables[
+            data2[:] = data_nc.variables[
                 f'{con}Amplitude{self.tpxo_version}'][:]
-            data2_phase = data_nc.variables[
+            data2_phase[:] = data_nc.variables[
                 f'{con}Phase{self.tpxo_version}'][:]
 
             data1_phase = data1_phase*np.pi/180.0
@@ -356,12 +380,13 @@ class Analysis(Step):
                              f'{con} RMSE (Amplitude) [m]',
                              f'{con} RMSE (Complex) [m]']
 
-            # Setup the subplot
             for subplot in range(0, 4):
                 ax = fig.add_subplot(2, 2, subplot+1,
                                      projection=ccrs.PlateCarree())
                 ax.set_title(subplot_title[subplot], fontsize=20)
                 levels = subplot_ticks[i][subplot][:]
+
+                # MPAS amplitude and phase
                 if subplot == 0:
                     cf = ax.tricontourf(lon_grid, lat_grid, data1,
                                         levels=levels,
@@ -369,6 +394,8 @@ class Analysis(Step):
                                         cmap=cmap_reversed)
                     ax.tricontour(lon_grid, lat_grid, data1_phase,
                                   levels=10, linewidths=0.5, colors='k')
+
+                # TPXO amplitude and phase
                 elif subplot == 1:
                     ix = np.logical_and(data2_phase >= 0, data2_phase < 360)
                     cf = ax.tricontourf(lon_grid, lat_grid, data2,
@@ -377,11 +404,15 @@ class Analysis(Step):
                                         cmap=cmap_reversed)
                     ax.tricontour(lon_grid[ix], lat_grid[ix], data2_phase[ix],
                                   levels=10, linewidths=0.5, colors='k')
+
+                # Amplitude RMSE
                 elif subplot == 2:
                     cf = ax.tricontourf(lon_grid, lat_grid, rmse_amp,
                                         levels=levels,
                                         transform=ccrs.PlateCarree(),
                                         cmap='OrRd')
+                
+                # Complex RMSE
                 elif subplot == 3:
                     cf = ax.tricontourf(lon_grid, lat_grid, rmse_com,
                                         levels=levels,
@@ -414,6 +445,7 @@ class Analysis(Step):
         Run this step of the test case
         """
 
+        self.check_tpxo_data()
         self.write_coordinate_file()
         self.setup_otps2()
         self.run_otps2()
