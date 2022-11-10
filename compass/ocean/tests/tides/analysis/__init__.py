@@ -12,25 +12,21 @@ import subprocess
 
 class Analysis(Step):
     """
-    A step for producing ssh validation plots at observation stations
+    A step for producing harmonic constituent errors and validation plots
 
     Attributes
     ----------
-    frmt : str
-        Format for datetimes
+    harmonic_analysis_file : str
+        File containing MPAS-O constitents
 
-    min_date : str
-        Beginning of time period to plot in frmt format
+    grid_file : str
+        Name of file containing MPAS-O mesh information
 
-    max_data : str
-        End of time period to plot in frmt format
+    constituents : list
+        List of constituents to extract from TPXO database
 
-    pointstats_file : dict
-        Dictionary of pointwiseStats outputs to plot. Dictionary key
-        becomes the lable in the legend.
-
-    observation : dict
-        Dictionary of stations belonging to a certain data product
+    tpxo_version : str
+        Version of TPXO to use in validation
     """
     def __init__(self, test_case):
         """
@@ -38,14 +34,14 @@ class Analysis(Step):
 
         Parameters
         ----------
-        test_case : compass.ocean.tests.hurricane.forward.Forward
+        test_case : compass.ocean.tests.tides.forward.Forward
             The test case this step belongs to
         """
         super().__init__(test_case=test_case, name='analysis')
 
         self.harmonic_analysis_file = 'harmonicAnalysis.nc'
-        self.tpxo_version = 'TPXO9'
         self.grid_file = 'initial_state.nc'
+        self.constituents = ['k1', 'k2', 'm2', 'n2', 'o1', 'p1', 'q1', 's2']
 
         self.add_input_file(
             filename=self.harmonic_analysis_file,
@@ -60,12 +56,13 @@ class Analysis(Step):
             target='TPXO9/extract_HC',
             database='tides')
 
-        self.constituents = ['k1', 'k2', 'm2', 'n2', 'o1', 'p1', 'q1', 's2']
-
     def setup(self):
         """
         Setup test case and download data
         """
+
+        config = self.config
+        self.tpxo_version = config.getint('tides', 'tpxo_version')
 
         os.makedirs(f'{self.work_dir}/TPXO_data', exist_ok=True)
         if self.tpxo_version == 'TPXO9':
@@ -240,10 +237,12 @@ class Analysis(Step):
         data_nc = netCDF4.Dataset(self.harmonic_analysis_file, 'r',
                                   format='NETCDF3_64BIT_OFFSET')
         for con in self.constituents[:]:
-           if (f'{con.upper()}Amplitude{self.tpxo_version}' in data_nc.variables) \
-               and ( f'{con.upper()}Phase{self.tpxo_version}' in data_nc.variables):
-               self.constituents.remove(con)
-               print(f'{con} TPXO Constituent already exists')
+            amp_var = f'{con.upper()}Amplitude{self.tpxo_version}'
+            phase_var = f'{con.upper()}Phase{self.tpxo_version}'
+            if (amp_var in data_nc.variables) \
+                    and (phase_var in data_nc.variables):
+                self.constituents.remove(con)
+                print(f'{con} TPXO Constituent already exists')
 
         data_nc.close()
 
@@ -317,56 +316,29 @@ class Analysis(Step):
                 - data1*data2*np.cos(data2_phase - data1_phase)
 
             # Calculate mean (global) values
-            rmse_amp_sum = 0
-            rmse_com_sum = 0
-            areaTotalAmp = 0
-            areaTotalCom = 0
-            for cell in range(nCells):
-                if (depth[cell] > 20) \
-                        and (rmse_com[cell] < 1000) \
-                        and (rmse_amp[cell] < 1000):
-                    if (rmse_amp[cell] < 10000):
-                        rmse_amp_sum += rmse_amp[cell]*area[cell]
-                        areaTotalAmp += area[cell]
-                    if (rmse_com[cell] < 10000):
-                        rmse_com_sum += rmse_com[cell]*area[cell]
-                        areaTotalCom += area[cell]
-            global_rmse_amp = np.sqrt(rmse_amp_sum / areaTotalAmp)
-            global_rmse_com = np.sqrt(rmse_com_sum / areaTotalCom)
-            print('Global RMSE (Amp) = ', global_rmse_amp)
-            print('Global RMSE (Com) = ', global_rmse_com)
+            idx = np.where((depth > 20)
+                           & (rmse_com < 1000) & (rmse_amp < 1000))
+            area_tot = np.sum(area[idx])
+            glo_rmse_amp = np.sqrt(np.sum(rmse_amp[idx]*area[idx])/area_tot)
+            glo_rmse_com = np.sqrt(np.sum(rmse_com[idx]*area[idx])/area_tot)
+            print('Global RMSE (Amp) = ', glo_rmse_amp)
+            print('Global RMSE (Com) = ', glo_rmse_com)
 
             # Calculate shallow RMSE (<=1000m)
-            rmse_amp_sum = 0
-            rmse_com_sum = 0
-            areaTotalAmp = 0
-            areaTotalCom = 0
-            for cell in range(nCells):
-                if (abs(lat_grid[cell]) < 66) \
-                        and (depth[cell] < 1000) \
-                        and (depth[cell] > 20):
-                    if (rmse_amp[cell] < 10000):
-                        rmse_amp_sum += rmse_amp[cell]*area[cell]
-                        areaTotalAmp += area[cell]
-                    if (rmse_com[cell] < 10000):
-                        rmse_com_sum += rmse_com[cell]*area[cell]
-                        areaTotalCom += area[cell]
-            shallow_rmse_amp = np.sqrt(rmse_amp_sum / areaTotalAmp)
-            shallow_rmse_com = np.sqrt(rmse_com_sum / areaTotalCom)
-            print('Shallow RMSE (Amp) = ', shallow_rmse_amp)
-            print('Shallow RMSE (Com) = ', shallow_rmse_com)
+            idx = np.where((depth > 20) & (depth < 1000)
+                           & (np.abs(lat_grid) < 66)
+                           & (rmse_com < 1000) & (rmse_amp < 1000))
+            area_tot = np.sum(area[idx])
+            shal_rmse_amp = np.sqrt(np.sum(rmse_amp[idx]*area[idx])/area_tot)
+            shal_rmse_com = np.sqrt(np.sum(rmse_com[idx]*area[idx])/area_tot)
+            print('Shallow RMSE (Amp) = ', shal_rmse_amp)
+            print('Shallow RMSE (Com) = ', shal_rmse_com)
 
             # Calculate deep RMSE (>1000m)
-            rmse_amp_sum = 0
-            rmse_com_sum = 0
-            areaTotal = 0
-            for cell in range(nCells):
-                if (abs(lat_grid[cell]) < 66) and (depth[cell] >= 1000):
-                    rmse_amp_sum += rmse_amp[cell]*area[cell]
-                    rmse_com_sum += rmse_com[cell]*area[cell]
-                    areaTotal += area[cell]
-            deep_rmse_amp = np.sqrt(rmse_amp_sum / areaTotal)
-            deep_rmse_com = np.sqrt(rmse_com_sum / areaTotal)
+            idx = np.where((depth >= 1000) & (np.abs(lat_grid) < 66))
+            area_tot = np.sum(area[idx])
+            deep_rmse_amp = np.sqrt(np.sum(rmse_amp[idx]*area[idx])/area_tot)
+            deep_rmse_com = np.sqrt(np.sum(rmse_com[idx]*area[idx])/area_tot)
             print('Deep RMSE (Amp) = ', deep_rmse_amp)
             print('Deep RMSE (Com) = ', deep_rmse_com)
 
@@ -411,7 +383,7 @@ class Analysis(Step):
                                         levels=levels,
                                         transform=ccrs.PlateCarree(),
                                         cmap='OrRd')
-                
+
                 # Complex RMSE
                 elif subplot == 3:
                     cf = ax.tricontourf(lon_grid, lat_grid, rmse_com,
@@ -430,9 +402,9 @@ class Analysis(Step):
                 cbar.ax.tick_params(labelsize=16)
 
             fig.tight_layout()
-            global_err = str(round(global_rmse_com*100, 3))
+            global_err = str(round(glo_rmse_com*100, 3))
             deep_err = str(round(deep_rmse_com*100, 3))
-            shallow_err = str(round(shallow_rmse_com*100, 3))
+            shallow_err = str(round(shal_rmse_com*100, 3))
             fig.suptitle(f'Complex: Global Avg = {global_err} cm; '
                          f'Deep RMSE = {deep_err} cm; '
                          f'Shallow RMSE = {shallow_err} cm',
