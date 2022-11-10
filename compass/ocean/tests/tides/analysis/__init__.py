@@ -94,16 +94,16 @@ class Analysis(Step):
                 target='TPXO8/grid_tpxo8_atlas_30_v1',
                 database='tides')
 
-    def write_coordinate_file(self):
+    def write_coordinate_file(self,idx):
         """
         Write mesh coordinates for TPXO extraction
         """
 
         # Read in mesh
         grid_nc = netCDF4.Dataset(self.grid_file, 'r')
-        lon_grid = np.degrees(grid_nc.variables['lonCell'][:])
-        lat_grid = np.degrees(grid_nc.variables['latCell'][:])
-        nCells = len(grid_nc.dimensions['nCells'])
+        lon_grid = np.degrees(grid_nc.variables['lonCell'][idx])
+        lat_grid = np.degrees(grid_nc.variables['latCell'][idx])
+        nCells = len(lon_grid)
 
         # Write coordinate file for OTPS2
         f = open('lat_lon', 'w')
@@ -166,40 +166,38 @@ class Analysis(Step):
 
         # Run the executable
         for con in self.constituents:
+            print('')
             print(f'run {con}')
             subprocess.call(f'./extract_HC < inputs/{con}_setup', shell=True)
 
-    def read_otps2_output(self):
+    def read_otps2_output(self,idx):
         """
         Read TPXO extraction output
         """
 
-        bou_AP = {}
+        start = idx[0]
         for con in self.constituents:
-            bou_AP[con] = {'amp': [], 'phase': []}
 
             f = open(f'outputs/{con}.out', 'r')
             lines = f.read().splitlines()
-            for line in lines[3:]:
+            for i,line in enumerate(lines[3:]):
                 line_sp = line.split()
                 if line_sp[2] != '*************':
                     val = float(line_sp[2])
-                    bou_AP[con]['amp'].append(val)
+                    self.mesh_AP[con]['amp'][start+i] = val
                 else:
-                    bou_AP[con]['amp'].append('-9999')
+                    self.mesh_AP[con]['amp'][start+i] = -9999
 
                 if line_sp[3] != 'Site':
                     val = float(line_sp[3])
                     if val < 0:
                         val = val + 360.0
-                    bou_AP[con]['phase'].append(val)
+                    self.mesh_AP[con]['phase'][start+i] = val
 
                 else:
-                    bou_AP[con]['phase'].append(-9999)
+                    self.mesh_AP[con]['phase'][start+i] = -9999
 
-        return bou_AP
-
-    def append_tpxo_data(self, mesh_AP):
+    def append_tpxo_data(self):
         """
         Inject TPXO data into harmonic analysis file
         """
@@ -207,25 +205,30 @@ class Analysis(Step):
         data_nc = netCDF4.Dataset(self.harmonic_analysis_file, 'a',
                                   format='NETCDF3_64BIT_OFFSET')
         for con in self.constituents:
+
+            # Inject amplitude 
+            amp_varname = f'{con.upper()}Amplitude{self.tpxo_version}'
             amp_var = data_nc.createVariable(
-                f'{con.upper()}Amplitude{self.tpxo_version}',
+                amp_varname,
                 np.float64,
                 ('nCells'))
-            amp_var[:] = mesh_AP[con]['amp'][:]
             amp_var.units = 'm'
             amp_var.long_name = f'Amplitude of {con.upper()} tidal ' \
                 'consitiuent at each cell center from the ' \
                 f'{self.tpxo_version} model'
+            amp_var[:] = self.mesh_AP[con]['amp'][:]
 
+            # Inject phase
+            phase_varname = f'{con.upper()}Phase{self.tpxo_version}' 
             phase_var = data_nc.createVariable(
-                f'{con.upper()}Phase{self.tpxo_version}',
+                phase_varname,
                 np.float64,
                 ('nCells'))
-            phase_var[:] = mesh_AP[con]['phase'][:]
             phase_var.units = 'deg'
             phase_var.long_name = f'Phase of {con.upper()} tidal ' \
                 'consitiuent at each cell center from the ' \
                 f'{self.tpxo_version} model'
+            phase_var[:] = self.mesh_AP[con]['phase'][:]
 
         data_nc.close()
 
@@ -236,13 +239,17 @@ class Analysis(Step):
 
         data_nc = netCDF4.Dataset(self.harmonic_analysis_file, 'r',
                                   format='NETCDF3_64BIT_OFFSET')
+        self.nCells = len(data_nc.dimensions['nCells'])
+
         for con in self.constituents[:]:
             amp_var = f'{con.upper()}Amplitude{self.tpxo_version}'
             phase_var = f'{con.upper()}Phase{self.tpxo_version}'
             if (amp_var in data_nc.variables) \
                     and (phase_var in data_nc.variables):
+
                 self.constituents.remove(con)
-                print(f'{con} TPXO Constituent already exists')
+                print(f'{con} TPXO Constituent already exists ' \
+                      f'in {self.harmonic_analysis_file}')
 
         data_nc.close()
 
@@ -295,7 +302,8 @@ class Analysis(Step):
 
         for i, con in enumerate(constituent_list):
 
-            print(" ====== " + con + " Constituent ======")
+            print('')
+            print(f' ====== {con} Constituent ======')
 
             # Get data
             data1[:] = data_nc.variables[
@@ -405,9 +413,9 @@ class Analysis(Step):
             global_err = str(round(glo_rmse_com*100, 3))
             deep_err = str(round(deep_rmse_com*100, 3))
             shallow_err = str(round(shal_rmse_com*100, 3))
-            fig.suptitle(f'Complex: Global Avg = {global_err} cm; '
-                         f'Deep RMSE = {deep_err} cm; '
-                         f'Shallow RMSE = {shallow_err} cm',
+            fig.suptitle(f'Complex RMSE: Global = {global_err} cm; '
+                         f'Deep = {deep_err} cm; '
+                         f'Shallow = {shallow_err} cm',
                          fontsize=20)
             plt.savefig(f'{con}_plot.png')
             plt.close()
@@ -417,11 +425,30 @@ class Analysis(Step):
         Run this step of the test case
         """
 
+        # Check if TPXO values aleady exist in harmonic_analysis.nc
         self.check_tpxo_data()
-        self.write_coordinate_file()
+    
+        # Setup input files for TPXO extraction
         self.setup_otps2()
-        self.run_otps2()
-        mesh_AP = self.read_otps2_output()
-        self.append_tpxo_data(mesh_AP)
 
+        # Setup chunking for TPXO extraction with large meshes
+        indices = np.arange(self.nCells)
+        nchunks = np.ceil(self.nCells/200000)
+        index_chunks = np.array_split(indices,nchunks)
+        
+        # Initialize data structure for TPXO values 
+        self.mesh_AP = {}
+        for con in self.constituents:
+            self.mesh_AP[con] = {'amp': np.zeros((self.nCells)), 'phase': np.zeros((self.nCells))}
+
+        # Extract TPXO values
+        for idx in index_chunks:
+            self.write_coordinate_file(idx)
+            self.run_otps2()
+            self.read_otps2_output(idx)
+
+        # Inject TPXO values
+        self.append_tpxo_data()
+
+        # Calulate and plot global errors
         self.plot()
