@@ -323,6 +323,11 @@ class ProcessSMB(Step):
         # correct the ismip6 smb anomaly
         ds["sfcMassBal"] = ds["sfcMassBal"] + corr_clim
 
+        # write metadata
+        ds["sfcMassBal"].attrs = {"long_name" : "surface mass balance",
+                                  "units" : "kg m-2 s-1",
+                                  "coordinates" : "lat lon"}
+
         # write to a new netCDF file
         write_netcdf(ds, output_file_final)
         ds.close()
