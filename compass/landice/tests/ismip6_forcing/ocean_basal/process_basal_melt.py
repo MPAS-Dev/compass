@@ -34,6 +34,7 @@ class ProcessBasalMelt(Step):
         section = config["ismip6_ais"]
         base_path_ismip6 = section.get("base_path_ismip6")
         base_path_mali = section.get("base_path_mali")
+        mali_mesh_name = section.get("mali_mesh_name")
         mali_mesh_file = section.get("mali_mesh_file")
         period_endyear = section.get("period_endyear")
 
@@ -49,7 +50,7 @@ class ProcessBasalMelt(Step):
         for file in input_files_coeff:
             self.add_input_file(filename=os.path.basename(file),
                                 target=os.path.join(base_path_ismip6, file))
-            self.add_output_file(filename=f"processed_basin_and_"
+            self.add_output_file(filename=f"{mali_mesh_name}_basin_and_"
                                           f"{os.path.basename(file)}")
 
     def run(self):
@@ -97,7 +98,8 @@ class ProcessBasalMelt(Step):
                                                       mali_mesh_file,
                                                       method_remap)
 
-            output_file = f"processed_basin_and_{os.path.basename(file)}"
+            output_file = f"{mali_mesh_name}_basin_and_" \
+                          f"{os.path.basename(file)}"
 
             # rename the ismip6 variables to MALI variables
             logger.info(f"Renaming the ismip6 variables to "

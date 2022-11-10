@@ -35,6 +35,7 @@ class ProcessThermalForcing(Step):
         section = config["ismip6_ais"]
         base_path_ismip6 = section.get("base_path_ismip6")
         base_path_mali = section.get("base_path_mali")
+        mali_mesh_name = section.get("mali_mesh_name")
         mali_mesh_file = section.get("mali_mesh_file")
         period_endyear = section.get("period_endyear")
         model = section.get("model")
@@ -49,10 +50,10 @@ class ProcessThermalForcing(Step):
 
         if process_obs_data:
             input_file = self._file_obs
-            output_file = f"processed_obs_TF_1995-2017_8km_x_60m.nc"
+            output_file = f"{mali_mesh_name}_obs_TF_1995-2017_8km_x_60m.nc"
         else:
             input_file = self._files[period_endyear][model][scenario]
-            output_file = f"processed_TF_{model}_{scenario}_" \
+            output_file = f"{mali_mesh_name}_TF_{model}_{scenario}_" \
                           f"{period_endyear}.nc"
 
         self.add_input_file(filename=os.path.basename(input_file[0]),
@@ -81,12 +82,12 @@ class ProcessThermalForcing(Step):
 
         if process_obs_data:
             input_file_list = self._file_obs
-            output_file = f"processed_obs_TF_1995-2017_8km_x_60m.nc"
+            output_file = f"{mali_mesh_name}_obs_TF_1995-2017_8km_x_60m.nc"
             output_path = f"{output_base_path}/ocean_thermal_forcing/"\
                           f"obs"
         else:
             input_file_list = self._files[period_endyear][model][scenario]
-            output_file = f"processed_TF_" \
+            output_file = f"{mali_mesh_name}_TF_" \
                           f"{model}_{scenario}_{period_endyear}.nc"
             output_path = f"{output_base_path}/ocean_thermal_forcing/" \
                           f"{model}_{scenario}/1995-{period_endyear}"

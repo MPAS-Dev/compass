@@ -38,6 +38,7 @@ class ProcessSMB(Step):
         base_path_ismip6 = section.get("base_path_ismip6")
         base_path_mali = section.get("base_path_mali")
         output_base_path = section.get("output_base_path")
+        mali_mesh_name = section.get("mali_mesh_name")
         mali_mesh_file = section.get("mali_mesh_file")
         period_endyear = section.get("period_endyear")
         model = section.get("model")
@@ -53,12 +54,12 @@ class ProcessSMB(Step):
                                 target=os.path.join(base_path_ismip6,
                                                     file))
 
-        output_file_esm = f"processed_SMB_{model}_{scenario}_" \
+        output_file_esm = f"{mali_mesh_name}_SMB_{model}_{scenario}_" \
                           f"{period_endyear}.nc"
         self.add_output_file(filename=output_file_esm)
 
         # add processed racmo data as input as it is needed for smb correction
-        racmo_clim_file = f"processed_RACMO2.3p2_ANT27" \
+        racmo_clim_file = f"{mali_mesh_name}_RACMO2.3p2_ANT27" \
                           f"_smb_climatology_1995-2017.nc"
         racmo_path = f"{output_base_path}/atmosphere_forcing/" \
                      f"RACMO_climatology_1995-2017"
@@ -87,7 +88,7 @@ class ProcessSMB(Step):
 
         # define file names needed
         # input racmo climotology file
-        racmo_clim_file = f"processed_RACMO2.3p2_ANT27" \
+        racmo_clim_file = f"{mali_mesh_name}_RACMO2.3p2_ANT27" \
                           f"_smb_climatology_1995-2017.nc"
         racmo_path = f"{output_base_path}/atmosphere_forcing/" \
                      f"RACMO_climatology_1995-2017"
@@ -105,9 +106,9 @@ class ProcessSMB(Step):
         remapped_clim_ismip6_temp = "remapped_clim_ismip6.nc"
         remapped_anomaly_ismip6_temp = "remapped_anomaly_ismip6.nc"
         # renamed remapped climatology and anomaly files (final outputs)
-        output_clim_ismip6 = f"processed_SMB_climatology_1995-2017_" \
+        output_clim_ismip6 = f"{mali_mesh_name}_SMB_climatology_1995-2017_" \
                              f"{model}_{scenario}.nc"
-        output_anomaly_ismip6 = f"processed_SMB_{model}_{scenario}_" \
+        output_anomaly_ismip6 = f"{mali_mesh_name}_SMB_{model}_{scenario}_" \
                                 f"{period_endyear}.nc"
 
         # combine ismip6 forcing data covering different periods

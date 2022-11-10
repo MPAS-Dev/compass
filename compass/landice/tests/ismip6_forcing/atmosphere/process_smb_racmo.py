@@ -35,6 +35,7 @@ class ProcessSmbRacmo(Step):
         config = self.config
         section = config["ismip6_ais"]
         base_path_mali = section.get("base_path_mali")
+        mali_mesh_name = section.get("mali_mesh_name")
         mali_mesh_file = section.get("mali_mesh_file")
 
         section = config["ismip6_ais_atmosphere"]
@@ -45,11 +46,10 @@ class ProcessSmbRacmo(Step):
                                                 mali_mesh_file))
 
         if process_smb_racmo:
-            self.add_input_file(filename="RACMO2.3p2_ANT27_smb_yearly_"
-                                         "1979_2018.nc",
-                                database="RACMO2.3p2_ANT27_smb_yearly_"
-                                         "1979_2018.nc")
-            output_file = f"processed_RACMO2.3p2_ANT27" \
+            self.add_input_file(
+                target="RACMO2.3p2_ANT27_smb_yearly_1979_2018.nc",
+                database="RACMO2.3p2_ANT27_SMB_yearly_1979_2018")
+            output_file = f"{mali_mesh_name}_RACMO2.3p2_ANT27" \
                           f"_smb_climatology_1995-2017.nc"
 
             self.add_output_file(filename=output_file)
@@ -76,7 +76,7 @@ class ProcessSmbRacmo(Step):
         racmo_file_temp1 = "RACMO2.3p2_smb_climatology_1995_2017.nc"
         racmo_file_temp2 = "RACMO2.3p2_smb_climatology_1995_2017_" \
                            "correct_unit.nc"
-        output_file = f"processed_RACMO2.3p2_ANT27" \
+        output_file = f"{mali_mesh_name}_RACMO2.3p2_ANT27" \
                       f"_smb_climatology_1995-2017.nc"
 
         output_file_final = os.path.join(output_base_path, output_file)
