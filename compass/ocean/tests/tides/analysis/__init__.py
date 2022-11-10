@@ -94,7 +94,7 @@ class Analysis(Step):
                 target='TPXO8/grid_tpxo8_atlas_30_v1',
                 database='tides')
 
-    def write_coordinate_file(self,idx):
+    def write_coordinate_file(self, idx):
         """
         Write mesh coordinates for TPXO extraction
         """
@@ -170,7 +170,7 @@ class Analysis(Step):
             print(f'run {con}')
             subprocess.call(f'./extract_HC < inputs/{con}_setup', shell=True)
 
-    def read_otps2_output(self,idx):
+    def read_otps2_output(self, idx):
         """
         Read TPXO extraction output
         """
@@ -180,7 +180,7 @@ class Analysis(Step):
 
             f = open(f'outputs/{con}.out', 'r')
             lines = f.read().splitlines()
-            for i,line in enumerate(lines[3:]):
+            for i, line in enumerate(lines[3:]):
                 line_sp = line.split()
                 if line_sp[2] != '*************':
                     val = float(line_sp[2])
@@ -206,7 +206,7 @@ class Analysis(Step):
                                   format='NETCDF3_64BIT_OFFSET')
         for con in self.constituents:
 
-            # Inject amplitude 
+            # Inject amplitude
             amp_varname = f'{con.upper()}Amplitude{self.tpxo_version}'
             amp_var = data_nc.createVariable(
                 amp_varname,
@@ -219,7 +219,7 @@ class Analysis(Step):
             amp_var[:] = self.mesh_AP[con]['amp'][:]
 
             # Inject phase
-            phase_varname = f'{con.upper()}Phase{self.tpxo_version}' 
+            phase_varname = f'{con.upper()}Phase{self.tpxo_version}'
             phase_var = data_nc.createVariable(
                 phase_varname,
                 np.float64,
@@ -427,19 +427,20 @@ class Analysis(Step):
 
         # Check if TPXO values aleady exist in harmonic_analysis.nc
         self.check_tpxo_data()
-    
+
         # Setup input files for TPXO extraction
         self.setup_otps2()
 
         # Setup chunking for TPXO extraction with large meshes
         indices = np.arange(self.nCells)
         nchunks = np.ceil(self.nCells/200000)
-        index_chunks = np.array_split(indices,nchunks)
-        
-        # Initialize data structure for TPXO values 
+        index_chunks = np.array_split(indices, nchunks)
+
+        # Initialize data structure for TPXO values
         self.mesh_AP = {}
         for con in self.constituents:
-            self.mesh_AP[con] = {'amp': np.zeros((self.nCells)), 'phase': np.zeros((self.nCells))}
+            self.mesh_AP[con] = {'amp': np.zeros((self.nCells)),
+                                 'phase': np.zeros((self.nCells))}
 
         # Extract TPXO values
         for idx in index_chunks:
