@@ -45,11 +45,10 @@ class ProcessSmbRacmo(Step):
                                                 mali_mesh_file))
 
         if process_smb_racmo:
-            base_path_racmo = section.get("base_path_racmo")
-            input_file_list = self._files
-            self.add_input_file(filename=input_file_list[0],
-                                target=os.path.join(base_path_racmo,
-                                                    input_file_list[0]))
+            self.add_input_file(filename="RACMO2.3p2_ANT27_smb_yearly_"
+                                         "1979_2018.nc",
+                                database="RACMO2.3p2_ANT27_smb_yearly_"
+                                         "1979_2018.nc")
             output_file = f"processed_RACMO2.3p2_ANT27" \
                           f"_smb_climatology_1995-2017.nc"
 
@@ -250,6 +249,3 @@ class ProcessSmbRacmo(Step):
         # write to a new netCDF file
         write_netcdf(ds, output_file)
         ds.close()
-
-    # create a dictionary for the regional climate RACMO dataset and the
-    _files = ["RACMO2.3p2_ANT27_smb_yearly_1979_2018.nc"]

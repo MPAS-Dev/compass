@@ -82,10 +82,9 @@ lower case "f" for the ``AIS/Atmospheric_forcing/`` and ``AIS/Ocean_forcing/``.
 In addition to atmospheric and ocean thermal forcing files that
 correspond to specific climate model (e.g., UKESM1-0-LL, CCSM4) and scenarios
 (e.g., SSP585, RCP85, RCP26-repeat), modern
-climatology files are needed. For the ``atmosphere`` testcase, users
-need to download the RACMO modern climatology data
-``RACMO2.3p2_ANT27_smb_yearly_1979_2018.nc`` from
-`here. <https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-albany-landice/>`_
+climatology files are needed. For the ``atmosphere`` testcase,
+``RACMO2.3p2_ANT27_smb_yearly_1979_2018.nc`` will be automatically downloaded
+from the database when the testcase is being set up.
 The RACMO file is used to correct the ISMIP6 the surface mass balance (SMB)
 data with the modern climatology. For the ``ocean_thermal`` case, users need to
 download the modern ocean thermal forcing climatology file named
@@ -190,9 +189,6 @@ Below is the default config options:
     # Set True to process RACMO modern climatology
     process_smb_racmo = True
 
-    # Full path to the RACMO regional climate model SMB data for modern climatology
-    base_path_racmo = /Users/hollyhan/Desktop/ISMIP6_2300_Protocol/ISMIP6-Projections-Forcing-2300/RACMO2.3p2_ANT27_SMB_yearly_1979_2018/
-
     # config options for ismip6 ocean thermal forcing data test cases
     [ismip6_ais_ocean_thermal]
 
@@ -252,9 +248,6 @@ process the RACMO modern SMB climatology but not the modern thermal forcing.
 
     # Set True to process RACMO modern climatology
     process_smb_racmo = True
-
-    # Full path to the RACMO regional climate model SMB data for modern climatology
-    base_path_racmo = NotAvailable
 
     # config options for ismip6 ocean thermal forcing data test cases
     [ismip6_ais_ocean_thermal]
