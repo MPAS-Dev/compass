@@ -37,7 +37,7 @@ class InterpolateWaveDrag(Step):
         test_case : compass.ocean.tests.tides.init.Init
             The test case this step belongs to
 
-        mesh : compass.ocean.tests.global_ocean.mesh.Mesh
+        mesh : compass.ocean.tests.tides.mesh.Mesh
             The test case that creates the mesh used by this test case
         """
         super().__init__(test_case=test_case, name='interpolate',

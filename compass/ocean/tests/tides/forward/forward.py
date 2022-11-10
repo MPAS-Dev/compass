@@ -9,7 +9,7 @@ class ForwardStep(Step):
 
     Attributes
     ----------
-    mesh : compass.ocean.tests.global_ocean.mesh.Mesh
+    mesh : compass.ocean.tests.tides.mesh.Mesh
         The test case that produces the mesh for this run
 
     init : compass.ocean.tests.tides.init.Init

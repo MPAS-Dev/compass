@@ -24,7 +24,7 @@ class Init(TestCase):
 
         Parameters
         ----------
-        test_group : compass.ocean.tests.tides.Hurricane
+        test_group : compass.ocean.tests.tides.Tides
             The tides test group that this test case belongs to
 
         mesh : compass.ocean.tests.tides.mesh.Mesh
