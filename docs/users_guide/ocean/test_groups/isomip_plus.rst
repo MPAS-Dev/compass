@@ -105,6 +105,9 @@ The ``isomip_plus`` test cases share the following config options:
     # Minimum number of vertical levels in a column
     minimum_levels = 3
 
+    # The minimum allowable layer thickness
+    min_layer_thickness = 0.0
+
     # Minimum thickness of the initial ocean column (to prevent 'drying')
     min_column_thickness = 10.0
 
@@ -287,13 +290,49 @@ options before running the test case:
 Dates do not have to be the beginnings of years, they could be any list that is
 monotonic in time. Scales can be any fraction between 0.0 and 1.0.
 
+thin_film_Ocean0
+----------------
+
+``ocean/isomip_plus/2km/z-star/thin_film_Ocean0`` and
+``ocean/isomip_plus/5km/z-star/thin_film_Ocean0``
+
+The thin-film version of Ocean0 turns the wetting-and-drying scheme on in
+MPAS-Ocean and features a thin ocean layer below the grounded ice of thickness
+``min_column_thickness`` specified in the config file. In the non-time-varying
+version of this test case, the behavior should be the same as the version
+without a thin film (``Ocean0``).
+
+There are also several time-varying versions of this test case:
+``ocean/isomip_plus/${RES}/${COORD}/thin_film_time_varying_Ocean0``,
+``ocean/isomip_plus/${RES}/${COORD}/thin_film_wetting_Ocean0``, and
+``ocean/isomip_plus/${RES}/${COORD}/thin_film_drying_Ocean0``. The
+latter two prescribe decreasing or increasing land ice pressure, respectively,
+to simulate grounding line motion in the landward or seaward directions. The
+resolutions supported (``RES``) are ``2km`` and ``5km`` and the coordinate
+types (``COORD``) are ``sigma`` and ``single_layer``.
+
+thin_film_tidal_forcing_Ocean0
+------------------------------
+
+``ocean/isomip_plus/2km/single_layer/thin_film_tidal_forcing_Ocean0`` and
+``ocean/isomip_plus/5km/single_layer/thin_film_tidal_forcing_Ocean0``
+
+The tidal forcing test case uses the existing tidal boundary forcing in the
+forward mode of MPAS-Ocean to drive SSH variations in the far-field that
+propagate into the ice shelf cavity. Given the geometry of the Ocean0 test
+case, these tidal SSH variations should not produce any grounding line motion.
+Thus, this is a test of the robustness of the wetting-and-drying algorithm to
+small pressure perturbations.
+
 Performance run
 ---------------
 
 By default, ``isomip_plus`` test cases are configured for "performance" runs.
 The initial condition is created, the the sea surface height and ice-shelf
 pressure are adjusted to be in balance.  Then, a simulation is performed for
-only 1 simulated hour (appropriate for regression testing).  Finally,
+only 1 simulated hour (appropriate for regression testing).  For the tidally-
+varying case, the simulation is extended to 24 hours but is still
+computationally inexpensive due to the single-layer configuration. Finally,
 potential temperature and salinity are plotted at the top and bottom of the
 ocean and along a cross section of through the middle (y = 40 km) of the
 domain.
