@@ -7,17 +7,19 @@ The ``landice/ismip6_forcing`` test group processes (i.e., remaps and renames)
 the atmospheric and ocean forcing data of the Ice Sheet Model Intercomparison for CMIP6
 (ISMIP6) protocol. The processed data is used to force MALI in its simulations
 under a relevant ISMIP6 (either the 2100 or 2300) experimental protocol.
-The test group includes three test cases, ``atmosphere``, ``ocean_basal`` and
-``ocean_thermal``; the ``atmosphere`` test case has two steps:
-``process_smb`` and ``process_smb_racmo``.  The ``ocean_basal`` and the
-``ocean_thermal`` test case each has one step, ``process_basal_melt``, and
-``process_thermal_forcing``, respectively. (For more details on the steps of
+The test group includes three test cases, ``atmosphere``, ``ocean_basal``,
+``ocean_thermal_obs`` and ``ocean_thermal``; the ``atmosphere`` test case
+has two steps: ``process_smb`` and ``process_smb_racmo``.  The ``ocean_basal``
+and the ``ocean_thermal`` test case each has one step, ``process_basal_melt``,
+and ``process_thermal_forcing``, respectively. (For more details on the steps of
 each test case, see :ref:`landice_ismip6_forcing_atmosphere`,
-:ref:`landice_ismip6_forcing_ocean_basal` and
+:ref:`landice_ismip6_forcing_ocean_basal`,
+:ref:`landice_ismip6_forcing_ocean_thermal_obs` and
 :ref:`landice_ismip6_forcing_ocean_thermal`.)
 Approximated time for processing a single forcing file
-on Cori (single core) is 2, 7, and 1 minutes for the atmosphere, ocean basal,
-and ocean thermal testcase, respectively.
+on Cori (single core) is 2 and 7 minutes for the atmosphere and ocean basal
+testcases, and less than a minute for ocean thermal obs and ocean thermal
+testcases, respectively.
 
 Before providing the details of necessary source data of the ISMIP6 protocols,
 we provide a summary of instructions of an overall process of this test group:
@@ -28,16 +30,20 @@ be provided as soon as they are publicly available. Then, for a given MALI mesh,
 1. run :ref:`landice_ismip6_forcing_ocean_basal` once, independent of the
 model, scenario and end year.
 
-2. run :ref:`landice_ismip6_forcing_ocean_thermal` once with
-``process_obs_data = True`` in the config file (:ref:`landice_ismip6_forcing_config`)
-to process the thermal forcing from the observational climatology (used for
+2. run :ref:`landice_ismip6_forcing_ocean_thermal_obs` once with, independent
+of the model, scenario and end year, to process the thermal forcing from the observational climatology (used for
 control runs).
 
-3. for each model, scenario and end year, run :ref:`landice_ismip6_forcing_ocean_thermal`,
-and run :ref:`landice_ismip6_forcing_ocean_atmosphere` with
-``process_racmo_smb = True`` once with any model, and run with subsequent
-models with ``process_racmo_smb = False``, but it is harmless to run it again
-with ``process_racmo_smb = True`` as it does nothing if data is already
+3. run :ref:`landice_ismip6_forcing_ocean_thermal` for each model, scenario
+and end year.
+
+4. run :ref:`landice_ismip6_forcing_ocean_atmosphere` with
+``process_racmo_smb = True`` once with any model.
+
+5. run :ref:`landice_ismip6_forcing_ocean_thermal` for each model,
+scenario and end year. Users can keep ``process_racmo_smb = False`` as far as
+the RACMO SMB has been processed once in Step 4, but it is harmless to leave
+``process_racmo_smb = True`` as it does nothing if data is already
 available, and the processing is very quick (less than a minute).
 
 There are six different of input data sets other than the MALI mesh that
@@ -84,7 +90,8 @@ correspond to specific climate model (e.g., UKESM1-0-LL, CCSM4) and scenarios
 (e.g., SSP585, RCP85, RCP26-repeat), modern
 climatology files are needed. For the ``atmosphere`` testcase,
 ``RACMO2.3p2_ANT27_smb_yearly_1979_2018.nc`` will be automatically downloaded
-from the database when the testcase is being set up.
+from the MALI public database when the testcase is being set up and saved
+to the directory that users define in the config option `landice_database_root`.
 The RACMO file is used to correct the ISMIP6 the surface mass balance (SMB)
 data with the modern climatology. For the ``ocean_thermal`` case, users need to
 download the modern ocean thermal forcing climatology file named
@@ -119,7 +126,7 @@ and where processed files will be saved.
 config options
 --------------
 
-All three test cases share some set of default config options under the section
+All four test cases share some set of default config options under the section
 ``[ismip6_ais]`` and have separate config options for each test case:
 ``[ismip6_ais_atmosphere]``, ``[ismip6_ais_ocean_thermal]``, and
 ``[ismip6_ais_ocean_basal]``. In the general config section
@@ -130,12 +137,7 @@ from the available options as given in the config file (see the example file
 below.) In the ``ismip6_ais_atmosphere`` section, users need to indicate
 ``True`` or ``False`` on whether to process the RACMO modern climatology
 (``True`` is required to run the ``process_smb_racmo`` step, which needs to be
-run before the ``process_smb`` step). In the ``ismip6_ais_ocean_thermal``
-section, users need to indicate ``True`` or ``False`` and on whether to process
-the observational thermal forcing data, which represents the modern ocean
-climatology between 1995-2017. When ``process_obs_data`` is set to ``True``,
-ocean forcing anomaly files from climate models are not processed (these files
-will only be processed when ``process_obs_data`` is set to ``False``)
+run before the ``process_smb`` step).
 
 For most the ``[ismip6_ais_atmosphere]`` and ``[ismip6_ais_ocean_thermal]``
 config sections users may choose the interpolation scheme among
@@ -148,6 +150,10 @@ Below is the default config options:
 .. code-block:: cfg
 
     # config options for ismip6 antarctic ice sheet data set
+    [paths]
+    # The root to a location where data files for MALI will be cached
+    landice_database_root = /Users/hollyhan/Desktop/RESEARCH/MALI/database/
+
     [ismip6_ais]
 
     # Base path to the input ismip6 ocean and smb forcing files. User has to supply.
@@ -195,8 +201,7 @@ Below is the default config options:
     # Remapping method used in building a mapping file. Options include: bilinear, neareststod, conserve
     method_remap = bilinear
 
-    # Set to True if want to process observational thermal forcing data. Set to False if want to process model thermal forcing data.
-    # Note: when set True, the ['ismip6_ais'] config options 'period_endyear', 'model' and 'scenario' will be ignored.
+    # Set to True if the want to process observational thermal forcing data. Set to False if want to process model thermal forcing data.
     process_obs_data = True
 
 Below is the example config options that users might create in running
@@ -208,6 +213,10 @@ process the RACMO modern SMB climatology but not the modern thermal forcing.
 .. code-block:: cfg
 
     # config options for ismip6 antarctic ice sheet data set
+    [paths]
+    # The root to a location where data files for MALI will be cached
+    landice_database_root = NotAvailable
+
     [ismip6_ais]
 
     # Base path to the input ismip6 ocean and smb forcing files. User has to supply.
@@ -255,10 +264,8 @@ process the RACMO modern SMB climatology but not the modern thermal forcing.
     # Remapping method used in building a mapping file. Options include: bilinear, neareststod, conserve
     method_remap = bilinear
 
-    # Set to True if want to process observational thermal forcing data. Set to False if want to process model thermal forcing data.
-    # Note: when set True, the ['ismip6_ais'] config options 'period_endyear', 'model' and 'scenario' will be ignored.
+    # Set to True if the want to process observational thermal forcing data. Set to False if want to process model thermal forcing data.
     process_obs_data = True
-
 
 .. _landice_ismip6_forcing_atmosphere:
 
@@ -283,6 +290,17 @@ performs processing of the coefficients for the basal melt parameterization
 utilized by the ISMIP6 protocol. Processing data includes combining the
 IMBIE2 basin numbers file and parameterization coefficients and remapping onto
 the MALI mesh.
+
+.. _landice_ismip6_forcing_ocean_thermal_obs:
+
+ocean_thermal_obs
+-----------------
+
+The ``landice/ismip6_forcing/ocean_thermal_obs`` test case
+performs the processing of the observational climatology of
+ocean thermal forcing. Processing data includes regridding the original ISMIP6
+thermal forcing data from its native polarstereo grid to MALI's unstructured
+grid and renaming variables.
 
 .. _landice_ismip6_forcing_ocean_thermal:
 

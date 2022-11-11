@@ -13,8 +13,13 @@ from compass.step import Step
 class ProcessThermalForcing(Step):
     """
     A step for creating a mesh and initial condition for dome test cases
+
+    Attributes
+    ----------
+    process_obs : bool
+        Whether we are processing observations rather than CMIP model data
     """
-    def __init__(self, test_case):
+    def __init__(self, test_case, process_obs):
         """
         Create the step
 
@@ -23,9 +28,13 @@ class ProcessThermalForcing(Step):
         test_case : compass.landice.tests.ismip6_forcing.ocean_thermal.
                     OceanThermal
             The test case this step belongs to
+
+        process_obs : bool
+            Whether we are processing observations rather than CMIP model data
         """
         super().__init__(test_case=test_case, name="process_thermal_forcing",
                          ntasks=4, min_tasks=1)
+        self.process_obs = process_obs
 
     def setup(self):
         """
@@ -41,8 +50,7 @@ class ProcessThermalForcing(Step):
         model = section.get("model")
         scenario = section.get("scenario")
 
-        section = config["ismip6_ais_ocean_thermal"]
-        process_obs_data = section.getboolean("process_obs_data")
+        process_obs_data = self.process_obs
 
         self.add_input_file(filename=mali_mesh_file,
                             target=os.path.join(base_path_mali,
@@ -78,7 +86,7 @@ class ProcessThermalForcing(Step):
 
         section = config["ismip6_ais_ocean_thermal"]
         method_remap = section.get("method_remap")
-        process_obs_data = section.getboolean("process_obs_data")
+        process_obs_data = self.process_obs
 
         if process_obs_data:
             input_file_list = self._file_obs
@@ -191,8 +199,7 @@ class ProcessThermalForcing(Step):
         """
 
         config = self.config
-        section = config["ismip6_ais_ocean_thermal"]
-        process_obs_data = section.getboolean("process_obs_data")
+        process_obs_data = self.process_obs
 
         # open dataset in 20 years chunk
         ds = xr.open_dataset(remapped_file_temp, chunks=dict(time=20),

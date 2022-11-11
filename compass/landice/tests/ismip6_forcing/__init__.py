@@ -22,4 +22,5 @@ class Ismip6Forcing(TestGroup):
 
         self.add_test_case(Atmosphere(test_group=self))
         self.add_test_case(OceanBasal(test_group=self))
-        self.add_test_case(OceanThermal(test_group=self))
+        self.add_test_case(OceanThermal(test_group=self, process_obs=True))
+        self.add_test_case(OceanThermal(test_group=self, process_obs=False))
