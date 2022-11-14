@@ -1,7 +1,6 @@
 import os
 import shutil
 import xarray as xr
-import warnings
 from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
 from compass.step import Step
@@ -56,9 +55,9 @@ class ProcessSmbRacmo(Step):
 
             self.add_output_file(filename=output_file)
         else:
-            warnings.warn(f"'process_smb_racmo' is set to 'False'. This step"
-                          f" will not run unless set 'True' in the"
-                          f" config file.")
+            print(f"\n'Warning: process_smb_racmo' is set to 'False'."
+                  f" This step will not run unless set 'True' in the"
+                  f" config file.\n")
 
     def run(self):
         """
