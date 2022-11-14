@@ -135,7 +135,7 @@ class InitialState(Step):
         angleEdgeDepth, _ = xarray.broadcast(ds.angleEdge, ds.refBottomDepth)
         xCellAdjusted = xCellAdjusted.values
         xEdgeAdjusted = xEdgeAdjusted.values
-        temperature = temperature_background * xarray.ones_like(xCellDepth)
+        temperature = temperature_right * xarray.ones_like(xCellDepth)
         temperature = xarray.where(xCellDepth < xMid,
                                    temperature_left,
                                    temperature_right)
