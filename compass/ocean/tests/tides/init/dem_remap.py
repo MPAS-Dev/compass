@@ -224,7 +224,7 @@ def dem_remap(elev_file, mpas_file):
         qpos = map_to_r3(mesh, xmid, ymid, head, tail)
 
         ttic = time.time()
-        __, nloc = tree.query(qpos, n_jobs=-1)
+        __, nloc = tree.query(qpos, workers=-1)
         ttoc = time.time()
         print("* built node-to-cell map:", ttoc - ttic)
 

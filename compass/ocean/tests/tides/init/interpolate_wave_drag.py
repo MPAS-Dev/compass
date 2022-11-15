@@ -145,7 +145,7 @@ class InterpolateWaveDrag(Step):
         # Save figure
         fig.tight_layout()
         fig.savefig('rinv.png',
-                    box_inches='tight')
+                    bbox_inches='tight')
         plt.close()
 
     def write_to_file(self, data):

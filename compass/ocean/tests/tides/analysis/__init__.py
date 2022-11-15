@@ -62,7 +62,7 @@ class Analysis(Step):
         """
 
         config = self.config
-        self.tpxo_version = config.getint('tides', 'tpxo_version')
+        self.tpxo_version = config.get('tides', 'tpxo_version')
 
         os.makedirs(f'{self.work_dir}/TPXO_data', exist_ok=True)
         if self.tpxo_version == 'TPXO9':
