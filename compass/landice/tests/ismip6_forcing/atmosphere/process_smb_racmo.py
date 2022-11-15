@@ -49,9 +49,9 @@ class ProcessSmbRacmo(Step):
             self.add_input_file(
                 target="RACMO2.3p2_ANT27_smb_yearly_1979_2018.nc",
                 database="RACMO2.3p2_ANT27_SMB_yearly_1979_2018")
+
             output_file = f"{mali_mesh_name}_RACMO2.3p2_ANT27" \
                           f"_smb_climatology_1995-2017.nc"
-
             self.add_output_file(filename=output_file)
         else:
             print(f"\n'Warning: process_smb_racmo' is set to 'False'."
@@ -64,6 +64,12 @@ class ProcessSmbRacmo(Step):
         """
         logger = self.logger
         config = self.config
+
+        section = config["ismip6_ais_atmosphere"]
+        process_smb_racmo = section.getboolean("process_smb_racmo")
+        if not process_smb_racmo:
+            # we don't want to run this step
+            return
 
         section = config["ismip6_ais"]
         mali_mesh_name = section.get("mali_mesh_name")
@@ -78,20 +84,21 @@ class ProcessSmbRacmo(Step):
                            "correct_unit.nc"
         output_file = f"{mali_mesh_name}_RACMO2.3p2_ANT27" \
                       f"_smb_climatology_1995-2017.nc"
+        output_path = f"{output_base_path}/atmosphere_forcing/" \
+                      f"RACMO_climatology_1995-2017"
+        output_path_final = os.path.join(output_base_path, output_path)
 
-        output_file_final = os.path.join(output_base_path, output_file)
-
-        if os.path.exists(output_file_final):
-            logger.info("Processed RACMO SMB data already exists in the "
-                        "output path {output_base_path}. "
-                        "Not processing the source data...")
+        if os.path.exists(os.path.join(output_path_final, output_file)):
+            logger.info(f"Processed RACMO SMB data already exists in the "
+                        f"output path {output_base_path}. "
+                        f"Not processing the source RACMO data...")
             return
 
-        input_file_list = self._files
+        input_file = self.inputs[1]
         # take the time average over the period 1995-2017
         args = ["ncra", "-O", "-F", "-d", "time,17,39",
-                f"{input_file_list[0]}",
-                f"{racmo_file_temp1}"]
+                input_file,
+                racmo_file_temp1]
 
         check_call(args, logger=logger)
 
@@ -100,7 +107,7 @@ class ProcessSmbRacmo(Step):
 
         # call the function that reads in, remap and rename the file.
         logger.info("Calling the remapping function...")
-        self.remap_source_smb_to_mali(f"{racmo_file_temp1}",
+        self.remap_source_smb_to_mali(racmo_file_temp1,
                                       remapped_file_temp,
                                       mali_mesh_name,
                                       mali_mesh_file,
@@ -110,15 +117,15 @@ class ProcessSmbRacmo(Step):
         # to be in unit of kg/m^2/s
         args = ["ncap2", "-O", "-v", "-s",
                 "sfcMassBal=smb/(60*60*24*365)",
-                f"{remapped_file_temp}",
-                f"{racmo_file_temp2}"]
+                remapped_file_temp,
+                racmo_file_temp2]
 
         check_call(args, logger=logger)
 
         # change the unit attribute to kg/m^2/s
         args = ["ncatted", "-O", "-a",
                 "units,sfcMassBal,m,c,'kg m-2 s-1'",
-                f"{racmo_file_temp2}"]
+                racmo_file_temp2]
 
         check_call(args, logger=logger)
 
