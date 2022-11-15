@@ -30,18 +30,18 @@ be provided as soon as they are publicly available. Then, for a given MALI mesh,
 1. run :ref:`landice_ismip6_forcing_ocean_basal` once, independent of the
 model, scenario and end year.
 
-2. run :ref:`landice_ismip6_forcing_ocean_thermal_obs` once with, independent
+2. run :ref:`landice_ismip6_forcing_ocean_thermal_obs` once, independent
 of the model, scenario and end year, to process the thermal forcing from the observational climatology (used for
 control runs).
 
 3. run :ref:`landice_ismip6_forcing_ocean_thermal` for each model, scenario
 and end year.
 
-4. run :ref:`landice_ismip6_forcing_ocean_atmosphere` with
+4. run :ref:`landice_ismip6_forcing_atmosphere` with
 ``process_racmo_smb = True`` once with any model.
 
-5. run :ref:`landice_ismip6_forcing_ocean_thermal` for each model,
-scenario and end year. Users can keep ``process_racmo_smb = False`` as far as
+5. run :ref:`landice_ismip6_forcing_atmosphere` for each model,
+scenario and end year. Users can keep ``process_racmo_smb = False`` as long as
 the RACMO SMB has been processed once in Step 4, but it is harmless to leave
 ``process_racmo_smb = True`` as it does nothing if data is already
 available, and the processing is very quick (less than a minute).
@@ -69,19 +69,20 @@ provided by the ISMIP6-2100 protocol (i.e., from the ``GHub-ISMIP6-Forcing``
 Globus endpoint), they must create the directory path
 ``AIS/Atmosphere_Forcing/UKESM1-0-LL/Regridded_8km/`` in their local system
 where they will download the file ``UKESM1-0-LL_anomaly_ssp585_1995-2100_8km.nc``.
-Note that the users only need to download SMB anomaly files (not the climatology
-file) that cover the period from 1995 to ``period_endyear``
-(either 2100 or 2300, defined in the config file;
+Note that the users only need to download SMB anomaly files in 8km resolution
+(the climatology file is not needed) that cover the period from 1995 to
+``period_endyear`` (either 2100 or 2300, defined in the config file;
 see :ref:`landice_ismip6_forcing_config`).
 
 Equivalently, for the
-ocean forcing, the user should create the directory path
+ocean forcing in this example, users should create the directory path
 ``AIS/Ocean_Forcing/ukesm1-0-ll_ssp585/1995-2100/`` and download the file
 ``UKESM1-0-LL_ssp585_thermal_forcing_8km_x_60m.nc`` from the same endpoint.
 Users do not need to download the thermal
 forcing files for the years previous to 1995 as only the files downloaded from
-``1995-{period_endyear}`` will be processed.
-Also note to be ware that unlike those in the ``GHub-ISMIP6-Forcing`` endpoint,
+``1995-{period_endyear}`` will be processed. Users also do not need to download
+the temperature and salinity files, as these will not be used by MALI.
+Also note to be aware that unlike those in the ``GHub-ISMIP6-Forcing`` endpoint,
 the directory names in the ``ISMIP6-Projections-Forcing-2300`` endpoint have a
 lower case "f" for the ``AIS/Atmospheric_forcing/`` and ``AIS/Ocean_forcing/``.
 
