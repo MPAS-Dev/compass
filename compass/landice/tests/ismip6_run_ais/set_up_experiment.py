@@ -84,6 +84,21 @@ class SetUpExperiment(Step):
         else:
             sys.exit(f"ERROR: Did not find exactly one matching TF file at {tf_search_path}: {fcgFileList}")
 
+        # copy calving mask files for exp11-14
+        useCalvingMask = False
+        if exp_fcg[-2:].isdigit():
+            exp_num = int(exp_fcg[-2:])
+            if exp_num >= 11:
+                mask_search_path = os.path.join(forcing_basepath, exp_fcg, 'Antarctica_8to30km_ice_shelf_collapse_mask_*.nc')
+                fcgFileList = glob.glob(mask_search_path)
+                if len(fcgFileList) == 1:
+                    mask_path = fcgFileList[0]
+                    mask_fname = os.path.split(mask_path)[-1]
+                    shutil.copy(mask_path, self.work_dir)
+                    useCalvingMask = True
+                else:
+                    sys.exit(f"ERROR: Did not find exactly one matching calving mask file at {mask_search_path}: {fcgFileList}")
+
         # Make stream modifications based on files that were determined above
         stream_replacements = {
                                'input_file_SMB_forcing': smb_fname,
@@ -101,6 +116,13 @@ class SetUpExperiment(Step):
             stream_replacements['forcing_interval'] = 'initial_only'
         else:
             stream_replacements['forcing_interval'] = '0001-00-00_00:00:00'
+        if useCalvingMask:
+            stream_replacements['input_file_calving_mask_active'] = 'input'
+            stream_replacements['input_file_calving_mask_forcing_name'] = mask_fname
+        else:
+            stream_replacements['input_file_calving_mask_active'] = 'none'
+            stream_replacements['input_file_calving_mask_forcing_name'] = 'UNUSED'
+
 
         self.add_streams_file(
             'compass.landice.tests.ismip6_run_ais', 'streams.landice.template',
@@ -122,6 +144,11 @@ class SetUpExperiment(Step):
             options = {'config_do_restart': ".false.",
                        'config_start_time': "'2000-01-01_00:00:00'",
                        'config_stop_time': "'2015-01-01_00:00:00'"}
+            self.add_namelist_options(options=options,
+                                      out_name='namelist.landice')
+
+        if useCalvingMask:
+            options = {'config_calving': "'mask'"}
             self.add_namelist_options(options=options,
                                       out_name='namelist.landice')
 

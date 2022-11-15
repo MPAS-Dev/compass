@@ -24,10 +24,11 @@ class Projection(TestCase):
         super().__init__(test_group=test_group, name=name,
                          subdir=name)
 
+        # tier 1
         experiments = ['hist', 'ctrlAE', 'expAE01', 'expAE02', 'expAE03',
                        'expAE04', 'expAE05', 'expAE06']
-        for i in range(7, 10+1):
-        #for i in range(7, 14+1):
+        # tier 2
+        for i in range(7, 14+1):
             experiments.append(f'expAE{i:02}')
 
         for exp in experiments:
