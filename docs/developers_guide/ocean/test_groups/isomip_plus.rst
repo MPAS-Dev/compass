@@ -42,7 +42,9 @@ ice-shelf topography.
 The function :py:func:`compass.ocean.tests.isomip_plus.geom.interpolate_ocean_mask()`
 interpolates the ocean mask from the BISICLES grid of the input geometry to
 the MPAS-Ocean mesh.  The mask can later be used to cull land cells from the
-MPAS mesh before interpolating other variables to the resulting culled mesh.
+MPAS mesh before interpolating other variables to the resulting culled mesh. 
+Optionally, a thin film under the ice sheet can be used and grounded ice is
+not culled.
 
 The function :py:func:`compass.ocean.tests.isomip_plus.geom.interpolate_geom()`
 interpolates the remaining geometric variables:
@@ -68,14 +70,16 @@ defines a step for setting up the initial state for each test case.
 
 First, a mesh appropriate for the resolution is generated using
 :py:func:`mpas_tools.planar_hex.make_planar_hex_mesh()`.  Then, the mesh is
-culled to remove land cells.  A vertical coordinate is generated,
+culled to remove land cells.  When a wetting-and-drying algorithm that relies
+on a thin film under land ice is used, a distance up to that specified by the
+config option ``nx_thin_film`` is retained.  A vertical coordinate is generated,
 with 36 layers of 20-m thickness in the open ocean by default.  By default,
 the :ref:`dev_ocean_framework_vertical` is ``z-star``, meaning the 1D grid is
 "squashed" down so the sea-surface height corresponds to the location of the
 ice-ocean interface (ice draft).  The initial temperature and salinity profiles
 are computed along with zero initial velocity.  Finally, forcing data fields
 are produced for restoring to temperature and salinity profiles at the northern
-boundary and for "evaporative" fluxes a the surface that are used to mimic a
+boundary and for "evaporative" fluxes at the surface that are used to mimic a
 spillway, removing water at the northern boundary and preventing runaway
 sea-level rise from the the incoming ice-shelf meltwater.
 
@@ -87,9 +91,15 @@ fields, based on the ``isomip_plus_forcing`` config options (see
 interpolation in time between consecutive entries in the these forcing
 fields, which are stored in a file ``land_ice_forcing.nc``.
 
-Currently, the grounding line and calving front are held fixed in time, so
-the field ``landIceFractionForcing`` is the same as ``landIceFraction``
-in the initial condition for all time.
+Grounding line motion is allowed to occur for a subset of test cases with have
+the attribute ``thin_film_present`` set to true. For all other test cases, the
+grounding line and calving front are held fixed in time, so the field
+``landIceFractionForcing`` is the same as ``landIceFraction`` in the initial
+condition for all time.
+
+The ``initial_state`` step also generates horizontal sections through the
+domain of layer thicknesses and the mid-layer depth as well as horizontal
+sections of initial SSH, land ice presure, and total water column thickness.
 
 ssh_adjustment
 ~~~~~~~~~~~~~~
@@ -112,9 +122,10 @@ run (including updating PIO namelist options and generating a graph partition)
 in ``run()``.
 
 The ``performance`` step is run for only 1 hour (appropriate for regression
-testing).  Then, potential temperature and salinity are plotted at the top and
-bottom of the ocean and along a cross section of through the middle (y = 40 km)
-of the domain.
+testing) except when tidal forcing is applied, in which case the run duration
+is 24 hours.  Then, potential temperature and salinity are plotted at the top
+and bottom of the ocean and along a cross section of through the middle (y =
+40 km) of the domain.
 
 The ``simulation`` step runs for 1 month, then adjusts the "evaporative"
 forcing based on the average of the melt fluxes from that month.  Then,

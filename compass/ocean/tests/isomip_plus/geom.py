@@ -6,7 +6,7 @@ import xarray
 
 
 def process_input_geometry(inFileName, outFileName, filterSigma,
-                           minIceThickness, scale=1.0):
+                           minIceThickness, scale=1.0, thin_film_present=False):
     """
     Process the BISICLES input geometry from ISOMIP+.  This includes:
 
@@ -38,6 +38,9 @@ def process_input_geometry(inFileName, outFileName, filterSigma,
     scale : float
         A fraction by which to scale the ice draft (as a very simple way of
         testing dynamic topography)
+
+    thin_film_present: bool
+        whether domain contains a thin film below grounded ice
     """
     def readVar(varName, defaultValue=0.0):
         field = defaultValue * numpy.ones((ny, nx), float)
@@ -87,10 +90,15 @@ def process_input_geometry(inFileName, outFileName, filterSigma,
     surf[mask] = 0.
     draft[mask] = 0.
     floatingMask[mask] = 0.
+    thinFilmMask = bed>=0
+    if thin_film_present:
+        smoothMask = numpy.logical_and(groundedMask, thinFilmMask)
+    else:
+        smoothMask = groundedMask
     openOceanMask[mask] = 1. - groundedMask[mask]
 
     bed, draft, smoothedDraftMask = _smooth_geometry(
-        groundedMask, floatingMask, bed, draft, filterSigma)
+        smoothMask, floatingMask, bed, draft, filterSigma)
 
     outFile = Dataset(outFileName, 'w', format='NETCDF4')
     outFile.createDimension('x', nx)
@@ -114,6 +122,46 @@ def process_input_geometry(inFileName, outFileName, filterSigma,
 
     outFile.close()
     inFile.close()
+
+
+def define_thin_film_mask_step1(dsMesh, dsGeom):
+    """
+    Interpolate the ocean mask from the original BISICLES grid to the MPAS
+    mesh.  This is handled separately from other fields because the ocean mask
+    is needed to cull land cells from the MPAS mesh before interpolating the
+    remaining fields.
+
+    Parameters
+    ----------
+    dsMesh : xarray.Dataset
+        An MPAS-Ocean mesh
+
+    dsGeom : xarray.Dataset
+        Ice-sheet topography produced by
+        :py:func:`compass.ocean.tests.isomip_plus.geom.process_input_geometry()`
+
+    Returns
+    -------
+    dsMask : xarray.Dataset
+        A dataset containing ``regionCellMasks``, a field with the ocean mask
+        that can be used to cull land cells from the mesh
+    """
+    x, y, xCell, yCell, oceanFraction = _get_geom_fields(dsGeom, dsMesh)
+
+    dsMask = xarray.Dataset()
+
+    valid = numpy.logical_and(
+        numpy.logical_and(xCell >= x[0], xCell <= x[-1]),
+        numpy.logical_and(yCell >= y[0], yCell <= y[-1]))
+
+    mask = valid
+
+    nCells = mask.shape[0]
+
+    dsMask['regionCellMasks'] = (('nCells', 'nRegions'),
+                                 mask.astype(int).reshape(nCells, 1))
+
+    return dsMask
 
 
 def interpolate_ocean_mask(dsMesh, dsGeom, min_ocean_fraction):
@@ -166,7 +214,7 @@ def interpolate_ocean_mask(dsMesh, dsGeom, min_ocean_fraction):
     return dsMask
 
 
-def interpolate_geom(dsMesh, dsGeom, min_ocean_fraction):
+def interpolate_geom(dsMesh, dsGeom, min_ocean_fraction, thin_film_present):
     """
     Interpolate the ice geometry from the original BISICLES grid to the MPAS
     mesh.
@@ -183,6 +231,9 @@ def interpolate_geom(dsMesh, dsGeom, min_ocean_fraction):
     min_ocean_fraction : float
         The minimum ocean fraction after interpolation, below which the cell
         is masked as land (which is not distinguished from grounded ice)
+
+    thin_film_present: bool
+        Whether domain contains a thin film below grounded ice
 
     Returns
     -------
@@ -210,9 +261,10 @@ def interpolate_geom(dsMesh, dsGeom, min_ocean_fraction):
     dsGeom['oceanFraction'] = oceanFraction
 
     # mash the topography to the ocean region before interpolation
-    for var in ['Z_bed', 'Z_ice_draft', 'floatingIceFraction',
-                'smoothedDraftMask']:
-        dsGeom[var] = dsGeom[var] * dsGeom['oceanFraction']
+    if not thin_film_present:
+        for var in ['Z_bed', 'Z_ice_draft', 'floatingIceFraction',
+                    'smoothedDraftMask']:
+            dsGeom[var] = dsGeom[var] * dsGeom['oceanFraction']
 
     fields = {'bottomDepthObserved': 'Z_bed',
               'ssh': 'Z_ice_draft',
@@ -224,7 +276,7 @@ def interpolate_geom(dsMesh, dsGeom, min_ocean_fraction):
         numpy.logical_and(xCell >= x[0], xCell <= x[-1]),
         numpy.logical_and(yCell >= y[0], yCell <= y[-1]))
 
-    if not numpy.all(valid):
+    if not numpy.all(valid) and not thin_film_present:
         raise ValueError('Something went wrong with culling.  There are still '
                          'out-of-range cells in the culled mesh.')
 
@@ -233,13 +285,14 @@ def interpolate_geom(dsMesh, dsGeom, min_ocean_fraction):
         dsOut[outfield] = (('nCells',), field)
 
     oceanFracObserved = dsOut['oceanFracObserved']
-    if not numpy.all(oceanFracObserved > min_ocean_fraction):
+    if not numpy.all(oceanFracObserved > min_ocean_fraction) and not thin_film_present:
         raise ValueError('Something went wrong with culling.  There are still '
                          'non-ocean cells in the culled mesh.')
 
-    for field in ['bottomDepthObserved', 'ssh', 'landIceFraction',
-                  'smoothedDraftMask']:
-        dsOut[field] = dsOut[field]/oceanFracObserved
+    if not thin_film_present:
+        for field in ['bottomDepthObserved', 'ssh', 'landIceFraction',
+                      'smoothedDraftMask']:
+            dsOut[field] = dsOut[field]/oceanFracObserved
 
     return dsOut
 

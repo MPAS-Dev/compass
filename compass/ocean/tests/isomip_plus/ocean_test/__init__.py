@@ -25,10 +25,15 @@ class OceanTest(TestCase):
 
     time_varying_forcing : bool
         Whether the run includes time-varying land-ice forcing
+
+    thin_film_prsent: bool
+        Whether a thin film is present under land ice
     """
 
     def __init__(self, test_group, resolution, experiment,
-                 vertical_coordinate, time_varying_forcing=False):
+                 vertical_coordinate, time_varying_forcing=False,
+                 time_varying_load='', thin_film_present=False,
+                 tidal_forcing=False):
         """
         Create the test case
 
@@ -48,15 +53,29 @@ class OceanTest(TestCase):
 
         time_varying_forcing : bool, optional
             Whether the run includes time-varying land-ice forcing
+
+        thin_film_present: bool, optional
+            Whether the run includes a thin film below grounded ice
         """
+        name = experiment
+        if tidal_forcing:
+            name = f'tidal_forcing_{name}'
         if time_varying_forcing:
-            name = f'time_varying_{experiment}'
-        else:
-            name = experiment
+            if time_varying_load == 'increasing':
+                name = f'drying_{name}'
+            elif time_varying_load == 'decreasing':
+                name = f'wetting_{name}'
+            else:
+                name = f'time_varying_{name}'
+        if thin_film_present:
+            name = f'thin_film_{name}'
+
         self.resolution = resolution
         self.experiment = experiment
         self.vertical_coordinate = vertical_coordinate
         self.time_varying_forcing = time_varying_forcing
+        self.time_varying_load = time_varying_load
+        self.thin_film_present = thin_film_present
 
         if resolution == int(resolution):
             res_folder = f'{int(resolution)}km'
@@ -70,20 +89,34 @@ class OceanTest(TestCase):
             InitialState(test_case=self, resolution=resolution,
                          experiment=experiment,
                          vertical_coordinate=vertical_coordinate,
-                         time_varying_forcing=time_varying_forcing))
+                         time_varying_forcing=time_varying_forcing,
+                         thin_film_present=thin_film_present))
         self.add_step(
-            SshAdjustment(test_case=self, resolution=resolution))
+            SshAdjustment(test_case=self, resolution=resolution,
+                          vertical_coordinate=vertical_coordinate,
+                          thin_film_present=thin_film_present))
+        if tidal_forcing or time_varying_load == 'increasing' or \
+            time_varying_load == 'decreasing':
+            performance_run_duration = '0000-00-01_00:00:00'
+        else:
+            performance_run_duration = '0000-00-00_01:00:00'
         self.add_step(
             Forward(test_case=self, name='performance', resolution=resolution,
                     experiment=experiment,
-                    run_duration='0000-00-00_01:00:00',
-                    time_varying_forcing=time_varying_forcing))
+                    run_duration=performance_run_duration,
+                    vertical_coordinate=vertical_coordinate,
+                    tidal_forcing=tidal_forcing,
+                    time_varying_forcing=time_varying_forcing,
+                    thin_film_present=thin_film_present))
 
         self.add_step(
             Forward(test_case=self, name='simulation', resolution=resolution,
                     experiment=experiment,
                     run_duration='0000-01-00_00:00:00',
-                    time_varying_forcing=time_varying_forcing),
+                    vertical_coordinate=vertical_coordinate,
+                    tidal_forcing=tidal_forcing,
+                    time_varying_forcing=time_varying_forcing,
+                    thin_film_present=thin_film_present),
             run_by_default=False)
 
         self.add_step(
@@ -92,7 +125,8 @@ class OceanTest(TestCase):
             run_by_default=False)
 
         self.add_step(
-            Viz(test_case=self, resolution=resolution, experiment=experiment),
+            Viz(test_case=self, resolution=resolution, experiment=experiment,
+                tidal_forcing=tidal_forcing),
             run_by_default=False)
 
         if resolution in [2., 5.]:
@@ -108,12 +142,24 @@ class OceanTest(TestCase):
 
         resolution = self.resolution
         vertical_coordinate = self.vertical_coordinate
+        thin_film_present = self.thin_film_present
+        time_varying_load = self.time_varying_load
         config = self.config
         experiment = self.experiment
 
         nx = round(800 / resolution)
         ny = round(100 / resolution)
         dc = 1e3 * resolution
+        # Width of the thin film region
+        nx_thin_film = 10
+
+        if thin_film_present:
+            config.set('isomip_plus', 'min_column_thickness', '1e-3')
+
+        if time_varying_load == 'increasing':
+            config.set('isomip_plus_forcing', 'scales', '1.0, 2.0, 2.0')
+        if time_varying_load == 'decreasing':
+            config.set('isomip_plus_forcing', 'scales', '1.0, 0.0, 0.0')
 
         if experiment in ['Ocean0', 'Ocean2', 'Ocean3']:
             # warm initial conditions
@@ -144,6 +190,7 @@ class OceanTest(TestCase):
         config.set('isomip_plus', 'nx', '{}'.format(nx))
         config.set('isomip_plus', 'ny', '{}'.format(ny))
         config.set('isomip_plus', 'dc', '{}'.format(dc))
+        config.set('isomip_plus', 'nx_thin_film', '{}'.format(nx_thin_film))
 
         approx_cells = 30e3 / resolution ** 2
         # round to the nearest 4 cores
@@ -157,8 +204,12 @@ class OceanTest(TestCase):
         config.set('vertical_grid', 'coord_type', vertical_coordinate)
 
         if vertical_coordinate == 'sigma':
-            # default to 10 vertical levels instead of 36
-            config.set('vertical_grid', 'vert_levels', '10')
+            if time_varying_load == 'increasing' or \
+                time_varying_load == 'decreasing':
+                config.set('vertical_grid', 'vert_levels', '3')
+            else:
+                # default to 10 vertical levels instead of 36
+                config.set('vertical_grid', 'vert_levels', '10')
 
         for step_name in self.steps:
             if step_name in ['ssh_adjustment', 'performance', 'simulation']:

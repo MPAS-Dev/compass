@@ -14,7 +14,7 @@ from compass.ocean.vertical import init_vertical_coord
 from compass.ocean.vertical.grid_1d import generate_1d_grid
 from compass.ocean.iceshelf import compute_land_ice_pressure_and_draft
 from compass.ocean.tests.isomip_plus.geom import process_input_geometry, \
-    interpolate_geom, interpolate_ocean_mask
+    interpolate_geom, define_thin_film_mask_step1, interpolate_ocean_mask
 from compass.ocean.tests.isomip_plus.viz.plot import MoviePlotter
 
 
@@ -35,9 +35,12 @@ class InitialState(Step):
 
     time_varying_forcing : bool
         Whether the run includes time-varying land-ice forcing
+
+    thin_film_present: bool
+        Whether the run includes a thin film below grounded ice
     """
     def __init__(self, test_case, resolution, experiment, vertical_coordinate,
-                 time_varying_forcing):
+                 time_varying_forcing, thin_film_present):
         """
         Create the step
 
@@ -57,12 +60,16 @@ class InitialState(Step):
 
         time_varying_forcing : bool
             Whether the run includes time-varying land-ice forcing
+
+        thin_film_present: bool
+            Whether the run includes a thin film below grounded ice
         """
         super().__init__(test_case=test_case, name='initial_state')
         self.resolution = resolution
         self.experiment = experiment
         self.vertical_coordinate = vertical_coordinate
         self.time_varying_forcing = time_varying_forcing
+        self.thin_film_present = thin_film_present
 
         if experiment in ['Ocean0', 'Ocean1']:
             self.add_input_file(filename='input_geometry.nc',
@@ -87,9 +94,14 @@ class InitialState(Step):
         config = self.config
         logger = self.logger
         vertical_coordinate = self.vertical_coordinate
+        thin_film_present = self.thin_film_present
 
+        if self.vertical_coordinate == 'single_layer':
+            config.set('vertical_grid', 'vert_levels', '1', comment='Number of vertical levels')
+            config.set('vertical_grid', 'coord_type', 'z-level')
         section = config['isomip_plus']
         nx = section.getint('nx')
+        nx_thin_film = section.getint('nx_thin_film')
         ny = section.getint('ny')
         dc = section.getfloat('dc')
         filter_sigma = section.getfloat('topo_smoothing')*self.resolution
@@ -101,11 +113,21 @@ class InitialState(Step):
                                'input_geometry_processed.nc',
                                filterSigma=filter_sigma,
                                minIceThickness=min_ice_thickness,
-                               scale=draft_scaling)
+                               scale=draft_scaling,
+                               thin_film_present=thin_film_present)
 
-        dsMesh = make_planar_hex_mesh(nx=nx+2, ny=ny+2, dc=dc,
-                                      nonperiodic_x=False, nonperiodic_y=False)
-        translate(mesh=dsMesh, yOffset=-2*dc)
+        # Add xOffset to reduce distance between x=0 and start of GL
+        if thin_film_present:
+            nxOffset = nx_thin_film
+            # consider increasing nx
+            dsMesh = make_planar_hex_mesh(nx=nx+nxOffset, ny=ny, dc=dc,
+                                          nonperiodic_x=True, nonperiodic_y=True)
+        else:
+            nxOffset = 0
+            dsMesh = make_planar_hex_mesh(nx=nx+2, ny=ny+2, dc=dc,
+                                          nonperiodic_x=False, nonperiodic_y=False)
+
+        translate(mesh=dsMesh, xOffset=-1*nxOffset*dc, yOffset=-2*dc)
         write_netcdf(dsMesh, 'base_mesh.nc')
 
         dsGeom = xarray.open_dataset('input_geometry_processed.nc')
@@ -113,7 +135,10 @@ class InitialState(Step):
         min_ocean_fraction = config.getfloat('isomip_plus',
                                              'min_ocean_fraction')
 
-        dsMask = interpolate_ocean_mask(dsMesh, dsGeom, min_ocean_fraction)
+        if thin_film_present:
+            dsMask = define_thin_film_mask_step1(dsMesh, dsGeom)
+        else:
+            dsMask = interpolate_ocean_mask(dsMesh, dsGeom, min_ocean_fraction)
         dsMesh = cull(dsMesh, dsInverse=dsMask, logger=logger)
         dsMesh.attrs['is_periodic'] = 'NO'
 
@@ -121,7 +146,7 @@ class InitialState(Step):
                          logger=logger)
         write_netcdf(dsMesh, 'culled_mesh.nc')
 
-        ds = interpolate_geom(dsMesh, dsGeom, min_ocean_fraction)
+        ds = interpolate_geom(dsMesh, dsGeom, min_ocean_fraction, thin_film_present)
 
         for var in ['landIceFraction']:
             ds[var] = ds[var].expand_dims(dim='Time', axis=0)
@@ -143,20 +168,24 @@ class InitialState(Step):
 
         section = config['isomip_plus']
 
+        # Deepen the bottom depth to maintain the minimum water-column thickness
         min_column_thickness = section.getfloat('min_column_thickness')
+        min_layer_thickness = section.getfloat('min_layer_thickness')
+        min_levels = section.getint('minimum_levels')
+        min_column_thickness = max(min_column_thickness,
+                                   min_levels*min_layer_thickness)
+        min_depth = -ds.ssh + min_column_thickness
+        ds['bottomDepth'] = numpy.maximum(ds.bottomDepth, min_depth)
+        print(f'Adjusted bottomDepth for '
+              f'{numpy.sum(ds.bottomDepth.values<min_depth.values)} cells '
+              f'to achieve minimum column thickness of {min_column_thickness}')
 
         interfaces = generate_1d_grid(config)
 
-        # Deepen the bottom depth to maintain the minimum water-column
-        # thickness
-        min_depth = -ds.ssh + min_column_thickness
-        if vertical_coordinate == 'z-star':
-            min_levels = section.getint('minimum_levels')
-            min_depth = numpy.maximum(min_depth, interfaces[min_levels+1])
-        ds['bottomDepth'] = numpy.maximum(ds.bottomDepth, min_depth)
-
         init_vertical_coord(config, ds)
 
+        maxLevelCell = ds['maxLevelCell']
+        ssh = ds['ssh']
         ds['modifyLandIcePressureMask'] = \
             (ds['landIceFraction'] > 0.01).astype(int)
 
@@ -168,8 +197,12 @@ class InitialState(Step):
         init_bot_temp = section.getfloat('init_bot_temp')
         init_top_sal = section.getfloat('init_top_sal')
         init_bot_sal = section.getfloat('init_bot_sal')
-        ds['temperature'] = (1.0 - frac) * init_top_temp + frac * init_bot_temp
-        ds['salinity'] = (1.0 - frac) * init_top_sal + frac * init_bot_sal
+        if self.vertical_coordinate=='single_layer':
+            ds['temperature'] = init_bot_temp*xarray.ones_like(frac)
+            ds['salinity'] = init_bot_sal*xarray.ones_like(frac)
+        else:
+            ds['temperature'] = (1.0 - frac) * init_top_temp + frac * init_bot_temp
+            ds['salinity'] = (1.0 - frac) * init_top_sal + frac * init_bot_sal
 
         # compute coriolis
         coriolis_parameter = section.getfloat('coriolis_parameter')
@@ -200,6 +233,32 @@ class InitialState(Step):
                                outFolder=plot_folder, expt=self.experiment,
                                sectionY=section_y, dsMesh=ds, ds=ds,
                                showProgress=show_progress)
+
+        ds['landIcePressure'] = ds['landIcePressure'].expand_dims(dim='Time', axis=0)
+        ds['bottomDepth'] = ds['bottomDepth'].expand_dims(dim='Time', axis=0)
+        ds['totalColThickness'] = ds['ssh']
+        ds['totalColThickness'].values = numpy.sum(ds['layerThickness'].values, axis=2)
+        plotter.plot_horiz_series(ds.landIcePressure,
+                                  'landIcePressure', 'landIcePressure',
+                                  True)
+        plotter.plot_horiz_series(ds.ssh,
+                                  'ssh', 'ssh',
+                                  True, vmin=-700, vmax=0)
+        plotter.plot_horiz_series(ds.ssh + ds.bottomDepth,
+                                  'H', 'H', True,
+                                  vmin=min_column_thickness+1e-10, vmax=700,
+                                  cmap_set_under='r', cmap_scale='log')
+        plotter.plot_horiz_series(ds.totalColThickness,
+                                  'totalColThickness', 'totalColThickness', True,
+                                  vmin=min_column_thickness+1e-10, vmax=700,
+                                  cmap_set_under='r')
+        plotter.plot_layer_interfaces()
+
+        plotter.plot_3d_field_top_bot_section(
+            ds.layerThickness, nameInTitle='layerThickness',
+            prefix='h', units='m',
+            vmin=min_column_thickness+1e-10, vmax=50,
+            cmap='cmo.deep_r', cmap_set_under='r')
 
         plotter.plot_3d_field_top_bot_section(
             ds.zMid, nameInTitle='zMid', prefix='zmid', units='m',
@@ -255,6 +314,13 @@ class InitialState(Step):
             mask*evap_rate*restore_top_sal/sflux_factor
         dsForcing['seaIceHeatFlux'] = \
             mask*evap_rate*restore_top_temp/hflux_factor
+
+        if self.vertical_coordinate=='single_layer':
+            xMax = numpy.max(ds.xCell.values)
+            dsForcing['tidalInputMask'] = xarray.where(
+                ds.xCell > (xMax - 0.6*self.resolution*1e3), 1.0, 0.0)
+        else:
+            dsForcing['tidalInputMask'] = xarray.zeros_like(frac)
 
         write_netcdf(dsForcing, 'init_mode_forcing_data.nc')
 
