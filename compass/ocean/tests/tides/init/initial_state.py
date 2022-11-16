@@ -108,9 +108,12 @@ class InitialState(Step):
 
         run_model(self)
 
+        max_depth = config.getfloat('vertical_grid', 'bottom_depth')
+
         init = netCDF4.Dataset("initial_state.nc", "r+")
         init["bottomDepth"][:] = \
-            np.minimum(6000., np.maximum(1., init["bottomDepthObserved"][:]))
+            np.minimum(max_depth,
+                       np.maximum(1., init["bottomDepthObserved"][:]))
 
         init["layerThickness"][0, :, 0] = init["bottomDepth"][:]
         init["restingThickness"][:, 0] = init["bottomDepth"][:]
