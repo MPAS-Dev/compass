@@ -51,10 +51,16 @@ def ingest(defaults_filename):
 def replace(namelist, replacements):
     """ Replace entries in the namelist using the replacements dict """
     new = dict(namelist)
+    is_not_replaced = [True for key in replacements.keys()]
     for record in new:
-        for key in replacements:
+        for idx, key in enumerate(replacements):
             if key in new[record]:
                 new[record][key] = replacements[key]
+                is_not_replaced[idx] = False
+    for idx, key in enumerate(replacements):
+        if is_not_replaced[idx]:
+            print(f'Warning: {key} is not in the namelist and replacements '
+                  'will not be used')
 
     return new
 
