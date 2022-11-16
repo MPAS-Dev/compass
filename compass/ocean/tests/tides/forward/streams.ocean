@@ -19,20 +19,6 @@
                   input_interval="initial_only"
                   output_interval="00-00-20_00:00:00"/>
 
-<immutable_stream name="atmospheric_forcing"
-                  type="input"
-                  filename_template="atmospheric_forcing.nc"
-                  filename_interval="none"
-                  packages="timeVaryingAtmosphericForcingPKG"
-                  input_interval="none"/>
-
-<immutable_stream name="land_ice_forcing"
-                  type="input"
-                  filename_template="land_ice_forcing.nc"
-                  filename_interval="none"
-                  packages="timeVaryingLandIceForcingPKG"
-                  input_interval="none"/>
-
 <stream name="output"
         filename_template="output/output.nc"
         filename_interval="01-00-00_00:00:00"
@@ -80,61 +66,49 @@
         <var name="topographic_wave_drag"/>
 </stream>
 
-        <stream name="globalStatsOutput"
-                runtime_format="single_file"
-                filename_interval="01-00-00_00:00:00"
-                clobber_mode="truncate"
-                output_interval="0000_06:00:00"
-                reference_time="0001-01-01_00:00:00"
-                filename_template="analysis_members/globalStats.$Y-$M-$D_$h.$m.$s.nc"
-                packages="globalStatsAMPKG"
-		type="output">
+<stream name="globalStatsOutput"
+        runtime_format="single_file"
+        filename_interval="01-00-00_00:00:00"
+        clobber_mode="truncate"
+        output_interval="0000_06:00:00"
+        reference_time="0001-01-01_00:00:00"
+        filename_template="analysis_members/globalStats.$Y-$M-$D_$h.$m.$s.nc"
+        packages="globalStatsAMPKG"
+	type="output">
 
-	    <var_array name="minGlobalStats"/>
-	    <var_array name="maxGlobalStats"/>
-	    <var_array name="sumGlobalStats"/>
-	    <var_array name="rmsGlobalStats"/>
-	    <var_array name="avgGlobalStats"/>
-	    <var_array name="vertSumMinGlobalStats"/>
-	    <var_array name="vertSumMaxGlobalStats"/>
-	    <var name="daysSinceStartOfSim"/>
-	    <var name="xtime"/>
-	    <var name="volumeCellGlobal"/>
-	    <var name="CFLNumberGlobal"/>
-	</stream>
+    <var_array name="minGlobalStats"/>
+    <var_array name="maxGlobalStats"/>
+    <var_array name="sumGlobalStats"/>
+    <var_array name="rmsGlobalStats"/>
+    <var_array name="avgGlobalStats"/>
+    <var_array name="vertSumMinGlobalStats"/>
+    <var_array name="vertSumMaxGlobalStats"/>
+    <var name="daysSinceStartOfSim"/>
+    <var name="xtime"/>
+    <var name="volumeCellGlobal"/>
+    <var name="CFLNumberGlobal"/>
+</stream>
 
-	<stream name="forcing_data"
-		filename_template="forcing_data.nc"
-		input_interval="initial_only"
-		type="input">
+<stream name="forcing_data"
+	filename_template="forcing_data.nc"
+	input_interval="initial_only"
+	type="input">
 
-	    <var_struct name="tracersSurfaceRestoringFields"/>
-	    <var_struct name="tracersInteriorRestoringFields"/>
-	    <var_struct name="tracersExponentialDecayFields"/>
-	    <var_struct name="tracersIdealAgeFields"/>
-	    <var_struct name="tracersTTDFields"/>
-	    <var name="windStressZonal"/>
-	    <var name="windStressMeridional"/>
-	    <var name="landIceSurfaceTemperature"/>
-	    <var name="atmosphericPressure"/>
-	    <var name="latentHeatFlux"/>
-	    <var name="sensibleHeatFlux"/>
-	    <var name="shortWaveHeatFlux"/>
-	    <var name="evaporationFlux"/>
-	    <var name="rainFlux"/>
-	</stream>
-
-	<stream name="shortwave_forcing_data"
-		filename_template="shortwaveData.nc"
-		input_interval="none"
-		type="input">
-
-	    <var name="xtime"/>
-	    <var name="chlorophyllData"/>
-	    <var name="zenithAngle"/>
-	    <var name="clearSkyRadiation"/>
-	</stream>
-
+    <var_struct name="tracersSurfaceRestoringFields"/>
+    <var_struct name="tracersInteriorRestoringFields"/>
+    <var_struct name="tracersExponentialDecayFields"/>
+    <var_struct name="tracersIdealAgeFields"/>
+    <var_struct name="tracersTTDFields"/>
+    <var name="windStressZonal"/>
+    <var name="windStressMeridional"/>
+    <var name="landIceSurfaceTemperature"/>
+    <var name="atmosphericPressure"/>
+    <var name="latentHeatFlux"/>
+    <var name="sensibleHeatFlux"/>
+    <var name="shortWaveHeatFlux"/>
+    <var name="evaporationFlux"/>
+    <var name="rainFlux"/>
+</stream>
 
 <stream name="harmonicAnalysisOutput"
         filename_template="analysis_members/harmonicAnalysis.nc"
