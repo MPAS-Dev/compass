@@ -261,7 +261,7 @@
                                                  <span class="n">cacheFileName</span><span class="p">,</span> <span class="n">show_progress</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_compute_barotorpic_transport</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_compute_barotropic_transport</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute the barotropic transport for inner edges (not on the domain</span>
 <span class="sd">    boundary) for the given mesh and monthly-mean data set</span>
@@ -291,7 +291,7 @@
 
 
 <span class="k">def</span> <span class="nf">_compute_barotropic_streamfunction_vertex</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">show_progress</span><span class="p">):</span>
-    <span class="n">innerEdges</span><span class="p">,</span> <span class="n">transport</span> <span class="o">=</span> <span class="n">_compute_barotorpic_transport</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>
+    <span class="n">innerEdges</span><span class="p">,</span> <span class="n">transport</span> <span class="o">=</span> <span class="n">_compute_barotropic_transport</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>
 
     <span class="n">nVertices</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nVertices&#39;</span><span class="p">]</span>
     <span class="n">nTime</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span>

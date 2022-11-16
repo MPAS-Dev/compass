@@ -115,7 +115,7 @@
 
 
 <div class="viewcode-block" id="process_input_geometry"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.geom.process_input_geometry.html#compass.ocean.tests.isomip_plus.geom.process_input_geometry">[docs]</a><span class="k">def</span> <span class="nf">process_input_geometry</span><span class="p">(</span><span class="n">inFileName</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">,</span> <span class="n">filterSigma</span><span class="p">,</span>
-                           <span class="n">minIceThickness</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+                           <span class="n">minIceThickness</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">thin_film_present</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Process the BISICLES input geometry from ISOMIP+.  This includes:</span>
 
@@ -147,6 +147,9 @@
 <span class="sd">    scale : float</span>
 <span class="sd">        A fraction by which to scale the ice draft (as a very simple way of</span>
 <span class="sd">        testing dynamic topography)</span>
+
+<span class="sd">    thin_film_present: bool</span>
+<span class="sd">        whether domain contains a thin film below grounded ice</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">readVar</span><span class="p">(</span><span class="n">varName</span><span class="p">,</span> <span class="n">defaultValue</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
         <span class="n">field</span> <span class="o">=</span> <span class="n">defaultValue</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">ny</span><span class="p">,</span> <span class="n">nx</span><span class="p">),</span> <span class="nb">float</span><span class="p">)</span>
@@ -196,10 +199,15 @@
     <span class="n">surf</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
     <span class="n">draft</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
     <span class="n">floatingMask</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
+    <span class="n">thinFilmMask</span> <span class="o">=</span> <span class="n">bed</span><span class="o">&gt;=</span><span class="mi">0</span>
+    <span class="k">if</span> <span class="n">thin_film_present</span><span class="p">:</span>
+        <span class="n">smoothMask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">groundedMask</span><span class="p">,</span> <span class="n">thinFilmMask</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">smoothMask</span> <span class="o">=</span> <span class="n">groundedMask</span>
     <span class="n">openOceanMask</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">-</span> <span class="n">groundedMask</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
 
     <span class="n">bed</span><span class="p">,</span> <span class="n">draft</span><span class="p">,</span> <span class="n">smoothedDraftMask</span> <span class="o">=</span> <span class="n">_smooth_geometry</span><span class="p">(</span>
-        <span class="n">groundedMask</span><span class="p">,</span> <span class="n">floatingMask</span><span class="p">,</span> <span class="n">bed</span><span class="p">,</span> <span class="n">draft</span><span class="p">,</span> <span class="n">filterSigma</span><span class="p">)</span>
+        <span class="n">smoothMask</span><span class="p">,</span> <span class="n">floatingMask</span><span class="p">,</span> <span class="n">bed</span><span class="p">,</span> <span class="n">draft</span><span class="p">,</span> <span class="n">filterSigma</span><span class="p">)</span>
 
     <span class="n">outFile</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">outFileName</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;NETCDF4&#39;</span><span class="p">)</span>
     <span class="n">outFile</span><span class="o">.</span><span class="n">createDimension</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">nx</span><span class="p">)</span>
@@ -223,6 +231,46 @@
 
     <span class="n">outFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
     <span class="n">inFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<span class="k">def</span> <span class="nf">define_thin_film_mask_step1</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">dsGeom</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Interpolate the ocean mask from the original BISICLES grid to the MPAS</span>
+<span class="sd">    mesh.  This is handled separately from other fields because the ocean mask</span>
+<span class="sd">    is needed to cull land cells from the MPAS mesh before interpolating the</span>
+<span class="sd">    remaining fields.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dsMesh : xarray.Dataset</span>
+<span class="sd">        An MPAS-Ocean mesh</span>
+
+<span class="sd">    dsGeom : xarray.Dataset</span>
+<span class="sd">        Ice-sheet topography produced by</span>
+<span class="sd">        :py:func:`compass.ocean.tests.isomip_plus.geom.process_input_geometry()`</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dsMask : xarray.Dataset</span>
+<span class="sd">        A dataset containing ``regionCellMasks``, a field with the ocean mask</span>
+<span class="sd">        that can be used to cull land cells from the mesh</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">xCell</span><span class="p">,</span> <span class="n">yCell</span><span class="p">,</span> <span class="n">oceanFraction</span> <span class="o">=</span> <span class="n">_get_geom_fields</span><span class="p">(</span><span class="n">dsGeom</span><span class="p">,</span> <span class="n">dsMesh</span><span class="p">)</span>
+
+    <span class="n">dsMask</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
+
+    <span class="n">valid</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span>
+        <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">xCell</span> <span class="o">&gt;=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">xCell</span> <span class="o">&lt;=</span> <span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span>
+        <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">yCell</span> <span class="o">&gt;=</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">yCell</span> <span class="o">&lt;=</span> <span class="n">y</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">valid</span>
+
+    <span class="n">nCells</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">dsMask</span><span class="p">[</span><span class="s1">&#39;regionCellMasks&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;nCells&#39;</span><span class="p">,</span> <span class="s1">&#39;nRegions&#39;</span><span class="p">),</span>
+                                 <span class="n">mask</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nCells</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">dsMask</span>
 
 
 <div class="viewcode-block" id="interpolate_ocean_mask"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.geom.interpolate_ocean_mask.html#compass.ocean.tests.isomip_plus.geom.interpolate_ocean_mask">[docs]</a><span class="k">def</span> <span class="nf">interpolate_ocean_mask</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">dsGeom</span><span class="p">,</span> <span class="n">min_ocean_fraction</span><span class="p">):</span>
@@ -275,7 +323,7 @@
     <span class="k">return</span> <span class="n">dsMask</span></div>
 
 
-<span class="k">def</span> <span class="nf">interpolate_geom</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">dsGeom</span><span class="p">,</span> <span class="n">min_ocean_fraction</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">interpolate_geom</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">dsGeom</span><span class="p">,</span> <span class="n">min_ocean_fraction</span><span class="p">,</span> <span class="n">thin_film_present</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Interpolate the ice geometry from the original BISICLES grid to the MPAS</span>
 <span class="sd">    mesh.</span>
@@ -292,6 +340,9 @@
 <span class="sd">    min_ocean_fraction : float</span>
 <span class="sd">        The minimum ocean fraction after interpolation, below which the cell</span>
 <span class="sd">        is masked as land (which is not distinguished from grounded ice)</span>
+
+<span class="sd">    thin_film_present: bool</span>
+<span class="sd">        Whether domain contains a thin film below grounded ice</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -319,9 +370,10 @@
     <span class="n">dsGeom</span><span class="p">[</span><span class="s1">&#39;oceanFraction&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">oceanFraction</span>
 
     <span class="c1"># mash the topography to the ocean region before interpolation</span>
-    <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Z_bed&#39;</span><span class="p">,</span> <span class="s1">&#39;Z_ice_draft&#39;</span><span class="p">,</span> <span class="s1">&#39;floatingIceFraction&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;smoothedDraftMask&#39;</span><span class="p">]:</span>
-        <span class="n">dsGeom</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsGeom</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">*</span> <span class="n">dsGeom</span><span class="p">[</span><span class="s1">&#39;oceanFraction&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">thin_film_present</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Z_bed&#39;</span><span class="p">,</span> <span class="s1">&#39;Z_ice_draft&#39;</span><span class="p">,</span> <span class="s1">&#39;floatingIceFraction&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;smoothedDraftMask&#39;</span><span class="p">]:</span>
+            <span class="n">dsGeom</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsGeom</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">*</span> <span class="n">dsGeom</span><span class="p">[</span><span class="s1">&#39;oceanFraction&#39;</span><span class="p">]</span>
 
     <span class="n">fields</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;bottomDepthObserved&#39;</span><span class="p">:</span> <span class="s1">&#39;Z_bed&#39;</span><span class="p">,</span>
               <span class="s1">&#39;ssh&#39;</span><span class="p">:</span> <span class="s1">&#39;Z_ice_draft&#39;</span><span class="p">,</span>
@@ -333,7 +385,7 @@
         <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">xCell</span> <span class="o">&gt;=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">xCell</span> <span class="o">&lt;=</span> <span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span>
         <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">yCell</span> <span class="o">&gt;=</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">yCell</span> <span class="o">&lt;=</span> <span class="n">y</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
 
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">valid</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">valid</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">thin_film_present</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Something went wrong with culling.  There are still &#39;</span>
                          <span class="s1">&#39;out-of-range cells in the culled mesh.&#39;</span><span class="p">)</span>
 
@@ -342,13 +394,14 @@
         <span class="n">dsOut</span><span class="p">[</span><span class="n">outfield</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;nCells&#39;</span><span class="p">,),</span> <span class="n">field</span><span class="p">)</span>
 
     <span class="n">oceanFracObserved</span> <span class="o">=</span> <span class="n">dsOut</span><span class="p">[</span><span class="s1">&#39;oceanFracObserved&#39;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">oceanFracObserved</span> <span class="o">&gt;</span> <span class="n">min_ocean_fraction</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">oceanFracObserved</span> <span class="o">&gt;</span> <span class="n">min_ocean_fraction</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">thin_film_present</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Something went wrong with culling.  There are still &#39;</span>
                          <span class="s1">&#39;non-ocean cells in the culled mesh.&#39;</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;bottomDepthObserved&#39;</span><span class="p">,</span> <span class="s1">&#39;ssh&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceFraction&#39;</span><span class="p">,</span>
-                  <span class="s1">&#39;smoothedDraftMask&#39;</span><span class="p">]:</span>
-        <span class="n">dsOut</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsOut</span><span class="p">[</span><span class="n">field</span><span class="p">]</span><span class="o">/</span><span class="n">oceanFracObserved</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">thin_film_present</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;bottomDepthObserved&#39;</span><span class="p">,</span> <span class="s1">&#39;ssh&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceFraction&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;smoothedDraftMask&#39;</span><span class="p">]:</span>
+            <span class="n">dsOut</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsOut</span><span class="p">[</span><span class="n">field</span><span class="p">]</span><span class="o">/</span><span class="n">oceanFracObserved</span>
 
     <span class="k">return</span> <span class="n">dsOut</span>
 

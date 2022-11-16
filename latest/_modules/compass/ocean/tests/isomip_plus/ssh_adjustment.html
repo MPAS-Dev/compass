@@ -118,7 +118,8 @@
 <span class="sd">    shelf to match the sea-surface height as part of ice-shelf 2D test cases</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="SshAdjustment.__init__"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.ssh_adjustment.SshAdjustment.html#compass.ocean.tests.isomip_plus.ssh_adjustment.SshAdjustment.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+                 <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">vertical_coordinate</span><span class="o">=</span><span class="s1">&#39;z-star&#39;</span><span class="p">,</span>
+                 <span class="n">thin_film_present</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the step</span>
 
@@ -153,9 +154,17 @@
         <span class="c1"># start with the same namelist settings as the forward run</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.isomip_plus&#39;</span><span class="p">,</span>
                                <span class="s1">&#39;namelist.forward_and_ssh_adjust&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">vertical_coordinate</span><span class="o">==</span><span class="s1">&#39;single_layer&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.isomip_plus&#39;</span><span class="p">,</span>
+                                   <span class="s1">&#39;namelist.single_layer.forward_and_ssh_adjust&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">thin_film_present</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="s1">&#39;compass.ocean.tests.isomip_plus&#39;</span><span class="p">,</span>
+                                   <span class="s1">&#39;namelist.thin_film.forward_and_ssh_adjust&#39;</span><span class="p">)</span>
 
         <span class="c1"># we don&#39;t want the global stats AM for this run</span>
-        <span class="n">options</span> <span class="o">=</span> <span class="n">get_time_steps</span><span class="p">(</span><span class="n">resolution</span><span class="p">)</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">thin_film_present</span><span class="p">:</span>
+            <span class="n">options</span> <span class="o">=</span> <span class="n">get_time_steps</span><span class="p">(</span><span class="n">resolution</span><span class="p">)</span>
         <span class="n">options</span><span class="p">[</span><span class="s1">&#39;config_AM_globalStats_enable&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;.false.&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_options</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
 

@@ -167,7 +167,9 @@ ice-shelf topography.</p>
 <p>The function <a class="reference internal" href="../generated/compass.ocean.tests.isomip_plus.geom.interpolate_ocean_mask.html#compass.ocean.tests.isomip_plus.geom.interpolate_ocean_mask" title="compass.ocean.tests.isomip_plus.geom.interpolate_ocean_mask"><code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.tests.isomip_plus.geom.interpolate_ocean_mask()</span></code></a>
 interpolates the ocean mask from the BISICLES grid of the input geometry to
 the MPAS-Ocean mesh.  The mask can later be used to cull land cells from the
-MPAS mesh before interpolating other variables to the resulting culled mesh.</p>
+MPAS mesh before interpolating other variables to the resulting culled mesh.
+Optionally, a thin film under the ice sheet can be used and grounded ice is
+not culled.</p>
 <p>The function <code class="xref py py-func docutils literal notranslate"><span class="pre">compass.ocean.tests.isomip_plus.geom.interpolate_geom()</span></code>
 interpolates the remaining geometric variables:</p>
 <ul class="simple">
@@ -187,14 +189,16 @@ to accommodate ice-shelf cavities</p></li>
 defines a step for setting up the initial state for each test case.</p>
 <p>First, a mesh appropriate for the resolution is generated using
 <a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.planar_hex.make_planar_hex_mesh.html#mpas_tools.planar_hex.make_planar_hex_mesh" title="(in mpas_tools vstable)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_tools.planar_hex.make_planar_hex_mesh()</span></code></a>.  Then, the mesh is
-culled to remove land cells.  A vertical coordinate is generated,
+culled to remove land cells.  When a wetting-and-drying algorithm that relies
+on a thin film under land ice is used, a distance up to that specified by the
+config option <code class="docutils literal notranslate"><span class="pre">nx_thin_film</span></code> is retained.  A vertical coordinate is generated,
 with 36 layers of 20-m thickness in the open ocean by default.  By default,
 the <a class="reference internal" href="../framework.html#dev-ocean-framework-vertical"><span class="std std-ref">Vertical coordinate</span></a> is <code class="docutils literal notranslate"><span class="pre">z-star</span></code>, meaning the 1D grid is
 “squashed” down so the sea-surface height corresponds to the location of the
 ice-ocean interface (ice draft).  The initial temperature and salinity profiles
 are computed along with zero initial velocity.  Finally, forcing data fields
 are produced for restoring to temperature and salinity profiles at the northern
-boundary and for “evaporative” fluxes a the surface that are used to mimic a
+boundary and for “evaporative” fluxes at the surface that are used to mimic a
 spillway, removing water at the northern boundary and preventing runaway
 sea-level rise from the the incoming ice-shelf meltwater.</p>
 <p>For the time-varying version of a test case, <code class="docutils literal notranslate"><span class="pre">initial_state</span></code> also computes
@@ -204,9 +208,14 @@ fields, based on the <code class="docutils literal notranslate"><span class="pre
 <code class="docutils literal notranslate"><span class="pre">landIcePressure</span></code> and <code class="docutils literal notranslate"><span class="pre">landIceDraft</span></code> fields is determined by linear
 interpolation in time between consecutive entries in the these forcing
 fields, which are stored in a file <code class="docutils literal notranslate"><span class="pre">land_ice_forcing.nc</span></code>.</p>
-<p>Currently, the grounding line and calving front are held fixed in time, so
-the field <code class="docutils literal notranslate"><span class="pre">landIceFractionForcing</span></code> is the same as <code class="docutils literal notranslate"><span class="pre">landIceFraction</span></code>
-in the initial condition for all time.</p>
+<p>Grounding line motion is allowed to occur for a subset of test cases with have
+the attribute <code class="docutils literal notranslate"><span class="pre">thin_film_present</span></code> set to true. For all other test cases, the
+grounding line and calving front are held fixed in time, so the field
+<code class="docutils literal notranslate"><span class="pre">landIceFractionForcing</span></code> is the same as <code class="docutils literal notranslate"><span class="pre">landIceFraction</span></code> in the initial
+condition for all time.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">initial_state</span></code> step also generates horizontal sections through the
+domain of layer thicknesses and the mid-layer depth as well as horizontal
+sections of initial SSH, land ice presure, and total water column thickness.</p>
 </section>
 <section id="ssh-adjustment">
 <h3>ssh_adjustment<a class="headerlink" href="#ssh-adjustment" title="Permalink to this heading">¶</a></h3>
@@ -226,9 +235,10 @@ MPAS-Ocean executable is created when the test case is set up and MPAS-Ocean is
 run (including updating PIO namelist options and generating a graph partition)
 in <code class="docutils literal notranslate"><span class="pre">run()</span></code>.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">performance</span></code> step is run for only 1 hour (appropriate for regression
-testing).  Then, potential temperature and salinity are plotted at the top and
-bottom of the ocean and along a cross section of through the middle (y = 40 km)
-of the domain.</p>
+testing) except when tidal forcing is applied, in which case the run duration
+is 24 hours.  Then, potential temperature and salinity are plotted at the top
+and bottom of the ocean and along a cross section of through the middle (y =
+40 km) of the domain.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">simulation</span></code> step runs for 1 month, then adjusts the “evaporative”
 forcing based on the average of the melt fluxes from that month.  Then,
 namelist options are modified so the simulation is ready to run for another

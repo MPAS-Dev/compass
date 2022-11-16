@@ -66,6 +66,8 @@
 <li class="toctree-l4"><a class="reference internal" href="#ocean1">Ocean1</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ocean2">Ocean2</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#time-varying-ocean0">time_varying_Ocean0</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#thin-film-ocean0">thin_film_Ocean0</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#thin-film-tidal-forcing-ocean0">thin_film_tidal_forcing_Ocean0</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#performance-run">Performance run</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#simulation-run">Simulation run</a></li>
 </ul>
@@ -234,6 +236,9 @@ interpolates the results to the MISOMIP comparison grid.</p>
 <span class="c1"># Minimum number of vertical levels in a column</span><span class="w"></span>
 <span class="na">minimum_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span><span class="w"></span>
 
+<span class="c1"># The minimum allowable layer thickness</span><span class="w"></span>
+<span class="na">min_layer_thickness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.0</span><span class="w"></span>
+
 <span class="c1"># Minimum thickness of the initial ocean column (to prevent &#39;drying&#39;)</span><span class="w"></span>
 <span class="na">min_column_thickness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10.0</span><span class="w"></span>
 
@@ -398,12 +403,43 @@ options before running the test case:</p>
 <p>Dates do not have to be the beginnings of years, they could be any list that is
 monotonic in time. Scales can be any fraction between 0.0 and 1.0.</p>
 </section>
+<section id="thin-film-ocean0">
+<h2>thin_film_Ocean0<a class="headerlink" href="#thin-film-ocean0" title="Permalink to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">ocean/isomip_plus/2km/z-star/thin_film_Ocean0</span></code> and
+<code class="docutils literal notranslate"><span class="pre">ocean/isomip_plus/5km/z-star/thin_film_Ocean0</span></code></p>
+<p>The thin-film version of Ocean0 turns the wetting-and-drying scheme on in
+MPAS-Ocean and features a thin ocean layer below the grounded ice of thickness
+<code class="docutils literal notranslate"><span class="pre">min_column_thickness</span></code> specified in the config file. In the non-time-varying
+version of this test case, the behavior should be the same as the version
+without a thin film (<code class="docutils literal notranslate"><span class="pre">Ocean0</span></code>).</p>
+<p>There are also several time-varying versions of this test case:
+<code class="docutils literal notranslate"><span class="pre">ocean/isomip_plus/${RES}/${COORD}/thin_film_time_varying_Ocean0</span></code>,
+<code class="docutils literal notranslate"><span class="pre">ocean/isomip_plus/${RES}/${COORD}/thin_film_wetting_Ocean0</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">ocean/isomip_plus/${RES}/${COORD}/thin_film_drying_Ocean0</span></code>. The
+latter two prescribe decreasing or increasing land ice pressure, respectively,
+to simulate grounding line motion in the landward or seaward directions. The
+resolutions supported (<code class="docutils literal notranslate"><span class="pre">RES</span></code>) are <code class="docutils literal notranslate"><span class="pre">2km</span></code> and <code class="docutils literal notranslate"><span class="pre">5km</span></code> and the coordinate
+types (<code class="docutils literal notranslate"><span class="pre">COORD</span></code>) are <code class="docutils literal notranslate"><span class="pre">sigma</span></code> and <code class="docutils literal notranslate"><span class="pre">single_layer</span></code>.</p>
+</section>
+<section id="thin-film-tidal-forcing-ocean0">
+<h2>thin_film_tidal_forcing_Ocean0<a class="headerlink" href="#thin-film-tidal-forcing-ocean0" title="Permalink to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">ocean/isomip_plus/2km/single_layer/thin_film_tidal_forcing_Ocean0</span></code> and
+<code class="docutils literal notranslate"><span class="pre">ocean/isomip_plus/5km/single_layer/thin_film_tidal_forcing_Ocean0</span></code></p>
+<p>The tidal forcing test case uses the existing tidal boundary forcing in the
+forward mode of MPAS-Ocean to drive SSH variations in the far-field that
+propagate into the ice shelf cavity. Given the geometry of the Ocean0 test
+case, these tidal SSH variations should not produce any grounding line motion.
+Thus, this is a test of the robustness of the wetting-and-drying algorithm to
+small pressure perturbations.</p>
+</section>
 <section id="performance-run">
 <h2>Performance run<a class="headerlink" href="#performance-run" title="Permalink to this heading">¶</a></h2>
 <p>By default, <code class="docutils literal notranslate"><span class="pre">isomip_plus</span></code> test cases are configured for “performance” runs.
 The initial condition is created, the the sea surface height and ice-shelf
 pressure are adjusted to be in balance.  Then, a simulation is performed for
-only 1 simulated hour (appropriate for regression testing).  Finally,
+only 1 simulated hour (appropriate for regression testing).  For the tidally-
+varying case, the simulation is extended to 24 hours but is still
+computationally inexpensive due to the single-layer configuration. Finally,
 potential temperature and salinity are plotted at the top and bottom of the
 ocean and along a cross section of through the middle (y = 40 km) of the
 domain.</p>
