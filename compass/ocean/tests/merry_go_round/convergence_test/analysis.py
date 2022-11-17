@@ -63,17 +63,17 @@ def _plot(filename, resolutions):
     fig = plt.gcf()
     dt = [3, 6, 12]
     order2 = [0.01, 0.04, 0.16]
-    operators = ['tracer1']
+    fields = ['tracer1']
 
     L2 = numpy.zeros((len(resolutions)))
 
-    for k, operator in enumerate(operators):
+    for k, field in enumerate(fields):
         for i, resolution in enumerate(resolutions):
             ds = xarray.open_dataset(f'../forward_{resolution}/output.nc')
 
             areaCell = ds.areaCell.values
-            final_field = ds[operator].isel(Time=1, nVertLevels=0).values
-            initial_field = ds[operator].isel(Time=0, nVertLevels=0).values
+            final_field = ds[field].isel(Time=1, nVertLevels=0).values
+            initial_field = ds[field].isel(Time=0, nVertLevels=0).values
 
             diff = abs(final_field - initial_field)
             multDen = (initial_field**2)*areaCell
@@ -88,8 +88,7 @@ def _plot(filename, resolutions):
         print(f'Order of convergence from dt 12 min to 6 min: ',
               f'{math.log2(L2[1]/L2[2])}')
 
-        operator = operators[k]
-        plt.loglog(dt, L2[:], '-x', label=f'Simulated {operator}')
+        plt.loglog(dt, L2[:], '-x', label=f'Simulated {field}')
 
     plt.loglog(dt, order2, 'k', label='Order 2 convergence')
     plt.title('Convergence to the exact solution')
