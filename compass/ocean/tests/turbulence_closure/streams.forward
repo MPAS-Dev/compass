@@ -6,22 +6,57 @@
 <immutable_stream name="input"
                   filename_template="init.nc"/>
 
-<immutable_stream name="restart"/>
+<immutable_stream name="restart"
+                  output_interval="0000-00-00_00:10:00"/>
 
 <stream name="output"
         type="output"
         filename_template="output.nc"
-        output_interval="0000_00:01:00"
+        output_interval="0000_01:00:00"
         clobber_mode="truncate">
 
+    <stream name="mesh"/>
     <var_struct name="tracers"/>
     <var name="xtime"/>
+    <var name="daysSinceStartOfSim"/>
+    <var name="vertDiffTopOfCell"/>
+    <var name="vertViscTopOfCell"/>
+    <var name="velocityZonal"/>
+    <var name="BruntVaisalaFreqTop"/>
+    <var name="tgrad"/>
+    <var name="ugrad"/>
+    <var name="vgrad"/>
+    <var name="Sh"/>
+    <var name="Sm"/>
+    <var name="RiTopOfCell"/>
+    <var name="wgrad"/>
+    <var name="velocityMeridional"/>
     <var name="normalVelocity"/>
+    <var name="ssh"/>
     <var name="layerThickness"/>
-	<var name="glsPsi"/>
-	<var name="tke"/>
-	<var name="verticalVelocity"/>
-	<var name="nonhydrostaticPressure"/>
+    <var name="vertVelocityTop"/>
+    <var name="velocityZonal"/>
+    <var name="velocityMeridional"/>
+    <var name="relativeVorticity"/>
+    <var name="relativeVorticityCell"/>
+    <var name="kineticEnergyCell"/>
+    <var_array name="activeTracerHorMixTendency"/>
+    <var_array name="activeTracerHorizontalAdvectionTendency"/>
+    <var_array name="activeTracerVerticalAdvectionTendency"/>
+    <var_array name="activeTracerVertMixTendency"/>
+    <var name="turbLength"/>
+    <var name="glsPsi"/>
+    <var name="tke"/>
+    <var name="buoyancyProduction"/>
+    <var name="shearProduction"/>
+    <var name="glsAdvTend"/>
+    <var name="glsDissTend"/>
+    <var name="glsTransTend"/>
+    <var name="tkeAdvTend"/>
+    <var name="tkeDissTend"/>
+    <var name="tkeTransTend"/>
+    <var name="verticalVelocity"/>
+    <var name="nonhydrostaticPressure"/>
 </stream>
 
 </streams>
