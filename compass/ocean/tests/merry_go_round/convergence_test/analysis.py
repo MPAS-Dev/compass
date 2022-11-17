@@ -71,10 +71,9 @@ def _plot(filename, resolutions):
         for i, resolution in enumerate(resolutions):
             ds = xarray.open_dataset(f'../forward_{resolution}/output.nc')
 
-            operator = operators[k]
             areaCell = ds.areaCell.values
-            final_field = ds[operator][1, :, 0].values
-            initial_field = ds[operator][0, :, 0].values
+            final_field = ds[operator].isel(Time=1, nVertLevels=0).values
+            initial_field = ds[operator].isel(Time=0, nVertLevels=0).values
 
             diff = abs(final_field - initial_field)
             multDen = (initial_field**2)*areaCell
