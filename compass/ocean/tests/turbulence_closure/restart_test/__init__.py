@@ -40,8 +40,8 @@ class RestartTest(TestCase):
 
         for part in ['full', 'restart']:
             name = '{}_run'.format(part)
-            step = Forward(test_case=self, name=name, subdir=name, cores=4,
-                           threads=1, resolution=resolution)
+            step = Forward(test_case=self, name=name, subdir=name, ntasks=4,
+                           openmp_threads=1, resolution=resolution)
 
             step.add_namelist_file(
                 'compass.ocean.tests.baroclinic_channel.restart_test',

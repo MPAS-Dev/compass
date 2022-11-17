@@ -40,8 +40,8 @@ class DecompTest(TestCase):
         for procs in [4, 8]:
             name = '{}proc'.format(procs)
             self.add_step(
-                Forward(test_case=self, name=name, subdir=name, cores=procs,
-                        threads=1, resolution=resolution))
+                Forward(test_case=self, name=name, subdir=name, ntasks=procs,
+                        openmp_threads=1, resolution=resolution))
 
     def configure(self):
         """
