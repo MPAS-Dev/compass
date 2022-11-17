@@ -147,25 +147,26 @@ class InitialState(Step):
 
         # Initialize normalVelocity
         normalVelocity = xarray.zeros_like(xEdgeDepth)
-        zMidEdge = xarray.zeros_like(xEdgeDepth)
-        mask = xarray.zeros_like(xEdgeDepth, dtype='bool')
+
         cell1 = ds.cellsOnEdge[:, 0].values - 1
         cell2 = ds.cellsOnEdge[:, 1].values - 1
-x1 = xCell[cell1]
-x2 = xCell[cell2]
-xQuarter = 0.75*xMin + 0.25*xMax
-xThreeQuarters = 0.25*xMin + 0.75*xMax
-mask = numpy.logical_or(
-    numpy.logical_and(
-        numpy.logical_and(x1 < xMid, x1 >= xQuarter),
-        numpy.logical_and(x2 < xMid, x2 >= xQuarter)),
-    numpy.logical_and(x1 > xThreeQuarters, 
-                      x2 > xThreeQuarters)))
         zMidEdge = 0.5*(zMid[0, cell1, :] + zMid[0, cell2, :])
+
+        x1 = xCell[cell1]
+        x2 = xCell[cell2]
+        xQuarter = 0.75*xMin + 0.25*xMax
+        xThreeQuarters = 0.25*xMin + 0.75*xMax
+        mask = numpy.logical_or(
+            numpy.logical_and(
+                numpy.logical_and(x1 < xMid, x1 >= xQuarter),
+                numpy.logical_and(x2 < xMid, x2 >= xQuarter)),
+            numpy.logical_and(x1 > xThreeQuarters,
+                              x2 > xThreeQuarters))
+        mask_mesh, _ = xarray.broadcast(mask, ds.refBottomDepth)
 
         dPsi = - (2.0*zMidEdge + bottom_depth) / (0.5*bottom_depth)**2
         den = (0.5*(xMax - xMin))**4
-        num = xarray.where(mask,
+        num = xarray.where(mask_mesh.values,
                            (xEdgeDepth - xMin - 0.5*(xMax + xMin))**4,
                            (xEdgeDepth - 0.5 * xMax)**4)
         normalVelocity = (numpy.subtract(1.0, numpy.divide(num, den)) *
