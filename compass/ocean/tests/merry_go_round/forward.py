@@ -47,11 +47,17 @@ class Forward(Step):
         self.resolution = resolution
         if min_tasks is None:
             min_tasks = ntasks
+
+        run_params = {'5m':    {'config_dt': '00:12:00'},
+                      '2.5m':  {'config_dt': '00:06:00'},
+                      '1.25m': {'config_dt': '00:03:00'}}
+
         super().__init__(test_case=test_case, name=name, subdir=subdir,
                          ntasks=ntasks, min_tasks=min_tasks,
                          openmp_threads=openmp_threads)
         self.add_namelist_file('compass.ocean.tests.merry_go_round',
                                'namelist.forward')
+        self.add_namelist_options(options=run_params[self.resolution])
 
         self.add_streams_file('compass.ocean.tests.merry_go_round',
                               'streams.forward')
@@ -72,8 +78,4 @@ class Forward(Step):
         """
         Run this step of the test case
         """
-        run_params = {'5m':    {'config_dt': '00:12:00'},
-                      '2.5m':  {'config_dt': '00:06:00'},
-                      '1.25m': {'config_dt': '00:03:00'}}
-        self.update_namelist_at_runtime(run_params[self.resolution])
         run_model(self)
