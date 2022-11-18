@@ -450,6 +450,32 @@ isomip_plus
    streamfunction.Streamfunction
    streamfunction.Streamfunction.run
 
+merry_go_round
+~~~~~~~~~~~~~~
+
+.. currentmodule:: compass.ocean.tests.merry_go_round
+
+.. autosummary::
+   :toctree: generated/
+
+   MerryGoRound
+
+   default.Default
+   default.Default.validate
+
+   convergence_test.analysis.Analysis
+   convergence_test.analysis.Analysis.run
+
+   forward.Forward
+   forward.Forward.run
+
+   initial_state.InitialState
+   initial_state.InitialState.run
+
+   viz.Viz
+   viz.Viz.run
+
+
 planar_convergence
 ~~~~~~~~~~~~~~~~~~
 
