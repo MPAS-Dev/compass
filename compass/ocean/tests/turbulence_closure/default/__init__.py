@@ -1,6 +1,7 @@
 from compass.testcase import TestCase
 from compass.ocean.tests.turbulence_closure.initial_state import InitialState
 from compass.ocean.tests.turbulence_closure.forward import Forward
+from compass.ocean.tests.turbulence_closure.viz import Viz
 from compass.ocean.tests import turbulence_closure
 
 
@@ -38,6 +39,7 @@ class Default(TestCase):
             InitialState(test_case=self, resolution=resolution))
         self.add_step(
             Forward(test_case=self, ntasks=4, openmp_threads=1, resolution=resolution))
+        self.add_step(Viz(test_case=self))
 
     def configure(self):
         """
