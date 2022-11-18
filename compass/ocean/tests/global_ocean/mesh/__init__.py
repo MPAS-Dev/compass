@@ -66,7 +66,7 @@ class Mesh(TestCase):
             base_mesh_step = EC30to60BaseMesh(self, name=name, subdir=subdir)
         elif mesh_name in ['ARRM10to60']:
             base_mesh_step = ARRM10to60BaseMesh(self, name=name, subdir=subdir)
-        elif mesh_name in ['SOwISC12to60']:
+        elif mesh_name in ['SO12to60', 'SOwISC12to60']:
             base_mesh_step = SO12to60BaseMesh(self, name=name, subdir=subdir)
         elif mesh_name in ['WC14']:
             base_mesh_step = WC14BaseMesh(self, name=name, subdir=subdir)

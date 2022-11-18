@@ -11,7 +11,7 @@ from compass.mesh import QuasiUniformSphericalMeshStep
 
 class SO12to60BaseMesh(QuasiUniformSphericalMeshStep):
     """
-    A step for creating SOwISC12to60 meshes
+    A step for creating SO12to60 meshes
     """
     def setup(self):
         """
