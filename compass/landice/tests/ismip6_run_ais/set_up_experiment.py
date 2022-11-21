@@ -116,18 +116,18 @@ class SetUpExperiment(Step):
             stream_replacements['forcing_interval'] = 'initial_only'
         else:
             stream_replacements['forcing_interval'] = '0001-00-00_00:00:00'
-        if useCalvingMask:
-            stream_replacements['input_file_calving_mask_active'] = 'input'
-            stream_replacements['input_file_calving_mask_forcing_name'] = mask_fname
-        else:
-            stream_replacements['input_file_calving_mask_active'] = 'none'
-            stream_replacements['input_file_calving_mask_forcing_name'] = 'UNUSED'
-
 
         self.add_streams_file(
             'compass.landice.tests.ismip6_run_ais', 'streams.landice.template',
             out_name='streams.landice',
             template_replacements=stream_replacements)
+
+        if useCalvingMask:
+            mask_stream_replacements['input_file_calving_mask_forcing_name'] = mask_fname
+            self.add_streams_file(
+                'compass.landice.tests.ismip6_run_ais', 'streams.mask_calving',
+                out_name='streams.landice',
+                template_replacements=mask_stream_replacements)
 
         # Set up namelist and customize as needed
         self.add_namelist_file(
@@ -148,7 +148,8 @@ class SetUpExperiment(Step):
                                       out_name='namelist.landice')
 
         if useCalvingMask:
-            options = {'config_calving': "'mask'"}
+            options = {'config_calving': "'none'",
+                       'config_apply_calving_mask': ".true."}
             self.add_namelist_options(options=options,
                                       out_name='namelist.landice')
 
