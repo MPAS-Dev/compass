@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>compass.landice.tests.ismip6_forcing.create_mapfile &mdash; compass latest documentation</title>
+      <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../_static/jquery.js"></script>
+        <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../../_static/doctools.js"></script>
+        <script src="../../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../../index.html" class="icon icon-home"> compass
+          </a>
+              <div class="version">
+                latest
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/quick_start.html">Quick Start for Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/test_cases.html">Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/config_files.html">Config Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/test_suites.html">Test Suites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../users_guide/machines/index.html">Machines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/command_line.html">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/organization.html">Organization of Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/landice/index.html">Landice core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/ocean/index.html">Ocean core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/framework.html">Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/machines/index.html">Machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/docs.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/building_docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_add_test_group.html">Developer Tutorial: Adding a new test group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_add_param_study.html">Developer Tutorial: Adding a parameter study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/dev_porting_legacy.html">Developer Tutorial: Porting a legacy COMPASS test group</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Glossary</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../glossary.html">Glossary</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../versions.html">Code and Documentation Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">compass</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../landice.html">compass.landice</a></li>
+          <li class="breadcrumb-item"><a href="../ismip6_forcing.html">compass.landice.tests.ismip6_forcing</a></li>
+      <li class="breadcrumb-item active">compass.landice.tests.ismip6_forcing.create_mapfile</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for compass.landice.tests.ismip6_forcing.create_mapfile</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.scrip.from_mpas</span> <span class="kn">import</span> <span class="n">scrip_from_mpas</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.logging</span> <span class="kn">import</span> <span class="n">check_call</span>
+
+
+<div class="viewcode-block" id="build_mapping_file"><a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.ismip6_forcing.create_mapfile.build_mapping_file.html#compass.landice.tests.ismip6_forcing.create_mapfile.build_mapping_file">[docs]</a><span class="k">def</span> <span class="nf">build_mapping_file</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">cores</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">ismip6_grid_file</span><span class="p">,</span>
+                       <span class="n">mapping_file</span><span class="p">,</span> <span class="n">mali_mesh_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                       <span class="n">method_remap</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Build a mapping file if it does not exist.</span>
+<span class="sd">    Mapping file is then used to remap the ismip6 source file in polarstero</span>
+<span class="sd">    coordinate to unstructured mali mesh</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : compass.config.CompassConfigParser</span>
+<span class="sd">        Configuration options for a ismip6 forcing test case</span>
+
+<span class="sd">    cores : int</span>
+<span class="sd">        the number of cores for the ESMF_RegridWeightGen</span>
+
+<span class="sd">    logger : logging.Logger</span>
+<span class="sd">        A logger for output from the step</span>
+
+<span class="sd">    ismip6_grid_file : str</span>
+<span class="sd">        ismip6 grid file</span>
+
+<span class="sd">    mapping_file : str</span>
+<span class="sd">        weights for interpolation from ismip6_grid_file to mali_mesh_file</span>
+
+<span class="sd">    mali_mesh_file : str, optional</span>
+<span class="sd">        The MALI mesh file if mapping file does not exist</span>
+
+<span class="sd">    method_remap : str, optional</span>
+<span class="sd">        Remapping method used in building a mapping file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">mapping_file</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mapping file exists. Not building a new one.&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="k">if</span> <span class="n">mali_mesh_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Mapping file does not exist. To build one, Mali &quot;</span>
+                         <span class="s2">&quot;mesh file with &#39;-f&#39; should be provided. &quot;</span>
+                         <span class="s2">&quot;Type --help for info&quot;</span><span class="p">)</span>
+
+    <span class="n">ismip6_scripfile</span> <span class="o">=</span> <span class="s2">&quot;temp_ismip6_8km_scrip.nc&quot;</span>
+    <span class="n">mali_scripfile</span> <span class="o">=</span> <span class="s2">&quot;temp_mali_scrip.nc&quot;</span>
+    <span class="n">ismip6_projection</span> <span class="o">=</span> <span class="s2">&quot;ais-bedmap2&quot;</span>
+
+    <span class="c1"># create the ismip6 scripfile if mapping file does not exist</span>
+    <span class="c1"># this is the projection of ismip6 data for Antarctica</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mapping file does not exist. Building one based on &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;the input/ouptut meshes&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Creating temporary scripfiles &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;for ismip6 grid and mali mesh...&quot;</span><span class="p">)</span>
+
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;create_SCRIP_file_from_planar_rectangular_grid.py&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;--input&quot;</span><span class="p">,</span> <span class="n">ismip6_grid_file</span><span class="p">,</span>
+            <span class="s2">&quot;--scrip&quot;</span><span class="p">,</span> <span class="n">ismip6_scripfile</span><span class="p">,</span>
+            <span class="s2">&quot;--proj&quot;</span><span class="p">,</span> <span class="n">ismip6_projection</span><span class="p">,</span>
+            <span class="s2">&quot;--rank&quot;</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">]</span>
+
+    <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+
+    <span class="c1"># create a MALI mesh scripfile if mapping file does not exist</span>
+    <span class="c1"># make sure the mali mesh file uses the longitude convention of [0 2pi]</span>
+    <span class="c1"># make changes on a duplicated file to avoid making changes to the</span>
+    <span class="c1"># original mesh file</span>
+
+    <span class="n">mali_mesh_copy</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mali_mesh_file</span><span class="si">}</span><span class="s2">_copy&quot;</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">mali_mesh_file</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mali_mesh_file</span><span class="si">}</span><span class="s2">_copy&quot;</span><span class="p">)</span>
+
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;set_lat_lon_fields_in_planar_grid.py&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;--file&quot;</span><span class="p">,</span> <span class="n">mali_mesh_copy</span><span class="p">,</span>
+            <span class="s2">&quot;--proj&quot;</span><span class="p">,</span> <span class="n">ismip6_projection</span><span class="p">]</span>
+
+    <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+
+    <span class="n">scrip_from_mpas</span><span class="p">(</span><span class="n">mali_mesh_file</span><span class="p">,</span> <span class="n">mali_scripfile</span><span class="p">)</span>
+
+    <span class="c1"># create a mapping file using ESMF weight gen</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Creating a mapping file... &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Mapping method used: </span><span class="si">{</span><span class="n">method_remap</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">method_remap</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Desired remapping option should be provided with &quot;</span>
+                         <span class="s2">&quot;--method. Available options are &#39;bilinear&#39;,&quot;</span>
+                         <span class="s2">&quot;&#39;neareststod&#39;, &#39;conserve&#39;.&quot;</span><span class="p">)</span>
+
+    <span class="n">parallel_executable</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;parallel&quot;</span><span class="p">,</span> <span class="s2">&quot;parallel_executable&quot;</span><span class="p">)</span>
+    <span class="c1"># split the parallel executable into constituents in case it includes flags</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parallel_executable</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+    <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;-n&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cores</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;ESMF_RegridWeightGen&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;-s&quot;</span><span class="p">,</span> <span class="n">ismip6_scripfile</span><span class="p">,</span>
+                 <span class="s2">&quot;-d&quot;</span><span class="p">,</span> <span class="n">mali_scripfile</span><span class="p">,</span>
+                 <span class="s2">&quot;-w&quot;</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">,</span>
+                 <span class="s2">&quot;-m&quot;</span><span class="p">,</span> <span class="n">method_remap</span><span class="p">,</span>
+                 <span class="s2">&quot;-i&quot;</span><span class="p">,</span> <span class="s2">&quot;-64bit_offset&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;--dst_regional&quot;</span><span class="p">,</span> <span class="s2">&quot;--src_regional&quot;</span><span class="p">])</span>
+
+    <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+
+    <span class="c1"># remove the temporary scripfiles once the mapping file is generated</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Removing the temporary mesh and scripfiles...&quot;</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">ismip6_scripfile</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">mali_scripfile</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">mali_mesh_copy</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
