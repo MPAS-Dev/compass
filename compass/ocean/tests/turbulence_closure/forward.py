@@ -68,6 +68,8 @@ class Forward(Step):
 
         self.add_input_file(filename='init.nc',
                             target='../initial_state/ocean.nc')
+        self.add_input_file(filename='forcing.nc',
+                            target='../initial_state/init_mode_forcing_data.nc')
         self.add_input_file(filename='graph.info',
                             target='../initial_state/culled_graph.info')
 

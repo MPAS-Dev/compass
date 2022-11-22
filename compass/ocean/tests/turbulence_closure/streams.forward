@@ -9,6 +9,13 @@
 <immutable_stream name="restart"
                   output_interval="0000-00-00_00:10:00"/>
 
+<stream name="forcing"
+                  filename_template="forcing.nc"
+                  input_interval="initial_only"
+                  type="input">
+    <var name="sensibleHeatFlux"/>
+</stream>
+
 <stream name="output"
         type="output"
         filename_template="output.nc"
