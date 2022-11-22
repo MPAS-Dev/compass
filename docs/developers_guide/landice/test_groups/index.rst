@@ -15,6 +15,7 @@ Test groups
    greenland
    humboldt
    hydro_radial
+   ismip6_forcing
    kangerlussuaq
    koge_bugt_s
    mismipplus
