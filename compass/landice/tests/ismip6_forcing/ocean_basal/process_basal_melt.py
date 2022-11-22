@@ -107,7 +107,7 @@ class ProcessBasalMelt(Step):
             self.rename_ismip6_basal_melt_to_mali_vars(remapped_file_temp,
                                                        output_file)
 
-            logger.info(f"Remapping and renamping process done successfully. "
+            logger.info(f"Remapping and renaming process done successfully. "
                         f"Removing the temporary files...")
 
             # remove the temporary combined file

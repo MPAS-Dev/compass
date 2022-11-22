@@ -45,7 +45,7 @@ def build_mapping_file(config, cores, logger, ismip6_grid_file,
 
     # create the scrip files if mapping file does not exist
     logger.info(f"Mapping file does not exist. Building one based on the"
-                f" input/ouptut meshes")
+                f" input/output meshes")
     logger.info(f"Creating temporary scrip files for source and "
                 f"destination grids...")
 

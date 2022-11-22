@@ -99,7 +99,7 @@ class ProcessSMB(Step):
                              "but it is required as an input file "
                              "to run this step. Please run `process_smb_racmo`"
                              "step prior to running this step by setting"
-                             "the config option 'process_smb_racmo' to 'True.")
+                             "the config option 'process_smb_racmo' to 'True'.")
 
         # temporary remapped climatology and anomaly files
         clim_ismip6_temp = "clim_ismip6.nc"
