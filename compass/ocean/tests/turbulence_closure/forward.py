@@ -42,9 +42,6 @@ class Forward(Step):
 
         openmp_threads : int, optional
             the number of OpenMP threads the step will use
-
-        nu : float, optional
-            the viscosity (if different from the default for the test group)
         """
         self.resolution = resolution
         if min_tasks is None:
@@ -53,12 +50,6 @@ class Forward(Step):
                          ntasks=ntasks, min_tasks=min_tasks, openmp_threads=openmp_threads)
         self.add_namelist_file('compass.ocean.tests.turbulence_closure',
                                'namelist.forward')
-        self.add_namelist_file('compass.ocean.tests.turbulence_closure',
-                               'namelist.{}.forward'.format(resolution))
-        if nu is not None:
-            # update the viscosity to the requested value
-            options = {'config_mom_del2': '{}'.format(nu)}
-            self.add_namelist_options(options)
 
         # make sure output is double precision
         self.add_streams_file('compass.ocean.streams', 'streams.output')
@@ -83,4 +74,13 @@ class Forward(Step):
         """
         Run this step of the test case
         """
+        # update the time step
+        resolution = self.resolution
+        if resolution == '10km':
+            self.update_namelist_at_runtime({'config_dt':
+                                             "'0000_00:01:00'"})
+        elif resolution == '1m':
+            self.update_namelist_at_runtime({'config_dt':
+                                             "'0000_00:00:00.5'"})
+
         run_model(self)

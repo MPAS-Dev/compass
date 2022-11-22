@@ -15,7 +15,7 @@ class TurbulenceClosure(TestGroup):
         """
         super().__init__(mpas_core=mpas_core, name='turbulence_closure')
 
-        for resolution in ['10km']:
+        for resolution in ['50m','10km']:
             self.add_test_case(
                 DecompTest(test_group=self, resolution=resolution))
             self.add_test_case(
@@ -44,7 +44,10 @@ def configure(resolution, config):
                           'dc': 4e3},
                   '1km': {'nx': 160,
                           'ny': 500,
-                          'dc': 1e3}}
+                          'dc': 1e3},
+                  '50m': {'nx': 3200,
+                          'ny': 10000,
+                          'dc': 5e1}}
 
     if resolution not in res_params:
         raise ValueError('Unsupported resolution {}. Supported values are: '
