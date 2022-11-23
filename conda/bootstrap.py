@@ -248,11 +248,7 @@ def build_conda_env(env_type, recreate, machine, mpi, conda_mpi, version,
     if env_type == 'test_release':
         # for a test release, we will be the compass package from the dev label
         channels = channels + ['-c e3sm/label/compass_dev']
-    if (machine is not None and machine.startswith('conda')) \
-            or env_type == 'release':
-        # we need libpnetcdf and scorpio (and maybe compass itself) from the
-        # e3sm channel, compass label
-        channels = channels + ['-c e3sm/label/compass']
+    channels = channels + ['-c e3sm/label/compass']
 
     channels = f'--override-channels {" ".join(channels)}'
     packages = f'python={python}'
