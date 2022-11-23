@@ -343,7 +343,8 @@ class Analysis(Step):
             print('Shallow RMSE (Com) = ', shal_rmse_com)
 
             # Calculate deep RMSE (>1000m)
-            idx = np.where((depth >= 1000) & (np.abs(lat_grid) < 66))
+            idx = np.where((depth >= 1000) & (np.abs(lat_grid) < 66)
+                           & (rmse_com < 1000) & (rmse_amp < 1000))
             area_tot = np.sum(area[idx])
             deep_rmse_amp = np.sqrt(np.sum(rmse_amp[idx]*area[idx])/area_tot)
             deep_rmse_com = np.sqrt(np.sum(rmse_com[idx]*area[idx])/area_tot)
