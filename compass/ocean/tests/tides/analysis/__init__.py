@@ -7,7 +7,6 @@ import numpy as np
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 import os
-import stat
 from mpas_tools.logging import check_call
 
 
@@ -51,12 +50,6 @@ class Analysis(Step):
         self.add_input_file(
             filename=self.grid_file,
             target='../forward/initial_state.nc')
-
-        self.add_input_file(
-            filename='extract_HC',
-            target='TPXO9/extract_HC',
-            database='tides',
-            copy=True)
 
     def setup(self):
         """
@@ -166,13 +159,11 @@ class Analysis(Step):
         Perform TPXO extraction
         """
 
-        os.chmod('extract_HC', stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR)
-
         # Run the executable
         for con in self.constituents:
             print('')
             print(f'run {con}')
-            check_call(f'./extract_HC < inputs/{con}_setup',
+            check_call(f'extract_HC < inputs/{con}_setup',
                        logger=self.logger, shell=True)
 
     def read_otps2_output(self, idx):
