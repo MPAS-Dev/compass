@@ -13,7 +13,7 @@ class Forward(Step):
         The resolution of the test case
     """
     def __init__(self, test_case, nonhydro_mode, name,
-                 cores=4, min_cores=1, threads=1):
+                 ntasks=4, min_tasks=1, openmp_threads=1):
         """
         Create a new test case
 
@@ -46,7 +46,7 @@ class Forward(Step):
         """
         self.nonhydro_mode = nonhydro_mode
         super().__init__(test_case=test_case, name=name,
-                         cores=cores, min_cores=min_cores, threads=threads)
+                         ntasks=ntasks, min_tasks=min_tasks, openmp_threads=openmp_threads)
         self.add_namelist_file(
             'compass.ocean.tests.nonhydro.stratified_seiche',
             'namelist.forward')
