@@ -120,7 +120,7 @@ class TimeSeriesPlotter(object):
                          figsize=(12, 6), color=None, overwrite=True):
 
         fileName = '{}/{}.png'.format(self.outFolder, prefix)
-        if(not overwrite and os.path.exists(fileName)):
+        if not overwrite and os.path.exists(fileName):
             return
 
         nTime = da.sizes['Time']
@@ -479,8 +479,14 @@ class MoviePlotter(object):
         vmin, vmax : float, optional
             The minimum and maximum values for the colorbar
 
-        cmap : Colormap or str
+        cmap : Colormap or str, optional
             A color map to plot
+
+        cmap_set_under : str or None, optional
+            A color for low out-of-range values
+
+        cmap_scale : {'log', 'linear'}, optional
+            Whether the colormap is logarithmic or linear
         """
 
         nTime = self.ds.sizes['Time']
@@ -539,6 +545,9 @@ class MoviePlotter(object):
 
         cmap : Colormap or str, optional
             A color map to plot
+
+        cmap_set_under : str or None, optional
+            A color for low out-of-range values
         """
 
         if vmin is None:
@@ -799,14 +808,11 @@ class MoviePlotter(object):
         if os.path.exists(outFileName):
             return
 
-        nTime = self.Z.shape[0]
-
         z_mask = numpy.ones(self.X.shape)
         z_mask[0:-1, 0:-1] *= numpy.where(self.sectionMask, 1., numpy.nan)
 
         tIndex = 0
         Z = numpy.array(self.Z[tIndex, :, :])
-        ylim = [numpy.amin(Z), 20]
         Z *= z_mask
         X = self.X
 
@@ -875,7 +881,7 @@ def _compute_cell_patches(dsMesh, mask):
     xVertex = dsMesh.xVertex.values
     yVertex = dsMesh.yVertex.values
     for iCell in range(dsMesh.sizes['nCells']):
-        if(not mask[iCell]):
+        if not mask[iCell]:
             continue
         nVert = nVerticesOnCell[iCell]
         vertexIndices = verticesOnCell[iCell, :nVert]

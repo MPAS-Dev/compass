@@ -45,7 +45,7 @@ class SshAdjustment(Step):
         # start with the same namelist settings as the forward run
         self.add_namelist_file('compass.ocean.tests.isomip_plus',
                                'namelist.forward_and_ssh_adjust')
-        if vertical_coordinate=='single_layer':
+        if vertical_coordinate == 'single_layer':
             self.add_namelist_file('compass.ocean.tests.isomip_plus',
                                    'namelist.single_layer.forward_and_ssh_adjust')
         if thin_film_present:

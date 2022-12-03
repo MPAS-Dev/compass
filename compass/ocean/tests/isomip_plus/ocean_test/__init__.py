@@ -26,13 +26,13 @@ class OceanTest(TestCase):
     time_varying_forcing : bool
         Whether the run includes time-varying land-ice forcing
 
-    thin_film_prsent: bool
+    thin_film_present: bool
         Whether a thin film is present under land ice
     """
 
     def __init__(self, test_group, resolution, experiment,
                  vertical_coordinate, time_varying_forcing=False,
-                 time_varying_load='', thin_film_present=False,
+                 time_varying_load=None, thin_film_present=False,
                  tidal_forcing=False):
         """
         Create the test case
@@ -54,8 +54,19 @@ class OceanTest(TestCase):
         time_varying_forcing : bool, optional
             Whether the run includes time-varying land-ice forcing
 
+        time_varying_load : {'increasing', 'decreasing', None}, optional
+            Only relevant if ``time_varying_forcing = True``.  If
+            ``'increasing'``, a doubling of the ice-shelf pressure will be
+            applied over one year.  If ``'decreasing'``, the ice-shelf
+            thickness will be reduced to zero over one year.  Otherwise,
+            the default behavior is that the ice shelf grows from 10% of its
+            full thickness to its full thickness over 1 year.
+
         thin_film_present: bool, optional
             Whether the run includes a thin film below grounded ice
+
+        tidal_forcing: bool, optional
+            Whether the run includes a single-period tidal forcing
         """
         name = experiment
         if tidal_forcing:
@@ -82,7 +93,7 @@ class OceanTest(TestCase):
         else:
             res_folder = f'{resolution}km'
 
-        subdir = '{}/{}/{}'.format(res_folder, vertical_coordinate, name)
+        subdir = f'{res_folder}/{vertical_coordinate}/{name}'
         super().__init__(test_group=test_group, name=name, subdir=subdir)
 
         self.add_step(
@@ -95,8 +106,7 @@ class OceanTest(TestCase):
             SshAdjustment(test_case=self, resolution=resolution,
                           vertical_coordinate=vertical_coordinate,
                           thin_film_present=thin_film_present))
-        if tidal_forcing or time_varying_load == 'increasing' or \
-            time_varying_load == 'decreasing':
+        if tidal_forcing or time_varying_load in ['increasing', 'decreasing']:
             performance_run_duration = '0000-00-01_00:00:00'
         else:
             performance_run_duration = '0000-00-00_01:00:00'
@@ -187,10 +197,10 @@ class OceanTest(TestCase):
             config.set('isomip_plus', 'restore_top_sal', '33.8')
             config.set('isomip_plus', 'restore_bot_sal', '34.55')
 
-        config.set('isomip_plus', 'nx', '{}'.format(nx))
-        config.set('isomip_plus', 'ny', '{}'.format(ny))
-        config.set('isomip_plus', 'dc', '{}'.format(dc))
-        config.set('isomip_plus', 'nx_thin_film', '{}'.format(nx_thin_film))
+        config.set('isomip_plus', 'nx', f'{nx}')
+        config.set('isomip_plus', 'ny', f'{ny}')
+        config.set('isomip_plus', 'dc', f'{dc}')
+        config.set('isomip_plus', 'nx_thin_film', f'{nx_thin_film}')
 
         approx_cells = 30e3 / resolution ** 2
         # round to the nearest 4 cores
@@ -204,8 +214,7 @@ class OceanTest(TestCase):
         config.set('vertical_grid', 'coord_type', vertical_coordinate)
 
         if vertical_coordinate == 'sigma':
-            if time_varying_load == 'increasing' or \
-                time_varying_load == 'decreasing':
+            if time_varying_load in ['increasing', 'decreasing']:
                 config.set('vertical_grid', 'vert_levels', '3')
             else:
                 # default to 10 vertical levels instead of 36

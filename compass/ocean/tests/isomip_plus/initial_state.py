@@ -11,7 +11,6 @@ from mpas_tools.cime.constants import constants
 
 from compass.step import Step
 from compass.ocean.vertical import init_vertical_coord
-from compass.ocean.vertical.grid_1d import generate_1d_grid
 from compass.ocean.iceshelf import compute_land_ice_pressure_and_draft
 from compass.ocean.tests.isomip_plus.geom import process_input_geometry, \
     interpolate_geom, define_thin_film_mask_step1, interpolate_ocean_mask
@@ -93,7 +92,6 @@ class InitialState(Step):
         """
         config = self.config
         logger = self.logger
-        vertical_coordinate = self.vertical_coordinate
         thin_film_present = self.thin_film_present
 
         if self.vertical_coordinate == 'single_layer':
@@ -118,35 +116,37 @@ class InitialState(Step):
 
         # Add xOffset to reduce distance between x=0 and start of GL
         if thin_film_present:
-            nxOffset = nx_thin_film
+            nx_offset = nx_thin_film
             # consider increasing nx
-            dsMesh = make_planar_hex_mesh(nx=nx+nxOffset, ny=ny, dc=dc,
-                                          nonperiodic_x=True, nonperiodic_y=True)
+            ds_mesh = make_planar_hex_mesh(nx=nx+nx_offset, ny=ny, dc=dc,
+                                           nonperiodic_x=True,
+                                           nonperiodic_y=True)
         else:
-            nxOffset = 0
-            dsMesh = make_planar_hex_mesh(nx=nx+2, ny=ny+2, dc=dc,
-                                          nonperiodic_x=False, nonperiodic_y=False)
+            nx_offset = 0
+            ds_mesh = make_planar_hex_mesh(nx=nx+2, ny=ny+2, dc=dc,
+                                           nonperiodic_x=False,
+                                           nonperiodic_y=False)
 
-        translate(mesh=dsMesh, xOffset=-1*nxOffset*dc, yOffset=-2*dc)
-        write_netcdf(dsMesh, 'base_mesh.nc')
+        translate(mesh=ds_mesh, xOffset=-1*nx_offset*dc, yOffset=-2*dc)
+        write_netcdf(ds_mesh, 'base_mesh.nc')
 
-        dsGeom = xarray.open_dataset('input_geometry_processed.nc')
+        ds_geom = xarray.open_dataset('input_geometry_processed.nc')
 
         min_ocean_fraction = config.getfloat('isomip_plus',
                                              'min_ocean_fraction')
 
         if thin_film_present:
-            dsMask = define_thin_film_mask_step1(dsMesh, dsGeom)
+            ds_mask = define_thin_film_mask_step1(ds_mesh, ds_geom)
         else:
-            dsMask = interpolate_ocean_mask(dsMesh, dsGeom, min_ocean_fraction)
-        dsMesh = cull(dsMesh, dsInverse=dsMask, logger=logger)
-        dsMesh.attrs['is_periodic'] = 'NO'
+            ds_mask = interpolate_ocean_mask(ds_mesh, ds_geom, min_ocean_fraction)
+        ds_mesh = cull(ds_mesh, dsInverse=ds_mask, logger=logger)
+        ds_mesh.attrs['is_periodic'] = 'NO'
 
-        dsMesh = convert(dsMesh, graphInfoFileName='culled_graph.info',
-                         logger=logger)
-        write_netcdf(dsMesh, 'culled_mesh.nc')
+        ds_mesh = convert(ds_mesh, graphInfoFileName='culled_graph.info',
+                          logger=logger)
+        write_netcdf(ds_mesh, 'culled_mesh.nc')
 
-        ds = interpolate_geom(dsMesh, dsGeom, min_ocean_fraction, thin_film_present)
+        ds = interpolate_geom(ds_mesh, ds_geom, min_ocean_fraction, thin_film_present)
 
         for var in ['landIceFraction']:
             ds[var] = ds[var].expand_dims(dim='Time', axis=0)
@@ -180,12 +180,8 @@ class InitialState(Step):
               f'{numpy.sum(ds.bottomDepth.values<min_depth.values)} cells '
               f'to achieve minimum column thickness of {min_column_thickness}')
 
-        interfaces = generate_1d_grid(config)
-
         init_vertical_coord(config, ds)
 
-        maxLevelCell = ds['maxLevelCell']
-        ssh = ds['ssh']
         ds['modifyLandIcePressureMask'] = \
             (ds['landIceFraction'] > 0.01).astype(int)
 
@@ -197,12 +193,14 @@ class InitialState(Step):
         init_bot_temp = section.getfloat('init_bot_temp')
         init_top_sal = section.getfloat('init_top_sal')
         init_bot_sal = section.getfloat('init_bot_sal')
-        if self.vertical_coordinate=='single_layer':
+        if self.vertical_coordinate == 'single_layer':
             ds['temperature'] = init_bot_temp*xarray.ones_like(frac)
             ds['salinity'] = init_bot_sal*xarray.ones_like(frac)
         else:
-            ds['temperature'] = (1.0 - frac) * init_top_temp + frac * init_bot_temp
-            ds['salinity'] = (1.0 - frac) * init_top_sal + frac * init_bot_sal
+            ds['temperature'] = \
+                (1.0 - frac) * init_top_temp + frac * init_bot_temp
+            ds['salinity'] = \
+                (1.0 - frac) * init_top_sal + frac * init_bot_sal
 
         # compute coriolis
         coriolis_parameter = section.getfloat('coriolis_parameter')
@@ -273,15 +271,15 @@ class InitialState(Step):
             units='PSU', vmin=33.8, vmax=34.7, cmap='cmo.haline')
 
         # compute restoring
-        dsForcing = xarray.Dataset()
+        ds_forcing = xarray.Dataset()
 
         restore_top_temp = section.getfloat('restore_top_temp')
         restore_bot_temp = section.getfloat('restore_bot_temp')
         restore_top_sal = section.getfloat('restore_top_sal')
         restore_bot_sal = section.getfloat('restore_bot_sal')
-        dsForcing['temperatureInteriorRestoringValue'] = \
+        ds_forcing['temperatureInteriorRestoringValue'] = \
             (1.0 - frac) * restore_top_temp + frac * restore_bot_temp
-        dsForcing['salinityInteriorRestoringValue'] = \
+        ds_forcing['salinityInteriorRestoringValue'] = \
             (1.0 - frac) * restore_top_sal + frac * restore_bot_sal
 
         restore_rate = section.getfloat('restore_rate')
@@ -289,13 +287,13 @@ class InitialState(Step):
         restore_xmax = section.getfloat('restore_xmax')
         frac = numpy.maximum(
             (ds.xCell - restore_xmin)/(restore_xmax-restore_xmin), 0.)
-        frac = frac.broadcast_like(dsForcing.temperatureInteriorRestoringValue)
+        frac = frac.broadcast_like(ds_forcing.temperatureInteriorRestoringValue)
 
         # convert from 1/days to 1/s
-        dsForcing['temperatureInteriorRestoringRate'] = \
+        ds_forcing['temperatureInteriorRestoringRate'] = \
             frac * restore_rate / constants['SHR_CONST_CDAY']
-        dsForcing['salinityInteriorRestoringRate'] = \
-            dsForcing.temperatureInteriorRestoringRate
+        ds_forcing['salinityInteriorRestoringRate'] = \
+            ds_forcing.temperatureInteriorRestoringRate
 
         # compute "evaporation"
         restore_evap_rate = section.getfloat('restore_evap_rate')
@@ -309,20 +307,20 @@ class InitialState(Step):
         sflux_factor = 1.
         # C*m/s to W/m^2
         hflux_factor = 1./(ref_density*constants['SHR_CONST_CPSW'])
-        dsForcing['evaporationFlux'] = mask*ref_density*evap_rate
-        dsForcing['seaIceSalinityFlux'] = \
+        ds_forcing['evaporationFlux'] = mask*ref_density*evap_rate
+        ds_forcing['seaIceSalinityFlux'] = \
             mask*evap_rate*restore_top_sal/sflux_factor
-        dsForcing['seaIceHeatFlux'] = \
+        ds_forcing['seaIceHeatFlux'] = \
             mask*evap_rate*restore_top_temp/hflux_factor
 
-        if self.vertical_coordinate=='single_layer':
-            xMax = numpy.max(ds.xCell.values)
-            dsForcing['tidalInputMask'] = xarray.where(
-                ds.xCell > (xMax - 0.6*self.resolution*1e3), 1.0, 0.0)
+        if self.vertical_coordinate == 'single_layer':
+            x_max = numpy.max(ds.xCell.values)
+            ds_forcing['tidalInputMask'] = xarray.where(
+                ds.xCell > (x_max - 0.6*self.resolution*1e3), 1.0, 0.0)
         else:
-            dsForcing['tidalInputMask'] = xarray.zeros_like(frac)
+            ds_forcing['tidalInputMask'] = xarray.zeros_like(frac)
 
-        write_netcdf(dsForcing, 'init_mode_forcing_data.nc')
+        write_netcdf(ds_forcing, 'init_mode_forcing_data.nc')
 
     def _write_time_varying_forcing(self, ds_init):
         """
@@ -359,7 +357,6 @@ class InitialState(Step):
             'Pressure from the weight of land ice at the ice-ocean interface'
         ds_out['landIceFractionForcing'] = \
             xarray.concat(landIceFraction, 'Time')
-        ds_out.landIceFractionForcing.attrs['units'] = 'unitless'
         ds_out.landIceFractionForcing.attrs['long_name'] = \
             'The fraction of each cell covered by land ice'
         write_netcdf(ds_out, 'land_ice_forcing.nc')
