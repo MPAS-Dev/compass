@@ -12,7 +12,7 @@ from mpas_tools.cime.constants import constants
 from compass.step import Step
 from compass.ocean.vertical import init_vertical_coord
 from compass.ocean.iceshelf import compute_land_ice_pressure_and_draft
-from compass.ocean.tests.isomip_plus.geom import process_input_geometry, \
+from compass.ocean.tests.isomip_plus.geom import \
     interpolate_geom, define_thin_film_mask_step1, interpolate_ocean_mask
 from compass.ocean.tests.isomip_plus.viz.plot import MoviePlotter
 
@@ -70,17 +70,9 @@ class InitialState(Step):
         self.time_varying_forcing = time_varying_forcing
         self.thin_film_present = thin_film_present
 
-        if experiment in ['Ocean0', 'Ocean1']:
-            self.add_input_file(filename='input_geometry.nc',
-                                target='Ocean1_input_geom_v1.01.nc',
-                                database='initial_condition_database')
-        elif experiment == 'Ocean2':
-            self.add_input_file(filename='input_geometry.nc',
-                                target='Ocean2_input_geom_v1.01.nc',
-                                database='initial_condition_database')
-        else:
-            raise ValueError('Unknown ISOMIP+ experiment {}'.format(
-                experiment))
+        self.add_input_file(
+            filename='input_geometry_processed.nc',
+            target='../process_geom/input_geometry_processes.nc')
 
         for file in ['base_mesh.nc', 'culled_mesh.nc', 'culled_graph.info',
                      'initial_state.nc', 'init_mode_forcing_data.nc']:
@@ -102,17 +94,7 @@ class InitialState(Step):
         nx_thin_film = section.getint('nx_thin_film')
         ny = section.getint('ny')
         dc = section.getfloat('dc')
-        filter_sigma = section.getfloat('topo_smoothing')*self.resolution
-        min_ice_thickness = section.getfloat('min_ice_thickness')
         min_land_ice_fraction = section.getfloat('min_land_ice_fraction')
-        draft_scaling = section.getfloat('draft_scaling')
-
-        process_input_geometry('input_geometry.nc',
-                               'input_geometry_processed.nc',
-                               filterSigma=filter_sigma,
-                               minIceThickness=min_ice_thickness,
-                               scale=draft_scaling,
-                               thin_film_present=thin_film_present)
 
         # Add xOffset to reduce distance between x=0 and start of GL
         if thin_film_present:
