@@ -1,6 +1,5 @@
 import xarray
 import os
-import numpy
 
 from mpas_tools.io import write_netcdf
 
@@ -72,8 +71,7 @@ class Viz(Step):
         out_dir = '.'
 
         dsMesh = xarray.open_dataset(f'{sim_dir}/init.nc')
-        dsOut = xarray.open_dataset(f'{sim_dir}/output.nc'.format(sim_dir))
-        dsForcing = xarray.open_dataset(f'{sim_dir}/forcing_data_init.nc')
+        dsOut = xarray.open_dataset(f'{sim_dir}/output.nc')
 
         plotter = MoviePlotter(inFolder=sim_dir,
                                streamfunctionFolder=streamfunction_dir,

@@ -546,7 +546,7 @@ def _compute_region_boundary_edges(dsMesh, cellMask):
     # convert from boolean mask to indices
     edgeIndices = numpy.nonzero(edgeMask)[0]
 
-    if(len(edgeIndices) == 0):
+    if len(edgeIndices) == 0:
         return numpy.array([]), numpy.array([])
     else:
         # according to the mesh spec, normals point from cell 0 to cell 1 on a

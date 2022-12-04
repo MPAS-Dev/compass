@@ -90,7 +90,7 @@ def process_input_geometry(inFileName, outFileName, filterSigma,
     surf[mask] = 0.
     draft[mask] = 0.
     floatingMask[mask] = 0.
-    thinFilmMask = bed>=0
+    thinFilmMask = bed >= 0
     if thin_film_present:
         smoothMask = numpy.logical_and(groundedMask, thinFilmMask)
     else:
@@ -104,11 +104,11 @@ def process_input_geometry(inFileName, outFileName, filterSigma,
     outFile.createDimension('x', nx)
     outFile.createDimension('y', ny)
 
-    outVar = outFile.createVariable('x', 'f8', ('x'))
+    outVar = outFile.createVariable('x', 'f8', ('x',))
     inVar = inFile.variables['x']
     outVar[:] = outX
     outVar.setncatts({k: inVar.getncattr(k) for k in inVar.ncattrs()})
-    outVar = outFile.createVariable('y', 'f8', ('y'))
+    outVar = outFile.createVariable('y', 'f8', ('y',))
     inVar = inFile.variables['y']
     outVar[:] = outY
     outVar.setncatts({k: inVar.getncattr(k) for k in inVar.ncattrs()})

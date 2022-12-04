@@ -120,7 +120,7 @@ class TimeSeriesPlotter(object):
                          figsize=(12, 6), color=None, overwrite=True):
 
         fileName = '{}/{}.png'.format(self.outFolder, prefix)
-        if(not overwrite and os.path.exists(fileName)):
+        if not overwrite and os.path.exists(fileName):
             return
 
         nTime = da.sizes['Time']
@@ -479,8 +479,14 @@ class MoviePlotter(object):
         vmin, vmax : float, optional
             The minimum and maximum values for the colorbar
 
-        cmap : Colormap or str
+        cmap : Colormap or str, optional
             A color map to plot
+
+        cmap_set_under : str or None, optional
+            A color for low out-of-range values
+
+        cmap_scale : {'log', 'linear'}, optional
+            Whether the colormap is logarithmic or linear
         """
 
         nTime = self.ds.sizes['Time']
@@ -539,6 +545,9 @@ class MoviePlotter(object):
 
         cmap : Colormap or str, optional
             A color map to plot
+
+        cmap_set_under : str or None, optional
+            A color for low out-of-range values
         """
 
         if vmin is None:
@@ -677,13 +686,15 @@ class MoviePlotter(object):
             plt.plot(1e-3 * X[0, :], self.zBotSection, 'g')
 
             ax.autoscale(tight=True)
+            x1, x2, y1, y2 = 420, 470, -650, -520
+            xlim = [min(x1, 1e-3*numpy.amin(X)), 1e-3*numpy.amax(X)]
+            plt.xlim(xlim)
             plt.ylim(ylim)
             axins = ax.inset_axes([0.01, 0.6, 0.3, 0.39])
             for z_index in range(1, X.shape[0]):
                 axins.plot(1e-3 * X[z_index, :], Z[z_index, :], 'k')
             axins.plot(1e-3 * X[0, :], Z[0, :], 'b')
             axins.plot(1e-3 * X[0, :], self.zBotSection, 'g')
-            x1, x2, y1, y2 = 420, 470, -650, -520
             axins.set_xlim(x1, x2)
             axins.set_ylim(y1, y2)
             axins.set_xticklabels([])
@@ -799,14 +810,11 @@ class MoviePlotter(object):
         if os.path.exists(outFileName):
             return
 
-        nTime = self.Z.shape[0]
-
         z_mask = numpy.ones(self.X.shape)
         z_mask[0:-1, 0:-1] *= numpy.where(self.sectionMask, 1., numpy.nan)
 
         tIndex = 0
         Z = numpy.array(self.Z[tIndex, :, :])
-        ylim = [numpy.amin(Z), 20]
         Z *= z_mask
         X = self.X
 
@@ -875,7 +883,7 @@ def _compute_cell_patches(dsMesh, mask):
     xVertex = dsMesh.xVertex.values
     yVertex = dsMesh.yVertex.values
     for iCell in range(dsMesh.sizes['nCells']):
-        if(not mask[iCell]):
+        if not mask[iCell]:
             continue
         nVert = nVerticesOnCell[iCell]
         vertexIndices = verticesOnCell[iCell, :nVert]
