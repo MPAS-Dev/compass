@@ -42,7 +42,7 @@ ice-shelf topography.
 The function :py:func:`compass.ocean.tests.isomip_plus.geom.interpolate_ocean_mask()`
 interpolates the ocean mask from the BISICLES grid of the input geometry to
 the MPAS-Ocean mesh.  The mask can later be used to cull land cells from the
-MPAS mesh before interpolating other variables to the resulting culled mesh. 
+MPAS mesh before interpolating other variables to the resulting culled mesh.
 Optionally, a thin film under the ice sheet can be used and grounded ice is
 not culled.
 
@@ -169,14 +169,14 @@ out the results in the format expected by MISOMIP.
     There is currently an issue with fill values not being handled correctly
     that needs to be resolved before this step is fully useful.
 
-.. _dev_ocean_isomip_plus_ocean_test:
+.. _dev_ocean_isomip_plus_test:
 
-ocean_test
-----------
+isomip_plus_test
+----------------
 
 The same class,
-:py:class:`compass.ocean.tests.isomip_plus.ocean_test.OceanTest`, defines
-the Ocean0, Ocean1 and Ocean2 test cases at various resolutions and with
+:py:class:`compass.ocean.tests.isomip_plus.isomip_plus_test.IsomipPlusTest`,
+defines the Ocean0, Ocean1 and Ocean2 test cases at various resolutions and with
 various vertical coordinates.  By default, these test cases only run 3 of the
 7 available steps: ``initial_state`` to create and mesh and initial condition,
 ``ssh_adjustment`` to perform 10 1-hour simulations used to balance the

@@ -8,7 +8,7 @@ from compass.ocean.tests.isomip_plus.misomip import Misomip
 from compass.validate import compare_variables
 
 
-class OceanTest(TestCase):
+class IsomipPlusTest(TestCase):
     """
     An ISOMIP+ test case
 
