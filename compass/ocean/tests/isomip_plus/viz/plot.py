@@ -686,13 +686,15 @@ class MoviePlotter(object):
             plt.plot(1e-3 * X[0, :], self.zBotSection, 'g')
 
             ax.autoscale(tight=True)
+            x1, x2, y1, y2 = 420, 470, -650, -520
+            xlim = [min(x1, 1e-3*numpy.amin(X)), 1e-3*numpy.amax(X)]
+            plt.xlim(xlim)
             plt.ylim(ylim)
             axins = ax.inset_axes([0.01, 0.6, 0.3, 0.39])
             for z_index in range(1, X.shape[0]):
                 axins.plot(1e-3 * X[z_index, :], Z[z_index, :], 'k')
             axins.plot(1e-3 * X[0, :], Z[0, :], 'b')
             axins.plot(1e-3 * X[0, :], self.zBotSection, 'g')
-            x1, x2, y1, y2 = 420, 470, -650, -520
             axins.set_xlim(x1, x2)
             axins.set_ylim(y1, y2)
             axins.set_xticklabels([])

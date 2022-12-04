@@ -168,7 +168,8 @@ class InitialState(Step):
 
         section = config['isomip_plus']
 
-        # Deepen the bottom depth to maintain the minimum water-column thickness
+        # Deepen the bottom depth to maintain the minimum water-column
+        # thickness
         min_column_thickness = section.getfloat('min_column_thickness')
         min_layer_thickness = section.getfloat('min_layer_thickness')
         min_levels = section.getint('minimum_levels')
@@ -232,10 +233,12 @@ class InitialState(Step):
                                sectionY=section_y, dsMesh=ds, ds=ds,
                                showProgress=show_progress)
 
-        ds['landIcePressure'] = ds['landIcePressure'].expand_dims(dim='Time', axis=0)
+        ds['landIcePressure'] = \
+            ds['landIcePressure'].expand_dims(dim='Time', axis=0)
         ds['bottomDepth'] = ds['bottomDepth'].expand_dims(dim='Time', axis=0)
         ds['totalColThickness'] = ds['ssh']
-        ds['totalColThickness'].values = numpy.sum(ds['layerThickness'].values, axis=2)
+        ds['totalColThickness'].values = \
+            ds['layerThickness'].sum(dim='nVertLevels')
         plotter.plot_horiz_series(ds.landIcePressure,
                                   'landIcePressure', 'landIcePressure',
                                   True)
@@ -247,9 +250,9 @@ class InitialState(Step):
                                   vmin=min_column_thickness+1e-10, vmax=700,
                                   cmap_set_under='r', cmap_scale='log')
         plotter.plot_horiz_series(ds.totalColThickness,
-                                  'totalColThickness', 'totalColThickness', True,
-                                  vmin=min_column_thickness+1e-10, vmax=700,
-                                  cmap_set_under='r')
+                                  'totalColThickness', 'totalColThickness',
+                                  True, vmin=min_column_thickness+1e-10,
+                                  vmax=700, cmap_set_under='r')
         plotter.plot_layer_interfaces()
 
         plotter.plot_3d_field_top_bot_section(
@@ -287,7 +290,8 @@ class InitialState(Step):
         restore_xmax = section.getfloat('restore_xmax')
         frac = numpy.maximum(
             (ds.xCell - restore_xmin)/(restore_xmax-restore_xmin), 0.)
-        frac = frac.broadcast_like(ds_forcing.temperatureInteriorRestoringValue)
+        frac = frac.broadcast_like(
+            ds_forcing.temperatureInteriorRestoringValue)
 
         # convert from 1/days to 1/s
         ds_forcing['temperatureInteriorRestoringRate'] = \
