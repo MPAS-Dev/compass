@@ -108,7 +108,7 @@
   <h1>Source code for compass.ocean.tests.isomip_plus</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">compass.testgroup</span> <span class="kn">import</span> <span class="n">TestGroup</span>
 
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.isomip_plus.ocean_test</span> <span class="kn">import</span> <span class="n">OceanTest</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.isomip_plus.isomip_plus_test</span> <span class="kn">import</span> <span class="n">IsomipPlusTest</span>
 
 
 <div class="viewcode-block" id="IsomipPlus"><a class="viewcode-back" href="../../../../developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.IsomipPlus.html#compass.ocean.tests.isomip_plus.IsomipPlus">[docs]</a><span class="k">class</span> <span class="nc">IsomipPlus</span><span class="p">(</span><span class="n">TestGroup</span><span class="p">):</span>
@@ -126,56 +126,64 @@
             <span class="k">for</span> <span class="n">experiment</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Ocean0&#39;</span><span class="p">,</span> <span class="s1">&#39;Ocean1&#39;</span><span class="p">,</span> <span class="s1">&#39;Ocean2&#39;</span><span class="p">]:</span>
                 <span class="k">for</span> <span class="n">vertical_coordinate</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;z-star&#39;</span><span class="p">]:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
-                        <span class="n">OceanTest</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
-                                  <span class="n">experiment</span><span class="o">=</span><span class="n">experiment</span><span class="p">,</span>
-                                  <span class="n">vertical_coordinate</span><span class="o">=</span><span class="n">vertical_coordinate</span><span class="p">))</span>
+                        <span class="n">IsomipPlusTest</span><span class="p">(</span>
+                            <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
+                            <span class="n">experiment</span><span class="o">=</span><span class="n">experiment</span><span class="p">,</span>
+                            <span class="n">vertical_coordinate</span><span class="o">=</span><span class="n">vertical_coordinate</span><span class="p">))</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
-                <span class="n">OceanTest</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
-                          <span class="n">experiment</span><span class="o">=</span><span class="s1">&#39;Ocean0&#39;</span><span class="p">,</span>
-                          <span class="n">vertical_coordinate</span><span class="o">=</span><span class="s1">&#39;sigma&#39;</span><span class="p">))</span>
+                <span class="n">IsomipPlusTest</span><span class="p">(</span>
+                    <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
+                    <span class="n">experiment</span><span class="o">=</span><span class="s1">&#39;Ocean0&#39;</span><span class="p">,</span>
+                    <span class="n">vertical_coordinate</span><span class="o">=</span><span class="s1">&#39;sigma&#39;</span><span class="p">))</span>
 
             <span class="k">for</span> <span class="n">experiment</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Ocean0&#39;</span><span class="p">]:</span>
                 <span class="k">for</span> <span class="n">vertical_coordinate</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;z-star&#39;</span><span class="p">]:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
-                        <span class="n">OceanTest</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
-                                  <span class="n">experiment</span><span class="o">=</span><span class="n">experiment</span><span class="p">,</span>
-                                  <span class="n">vertical_coordinate</span><span class="o">=</span><span class="n">vertical_coordinate</span><span class="p">,</span>
-                                  <span class="n">time_varying_forcing</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+                        <span class="n">IsomipPlusTest</span><span class="p">(</span>
+                            <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
+                            <span class="n">experiment</span><span class="o">=</span><span class="n">experiment</span><span class="p">,</span>
+                            <span class="n">vertical_coordinate</span><span class="o">=</span><span class="n">vertical_coordinate</span><span class="p">,</span>
+                            <span class="n">time_varying_forcing</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
                 <span class="k">for</span> <span class="n">vertical_coordinate</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;z-star&#39;</span><span class="p">,</span> <span class="s1">&#39;sigma&#39;</span><span class="p">,</span> <span class="s1">&#39;single_layer&#39;</span><span class="p">]:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
-                        <span class="n">OceanTest</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
-                                  <span class="n">experiment</span><span class="o">=</span><span class="n">experiment</span><span class="p">,</span>
-                                  <span class="n">vertical_coordinate</span><span class="o">=</span><span class="n">vertical_coordinate</span><span class="p">,</span>
-                                  <span class="n">thin_film_present</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+                        <span class="n">IsomipPlusTest</span><span class="p">(</span>
+                            <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
+                            <span class="n">experiment</span><span class="o">=</span><span class="n">experiment</span><span class="p">,</span>
+                            <span class="n">vertical_coordinate</span><span class="o">=</span><span class="n">vertical_coordinate</span><span class="p">,</span>
+                            <span class="n">thin_film_present</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
-                        <span class="n">OceanTest</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
-                                  <span class="n">experiment</span><span class="o">=</span><span class="n">experiment</span><span class="p">,</span>
-                                  <span class="n">vertical_coordinate</span><span class="o">=</span><span class="n">vertical_coordinate</span><span class="p">,</span>
-                                  <span class="n">time_varying_forcing</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                                  <span class="n">thin_film_present</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+                        <span class="n">IsomipPlusTest</span><span class="p">(</span>
+                            <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
+                            <span class="n">experiment</span><span class="o">=</span><span class="n">experiment</span><span class="p">,</span>
+                            <span class="n">vertical_coordinate</span><span class="o">=</span><span class="n">vertical_coordinate</span><span class="p">,</span>
+                            <span class="n">time_varying_forcing</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                            <span class="n">thin_film_present</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
                 <span class="k">for</span> <span class="n">vertical_coordinate</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;sigma&#39;</span><span class="p">,</span> <span class="s1">&#39;single_layer&#39;</span><span class="p">]:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
-                        <span class="n">OceanTest</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
-                                  <span class="n">experiment</span><span class="o">=</span><span class="n">experiment</span><span class="p">,</span>
-                                  <span class="n">vertical_coordinate</span><span class="o">=</span><span class="n">vertical_coordinate</span><span class="p">,</span>
-                                  <span class="n">time_varying_forcing</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                                  <span class="n">time_varying_load</span><span class="o">=</span><span class="s1">&#39;increasing&#39;</span><span class="p">,</span>
-                                  <span class="n">thin_film_present</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+                        <span class="n">IsomipPlusTest</span><span class="p">(</span>
+                            <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
+                            <span class="n">experiment</span><span class="o">=</span><span class="n">experiment</span><span class="p">,</span>
+                            <span class="n">vertical_coordinate</span><span class="o">=</span><span class="n">vertical_coordinate</span><span class="p">,</span>
+                            <span class="n">time_varying_forcing</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                            <span class="n">time_varying_load</span><span class="o">=</span><span class="s1">&#39;increasing&#39;</span><span class="p">,</span>
+                            <span class="n">thin_film_present</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
-                        <span class="n">OceanTest</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
-                                  <span class="n">experiment</span><span class="o">=</span><span class="n">experiment</span><span class="p">,</span>
-                                  <span class="n">vertical_coordinate</span><span class="o">=</span><span class="n">vertical_coordinate</span><span class="p">,</span>
-                                  <span class="n">time_varying_forcing</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                                  <span class="n">time_varying_load</span><span class="o">=</span><span class="s1">&#39;decreasing&#39;</span><span class="p">,</span>
-                                  <span class="n">thin_film_present</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+                        <span class="n">IsomipPlusTest</span><span class="p">(</span>
+                            <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
+                            <span class="n">experiment</span><span class="o">=</span><span class="n">experiment</span><span class="p">,</span>
+                            <span class="n">vertical_coordinate</span><span class="o">=</span><span class="n">vertical_coordinate</span><span class="p">,</span>
+                            <span class="n">time_varying_forcing</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                            <span class="n">time_varying_load</span><span class="o">=</span><span class="s1">&#39;decreasing&#39;</span><span class="p">,</span>
+                            <span class="n">thin_film_present</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
                 <span class="k">for</span> <span class="n">vertical_coordinate</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;single_layer&#39;</span><span class="p">]:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
-                        <span class="n">OceanTest</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
-                                  <span class="n">experiment</span><span class="o">=</span><span class="n">experiment</span><span class="p">,</span>
-                                  <span class="n">vertical_coordinate</span><span class="o">=</span><span class="n">vertical_coordinate</span><span class="p">,</span>
-                                  <span class="n">tidal_forcing</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                                  <span class="n">thin_film_present</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span></div></div>
+                        <span class="n">IsomipPlusTest</span><span class="p">(</span>
+                            <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
+                            <span class="n">experiment</span><span class="o">=</span><span class="n">experiment</span><span class="p">,</span>
+                            <span class="n">vertical_coordinate</span><span class="o">=</span><span class="n">vertical_coordinate</span><span class="p">,</span>
+                            <span class="n">tidal_forcing</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                            <span class="n">thin_film_present</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span></div></div>
 </pre></div>
 
            </div>

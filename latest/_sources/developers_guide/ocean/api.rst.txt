@@ -403,9 +403,9 @@ isomip_plus
 
    IsomipPlus
 
-   ocean_test.OceanTest
-   ocean_test.OceanTest.configure
-   ocean_test.OceanTest.run
+   isomip_plus_test.IsomipPlusTest
+   isomip_plus_test.IsomipPlusTest.configure
+   isomip_plus_test.IsomipPlusTest.run
 
    viz.Viz
    viz.Viz.run
