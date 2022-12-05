@@ -237,7 +237,7 @@ class MoviePlotter(object):
         self.dsMesh = dsMesh
         self.ds = ds
 
-        landIceMask = self.dsMesh.landIceFraction.isel(Time=0) > 0.01
+        landIceMask = self.dsMesh.landIceMask.isel(Time=0) > 0
         self.oceanMask = self.dsMesh.maxLevelCell-1 >= 0
         self.cavityMask = numpy.logical_and(self.oceanMask, landIceMask)
 
