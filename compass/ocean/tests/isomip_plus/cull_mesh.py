@@ -6,6 +6,7 @@ from mpas_tools.mesh.conversion import convert, cull
 from compass.step import Step
 from compass.ocean.tests.isomip_plus.geom import \
     define_thin_film_mask_step1, interpolate_ocean_mask
+from compass.ocean.tests.isomip_plus.spherical_mesh import add_isomip_plus_xy
 
 
 class CullMesh(Step):
@@ -77,4 +78,13 @@ class CullMesh(Step):
 
         ds_mesh = convert(ds_mesh, graphInfoFileName='culled_graph.info',
                           logger=logger)
+        if self.planar:
+            ds_mesh['xIsomipCell'] = ds_mesh.xCell
+            ds_mesh['yIsomipCell'] = ds_mesh.yCell
+            ds_mesh['xIsomipVertex'] = ds_mesh.xVertex
+            ds_mesh['yIsomipVertex'] = ds_mesh.yVertex
+        else:
+            lat0 = config.getfloat('spherical_mesh', 'lat0')
+            add_isomip_plus_xy(ds_mesh, lat0)
+
         write_netcdf(ds_mesh, 'culled_mesh.nc')

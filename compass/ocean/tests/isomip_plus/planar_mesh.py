@@ -58,4 +58,9 @@ class PlanarMesh(Step):
 
         translate(mesh=ds_mesh, xOffset=-1*nx_offset*dc, yOffset=-2*dc)
 
+        ds_mesh['xIsomipCell'] = ds_mesh.xCell
+        ds_mesh['yIsomipCell'] = ds_mesh.yCell
+        ds_mesh['xIsomipVertex'] = ds_mesh.xVertex
+        ds_mesh['yIsomipVertex'] = ds_mesh.yVertex
+
         write_netcdf(ds_mesh, 'base_mesh.nc')

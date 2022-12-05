@@ -220,8 +220,8 @@ def _compute_misomip_interp_coeffs(in_dir, show_progress):
     inVars = inFile.variables
     nEdgesOnCell = inVars['nEdgesOnCell'][:]
     verticesOnCell = inVars['verticesOnCell'][:, :] - 1
-    xVertex = inVars['xVertex'][:]
-    yVertex = inVars['yVertex'][:]
+    xVertex = inVars['xIsomipVertex'][:]
+    yVertex = inVars['yIsomipVertex'][:]
 
     inFile.close()
     if(not os.path.exists(interpWeightsFileName)):

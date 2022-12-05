@@ -260,7 +260,7 @@ class InitialState(Step):
         restore_xmin = section.getfloat('restore_xmin')
         restore_xmax = section.getfloat('restore_xmax')
         frac = np.maximum(
-            (ds.xCell - restore_xmin)/(restore_xmax-restore_xmin), 0.)
+            (ds.xIsomipCell - restore_xmin)/(restore_xmax-restore_xmin), 0.)
         frac = frac.broadcast_like(
             ds_forcing.temperatureInteriorRestoringValue)
 
@@ -273,8 +273,8 @@ class InitialState(Step):
         # compute "evaporation"
         restore_evap_rate = section.getfloat('restore_evap_rate')
 
-        mask = np.logical_and(ds.xCell >= restore_xmin,
-                              ds.xCell <= restore_xmax)
+        mask = np.logical_and(ds.xIsomipCell >= restore_xmin,
+                              ds.xIsomipCell <= restore_xmax)
         mask = mask.expand_dims(dim='Time', axis=0)
         # convert to m/s, negative for evaporation rather than precipitation
         evap_rate = -restore_evap_rate/(constants['SHR_CONST_CDAY']*365)
@@ -289,9 +289,9 @@ class InitialState(Step):
             mask*evap_rate*restore_top_temp/hflux_factor
 
         if self.vertical_coordinate == 'single_layer':
-            x_max = np.max(ds.xCell.values)
+            x_max = np.max(ds.xIsomipCell.values)
             ds_forcing['tidalInputMask'] = xr.where(
-                ds.xCell > (x_max - 0.6*self.resolution*1e3), 1.0, 0.0)
+                ds.xIsomipCell > (x_max - 0.6*self.resolution*1e3), 1.0, 0.0)
         else:
             ds_forcing['tidalInputMask'] = xr.zeros_like(frac)
 

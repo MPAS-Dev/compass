@@ -839,7 +839,8 @@ class MoviePlotter(object):
         plt.close()
 
     def _compute_section_x_z(self):
-        x = _interp_extrap_corner(self.dsMesh.xCell[self.sectionCellIndices])
+        x = _interp_extrap_corner(
+            self.dsMesh.xIsomipCell[self.sectionCellIndices])
         nx = len(x)
         nVertLevels = self.dsMesh.sizes['nVertLevels']
         nTime = self.ds.sizes['Time']
@@ -881,8 +882,8 @@ def _compute_cell_patches(dsMesh, mask):
     patches = []
     nVerticesOnCell = dsMesh.nEdgesOnCell.values
     verticesOnCell = dsMesh.verticesOnCell.values - 1
-    xVertex = dsMesh.xVertex.values
-    yVertex = dsMesh.yVertex.values
+    xVertex = dsMesh.xIsomipVertex.values
+    yVertex = dsMesh.yIsomipVertex.values
     for iCell in range(dsMesh.sizes['nCells']):
         if not mask[iCell]:
             continue
@@ -901,8 +902,8 @@ def _compute_cell_patches(dsMesh, mask):
 
 
 def _compute_section_cell_indices(y, dsMesh):
-    xCell = dsMesh.xCell.values
-    yCell = dsMesh.yCell.values
+    xCell = dsMesh.xIsomipCell.values
+    yCell = dsMesh.yIsomipCell.values
     xMin = numpy.amin(xCell)
     xMax = numpy.amax(xCell)
     xs = numpy.linspace(xMin, xMax, 10000)

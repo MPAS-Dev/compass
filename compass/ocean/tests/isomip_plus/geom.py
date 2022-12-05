@@ -178,8 +178,8 @@ def interpolate_geom(ds_mesh, ds_geom, min_ocean_fraction, thin_film_present):
 def _get_geom_fields(ds_geom, ds_mesh):
     x = ds_geom.x.values
     y = ds_geom.y.values
-    x_cell = ds_mesh.xCell.values
-    y_cell = ds_mesh.yCell.values
+    x_cell = ds_mesh.xIsomipCell.values
+    y_cell = ds_mesh.yIsomipCell.values
 
     ocean_fraction = - ds_geom['landFraction'] + 1.0
 
