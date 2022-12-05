@@ -112,7 +112,7 @@ class Forward(Step):
         self.add_input_file(filename='init.nc',
                             target='../ssh_adjustment/adjusted_init.nc')
         self.add_input_file(filename='graph.info',
-                            target='../initial_state/culled_graph.info')
+                            target='../cull_mesh/culled_graph.info')
         self.add_input_file(
             filename='forcing_data_init.nc',
             target='../initial_state/init_mode_forcing_data.nc')

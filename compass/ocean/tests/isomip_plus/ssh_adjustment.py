@@ -70,7 +70,7 @@ class SshAdjustment(Step):
                             target='../initial_state/initial_state.nc')
 
         self.add_input_file(filename='graph.info',
-                            target='../initial_state/culled_graph.info')
+                            target='../cull_mesh/culled_graph.info')
 
         self.add_model_as_input()
 

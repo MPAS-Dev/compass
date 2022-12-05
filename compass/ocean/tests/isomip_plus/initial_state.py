@@ -72,7 +72,7 @@ class InitialState(Step):
 
         self.add_input_file(
             filename='culled_mesh.nc',
-            target='../planar_mesh/culled_mesh.nc')
+            target='../cull_mesh/culled_mesh.nc')
 
         for file in ['initial_state.nc', 'init_mode_forcing_data.nc']:
             self.add_output_file(file)
@@ -90,7 +90,8 @@ class InitialState(Step):
         thin_film_present = self.thin_film_present
 
         if self.vertical_coordinate == 'single_layer':
-            config.set('vertical_grid', 'vert_levels', '1', comment='Number of vertical levels')
+            config.set('vertical_grid', 'vert_levels', '1',
+                       comment='Number of vertical levels')
             config.set('vertical_grid', 'coord_type', 'z-level')
         section = config['isomip_plus']
         min_land_ice_fraction = section.getfloat('min_land_ice_fraction')
