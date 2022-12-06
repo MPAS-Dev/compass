@@ -780,8 +780,8 @@ class MoviePlotter(object):
         if cmap_set_under is not None:
             current_cmap = localPatches.get_cmap()
             current_cmap.set_under(cmap_set_under)
-        localPatches.set_clim(vmin=vmin, vmax=vmax)
         localPatches.set_edgecolor('face')
+        localPatches.set_clim(vmin=vmin, vmax=vmax)
 
         if cmap_scale == 'log':
             localPatches.set_norm(LogNorm(vmin=max(1e-10, vmin),
