@@ -1,4 +1,5 @@
 from compass.testcase import TestCase
+from compass.ocean.tests.overflow.initial_state import InitialState
 
 
 class Default(TestCase):
@@ -16,3 +17,4 @@ class Default(TestCase):
             The test group that this test case belongs to
         """
         super().__init__(test_group=test_group, name='default')
+        self.add_step(InitialState(test_case=self))
