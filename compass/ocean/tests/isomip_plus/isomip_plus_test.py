@@ -8,6 +8,7 @@ from compass.ocean.tests.isomip_plus.ssh_adjustment import SshAdjustment
 from compass.ocean.tests.isomip_plus.forward import Forward
 from compass.ocean.tests.isomip_plus.streamfunction import Streamfunction
 from compass.ocean.tests.isomip_plus.viz import Viz
+from compass.ocean.tests.isomip_plus.files_for_e3sm import FilesForE3sm
 from compass.ocean.tests.isomip_plus.misomip import Misomip
 from compass.validate import compare_variables
 
@@ -172,6 +173,12 @@ class IsomipPlusTest(TestCase):
             Viz(test_case=self, resolution=resolution, experiment=experiment,
                 tidal_forcing=tidal_forcing),
             run_by_default=False)
+
+        if not planar:
+            self.add_step(
+                FilesForE3sm(test_case=self, resolution=resolution,
+                             experiment=experiment),
+                run_by_default=False)
 
         if resolution in [2., 5.]:
             self.add_step(
