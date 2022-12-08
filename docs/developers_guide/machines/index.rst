@@ -47,13 +47,13 @@ the MPAS model.
 |              |            +-----------+-------------------+
 |              |            | openmpi   | ifort             |
 |              +------------+-----------+-------------------+
-|              | gnu        | mvapich   | gfortran          |
+|              | gnu        | openmpi   | gfortran          |
 |              |            +-----------+-------------------+
-|              |            | openmpi   | gfortran          |
+|              |            | mvapich   | gfortran          |
 +--------------+------------+-----------+-------------------+
-| chrysalis    | intel      | impi      | intel-mpi         |
+| chrysalis    | intel      | openmpi   | ifort             |
 |              |            +-----------+-------------------+
-|              |            | openmpi   | ifort             |
+|              |            | impi      | intel-mpi         |
 |              +------------+-----------+-------------------+
 |              | gnu        | openmpi   | gfortran          |
 +--------------+------------+-----------+-------------------+
