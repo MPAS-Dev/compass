@@ -72,7 +72,7 @@ class SphericalBaseStep(Step):
         cell_width_filename = section.get('cell_width_filename')
         da.to_netcdf(cell_width_filename)
 
-        if section.getboolean('plot_cell_widths'):
+        if section.getboolean('plot_cell_width'):
             self._plot_cell_width(cell_width)
 
     def setup(self):

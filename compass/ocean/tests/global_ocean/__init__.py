@@ -180,8 +180,8 @@ class GlobalOcean(TestGroup):
                     test_group=self, mesh=mesh, init=init,
                     dynamic_adjustment=dynamic_adjustment))
 
-        # SOwISC12to60: just the version with cavities for now
-        for mesh_name in ['SOwISC12to60']:
+        # SO12to60: with and without cavities
+        for mesh_name in ['SO12to60', 'SOwISC12to60']:
             mesh = Mesh(test_group=self, mesh_name=mesh_name)
             self.add_test_case(mesh)
 
