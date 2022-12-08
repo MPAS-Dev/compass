@@ -198,7 +198,10 @@ def get_env_setup(args, config, machine, compiler, mpi, env_type, source_path,
         activ_path = os.path.abspath(os.path.join(conda_base, '..'))
 
     if args.with_albany:
-        check_albany_supported(machine, compiler, mpi, source_path)
+        check_supported('albany', machine, compiler, mpi, source_path)
+
+    if args.with_petsc:
+        check_supported('petsc', machine, compiler, mpi, source_path)
 
     if env_type == 'dev':
         spack_env = f'dev_compass_{compass_version}{env_suffix}'
@@ -722,8 +725,8 @@ def parse_unsupported(machine, source_path):
     return unsupported
 
 
-def check_albany_supported(machine, compiler, mpi, source_path):
-    filename = os.path.join(source_path, 'conda', 'albany_supported.txt')
+def check_supported(library, machine, compiler, mpi, source_path):
+    filename = os.path.join(source_path, 'conda', f'{library}_supported.txt')
     with open(filename, 'r') as f:
         content = f.readlines()
     content = [line.strip() for line in content if not
@@ -733,13 +736,13 @@ def check_albany_supported(machine, compiler, mpi, source_path):
             continue
         supported = [part.strip() for part in line.split(',')]
         if len(supported) != 3:
-            raise ValueError(f'Bad line in "albany_supported.txt" {line}')
+            raise ValueError(f'Bad line in "{library}_supported.txt" {line}')
         if machine == supported[0] and compiler == supported[1] and \
                 mpi == supported[2]:
             return
 
-    raise ValueError(f'{compiler} with {mpi} is not supported with Albany on '
-                     f'{machine}')
+    raise ValueError(f'{compiler} with {mpi} is not supported with {library} '
+                     f'on {machine}')
 
 
 def main():

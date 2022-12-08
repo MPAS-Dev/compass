@@ -37,7 +37,7 @@ test suite:
     compiler = intel
 
     # the system MPI library to use for intel compiler
-    mpi_intel = impi
+    mpi_intel = openmpi
 
     # the system MPI library to use for gnu compiler
     mpi_gnu = openmpi
@@ -79,13 +79,13 @@ variables:
 
 .. code-block:: bash
 
-    source /lcrc/soft/climate/compass/chrysalis/load_latest_compass_intel_impi.sh
+    source /lcrc/soft/climate/compass/chrysalis/load_latest_compass_intel_openmpi.sh
 
 To build the MPAS model with
 
 .. code-block:: bash
 
-    make [DEBUG=true] [OPENMP=true] intel-mpi
+    make [DEBUG=true] [OPENMP=true] ifort
 
 
 Gnu on Chrysalis

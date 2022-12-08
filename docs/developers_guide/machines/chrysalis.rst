@@ -11,13 +11,13 @@ been set up properly (see :ref:`dev_conda_env`), you should be able to source:
 
 .. code-block:: bash
 
-    source load_dev_compass_1.0.0_chrysalis_intel_impi.sh
+    source load_dev_compass_1.0.0_chrysalis_intel_openmpi.sh
 
 Then, you can build the MPAS model with
 
 .. code-block:: bash
 
-    make [DEBUG=true] [OPENMP=true] intel-mpi
+    make [DEBUG=true] [OPENMP=true] ifort
 
 gnu
 ---

@@ -44,7 +44,7 @@ or when you choose ``-m anvil`` when setting up test cases or a test suite:
     mpi_intel = impi
 
     # the system MPI library to use for gnu compiler
-    mpi_gnu = mvapich
+    mpi_gnu = openmpi
 
     # the base path for spack environments used by compass
     spack = /lcrc/soft/climate/compass/anvil/spack
