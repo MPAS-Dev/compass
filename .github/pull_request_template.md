@@ -5,7 +5,7 @@ Please add a description of what is accomplished in the PR here at the top:
 
 <!--
 Below are a few things we ask you or your reviewers to kindly check. 
-Remove checks that are not relevant by deleting the line(s) below.
+***Remove checks that are not relevant by deleting the line(s) below.***
 -->
 Checklist
 * [ ] User's Guide has been updated
@@ -15,7 +15,8 @@ Checklist
 * [ ] The `E3SM-Project` submodule has been updated with relevant E3SM changes
 * [ ] The `MALI-Dev` submodule has been updated with relevant MALI changes
 * [ ] Document (in a comment titled `Testing` in this PR) any testing that was used to verify the changes
+* [ ] New tests have been added to a test suite
 
 <!--
-Please note any issues this fixes using [closing keywords]( https://help.github.com/articles/closing-issues-using-keywords/ ):
+Please note any issues this fixes using closing keywords: https://help.github.com/articles/closing-issues-using-keywords
 -->
