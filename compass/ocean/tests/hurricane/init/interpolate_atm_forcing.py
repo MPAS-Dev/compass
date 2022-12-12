@@ -185,7 +185,7 @@ class InterpolateAtmForcing(Step):
         # Save figure
         fig.tight_layout()
         fig.savefig(var_abrev+'_'+str(i).zfill(4)+'.png',
-                    box_inches='tight')
+                    bbox_inches='tight')
         plt.close()
 
     def write_to_file(self, filename, data, var, xtime):
