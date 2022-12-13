@@ -90,8 +90,8 @@ class InitialState(Step):
         """
         # get the these properties from the config options
         config = self.config
-        self.cores = config.getint('tides', 'init_cores')
-        self.min_cores = config.getint('tides', 'init_min_cores')
+        self.ntasks = config.getint('tides', 'init_ntasks')
+        self.min_tasks = config.getint('tides', 'init_min_tasks')
         self.threads = config.getint('tides', 'init_threads')
 
     def run(self):
