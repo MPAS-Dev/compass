@@ -112,6 +112,7 @@
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.dam_break.initial_state</span> <span class="kn">import</span> <span class="n">InitialState</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.dam_break.forward</span> <span class="kn">import</span> <span class="n">Forward</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.dam_break.viz</span> <span class="kn">import</span> <span class="n">Viz</span>
+<span class="kn">from</span> <span class="nn">compass.validate</span> <span class="kn">import</span> <span class="n">compare_variables</span>
 
 
 <div class="viewcode-block" id="Default"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.dam_break.default.Default.html#compass.ocean.tests.dam_break.default.Default">[docs]</a><span class="k">class</span> <span class="nc">Default</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
@@ -175,7 +176,15 @@
         <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;dam_break&#39;</span><span class="p">,</span> <span class="s1">&#39;ny&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ny</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="s1">&#39;the number of &#39;</span>
                    <span class="s1">&#39;mesh cells in the y direction&#39;</span><span class="p">)</span>
         <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;dam_break&#39;</span><span class="p">,</span> <span class="s1">&#39;dc&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dc</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="s1">&#39;the distance &#39;</span>
-                   <span class="s1">&#39;between adjacent cell centers&#39;</span><span class="p">)</span></div></div>
+                   <span class="s1">&#39;between adjacent cell centers&#39;</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Validate variables against a baseline</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;layerThickness&#39;</span><span class="p">,</span> <span class="s1">&#39;normalVelocity&#39;</span><span class="p">,</span> <span class="s1">&#39;ssh&#39;</span><span class="p">]</span>
+        <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
+                          <span class="n">filename1</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;forward/output.nc&#39;</span><span class="p">)</span></div>
 </pre></div>
 
            </div>
