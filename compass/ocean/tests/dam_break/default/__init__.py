@@ -3,6 +3,7 @@ from compass.testcase import TestCase
 from compass.ocean.tests.dam_break.initial_state import InitialState
 from compass.ocean.tests.dam_break.forward import Forward
 from compass.ocean.tests.dam_break.viz import Viz
+from compass.validate import compare_variables
 
 
 class Default(TestCase):
@@ -67,3 +68,11 @@ class Default(TestCase):
                    'mesh cells in the y direction')
         config.set('dam_break', 'dc', f'{dc}', comment='the distance '
                    'between adjacent cell centers')
+
+    def validate(self):
+        """
+        Validate variables against a baseline
+        """
+        variables = ['layerThickness', 'normalVelocity', 'ssh']
+        compare_variables(test_case=self, variables=variables,
+                          filename1=f'forward/output.nc')
