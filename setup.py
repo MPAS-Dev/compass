@@ -32,7 +32,7 @@ install_requires = \
      'pyamg',
      'pyproj',
      'requests',
-     'scipy',
+     'scipy>=1.8.0',
      'shapely',
      'xarray']
 

@@ -1,0 +1,151 @@
+<streams>
+
+<immutable_stream name="mesh"
+                  type="input"
+                  filename_template="initial_state.nc"
+                  input_interval="initial_only"/>
+
+<immutable_stream name="input"
+                  type="input"
+                  filename_template="initial_state.nc"
+                  input_interval="initial_only"/>
+
+<immutable_stream name="restart"
+                  type="input;output"
+                  filename_template="restarts/restart.$Y-$M-$D_$h.$m.$s.nc"
+                  filename_interval="output_interval"
+                  reference_time="0001-01-00_00:00:00"
+                  clobber_mode="truncate"
+                  input_interval="initial_only"
+                  output_interval="00-00-20_00:00:00"/>
+
+<stream name="output"
+        filename_template="output/output.nc"
+        filename_interval="01-00-00_00:00:00"
+        clobber_mode="truncate"
+        reference_time="0001-01-00_00:00:00"
+        type="output"
+        output_interval="00-00-10_00:00:00">
+
+    <stream name="mesh"/>
+    <var name="ssh"/>
+    <var name="ssh_sal"/>
+    <var name="layerThickness"/>
+    <var name="xtime"/>
+    <var name="kineticEnergyCell"/>
+    <var name="relativeVorticityCell"/>
+    <var name="areaCellGlobal"/>
+    <var name="areaEdgeGlobal"/>
+    <var name="areaTriangleGlobal"/>
+    <var name="volumeCellGlobal"/>
+    <var name="volumeEdgeGlobal"/>
+    <var name="CFLNumberGlobal"/>
+</stream>
+
+<stream name="block_debug_output"
+        filename_template="output_debug_block_$B.nc"
+        filename_interval="1000-00-00_00:00:00"
+        clobber_mode="truncate"
+        reference_time="0001-01-01_00:00:00"
+        type="output"
+        output_interval="1000-00-00_00:00:00">
+
+    <stream name="mesh"/>
+    <var_struct name="tracers"/>
+    <var name="xtime"/>
+    <var name="layerThickness"/>
+    <var name="normalVelocity"/>
+    <var name="ssh"/>
+</stream>
+
+<stream name="topographic_wave_drag"
+        type="input"
+        filename_template="topographic_wave_drag.nc"
+        input_interval="initial_only" >
+
+        <var name="topographic_wave_drag"/>
+</stream>
+
+<stream name="globalStatsOutput"
+        runtime_format="single_file"
+        filename_interval="01-00-00_00:00:00"
+        clobber_mode="truncate"
+        output_interval="0000_06:00:00"
+        reference_time="0001-01-01_00:00:00"
+        filename_template="analysis_members/globalStats.$Y-$M-$D_$h.$m.$s.nc"
+        packages="globalStatsAMPKG"
+	type="output">
+
+    <var_array name="minGlobalStats"/>
+    <var_array name="maxGlobalStats"/>
+    <var_array name="sumGlobalStats"/>
+    <var_array name="rmsGlobalStats"/>
+    <var_array name="avgGlobalStats"/>
+    <var_array name="vertSumMinGlobalStats"/>
+    <var_array name="vertSumMaxGlobalStats"/>
+    <var name="daysSinceStartOfSim"/>
+    <var name="xtime"/>
+    <var name="volumeCellGlobal"/>
+    <var name="CFLNumberGlobal"/>
+</stream>
+
+<stream name="forcing_data"
+	filename_template="forcing_data.nc"
+	input_interval="initial_only"
+	type="input">
+
+    <var_struct name="tracersSurfaceRestoringFields"/>
+    <var_struct name="tracersInteriorRestoringFields"/>
+    <var_struct name="tracersExponentialDecayFields"/>
+    <var_struct name="tracersIdealAgeFields"/>
+    <var_struct name="tracersTTDFields"/>
+    <var name="windStressZonal"/>
+    <var name="windStressMeridional"/>
+    <var name="landIceSurfaceTemperature"/>
+    <var name="atmosphericPressure"/>
+    <var name="latentHeatFlux"/>
+    <var name="sensibleHeatFlux"/>
+    <var name="shortWaveHeatFlux"/>
+    <var name="evaporationFlux"/>
+    <var name="rainFlux"/>
+</stream>
+
+<stream name="harmonicAnalysisOutput"
+        filename_template="analysis_members/harmonicAnalysis.nc"
+        type="output"
+        mode="forward;analysis"
+        output_interval="1000-00-00_00:00:00"
+        packages="harmonicAnalysisAMPKG"
+        clobber_mode="truncate"
+        runtime_format="single_file">
+
+    <stream name="mesh"/>
+    <var name="M2Amplitude"/>
+    <var name="M2Phase"/>
+    <var name="S2Amplitude"/>
+    <var name="S2Phase"/>
+    <var name="N2Amplitude"/>
+    <var name="N2Phase"/>
+    <var name="K1Amplitude"/>
+    <var name="K1Phase"/>
+    <var name="O1Amplitude"/>
+    <var name="O1Phase"/>
+</stream>
+
+<stream name="harmonicAnalysisRestart"
+        filename_template="restarts/mpaso.rst.am.harmonicAnalysisRestart.$Y-$M-$D_$h.$m.$s.nc"
+        filename_interval="output_interval"
+        type="input;output"
+        mode="forward;analysis"
+        output_interval="stream:restart:output_interval"
+        input_interval="initial_only"
+        packages="harmonicAnalysisAMPKG"
+        clobber_mode="truncate"
+        runtime_format="single_file"
+        reference_time="0001-01-01_00:00:00">
+
+    <var name="leastSquaresLHSMatrix"/>
+    <var name="leastSquaresRHSVector"/>
+</stream>
+
+</streams>

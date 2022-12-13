@@ -25,5 +25,6 @@ coming months.
    planar_convergence
    soma
    sphere_transport
-   ziso
    spherical_harmonic_transform
+   tides
+   ziso
