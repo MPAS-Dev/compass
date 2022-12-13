@@ -677,6 +677,57 @@ sphere_transport framework
    process_output.plot_filament
    process_output.plot_over_and_undershoot_errors
 
+tides
+~~~~~
+
+test cases and steps
+''''''''''''''''''''
+
+.. currentmodule:: compass.ocean.tests.tides
+
+.. autosummary::
+   :toctree: generated/
+
+   Tides
+   configure
+
+   mesh.Mesh
+   mesh.Mesh.configure
+   mesh.Mesh.run
+
+   init.Init
+   init.Init.configure
+   init.Init.run
+   init.remap_bathymetry.RemapBathymetry
+   init.remap_bathymetry.RemapBathymetry.run
+   init.initial_state.InitialState
+   init.initial_state.InitialState.setup
+   init.initial_state.InitialState.run
+   init.interpolate_wave_drag.InterpolateWaveDrag
+   init.interpolate_wave_drag.InterpolateWaveDrag.interpolate_data_to_grid
+   init.interpolate_wave_drag.InterpolateWaveDrag.plot_interp_data
+   init.interpolate_wave_drag.InterpolateWaveDrag.write_to_file
+   init.interpolate_wave_drag.InterpolateWaveDrag.run
+
+
+   forward.Forward
+   forward.Forward.configure
+   forward.Forward.run
+   forward.forward.ForwardStep
+   forward.forward.ForwardStep.setup
+   forward.forward.ForwardStep.run
+
+   analysis.Analysis
+   analysis.Analysis.setup
+   analysis.Analysis.write_coordinate_file
+   analysis.Analysis.setup_otps2
+   analysis.Analysis.run_otps2
+   analysis.Analysis.read_otps2_output
+   analysis.Analysis.append_tpxo_data
+   analysis.Analysis.check_tpxo_data
+   analysis.Analysis.plot
+   analysis.Analysis.run
+
 ziso
 ~~~~
 
