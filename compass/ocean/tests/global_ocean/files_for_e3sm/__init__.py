@@ -8,6 +8,8 @@ from compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition \
     import SeaiceInitialCondition
 from compass.ocean.tests.global_ocean.files_for_e3sm.ocean_graph_partition \
     import OceanGraphPartition
+from compass.ocean.tests.global_ocean.files_for_e3sm.seaice_graph_partition \
+    import SeaiceGraphPartition
 from compass.ocean.tests.global_ocean.files_for_e3sm.scrip import Scrip
 from compass.ocean.tests.global_ocean.files_for_e3sm.e3sm_to_cmip_maps import \
     E3smToCmipMaps
@@ -84,6 +86,10 @@ class FilesForE3SM(TestCase):
             SeaiceInitialCondition(
                 test_case=self, restart_filename=restart_filename,
                 with_ice_shelf_cavities=mesh.with_ice_shelf_cavities))
+
+        self.add_step(
+            SeaiceGraphPartition(test_case=self,
+                                 restart_filename=restart_filename))
 
         self.add_step(
             Scrip(
