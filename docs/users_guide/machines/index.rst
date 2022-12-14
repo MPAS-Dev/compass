@@ -22,13 +22,8 @@ The config options typically defined for a machine are:
     # cases.
     [paths]
 
-    # The root to a location where the mesh_database, initial_condition_database,
-    # and bathymetry_database for MPAS-Ocean will be cached
-    ocean_database_root = /lcrc/group/e3sm/public_html/mpas_standalonedata/mpas-ocean
-
-    # The root to a location where the mesh_database and initial_condition_database
-    # for MALI will be cached
-    landice_database_root = /lcrc/group/e3sm/public_html/mpas_standalonedata/mpas-albany-landice
+    # A shared root directory where MPAS standalone data can be found
+    database_root = /lcrc/group/e3sm/public_html/mpas_standalonedata
 
     # the path to the base conda environment where compass environments have
     # been created
@@ -43,7 +38,7 @@ The config options typically defined for a machine are:
     compiler = intel
 
     # the system MPI library to use for intel compiler
-    mpi_intel = impi
+    mpi_intel = openmpi
 
     # the system MPI library to use for gnu compiler
     mpi_gnu = openmpi
@@ -155,16 +150,13 @@ in your user config file:
 
 .. code-block:: cfg
 
+    # This file contains some common config options you might want to set
+
+    # The paths section describes paths to databases and shared compass environments
     [paths]
 
-    # The root to a location where the mesh_database, initial_condition_database,
-    # and bathymetry_database for MPAS-Ocean will be cached
-    ocean_database_root = /home/xylar/data/mpas/mpas_standalonedata/mpas-ocean
-
-    # The root to a location where the mesh_database and initial_condition_database
-    # for MALI will be cached
-    landice_database_root = /home/xylar/data/mpas/mpas_standalonedata/mpas-albany-landice
-
+    # A root directory where MPAS standalone data can be found
+    database_root = /home/xylar/data/mpas/mpas_standalonedata
 
     # The parallel section describes options related to running tests in parallel
     [parallel]

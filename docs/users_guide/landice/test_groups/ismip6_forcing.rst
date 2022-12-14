@@ -92,7 +92,8 @@ correspond to specific climate model (e.g., UKESM1-0-LL, CCSM4) and scenarios
 climatology files are needed. For the ``atmosphere`` testcase,
 ``RACMO2.3p2_ANT27_smb_yearly_1979_2018.nc`` will be automatically downloaded
 from the MALI public database when the testcase is being set up and saved
-to the directory that users define in the config option `landice_database_root`.
+to a subdirectory of the root directory that users define in the config option
+``database_root`` (defined automatically on supported machines).
 The RACMO file is used to correct the ISMIP6 the surface mass balance (SMB)
 data with the modern climatology. For the ``ocean_thermal`` case, users need to
 download the modern ocean thermal forcing climatology file named
@@ -146,14 +147,14 @@ config sections users may choose the interpolation scheme among
 the ``ocean basal`` test case should always use the ``neareststod`` method
 because the source files have a single valued data per basin.
 
-Below is the default config options:
+Below are the default config options:
 
 .. code-block:: cfg
 
     # config options for ismip6 antarctic ice sheet data set
     [paths]
     # The root to a location where data files for MALI will be cached
-    landice_database_root = /Users/hollyhan/Desktop/RESEARCH/MALI/database/
+    database_root = /Users/hollyhan/Desktop/RESEARCH/MALI/database/
 
     [ismip6_ais]
 
@@ -216,7 +217,7 @@ process the RACMO modern SMB climatology but not the modern thermal forcing.
     # config options for ismip6 antarctic ice sheet data set
     [paths]
     # The root to a location where data files for MALI will be cached
-    landice_database_root = NotAvailable
+    database_root = NotAvailable
 
     [ismip6_ais]
 
