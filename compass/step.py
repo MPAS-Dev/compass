@@ -1,13 +1,12 @@
 import os
 from lxml import etree
-from importlib.resources import path
 import shutil
 import numpy
 import stat
 import grp
 import progressbar
 
-from compass.io import download, symlink
+from compass.io import download, symlink, package_path
 import compass.namelist
 import compass.streams
 
@@ -697,8 +696,8 @@ class Step:
             if package is not None:
                 if target is None:
                     target = filename
-                with path(package, target) as package_path:
-                    target = str(package_path)
+                with package_path(package, target) as path:
+                    target = str(path)
 
             if work_dir_target is not None:
                 target = os.path.join(self.base_work_dir, work_dir_target)
