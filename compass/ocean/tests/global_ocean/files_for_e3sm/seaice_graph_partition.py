@@ -1,21 +1,22 @@
 import os
-import xarray
 import numpy as np
 from glob import glob
+import xarray as xr
 
 from mpas_tools.logging import check_call
 
 from compass.io import symlink
-from compass.step import Step
+from compass.ocean.tests.global_ocean.files_for_e3sm.files_for_e3sm_step \
+    import FilesForE3SMStep
 from compass.ocean.tests.global_ocean.files_for_e3sm.graph_partition import \
     get_core_list
 
 
-class SeaiceGraphPartition(Step):
+class SeaiceGraphPartition(FilesForE3SMStep):
     """
     A step for creating graph partition files for the sea-ice mesh
     """
-    def __init__(self, test_case, restart_filename):
+    def __init__(self, test_case):
         """
         Create a new step
 
@@ -23,18 +24,9 @@ class SeaiceGraphPartition(Step):
         ----------
         test_case : compass.ocean.tests.global_ocean.files_for_e3sm.FilesForE3SM
             The test case this step belongs to
-
-        restart_filename : str
-            A restart file from the end of the dynamic adjustment test case to
-            use as the basis for an E3SM initial condition
         """
 
-        super().__init__(test_case, name='seaice_graph_partition', ntasks=1,
-                         min_tasks=1, openmp_threads=1)
-
-        self.add_input_file(filename='README', target='../README')
-        self.add_input_file(filename='mesh.nc',
-                            target=f'../{restart_filename}')
+        super().__init__(test_case, name='seaice_graph_partition')
 
         for filename in ['icePresent_QU60km_polar.nc',
                          'seaice_QU60km_polar.nc']:
@@ -47,48 +39,51 @@ class SeaiceGraphPartition(Step):
         # short name, which is not known at setup time.  Currently, this is
         # safe because no other steps depend on the outputs of this one.
 
+    def setup(self):
+        """
+        setup input files based on config options
+        """
+        super().setup()
+        graph_filename = self.config.get('files_for_e3sm', 'graph_filename')
+        if graph_filename != 'autodetect':
+            self.add_input_file(filename='graph.info', target=graph_filename)
+
+
     def run(self):
         """
         Run this step of the testcase
         """
+        super().run()
+        config = self.config
         logger = self.logger
+        creation_date = self.creation_date
 
-        with xarray.open_dataset('mesh.nc') as ds:
-            mesh_short_name = ds.attrs['MPAS_Mesh_Short_Name']
-            mesh_prefix = ds.attrs['MPAS_Mesh_Prefix']
-            prefix = f'MPAS_Mesh_{mesh_prefix}'
-            creation_date = ds.attrs[f'{prefix}_Version_Creation_Date']
+        with xr.open_dataset('restart.nc') as ds:
+            ncells = ds.sizes['nCells']
 
-        assembled_dir = f'../assembled_files/inputdata/ice/mpas-seaice/' \
-                        f'{mesh_short_name}'
-        try:
-            os.makedirs(assembled_dir)
-        except OSError:
-            pass
-
-        args = ['prepare_seaice_partitions',
-                '-i', 'seaice_QU60km_polar.nc',
-                '-p', 'icePresent_QU60km_polar.nc',
-                '-m', 'mesh.nc',
-                '-o', '.']
-        check_call(args, logger)
-
-        ncells = sum(1 for _ in open('graph.info'))
         cores = get_core_list(ncells=ncells)
         logger.info(f'Creating graph files between {np.amin(cores)} and '
                     f'{np.amax(cores)}')
 
-        for ncores in cores:
-            args = ['create_seaice_partitions',
-                    '-m', 'mesh.nc',
-                    '-o', '.',
-                    '-p', f'mpas-seaice.graph.info.{creation_date}'
-                    '-g', 'gpmetis',
-                    '-n', f'{ncores}']
-            check_call(args, logger)
+        args = ['prepare_seaice_partitions',
+                '-i', 'seaice_QU60km_polar.nc',
+                '-p', 'icePresent_QU60km_polar.nc',
+                '-m', 'restart.nc',
+                '-o', '.']
+        check_call(args, logger)
+
+        args = ['create_seaice_partitions',
+                '-m', 'restart.nc',
+                '-o', '.',
+                '-p', f'mpas-seaice.graph.info.{creation_date}',
+                '-g', 'gpmetis',
+                '--plotting', 
+                '-n']
+        args = args + [f'{ncores}' for ncores in cores]
+        check_call(args, logger)
 
         # create link in assembled files directory
         files = glob('mpas-seaice.graph.info.*')
         for file in files:
-            symlink(f'../../../../../seaice_graph_partition/{file}',
-                    f'{assembled_dir}/{file}')
+            symlink(os.path.abspath(file),
+                    f'{self.seaice_inputdata_dir}/{file}')

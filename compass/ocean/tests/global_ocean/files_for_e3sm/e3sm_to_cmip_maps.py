@@ -4,15 +4,16 @@ import xarray
 from mpas_tools.logging import check_call
 
 from compass.io import symlink
-from compass.step import Step
+from compass.ocean.tests.global_ocean.files_for_e3sm.files_for_e3sm_step \
+    import FilesForE3SMStep
 
 
-class E3smToCmipMaps(Step):
+class E3smToCmipMaps(FilesForE3SMStep):
     """
     A step for creating mapping files from the MPAS-Ocean mesh to a standard
     CMIP6 mesh
     """
-    def __init__(self, test_case, restart_filename):
+    def __init__(self, test_case):
         """
         Create a new step
 
@@ -20,18 +21,10 @@ class E3smToCmipMaps(Step):
         ----------
         test_case : compass.ocean.tests.global_ocean.files_for_e3sm.FilesForE3SM
             The test case this step belongs to
-
-        restart_filename : str
-            A restart file from the end of the dynamic adjustment test case to
-            use as the basis for an E3SM initial condition
         """
 
         super().__init__(test_case, name='e3sm_to_cmip_maps', ntasks=36,
-                         min_tasks=1, openmp_threads=1)
-
-        self.add_input_file(filename='README', target='../README')
-        self.add_input_file(filename='restart.nc',
-                            target=f'../{restart_filename}')
+                         min_tasks=1)
 
         self.add_input_file(filename='ocean.scrip.nc',
                             target='../scrip/ocean.scrip.nc')
@@ -55,18 +48,13 @@ class E3smToCmipMaps(Step):
         """
         Run this step of the testcase
         """
-        with xarray.open_dataset('restart.nc') as ds:
-            mesh_short_name = ds.attrs['MPAS_Mesh_Short_Name']
-            mesh_prefix = ds.attrs['MPAS_Mesh_Prefix']
-            prefix = f'MPAS_Mesh_{mesh_prefix}'
-            creation_date = ds.attrs[f'{prefix}_Version_Creation_Date']
-
-        make_e3sm_to_cmip_maps(self.config, self.logger, mesh_short_name,
-                               creation_date, self.subdir, self.ntasks)
+        super().run()
+        make_e3sm_to_cmip_maps(self.config, self.logger, self.mesh_short_name,
+                               self.creation_date, self.ntasks)
 
 
 def make_e3sm_to_cmip_maps(config, logger, mesh_short_name, creation_date,
-                           subdir, ntasks):
+                           ntasks):
     """
     Make mapping file from the MPAS-Ocean mesh to the CMIP6 grid
 
@@ -84,10 +72,6 @@ def make_e3sm_to_cmip_maps(config, logger, mesh_short_name, creation_date,
     creation_date : str
         The date to append to the mapping files
 
-    subdir : str
-        The subdirectory this function is run from, for symlinking into
-        ``assembled_files``
-
     ntasks : int
         The number of parallel tasks to use for remapping
     """
@@ -96,7 +80,7 @@ def make_e3sm_to_cmip_maps(config, logger, mesh_short_name, creation_date,
 
     try:
         os.makedirs(link_dir)
-    except OSError:
+    except FileExistsError:
         pass
 
     src_scrip_filename = 'ocean.scrip.nc'
@@ -134,5 +118,5 @@ def make_e3sm_to_cmip_maps(config, logger, mesh_short_name, creation_date,
         map_filename = \
             f'map_{mesh_short_name}_to_cmip6_{cmip6_grid_res}_{suffix}.{creation_date}.nc'
 
-        symlink(f'../../../{subdir}/{local_map_filename}',
+        symlink(os.path.abspath(local_map_filename),
                 f'{link_dir}/{map_filename}')

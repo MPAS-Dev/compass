@@ -21,8 +21,6 @@ from compass.ocean.tests.global_ocean.daily_output_test import DailyOutputTest
 from compass.ocean.tests.global_ocean.monthly_output_test import \
     MonthlyOutputTest
 from compass.ocean.tests.global_ocean.files_for_e3sm import FilesForE3SM
-from compass.ocean.tests.global_ocean.make_diagnostics_files import \
-    MakeDiagnosticsFiles
 
 
 class GlobalOcean(TestGroup):
@@ -226,5 +224,5 @@ class GlobalOcean(TestGroup):
                     test_group=self, mesh=mesh, init=init,
                     dynamic_adjustment=dynamic_adjustment))
 
-        # A test case for making diagnostics files from an existing mesh
-        self.add_test_case(MakeDiagnosticsFiles(test_group=self))
+        # A test case for making E3SM support files from an existing mesh
+        self.add_test_case(FilesForE3SM(test_group=self))

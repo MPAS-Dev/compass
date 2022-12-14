@@ -4,17 +4,15 @@ import xarray
 from mpas_tools.scrip.from_mpas import scrip_from_mpas
 
 from compass.io import symlink
-from compass.step import Step
+from compass.ocean.tests.global_ocean.files_for_e3sm.files_for_e3sm_step \
+    import FilesForE3SMStep
 
 
-class Scrip(Step):
+class Scrip(FilesForE3SMStep):
     """
     A step for creating SCRIP files from the MPAS-Ocean mesh
-
-    with_ice_shelf_cavities : bool
-        Whether the mesh includes ice-shelf cavities
     """
-    def __init__(self, test_case, restart_filename, with_ice_shelf_cavities):
+    def __init__(self, test_case):
         """
         Create a new step
 
@@ -22,47 +20,28 @@ class Scrip(Step):
         ----------
         test_case : compass.ocean.tests.global_ocean.files_for_e3sm.FilesForE3SM
             The test case this step belongs to
-
-        restart_filename : str
-            A restart file from the end of the dynamic adjustment test case to
-            use as the basis for an E3SM initial condition
-
-        with_ice_shelf_cavities : bool
-            Whether the mesh includes ice-shelf cavities
         """
 
-        super().__init__(test_case, name='scrip', ntasks=1,
-                         min_tasks=1, openmp_threads=1)
+        super().__init__(test_case, name='scrip')
 
-        self.add_input_file(filename='README', target='../README')
-        self.add_input_file(filename='restart.nc',
-                            target=f'../{restart_filename}')
-
-        self.with_ice_shelf_cavities = with_ice_shelf_cavities
-
+    def setup(self):
+        """
+        setup input files based on config options
+        """
+        super().setup()
         self.add_output_file(filename='ocean.scrip.nc')
-
-        if with_ice_shelf_cavities:
+        with_ice_shelf_cavities = self.with_ice_shelf_cavities
+        if with_ice_shelf_cavities is not None and with_ice_shelf_cavities:
             self.add_output_file(filename='ocean.mask.scrip.nc')
 
     def run(self):
         """
         Run this step of the testcase
         """
+        super().run()
         with_ice_shelf_cavities = self.with_ice_shelf_cavities
-
-        with xarray.open_dataset('restart.nc') as ds:
-            mesh_short_name = ds.attrs['MPAS_Mesh_Short_Name']
-            mesh_prefix = ds.attrs['MPAS_Mesh_Prefix']
-            prefix = f'MPAS_Mesh_{mesh_prefix}'
-            creation_date = ds.attrs[f'{prefix}_Version_Creation_Date']
-
-        link_dir = f'../assembled_files/inputdata/ocn/mpas-o/{mesh_short_name}'
-
-        try:
-            os.makedirs(link_dir)
-        except OSError:
-            pass
+        mesh_short_name = self.mesh_short_name
+        creation_date = self.creation_date
 
         if with_ice_shelf_cavities:
             nomask_str = '.nomask'
@@ -75,8 +54,8 @@ class Scrip(Step):
 
         scrip_from_mpas('restart.nc', local_filename)
 
-        symlink(f'../../../../../scrip/{local_filename}',
-                f'{link_dir}/{scrip_filename}')
+        symlink(os.path.abspath(local_filename),
+                f'{self.ocean_inputdata_dir}/{scrip_filename}')
 
         if with_ice_shelf_cavities:
             local_filename = 'ocean.mask.scrip.nc'
@@ -85,5 +64,5 @@ class Scrip(Step):
             scrip_from_mpas('restart.nc', local_filename,
                             useLandIceMask=True)
 
-            symlink(f'../../../../../scrip/{local_filename}',
-                    f'{link_dir}/{scrip_mask_filename}')
+            symlink(os.path.abspath(local_filename),
+                    f'{self.ocean_inputdata_dir}//{scrip_mask_filename}')
