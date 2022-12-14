@@ -105,6 +105,9 @@ def _get_mpas_git_version(config):
 
     mpas_model_path = config.get('paths', 'mpas_model')
 
+    if not os.path.exists(mpas_model_path):
+        return None
+
     cwd = os.getcwd()
     os.chdir(mpas_model_path)
 
