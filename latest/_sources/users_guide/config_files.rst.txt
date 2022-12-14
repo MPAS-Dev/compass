@@ -25,18 +25,17 @@ Here is an example:
 
 .. code-block:: cfg
 
+    # This file contains some common config options you might want to set
+
+    # The paths section describes paths to databases and shared compass environments
     [paths]
 
-    mpas_model = .
+    # the relative or absolute path to the root of a branch where the MPAS
+    # component has been built
+    mpas_mode = .
 
-    # The root to a location where the mesh_database, initial_condition_database,
-    # and bathymetry_database for MPAS-Ocean will be cached
-    ocean_database_root = /home/xylar/data/mpas/mpas_standalonedata/mpas-ocean
-
-    # The root to a location where the mesh_database and initial_condition_database
-    # for MALI will be cached
-    landice_database_root = /home/xylar/data/mpas/mpas_standalonedata/mpas-albany-landice
-
+    # A root directory where MPAS standalone data can be found
+    database_root = /home/xylar/data/mpas/mpas_standalonedata/mpas-ocean
 
     # The parallel section describes options related to running tests in parallel
     [parallel]
@@ -45,13 +44,10 @@ Here is an example:
     system = single_node
 
     # whether to use mpirun or srun to run the model
-    parallel_executable = mpirun
+    parallel_executable = mpirun -host localhost
 
-    # cores per node on the machine
+    # cores per node on the machine, detected automatically by default
     cores_per_node = 8
-
-    # the number of multiprocessing or dask threads to use
-    threads = 8
 
 The comments in this example are hopefully pretty self-explanatory. In this
 example, the ``mpas_model`` path points to the current directory ``.``. You can
@@ -67,8 +63,8 @@ which case you could provide an absolute path like:
     # The paths section points compass to external paths
     [paths]
 
-    # the relative or absolute path to the root of a branch where MPAS-Ocean
-    # has been built
+    # the relative or absolute path to the root of a branch where the MPAS
+    # component has been built
     mpas_model = /home/xylar/code/E3SM/components/mpas-ocean
 
 You provide the config file to ``compass setup`` and ``compass suite`` with

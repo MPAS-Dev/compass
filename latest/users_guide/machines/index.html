@@ -139,13 +139,8 @@ cases are configured in a way that is appropriate for your machine.</p>
 <span class="c1"># cases.</span><span class="w"></span>
 <span class="k">[paths]</span><span class="w"></span>
 
-<span class="c1"># The root to a location where the mesh_database, initial_condition_database,</span><span class="w"></span>
-<span class="c1"># and bathymetry_database for MPAS-Ocean will be cached</span><span class="w"></span>
-<span class="na">ocean_database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/lcrc/group/e3sm/public_html/mpas_standalonedata/mpas-ocean</span><span class="w"></span>
-
-<span class="c1"># The root to a location where the mesh_database and initial_condition_database</span><span class="w"></span>
-<span class="c1"># for MALI will be cached</span><span class="w"></span>
-<span class="na">landice_database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/lcrc/group/e3sm/public_html/mpas_standalonedata/mpas-albany-landice</span><span class="w"></span>
+<span class="c1"># A shared root directory where MPAS standalone data can be found</span><span class="w"></span>
+<span class="na">database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/lcrc/group/e3sm/public_html/mpas_standalonedata</span><span class="w"></span>
 
 <span class="c1"># the path to the base conda environment where compass environments have</span><span class="w"></span>
 <span class="c1"># been created</span><span class="w"></span>
@@ -160,7 +155,7 @@ cases are configured in a way that is appropriate for your machine.</p>
 <span class="na">compiler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">intel</span><span class="w"></span>
 
 <span class="c1"># the system MPI library to use for intel compiler</span><span class="w"></span>
-<span class="na">mpi_intel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">impi</span><span class="w"></span>
+<span class="na">mpi_intel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">openmpi</span><span class="w"></span>
 
 <span class="c1"># the system MPI library to use for gnu compiler</span><span class="w"></span>
 <span class="na">mpi_gnu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">openmpi</span><span class="w"></span>
@@ -253,16 +248,13 @@ to use the default MPI variant for each compiler on each machine.</p>
 <p>If you are working on an “unknown” machine, you will need to define some of
 the config options that would normally be in a machine’s config file yourself
 in your user config file:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[paths]</span><span class="w"></span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># This file contains some common config options you might want to set</span><span class="w"></span>
 
-<span class="c1"># The root to a location where the mesh_database, initial_condition_database,</span><span class="w"></span>
-<span class="c1"># and bathymetry_database for MPAS-Ocean will be cached</span><span class="w"></span>
-<span class="na">ocean_database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/xylar/data/mpas/mpas_standalonedata/mpas-ocean</span><span class="w"></span>
+<span class="c1"># The paths section describes paths to databases and shared compass environments</span><span class="w"></span>
+<span class="k">[paths]</span><span class="w"></span>
 
-<span class="c1"># The root to a location where the mesh_database and initial_condition_database</span><span class="w"></span>
-<span class="c1"># for MALI will be cached</span><span class="w"></span>
-<span class="na">landice_database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/xylar/data/mpas/mpas_standalonedata/mpas-albany-landice</span><span class="w"></span>
-
+<span class="c1"># A root directory where MPAS standalone data can be found</span><span class="w"></span>
+<span class="na">database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/xylar/data/mpas/mpas_standalonedata</span><span class="w"></span>
 
 <span class="c1"># The parallel section describes options related to running tests in parallel</span><span class="w"></span>
 <span class="k">[parallel]</span><span class="w"></span>

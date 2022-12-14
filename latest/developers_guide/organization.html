@@ -1479,11 +1479,18 @@ a location where they can be shared between users and reused over time.  These
 the file <code class="docutils literal notranslate"><span class="pre">BedMachineAntarctica_v2_and_GEBCO_2022_0.05_degree_20220729.nc</span></code> is
 slated for later downloaded from
 <a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-ocean/bathymetry_database/">MPAS-Ocean’s bathymetry database</a>.
-The file will be stored in the subdirectory <code class="docutils literal notranslate"><span class="pre">bathymetry_database</span></code> of the path
-in the <code class="docutils literal notranslate"><span class="pre">ocean_database_root</span></code> config option in the <code class="docutils literal notranslate"><span class="pre">paths</span></code> section of the
-config file.  The <code class="docutils literal notranslate"><span class="pre">ocean_database_root</span></code> option (or the equivalent for other
-MPAS cores) is set either by selecting one of the <a class="reference internal" href="../users_guide/machines/index.html#supported-machines"><span class="std std-ref">Supported Machines</span></a> or
-in the user’s config file.</p>
+The file will be stored in the subdirectory <code class="docutils literal notranslate"><span class="pre">mpas-ocean/bathymetry_database</span></code>
+of the path in the <code class="docutils literal notranslate"><span class="pre">database_root</span></code> config option in the <code class="docutils literal notranslate"><span class="pre">paths</span></code> section of
+the config file.  The <code class="docutils literal notranslate"><span class="pre">database_root</span></code> option is set either by selecting one
+of the <a class="reference internal" href="../users_guide/machines/index.html#supported-machines"><span class="std std-ref">Supported Machines</span></a> or in the user’s config file.</p>
+<p>You can also specify the <code class="docutils literal notranslate"><span class="pre">database_component</span></code> parameter to choose to get
+files from a database belonging to another component, e.g.:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;icePresent_QU60km_polar.nc&#39;</span><span class="p">,</span>
+                    <span class="n">target</span><span class="o">=</span><span class="s1">&#39;icePresent_QU60km_polar.nc&#39;</span><span class="p">,</span>
+                    <span class="n">database</span><span class="o">=</span><span class="s1">&#39;partition&#39;</span><span class="p">,</span>
+                    <span class="n">database_component</span><span class="o">=</span><span class="s1">&#39;seaice&#39;</span>
+</pre></div>
+</div>
 <p>It is also possible to download files directly from a URL and store them in
 the step’s working directory:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">step</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>

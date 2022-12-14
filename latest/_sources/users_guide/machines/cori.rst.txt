@@ -58,17 +58,12 @@ cases or a test suite:
     # cases.
     [paths]
 
-    # The root to a location where the mesh_database, initial_condition_database,
-    # and bathymetry_database for MPAS-Ocean will be cached
-    ocean_database_root = /global/cfs/cdirs/e3sm/mpas_standalonedata/mpas-ocean
-
-    # The root to a location where the mesh_database and initial_condition_database
-    # for MALI will be cached
-    landice_database_root = /global/cfs/cdirs/e3sm/mpas_standalonedata/mpas-albany-landice
+    # A shared root directory where MPAS standalone data can be found
+    database_root = /global/cfs/cdirs/e3sm/mpas_standalonedata
 
     # the path to the base conda environment where compass environments have
     # been created
-    compass_envs = /global/cfs/cdirs/e3sm/software/compass/cori-haswell/base
+    compass_envs = /global/common/software/e3sm/compass/cori-haswell/base
 
 
     # Options related to deploying a compass conda environment on supported
@@ -93,6 +88,14 @@ cases or a test suite:
 
     # the version of ESMF to build if using system compilers and MPI (don't build)
     esmf = None
+
+
+    # Config options related to creating a job script
+    [job]
+
+    # The job constraint to use, by default, taken from the first constraint (if
+    # any) provided for the  machine by mache
+    constraint = haswell
 
 Additionally, some relevant config options come from the
 `mache <https://github.com/E3SM-Project/mache/>`_ package:

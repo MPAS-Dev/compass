@@ -110,6 +110,7 @@
 <span class="kn">import</span> <span class="nn">requests</span>
 <span class="kn">import</span> <span class="nn">progressbar</span>
 <span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="kn">import</span> <span class="n">urlparse</span>
+<span class="kn">import</span> <span class="nn">importlib.resources</span>
 
 
 <div class="viewcode-block" id="download"><a class="viewcode-back" href="../../developers_guide/generated/compass.io.download.html#compass.io.download">[docs]</a><span class="k">def</span> <span class="nf">download</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">dest_path</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">exceptions</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
@@ -293,6 +294,26 @@
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">islink</span><span class="p">(</span><span class="n">temp_link_name</span><span class="p">):</span>
             <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">temp_link_name</span><span class="p">)</span>
         <span class="k">raise</span></div>
+
+
+<div class="viewcode-block" id="package_path"><a class="viewcode-back" href="../../developers_guide/generated/compass.io.package_path.html#compass.io.package_path">[docs]</a><span class="k">def</span> <span class="nf">package_path</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">resource</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A replacement for deprecated ``importlib.resources.path()``:</span>
+<span class="sd">    https://github.com/python/importlib_resources/blob/7e9020a1b84726fdc6ba71ee2893119d1ee61e02/importlib_resources/_legacy.py</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    package : Package</span>
+<span class="sd">        The python package for the resource</span>
+<span class="sd">    resource : Resource</span>
+<span class="sd">        The file within the package</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parent</span><span class="p">,</span> <span class="n">file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">resource</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">parent</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">resource</span><span class="si">!r}</span><span class="s1"> must be only a file name&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">importlib</span><span class="o">.</span><span class="n">resources</span><span class="o">.</span><span class="n">as_file</span><span class="p">(</span>
+        <span class="n">importlib</span><span class="o">.</span><span class="n">resources</span><span class="o">.</span><span class="n">files</span><span class="p">(</span><span class="n">package</span><span class="p">)</span> <span class="o">/</span> <span class="n">file_name</span><span class="p">)</span></div>
 
 
 <span class="c1"># From https://stackoverflow.com/a/1094933/7728169</span>

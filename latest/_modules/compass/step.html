@@ -107,14 +107,14 @@
   <h1>Source code for compass.step</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">lxml</span> <span class="kn">import</span> <span class="n">etree</span>
-<span class="kn">from</span> <span class="nn">importlib.resources</span> <span class="kn">import</span> <span class="n">path</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">stat</span>
 <span class="kn">import</span> <span class="nn">grp</span>
 <span class="kn">import</span> <span class="nn">progressbar</span>
+<span class="kn">import</span> <span class="nn">json</span>
 
-<span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">download</span><span class="p">,</span> <span class="n">symlink</span>
+<span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">download</span><span class="p">,</span> <span class="n">symlink</span><span class="p">,</span> <span class="n">package_path</span>
 <span class="kn">import</span> <span class="nn">compass.namelist</span>
 <span class="kn">import</span> <span class="nn">compass.streams</span>
 
@@ -454,8 +454,8 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Step.add_input_file"><a class="viewcode-back" href="../../developers_guide/generated/compass.Step.add_input_file.html#compass.Step.add_input_file">[docs]</a>    <span class="k">def</span> <span class="nf">add_input_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                       <span class="n">url</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">work_dir_target</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">package</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                       <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+                       <span class="n">database_component</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">work_dir_target</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                       <span class="n">package</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add an input file to the step (but not necessarily to the MPAS model).</span>
 <span class="sd">        The file can be local, a symlink to a file that will be created in</span>
@@ -483,6 +483,12 @@
 <span class="sd">            determined by combining the base URL of the data server, the</span>
 <span class="sd">            relative path for the core, ``database`` and ``target``.</span>
 
+<span class="sd">        database_component : {&#39;ocean&#39;, &#39;seaice&#39;, &#39;landice&#39;, None}, optional</span>
+<span class="sd">            The prefix of a database root that the database resides in.  By</span>
+<span class="sd">            default this is the MPAS core name for this step.  The suffix</span>
+<span class="sd">            ``_database_root`` is appended to this string to determine the</span>
+<span class="sd">            config option where the database root resides on the local machine.</span>
+
 <span class="sd">        url : str, optional</span>
 <span class="sd">            The URL (including file name) for downloading the file.  This</span>
 <span class="sd">            option should be set if the file is not in a database on the data</span>
@@ -507,8 +513,9 @@
             <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">input_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">,</span>
-                                    <span class="n">database</span><span class="o">=</span><span class="n">database</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
-                                    <span class="n">work_dir_target</span><span class="o">=</span><span class="n">work_dir_target</span><span class="p">,</span>
+                                    <span class="n">database</span><span class="o">=</span><span class="n">database</span><span class="p">,</span>
+                                    <span class="n">database_component</span><span class="o">=</span><span class="n">database_component</span><span class="p">,</span>
+                                    <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">work_dir_target</span><span class="o">=</span><span class="n">work_dir_target</span><span class="p">,</span>
                                     <span class="n">package</span><span class="o">=</span><span class="n">package</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="n">copy</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="Step.add_output_file"><a class="viewcode-back" href="../../developers_guide/generated/compass.Step.add_output_file.html#compass.Step.add_output_file">[docs]</a>    <span class="k">def</span> <span class="nf">add_output_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
@@ -750,6 +757,10 @@
         <span class="n">step_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
 
+        <span class="k">with</span> <span class="n">package_path</span><span class="p">(</span><span class="s1">&#39;compass&#39;</span><span class="p">,</span> <span class="s1">&#39;database_subdirs.json&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">path</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="k">as</span> <span class="n">data_file</span><span class="p">:</span>
+                <span class="n">database_subdirs</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">data_file</span><span class="p">)</span>
+
         <span class="c1"># process the outputs first because cached outputs will add more inputs</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cached</span><span class="p">:</span>
             <span class="c1"># forget about the inputs -- we won&#39;t used them, but we will add</span>
@@ -772,6 +783,7 @@
             <span class="n">filename</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">]</span>
             <span class="n">target</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span>
             <span class="n">database</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;database&#39;</span><span class="p">]</span>
+            <span class="n">database_component</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;database_component&#39;</span><span class="p">]</span>
             <span class="n">url</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">]</span>
             <span class="n">work_dir_target</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;work_dir_target&#39;</span><span class="p">]</span>
             <span class="n">package</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;package&#39;</span><span class="p">]</span>
@@ -804,8 +816,8 @@
             <span class="k">if</span> <span class="n">package</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">target</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">target</span> <span class="o">=</span> <span class="n">filename</span>
-                <span class="k">with</span> <span class="n">path</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span> <span class="k">as</span> <span class="n">package_path</span><span class="p">:</span>
-                    <span class="n">target</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">package_path</span><span class="p">)</span>
+                <span class="k">with</span> <span class="n">package_path</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span> <span class="k">as</span> <span class="n">path</span><span class="p">:</span>
+                    <span class="n">target</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">work_dir_target</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">target</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_work_dir</span><span class="p">,</span> <span class="n">work_dir_target</span><span class="p">)</span>
@@ -820,17 +832,22 @@
             <span class="k">if</span> <span class="n">database</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="c1"># we&#39;re downloading a file to a cache of a database (if it&#39;s</span>
                 <span class="c1"># not already there.</span>
+                <span class="k">if</span> <span class="n">database_component</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">database_component</span> <span class="o">=</span> <span class="n">mpas_core</span>
+
+                <span class="k">if</span> <span class="n">database_component</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">database_subdirs</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">database_component</span><span class="si">}</span><span class="s1"> a recognized &#39;</span>
+                                     <span class="sa">f</span><span class="s1">&#39;database in database_subdirs.json&#39;</span><span class="p">)</span>
+
+                <span class="n">core_path</span> <span class="o">=</span> <span class="n">database_subdirs</span><span class="p">[</span><span class="n">database_component</span><span class="p">]</span>
+
                 <span class="k">if</span> <span class="n">url</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">base_url</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;download&#39;</span><span class="p">,</span> <span class="s1">&#39;server_base_url&#39;</span><span class="p">)</span>
-                    <span class="n">core_path</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;download&#39;</span><span class="p">,</span> <span class="s1">&#39;core_path&#39;</span><span class="p">)</span>
-                    <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">base_url</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">core_path</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">database</span><span class="si">}</span><span class="s1">&#39;</span>
+                    <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">base_url</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">core_path</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">database</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s1">&#39;</span>
 
-                    <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s1">&#39;</span>
-
-                <span class="n">database_root</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-                    <span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mpas_core</span><span class="si">}</span><span class="s1">_database_root&#39;</span><span class="p">)</span>
-                <span class="n">download_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">database_root</span><span class="p">,</span> <span class="n">database</span><span class="p">,</span>
-                                             <span class="n">download_target</span><span class="p">)</span>
+                <span class="n">database_root</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="s1">&#39;database_root&#39;</span><span class="p">)</span>
+                <span class="n">download_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">database_root</span><span class="p">,</span> <span class="n">core_path</span><span class="p">,</span>
+                                             <span class="n">database</span><span class="p">,</span> <span class="n">download_target</span><span class="p">)</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">download_path</span><span class="p">):</span>
                     <span class="n">database_subdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">database_root</span><span class="p">,</span> <span class="n">database</span><span class="p">)</span>
                     <span class="n">databases_with_downloads</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">database_subdir</span><span class="p">)</span>

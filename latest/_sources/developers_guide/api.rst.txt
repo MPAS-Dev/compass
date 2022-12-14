@@ -183,6 +183,7 @@ io
 
    download
    symlink
+   package_path
 
 logging
 ^^^^^^^

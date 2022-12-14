@@ -171,17 +171,12 @@ cases or a test suite:</p>
 <span class="c1"># cases.</span><span class="w"></span>
 <span class="k">[paths]</span><span class="w"></span>
 
-<span class="c1"># The root to a location where the mesh_database, initial_condition_database,</span><span class="w"></span>
-<span class="c1"># and bathymetry_database for MPAS-Ocean will be cached</span><span class="w"></span>
-<span class="na">ocean_database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/e3sm/mpas_standalonedata/mpas-ocean</span><span class="w"></span>
-
-<span class="c1"># The root to a location where the mesh_database and initial_condition_database</span><span class="w"></span>
-<span class="c1"># for MALI will be cached</span><span class="w"></span>
-<span class="na">landice_database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/e3sm/mpas_standalonedata/mpas-albany-landice</span><span class="w"></span>
+<span class="c1"># A shared root directory where MPAS standalone data can be found</span><span class="w"></span>
+<span class="na">database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/e3sm/mpas_standalonedata</span><span class="w"></span>
 
 <span class="c1"># the path to the base conda environment where compass environments have</span><span class="w"></span>
 <span class="c1"># been created</span><span class="w"></span>
-<span class="na">compass_envs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/cfs/cdirs/e3sm/software/compass/cori-haswell/base</span><span class="w"></span>
+<span class="na">compass_envs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/global/common/software/e3sm/compass/cori-haswell/base</span><span class="w"></span>
 
 
 <span class="c1"># Options related to deploying a compass conda environment on supported</span><span class="w"></span>
@@ -206,6 +201,14 @@ cases or a test suite:</p>
 
 <span class="c1"># the version of ESMF to build if using system compilers and MPI (don&#39;t build)</span><span class="w"></span>
 <span class="na">esmf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">None</span><span class="w"></span>
+
+
+<span class="c1"># Config options related to creating a job script</span><span class="w"></span>
+<span class="k">[job]</span><span class="w"></span>
+
+<span class="c1"># The job constraint to use, by default, taken from the first constraint (if</span><span class="w"></span>
+<span class="c1"># any) provided for the  machine by mache</span><span class="w"></span>
+<span class="na">constraint</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">haswell</span><span class="w"></span>
 </pre></div>
 </div>
 <p>Additionally, some relevant config options come from the

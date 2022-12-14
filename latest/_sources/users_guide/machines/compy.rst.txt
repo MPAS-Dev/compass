@@ -16,13 +16,8 @@ suite:
     # cases.
     [paths]
 
-    # The root to a location where the mesh_database, initial_condition_database,
-    # and bathymetry_database for MPAS-Ocean will be cached
-    ocean_database_root = /compyfs/mpas_standalonedata/mpas-ocean
-
-    # The root to a location where the mesh_database and initial_condition_database
-    # for MALI will be cached
-    landice_database_root = /compyfs/mpas_standalonedata/mpas-albany-landice
+    # A shared root directory where MPAS standalone data can be found
+    database_root = /compyfs/mpas_standalonedata
 
     # the path to the base conda environment where compass environments have
     # been created
@@ -40,7 +35,7 @@ suite:
     mpi_intel = impi
 
     # the system MPI library to use for gnu compiler
-    mpi_pgi = mvapich2
+    mpi_gnu = openmpi
 
     # the base path for spack environments used by compass
     spack = /share/apps/E3SM/conda_envs/compass/spack

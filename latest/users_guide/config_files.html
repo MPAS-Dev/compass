@@ -128,18 +128,17 @@ you’re running on one of the supported machines, you might find it convenient
 to make your own changes to config options related to either setting up or
 running test suites and test case.</p>
 <p>Here is an example:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[paths]</span><span class="w"></span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># This file contains some common config options you might want to set</span><span class="w"></span>
 
-<span class="na">mpas_model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">.</span><span class="w"></span>
+<span class="c1"># The paths section describes paths to databases and shared compass environments</span><span class="w"></span>
+<span class="k">[paths]</span><span class="w"></span>
 
-<span class="c1"># The root to a location where the mesh_database, initial_condition_database,</span><span class="w"></span>
-<span class="c1"># and bathymetry_database for MPAS-Ocean will be cached</span><span class="w"></span>
-<span class="na">ocean_database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/xylar/data/mpas/mpas_standalonedata/mpas-ocean</span><span class="w"></span>
+<span class="c1"># the relative or absolute path to the root of a branch where the MPAS</span><span class="w"></span>
+<span class="c1"># component has been built</span><span class="w"></span>
+<span class="na">mpas_mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">.</span><span class="w"></span>
 
-<span class="c1"># The root to a location where the mesh_database and initial_condition_database</span><span class="w"></span>
-<span class="c1"># for MALI will be cached</span><span class="w"></span>
-<span class="na">landice_database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/xylar/data/mpas/mpas_standalonedata/mpas-albany-landice</span><span class="w"></span>
-
+<span class="c1"># A root directory where MPAS standalone data can be found</span><span class="w"></span>
+<span class="na">database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/xylar/data/mpas/mpas_standalonedata/mpas-ocean</span><span class="w"></span>
 
 <span class="c1"># The parallel section describes options related to running tests in parallel</span><span class="w"></span>
 <span class="k">[parallel]</span><span class="w"></span>
@@ -148,13 +147,10 @@ running test suites and test case.</p>
 <span class="na">system</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">single_node</span><span class="w"></span>
 
 <span class="c1"># whether to use mpirun or srun to run the model</span><span class="w"></span>
-<span class="na">parallel_executable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">mpirun</span><span class="w"></span>
+<span class="na">parallel_executable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">mpirun -host localhost</span><span class="w"></span>
 
-<span class="c1"># cores per node on the machine</span><span class="w"></span>
+<span class="c1"># cores per node on the machine, detected automatically by default</span><span class="w"></span>
 <span class="na">cores_per_node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8</span><span class="w"></span>
-
-<span class="c1"># the number of multiprocessing or dask threads to use</span><span class="w"></span>
-<span class="na">threads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8</span><span class="w"></span>
 </pre></div>
 </div>
 <p>The comments in this example are hopefully pretty self-explanatory. In this
@@ -168,8 +164,8 @@ which case you could provide an absolute path like:</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># The paths section points compass to external paths</span><span class="w"></span>
 <span class="k">[paths]</span><span class="w"></span>
 
-<span class="c1"># the relative or absolute path to the root of a branch where MPAS-Ocean</span><span class="w"></span>
-<span class="c1"># has been built</span><span class="w"></span>
+<span class="c1"># the relative or absolute path to the root of a branch where the MPAS</span><span class="w"></span>
+<span class="c1"># component has been built</span><span class="w"></span>
 <span class="na">mpas_model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/xylar/code/E3SM/components/mpas-ocean</span><span class="w"></span>
 </pre></div>
 </div>

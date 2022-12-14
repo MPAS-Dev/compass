@@ -217,7 +217,8 @@ correspond to specific climate model (e.g., UKESM1-0-LL, CCSM4) and scenarios
 climatology files are needed. For the <code class="docutils literal notranslate"><span class="pre">atmosphere</span></code> testcase,
 <code class="docutils literal notranslate"><span class="pre">RACMO2.3p2_ANT27_smb_yearly_1979_2018.nc</span></code> will be automatically downloaded
 from the MALI public database when the testcase is being set up and saved
-to the directory that users define in the config option <cite>landice_database_root</cite>.
+to a subdirectory of the root directory that users define in the config option
+<code class="docutils literal notranslate"><span class="pre">database_root</span></code> (defined automatically on supported machines).
 The RACMO file is used to correct the ISMIP6 the surface mass balance (SMB)
 data with the modern climatology. For the <code class="docutils literal notranslate"><span class="pre">ocean_thermal</span></code> case, users need to
 download the modern ocean thermal forcing climatology file named
@@ -260,11 +261,11 @@ config sections users may choose the interpolation scheme among
 <code class="docutils literal notranslate"><span class="pre">bilinear</span></code>, <code class="docutils literal notranslate"><span class="pre">neareststod</span></code> and <code class="docutils literal notranslate"><span class="pre">conserve</span></code> methods. The exception is that
 the <code class="docutils literal notranslate"><span class="pre">ocean</span> <span class="pre">basal</span></code> test case should always use the <code class="docutils literal notranslate"><span class="pre">neareststod</span></code> method
 because the source files have a single valued data per basin.</p>
-<p>Below is the default config options:</p>
+<p>Below are the default config options:</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># config options for ismip6 antarctic ice sheet data set</span><span class="w"></span>
 <span class="k">[paths]</span><span class="w"></span>
 <span class="c1"># The root to a location where data files for MALI will be cached</span><span class="w"></span>
-<span class="na">landice_database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/Users/hollyhan/Desktop/RESEARCH/MALI/database/</span><span class="w"></span>
+<span class="na">database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/Users/hollyhan/Desktop/RESEARCH/MALI/database/</span><span class="w"></span>
 
 <span class="k">[ismip6_ais]</span><span class="w"></span>
 
@@ -325,7 +326,7 @@ process the RACMO modern SMB climatology but not the modern thermal forcing.</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># config options for ismip6 antarctic ice sheet data set</span><span class="w"></span>
 <span class="k">[paths]</span><span class="w"></span>
 <span class="c1"># The root to a location where data files for MALI will be cached</span><span class="w"></span>
-<span class="na">landice_database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">NotAvailable</span><span class="w"></span>
+<span class="na">database_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">NotAvailable</span><span class="w"></span>
 
 <span class="k">[ismip6_ais]</span><span class="w"></span>
 
