@@ -3,6 +3,7 @@ import tempfile
 import requests
 import progressbar
 from urllib.parse import urlparse
+import importlib.resources
 
 
 def download(url, dest_path, config, exceptions=True):
@@ -186,6 +187,26 @@ def symlink(target, link_name, overwrite=True):
         if os.path.islink(temp_link_name):
             os.remove(temp_link_name)
         raise
+
+
+def package_path(package, resource):
+    """
+    A replacement for deprecated ``importlib.resources.path()``:
+    https://github.com/python/importlib_resources/blob/7e9020a1b84726fdc6ba71ee2893119d1ee61e02/importlib_resources/_legacy.py
+
+    Parameters
+    ----------
+    package : Package
+        The python package for the resource
+    resource : Resource
+        The file within the package
+    """
+    parent, file_name = os.path.split(str(resource))
+    if parent:
+        raise ValueError(f'{resource!r} must be only a file name')
+
+    return importlib.resources.as_file(
+        importlib.resources.files(package) / file_name)
 
 
 # From https://stackoverflow.com/a/1094933/7728169

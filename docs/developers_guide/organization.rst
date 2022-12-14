@@ -1537,11 +1537,20 @@ In this example from
 the file ``BedMachineAntarctica_v2_and_GEBCO_2022_0.05_degree_20220729.nc`` is
 slated for later downloaded from
 `MPAS-Ocean's bathymetry database <https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-ocean/bathymetry_database/>`_.
-The file will be stored in the subdirectory ``bathymetry_database`` of the path
-in the ``ocean_database_root`` config option in the ``paths`` section of the
-config file.  The ``ocean_database_root`` option (or the equivalent for other
-MPAS cores) is set either by selecting one of the :ref:`supported_machines` or
-in the user's config file.
+The file will be stored in the subdirectory ``mpas-ocean/bathymetry_database``
+of the path in the ``database_root`` config option in the ``paths`` section of
+the config file.  The ``database_root`` option is set either by selecting one
+of the :ref:`supported_machines` or in the user's config file.
+
+You can also specify the ``database_component`` parameter to choose to get
+files from a database belonging to another component, e.g.:
+
+.. code-block:: python
+
+    self.add_input_file(filename='icePresent_QU60km_polar.nc',
+                        target='icePresent_QU60km_polar.nc',
+                        database='partition',
+                        database_component='seaice'
 
 It is also possible to download files directly from a URL and store them in
 the step's working directory:

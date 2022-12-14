@@ -314,8 +314,9 @@ and adding it as an input to the step.  No current test cases use
     def setup(self):
 
         step_dir = self.work_dir
-        database_root = self.config.get('paths', 'ocean_database_root')
-        download_path = os.path.join(database_root, 'bathymetry_database')
+        database_root = self.config.get('paths', 'database_root')
+        download_path = os.path.join(database_root, 'mpas-ocean',
+                                     'bathymetry_database')
 
         remote_filename = \
             'BedMachineAntarctica_and_GEBCO_2019_0.05_degree.200128.nc'

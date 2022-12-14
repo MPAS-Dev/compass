@@ -261,25 +261,19 @@ machine and you used ``-p`` to point to the MPAS build you want to use, you do
 not need a config file.
 
 If you are not on one of the supported machines, you will need to create a
-config file like in this example for MPAS-Ocean. See also
-`these examples <https://github.com/MPAS-Dev/compass/tree/master/example_configs>`_
+config file like in this example. See also
+`this example <https://github.com/MPAS-Dev/compass/tree/master/example_configs>`_
 in the repository.
 
 .. code-block:: cfg
 
     # This file contains some common config options you might want to set
-    # if you're working with the compass MPAS-Ocean or MALI.
 
-    # The paths section describes paths that are used within landice and ocean
-    # test cases.
+    # The paths section describes paths to databases and shared compass environments
     [paths]
 
-    # The root to a location where data files for MALI will be cached
-    landice_database_root = </path/to/landice_datafiles>
-
-    # The root to a location where the mesh_database, initial_condition_database,
-    # and bathymetry_database for MPAS-Ocean will be cached
-    ocean_database_root = </path/to/ocean_databases>
+    # A root directory where MPAS standalone data can be found
+    database_root = </path/to/root>/mpas_standalonedata
 
     # The parallel section describes options related to running tests in parallel
     [parallel]
@@ -293,9 +287,9 @@ in the repository.
     # cores per node on the machine, detected automatically by default
     # cores_per_node = 4
 
-The two ``*_database_root`` directories can point to locations where you would
-like to download data for MALI and MPAS-Ocean.  This data is downloaded only
-once and cached for the next time you call ``compass setup`` or
+The ``database_root`` directory can point to a location where you would like to
+download data for MALI, MPAS-Seaice and MPAS-Ocean.  This data is downloaded
+only once and cached for the next time you call ``compass setup`` or
 ``compass suite`` (see below).
 
 The ``cores_per_node`` config option will default to the number of CPUs on your

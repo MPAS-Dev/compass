@@ -1,6 +1,4 @@
-from importlib.resources import path
-
-from compass.io import symlink
+from compass.io import symlink, package_path
 from compass.landice.tests.enthalpy_benchmark.setup_mesh import SetupMesh
 from compass.landice.tests.enthalpy_benchmark.run_model import RunModel
 from compass.landice.tests.enthalpy_benchmark.A.visualize import Visualize
@@ -38,8 +36,8 @@ class B(TestCase):
         """
         Modify the configuration options for this test case
         """
-        with path('compass.landice.tests.enthalpy_benchmark', 'README') as \
-                target:
+        package = 'compass.landice.tests.enthalpy_benchmark'
+        with package_path(package, 'README') as target:
             symlink(str(target), '{}/README'.format(self.work_dir))
 
     # no run() method needed: we just run the steps, the default behavior

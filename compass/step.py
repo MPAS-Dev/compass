@@ -1,13 +1,13 @@
 import os
 from lxml import etree
-from importlib.resources import path
 import shutil
 import numpy
 import stat
 import grp
 import progressbar
+import json
 
-from compass.io import download, symlink
+from compass.io import download, symlink, package_path
 import compass.namelist
 import compass.streams
 
@@ -347,8 +347,8 @@ class Step:
         pass
 
     def add_input_file(self, filename=None, target=None, database=None,
-                       url=None, work_dir_target=None, package=None,
-                       copy=False):
+                       database_component=None, url=None, work_dir_target=None,
+                       package=None, copy=False):
         """
         Add an input file to the step (but not necessarily to the MPAS model).
         The file can be local, a symlink to a file that will be created in
@@ -376,6 +376,12 @@ class Step:
             determined by combining the base URL of the data server, the
             relative path for the core, ``database`` and ``target``.
 
+        database_component : {'ocean', 'seaice', 'landice', None}, optional
+            The prefix of a database root that the database resides in.  By
+            default this is the MPAS core name for this step.  The suffix
+            ``_database_root`` is appended to this string to determine the
+            config option where the database root resides on the local machine.
+
         url : str, optional
             The URL (including file name) for downloading the file.  This
             option should be set if the file is not in a database on the data
@@ -400,8 +406,9 @@ class Step:
             filename = os.path.basename(target)
 
         self.input_data.append(dict(filename=filename, target=target,
-                                    database=database, url=url,
-                                    work_dir_target=work_dir_target,
+                                    database=database,
+                                    database_component=database_component,
+                                    url=url, work_dir_target=work_dir_target,
                                     package=package, copy=copy))
 
     def add_output_file(self, filename):
@@ -643,6 +650,10 @@ class Step:
         step_dir = self.work_dir
         config = self.config
 
+        with package_path('compass', 'database_subdirs.json') as path:
+            with open(path) as data_file:
+                database_subdirs = json.load(data_file)
+
         # process the outputs first because cached outputs will add more inputs
         if self.cached:
             # forget about the inputs -- we won't used them, but we will add
@@ -665,6 +676,7 @@ class Step:
             filename = entry['filename']
             target = entry['target']
             database = entry['database']
+            database_component = entry['database_component']
             url = entry['url']
             work_dir_target = entry['work_dir_target']
             package = entry['package']
@@ -697,8 +709,8 @@ class Step:
             if package is not None:
                 if target is None:
                     target = filename
-                with path(package, target) as package_path:
-                    target = str(package_path)
+                with package_path(package, target) as path:
+                    target = str(path)
 
             if work_dir_target is not None:
                 target = os.path.join(self.base_work_dir, work_dir_target)
@@ -713,17 +725,22 @@ class Step:
             if database is not None:
                 # we're downloading a file to a cache of a database (if it's
                 # not already there.
+                if database_component is None:
+                    database_component = mpas_core
+
+                if database_component not in database_subdirs:
+                    raise ValueError(f'{database_component} a recognized '
+                                     f'database in database_subdirs.json')
+
+                core_path = database_subdirs[database_component]
+
                 if url is None:
                     base_url = config.get('download', 'server_base_url')
-                    core_path = config.get('download', 'core_path')
-                    url = f'{base_url}/{core_path}/{database}'
+                    url = f'{base_url}/{core_path}/{database}/{target}'
 
-                    url = f'{url}/{target}'
-
-                database_root = config.get(
-                    'paths', f'{mpas_core}_database_root')
-                download_path = os.path.join(database_root, database,
-                                             download_target)
+                database_root = config.get('paths', 'database_root')
+                download_path = os.path.join(database_root, core_path,
+                                             database, download_target)
                 if not os.path.exists(download_path):
                     database_subdir = os.path.join(database_root, database)
                     databases_with_downloads.add(database_subdir)
