@@ -191,8 +191,10 @@ def setup_and_submit(load_script, setup_command, worktree, mpas_subdir,
         full_setup = f'{full_setup} -b {baseline}'
 
     commands = f'source {load_script}; ' \
-               f'{full_setup}; ' \
-               f'cd {workdir}; ' \
+               f'{full_setup}'
+    print_and_run(commands)
+
+    commands = f'cd {workdir}; ' \
                f'sbatch job_script.{suite}.sh'
     print_and_run(commands)
 
