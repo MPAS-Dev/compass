@@ -44,23 +44,6 @@ class ConvTestCase(TestCase):
 
         self.update_cores()
 
-    def run(self):
-        """
-        Run each step of the testcase
-        """
-        config = self.config
-        for resolution in self.resolutions:
-            ntasks = config.getint(f'planar_convergence',
-                                   f'{resolution}km_ntasks')
-            min_tasks = config.getint(f'planar_convergence',
-                                      f'{resolution}km_min_tasks')
-            step = self.steps['{}km_forward'.format(resolution)]
-            step.ntasks = ntasks
-            step.min_tasks = min_tasks
-
-        # run the step
-        super().run()
-
     def update_cores(self):
         """ Update the number of cores and min_tasks for each forward step """
 

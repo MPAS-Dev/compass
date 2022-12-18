@@ -68,6 +68,14 @@ class Forward(Step):
         self.add_streams_file('compass.ocean.tests.planar_convergence',
                               'streams.template',
                               template_replacements=stream_replacements)
+        self._get_resources()
+
+    def constrain_resources(self, available_cores):
+        """
+        Update resources at runtime from config options
+        """
+        self._get_resources()
+        super().constrain_resources(available_cores)
 
     def run(self):
         """
@@ -118,3 +126,11 @@ class Forward(Step):
         stream_replacements = {'output_interval': duration}
 
         return namelist_replacements, stream_replacements
+
+    def _get_resources(self):
+        config = self.config
+        resolution = self.resolution
+        self.ntasks = config.getint(f'planar_convergence',
+                                    f'{resolution}km_ntasks')
+        self.min_tasks = config.getint(f'planar_convergence',
+                                       f'{resolution}km_min_tasks')
