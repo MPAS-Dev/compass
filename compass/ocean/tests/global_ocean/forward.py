@@ -25,14 +25,9 @@ class ForwardStep(Step):
     time_integrator : {'split_explicit', 'RK4'}
         The time integrator to use for the forward run
 
-    ntasks_from_config : bool
-        Whether to get ``ntasks`` from the config file
-
-    min_tasks_from_config : bool
-        Whether to get ``min_tasks`` from the config file
-
-    threads_from_config : bool
-        Whether to get ``threads`` from the config file
+    resources_from_config : bool
+        Whether to get ``ntasks``, ``min_tasks`` and ``openmp_threads`` from
+        config options
     """
     def __init__(self, test_case, mesh, init, time_integrator, name='forward',
                  subdir=None, ntasks=None, min_tasks=None,
@@ -81,9 +76,10 @@ class ForwardStep(Step):
                          ntasks=ntasks, min_tasks=min_tasks,
                          openmp_threads=openmp_threads)
 
-        self.ntasks_from_config = ntasks is None
-        self.min_tasks_from_config = min_tasks is None
-        self.threads_from_config = openmp_threads is None
+        if (ntasks is None) != (openmp_threads is None):
+            raise ValueError('You must specify both ntasks and openmp_threads '
+                             'or neither.')
+        self.resources_from_config = ntasks is None
 
         # make sure output is double precision
         self.add_streams_file('compass.ocean.streams', 'streams.output')
@@ -140,15 +136,14 @@ class ForwardStep(Step):
         Set up the test case in the work directory, including downloading any
         dependencies
         """
-        if self.ntasks_from_config:
-            self.ntasks = self.config.getint(
-                'global_ocean', 'forward_ntasks')
-        if self.min_tasks_from_config:
-            self.min_tasks = self.config.getint(
-                'global_ocean', 'forward_min_tasks')
-        if self.threads_from_config:
-            self.openmp_threads = self.config.getint(
-                'global_ocean', 'forward_threads')
+        self._get_resources()
+
+    def constrain_resources(self, available_cores):
+        """
+        Update resources at runtime from config options
+        """
+        self._get_resources()
+        super().constrain_resources(available_cores)
 
     def run(self):
         """
@@ -158,6 +153,16 @@ class ForwardStep(Step):
         add_mesh_and_init_metadata(self.outputs, self.config,
                                    init_filename='init.nc')
 
+    def _get_resources(self):
+        # get the these properties from the config options
+        if self.resources_from_config:
+            config = self.config
+            self.ntasks = config.getint(
+                'global_ocean', 'forward_ntasks')
+            self.min_tasks = config.getint(
+                'global_ocean', 'forward_min_tasks')
+            self.openmp_threads = config.getint(
+                'global_ocean', 'forward_threads')
 
 class ForwardTestCase(TestCase):
     """
@@ -207,27 +212,6 @@ class ForwardTestCase(TestCase):
         Modify the configuration options for this test case
         """
         configure_global_ocean(test_case=self, mesh=self.mesh, init=self.init)
-
-    def run(self):
-        """
-        Run each step of the testcase
-        """
-        config = self.config
-        for step_name in self.steps_to_run:
-            step = self.steps[step_name]
-            if isinstance(step, ForwardStep):
-                if step.ntasks_from_config:
-                    step.ntasks = config.getint('global_ocean',
-                                                'forward_ntasks')
-                if step.min_tasks_from_config:
-                    step.min_tasks = config.getint('global_ocean',
-                                                   'forward_min_tasks')
-                if step.threads_from_config:
-                    step.threads = config.getint('global_ocean',
-                                                 'forward_threads')
-
-        # run the steps
-        super().run()
 
 
 def get_forward_subdir(init_subdir, time_integrator, name):
