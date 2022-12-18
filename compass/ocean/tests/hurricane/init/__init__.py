@@ -51,11 +51,3 @@ class Init(TestCase):
         Modify the configuration options for this test case
         """
         configure_hurricane(test_case=self, mesh=self.mesh)
-
-    def run(self):
-        """
-        Run each step of the testcase
-        """
-
-        # run the steps
-        super().run()

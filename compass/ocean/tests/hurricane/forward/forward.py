@@ -69,13 +69,24 @@ class ForwardStep(Step):
         Set up the test case in the work directory, including downloading any
         dependencies
         """
-        self.ntasks = self.config.getint('hurricane', 'forward_ntasks')
-        self.min_tasks = self.config.getint('hurricane', 'forward_min_tasks')
-        self.openmp_threads = self.config.getint('hurricane',
-                                                 'forward_threads')
+        self._get_resources()
+
+    def constrain_resources(self, available_cores):
+        """
+        Update resources at runtime from config options
+        """
+        self._get_resources()
+        super().constrain_resources(available_cores)
 
     def run(self):
         """
         Run this step of the testcase
         """
         run_model(self)
+
+    def _get_resources(self):
+        # get the these properties from the config options
+        config = self.config
+        self.ntasks = config.getint('hurricane', 'forward_ntasks')
+        self.min_tasks = config.getint('hurricane', 'forward_min_tasks')
+        self.openmp_threads = config.getint('hurricane', 'forward_threads')
