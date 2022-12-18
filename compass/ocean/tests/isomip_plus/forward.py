@@ -57,7 +57,7 @@ class Forward(Step):
         self.resolution = resolution
         self.experiment = experiment
         super().__init__(test_case=test_case, name=name, subdir=subdir,
-                         ntasks=None, min_tasks=None, openmp_threads=1)
+                         ntasks=None, min_tasks=None, openmp_threads=None)
 
         # make sure output is double precision
         self.add_streams_file('compass.ocean.streams', 'streams.output')
@@ -126,7 +126,19 @@ class Forward(Step):
         self.add_output_file('output.nc')
         self.add_output_file('land_ice_fluxes.nc')
 
-    # no setup() is needed
+    def setup(self):
+        """
+        Set up the test case in the work directory, including downloading any
+        dependencies
+        """
+        self._get_resources()
+
+    def constrain_resources(self, available_cores):
+        """
+        Update resources at runtime from config options
+        """
+        self._get_resources()
+        super().constrain_resources(available_cores)
 
     def run(self):
         """
@@ -170,6 +182,15 @@ class Forward(Step):
                             'config_start_time': "'file'"}
             self.update_namelist_at_runtime(replacements)
 
+    def _get_resources(self):
+        """
+        Get resources (ntasks, min_tasks, and openmp_threads) from the config
+        options
+        """
+        config = self.config
+        self.ntasks = config.getint('isomip_plus', 'forward_ntasks')
+        self.min_tasks = config.getint('isomip_plus', 'forward_min_tasks')
+        self.openmp_threads = config.getint('isomip_plus', 'forward_threads')
 
 def get_time_steps(resolution):
     """
