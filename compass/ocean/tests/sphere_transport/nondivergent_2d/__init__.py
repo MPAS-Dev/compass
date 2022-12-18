@@ -55,23 +55,6 @@ class Nondivergent2D(TestCase):
 
         self.update_cores()
 
-    def run(self):
-        """
-        Run each step of the testcase
-        """
-        config = self.config
-        for resolution in self.resolutions:
-            ntasks = config.getint('nondivergent_2d',
-                                   f'QU{resolution}_ntasks')
-            min_tasks = config.getint('nondivergent_2d',
-                                      f'QU{resolution}_min_tasks')
-            step = self.steps[f'QU{resolution}_forward']
-            step.ntasks = ntasks
-            step.min_tasks = min_tasks
-
-        # run the step
-        super().run()
-
     def update_cores(self):
         """ Update the number of cores and min_tasks for each forward step """
 
