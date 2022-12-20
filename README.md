@@ -1,6 +1,6 @@
 # COMPASS
 
-[![Build Status](https://dev.azure.com/MPAS-Dev/compass%20testing/_apis/build/status/MPAS-Dev.compass?branchName=master)](https://dev.azure.com/MPAS-Dev/compass%20testing/_build/latest?definitionId=7&branchName=master)
+[![Build Status](https://dev.azure.com/MPAS-Dev/compass%20testing/_apis/build/status/MPAS-Dev.compass?branchName=main)](https://dev.azure.com/MPAS-Dev/compass%20testing/_build/latest?definitionId=7&branchName=main)
 
 The COMPASS (Configuration Of Model for Prediction Across Scales Setups) 
 infrastructure provides a capability for defining simple test-case workflows.

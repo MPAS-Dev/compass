@@ -22,7 +22,7 @@ If you prefer, you can use either of the approaches described in
 :ref:`dev_compass_repo` or :ref:`dev_compass_repo_advanced` to clone the repo
 and check out the ``legacy`` branch.
 
-Next, you will need to create a new branch from ``master`` for developing the
+Next, you will need to create a new branch from ``main`` for developing the
 new test group.  For this purpose, we will stick with the simpler approach in
 :ref:`dev_compass_repo` here, but feel free to use the ``worktree`` approach
 instead if you are comfortable with it.

@@ -63,7 +63,7 @@ The default location for MPAS-Ocean is in the
 `git submodule <https://git-scm.com/book/en/v2/Git-Tools-Submodules>`_
 ``E3SM-Project`` in the directory ``components/mpas-ocean``.  The submodule
 may not point to the latest MPAS-Ocean code in on the E3SM
-`master <https://github.com/E3SM-Project/E3SM/tree/master>`_
+`main <https://github.com/E3SM-Project/E3SM/tree/main>`_
 branch but the plan is to update the submodule frequently.  The current version
 of the submodule should always be guaranteed to be compatible with the
 corresponding version of ``compass``.

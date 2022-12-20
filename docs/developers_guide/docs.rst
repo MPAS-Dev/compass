@@ -10,7 +10,7 @@ format.  We recommend this `basic guide <https://www.sphinx-doc.org/en/master/us
 to reStructuredText in Sphinx.
 
 Another easy way to get started is by taking a look at the existing source
-code for the documentation: https://github.com/MPAS-Dev/compass/tree/master/docs/
+code for the documentation: https://github.com/MPAS-Dev/compass/tree/main/docs/
 
 Each time you add a core, configuration or test case, the corresponding
 documentation must be included with the pull request to add the code.  This
