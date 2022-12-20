@@ -220,32 +220,6 @@ class IsomipPlusTest(TestCase):
                 # default to 10 vertical levels instead of 36
                 config.set('vertical_grid', 'vert_levels', '10')
 
-        for step_name in self.steps:
-            if step_name in ['ssh_adjustment', 'performance', 'simulation']:
-                step = self.steps[step_name]
-                step.ntasks = ntasks
-                step.min_tasks = min_tasks
-                step.openmp_threads = 1
-
-    def run(self):
-        """
-        Run each step of the test case
-        """
-        config = self.config
-        # get the these properties from the config options
-        for step_name in self.steps_to_run:
-            if step_name in ['ssh_adjustment', 'performance', 'simulation']:
-                step = self.steps[step_name]
-                # get the these properties from the config options
-                step.ntasks = config.getint('isomip_plus', 'forward_ntasks')
-                step.min_tasks = config.getint('isomip_plus',
-                                               'forward_min_tasks')
-                step.openmp_threads = config.getint('isomip_plus',
-                                                    'forward_threads')
-
-        # run the steps
-        super().run()
-
     def validate(self):
         """
         Perform validation of variables

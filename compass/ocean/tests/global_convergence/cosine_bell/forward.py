@@ -13,6 +13,9 @@ class Forward(Step):
     ----------
     resolution : int
         The resolution of the (uniform) mesh in km
+
+    mesh_name : str
+        The name of the mesh
     """
 
     def __init__(self, test_case, resolution, mesh_name):
@@ -35,6 +38,7 @@ class Forward(Step):
                          subdir=f'{mesh_name}/forward')
 
         self.resolution = resolution
+        self.mesh_name = mesh_name
 
         # make sure output is double precision
         self.add_streams_file('compass.ocean.streams', 'streams.output')
@@ -61,6 +65,14 @@ class Forward(Step):
         """
         dt = self.get_dt()
         self.add_namelist_options({'config_dt': dt})
+        self._get_resources()
+
+    def constrain_resources(self, available_cores):
+        """
+        Update resources at runtime from config options
+        """
+        self._get_resources()
+        super().constrain_resources(available_cores)
 
     def run(self):
         """
@@ -92,3 +104,9 @@ class Forward(Step):
         dt = time.strftime('%H:%M:%S', time.gmtime(dt))
 
         return dt
+
+    def _get_resources(self):
+        mesh_name = self.mesh_name
+        config = self.config
+        self.ntasks = config.getint('cosine_bell', f'{mesh_name}_ntasks')
+        self.min_tasks = config.getint('cosine_bell', f'{mesh_name}_min_tasks')

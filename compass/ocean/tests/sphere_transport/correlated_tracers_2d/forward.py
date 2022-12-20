@@ -62,6 +62,14 @@ class Forward(Step):
                                    config.get(
                                        'correlated_tracers_2d',
                                        'time_integrator')})
+        self._get_resources()
+
+    def constrain_resources(self, available_cores):
+        """
+        Update resources at runtime from config options
+        """
+        self._get_resources()
+        super().constrain_resources(available_cores)
 
     def run(self):
         """
@@ -100,3 +108,11 @@ class Forward(Step):
             dtminutes = dt / timedelta(minutes=1)
             dtstr = "00:" + str(int(dtminutes))[:2].zfill(2) + ":00"
         return dtstr
+
+    def _get_resources(self):
+        resolution = self.resolution
+        config = self.config
+        self.ntasks = config.getint('correlated_tracers_2d',
+                                    f'QU{resolution}_ntasks')
+        self.min_tasks = config.getint('correlated_tracers_2d',
+                                       f'QU{resolution}_min_tasks')

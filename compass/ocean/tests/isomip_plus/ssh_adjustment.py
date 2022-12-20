@@ -8,8 +8,7 @@ class SshAdjustment(Step):
     A step for iteratively adjusting the pressure from the weight of the ice
     shelf to match the sea-surface height as part of ice-shelf 2D test cases
     """
-    def __init__(self, test_case, resolution, ntasks=1, min_tasks=None,
-                 openmp_threads=1, vertical_coordinate='z-star',
+    def __init__(self, test_case, resolution, vertical_coordinate='z-star',
                  thin_film_present=False):
         """
         Create the step
@@ -21,25 +20,10 @@ class SshAdjustment(Step):
 
         resolution : float
             The horizontal resolution (km) of the test case
-
-        ntasks : int, optional
-            the number of tasks the step would ideally use.  If fewer tasks
-            are available on the system, the step will run on all available
-            tasks as long as this is not below ``min_tasks``
-
-        min_tasks : int, optional
-            the number of tasks the step requires.  If the system has fewer
-            than this number of tasks, the step will fail
-
-        openmp_threads : int, optional
-            the number of OpenMP threads the step will use
-
         """
-        if min_tasks is None:
-            min_tasks = ntasks
         super().__init__(test_case=test_case, name='ssh_adjustment',
-                         ntasks=ntasks, min_tasks=min_tasks,
-                         openmp_threads=openmp_threads)
+                         ntasks=None, min_tasks=None,
+                         openmp_threads=None)
 
         # generate the namelist, replacing a few default options
         # start with the same namelist settings as the forward run
@@ -76,7 +60,19 @@ class SshAdjustment(Step):
 
         self.add_output_file(filename='adjusted_init.nc')
 
-    # no setup() is needed
+    def setup(self):
+        """
+        Set up the test case in the work directory, including downloading any
+        dependencies
+        """
+        self._get_resources()
+
+    def constrain_resources(self, available_cores):
+        """
+        Update resources at runtime from config options
+        """
+        self._get_resources()
+        super().constrain_resources(available_cores)
 
     def run(self):
         """
@@ -86,3 +82,13 @@ class SshAdjustment(Step):
         iteration_count = config.getint('ssh_adjustment', 'iterations')
         adjust_ssh(variable='landIcePressure', iteration_count=iteration_count,
                    step=self)
+
+    def _get_resources(self):
+        """
+        Get resources (ntasks, min_tasks, and openmp_threads) from the config
+        options
+        """
+        config = self.config
+        self.ntasks = config.getint('isomip_plus', 'forward_ntasks')
+        self.min_tasks = config.getint('isomip_plus', 'forward_min_tasks')
+        self.openmp_threads = config.getint('isomip_plus', 'forward_threads')

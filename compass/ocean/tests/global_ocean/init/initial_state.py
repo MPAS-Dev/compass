@@ -148,14 +148,17 @@ class InitialState(Step):
 
     def setup(self):
         """
-        Set up the test case in the work directory, including downloading any
-        dependencies.
+        Get resources at setup from config options
         """
-        # get the these properties from the config options
-        config = self.config
-        self.ntasks = config.getint('global_ocean', 'init_ntasks')
-        self.min_tasks = config.getint('global_ocean', 'init_min_tasks')
-        self.openmp_threads = config.getint('global_ocean', 'init_threads')
+        self._get_resources()
+
+
+    def constrain_resources(self, available_cores):
+        """
+        Update resources at runtime from config options
+        """
+        self._get_resources()
+        super().constrain_resources(available_cores)
 
     def run(self):
         """
@@ -175,3 +178,10 @@ class InitialState(Step):
 
         plot_initial_state(input_file_name='initial_state.nc',
                            output_file_name='initial_state.png')
+
+    def _get_resources(self):
+        # get the these properties from the config options
+        config = self.config
+        self.ntasks = config.getint('global_ocean', 'init_ntasks')
+        self.min_tasks = config.getint('global_ocean', 'init_min_tasks')
+        self.openmp_threads = config.getint('global_ocean', 'init_threads')

@@ -431,6 +431,15 @@ def _run_step(test_case, step, new_log_file):
                         log_filename=log_filename) as step_logger:
         step.logger = step_logger
         os.chdir(step.work_dir)
+
+        # runtime_setup() will perform small tasks that require knowing the
+        # resources of the task before the step runs (such as creating
+        # graph partitions)
+        step_logger.info('')
+        log_method_call(method=step.runtime_setup, logger=step_logger)
+        step_logger.info('')
+        step.runtime_setup()
+
         step_logger.info('')
         log_method_call(method=step.run, logger=step_logger)
         step_logger.info('')

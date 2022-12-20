@@ -72,25 +72,6 @@ class CosineBell(TestCase):
 
         self.update_cores()
 
-    def run(self):
-        """
-        Run each step of the testcase
-        """
-        config = self.config
-        for resolution in self.resolutions:
-            if self.icosahedral:
-                mesh_name = f'Icos{resolution}'
-            else:
-                mesh_name = f'QU{resolution}'
-            ntasks = config.getint('cosine_bell', f'{mesh_name}_ntasks')
-            min_tasks = config.getint('cosine_bell', f'{mesh_name}_min_tasks')
-            step = self.steps[f'{mesh_name}_forward']
-            step.ntasks = ntasks
-            step.min_tasks = min_tasks
-
-        # run the step
-        super().run()
-
     def update_cores(self):
         """ Update the number of cores and min_tasks for each forward step """
 
