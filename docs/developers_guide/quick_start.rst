@@ -20,7 +20,7 @@ switch to bash by calling ``/bin/bash`` each time you want to use compass.
 Set up a compass repository: for beginners
 ------------------------------------------
 
-To begin, obtain the master branch of the
+To begin, obtain the main branch of the
 `compass repository <https://github.com/MPAS-Dev/compass>`_ with:
 
 .. code-block:: bash
@@ -454,8 +454,8 @@ branches at once. Begin where you keep your repositories:
 
     mkdir compass
     cd compass
-    git clone git@github.com:MPAS-Dev/compass.git master
-    cd master
+    git clone git@github.com:MPAS-Dev/compass.git main
+    cd main
 
 The ``MPAS-Dev/compass`` repo is now ``origin``. You can add more remotes. For
 example:
@@ -482,11 +482,11 @@ unix directory:
 
 .. code-block:: bash
 
-    cd compass/master
-    git worktree add -b new_branch_name ../new_branch_name origin/master
+    cd compass/main
+    git worktree add -b new_branch_name ../new_branch_name origin/main
     cd ../new_branch_name
 
-In this example, we branched off ``origin/master``, but you could start from
+In this example, we branched off ``origin/main``, but you could start from
 any branch, which is specified by the last ``git worktree`` argument.
 
 There are two ways to build the MPAS executable:
@@ -528,4 +528,4 @@ There are two ways to build the MPAS executable:
 
      git clone git@github.com:E3SM-Project/E3SM.git your_new_branch
      cd your_new_branch
-     git checkout -b your_new_branch origin/master
+     git checkout -b your_new_branch origin/main

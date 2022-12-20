@@ -262,7 +262,7 @@ not need a config file.
 
 If you are not on one of the supported machines, you will need to create a
 config file like in this example. See also
-`this example <https://github.com/MPAS-Dev/compass/tree/master/example_configs>`_
+`this example <https://github.com/MPAS-Dev/compass/tree/main/example_configs>`_
 in the repository.
 
 .. code-block:: cfg

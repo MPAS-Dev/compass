@@ -968,7 +968,7 @@ Contributors: Xylar Asay-Davis, Mark Petersen
 Rather than having users create their own batch scripts from scratch, a simper
 solution would be to generate a job script appropriate for a given
 machine from a template.  This has been done for performance tests,
-`see example <https://github.com/MPAS-Dev/MPAS-Tools/blob/master/ocean/performance_testing/submit_performance_test_to_queue.py#L96>`_
+`see example <https://github.com/MPAS-Dev/MPAS-Tools/blob/main/ocean/performance_testing/submit_performance_test_to_queue.py#L96>`_
 for single line command. An alternative will be to use ``parsl`` to handle the
 SLURM (or other) submission.
 

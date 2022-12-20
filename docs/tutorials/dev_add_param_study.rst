@@ -66,9 +66,9 @@ For each step, we create a python module containing a class with the name of
 the step converted to camel case (e.g. a ``Mesh`` class for the ``mesh`` step).
 The details of these modules are not critical for this tutorial but you are
 welcome to take a closer look:
-`mesh.py <https://github.com/MPAS-Dev/compass/blob/master/compass/ocean/tests/global_convergence/cosine_bell/mesh.py>`_,
-`init.py <https://github.com/MPAS-Dev/compass/blob/master/compass/ocean/tests/global_convergence/cosine_bell/init.py>`_,
-and `forward.py <https://github.com/MPAS-Dev/compass/blob/master/compass/ocean/tests/global_convergence/cosine_bell/forward.py>`_.
+`mesh.py <https://github.com/MPAS-Dev/compass/blob/main/compass/ocean/tests/global_convergence/cosine_bell/mesh.py>`_,
+`init.py <https://github.com/MPAS-Dev/compass/blob/main/compass/ocean/tests/global_convergence/cosine_bell/init.py>`_,
+and `forward.py <https://github.com/MPAS-Dev/compass/blob/main/compass/ocean/tests/global_convergence/cosine_bell/forward.py>`_.
 One important detail is that each step take the resolution (i.e. the parameter
 value) as an input and uses that value to give the step a unique name and
 subdirectory within the test case.  For example, this is from the ``mesh``
@@ -142,7 +142,7 @@ in that it takes all parameter values (in this case resolutions) as an input:
 
 The remaining details of the analysis step are specific to this particular test
 case so we won't go into them in this tutorial.  But feel free to have a look:
-`analysis.py <https://github.com/MPAS-Dev/compass/blob/master/compass/ocean/tests/global_convergence/cosine_bell/analysis.py>`_.
+`analysis.py <https://github.com/MPAS-Dev/compass/blob/main/compass/ocean/tests/global_convergence/cosine_bell/analysis.py>`_.
 
 Adding the steps to the test case
 ---------------------------------
