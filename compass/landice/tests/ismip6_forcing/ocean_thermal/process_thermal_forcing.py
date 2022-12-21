@@ -213,8 +213,6 @@ class ProcessThermalForcing(Step):
             ismip6_to_mali_dims = dict(
                 z="nISMIP6OceanLayers",
                 ncol="nCells")
-            ds["xtime"] = ("Time", ["2015-01-01_00:00:00".ljust(64)])
-            ds["xtime"] = ds.xtime.astype("S")
             ds["thermal_forcing"] = ds["thermal_forcing"].expand_dims(
                 dim="Time", axis=0)
             ds = ds.rename(ismip6_to_mali_dims)
