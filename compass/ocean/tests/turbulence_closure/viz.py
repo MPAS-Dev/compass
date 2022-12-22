@@ -10,7 +10,7 @@ class Viz(Step):
     """
     A step for visualizing a cross-section through the domain
     """
-    def __init__(self, test_case):
+    def __init__(self, test_case, resolution, forcing, do_comparison=False):
         """
         Create the step
 
@@ -23,10 +23,27 @@ class Viz(Step):
 
         self.add_input_file(filename='output.nc',
                             target='../forward/output.nc')
-        self.add_output_file('uNormal_depth_section_t0.png')
-        self.add_output_file('pt_depth_section_t0.png')
-        self.add_output_file('sa_depth_section_t0.png')
-        self.add_output_file('layerThickness_depth_section_t0.png')
+
+        if resolution == '1m':
+            suffix = 'g128_l128'
+
+        if do_comparison:
+            if forcing == 'cooling':
+                forcing_name = 'c02'
+            elif forcing == 'evaporation':
+                forcing_name = 'e04'
+            else:
+                #TODO change to log
+                print('Comparison simulation not available for this configuration')
+                do_comparison = False
+
+        if do_comparison:
+            filename = f'case_{forcing_name}_{suffix}.nc'
+            print(f'Compare to {filename}')
+            self.add_input_file(filename='palm.nc', target=filename,
+                                database='turbulence_closure')
+
+        self.do_comparison = do_comparison
 
     def run(self):
         """
@@ -36,6 +53,8 @@ class Viz(Step):
         ds = xarray.open_dataset('output.nc')
         ds = ds.sortby('yEdge')
 
+        if self.do_comparison:
+            dsPalm = xarray.open_dataset('palm.nc')
         dsInit = xarray.open_dataset('../forward/init.nc')
         ds0 = ds.isel(Time=0)
         figsize = [6.4, 4.8]
@@ -97,6 +116,10 @@ class Viz(Step):
             normalVelocity = ds1.normalVelocity
             normalVelocity_xmesh = normalVelocity[edgeMask_x, :]
 
+            velocityZonal = ds1.velocityZonal
+            velocityZonal_z = velocityZonal.mean(dim='nCells')
+            velocityMeridional = ds1.velocityMeridional
+            velocityMeridional_z = velocityMeridional.mean(dim='nCells')
 
             # Import cell quantities
             layerThickness = ds1.layerThickness
@@ -175,6 +198,15 @@ class Viz(Step):
             cbar = plt.colorbar()
             cbar.ax.set_title('SA (g/kg)')
             plt.savefig('sa_depth_section_t{}.png'.format(j),
+                        bbox_inches='tight', dpi=200)
+            plt.close()
+
+            plt.figure(figsize=figsize, dpi=100)
+            plt.plot(velocityZonal_z.values, zMid)
+            plt.plot(velocityMeridional_z.values, zMid, '--')
+            plt.xlabel('u,v (m/s)')
+            plt.ylabel('z (m)')
+            plt.savefig('uv_depth_t{}.png'.format(j),
                         bbox_inches='tight', dpi=200)
             plt.close()
 

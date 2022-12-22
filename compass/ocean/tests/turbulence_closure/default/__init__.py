@@ -39,16 +39,18 @@ class Default(TestCase):
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
 
-        if resolution == '1m':
+        if resolution == '1m' or resolution == '2m':
             ntasks = 128
+            plot_comparison=True
         else:
             ntasks = 4
+            plot_comparison=False
 
         self.add_step(
             InitialState(test_case=self, resolution=resolution))
         self.add_step(
             Forward(test_case=self, ntasks=ntasks, openmp_threads=1, resolution=resolution))
-        self.add_step(Viz(test_case=self, resolution=resolution, forcing=forcing))
+        self.add_step(Viz(test_case=self, resolution=resolution, forcing=forcing, do_comparison=plot_comparison))
 
     def configure(self):
         """
