@@ -266,7 +266,9 @@ def build_conda_env(env_type, recreate, machine, mpi, conda_mpi, version,
         template = Template(f.read())
 
     if env_type == 'dev':
-        spec_file = template.render(mpi=conda_mpi, mpi_prefix=mpi_prefix)
+        supports_otps = platform.system() == 'Linux'
+        spec_file = template.render(supports_otps=supports_otps,
+                                    mpi=conda_mpi, mpi_prefix=mpi_prefix)
 
         spec_filename = f'spec-file-{conda_mpi}.txt'
         with open(spec_filename, 'w') as handle:
