@@ -1,0 +1,130 @@
+<streams>
+
+<immutable_stream name="basicmesh"
+                  filename_template="not-to-be-used.nc"
+                  type="none"/>
+
+<immutable_stream name="input"
+                  filename_template="/global/project/projectdirs/piscees/MALI_projects/Thwaites_UQ/thwaites_4km_mesh_20221122/input_files/Thwaites.nc"
+                  input_interval="initial_only"
+                  type="input"/>
+
+<immutable_stream name="restart"
+                  filename_interval="output_interval"
+                  clobber_mode="overwrite"
+                  precision="double"
+                  output_interval="0005-00-00_00:00:00"
+                  filename_template="rst.$Y-$M-$D.nc"
+                  input_interval="initial_only"
+                  type="input;output"
+                  input_interal="initial_only"/>
+
+<stream name="smb"
+        type="input"
+        mode="forward;analysis"
+        input_interval="initial_only"
+        filename_template="/global/project/projectdirs/piscees/MALI_projects/Thwaites_UQ/thwaites_4km_mesh_20221122/input_files/Thwaites_4to20km_r01_20221122_RACMO2.3p2_ANT27_smb_climatology_1995-2017.nc"
+        runtime_format="single_file">
+        <var name="sfcMassBal"/>
+</stream>
+
+<stream name="ocean_thermal_forcing"
+        type="input"
+        mode="forward;analysis"
+        input_interval="initial_only"
+        filename_template="/global/project/projectdirs/piscees/MALI_projects/Thwaites_UQ/thwaites_4km_mesh_20221122/input_files/Thwaites_4to20km_r01_20221122_obs_TF_1995-2017_8km_x_60m.nc"
+        runtime_format="single_file">
+        <var name="ismip6shelfMelt_3dThermalForcing"/>
+        <var name="ismip6shelfMelt_zOcean"/>
+</stream>
+
+<stream name="basal_melt"
+        type="input"
+        mode="forward;analysis"
+        input_interval="initial_only"
+        filename_template="/global/project/projectdirs/piscees/MALI_projects/Thwaites_UQ/thwaites_4km_mesh_20221122/input_files/Thwaites_4to20km_r01_20221122_basin_and_coeff_gamma0_DeltaT_quadratic_non_local_median.nc"
+        runtime_format="single_file">
+        <var name="ismip6shelfMelt_basin"/>
+        <var name="ismip6shelfMelt_gamma0"/>
+        <var name="ismip6shelfMelt_deltaT"/>
+</stream>
+
+<stream name="output"
+        type="output"
+        filename_template="output/output_state_$Y.nc"
+        filename_interval="005-00-00_00:00:00"
+        reference_time="2000-01-01_00:00:00"
+        clobber_mode="overwrite"
+        precision="double"
+        output_interval="0001-00-00_00:00:00">
+
+    <stream name="basicmesh"/>
+    <var name="xtime"/>
+    <var name="simulationStartTime"/>
+    <var name="thickness"/>
+    <var name="lowerSurface"/>
+    <var name="upperSurface"/>
+    <var name="bedTopography"/>
+    <var name="uReconstructX"/>
+    <var name="uReconstructY"/>
+    <var name="surfaceSpeed"/>
+    <var name="xvelmean"/>
+    <var name="yvelmean"/>
+    <var name="basalTemperature"/>
+    <var name="surfaceTemperature"/>
+    <var name="betaSolve"/>
+    <var name="daysSinceStart"/>
+    <var name="cellProcID"/>
+    <var name="cellMask"/>
+    <var name="deltat"/>
+    <var name="vonMisesStress"/>
+    <var name="damage"/>
+</stream>
+
+<stream name="output_flux"
+        clobber_mode="overwrite"
+        output_interval="0000-00-00_00:00:01"
+        reference_time="2000-01-01_00:00:00"
+        filename_interval="0001-00-00_00:00:00"
+        filename_template="output/output_flux_all_timesteps_$Y.nc"
+        type="output">
+
+    <stream name="basicmesh"/>
+    <var name="xtime"/>
+    <var name="simulationStartTime"/>
+    <var name="damage"/>
+    <var name="calvingThickness"/>
+    <var name="calvingVelocity"/>
+    <var name="surfaceSpeed"/>
+    <var name="daysSinceStart"/>
+    <var name="cellMask"/>
+    <var name="sfcMassBalApplied"/>
+    <var name="floatingBasalMassBalApplied"/>
+    <var name="groundedBasalMassBalApplied"/>
+    <var name="deltat"/>
+    <var name="fluxAcrossGroundingLineOnCells"/>
+    <var name="xvelmean"/>
+    <var name="yvelmean"/>
+    <var name="thickness"/>
+    <var name="dHdt"/>
+</stream>
+
+<stream name="globalStats"
+        type="output"
+        filename_template="globalStats.nc"
+        filename_interval="none"
+        clobber_mode="overwrite"
+        output_interval="0000-00-00_01:00:00"
+        reference_time="2015-01-01_00:00:00"
+        packages="globalStatsAMPKG"
+        runtime_format="single_file">
+    <var name="xtime"/>
+    <var name="daysSinceStart"/>
+    <var name="deltat"/>
+    <var name="allowableDtACFL"/>
+    <var name="allowableDtDCFL"/>
+    <var name="calvingCFLdt"/>
+    <var_struct name="globalStatsAM"/>
+</stream>
+
+</streams>
