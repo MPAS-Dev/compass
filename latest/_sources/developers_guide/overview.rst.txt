@@ -41,7 +41,7 @@ files to the PEP8 standard is included in the COMPASS conda environment. To use
 flake8, just run ``flake8`` from any directory and it will return lint results
 for all files recursively through all subdirectories.  You can also run it for a
 single file or using wildcards (e.g., ``flake8 *.py``).  There also is a
-`vim plugin <https://github.com/nvie/vim-flake8>`_ that runs the flake8 linter 
+`vim plugin <https://github.com/nvie/vim-flake8>`_ that runs the flake8 linter
 from within vim.  If you are not using an IDE that lints automatically, it is
 recommended you run flake8 from the command line or the vim plugin before
 committing your code changes.
@@ -81,7 +81,7 @@ A python package is a directory that has a file called ``__init__.py``.  That
 file can be empty or it can have code in it.  If it has functions or classes
 inside of it, they act like they're directly in the package.  As an example,
 the compass file
-`compass/ocean/__init__.py <https://github.com/MPAS-Dev/compass/tree/master/compass/ocean/__init__.py>`_
+`compass/ocean/__init__.py <https://github.com/MPAS-Dev/compass/tree/main/compass/ocean/__init__.py>`_
 has a class :py:class:`compass.ocean.Ocean()` that looks like this (with the
 `docstrings <https://www.python.org/dev/peps/pep-0257/>`_ stripped out):
 

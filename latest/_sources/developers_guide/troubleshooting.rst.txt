@@ -121,5 +121,5 @@ of your user config file:
      # whether to use mpirun or srun to run the model
      parallel_executable = mpirun -host localhost
 
-The `example config files <https://github.com/MPAS-Dev/compass/tree/master/example_configs>`_
+The `example config files <https://github.com/MPAS-Dev/compass/tree/main/example_configs>`_
 have been updated to include this flag.

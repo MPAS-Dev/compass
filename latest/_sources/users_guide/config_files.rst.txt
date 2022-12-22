@@ -88,12 +88,12 @@ Config options for a given test case are built up from a number of different
 sources:
 
 * the default config file,
-  `default.cfg <https://github.com/MPAS-Dev/compass/blob/master/compass/default.cfg>`_,
+  `default.cfg <https://github.com/MPAS-Dev/compass/blob/main/compass/default.cfg>`_,
   which sets a few options related to downloading files during setup (whether
   to download and whether to check the size of files already downloaded)
 
-* the `machine config file <https://github.com/MPAS-Dev/compass/blob/master/compass/machines>`_
-  (using `machines/default.cfg <https://github.com/MPAS-Dev/compass/blob/master/compass/machines/default.cfg>`_
+* the `machine config file <https://github.com/MPAS-Dev/compass/blob/main/compass/machines>`_
+  (using `machines/default.cfg <https://github.com/MPAS-Dev/compass/blob/main/compass/machines/default.cfg>`_
   if no machine was specified) with information on the parallel system and
   the paths to cached data files
 

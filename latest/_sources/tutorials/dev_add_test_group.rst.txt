@@ -16,7 +16,7 @@ Getting started
 ---------------
 
 To begin with, you will need to check out the compass repo and create  a new
-branch from ``master`` for developing the new test group.  For this purpose, we
+branch from ``main`` for developing the new test group.  For this purpose, we
 will stick with the simpler approach in :ref:`dev_compass_repo` here, but feel
 free to use the ``worktree`` approach instead if you are comfortable with it.
 
@@ -62,7 +62,7 @@ development there as well:
 
   cd E3SM-Project
   git fetch --all -p
-  git branch xylar/mpas-ocean/add-baroclinic-channel origin/master
+  git branch xylar/mpas-ocean/add-baroclinic-channel origin/main
   git switch xylar/mpas-ocean/add-baroclinic-channel
   cd ../
 

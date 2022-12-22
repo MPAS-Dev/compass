@@ -138,7 +138,7 @@ switch to bash by calling <code class="docutils literal notranslate"><span class
 </section>
 <section id="set-up-a-compass-repository-for-beginners">
 <span id="dev-compass-repo"></span><h2>Set up a compass repository: for beginners<a class="headerlink" href="#set-up-a-compass-repository-for-beginners" title="Permalink to this heading">¶</a></h2>
-<p>To begin, obtain the master branch of the
+<p>To begin, obtain the main branch of the
 <a class="reference external" href="https://github.com/MPAS-Dev/compass">compass repository</a> with:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone git@github.com:MPAS-Dev/compass.git
 <span class="nb">cd</span> compass
@@ -483,8 +483,8 @@ a git branch. It is easier to keep track of, and easier to work with many
 branches at once. Begin where you keep your repositories:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir compass
 <span class="nb">cd</span> compass
-git clone git@github.com:MPAS-Dev/compass.git master
-<span class="nb">cd</span> master
+git clone git@github.com:MPAS-Dev/compass.git main
+<span class="nb">cd</span> main
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">MPAS-Dev/compass</span></code> repo is now <code class="docutils literal notranslate"><span class="pre">origin</span></code>. You can add more remotes. For
@@ -503,12 +503,12 @@ git fetch mark-petersen
 </div>
 <p>We will use the git worktree command to create a new local branch in its own
 unix directory:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> compass/master
-git worktree add -b new_branch_name ../new_branch_name origin/master
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> compass/main
+git worktree add -b new_branch_name ../new_branch_name origin/main
 <span class="nb">cd</span> ../new_branch_name
 </pre></div>
 </div>
-<p>In this example, we branched off <code class="docutils literal notranslate"><span class="pre">origin/master</span></code>, but you could start from
+<p>In this example, we branched off <code class="docutils literal notranslate"><span class="pre">origin/main</span></code>, but you could start from
 any branch, which is specified by the last <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">worktree</span></code> argument.</p>
 <p>There are two ways to build the MPAS executable:</p>
 <ol class="arabic">
@@ -541,7 +541,7 @@ git checkout -b your_new_branch origin/develop
 <p>The equivalent for MPAS-Ocean development would be:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone git@github.com:E3SM-Project/E3SM.git your_new_branch
 <span class="nb">cd</span> your_new_branch
-git checkout -b your_new_branch origin/master
+git checkout -b your_new_branch origin/main
 </pre></div>
 </div>
 </li>
