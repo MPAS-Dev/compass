@@ -16,7 +16,7 @@ class DecompTest(TestCase):
         The resolution of the test case
     """
 
-    def __init__(self, test_group, resolution):
+    def __init__(self, test_group, resolution, forcing='cooling'):
         """
         Create the test case
 
@@ -30,7 +30,7 @@ class DecompTest(TestCase):
         """
         name = 'decomp_test'
         self.resolution = resolution
-        subdir = '{}/{}'.format(resolution, name)
+        subdir = f'{resolution}/{forcing}/{name}'
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
 

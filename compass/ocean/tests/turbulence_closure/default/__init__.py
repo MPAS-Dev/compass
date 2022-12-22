@@ -17,7 +17,7 @@ class Default(TestCase):
         The resolution of the test case
     """
 
-    def __init__(self, test_group, resolution):
+    def __init__(self, test_group, resolution, forcing='cooling'):
         """
         Create the test case
 
@@ -28,23 +28,32 @@ class Default(TestCase):
 
         resolution : str
             The resolution of the test case
+
+        forcing: str
+            The forcing applied to the test case
         """
         name = 'default'
         self.resolution = resolution
-        subdir = '{}/{}'.format(resolution, name)
+        self.forcing = forcing
+        subdir = f'{resolution}/{forcing}/{name}'
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
+
+        if resolution == '1m':
+            ntasks = 128
+        else:
+            ntasks = 4
 
         self.add_step(
             InitialState(test_case=self, resolution=resolution))
         self.add_step(
-            Forward(test_case=self, ntasks=4, openmp_threads=1, resolution=resolution))
-        self.add_step(Viz(test_case=self))
+            Forward(test_case=self, ntasks=ntasks, openmp_threads=1, resolution=resolution))
+        self.add_step(Viz(test_case=self, resolution=resolution, forcing=forcing))
 
     def configure(self):
         """
         Modify the configuration options for this test case.
         """
-        turbulence_closure.configure(self.resolution, self.config)
+        turbulence_closure.configure(self.resolution, self.forcing, self.config)
 
     # no run() is needed because we're doing the default: running all steps
