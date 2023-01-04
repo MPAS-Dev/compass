@@ -1,5 +1,8 @@
 from compass.step import Step
 from compass.model import make_graph_file, run_model
+from compass.job import write_job_script
+from compass.landice.tests.thwaites.uq_ensemble.job \
+    import write_step_job_script
 
 import numpy as np
 
@@ -78,6 +81,9 @@ class CreateEnsembleMember(Step):
 
         self.add_namelist_options(options=options,
                                   out_name='namelist.landice')
+
+        write_step_job_script(self.config, self.name, target_cores=self.ntasks,
+                              min_cores=self.min_tasks, work_dir=self.work_dir)
 
 
 
