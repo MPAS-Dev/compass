@@ -1,0 +1,21 @@
+<streams>
+
+<immutable_stream name="mesh"
+                  filename_template="mesh.nc"/>
+
+<immutable_stream name="input"
+                  filename_template="init.nc"/>
+
+<stream name="output"
+        type="output"
+        filename_template="output.nc"
+        output_interval="0000-00-00_01:00:00"
+        clobber_mode="truncate">
+
+    <stream name="mesh"/>
+    <var name="xtime"/>
+    <var name="daysSinceStartOfSim"/>
+    <var name="density"/>
+</stream>
+
+</streams>

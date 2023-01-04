@@ -6,13 +6,8 @@ class Forward(Step):
     """
     A step for performing forward MPAS-Ocean runs as part of overflow
     test cases.
-
-    Attributes
-    ----------
-    resolution : str
-        The resolution of the test case
     """
-    def __init__(self, test_case, resolution, name='forward', subdir=None,
+    def __init__(self, test_case, name='forward', subdir=None,
                  ntasks=1, min_tasks=None, openmp_threads=1, nu=None):
         """
         Create a new test case
@@ -21,9 +16,6 @@ class Forward(Step):
         ----------
         test_case : compass.TestCase
             The test case this step belongs to
-
-        resolution : str
-            The resolution of the test case
 
         name : str
             the name of the test case
@@ -44,7 +36,6 @@ class Forward(Step):
             the number of OpenMP threads the step will use
 
         """
-        self.resolution = resolution
         if min_tasks is None:
             min_tasks = ntasks
         super().__init__(test_case=test_case, name=name, subdir=subdir,
@@ -65,6 +56,8 @@ class Forward(Step):
 
         self.add_input_file(filename='init.nc',
                             target='../initial_state/ocean.nc')
+        self.add_input_file(filename='mesh.nc',
+                            target='../initial_state/culled_mesh.nc')
         self.add_input_file(filename='graph.info',
                             target='../initial_state/culled_graph.info')
 
