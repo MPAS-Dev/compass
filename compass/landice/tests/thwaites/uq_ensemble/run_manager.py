@@ -32,7 +32,10 @@ class RunManager(Step):
         """
         Set up the run manager
         """
-        # Nothing to do
+        # Link viz script
+        with path('compass.landice.tests.thwaites.uq_ensemble', 'plot_ensemble.py') as \
+            target:
+        symlink(str(target), f'{self.test_case.work_dir}/plot_ensemble.py')
 
     def run(self):
         """
