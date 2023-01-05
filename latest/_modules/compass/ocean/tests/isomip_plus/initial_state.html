@@ -301,11 +301,17 @@
 
         <span class="n">ds</span> <span class="o">=</span> <span class="n">interpolate_geom</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">,</span> <span class="n">ds_geom</span><span class="p">,</span> <span class="n">min_ocean_fraction</span><span class="p">,</span> <span class="n">thin_film_present</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;landIceFraction&#39;</span><span class="p">]:</span>
-            <span class="n">ds</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">var</span><span class="p">]</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;landIceFraction&#39;</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;landIceFraction&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;landIceMask&#39;</span><span class="p">]</span> <span class="o">=</span> \
-            <span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">landIceFraction</span> <span class="o">&gt;=</span> <span class="n">min_land_ice_fraction</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;modifyLandIcePressureMask&#39;</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="s1">&#39;landIceFraction&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.01</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">landIceFraction</span> <span class="o">&gt;=</span> <span class="n">min_land_ice_fraction</span>
+
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;landIceMask&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;landIceFraction&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">landIceFraction</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span>
 
         <span class="n">ref_density</span> <span class="o">=</span> <span class="n">constants</span><span class="p">[</span><span class="s1">&#39;SHR_CONST_RHOSW&#39;</span><span class="p">]</span>
         <span class="n">landIcePressure</span><span class="p">,</span> <span class="n">landIceDraft</span> <span class="o">=</span> <span class="n">compute_land_ice_pressure_and_draft</span><span class="p">(</span>
@@ -335,9 +341,6 @@
               <span class="sa">f</span><span class="s1">&#39;to achieve minimum column thickness of </span><span class="si">{</span><span class="n">min_column_thickness</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
         <span class="n">init_vertical_coord</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>
-
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;modifyLandIcePressureMask&#39;</span><span class="p">]</span> <span class="o">=</span> \
-            <span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="s1">&#39;landIceFraction&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.01</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 
         <span class="n">max_bottom_depth</span> <span class="o">=</span> <span class="o">-</span><span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;vertical_grid&#39;</span><span class="p">,</span> <span class="s1">&#39;bottom_depth&#39;</span><span class="p">)</span>
         <span class="n">frac</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.</span> <span class="o">-</span> <span class="n">ds</span><span class="o">.</span><span class="n">zMid</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">0.</span> <span class="o">-</span> <span class="n">max_bottom_depth</span><span class="p">)</span>
