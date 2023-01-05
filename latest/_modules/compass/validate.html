@@ -1,36 +1,74 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
   <title>compass.validate &mdash; compass latest documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
-    <script src="../../_static/js/theme.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav"> 
+<body class="wy-body-for-nav">
+
+   
   <div class="wy-grid-for-nav">
+    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
+          
+
+          
             <a href="../../index.html" class="icon icon-home"> compass
+          
+
+          
           </a>
+
+          
+            
+            
               <div class="version">
                 latest
               </div>
+            
+          
+
+          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -38,7 +76,18 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
               <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../users_guide/quick_start.html">Quick Start for Users</a></li>
@@ -80,30 +129,69 @@
 <li class="toctree-l1"><a class="reference internal" href="../../versions.html">Code and Documentation Versions</a></li>
 </ul>
 
+            
+          
         </div>
+        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">compass</a>
+        
       </nav>
 
+
       <div class="wy-nav-content">
+        
         <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">compass.validate</li>
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>compass.validate</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
+        
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-             
+            
   <h1>Source code for compass.validate</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
@@ -115,7 +203,7 @@
 <div class="viewcode-block" id="compare_variables"><a class="viewcode-back" href="../../developers_guide/generated/compass.validate.compare_variables.html#compass.validate.compare_variables">[docs]</a><span class="k">def</span> <span class="nf">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">variables</span><span class="p">,</span> <span class="n">filename1</span><span class="p">,</span> <span class="n">filename2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                       <span class="n">l1_norm</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">l2_norm</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">linf_norm</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                       <span class="n">check_outputs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">skip_if_step_not_run</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compare variables between files in the current test case and/or with the</span>
 <span class="sd">    baseline results.  The results of the comparison are added to the</span>
 <span class="sd">    test case&#39;s &quot;validation&quot; dictionary, which the framework can use later to</span>
@@ -267,7 +355,7 @@
 
 
 <div class="viewcode-block" id="compare_timers"><a class="viewcode-back" href="../../developers_guide/generated/compass.validate.compare_timers.html#compass.validate.compare_timers">[docs]</a><span class="k">def</span> <span class="nf">compare_timers</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">timers</span><span class="p">,</span> <span class="n">rundir1</span><span class="p">,</span> <span class="n">rundir2</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compare variables between files in the current test case and/or with the</span>
 <span class="sd">    baseline results.</span>
 
@@ -311,7 +399,7 @@
 
 <span class="k">def</span> <span class="nf">_compare_variables</span><span class="p">(</span><span class="n">variables</span><span class="p">,</span> <span class="n">filename1</span><span class="p">,</span> <span class="n">filename2</span><span class="p">,</span> <span class="n">l1_norm</span><span class="p">,</span> <span class="n">l2_norm</span><span class="p">,</span>
                        <span class="n">linf_norm</span><span class="p">,</span> <span class="n">quiet</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; compare fields in the two files &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; compare fields in the two files &quot;&quot;&quot;</span>
 
     <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="p">[</span><span class="n">filename1</span><span class="p">,</span> <span class="n">filename2</span><span class="p">]:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
@@ -399,7 +487,7 @@
 
 <span class="k">def</span> <span class="nf">_compute_norms</span><span class="p">(</span><span class="n">da1</span><span class="p">,</span> <span class="n">da2</span><span class="p">,</span> <span class="n">quiet</span><span class="p">,</span> <span class="n">max_l1_norm</span><span class="p">,</span> <span class="n">max_l2_norm</span><span class="p">,</span> <span class="n">max_linf_norm</span><span class="p">,</span>
                    <span class="n">time_index</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Compute norms between variables in two DataArrays &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Compute norms between variables in two DataArrays &quot;&quot;&quot;</span>
 
     <span class="n">da1</span> <span class="o">=</span> <span class="n">_rename_duplicate_dims</span><span class="p">(</span><span class="n">da1</span><span class="p">)</span>
     <span class="n">da2</span> <span class="o">=</span> <span class="n">_rename_duplicate_dims</span><span class="p">(</span><span class="n">da2</span><span class="p">)</span>
@@ -440,7 +528,7 @@
 
 
 <span class="k">def</span> <span class="nf">_compute_timers</span><span class="p">(</span><span class="n">base_directory</span><span class="p">,</span> <span class="n">comparison_directory</span><span class="p">,</span> <span class="n">timers</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Find timers and compute speedup between two run directories &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Find timers and compute speedup between two run directories &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">timer</span> <span class="ow">in</span> <span class="n">timers</span><span class="p">:</span>
         <span class="n">timer1_found</span><span class="p">,</span> <span class="n">timer1</span> <span class="o">=</span> <span class="n">_find_timer_value</span><span class="p">(</span><span class="n">timer</span><span class="p">,</span> <span class="n">base_directory</span><span class="p">)</span>
         <span class="n">timer2_found</span><span class="p">,</span> <span class="n">timer2</span> <span class="o">=</span> <span class="n">_find_timer_value</span><span class="p">(</span><span class="n">timer</span><span class="p">,</span> <span class="n">comparison_directory</span><span class="p">)</span>
@@ -461,7 +549,7 @@
 
 
 <span class="k">def</span> <span class="nf">_find_timer_value</span><span class="p">(</span><span class="n">timer_name</span><span class="p">,</span> <span class="n">directory</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Find a timer in the given directory &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Find a timer in the given directory &quot;&quot;&quot;</span>
     <span class="c1"># Build a regular expression for any two characters with a space between</span>
     <span class="c1"># them.</span>
     <span class="n">regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(\S) (\S)&#39;</span><span class="p">)</span>
@@ -523,30 +611,46 @@
 </pre></div>
 
            </div>
+           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
-  </div>
+    <p>
+        &#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
         </div>
       </div>
+
     </section>
+
   </div>
-  <script>
+  
+
+  <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

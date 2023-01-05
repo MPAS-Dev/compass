@@ -1,39 +1,77 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" />
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
   <title>Developer Tutorial: Porting a legacy COMPASS test group &mdash; compass latest documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
-    <script src="../_static/js/theme.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Glossary" href="../glossary.html" />
     <link rel="prev" title="Developer Tutorial: Adding a parameter study" href="dev_add_param_study.html" /> 
 </head>
 
-<body class="wy-body-for-nav"> 
+<body class="wy-body-for-nav">
+
+   
   <div class="wy-grid-for-nav">
+    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
+          
+
+          
             <a href="../index.html" class="icon icon-home"> compass
+          
+
+          
           </a>
+
+          
+            
+            
               <div class="version">
                 latest
               </div>
+            
+          
+
+          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -41,7 +79,18 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
               <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../users_guide/quick_start.html">Quick Start for Users</a></li>
@@ -103,30 +152,71 @@
 <li class="toctree-l1"><a class="reference internal" href="../versions.html">Code and Documentation Versions</a></li>
 </ul>
 
+            
+          
         </div>
+        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">compass</a>
+        
       </nav>
 
+
       <div class="wy-nav-content">
+        
         <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a></li>
-      <li class="breadcrumb-item active">Developer Tutorial: Porting a legacy COMPASS test group</li>
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Developer Tutorial: Porting a legacy COMPASS test group</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
+        
+          
             <a href="../_sources/tutorials/dev_porting_legacy.rst.txt" rel="nofollow"> View page source</a>
+          
+        
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-             
+            
   <section id="developer-tutorial-porting-a-legacy-compass-test-group">
 <span id="dev-tutorial-porting-legacy"></span><h1>Developer Tutorial: Porting a legacy COMPASS test group<a class="headerlink" href="#developer-tutorial-porting-a-legacy-compass-test-group" title="Permalink to this heading">¶</a></h1>
 <p>This tutorial presents a step-by-step guide to porting a legacy COMPASS test
@@ -149,8 +239,8 @@ and check out the <code class="docutils literal notranslate"><span class="pre">l
 new test group.  For this purpose, we will stick with the simpler approach in
 <a class="reference internal" href="../developers_guide/quick_start.html#dev-compass-repo"><span class="std std-ref">Set up a compass repository: for beginners</span></a> here, but feel free to use the <code class="docutils literal notranslate"><span class="pre">worktree</span></code> approach
 instead if you are comfortable with it.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone git@github.com:MPAS-Dev/compass.git add_gotm
-<span class="nb">cd</span> add_gotm
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:MPAS-Dev/compass.git<span class="w"> </span>add_gotm
+<span class="nb">cd</span><span class="w"> </span>add_gotm
 </pre></div>
 </div>
 <p>Now, you will need to create a conda environment for developing compass, as
@@ -159,23 +249,23 @@ you are working on a “supported” machine and using the default compilers and
 MPI libraries, but consult the documentation to make an environment to suit
 your needs.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># this one will take a while the first time</span>
-./conda/configure_compass_env.py --conda <span class="nv">$HOME</span>/miniconda3
+./conda/configure_compass_env.py<span class="w"> </span>--conda<span class="w"> </span><span class="nv">$HOME</span>/miniconda3
 </pre></div>
 </div>
 <p>If all goes well, you will have a file named <code class="docutils literal notranslate"><span class="pre">load_dev_compass_1.0.0*.sh</span></code>, where
 the details of the <code class="docutils literal notranslate"><span class="pre">*</span></code> depend on your specific machine and compilers.  For
 example, on Chrysalis, you will have <code class="docutils literal notranslate"><span class="pre">load_dev_compass_1.0.0_chrysalis_intel_impi.sh</span></code>,
 which will be the example used here:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> load_dev_compass_1.0.0_chrysalis_intel_impi.sh
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>load_dev_compass_1.0.0_chrysalis_intel_impi.sh
 </pre></div>
 </div>
 <p>Now, we’re ready to get the MPAS-Ocean source code from the E3SM repository and
 build the MPAS-Ocean executable:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get the E3SM code -- this one takes a while every time</span>
-git submodule update --init --recursive
-<span class="nb">cd</span> E3SM-Project/components/mpas-ocean/
-make intel-mpi
-<span class="nb">cd</span> ../../..
+git<span class="w"> </span>submodule<span class="w"> </span>update<span class="w"> </span>--init<span class="w"> </span>--recursive
+<span class="nb">cd</span><span class="w"> </span>E3SM-Project/components/mpas-ocean/
+make<span class="w"> </span>intel-mpi
+<span class="nb">cd</span><span class="w"> </span>../../..
 </pre></div>
 </div>
 <p>The make target will be different depending on the machine and compilers, see
@@ -195,76 +285,76 @@ geojson files.</p>
 the test case.  The <code class="docutils literal notranslate"><span class="pre">gotm</span></code> test group that we are using as an example has a
 single test case, <code class="docutils literal notranslate"><span class="pre">ocean/gotm/2.5km/default</span></code>.  Its <code class="docutils literal notranslate"><span class="pre">config_driver.xml</span></code>
 looks like this:</p>
-<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;driver_script</span> <span class="na">name=</span><span class="s">&quot;run_test.py&quot;</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;case</span> <span class="na">name=</span><span class="s">&quot;init&quot;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;step</span> <span class="na">executable=</span><span class="s">&quot;./run.py&quot;</span> <span class="na">quiet=</span><span class="s">&quot;true&quot;</span> <span class="na">pre_message=</span><span class="s">&quot; * Running init&quot;</span> <span class="na">post_message=</span><span class="s">&quot;     Complete&quot;</span><span class="nt">/&gt;</span>
-    <span class="nt">&lt;/case&gt;</span>
-    <span class="nt">&lt;case</span> <span class="na">name=</span><span class="s">&quot;forward&quot;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;step</span> <span class="na">executable=</span><span class="s">&quot;./run.py&quot;</span> <span class="na">quiet=</span><span class="s">&quot;true&quot;</span> <span class="na">pre_message=</span><span class="s">&quot; * Running forward&quot;</span> <span class="na">post_message=</span><span class="s">&quot;     Complete&quot;</span><span class="nt">/&gt;</span>
-    <span class="nt">&lt;/case&gt;</span>
-    <span class="nt">&lt;case</span> <span class="na">name=</span><span class="s">&quot;analysis&quot;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;step</span> <span class="na">executable=</span><span class="s">&quot;./run.py&quot;</span> <span class="na">quiet=</span><span class="s">&quot;true&quot;</span> <span class="na">pre_message=</span><span class="s">&quot; * Running analysis&quot;</span> <span class="na">post_message=</span><span class="s">&quot;     Complete&quot;</span><span class="nt">/&gt;</span>
-    <span class="nt">&lt;/case&gt;</span>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;driver_script</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;run_test.py&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;case</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;init&quot;</span><span class="nt">&gt;</span>
+<span class="w">        </span><span class="nt">&lt;step</span><span class="w"> </span><span class="na">executable=</span><span class="s">&quot;./run.py&quot;</span><span class="w"> </span><span class="na">quiet=</span><span class="s">&quot;true&quot;</span><span class="w"> </span><span class="na">pre_message=</span><span class="s">&quot; * Running init&quot;</span><span class="w"> </span><span class="na">post_message=</span><span class="s">&quot;     Complete&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/case&gt;</span>
+<span class="w">    </span><span class="nt">&lt;case</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;forward&quot;</span><span class="nt">&gt;</span>
+<span class="w">        </span><span class="nt">&lt;step</span><span class="w"> </span><span class="na">executable=</span><span class="s">&quot;./run.py&quot;</span><span class="w"> </span><span class="na">quiet=</span><span class="s">&quot;true&quot;</span><span class="w"> </span><span class="na">pre_message=</span><span class="s">&quot; * Running forward&quot;</span><span class="w"> </span><span class="na">post_message=</span><span class="s">&quot;     Complete&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/case&gt;</span>
+<span class="w">    </span><span class="nt">&lt;case</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;analysis&quot;</span><span class="nt">&gt;</span>
+<span class="w">        </span><span class="nt">&lt;step</span><span class="w"> </span><span class="na">executable=</span><span class="s">&quot;./run.py&quot;</span><span class="w"> </span><span class="na">quiet=</span><span class="s">&quot;true&quot;</span><span class="w"> </span><span class="na">pre_message=</span><span class="s">&quot; * Running analysis&quot;</span><span class="w"> </span><span class="na">post_message=</span><span class="s">&quot;     Complete&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/case&gt;</span>
 <span class="nt">&lt;/driver_script&gt;</span>
 </pre></div>
 </div>
 <p>The test case is made up of 3 steps, <code class="docutils literal notranslate"><span class="pre">init</span></code>, <code class="docutils literal notranslate"><span class="pre">forward</span></code> and <code class="docutils literal notranslate"><span class="pre">analysis</span></code>.
 Each has its own XML file.  For example, <code class="docutils literal notranslate"><span class="pre">config_init.xml</span></code> looks like this:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot;?&gt;</span>
-<span class="nt">&lt;config</span> <span class="na">case=</span><span class="s">&quot;init&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;config</span><span class="w"> </span><span class="na">case=</span><span class="s">&quot;init&quot;</span><span class="nt">&gt;</span>
 
-    <span class="nt">&lt;add_executable</span> <span class="na">source=</span><span class="s">&quot;model&quot;</span> <span class="na">dest=</span><span class="s">&quot;ocean_model&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;add_executable</span><span class="w"> </span><span class="na">source=</span><span class="s">&quot;model&quot;</span><span class="w"> </span><span class="na">dest=</span><span class="s">&quot;ocean_model&quot;</span><span class="nt">/&gt;</span>
 
-    <span class="nt">&lt;namelist</span> <span class="na">name=</span><span class="s">&quot;namelist.ocean&quot;</span> <span class="na">mode=</span><span class="s">&quot;init&quot;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_init_configuration&quot;</span><span class="nt">&gt;</span>&#39;periodic_planar&#39;<span class="nt">&lt;/option&gt;</span>
-        <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_vert_levels&quot;</span><span class="nt">&gt;</span>-1<span class="nt">&lt;/option&gt;</span>
-        <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_periodic_planar_vert_levels&quot;</span><span class="nt">&gt;</span>250<span class="nt">&lt;/option&gt;</span>
-        <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_periodic_planar_bottom_depth&quot;</span><span class="nt">&gt;</span>15.0<span class="nt">&lt;/option&gt;</span>
-        <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_periodic_planar_velocity_strength&quot;</span><span class="nt">&gt;</span>0.0<span class="nt">&lt;/option&gt;</span>
-        <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_ocean_run_mode&quot;</span><span class="nt">&gt;</span>&#39;init&#39;<span class="nt">&lt;/option&gt;</span>
-        <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_write_cull_cell_mask&quot;</span><span class="nt">&gt;</span>.false.<span class="nt">&lt;/option&gt;</span>
-        <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_vertical_grid&quot;</span><span class="nt">&gt;</span>&#39;uniform&#39;<span class="nt">&lt;/option&gt;</span>
-    <span class="nt">&lt;/namelist&gt;</span>
+<span class="w">    </span><span class="nt">&lt;namelist</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;namelist.ocean&quot;</span><span class="w"> </span><span class="na">mode=</span><span class="s">&quot;init&quot;</span><span class="nt">&gt;</span>
+<span class="w">        </span><span class="nt">&lt;option</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;config_init_configuration&quot;</span><span class="nt">&gt;</span>&#39;periodic_planar&#39;<span class="nt">&lt;/option&gt;</span>
+<span class="w">        </span><span class="nt">&lt;option</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;config_vert_levels&quot;</span><span class="nt">&gt;</span>-1<span class="nt">&lt;/option&gt;</span>
+<span class="w">        </span><span class="nt">&lt;option</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;config_periodic_planar_vert_levels&quot;</span><span class="nt">&gt;</span>250<span class="nt">&lt;/option&gt;</span>
+<span class="w">        </span><span class="nt">&lt;option</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;config_periodic_planar_bottom_depth&quot;</span><span class="nt">&gt;</span>15.0<span class="nt">&lt;/option&gt;</span>
+<span class="w">        </span><span class="nt">&lt;option</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;config_periodic_planar_velocity_strength&quot;</span><span class="nt">&gt;</span>0.0<span class="nt">&lt;/option&gt;</span>
+<span class="w">        </span><span class="nt">&lt;option</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;config_ocean_run_mode&quot;</span><span class="nt">&gt;</span>&#39;init&#39;<span class="nt">&lt;/option&gt;</span>
+<span class="w">        </span><span class="nt">&lt;option</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;config_write_cull_cell_mask&quot;</span><span class="nt">&gt;</span>.false.<span class="nt">&lt;/option&gt;</span>
+<span class="w">        </span><span class="nt">&lt;option</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;config_vertical_grid&quot;</span><span class="nt">&gt;</span>&#39;uniform&#39;<span class="nt">&lt;/option&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/namelist&gt;</span>
 
-    <span class="nt">&lt;streams</span> <span class="na">name=</span><span class="s">&quot;streams.ocean&quot;</span> <span class="na">keep=</span><span class="s">&quot;immutable&quot;</span> <span class="na">mode=</span><span class="s">&quot;init&quot;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;stream</span> <span class="na">name=</span><span class="s">&quot;input_init&quot;</span><span class="nt">&gt;</span>
-            <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;filename_template&quot;</span><span class="nt">&gt;</span>mesh.nc<span class="nt">&lt;/attribute&gt;</span>
-        <span class="nt">&lt;/stream&gt;</span>
-        <span class="nt">&lt;stream</span> <span class="na">name=</span><span class="s">&quot;output_init&quot;</span><span class="nt">&gt;</span>
-            <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;type&quot;</span><span class="nt">&gt;</span>output<span class="nt">&lt;/attribute&gt;</span>
-            <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;output_interval&quot;</span><span class="nt">&gt;</span>0000_00:00:01<span class="nt">&lt;/attribute&gt;</span>
-            <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;clobber_mode&quot;</span><span class="nt">&gt;</span>truncate<span class="nt">&lt;/attribute&gt;</span>
-            <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;filename_template&quot;</span><span class="nt">&gt;</span>ocean.nc<span class="nt">&lt;/attribute&gt;</span>
-            <span class="nt">&lt;add_contents&gt;</span>
-                <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;input_init&quot;</span> <span class="na">type=</span><span class="s">&quot;stream&quot;</span><span class="nt">/&gt;</span>
-                <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;layerThickness&quot;</span> <span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
-                <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;restingThickness&quot;</span> <span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
-                <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;refBottomDepth&quot;</span> <span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
-                <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;bottomDepth&quot;</span> <span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
-                <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;maxLevelCell&quot;</span> <span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
-                <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;vertCoordMovementWeights&quot;</span> <span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
-                <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;edgeMask&quot;</span> <span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
-            <span class="nt">&lt;/add_contents&gt;</span>
-    <span class="nt">&lt;/stream&gt;</span>
-    <span class="nt">&lt;/streams&gt;</span>
+<span class="w">    </span><span class="nt">&lt;streams</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;streams.ocean&quot;</span><span class="w"> </span><span class="na">keep=</span><span class="s">&quot;immutable&quot;</span><span class="w"> </span><span class="na">mode=</span><span class="s">&quot;init&quot;</span><span class="nt">&gt;</span>
+<span class="w">        </span><span class="nt">&lt;stream</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;input_init&quot;</span><span class="nt">&gt;</span>
+<span class="w">            </span><span class="nt">&lt;attribute</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;filename_template&quot;</span><span class="nt">&gt;</span>mesh.nc<span class="nt">&lt;/attribute&gt;</span>
+<span class="w">        </span><span class="nt">&lt;/stream&gt;</span>
+<span class="w">        </span><span class="nt">&lt;stream</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;output_init&quot;</span><span class="nt">&gt;</span>
+<span class="w">            </span><span class="nt">&lt;attribute</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;type&quot;</span><span class="nt">&gt;</span>output<span class="nt">&lt;/attribute&gt;</span>
+<span class="w">            </span><span class="nt">&lt;attribute</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;output_interval&quot;</span><span class="nt">&gt;</span>0000_00:00:01<span class="nt">&lt;/attribute&gt;</span>
+<span class="w">            </span><span class="nt">&lt;attribute</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;clobber_mode&quot;</span><span class="nt">&gt;</span>truncate<span class="nt">&lt;/attribute&gt;</span>
+<span class="w">            </span><span class="nt">&lt;attribute</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;filename_template&quot;</span><span class="nt">&gt;</span>ocean.nc<span class="nt">&lt;/attribute&gt;</span>
+<span class="w">            </span><span class="nt">&lt;add_contents&gt;</span>
+<span class="w">                </span><span class="nt">&lt;member</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;input_init&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;stream&quot;</span><span class="nt">/&gt;</span>
+<span class="w">                </span><span class="nt">&lt;member</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;layerThickness&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
+<span class="w">                </span><span class="nt">&lt;member</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;restingThickness&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
+<span class="w">                </span><span class="nt">&lt;member</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;refBottomDepth&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
+<span class="w">                </span><span class="nt">&lt;member</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;bottomDepth&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
+<span class="w">                </span><span class="nt">&lt;member</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;maxLevelCell&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
+<span class="w">                </span><span class="nt">&lt;member</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;vertCoordMovementWeights&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
+<span class="w">                </span><span class="nt">&lt;member</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;edgeMask&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
+<span class="w">            </span><span class="nt">&lt;/add_contents&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/stream&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/streams&gt;</span>
 
-    <span class="nt">&lt;run_script</span> <span class="na">name=</span><span class="s">&quot;run.py&quot;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;step</span> <span class="na">executable=</span><span class="s">&quot;planar_hex&quot;</span><span class="nt">&gt;</span>
-            <span class="nt">&lt;argument</span> <span class="na">flag=</span><span class="s">&quot;--nx&quot;</span><span class="nt">&gt;</span>4<span class="nt">&lt;/argument&gt;</span>
-            <span class="nt">&lt;argument</span> <span class="na">flag=</span><span class="s">&quot;--ny&quot;</span><span class="nt">&gt;</span>4<span class="nt">&lt;/argument&gt;</span>
-            <span class="nt">&lt;argument</span> <span class="na">flag=</span><span class="s">&quot;--dc&quot;</span><span class="nt">&gt;</span>2500.0<span class="nt">&lt;/argument&gt;</span>
-            <span class="nt">&lt;argument</span> <span class="na">flag=</span><span class="s">&quot;-o&quot;</span><span class="nt">&gt;</span>grid.nc<span class="nt">&lt;/argument&gt;</span>
-        <span class="nt">&lt;/step&gt;</span>
-        <span class="nt">&lt;step</span> <span class="na">executable=</span><span class="s">&quot;MpasCellCuller.x&quot;</span><span class="nt">&gt;</span>
-            <span class="nt">&lt;argument</span> <span class="na">flag=</span><span class="s">&quot;&quot;</span><span class="nt">&gt;</span>grid.nc<span class="nt">&lt;/argument&gt;</span>
-            <span class="nt">&lt;argument</span> <span class="na">flag=</span><span class="s">&quot;&quot;</span><span class="nt">&gt;</span>culled_mesh.nc<span class="nt">&lt;/argument&gt;</span>
-        <span class="nt">&lt;/step&gt;</span>
-        <span class="nt">&lt;step</span> <span class="na">executable=</span><span class="s">&quot;MpasMeshConverter.x&quot;</span><span class="nt">&gt;</span>
-            <span class="nt">&lt;argument</span> <span class="na">flag=</span><span class="s">&quot;&quot;</span><span class="nt">&gt;</span>culled_mesh.nc<span class="nt">&lt;/argument&gt;</span>
-            <span class="nt">&lt;argument</span> <span class="na">flag=</span><span class="s">&quot;&quot;</span><span class="nt">&gt;</span>mesh.nc<span class="nt">&lt;/argument&gt;</span>
-        <span class="nt">&lt;/step&gt;</span>
-        <span class="nt">&lt;model_run</span> <span class="na">procs=</span><span class="s">&quot;1&quot;</span> <span class="na">threads=</span><span class="s">&quot;1&quot;</span> <span class="na">namelist=</span><span class="s">&quot;namelist.ocean&quot;</span> <span class="na">streams=</span><span class="s">&quot;streams.ocean&quot;</span><span class="nt">/&gt;</span>
-    <span class="nt">&lt;/run_script&gt;</span>
+<span class="w">    </span><span class="nt">&lt;run_script</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;run.py&quot;</span><span class="nt">&gt;</span>
+<span class="w">        </span><span class="nt">&lt;step</span><span class="w"> </span><span class="na">executable=</span><span class="s">&quot;planar_hex&quot;</span><span class="nt">&gt;</span>
+<span class="w">            </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">flag=</span><span class="s">&quot;--nx&quot;</span><span class="nt">&gt;</span>4<span class="nt">&lt;/argument&gt;</span>
+<span class="w">            </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">flag=</span><span class="s">&quot;--ny&quot;</span><span class="nt">&gt;</span>4<span class="nt">&lt;/argument&gt;</span>
+<span class="w">            </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">flag=</span><span class="s">&quot;--dc&quot;</span><span class="nt">&gt;</span>2500.0<span class="nt">&lt;/argument&gt;</span>
+<span class="w">            </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">flag=</span><span class="s">&quot;-o&quot;</span><span class="nt">&gt;</span>grid.nc<span class="nt">&lt;/argument&gt;</span>
+<span class="w">        </span><span class="nt">&lt;/step&gt;</span>
+<span class="w">        </span><span class="nt">&lt;step</span><span class="w"> </span><span class="na">executable=</span><span class="s">&quot;MpasCellCuller.x&quot;</span><span class="nt">&gt;</span>
+<span class="w">            </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">flag=</span><span class="s">&quot;&quot;</span><span class="nt">&gt;</span>grid.nc<span class="nt">&lt;/argument&gt;</span>
+<span class="w">            </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">flag=</span><span class="s">&quot;&quot;</span><span class="nt">&gt;</span>culled_mesh.nc<span class="nt">&lt;/argument&gt;</span>
+<span class="w">        </span><span class="nt">&lt;/step&gt;</span>
+<span class="w">        </span><span class="nt">&lt;step</span><span class="w"> </span><span class="na">executable=</span><span class="s">&quot;MpasMeshConverter.x&quot;</span><span class="nt">&gt;</span>
+<span class="w">            </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">flag=</span><span class="s">&quot;&quot;</span><span class="nt">&gt;</span>culled_mesh.nc<span class="nt">&lt;/argument&gt;</span>
+<span class="w">            </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">flag=</span><span class="s">&quot;&quot;</span><span class="nt">&gt;</span>mesh.nc<span class="nt">&lt;/argument&gt;</span>
+<span class="w">        </span><span class="nt">&lt;/step&gt;</span>
+<span class="w">        </span><span class="nt">&lt;model_run</span><span class="w"> </span><span class="na">procs=</span><span class="s">&quot;1&quot;</span><span class="w"> </span><span class="na">threads=</span><span class="s">&quot;1&quot;</span><span class="w"> </span><span class="na">namelist=</span><span class="s">&quot;namelist.ocean&quot;</span><span class="w"> </span><span class="na">streams=</span><span class="s">&quot;streams.ocean&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/run_script&gt;</span>
 
 <span class="nt">&lt;/config&gt;</span>
 </pre></div>
@@ -297,11 +387,11 @@ new package in <code class="docutils literal notranslate"><span class="pre">comp
 
 
 <span class="k">class</span> <span class="nc">Gotm</span><span class="p">(</span><span class="n">TestGroup</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A test group for General Ocean Turbulence Model (GOTM) test cases</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpas_core</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        mpas_core : compass.MpasCore</span>
 <span class="sd">            the MPAS core that this test group belongs to</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -340,12 +430,12 @@ groups in the ocean core:</p>
 
 
 <span class="k">class</span> <span class="nc">Ocean</span><span class="p">(</span><span class="n">MpasCore</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A test group for General Ocean Turbulence Model (GOTM) test cases</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the collection of MPAS-Ocean test cases</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">)</span>
@@ -381,7 +471,7 @@ descends from the <code class="docutils literal notranslate"><span class="pre">T
 
 
 <span class="k">class</span> <span class="nc">Default</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The default test case for the General Ocean Turbulence Model (GOTM) test</span>
 <span class="sd">    group creates an initial condition on a 4 x 4 cell, doubly periodic grid,</span>
 <span class="sd">    performs a short simulation, then vertical plots of the velocity and</span>
@@ -389,7 +479,7 @@ descends from the <code class="docutils literal notranslate"><span class="pre">T
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the test case</span>
 
 <span class="sd">        Parameters</span>
@@ -434,7 +524,7 @@ test cases.</p>
 
 
 <span class="k">class</span> <span class="nc">Default</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The default test case for the baroclinic channel test group simply creates</span>
 <span class="sd">    the mesh and initial condition, then performs a short forward run on 4</span>
 <span class="sd">    cores.</span>
@@ -446,7 +536,7 @@ test cases.</p>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the test case</span>
 
 <span class="sd">        Parameters</span>
@@ -474,7 +564,7 @@ pick the right inner dictionary, and then set config options (see
 <a class="reference internal" href="../users_guide/config_files.html#config-files"><span class="std std-ref">Config Files</span></a>).  This example is a slight modification of
 <code class="docutils literal notranslate"><span class="pre">baroclinic_channel/default</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Modify the configuration options for this test case.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">resolution</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span>
@@ -518,12 +608,12 @@ we’ll just create a new <code class="docutils literal notranslate"><span class
 
 
 <span class="k">class</span> <span class="nc">Init</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A step for creating a mesh and initial condition for General Ocean</span>
 <span class="sd">    Turbulence Model (GOTM) test cases</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the step</span>
 
 <span class="sd">        Parameters</span>
@@ -580,15 +670,15 @@ namelist file with the desired values.  This is useful for namelist options that
 are always the same for this test case and can’t be changed based on config
 options from the config file (see above).</p>
 <p>The original <code class="docutils literal notranslate"><span class="pre">config_init.xml</span></code> contained:</p>
-<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;namelist</span> <span class="na">name=</span><span class="s">&quot;namelist.ocean&quot;</span> <span class="na">mode=</span><span class="s">&quot;init&quot;</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_init_configuration&quot;</span><span class="nt">&gt;</span>&#39;periodic_planar&#39;<span class="nt">&lt;/option&gt;</span>
-    <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_vert_levels&quot;</span><span class="nt">&gt;</span>-1<span class="nt">&lt;/option&gt;</span>
-    <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_periodic_planar_vert_levels&quot;</span><span class="nt">&gt;</span>250<span class="nt">&lt;/option&gt;</span>
-    <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_periodic_planar_bottom_depth&quot;</span><span class="nt">&gt;</span>15.0<span class="nt">&lt;/option&gt;</span>
-    <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_periodic_planar_velocity_strength&quot;</span><span class="nt">&gt;</span>0.0<span class="nt">&lt;/option&gt;</span>
-    <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_ocean_run_mode&quot;</span><span class="nt">&gt;</span>&#39;init&#39;<span class="nt">&lt;/option&gt;</span>
-    <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_write_cull_cell_mask&quot;</span><span class="nt">&gt;</span>.false.<span class="nt">&lt;/option&gt;</span>
-    <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_vertical_grid&quot;</span><span class="nt">&gt;</span>&#39;uniform&#39;<span class="nt">&lt;/option&gt;</span>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;namelist</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;namelist.ocean&quot;</span><span class="w"> </span><span class="na">mode=</span><span class="s">&quot;init&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;option</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;config_init_configuration&quot;</span><span class="nt">&gt;</span>&#39;periodic_planar&#39;<span class="nt">&lt;/option&gt;</span>
+<span class="w">    </span><span class="nt">&lt;option</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;config_vert_levels&quot;</span><span class="nt">&gt;</span>-1<span class="nt">&lt;/option&gt;</span>
+<span class="w">    </span><span class="nt">&lt;option</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;config_periodic_planar_vert_levels&quot;</span><span class="nt">&gt;</span>250<span class="nt">&lt;/option&gt;</span>
+<span class="w">    </span><span class="nt">&lt;option</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;config_periodic_planar_bottom_depth&quot;</span><span class="nt">&gt;</span>15.0<span class="nt">&lt;/option&gt;</span>
+<span class="w">    </span><span class="nt">&lt;option</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;config_periodic_planar_velocity_strength&quot;</span><span class="nt">&gt;</span>0.0<span class="nt">&lt;/option&gt;</span>
+<span class="w">    </span><span class="nt">&lt;option</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;config_ocean_run_mode&quot;</span><span class="nt">&gt;</span>&#39;init&#39;<span class="nt">&lt;/option&gt;</span>
+<span class="w">    </span><span class="nt">&lt;option</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;config_write_cull_cell_mask&quot;</span><span class="nt">&gt;</span>.false.<span class="nt">&lt;/option&gt;</span>
+<span class="w">    </span><span class="nt">&lt;option</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;config_vertical_grid&quot;</span><span class="nt">&gt;</span>&#39;uniform&#39;<span class="nt">&lt;/option&gt;</span>
 <span class="nt">&lt;/namelist&gt;</span>
 </pre></div>
 </div>
@@ -625,49 +715,49 @@ is set up.  The syntax in <code class="docutils literal notranslate"><span class
 than in legacy COMPASS (where a different XML convention was used to define
 streams than the XML of the streams files themselves).  In legacy COMPASS,
 the streams for the <code class="docutils literal notranslate"><span class="pre">init</span></code> step are defined in <code class="docutils literal notranslate"><span class="pre">config_init.xml</span></code> as:</p>
-<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;streams</span> <span class="na">name=</span><span class="s">&quot;streams.ocean&quot;</span> <span class="na">keep=</span><span class="s">&quot;immutable&quot;</span> <span class="na">mode=</span><span class="s">&quot;init&quot;</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;stream</span> <span class="na">name=</span><span class="s">&quot;input_init&quot;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;filename_template&quot;</span><span class="nt">&gt;</span>mesh.nc<span class="nt">&lt;/attribute&gt;</span>
-    <span class="nt">&lt;/stream&gt;</span>
-    <span class="nt">&lt;stream</span> <span class="na">name=</span><span class="s">&quot;output_init&quot;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;type&quot;</span><span class="nt">&gt;</span>output<span class="nt">&lt;/attribute&gt;</span>
-        <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;output_interval&quot;</span><span class="nt">&gt;</span>0000_00:00:01<span class="nt">&lt;/attribute&gt;</span>
-        <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;clobber_mode&quot;</span><span class="nt">&gt;</span>truncate<span class="nt">&lt;/attribute&gt;</span>
-        <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;filename_template&quot;</span><span class="nt">&gt;</span>ocean.nc<span class="nt">&lt;/attribute&gt;</span>
-        <span class="nt">&lt;add_contents&gt;</span>
-            <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;input_init&quot;</span> <span class="na">type=</span><span class="s">&quot;stream&quot;</span><span class="nt">/&gt;</span>
-            <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;layerThickness&quot;</span> <span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
-            <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;restingThickness&quot;</span> <span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
-            <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;refBottomDepth&quot;</span> <span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
-            <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;bottomDepth&quot;</span> <span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
-            <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;maxLevelCell&quot;</span> <span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
-            <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;vertCoordMovementWeights&quot;</span> <span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
-            <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;edgeMask&quot;</span> <span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
-        <span class="nt">&lt;/add_contents&gt;</span>
-    <span class="nt">&lt;/stream&gt;</span>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;streams</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;streams.ocean&quot;</span><span class="w"> </span><span class="na">keep=</span><span class="s">&quot;immutable&quot;</span><span class="w"> </span><span class="na">mode=</span><span class="s">&quot;init&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;stream</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;input_init&quot;</span><span class="nt">&gt;</span>
+<span class="w">        </span><span class="nt">&lt;attribute</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;filename_template&quot;</span><span class="nt">&gt;</span>mesh.nc<span class="nt">&lt;/attribute&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/stream&gt;</span>
+<span class="w">    </span><span class="nt">&lt;stream</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;output_init&quot;</span><span class="nt">&gt;</span>
+<span class="w">        </span><span class="nt">&lt;attribute</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;type&quot;</span><span class="nt">&gt;</span>output<span class="nt">&lt;/attribute&gt;</span>
+<span class="w">        </span><span class="nt">&lt;attribute</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;output_interval&quot;</span><span class="nt">&gt;</span>0000_00:00:01<span class="nt">&lt;/attribute&gt;</span>
+<span class="w">        </span><span class="nt">&lt;attribute</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;clobber_mode&quot;</span><span class="nt">&gt;</span>truncate<span class="nt">&lt;/attribute&gt;</span>
+<span class="w">        </span><span class="nt">&lt;attribute</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;filename_template&quot;</span><span class="nt">&gt;</span>ocean.nc<span class="nt">&lt;/attribute&gt;</span>
+<span class="w">        </span><span class="nt">&lt;add_contents&gt;</span>
+<span class="w">            </span><span class="nt">&lt;member</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;input_init&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;stream&quot;</span><span class="nt">/&gt;</span>
+<span class="w">            </span><span class="nt">&lt;member</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;layerThickness&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
+<span class="w">            </span><span class="nt">&lt;member</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;restingThickness&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
+<span class="w">            </span><span class="nt">&lt;member</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;refBottomDepth&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
+<span class="w">            </span><span class="nt">&lt;member</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;bottomDepth&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
+<span class="w">            </span><span class="nt">&lt;member</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;maxLevelCell&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
+<span class="w">            </span><span class="nt">&lt;member</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;vertCoordMovementWeights&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
+<span class="w">            </span><span class="nt">&lt;member</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;edgeMask&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
+<span class="w">        </span><span class="nt">&lt;/add_contents&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/stream&gt;</span>
 <span class="nt">&lt;/streams&gt;</span>
 </pre></div>
 </div>
 <p>In <code class="docutils literal notranslate"><span class="pre">compass</span></code>, we add a <code class="docutils literal notranslate"><span class="pre">streams.init</span></code> file to the <code class="docutils literal notranslate"><span class="pre">default</span></code> test case:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;streams&gt;</span>
 
-<span class="nt">&lt;immutable_stream</span> <span class="na">name=</span><span class="s">&quot;input_init&quot;</span>
-                  <span class="na">filename_template=</span><span class="s">&quot;mesh.nc&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;immutable_stream</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;input_init&quot;</span>
+<span class="w">                  </span><span class="na">filename_template=</span><span class="s">&quot;mesh.nc&quot;</span><span class="nt">/&gt;</span>
 
-<span class="nt">&lt;stream</span> <span class="na">name=</span><span class="s">&quot;output_init&quot;</span>
-        <span class="na">type=</span><span class="s">&quot;output&quot;</span>
-        <span class="na">output_interval=</span><span class="s">&quot;0000_00:00:01&quot;</span>
-        <span class="na">clobber_mode=</span><span class="s">&quot;truncate&quot;</span>
-        <span class="na">filename_template=</span><span class="s">&quot;ocean.nc&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;stream</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;output_init&quot;</span>
+<span class="w">        </span><span class="na">type=</span><span class="s">&quot;output&quot;</span>
+<span class="w">        </span><span class="na">output_interval=</span><span class="s">&quot;0000_00:00:01&quot;</span>
+<span class="w">        </span><span class="na">clobber_mode=</span><span class="s">&quot;truncate&quot;</span>
+<span class="w">        </span><span class="na">filename_template=</span><span class="s">&quot;ocean.nc&quot;</span><span class="nt">&gt;</span>
 
-    <span class="nt">&lt;stream</span> <span class="na">name=</span><span class="s">&quot;input_init&quot;</span><span class="nt">/&gt;</span>
-    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;layerThickness&quot;</span><span class="nt">/&gt;</span>
-    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;restingThickness&quot;</span><span class="nt">/&gt;</span>
-    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;refBottomDepth&quot;</span><span class="nt">/&gt;</span>
-    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;bottomDepth&quot;</span><span class="nt">/&gt;</span>
-    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;maxLevelCell&quot;</span><span class="nt">/&gt;</span>
-    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;vertCoordMovementWeights&quot;</span><span class="nt">/&gt;</span>
-    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;edgeMask&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;stream</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;input_init&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;layerThickness&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;restingThickness&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;refBottomDepth&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;bottomDepth&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;maxLevelCell&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;vertCoordMovementWeights&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;edgeMask&quot;</span><span class="nt">/&gt;</span>
 <span class="nt">&lt;/stream&gt;</span>
 
 <span class="nt">&lt;/streams&gt;</span>
@@ -677,10 +767,10 @@ the streams for the <code class="docutils literal notranslate"><span class="pre"
 will use the default attributes defined by the MPAS component unless they are
 explicitly replaced in the streams file.  On setting up the test case, the
 stream in the <code class="docutils literal notranslate"><span class="pre">streams.ocean</span></code> file becomes:</p>
-<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;immutable_stream</span> <span class="na">name=</span><span class="s">&quot;input_init&quot;</span>
-                  <span class="na">type=</span><span class="s">&quot;input&quot;</span>
-                  <span class="na">filename_template=</span><span class="s">&quot;mesh.nc&quot;</span>
-                  <span class="na">input_interval=</span><span class="s">&quot;initial_only&quot;</span><span class="nt">/&gt;</span>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;immutable_stream</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;input_init&quot;</span>
+<span class="w">                  </span><span class="na">type=</span><span class="s">&quot;input&quot;</span>
+<span class="w">                  </span><span class="na">filename_template=</span><span class="s">&quot;mesh.nc&quot;</span>
+<span class="w">                  </span><span class="na">input_interval=</span><span class="s">&quot;initial_only&quot;</span><span class="nt">/&gt;</span>
 </pre></div>
 </div>
 </section>
@@ -693,21 +783,21 @@ parameters in the config file for the test case.  To do this, we can make a
 config file with the test group’s package, the test case’s package, or both.
 In our example, we will just add a config file <code class="docutils literal notranslate"><span class="pre">defaults.cfg</span></code> to the
 <code class="docutils literal notranslate"><span class="pre">defaults</span></code> test case:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># config options for General Ocean Turbulence Model (GOTM) test cases</span><span class="w"></span>
-<span class="k">[gotm]</span><span class="w"></span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># config options for General Ocean Turbulence Model (GOTM) test cases</span>
+<span class="k">[gotm]</span>
 
-<span class="c1"># the number of grid cells in x and y</span><span class="w"></span>
-<span class="na">nx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span><span class="w"></span>
-<span class="na">ny</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span><span class="w"></span>
+<span class="c1"># the number of grid cells in x and y</span>
+<span class="na">nx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span>
+<span class="na">ny</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span>
 
-<span class="c1"># the size of grid cells (m)</span><span class="w"></span>
-<span class="na">dc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2500.0</span><span class="w"></span>
+<span class="c1"># the size of grid cells (m)</span>
+<span class="na">dc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2500.0</span>
 
-<span class="c1"># the number of vertical levels</span><span class="w"></span>
-<span class="na">vert_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">250</span><span class="w"></span>
+<span class="c1"># the number of vertical levels</span>
+<span class="na">vert_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">250</span>
 
-<span class="c1"># the depth of the sea floor (m)</span><span class="w"></span>
-<span class="na">bottom_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">15.0</span><span class="w"></span>
+<span class="c1"># the depth of the sea floor (m)</span>
+<span class="na">bottom_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">15.0</span>
 </pre></div>
 </div>
 <p>By default, the domain is 4 x 4 horizontal cells, each 2.5 km in size.  The
@@ -723,22 +813,22 @@ set up.</p>
 <p>With these config options, namelists and streams files defined, we will
 implement the <code class="docutils literal notranslate"><span class="pre">run()</span></code> method of the <code class="docutils literal notranslate"><span class="pre">init</span></code> step to do the rest of the work
 for this step.  In legacy COMPASS, the XML for defining the run scrip was:</p>
-<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;run_script</span> <span class="na">name=</span><span class="s">&quot;run.py&quot;</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;step</span> <span class="na">executable=</span><span class="s">&quot;planar_hex&quot;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;argument</span> <span class="na">flag=</span><span class="s">&quot;--nx&quot;</span><span class="nt">&gt;</span>4<span class="nt">&lt;/argument&gt;</span>
-        <span class="nt">&lt;argument</span> <span class="na">flag=</span><span class="s">&quot;--ny&quot;</span><span class="nt">&gt;</span>4<span class="nt">&lt;/argument&gt;</span>
-        <span class="nt">&lt;argument</span> <span class="na">flag=</span><span class="s">&quot;--dc&quot;</span><span class="nt">&gt;</span>2500.0<span class="nt">&lt;/argument&gt;</span>
-        <span class="nt">&lt;argument</span> <span class="na">flag=</span><span class="s">&quot;-o&quot;</span><span class="nt">&gt;</span>grid.nc<span class="nt">&lt;/argument&gt;</span>
-    <span class="nt">&lt;/step&gt;</span>
-    <span class="nt">&lt;step</span> <span class="na">executable=</span><span class="s">&quot;MpasCellCuller.x&quot;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;argument</span> <span class="na">flag=</span><span class="s">&quot;&quot;</span><span class="nt">&gt;</span>grid.nc<span class="nt">&lt;/argument&gt;</span>
-        <span class="nt">&lt;argument</span> <span class="na">flag=</span><span class="s">&quot;&quot;</span><span class="nt">&gt;</span>culled_mesh.nc<span class="nt">&lt;/argument&gt;</span>
-    <span class="nt">&lt;/step&gt;</span>
-    <span class="nt">&lt;step</span> <span class="na">executable=</span><span class="s">&quot;MpasMeshConverter.x&quot;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;argument</span> <span class="na">flag=</span><span class="s">&quot;&quot;</span><span class="nt">&gt;</span>culled_mesh.nc<span class="nt">&lt;/argument&gt;</span>
-        <span class="nt">&lt;argument</span> <span class="na">flag=</span><span class="s">&quot;&quot;</span><span class="nt">&gt;</span>mesh.nc<span class="nt">&lt;/argument&gt;</span>
-    <span class="nt">&lt;/step&gt;</span>
-    <span class="nt">&lt;model_run</span> <span class="na">procs=</span><span class="s">&quot;1&quot;</span> <span class="na">threads=</span><span class="s">&quot;1&quot;</span> <span class="na">namelist=</span><span class="s">&quot;namelist.ocean&quot;</span> <span class="na">streams=</span><span class="s">&quot;streams.ocean&quot;</span><span class="nt">/&gt;</span>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;run_script</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;run.py&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;step</span><span class="w"> </span><span class="na">executable=</span><span class="s">&quot;planar_hex&quot;</span><span class="nt">&gt;</span>
+<span class="w">        </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">flag=</span><span class="s">&quot;--nx&quot;</span><span class="nt">&gt;</span>4<span class="nt">&lt;/argument&gt;</span>
+<span class="w">        </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">flag=</span><span class="s">&quot;--ny&quot;</span><span class="nt">&gt;</span>4<span class="nt">&lt;/argument&gt;</span>
+<span class="w">        </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">flag=</span><span class="s">&quot;--dc&quot;</span><span class="nt">&gt;</span>2500.0<span class="nt">&lt;/argument&gt;</span>
+<span class="w">        </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">flag=</span><span class="s">&quot;-o&quot;</span><span class="nt">&gt;</span>grid.nc<span class="nt">&lt;/argument&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/step&gt;</span>
+<span class="w">    </span><span class="nt">&lt;step</span><span class="w"> </span><span class="na">executable=</span><span class="s">&quot;MpasCellCuller.x&quot;</span><span class="nt">&gt;</span>
+<span class="w">        </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">flag=</span><span class="s">&quot;&quot;</span><span class="nt">&gt;</span>grid.nc<span class="nt">&lt;/argument&gt;</span>
+<span class="w">        </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">flag=</span><span class="s">&quot;&quot;</span><span class="nt">&gt;</span>culled_mesh.nc<span class="nt">&lt;/argument&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/step&gt;</span>
+<span class="w">    </span><span class="nt">&lt;step</span><span class="w"> </span><span class="na">executable=</span><span class="s">&quot;MpasMeshConverter.x&quot;</span><span class="nt">&gt;</span>
+<span class="w">        </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">flag=</span><span class="s">&quot;&quot;</span><span class="nt">&gt;</span>culled_mesh.nc<span class="nt">&lt;/argument&gt;</span>
+<span class="w">        </span><span class="nt">&lt;argument</span><span class="w"> </span><span class="na">flag=</span><span class="s">&quot;&quot;</span><span class="nt">&gt;</span>mesh.nc<span class="nt">&lt;/argument&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/step&gt;</span>
+<span class="w">    </span><span class="nt">&lt;model_run</span><span class="w"> </span><span class="na">procs=</span><span class="s">&quot;1&quot;</span><span class="w"> </span><span class="na">threads=</span><span class="s">&quot;1&quot;</span><span class="w"> </span><span class="na">namelist=</span><span class="s">&quot;namelist.ocean&quot;</span><span class="w"> </span><span class="na">streams=</span><span class="s">&quot;streams.ocean&quot;</span><span class="nt">/&gt;</span>
 <span class="nt">&lt;/run_script&gt;</span>
 </pre></div>
 </div>
@@ -752,7 +842,7 @@ for this step.  In legacy COMPASS, the XML for defining the run scrip was:</p>
 <span class="o">...</span>
 
 <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Run this step of the test case</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
@@ -833,12 +923,12 @@ number of cores, minimum number of cores, and number of threads:</p>
 
 
 <span class="k">class</span> <span class="nc">Forward</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A step for performing forward MPAS-Ocean runs as part of General Ocean</span>
 <span class="sd">    Turbulence Model (GOTM) test cases.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new test case</span>
 
 <span class="sd">        Parameters</span>
@@ -852,9 +942,9 @@ number of cores, minimum number of cores, and number of threads:</p>
 </pre></div>
 </div>
 <p>The following XML from legacy COMPASS:</p>
-<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;add_link</span> <span class="na">source=</span><span class="s">&quot;../init/ocean.nc&quot;</span> <span class="na">dest=</span><span class="s">&quot;init.nc&quot;</span><span class="nt">/&gt;</span>
-<span class="nt">&lt;add_link</span> <span class="na">source=</span><span class="s">&quot;../init/mesh.nc&quot;</span> <span class="na">dest=</span><span class="s">&quot;mesh.nc&quot;</span><span class="nt">/&gt;</span>
-<span class="nt">&lt;add_link</span> <span class="na">source=</span><span class="s">&quot;../init/graph.info&quot;</span> <span class="na">dest=</span><span class="s">&quot;graph.info&quot;</span><span class="nt">/&gt;</span>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;add_link</span><span class="w"> </span><span class="na">source=</span><span class="s">&quot;../init/ocean.nc&quot;</span><span class="w"> </span><span class="na">dest=</span><span class="s">&quot;init.nc&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;add_link</span><span class="w"> </span><span class="na">source=</span><span class="s">&quot;../init/mesh.nc&quot;</span><span class="w"> </span><span class="na">dest=</span><span class="s">&quot;mesh.nc&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;add_link</span><span class="w"> </span><span class="na">source=</span><span class="s">&quot;../init/graph.info&quot;</span><span class="w"> </span><span class="na">dest=</span><span class="s">&quot;graph.info&quot;</span><span class="nt">/&gt;</span>
 </pre></div>
 </div>
 <p>is replaced by these method calls within the step’s constructor in <code class="docutils literal notranslate"><span class="pre">compass</span></code>:</p>
@@ -865,7 +955,7 @@ number of cores, minimum number of cores, and number of threads:</p>
 </div>
 <p>As in <code class="docutils literal notranslate"><span class="pre">Init</span></code>, we want to make a link to the MPAS-Ocean executable.  The
 legacy COMPASS version of this was:</p>
-<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;add_executable</span> <span class="na">source=</span><span class="s">&quot;model&quot;</span> <span class="na">dest=</span><span class="s">&quot;ocean_model&quot;</span><span class="nt">/&gt;</span>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;add_executable</span><span class="w"> </span><span class="na">source=</span><span class="s">&quot;model&quot;</span><span class="w"> </span><span class="na">dest=</span><span class="s">&quot;ocean_model&quot;</span><span class="nt">/&gt;</span>
 </pre></div>
 </div>
 <p>and the <code class="docutils literal notranslate"><span class="pre">compass</span></code> version is:</p>
@@ -876,7 +966,7 @@ legacy COMPASS version of this was:</p>
 GOTM library called from within MPAS-Ocean (i.e. a different namelist than the
 MPAS-Ocean <code class="docutils literal notranslate"><span class="pre">namelist.ocean</span></code> file).  In legacy COMPASS, a symlink from the
 script test directory to the working directory was accomplished with:</p>
-<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;copy_file</span> <span class="na">source_path=</span><span class="s">&quot;script_test_dir&quot;</span> <span class="na">source=</span><span class="s">&quot;gotmturb.nml&quot;</span> <span class="na">dest=</span><span class="s">&quot;gotmturb.nml&quot;</span><span class="nt">/&gt;</span>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;copy_file</span><span class="w"> </span><span class="na">source_path=</span><span class="s">&quot;script_test_dir&quot;</span><span class="w"> </span><span class="na">source=</span><span class="s">&quot;gotmturb.nml&quot;</span><span class="w"> </span><span class="na">dest=</span><span class="s">&quot;gotmturb.nml&quot;</span><span class="nt">/&gt;</span>
 </pre></div>
 </div>
 <p>In <code class="docutils literal notranslate"><span class="pre">compass</span></code>, this becomes:</p>
@@ -892,7 +982,7 @@ package that we’re currently working on.</p>
 </div>
 <p>The complete constructor looks like:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create a new test case</span>
 
 <span class="sd">    Parameters</span>
@@ -925,20 +1015,20 @@ package that we’re currently working on.</p>
 is.</p>
 <p>The MPAS-Ocean namelist file <code class="docutils literal notranslate"><span class="pre">namelist.forward</span></code> contains the same contents
 as the legacy XML:</p>
-<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;namelist</span> <span class="na">name=</span><span class="s">&quot;namelist.ocean&quot;</span> <span class="na">mode=</span><span class="s">&quot;forward&quot;</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_ocean_run_mode&quot;</span><span class="nt">&gt;</span>&#39;forward&#39;<span class="nt">&lt;/option&gt;</span>
-    <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_dt&quot;</span><span class="nt">&gt;</span>&#39;000:00:25&#39;<span class="nt">&lt;/option&gt;</span>
-    <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_btr_dt&quot;</span><span class="nt">&gt;</span>&#39;000:00:25&#39;<span class="nt">&lt;/option&gt;</span>
-    <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_time_integrator&quot;</span><span class="nt">&gt;</span>&#39;split_explicit&#39;<span class="nt">&lt;/option&gt;</span>
-    <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_run_duration&quot;</span><span class="nt">&gt;</span>&#39;0000_12:00:00&#39;<span class="nt">&lt;/option&gt;</span>
-    <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_zonal_ssh_grad&quot;</span><span class="nt">&gt;</span>-1.0e-5<span class="nt">&lt;/option&gt;</span>
-    <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_pressure_gradient_type&quot;</span><span class="nt">&gt;</span>&#39;constant_forced&#39;<span class="nt">&lt;/option&gt;</span>
-    <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_use_cvmix&quot;</span><span class="nt">&gt;</span>.false.<span class="nt">&lt;/option&gt;</span>
-    <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_use_gotm&quot;</span><span class="nt">&gt;</span>.true.<span class="nt">&lt;/option&gt;</span>
-    <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_gotm_namelist_file&quot;</span><span class="nt">&gt;</span>&#39;gotmturb.nml&#39;<span class="nt">&lt;/option&gt;</span>
-    <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_gotm_constant_bottom_drag_coeff&quot;</span><span class="nt">&gt;</span>1.73e-2<span class="nt">&lt;/option&gt;</span>
-    <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_use_implicit_bottom_drag&quot;</span><span class="nt">&gt;</span>.true.<span class="nt">&lt;/option&gt;</span>
-    <span class="nt">&lt;option</span> <span class="na">name=</span><span class="s">&quot;config_implicit_bottom_drag_coeff&quot;</span><span class="nt">&gt;</span>1.73e-2<span class="nt">&lt;/option&gt;</span>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;namelist</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;namelist.ocean&quot;</span><span class="w"> </span><span class="na">mode=</span><span class="s">&quot;forward&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;option</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;config_ocean_run_mode&quot;</span><span class="nt">&gt;</span>&#39;forward&#39;<span class="nt">&lt;/option&gt;</span>
+<span class="w">    </span><span class="nt">&lt;option</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;config_dt&quot;</span><span class="nt">&gt;</span>&#39;000:00:25&#39;<span class="nt">&lt;/option&gt;</span>
+<span class="w">    </span><span class="nt">&lt;option</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;config_btr_dt&quot;</span><span class="nt">&gt;</span>&#39;000:00:25&#39;<span class="nt">&lt;/option&gt;</span>
+<span class="w">    </span><span class="nt">&lt;option</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;config_time_integrator&quot;</span><span class="nt">&gt;</span>&#39;split_explicit&#39;<span class="nt">&lt;/option&gt;</span>
+<span class="w">    </span><span class="nt">&lt;option</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;config_run_duration&quot;</span><span class="nt">&gt;</span>&#39;0000_12:00:00&#39;<span class="nt">&lt;/option&gt;</span>
+<span class="w">    </span><span class="nt">&lt;option</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;config_zonal_ssh_grad&quot;</span><span class="nt">&gt;</span>-1.0e-5<span class="nt">&lt;/option&gt;</span>
+<span class="w">    </span><span class="nt">&lt;option</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;config_pressure_gradient_type&quot;</span><span class="nt">&gt;</span>&#39;constant_forced&#39;<span class="nt">&lt;/option&gt;</span>
+<span class="w">    </span><span class="nt">&lt;option</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;config_use_cvmix&quot;</span><span class="nt">&gt;</span>.false.<span class="nt">&lt;/option&gt;</span>
+<span class="w">    </span><span class="nt">&lt;option</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;config_use_gotm&quot;</span><span class="nt">&gt;</span>.true.<span class="nt">&lt;/option&gt;</span>
+<span class="w">    </span><span class="nt">&lt;option</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;config_gotm_namelist_file&quot;</span><span class="nt">&gt;</span>&#39;gotmturb.nml&#39;<span class="nt">&lt;/option&gt;</span>
+<span class="w">    </span><span class="nt">&lt;option</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;config_gotm_constant_bottom_drag_coeff&quot;</span><span class="nt">&gt;</span>1.73e-2<span class="nt">&lt;/option&gt;</span>
+<span class="w">    </span><span class="nt">&lt;option</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;config_use_implicit_bottom_drag&quot;</span><span class="nt">&gt;</span>.true.<span class="nt">&lt;/option&gt;</span>
+<span class="w">    </span><span class="nt">&lt;option</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;config_implicit_bottom_drag_coeff&quot;</span><span class="nt">&gt;</span>1.73e-2<span class="nt">&lt;/option&gt;</span>
 <span class="nt">&lt;/namelist&gt;</span>
 </pre></div>
 </div>
@@ -962,28 +1052,28 @@ config_implicit_bottom_drag_coeff = 1.73e-2
 by <code class="docutils literal notranslate"><span class="pre">compass</span></code> when we add a namelist with the keyword argument
 <code class="docutils literal notranslate"><span class="pre">mode='forward'</span></code> (which is the default mode).</p>
 <p>Similarly, the legacy definition of the streams:</p>
-<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;streams</span> <span class="na">name=</span><span class="s">&quot;streams.ocean&quot;</span> <span class="na">keep=</span><span class="s">&quot;immutable&quot;</span> <span class="na">mode=</span><span class="s">&quot;forward&quot;</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;stream</span> <span class="na">name=</span><span class="s">&quot;mesh&quot;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;filename_template&quot;</span><span class="nt">&gt;</span>mesh.nc<span class="nt">&lt;/attribute&gt;</span>
-    <span class="nt">&lt;/stream&gt;</span>
-    <span class="nt">&lt;stream</span> <span class="na">name=</span><span class="s">&quot;input&quot;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;filename_template&quot;</span><span class="nt">&gt;</span>init.nc<span class="nt">&lt;/attribute&gt;</span>
-    <span class="nt">&lt;/stream&gt;</span>
-    <span class="nt">&lt;stream</span> <span class="na">name=</span><span class="s">&quot;output&quot;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;type&quot;</span><span class="nt">&gt;</span>output<span class="nt">&lt;/attribute&gt;</span>
-        <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;filename_template&quot;</span><span class="nt">&gt;</span>output.nc<span class="nt">&lt;/attribute&gt;</span>
-        <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;output_interval&quot;</span><span class="nt">&gt;</span>0000-00-00_00:10:00<span class="nt">&lt;/attribute&gt;</span>
-        <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;clobber_mode&quot;</span><span class="nt">&gt;</span>truncate<span class="nt">&lt;/attribute&gt;</span>
-        <span class="nt">&lt;add_contents&gt;</span>
-            <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;velocityZonal&quot;</span> <span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
-            <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;velocityMeridional&quot;</span> <span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
-            <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;vertViscTopOfCell&quot;</span> <span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
-            <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;mesh&quot;</span> <span class="na">type=</span><span class="s">&quot;stream&quot;</span><span class="nt">/&gt;</span>
-            <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;xtime&quot;</span> <span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
-            <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;normalVelocity&quot;</span> <span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
-            <span class="nt">&lt;member</span> <span class="na">name=</span><span class="s">&quot;layerThickness&quot;</span> <span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
-        <span class="nt">&lt;/add_contents&gt;</span>
-    <span class="nt">&lt;/stream&gt;</span>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;streams</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;streams.ocean&quot;</span><span class="w"> </span><span class="na">keep=</span><span class="s">&quot;immutable&quot;</span><span class="w"> </span><span class="na">mode=</span><span class="s">&quot;forward&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;stream</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;mesh&quot;</span><span class="nt">&gt;</span>
+<span class="w">        </span><span class="nt">&lt;attribute</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;filename_template&quot;</span><span class="nt">&gt;</span>mesh.nc<span class="nt">&lt;/attribute&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/stream&gt;</span>
+<span class="w">    </span><span class="nt">&lt;stream</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;input&quot;</span><span class="nt">&gt;</span>
+<span class="w">        </span><span class="nt">&lt;attribute</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;filename_template&quot;</span><span class="nt">&gt;</span>init.nc<span class="nt">&lt;/attribute&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/stream&gt;</span>
+<span class="w">    </span><span class="nt">&lt;stream</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;output&quot;</span><span class="nt">&gt;</span>
+<span class="w">        </span><span class="nt">&lt;attribute</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;type&quot;</span><span class="nt">&gt;</span>output<span class="nt">&lt;/attribute&gt;</span>
+<span class="w">        </span><span class="nt">&lt;attribute</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;filename_template&quot;</span><span class="nt">&gt;</span>output.nc<span class="nt">&lt;/attribute&gt;</span>
+<span class="w">        </span><span class="nt">&lt;attribute</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;output_interval&quot;</span><span class="nt">&gt;</span>0000-00-00_00:10:00<span class="nt">&lt;/attribute&gt;</span>
+<span class="w">        </span><span class="nt">&lt;attribute</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;clobber_mode&quot;</span><span class="nt">&gt;</span>truncate<span class="nt">&lt;/attribute&gt;</span>
+<span class="w">        </span><span class="nt">&lt;add_contents&gt;</span>
+<span class="w">            </span><span class="nt">&lt;member</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;velocityZonal&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
+<span class="w">            </span><span class="nt">&lt;member</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;velocityMeridional&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
+<span class="w">            </span><span class="nt">&lt;member</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;vertViscTopOfCell&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
+<span class="w">            </span><span class="nt">&lt;member</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;mesh&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;stream&quot;</span><span class="nt">/&gt;</span>
+<span class="w">            </span><span class="nt">&lt;member</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;xtime&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
+<span class="w">            </span><span class="nt">&lt;member</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;normalVelocity&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
+<span class="w">            </span><span class="nt">&lt;member</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;layerThickness&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;var&quot;</span><span class="nt">/&gt;</span>
+<span class="w">        </span><span class="nt">&lt;/add_contents&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/stream&gt;</span>
 <span class="nt">&lt;/streams&gt;</span>
 </pre></div>
 </div>
@@ -991,33 +1081,33 @@ by <code class="docutils literal notranslate"><span class="pre">compass</span></
 identical to the full streams file in the work directory:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;streams&gt;</span>
 
-<span class="nt">&lt;immutable_stream</span> <span class="na">name=</span><span class="s">&quot;mesh&quot;</span>
-                  <span class="na">filename_template=</span><span class="s">&quot;mesh.nc&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;immutable_stream</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;mesh&quot;</span>
+<span class="w">                  </span><span class="na">filename_template=</span><span class="s">&quot;mesh.nc&quot;</span><span class="nt">/&gt;</span>
 
-<span class="nt">&lt;immutable_stream</span> <span class="na">name=</span><span class="s">&quot;input&quot;</span>
-                  <span class="na">filename_template=</span><span class="s">&quot;init.nc&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;immutable_stream</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;input&quot;</span>
+<span class="w">                  </span><span class="na">filename_template=</span><span class="s">&quot;init.nc&quot;</span><span class="nt">/&gt;</span>
 
-<span class="nt">&lt;stream</span> <span class="na">name=</span><span class="s">&quot;output&quot;</span>
-        <span class="na">type=</span><span class="s">&quot;output&quot;</span>
-        <span class="na">filename_template=</span><span class="s">&quot;output.nc&quot;</span>
-        <span class="na">output_interval=</span><span class="s">&quot;0000-00-00_00:10:00&quot;</span>
-        <span class="na">clobber_mode=</span><span class="s">&quot;truncate&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;stream</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;output&quot;</span>
+<span class="w">        </span><span class="na">type=</span><span class="s">&quot;output&quot;</span>
+<span class="w">        </span><span class="na">filename_template=</span><span class="s">&quot;output.nc&quot;</span>
+<span class="w">        </span><span class="na">output_interval=</span><span class="s">&quot;0000-00-00_00:10:00&quot;</span>
+<span class="w">        </span><span class="na">clobber_mode=</span><span class="s">&quot;truncate&quot;</span><span class="nt">&gt;</span>
 
-    <span class="nt">&lt;stream</span> <span class="na">name=</span><span class="s">&quot;mesh&quot;</span><span class="nt">/&gt;</span>
-    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;velocityZonal&quot;</span><span class="nt">/&gt;</span>
-    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;velocityMeridional&quot;</span><span class="nt">/&gt;</span>
-    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;vertViscTopOfCell&quot;</span><span class="nt">/&gt;</span>
-    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;xtime&quot;</span><span class="nt">/&gt;</span>
-    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;normalVelocity&quot;</span><span class="nt">/&gt;</span>
-    <span class="nt">&lt;var</span> <span class="na">name=</span><span class="s">&quot;layerThickness&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;stream</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;mesh&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;velocityZonal&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;velocityMeridional&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;vertViscTopOfCell&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;xtime&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;normalVelocity&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;var</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;layerThickness&quot;</span><span class="nt">/&gt;</span>
 <span class="nt">&lt;/stream&gt;</span>
 
 <span class="nt">&lt;/streams&gt;</span>
 </pre></div>
 </div>
 <p>The run script from the legacy test case:</p>
-<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;run_script</span> <span class="na">name=</span><span class="s">&quot;run.py&quot;</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;model_run</span> <span class="na">procs=</span><span class="s">&quot;1&quot;</span> <span class="na">threads=</span><span class="s">&quot;1&quot;</span> <span class="na">namelist=</span><span class="s">&quot;namelist.ocean&quot;</span> <span class="na">streams=</span><span class="s">&quot;streams.ocean&quot;</span><span class="nt">/&gt;</span>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;run_script</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;run.py&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;model_run</span><span class="w"> </span><span class="na">procs=</span><span class="s">&quot;1&quot;</span><span class="w"> </span><span class="na">threads=</span><span class="s">&quot;1&quot;</span><span class="w"> </span><span class="na">namelist=</span><span class="s">&quot;namelist.ocean&quot;</span><span class="w"> </span><span class="na">streams=</span><span class="s">&quot;streams.ocean&quot;</span><span class="nt">/&gt;</span>
 <span class="nt">&lt;/run_script&gt;</span>
 </pre></div>
 </div>
@@ -1027,7 +1117,7 @@ identical to the full streams file in the work directory:</p>
 <span class="o">...</span>
 
 <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Run this step of the test case</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -1037,14 +1127,14 @@ identical to the full streams file in the work directory:</p>
 <section id="adding-the-analysis-step">
 <h2>Adding the analysis step<a class="headerlink" href="#adding-the-analysis-step" title="Permalink to this heading">¶</a></h2>
 <p>The legacy <code class="docutils literal notranslate"><span class="pre">analysis</span></code> step is defined like this:</p>
-<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;config</span> <span class="na">case=</span><span class="s">&quot;analysis&quot;</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;add_link</span> <span class="na">source=</span><span class="s">&quot;../forward/output.nc&quot;</span> <span class="na">dest=</span><span class="s">&quot;output.nc&quot;</span><span class="nt">/&gt;</span>
-    <span class="nt">&lt;add_link</span> <span class="na">source_path=</span><span class="s">&quot;script_test_dir&quot;</span> <span class="na">source=</span><span class="s">&quot;plot_profile.py&quot;</span> <span class="na">dest=</span><span class="s">&quot;plot_profile.py&quot;</span><span class="nt">/&gt;</span>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;config</span><span class="w"> </span><span class="na">case=</span><span class="s">&quot;analysis&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;add_link</span><span class="w"> </span><span class="na">source=</span><span class="s">&quot;../forward/output.nc&quot;</span><span class="w"> </span><span class="na">dest=</span><span class="s">&quot;output.nc&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;add_link</span><span class="w"> </span><span class="na">source_path=</span><span class="s">&quot;script_test_dir&quot;</span><span class="w"> </span><span class="na">source=</span><span class="s">&quot;plot_profile.py&quot;</span><span class="w"> </span><span class="na">dest=</span><span class="s">&quot;plot_profile.py&quot;</span><span class="nt">/&gt;</span>
 
-    <span class="nt">&lt;run_script</span> <span class="na">name=</span><span class="s">&quot;run.py&quot;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;step</span> <span class="na">executable=</span><span class="s">&quot;./plot_profile.py&quot;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;/step&gt;</span>
-    <span class="nt">&lt;/run_script&gt;</span>
+<span class="w">    </span><span class="nt">&lt;run_script</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;run.py&quot;</span><span class="nt">&gt;</span>
+<span class="w">        </span><span class="nt">&lt;step</span><span class="w"> </span><span class="na">executable=</span><span class="s">&quot;./plot_profile.py&quot;</span><span class="nt">&gt;</span>
+<span class="w">        </span><span class="nt">&lt;/step&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/run_script&gt;</span>
 <span class="nt">&lt;/config&gt;</span>
 </pre></div>
 </div>
@@ -1065,12 +1155,12 @@ instead.</p>
 
 
 <span class="k">class</span> <span class="nc">Analysis</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A step for plotting the results of the default General Ocean Turbulence</span>
 <span class="sd">    Model (GOTM) test case</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new test case</span>
 
 <span class="sd">        Parameters</span>
@@ -1101,7 +1191,7 @@ MPAS-Ocean in this step:</p>
 <span class="o">...</span>
 
 <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Run this step of the test case</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -1171,7 +1261,7 @@ case to the test group:</p>
 </span>
 
 <span class="k">class</span> <span class="nc">Default</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The default test case for the General Ocean Turbulence Model (GOTM) test</span>
 <span class="sd">    group creates an initial condition on a 4 x 4 cell, doubly periodic grid,</span>
 <span class="sd">    performs a short simulation, then vertical plots of the velocity and</span>
@@ -1179,7 +1269,7 @@ case to the test group:</p>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_group</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the test case</span>
 
 <span class="sd">        Parameters</span>
@@ -1200,12 +1290,12 @@ case to the test group:</p>
 </span>
 
 <span class="k">class</span> <span class="nc">Gotm</span><span class="p">(</span><span class="n">TestGroup</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A test group for General Ocean Turbulence Model (GOTM) test cases</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpas_core</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        mpas_core : compass.MpasCore</span>
 <span class="sd">            the MPAS core that this test group belongs to</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1228,7 +1318,7 @@ class in <code class="docutils literal notranslate"><span class="pre">Default</s
 <span class="o">...</span>
 
 <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Validate variables against a baseline</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
@@ -1282,33 +1372,50 @@ appropriate place (in alphabetical order) in the list of test groups in
 
 
            </div>
+           
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="dev_add_param_study.html" class="btn btn-neutral float-left" title="Developer Tutorial: Adding a parameter study" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
         <a href="../glossary.html" class="btn btn-neutral float-right" title="Glossary" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="dev_add_param_study.html" class="btn btn-neutral float-left" title="Developer Tutorial: Adding a parameter study" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..</p>
-  </div>
+    <p>
+        &#169; Copyright Copyright (c) 2013-2021,  Los Alamos National Security, LLC (LANS) (Ocean: LA-CC-13-047;Land Ice: LA-CC-13-117) and the University Corporation for Atmospheric Research (UCAR)..
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
         </div>
       </div>
+
     </section>
+
   </div>
-  <script>
+  
+
+  <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>
