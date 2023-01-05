@@ -1,4 +1,7 @@
 from compass.testcase import TestCase
+from compass.ocean.tests.isomip_plus.process_geom import ProcessGeom
+from compass.ocean.tests.isomip_plus.planar_mesh import PlanarMesh
+from compass.ocean.tests.isomip_plus.cull_mesh import CullMesh
 from compass.ocean.tests.isomip_plus.initial_state import InitialState
 from compass.ocean.tests.isomip_plus.ssh_adjustment import SshAdjustment
 from compass.ocean.tests.isomip_plus.forward import Forward
@@ -95,6 +98,18 @@ class IsomipPlusTest(TestCase):
 
         subdir = f'{res_folder}/{vertical_coordinate}/{name}'
         super().__init__(test_group=test_group, name=name, subdir=subdir)
+
+        self.add_step(
+            ProcessGeom(test_case=self, resolution=resolution,
+                        experiment=experiment,
+                        thin_film_present=thin_film_present))
+
+        self.add_step(
+            PlanarMesh(test_case=self, thin_film_present=thin_film_present))
+
+        self.add_step(
+            CullMesh(test_case=self, thin_film_present=thin_film_present,
+                     planar=True))
 
         self.add_step(
             InitialState(test_case=self, resolution=resolution,

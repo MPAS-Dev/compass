@@ -780,8 +780,8 @@ class MoviePlotter(object):
         if cmap_set_under is not None:
             current_cmap = localPatches.get_cmap()
             current_cmap.set_under(cmap_set_under)
-        localPatches.set_clim(vmin=vmin, vmax=vmax)
         localPatches.set_edgecolor('face')
+        localPatches.set_clim(vmin=vmin, vmax=vmax)
 
         if cmap_scale == 'log':
             localPatches.set_norm(LogNorm(vmin=max(1e-10, vmin),
@@ -810,24 +810,25 @@ class MoviePlotter(object):
         if os.path.exists(outFileName):
             return
 
-        z_mask = numpy.ones(self.X.shape)
-        z_mask[0:-1, 0:-1] *= numpy.where(self.sectionMask, 1., numpy.nan)
-
-        tIndex = 0
-        Z = numpy.array(self.Z[tIndex, :, :])
-        Z *= z_mask
-        X = self.X
-
         plt.figure(figsize=figsize)
         ax = plt.subplot(111)
         if show_boundaries:
+            z_mask = numpy.ones(self.X.shape)
+            z_mask[0:-1, 0:-1] *= numpy.where(self.sectionMask, 1., numpy.nan)
+
+            tIndex = 0
+            Z = numpy.array(self.Z[tIndex, :, :])
+            Z *= z_mask
+            X = self.X
+
             plt.fill_between(1e-3 * X[0, :], self.zBotSection, y2=0,
-                             facecolor='lightsteelblue')
+                             facecolor='lightsteelblue', zorder=2)
             plt.fill_between(1e-3 * X[0, :], self.zBotSection, y2=-750,
-                             facecolor='grey')
-        plt.pcolormesh(1e-3*inX, inZ, field, vmin=vmin, vmax=vmax, cmap=cmap)
-        for z_index in range(1, X.shape[0]):
-            plt.plot(1e-3 * X[z_index, :], Z[z_index, :], 'k')
+                             facecolor='grey', zorder=1)
+            for z_index in range(1, X.shape[0]):
+                plt.plot(1e-3 * X[z_index, :], Z[z_index, :], 'k', zorder=4)
+        plt.pcolormesh(1e-3*inX, inZ, field, vmin=vmin, vmax=vmax, cmap=cmap,
+                       zorder=3)
         plt.colorbar()
         ax.autoscale(tight=True)
         plt.ylim([numpy.amin(inZ), 20])

@@ -1,130 +1,9 @@
 import numpy
-from netCDF4 import Dataset
-import scipy.ndimage.filters as filters
 from mpas_tools.mesh.interpolation import interp_bilin
 import xarray
 
 
-def process_input_geometry(inFileName, outFileName, filterSigma,
-                           minIceThickness, scale=1.0, thin_film_present=False):
-    """
-    Process the BISICLES input geometry from ISOMIP+.  This includes:
-
-    * reading in the bathymetry and ice topography
-
-    * scaling the ice draft
-
-    * implementing a simple calving scheme based on a thickness threshold
-
-    * smoothing the topography
-
-    * writing the processed topography out to a file
-
-    Parameters
-    ----------
-    inFileName : str
-        The file name of the original BISICLES geometry
-
-    outFileName : str
-        The file name of the processed geometry
-
-    filterSigma : float
-        The distance over which to smooth the geometry (in km)
-
-    minIceThickness : float
-        The minimum ice thickness, below which it is calved (removed and
-        replaced with open ocean)
-
-    scale : float
-        A fraction by which to scale the ice draft (as a very simple way of
-        testing dynamic topography)
-
-    thin_film_present: bool
-        whether domain contains a thin film below grounded ice
-    """
-    def readVar(varName, defaultValue=0.0):
-        field = defaultValue * numpy.ones((ny, nx), float)
-        field[buffer:-buffer, buffer:-buffer] = numpy.array(
-            inFile.variables[varName])[:, minIndex:]
-        return field
-
-    def writeVar(outVarName, inVarName, field):
-        outVar = outFile.createVariable(outVarName, 'f8', ('y', 'x'))
-        inVar = inFile.variables[inVarName]
-        outVar[:, :] = field
-        outVar.setncatts({k: inVar.getncattr(k) for k in inVar.ncattrs()})
-
-    buffer = 1
-
-    x0 = 320e3  # km
-
-    inFile = Dataset(inFileName, 'r')
-    x = numpy.array(inFile.variables['x'])[:]
-    y = numpy.array(inFile.variables['y'])[:]
-
-    deltaX = x[1] - x[0]
-    deltaY = y[1] - y[0]
-
-    minIndex = numpy.nonzero(x >= x0)[0][0]
-
-    nx = len(x) - minIndex + 2 * buffer
-    ny = len(y) + 2 * buffer
-
-    outX = x[minIndex] + deltaX * (-buffer + numpy.arange(nx))
-    outY = y[0] + deltaY * (-buffer + numpy.arange(ny))
-
-    surf = readVar('upperSurface')
-    draft = readVar('lowerSurface')
-    bed = readVar('bedrockTopography')
-    floatingMask = readVar('floatingMask')
-    groundedMask = readVar('groundedMask', defaultValue=1.0)
-    openOceanMask = readVar('openOceanMask')
-
-    iceThickness = surf - draft
-
-    draft *= scale
-
-    # take care of calving criterion
-    mask = numpy.logical_and(floatingMask > 0.1,
-                             iceThickness < minIceThickness)
-    surf[mask] = 0.
-    draft[mask] = 0.
-    floatingMask[mask] = 0.
-    thinFilmMask = bed >= 0
-    if thin_film_present:
-        smoothMask = numpy.logical_and(groundedMask, thinFilmMask)
-    else:
-        smoothMask = groundedMask
-    openOceanMask[mask] = 1. - groundedMask[mask]
-
-    bed, draft, smoothedDraftMask = _smooth_geometry(
-        smoothMask, floatingMask, bed, draft, filterSigma)
-
-    outFile = Dataset(outFileName, 'w', format='NETCDF4')
-    outFile.createDimension('x', nx)
-    outFile.createDimension('y', ny)
-
-    outVar = outFile.createVariable('x', 'f8', ('x',))
-    inVar = inFile.variables['x']
-    outVar[:] = outX
-    outVar.setncatts({k: inVar.getncattr(k) for k in inVar.ncattrs()})
-    outVar = outFile.createVariable('y', 'f8', ('y',))
-    inVar = inFile.variables['y']
-    outVar[:] = outY
-    outVar.setncatts({k: inVar.getncattr(k) for k in inVar.ncattrs()})
-    writeVar('Z_ice_surface', 'upperSurface', surf)
-    writeVar('Z_ice_draft', 'lowerSurface', draft)
-    writeVar('Z_bed', 'bedrockTopography', bed)
-    writeVar('floatingIceFraction', 'floatingMask', floatingMask)
-    writeVar('landFraction', 'groundedMask', groundedMask)
-    writeVar('openOceanFraction', 'openOceanMask', openOceanMask)
-    writeVar('smoothedDraftMask', 'openOceanMask', smoothedDraftMask)
-
-    outFile.close()
-    inFile.close()
-
-
-def define_thin_film_mask_step1(dsMesh, dsGeom):
+def define_thin_film_mask_step1(ds_mesh, ds_geom):
     """
     Interpolate the ocean mask from the original BISICLES grid to the MPAS
     mesh.  This is handled separately from other fields because the ocean mask
@@ -133,38 +12,38 @@ def define_thin_film_mask_step1(dsMesh, dsGeom):
 
     Parameters
     ----------
-    dsMesh : xarray.Dataset
+    ds_mesh : xarray.Dataset
         An MPAS-Ocean mesh
 
-    dsGeom : xarray.Dataset
+    ds_geom : xarray.Dataset
         Ice-sheet topography produced by
         :py:func:`compass.ocean.tests.isomip_plus.geom.process_input_geometry()`
 
     Returns
     -------
-    dsMask : xarray.Dataset
+    ds_mask : xarray.Dataset
         A dataset containing ``regionCellMasks``, a field with the ocean mask
         that can be used to cull land cells from the mesh
     """
-    x, y, xCell, yCell, oceanFraction = _get_geom_fields(dsGeom, dsMesh)
+    x, y, x_cell, y_cell, ocean_fraction = _get_geom_fields(ds_geom, ds_mesh)
 
-    dsMask = xarray.Dataset()
+    ds_mask = xarray.Dataset()
 
     valid = numpy.logical_and(
-        numpy.logical_and(xCell >= x[0], xCell <= x[-1]),
-        numpy.logical_and(yCell >= y[0], yCell <= y[-1]))
+        numpy.logical_and(x_cell >= x[0], x_cell <= x[-1]),
+        numpy.logical_and(y_cell >= y[0], y_cell <= y[-1]))
 
     mask = valid
 
-    nCells = mask.shape[0]
+    n_cells = mask.shape[0]
 
-    dsMask['regionCellMasks'] = (('nCells', 'nRegions'),
-                                 mask.astype(int).reshape(nCells, 1))
+    ds_mask['regionCellMasks'] = (('nCells', 'nRegions'),
+                                  mask.astype(int).reshape(n_cells, 1))
 
-    return dsMask
+    return ds_mask
 
 
-def interpolate_ocean_mask(dsMesh, dsGeom, min_ocean_fraction):
+def interpolate_ocean_mask(ds_mesh, ds_geom, min_ocean_fraction):
     """
     Interpolate the ocean mask from the original BISICLES grid to the MPAS
     mesh.  This is handled separately from other fields because the ocean mask
@@ -173,10 +52,10 @@ def interpolate_ocean_mask(dsMesh, dsGeom, min_ocean_fraction):
 
     Parameters
     ----------
-    dsMesh : xarray.Dataset
+    ds_mesh : xarray.Dataset
         An MPAS-Ocean mesh
 
-    dsGeom : xarray.Dataset
+    ds_geom : xarray.Dataset
         Ice-sheet topography produced by
         :py:func:`compass.ocean.tests.isomip_plus.geom.process_input_geometry()`
 
@@ -186,45 +65,45 @@ def interpolate_ocean_mask(dsMesh, dsGeom, min_ocean_fraction):
 
     Returns
     -------
-    dsMask : xarray.Dataset
+    ds_mask : xarray.Dataset
         A dataset containing ``regionCellMasks``, a field with the ocean mask
         that can be used to cull land cells from the mesh
     """
-    x, y, xCell, yCell, oceanFraction = _get_geom_fields(dsGeom, dsMesh)
+    x, y, x_cell, y_cell, ocean_fraction = _get_geom_fields(ds_geom, ds_mesh)
 
-    dsMask = xarray.Dataset()
+    ds_mask = xarray.Dataset()
 
     valid = numpy.logical_and(
-        numpy.logical_and(xCell >= x[0], xCell <= x[-1]),
-        numpy.logical_and(yCell >= y[0], yCell <= y[-1]))
+        numpy.logical_and(x_cell >= x[0], x_cell <= x[-1]),
+        numpy.logical_and(y_cell >= y[0], y_cell <= y[-1]))
 
-    xCell = xCell[valid]
-    yCell = yCell[valid]
-    oceanFracObserved = numpy.zeros(dsMesh.sizes['nCells'])
-    oceanFracObserved[valid] = interp_bilin(x, y, oceanFraction.values,
-                                            xCell, yCell)
+    x_cell = x_cell[valid]
+    y_cell = y_cell[valid]
+    ocean_frac_observed = numpy.zeros(ds_mesh.sizes['nCells'])
+    ocean_frac_observed[valid] = interp_bilin(x, y, ocean_fraction.values,
+                                              x_cell, y_cell)
 
-    mask = oceanFracObserved > min_ocean_fraction
+    mask = ocean_frac_observed > min_ocean_fraction
 
-    nCells = mask.shape[0]
+    n_cells = mask.shape[0]
 
-    dsMask['regionCellMasks'] = (('nCells', 'nRegions'),
-                                 mask.astype(int).reshape(nCells, 1))
+    ds_mask['regionCellMasks'] = (('nCells', 'nRegions'),
+                                  mask.astype(int).reshape(n_cells, 1))
 
-    return dsMask
+    return ds_mask
 
 
-def interpolate_geom(dsMesh, dsGeom, min_ocean_fraction, thin_film_present):
+def interpolate_geom(ds_mesh, ds_geom, min_ocean_fraction, thin_film_present):
     """
     Interpolate the ice geometry from the original BISICLES grid to the MPAS
     mesh.
 
     Parameters
     ----------
-    dsMesh : xarray.Dataset
+    ds_mesh : xarray.Dataset
         An MPAS-Ocean mesh
 
-    dsGeom : xarray.Dataset
+    ds_geom : xarray.Dataset
         Ice-sheet topography produced by
         :py:func:`compass.ocean.tests.isomip_plus.geom.process_input_geometry()`
 
@@ -237,7 +116,7 @@ def interpolate_geom(dsMesh, dsGeom, min_ocean_fraction, thin_film_present):
 
     Returns
     -------
-    dsOut : xarray.Dataset
+    ds_out : xarray.Dataset
         A dataset containing :
 
         * ``bottomDepthObserved`` -- the bedrock elevation (positive up)
@@ -253,18 +132,18 @@ def interpolate_geom(dsMesh, dsGeom, min_ocean_fraction, thin_film_present):
           may be useful for determining where to alter the vertical coordinate
           to accommodate ice-shelf cavities
     """
-    x, y, xCell, yCell, oceanFraction = _get_geom_fields(dsGeom, dsMesh)
+    x, y, x_cell, y_cell, ocean_fraction = _get_geom_fields(ds_geom, ds_mesh)
 
-    dsOut = xarray.Dataset(dsMesh)
-    dsOut.attrs = dsMesh.attrs
+    ds_out = xarray.Dataset(ds_mesh)
+    ds_out.attrs = ds_mesh.attrs
 
-    dsGeom['oceanFraction'] = oceanFraction
+    ds_geom['oceanFraction'] = ocean_fraction
 
     # mash the topography to the ocean region before interpolation
     if not thin_film_present:
         for var in ['Z_bed', 'Z_ice_draft', 'floatingIceFraction',
                     'smoothedDraftMask']:
-            dsGeom[var] = dsGeom[var] * dsGeom['oceanFraction']
+            ds_geom[var] = ds_geom[var] * ds_geom['oceanFraction']
 
     fields = {'bottomDepthObserved': 'Z_bed',
               'ssh': 'Z_ice_draft',
@@ -273,72 +152,36 @@ def interpolate_geom(dsMesh, dsGeom, min_ocean_fraction, thin_film_present):
               'smoothedDraftMask': 'smoothedDraftMask'}
 
     valid = numpy.logical_and(
-        numpy.logical_and(xCell >= x[0], xCell <= x[-1]),
-        numpy.logical_and(yCell >= y[0], yCell <= y[-1]))
+        numpy.logical_and(x_cell >= x[0], x_cell <= x[-1]),
+        numpy.logical_and(y_cell >= y[0], y_cell <= y[-1]))
 
     if not numpy.all(valid) and not thin_film_present:
         raise ValueError('Something went wrong with culling.  There are still '
                          'out-of-range cells in the culled mesh.')
 
     for outfield, infield in fields.items():
-        field = interp_bilin(x, y, dsGeom[infield].values, xCell, yCell)
-        dsOut[outfield] = (('nCells',), field)
+        field = interp_bilin(x, y, ds_geom[infield].values, x_cell, y_cell)
+        ds_out[outfield] = (('nCells',), field)
 
-    oceanFracObserved = dsOut['oceanFracObserved']
-    if not numpy.all(oceanFracObserved > min_ocean_fraction) and not thin_film_present:
+    ocean_frac_observed = ds_out['oceanFracObserved']
+    if not numpy.all(ocean_frac_observed > min_ocean_fraction) and not thin_film_present:
         raise ValueError('Something went wrong with culling.  There are still '
                          'non-ocean cells in the culled mesh.')
 
     if not thin_film_present:
         for field in ['bottomDepthObserved', 'ssh', 'landIceFraction',
                       'smoothedDraftMask']:
-            dsOut[field] = dsOut[field]/oceanFracObserved
+            ds_out[field] = ds_out[field]/ocean_frac_observed
 
-    return dsOut
-
-
-def _get_geom_fields(dsGeom, dsMesh):
-    x = dsGeom.x.values
-    y = dsGeom.y.values
-    xCell = dsMesh.xCell.values
-    yCell = dsMesh.yCell.values
-
-    oceanFraction = - dsGeom['landFraction'] + 1.0
-
-    return x, y, xCell, yCell, oceanFraction
+    return ds_out
 
 
-def _smooth_geometry(landFraction, floatingFraction, bed, draft, filterSigma):
-    """
-    Smoothing is performed using only the topography in the portion of the grid
-    that is ocean. This prevents the kink in the ice draft across the grounding
-    line or regions of bare bedrock from influencing the smoothed topography.
-    (Parts of the Ross ice shelf near the Trans-Antarctic Mountains are
-    particularly troublesome if topogrpahy is smoothed across the grounding
-    line.)
+def _get_geom_fields(ds_geom, ds_mesh):
+    x = ds_geom.x.values
+    y = ds_geom.y.values
+    x_cell = ds_mesh.xCell.values
+    y_cell = ds_mesh.yCell.values
 
-    Unlike in POP, the calving front is smoothed as well because MPAS-O does
-    not support a sheer calving face
-    """
+    ocean_fraction = - ds_geom['landFraction'] + 1.0
 
-    # we won't normalize bed topography or ice draft where the mask is below
-    # this threshold
-    threshold = 0.01
-
-    oceanFraction = 1. - landFraction
-    smoothedMask = filters.gaussian_filter(oceanFraction, filterSigma,
-                                           mode='constant', cval=0.)
-    mask = smoothedMask > threshold
-
-    draft = filters.gaussian_filter(draft * oceanFraction, filterSigma,
-                                    mode='constant', cval=0.)
-    draft[mask] /= smoothedMask[mask]
-    bed = filters.gaussian_filter(bed * oceanFraction, filterSigma,
-                                  mode='constant', cval=0.)
-    bed[mask] /= smoothedMask[mask]
-
-    smoothedDraftMask = filters.gaussian_filter(floatingFraction, filterSigma,
-                                                mode='constant', cval=0.)
-    smoothedDraftMask[mask] /= smoothedMask[mask]
-
-    return bed, draft, smoothedDraftMask
+    return x, y, x_cell, y_cell, ocean_fraction
