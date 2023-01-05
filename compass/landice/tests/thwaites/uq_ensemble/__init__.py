@@ -2,6 +2,8 @@ from compass.validate import compare_variables
 from compass.testcase import TestCase
 from compass.landice.tests.thwaites.uq_ensemble.ensemble \
         import CreateEnsembleMember
+from compass.landice.tests.thwaites.uq_ensemble.run_manager \
+        import RunManager
 
 
 class UQEnsemble(TestCase):
@@ -34,7 +36,16 @@ class UQEnsemble(TestCase):
                 CreateEnsembleMember(test_case=self,
                                      runNum=runNum))
 
-    # no configure() method is needed
+        # Now add the run manager
+        self.add_step(RunManager(test_case=self))
+
+
+    def configure(self):
+        # Have compass run only run the run_manager but not any actual runs.
+        # This is because the individual runs will be submitted as jobs
+        # by the run manager.
+        self.steps_to_run = ['run_manager',]
+
 
     # no run() method is needed
 
