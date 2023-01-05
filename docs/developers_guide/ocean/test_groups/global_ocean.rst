@@ -914,8 +914,19 @@ The test case is made up of 5 steps:
     Otherwise, only one file is symlinked, and it is named
     ``ocean.<mesh_short_name>.scrip.<creation_date>.nc``
 
-:py:class:`compass.ocean.tests.global_ocean.files_for_e3sm.diagnostics_files.DiagnosticsFiles`
-    creates mapping files and regions masks for E3SM analysis members and
+:py:class:`compass.ocean.tests.global_ocean.files_for_e3sm.diagnostic_maps.DiagnosticMaps`
+    creates mapping files for
+    `MPAS-Analysis <https://mpas-dev.github.io/MPAS-Analysis/stable/>`_.
+
+    Mapping files are created from the MPAS-Ocean and -Seaice mesh to 7
+    standard comparison grids. Mapping files are created from both cells and
+    vertices on the MPAS mesh. The vertex maps are needed for quantities like
+    the barotropic streamfunction in MPAS-Ocean and ice speed in MPAS-Seaice.
+    The mapping files are symlinked in the directory
+    ``assembled_files/diagnostics/mpas_analysis/maps/``.
+
+:py:class:`compass.ocean.tests.global_ocean.files_for_e3sm.diagnostic_masks.DiagnosticMasks`
+    creates regions masks for E3SM analysis members and
     `MPAS-Analysis <https://mpas-dev.github.io/MPAS-Analysis/stable/>`_.
 
     Region masks are created using
@@ -929,6 +940,8 @@ The test case is made up of 5 steps:
                          'Ocean Subbasins', 'ISMIP6 Regions',
                          'Transport Transects']
 
+    If ice-shelf cavities are present in the mesh, the ``Ice Shelves``
+    regions are also included.
     The resulting region masks are symlinked in the directory
     ``assembled_files/diagnostics/mpas_analysis/region_masks/``
     and named ``<mesh_short_name>_<region_group><ref_date>.nc``
@@ -937,12 +950,3 @@ The test case is made up of 5 steps:
     basins and the transects representing their southern boundaries.
     The resulting region mask is in the same directory as above, and named
     ``<mesh_short_name>_moc_masks_and_transects.nc``
-
-    Mapping files are created from the MPAS-Ocean and -Seaice mesh to 3
-    standard comparison grids: a 0.5 x 0.5 degree longitude/latitude grid,
-    an Antarctic stereographic grid, and an Arctic stereographic grid.
-    The mapping files are symlinked in the directory
-    ``assembled_files/diagnostics/mpas_analysis/maps/``
-    and named ``map_<mesh_short_name>_to_0.5x0.5degree_bilinear.nc``,
-    ``map_<mesh_short_name>_to_6000.0x6000.0km_10.0km_Antarctic_stereo_bilinear.nc``,
-    and ``map_<mesh_short_name>_to_6000.0x6000.0km_10.0km_Arctic_stereo_bilinear.nc``.
