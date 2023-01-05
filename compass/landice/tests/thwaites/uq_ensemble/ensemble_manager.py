@@ -2,11 +2,11 @@ from compass.step import Step
 import os
 from mpas_tools.logging import check_call
 
-class RunManager(Step):
+class EnsembleManager(Step):
     """
-    A step for creating a run manager.
+    A step for an ensemble manager.
     The individual runs are other steps of this test case of class
-    CreateEnsembleMember
+    EnsembleMember
 
     Attributes
     ----------
@@ -16,7 +16,7 @@ class RunManager(Step):
 
     def __init__(self, test_case):
         """
-        Creates a run manager
+        Creates an ensemble manager
 
         Parameters
         ----------
@@ -24,13 +24,13 @@ class RunManager(Step):
             The test case this step belongs to
         """
         # define step name
-        self.name = 'run_manager'
+        self.name = 'ensemble_manager'
 
         super().__init__(test_case=test_case, name=self.name)
 
     def setup(self):
         """
-        Set up the run manager
+        Set up the ensemble manager
         """
         # Link viz script
         with path('compass.landice.tests.thwaites.uq_ensemble', 'plot_ensemble.py') as \
@@ -39,9 +39,9 @@ class RunManager(Step):
 
     def run(self):
         """
-        Use the run manager to manage and launch jobs for each run
+        Use the ensemble manager to manage and launch jobs for each run
         Each ensemble member is a step of the test case.
-        The run manager submits a job script for each run so that they
+        The ensemble manager submits a job script for each run so that they
         are run in parallel through SLURM.
         Eventually we want this function to handle restarts.
         """

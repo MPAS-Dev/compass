@@ -6,7 +6,7 @@ from compass.landice.tests.thwaites.uq_ensemble.job \
 
 import numpy as np
 
-class CreateEnsembleMember(Step):
+class EnsembleMember(Step):
     """
     A step for setting up a single ensemble member
 
@@ -89,8 +89,7 @@ class CreateEnsembleMember(Step):
 
     def run(self):
         """
-        Run this member of the test ensemble.
-        Eventually we want each ensemble member (step) to run as a separate job in parallel.
+        Run this member of the ensemble.
         Eventually we want this function to handle restarts.
         """
 
