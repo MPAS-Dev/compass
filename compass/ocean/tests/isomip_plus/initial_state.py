@@ -102,11 +102,17 @@ class InitialState(Step):
 
         ds = interpolate_geom(ds_mesh, ds_geom, min_ocean_fraction, thin_film_present)
 
-        for var in ['landIceFraction']:
-            ds[var] = ds[var].expand_dims(dim='Time', axis=0)
+        ds['landIceFraction'] = \
+            ds['landIceFraction'].expand_dims(dim='Time', axis=0)
 
-        ds['landIceMask'] = \
-            (ds.landIceFraction >= min_land_ice_fraction).astype(int)
+        ds['modifyLandIcePressureMask'] = \
+            (ds['landIceFraction'] > 0.01).astype(int)
+
+        mask = ds.landIceFraction >= min_land_ice_fraction
+
+        ds['landIceMask'] = mask.astype(int)
+
+        ds['landIceFraction'] = xr.where(mask, ds.landIceFraction, 0.)
 
         ref_density = constants['SHR_CONST_RHOSW']
         landIcePressure, landIceDraft = compute_land_ice_pressure_and_draft(
@@ -136,9 +142,6 @@ class InitialState(Step):
               f'to achieve minimum column thickness of {min_column_thickness}')
 
         init_vertical_coord(config, ds)
-
-        ds['modifyLandIcePressureMask'] = \
-            (ds['landIceFraction'] > 0.01).astype(int)
 
         max_bottom_depth = -config.getfloat('vertical_grid', 'bottom_depth')
         frac = (0. - ds.zMid) / (0. - max_bottom_depth)
