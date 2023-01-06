@@ -40,7 +40,7 @@ Instructions
 
 3. Modify the config options with the appropriate compilers and MPI libraries;
    whether to build in debug mode, optimized or both; and whether to build with
-   OpenMPI or not (or both)
+   OpenMP or not (or both)
 
 4. Set the conda environment name (or prefix on Linux and OSX) that you want to
    use
@@ -58,8 +58,8 @@ Instructions
    Optionally use the `--submit` flag to submit jobs once each configuration
    has been built and set up.
 
-8. The matrix build doesn't take care of running the jobs on a compute node.
-   You will need to do that yourself.
+8. If you do not use the `--submit` flag, the matrix build doesn't take care of
+   running the jobs on a compute node.  You will need to do that yourself.
 
 Matrix of compilers and MPI libraries
 -------------------------------------
