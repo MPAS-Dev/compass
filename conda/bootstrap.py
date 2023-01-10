@@ -11,7 +11,7 @@ import grp
 import shutil
 import progressbar
 from jinja2 import Template
-from importlib.resources import path
+import importlib.resources
 from configparser import ConfigParser
 
 from mache import discover_machine, MachineInfo
@@ -30,8 +30,9 @@ def get_config(config_file, machine):
 
     if machine is not None:
         if not machine.startswith('conda'):
-            with path('mache.machines', f'{machine}.cfg') as machine_config:
-                config.read(str(machine_config))
+            machine_config = \
+                importlib.resources.files('mache.machines') / f'{machine}.cfg'
+            config.read(str(machine_config))
 
         machine_config = os.path.join(here, '..', 'compass', 'machines',
                                       '{}.cfg'.format(machine))
