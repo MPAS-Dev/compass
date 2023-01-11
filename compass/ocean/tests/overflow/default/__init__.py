@@ -23,7 +23,8 @@ class Default(TestCase):
         test_group : compass.ocean.tests.overflow.Overflow
             The test group that this test case belongs to
         """
-        super().__init__(test_group=test_group, name='default')
+        super().__init__(test_group=test_group, name='default',
+                         subdir=f'{resolution}/default')
         self.resolution = resolution
         self.add_step(InitialState(test_case=self))
         self.add_step(Forward(test_case=self, ntasks=4, openmp_threads=1))

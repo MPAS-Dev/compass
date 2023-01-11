@@ -1,7 +1,7 @@
 from compass.testcase import TestCase
 from compass.ocean.tests.overflow.initial_state import InitialState
 from compass.ocean.tests.overflow.forward import Forward
-#from compass.ocean.tests.overflow.rpe_test.analysis import Analysis
+from compass.ocean.tests.overflow.rpe_test.analysis import Analysis
 from compass.ocean.tests import overflow
 
 
@@ -28,11 +28,11 @@ class RpeTest(TestCase):
 
         """
         name = 'rpe_test'
-        subdir = f'{name}'
+        subdir = f'{resolution}/{name}'
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
 
-        nus = [1, 5, 10, 20, 200]
+        nus = [1, 5, 10, 100, 1000]
 
         self.resolution = resolution
 
@@ -43,7 +43,7 @@ class RpeTest(TestCase):
             name = 'rpe_test_{}_nu_{}'.format(index + 1, nu)
             step = Forward(
                 test_case=self, name=name, subdir=name,
-                ntasks=144, min_tasks=36,
+                ntasks=64, min_tasks=16, openmp_threads=1,
                 nu=float(nu))
 
             step.add_namelist_file(
@@ -54,8 +54,8 @@ class RpeTest(TestCase):
                 'streams.forward')
             self.add_step(step)
 
-        #self.add_step(
-        #    Analysis(test_case=self, resolution=resolution, nus=nus))
+        self.add_step(
+            Analysis(test_case=self, resolution=resolution, nus=nus))
 
     def configure(self):
         """

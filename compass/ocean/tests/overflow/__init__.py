@@ -15,7 +15,7 @@ class Overflow(TestGroup):
         super().__init__(mpas_core=mpas_core, name='overflow')
         
         self.add_test_case(Default(test_group=self, resolution='10km'))
-        self.add_test_case(RpeTest(test_group=self, resolution='1km'))
+        self.add_test_case(RpeTest(test_group=self, resolution='2km'))
 
 def configure(resolution, config):
     """
@@ -29,22 +29,15 @@ def configure(resolution, config):
     config : compass.config.CompassConfigParser
         Configuration options for this test case
     """
-    res_params = {'10km': {'nx': 4,
-                           'ny': 24,
-                           'dc': 10e3},
-                  '1km': {'nx': 4,
-                          'ny': 200,
-                          'dc': 1e3}}
+    width = 40 # km
+    length = 200 # km
+    dc = float(resolution[:-2])
+    nx = int(width/dc)
+    ny = int(length/dc)
 
-    comment = {'nx': 'the number of mesh cells in the x direction',
-               'ny': 'the number of mesh cells in the y direction',
-               'dc': 'the distance between adjacent cell centers'}
-
-    if resolution not in res_params:
-        raise ValueError(f'Unsupported resolution {resolution}. Supported '
-                         f'values are: {list(res_params)}')
-
-    res_params = res_params[resolution]
-    for param in res_params:
-        config.set('overflow', param, str(res_params[param]),
-                   comment=comment[param])
+    config.set('overflow', 'nx', str(nx),
+               comment='the number of mesh cells in the x direction')
+    config.set('overflow', 'ny', str(ny),
+               comment='the number of mesh cells in the y direction')
+    config.set('overflow', 'dc', str(dc*1e3),
+               comment='the distance between adjacent cell centers')
