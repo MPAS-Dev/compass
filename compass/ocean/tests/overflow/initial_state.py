@@ -56,7 +56,7 @@ class InitialState(Step):
 
         logger.info(' * Make planar hex mesh')
         dsMesh = make_planar_hex_mesh(nx=nx, ny=ny, dc=dc, nonperiodic_x=True,
-                                      nonperiodic_y=True)
+                                      nonperiodic_y=False)
         logger.info(' * Completed Make planar hex mesh')
         write_netcdf(dsMesh, 'base_mesh.nc')
 
@@ -82,4 +82,3 @@ class InitialState(Step):
 
         run_model(self, namelist='namelist.ocean',
                   streams='streams.ocean')
-
