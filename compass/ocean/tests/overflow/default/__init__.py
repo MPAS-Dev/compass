@@ -2,6 +2,7 @@ from compass.testcase import TestCase
 from compass.ocean.tests.overflow.initial_state import InitialState
 from compass.ocean.tests.overflow.forward import Forward
 from compass.ocean.tests import overflow
+from compass.validate import compare_variables
 
 
 class Default(TestCase):
@@ -34,3 +35,11 @@ class Default(TestCase):
         Modify the configuration options for this test case.
         """
         overflow.configure(self.resolution, self.config)
+
+    def validate(self):
+        """
+        Validate variables against a baseline
+        """
+        compare_variables(test_case=self,
+                          variables=['layerThickness', 'temperature'],
+                          filename1='forward/output.nc')
