@@ -17,7 +17,7 @@ def define_thin_film_mask_step1(ds_mesh, ds_geom):
 
     ds_geom : xarray.Dataset
         Ice-sheet topography produced by
-        :py:func:`compass.ocean.tests.isomip_plus.geom.process_input_geometry()`
+        :py:class:`compass.ocean.tests.isomip_plus.process_geom.ProcessGeom`
 
     Returns
     -------
@@ -57,7 +57,7 @@ def interpolate_ocean_mask(ds_mesh, ds_geom, min_ocean_fraction):
 
     ds_geom : xarray.Dataset
         Ice-sheet topography produced by
-        :py:func:`compass.ocean.tests.isomip_plus.geom.process_input_geometry()`
+        :py:class:`compass.ocean.tests.isomip_plus.process_geom.ProcessGeom`
 
     min_ocean_fraction : float
         The minimum ocean fraction after interpolation, below which the cell
@@ -105,7 +105,7 @@ def interpolate_geom(ds_mesh, ds_geom, min_ocean_fraction, thin_film_present):
 
     ds_geom : xarray.Dataset
         Ice-sheet topography produced by
-        :py:func:`compass.ocean.tests.isomip_plus.geom.process_input_geometry()`
+        :py:class:`compass.ocean.tests.isomip_plus.process_geom.ProcessGeom`
 
     min_ocean_fraction : float
         The minimum ocean fraction after interpolation, below which the cell

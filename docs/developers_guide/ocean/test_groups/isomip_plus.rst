@@ -33,11 +33,13 @@ rising indefinitely due to the input of freshwater from ice-shelf melting.
 geom
 ~~~~
 
-The function :py:func:`compass.ocean.tests.isomip_plus.geom.process_input_geometry()`
-is used to apply a simple calving scheme based on a threshold in ice-shelf
-thickness, then apply smoothing to the topography data.  Optionally, the
-ice draft can be scaled by a factor as a simple way to explore changing
-ice-shelf topography.
+The function :py:func:`compass.ocean.tests.isomip_plus.geom.define_thin_film_mask_step1()`
+interpolates the ocean mask from the original BISICLES grid to the MPAS mesh
+in cases with a thin film. This is handled separately from other fields because
+the ocean mask is needed to cull land cells from the MPAS mesh before
+interpolating the remaining fields and because the thin-film region needs to
+be preserved.
+
 
 The function :py:func:`compass.ocean.tests.isomip_plus.geom.interpolate_ocean_mask()`
 interpolates the ocean mask from the BISICLES grid of the input geometry to
@@ -61,6 +63,17 @@ interpolates the remaining geometric variables:
 * ``smoothedDraftMask`` -- a smoothed version of the floating mask that
   may be useful for determining where to alter the vertical coordinate
   to accommodate ice-shelf cavities
+
+process_geom
+~~~~~~~~~~~~
+
+The class :py:class:`compass.ocean.tests.isomip_plus.process_geom.ProcessGeom`
+defines a step for processing ISOMIP+ geometry before interpolating it to the
+MPAS mesh.  This includes applying a simple calving scheme based on a threshold
+in ice-shelf thickness, then apply smoothing to the topography data.
+Optionally, the ice draft can be scaled by a factor as a simple way to explore
+changing ice-shelf topography.  Variables are renamed to those expected by
+MPAS-Ocean.
 
 initial_state
 ~~~~~~~~~~~~~
