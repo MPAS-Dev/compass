@@ -105,7 +105,7 @@ variables:
 
 .. code-block:: bash
 
-    source /lcrc/soft/climate/compass/anvil/load_latest_compass_gnu_mvapich.sh
+    source /lcrc/soft/climate/compass/anvil/load_latest_compass_gnu_openmpi.sh
 
 To build the MPAS model with
 

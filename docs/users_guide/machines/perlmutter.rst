@@ -152,7 +152,7 @@ To build the MPAS model with
 
 .. code-block:: bash
 
-    make [DEBUG=true] [OPENMP=true] [ALBANY=true] gnu-nersc
+    make [DEBUG=true] [OPENMP=true] [ALBANY=true] gnu-cray
 
 
 Jupyter notebook on remote data

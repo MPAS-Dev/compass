@@ -61,11 +61,11 @@ the MPAS model.
 |              +------------+-----------+-------------------+
 |              | gnu        | openmpi   | gfortran          |
 +--------------+------------+-----------+-------------------+
-| cori-haswell | intel      | mpt       | intel-nersc       |
+| cori-haswell | intel      | mpt       | intel-cray        |
 |              +------------+-----------+-------------------+
-|              | gnu        | mpt       | gnu-nersc         |
+|              | gnu        | mpt       | gnu-cray          |
 +--------------+------------+-----------+-------------------+
-| pm-cpu       | gnu        | mpich     | gnu-nersc         |
+| pm-cpu       | gnu        | mpich     | gnu-cray          |
 +--------------+------------+-----------+-------------------+
 
 Below are specifics for each supported machine

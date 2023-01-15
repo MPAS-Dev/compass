@@ -354,7 +354,7 @@ def get_env_vars(machine, compiler, mpilib):
 
 
 def build_spack_env(config, update_spack, machine, compiler, mpi, spack_env,
-                    spack_base, spack_template_path, env_vars, tmpdir):
+                    spack_base, spack_template_path, env_vars, tmpdir, logger):
 
     albany = config.get('deploy', 'albany')
     esmf = config.get('deploy', 'esmf')
@@ -392,7 +392,7 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, spack_env,
         specs.append(f'scorpio@{scorpio}+pnetcdf~timing+internal-timing~tools+malloc')
 
     if albany != 'None':
-        specs.append(f'albany@{albany}+mpas')
+        specs.append(f'albany@{albany}+mpas+cxx17')
 
     yaml_template = f'{spack_template_path}/{machine}_{compiler}_{mpi}.yaml'
     if not os.path.exists(yaml_template):
@@ -412,6 +412,7 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, spack_env,
             files = glob.glob(os.path.join(include_path, f'{prefix}*'))
             for filename in files:
                 os.remove(filename)
+        set_ld_library_path(spack_branch_base, spack_env, logger)
 
     spack_script = get_spack_script(
         spack_path=spack_branch_base, env_name=spack_env, compiler=compiler,
@@ -458,6 +459,15 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, spack_env,
                    f'export USE_PETSC=true\n'
 
     return spack_branch_base, spack_script, env_vars
+
+
+def set_ld_library_path(spack_branch_base, spack_env, logger):
+    commands = \
+        f'source {spack_branch_base}/share/spack/setup-env.sh; ' \
+        f'spack env activate {spack_env}; ' \
+        f'spack config add modules:prefix_inspections:lib:[LD_LIBRARY_PATH]; ' \
+        f'spack config add modules:prefix_inspections:lib64:[LD_LIBRARY_PATH]'
+    check_call(commands, logger=logger)
 
 
 def write_load_compass(template_path, activ_path, conda_base, env_type,
@@ -863,7 +873,7 @@ def main():
                 spack_branch_base, spack_script, env_vars = build_spack_env(
                     config, args.update_spack, machine, compiler, mpi,
                     spack_env, spack_base, spack_template_path, env_vars,
-                    args.tmpdir)
+                    args.tmpdir, logger)
                 spack_script = f'echo Loading Spack environment...\n' \
                                f'{spack_script}\n' \
                                f'echo Done.\n' \
