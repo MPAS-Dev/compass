@@ -15,4 +15,4 @@ Then, you can build the MPAS model with
 
 .. code-block:: bash
 
-    make [DEBUG=true] gnu-nersc
+    make [DEBUG=true] gnu-cray
