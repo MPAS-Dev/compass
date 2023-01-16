@@ -65,7 +65,6 @@ class Analysis(Step):
 
 def _plot(nx, ny, filename, nus, rpe):
     """
-    TODO change section from nx vs ny to ny vs. nz
     Plot section of the overflow at different viscosities
 
     Parameters
@@ -109,18 +108,18 @@ def _plot(nx, ny, filename, nus, rpe):
     # prep mesh quantities
     ds = xarray.open_dataset('../initial_state/ocean.nc')
     ds = ds.sortby('yEdge')
-    xEdge = ds.xEdge
-    yEdge = ds.yEdge
-    cellsOnEdge = ds.cellsOnEdge
-    nVertLevels = ds.sizes['nVertLevels']
+    x_edge = ds.xEdge
+    y_edge = ds.yEdge
+    cells_on_edge = ds.cellsOnEdge
+    n_vert_levels = ds.sizes['nVertLevels']
 
-    xEdge_mid = np.median(xEdge)
-    edgeMask_x = np.equal(xEdge, xEdge_mid)
-    yEdge_x = yEdge[edgeMask_x]
-    cellsOnEdge_x = cellsOnEdge[edgeMask_x, :]
-    cell1Index = np.subtract(cellsOnEdge_x[:, 0], 1)
-    cell2Index = np.subtract(cellsOnEdge_x[:, 1], 1)
-    nEdges_x = len(yEdge_x)
+    x_edge_mid = np.median(x_edge)
+    edge_mask_x = np.equal(x_edge, x_edge_mid)
+    y_edge_x = y_edge[edge_mask_x]
+    cells_on_edge_x = cells_on_edge[edge_mask_x, :]
+    cell1_index = np.subtract(cells_on_edge_x[:, 0], 1)
+    cell2_index = np.subtract(cells_on_edge_x[:, 1], 1)
+    nEdges_x = len(y_edge_x)
 
     fig, axs = plt.subplots(num_files, 1, figsize=(
         5.0, 2.1 * num_files), constrained_layout=True)
@@ -135,54 +134,54 @@ def _plot(nx, ny, filename, nus, rpe):
         # Don't assume that the output times are the same for all files
         times = ds.daysSinceStartOfSim.values
         times = np.divide(times.tolist(), nanosecondsPerDay)
-        tidx = np.argmin(np.abs(times-time))
-        ds = ds.isel(Time=tidx)
+        t_idx = np.argmin(np.abs(times-time))
+        ds = ds.isel(Time=t_idx)
 
         ds = ds.sortby('yEdge')
 
         # Compute the layer interfaces depths across the cross-section
-        layerThickness = ds.layerThickness
-        layerThickness_cell1 = layerThickness[cell1Index, :]
-        layerThickness_cell2 = layerThickness[cell2Index, :]
-        layerThickness_x = layerThickness_cell2[1:, :]
+        layer_thickness = ds.layerThickness
+        layer_thickness_cell1 = layer_thickness[cell1_index, :]
+        layer_thickness_cell2 = layer_thickness[cell2_index, :]
+        layer_thickness_x = layer_thickness_cell2[1:, :]
 
         ssh = ds.ssh
-        ssh_cell1 = ssh[cell1Index]
-        ssh_cell2 = ssh[cell2Index]
+        ssh_cell1 = ssh[cell1_index]
+        ssh_cell2 = ssh[cell2_index]
         ssh_x = ssh_cell2[1:]
 
-        zIndex = xarray.DataArray(data=np.arange(nVertLevels),
-                                  dims='nVertLevels')
+        z_index = xarray.DataArray(data=np.arange(n_vert_levels),
+                                   dims='nVertLevels')
 
-        zEdgeInterface = np.zeros((nEdges_x, nVertLevels + 1))
-        zEdgeInterface[:, 0] = 0.5 * (ssh_cell1.values + ssh_cell2.values)
-        for zIndex in range(nVertLevels):
-            thickness1 = layerThickness_cell1.isel(nVertLevels=zIndex)
+        z_interface = np.zeros((nEdges_x, n_vert_levels + 1))
+        z_interface[:, 0] = 0.5 * (ssh_cell1.values + ssh_cell2.values)
+        for z_index in range(n_vert_levels):
+            thickness1 = layer_thickness_cell1.isel(nVertLevels=z_index)
             thickness1 = thickness1.fillna(0.)
-            thickness2 = layerThickness_cell2.isel(nVertLevels=zIndex)
+            thickness2 = layer_thickness_cell2.isel(nVertLevels=z_index)
             thickness2 = thickness2.fillna(0.)
-            zEdgeInterface[:, zIndex + 1] = \
-                zEdgeInterface[:, zIndex] - \
+            z_interface[:, z_index + 1] = \
+                z_interface[:, z_index] - \
                 0.5 * (thickness1.values + thickness2.values)
 
-        _, yEdges_mesh = np.meshgrid(zEdgeInterface[0, :], yEdge_x)
+        _, y_edges_mesh = np.meshgrid(z_interface[0, :], y_edge_x)
 
         # Retrieve the temperature field
         temperature = ds.temperature
-        temperature_x = temperature[cell2Index[1:], :]
+        temperature_x = temperature[cell2_index[1:], :]
 
         # Plot
-        dis = ax.pcolormesh(np.divide(yEdges_mesh, 1e3),
-                            zEdgeInterface,
-                            temperature_x.values, cmap='viridis',
-                            vmin=10, vmax=20)
-        ax.set_title(f'hour {int(times[tidx]*24.)}, '
+        p = ax.pcolormesh(np.divide(y_edges_mesh, 1e3),
+                          z_interface,
+                          temperature_x.values,
+                          cmap='viridis', vmin=10, vmax=20)
+        ax.set_title(f'hour {int(times[t_idx]*24.)}, '
                      f'$\\nu_h=${nus[iCol]}')
 
         ax.set_ylabel('z (m)')
         ax.set_xlim([10, 100])
         if iCol == 0:
-            fig.colorbar(dis)
+            fig.colorbar(p)
         if iCol == num_files - 1:
             ax.set_xlabel('y (km)')
 

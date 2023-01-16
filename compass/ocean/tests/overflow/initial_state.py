@@ -55,18 +55,18 @@ class InitialState(Step):
            {'config_overflow_dc': f'{dc}'})
 
         logger.info(' * Make planar hex mesh')
-        dsMesh = make_planar_hex_mesh(nx=nx, ny=ny, dc=dc, nonperiodic_x=True,
+        ds_mesh = make_planar_hex_mesh(nx=nx, ny=ny, dc=dc, nonperiodic_x=True,
                                       nonperiodic_y=False)
         logger.info(' * Completed Make planar hex mesh')
-        write_netcdf(dsMesh, 'base_mesh.nc')
+        write_netcdf(ds_mesh, 'base_mesh.nc')
 
         logger.info(' * Cull mesh boundaries')
-        dsMesh = cull(dsMesh, logger=logger)
+        ds_mesh = cull(ds_mesh, logger=logger)
         logger.info(' * Convert mesh')
-        dsMesh = convert(dsMesh, graphInfoFileName='culled_graph.info',
+        ds_mesh = convert(ds_mesh, graphInfoFileName='culled_graph.info',
                          logger=logger)
         logger.info(' * Completed Convert mesh')
-        write_netcdf(dsMesh, 'culled_mesh.nc')
+        write_netcdf(ds_mesh, 'culled_mesh.nc')
 
         run_model(self, namelist='namelist.ocean',
                   streams='streams.ocean')
