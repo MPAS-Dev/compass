@@ -34,11 +34,8 @@ geom
 ~~~~
 
 The function :py:func:`compass.ocean.tests.isomip_plus.geom.define_thin_film_mask_step1()`
-interpolates the ocean mask from the original BISICLES grid to the MPAS mesh
-in cases with a thin film. This is handled separately from other fields because
-the ocean mask is needed to cull land cells from the MPAS mesh before
-interpolating the remaining fields and because the thin-film region needs to
-be preserved.
+defines an MPAS mesh mask for the ocean domain including cells over the full x- and y-range
+in cases with a thin film. Thus, all land cells are included in the ocean's thin-film region.
 
 
 The function :py:func:`compass.ocean.tests.isomip_plus.geom.interpolate_ocean_mask()`
