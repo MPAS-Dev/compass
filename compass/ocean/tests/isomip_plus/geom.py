@@ -5,10 +5,9 @@ import xarray
 
 def define_thin_film_mask_step1(ds_mesh, ds_geom):
     """
-    Interpolate the ocean mask from the original BISICLES grid to the MPAS
-    mesh.  This is handled separately from other fields because the ocean mask
-    is needed to cull land cells from the MPAS mesh before interpolating the
-    remaining fields.
+    Define an MPAS mesh mask for the ocean domain including cells over the 
+    full x- and y-range in order to include all land cells in the ocean's 
+    thin-film region.
 
     Parameters
     ----------
