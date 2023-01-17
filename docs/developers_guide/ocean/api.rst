@@ -434,14 +434,18 @@ isomip_plus
    forward.Forward.setup
    forward.Forward.run
 
-   geom.process_input_geometry
+   geom.define_thin_film_mask_step1
    geom.interpolate_ocean_mask
+   geom.interpolate_geom
 
    initial_state.InitialState
    initial_state.InitialState.run
 
    misomip.Misomip
    misomip.Misomip.run
+
+   process_geom.ProcessGeom
+   process_geom.ProcessGeom.run
 
    ssh_adjustment.SshAdjustment
    ssh_adjustment.SshAdjustment.setup

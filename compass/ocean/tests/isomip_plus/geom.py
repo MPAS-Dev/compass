@@ -5,10 +5,9 @@ import xarray
 
 def define_thin_film_mask_step1(ds_mesh, ds_geom):
     """
-    Interpolate the ocean mask from the original BISICLES grid to the MPAS
-    mesh.  This is handled separately from other fields because the ocean mask
-    is needed to cull land cells from the MPAS mesh before interpolating the
-    remaining fields.
+    Define an MPAS mesh mask for the ocean domain including cells over the 
+    full x- and y-range in order to include all land cells in the ocean's 
+    thin-film region.
 
     Parameters
     ----------
@@ -17,7 +16,7 @@ def define_thin_film_mask_step1(ds_mesh, ds_geom):
 
     ds_geom : xarray.Dataset
         Ice-sheet topography produced by
-        :py:func:`compass.ocean.tests.isomip_plus.geom.process_input_geometry()`
+        :py:class:`compass.ocean.tests.isomip_plus.process_geom.ProcessGeom`
 
     Returns
     -------
@@ -57,7 +56,7 @@ def interpolate_ocean_mask(ds_mesh, ds_geom, min_ocean_fraction):
 
     ds_geom : xarray.Dataset
         Ice-sheet topography produced by
-        :py:func:`compass.ocean.tests.isomip_plus.geom.process_input_geometry()`
+        :py:class:`compass.ocean.tests.isomip_plus.process_geom.ProcessGeom`
 
     min_ocean_fraction : float
         The minimum ocean fraction after interpolation, below which the cell
@@ -105,7 +104,7 @@ def interpolate_geom(ds_mesh, ds_geom, min_ocean_fraction, thin_film_present):
 
     ds_geom : xarray.Dataset
         Ice-sheet topography produced by
-        :py:func:`compass.ocean.tests.isomip_plus.geom.process_input_geometry()`
+        :py:class:`compass.ocean.tests.isomip_plus.process_geom.ProcessGeom`
 
     min_ocean_fraction : float
         The minimum ocean fraction after interpolation, below which the cell
