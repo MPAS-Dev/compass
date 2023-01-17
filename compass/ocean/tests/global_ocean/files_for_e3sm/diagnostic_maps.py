@@ -87,8 +87,6 @@ def make_diagnostics_maps(config, logger, mesh_short_name, ntasks):
 def _make_analysis_lat_lon_map(config, mesh_name, ntasks, logger):
     mesh_filename = 'restart.nc'
 
-    in_descriptor = MpasMeshDescriptor(mesh_filename, mesh_name)
-
     lat_res = config.getfloat('files_for_e3sm', 'comparisonLatResolution')
     lon_res = config.getfloat('files_for_e3sm', 'comparisonLonResolution')
 
@@ -97,7 +95,7 @@ def _make_analysis_lat_lon_map(config, mesh_name, ntasks, logger):
                                             dLat=lon_res)
     out_grid_name = out_descriptor.meshName
 
-    _make_mapping_file(mesh_name, out_grid_name, in_descriptor, out_descriptor,
+    _make_mapping_file(mesh_name, out_grid_name, mesh_filename, out_descriptor,
                        ntasks, config, logger)
 
 
@@ -171,8 +169,6 @@ def _make_analysis_projection_map(config, mesh_name, projection_name, ntasks,
     option_suffix = option_suffixes[projection_name]
     grid_suffix = grid_suffixes[projection_name]
 
-    in_descriptor = MpasMeshDescriptor(mesh_filename, mesh_name)
-
     width = config.getfloat(
         section, f'comparison{option_suffix}Width')
     option = f'comparison{option_suffix}Height'
@@ -195,16 +191,29 @@ def _make_analysis_projection_map(config, mesh_name, projection_name, ntasks,
     out_descriptor = ProjectionGridDescriptor.create(projection, x, y,
                                                      mesh_name)
 
-    _make_mapping_file(mesh_name, out_grid_name, in_descriptor, out_descriptor,
+    _make_mapping_file(mesh_name, out_grid_name, mesh_filename, out_descriptor,
                        ntasks, config, logger)
 
 
-def _make_mapping_file(mesh_name, out_grid_name, in_descriptor, out_descriptor,
+def _make_mapping_file(mesh_name, out_grid_name, mesh_filename, out_descriptor,
                        ntasks, config, logger):
 
     parallel_executable = config.get('parallel', 'parallel_executable')
 
+    in_descriptor = MpasMeshDescriptor(mesh_filename, mesh_name)
+
     mapping_file_name = f'map_{mesh_name}_to_{out_grid_name}_bilinear.nc'
+
+    remapper = Remapper(in_descriptor, out_descriptor, mapping_file_name)
+
+    remapper.build_mapping_file(method='bilinear', mpiTasks=ntasks, tempdir='.',
+                                logger=logger,
+                                esmf_parallel_exec=parallel_executable)
+
+    # now the same on vertices (e.g. for streamfunctions)
+    in_descriptor = MpasMeshDescriptor(mesh_filename, mesh_name, vertices=True)
+    mapping_file_name = \
+        f'map_{mesh_name}_vertices_to_{out_grid_name}_bilinear.nc'
 
     remapper = Remapper(in_descriptor, out_descriptor, mapping_file_name)
 
