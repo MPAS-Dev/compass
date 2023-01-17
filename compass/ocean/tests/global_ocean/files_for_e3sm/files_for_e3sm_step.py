@@ -127,9 +127,14 @@ class FilesForE3SMStep(Step):
                                 attr.endswith('Version_Creation_Date'):
                             creation_date = ds.attrs[attr]
                             # convert to the desired format
-                            date = datetime.strptime(creation_date,
-                                                     '%m/%d/%Y %H:%M:%S')
-                            creation_date = date.strftime("%Y%m%d")
+                            try:
+                                date = datetime.strptime(creation_date,
+                                                         '%m/%d/%Y %H:%M:%S')
+                                creation_date = date.strftime("%Y%m%d")
+                            except ValueError:
+                                # creation date isn't in this old format, so
+                                # assume it's already YYYYMMDD
+                                pass
                             break
                     
 
