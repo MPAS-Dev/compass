@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>compass.ocean.tests.isomip_plus.geom.interpolate_ocean_mask &mdash; compass latest documentation</title>
+  <title>compass.ocean.tests.isomip_plus.geom.interpolate_geom &mdash; compass latest documentation</title>
   
 
   
@@ -41,8 +41,8 @@
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="compass.ocean.tests.isomip_plus.geom.interpolate_geom" href="compass.ocean.tests.isomip_plus.geom.interpolate_geom.html" />
-    <link rel="prev" title="compass.ocean.tests.isomip_plus.geom.define_thin_film_mask_step1" href="compass.ocean.tests.isomip_plus.geom.define_thin_film_mask_step1.html" /> 
+    <link rel="next" title="compass.ocean.tests.isomip_plus.initial_state.InitialState" href="compass.ocean.tests.isomip_plus.initial_state.InitialState.html" />
+    <link rel="prev" title="compass.ocean.tests.isomip_plus.geom.interpolate_ocean_mask" href="compass.ocean.tests.isomip_plus.geom.interpolate_ocean_mask.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -195,13 +195,13 @@
         
           <li><a href="../api.html">ocean</a> &raquo;</li>
         
-      <li>compass.ocean.tests.isomip_plus.geom.interpolate_ocean_mask</li>
+      <li>compass.ocean.tests.isomip_plus.geom.interpolate_geom</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../../../_sources/developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.geom.interpolate_ocean_mask.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/developers_guide/ocean/generated/compass.ocean.tests.isomip_plus.geom.interpolate_geom.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -214,15 +214,13 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="compass-ocean-tests-isomip-plus-geom-interpolate-ocean-mask">
-<h1>compass.ocean.tests.isomip_plus.geom.interpolate_ocean_mask<a class="headerlink" href="#compass-ocean-tests-isomip-plus-geom-interpolate-ocean-mask" title="Permalink to this heading">¶</a></h1>
+  <section id="compass-ocean-tests-isomip-plus-geom-interpolate-geom">
+<h1>compass.ocean.tests.isomip_plus.geom.interpolate_geom<a class="headerlink" href="#compass-ocean-tests-isomip-plus-geom-interpolate-geom" title="Permalink to this heading">¶</a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="compass.ocean.tests.isomip_plus.geom.interpolate_ocean_mask">
-<span class="sig-prename descclassname"><span class="pre">compass.ocean.tests.isomip_plus.geom.</span></span><span class="sig-name descname"><span class="pre">interpolate_ocean_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ds_mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ds_geom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_ocean_fraction</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/ocean/tests/isomip_plus/geom.html#interpolate_ocean_mask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.ocean.tests.isomip_plus.geom.interpolate_ocean_mask" title="Permalink to this definition">¶</a></dt>
-<dd><p>Interpolate the ocean mask from the original BISICLES grid to the MPAS
-mesh.  This is handled separately from other fields because the ocean mask
-is needed to cull land cells from the MPAS mesh before interpolating the
-remaining fields.</p>
+<dt class="sig sig-object py" id="compass.ocean.tests.isomip_plus.geom.interpolate_geom">
+<span class="sig-prename descclassname"><span class="pre">compass.ocean.tests.isomip_plus.geom.</span></span><span class="sig-name descname"><span class="pre">interpolate_geom</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ds_mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ds_geom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_ocean_fraction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thin_film_present</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/ocean/tests/isomip_plus/geom.html#interpolate_geom"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.ocean.tests.isomip_plus.geom.interpolate_geom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interpolate the ice geometry from the original BISICLES grid to the MPAS
+mesh.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -231,11 +229,22 @@ remaining fields.</p>
 <a class="reference internal" href="compass.ocean.tests.isomip_plus.process_geom.ProcessGeom.html#compass.ocean.tests.isomip_plus.process_geom.ProcessGeom" title="compass.ocean.tests.isomip_plus.process_geom.ProcessGeom"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.isomip_plus.process_geom.ProcessGeom</span></code></a></p></li>
 <li><p><strong>min_ocean_fraction</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – The minimum ocean fraction after interpolation, below which the cell
 is masked as land (which is not distinguished from grounded ice)</p></li>
+<li><p><strong>thin_film_present</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – Whether domain contains a thin film below grounded ice</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ds_mask</strong> (<em>xarray.Dataset</em>) – A dataset containing <code class="docutils literal notranslate"><span class="pre">regionCellMasks</span></code>, a field with the ocean mask
-that can be used to cull land cells from the mesh</p>
+<dd class="field-even"><p><p><strong>ds_out</strong> (<em>xarray.Dataset</em>) – A dataset containing :</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">bottomDepthObserved</span></code> – the bedrock elevation (positive up)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ssh</span></code> – the sea surface height</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">oceanFracObserved</span></code> – the fraction of the mesh cell that is ocean</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">landIceFraction</span></code> – the fraction of the mesh cell that is covered
+by an ice shelf</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">smoothedDraftMask</span></code> – a smoothed version of the floating mask that
+may be useful for determining where to alter the vertical coordinate
+to accommodate ice-shelf cavities</p></li>
+</ul>
+</p>
 </dd>
 </dl>
 </dd></dl>
@@ -248,8 +257,8 @@ that can be used to cull land cells from the mesh</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="compass.ocean.tests.isomip_plus.geom.interpolate_geom.html" class="btn btn-neutral float-right" title="compass.ocean.tests.isomip_plus.geom.interpolate_geom" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="compass.ocean.tests.isomip_plus.geom.define_thin_film_mask_step1.html" class="btn btn-neutral float-left" title="compass.ocean.tests.isomip_plus.geom.define_thin_film_mask_step1" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="compass.ocean.tests.isomip_plus.initial_state.InitialState.html" class="btn btn-neutral float-right" title="compass.ocean.tests.isomip_plus.initial_state.InitialState" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="compass.ocean.tests.isomip_plus.geom.interpolate_ocean_mask.html" class="btn btn-neutral float-left" title="compass.ocean.tests.isomip_plus.geom.interpolate_ocean_mask" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>
