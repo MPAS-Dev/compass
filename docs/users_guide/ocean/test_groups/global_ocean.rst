@@ -118,19 +118,6 @@ Note that meshes and test cases may modify these options, as noted below.
     # for E3SM
     [files_for_e3sm]
 
-    # whether to generate an ocean initial condition in E3SM
-    enable_ocean_initial_condition = true
-    # whether to generate graph partitions for different numbers of ocean cores in
-    # E3SM
-    enable_ocean_graph_partition = true
-    # whether to generate a sea-ice initial condition in E3SM
-    enable_seaice_initial_condition = true
-    # whether to generate SCRIP files for later use in creating E3SM mapping files
-    enable_scrip = true
-    # whether to generate region masks, transects and mapping files for use in both
-    # online analysis members and offline with MPAS-Analysis
-    enable_diagnostics_files = true
-
     ## the following relate to the comparison grids in MPAS-Analysis to generate
     ## mapping files for.  The default values are also the defaults in
     ## MPAS-Analysis.  Coarser or finer resolution may be desirable for some MPAS
@@ -147,6 +134,49 @@ Note that meshes and test cases may modify these options, as noted below.
     # The comparison Arctic polar stereographic grid size and resolution in km
     comparisonArcticStereoWidth = 6000.
     comparisonArcticStereoResolution = 10.
+
+    # The extended Antarctic polar stereographic comparison grid size and
+    # resolution in km
+    comparisonAntarcticExtendedWidth = 9000.
+    comparisonAntarcticExtendedResolution = 15.
+
+    # The extended Arctic polar stereographic comparison grid size and
+    # resolution in km
+    comparisonArcticExtendedWidth = 9000.
+    comparisonArcticExtendedResolution = 15.
+
+    # The comparison North Atlantic grid size and resolution in km
+    comparisonNorthAtlanticWidth = 8500.
+    comparisonNorthAtlanticHeight = 5500.
+    comparisonNorthAtlanticResolution = 20.
+
+    # The comparison North Pacific c grid size and resolution in km
+    comparisonNorthPacificWidth = 15000.
+    comparisonNorthPacificHeight = 5000.
+    comparisonNorthPacificResolution = 20.
+
+    # The comparison North Atlantic grid size and resolution in km
+    comparisonSubpolarNorthAtlanticWidth = 7000.
+    comparisonSubpolarNorthAtlanticHeight = 4000.
+    comparisonSubpolarNorthAtlanticResolution = 20.
+
+    # CMIP6 grid resolution
+    cmip6_grid_res = 180x360
+
+    # the E3SM short name of the mesh or "autodetect" to use the
+    # MPAS_Mesh_Short_Name attribute of the mesh file
+    mesh_short_name = autodetect
+
+    # the absolute path or relative path with respect to the test case's work
+    # directory of an ocean restart file on the given mesh
+    ocean_restart_filename = autodetect
+
+    # the absolute path or relative path with respect to the test case's work
+    # directory of a graph file that corresponds to the mesh
+    graph_filename = autodetect
+
+    # whether the mesh has ice-shelf cavities
+    with_ice_shelf_cavities = autodetect
 
 The ``cull_mesh_*``, ``init_*`` and ``forward:*`` config options are used to
 specify the resources used in in the ``mesh`` step of the :ref:`global_ocean_mesh`,
@@ -735,31 +765,33 @@ along with additional files required for full E3SM integration.  Currently,
 there is not a way to use new meshes in E3SM without help from an expert from
 the E3SM team.
 
-.. _global_ocean_make_diagnostic_files:
+.. _global_ocean_files_for_e3sm_for_existing:
 
-make_diagnostic_files test case
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+files_for_e3sm for an existing mesh
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Sometimes, we already have an E3SM initial condition but the diagnostics files
-for `MPAS-Analysis <https://mpas-dev.github.io/MPAS-Analysis/stable/>`_
-either weren't created with the initial condition or they are out of date.
+Sometimes, we already have an E3SM initial condition but some of the support
+files, such as the diagnostics files for
+`MPAS-Analysis <https://mpas-dev.github.io/MPAS-Analysis/stable/>`_ or the
+graph partition files for MPAS-Seaice, either weren't created with the initial
+condition or they are out of date.  The ``ocean/global_ocean/files_for_e3sm``
+test case is useful for creating these files.
 
 The user should create a local symlink to an E3SM initial condition for
-MPAS-Ocean ofr the desired mesh.  Then, the config options in
-`make_diagnostics_files.cfg` should be edited.  In this example, we have
-created a local link to the `ocean.WCAtl12to45E2r4.210318.nc` initial condition
-in the test case directory.  The mesh name has also been set to the E3SM short
-name for this mesh `WCAtl12to45E2r4`.  We use all 36 cores on a node (this
-test case can't use multiple nodes for most steps).  We indicate that the mesh
-does not include ice-shelf cavities, which means we don't compute masks for
-ice-shelf melt rates.
+MPAS-Ocean for the desired mesh.  Then, the config options in
+``files_for_e3sm.cfg`` should be edited.  In this example, we have
+created a local link to the ``ocean.WCAtl12to45E2r4.210318.nc`` initial
+condition and the ``mpas-o.graph.info.210318`` graph file in the test case
+directory.  The mesh name has also been set to the E3SM short name for this
+mesh ``WCAtl12to45E2r4``.  We indicate that the mesh does not include ice-shelf
+cavities, which means we don't compute masks for ice-shelf melt rates.
 
 .. code-block:: cfg
 
-    [make_diagnostics_files]
-    mesh_name = WCAtl12to45E2r4
-    mesh_filename = ocean.WCAtl12to45E2r4.210318.nc
-    cores = 36
+    [files_for_e3sm]
+    mesh_short_name = WCAtl12to45E2r4
+    ocean_restart_filename = ocean.WCAtl12to45E2r4.210318.nc
+    graph_filename = mpas-o.graph.info.210318
     with_ice_shelf_cavities = False
 
 The resulting files are symlinked in a subdirectory of the test case called
