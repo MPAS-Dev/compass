@@ -950,3 +950,42 @@ The test case is made up of 5 steps:
     basins and the transects representing their southern boundaries.
     The resulting region mask is in the same directory as above, and named
     ``<mesh_short_name>_moc_masks_and_transects.nc``
+
+files_for_e3sm for an existing mesh
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The test case ``ocean/global_ocean/files_for_e3sm`` can be used to create all the
+same files as in :ref:`dev_ocean_global_ocean_files_for_e3sm` but for an
+existing mesh.  To point to the existing mesh and associated graph file, the
+following config options must be specified (typically by editing
+``files_for_e3sm.cfg`` after setting up the test case):
+
+.. code-block:: ini
+
+    # config options related to initial condition and diagnostics support files
+    # for E3SM
+    [files_for_e3sm]
+
+    # the absolute path or relative path with respect to the test case's work
+    # directory of an ocean restart file on the given mesh
+    ocean_restart_filename = autodetect
+
+    # the absolute path or relative path with respect to the test case's work
+    # directory of a graph file that corresponds to the mesh
+    graph_filename = autodetect
+
+The following will be detected from the metadata in the ocean restart file if
+present but can be set if needed:
+
+.. code-block:: ini
+
+    # config options related to initial condition and diagnostics support files
+    # for E3SM
+    [files_for_e3sm]
+
+    # the E3SM short name of the mesh or "autodetect" to use the
+    # MPAS_Mesh_Short_Name attribute of the mesh file
+    mesh_short_name = autodetect
+
+    # whether the mesh has ice-shelf cavities
+    with_ice_shelf_cavities = autodetect
