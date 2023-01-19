@@ -1,10 +1,11 @@
 from compass.step import Step
 from compass.model import make_graph_file, run_model
 from compass.job import write_job_script
-from compass.landice.tests.thwaites.uq_ensemble.job \
-    import write_step_job_script
+from compass.job import write_job_script
+from compass.io import symlink
 
 import numpy as np
+import os
 
 class EnsembleMember(Step):
     """
@@ -82,10 +83,21 @@ class EnsembleMember(Step):
         self.add_namelist_options(options=options,
                                   out_name='namelist.landice')
 
-        write_step_job_script(self.config, self.name, target_cores=self.ntasks,
-                              min_cores=self.min_tasks, work_dir=self.work_dir)
 
+        # set job name to run number so it will get set in batch script
+        self.config.set('job', 'job_name', f'uq_{self.name}')
+        machine = self.config.get('deploy', 'machine')
+        write_job_script(self.config, machine,
+                         target_cores=self.ntasks, min_cores=self.min_tasks,
+                         work_dir=self.work_dir)
 
+        # COMPASS does not create symlinks for the load script in step dirs,
+        # so use the standard approach for creating that symlink in each step dir.
+        if 'LOAD_COMPASS_ENV' in os.environ:
+            script_filename = os.environ['LOAD_COMPASS_ENV']
+            # make a symlink to the script for loading the compass conda env.
+            symlink(script_filename, os.path.join(self.work_dir,
+                                                 'load_compass_env.sh'))
 
     def run(self):
         """
