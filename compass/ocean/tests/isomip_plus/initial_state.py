@@ -1,5 +1,6 @@
 import os
 import shutil
+import cmocean
 
 import numpy as np
 import xarray as xr
@@ -111,15 +112,18 @@ class InitialState(Step):
         ds['modifyLandIcePressureMask'] = \
             (ds['landIceFraction'] > 0.01).astype(int)
 
-        mask = ds.landIceFraction >= min_land_ice_fraction
-        floating_mask = ds.Z_ice_draft >= ds.Z_bed
+        # This inequality needs to be > rather than >= to ensure correctness
+        # when min_land_ice_fraction = 0
+        mask = ds.landIceFraction > min_land_ice_fraction
+
+        floating_mask = np.logical_and(
+            ds.landIceFloatingFraction > 0,
+            ds.landIceFraction > min_land_ice_fraction)
 
         ds['landIceMask'] = mask.astype(int)
         ds['landIceFloatingMask'] = floating_mask.astype(int)
 
         ds['landIceFraction'] = xr.where(mask, ds.landIceFraction, 0.)
-        ds['landIceFloatingFraction'] = xr.where(floating_mask,
-            ds.landIceFloatingFraction, 0.)
 
         ref_density = constants['SHR_CONST_RHOSW']
         landIcePressure, landIceDraft = compute_land_ice_pressure_and_draft(
@@ -206,26 +210,62 @@ class InitialState(Step):
                                sectionY=section_y, dsMesh=ds, ds=ds,
                                showProgress=show_progress)
 
+        ds['oceanFracObserved'] = \
+            ds['oceanFracObserved'].expand_dims(dim='Time', axis=0)
         ds['landIcePressure'] = \
             ds['landIcePressure'].expand_dims(dim='Time', axis=0)
+        ds['landIceGroundedFraction'] = \
+            ds['landIceGroundedFraction'].expand_dims(dim='Time', axis=0)
         ds['bottomDepth'] = ds['bottomDepth'].expand_dims(dim='Time', axis=0)
         ds['totalColThickness'] = ds['ssh']
         ds['totalColThickness'].values = \
             ds['layerThickness'].sum(dim='nVertLevels')
+        tol=1e-10
+        plotter.plot_horiz_series(ds.landIceMask,
+                                  'landIceMask', 'landIceMask',
+                                  True)
+        plotter.plot_horiz_series(ds.landIceFloatingMask,
+                                  'landIceFloatingMask', 'landIceFloatingMask',
+                                  True)
         plotter.plot_horiz_series(ds.landIcePressure,
                                   'landIcePressure', 'landIcePressure',
-                                  True)
+                                  True, vmin=1, vmax=1e6, cmap_scale='log')
         plotter.plot_horiz_series(ds.ssh,
                                   'ssh', 'ssh',
                                   True, vmin=-700, vmax=0)
+        plotter.plot_horiz_series(ds.bottomDepth,
+                                  'bottomDepth', 'bottomDepth',
+                                  True, vmin=0, vmax=700)
         plotter.plot_horiz_series(ds.ssh + ds.bottomDepth,
                                   'H', 'H', True,
-                                  vmin=min_column_thickness + 1e-10, vmax=700,
+                                  vmin=min_column_thickness+tol, vmax=700,
                                   cmap_set_under='r', cmap_scale='log')
         plotter.plot_horiz_series(ds.totalColThickness,
                                   'totalColThickness', 'totalColThickness',
                                   True, vmin=min_column_thickness + 1e-10,
                                   vmax=700, cmap_set_under='r')
+        plotter.plot_horiz_series(ds.landIceFraction,
+                                  'landIceFraction', 'landIceFraction',
+                                  True, vmin=0+tol, vmax=1-tol,
+                                  cmap='cmo.balance',
+                                  cmap_set_under='k', cmap_set_over='r')
+        plotter.plot_horiz_series(ds.landIceFloatingFraction,
+                                  'landIceFloatingFraction',
+                                  'landIceFloatingFraction',
+                                  True, vmin=0+tol, vmax=1-tol,
+                                  cmap='cmo.balance',
+                                  cmap_set_under='k', cmap_set_over='r')
+        plotter.plot_horiz_series(ds.landIceGroundedFraction,
+                                  'landIceGroundedFraction',
+                                  'landIceGroundedFraction',
+                                  True, vmin=0+tol, vmax=1-tol,
+                                  cmap='cmo.balance',
+                                  cmap_set_under='k', cmap_set_over='r')
+        plotter.plot_horiz_series(ds.oceanFracObserved,
+                                  'oceanFracObserved', 'oceanFracObserved',
+                                  True, vmin=0+tol, vmax=1-tol,
+                                  cmap='cmo.balance',
+                                  cmap_set_under='k', cmap_set_over='r')
         plotter.plot_layer_interfaces()
 
         plotter.plot_3d_field_top_bot_section(
