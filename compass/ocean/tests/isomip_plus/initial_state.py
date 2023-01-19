@@ -105,15 +105,21 @@ class InitialState(Step):
 
         ds['landIceFraction'] = \
             ds['landIceFraction'].expand_dims(dim='Time', axis=0)
+        ds['landIceFloatingFraction'] = \
+            ds['landIceFloatingFraction'].expand_dims(dim='Time', axis=0)
 
         ds['modifyLandIcePressureMask'] = \
             (ds['landIceFraction'] > 0.01).astype(int)
 
         mask = ds.landIceFraction >= min_land_ice_fraction
+        floating_mask = ds.Z_ice_draft >= ds.Z_bed
 
         ds['landIceMask'] = mask.astype(int)
+        ds['landIceFloatingMask'] = floating_mask.astype(int)
 
         ds['landIceFraction'] = xr.where(mask, ds.landIceFraction, 0.)
+        ds['landIceFloatingFraction'] = xr.where(floating_mask,
+            ds.landIceFloatingFraction, 0.)
 
         ref_density = constants['SHR_CONST_RHOSW']
         landIcePressure, landIceDraft = compute_land_ice_pressure_and_draft(
@@ -318,11 +324,13 @@ class InitialState(Step):
         landIceDraft = list()
         landIcePressure = list()
         landIceFraction = list()
+        landIceFloatingFraction = list()
 
         for scale in scales:
             landIceDraft.append(scale * ds_init.landIceDraft)
             landIcePressure.append(scale * ds_init.landIcePressure)
             landIceFraction.append(ds_init.landIceFraction)
+            landIceFloatingFraction.append(ds_init.landIceFloatingFraction)
 
         ds_out['landIceDraftForcing'] = xr.concat(landIceDraft, 'Time')
         ds_out.landIceDraftForcing.attrs['units'] = 'm'
@@ -337,6 +345,10 @@ class InitialState(Step):
             xr.concat(landIceFraction, 'Time')
         ds_out.landIceFractionForcing.attrs['long_name'] = \
             'The fraction of each cell covered by land ice'
+        ds_out['landIceFloatingFractionForcing'] = \
+            xr.concat(landIceFloatingFraction, 'Time')
+        ds_out.landIceFloatingFractionForcing.attrs['long_name'] = \
+            'The fraction of each cell covered by floating land ice'
         write_netcdf(ds_out, 'land_ice_forcing.nc')
 
         ds_init['landIceDraft'] = scales[0] * ds_init.landIceDraft
