@@ -13,7 +13,7 @@ class EnsembleMember(Step):
 
     Attributes
     ----------
-    runNum : integer
+    run_num : integer
         the run number for this ensemble member
 
     name : str
@@ -23,7 +23,7 @@ class EnsembleMember(Step):
         the number of parallel (MPI) tasks the step would ideally use
     """
 
-    def __init__(self, test_case, runNum):
+    def __init__(self, test_case, run_num):
         """
         Creates a new run within an ensemble
 
@@ -32,11 +32,11 @@ class EnsembleMember(Step):
         test_case : compass.TestCase
             The test case this step belongs to
 
-        runNum : integer
+        run_num : integer
             the run number for this ensemble member
         """
         # define step (run) name
-        self.name=f'run{runNum:03}'
+        self.name=f'run{run_num:03}'
 
         super().__init__(test_case=test_case, name=self.name)
 

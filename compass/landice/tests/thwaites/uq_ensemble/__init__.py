@@ -30,11 +30,12 @@ class UQEnsemble(TestCase):
         # Steps need to be defined in TestCase.__init__
         # But we want to keep operations to a minimum
 
-        self.nRuns = 20 # number of runs in ensemble
-        for runNum in range(self.nRuns):
-            self.add_step(
-                EnsembleMember(test_case=self,
-                               runNum=runNum))
+        start_run = 0
+        end_run = 39
+        #self.start_run = self.config.get('thwaites_uq', 'start_run')
+        #self.end_run = self.config.get('thwaites_uq', 'end_run')
+        for run_num in range(start_run, end_run+1):
+            self.add_step(EnsembleMember(test_case=self, run_num=run_num))
 
         # Now add the run manager
         self.add_step(EnsembleManager(test_case=self))
