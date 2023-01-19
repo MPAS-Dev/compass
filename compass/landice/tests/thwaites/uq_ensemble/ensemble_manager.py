@@ -1,4 +1,6 @@
 from compass.step import Step
+from importlib.resources import path
+from compass.io import symlink
 import os
 from mpas_tools.logging import check_call
 
@@ -33,9 +35,9 @@ class EnsembleManager(Step):
         Set up the ensemble manager
         """
         # Link viz script
-        with path('compass.landice.tests.thwaites.uq_ensemble', 'plot_ensemble.py') as \
-            target:
-        symlink(str(target), f'{self.test_case.work_dir}/plot_ensemble.py')
+        with path('compass.landice.tests.thwaites.uq_ensemble',
+                  'plot_ensemble.py') as target:
+            symlink(str(target), f'{self.test_case.work_dir}/plot_ensemble.py')
 
     def run(self):
         """
