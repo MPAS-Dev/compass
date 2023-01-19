@@ -1,8 +1,8 @@
 from compass.step import Step
 from compass.model import make_graph_file, run_model
 from compass.job import write_job_script
-from compass.job import write_job_script
 from compass.io import symlink
+from importlib import resources
 
 import numpy as np
 import os
@@ -35,6 +35,8 @@ class EnsembleMember(Step):
         run_num : integer
             the run number for this ensemble member
         """
+        self.run_num = run_num
+
         # define step (run) name
         self.name=f'run{run_num:03}'
 
@@ -63,12 +65,19 @@ class EnsembleMember(Step):
 
         self.add_model_as_input()
 
-        #self.add_output_file(filename='output.nc')
-
         # modify param values as needed for this ensemble member
 
+        # Use pre-defined parameter vectors in a text file
+        param_file_name = self.config.get('thwaites_uq',
+                                          'param_vector_filename')
+        with resources.open_text('compass.landice.tests.thwaites.uq_ensemble', param_file_name) as params_file:
+            vm_thresh_vec, gamma0_vec = np.loadtxt(params_file, delimiter=',',
+                                                   skiprows=1,
+                                                   usecols=(1,2), unpack=True)
+
         # von Mises stress threshold
-        self.vM_value = np.random.uniform(150.0e3, 400.0e3)
+        #self.vM_value = np.random.uniform(150.0e3, 400.0e3)
+        self.vM_value = vm_thresh_vec[self.run_num]
         options = {'config_grounded_von_Mises_threshold_stress':
                    f'{self.vM_value}',
                    'config_floating_von_Mises_threshold_stress':
