@@ -98,6 +98,8 @@ class InitialState(Step):
             dim='Time', axis=0)
         landIceFraction = modify_mask.astype(float)
         landIceMask = modify_mask.copy()
+        landIceFloatingFraction = landIceFraction.copy()
+        landIceFloatingMask = landIceMask.copy()
 
         ref_density = constants['SHR_CONST_RHOSW']
         landIcePressure, landIceDraft = compute_land_ice_pressure_and_draft(
@@ -121,7 +123,9 @@ class InitialState(Step):
         ds['fVertex'] = xarray.zeros_like(ds.xVertex)
         ds['modifyLandIcePressureMask'] = modify_mask
         ds['landIceFraction'] = landIceFraction
+        ds['landIceFloatingFraction'] = landIceFloatingFraction
         ds['landIceMask'] = landIceMask
+        ds['landIceFloatingMask'] = landIceFloatingMask
         ds['landIcePressure'] = landIcePressure
         ds['landIceDraft'] = landIceDraft
 
