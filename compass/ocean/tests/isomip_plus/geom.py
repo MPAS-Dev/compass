@@ -3,7 +3,7 @@ import xarray
 from mpas_tools.mesh.interpolation import interp_bilin
 
 
-def define_thin_film_mask_step1(ds_mesh, ds_geom):
+def define_thin_film_mask_step1(ds_mesh, ds_geom, min_ocean_fraction):
     """
     Define an MPAS mesh mask for the ocean domain including cells over the
     full x- and y-range in order to include all land cells in the ocean's
@@ -32,7 +32,17 @@ def define_thin_film_mask_step1(ds_mesh, ds_geom):
         numpy.logical_and(x_cell >= x[0], x_cell <= x[-1]),
         numpy.logical_and(y_cell >= y[0], y_cell <= y[-1]))
 
-    mask = valid
+    x_cell = x_cell[valid]
+    y_cell = y_cell[valid]
+    ocean_frac_observed = numpy.zeros(ds_mesh.sizes['nCells'])
+    ocean_frac_observed[valid] = interp_bilin(x, y, ocean_fraction.values,
+                                              x_cell, y_cell)
+    land_fraction = numpy.zeros(ds_mesh.sizes['nCells'])
+    land_fraction[valid] = interp_bilin(x, y, ds_geom.landFraction.values,
+                                        x_cell, y_cell)
+
+    mask = numpy.logical_or(ocean_frac_observed > min_ocean_fraction,
+                            land_fraction > 0)
 
     n_cells = mask.shape[0]
 

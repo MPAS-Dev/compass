@@ -71,7 +71,7 @@ class CullMesh(Step):
         ds_geom = xr.open_dataset('input_geometry_processed.nc')
 
         if thin_film_present:
-            ds_mask = define_thin_film_mask_step1(ds_mesh, ds_geom)
+            ds_mask = define_thin_film_mask_step1(ds_mesh, ds_geom, min_ocean_fraction)
         else:
             ds_mask = \
                 interpolate_ocean_mask(ds_mesh, ds_geom, min_ocean_fraction)
