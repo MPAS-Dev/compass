@@ -886,8 +886,10 @@ def main():
                                f'echo Done.\n' \
                                f'echo\n'
             else:
-                env_vars = f'{env_vars}' \
-                           f'export PIO={conda_env_path}\n'
+                env_vars = \
+                    f'{env_vars}' \
+                    f'export PIO={conda_env_path}\n' \
+                    f'export OPENMP_INCLUDE=-I"{conda_env_path}/include"\n'
         else:
             env_vars = ''
 
