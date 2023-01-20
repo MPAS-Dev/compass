@@ -167,17 +167,39 @@ def install_miniconda(conda_base, activate_base, logger):
         check_call(command, logger=logger)
         os.remove(miniconda)
 
+    backup_bashrc()
+
     print('Doing initial setup\n')
     commands = '{}; ' \
                'conda config --add channels conda-forge; ' \
                'conda config --set channel_priority strict; ' \
                'conda install -y boa; ' \
                'conda update -y --all;' \
-               'cp ~/.bashrc ~/.bashrc.conda_bak; ' \
-               'mamba init; ' \
-               'mv ~/.bashrc.conda_bak ~/.bashrc'.format(activate_base)
+               'mamba init'.format(activate_base)
 
     check_call(commands, logger=logger)
+
+    restore_bashrc()
+
+
+def backup_bashrc():
+    home_dir = os.path.expanduser('~')
+    files = ['.bashrc', '.bash_profile']
+    for filename in files:
+        src = os.path.join(home_dir, filename)
+        dst = os.path.join(home_dir, f'{filename}.conda_bak')
+        if os.path.exists(filename):
+            shutil.copyfile(src, dst)
+
+
+def restore_bashrc():
+    home_dir = os.path.expanduser('~')
+    files = ['.bashrc', '.bash_profile']
+    for filename in files:
+        src = os.path.join(home_dir, f'{filename}.conda_bak')
+        dst = os.path.join(home_dir, filename)
+        if os.path.exists(filename):
+            shutil.move(src, dst)
 
 
 def get_logger(name, log_filename):
