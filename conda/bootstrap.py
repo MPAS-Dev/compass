@@ -268,8 +268,15 @@ def build_conda_env(env_type, recreate, machine, mpi, conda_mpi, version,
 
     if env_type == 'dev':
         supports_otps = platform.system() == 'Linux'
+        if platform.system() == 'Linux':
+            conda_openmp = 'libgomp'
+        elif platform.system() == 'Darwin':
+            conda_openmp = 'llvm-openmp'
+        else:
+            conda_openmp = ''
         spec_file = template.render(supports_otps=supports_otps,
-                                    mpi=conda_mpi, mpi_prefix=mpi_prefix)
+                                    mpi=conda_mpi, openmp=conda_openmp,
+                                    mpi_prefix=mpi_prefix)
 
         spec_filename = f'spec-file-{conda_mpi}.txt'
         with open(spec_filename, 'w') as handle:
