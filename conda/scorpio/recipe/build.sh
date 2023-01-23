@@ -1,27 +1,31 @@
 #!/bin/bash
 
-export NETCDF_C_PATH=$(dirname $(dirname $(which nc-config)))
-export NETCDF_FORTRAN_PATH=$(dirname $(dirname $(which nf-config)))
-export PNETCDF_PATH=$(dirname $(dirname $(which pnetcdf-config)))
+set -xe
 
 mkdir build
 cd build
-# turning TESTS off temporarily because of a bug in 1.3.2
+
+echo CMAKE_ARGS: ${CMAKE_ARGS}
+
 FC=mpifort CC=mpicc CXX=mpicxx cmake \
+    -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=$PREFIX \
+    -DBUILD_SHARED_LIBS:BOOL=ON \
     -DPIO_USE_MALLOC:BOOL=ON \
     -DPIO_ENABLE_TOOLS:BOOL=OFF \
-    -DPIO_ENABLE_TESTS:BOOL=OFF \
+    -DPIO_ENABLE_TESTS:BOOL=ON \
     -DPIO_ENABLE_EXAMPLES:BOOL=OFF \
     -DPIO_ENABLE_TIMING:BOOL=OFF \
-    -DPIO_ENABLE_INTERNAL_TIMING:BOOL=ON \
-    -DNetCDF_C_PATH=$NETCDF_C_PATH \
-    -DNetCDF_Fortran_PATH=$NETCDF_FORTRAN_PATH \
-    -DPnetCDF_PATH=$PNETCDF_PATH ..
+    -DWITH_HDF5:BOOL=OFF \
+    -DWITH_NETCDF:BOOL=ON \
+    -DWITH_PNETCDF:BOOL=ON \
+    -DNetCDF_C_PATH=$PREFIX \
+    -DNetCDF_Fortran_PATH=$PREFIX \
+    -DPnetCDF_PATH=$PREFIX \
+    ${SRC_DIR}
 
-make
+cmake --build .
 
-# make tests
-# ctest
+ctest --output-on-failure
 
-make install
+cmake --install .
