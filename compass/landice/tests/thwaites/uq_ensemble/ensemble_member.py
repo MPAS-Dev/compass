@@ -144,14 +144,14 @@ class EnsembleMember(Step):
 
 def _adjust_friction_exponent(orig_fric_exp, new_fric_exp, filename, albany_input_yaml):
     f = netCDF4.Dataset(filename, 'r+')
+    f.set_auto_mask(False)
     mu = f.variables['muFriction'][0,:]
-    uX = f.variables['uReconstructX'][0,:,:]
-    uY = f.variables['uReconstructY'][0,:,:]
-    spd = (uX[:,-1]**2 + uY[:,-1]**2)**0.5 * (60.*60.*24.*365.)
-    exp_adjustment = orig_fric_exp - new_fric_exp
-    mu = mu * spd**exp_adjustment
+    uX = f.variables['uReconstructX'][0,:,-1]
+    uY = f.variables['uReconstructY'][0,:,-1]
+    spd = (uX**2 + uY**2)**0.5 * (60.*60.*24.*365.)
+    mu = mu * spd**(orig_fric_exp - new_fric_exp)
     mu[spd == 0.0] = 0.0  # The previous step leads to infs or nans in ice-free areas. Set them all to 0.0 for the extrapolation step
-    f.variables['muFriction'][0,:] = mu
+    f.variables['muFriction'][0,:] = mu[:]
     f.close()
 
     extrapolate_variable(filename, 'muFriction', 'min')

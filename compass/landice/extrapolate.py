@@ -35,6 +35,7 @@ def extrapolate_variable(nc_file, var_name, extrap_method, set_value=None):
         keepCellMask = np.copy(groundedMask)
         extrap_method == "min"
 
+        # grow mask by one cell oceanward of GL
         for iCell in range(nCells):
             for n in range(nEdgesOnCell[iCell]):
                 jCell = cellsOnCell[iCell, n] - 1
