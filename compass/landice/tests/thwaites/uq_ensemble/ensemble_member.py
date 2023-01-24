@@ -94,7 +94,7 @@ class EnsembleMember(Step):
 
         # von Mises stress threshold
         #self.vM_value = np.random.uniform(150.0e3, 400.0e3)
-        self.vM_value = vm_thresh_vec[self.run_num]
+        self.vM_value = vm_thresh_vec[self.run_num] * 1000.0  # values in file are kPa
         options = {'config_grounded_von_Mises_threshold_stress':
                    f'{self.vM_value}',
                    'config_floating_von_Mises_threshold_stress':
