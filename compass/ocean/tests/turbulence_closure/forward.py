@@ -78,9 +78,12 @@ class Forward(Step):
         resolution = self.resolution
         if resolution == '10km':
             self.update_namelist_at_runtime({'config_dt':
-                                             "'0000_00:01:00'"})
+                                             "'0000_00:00:01'"})
+        elif resolution == '2m':
+            self.update_namelist_at_runtime({'config_dt':
+                                             "'0000_00:00:00.1'"})
         elif resolution == '1m':
             self.update_namelist_at_runtime({'config_dt':
-                                             "'0000_00:00:00.5'"})
+                                             "'0000_00:00:00.1'"})
 
         run_model(self)

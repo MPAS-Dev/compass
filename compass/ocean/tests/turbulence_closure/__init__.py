@@ -20,7 +20,7 @@ class TurbulenceClosure(TestGroup):
                 DecompTest(test_group=self, resolution=resolution))
             self.add_test_case(
                 RestartTest(test_group=self, resolution=resolution))
-        for resolution in ['1m', '10km']:
+        for resolution in ['1m', '2m', '10km']:
             for forcing in ['cooling', 'evaporation']:
                 self.add_test_case(
                     Default(test_group=self, resolution=resolution, forcing=forcing))
@@ -41,11 +41,16 @@ def configure(resolution, forcing, config):
     res_params = {'10km': {'nx': 16,
                            'ny': 50,
                            'dc': 10e3},
+                  '2m': {'nx': 150,
+                         'ny': 150,
+                         'dc': 2},
                   '1m': {'nx': 128,
                          'ny': 128,
                          'dc': 1}}
     vert_params = {'10km': {'vert_levels': 20,
                             'bottom_depth': 1e3},
+                   '2m': {'vert_levels': 50,
+                          'bottom_depth': 100.0},
                    '1m': {'vert_levels': 128,
                           'bottom_depth': 128.0}}
 
