@@ -187,7 +187,7 @@ def backup_bashrc():
     files = ['.bashrc', '.bash_profile']
     for filename in files:
         src = os.path.join(home_dir, filename)
-        dst = os.path.join(home_dir, f'{filename}.conda_bak')
+        dst = os.path.join(home_dir, '{}.conda_bak'.format(filename))
         if os.path.exists(filename):
             shutil.copyfile(src, dst)
 
@@ -196,7 +196,7 @@ def restore_bashrc():
     home_dir = os.path.expanduser('~')
     files = ['.bashrc', '.bash_profile']
     for filename in files:
-        src = os.path.join(home_dir, f'{filename}.conda_bak')
+        src = os.path.join(home_dir, '{}.conda_bak'.format(filename))
         dst = os.path.join(home_dir, filename)
         if os.path.exists(filename):
             shutil.move(src, dst)
