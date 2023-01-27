@@ -24,22 +24,16 @@ class Init(Step):
                          subdir=f'{mesh_name}/init',
                          ntasks=36, min_tasks=1)
 
-        package = 'compass.ocean.tests.global_convergence.cosine_bell'
-
-        self.add_namelist_file(package, 'namelist.init', mode='init')
-        self.add_streams_file(package, 'streams.init', mode='init')
-
         self.add_input_file(filename='mesh.nc', target='../mesh/mesh.nc')
 
         self.add_input_file(filename='graph.info', target='../mesh/graph.info')
 
-        self.add_model_as_input()
-
-        self.add_output_file(filename='namelist.ocean')
         self.add_output_file(filename='initial_state.nc')
 
     def run(self):
         """
         Run this step of the testcase
         """
-        run_model(self)
+        config = self.config
+        logger = self.logger
+
