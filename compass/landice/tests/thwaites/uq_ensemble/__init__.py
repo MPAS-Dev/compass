@@ -26,22 +26,21 @@ class UQEnsemble(TestCase):
         name = 'thwaites_uq'
         super().__init__(test_group=test_group, name=name)
 
-        # We need the list of runs to set up steps.
-        # Steps need to be defined in TestCase.__init__
-        # But we want to keep operations to a minimum
-
-        start_run = 0
-        end_run = 39
-        #self.start_run = self.config.get('thwaites_uq', 'start_run')
-        #self.end_run = self.config.get('thwaites_uq', 'end_run')
-        for run_num in range(start_run, end_run+1):
-            self.add_step(EnsembleMember(test_case=self, run_num=run_num))
-
-        # Now add the run manager
+        # We don't want to initialize all the individual runs
+        # So during init, we only add the run manager
         self.add_step(EnsembleManager(test_case=self))
 
 
     def configure(self):
+
+        # add runs as steps based on the run range requested
+        self.start_run = self.config.getint('thwaites_uq', 'start_run')
+        self.end_run = self.config.getint('thwaites_uq', 'end_run')
+        for run_num in range(self.start_run, self.end_run+1):
+            self.add_step(EnsembleMember(test_case=self, run_num=run_num))
+            # Note: do not add to step_to_run, because ensemble_manager
+            # will handle submitting and running the runs
+
         # Have compass run only run the run_manager but not any actual runs.
         # This is because the individual runs will be submitted as jobs
         # by the ensemble manager.
