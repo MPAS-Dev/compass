@@ -28,6 +28,8 @@ all_build_targets = {
         ('intel', 'mvapich'): 'ifort',
         ('gnu', 'openmpi'): 'gfortran',
         ('gnu', 'mvapich'): 'gfortran'},
+    'chicoma-cpu': {
+        ('gnu', 'mpich'): 'gnu-cray'},
     'chrysalis': {
         ('intel', 'impi'): 'intel-mpi',
         ('intel', 'openmpi'): 'ifort',

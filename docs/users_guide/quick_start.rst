@@ -26,6 +26,12 @@ Here are the commands to load the the environment for the latest
 
     source /lcrc/soft/climate/compass/anvil/load_latest_compass.sh
 
+* Chicoma-CPU (coming soon):
+
+.. code-block:: bash
+
+    source /usr/projects/climate/SHARED_CLIMATE/compass/chicoma-cpu/load_latest_compass.sh
+
 * Chrysalis:
 
 .. code-block:: bash
