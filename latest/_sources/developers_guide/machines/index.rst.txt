@@ -51,6 +51,8 @@ the MPAS model.
 |              |            +-----------+-------------------+
 |              |            | mvapich   | gfortran          |
 +--------------+------------+-----------+-------------------+
+| chicoma-cpu  | gnu        | mpich     | gnu-cray          |
++--------------+------------+-----------+-------------------+
 | chrysalis    | intel      | openmpi   | ifort             |
 |              |            +-----------+-------------------+
 |              |            | impi      | intel-mpi         |
@@ -74,6 +76,7 @@ Below are specifics for each supported machine
    :titlesonly:
 
    anvil
+   chicoma
    chrysalis
    compy
    cori

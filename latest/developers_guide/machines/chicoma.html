@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Cori &mdash; compass latest documentation</title>
+  <title>Chicoma &mdash; compass latest documentation</title>
   
 
   
@@ -41,8 +41,8 @@
     
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Perlmutter" href="perlmutter.html" />
-    <link rel="prev" title="CompyMcNodeFace" href="compy.html" /> 
+    <link rel="next" title="Chrysalis" href="chrysalis.html" />
+    <link rel="prev" title="Anvil" href="anvil.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -113,14 +113,13 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Machines</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="index.html#supported-machines">Supported Machines</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="anvil.html">Anvil</a></li>
-<li class="toctree-l3"><a class="reference internal" href="chicoma.html">Chicoma</a></li>
-<li class="toctree-l3"><a class="reference internal" href="chrysalis.html">Chrysalis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="compy.html">CompyMcNodeFace</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Cori</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#cori-haswell-intel">cori-haswell, intel</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#cori-haswell-gnu">cori-haswell, gnu</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Chicoma</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#chicoma-cpu-gnu">chicoma-cpu, gnu</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="chrysalis.html">Chrysalis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="compy.html">CompyMcNodeFace</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cori.html">Cori</a></li>
 <li class="toctree-l3"><a class="reference internal" href="perlmutter.html">Perlmutter</a></li>
 </ul>
 </li>
@@ -196,13 +195,13 @@
         
           <li><a href="index.html">Machines</a> &raquo;</li>
         
-      <li>Cori</li>
+      <li>Chicoma</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../../_sources/developers_guide/machines/cori.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/developers_guide/machines/chicoma.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -215,29 +214,17 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="cori">
-<h1>Cori<a class="headerlink" href="#cori" title="Permalink to this heading">¶</a></h1>
-<section id="cori-haswell-intel">
-<h2>cori-haswell, intel<a class="headerlink" href="#cori-haswell-intel" title="Permalink to this heading">¶</a></h2>
-<p>This is the default <code class="docutils literal notranslate"><span class="pre">compass</span></code> architecture and compiler on Cori.  If the
-environment has been set up properly (see <a class="reference internal" href="../quick_start.html#dev-conda-env"><span class="std std-ref">compass conda environment, compilers and system modules</span></a>), you should be
-able to source:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>load_dev_compass_1.0.0_cori-haswell_intel_mpt.sh
+  <section id="chicoma">
+<h1>Chicoma<a class="headerlink" href="#chicoma" title="Permalink to this heading">¶</a></h1>
+<section id="chicoma-cpu-gnu">
+<h2>chicoma-cpu, gnu<a class="headerlink" href="#chicoma-cpu-gnu" title="Permalink to this heading">¶</a></h2>
+<p>If you’ve set things up for this compiler, you should be able to source a load
+script similar to:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>load_dev_compass_1.2.0-alpha.4_chicoma-cpu_gnu_mpich.sh
 </pre></div>
 </div>
 <p>Then, you can build the MPAS model with</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span><span class="o">[</span><span class="nv">DEBUG</span><span class="o">=</span>true<span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="nv">OPENMP</span><span class="o">=</span>true<span class="o">]</span><span class="w"> </span>intel-cray
-</pre></div>
-</div>
-</section>
-<section id="cori-haswell-gnu">
-<h2>cori-haswell, gnu<a class="headerlink" href="#cori-haswell-gnu" title="Permalink to this heading">¶</a></h2>
-<p>If you’ve set things up for this compiler, you should be able to:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>load_dev_compass_1.0.0_cori-haswell_gnu_mpt.sh
-</pre></div>
-</div>
-<p>Then, you can build the MPAS model with</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span><span class="o">[</span><span class="nv">DEBUG</span><span class="o">=</span>true<span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="nv">OPENMP</span><span class="o">=</span>true<span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="nv">ALBANY</span><span class="o">=</span>true<span class="o">]</span><span class="w"> </span>gnu-cray
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span><span class="o">[</span><span class="nv">DEBUG</span><span class="o">=</span>true<span class="o">]</span><span class="w"> </span>gnu-cray
 </pre></div>
 </div>
 </section>
@@ -249,8 +236,8 @@ able to source:</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="perlmutter.html" class="btn btn-neutral float-right" title="Perlmutter" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="compy.html" class="btn btn-neutral float-left" title="CompyMcNodeFace" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="chrysalis.html" class="btn btn-neutral float-right" title="Chrysalis" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="anvil.html" class="btn btn-neutral float-left" title="Anvil" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

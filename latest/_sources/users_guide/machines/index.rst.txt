@@ -133,6 +133,7 @@ to use the default MPI variant for each compiler on each machine.
    :titlesonly:
 
    anvil
+   chicoma
    chrysalis
    compy
    cori
