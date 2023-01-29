@@ -6,6 +6,7 @@ import argparse
 import subprocess
 import platform
 import logging
+import shutil
 
 try:
     from urllib.request import urlopen, Request
@@ -174,7 +175,7 @@ def install_miniconda(conda_base, activate_base, logger):
                'conda config --add channels conda-forge; ' \
                'conda config --set channel_priority strict; ' \
                'conda install -y boa; ' \
-               'conda update -y --all;' \
+               'conda update -y --all; ' \
                'mamba init'.format(activate_base)
 
     check_call(commands, logger=logger)
@@ -188,7 +189,7 @@ def backup_bashrc():
     for filename in files:
         src = os.path.join(home_dir, filename)
         dst = os.path.join(home_dir, '{}.conda_bak'.format(filename))
-        if os.path.exists(filename):
+        if os.path.exists(src):
             shutil.copyfile(src, dst)
 
 
@@ -198,7 +199,7 @@ def restore_bashrc():
     for filename in files:
         src = os.path.join(home_dir, '{}.conda_bak'.format(filename))
         dst = os.path.join(home_dir, filename)
-        if os.path.exists(filename):
+        if os.path.exists(src):
             shutil.move(src, dst)
 
 
