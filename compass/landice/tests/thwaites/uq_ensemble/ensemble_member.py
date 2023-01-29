@@ -28,7 +28,10 @@ class EnsembleMember(Step):
         the number of parallel (MPI) tasks the step would ideally use
     """
 
-    def __init__(self, test_case, run_num):
+    def __init__(self, test_case, run_num,
+                 basal_fric_exp=None,
+                 von_mises_threshold=None,
+                 calv_spd_lim=None):
         """
         Creates a new run within an ensemble
 
@@ -42,6 +45,11 @@ class EnsembleMember(Step):
         """
         self.run_num = run_num
 
+        # store assigned param values for this run
+        self.basal_fric_exp = basal_fric_exp
+        self.von_mises_threshold = von_mises_threshold
+        self.calv_spd_lim = calv_spd_lim
+
         # define step (run) name
         self.name=f'run{run_num:03}'
 
@@ -54,6 +62,9 @@ class EnsembleMember(Step):
         * modify parameters for this ensemble member based on
           externally provided parameter vector
         """
+
+        print(f'Setting up run number {self.run_num}')
+        print(f'    basal_fric_exp={self.basal_fric_exp}, von_mises_threshold={self.von_mises_threshold}, calv_spd_lim={self.calv_spd_lim}')
 
         self.ntasks = 32 # chosen for Cori Haswell
 
@@ -84,37 +95,26 @@ class EnsembleMember(Step):
 
         # modify param values as needed for this ensemble member
 
-        # Use pre-defined parameter vectors in a text file
-        param_file_name = self.config.get('thwaites_uq',
-                                          'param_vector_filename')
-        with resources.open_text('compass.landice.tests.thwaites.uq_ensemble', param_file_name) as params_file:
-            vm_thresh_vec, fric_exp_vec = np.loadtxt(params_file, delimiter=',',
-                                                     skiprows=1,
-                                                     usecols=(1,2), unpack=True)
-
         # von Mises stress threshold
-        #self.vM_value = np.random.uniform(150.0e3, 400.0e3)
-        self.vM_value = vm_thresh_vec[self.run_num] * 1000.0  # values in file are kPa
         options = {'config_grounded_von_Mises_threshold_stress':
-                   f'{self.vM_value}',
+                   f'{self.von_mises_threshold}',
                    'config_floating_von_Mises_threshold_stress':
-                   f'{self.vM_value}'}
+                   f'{self.von_mises_threshold}'}
 
-        # von Mises speed limit
-        #secYr = 3600.0 * 24.0 * 365.0
-        #self.clv_spd_lim_value = np.random.uniform(8000.0, 30000.0)
-        #options['config_calving_speed_limit'] = \
-        #        f'{self.clv_spd_lim_value / secYr}'
-
-        self.add_namelist_options(options=options,
-                                  out_name='namelist.landice')
+        # calving speed limit
+        options['config_calving_speed_limit'] = \
+                f'{self.calv_spd_lim}'
 
         # adjust basal friction exponent
         orig_fric_exp = 0.2  # set by initial condition file being used
-        _adjust_friction_exponent(orig_fric_exp, float(fric_exp_vec[self.run_num]),
+        _adjust_friction_exponent(orig_fric_exp, self.basal_fric_exp,
                                   os.path.join(self.work_dir, input_file_name),
                                   os.path.join(self.work_dir,
                                                'albany_input.yaml'))
+
+        # store modified namelist options
+        self.add_namelist_options(options=options,
+                                  out_name='namelist.landice')
 
         # set job name to run number so it will get set in batch script
         self.config.set('job', 'job_name', f'uq_{self.name}')
@@ -163,7 +163,7 @@ def _adjust_friction_exponent(orig_fric_exp, new_fric_exp, filename, albany_inpu
         except yaml.YAMLError as exc:
             print(exc)
     # Change value
-    loaded['ANONYMOUS']['Problem']['LandIce BCs']['BC 0']['Basal Friction Coefficient']['Power Exponent'] = new_fric_exp
+    loaded['ANONYMOUS']['Problem']['LandIce BCs']['BC 0']['Basal Friction Coefficient']['Power Exponent'] = float(new_fric_exp)
     # write out again
     with open(albany_input_yaml, 'w') as stream:
         try:

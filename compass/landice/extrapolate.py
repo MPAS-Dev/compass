@@ -61,7 +61,7 @@ def extrapolate_variable(nc_file, var_name, extrap_method, set_value=None):
     # 5) Update mask
     # 6) go to step 1)
 
-    print("\nStart {} extrapolation using {} method".format(var_name, extrap_method))
+    print("Start {} extrapolation using {} method".format(var_name, extrap_method))
     if extrap_method == 'value':
         varValue[np.where(np.logical_not(keepCellMask))] = float(options.set_value)
     else:
@@ -100,7 +100,7 @@ def extrapolate_variable(nc_file, var_name, extrap_method, set_value=None):
 
                     keepCellMaskNew[iCell] = 1
 
-            print ("{0:8d} cells left for extrapolation in total {1:8d} cells".format(nCells-np.count_nonzero(keepCellMask),  nCells))
+            # print ("{0:8d} cells left for extrapolation in total {1:8d} cells".format(nCells-np.count_nonzero(keepCellMask),  nCells))
 
     dataset.variables[var_name][0,:] = varValue # Put updated array back into file.
     # === Clean-up =============
