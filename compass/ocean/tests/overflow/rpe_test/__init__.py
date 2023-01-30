@@ -32,15 +32,27 @@ class RpeTest(TestCase):
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
 
-        nus = [1, 5, 10, 100, 1000]
-
         self.resolution = resolution
+        self.nus = None
+
+
+    def configure(self):
+        """
+        Modify the configuration options for this test case.
+        """
+        config = self.config
+        resolution = self.resolution
+
+        overflow.configure(resolution, config)
+
+        nus = config.getlist('overflow', 'viscosities', dtype=float)
+        self.nus = nus
 
         self.add_step(
             InitialState(test_case=self))
 
         for index, nu in enumerate(nus):
-            name = f'rpe_test_{index + 1}_nu_{nu}'
+            name = f'rpe_test_{index + 1}_nu_{int(nu)}'
             step = Forward(
                 test_case=self, name=name, subdir=name,
                 ntasks=64, min_tasks=16, openmp_threads=1,
@@ -56,11 +68,4 @@ class RpeTest(TestCase):
 
         self.add_step(
             Analysis(test_case=self, resolution=resolution, nus=nus))
-
-    def configure(self):
-        """
-        Modify the configuration options for this test case.
-        """
-        overflow.configure(self.resolution, self.config)
-
     # no run() is needed because we're doing the default: running all steps
