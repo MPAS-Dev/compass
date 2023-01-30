@@ -53,9 +53,11 @@ class InitialState(Step):
                          logger=logger)
         write_netcdf(dsMesh, 'culled_mesh.nc')
 
-        section = config['solitary_wave'] 
-        maxDepth = section.getfloat('maxDepth')
-        nVertLevels = section.getint('nVertLevels')
+        section = config['vertical_grid'] 
+        maxDepth = section.getfloat('bottom_depth')
+        nVertLevels = section.getint('vert_levels')
+
+        section = config['solitary_wave']
         config_eos_linear_alpha = section.getfloat('eos_linear_alpha')
         config_eos_linear_beta = section.getfloat('eos_linear_beta')
         config_eos_linear_Tref = section.getfloat('eos_linear_Tref')
@@ -69,7 +71,7 @@ class InitialState(Step):
         wavelenght = section.getfloat('wavelenght')
 
         # comment('obtain dimensions and mesh variables')
-        vertical_coordinate = 'uniform'
+        #vertical_coordinate = 'uniform'
 
         ds = dsMesh.copy()
         nCells = ds.nCells.size
@@ -85,12 +87,12 @@ class InitialState(Step):
         edgesOnCell = ds.edgesOnCell
 
         # Adjust coordinates so first edge is at zero in x and y
-        xOffset = xEdge.min()
-        xCell -= xOffset
-        xEdge -= xOffset
-        yOffset = np.min(yEdge)
-        yCell -= yOffset
-        yEdge -= yOffset
+        #xOffset = xEdge.min()
+        #xCell -= xOffset
+        #xEdge -= xOffset
+        #yOffset = np.min(yEdge)
+        #yCell -= yOffset
+        #yEdge -= yOffset
 
         # initialize velocity field
         u = np.zeros([1, nEdges, nVertLevels])
@@ -98,84 +100,113 @@ class InitialState(Step):
         # comment('create and initialize variables')
         time1 = time.time()
 
-        varsZ = ['refLayerThickness', 'refBottomDepth', 'refZMid', 'vertCoordMovementWeights']
-        for var in varsZ:
-            globals()[var] = np.nan * np.ones(nVertLevels)
+        #varsZ = ['refLayerThickness', 'refBottomDepth', 'refZMid', 'vertCoordMovementWeights']
+        #for var in varsZ:
+        #    globals()[var] = np.nan * np.ones(nVertLevels)
 
-        vars2D = ['ssh', 'bottomDepth', 'surfaceStress',
-            'atmosphericPressure', 'boundaryLayerDepth']
-        for var in vars2D:
-            globals()[var] = np.nan * np.ones(nCells)
+        #vars2D = ['ssh', 'bottomDepth', 'surfaceStress',
+        #    'atmosphericPressure', 'boundaryLayerDepth']
+        #for var in vars2D:
+        #    globals()[var] = np.nan * np.ones(nCells)
+        #maxLevelCell = np.ones(nCells, dtype=np.int32)
+
+        #vars3D = ['layerThickness', 'temperature', 'salinity',
+        #     'zMid', 'density']
+        #for var in vars3D:
+        #    globals()[var] = np.nan * np.ones([1, nCells, nVertLevels])
+        #restingThickness = np.nan * np.ones([nCells, nVertLevels])
+
+        refLayerThickness = np.nan * np.ones(nVertLevels)
+        refBottomDepth = np.nan * np.ones(nVertLevels)
+        refZMid = np.nan * np.ones(nVertLevels) 
+
+        ssh = np.nan * np.ones(nCells)
+        bottomDepth = np.nan * np.ones(nCells)
+        surfaceStress = np.nan * np.ones(nCells)
+        atmosphericPressure = np.nan * np.ones(nCells)
+        boundaryLayerDepth = np.nan * np.ones(nCells)
         maxLevelCell = np.ones(nCells, dtype=np.int32)
 
-        vars3D = ['layerThickness', 'temperature', 'salinity',
-             'zMid', 'density']
-        for var in vars3D:
-            globals()[var] = np.nan * np.ones([1, nCells, nVertLevels])
         restingThickness = np.nan * np.ones([nCells, nVertLevels])
+        layerThickness = np.nan * np.ones([nCells, nVertLevels])
+        temperature = np.nan * np.ones([nCells, nVertLevels])
+        salinity = np.nan * np.ones([nCells, nVertLevels])
+        density = np.nan * np.ones([nCells, nVertLevels])
 
         # Note that this line shouldn't be required, but if layerThickness is
         # initialized with nans, the simulation dies. It must multiply by
         # a nan or a land cell on an edge, and then multiply by zero.
-        layerThickness[:] = -1e34
 
         # equally spaced layers
-        refLayerThickness[:] = maxDepth / nVertLevels
-        refBottomDepth[0] = refLayerThickness[0]
-        refZMid[0] = -0.5 * refLayerThickness[0]
-        for k in range(1, nVertLevels):
-            refBottomDepth[k] = refBottomDepth[k - 1] + refLayerThickness[k]
-            refZMid[k] = -refBottomDepth[k - 1] - 0.5 * refLayerThickness[k]
+        #refLayerThickness[:] = maxDepth / nVertLevels
+        #refBottomDepth[0] = refLayerThickness[0]
+        #refZMid[0] = -0.5 * refLayerThickness[0]
+        #for k in range(1, nVertLevels):
+        #    refBottomDepth[k] = refBottomDepth[k - 1] + refLayerThickness[k]
+        #    refZMid[k] = -refBottomDepth[k - 1] - 0.5 * refLayerThickness[k]
 
         # SSH
-        ssh[:] = 0.0
+        #ssh[:] = 0.0
+        ds['bottomDepth'] = maxDepth * xarray.ones_like(xCell)
+        ds['ssh'] = xarray.zeros_like(xCell)
+
+        init_vertical_coord(config, ds)
 
         # Compute maxLevelCell and layerThickness for z-level 
         # (variation only on top)
-        if (vertical_coordinate == 'z'):
-            vertCoordMovementWeights[:] = 0.0
-            vertCoordMovementWeights[0] = 1.0
-            for iCell in range(0, nCells):
-                maxLevelCell[iCell] = nVertLevels - 1
-                bottomDepth[iCell] = refBottomDepth[nVertLevels - 1] 
-                layerThickness[0, iCell, :] = refLayerThickness[:]
-                layerThickness[0, iCell, 0] += ssh[iCell]
-            restingThickness[:, :] = layerThickness[0, :, :]
+        #if (vertical_coordinate == 'z'):
+        #    vertCoordMovementWeights[:] = 0.0
+        #    vertCoordMovementWeights[0] = 1.0
+        #    for iCell in range(0, nCells):
+        #        maxLevelCell[iCell] = nVertLevels - 1
+        #        bottomDepth[iCell] = refBottomDepth[nVertLevels - 1] 
+        #        layerThickness[0, iCell, :] = refLayerThickness[:]
+        #        layerThickness[0, iCell, 0] += ssh[iCell]
+        #    restingThickness[:, :] = layerThickness[0, :, :]
         #Compute maxLevelCell and layerThickness for uniform
-        elif (vertical_coordinate == 'uniform'):
-            vertCoordMovementWeights[:] = 1.0
-            vertCoordMovementWeights[0] = 1.0
-            for iCell in range(0, nCells):
-                maxLevelCell[iCell] = nVertLevels - 1
-                bottomDepth[iCell] = refBottomDepth[nVertLevels - 1]
-                layerThickness[0, iCell, :] = refLayerThickness[:] + \
-                    ssh[iCell]/nVertLevels
-            restingThickness[:, :] = refLayerThickness[:]
+        #elif (vertical_coordinate == 'uniform'):
+        #    vertCoordMovementWeights[:] = 1.0
+        #    vertCoordMovementWeights[0] = 1.0
+        #    for iCell in range(0, nCells):
+        #        maxLevelCell[iCell] = nVertLevels - 1
+        #        bottomDepth[iCell] = refBottomDepth[nVertLevels - 1]
+        #        layerThickness[0, iCell, :] = refLayerThickness[:] + \
+        #            ssh[iCell]/nVertLevels
+        #    restingThickness[:, :] = refLayerThickness[:]
 
         # Compute zMid (same, regardless of vertical coordinate)
-        for iCell in range(0, nCells):
-            k = maxLevelCell[iCell]
-            zMid[0, iCell, k] = -bottomDepth[iCell] + \
-                0.5 * layerThickness[0, iCell, k]
-            for k in range(maxLevelCell[iCell] - 1, -1, -1):
-                zMid[0, iCell, k] = zMid[0, iCell, k + 1] + 0.5 * \
-                    (layerThickness[0, iCell, k + 1] + \
-                    layerThickness[0, iCell, k])
+        #for iCell in range(0, nCells):
+        #    k = maxLevelCell[iCell]
+        #    zMid[0, iCell, k] = -bottomDepth[iCell] + \
+        #        0.5 * layerThickness[0, iCell, k]
+        #    for k in range(maxLevelCell[iCell] - 1, -1, -1):
+        #        zMid[0, iCell, k] = zMid[0, iCell, k + 1] + 0.5 * \
+        #            (layerThickness[0, iCell, k + 1] + \
+        #            layerThickness[0, iCell, k])
 
         # linear equation of state
         # rho = rho0 - alpha*(T-Tref) + beta*(S-Sref)
         # set S=Sref
         # T = Tref - (rho - rhoRef)/alpha
-        for k in range(0, nVertLevels):
-            activeCells = k <= maxLevelCell
-            salinity[0, activeCells, k] = config_eos_linear_Sref 
-            density[0, activeCells, k] = config_eos_linear_densityref - \
-                (0.5*deltaRho)*(np.tanh((2/interfaceThick)*np.arctanh(0.99)*(zMid[0, activeCells, k] + \
-                amplitude*np.exp(-(xCell[activeCells]/wavelenght)*(xCell[activeCells]/wavelenght)) + h1)))
-            # T = Tref - (rho - rhoRef)/alpha
-            temperature[0, activeCells, k] = config_eos_linear_Tref \
-                - (density[0, activeCells, k] - config_eos_linear_densityref) / \
-                config_eos_linear_alpha
+        #for k in range(0, nVertLevels):
+        #    activeCells = k <= maxLevelCell
+        #    salinity[0, activeCells, k] = config_eos_linear_Sref 
+        #    density[0, activeCells, k] = config_eos_linear_densityref - \
+        #        (0.5*deltaRho)*(np.tanh((2/interfaceThick)*np.arctanh(0.99)*(zMid[0, activeCells, k] + \
+        #        amplitude*np.exp(-(xCell[activeCells]/wavelenght)*(xCell[activeCells]/wavelenght)) + h1)))
+        #    # T = Tref - (rho - rhoRef)/alpha
+        #    temperature[0, activeCells, k] = config_eos_linear_Tref \
+        #        - (density[0, activeCells, k] - config_eos_linear_densityref) / \
+        #        config_eos_linear_alpha
+        ds['salinity'] = (config_eos_linear_Sref*xarray.ones_like(ds.zMid)).where(ds.cellMask)
+        ds['density'] = config_eos_linear_densityref - \
+                   (0.5*deltaRho)*(np.tanh((2/interfaceThick)*np.arctanh(0.99)*(ds.zMid + \
+                   amplitude*np.exp(-(ds.xCell/wavelenght)*(ds.xCell/wavelenght)) + h1)))
+        # T = Tref - (rho - rhoRef)/alpha
+        ds['temperature'] =  config_eos_linear_Tref \
+                        - (ds.density - config_eos_linear_densityref) / \
+                        config_eos_linear_alpha
+
 
         # initial velocity on edges
         ds['normalVelocity'] = (('Time', 'nEdges', 'nVertLevels',),
@@ -197,20 +228,36 @@ class InitialState(Step):
         surfaceStress[:] = 0.0
         atmosphericPressure[:] = 0.0
         boundaryLayerDepth[:] = 0.0
-        print('   time: %f' % ((time.time() - time1)))
+        print(f'   time: {time.time() - time1}')
 
         # comment('finalize and write file')
         time1 = time.time()
-        ds['maxLevelCell'] = (['nCells'], maxLevelCell + 1)
-        ds['restingThickness'] = (['nCells', 'nVertLevels'], restingThickness)
-        for var in varsZ:
-            ds[var] = (['nVertLevels'], globals()[var])
-        for var in vars2D:
-            ds[var] = (['nCells'], globals()[var])
-        for var in vars3D:
-            ds[var] = (['Time', 'nCells', 'nVertLevels'], globals()[var])
+        #ds['maxLevelCell'] = (['nCells'], maxLevelCell + 1)
+        #ds['restingThickness'] = (['nCells', 'nVertLevels'], restingThickness)
+        #for var in varsZ:
+        #    ds[var] = (['nVertLevels'], globals()[var])
+        #for var in vars2D:
+        #    ds[var] = (['nCells'], globals()[var])
+        #for var in vars3D:
+        #    ds[var] = (['Time', 'nCells', 'nVertLevels'], globals()[var])
+        #ds['refLayerThickness'] = refLayerThickness
+        #ds['refBottomDepth'] = refBottomDepth
+        #ds['refZMid'] = refZMid
+
+        #ds['ssh'] = ssh
+        #ds['bottomDepth'] = bottomDepth
+        #ds['surfaceStress'] = surfaceStress
+        #ds['atmosphericPressure'] = atmosphericPressure
+        #ds['boundaryLayerDepth'] = boundaryLayerDepth
+
+        #ds['restingThickness'] = restingThickness
+        #ds['layerThickness'] = layerThickness
+        #ds['temperature'] = temperature
+        #ds['salinity'] = salinity
+        #ds['density'] = density 
+
         # If you prefer not to have NaN as the fill value, you should consider
         # using mpas_tools.io.write_netcdf() instead
-        ds.to_netcdf('initial_state.nc', format='NETCDF3_64BIT_OFFSET') 
-        print('   time: %f' % ((time.time() - time1)))
-        print('Total time: %f' % ((time.time() - timeStart)))
+        write_netcdf(ds, 'initial_state.nc')
+        print(f'   time: {time.time() - time1}')
+        print(f'Total time: {time.time() - timeStart}')

@@ -53,9 +53,10 @@ class InitialState(Step):
                          logger=logger)
         write_netcdf(dsMesh, 'culled_mesh.nc')
 
-        section = config['stratified_seiche'] 
+        section = config['vertical_grid']
         maxDepth = section.getfloat('maxDepth')
         nVertLevels = section.getint('nVertLevels')
+        section = config['stratified_seiche']
         config_eos_linear_alpha = section.getfloat('eos_linear_alpha')
         config_eos_linear_beta = section.getfloat('eos_linear_beta')
         config_eos_linear_Tref = section.getfloat('eos_linear_Tref')

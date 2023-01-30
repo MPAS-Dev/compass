@@ -45,6 +45,8 @@ class Visualize(Step):
         nx = section.getint('nx')
         section = config['visualize']
         maxLayerForPlot = section.getint('maxLayerForPlot')
+        L0 = section.getint('L0')
+        a0 = section.getint('a0')
         time = section.getint('plotTime')
 
         for j in range(nGrids):
@@ -54,8 +56,6 @@ class Visualize(Step):
             temp = ncfile.variables['temperature'][time, 0:nx, :]
             xCell = ncfileIC.variables['xCell'][0:nx]
             zMid = ncfile.variables['zMid'][time, 0, :]
-            L0 = 1436
-            a0 = 220
             x = xCell/L0
             z = zMid/a0
             z1 = z[0:maxLayerForPlot]
