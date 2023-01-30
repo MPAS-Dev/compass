@@ -89,9 +89,10 @@ class EnsembleMember(Step):
         # copy in input file so it can be modified
         config = self.config
         section = config['thwaites_uq']
+        input_file_name = 'Thwaites.nc'  # needs to match streams
         input_file_path = section.get('input_file_path')
-        shutil.copy(input_file_path, self.work_dir)
-        input_file_name = input_file_path.split('/')[-1]
+        shutil.copy(input_file_path, os.path.join(self.work_dir,
+                                                  input_file_name))
 
         # modify param values as needed for this ensemble member
 
@@ -137,7 +138,7 @@ class EnsembleMember(Step):
         Eventually we want this function to handle restarts.
         """
 
-        make_graph_file(mesh_filename='/global/project/projectdirs/piscees/MALI_projects/Thwaites_UQ/thwaites_4km_mesh_20221122/input_files/Thwaites.nc',
+        make_graph_file(mesh_filename='Thwaites.nc',
                         graph_filename='graph.info')
         run_model(self)
 
