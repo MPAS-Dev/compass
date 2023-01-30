@@ -65,7 +65,7 @@ class UQEnsemble(TestCase):
 
         # von mises threshold stress
         von_mises_threshold_idx = 1
-        von_mises_threshold_range = [150.0e3, 400.0e3]
+        von_mises_threshold_range = [150.0e3, 350.0e3]
         von_mises_threshold_vec = param_unit_values[:,von_mises_threshold_idx] * \
                 (von_mises_threshold_range[1] - von_mises_threshold_range[0]) + \
                 von_mises_threshold_range[0]
@@ -73,7 +73,7 @@ class UQEnsemble(TestCase):
         # calving speed limit
         # Currently set to a constant value, but likely to be added later
         sec_in_yr = 3600.0 * 24.0 * 365.0
-        calv_spd_lim_vec = 30.0e3 * np.ones((max_samples,)) * sec_in_yr
+        calv_spd_lim_vec = 30.0e3 / sec_in_yr * np.ones((max_samples,))
 
         # add runs as steps based on the run range requested
         if self.end_run > max_samples:
