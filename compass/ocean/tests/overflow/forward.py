@@ -45,7 +45,7 @@ class Forward(Step):
                                'namelist.forward')
         if nu is not None:
             # update the viscosity to the requested value
-            options = {'config_mom_del2': '{}'.format(nu)}
+            options = {'config_mom_del2': f'{nu}'}
             self.add_namelist_options(options)
 
         # make sure output is double precision

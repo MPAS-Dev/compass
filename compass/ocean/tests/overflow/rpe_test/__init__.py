@@ -40,7 +40,7 @@ class RpeTest(TestCase):
             InitialState(test_case=self))
 
         for index, nu in enumerate(nus):
-            name = 'rpe_test_{}_nu_{}'.format(index + 1, nu)
+            name = f'rpe_test_{index + 1}_nu_{nu}'
             step = Forward(
                 test_case=self, name=name, subdir=name,
                 ntasks=64, min_tasks=16, openmp_threads=1,

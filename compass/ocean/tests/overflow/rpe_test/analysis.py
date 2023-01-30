@@ -45,11 +45,11 @@ class Analysis(Step):
 
         for index, nu in enumerate(nus):
             self.add_input_file(
-                filename='output_{}.nc'.format(index+1),
-                target='../rpe_test_{}_nu_{}/output.nc'.format(index+1, nu))
+                filename=f'output_{index+1}.nc',
+                target=f'../rpe_test_{index+1}_nu_{nu}/output.nc')
 
         self.add_output_file(
-            filename='sections_overflow_{}.png'.format(resolution))
+            filename=f'sections_overflow_{resolution}.png')
         self.add_output_file(filename='rpe_t.png')
 
     def run(self):
@@ -90,7 +90,7 @@ def _plot(filename, nus, rpe):
     for i in range(num_files):
         rpe_norm = np.divide((rpe[i, :]-rpe[i, 0]), rpe[i, 0])
         plt.plot(times, rpe_norm,
-                 label="$\\nu_h=${}".format(nus[i]))
+                 label=f"$\\nu_h=${nus[i]}")
     plt.xlabel('Time, days')
     plt.ylabel('RPE-RPE(0)/RPE(0)')
     plt.legend()
@@ -115,12 +115,12 @@ def _plot(filename, nus, rpe):
 
     fig, axs = plt.subplots(num_files, 1, figsize=(
         5.0, 2.1 * num_files), constrained_layout=True)
-    fig.suptitle(f'Temperature, Overflow test case')
+    fig.suptitle('Temperature, Overflow test case')
 
     for iCol in range(num_files):
 
         ax = axs[iCol]
-        ds = xarray.open_dataset('output_{}.nc'.format(iCol + 1))
+        ds = xarray.open_dataset(f'output_{iCol + 1}.nc')
 
         # Get the output times again
         # Don't assume that the output times are the same for all files
