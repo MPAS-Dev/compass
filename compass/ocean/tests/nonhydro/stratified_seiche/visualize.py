@@ -40,8 +40,8 @@ class Visualize(Step):
 
         config = self.config
 
-        section = config['stratified_seiche']
-        nVertLevels = section.getint('nVertLevels')
+        section = config['vertical_grid']
+        nVertLevels = section.getint('vert_levels')
         section = config['visualize']
         time = section.getint('plotTime')
         cell1_midEdge = section.getint('cell1')
