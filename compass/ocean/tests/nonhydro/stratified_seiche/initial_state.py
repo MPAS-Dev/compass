@@ -98,39 +98,6 @@ class InitialState(Step):
         # comment('create and initialize variables')
         time1 = time.time()
 
-        #varsZ = ['refLayerThickness', 'refBottomDepth', 'refZMid',
-        #    'vertCoordMovementWeights']
-        #for var in varsZ:
-        #    globals()[var] = np.nan * np.ones(nVertLevels)
-
-        #vars2D = ['ssh', 'bottomDepth', 'surfaceStress',
-        #    'atmosphericPressure', 'boundaryLayerDepth']
-        #for var in vars2D:
-        #    globals()[var] = np.nan * np.ones(nCells)
-        #maxLevelCell = np.ones(nCells, dtype=np.int32)
-
-        #vars3D = [ 'layerThickness', 'temperature', 'salinity',
-        #    'zMid', 'density']
-        #for var in vars3D:
-        #    globals()[var] = np.nan * np.ones([1, nCells, nVertLevels])
-        #restingThickness = np.nan * np.ones([nCells, nVertLevels])
-
-        # Note that this line shouldn't be required, but if layerThickness is
-        # initialized with nans, the simulation dies. It must multiply by a
-        # a nan on a land cell on an edge, and then multiply by zero.
-        #layerThickness[:] = -1e34
-
-        # equally spaced layers
-        #refLayerThickness[:] = maxDepth / nVertLevels
-        #refBottomDepth[0] = refLayerThickness[0]
-        #refZMid[0] = -0.5 * refLayerThickness[0]
-        #for k in range(1, nVertLevels):
-        #    refBottomDepth[k] = refBottomDepth[k - 1] + refLayerThickness[k]
-        #    refZMid[k] = -refBottomDepth[k - 1] - 0.5 * refLayerThickness[k]
-
-        # SSH
-        #ssh[:] = 0.0
-
         surfaceStress = np.nan * np.ones(nCells)
         atmosphericPressure = np.nan * np.ones(nCells)
         boundaryLayerDepth = np.nan * np.ones(nCells)
@@ -142,38 +109,6 @@ class InitialState(Step):
         ds['ssh'] = xarray.zeros_like(xCell)
 
         init_vertical_coord(config, ds)
-
-        # Compute maxLevelCell and layerThickness for z-level
-        # (variation only on top)
-        #if (vertical_coordinate == 'z'):
-        #    vertCoordMovementWeights[:] = 0.0
-        #    vertCoordMovementWeights[0] = 1.0
-        #    for iCell in range(0, nCells):
-        #        maxLevelCell[iCell] = nVertLevels - 1
-        #        bottomDepth[iCell] = refBottomDepth[nVertLevels - 1] 
-        #        layerThickness[0, iCell, :] = refLayerThickness[:]
-        #        layerThickness[0, iCell, 0] += ssh[iCell]
-        #    restingThickness[:, :] = layerThickness[0, :, :]
-        # Compute maxLevelCell and layerThickness for uniform
-        #elif (vertical_coordinate == 'uniform'):
-        #    vertCoordMovementWeights[:] = 1.0
-        #    vertCoordMovementWeights[0] = 1.0
-        #    for iCell in range(0, nCells):
-        #        maxLevelCell[iCell] = nVertLevels - 1
-        #        bottomDepth[iCell] = refBottomDepth[nVertLevels - 1]
-        #        layerThickness[0, iCell, :] = refLayerThickness[:] + \
-        #            ssh[iCell]/nVertLevels
-        #    restingThickness[:, :] = refLayerThickness[:]
-
-        # Compute zMid (same, regardless of vertical coordinate)
-        #for iCell in range(0, nCells):
-        #    k = maxLevelCell[iCell]
-        #    zMid[0, iCell, k] = -bottomDepth[iCell] + \
-        #        0.5 * layerThickness[0, iCell, k]
-        #    for k in range(maxLevelCell[iCell] - 1, -1, -1):
-        #        zMid[0, iCell, k] = zMid[0, iCell, k + 1] + 0.5 * \
-        #            (layerThickness[0, iCell, k + 1] + \
-        #            layerThickness[0, iCell, k])
 
         # initial salinity, density, temperature
         ds['salinity'] = (config_eos_linear_Sref*xarray.ones_like(ds.zMid)).where(ds.cellMask)

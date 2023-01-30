@@ -53,7 +53,7 @@ class InitialState(Step):
                          logger=logger)
         write_netcdf(dsMesh, 'culled_mesh.nc')
 
-        section = config['vertical_grid'] 
+        section = config['vertical_grid']
         maxDepth = section.getfloat('bottom_depth')
         nVertLevels = section.getint('vert_levels')
 
