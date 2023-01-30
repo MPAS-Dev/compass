@@ -46,7 +46,7 @@ class Analysis(Step):
         for index, nu in enumerate(nus):
             self.add_input_file(
                 filename=f'output_{index+1}.nc',
-                target=f'../rpe_test_{index+1}_nu_{nu}/output.nc')
+                target=f'../rpe_test_{index+1}_nu_{int(nu)}/output.nc')
 
         self.add_output_file(
             filename=f'sections_overflow_{resolution}.png')
@@ -73,7 +73,8 @@ def _plot(filename, nus, rpe):
     nus : list of float
         The viscosity values
 
-    rpe : float, dim len(nu) x len(time)
+    rpe : numpy.ndarray
+        The reference potential energy with size len(nu) x len(time)
     """
 
     plt.switch_backend('Agg')
@@ -135,15 +136,10 @@ def _plot(filename, nus, rpe):
         layer_thickness = ds.layerThickness
         layer_thickness_cell1 = layer_thickness[cell1_index, :]
         layer_thickness_cell2 = layer_thickness[cell2_index, :]
-        layer_thickness_x = layer_thickness_cell2[1:, :]
 
         ssh = ds.ssh
         ssh_cell1 = ssh[cell1_index]
         ssh_cell2 = ssh[cell2_index]
-        ssh_x = ssh_cell2[1:]
-
-        z_index = xarray.DataArray(data=np.arange(n_vert_levels),
-                                   dims='nVertLevels')
 
         z_interface = np.zeros((nEdges_x, n_vert_levels + 1))
         z_interface[:, 0] = 0.5 * (ssh_cell1.values + ssh_cell2.values)
