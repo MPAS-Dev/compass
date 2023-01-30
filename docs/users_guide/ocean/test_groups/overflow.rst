@@ -40,12 +40,14 @@ All 3 test cases share the same set of config options:
     # Options related to the overflow case
     [overflow]
     
-    # the number of grid cells in x and y
-    nx = 4
-    ny = 24
+    # The width of the domain in the across-slope dimension (km)
+    width = 40
     
-    # the size of grid cells (m)
-    dc = 10000.0
+    # The length of the domain in the along-slope dimension (km)
+    length = 200
+
+    # Viscosity values to test for rpe test case
+    viscosities = 1, 5, 10, 100, 1000
 
 default
 -------

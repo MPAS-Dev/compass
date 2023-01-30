@@ -31,8 +31,9 @@ def configure(resolution, config):
     config : compass.config.CompassConfigParser
         Configuration options for this test case
     """
-    width = 40    # km
-    length = 200  # km
+    width = config.getint('overflow', 'width')
+    length = config.getint('overflow', 'length')
+
     dc = float(resolution[:-2])
     nx = int(width/dc)
     ny = int(length/dc)

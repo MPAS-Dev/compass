@@ -56,24 +56,16 @@ class Analysis(Step):
         """
         Run this step of the test case
         """
-        section = self.config['overflow']
-        nx = section.getint('nx')
-        ny = section.getint('ny') - 2
         rpe = compute_rpe()
-        _plot(nx, ny, self.outputs[0], self.nus, rpe)
+        _plot(self.outputs[0], self.nus, rpe)
 
 
-def _plot(nx, ny, filename, nus, rpe):
+def _plot(filename, nus, rpe):
     """
     Plot section of the overflow at different viscosities
 
     Parameters
     ----------
-    nx : int
-        The number of cells in the x direction
-
-    ny : int
-        The number of cells in the y direction (before culling)
 
     filename : str
         The output file name
