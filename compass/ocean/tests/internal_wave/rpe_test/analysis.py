@@ -41,8 +41,8 @@ class Analysis(Step):
 
         for index, nu in enumerate(nus):
             self.add_input_file(
-                filename='output_{}.nc'.format(index+1),
-                target='../rpe_test_{}_nu_{}/output.nc'.format(index+1, nu))
+                filename=f'output_{index+1}.nc',
+                target=f'../rpe_test_{index+1}_nu_{nu:g}/output.nc')
 
         self.add_output_file(
             filename='sections_internal_wave.png')
@@ -52,32 +52,24 @@ class Analysis(Step):
         """
         Run this step of the test case
         """
-        section = self.config['internal_wave']
-        nx = section.getint('nx')
-        ny = section.getint('ny')
         rpe = compute_rpe(num_files=len(self.nus))
-        _plot(nx, ny, self.outputs[0], self.nus, rpe)
+        _plot(self.outputs[0], self.nus, rpe)
 
 
-def _plot(nx, ny, filename, nus, rpe):
+def _plot(filename, nus, rpe):
     """
     Plot section of the internal wave at different viscosities
 
     Parameters
     ----------
-    nx : int
-        The number of cells in the x direction
-
-    ny : int
-        The number of cells in the y direction (before culling)
-
     filename : str
         The output file name
 
     nus : list of float
         The viscosity values
 
-    rpe : float, dim len(nu) x len(time)
+    rpe : numpy.ndarray
+        The reference potential energy with size len(nu) x len(time)
     """
 
     plt.switch_backend('Agg')
@@ -94,7 +86,7 @@ def _plot(nx, ny, filename, nus, rpe):
     for i in range(num_files):
         rpe_norm = np.divide((rpe[i, :]-rpe[i, 0]), rpe[i, 0])
         plt.plot(times, rpe_norm,
-                 label="$\\nu_h=${}".format(nus[i]))
+                 label=f"$\\nu_h=${nus[i]}")
     plt.xlabel('Time, days')
     plt.ylabel('RPE-RPE(0)/RPE(0)')
     plt.legend()
@@ -108,7 +100,7 @@ def _plot(nx, ny, filename, nus, rpe):
         4.0 * nCol, 3.7 * nRow), constrained_layout=True)
 
     for iRow in range(nRow):
-        ds = xarray.open_dataset('output_{}.nc'.format(iRow + 1))
+        ds = xarray.open_dataset(f'output_{iRow + 1}.nc')
         times = ds.daysSinceStartOfSim.values
         times = np.divide(times.tolist(), nanosecondsPerDay)
         var = ds.temperature.values
@@ -128,6 +120,6 @@ def _plot(nx, ny, filename, nus, rpe):
                 ax.set_ylabel('depth, m')
             if iCol == nCol - 1:
                 fig.colorbar(dis, ax=axs[iRow, iCol], aspect=10)
-            ax.set_title("day {}, $\\nu_h=${}".format(time[iCol], nus[iRow]))
+            ax.set_title(f"day {time[iCol]}, $\\nu_h=${nus[iRow]}")
 
     plt.savefig('sections_internal_wave.png')
