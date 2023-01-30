@@ -436,6 +436,10 @@ def _get_basic_config(config_file, machine, mpas_model_path, mpas_core):
         machine = 'default'
     config.add_from_package('compass.machines', f'{machine}.cfg')
 
+    # store name of machine so tests have access to it if needed
+    if machine is not None:
+        config.set('deploy', 'machine', machine)
+
     if 'COMPASS_BRANCH' in os.environ:
         compass_branch = os.environ['COMPASS_BRANCH']
         config.set('paths', 'compass_branch', compass_branch)
