@@ -1,6 +1,4 @@
 import xarray
-import numpy
-import matplotlib.pyplot as plt
 
 from mpas_tools.planar_hex import make_planar_hex_mesh
 from mpas_tools.io import write_netcdf
@@ -21,7 +19,7 @@ class InitialState(Step):
 
         Parameters
         ----------
-        test_case : compass.ocean.tests.overflow.default.Default
+        test_case : compass.testcase.Testcase
             The test case this step belongs to
         """
         super().__init__(test_case=test_case, name='initial_state', ntasks=1,
@@ -56,7 +54,7 @@ class InitialState(Step):
 
         logger.info(' * Make planar hex mesh')
         ds_mesh = make_planar_hex_mesh(nx=nx, ny=ny, dc=dc, nonperiodic_x=True,
-                                      nonperiodic_y=False)
+                                       nonperiodic_y=False)
         logger.info(' * Completed Make planar hex mesh')
         write_netcdf(ds_mesh, 'base_mesh.nc')
 
@@ -64,7 +62,7 @@ class InitialState(Step):
         ds_mesh = cull(ds_mesh, logger=logger)
         logger.info(' * Convert mesh')
         ds_mesh = convert(ds_mesh, graphInfoFileName='culled_graph.info',
-                         logger=logger)
+                          logger=logger)
         logger.info(' * Completed Convert mesh')
         write_netcdf(ds_mesh, 'culled_mesh.nc')
 
