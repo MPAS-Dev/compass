@@ -9,10 +9,10 @@ def compute_rpe(initial_state_file_name='initial_state.nc',
     Computes the reference (resting) potential energy for the whole domain
     Parameters
     ----------
-    initial_state_file_name : string
+    initial_state_file_name : str
         Name of the netCDF file containing the initial state
 
-    output_file_prefix : string
+    output_file_prefix : str
         Prefix for the netCDF file containing output of forward step
 
     num_files : int
@@ -20,7 +20,8 @@ def compute_rpe(initial_state_file_name='initial_state.nc',
 
     Returns
     -------
-    rpe : numpy array of size (num_timesteps) x (num_files)
+    rpe : numpy.ndarray
+          the reference potential energy of size (num_timesteps) x (num_files)
     """
     gravity = 9.80616
 
