@@ -120,6 +120,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#creating-updating-only-the-compass-environment">Creating/updating only the compass environment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#building-mpas-components">Building MPAS components</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#running-compass-from-the-repo">Running compass from the repo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#code-style-for-compass">Code style for compass</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#set-up-a-compass-repository-with-worktrees-for-advanced-users">Set up a compass repository with worktrees: for advanced users</a></li>
 </ul>
 </li>
@@ -563,6 +564,30 @@ compass<span class="w"> </span>run
 (<code class="docutils literal notranslate"><span class="pre">load_dev_compass_&lt;version&gt;_&lt;machine&gt;_&lt;compiler&gt;_&lt;mpi&gt;.sh</span></code>) that you used to set
 up the suite or test case (<code class="docutils literal notranslate"><span class="pre">load_compass_env.sh</span></code> is just a symlink to that
 activation script you sourced before setting up the suite or test case).</p>
+</section>
+<section id="code-style-for-compass">
+<span id="dev-compass-style"></span><h2>Code style for compass<a class="headerlink" href="#code-style-for-compass" title="Permalink to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">compass</span></code> complies with the coding conventions of
+<a class="reference external" href="https://peps.python.org/pep-0008/">PEP8</a>. Rather than memorize all the
+guidelines, the easiest way to stay in compliance as a developer writing new
+code or modifying existing code is to use a PEP8 style checker. One option is
+to use an IDE with a PEP8 style checker built in, such as
+<a class="reference external" href="https://www.jetbrains.com/pycharm/">PyCharm</a>. See
+<a class="reference external" href="https://www.jetbrains.com/help/pycharm/tutorial-code-quality-assistance-tips-and-tricks.html">this tutorial</a>
+for some tips on checking code style in PyCharm.</p>
+<p>Here’s the manual way to check for PEP8 compliance.</p>
+<p><a class="reference external" href="https://flake8.pycqa.org/en/latest/">Flake8</a> is a PEP8 checker that is
+included in the <code class="docutils literal notranslate"><span class="pre">compass</span></code> conda environment. For each of the files you have
+modified, you can run the Flake8 checker to see a list of all instances of
+non-compliance in that file.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">$flake8</span><span class="w"> </span>example.py
+example.py:77:1:<span class="w"> </span>E302<span class="w"> </span>expected<span class="w"> </span><span class="m">2</span><span class="w"> </span>blank<span class="w"> </span>lines,<span class="w"> </span>found<span class="w"> </span><span class="m">1</span>
+</pre></div>
+</div>
+<p>For this example, we would just add an additional blank line after line 77 and
+run the checker again to make sure we’ve resolved the issue.</p>
+<p>Once you open a pull request for your feature, there is an additional PEP8
+style checker at this stage.</p>
 </section>
 <section id="set-up-a-compass-repository-with-worktrees-for-advanced-users">
 <span id="dev-compass-repo-advanced"></span><h2>Set up a compass repository with worktrees: for advanced users<a class="headerlink" href="#set-up-a-compass-repository-with-worktrees-for-advanced-users" title="Permalink to this heading">¶</a></h2>
