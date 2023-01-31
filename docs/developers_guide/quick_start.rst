@@ -439,6 +439,35 @@ The first command will source the same activation script
 up the suite or test case (``load_compass_env.sh`` is just a symlink to that
 activation script you sourced before setting up the suite or test case).
 
+.. _dev_compass_style:
+
+Code style for compass
+----------------------
+
+``compass`` complies with the coding conventions of
+`PEP8 <https://peps.python.org/pep-0008/>`_. Rather than memorize all the
+guidelines, the easiest way to stay in compliance as a developer writing new
+code or modifying existing code is to use a PEP8 style checker. One option is
+to use an IDE with a PEP8 style checker built in, such as
+`PyCharm <https://www.jetbrains.com/pycharm/>`_. Here's the manual way to check
+for PEP8 compliance.
+
+`Flake8 <https://flake8.pycqa.org/en/latest/>`_ is a PEP8 checker that is
+included in the ``compass`` conda environment. For each of the files you have
+modified, you can run the Flake8 checker to see a list of all instances of
+non-compliance in that file.
+
+.. code-block:: bash
+
+    $flake8 example.py
+    example.py:77:1: E302 expected 2 blank lines, found 1
+
+For this example, we would just add an additional blank line after line 77 and
+run the checker again to make sure we've resolved the issue.
+
+Once you open a pull request for your feature, there is an additional PEP8
+style checker at this stage.
+
 .. _dev_compass_repo_advanced:
 
 Set up a compass repository with worktrees: for advanced users
