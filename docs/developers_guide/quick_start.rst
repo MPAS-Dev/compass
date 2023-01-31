@@ -449,8 +449,12 @@ Code style for compass
 guidelines, the easiest way to stay in compliance as a developer writing new
 code or modifying existing code is to use a PEP8 style checker. One option is
 to use an IDE with a PEP8 style checker built in, such as
-`PyCharm <https://www.jetbrains.com/pycharm/>`_. Here's the manual way to check
-for PEP8 compliance.
+`PyCharm <https://www.jetbrains.com/pycharm/>`_. See 
+`this tutorial <https://www.jetbrains.com/help/pycharm/tutorial-code-quality-assistance-tips-and-tricks.html>`_
+for some tips on checking code style in PyCharm.
+
+
+Here's the manual way to check for PEP8 compliance.
 
 `Flake8 <https://flake8.pycqa.org/en/latest/>`_ is a PEP8 checker that is
 included in the ``compass`` conda environment. For each of the files you have
