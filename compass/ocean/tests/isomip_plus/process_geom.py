@@ -75,10 +75,12 @@ class ProcessGeom(Step):
                   'lowerSurface': 'Z_ice_draft',
                   'bedrockTopography': 'Z_bed',
                   'floatingMask': 'landIceFloatingFraction',
-                  'groundedMask': 'landFraction',
+                  'groundedMask': 'landIceGroundedFraction',
                   'openOceanMask': 'openOceanFraction'}
 
         ds_in = ds_in.rename(rename)
+        # This test case assumes that all land is ice covered
+        ds_in['landFraction'] = ds_in.landIceGroundedFraction
 
         x_in = ds_in.x.values
         y_in = ds_in.y.values
@@ -100,6 +102,7 @@ class ProcessGeom(Step):
                        'Z_ice_draft': 0.,
                        'Z_bed': 0.,
                        'landIceFloatingFraction': 0.,
+                       'landIceGroundedFraction': 1.,
                        'landFraction': 1.,
                        'openOceanFraction': 0.}
 
@@ -118,7 +121,6 @@ class ProcessGeom(Step):
 
         for var in ['Z_ice_surface', 'Z_ice_draft', 'landIceFloatingFraction']:
             ds[var] = xr.where(mask, ds[var], 0.0)
-        landIceFraction = ds.landFraction + ds.landIceFloatingFraction
         ds['openOceanFraction'] = xr.where(mask, ds.openOceanFraction,
                                            1. - ds.landFraction)
 
@@ -132,8 +134,8 @@ class ProcessGeom(Step):
 
         # copy attributes
         for var in ['x', 'y', 'Z_ice_surface', 'Z_ice_draft', 'Z_bed',
-                    'landIceFloatingFraction', 'landFraction',
-                    'openOceanFraction']:
+                    'landIceFloatingFraction', 'landIceGroundedFraction',
+                    'landFraction', 'openOceanFraction']:
             attrs = ds_in[var].attrs
             if 'units' in attrs and attrs['units'] == 'unitless':
                 attrs.pop('units')

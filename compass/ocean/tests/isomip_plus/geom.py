@@ -3,56 +3,8 @@ import xarray
 from mpas_tools.mesh.interpolation import interp_bilin
 
 
-def define_thin_film_mask_step1(ds_mesh, ds_geom, min_ocean_fraction):
-    """
-    Define an MPAS mesh mask for the ocean domain including cells over the
-    full x- and y-range in order to include all land cells in the ocean's
-    thin-film region.
-
-    Parameters
-    ----------
-    ds_mesh : xarray.Dataset
-        An MPAS-Ocean mesh
-
-    ds_geom : xarray.Dataset
-        Ice-sheet topography produced by
-        :py:class:`compass.ocean.tests.isomip_plus.process_geom.ProcessGeom`
-
-    Returns
-    -------
-    ds_mask : xarray.Dataset
-        A dataset containing ``regionCellMasks``, a field with the ocean mask
-        that can be used to cull land cells from the mesh
-    """
-    x, y, x_cell, y_cell, ocean_fraction = _get_geom_fields(ds_geom, ds_mesh)
-
-    ds_mask = xarray.Dataset()
-
-    valid = numpy.logical_and(
-        numpy.logical_and(x_cell >= x[0], x_cell <= x[-1]),
-        numpy.logical_and(y_cell >= y[0], y_cell <= y[-1]))
-
-    x_cell = x_cell[valid]
-    y_cell = y_cell[valid]
-    ocean_frac_observed = numpy.zeros(ds_mesh.sizes['nCells'])
-    ocean_frac_observed[valid] = interp_bilin(x, y, ocean_fraction.values,
-                                              x_cell, y_cell)
-    land_fraction = numpy.zeros(ds_mesh.sizes['nCells'])
-    land_fraction[valid] = interp_bilin(x, y, ds_geom.landFraction.values,
-                                        x_cell, y_cell)
-
-    mask = numpy.logical_or(ocean_frac_observed > min_ocean_fraction,
-                            land_fraction > 0)
-
-    n_cells = mask.shape[0]
-
-    ds_mask['regionCellMasks'] = (('nCells', 'nRegions'),
-                                  mask.astype(int).reshape(n_cells, 1))
-
-    return ds_mask
-
-
-def interpolate_ocean_mask(ds_mesh, ds_geom, min_ocean_fraction):
+def interpolate_ocean_mask(ds_mesh, ds_geom, min_ocean_fraction,
+                           thin_film_present):
     """
     Interpolate the ocean mask from the original BISICLES grid to the MPAS
     mesh.  This is handled separately from other fields because the ocean mask
@@ -72,13 +24,17 @@ def interpolate_ocean_mask(ds_mesh, ds_geom, min_ocean_fraction):
         The minimum ocean fraction after interpolation, below which the cell
         is masked as land (which is not distinguished from grounded ice)
 
+    thin_film_present: bool
+        Whether domain contains a thin film below grounded ice
+
     Returns
     -------
     ds_mask : xarray.Dataset
         A dataset containing ``regionCellMasks``, a field with the ocean mask
         that can be used to cull land cells from the mesh
     """
-    x, y, x_cell, y_cell, ocean_fraction = _get_geom_fields(ds_geom, ds_mesh)
+    x, y, x_cell, y_cell, ocean_fraction = _get_geom_fields(
+        ds_geom, ds_mesh, thin_film_present)
 
     ds_mask = xarray.Dataset()
 
@@ -137,35 +93,33 @@ def interpolate_geom(ds_mesh, ds_geom, min_ocean_fraction, thin_film_present):
         * ``landIceFraction`` -- the fraction of the mesh cell that is covered
           by land ice, grounded or floating
 
-        * ``landIceFloatingFraction`` -- the fraction of the mesh cell that is covered
-          by an ice shelf
+        * ``landIceFloatingFraction`` -- the fraction of the mesh cell that is
+          covered by an ice shelf
 
         * ``smoothedDraftMask`` -- a smoothed version of the floating mask that
           may be useful for determining where to alter the vertical coordinate
           to accommodate ice-shelf cavities
     """
-    x, y, x_cell, y_cell, ocean_fraction = _get_geom_fields(ds_geom, ds_mesh)
+    x, y, x_cell, y_cell, ocean_fraction = _get_geom_fields(
+        ds_geom, ds_mesh, thin_film_present)
 
     ds_out = xarray.Dataset(ds_mesh)
     ds_out.attrs = ds_mesh.attrs
 
     ds_geom['oceanFraction'] = ocean_fraction
-    ds_geom['landIceFraction'] = ds_geom['landIceFloatingFraction']
+    ds_geom['landIceFraction'] = (ds_geom.landIceFloatingFraction +
+                                  ds_geom.landIceGroundedFraction)
 
-    # mash the topography to the ocean region before interpolation
-    if not thin_film_present:
-        for var in ['Z_bed', 'Z_ice_draft', 'landIceFraction',
-                    'smoothedDraftMask']:
-            ds_geom[var] = ds_geom[var] * ds_geom['oceanFraction']
-    ds_geom['landIceFloatingFraction'] = ds_geom['landIceFloatingFraction'] * ds_geom['oceanFraction']
-    if thin_film_present:
-        ds_geom['landIceFraction'] = ds_geom['landIceFloatingFraction'] + ds_geom['landFraction']
+    # mask the topography to the ocean region before interpolation
+    for var in ['Z_bed', 'Z_ice_draft', 'landIceFraction',
+                'landIceFloatingFraction', 'smoothedDraftMask']:
+        ds_geom[var] = ds_geom[var] * ds_geom['oceanFraction']
 
     fields = {'bottomDepthObserved': 'Z_bed',
               'ssh': 'Z_ice_draft',
               'oceanFracObserved': 'oceanFraction',
               'landIceFraction': 'landIceFraction',
-              'landIceGroundedFraction': 'landFraction',
+              'landIceGroundedFraction': 'landIceGroundedFraction',
               'landIceFloatingFraction': 'landIceFloatingFraction',
               'smoothedDraftMask': 'smoothedDraftMask'}
 
@@ -173,7 +127,7 @@ def interpolate_geom(ds_mesh, ds_geom, min_ocean_fraction, thin_film_present):
         numpy.logical_and(x_cell >= x[0], x_cell <= x[-1]),
         numpy.logical_and(y_cell >= y[0], y_cell <= y[-1]))
 
-    if not numpy.all(valid) and not thin_film_present:
+    if not numpy.all(valid):
         raise ValueError('Something went wrong with culling.  There are still '
                          'out-of-range cells in the culled mesh.')
 
@@ -181,35 +135,30 @@ def interpolate_geom(ds_mesh, ds_geom, min_ocean_fraction, thin_film_present):
         field = interp_bilin(x, y, ds_geom[infield].values, x_cell, y_cell)
         ds_out[outfield] = (('nCells',), field)
 
-    if thin_film_present:
-        # Correct values at the boundary
-        boundary_mask = ds_out.xCell >= 800e3
-        ds_out['landIceFraction'] = xarray.where(boundary_mask, 0, ds_out.landIceFraction)
-        ds_out['landIceGroundedFraction'] = xarray.where(boundary_mask, 0, ds_out.landIceGroundedFraction)
-        ds_out['oceanFracObserved'] = xarray.where(boundary_mask, 1, ds_out.oceanFracObserved)
-
     ocean_frac_observed = ds_out['oceanFracObserved']
-    if not numpy.all(ocean_frac_observed > min_ocean_fraction) and \
-            not thin_film_present:
+    if not numpy.all(ocean_frac_observed > min_ocean_fraction):
         raise ValueError('Something went wrong with culling.  There are still '
                          'non-ocean cells in the culled mesh.')
 
-    if not thin_film_present:
-        # Do not include landIceFloatingFraction here so that fractional melt
-        # fluxes are represented
-        for field in ['bottomDepthObserved', 'ssh', 'landIceFraction',
-                      'smoothedDraftMask']:
-            ds_out[field] = ds_out[field] / ocean_frac_observed
+    # Do not include landIceFloatingFraction here so that fractional melt
+    # fluxes are represented
+    for field in ['bottomDepthObserved', 'ssh', 'landIceFraction',
+                  'smoothedDraftMask']:
+        ds_out[field] = ds_out[field]/ocean_frac_observed
 
     return ds_out
 
 
-def _get_geom_fields(ds_geom, ds_mesh):
+def _get_geom_fields(ds_geom, ds_mesh, thin_film_present):
     x = ds_geom.x.values
     y = ds_geom.y.values
     x_cell = ds_mesh.xIsomipCell.values
     y_cell = ds_mesh.yIsomipCell.values
 
-    ocean_fraction = - ds_geom['landFraction'] + 1.0
+    if thin_film_present:
+        ocean_fraction = - ds_geom['landFraction'] + 1.0
+    else:
+        ocean_fraction = (ds_geom['landIceFloatingFraction'] +
+                          ds_geom['openOceanFraction'])
 
     return x, y, x_cell, y_cell, ocean_fraction
