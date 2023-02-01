@@ -57,7 +57,7 @@ The test group uses the following default config options:
     use_mu = False
 
     # option to make the grounded area 7 cells instead of 1
-    use_7cells = False
+    use_7cells = True
 
     # config options related to visualization for circular_shelf test cases
     [circular_shelf_viz]
