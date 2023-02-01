@@ -1,9 +1,8 @@
-import xarray
-import numpy
+import xarray as xr
+import numpy as np
 import matplotlib.pyplot as plt
 
 from compass.step import Step
-import cmocean
 
 
 class Viz(Step):
@@ -23,9 +22,9 @@ class Viz(Step):
 
         self.add_input_file(filename='output.nc',
                             target='../forward/output.nc')
+        self.add_input_file(filename='mesh.nc',
+                            target='../initial_state/culled_mesh.nc')
 
-        if resolution == '1m':
-            suffix = 'g128_l128'
 
         if do_comparison:
             if forcing == 'cooling':
@@ -33,13 +32,12 @@ class Viz(Step):
             elif forcing == 'evaporation':
                 forcing_name = 'e04'
             else:
-                #TODO change to log
-                print('Comparison simulation not available for this configuration')
                 do_comparison = False
 
         if do_comparison:
+            # Compare all cases with 1m resolution PALM output
+            suffix = 'g128_l128'
             filename = f'case_{forcing_name}_{suffix}.nc'
-            print(f'Compare to {filename}')
             self.add_input_file(filename='palm.nc', target=filename,
                                 database='turbulence_closure')
 
@@ -50,202 +48,151 @@ class Viz(Step):
         Run this step of the test case
         """
 
-        ds = xarray.open_dataset('output.nc')
-        ds = ds.sortby('yEdge')
-
-        if self.do_comparison:
-            dsPalm = xarray.open_dataset('palm.nc')
-        dsInit = xarray.open_dataset('../forward/init.nc')
-        ds0 = ds.isel(Time=0)
         figsize = [6.4, 4.8]
-        markersize = 20
+        markersize = 5
+
+        dsInit = xr.open_dataset('../forward/init.nc')
+        ds = xr.open_dataset('output.nc')
+        if self.do_comparison:
+            ds_palm = xr.open_dataset('palm.nc')
+
         if 'Time' not in ds.dims:
             print('Dataset missing time dimension')
             return
-        nSteps = ds.sizes['Time']  # number of timesteps
-        tend = nSteps - 1
 
-        nCells = dsInit.sizes['nCells']
-        nEdges = dsInit.sizes['nEdges']
-        nVertLevels = dsInit.sizes['nVertLevels']
+        nt = ds.sizes['Time']  # number of timesteps
+        tidx = nt - 1
+        seconds_per_day = 24.0 * 3600.0
+        if 'daysSinceStartOfSim' in ds.keys():
+            time = ds.daysSinceStartOfSim
+        else:
+            # This routine is not generic but should not be used as
+            # daysSinceStartOfSim is included in the streams file
+            time0 = 2.0 + (7.0/24.0)
+            dt = 0.5/24.0
+            time = np.linspace(time0 + dt, time0 + nt*dt, num=nt)
 
+        if self.do_comparison:
+            time_palm = ds_palm.time
+            time_palm_day = (time_palm.astype('float64') /
+                             (seconds_per_day * 1e9))
+            tidx_palm = np.argmin(np.abs(np.subtract(
+                time_palm_day.values, time[tidx])))
+
+        ds = ds.isel(Time=tidx)
+        ds_palm = ds_palm.isel(time=tidx_palm)
+
+        if 'yEdge' not in ds.keys():
+            ds['yEdge'] = dsInit.yEdge
+        ds = ds.sortby('yEdge')
+
+        # Get mesh variables
         xEdge = dsInit.xEdge
         yEdge = dsInit.yEdge
         xCell = dsInit.xCell
         yCell = dsInit.yCell
-
-        xEdge_mid = numpy.median(xEdge)
-        edgeMask_x = numpy.equal(xEdge, xEdge_mid)
-
-        # Solve for lateral boundaries of uNormal at cell centers for
-        # x-section
-        cellsOnEdge = dsInit.cellsOnEdge
-        cellsOnEdge_x = cellsOnEdge[edgeMask_x, :]
-        yEdges = numpy.zeros((len(cellsOnEdge_x)+1))
-        for i in range(len(cellsOnEdge_x)):
-            if cellsOnEdge[i, 1] == 0:
-                yEdges[i] = yCell[cellsOnEdge_x[i, 0] - 1]
-                yEdges[i+1] = yCell[cellsOnEdge_x[i, 0] - 1]
-            elif cellsOnEdge[i, 1] == 0:
-                yEdges[i] = yCell[cellsOnEdge_x[i, 1] - 1]
-                yEdges[i+1] = yCell[cellsOnEdge_x[i, 1] - 1]
-            else:
-                yEdges[i] = min(yCell[cellsOnEdge_x[i, 0] - 1],
-                                yCell[cellsOnEdge_x[i, 1] - 1])
-                yEdges[i+1] = max(yCell[cellsOnEdge_x[i, 0] - 1],
-                                  yCell[cellsOnEdge_x[i, 1] - 1])
-
-        # Prep variables for cell quantities
-        cellIndex = numpy.subtract(cellsOnEdge_x[1:, 0], 1)
-        yEdge_x = yEdge[edgeMask_x]
-
-        # prep all variables for uNormal plot
-        zInterface = dsInit.refInterfaces
         zMid = dsInit.refZMid
 
-        zInterfaces_edge_mesh, yEdges_mesh = numpy.meshgrid(zInterface,
-                                                       yEdges)
-        zInterfaces_cell_mesh, yCells_mesh = numpy.meshgrid(zInterface,
-                                                       yEdge_x)
-        temperature0 = ds0.temperature
-        temperature0_z = temperature0.mean(dim='nCells')
+        # Import cell quantities
+        temperature = ds.temperature
+        temperature_z = temperature.mean(dim='nCells')
+        salinity = ds.salinity
+        salinity_z = salinity.mean(dim='nCells')
+        w = ds.verticalVelocity
+        w_zTop = w[:, 0]
 
-        for j in [tend]:
-            ds1 = ds.isel(Time=j)
+        velocityZonal = ds.velocityZonal
+        velocityZonal_z = velocityZonal.mean(dim='nCells')
+        velocityMeridional = ds.velocityMeridional
+        velocityMeridional_z = velocityMeridional.mean(dim='nCells')
+        buoyancyProduction = ds.buoyancyProduction
+        buoyancyProduction_z = buoyancyProduction.mean(dim='nCells')
+        wpt = ds.temperatureVerticalAdvectionTendency
+        wpt_z = wpt.mean(dim='nCells')
 
-            normalVelocity = ds1.normalVelocity
-            normalVelocity_xmesh = normalVelocity[edgeMask_x, :]
+        if self.do_comparison:
+            alpha_T = ds_palm.alpha_T
+            if 'beta_S' in ds_palm.keys():
+                beta_S = ds_palm.beta_S
+            else:
+                beta_S = 7.8e-4
+            pt_palm = ds_palm.pt - 273.15
+            sa_palm = ds_palm.sa
+            u_palm = ds_palm.u
+            v_palm = ds_palm.v
+            wpt_palm = np.add(ds_palm['w*pt*'].values, ds_palm['w"pt"'].values)
+            wsa_palm = np.add(ds_palm['w*sa*'].values, ds_palm['w"sa"'].values)
+            temp1 = np.multiply(alpha_T, wpt_palm)
+            temp2 = np.multiply(beta_S, wsa_palm)
+            buoyancyProduction_palm = np.multiply(9.81,
+                                                  np.subtract(temp1, temp2))
+            zu_palm = ds_palm.zu
+            z_palm = ds_palm.zprho
 
-            velocityZonal = ds1.velocityZonal
-            velocityZonal_z = velocityZonal.mean(dim='nCells')
-            velocityMeridional = ds1.velocityMeridional
-            velocityMeridional_z = velocityMeridional.mean(dim='nCells')
+        # Figures
 
-            # Import cell quantities
-            layerThickness = ds1.layerThickness
-            layerThickness_x = layerThickness[cellIndex, :]
-            temperature = ds1.temperature
-            temperature_z = temperature.mean(dim='nCells')
-            temperature_x = temperature[cellIndex, :]
-            salinity = ds1.salinity
-            salinity_z = salinity.mean(dim='nCells')
-            salinity_x = salinity[cellIndex, :]
-            w = ds1.vertVelocityTop
-            w_x = w[cellIndex, :]
-            w_zTop = w[:, 0]
+        plt.figure(figsize=figsize, dpi=100)
+        plt.plot(temperature_z.values, zMid, 'k-')
+        if self.do_comparison:
+            plt.plot(pt_palm.values, z_palm.values, 'b-')
+        plt.xlabel('PT (C)')
+        plt.ylabel('z (m)')
+        plt.savefig(f'pt_depth_t{int(time[tidx]*24.0)}h.png',
+                    bbox_inches='tight', dpi=200)
+        plt.close()
 
-            # Figures
-            plt.figure(figsize=figsize, dpi=100)
-            cmax = numpy.max(numpy.abs(normalVelocity_xmesh.values))
-            plt.pcolormesh(numpy.divide(yEdges_mesh, 1e3),
-                           zInterfaces_edge_mesh,
-                           normalVelocity_xmesh.values,
-                           cmap='cmo.balance', vmin=-1.*cmax, vmax=cmax)
-            cbar = plt.colorbar()
-            cbar.ax.set_title('uNormal (m/s)')
-            plt.savefig('uNormal_depth_section_t{}.png'.format(j),
-                        bbox_inches='tight', dpi=200)
-            plt.close()
+        plt.figure(figsize=figsize, dpi=100)
+        plt.plot(wpt_z, zMid, 'k-')
+        if self.do_comparison:
+            plt.plot(wpt_palm, z_palm.values, 'b-')
+        plt.xlabel('wpt (C m/s)')
+        plt.ylabel('z (m)')
+        plt.savefig(f'wpt_depth_t{int(time[tidx]*24.0)}h.png',
+                    bbox_inches='tight', dpi=200)
+        plt.close()
 
-            # ------------------------------------------------------------------
-            # Plot cell-centered variables
-            # ------------------------------------------------------------------
-            # Figures
-            plt.figure(figsize=figsize, dpi=100)
-            plt.plot(temperature_z.values, zMid)
-            plt.xlabel('PT (C)')
-            plt.ylabel('z (m)')
-            plt.savefig('pt_depth_t{}.png'.format(j),
-                        bbox_inches='tight', dpi=200)
-            plt.close()
+        plt.figure(figsize=figsize, dpi=100)
+        plt.plot(buoyancyProduction_z, zMid, 'k-')
+        if self.do_comparison:
+            plt.plot(buoyancyProduction_palm, z_palm.values, 'b-')
+        plt.xlabel('bouyancy production')
+        plt.ylabel('z (m)')
+        plt.savefig(f'buoy_depth_t{int(time[tidx]*24.0)}h.png',
+                    bbox_inches='tight', dpi=200)
+        plt.close()
 
-            plt.figure(figsize=figsize, dpi=100)
-            plt.pcolormesh(numpy.divide(yCells_mesh, 1e3),
-                           zInterfaces_cell_mesh,
-                           temperature_x.values, cmap='cmo.thermal')
-            plt.xlabel('y (km)')
-            plt.ylabel('z (m)')
-            cbar = plt.colorbar()
-            cbar.ax.set_title('PT (C)')
-            plt.savefig('pt_depth_section_t{}.png'.format(j),
-                        bbox_inches='tight', dpi=200)
-            plt.close()
+        plt.figure(figsize=figsize, dpi=100)
+        plt.plot(salinity_z.values, zMid, 'k-')
+        if self.do_comparison:
+            plt.plot(sa_palm.values, z_palm.values, 'b-')
+        plt.xlabel('SA (g/kg)')
+        plt.ylabel('z (m)')
+        plt.savefig(f'sa_depth_t{int(time[tidx]*24.0)}h.png',
+                    bbox_inches='tight', dpi=200)
+        plt.close()
 
-            plt.figure(figsize=figsize, dpi=100)
-            plt.plot(numpy.subtract(temperature_z.values,
-                                    temperature0_z.values),
-                     zMid)
-            plt.xlabel('delta PT (C)')
-            plt.ylabel('z (m)')
-            plt.savefig('dpt_depth_t{}.png'.format(j),
-                        bbox_inches='tight', dpi=200)
-            plt.close()
+        plt.figure(figsize=figsize, dpi=100)
+        plt.plot(velocityZonal_z.values, zMid, 'k-')
+        plt.plot(velocityMeridional_z.values, zMid, 'k--')
+        if self.do_comparison:
+            plt.plot(u_palm.values, zu_palm.values, 'b-')
+            plt.plot(v_palm.values, zu_palm.values, 'b--')
+        plt.xlabel('u,v (m/s)')
+        plt.ylabel('z (m)')
+        plt.savefig(f'uv_depth_t{int(time[tidx]*24.0)}h.png',
+                    bbox_inches='tight', dpi=200)
+        plt.close()
 
-            plt.figure(figsize=figsize, dpi=100)
-            plt.plot(salinity_z.values, zMid)
-            plt.xlabel('SA (g/kg)')
-            plt.ylabel('z (m)')
-            plt.savefig('sa_depth_t{}.png'.format(j),
-                        bbox_inches='tight', dpi=200)
-            plt.close()
-
-            plt.figure(figsize=figsize, dpi=100)
-            plt.pcolormesh(numpy.divide(yCells_mesh, 1e3),
-                           zInterfaces_cell_mesh,
-                           salinity_x.values, cmap='cmo.haline')
-            plt.xlabel('y (km)')
-            plt.ylabel('z (m)')
-            cbar = plt.colorbar()
-            cbar.ax.set_title('SA (g/kg)')
-            plt.savefig('sa_depth_section_t{}.png'.format(j),
-                        bbox_inches='tight', dpi=200)
-            plt.close()
-
-            plt.figure(figsize=figsize, dpi=100)
-            plt.plot(velocityZonal_z.values, zMid)
-            plt.plot(velocityMeridional_z.values, zMid, '--')
-            plt.xlabel('u,v (m/s)')
-            plt.ylabel('z (m)')
-            plt.savefig('uv_depth_t{}.png'.format(j),
-                        bbox_inches='tight', dpi=200)
-            plt.close()
-
-            plt.figure(figsize=figsize, dpi=100)
-            cmax = numpy.max(numpy.abs(w_x.values))
-            plt.pcolormesh(numpy.divide(yCells_mesh[:-1,:], 1e3),
-                           zInterfaces_cell_mesh[:-1,:],
-                           w_x.values, cmap='cmo.balance',
-                           vmin=-1.*cmax, vmax=cmax)
-            plt.xlabel('y (km)')
-            plt.ylabel('z (m)')
-            cbar = plt.colorbar()
-            cbar.ax.set_title('w (m/s)')
-            plt.savefig('w_depth_section_t{}.png'.format(j),
-                        bbox_inches='tight', dpi=200)
-            plt.close()
-
-            plt.figure(figsize=figsize, dpi=100)
-            cmax = numpy.max(numpy.abs(w_zTop.values))
-            plt.scatter(numpy.divide(xCell, 1e3),
-                        numpy.divide(yCell, 1e3),
-                        s=5, c=w_zTop.values,
-                        cmap='cmo.balance', vmin=-1.*cmax, vmax=cmax)
-            plt.xlabel('x (km)')
-            plt.ylabel('y (km)')
-            cbar = plt.colorbar()
-            cbar.ax.set_title('w (m/s)')
-            plt.savefig('w_top_section_t{}.png'.format(j),
-                        bbox_inches='tight', dpi=200)
-            plt.close()
-
-            plt.figure(figsize=figsize, dpi=100)
-            plt.pcolormesh(numpy.divide(yCells_mesh, 1e3),
-                           zInterfaces_cell_mesh,
-                           layerThickness_x.values, cmap='viridis')
-            plt.xlabel('y (km)')
-            plt.ylabel('z (m)')
-            cbar = plt.colorbar()
-            cbar.ax.set_title('h (m)')
-            plt.savefig('layerThickness_depth_section_t{}.png'.format(j),
-                        bbox_inches='tight', dpi=200)
-            plt.close()
+        plt.figure(figsize=figsize, dpi=100)
+        cmax = np.max(np.abs(w_zTop.values))
+        plt.scatter(np.divide(xCell, 1e3),
+                    np.divide(yCell, 1e3),
+                    s=markersize, c=w_zTop.values,
+                    cmap='cmo.balance', vmin=-1.*cmax, vmax=cmax)
+        plt.xlabel('x (km)')
+        plt.ylabel('y (km)')
+        cbar = plt.colorbar()
+        cbar.ax.set_title('w (m/s)')
+        plt.savefig(f'w_top_section_t{int(time[tidx]*24.0)}h.png',
+                    bbox_inches='tight', dpi=200)
+        plt.close()
