@@ -1,0 +1,30 @@
+<streams>
+
+<immutable_stream name="mesh"
+                  filename_template="init.nc"/>
+
+<immutable_stream name="input"
+                  filename_template="init.nc"/>
+
+<immutable_stream name="restart"/>
+
+<stream name="output"
+        type="output"
+        filename_template="output.nc"
+        output_interval="0000_01:30:00"
+        clobber_mode="truncate">
+
+    <var_struct name="tracers"/>
+    <var name="xtime"/>
+    <var name="normalVelocity"/>
+    <var name="layerThickness"/>
+    <var name="pressure"/>
+    <var name="density"/>
+    <var name="nonhydrostaticPressure"/>
+    <var name="vertVelocityNonhydro"/>
+    <var name="zMid"/>
+    <var name="vertAleTransportTop"/>
+    <var name="vertVelocityTop"/>
+</stream>
+
+</streams>
