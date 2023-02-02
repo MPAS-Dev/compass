@@ -15,12 +15,12 @@ class TurbulenceClosure(TestGroup):
         """
         super().__init__(mpas_core=mpas_core, name='turbulence_closure')
 
-        for resolution in ['10km']:
+        for resolution in [1e4]:
             self.add_test_case(
                 DecompTest(test_group=self, resolution=resolution))
             self.add_test_case(
                 RestartTest(test_group=self, resolution=resolution))
-        for resolution in ['1m', '2m', '10km']:
+        for resolution in [1, 2, 1e4]:
             for forcing in ['cooling', 'evaporation']:
                 self.add_test_case(
                     Default(test_group=self, resolution=resolution, forcing=forcing))
@@ -32,38 +32,41 @@ def configure(resolution, forcing, config):
 
     Parameters
     ----------
-    resolution : str
-        The resolution of the test case
+    resolution : float
+        The resolution of the test case in meters
 
     config : configparser.ConfigParser
         Configuration options for this test case
     """
-    res_params = {'10km': {'nx': 16,
-                           'ny': 50,
-                           'dc': 10e3},
-                  '2m': {'nx': 150,
-                         'ny': 150,
-                         'dc': 2},
-                  '1m': {'nx': 128,
-                         'ny': 128,
-                         'dc': 1}}
-    vert_params = {'10km': {'vert_levels': 20,
-                            'bottom_depth': 1e3},
-                   '2m': {'vert_levels': 50,
-                          'bottom_depth': 100.0},
-                   '1m': {'vert_levels': 128,
-                          'bottom_depth': 128.0}}
+    # The resolution parameters are different for different resolutions
+    # to match existing simulations
+    if resolution > 1e3:
+        nx = 16
+        ny = 50
+        vert_levels = 20
+        bottom_depth = 1e3
+    elif resolution <= 1e3 and resolution > 5:
+        nx = 50
+        ny = 50
+        vert_levels = 50
+        bottom_depth = 100.0
+    elif resolution <= 5 and resolution > 1:
+        nx = 150
+        ny = 150
+        vert_levels = 50
+        bottom_depth = 100.0
+    elif resolution <= 1:
+        nx = 128
+        ny = 128
+        vert_levels = 128
+        bottom_depth = 128.0
 
-    if resolution not in res_params:
-        raise ValueError(f'Unsupported resolution {resolution}. '
-                         f'Supported values are: {list(res_params)}')
 
-    res_params = res_params[resolution]
-    for param in res_params:
-        config.set('turbulence_closure', param, f'{res_params[param]}')
-    vert_params = vert_params[resolution]
-    for param in vert_params:
-        config.set('vertical_grid', param, f'{vert_params[param]}')
+    config.set('turbulence_closure', 'nx', f'{nx}')
+    config.set('turbulence_closure', 'ny', f'{ny}')
+    config.set('turbulence_closure', 'dc', f'{resolution}')
+    config.set('vertical_grid', 'vert_levels', f'{vert_levels}')
+    config.set('vertical_grid', 'bottom_depth', f'{bottom_depth}')
 
     if forcing == 'cooling':
         config.set('turbulence_closure', 'surface_heat_flux', '-100')

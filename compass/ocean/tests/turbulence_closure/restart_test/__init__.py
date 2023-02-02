@@ -13,8 +13,8 @@ class RestartTest(TestCase):
 
     Attributes
     ----------
-    resolution : str
-        The resolution of the test case
+    resolution : float
+        The resolution of the test case in meters
     """
 
     def __init__(self, test_group, resolution, forcing='cooling'):
@@ -26,12 +26,16 @@ class RestartTest(TestCase):
         test_group : compass.ocean.tests.baroclinic_channel.BaroclinicChannel
             The test group that this test case belongs to
 
-        resolution : str
-            The resolution of the test case
+        resolution : float
+            The resolution of the test case in meters
         """
         name = 'restart_test'
         self.resolution = resolution
-        subdir = f'{resolution}/{forcing}/{name}'
+        if resolution >= 1e3:
+            res_name = f'{int(resolution/1e3)}km'
+        else:
+            res_name = f'{int(resolution)}m'
+        subdir = f'{res_name}/{forcing}/{name}'
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
 

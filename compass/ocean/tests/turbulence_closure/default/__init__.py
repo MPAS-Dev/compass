@@ -13,8 +13,8 @@ class Default(TestCase):
 
     Attributes
     ----------
-    resolution : str
-        The resolution of the test case
+    resolution : float
+        The resolution of the test case in meters
     """
 
     def __init__(self, test_group, resolution, forcing='cooling'):
@@ -26,8 +26,8 @@ class Default(TestCase):
         test_group : compass.ocean.tests.turbulence_closure.TurbulenceClosure
             The test group that this test case belongs to
 
-        resolution : str
-            The resolution of the test case
+        resolution : float
+            The resolution of the test case in meters
 
         forcing: str
             The forcing applied to the test case
@@ -35,11 +35,15 @@ class Default(TestCase):
         name = 'default'
         self.resolution = resolution
         self.forcing = forcing
-        subdir = f'{resolution}/{forcing}/{name}'
+        if resolution >= 1e3:
+            res_name = f'{int(resolution/1e3)}km'
+        else:
+            res_name = f'{int(resolution)}m'
+        subdir = f'{res_name}/{forcing}/{name}'
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
 
-        if resolution == '1m' or resolution == '2m':
+        if resolution <= 5:
             ntasks = 128
             plot_comparison=True
         else:
