@@ -7,9 +7,10 @@ from compass.ocean.tests.nonhydro.stratified_seiche.visualize import Visualize
 
 class StratifiedSeiche(TestCase):
     """
-    The default test case for the baroclinic channel test group simply creates
-    the mesh and initial condition, then performs a short forward run on 4
-    cores.
+    The default test case for the stratified seiche test simply creates the
+    mesh and initial condition, then performs two forward runs, one with
+    the standard hydrostatic version of MPAS-O, and the second with the
+    nonhydrostatic version.
     """
 
     def __init__(self, test_group):

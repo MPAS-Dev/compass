@@ -4,8 +4,8 @@ from compass.step import Step
 
 class Forward(Step):
     """
-    A step for performing forward MPAS-Ocean runs as part of baroclinic
-    channel test cases.
+    A step for performing forward MPAS-Ocean runs as part of the
+    stratified seiche test case.
 
     Attributes
     ----------
