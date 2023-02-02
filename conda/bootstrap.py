@@ -386,7 +386,7 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, spack_env,
             f'parallel-netcdf@{pnetcdf}+cxx+fortran'])
 
     if esmf != 'None':
-        specs.append(f'esmf@{esmf}+mpi+netcdf~pio+pnetcdf')
+        specs.append(f'esmf@{esmf}+mpi+netcdf~parallelio+pnetcdf')
     if lapack != 'None':
         specs.append(f'netlib-lapack@{lapack}')
         include_e3sm_lapack = False
