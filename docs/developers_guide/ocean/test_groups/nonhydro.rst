@@ -26,7 +26,7 @@ preconditioner and tolerances used for the solution of the nonhydrostatic
 elliptic problem.
 
 initial_state
-~~~~~~~~~~~~
+~~~~~~~~~~~~~
 
 The class :py:class:`compass.ocean.tests.nonhydro_stratified_seiche.initial_state.InitialState`
 sets up the initial state for the stratified seiche test case.
@@ -38,7 +38,7 @@ density profile is computed along with temperature, uniform salinity and zero in
 velocity.
 
 forward
-~~~~~~
+~~~~~~~
 
 The class :py:class:`compass.ocean.tests.stratified_seiche.forward.Forward`
 defines a step for running MPAS-Ocean from the initial condition produced in
@@ -51,7 +51,7 @@ simulation are run on 4 cores and have a run duration of 50s, which
 corresponds to one seiche period.
 
 visualize
-~~~~~~
+~~~~~~~~~
 
 The ``visualize`` step defined by
 :py:class:`compass.ocean.tests.nonhydro.stratified_seiche.visualize.Visualize`
@@ -63,7 +63,7 @@ respectively, at time t = 12s.
 .. _dev_ocean_nonhydro_solitary_wave:
 
 solitary_wave
-____________
+_____________
 
 This test describes the evolution of a train of solitary waves. After the creation
 of the mesh and initial conditions, an hydrostatic and a nonhydrostatic
@@ -77,7 +77,7 @@ nonhydrostatic run share the same ``streams.forward`` file that defines
 ``mesh``, ``input``, ``restart``, and ``output`` streams.
 
 initial_state
-~~~~~~~~~~~
+~~~~~~~~~~~~~
 
 The class :py:class:`compass.ocean.tests.nonhydro_solitary_wave.initial_state.InitialState`
 sets up the initial state for the solitary test case.
@@ -89,7 +89,7 @@ density profile is computed along with temperature, uniform salinity and zero in
 velocity.
 
 forward
-~~~~~
+~~~~~~~
 
 The class :py:class:`compass.ocean.tests.solitary_wave.forward.Forward`
 defines a step for running MPAS-Ocean from the initial condition produced in
@@ -98,15 +98,15 @@ determines if the hydrostatic or the nonhydrostatic model is run.
 Namelist and streams files are generate during ``setup()`` and
 MPAS-Ocean is run (including updating PIO namelist options and generating a
 graph partition) in ``run()``. Both the hydrostatic and nonhydrostatic
-simulation are run on 16 cores and have a run duration of 1d and 16h, time at
+simulation are run on 16 cores and have a run duration of 40h, the time at
 which the solitary waves are fully formed.
 
 visualize
-~~~~~
+~~~~~~~~~
 
 The ``visualize`` step defined by
 :py:class:`compass.ocean.tests.nonhydro.solitary_wave.visualize.Visualize`
-makes plots of the temperature profile at 1d and 16h for the hydrostatic
+makes plots of the temperature profile at 40h for the hydrostatic
 and nonhydrostatic case. The plot shows that the nonhydrostatic result 
 leads to a train of rank-ordered solitary-like internal gravity waves, 
 whereas the hydrostatic model fails to capture correct physics. 

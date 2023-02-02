@@ -28,7 +28,7 @@ stratified interface. The set config options for this test case are:
 .. code-block:: cfg
 
     # config options for the horizontal grid
-    [horizonatl_grid]
+    [horizontal_grid]
 
     #Number of cells in the x-direction
     nx = 64
@@ -146,9 +146,9 @@ solitary-like waves. The set config options for this test case are:
     #Wavelenght
     wavelenght = 15000.0
 
-The hydrostatic and nonhydrostatic simulations are run for 1d and 16h
+The hydrostatic and nonhydrostatic simulations are run for 40h
 using split-explicit with a baroclinic time-step of 1min and a 
-barotropic time-step of 1s. A plot at 1d and 16h is produced and shows 
+barotropic time-step of 1s. A plot at 40h is produced and shows 
 that the nonhydrostatic result leads to a train of rank-ordered 
 solitary-like internal gravity waves, whereas the hydrostatic model 
 fails to capture correct physics.
