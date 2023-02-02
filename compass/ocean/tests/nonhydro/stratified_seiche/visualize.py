@@ -1,11 +1,8 @@
-import xarray
-import numpy as np
 from netCDF4 import Dataset
 from compass.step import Step
-from scipy.interpolate import griddata
 import matplotlib.pyplot as plt
 import matplotlib
-from matplotlib import transforms
+
 matplotlib.use('Agg')
 
 
@@ -13,6 +10,7 @@ class Visualize(Step):
     """
     A step for visualizing a cross-section through the internal wave
     """
+
     def __init__(self, test_case):
         """
         Create the step
@@ -57,38 +55,45 @@ class Visualize(Step):
         normalVelocityNH = ncfileNH.variables['normalVelocity']
         vertAleTransportTopNH = ncfileNH.variables['vertAleTransportTop']
         zMidNH = ncfileNH.variables['zMid']
-        cellsOnEdge = initfile.variables['cellsOnEdge']
         edgesOnCell = initfile.variables['edgesOnCell']
 
         # horizontal velocity
-        zMidEdge = 0.5*(zMidH[time, cell1_midEdge, :] + zMidH[time, cell2_midEdge, :])
-        zMidEdge1 = zMidEdge/16 
+        zMidEdge = 0.5 * (zMidH[time, cell1_midEdge, :] +
+                          zMidH[time, cell2_midEdge, :])
+        zMidEdge1 = zMidEdge / 16
+        midEdge = None
         for i in range(0, 6):
             iEdge = edgesOnCell[cell1_midEdge, i] - 1
             for j in range(0, 6):
                 jEdge = edgesOnCell[cell2_midEdge, j] - 1
-                if (iEdge == jEdge):
+                if iEdge == jEdge:
                     midEdge = iEdge
-        normalVelocity1 = normalVelocityH[time, midEdge, :]/ \
-            max(normalVelocityH[time, midEdge, :])
-        zMidEdge = 0.5*(zMidNH[time, cell1_midEdge, :] + zMidNH[time, cell2_midEdge, :])
-        zMidEdge2 = zMidEdge/16
+        if midEdge is None:
+            raise ValueError('Could not find midEdge!')
+        normalVelocity1 = \
+            (normalVelocityH[time, midEdge, :] /
+             max(normalVelocityH[time, midEdge, :]))
+        zMidEdge = 0.5 * (zMidNH[time, cell1_midEdge, :] +
+                          zMidNH[time, cell2_midEdge, :])
+        zMidEdge2 = zMidEdge / 16
         for i in range(0, 6):
             iEdge = edgesOnCell[cell1_midEdge, i] - 1
             for j in range(0, 6):
                 jEdge = edgesOnCell[cell2_midEdge, j] - 1
-                if (iEdge == jEdge):
+                if iEdge == jEdge:
                     midEdge = iEdge
-        normalVelocity2 = normalVelocityNH[time, midEdge, :]/ \
-            max(normalVelocityNH[time, midEdge, :]) 
+        normalVelocity2 = (normalVelocityNH[time, midEdge, :] /
+                           max(normalVelocityNH[time, midEdge, :]))
 
         # vertical velocity
-        zMid_origin1 = zMidH[time, firstCell, :]/16
-        vertAleTransportTop_origin1 = vertAleTransportTopH[time, firstCell, 0:nVertLevels]/ \
-            max(abs(vertAleTransportTopH[time, firstCell, 0:nVertLevels]))
-        zMid_origin2 = zMidNH[time, firstCell, :]/16
-        vertAleTransportTop_origin2 = vertAleTransportTopNH[time, firstCell, 0:nVertLevels]/ \
-            max(abs(vertAleTransportTopNH[time, firstCell, 0:nVertLevels]))
+        zMid_origin1 = zMidH[time, firstCell, :] / 16
+        vertAleTransportTop_origin1 = \
+            (vertAleTransportTopH[time, firstCell, 0:nVertLevels] /
+             max(abs(vertAleTransportTopH[time, firstCell, 0:nVertLevels])))
+        zMid_origin2 = zMidNH[time, firstCell, :] / 16
+        vertAleTransportTop_origin2 = \
+            (vertAleTransportTopNH[time, firstCell, 0:nVertLevels] /
+             max(abs(vertAleTransportTopNH[time, firstCell, 0:nVertLevels])))
 
         # plots
         plt.figure(figsize=(8.4, 4.2))
@@ -102,9 +107,9 @@ class Visualize(Step):
 
         plt.subplot(1, 2, 2)
         plt.plot(vertAleTransportTop_origin1, zMid_origin1, 'r',
-            label='H model')
+                 label='H model')
         plt.plot(vertAleTransportTop_origin2, zMid_origin2, 'b',
-            label='NH model')
+                 label='NH model')
         plt.xlim([-1.1, 1.1])
         plt.xlabel('w/w_max')
         plt.legend()

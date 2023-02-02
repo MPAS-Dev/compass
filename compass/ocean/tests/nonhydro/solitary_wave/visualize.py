@@ -1,11 +1,7 @@
-import xarray
-import numpy as np
 from netCDF4 import Dataset
-from scipy.interpolate import griddata
 from compass.step import Step
 import matplotlib.pyplot as plt
 import matplotlib
-from matplotlib import transforms
 matplotlib.use('Agg')
 
 
@@ -28,7 +24,7 @@ class Visualize(Step):
             self.add_input_file(filename=f'output_{grid}.nc',
                                 target=f'../{grid}/output.nc')
             self.add_input_file(filename=f'init_{grid}.nc',
-                               target=f'../{grid}/init.nc')
+                                target=f'../{grid}/init.nc')
         self.add_output_file('plotTemp.png')
 
     def run(self):
@@ -63,9 +59,9 @@ class Visualize(Step):
             plt.ylabel('z/a0')
             plt.subplot(2, 1, j+1)
             plt.contour(x, z1, temp1.T)
+            ncfileIC.close()
+            ncfile.close()
 
         plt.xlabel('x/L0')
         plt.ylabel('z/a0')
-        ncfileIC.close()
-        ncfile.close()
         plt.savefig('plotTemp.png')

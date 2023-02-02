@@ -58,7 +58,6 @@ class InitialState(Step):
         nVertLevels = section.getint('vert_levels')
         section = config['stratified_seiche']
         config_eos_linear_alpha = section.getfloat('eos_linear_alpha')
-        config_eos_linear_beta = section.getfloat('eos_linear_beta')
         config_eos_linear_Tref = section.getfloat('eos_linear_Tref')
         config_eos_linear_Sref = section.getfloat('eos_linear_Sref')
         config_eos_linear_densityref = section.getfloat(
@@ -69,7 +68,7 @@ class InitialState(Step):
         wavenumber = section.getfloat('wavenumber')
 
         # comment('obtain dimensions and mesh variables')
-        #vertical_coordinate = 'uniform'
+        # vertical_coordinate = 'uniform'
 
         ds = dsMesh.copy()
         nCells = ds.nCells.size
@@ -81,8 +80,6 @@ class InitialState(Step):
         xEdge = ds.xEdge
         yEdge = ds.yEdge
         angleEdge = ds.angleEdge
-        cellsOnEdge = ds.cellsOnEdge
-        edgesOnCell = ds.edgesOnCell
 
         # Adjust coordinates so first edge is at zero in x and y
         xOffset = xEdge.min()
@@ -101,9 +98,6 @@ class InitialState(Step):
         surfaceStress = np.nan * np.ones(nCells)
         atmosphericPressure = np.nan * np.ones(nCells)
         boundaryLayerDepth = np.nan * np.ones(nCells)
-        temperature = np.nan * np.ones([nCells, nVertLevels])
-        salinity = np.nan * np.ones([nCells, nVertLevels])
-        density = np.nan * np.ones([nCells, nVertLevels])
 
         ds['bottomDepth'] = maxDepth * xarray.ones_like(xCell)
         ds['ssh'] = xarray.zeros_like(xCell)
@@ -111,18 +105,22 @@ class InitialState(Step):
         init_vertical_coord(config, ds)
 
         # initial salinity, density, temperature
-        ds['salinity'] = (config_eos_linear_Sref*xarray.ones_like(ds.zMid)).where(ds.cellMask)
-        ds['density'] = config_eos_linear_densityref + \
-                (deltaRho/2)*(1.0 - np.tanh((2/interfaceThick)*np.arctanh(0.99)*(ds.zMid + \
-                0.5*maxDepth - amplitude*np.cos(wavenumber*ds.xCell))))
+        ds['salinity'] = (config_eos_linear_Sref *
+                          xarray.ones_like(ds.zMid)).where(ds.cellMask)
+        ds['density'] = \
+            (config_eos_linear_densityref +
+             (deltaRho/2)*(1.0 - np.tanh(
+                (2/interfaceThick)*np.arctanh(0.99) *
+                (ds.zMid + 0.5*maxDepth -
+                 amplitude*np.cos(wavenumber*ds.xCell)))))
         # T = Tref - (rho - rhoRef)/alpha
-        ds['temperature'] = config_eos_linear_Tref \
-                - (ds.density - config_eos_linear_densityref) / \
-                config_eos_linear_alpha
+        ds['temperature'] = (config_eos_linear_Tref
+                             - (ds.density - config_eos_linear_densityref) /
+                             config_eos_linear_alpha)
 
         # initial velocity on edges
         ds['normalVelocity'] = (('Time', 'nEdges', 'nVertLevels',),
-            np.zeros([1, nEdges, nVertLevels]))
+                                np.zeros([1, nEdges, nVertLevels]))
         normalVelocity = ds['normalVelocity']
         for iEdge in range(0, nEdges):
             normalVelocity[0, iEdge, :] = u[0, iEdge, :] * math.cos(angleEdge[iEdge])
@@ -131,7 +129,7 @@ class InitialState(Step):
         ds['fCell'] = (('nCells', 'nVertLevels',), np.zeros([nCells, nVertLevels]))
         ds['fEdge'] = (('nEdges', 'nVertLevels',), np.zeros([nEdges, nVertLevels]))
         ds['fVertex'] = (('nVertices', 'nVertLevels',),
-            np.zeros([nVertices, nVertLevels]))
+                         np.zeros([nVertices, nVertLevels]))
 
         # surface fields
         surfaceStress[:] = 0.0

@@ -22,31 +22,26 @@ class Forward(Step):
         test_case : compass.TestCase
             The test case this step belongs to
 
-        resolution : str
-            The resolution of the test case
-
         name : str
             the name of the test case
 
-        subdir : str, optional
-            the subdirectory for the step.  The default is ``name``
-
-        cores : int, optional
+        ntasks : int, optional
             the number of cores the step would ideally use.  If fewer cores
             are available on the system, the step will run on all available
             cores as long as this is not below ``min_cores``
 
-        min_cores : int, optional
+        min_tasks : int, optional
             the number of cores the step requires.  If the system has fewer
             than this number of cores, the step will fail
 
-        threads : int, optional
+        openmp_threads : int, optional
             the number of threads the step will use
 
         """
         self.nonhydro_mode = nonhydro_mode
         super().__init__(test_case=test_case, name=name,
-                         ntasks=ntasks, min_tasks=min_tasks, openmp_threads=openmp_threads)
+                         ntasks=ntasks, min_tasks=min_tasks,
+                         openmp_threads=openmp_threads)
         self.add_namelist_file('compass.ocean.tests.nonhydro.solitary_wave',
                                'namelist.forward')
         if nonhydro_mode:

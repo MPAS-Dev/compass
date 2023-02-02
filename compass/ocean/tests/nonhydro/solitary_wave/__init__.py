@@ -10,11 +10,6 @@ class SolitaryWave(TestCase):
     The default test case for the baroclinic channel test group simply creates
     the mesh and initial condition, then performs a short forward run on 4
     cores.
-
-    Attributes
-    ----------
-    resolution : str
-        The resolution of the test case
     """
 
     def __init__(self, test_group):
@@ -23,11 +18,8 @@ class SolitaryWave(TestCase):
 
         Parameters
         ----------
-        test_group : compass.ocean.tests.baroclinic_channel.BaroclinicChannel
+        test_group : compass.ocean.tests.nonhydro.Nonhydro
             The test group that this test case belongs to
-
-        resolution : str
-            The resolution of the test case
         """
         name = 'solitary_wave'
         super().__init__(test_group=test_group, name=name)
