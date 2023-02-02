@@ -50,6 +50,12 @@ class Forward(Step):
                          ntasks=ntasks, min_tasks=min_tasks, openmp_threads=openmp_threads)
         self.add_namelist_file('compass.ocean.tests.turbulence_closure',
                                'namelist.forward')
+        if resolution < 500:
+            self.add_namelist_file('compass.ocean.tests.turbulence_closure',
+                                   'namelist.les.forward')
+        if resolution < 100:
+            self.add_namelist_file('compass.ocean.tests.turbulence_closure',
+                                   'namelist.nonhydro.forward')
 
         # make sure output is double precision
         self.add_streams_file('compass.ocean.streams', 'streams.output')
