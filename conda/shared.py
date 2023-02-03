@@ -1,5 +1,3 @@
-from __future__ import print_function
-
 import argparse
 import logging
 import os
@@ -7,11 +5,7 @@ import platform
 import shutil
 import subprocess
 import sys
-
-try:
-    from urllib.request import Request, urlopen
-except ImportError:
-    from urllib2 import Request, urlopen
+from urllib.request import Request, urlopen
 
 
 def parse_args(bootstrap):
@@ -100,9 +94,9 @@ def get_conda_base(conda_base, config, shared=False, warn=False):
             conda_base = os.path.abspath(
                 os.path.join(conda_exe, '..', '..'))
             if warn:
-                print('\nWarning: --conda path not supplied.  Using conda '
-                      'installed at:\n'
-                      '   {}\n'.format(conda_base))
+                print(f'\nWarning: --conda path not supplied.  Using conda '
+                      f'installed at:\n'
+                      f'   {conda_base}\n')
         else:
             raise ValueError('No conda base provided with --conda and '
                              'none could be inferred.')
@@ -126,9 +120,9 @@ def get_spack_base(spack_base, config):
 def check_call(commands, env=None, logger=None):
     print_command = '\n   '.join(commands.split(' && '))
     if logger is None:
-        print('\n Running:\n   {}\n'.format(print_command))
+        print(f'\n Running:\n   {print_command}\n')
     else:
-        logger.info('\nrunning:\n   {}\n'.format(print_command))
+        logger.info(f'\nrunning:\n   {print_command}\n')
 
     if logger is None:
         process = subprocess.Popen(commands, env=env, executable='/bin/bash',
@@ -162,8 +156,8 @@ def install_miniconda(conda_base, activate_base, logger):
             system = 'MacOSX'
         else:
             system = 'Linux'
-        miniconda = 'Mambaforge-{}-x86_64.sh'.format(system)
-        url = 'https://github.com/conda-forge/miniforge/releases/latest/download/{}'.format(miniconda)  # noqa: E501
+        miniconda = f'Mambaforge-{system}-x86_64.sh'
+        url = f'https://github.com/conda-forge/miniforge/releases/latest/download/{miniconda}'  # noqa: E501
         print(url)
         req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
         f = urlopen(req)
@@ -172,7 +166,7 @@ def install_miniconda(conda_base, activate_base, logger):
             outfile.write(html)
         f.close()
 
-        command = '/bin/bash {} -b -p {}'.format(miniconda, conda_base)
+        command = f'/bin/bash {miniconda} -b -p {conda_base}'
         check_call(command, logger=logger)
         os.remove(miniconda)
 
@@ -180,23 +174,22 @@ def install_miniconda(conda_base, activate_base, logger):
 
     print('Doing initial setup\n')
 
-    commands = '{} && ' \
-               'conda config --add channels conda-forge && ' \
-               'conda config --set channel_priority strict' \
-               ''.format(activate_base)
+    commands = f'{activate_base} && ' \
+               f'conda config --add channels conda-forge && ' \
+               f'conda config --set channel_priority strict'
 
     check_call(commands, logger=logger)
 
-    commands = '{} && ' \
-               'conda remove -y boa'.format(activate_base)
+    commands = f'{activate_base} && ' \
+               f'conda remove -y boa'
     try:
         check_call(commands, logger=logger)
     except subprocess.CalledProcessError:
         pass
 
-    commands = '{} && ' \
-               'mamba update -y --all && ' \
-               'mamba init'.format(activate_base)
+    commands = f'{activate_base} && ' \
+               f'mamba update -y --all && ' \
+               f'mamba init'
 
     check_call(commands, logger=logger)
 
@@ -208,7 +201,7 @@ def backup_bashrc():
     files = ['.bashrc', '.bash_profile']
     for filename in files:
         src = os.path.join(home_dir, filename)
-        dst = os.path.join(home_dir, '{}.conda_bak'.format(filename))
+        dst = os.path.join(home_dir, f'{filename}.conda_bak')
         if os.path.exists(src):
             shutil.copyfile(src, dst)
 
@@ -217,14 +210,14 @@ def restore_bashrc():
     home_dir = os.path.expanduser('~')
     files = ['.bashrc', '.bash_profile']
     for filename in files:
-        src = os.path.join(home_dir, '{}.conda_bak'.format(filename))
+        src = os.path.join(home_dir, f'{filename}.conda_bak')
         dst = os.path.join(home_dir, filename)
         if os.path.exists(src):
             shutil.move(src, dst)
 
 
 def get_logger(name, log_filename):
-    print('Logging to: {}\n'.format(log_filename))
+    print(f'Logging to: {log_filename}\n')
     try:
         os.remove(log_filename)
     except OSError:

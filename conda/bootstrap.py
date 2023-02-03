@@ -1,6 +1,4 @@
-#!/usr/bin/env python
-
-from __future__ import print_function
+#!/usr/bin/env python3
 
 import glob
 import grp
@@ -899,10 +897,10 @@ def main():  # noqa: C901
 
             if local_mache:
                 print('Install local mache\n')
-                commands = f'source {conda_base}/etc/profile.d/conda.sh; ' \
-                           f'source {conda_base}/etc/profile.d/mamba.sh; ' \
-                           f'conda activate {conda_env_name}; ' \
-                           'cd ../build_mache/mache; ' \
+                commands = f'source {conda_base}/etc/profile.d/conda.sh && ' \
+                           f'source {conda_base}/etc/profile.d/mamba.sh && ' \
+                           f'conda activate {conda_env_name} && ' \
+                           'cd ../build_mache/mache && ' \
                            'python -m pip install .'
                 check_call(commands, logger=logger)
 
