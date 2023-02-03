@@ -47,13 +47,13 @@ def bootstrap(activate_install_env, source_path, local_conda_build):
 
 
 def setup_install_env(env_name, activate_base, use_local, logger, recreate,
-                      conda_base):
+                      conda_base, mache):
     env_path = os.path.join(conda_base, 'envs', env_name)
     if use_local:
         channels = '--use-local'
     else:
         channels = ''
-    packages = 'progressbar2 jinja2 "mache=1.10.0"'
+    packages = 'progressbar2 jinja2 {}'.format(mache)
     if recreate or not os.path.exists(env_path):
         print('Setting up a conda environment for installing compass\n')
         commands = '{}; ' \
@@ -101,8 +101,28 @@ def main():
     # install miniconda if needed
     install_miniconda(conda_base, activate_base, logger)
 
+    local_mache = args.mache_fork is not None and args.mache_branch is not None
+    if local_mache:
+        mache = ''
+    else:
+        mache = '"mache=1.10.0"'
+
     setup_install_env(env_name, activate_base, args.use_local, logger,
-                      args.recreate, conda_base)
+                      args.recreate, conda_base, mache)
+
+    if local_mache:
+        print('Clone and install local mache\n')
+        commands = '{}; ' \
+                   'rm -rf conda/build_mache; ' \
+                   'mkdir -p conda/build_mache; ' \
+                   'cd conda/build_mache; ' \
+                   'git clone -b {} git@github.com:{}.git mache; ' \
+                   'cd mache; ' \
+                   'python -m pip install .'.format(activate_install_env,
+                                                    args.mache_branch,
+                                                    args.mache_fork)
+
+        check_call(commands, logger=logger)
 
     env_type = config.get('deploy', 'env_type')
     if env_type not in ['dev', 'test_release', 'release']:
