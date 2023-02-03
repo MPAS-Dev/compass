@@ -25,7 +25,7 @@ class ThwaitesEnsemble(TestCase):
             The test group that this test case belongs to
 
         """
-        name = 'thwaites_uq'
+        name = 'thwaites_ensemble'
         super().__init__(test_group=test_group, name=name)
 
         # We don't want to initialize all the individual runs
@@ -36,12 +36,12 @@ class ThwaitesEnsemble(TestCase):
     def configure(self):
 
         # Determine start and end run numbers being requested
-        self.start_run = self.config.getint('thwaites_uq', 'start_run')
-        self.end_run = self.config.getint('thwaites_uq', 'end_run')
+        self.start_run = self.config.getint('ensemble', 'start_run')
+        self.end_run = self.config.getint('ensemble', 'end_run')
 
         # Read pre-defined parameter vectors from a text file
         # These should have unit ranges
-        param_file_name = self.config.get('thwaites_uq',
+        param_file_name = self.config.get('ensemble',
                                           'param_vector_filename')
         with resources.open_text(
                 'compass.landice.tests.ensemble_generator',
@@ -82,6 +82,7 @@ class ThwaitesEnsemble(TestCase):
                      "size available in param_vector_filename")
         for run_num in range(self.start_run, self.end_run+1):
             self.add_step(EnsembleMember(test_case=self, run_num=run_num,
+                                         test_resources_location='compass.landice.tests.ensemble_generator.thwaites',
                                          basal_fric_exp=basal_fric_exp_vec[run_num],
                                          von_mises_threshold=von_mises_threshold_vec[run_num],
                                          calv_spd_lim=calv_spd_lim_vec[run_num]))

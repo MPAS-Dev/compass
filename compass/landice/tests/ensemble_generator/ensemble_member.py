@@ -26,9 +26,26 @@ class EnsembleMember(Step):
 
     ntasks : integer
         the number of parallel (MPI) tasks the step would ideally use
+
+    test_resources_location : str
+        path to the python package that contains the resources to be
+        used for the test (namelist, streams, albany input file)
+
+    input_file_name : str
+        name of the input file that was read from the config
+
+    basal_fric_exp : float
+        value of basal friction exponent to use
+
+    von_mises_threshold : float
+        value of von Mises stress threshold to use
+
+    calv_spd_lim : float
+        value of calving speed limit to use
     """
 
     def __init__(self, test_case, run_num,
+                 test_resources_location,
                  basal_fric_exp=None,
                  von_mises_threshold=None,
                  calv_spd_lim=None):
@@ -44,6 +61,7 @@ class EnsembleMember(Step):
             the run number for this ensemble member
         """
         self.run_num = run_num
+        self.test_resources_location = test_resources_location
 
         # store assigned param values for this run
         self.basal_fric_exp = basal_fric_exp
@@ -69,17 +87,13 @@ class EnsembleMember(Step):
         self.ntasks = 32 # chosen for Cori Haswell
 
         # Set up base run configuration
-        self.add_namelist_file(
-            'compass.landice.tests.ensemble_generator.thwaites', 'namelist.landice')
-
-        self.add_streams_file(
-            'compass.landice.tests.ensemble_generator.thwaites', 'streams.landice')
+        self.add_namelist_file(self.test_resources_location, 'namelist.landice')
 
         # copy over albany yaml file
         # cannot use add_input functionality because we need to modify the file
         # in this function, and inputs don't get processed until after this
         # function
-        with resources.path('compass.landice.tests.ensemble_generator.thwaites',
+        with resources.path(self.test_resources_location,
                             'albany_input.yaml') as package_path:
             target = str(package_path)
             shutil.copy(target, self.work_dir)
@@ -88,9 +102,10 @@ class EnsembleMember(Step):
 
         # copy in input file so it can be modified
         config = self.config
-        section = config['thwaites_uq']
-        input_file_name = 'Thwaites.nc'  # needs to match streams
+        section = config['ensemble']
         input_file_path = section.get('input_file_path')
+        input_file_name = input_file_path.split('/')[-1]
+        self.input_file_name = input_file_name
         shutil.copy(input_file_path, os.path.join(self.work_dir,
                                                   input_file_name))
 
@@ -107,7 +122,7 @@ class EnsembleMember(Step):
                 f'{self.calv_spd_lim}'
 
         # adjust basal friction exponent
-        orig_fric_exp = 0.2  # set by initial condition file being used
+        orig_fric_exp = section.getfloat('orig_fric_exp')
         _adjust_friction_exponent(orig_fric_exp, self.basal_fric_exp,
                                   os.path.join(self.work_dir, input_file_name),
                                   os.path.join(self.work_dir,
@@ -116,6 +131,12 @@ class EnsembleMember(Step):
         # store modified namelist options
         self.add_namelist_options(options=options,
                                   out_name='namelist.landice')
+
+        # set input filename in streams and create streams file
+        stream_replacements = {'input_file_init_cond': input_file_name}
+        self.add_streams_file(self.test_resources_location, 'streams.landice',
+                              out_name='streams.landice',
+                              template_replacements=stream_replacements)
 
         # set job name to run number so it will get set in batch script
         self.config.set('job', 'job_name', f'uq_{self.name}')
@@ -138,7 +159,7 @@ class EnsembleMember(Step):
         Eventually we want this function to handle restarts.
         """
 
-        make_graph_file(mesh_filename='Thwaites.nc',
+        make_graph_file(mesh_filename=self.input_file_name,
                         graph_filename='graph.info')
         run_model(self)
 
