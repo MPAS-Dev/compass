@@ -1,19 +1,18 @@
 from compass.validate import compare_variables
 from compass.testcase import TestCase
-from compass.landice.tests.thwaites.uq_ensemble.ensemble_member \
+from compass.landice.tests.ensemble_generator.ensemble_member \
         import EnsembleMember
-from compass.landice.tests.thwaites.uq_ensemble.ensemble_manager \
+from compass.landice.tests.ensemble_generator.ensemble_manager \
         import EnsembleManager
 from importlib import resources
 import numpy as np
 import sys
 
 
-class UQEnsemble(TestCase):
+class ThwaitesEnsemble(TestCase):
     """
-    A test case for performing two MALI runs of the Thwaites setup,
-    with two different core counts.  The test case verifies that the
-    results of the two runs are identical.
+    A test case for performing an ensemble of Thwaites Glacier
+    simulations for uncertainty quantification studies.
     """
 
     def __init__(self, test_group):
@@ -44,7 +43,9 @@ class UQEnsemble(TestCase):
         # These should have unit ranges
         param_file_name = self.config.get('thwaites_uq',
                                           'param_vector_filename')
-        with resources.open_text('compass.landice.tests.thwaites.uq_ensemble', param_file_name) as params_file:
+        with resources.open_text(
+                'compass.landice.tests.ensemble_generator',
+                param_file_name) as params_file:
             param_array = np.loadtxt(params_file, delimiter=',',
                                      skiprows=1)
         param_sample_number = param_array[:,0]

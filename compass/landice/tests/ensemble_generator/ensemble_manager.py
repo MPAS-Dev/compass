@@ -35,7 +35,7 @@ class EnsembleManager(Step):
         Set up the ensemble manager
         """
         # Link viz script
-        with path('compass.landice.tests.thwaites.uq_ensemble',
+        with path('compass.landice.tests.ensemble_generator',
                   'plot_ensemble.py') as target:
             symlink(str(target), f'{self.test_case.work_dir}/plot_ensemble.py')
 

@@ -70,16 +70,16 @@ class EnsembleMember(Step):
 
         # Set up base run configuration
         self.add_namelist_file(
-            'compass.landice.tests.thwaites.uq_ensemble', 'namelist.landice')
+            'compass.landice.tests.ensemble_generator.thwaites', 'namelist.landice')
 
         self.add_streams_file(
-            'compass.landice.tests.thwaites.uq_ensemble', 'streams.landice')
+            'compass.landice.tests.ensemble_generator.thwaites', 'streams.landice')
 
         # copy over albany yaml file
         # cannot use add_input functionality because we need to modify the file
         # in this function, and inputs don't get processed until after this
         # function
-        with resources.path('compass.landice.tests.thwaites.uq_ensemble',
+        with resources.path('compass.landice.tests.ensemble_generator.thwaites',
                             'albany_input.yaml') as package_path:
             target = str(package_path)
             shutil.copy(target, self.work_dir)
