@@ -47,6 +47,10 @@ def parse_args(bootstrap):
                              "packages")
     parser.add_argument("--use_local", dest="use_local", action='store_true',
                         help="Use locally built conda packages (for testing).")
+    parser.add_argument("--mache_fork", dest="mache_fork",
+                        help="Point to a mache fork (and branch) for testing")
+    parser.add_argument("--mache_branch", dest="mache_branch",
+                        help="Point to a mache branch (and fork) for testing")
     parser.add_argument("--update_spack", dest="update_spack",
                         action='store_true',
                         help="If the shared spack environment should be "
@@ -77,6 +81,10 @@ def parse_args(bootstrap):
                             help="A path for conda packages (for testing).")
 
     args = parser.parse_args(sys.argv[1:])
+
+    if (args.mache_fork is None) != (args.mache_branch is None):
+        raise ValueError('You must supply both or neither of '
+                         '--mache_fork and --mache_branch')
 
     return args
 
