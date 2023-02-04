@@ -58,7 +58,7 @@ jobs:
       eval "$(conda shell.bash hook)"
       mamba create --yes --quiet --name compass -c ${CONDA_PREFIX}/conda-bld/ \
           -c conda-forge -c e3sm/label/compass python=$PYTHON_VERSION compass \
-          sphinx mock sphinx_rtd_theme m2r2
+          "docutils<0.17" sphinx mock sphinx_rtd_theme m2r2
     displayName: Create compass conda environment
 
   - bash: |
