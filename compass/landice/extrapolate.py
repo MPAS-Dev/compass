@@ -5,16 +5,22 @@ from datetime import datetime
 
 def extrapolate_variable(nc_file, var_name, extrap_method, set_value=None):
     """
-    Script to extrapolate arbitrary variable
+    Function to extrapolate variable values into undefined regions
 
-    Created on Mon Feb1 2021
+    Parameters
+    ----------
+    nc_file : str
+        the mpas file to modify
 
-    parser.add_option("-f", "--file", dest="nc_file", help="the mpas file to write to")
-    parser.add_option("-v", "--variable", dest="var_name", help="the mpas variable(s) you want to extrapolate")
-    parser.add_option("-m", "--method", dest="extrap_method", default='min', help="idw, min, or value method of extrapolation")
-    parser.add_option("-s", "--set_value", dest="set_value", default=None, help="value to set variable to outside keepCellMask when using -v value")
+    var_name : str
+        the mpas variable to extrapolate
 
-    @author: Matt Hoffman, Trevor Hillebrand
+    extrap_method : str
+        idw, min, or value method of extrapolation
+
+    set_value : float
+        value to set variable to outside keepCellMask
+        when using -v value
     """
 
     dataset = Dataset(nc_file, 'r+')

@@ -59,6 +59,19 @@ class EnsembleMember(Step):
 
         run_num : integer
             the run number for this ensemble member
+
+        test_resources_location : str
+            path to the python package that contains the resources to be
+            used for the test (namelist, streams, albany input file)
+
+        basal_fric_exp : float
+            value of basal friction exponent to use
+
+        von_mises_threshold : float
+            value of von Mises stress threshold to use
+
+        calv_spd_lim : float
+            value of calving speed limit to use
         """
         self.run_num = run_num
         self.test_resources_location = test_resources_location
@@ -75,10 +88,9 @@ class EnsembleMember(Step):
 
     def setup(self):
         """
-        Set up this run:
-        * set up baseline run configuration
-        * modify parameters for this ensemble member based on
-          externally provided parameter vector
+        Set up this run by setting a up baseline run configuration
+        and then modifying parameters for this ensemble member based on
+        an externally provided unit parameter vector
         """
 
         print(f'Setting up run number {self.run_num}')
@@ -165,6 +177,11 @@ class EnsembleMember(Step):
 
 
 def _adjust_friction_exponent(orig_fric_exp, new_fric_exp, filename, albany_input_yaml):
+    """
+    Function to adjust the basal friction parameter by adjusting muFriction
+    field in an input file to maintain the same basal shear stress, and
+    then set the desired exponent value in the albany_input.yaml file.
+    """
     f = netCDF4.Dataset(filename, 'r+')
     f.set_auto_mask(False)
     mu = f.variables['muFriction'][0,:]

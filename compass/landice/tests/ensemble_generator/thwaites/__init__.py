@@ -21,7 +21,7 @@ class ThwaitesEnsemble(TestCase):
 
         Parameters
         ----------
-        test_group : compass.landice.tests.thwaites.Thwaites
+        test_group : compass.landice.tests.ensemble_generator.EnsembleGenerator
             The test group that this test case belongs to
 
         """
@@ -34,6 +34,26 @@ class ThwaitesEnsemble(TestCase):
 
 
     def configure(self):
+        """
+        Configure a parameter ensemble of a Thwaites Glacier simulations.
+
+        Start by identifying the start and end run numbers to set up
+        from the config.
+
+        Next, read a pre-defined unit parameter vector that can be used
+        for assigning parameter values to each ensemble member.
+
+        The main work is using the unit parameter vector to set parameter
+        values for each parameter to be varied, over prescribed ranges.
+
+        Then create the ensemble member as a step in the test case by calling
+        the EnsembleMember constructor.
+
+        Finally, add this step to the test case's step_to_run.  This normally
+        happens automatically if steps are added to the test case in the test
+        case constructor, but because we waited to add these steps until this
+        configure phase, we must explicitly add the steps to steps_to_run.
+        """
 
         # Determine start and end run numbers being requested
         self.start_run = self.config.getint('ensemble', 'start_run')

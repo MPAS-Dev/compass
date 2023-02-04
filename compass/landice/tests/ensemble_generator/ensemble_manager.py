@@ -32,7 +32,7 @@ class EnsembleManager(Step):
 
     def setup(self):
         """
-        Set up the ensemble manager
+        Sets up the ensemble manager
         """
         # Link viz script
         with path('compass.landice.tests.ensemble_generator',
