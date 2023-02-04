@@ -17,4 +17,8 @@ Then, run the following script to build the docs:
     rm -rf developers_guide/generated/ developers_guide/*/generated/ _build/
     make html
 
+You may need to rerun your compass load script for the api docs to build
+successfully if you have added new modules since the load script was
+last run.
+
 You can view the documentation by opening ``_build/html/index.html``.
