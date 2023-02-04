@@ -142,6 +142,26 @@ eismint2
    setup_mesh.SetupMesh
    setup_mesh.SetupMesh.run
 
+ensemble_generator
+~~~~~~~~~~~~~~~~~~
+
+.. currentmodule:: compass.landice.tests.ensemble_generator
+
+.. autosummary::
+   :toctree: generated/
+
+   EnsembleGenerator
+
+   ensemble_manager.EnsembleManager
+   ensemble_manager.EnsembleManager.setup
+   ensemble_manager.EnsembleManager.run
+
+   ensemble_member.EnsembleMember
+   ensemble_member.EnsembleMember.setup
+   ensemble_member.EnsembleMember.run
+
+   thwaites.ThwaitesEnsemble
+   thwaites.ThwaitesEnsemble.configure
 
 greenland
 ~~~~~~~~~
@@ -348,4 +368,17 @@ thwaites
    run_model.RunModel.setup
    run_model.RunModel.run
 
+Landice Framework
+^^^^^^^^^^^^^^^^^
 
+.. currentmodule:: compass.landice
+
+.. autosummary::
+   :toctree: generated/
+
+   extrapolate.extrapolate_variable
+
+   mesh.gridded_flood_fill
+   mesh.set_rectangular_geom_points_and_edges
+   mesh.set_cell_width
+   mesh.get_dist_to_edge_and_GL

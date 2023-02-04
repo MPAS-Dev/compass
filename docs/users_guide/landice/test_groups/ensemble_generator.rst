@@ -25,38 +25,47 @@ indicates the original sample size was insufficient.
 
 Individual test cases will define which parameter are being sampled and
 over what range.  Currently three parameters are supported:
+
 * basal friction power law exponent
+
 * von Mises threshold stress for calving
+
 * calving rate speed limit
+
 Additional parameters can be easily added in the future.
 The test group currently includes a file of unit parameter values for two
 parameters with 100 samples using a Sobol sequence.  The parameter
-dimensinality or sample size can be increased by modifying this file and
+dimensionality or sample size can be increased by modifying this file and
 its usage.  It also would be possible to modify the sampling strategy to
 perform uniform parameter sensitivity tests.
 
-`compass setup` will set up the set up simulations and the ensemble manager.
-`compass run` from the test case work directory will submit each run as a
+``compass setup`` will set up the set up simulations and the ensemble manager.
+``compass run`` from the test case work directory will submit each run as a
 separate slurm job.
-Individual runs can be run independently through `compass run` executed in the
-run directory.  (If you want to test or debug a run without running the entire
-ensemble.)
+Individual runs can be run independently through ``compass run`` executed in the
+run directory.  (E.g., if you want to test or debug a run without running the
+entire ensemble.)
 
-> **_NOTE:_**  Due to the requirement that `compass run` is only executed
-> on a compute node, this operation has to be submitted via a batch script or
-> interactive job, or compass framework code can be modified by an expert user
-> to lift this restriction. (This may be addressed in the future.) 
+.. note::
 
-Simulation output can be analyzed with the `plot_ensemble.py` visualization
+   Due to the requirement that ``compass run`` is only executed
+   on a compute node, this operation has to be submitted via a batch script or
+   interactive job, or compass framework code can be modified by an expert user
+   to lift this restriction. (This may be addressed in the future.) 
+
+Simulation output can be analyzed with the ``plot_ensemble.py`` visualization
 script, which generates plots of basic quantities of interest as a function
 of parameter values, as well as identifies runs that did not reach the
 target year.
 
 Future improvements may include:
+
 * enabling the ensemble manager to identify runs that need to be restarted
-  so the restarts do not need to be managed manualy
+  so the restarts do not need to be managed manually
+
 * safety checks or warnings before submitting ensembles that will use large
   amounts of computing resources
+
 * more flexibility in customizing ensembles without needing to modify test
   case files
 
@@ -76,6 +85,7 @@ numbers create a small ensemble, but uncertainty quantification applications
 will typically need dozens or more simulations.
 
 .. code-block:: cfg
+
    # config options for setting up an ensemble
    [ensemble]
 
@@ -98,25 +108,30 @@ will typically need dozens or more simulations.
    # in the input file
    orig_fric_exp = 0.2
 
-
-
 thwaites
 --------
 
 ``landice/ensemble_generator/thwaites`` uses the ensemble framework to create
 and ensemble of 4 km resolution Thwaites Glacier simulations integrated from
 2000 to 2100 with two parameters varying:
+
 * basal friction power law exponent: range [0.1, 0.333]
+
 * von Mises threshold stress for calving: range [150, 350] kPa
 
-The initial condition file is specified in the `ensemble_generator.cfg` file
+The initial condition file is specified in the ``ensemble_generator.cfg`` file
 or a user modification of it.  The forcing files for the simulation are
 hard-coded in the test case streams file  and are located on the NERSC
 filesystem.  
 The model configuration uses:
+
 * first-order velocity solver
+
 * power law basal friction
+
 * evolving temperature
+
 * von Mises calving
+
 * ISMIP6 surface mass balance and sub-ice-shelf melting using climatological
   mean forcing
