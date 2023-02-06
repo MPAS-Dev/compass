@@ -139,7 +139,7 @@ def _read_json(grid_type):
 def _create_tanh_dz_grid(num_vert_levels, bottom_depth, min_layer_thickness,
                          max_layer_thickness):
     """
-    Creates the vertical grid for MPAS-Ocean and writes it to a NetCDF file
+    Creates the tanh vertical grid for MPAS-Ocean and writes it to a NetCDF file
 
     Parameters
     ----------
@@ -171,20 +171,21 @@ def _create_tanh_dz_grid(num_vert_levels, bottom_depth, min_layer_thickness,
     # and the root finder will determine a value of delta (sol.root) such that
     # match_bottom is within a tolerance of zero, meaning the bottom of the
     # coordinate computed by cumsum_z hits bottom_depth almost exactly
-    sol = root_scalar(_match_bottom, method='brentq',
+    sol = root_scalar(_tanh_match_bottom, method='brentq',
                       bracket=[dz1, 10 * bottom_depth],
                       args=(nz, dz1, dz2, bottom_depth))
 
     delta = sol.root
-    layerThickness, z = _cumsum_z(delta, nz, dz1, dz2)
+    layerThickness, z = _tanh_cumsum_z(delta, nz, dz1, dz2)
     interfaces = -z
 
     return interfaces
 
 
-def _match_bottom(delta, nz, dz1, dz2, bottom_depth):
+def _tanh_match_bottom(delta, nz, dz1, dz2, bottom_depth):
     """
-    Compute the difference between the bottom depth computed with the given
+    For tanh layer thickness, compute the difference between the 
+    bottom depth computed with the given
     parameters and the target ``bottom_depth``, used in the root finding
     algorithm to determine which value of ``delta`` to use.
 
@@ -214,14 +215,14 @@ def _match_bottom(delta, nz, dz1, dz2, bottom_depth):
         The computed bottom depth minus the target ``bottom_depth``.  ``diff``
         should be zero when we have found the desired ``delta``.
     """
-    _, z = _cumsum_z(delta, nz, dz1, dz2)
+    _, z = _tanh_cumsum_z(delta, nz, dz1, dz2)
     diff = -bottom_depth - z[-1]
     return diff
 
 
-def _cumsum_z(delta, nz, dz1, dz2):
+def _tanh_cumsum_z(delta, nz, dz1, dz2):
     """
-    Compute layer interface depths and layer thicknesses over ``nz`` layers
+    Compute tanh layer interface depths and layer thicknesses over ``nz`` layers
 
     Parameters
     ----------
@@ -250,14 +251,14 @@ def _cumsum_z(delta, nz, dz1, dz2):
     dz = np.zeros(nz)
     z = np.zeros(nz + 1)
     for zindex in range(nz):
-        dz[zindex] = _dz_z(z[zindex], dz1, dz2, delta)
+        dz[zindex] = _tanh_dz_z(z[zindex], dz1, dz2, delta)
         z[zindex + 1] = z[zindex] - dz[zindex]
     return dz, z
 
 
-def _dz_z(z, dz1, dz2, delta):
+def _tanh_dz_z(z, dz1, dz2, delta):
     """
-    layer thickness as a function of depth
+    Tanh layer thickness as a function of depth
 
     Parameters
     ----------
