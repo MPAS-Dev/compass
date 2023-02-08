@@ -436,6 +436,82 @@ The default config options for this mesh are:
 The vertical grid is a ``60layerPHC`` profile (see :ref:`dev_ocean_framework_vertical`)
 with 60 vertical levels ranging in thickness from 10 to 250 m.
 
+.. _dev_ocean_global_ocean_kuroshio:
+
+Kuroshio8to60 and Kuroshio12to60
+++++++++++++++++++++++++++++++++
+
+The ``Kuroshio8to60`` and ``Kuroshio12to60`` mehses are designed to explore
+dynamics of the Kuroshio Current.
+
+The class
+:py:class:`compass.ocean.tests.global_ocean.mesh.kuroshio.KuroshioBaseMesh`
+defines the resolution for the meshes, where the finest resolution comes from
+the ``min_res`` config option in the ``[global_ocean]`` section of the config
+file.
+
+The ``compass.ocean.tests.global_ocean.mesh.kuroshio8to60`` and
+``compass.ocean.tests.global_ocean.mesh.kuroshio12to60`` modules include
+namelist options appropriate for forward simulations with split-explicit (but
+not RK4) time integration on this mesh.  These set the time step and default
+run duration for short runs with this mesh.
+
+Except for ``min_res``, default config options for these meshes come from a
+shared config file in the ``compass.ocean.tests.global_ocean.mesh.kuroshio``
+module:
+
+.. code-block:: cfg
+
+    # options related to the vertical grid
+    [vertical_grid]
+
+    # the type of vertical grid
+    grid_type = 60layerPHC
+
+    # options for global ocean testcases
+    [global_ocean]
+
+    ## config options related to the initial_state step
+    # number of cores to use
+    init_ntasks = 36
+    # minimum of cores, below which the step fails
+    init_min_tasks = 8
+    # maximum memory usage allowed (in MB)
+    init_max_memory = 1000
+
+    ## config options related to the forward steps
+    # number of cores to use
+    forward_ntasks = 1296
+    # minimum of cores, below which the step fails
+    forward_min_tasks = 128
+    # maximum memory usage allowed (in MB)
+    forward_max_memory = 1000
+
+    ## metadata related to the mesh
+    # the prefix (e.g. QU, EC, WC, SO, Kuroshio)
+    prefix = Kuroshio
+    # a description of the mesh and initial condition
+    mesh_description = MPAS Kuroshio regionally refined mesh for E3SM version
+                       ${e3sm_version} with enhanced resolution (${min_res} km) in
+                       Kuroshio-Oyashio Extension, 45-km resolution in the mid latitudes,
+                       30-km resolution in a 15-degree band around the equator, 60-km
+                       resolution in northern mid latitudes, 30 km in the north
+                       Atlantic and 35 km in the Arctic.  This mesh has ${levels}
+                       vertical levels.
+    # E3SM version that the mesh is intended for
+    e3sm_version = 2
+    # The revision number of the mesh, which should be incremented each time the
+    # mesh is revised
+    mesh_revision = 4
+    # the maximum (coarsest) resolution in the mesh, can be the same as min_res
+    max_res = 60
+    # the URL of the pull request documenting the creation of the mesh
+    pull_request = https://github.com/MPAS-Dev/compass/pull/525
+
+The vertical grid is a ``60layerPHC`` profile (see
+:ref:`dev_ocean_framework_vertical`) with 60 vertical levels ranging in
+thickness from 10 to 250 m.
+
 .. _dev_ocean_global_ocean_sowisc12to60:
 
 SOwISC12to60
