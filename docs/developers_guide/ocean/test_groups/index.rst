@@ -18,6 +18,7 @@ Test groups
    internal_wave
    isomip_plus
    merry_go_round
+   nonhydro
    planar_convergence
    soma
    sphere_transport

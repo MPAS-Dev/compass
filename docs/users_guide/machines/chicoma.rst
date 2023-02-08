@@ -66,7 +66,9 @@ Archiving
 LANL uses slurm. To obtain an interactive node:
 
 .. code-block:: bash
+
     salloc -N 1 -t 2:0:0 --qos=interactive
+
 Use ``--account=ACCOUNT_NAME`` to change to a particular account.
 
 Chicoma-CPU
