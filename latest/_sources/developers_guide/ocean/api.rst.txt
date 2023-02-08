@@ -485,34 +485,33 @@ nonhydro
 .. currentmodule:: compass.ocean.tests.nonhydro
 
 .. autosummary::
-      :toctree: generated/
+   :toctree: generated/
 
    Nonhydro
-   configure
 
    stratified_seiche.StratifiedSeiche
-   stratified_seiche.StratifiedSeiche.setup
-   stratified_seiche.InitialState
-   stratified_seiche.InitialState.setup
-   stratified_seiche.InitialState.run
-   stratified_seiche.Forward
-   stratified_seiche.Forward.setup
-   stratified_seiche.Forward.run
-   stratified_seiche.Visualize
-   stratified_seiche.Visualize.setup 
-   stratified_seiche.Visualize.run
+   stratified_seiche.StratifiedSeiche.configure
+   stratified_seiche.initial_state.InitialState
+   stratified_seiche.initial_state.InitialState.setup
+   stratified_seiche.initial_state.InitialState.run
+   stratified_seiche.forward.Forward
+   stratified_seiche.forward.Forward.setup
+   stratified_seiche.forward.Forward.run
+   stratified_seiche.visualize.Visualize
+   stratified_seiche.visualize.Visualize.setup
+   stratified_seiche.visualize.Visualize.run
 
    solitary_wave.SolitaryWave
-   solitary_wave.SolitaryWave.setup
-   solitary_wave.InitialState
-   solitary_wave.InitialState.setup
-   solitary_wave.InitialState.run
-   solitary_wave.Forward
-   solitary_wave.Forward.setup
-   solitary_wave.Forward.run
-   solitary_wave.Visualize
-   solitary_wave.Visualize.setup
-   solitary_wave.Visualize.run
+   solitary_wave.SolitaryWave.configure
+   solitary_wave.initial_state.InitialState
+   solitary_wave.initial_state.InitialState.setup
+   solitary_wave.initial_state.InitialState.run
+   solitary_wave.forward.Forward
+   solitary_wave.forward.Forward.setup
+   solitary_wave.forward.Forward.run
+   solitary_wave.visualize.Visualize
+   solitary_wave.visualize.Visualize.setup
+   solitary_wave.visualize.Visualize.run
 
 planar_convergence
 ~~~~~~~~~~~~~~~~~~
