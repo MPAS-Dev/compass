@@ -377,7 +377,7 @@ is identical except that it includes the cavities below ice shelves in the
 ocean domain.
 
 The class
-:py:class:`compass.ocean.tests.global_ocean.mesh.ec30to60.EC30to60Mesh` defines
+:py:class:`compass.ocean.tests.global_ocean.mesh.ec30to60.EC30to60BaseMesh` defines
 the resolution for both meshes. The ``compass.ocean.tests.global_ocean.mesh.ec30to60``
 module includes  namelist options appropriate for forward simulations with
 split-explicit (but not RK4) time integration on this mesh.  These set the time
@@ -447,7 +447,7 @@ mid-latitudes, 30-km at the equator and in the North Atlantic, 60-km resolution
 in the North Pacific, and 35-km resolution in the Arctic.
 
 The class
-:py:class:`compass.ocean.tests.global_ocean.mesh.so12to60.SO12to60Mesh` defines
+:py:class:`compass.ocean.tests.global_ocean.mesh.so12to60.SO12to60BaseMesh` defines
 the resolution for the mesh. The ``compass.ocean.tests.global_ocean.mesh.so12to60``
 module includes namelist options appropriate for forward simulations with
 split-explicit (but not RK4) time integration on this mesh.  These set the time
@@ -521,7 +521,7 @@ and a section of the North Atlantic containing the Gulf Stream. The resolution
 elsewhere varies between 35 km at the South Pole to 60 km at mid latitudes,
 with a band of 30-km resolution around the equator.
 
-The class :py:class:`compass.ocean.tests.global_ocean.mesh.wc14.WC14Mesh`
+The class :py:class:`compass.ocean.tests.global_ocean.mesh.wc14.WC14BaseMesh`
 defines the resolution for the mesh. The
 ``compass.ocean.tests.global_ocean.mesh.wc14`` module includes namelist options
 appropriate for forward simulations with split-explicit (but not RK4) time
