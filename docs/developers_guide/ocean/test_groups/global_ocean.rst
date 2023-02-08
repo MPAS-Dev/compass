@@ -24,26 +24,6 @@ and ``streams.forward``), one specific to meshes with ice-shelf cavities
 (``namelist.wisc``), and some related to simulations with biogeochemistry
 (``namelist.bgc`` and ``streams.bgc``).
 
-.. _dev_ocean_global_ocean_config:
-
-configure
-~~~~~~~~~
-
-The function :py:func:`compass.ocean.tests.global_ocean.configure.configure_global_ocean()`
-is used to set config options for most test cases in ``global_ocean``.  It
-takes as arguments a test case object, a :ref:`dev_ocean_global_ocean_mesh`
-object, and optionally an :ref:`dev_ocean_global_ocean_init` object.  These
-2 or 3 test cases are used to:
-
-* add config options specific to the mesh
-
-* add config options specific to the test case
-
-* set config options describing the mesh and initial conditions (if ``init``
-  is provided).  The config options will be used to add
-  :ref:`dev_ocean_global_ocean_metadata` to output files describing the mesh
-  and initial condition.
-
 .. _dev_ocean_global_ocean_metadata:
 
 metadata
@@ -161,7 +141,9 @@ attribute ``self.time_integrator`` to determine whether ``split-explicit`` or
 ``RK4`` time integration will be used.
 
 In its ``configure()`` method, ``ForwardTestCase`` takes care of config options
-by calling :py:func:`compass.ocean.tests.global_ocean.configure.configure_global_ocean()`.
+by calling :py:meth:`compass.ocean.tests.global_ocean.init.Init.configure()`
+to also pick up config options (e.g. metadata) related to the mesh and
+initial condition.
 
 In its ``run()`` method, it sets the number of target and minimum number of
 cores as well as the number of threads based on config options.  Then, it calls
@@ -611,6 +593,10 @@ fields used for initialization: the Polar science center Hydrographic Climatolog
 (`PHC <http://psc.apl.washington.edu/nonwp_projects/PHC/Climatology.html>`_)
 or the UK MetOffice's EN4 estimated climatology for the year 1900
 (`EN4_1900 <https://www.metoffice.gov.uk/hadobs/en4/download-en4-2-0.html>`_).
+
+In its ``configure()`` method, ``Init`` brings in config options related to
+the mesh (e.g. metadata) by calling
+:py:meth:`compass.ocean.tests.global_ocean.mesh.Mesh.configure()`.
 
 The test case includes 5 namelist replacement files and 3 streams files.
 ``namelist.init`` and ``streams.init`` modify the namelist options and set up
