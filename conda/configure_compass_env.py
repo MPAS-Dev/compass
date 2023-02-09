@@ -61,6 +61,12 @@ def main():
     args = parse_args(bootstrap=False)
     source_path = os.getcwd()
 
+    if args.tmpdir is not None:
+        try:
+            os.makedirs(args.tmpdir)
+        except FileExistsError:
+            pass
+
     config = get_config(args.config_file)
 
     conda_base = get_conda_base(args.conda_base, config, warn=True)
