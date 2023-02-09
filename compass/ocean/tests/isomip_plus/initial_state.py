@@ -162,6 +162,20 @@ class InitialState(Step):
         init_bot_temp = section.getfloat('init_bot_temp')
         init_top_sal = section.getfloat('init_top_sal')
         init_bot_sal = section.getfloat('init_bot_sal')
+        thin_film_mask = np.logical_and(mask.values,
+                                        np.logical_not(floating_mask.values))
+        # These coefficients are hard-coded as the defaults in the namelist
+        # Note that using the land ice pressure rather than the pressure at
+        # floatation will mean that there is a small amount of cooling from
+        # grounding line retreat. However, the thin film should be thin enough
+        # that this effect isn't signicant.
+        freezing_temp = (6.22e-2 +
+                         -5.63e-2 * init_bot_sal +
+                         -7.43e-8 * landIcePressure +
+                         -1.74e-10 * landIcePressure * init_bot_sal)
+        _, thin_film_temp = np.meshgrid(ds.refZMid, freezing_temp)
+        _, thin_film_mask = np.meshgrid(ds.refZMid, thin_film_mask)
+        thin_film_temp = np.expand_dims(thin_film_temp, axis=0)
         if self.vertical_coordinate == 'single_layer':
             ds['temperature'] = init_bot_temp * xr.ones_like(frac)
             ds['salinity'] = init_bot_sal * xr.ones_like(frac)
@@ -170,6 +184,8 @@ class InitialState(Step):
                 (1.0 - frac) * init_top_temp + frac * init_bot_temp
             ds['salinity'] = \
                 (1.0 - frac) * init_top_sal + frac * init_bot_sal
+        # for thin film cells, set temperature to freezing point
+        ds['temperature'] = xr.where(thin_film_mask, thin_film_temp, ds.temperature)
 
         # compute coriolis
         coriolis_parameter = section.getfloat('coriolis_parameter')
