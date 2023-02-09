@@ -11,6 +11,7 @@ from compass.ocean.tests.ice_shelf_2d import IceShelf2d
 from compass.ocean.tests.isomip_plus import IsomipPlus
 from compass.ocean.tests.merry_go_round import MerryGoRound
 from compass.ocean.tests.nonhydro import Nonhydro
+from compass.ocean.tests.overflow import Overflow
 from compass.ocean.tests.planar_convergence import PlanarConvergence
 from compass.ocean.tests.soma import Soma
 from compass.ocean.tests.sphere_transport import SphereTransport
@@ -43,6 +44,7 @@ class Ocean(MpasCore):
         self.add_test_group(IsomipPlus(mpas_core=self))
         self.add_test_group(MerryGoRound(mpas_core=self))
         self.add_test_group(Nonhydro(mpas_core=self))
+        self.add_test_group(Overflow(mpas_core=self))
         self.add_test_group(PlanarConvergence(mpas_core=self))
         self.add_test_group(Soma(mpas_core=self))
         self.add_test_group(SphereTransport(mpas_core=self))
