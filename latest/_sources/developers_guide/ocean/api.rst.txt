@@ -513,6 +513,30 @@ nonhydro
    solitary_wave.visualize.Visualize.setup
    solitary_wave.visualize.Visualize.run
 
+overflow
+~~~~~~~~
+
+.. currentmodule:: compass.ocean.tests.overflow
+
+.. autosummary::
+   :toctree: generated/
+
+   Overflow
+
+   default.Default
+
+   rpe_test.RpeTest
+
+   rpe_test.analysis.Analysis
+   rpe_test.analysis.Analysis.run
+
+   forward.Forward
+   forward.Forward.run
+
+   initial_state.InitialState
+   initial_state.InitialState.run
+
+
 planar_convergence
 ~~~~~~~~~~~~~~~~~~
 
