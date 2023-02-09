@@ -1,5 +1,7 @@
 import os
 
+import matplotlib.pyplot as plt
+import numpy as np
 import xarray
 from mpas_tools.io import write_netcdf
 
@@ -102,6 +104,24 @@ class Viz(Step):
             delssh = dsOut.ssh - dsOut.ssh[0, :]
             plotter.plot_horiz_series(delssh, 'delssh', 'delssh', True,
                                       cmap='cmo.curl', vmin=-1, vmax=1)
+
+        wct = dsOut.ssh + dsMesh.bottomDepth
+        idx_thin = np.logical_and(wct[0, :] > 1e-1,
+                                  wct[0, :] < 1)
+        wct_thin = wct[:, idx_thin]
+        wct_mean = wct_thin.mean(dim='nCells').values
+        time = dsOut.daysSinceStartOfSim.values
+        fig = plt.figure()
+        plt.plot(time, wct_mean, '.')
+        fig.set_xlabel('Time (days)')
+        fig.set_ylabel('Mean thickness of thin film (m)')
+        plt.savefig('wct_thin_t.png')
+        plt.close()
+
+        plotter.plot_horiz_series(wct, 'H', 'H',
+                                  True, vmin=min_column_thickness + 1e-10,
+                                  vmax=700, cmap_set_under='r',
+                                  cmap_scale='log')
 
         if os.path.exists(f'{sim_dir}/timeSeriesStatsMonthly.0001-01-01.nc'):
             ds = xarray.open_mfdataset(
