@@ -422,7 +422,7 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, spack_env,
             f'scorpio@{scorpio}+pnetcdf~timing+internal-timing~tools+malloc')
 
     if albany != 'None':
-        specs.append(f'albany@{albany}+mpas+cxx17')
+        specs.append(f'albany@{albany}+mpas')
 
     yaml_template = f'{spack_template_path}/{machine}_{compiler}_{mpi}.yaml'
     if not os.path.exists(yaml_template):
