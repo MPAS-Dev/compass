@@ -343,11 +343,11 @@ Kuroshio8to60 and Kuroshio12to60
 The Kuroshio 8- and 12- to 60-km meshes (Kuroshio8to60 and Kuroshio12to60) are
 designed to explore dynamics of the Kuroshio Current.
 
-The meshes have 8 and 12 km resolution, respectively, in the eastern
+The meshes have 8 and 12 km resolution, respectively, in the western
 North Pacific, tapering to 60 km at mid latitudes, 30 km at the equator, and
 35 km in polar regions (the same as the EC30to60).
 
-.. image:: images/kuroshio12to60.png
+.. image:: images/kuroshio8to60.png
    :width: 500 px
    :align: center
 

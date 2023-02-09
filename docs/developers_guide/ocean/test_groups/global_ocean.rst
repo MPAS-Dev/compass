@@ -442,7 +442,8 @@ Kuroshio8to60 and Kuroshio12to60
 ++++++++++++++++++++++++++++++++
 
 The ``Kuroshio8to60`` and ``Kuroshio12to60`` mehses are designed to explore
-dynamics of the Kuroshio Current.
+dynamics of the Western Boundary Current (WBC) in the North Pacific Ocean, 
+the Kuroshio.
 
 The class
 :py:class:`compass.ocean.tests.global_ocean.mesh.kuroshio.KuroshioBaseMesh`
