@@ -23,12 +23,17 @@ class RpeTest(TestCase):
         name = 'rpe_test'
         super().__init__(test_group=test_group, name=name)
 
-        nus = [0.01, 1, 15, 150]
 
+    def configure(self):
+        """
+        Modify the configuration options for this test case.
+        """
+        config = self.config
         self.add_step(InitialState(test_case=self))
 
+        nus = config.getlist('internal_wave', 'viscosities', dtype=float)
         for index, nu in enumerate(nus):
-            name = 'rpe_test_{}_nu_{:g}'.format(index + 1, nu)
+            name = f'rpe_test_{index + 1}_nu_{nu:g}'
             step = Forward(
                 test_case=self, name=name, subdir=name, ntasks=4,
                 openmp_threads=1, nu=float(nu))

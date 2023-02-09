@@ -45,11 +45,11 @@ class Analysis(Step):
 
         for index, nu in enumerate(nus):
             self.add_input_file(
-                filename='output_{}.nc'.format(index+1),
-                target='../rpe_test_{}_nu_{}/output.nc'.format(index+1, nu))
+                filename=f'output_{index+1}.nc',
+                target=f'../rpe_test_{index+1}_nu_{int(nu)}/output.nc')
 
         self.add_output_file(
-            filename='sections_baroclinic_channel_{}.png'.format(resolution))
+            filename=f'sections_baroclinic_channel_{resolution}.png')
         self.add_output_file(filename='rpe_t.png')
 
     def run(self):
@@ -81,7 +81,8 @@ def _plot(nx, ny, filename, nus, rpe):
     nus : list of float
         The viscosity values
 
-    rpe : float, dim len(nu) x len(time)
+    rpe : numpy.ndarray
+        The reference potential energy with size len(nu) x len(time)
     """
 
     plt.switch_backend('Agg')
@@ -98,7 +99,7 @@ def _plot(nx, ny, filename, nus, rpe):
     for i in range(num_files):
         rpe_norm = np.divide((rpe[i, :]-rpe[i, 0]), rpe[i, 0])
         plt.plot(times, rpe_norm,
-                 label="$\\nu_h=${}".format(nus[i]))
+                 label=f"$\\nu_h=${nus[i]}")
     plt.xlabel('Time, days')
     plt.ylabel('RPE-RPE(0)/RPE(0)')
     plt.legend()
@@ -109,7 +110,7 @@ def _plot(nx, ny, filename, nus, rpe):
         2.1 * num_files, 5.0), constrained_layout=True)
 
     for iCol in range(num_files):
-        ds = xarray.open_dataset('output_{}.nc'.format(iCol + 1))
+        ds = xarray.open_dataset(f'output_{iCol + 1}.nc')
         times = ds.daysSinceStartOfSim.values
         times = np.divide(times.tolist(), nanosecondsPerDay)
         tidx = np.argmin(np.abs(times-time))
@@ -132,8 +133,8 @@ def _plot(nx, ny, filename, nus, rpe):
             cmap='cmo.thermal',
             vmin=11.8,
             vmax=13.0)
-        ax.set_title("day {}, $\\nu_h=${}".format(
-            int(times[tidx]), nus[iCol]))
+        ax.set_title(f'day {times[tidx]}, '
+                     f'$\\nu_h=${nus[iCol]}')
         ax.set_xticks(np.arange(0, 161, step=40))
         ax.set_yticks(np.arange(0, 501, step=50))
 

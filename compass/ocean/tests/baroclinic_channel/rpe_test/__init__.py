@@ -33,8 +33,16 @@ class RpeTest(TestCase):
         subdir = f'{resolution}/{name}'
         super().__init__(test_group=test_group, name=name,
                          subdir=subdir)
+        self.resolution = resolution
 
-        nus = [1, 5, 10, 20, 200]
+
+    def configure(self):
+        """
+        Modify the configuration options for this test case.
+        """
+        resolution = self.resolution
+        config = self.config
+        baroclinic_channel.configure(resolution, config)
 
         res_params = {'1km': {'ntasks': 144, 'min_tasks': 36},
                       '4km': {'ntasks': 36, 'min_tasks': 8},
@@ -47,13 +55,12 @@ class RpeTest(TestCase):
 
         params = res_params[resolution]
 
-        self.resolution = resolution
-
         self.add_step(
             InitialState(test_case=self, resolution=resolution))
 
+        nus = config.getlist('baroclinic_channel', 'viscosities', dtype=float)
         for index, nu in enumerate(nus):
-            name = 'rpe_test_{}_nu_{}'.format(index + 1, nu)
+            name = f'rpe_test_{index + 1}_nu_{int(nu)}'
             step = Forward(
                 test_case=self, name=name, subdir=name,
                 ntasks=params['ntasks'], min_tasks=params['min_tasks'],
@@ -69,11 +76,3 @@ class RpeTest(TestCase):
 
         self.add_step(
             Analysis(test_case=self, resolution=resolution, nus=nus))
-
-    def configure(self):
-        """
-        Modify the configuration options for this test case.
-        """
-        baroclinic_channel.configure(self.resolution, self.config)
-
-    # no run() is needed because we're doing the default: running all steps
