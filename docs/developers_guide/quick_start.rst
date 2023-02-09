@@ -54,24 +54,30 @@ package because these don't get added automatically.
 
 Whether you are on one of the :ref:`dev_supported_machines` or an "unknown"
 machine, you will need to specify a path where
-`Miniconda3 <https://docs.conda.io/en/latest/miniconda.html>`_ either has
-already been installed or where the script can install it.  You must have write
-permission in the base environment.
+`Mambaforge <https://github.com/conda-forge/miniforge#mambaforge>`_ either has
+already been installed or an empty directory where the script can install it.
+You must have write permission in the base environment (if it exists).
 
 .. note::
 
-    It is *very* important that you not use a shared installation of Miniconda3
-    such as the base environment for E3SM-Unified for ``compass`` development.
-    Most developers will not have write access to shared environments, meaning
-    that you will get write-permission errors when you try to update the base
-    environment or create the compass development environment.
+    We have found that an existing Miniconda3 installation **does not** always
+    work well for ``compass``, so please start with Mambaforge instead.
+
+.. note::
+
+    It is *very* important that you not use a shared installation of Mambaforge
+    or Miniconda3 such as the base environment for E3SM-Unified for ``compass``
+    development. Most developers will not have write access to shared
+    environments, meaning that you will get write-permission errors when you
+    try to update the base environment or create the compass development
+    environment.
 
     For anyone who does have write permission to a shared environment, you
     would be creating your compass development environment in a shared space,
     which could cause confusion.
 
-    Please use your own personal installation of Miniconda3 for development,
-    letting ``configure_compass_env.py`` download and install Miniconda3 for
+    Please use your own personal installation of Mambaforge for development,
+    letting ``configure_compass_env.py`` download and install Mambaforge for
     you if you don't already have it installed.
 
 Supported machines
@@ -85,8 +91,8 @@ If you are on one of the :ref:`dev_supported_machines`, run:
         -c <compiler> [--mpi <mpi>] [-m <machine>] [--with_albany] \
         [--with_netlib_lapack] [--with_petsc]
 
-The ``<base_path_to_install_or_update_conda>`` is typically ``~/miniconda3``.
-This is the location where you would like to install Miniconda3 or where it is
+The ``<base_path_to_install_or_update_conda>`` is typically ``~/mambaforge``.
+This is the location where you would like to install Mambaforge or where it is
 already installed. If you have limited space in your home directory, you may
 want to give another path.  If you already have it installed, that path will
 be used to add (or update) the compass test environment.
@@ -136,8 +142,8 @@ workstation, you will need to specify which flavor of MPI you want to use
 
   ./conda/configure_compass_env.py --conda <conda_path> --mpi <mpi>
 
-Again, the ``<conda_path>`` is typically ``~/miniconda3``, and is the location
-where you would like to install Miniconda3 or where it is already installed.
+Again, the ``<conda_path>`` is typically ``~/mambaforge``, and is the location
+where you would like to install Mambaforge or where it is already installed.
 If you already have it installed, that path will be used to add (or update) the
 compass test environment.
 
@@ -163,14 +169,14 @@ in :ref:`config_files`.
 What the script does
 ~~~~~~~~~~~~~~~~~~~~
 
-In addition to installing Miniconda and creating the conda environment for you,
-this script will also:
+In addition to installing Mambaforge and creating the conda environment for
+you, this script will also:
 
 * install the ``compass`` package from the local branch in "development" mode
   so changes you make to the repo are immediately reflected in the conda
   environment.
 
-* with the ``--update_speck`` flag on supported machines, installs or
+* with the ``--update_spack`` flag on supported machines, installs or
   reinstalls a spack environment with various system libraries.  The
   ``--spack`` flag can be used to point to a location for the spack repo to be
   checked out.  Without this flag, a default location is used. Spack is used to
@@ -180,7 +186,8 @@ this script will also:
   in parallel), `Trilinos <https://trilinos.github.io/>`_,
   `Albany <https://github.com/sandialabs/Albany>`_,
   `Netlib-LAPACK <http://www.netlib.org/lapack/>`_ and
-  `PETSc <https://petsc.org/>`_.
+  `PETSc <https://petsc.org/>`_. **Please uses these flags with caution, as
+  they can affect shared environments!**  See :ref:`dev_deploying_spack`.
 
 * with the ``--with_albany`` flag, creates or uses an existing Spack
   environment that includes Albany and Trilinos.

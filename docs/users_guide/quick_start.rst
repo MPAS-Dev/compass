@@ -70,21 +70,13 @@ other machines
 ~~~~~~~~~~~~~~
 
 To install your own ``compass`` conda environment on other machines, first,
-install `Miniconda3 <https://docs.conda.io/en/latest/miniconda.html>`_ (if
-miniconda is not already installed), then add the
-`conda-forge channel <https://conda-forge.org/#about>`_:
+install `Mambaforge <https://github.com/conda-forge/miniforge#mambaforge>`_
+(if it is not already installed), then create a new conda environment (called
+``compass`` in this example) as follows:
 
 .. code-block:: bash
 
-    conda config --add channels conda-forge
-    conda config --set channel_priority strict
-
-then, create a new conda environment (called ``compass`` in this example) as
-follows:
-
-.. code-block:: bash
-
-    conda create -n compass -c conda-forge -c e3sm/label/compass python=3.9 \
+    conda create -n compass -c conda-forge -c e3sm/label/compass python=3.10 \
         "compass=*=mpi_mpich*"
 
 This will install the version of the package with MPI from conda-forge's MPICH
