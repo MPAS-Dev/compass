@@ -62,6 +62,9 @@ All 5 test cases share the same set of config options:
     # or fractions. False means fractions.
     use_distances = False
 
+    # Viscosity values to test for rpe test case
+    viscosities = 1, 5, 10, 20, 200
+
     # Temperature of the surface in the northern half of the domain.
     surface_temperature = 13.1
 

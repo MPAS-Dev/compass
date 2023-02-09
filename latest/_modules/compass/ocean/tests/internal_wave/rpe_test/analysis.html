@@ -151,8 +151,8 @@
 
         <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">nu</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">nus</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-                <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;output_</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span>
-                <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../rpe_test_</span><span class="si">{}</span><span class="s1">_nu_</span><span class="si">{}</span><span class="s1">/output.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">nu</span><span class="p">))</span>
+                <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;output_</span><span class="si">{</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">.nc&#39;</span><span class="p">,</span>
+                <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;../rpe_test_</span><span class="si">{</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">_nu_</span><span class="si">{</span><span class="n">nu</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">/output.nc&#39;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span>
             <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;sections_internal_wave.png&#39;</span><span class="p">)</span>
@@ -162,32 +162,24 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run this step of the test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">section</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;internal_wave&#39;</span><span class="p">]</span>
-        <span class="n">nx</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;nx&#39;</span><span class="p">)</span>
-        <span class="n">ny</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;ny&#39;</span><span class="p">)</span>
         <span class="n">rpe</span> <span class="o">=</span> <span class="n">compute_rpe</span><span class="p">(</span><span class="n">num_files</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nus</span><span class="p">))</span>
-        <span class="n">_plot</span><span class="p">(</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">nus</span><span class="p">,</span> <span class="n">rpe</span><span class="p">)</span></div></div>
+        <span class="n">_plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">nus</span><span class="p">,</span> <span class="n">rpe</span><span class="p">)</span></div></div>
 
 
-<span class="k">def</span> <span class="nf">_plot</span><span class="p">(</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">nus</span><span class="p">,</span> <span class="n">rpe</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_plot</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">nus</span><span class="p">,</span> <span class="n">rpe</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plot section of the internal wave at different viscosities</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    nx : int</span>
-<span class="sd">        The number of cells in the x direction</span>
-
-<span class="sd">    ny : int</span>
-<span class="sd">        The number of cells in the y direction (before culling)</span>
-
 <span class="sd">    filename : str</span>
 <span class="sd">        The output file name</span>
 
 <span class="sd">    nus : list of float</span>
 <span class="sd">        The viscosity values</span>
 
-<span class="sd">    rpe : float, dim len(nu) x len(time)</span>
+<span class="sd">    rpe : numpy.ndarray</span>
+<span class="sd">        The reference potential energy with size len(nu) x len(time)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">plt</span><span class="o">.</span><span class="n">switch_backend</span><span class="p">(</span><span class="s1">&#39;Agg&#39;</span><span class="p">)</span>
@@ -204,7 +196,7 @@
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_files</span><span class="p">):</span>
         <span class="n">rpe_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">((</span><span class="n">rpe</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span><span class="o">-</span><span class="n">rpe</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">rpe</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">rpe_norm</span><span class="p">,</span>
-                 <span class="n">label</span><span class="o">=</span><span class="s2">&quot;$</span><span class="se">\\</span><span class="s2">nu_h=$</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nus</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+                 <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;$</span><span class="se">\\</span><span class="s2">nu_h=$</span><span class="si">{</span><span class="n">nus</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time, days&#39;</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;RPE-RPE(0)/RPE(0)&#39;</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
@@ -218,7 +210,7 @@
         <span class="mf">4.0</span> <span class="o">*</span> <span class="n">nCol</span><span class="p">,</span> <span class="mf">3.7</span> <span class="o">*</span> <span class="n">nRow</span><span class="p">),</span> <span class="n">constrained_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">iRow</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nRow</span><span class="p">):</span>
-        <span class="n">ds</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;output_</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iRow</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;output_</span><span class="si">{</span><span class="n">iRow</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s1">.nc&#39;</span><span class="p">)</span>
         <span class="n">times</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">daysSinceStartOfSim</span><span class="o">.</span><span class="n">values</span>
         <span class="n">times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">times</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">nanosecondsPerDay</span><span class="p">)</span>
         <span class="n">var</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">temperature</span><span class="o">.</span><span class="n">values</span>
@@ -238,7 +230,7 @@
                 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;depth, m&#39;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">iCol</span> <span class="o">==</span> <span class="n">nCol</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">dis</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="n">iRow</span><span class="p">,</span> <span class="n">iCol</span><span class="p">],</span> <span class="n">aspect</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;day </span><span class="si">{}</span><span class="s2">, $</span><span class="se">\\</span><span class="s2">nu_h=$</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="p">[</span><span class="n">iCol</span><span class="p">],</span> <span class="n">nus</span><span class="p">[</span><span class="n">iRow</span><span class="p">]))</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;day </span><span class="si">{</span><span class="n">time</span><span class="p">[</span><span class="n">iCol</span><span class="p">]</span><span class="si">}</span><span class="s2">, $</span><span class="se">\\</span><span class="s2">nu_h=$</span><span class="si">{</span><span class="n">nus</span><span class="p">[</span><span class="n">iRow</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;sections_internal_wave.png&#39;</span><span class="p">)</span>
 </pre></div>
