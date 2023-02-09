@@ -33,11 +33,6 @@ rising indefinitely due to the input of freshwater from ice-shelf melting.
 geom
 ~~~~
 
-The function :py:func:`compass.ocean.tests.isomip_plus.geom.define_thin_film_mask_step1()`
-defines an MPAS mesh mask for the ocean domain including cells over the full x- and y-range
-in cases with a thin film. Thus, all land cells are included in the ocean's thin-film region.
-
-
 The function :py:func:`compass.ocean.tests.isomip_plus.geom.interpolate_ocean_mask()`
 interpolates the ocean mask from the BISICLES grid of the input geometry to
 the MPAS-Ocean mesh.  The mask can later be used to cull land cells from the
