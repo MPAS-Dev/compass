@@ -12,7 +12,7 @@ LOGDIR=previous_logs_`date +"%Y-%m-%d_%H-%M-%S"`
 mkdir $LOGDIR
 cp log* $LOGDIR
 
-source {{ LOAD_SCRIPT }}
+source ../load_compass_env.sh
 date
 srun -n 3840 --cpu-bind=cores --hint=multithread ./landice_model
 date

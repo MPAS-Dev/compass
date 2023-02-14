@@ -35,7 +35,6 @@ class SetUpExperiment(Step):
         config = self.config
         section = config['ismip6_run_ais']
         mesh_res = section.getint('mesh_res')
-        compass_load_path = section.get('compass_load_path')
         forcing_basepath = section.get('forcing_basepath')
         init_cond_path = section.get('init_cond_path')
         init_cond_fname = os.path.split(init_cond_path)[-1]
@@ -200,8 +199,7 @@ class SetUpExperiment(Step):
         template = Template(resources.read_text(
             'compass.landice.tests.ismip6_run_ais',
             f'slurm.{mesh_res:02d}.run'))
-        slurm_replacements = {'EXP': f'{self.exp}_{mesh_res:02d}',
-                              'LOAD_SCRIPT': compass_load_path}
+        slurm_replacements = {'EXP': f'{self.exp}_{mesh_res:02d}'}
         rendered_text = template.render(slurm_replacements)
         with open(os.path.join(self.work_dir, 'slurm.run'), "w") as fh:
             fh.write(rendered_text)
