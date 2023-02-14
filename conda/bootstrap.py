@@ -351,11 +351,18 @@ def get_env_vars(machine, compiler, mpilib):
                    f'export MV2_ENABLE_AFFINITY=0\n' \
                    f'export MV2_SHOW_CPU_BINDING=1\n'
 
-    env_vars = \
-        f'{env_vars}' \
-        f'export NETCDF=$(dirname $(dirname $(which nc-config)))\n' \
-        f'export NETCDFF=$(dirname $(dirname $(which nf-config)))\n' \
-        f'export PNETCDF=$(dirname $(dirname $(which pnetcdf-config)))\n'
+    if machine.startswith('chicoma') or machine.startswith('pm'):
+        env_vars = \
+            f'{env_vars}' \
+            f'export NETCDF=${{CRAY_NETCDF_HDF5PARALLEL_PREFIX}}\n' \
+            f'export NETCDFF=${{CRAY_NETCDF_HDF5PARALLEL_PREFIX}}\n' \
+            f'export PNETCDF=${{CRAY_PARALLEL_NETCDF_PREFIX}}\n'
+    else:
+        env_vars = \
+            f'{env_vars}' \
+            f'export NETCDF=$(dirname $(dirname $(which nc-config)))\n' \
+            f'export NETCDFF=$(dirname $(dirname $(which nf-config)))\n' \
+            f'export PNETCDF=$(dirname $(dirname $(which pnetcdf-config)))\n'
 
     return env_vars
 
