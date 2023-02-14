@@ -34,7 +34,7 @@ class SetUpExperiment(Step):
 
         config = self.config
         section = config['ismip6_run_ais']
-        mesh_res = section.get('mesh_res')
+        mesh_res = section.getint('mesh_res')
         compass_load_path = section.get('compass_load_path')
         forcing_basepath = section.get('forcing_basepath')
         init_cond_path = section.get('init_cond_path')
@@ -51,7 +51,7 @@ class SetUpExperiment(Step):
             exp_fcg = self.exp
 
         # We chose to use vM calving at 4km but restore calving at 8km
-        if mesh_res == '04':
+        if mesh_res == 4:
             use_vM_calving = True
         else:
             use_vM_calving = False
@@ -118,7 +118,7 @@ class SetUpExperiment(Step):
             stream_replacements['input_file_init_cond'] = 'USE_RESTART_FILE_INSTEAD'
             stream_replacements['input_file_region_mask'] = 'USE_RESTART_FILE_INSTEAD'
             stream_replacements['input_file_melt_params'] = 'USE_RESTART_FILE_INSTEAD'
-        if self.exp == 'hist' or self.exp == 'ctrlAE':
+        if self.exp in ['hist', 'ctrlAE']:
             stream_replacements['forcing_interval'] = 'initial_only'
         else:
             stream_replacements['forcing_interval'] = '0001-00-00_00:00:00'
@@ -148,7 +148,7 @@ class SetUpExperiment(Step):
             'compass.landice.tests.ismip6_run_ais', 'namelist.landice',
             out_name='namelist.landice')
 
-        if mesh_res == '04':
+        if mesh_res == 4:
             options = {'config_pio_num_iotasks': '60',
                        'config_pio_stride': '64'}
             self.add_namelist_options(options=options,
@@ -199,8 +199,8 @@ class SetUpExperiment(Step):
         # provide an example submit script
         template = Template(resources.read_text(
             'compass.landice.tests.ismip6_run_ais',
-            f'slurm.{mesh_res}.run'))
-        slurm_replacements = {'EXP': f'{self.exp}_{mesh_res}',
+            f'slurm.{mesh_res:02d}.run'))
+        slurm_replacements = {'EXP': f'{self.exp}_{mesh_res:02d}',
                               'LOAD_SCRIPT': compass_load_path}
         rendered_text = template.render(slurm_replacements)
         with open(os.path.join(self.work_dir, 'slurm.run'), "w") as fh:
