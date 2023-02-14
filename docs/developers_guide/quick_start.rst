@@ -260,6 +260,14 @@ a similar command.
     an incorrect and possibly unusable ``compass`` package in your conda
     environment.
 
+    In general, if one wishes to switch between environments created for
+    different compass branches or applications, the best practice is to end
+    the current terminal session and start a new session with a clean
+    environment before executing the other compass load script.  Similarly,
+    if you want to run a job script that itself sources the load script,
+    it's best to start a new terminal without having sourced a load script at
+    all.
+
 If you switch to another branch, you will need to rerun
 ``./conda/configure_compass_env.py`` with the same arguments as above to make
 sure dependencies are up to date and the ``compass`` package points to the
