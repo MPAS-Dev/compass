@@ -286,6 +286,34 @@ Here is an example:
         --with_petsc \
         --recreate
 
+
+Troubleshooting spack
+------------------------------
+
+If you encounter an error like:
+.. code-block:: bash
+
+    ==>   spack env activate dev_compass_1_2_0-alpha_4_gnu_mpich
+    ==> Error: Package 'armpl' not found.
+    You may need to run 'spack clean -m'.
+
+during the attempt to build spack, you will first need to find the path to `setup-env.sh` (see 
+`compass/build_*/build*.sh`) and source that script to get the `spack` command, e.g.:
+
+.. code-block:: bash
+
+    source ${PSCRATCH}/spack_test/spack_for_mache_1.12.0/share/spack/setup-env.sh
+
+Then run the suggested command:
+
+.. code-block:: bash
+
+    spack clean -m
+
+After that, re-running `./conda/configure_compass_env.py` should work correctly.
+
+This issue seems to be related to switching between spack v0.18 and v0.19 (used by different versions of compass).
+
 Testing compass
 ===============
 
