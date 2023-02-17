@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>compass.ocean.iceshelf.compute_land_ice_pressure_and_draft &mdash; compass latest documentation</title>
@@ -12,6 +12,9 @@
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -130,14 +133,14 @@
 <span class="sig-prename descclassname"><span class="pre">compass.ocean.iceshelf.</span></span><span class="sig-name descname"><span class="pre">compute_land_ice_pressure_and_draft</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ssh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modify_mask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_density</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/compass/ocean/iceshelf.html#compute_land_ice_pressure_and_draft"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#compass.ocean.iceshelf.compute_land_ice_pressure_and_draft" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the pressure from and overlying ice shelf and the ice-shelf draft</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ssh</strong> (<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2023.2.1.dev0)"><em>xarray.DataArray</em></a>) – The sea surface height (the ice draft)</p></li>
 <li><p><strong>modify_mask</strong> (<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2023.2.1.dev0)"><em>xarray.DataArray</em></a>) – A mask that is 1 where <code class="docutils literal notranslate"><span class="pre">landIcePressure</span></code> can be deviate from 0</p></li>
 <li><p><strong>ref_density</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – A reference density for seawater displaced by the ice shelf</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><strong>landIcePressure</strong> (<em>xarray.DataArray</em>) – The pressure from the overlying land ice on the ocean</p></li>
 <li><p><strong>landIceDraft</strong> (<em>xarray.DataArray</em>) – The ice draft, equal to the initial <code class="docutils literal notranslate"><span class="pre">ssh</span></code></p></li>
