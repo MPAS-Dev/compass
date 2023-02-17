@@ -36,7 +36,6 @@ xarray
 
 # Development
 pip
-flake8
 {% if mpi != "nompi" %}
 c-compiler
 cmake
@@ -51,6 +50,12 @@ make
 {{ openmp }}
 netcdf-fortran
 {% endif %}
+
+# Linting and testing
+pytest
+isort
+flake8
+pre-commit
 
 # CF-compliance
 cfchecker
