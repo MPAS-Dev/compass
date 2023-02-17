@@ -13,6 +13,8 @@ jobs:
     defaults:
       run:
         shell: bash -l {0}
+    env:
+      docs_version: "latest"
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v3
@@ -63,6 +65,7 @@ jobs:
               export DOCS_VERSION=${GITHUB_REF_NAME}
           fi
           echo "Docs version: $DOCS_VERSION"
+          echo "docs_version=$DOCS_VERSION" >> $GITHUB_ENV
           make html
       - name: Copy Docs and Commit
         run: |
@@ -77,6 +80,7 @@ jobs:
           # Add `index.html` to point to the `main` branch automatically.
           printf '<meta http-equiv="refresh" content="0; url=./main/index.html" />' > index.html
           # Only replace `main` docs with latest changes. Docs for releases should be untouched.
+          export DOCS_VERSION="${{ env.docs_version }}"
           rm -rf ${DOCS_VERSION}
           mkdir ${DOCS_VERSION}
           cp -r ../_build/html/* ${DOCS_VERSION}
