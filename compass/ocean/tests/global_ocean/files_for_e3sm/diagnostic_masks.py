@@ -1,16 +1,17 @@
 import os
-import xarray as xr
 
+import mpas_tools.io
+import xarray as xr
 from geometric_features import GeometricFeatures
 from geometric_features.aggregation import get_aggregator_by_name
+from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
 from mpas_tools.ocean.moc import add_moc_southern_boundary_transects
-from mpas_tools.io import write_netcdf
-import mpas_tools.io
 
 from compass.io import symlink
-from compass.ocean.tests.global_ocean.files_for_e3sm.files_for_e3sm_step \
-    import FilesForE3SMStep
+from compass.ocean.tests.global_ocean.files_for_e3sm.files_for_e3sm_step import (  # noqa: E501
+    FilesForE3SMStep,
+)
 
 
 class DiagnosticMasks(FilesForE3SMStep):
@@ -27,7 +28,7 @@ class DiagnosticMasks(FilesForE3SMStep):
         ----------
         test_case : compass.ocean.tests.global_ocean.files_for_e3sm.FilesForE3SM
             The test case this step belongs to
-        """
+        """  # noqa: E501
 
         super().__init__(test_case, name='diagnostics_masks', cpus_per_task=18,
                          min_cpus_per_task=1)

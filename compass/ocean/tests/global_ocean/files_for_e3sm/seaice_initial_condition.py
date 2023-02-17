@@ -1,11 +1,12 @@
 import os
-import xarray
 
+import xarray
 from mpas_tools.io import write_netcdf
 
 from compass.io import symlink
-from compass.ocean.tests.global_ocean.files_for_e3sm.files_for_e3sm_step \
-    import FilesForE3SMStep
+from compass.ocean.tests.global_ocean.files_for_e3sm.files_for_e3sm_step import (  # noqa: E501
+    FilesForE3SMStep,
+)
 
 
 class SeaiceInitialCondition(FilesForE3SMStep):
@@ -21,7 +22,7 @@ class SeaiceInitialCondition(FilesForE3SMStep):
         ----------
         test_case : compass.ocean.tests.global_ocean.files_for_e3sm.FilesForE3SM
             The test case this step belongs to
-        """
+        """  # noqa: E501
 
         super().__init__(test_case, name='seaice_initial_condition')
 

@@ -1,6 +1,7 @@
 import os
-import xarray as xr
 from datetime import datetime
+
+import xarray as xr
 
 from compass.io import symlink
 from compass.step import Step
@@ -94,7 +95,7 @@ class FilesForE3SMStep(Step):
             self.with_ice_shelf_cavities = \
                 (with_ice_shelf_cavities.lower() == 'true')
 
-    def run(self):
+    def run(self):  # noqa: C901
         """
         Run this step of the testcase
         """
@@ -136,12 +137,11 @@ class FilesForE3SMStep(Step):
                                 # assume it's already YYYYMMDD
                                 pass
                             break
-                    
 
         if mesh_short_name == 'autodetect':
             raise ValueError(
-                'No mesh short name provided in "mesh_short_name" config option '
-                'and none found in MPAS_Mesh_Short_Name attribute.')
+                'No mesh short name provided in "mesh_short_name" config '
+                'option and none found in MPAS_Mesh_Short_Name attribute.')
 
         if creation_date == 'autodetect':
             now = datetime.now()

@@ -1,14 +1,19 @@
-import os
 import glob
-import pyproj
-import numpy
+import os
 
-from pyremap import get_lat_lon_descriptor, ProjectionGridDescriptor, \
-    MpasMeshDescriptor, Remapper
+import numpy
+import pyproj
+from pyremap import (
+    MpasMeshDescriptor,
+    ProjectionGridDescriptor,
+    Remapper,
+    get_lat_lon_descriptor,
+)
 
 from compass.io import symlink
-from compass.ocean.tests.global_ocean.files_for_e3sm.files_for_e3sm_step \
-    import FilesForE3SMStep
+from compass.ocean.tests.global_ocean.files_for_e3sm.files_for_e3sm_step import (  # noqa: E501
+    FilesForE3SMStep,
+)
 
 
 class DiagnosticMaps(FilesForE3SMStep):
@@ -24,7 +29,7 @@ class DiagnosticMaps(FilesForE3SMStep):
         ----------
         test_case : compass.ocean.tests.global_ocean.files_for_e3sm.FilesForE3SM
             The test case this step belongs to
-        """
+        """  # noqa: E501
 
         super().__init__(test_case, name='diagnostics_maps', ntasks=36,
                          min_tasks=1)
@@ -206,8 +211,8 @@ def _make_mapping_file(mesh_name, out_grid_name, mesh_filename, out_descriptor,
 
     remapper = Remapper(in_descriptor, out_descriptor, mapping_file_name)
 
-    remapper.build_mapping_file(method='bilinear', mpiTasks=ntasks, tempdir='.',
-                                logger=logger,
+    remapper.build_mapping_file(method='bilinear', mpiTasks=ntasks,
+                                tempdir='.', logger=logger,
                                 esmf_parallel_exec=parallel_executable)
 
     # now the same on vertices (e.g. for streamfunctions)
@@ -217,6 +222,6 @@ def _make_mapping_file(mesh_name, out_grid_name, mesh_filename, out_descriptor,
 
     remapper = Remapper(in_descriptor, out_descriptor, mapping_file_name)
 
-    remapper.build_mapping_file(method='bilinear', mpiTasks=ntasks, tempdir='.',
-                                logger=logger,
+    remapper.build_mapping_file(method='bilinear', mpiTasks=ntasks,
+                                tempdir='.', logger=logger,
                                 esmf_parallel_exec=parallel_executable)

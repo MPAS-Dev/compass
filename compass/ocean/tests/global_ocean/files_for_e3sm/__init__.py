@@ -1,24 +1,31 @@
 import os
 
-from compass.io import symlink, package_path
-from compass.testcase import TestCase
-from compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition \
-    import OceanInitialCondition
-from compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition \
-    import SeaiceInitialCondition
-from compass.ocean.tests.global_ocean.files_for_e3sm.ocean_graph_partition \
-    import OceanGraphPartition
-from compass.ocean.tests.global_ocean.files_for_e3sm.seaice_graph_partition \
-    import SeaiceGraphPartition
-from compass.ocean.tests.global_ocean.files_for_e3sm.scrip import Scrip
-from compass.ocean.tests.global_ocean.files_for_e3sm.e3sm_to_cmip_maps import \
-    E3smToCmipMaps
-from compass.ocean.tests.global_ocean.files_for_e3sm.diagnostic_maps \
-    import DiagnosticMaps
-from compass.ocean.tests.global_ocean.files_for_e3sm.diagnostic_masks \
-    import DiagnosticMasks
-from compass.ocean.tests.global_ocean.forward import get_forward_subdir
+from compass.io import package_path, symlink
 from compass.ocean.tests.global_ocean.configure import configure_global_ocean
+from compass.ocean.tests.global_ocean.files_for_e3sm.diagnostic_maps import (
+    DiagnosticMaps,
+)
+from compass.ocean.tests.global_ocean.files_for_e3sm.diagnostic_masks import (
+    DiagnosticMasks,
+)
+from compass.ocean.tests.global_ocean.files_for_e3sm.e3sm_to_cmip_maps import (
+    E3smToCmipMaps,
+)
+from compass.ocean.tests.global_ocean.files_for_e3sm.ocean_graph_partition import (  # noqa: E501
+    OceanGraphPartition,
+)
+from compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition import (  # noqa: E501
+    OceanInitialCondition,
+)
+from compass.ocean.tests.global_ocean.files_for_e3sm.scrip import Scrip
+from compass.ocean.tests.global_ocean.files_for_e3sm.seaice_graph_partition import (  # noqa: E501
+    SeaiceGraphPartition,
+)
+from compass.ocean.tests.global_ocean.files_for_e3sm.seaice_initial_condition import (  # noqa: E501
+    SeaiceInitialCondition,
+)
+from compass.ocean.tests.global_ocean.forward import get_forward_subdir
+from compass.testcase import TestCase
 
 
 class FilesForE3SM(TestCase):
@@ -38,7 +45,7 @@ class FilesForE3SM(TestCase):
     dynamic_adjustment : compass.ocean.tests.global_ocean.dynamic_adjustment.DynamicAdjustment
         The test case that performs dynamic adjustment to dissipate
         fast-moving waves from the initial condition
-    """
+    """  # noqa: E501
     def __init__(self, test_group, mesh=None, init=None,
                  dynamic_adjustment=None):
         """
@@ -58,11 +65,12 @@ class FilesForE3SM(TestCase):
         dynamic_adjustment : compass.ocean.tests.global_ocean.dynamic_adjustment.DynamicAdjustment, optional
             The test case that performs dynamic adjustment to dissipate
             fast-moving waves from the initial condition
-        """
+        """  # noqa: E501
         name = 'files_for_e3sm'
         if dynamic_adjustment is not None:
             time_integrator = dynamic_adjustment.time_integrator
-            subdir = get_forward_subdir(init.init_subdir, time_integrator, name)
+            subdir = get_forward_subdir(
+                init.init_subdir, time_integrator, name)
         else:
             subdir = name
 

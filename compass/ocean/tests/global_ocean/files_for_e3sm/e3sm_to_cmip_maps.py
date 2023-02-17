@@ -1,11 +1,11 @@
 import os
-import xarray
 
 from mpas_tools.logging import check_call
 
 from compass.io import symlink
-from compass.ocean.tests.global_ocean.files_for_e3sm.files_for_e3sm_step \
-    import FilesForE3SMStep
+from compass.ocean.tests.global_ocean.files_for_e3sm.files_for_e3sm_step import (  # noqa: E501
+    FilesForE3SMStep,
+)
 
 
 class E3smToCmipMaps(FilesForE3SMStep):
@@ -21,7 +21,7 @@ class E3smToCmipMaps(FilesForE3SMStep):
         ----------
         test_case : compass.ocean.tests.global_ocean.files_for_e3sm.FilesForE3SM
             The test case this step belongs to
-        """
+        """  # noqa: E501
 
         super().__init__(test_case, name='e3sm_to_cmip_maps', ntasks=36,
                          min_tasks=1)
@@ -76,7 +76,7 @@ def make_e3sm_to_cmip_maps(config, logger, mesh_short_name, creation_date,
         The number of parallel tasks to use for remapping
     """
 
-    link_dir = f'../assembled_files/diagnostics/maps'
+    link_dir = '../assembled_files/diagnostics/maps'
 
     try:
         os.makedirs(link_dir)
@@ -86,9 +86,9 @@ def make_e3sm_to_cmip_maps(config, logger, mesh_short_name, creation_date,
     src_scrip_filename = 'ocean.scrip.nc'
     cmip6_grid_res = config.get('files_for_e3sm', 'cmip6_grid_res')
     if cmip6_grid_res == '180x360':
-        dst_scrip_filename = f'cmip6_180x360_scrip.20181001.nc'
+        dst_scrip_filename = 'cmip6_180x360_scrip.20181001.nc'
     elif cmip6_grid_res == '720x1440':
-        dst_scrip_filename = f'cmip6_720x1440_scrip.20181001.nc'
+        dst_scrip_filename = 'cmip6_720x1440_scrip.20181001.nc'
     else:
         raise ValueError(f'Unexpected cmip6_grid_res: {cmip6_grid_res}')
 
@@ -116,7 +116,7 @@ def make_e3sm_to_cmip_maps(config, logger, mesh_short_name, creation_date,
         check_call(args, logger=logger)
 
         map_filename = \
-            f'map_{mesh_short_name}_to_cmip6_{cmip6_grid_res}_{suffix}.{creation_date}.nc'
+            f'map_{mesh_short_name}_to_cmip6_{cmip6_grid_res}_{suffix}.{creation_date}.nc'  # noqa: E501
 
         symlink(os.path.abspath(local_map_filename),
                 f'{link_dir}/{map_filename}')

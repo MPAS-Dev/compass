@@ -1,15 +1,17 @@
 import os
-import numpy as np
 from glob import glob
-import xarray as xr
 
+import numpy as np
+import xarray as xr
 from mpas_tools.logging import check_call
 
 from compass.io import symlink
-from compass.ocean.tests.global_ocean.files_for_e3sm.files_for_e3sm_step \
-    import FilesForE3SMStep
-from compass.ocean.tests.global_ocean.files_for_e3sm.graph_partition import \
-    get_core_list
+from compass.ocean.tests.global_ocean.files_for_e3sm.files_for_e3sm_step import (  # noqa: E501
+    FilesForE3SMStep,
+)
+from compass.ocean.tests.global_ocean.files_for_e3sm.graph_partition import (
+    get_core_list,
+)
 
 
 class SeaiceGraphPartition(FilesForE3SMStep):
@@ -24,7 +26,7 @@ class SeaiceGraphPartition(FilesForE3SMStep):
         ----------
         test_case : compass.ocean.tests.global_ocean.files_for_e3sm.FilesForE3SM
             The test case this step belongs to
-        """
+        """  # noqa: E501
 
         super().__init__(test_case, name='seaice_graph_partition')
 
@@ -48,13 +50,11 @@ class SeaiceGraphPartition(FilesForE3SMStep):
         if graph_filename != 'autodetect':
             self.add_input_file(filename='graph.info', target=graph_filename)
 
-
     def run(self):
         """
         Run this step of the testcase
         """
         super().run()
-        config = self.config
         logger = self.logger
         creation_date = self.creation_date
 
@@ -77,7 +77,7 @@ class SeaiceGraphPartition(FilesForE3SMStep):
                 '-o', '.',
                 '-p', f'mpas-seaice.graph.info.{creation_date}',
                 '-g', 'gpmetis',
-                '--plotting', 
+                '--plotting',
                 '-n']
         args = args + [f'{ncores}' for ncores in cores]
         check_call(args, logger)

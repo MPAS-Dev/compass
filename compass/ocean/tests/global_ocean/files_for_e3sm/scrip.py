@@ -1,11 +1,11 @@
 import os
-import xarray
 
 from mpas_tools.scrip.from_mpas import scrip_from_mpas
 
 from compass.io import symlink
-from compass.ocean.tests.global_ocean.files_for_e3sm.files_for_e3sm_step \
-    import FilesForE3SMStep
+from compass.ocean.tests.global_ocean.files_for_e3sm.files_for_e3sm_step import (  # noqa: E501
+    FilesForE3SMStep,
+)
 
 
 class Scrip(FilesForE3SMStep):
@@ -20,7 +20,7 @@ class Scrip(FilesForE3SMStep):
         ----------
         test_case : compass.ocean.tests.global_ocean.files_for_e3sm.FilesForE3SM
             The test case this step belongs to
-        """
+        """  # noqa: E501
 
         super().__init__(test_case, name='scrip')
 
