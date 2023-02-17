@@ -1,8 +1,8 @@
 import os
 
-from compass.testcase import TestCase
 from compass.ocean.tests.global_ocean.init.initial_state import InitialState
 from compass.ocean.tests.global_ocean.init.ssh_adjustment import SshAdjustment
+from compass.testcase import TestCase
 from compass.validate import compare_variables
 
 

@@ -1,14 +1,17 @@
-from compass.testcase import TestCase
-from compass.mesh.spherical import IcosahedralMeshStep, \
-    QuasiUniformSphericalMeshStep
+from compass.mesh.spherical import (
+    IcosahedralMeshStep,
+    QuasiUniformSphericalMeshStep,
+)
 from compass.ocean.mesh.cull import CullMeshStep
-from compass.ocean.tests.global_ocean.metadata import \
-    get_author_and_email_from_git
 from compass.ocean.tests.global_ocean.mesh.arrm10to60 import ARRM10to60BaseMesh
 from compass.ocean.tests.global_ocean.mesh.ec30to60 import EC30to60BaseMesh
-from compass.ocean.tests.global_ocean.mesh.so12to60 import SO12to60BaseMesh
 from compass.ocean.tests.global_ocean.mesh.kuroshio import KuroshioBaseMesh
+from compass.ocean.tests.global_ocean.mesh.so12to60 import SO12to60BaseMesh
 from compass.ocean.tests.global_ocean.mesh.wc14 import WC14BaseMesh
+from compass.ocean.tests.global_ocean.metadata import (
+    get_author_and_email_from_git,
+)
+from compass.testcase import TestCase
 from compass.validate import compare_variables
 
 

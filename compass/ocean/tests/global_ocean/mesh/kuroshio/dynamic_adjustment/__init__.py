@@ -1,5 +1,6 @@
-from compass.ocean.tests.global_ocean.dynamic_adjustment import \
-    DynamicAdjustment
+from compass.ocean.tests.global_ocean.dynamic_adjustment import (
+    DynamicAdjustment,
+)
 from compass.ocean.tests.global_ocean.forward import ForwardStep
 
 

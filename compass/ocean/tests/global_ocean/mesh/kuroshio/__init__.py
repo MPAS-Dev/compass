@@ -1,10 +1,10 @@
-import numpy as np
-
 import mpas_tools.mesh.creation.mesh_definition_tools as mdt
-from mpas_tools.mesh.creation.signed_distance import \
-    signed_distance_from_geojson
+import numpy as np
 from geometric_features import read_feature_collection
 from mpas_tools.cime.constants import constants
+from mpas_tools.mesh.creation.signed_distance import (
+    signed_distance_from_geojson,
+)
 
 from compass.mesh import QuasiUniformSphericalMeshStep
 
@@ -46,8 +46,8 @@ class KuroshioBaseMesh(QuasiUniformSphericalMeshStep):
         dlon = 0.1
         dlat = dlon
         earth_radius = constants['SHR_CONST_REARTH']
-        nlon = int(360./dlon) + 1
-        nlat = int(180./dlat) + 1
+        nlon = int(360. / dlon) + 1
+        nlat = int(180. / dlat) + 1
         lon = np.linspace(-180., 180., nlon)
         lat = np.linspace(-90., 90., nlat)
 
@@ -61,8 +61,8 @@ class KuroshioBaseMesh(QuasiUniformSphericalMeshStep):
         fc1 = read_feature_collection('wbc_rectangle3-1.geojson')
 
         ks_signed_distance1 = signed_distance_from_geojson(fc1, lon, lat,
-                                                          earth_radius,
-                                                          max_length=0.25)
+                                                           earth_radius,
+                                                           max_length=0.25)
 
         trans_width = 400e3
         trans_start = 0
@@ -73,12 +73,11 @@ class KuroshioBaseMesh(QuasiUniformSphericalMeshStep):
 
         cellWidth = dx_min * (1 - weights) + cellWidth * weights
 
-
         fc2 = read_feature_collection('wbc_rectangle3-2.geojson')
 
         ks_signed_distance2 = signed_distance_from_geojson(fc2, lon, lat,
-                                                          earth_radius,
-                                                          max_length=0.25)
+                                                           earth_radius,
+                                                           max_length=0.25)
 
         trans_width = 400e3
         trans_start = 0
@@ -89,12 +88,11 @@ class KuroshioBaseMesh(QuasiUniformSphericalMeshStep):
 
         cellWidth = dx_min * (1 - weights) + cellWidth * weights
 
-
         fc3 = read_feature_collection('wbc_rectangle3-3.geojson')
 
         ks_signed_distance3 = signed_distance_from_geojson(fc3, lon, lat,
-                                                          earth_radius,
-                                                          max_length=0.25)
+                                                           earth_radius,
+                                                           max_length=0.25)
 
         trans_width = 400e3
         trans_start = 0

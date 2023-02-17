@@ -1,11 +1,12 @@
 import os
 from importlib.resources import contents
 
-from compass.ocean.tests.global_ocean.metadata import \
-    add_mesh_and_init_metadata
 from compass.model import run_model
-from compass.testcase import TestCase
+from compass.ocean.tests.global_ocean.metadata import (
+    add_mesh_and_init_metadata,
+)
 from compass.step import Step
+from compass.testcase import TestCase
 
 
 class ForwardStep(Step):
@@ -162,6 +163,7 @@ class ForwardStep(Step):
                 'global_ocean', 'forward_min_tasks')
             self.openmp_threads = config.getint(
                 'global_ocean', 'forward_threads')
+
 
 class ForwardTestCase(TestCase):
     """
