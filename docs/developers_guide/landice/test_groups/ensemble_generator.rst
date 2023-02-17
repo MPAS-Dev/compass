@@ -31,7 +31,7 @@ be flexibly called from any test case that one would like to define.
 
 The ``setup`` method actually sets up the run by first setting up a baseline
 configuration and then modifying parameter values using the parameter
-values defined when the constructor was called.  There are steps to set
+values defined when the constructor was called.  There are operations to set
 parameters:
 
 * basal friction exponent
@@ -39,6 +39,12 @@ parameters:
 * von Mises threshold stress
 
 * calving speed limit
+
+* gamma0 melt sensitivity parameter in ISMIP6-AIS ice-shelf basal melting
+  parameterization
+
+* deltaT thermal forcing bias adjustment  parameter in ISMIP6-AIS ice-shel
+  basal melting parameterization
 
 These parameter values are always set; if it desired they not be modified
 from the baseline configuration, a default value should be passed to the
@@ -49,6 +55,10 @@ muFriction to yield the same basal shear stress as the original file,
 there is also an operation to set the output filename in the streams file,
 where the file to be used and modified was specified in the cfg file for the
 test case.
+
+Similarly, because changing gamma0 and deltaT require modifying a basal melt
+parameter file, the baseline file path needs to be specified in the config
+and that file is copied, renamed, and modified in each run directory.
 
 Additionally, a job script is written for the run so that the run can be
 submitted as a slurm job independent of other runs in the ensemble.  This also
@@ -62,7 +72,9 @@ The ``run`` method creates a graph file and runs MALI.
 
 Finally, there is a function ``_adjust_friction_exponent`` that modifies the
 friction exponent in the ``albany_input.yaml`` file and adjusts muFriction
-in the input file to maintain an unchanged basal shear stress.
+in the input file to maintain an unchanged basal shear stress.  Similarly,
+there is a function ``_adjust_basal_melt_params`` that modifes gamma0 and
+deltaT in a basal melt parameter file.
 
 ensemble_manager
 ~~~~~~~~~~~~~~~~

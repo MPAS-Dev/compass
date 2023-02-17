@@ -96,6 +96,14 @@ class ThwaitesEnsemble(TestCase):
         sec_in_yr = 3600.0 * 24.0 * 365.0
         calv_spd_lim_vec = 30.0e3 / sec_in_yr * np.ones((max_samples,))
 
+        # gamma0
+        # Currently set to a constant value, but likely to be added later
+        gamma0_vec = 14477.3367602277 * np.ones((max_samples,))
+
+        # deltaT
+        # Currently set to a constant value, but likely to be added later
+        deltaT_vec = 1.06652677059174 * np.ones((max_samples,))
+
         # add runs as steps based on the run range requested
         if self.end_run > max_samples:
             sys.exit("Error: end_run specified in config exceeds maximum sample "
@@ -105,7 +113,9 @@ class ThwaitesEnsemble(TestCase):
                                          test_resources_location='compass.landice.tests.ensemble_generator.thwaites',
                                          basal_fric_exp=basal_fric_exp_vec[run_num],
                                          von_mises_threshold=von_mises_threshold_vec[run_num],
-                                         calv_spd_lim=calv_spd_lim_vec[run_num]))
+                                         calv_spd_lim=calv_spd_lim_vec[run_num],
+                                         gamma0=gamma0_vec[run_num],
+                                         deltaT=deltaT_vec[run_num]))
             # Note: do not add to steps_to_run, because ensemble_manager
             # will handle submitting and running the runs
 

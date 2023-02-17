@@ -42,13 +42,21 @@ class EnsembleMember(Step):
 
     calv_spd_lim : float
         value of calving speed limit to use
+
+    gamma0 : float
+        value of gamma0 to use in ISMIP6 ice-shelf basal melt param.
+
+    deltaT : float
+        value of deltaT to use in ISMIP6 ice-shelf basal melt param.
     """
 
     def __init__(self, test_case, run_num,
                  test_resources_location,
                  basal_fric_exp=None,
                  von_mises_threshold=None,
-                 calv_spd_lim=None):
+                 calv_spd_lim=None,
+                 gamma0=None,
+                 deltaT=None):
         """
         Creates a new run within an ensemble
 
@@ -72,6 +80,12 @@ class EnsembleMember(Step):
 
         calv_spd_lim : float
             value of calving speed limit to use
+
+        gamma0 : float
+            value of gamma0 to use in ISMIP6 ice-shelf basal melt param.
+
+        deltaT : float
+            value of deltaT to use in ISMIP6 ice-shelf basal melt param.
         """
         self.run_num = run_num
         self.test_resources_location = test_resources_location
@@ -80,23 +94,33 @@ class EnsembleMember(Step):
         self.basal_fric_exp = basal_fric_exp
         self.von_mises_threshold = von_mises_threshold
         self.calv_spd_lim = calv_spd_lim
+        self.gamma0 = gamma0
+        self.deltaT = deltaT
 
         # define step (run) name
         self.name=f'run{run_num:03}'
 
         super().__init__(test_case=test_case, name=self.name)
 
+
     def setup(self):
         """
-        Set up this run by setting a up baseline run configuration
+        Set up this run by setting up a baseline run configuration
         and then modifying parameters for this ensemble member based on
         an externally provided unit parameter vector
         """
 
         print(f'Setting up run number {self.run_num}')
-        print(f'    basal_fric_exp={self.basal_fric_exp}, von_mises_threshold={self.von_mises_threshold}, calv_spd_lim={self.calv_spd_lim}')
+        #print(f'    basal_fric_exp={self.basal_fric_exp}, von_mises_threshold={self.von_mises_threshold}, calv_spd_lim={self.calv_spd_lim}')
 
-        self.ntasks = 32 # chosen for Cori Haswell
+        # Get config for info needed for setting up simulation
+        config = self.config
+        section = config['ensemble']
+
+        # save number of tasks to use
+        # eventually compass could determine this, but for now we want
+        # explicit control
+        self.ntasks = section.getint('ntasks')
 
         # Set up base run configuration
         self.add_namelist_file(self.test_resources_location, 'namelist.landice')
@@ -113,8 +137,6 @@ class EnsembleMember(Step):
         self.add_model_as_input()
 
         # copy in input file so it can be modified
-        config = self.config
-        section = config['ensemble']
         input_file_path = section.get('input_file_path')
         input_file_name = input_file_path.split('/')[-1]
         self.input_file_name = input_file_name
@@ -139,13 +161,27 @@ class EnsembleMember(Step):
                                   os.path.join(self.work_dir, input_file_name),
                                   os.path.join(self.work_dir,
                                                'albany_input.yaml'))
-
-        # store modified namelist options
-        self.add_namelist_options(options=options,
-                                  out_name='namelist.landice')
-
         # set input filename in streams and create streams file
         stream_replacements = {'input_file_init_cond': input_file_name}
+
+        # adjust gamma0 and deltaT
+        basal_melt_param_file_path = section.get('basal_melt_param_file_path')
+        basal_melt_param_file_name = basal_melt_param_file_path.split('/')[-1]
+        basal_melt_param_new_file_name = f"{basal_melt_param_file_name.split('.')[:-1][0]}_MODIFIED_gamma{self.gamma0:.0f}_dT{self.deltaT:.3f}.nc"
+        shutil.copy(basal_melt_param_file_path,
+                    os.path.join(self.work_dir,
+                                 basal_melt_param_new_file_name))
+        _adjust_basal_melt_params(os.path.join(self.work_dir,
+                                            basal_melt_param_new_file_name),
+                                  self.gamma0, self.deltaT)
+        stream_replacements['basal_melt_param_file_name'] = \
+                               basal_melt_param_new_file_name
+
+        print(stream_replacements)
+
+        # store modified namelist and streams options
+        self.add_namelist_options(options=options,
+                                  out_name='namelist.landice')
         self.add_streams_file(self.test_resources_location, 'streams.landice',
                               out_name='streams.landice',
                               template_replacements=stream_replacements)
@@ -209,3 +245,18 @@ def _adjust_friction_exponent(orig_fric_exp, new_fric_exp, filename, albany_inpu
             yaml.dump(loaded, stream, default_flow_style=False)
         except yaml.YAMLError as exc:
             print(exc)
+
+def _adjust_basal_melt_params(filename, gamma0=None, deltaT=None):
+    """
+    Function to adjust gamma0 and deltaT in a MALI input file for basal melt
+    parameters.
+    Currently assumes this is a regional mesh, and there is a single value of
+    deltaT that should be used everywhere in the domain.
+    """
+    f = netCDF4.Dataset(filename, 'r+')
+    f.set_auto_mask(False)
+    if gamma0 is not None:
+        f.variables['ismip6shelfMelt_gamma0'][:] = gamma0
+    if deltaT is not None:
+        f.variables['ismip6shelfMelt_deltaT'][:] = deltaT
+    f.close()
