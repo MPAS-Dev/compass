@@ -114,4 +114,15 @@ jobs:
         name: Run Tests
         env:
           CHECK_IMAGES: False
-        run: pytest --pyargs compass
+        run: |
+          source load_compass_test.sh
+          python -c "import compass"
+          compass list
+          compass list --machines
+          compass list --suites
+          compass list --help
+          compass setup --help
+          compass suite --help
+          compass clean --help
+          create_compass_load_script --help
+          pip check
