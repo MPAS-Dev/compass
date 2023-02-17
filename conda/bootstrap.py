@@ -2,23 +2,29 @@
 
 from __future__ import print_function
 
+import glob
+import grp
+import importlib.resources
 import os
 import platform
-import subprocess
-import glob
-import stat
-import grp
 import shutil
-import progressbar
-from jinja2 import Template
-import importlib.resources
+import stat
+import subprocess
 from configparser import ConfigParser
 
-from mache import discover_machine, MachineInfo
-from mache.spack import make_spack_env, get_spack_script
+import progressbar
+from jinja2 import Template
+from mache import MachineInfo, discover_machine
+from mache.spack import get_spack_script, make_spack_env
 from mache.version import __version__ as mache_version
-from shared import parse_args, get_conda_base, get_spack_base, check_call, \
-    install_miniconda, get_logger
+from shared import (
+    check_call,
+    get_conda_base,
+    get_logger,
+    get_spack_base,
+    install_miniconda,
+    parse_args,
+)
 
 
 def get_config(config_file, machine):
@@ -58,7 +64,8 @@ def get_version():
     return version
 
 
-def get_compilers_mpis(config, machine, compilers, mpis, source_path):
+def get_compilers_mpis(config, machine, compilers, mpis,   # noqa: C901
+                       source_path):
 
     unsupported = parse_unsupported(machine, source_path)
     if machine is None:
@@ -227,7 +234,7 @@ def get_env_setup(args, config, machine, compiler, mpi, env_type, source_path,
 
     activate_env = f'{source_activation_scripts}; conda activate {env_name}'
 
-    return python, recreate, conda_mpi,  activ_suffix, env_suffix, \
+    return python, recreate, conda_mpi, activ_suffix, env_suffix, \
         activ_path, env_path, env_name, activate_env, spack_env
 
 
@@ -325,6 +332,14 @@ def build_conda_env(env_type, recreate, machine, mpi, conda_mpi, version,
         else:
             print(f'{env_name} already exists')
 
+    if env_type == 'dev':
+        print('Installing pre-commit\n')
+        commands = \
+            f'{activate_env} && ' \
+            f'cd {source_path} && ' \
+            f'pre-commit install'
+        check_call(commands, logger=logger)
+
 
 def get_env_vars(machine, compiler, mpilib):
 
@@ -403,7 +418,8 @@ def build_spack_env(config, update_spack, machine, compiler, mpi, spack_env,
         specs.append(f'petsc@{petsc}+mpi+batch')
 
     if scorpio != 'None':
-        specs.append(f'scorpio@{scorpio}+pnetcdf~timing+internal-timing~tools+malloc')
+        specs.append(
+            f'scorpio@{scorpio}+pnetcdf~timing+internal-timing~tools+malloc')
 
     if albany != 'None':
         specs.append(f'albany@{albany}+mpas+cxx17')
@@ -480,7 +496,7 @@ def set_ld_library_path(spack_branch_base, spack_env, logger):
         f'source {spack_branch_base}/share/spack/setup-env.sh; ' \
         f'spack env activate {spack_env}; ' \
         f'spack config add modules:prefix_inspections:lib:[LD_LIBRARY_PATH]; ' \
-        f'spack config add modules:prefix_inspections:lib64:[LD_LIBRARY_PATH]'
+        f'spack config add modules:prefix_inspections:lib64:[LD_LIBRARY_PATH]'  # noqa: E501
     check_call(commands, logger=logger)
 
 
@@ -599,7 +615,8 @@ def test_command(command, env, package, logger):
     print('  {} passes'.format(package))
 
 
-def update_permissions(config, env_type, activ_path, directories):
+def update_permissions(config, env_type, activ_path,  # noqa: C901
+                       directories):
 
     if not config.has_option('e3sm_unified', 'group'):
         return
@@ -772,7 +789,7 @@ def check_supported(library, machine, compiler, mpi, source_path):
                      f'on {machine}')
 
 
-def main():
+def main():  # noqa: C901
     args = parse_args(bootstrap=True)
 
     logger = get_logger(log_filename='conda/logs/bootstrap.log',
