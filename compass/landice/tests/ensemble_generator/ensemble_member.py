@@ -136,13 +136,6 @@ class EnsembleMember(Step):
 
         self.add_model_as_input()
 
-        # copy in input file so it can be modified
-        input_file_path = section.get('input_file_path')
-        input_file_name = input_file_path.split('/')[-1]
-        self.input_file_name = input_file_name
-        shutil.copy(input_file_path, os.path.join(self.work_dir,
-                                                  input_file_name))
-
         # modify param values as needed for this ensemble member
 
         # von Mises stress threshold
@@ -156,13 +149,22 @@ class EnsembleMember(Step):
                 f'{self.calv_spd_lim}'
 
         # adjust basal friction exponent
+        # rename and copy base file
+        input_file_path = section.get('input_file_path')
+        input_file_name = input_file_path.split('/')[-1]
+        input_new_file_name = f"{input_file_name.split('.')[:-1][0]}_MODIFIED_fricexp{self.basal_fric_exp:.4f}.nc"
+        self.input_file_name = input_new_file_name
+        shutil.copy(input_file_path, os.path.join(self.work_dir,
+                                                  input_new_file_name))
+        # adjust mu and exponent
         orig_fric_exp = section.getfloat('orig_fric_exp')
         _adjust_friction_exponent(orig_fric_exp, self.basal_fric_exp,
-                                  os.path.join(self.work_dir, input_file_name),
+                                  os.path.join(self.work_dir,
+                                               input_new_file_name),
                                   os.path.join(self.work_dir,
                                                'albany_input.yaml'))
         # set input filename in streams and create streams file
-        stream_replacements = {'input_file_init_cond': input_file_name}
+        stream_replacements = {'input_file_init_cond': input_new_file_name}
 
         # adjust gamma0 and deltaT
         basal_melt_param_file_path = section.get('basal_melt_param_file_path')

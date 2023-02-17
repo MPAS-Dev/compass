@@ -54,7 +54,10 @@ Because changing the exponent requires modifying the input file to adjust
 muFriction to yield the same basal shear stress as the original file,
 there is also an operation to set the output filename in the streams file,
 where the file to be used and modified was specified in the cfg file for the
-test case.
+test case.  The default input file is renamed to indicate the updated exponent
+value it is appropriate for.  This is updated automatically in the streams
+file, but it avoids potential confusion if a user were to use this file for
+another purpose.
 
 Similarly, because changing gamma0 and deltaT require modifying a basal melt
 parameter file, the baseline file path needs to be specified in the config
