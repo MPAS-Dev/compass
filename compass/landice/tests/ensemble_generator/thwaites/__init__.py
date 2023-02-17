@@ -86,7 +86,7 @@ class ThwaitesEnsemble(TestCase):
 
         # von mises threshold stress
         von_mises_threshold_idx = 1
-        von_mises_threshold_range = [150.0e3, 350.0e3]
+        von_mises_threshold_range = [100.0e3, 300.0e3]
         von_mises_threshold_vec = param_unit_values[:,von_mises_threshold_idx] * \
                 (von_mises_threshold_range[1] - von_mises_threshold_range[0]) + \
                 von_mises_threshold_range[0]

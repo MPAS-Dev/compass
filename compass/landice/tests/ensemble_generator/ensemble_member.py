@@ -179,8 +179,6 @@ class EnsembleMember(Step):
         stream_replacements['basal_melt_param_file_name'] = \
                                basal_melt_param_new_file_name
 
-        print(stream_replacements)
-
         # store modified namelist and streams options
         self.add_namelist_options(options=options,
                                   out_name='namelist.landice')

@@ -35,7 +35,7 @@ over what range.  Currently these parameters are supported:
 * gamma0 melt sensitivity parameter in ISMIP6-AIS ice-shelf basal melting
   parameterization
 
-* deltaT thermal forcing bias adjustment  parameter in ISMIP6-AIS ice-shel
+* deltaT thermal forcing bias adjustment parameter in ISMIP6-AIS ice-shel
   basal melting parameterization
 
 Additional parameters can be easily added in the future.
@@ -135,7 +135,7 @@ and ensemble of 4 km resolution Thwaites Glacier simulations integrated from
 
 * basal friction power law exponent: range [0.1, 0.333]
 
-* von Mises threshold stress for calving: range [150, 350] kPa
+* von Mises threshold stress for calving: range [100, 300] kPa
 
 The initial condition file is specified in the ``ensemble_generator.cfg`` file
 or a user modification of it.  The forcing files for the simulation are
