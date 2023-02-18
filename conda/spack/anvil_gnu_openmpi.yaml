@@ -1,0 +1,124 @@
+spack:
+  specs:
+  - cmake
+  - gcc
+  - openmpi+cxx+pmi "schedulers=slurm"
+  - hdf5+cxx+fortran+hl+mpi
+  - netcdf-c+mpi~parallel-netcdf
+  - netcdf-fortran
+  - parallel-netcdf+cxx+fortran
+{{ specs }}
+  concretizer:
+    unify: true
+  packages:
+    all:
+      compiler: [gcc@11.3.0]
+      providers:
+        mpi: [openmpi]
+    bison:
+      externals:
+      - spec: bison@3.0.4
+        prefix: /usr
+      buildable: false
+    bzip2:
+      externals:
+      - spec: bzip2@1.0.6
+        prefix: /gpfs/fs1/software/centos7/spack-latest/opt/spack/linux-centos7-x86_64/gcc-6.5.0/bzip2-1.0.6-mbwr6sk
+      buildable: false
+    curl:
+      externals:
+      - spec: curl@7.72.0
+        prefix: /gpfs/fs1/software/centos7/spack-latest/opt/spack/linux-centos7-x86_64/gcc-6.5.0/curl-7.72.0-bnppi6e
+      buildable: false
+    diffutils:
+      externals:
+      - spec: diffutils@3.7
+        prefix: /gpfs/fs1/software/centos7/spack-latest/opt/spack/linux-centos7-x86_64/gcc-6.5.0/diffutils-3.7-lmwmgqg
+      buildable: false
+    findutils:
+      externals:
+      - spec: findutils@4.6.0
+        prefix: /gpfs/fs1/software/centos7/spack-latest/opt/spack/linux-centos7-x86_64/gcc-6.5.0/findutils-4.6.0-ef3lzvf
+      buildable: false
+    gettext:
+      externals:
+      - spec: gettext@0.19.8.1
+        prefix: /usr
+      buildable: false
+    libiconv:
+      externals:
+      - spec: libiconv@1.16
+        prefix: /gpfs/fs1/software/centos7/spack-latest/opt/spack/linux-centos7-x86_64/intel-20.0.4/libiconv-1.16-gcutq6m
+      buildable: false
+    libxml2:
+      externals:
+      - spec: libxml2@2.9.10
+        prefix: /gpfs/fs1/software/centos7/spack-latest/opt/spack/linux-centos7-x86_64/intel-20.0.4/libxml2-2.9.10-dwvqy3m
+      buildable: false
+    m4:
+      externals:
+      - spec: m4@1.4.16
+        prefix: /usr
+      buildable: false
+    openssl:
+      externals:
+      - spec: openssl@1.0.2k
+        prefix: /usr
+      buildable: false
+    tar:
+      externals:
+      - spec: tar@1.26
+        prefix: /usr
+      buildable: false
+    xz:
+      externals:
+      - spec: xz@5.2.5
+        prefix: /gpfs/fs1/software/centos7/spack-latest/opt/spack/linux-centos7-x86_64/intel-20.0.4/xz-5.2.5-6uopvxd
+      buildable: false
+    zlib:
+      externals:
+      - spec: zlib@1.2.11
+        prefix: /gpfs/fs1/soft/chrysalis/spack/opt/spack/linux-centos8-x86_64/intel-20.0.4/zlib-1.2.11-dudhhig
+      buildable: false
+    cmake:
+      externals:
+      - spec: cmake@3.20.3
+        prefix: /gpfs/fs1/software/centos7/spack-latest/opt/spack/linux-centos7-x86_64/gcc-6.5.0/cmake-3.20.3-vedypwm
+        modules:
+        - cmake/3.20.3-vedypwm
+      buildable: false
+    perl:
+      externals:
+      - spec: perl@5.30.3
+        prefix: /gpfs/fs1/software/centos7/spack-latest/opt/spack/linux-centos7-x86_64/gcc-6.5.0/perl-5.30.3-co3kopi
+        modules:
+          - perl/5.30.3-co3kopi
+      buildable: false
+    gcc:
+      externals:
+      - spec: gcc@11.3.0
+        prefix: /gpfs/fs1/soft/bebop/spack/opt/spack/linux-centos7-x86_64/gcc-4.8.5/gcc-11.3.0-zr6ek74
+        modules:
+        - gcc/11.3.0
+      buildable: false
+    slurm:
+      externals:
+      - spec: slurm@17-11-7-1
+        prefix: /usr
+      buildable: false
+  config:
+    install_missing_compilers: false
+  compilers:
+  - compiler:
+      spec: gcc@11.3.0
+      paths:
+        cc: /gpfs/fs1/soft/bebop/spack/opt/spack/linux-centos7-x86_64/gcc-4.8.5/gcc-11.3.0-zr6ek74/bin/gcc
+        cxx: /gpfs/fs1/soft/bebop/spack/opt/spack/linux-centos7-x86_64/gcc-4.8.5/gcc-11.3.0-zr6ek74/bin/g++
+        f77: /gpfs/fs1/soft/bebop/spack/opt/spack/linux-centos7-x86_64/gcc-4.8.5/gcc-11.3.0-zr6ek74/bin/gfortran
+        fc: /gpfs/fs1/soft/bebop/spack/opt/spack/linux-centos7-x86_64/gcc-4.8.5/gcc-11.3.0-zr6ek74/bin/gfortran
+      flags: {}
+      operating_system: centos7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
