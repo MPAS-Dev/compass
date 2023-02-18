@@ -1,12 +1,15 @@
 from compass.config import CompassConfigParser
-from compass.testcase import TestCase
-
-from compass.mesh.spherical import QuasiUniformSphericalMeshStep, \
-    IcosahedralMeshStep
-from compass.ocean.tests.global_convergence.cosine_bell.init import Init
+from compass.mesh.spherical import (
+    IcosahedralMeshStep,
+    QuasiUniformSphericalMeshStep,
+)
+from compass.ocean.tests.global_convergence.cosine_bell.analysis import (
+    Analysis,
+)
 from compass.ocean.tests.global_convergence.cosine_bell.forward import Forward
-from compass.ocean.tests.global_convergence.cosine_bell.analysis import \
-    Analysis
+from compass.ocean.tests.global_convergence.cosine_bell.init import Init
+from compass.testcase import TestCase
+from compass.validate import compare_variables
 
 
 class CosineBell(TestCase):
@@ -92,7 +95,7 @@ class CosineBell(TestCase):
             # ideally, about 300 cells per core
             # (make it a multiple of 4 because...it looks better?)
             ntasks = max(1,
-                         4*round(approx_cells / (4 * goal_cells_per_core)))
+                         4 * round(approx_cells / (4 * goal_cells_per_core)))
             # In a pinch, about 3000 cells per core
             min_tasks = max(1,
                             round(approx_cells / max_cells_per_core))
@@ -154,3 +157,16 @@ class CosineBell(TestCase):
 
         self.add_step(Analysis(test_case=self, resolutions=resolutions,
                                icosahedral=self.icosahedral))
+
+    def validate(self):
+        """
+        Validate variables against a baseline
+        """
+        for resolution in self.resolutions:
+            if self.icosahedral:
+                mesh_name = f'Icos{resolution}'
+            else:
+                mesh_name = f'QU{resolution}'
+            compare_variables(test_case=self,
+                              variables=['normalVelocity', 'tracer1'],
+                              filename1=f'{mesh_name}/forward/output.nc')
