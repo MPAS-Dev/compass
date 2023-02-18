@@ -1,28 +1,31 @@
-from compass.testgroup import TestGroup
-
-from compass.ocean.tests.global_ocean.mesh import Mesh
-from compass.ocean.tests.global_ocean.mesh.qu240.dynamic_adjustment import \
-    QU240DynamicAdjustment
-from compass.ocean.tests.global_ocean.mesh.ec30to60.dynamic_adjustment import \
-    EC30to60DynamicAdjustment
-from compass.ocean.tests.global_ocean.mesh.arrm10to60.dynamic_adjustment \
-    import ARRM10to60DynamicAdjustment
-from compass.ocean.tests.global_ocean.mesh.so12to60.dynamic_adjustment import \
-    SO12to60DynamicAdjustment
-from compass.ocean.tests.global_ocean.mesh.wc14.dynamic_adjustment import \
-    WC14DynamicAdjustment
-from compass.ocean.tests.global_ocean.init import Init
-from compass.ocean.tests.global_ocean.performance_test import PerformanceTest
-from compass.ocean.tests.global_ocean.restart_test import RestartTest
-from compass.ocean.tests.global_ocean.decomp_test import DecompTest
-from compass.ocean.tests.global_ocean.threads_test import ThreadsTest
 from compass.ocean.tests.global_ocean.analysis_test import AnalysisTest
 from compass.ocean.tests.global_ocean.daily_output_test import DailyOutputTest
-from compass.ocean.tests.global_ocean.monthly_output_test import \
-    MonthlyOutputTest
+from compass.ocean.tests.global_ocean.decomp_test import DecompTest
 from compass.ocean.tests.global_ocean.files_for_e3sm import FilesForE3SM
-from compass.ocean.tests.global_ocean.make_diagnostics_files import \
-    MakeDiagnosticsFiles
+from compass.ocean.tests.global_ocean.init import Init
+from compass.ocean.tests.global_ocean.mesh import Mesh
+from compass.ocean.tests.global_ocean.mesh.arrm10to60.dynamic_adjustment import (  # noqa: E501
+    ARRM10to60DynamicAdjustment,
+)
+from compass.ocean.tests.global_ocean.mesh.ec30to60.dynamic_adjustment import (
+    EC30to60DynamicAdjustment,
+)
+from compass.ocean.tests.global_ocean.mesh.qu240.dynamic_adjustment import (
+    QU240DynamicAdjustment,
+)
+from compass.ocean.tests.global_ocean.mesh.so12to60.dynamic_adjustment import (
+    SO12to60DynamicAdjustment,
+)
+from compass.ocean.tests.global_ocean.mesh.wc14.dynamic_adjustment import (
+    WC14DynamicAdjustment,
+)
+from compass.ocean.tests.global_ocean.monthly_output_test import (
+    MonthlyOutputTest,
+)
+from compass.ocean.tests.global_ocean.performance_test import PerformanceTest
+from compass.ocean.tests.global_ocean.restart_test import RestartTest
+from compass.ocean.tests.global_ocean.threads_test import ThreadsTest
+from compass.testgroup import TestGroup
 
 
 class GlobalOcean(TestGroup):
@@ -226,5 +229,5 @@ class GlobalOcean(TestGroup):
                     test_group=self, mesh=mesh, init=init,
                     dynamic_adjustment=dynamic_adjustment))
 
-        # A test case for making diagnostics files from an existing mesh
-        self.add_test_case(MakeDiagnosticsFiles(test_group=self))
+        # A test case for making E3SM support files from an existing mesh
+        self.add_test_case(FilesForE3SM(test_group=self))

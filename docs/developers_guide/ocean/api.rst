@@ -173,8 +173,10 @@ test cases and steps
    files_for_e3sm.scrip.Scrip.run
    files_for_e3sm.seaice_initial_condition.SeaiceInitialCondition
    files_for_e3sm.seaice_initial_condition.SeaiceInitialCondition.run
-   files_for_e3sm.diagnostics_files.DiagnosticsFiles
-   files_for_e3sm.diagnostics_files.DiagnosticsFiles.run
+   files_for_e3sm.diagnostic_maps.DiagnosticMaps
+   files_for_e3sm.diagnostic_maps.DiagnosticMaps.run
+   files_for_e3sm.diagnostic_masks.DiagnosticMasks
+   files_for_e3sm.diagnostic_masks.DiagnosticMasks.run
 
    init.Init
    init.Init.configure

@@ -2,6 +2,7 @@ import os
 from glob import glob
 
 import numpy as np
+import xarray as xr
 from mpas_tools.logging import check_call
 
 from compass.io import symlink
@@ -13,9 +14,9 @@ from compass.ocean.tests.global_ocean.files_for_e3sm.graph_partition import (
 )
 
 
-class OceanGraphPartition(FilesForE3SMStep):
+class SeaiceGraphPartition(FilesForE3SMStep):
     """
-    A step for creating graph partition files for the ocean mesh
+    A step for creating graph partition files for the sea-ice mesh
     """
     def __init__(self, test_case):
         """
@@ -27,7 +28,14 @@ class OceanGraphPartition(FilesForE3SMStep):
             The test case this step belongs to
         """  # noqa: E501
 
-        super().__init__(test_case, name='ocean_graph_partition')
+        super().__init__(test_case, name='seaice_graph_partition')
+
+        for filename in ['icePresent_QU60km_polar.nc',
+                         'seaice_QU60km_polar.nc']:
+            self.add_input_file(filename=filename,
+                                target=filename,
+                                database='partition',
+                                database_component='seaice')
 
         # for now, we won't define any outputs because they include the mesh
         # short name, which is not known at setup time.  Currently, this is
@@ -48,35 +56,34 @@ class OceanGraphPartition(FilesForE3SMStep):
         """
         super().run()
         logger = self.logger
-        config = self.config
         creation_date = self.creation_date
 
-        if not os.path.exists('graph.info'):
-            graph_filename = config.get('files_for_e3sm', 'graph_filename')
-            if graph_filename == 'autodetect':
-                raise ValueError('No graph file was provided in the '
-                                 'graph_filename config option.')
-            graph_filename = os.path.normpath(os.path.join(
-                self.test_case.work_dir, graph_filename))
-            if not os.path.exists(graph_filename):
-                raise FileNotFoundError('The graph file given in '
-                                        'graph_filename could not be found.')
-            if graph_filename != 'graph.info':
-                symlink(graph_filename, 'graph.info')
+        with xr.open_dataset('restart.nc') as ds:
+            ncells = ds.sizes['nCells']
 
-        symlink('graph.info', f'mpas-o.graph.info.{creation_date}')
-
-        ncells = sum(1 for _ in open('graph.info'))
         cores = get_core_list(ncells=ncells)
         logger.info(f'Creating graph files between {np.amin(cores)} and '
                     f'{np.amax(cores)}')
-        for ncores in cores:
-            args = ['gpmetis', f'mpas-o.graph.info.{creation_date}',
-                    f'{ncores}']
-            check_call(args, logger)
+
+        args = ['prepare_seaice_partitions',
+                '-i', 'seaice_QU60km_polar.nc',
+                '-p', 'icePresent_QU60km_polar.nc',
+                '-m', 'restart.nc',
+                '-o', '.']
+        check_call(args, logger)
+
+        args = ['create_seaice_partitions',
+                '-m', 'restart.nc',
+                '-o', '.',
+                '-p', f'mpas-seaice.graph.info.{creation_date}',
+                '-g', 'gpmetis',
+                '--plotting',
+                '-n']
+        args = args + [f'{ncores}' for ncores in cores]
+        check_call(args, logger)
 
         # create link in assembled files directory
-        files = glob('mpas-o.graph.info.*')
+        files = glob('mpas-seaice.graph.info.*')
         for file in files:
             symlink(os.path.abspath(file),
-                    f'{self.ocean_inputdata_dir}/{file}')
+                    f'{self.seaice_inputdata_dir}/{file}')
