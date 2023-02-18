@@ -112,7 +112,11 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.global_convergence.cosine_bell.init</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">run_model</span>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
+
+<span class="kn">from</span> <span class="nn">compass.ocean.vertical</span> <span class="kn">import</span> <span class="n">init_vertical_coord</span>
 <span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
 
 
@@ -126,7 +130,7 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        test_case : compass.ocean.tests.global_convergence.cosine_bell.CosineBell</span>
+<span class="sd">        test_case : compass.ocean.tests.global_convergence.cosine_bell.CosineBell  # noqa: E501</span>
 <span class="sd">            The test case this step belongs to</span>
 
 <span class="sd">        mesh_name : str</span>
@@ -138,25 +142,77 @@
                          <span class="n">subdir</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mesh_name</span><span class="si">}</span><span class="s1">/init&#39;</span><span class="p">,</span>
                          <span class="n">ntasks</span><span class="o">=</span><span class="mi">36</span><span class="p">,</span> <span class="n">min_tasks</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-        <span class="n">package</span> <span class="o">=</span> <span class="s1">&#39;compass.ocean.tests.global_convergence.cosine_bell&#39;</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_namelist_file</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">&#39;namelist.init&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_streams_file</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">&#39;streams.init&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;mesh.nc&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../mesh/mesh.nc&#39;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../mesh/graph.info&#39;</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_model_as_input</span><span class="p">()</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;namelist.ocean&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;initial_state.nc&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Init.run"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_convergence.cosine_bell.init.Init.run.html#compass.ocean.tests.global_convergence.cosine_bell.init.Init.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run this step of the testcase</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div></div>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;cosine_bell&#39;</span><span class="p">]</span>
+        <span class="n">temperature</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;temperature&#39;</span><span class="p">)</span>
+        <span class="n">salinity</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;salinity&#39;</span><span class="p">)</span>
+        <span class="n">lat_center</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;lat_center&#39;</span><span class="p">)</span>
+        <span class="n">lon_center</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;lon_center&#39;</span><span class="p">)</span>
+        <span class="n">lon_center</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;lon_center&#39;</span><span class="p">)</span>
+        <span class="n">radius</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;radius&#39;</span><span class="p">)</span>
+        <span class="n">psi0</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;psi0&#39;</span><span class="p">)</span>
+        <span class="n">vel_pd</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;vel_pd&#39;</span><span class="p">)</span>
+
+        <span class="n">section</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;vertical_grid&#39;</span><span class="p">]</span>
+        <span class="n">bottom_depth</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;bottom_depth&#39;</span><span class="p">)</span>
+
+        <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;mesh.nc&#39;</span><span class="p">)</span>
+        <span class="n">angleEdge</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">angleEdge</span>
+        <span class="n">latCell</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">latCell</span>
+        <span class="n">latEdge</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">latEdge</span>
+        <span class="n">lonCell</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">lonCell</span>
+        <span class="n">sphere_radius</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">sphere_radius</span>
+
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;bottomDepth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bottom_depth</span> <span class="o">*</span> <span class="n">xr</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">latCell</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;ssh&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">latCell</span><span class="p">)</span>
+
+        <span class="n">init_vertical_coord</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>
+
+        <span class="n">temperature_array</span> <span class="o">=</span> <span class="n">temperature</span> <span class="o">*</span> <span class="n">xr</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">latCell</span><span class="p">)</span>
+        <span class="n">temperature_array</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">broadcast</span><span class="p">(</span><span class="n">temperature_array</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">refZMid</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temperature_array</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;salinity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">salinity</span> <span class="o">*</span> <span class="n">xr</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">temperature</span><span class="p">)</span>
+
+        <span class="n">distance_from_center</span> <span class="o">=</span> <span class="n">sphere_radius</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">lat_center</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">latCell</span><span class="p">)</span> <span class="o">+</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">lat_center</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">latCell</span><span class="p">)</span> <span class="o">*</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">lonCell</span> <span class="o">-</span> <span class="n">lon_center</span><span class="p">))</span>
+        <span class="n">bell_value</span> <span class="o">=</span> <span class="n">psi0</span> <span class="o">/</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="p">(</span>
+            <span class="mf">1.0</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span>
+                         <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">distance_from_center</span><span class="p">,</span> <span class="n">radius</span><span class="p">)))</span>
+        <span class="n">debug_tracers</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">distance_from_center</span> <span class="o">&lt;</span> <span class="n">radius</span><span class="p">,</span>
+                                 <span class="n">bell_value</span><span class="p">,</span>
+                                 <span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">debug_tracers_array</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">broadcast</span><span class="p">(</span><span class="n">debug_tracers</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">refZMid</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;tracer1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">debug_tracers_array</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;tracer2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">tracer1</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;tracer3&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">tracer1</span>
+
+        <span class="c1"># Initialize velocity</span>
+        <span class="n">seconds_per_day</span> <span class="o">=</span> <span class="mf">86400.0</span>
+        <span class="n">velocity</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angleEdge</span><span class="p">)</span> <span class="o">*</span> <span class="n">sphere_radius</span> <span class="o">*</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">latEdge</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">seconds_per_day</span> <span class="o">*</span> <span class="n">vel_pd</span><span class="p">))</span>
+        <span class="n">velocity_array</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">broadcast</span><span class="p">(</span><span class="n">velocity</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">refZMid</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;normalVelocity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">velocity_array</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;fCell&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xCell</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;fEdge&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xEdge</span><span class="p">)</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;fVertex&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xVertex</span><span class="p">)</span>
+
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="s1">&#39;initial_state.nc&#39;</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>
