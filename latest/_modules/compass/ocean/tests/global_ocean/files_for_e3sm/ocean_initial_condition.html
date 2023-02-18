@@ -113,20 +113,22 @@
              
   <h1>Source code for compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">xarray</span>
 
+<span class="kn">import</span> <span class="nn">xarray</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
 
 <span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">symlink</span>
-<span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.files_for_e3sm_step</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
+    <span class="n">FilesForE3SMStep</span><span class="p">,</span>
+<span class="p">)</span>
 
 
-<div class="viewcode-block" id="OceanInitialCondition"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition.OceanInitialCondition.html#compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition.OceanInitialCondition">[docs]</a><span class="k">class</span> <span class="nc">OceanInitialCondition</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+<div class="viewcode-block" id="OceanInitialCondition"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition.OceanInitialCondition.html#compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition.OceanInitialCondition">[docs]</a><span class="k">class</span> <span class="nc">OceanInitialCondition</span><span class="p">(</span><span class="n">FilesForE3SMStep</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A step for creating an E3SM ocean initial condition from the results of</span>
 <span class="sd">    a dynamic-adjustment process to dissipate fast waves</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="OceanInitialCondition.__init__"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition.OceanInitialCondition.html#compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition.OceanInitialCondition.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">restart_filename</span><span class="p">):</span>
+<div class="viewcode-block" id="OceanInitialCondition.__init__"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition.OceanInitialCondition.html#compass.ocean.tests.global_ocean.files_for_e3sm.ocean_initial_condition.OceanInitialCondition.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new step</span>
 
@@ -134,18 +136,9 @@
 <span class="sd">        ----------</span>
 <span class="sd">        test_case : compass.ocean.tests.global_ocean.files_for_e3sm.FilesForE3SM</span>
 <span class="sd">            The test case this step belongs to</span>
+<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
 
-<span class="sd">        restart_filename : str</span>
-<span class="sd">            A restart file from the end of the dynamic adjustment test case to</span>
-<span class="sd">            use as the basis for an E3SM initial condition</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ocean_initial_condition&#39;</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                         <span class="n">min_tasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;README&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../README&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;restart.nc&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">restart_filename</span><span class="p">))</span></div>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ocean_initial_condition&#39;</span><span class="p">)</span></div>
 
         <span class="c1"># for now, we won&#39;t define any outputs because they include the mesh</span>
         <span class="c1"># short name, which is not known at setup time.  Currently, this is</span>
@@ -155,30 +148,19 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run this step of the testcase</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">with</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;restart.nc&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds</span><span class="p">:</span>
-            <span class="n">mesh_short_name</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;MPAS_Mesh_Short_Name&#39;</span><span class="p">]</span>
-            <span class="n">mesh_prefix</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;MPAS_Mesh_Prefix&#39;</span><span class="p">]</span>
-            <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;MPAS_Mesh_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_prefix</span><span class="p">)</span>
-            <span class="n">creation_date</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_Version_Creation_Date&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">)]</span>
-
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s1">&#39;../assembled_files/inputdata/ocn/mpas-o/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">mesh_short_name</span><span class="p">))</span>
-        <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
-            <span class="k">pass</span>
-
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
         <span class="n">source_filename</span> <span class="o">=</span> <span class="s1">&#39;restart.nc&#39;</span>
-        <span class="n">dest_filename</span> <span class="o">=</span> <span class="s1">&#39;mpaso.</span><span class="si">{}</span><span class="s1">.</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_short_name</span><span class="p">,</span> <span class="n">creation_date</span><span class="p">)</span>
+        <span class="n">dest_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;mpaso.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh_short_name</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">creation_date</span><span class="si">}</span><span class="s1">.nc&#39;</span>
 
         <span class="k">with</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">source_filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds</span><span class="p">:</span>
             <span class="n">ds</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
-            <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="s1">&#39;xtime&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s1">&#39;xtime&#39;</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">data_vars</span><span class="p">:</span>
+                <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="s1">&#39;xtime&#39;</span><span class="p">)</span>
             <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">dest_filename</span><span class="p">)</span>
 
         <span class="n">symlink</span><span class="p">(</span>
-            <span class="s1">&#39;../../../../../ocean_initial_condition/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dest_filename</span><span class="p">),</span>
-            <span class="s1">&#39;../assembled_files/inputdata/ocn/mpas-o/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">mesh_short_name</span><span class="p">,</span> <span class="n">dest_filename</span><span class="p">))</span></div></div>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">dest_filename</span><span class="p">),</span>
+            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ocean_inputdata_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">dest_filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

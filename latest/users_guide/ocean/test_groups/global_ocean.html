@@ -256,19 +256,6 @@ Note that meshes and test cases may modify these options, as noted below.</p>
 <span class="c1"># for E3SM</span>
 <span class="k">[files_for_e3sm]</span>
 
-<span class="c1"># whether to generate an ocean initial condition in E3SM</span>
-<span class="na">enable_ocean_initial_condition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span>
-<span class="c1"># whether to generate graph partitions for different numbers of ocean cores in</span>
-<span class="c1"># E3SM</span>
-<span class="na">enable_ocean_graph_partition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span>
-<span class="c1"># whether to generate a sea-ice initial condition in E3SM</span>
-<span class="na">enable_seaice_initial_condition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span>
-<span class="c1"># whether to generate SCRIP files for later use in creating E3SM mapping files</span>
-<span class="na">enable_scrip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span>
-<span class="c1"># whether to generate region masks, transects and mapping files for use in both</span>
-<span class="c1"># online analysis members and offline with MPAS-Analysis</span>
-<span class="na">enable_diagnostics_files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span>
-
 <span class="c1">## the following relate to the comparison grids in MPAS-Analysis to generate</span>
 <span class="c1">## mapping files for.  The default values are also the defaults in</span>
 <span class="c1">## MPAS-Analysis.  Coarser or finer resolution may be desirable for some MPAS</span>
@@ -285,6 +272,49 @@ Note that meshes and test cases may modify these options, as noted below.</p>
 <span class="c1"># The comparison Arctic polar stereographic grid size and resolution in km</span>
 <span class="na">comparisonArcticStereoWidth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">6000.</span>
 <span class="na">comparisonArcticStereoResolution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10.</span>
+
+<span class="c1"># The extended Antarctic polar stereographic comparison grid size and</span>
+<span class="c1"># resolution in km</span>
+<span class="na">comparisonAntarcticExtendedWidth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">9000.</span>
+<span class="na">comparisonAntarcticExtendedResolution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">15.</span>
+
+<span class="c1"># The extended Arctic polar stereographic comparison grid size and</span>
+<span class="c1"># resolution in km</span>
+<span class="na">comparisonArcticExtendedWidth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">9000.</span>
+<span class="na">comparisonArcticExtendedResolution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">15.</span>
+
+<span class="c1"># The comparison North Atlantic grid size and resolution in km</span>
+<span class="na">comparisonNorthAtlanticWidth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8500.</span>
+<span class="na">comparisonNorthAtlanticHeight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5500.</span>
+<span class="na">comparisonNorthAtlanticResolution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">20.</span>
+
+<span class="c1"># The comparison North Pacific c grid size and resolution in km</span>
+<span class="na">comparisonNorthPacificWidth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">15000.</span>
+<span class="na">comparisonNorthPacificHeight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5000.</span>
+<span class="na">comparisonNorthPacificResolution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">20.</span>
+
+<span class="c1"># The comparison North Atlantic grid size and resolution in km</span>
+<span class="na">comparisonSubpolarNorthAtlanticWidth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">7000.</span>
+<span class="na">comparisonSubpolarNorthAtlanticHeight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4000.</span>
+<span class="na">comparisonSubpolarNorthAtlanticResolution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">20.</span>
+
+<span class="c1"># CMIP6 grid resolution</span>
+<span class="na">cmip6_grid_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">180x360</span>
+
+<span class="c1"># the E3SM short name of the mesh or &quot;autodetect&quot; to use the</span>
+<span class="c1"># MPAS_Mesh_Short_Name attribute of the mesh file</span>
+<span class="na">mesh_short_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span>
+
+<span class="c1"># the absolute path or relative path with respect to the test case&#39;s work</span>
+<span class="c1"># directory of an ocean restart file on the given mesh</span>
+<span class="na">ocean_restart_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span>
+
+<span class="c1"># the absolute path or relative path with respect to the test case&#39;s work</span>
+<span class="c1"># directory of a graph file that corresponds to the mesh</span>
+<span class="na">graph_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span>
+
+<span class="c1"># whether the mesh has ice-shelf cavities</span>
+<span class="na">with_ice_shelf_cavities</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span>
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">cull_mesh_*</span></code>, <code class="docutils literal notranslate"><span class="pre">init_*</span></code> and <code class="docutils literal notranslate"><span class="pre">forward:*</span></code> config options are used to
@@ -738,24 +768,26 @@ along with additional files required for full E3SM integration.  Currently,
 there is not a way to use new meshes in E3SM without help from an expert from
 the E3SM team.</p>
 </section>
-<section id="make-diagnostic-files-test-case">
-<span id="global-ocean-make-diagnostic-files"></span><h3>make_diagnostic_files test case<a class="headerlink" href="#make-diagnostic-files-test-case" title="Permalink to this heading">¶</a></h3>
-<p>Sometimes, we already have an E3SM initial condition but the diagnostics files
-for <a class="reference external" href="https://mpas-dev.github.io/MPAS-Analysis/stable/">MPAS-Analysis</a>
-either weren’t created with the initial condition or they are out of date.</p>
+<section id="files-for-e3sm-for-an-existing-mesh">
+<span id="global-ocean-files-for-e3sm-for-existing"></span><h3>files_for_e3sm for an existing mesh<a class="headerlink" href="#files-for-e3sm-for-an-existing-mesh" title="Permalink to this heading">¶</a></h3>
+<p>Sometimes, we already have an E3SM initial condition but some of the support
+files, such as the diagnostics files for
+<a class="reference external" href="https://mpas-dev.github.io/MPAS-Analysis/stable/">MPAS-Analysis</a> or the
+graph partition files for MPAS-Seaice, either weren’t created with the initial
+condition or they are out of date.  The <code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/files_for_e3sm</span></code>
+test case is useful for creating these files.</p>
 <p>The user should create a local symlink to an E3SM initial condition for
-MPAS-Ocean ofr the desired mesh.  Then, the config options in
-<cite>make_diagnostics_files.cfg</cite> should be edited.  In this example, we have
-created a local link to the <cite>ocean.WCAtl12to45E2r4.210318.nc</cite> initial condition
-in the test case directory.  The mesh name has also been set to the E3SM short
-name for this mesh <cite>WCAtl12to45E2r4</cite>.  We use all 36 cores on a node (this
-test case can’t use multiple nodes for most steps).  We indicate that the mesh
-does not include ice-shelf cavities, which means we don’t compute masks for
-ice-shelf melt rates.</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[make_diagnostics_files]</span>
-<span class="na">mesh_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">WCAtl12to45E2r4</span>
-<span class="na">mesh_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">ocean.WCAtl12to45E2r4.210318.nc</span>
-<span class="na">cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">36</span>
+MPAS-Ocean for the desired mesh.  Then, the config options in
+<code class="docutils literal notranslate"><span class="pre">files_for_e3sm.cfg</span></code> should be edited.  In this example, we have
+created a local link to the <code class="docutils literal notranslate"><span class="pre">ocean.WCAtl12to45E2r4.210318.nc</span></code> initial
+condition and the <code class="docutils literal notranslate"><span class="pre">mpas-o.graph.info.210318</span></code> graph file in the test case
+directory.  The mesh name has also been set to the E3SM short name for this
+mesh <code class="docutils literal notranslate"><span class="pre">WCAtl12to45E2r4</span></code>.  We indicate that the mesh does not include ice-shelf
+cavities, which means we don’t compute masks for ice-shelf melt rates.</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[files_for_e3sm]</span>
+<span class="na">mesh_short_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">WCAtl12to45E2r4</span>
+<span class="na">ocean_restart_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">ocean.WCAtl12to45E2r4.210318.nc</span>
+<span class="na">graph_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">mpas-o.graph.info.210318</span>
 <span class="na">with_ice_shelf_cavities</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
 </pre></div>
 </div>

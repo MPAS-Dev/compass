@@ -113,22 +113,25 @@
              
   <h1>Source code for compass.ocean.tests.global_ocean.files_for_e3sm.ocean_graph_partition</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">xarray</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
 
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.logging</span> <span class="kn">import</span> <span class="n">check_call</span>
 
 <span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">symlink</span>
-<span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.files_for_e3sm_step</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
+    <span class="n">FilesForE3SMStep</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.graph_partition</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">get_core_list</span><span class="p">,</span>
+<span class="p">)</span>
 
 
-<div class="viewcode-block" id="OceanGraphPartition"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.files_for_e3sm.ocean_graph_partition.OceanGraphPartition.html#compass.ocean.tests.global_ocean.files_for_e3sm.ocean_graph_partition.OceanGraphPartition">[docs]</a><span class="k">class</span> <span class="nc">OceanGraphPartition</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+<div class="viewcode-block" id="OceanGraphPartition"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.files_for_e3sm.ocean_graph_partition.OceanGraphPartition.html#compass.ocean.tests.global_ocean.files_for_e3sm.ocean_graph_partition.OceanGraphPartition">[docs]</a><span class="k">class</span> <span class="nc">OceanGraphPartition</span><span class="p">(</span><span class="n">FilesForE3SMStep</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A step for creating an E3SM ocean initial condition from the results of</span>
-<span class="sd">    a dynamic-adjustment process to dissipate fast waves</span>
+<span class="sd">    A step for creating graph partition files for the ocean mesh</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="OceanGraphPartition.__init__"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.files_for_e3sm.ocean_graph_partition.OceanGraphPartition.html#compass.ocean.tests.global_ocean.files_for_e3sm.ocean_graph_partition.OceanGraphPartition.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">restart_filename</span><span class="p">):</span>
+<div class="viewcode-block" id="OceanGraphPartition.__init__"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.files_for_e3sm.ocean_graph_partition.OceanGraphPartition.html#compass.ocean.tests.global_ocean.files_for_e3sm.ocean_graph_partition.OceanGraphPartition.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new step</span>
 
@@ -136,76 +139,61 @@
 <span class="sd">        ----------</span>
 <span class="sd">        test_case : compass.ocean.tests.global_ocean.files_for_e3sm.FilesForE3SM</span>
 <span class="sd">            The test case this step belongs to</span>
+<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
 
-<span class="sd">        mesh : compass.ocean.tests.global_ocean.mesh.Mesh</span>
-<span class="sd">            The test case that creates the mesh used by this test case</span>
-
-<span class="sd">        restart_filename : str</span>
-<span class="sd">            A restart file from the end of the dynamic adjustment test case to</span>
-<span class="sd">            use as the basis for an E3SM initial condition</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ocean_graph_partition&#39;</span><span class="p">,</span> <span class="n">ntasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                         <span class="n">min_tasks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">openmp_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;README&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../README&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;restart.nc&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;../</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">restart_filename</span><span class="p">))</span>
-
-        <span class="n">mesh_path</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">get_cull_mesh_path</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span>
-            <span class="n">work_dir_target</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/culled_graph.info&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_path</span><span class="p">))</span></div>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ocean_graph_partition&#39;</span><span class="p">)</span></div>
 
         <span class="c1"># for now, we won&#39;t define any outputs because they include the mesh</span>
         <span class="c1"># short name, which is not known at setup time.  Currently, this is</span>
         <span class="c1"># safe because no other steps depend on the outputs of this one.</span>
 
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        setup input files based on config options</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
+        <span class="n">graph_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;files_for_e3sm&#39;</span><span class="p">,</span> <span class="s1">&#39;graph_filename&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">graph_filename</span> <span class="o">!=</span> <span class="s1">&#39;autodetect&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">graph_filename</span><span class="p">)</span>
+
 <div class="viewcode-block" id="OceanGraphPartition.run"><a class="viewcode-back" href="../../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.files_for_e3sm.ocean_graph_partition.OceanGraphPartition.run.html#compass.ocean.tests.global_ocean.files_for_e3sm.ocean_graph_partition.OceanGraphPartition.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run this step of the testcase</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">creation_date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">creation_date</span>
 
-        <span class="k">with</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;restart.nc&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds</span><span class="p">:</span>
-            <span class="n">mesh_short_name</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;MPAS_Mesh_Short_Name&#39;</span><span class="p">]</span>
-            <span class="n">mesh_prefix</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;MPAS_Mesh_Prefix&#39;</span><span class="p">]</span>
-            <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;MPAS_Mesh_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mesh_prefix</span><span class="p">)</span>
-            <span class="n">creation_date</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_Version_Creation_Date&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;graph.info&#39;</span><span class="p">):</span>
+            <span class="n">graph_filename</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;files_for_e3sm&#39;</span><span class="p">,</span> <span class="s1">&#39;graph_filename&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">graph_filename</span> <span class="o">==</span> <span class="s1">&#39;autodetect&#39;</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;No graph file was provided in the &#39;</span>
+                                 <span class="s1">&#39;graph_filename config option.&#39;</span><span class="p">)</span>
+            <span class="n">graph_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">test_case</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">graph_filename</span><span class="p">))</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">graph_filename</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s1">&#39;The graph file given in &#39;</span>
+                                        <span class="s1">&#39;graph_filename could not be found.&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">graph_filename</span> <span class="o">!=</span> <span class="s1">&#39;graph.info&#39;</span><span class="p">:</span>
+                <span class="n">symlink</span><span class="p">(</span><span class="n">graph_filename</span><span class="p">,</span> <span class="s1">&#39;graph.info&#39;</span><span class="p">)</span>
 
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s1">&#39;../assembled_files/inputdata/ocn/mpas-o/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">mesh_short_name</span><span class="p">))</span>
-        <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
-            <span class="k">pass</span>
+        <span class="n">symlink</span><span class="p">(</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;mpas-o.graph.info.</span><span class="si">{</span><span class="n">creation_date</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
-        <span class="n">symlink</span><span class="p">(</span><span class="s1">&#39;graph.info&#39;</span><span class="p">,</span> <span class="s1">&#39;mpas-o.graph.info.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">creation_date</span><span class="p">))</span>
-
-        <span class="n">nCells</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;graph.info&#39;</span><span class="p">))</span>
-        <span class="n">min_graph_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">nCells</span> <span class="o">/</span> <span class="mi">6000</span><span class="p">)</span>
-        <span class="n">max_graph_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">nCells</span> <span class="o">/</span> <span class="mi">100</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Creating graph files between </span><span class="si">{}</span><span class="s1"> and </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="n">min_graph_size</span><span class="p">,</span> <span class="n">max_graph_size</span><span class="p">))</span>
-        <span class="n">n_power2</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">21</span><span class="p">)</span>
-        <span class="n">n_multiples12</span> <span class="o">=</span> <span class="mi">12</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
-
-        <span class="n">n</span> <span class="o">=</span> <span class="n">n_power2</span>
-        <span class="k">for</span> <span class="n">power10</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
-            <span class="n">n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">n</span><span class="p">,</span> <span class="mi">10</span><span class="o">**</span><span class="n">power10</span> <span class="o">*</span> <span class="n">n_multiples12</span><span class="p">])</span>
-
-        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">n</span><span class="p">)):</span>
-            <span class="k">if</span> <span class="n">min_graph_size</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">max_graph_size</span><span class="p">:</span>
-                <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;gpmetis&#39;</span><span class="p">,</span> <span class="s1">&#39;mpas-o.graph.info.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">creation_date</span><span class="p">),</span>
-                        <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="n">index</span><span class="p">])]</span>
-                <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+        <span class="n">ncells</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;graph.info&#39;</span><span class="p">))</span>
+        <span class="n">cores</span> <span class="o">=</span> <span class="n">get_core_list</span><span class="p">(</span><span class="n">ncells</span><span class="o">=</span><span class="n">ncells</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Creating graph files between </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">cores</span><span class="p">)</span><span class="si">}</span><span class="s1"> and &#39;</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">cores</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">ncores</span> <span class="ow">in</span> <span class="n">cores</span><span class="p">:</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;gpmetis&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;mpas-o.graph.info.</span><span class="si">{</span><span class="n">creation_date</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ncores</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span>
+            <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
 
         <span class="c1"># create link in assembled files directory</span>
         <span class="n">files</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="s1">&#39;mpas-o.graph.info.*&#39;</span><span class="p">)</span>
-        <span class="n">dest_path</span> <span class="o">=</span> <span class="s1">&#39;../assembled_files/inputdata/ocn/mpas-o/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="n">mesh_short_name</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
-            <span class="n">symlink</span><span class="p">(</span><span class="s1">&#39;../../../../../ocean_graph_partition/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">file</span><span class="p">),</span>
-                    <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dest_path</span><span class="p">,</span> <span class="n">file</span><span class="p">))</span></div></div>
+            <span class="n">symlink</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">file</span><span class="p">),</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ocean_inputdata_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">file</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

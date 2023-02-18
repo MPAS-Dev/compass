@@ -914,8 +914,19 @@ The test case is made up of 5 steps:
     Otherwise, only one file is symlinked, and it is named
     ``ocean.<mesh_short_name>.scrip.<creation_date>.nc``
 
-:py:class:`compass.ocean.tests.global_ocean.files_for_e3sm.diagnostics_files.DiagnosticsFiles`
-    creates mapping files and regions masks for E3SM analysis members and
+:py:class:`compass.ocean.tests.global_ocean.files_for_e3sm.diagnostic_maps.DiagnosticMaps`
+    creates mapping files for
+    `MPAS-Analysis <https://mpas-dev.github.io/MPAS-Analysis/stable/>`_.
+
+    Mapping files are created from the MPAS-Ocean and -Seaice mesh to 7
+    standard comparison grids. Mapping files are created from both cells and
+    vertices on the MPAS mesh. The vertex maps are needed for quantities like
+    the barotropic streamfunction in MPAS-Ocean and ice speed in MPAS-Seaice.
+    The mapping files are symlinked in the directory
+    ``assembled_files/diagnostics/mpas_analysis/maps/``.
+
+:py:class:`compass.ocean.tests.global_ocean.files_for_e3sm.diagnostic_masks.DiagnosticMasks`
+    creates regions masks for E3SM analysis members and
     `MPAS-Analysis <https://mpas-dev.github.io/MPAS-Analysis/stable/>`_.
 
     Region masks are created using
@@ -929,6 +940,8 @@ The test case is made up of 5 steps:
                          'Ocean Subbasins', 'ISMIP6 Regions',
                          'Transport Transects']
 
+    If ice-shelf cavities are present in the mesh, the ``Ice Shelves``
+    regions are also included.
     The resulting region masks are symlinked in the directory
     ``assembled_files/diagnostics/mpas_analysis/region_masks/``
     and named ``<mesh_short_name>_<region_group><ref_date>.nc``
@@ -938,11 +951,41 @@ The test case is made up of 5 steps:
     The resulting region mask is in the same directory as above, and named
     ``<mesh_short_name>_moc_masks_and_transects.nc``
 
-    Mapping files are created from the MPAS-Ocean and -Seaice mesh to 3
-    standard comparison grids: a 0.5 x 0.5 degree longitude/latitude grid,
-    an Antarctic stereographic grid, and an Arctic stereographic grid.
-    The mapping files are symlinked in the directory
-    ``assembled_files/diagnostics/mpas_analysis/maps/``
-    and named ``map_<mesh_short_name>_to_0.5x0.5degree_bilinear.nc``,
-    ``map_<mesh_short_name>_to_6000.0x6000.0km_10.0km_Antarctic_stereo_bilinear.nc``,
-    and ``map_<mesh_short_name>_to_6000.0x6000.0km_10.0km_Arctic_stereo_bilinear.nc``.
+files_for_e3sm for an existing mesh
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The test case ``ocean/global_ocean/files_for_e3sm`` can be used to create all the
+same files as in :ref:`dev_ocean_global_ocean_files_for_e3sm` but for an
+existing mesh.  To point to the existing mesh and associated graph file, the
+following config options must be specified (typically by editing
+``files_for_e3sm.cfg`` after setting up the test case):
+
+.. code-block:: ini
+
+    # config options related to initial condition and diagnostics support files
+    # for E3SM
+    [files_for_e3sm]
+
+    # the absolute path or relative path with respect to the test case's work
+    # directory of an ocean restart file on the given mesh
+    ocean_restart_filename = autodetect
+
+    # the absolute path or relative path with respect to the test case's work
+    # directory of a graph file that corresponds to the mesh
+    graph_filename = autodetect
+
+The following will be detected from the metadata in the ocean restart file if
+present but can be set if needed:
+
+.. code-block:: ini
+
+    # config options related to initial condition and diagnostics support files
+    # for E3SM
+    [files_for_e3sm]
+
+    # the E3SM short name of the mesh or "autodetect" to use the
+    # MPAS_Mesh_Short_Name attribute of the mesh file
+    mesh_short_name = autodetect
+
+    # whether the mesh has ice-shelf cavities
+    with_ice_shelf_cavities = autodetect

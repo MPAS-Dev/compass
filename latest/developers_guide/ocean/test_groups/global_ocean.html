@@ -921,7 +921,16 @@ and
 Otherwise, only one file is symlinked, and it is named
 <code class="docutils literal notranslate"><span class="pre">ocean.&lt;mesh_short_name&gt;.scrip.&lt;creation_date&gt;.nc</span></code></p>
 </dd>
-<dt><a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.files_for_e3sm.diagnostics_files.DiagnosticsFiles.html#compass.ocean.tests.global_ocean.files_for_e3sm.diagnostics_files.DiagnosticsFiles" title="compass.ocean.tests.global_ocean.files_for_e3sm.diagnostics_files.DiagnosticsFiles"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.files_for_e3sm.diagnostics_files.DiagnosticsFiles</span></code></a></dt><dd><p>creates mapping files and regions masks for E3SM analysis members and
+<dt><a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.files_for_e3sm.diagnostic_maps.DiagnosticMaps.html#compass.ocean.tests.global_ocean.files_for_e3sm.diagnostic_maps.DiagnosticMaps" title="compass.ocean.tests.global_ocean.files_for_e3sm.diagnostic_maps.DiagnosticMaps"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.files_for_e3sm.diagnostic_maps.DiagnosticMaps</span></code></a></dt><dd><p>creates mapping files for
+<a class="reference external" href="https://mpas-dev.github.io/MPAS-Analysis/stable/">MPAS-Analysis</a>.</p>
+<p>Mapping files are created from the MPAS-Ocean and -Seaice mesh to 7
+standard comparison grids. Mapping files are created from both cells and
+vertices on the MPAS mesh. The vertex maps are needed for quantities like
+the barotropic streamfunction in MPAS-Ocean and ice speed in MPAS-Seaice.
+The mapping files are symlinked in the directory
+<code class="docutils literal notranslate"><span class="pre">assembled_files/diagnostics/mpas_analysis/maps/</span></code>.</p>
+</dd>
+<dt><a class="reference internal" href="../generated/compass.ocean.tests.global_ocean.files_for_e3sm.diagnostic_masks.DiagnosticMasks.html#compass.ocean.tests.global_ocean.files_for_e3sm.diagnostic_masks.DiagnosticMasks" title="compass.ocean.tests.global_ocean.files_for_e3sm.diagnostic_masks.DiagnosticMasks"><code class="xref py py-class docutils literal notranslate"><span class="pre">compass.ocean.tests.global_ocean.files_for_e3sm.diagnostic_masks.DiagnosticMasks</span></code></a></dt><dd><p>creates regions masks for E3SM analysis members and
 <a class="reference external" href="https://mpas-dev.github.io/MPAS-Analysis/stable/">MPAS-Analysis</a>.</p>
 <p>Region masks are created using
 <a class="reference external" href="http://mpas-dev.github.io/geometric_features/stable/generated/geometric_features.aggregation.get_aggregator_by_name.html#geometric_features.aggregation.get_aggregator_by_name" title="(in geometric_features v1.0.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">geometric_features.aggregation.get_aggregator_by_name()</span></code></a> for
@@ -932,23 +941,52 @@ the following region groups:</p>
                  <span class="s1">&#39;Transport Transects&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
-<p>The resulting region masks are symlinked in the directory
+<p>If ice-shelf cavities are present in the mesh, the <code class="docutils literal notranslate"><span class="pre">Ice</span> <span class="pre">Shelves</span></code>
+regions are also included.
+The resulting region masks are symlinked in the directory
 <code class="docutils literal notranslate"><span class="pre">assembled_files/diagnostics/mpas_analysis/region_masks/</span></code>
 and named <code class="docutils literal notranslate"><span class="pre">&lt;mesh_short_name&gt;_&lt;region_group&gt;&lt;ref_date&gt;.nc</span></code></p>
 <p>Masks are also created for the meridional overturning circulation (MOC)
 basins and the transects representing their southern boundaries.
 The resulting region mask is in the same directory as above, and named
 <code class="docutils literal notranslate"><span class="pre">&lt;mesh_short_name&gt;_moc_masks_and_transects.nc</span></code></p>
-<p>Mapping files are created from the MPAS-Ocean and -Seaice mesh to 3
-standard comparison grids: a 0.5 x 0.5 degree longitude/latitude grid,
-an Antarctic stereographic grid, and an Arctic stereographic grid.
-The mapping files are symlinked in the directory
-<code class="docutils literal notranslate"><span class="pre">assembled_files/diagnostics/mpas_analysis/maps/</span></code>
-and named <code class="docutils literal notranslate"><span class="pre">map_&lt;mesh_short_name&gt;_to_0.5x0.5degree_bilinear.nc</span></code>,
-<code class="docutils literal notranslate"><span class="pre">map_&lt;mesh_short_name&gt;_to_6000.0x6000.0km_10.0km_Antarctic_stereo_bilinear.nc</span></code>,
-and <code class="docutils literal notranslate"><span class="pre">map_&lt;mesh_short_name&gt;_to_6000.0x6000.0km_10.0km_Arctic_stereo_bilinear.nc</span></code>.</p>
 </dd>
 </dl>
+</section>
+<section id="files-for-e3sm-for-an-existing-mesh">
+<h3>files_for_e3sm for an existing mesh<a class="headerlink" href="#files-for-e3sm-for-an-existing-mesh" title="Permalink to this heading">¶</a></h3>
+<p>The test case <code class="docutils literal notranslate"><span class="pre">ocean/global_ocean/files_for_e3sm</span></code> can be used to create all the
+same files as in <a class="reference internal" href="#dev-ocean-global-ocean-files-for-e3sm"><span class="std std-ref">files_for_e3sm test case</span></a> but for an
+existing mesh.  To point to the existing mesh and associated graph file, the
+following config options must be specified (typically by editing
+<code class="docutils literal notranslate"><span class="pre">files_for_e3sm.cfg</span></code> after setting up the test case):</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="c1"># config options related to initial condition and diagnostics support files</span>
+<span class="c1"># for E3SM</span>
+<span class="k">[files_for_e3sm]</span>
+
+<span class="c1"># the absolute path or relative path with respect to the test case&#39;s work</span>
+<span class="c1"># directory of an ocean restart file on the given mesh</span>
+<span class="na">ocean_restart_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span>
+
+<span class="c1"># the absolute path or relative path with respect to the test case&#39;s work</span>
+<span class="c1"># directory of a graph file that corresponds to the mesh</span>
+<span class="na">graph_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span>
+</pre></div>
+</div>
+<p>The following will be detected from the metadata in the ocean restart file if
+present but can be set if needed:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="c1"># config options related to initial condition and diagnostics support files</span>
+<span class="c1"># for E3SM</span>
+<span class="k">[files_for_e3sm]</span>
+
+<span class="c1"># the E3SM short name of the mesh or &quot;autodetect&quot; to use the</span>
+<span class="c1"># MPAS_Mesh_Short_Name attribute of the mesh file</span>
+<span class="na">mesh_short_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span>
+
+<span class="c1"># whether the mesh has ice-shelf cavities</span>
+<span class="na">with_ice_shelf_cavities</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">autodetect</span>
+</pre></div>
+</div>
 </section>
 </section>
 </section>
