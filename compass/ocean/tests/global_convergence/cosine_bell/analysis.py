@@ -35,7 +35,7 @@ class Analysis(Step):
         icosahedral : bool
             Whether to use icosahedral, as opposed to less regular, JIGSAW
             meshes
-        """
+        """  # noqa: E501
         super().__init__(test_case=test_case, name='analysis')
         self.resolutions = resolutions
         self.icosahedral = icosahedral
@@ -159,7 +159,7 @@ class Analysis(Step):
             lonC - newLon))
         mask = temp < radius
         tracer[mask] = psi0 / 2.0 * (
-                    1.0 + np.cos(3.1415926 * temp[mask] / radius))
+            1.0 + np.cos(3.1415926 * temp[mask] / radius))
 
         # oad forward mode data
         tracerF = ds.tracer1[sliceTime, :, 0].values
