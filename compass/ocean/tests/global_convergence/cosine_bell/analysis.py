@@ -1,7 +1,8 @@
+import warnings
+
+import matplotlib.pyplot as plt
 import numpy as np
 import xarray as xr
-import matplotlib.pyplot as plt
-import warnings
 
 from compass.step import Step
 
@@ -34,7 +35,7 @@ class Analysis(Step):
         icosahedral : bool
             Whether to use icosahedral, as opposed to less regular, JIGSAW
             meshes
-        """
+        """  # noqa: E501
         super().__init__(test_case=test_case, name='analysis')
         self.resolutions = resolutions
         self.icosahedral = icosahedral
@@ -44,9 +45,6 @@ class Analysis(Step):
                 mesh_name = f'Icos{resolution}'
             else:
                 mesh_name = f'QU{resolution}'
-            self.add_input_file(
-                filename=f'{mesh_name}_namelist.ocean',
-                target=f'../{mesh_name}/init/namelist.ocean')
             self.add_input_file(
                 filename=f'{mesh_name}_init.nc',
                 target=f'../{mesh_name}/init/initial_state.nc')
@@ -161,7 +159,7 @@ class Analysis(Step):
             lonC - newLon))
         mask = temp < radius
         tracer[mask] = psi0 / 2.0 * (
-                    1.0 + np.cos(3.1415926 * temp[mask] / radius))
+            1.0 + np.cos(3.1415926 * temp[mask] / radius))
 
         # oad forward mode data
         tracerF = ds.tracer1[sliceTime, :, 0].values
