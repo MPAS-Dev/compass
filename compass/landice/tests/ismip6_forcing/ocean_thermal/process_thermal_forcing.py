@@ -1,12 +1,14 @@
 import os
-import numpy as np
 import shutil
-import subprocess
+
+import numpy as np
 import xarray as xr
-from compass.landice.tests.ismip6_forcing.create_mapfile \
-    import build_mapping_file
 from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
+
+from compass.landice.tests.ismip6_forcing.create_mapfile import (
+    build_mapping_file,
+)
 from compass.step import Step
 
 
@@ -114,26 +116,26 @@ class ProcessThermalForcing(Step):
                                                        method_remap)
 
         # call the function that renames the ismip6 variables to MALI variables
-        logger.info(f"Renaming the ismip6 variables to mali variable names...")
+        logger.info("Renaming the ismip6 variables to mali variable names...")
         self.rename_ismip6_thermal_forcing_to_mali_vars(remapped_file_temp,
                                                         output_file)
 
-        logger.info(f"Remapping and renamping process done successfully. "
-                    f"Removing the temporary file 'remapped.nc'...")
+        logger.info("Remapping and renamping process done successfully. "
+                    "Removing the temporary file 'remapped.nc'...")
 
         # remove the temporary combined file
         os.remove(remapped_file_temp)
 
         # place the output file in appropriate directory
         if not os.path.exists(output_path):
-            logger.info(f"Creating a new directory for the output data...")
+            logger.info("Creating a new directory for the output data...")
             os.makedirs(output_path)
 
         src = os.path.join(os.getcwd(), output_file)
         dst = os.path.join(output_path, output_file)
         shutil.copy(src, dst)
 
-        logger.info(f"!---Done processing the file---!")
+        logger.info("!---Done processing the file---!")
 
     def remap_ismip6_thermal_forcing_to_mali_vars(self,
                                                   input_file,
@@ -171,8 +173,8 @@ class ProcessThermalForcing(Step):
                                input_file, mapping_file, mali_mesh_file,
                                method_remap)
         else:
-            self.logger.info(f"Mapping file exists. "
-                             f"Remapping the input data...")
+            self.logger.info("Mapping file exists. "
+                             "Remapping the input data...")
 
         # remap the input data
         args = ["ncremap",
@@ -198,7 +200,6 @@ class ProcessThermalForcing(Step):
             remapped ismip6 data renamed on mali mesh
         """
 
-        config = self.config
         process_obs_data = self.process_obs
 
         # open dataset in 20 years chunk
@@ -208,11 +209,18 @@ class ProcessThermalForcing(Step):
         ds["ismip6shelfMelt_zOcean"] = ds.z
         ds = ds.drop_vars("z")  # dropping 'z' while it's still called 'z'
 
+        zbnds = ds.z_bnds
+        if "time" in zbnds.dims:
+            zbnds = zbnds.isel(time=0)
+        ds["ismip6shelfMelt_zBndsOcean"] = zbnds
+        ds = ds.drop_vars("z_bnds")
+
         # build dictionary for ismip6 variables that MALI takes in
         if process_obs_data:
             ismip6_to_mali_dims = dict(
                 z="nISMIP6OceanLayers",
-                ncol="nCells")
+                ncol="nCells",
+                nbounds="TWO")
             ds["thermal_forcing"] = ds["thermal_forcing"].expand_dims(
                 dim="Time", axis=0)
             ds = ds.rename(ismip6_to_mali_dims)
@@ -220,7 +228,8 @@ class ProcessThermalForcing(Step):
             ismip6_to_mali_dims = dict(
                 z="nISMIP6OceanLayers",
                 time="Time",
-                ncol="nCells")
+                ncol="nCells",
+                nbounds="TWO")
             ds = ds.rename(ismip6_to_mali_dims)
             # add xtime variable
             xtime = []
@@ -246,7 +255,7 @@ class ProcessThermalForcing(Step):
         ds = ds.rename(ismip6_to_mali_vars)
 
         # drop unnecessary variables
-        ds = ds.drop_vars(["z_bnds", "lat_vertices", "area",
+        ds = ds.drop_vars(["lat_vertices", "area",
                            "lon_vertices", "lat", "lon"])
 
         # transpose dimension
@@ -258,88 +267,89 @@ class ProcessThermalForcing(Step):
         write_netcdf(ds, output_file)
         ds.close()
 
-    # create a nested dictionary for the ISMIP6 original forcing files including relative path
-    _file_obs = ["AIS/Ocean_Forcing/climatology_from_obs_1995-2017/obs_thermal_forcing_1995-2017_8km_x_60m.nc"]
+    # create a nested dictionary for the ISMIP6 original forcing files
+    # including relative path
+    _file_obs = ["AIS/Ocean_Forcing/climatology_from_obs_1995-2017/obs_thermal_forcing_1995-2017_8km_x_60m.nc"]  # noqa: E501
     _files = {
         "2100": {
             "CCSM4": {
-                "RCP85": ["AIS/Ocean_Forcing/ccsm4_rcp8.5/1995-2100/CCSM4_thermal_forcing_8km_x_60m.nc"]
+                "RCP85": ["AIS/Ocean_Forcing/ccsm4_rcp8.5/1995-2100/CCSM4_thermal_forcing_8km_x_60m.nc"]  # noqa: E501
             },
             "CESM2": {
                 "SSP585v1": [
-                    "AIS/Ocean_Forcing/cesm2_ssp585/1995-2100/CESM2_ssp585_thermal_forcing_8km_x_60m.nc"],
+                    "AIS/Ocean_Forcing/cesm2_ssp585/1995-2100/CESM2_ssp585_thermal_forcing_8km_x_60m.nc"],  # noqa: E501
                 "SSP585v2": [
-                    "AIS/Ocean_Forcing/cesm2_ssp585/1995-2100/CESM2_ssp585_thermal_forcing_8km_x_60m.nc"],
+                    "AIS/Ocean_Forcing/cesm2_ssp585/1995-2100/CESM2_ssp585_thermal_forcing_8km_x_60m.nc"],  # noqa: E501
             },
             "CNRM_CM6": {
                 "SSP126": [
-                    "AIS/Ocean_Forcing/cnrm-cm6-1_ssp126/1995-2100/CNRM-CM6-1_ssp126_thermal_forcing_8km_x_60m.nc"],
+                    "AIS/Ocean_Forcing/cnrm-cm6-1_ssp126/1995-2100/CNRM-CM6-1_ssp126_thermal_forcing_8km_x_60m.nc"],  # noqa: E501
                 "SSP585": [
-                    "AIS/Ocean_Forcing/cnrm-cm6-1_ssp585/1995-2100/CNRM-CM6-1_ssp585_thermal_forcing_8km_x_60m.nc"]
+                    "AIS/Ocean_Forcing/cnrm-cm6-1_ssp585/1995-2100/CNRM-CM6-1_ssp585_thermal_forcing_8km_x_60m.nc"]  # noqa: E501
             },
             "CNRM_ESM2": {
                 "SSP585": [
-                    "AIS/Ocean_Forcing/cnrm-esm2-1_ssp585/1995-2100/CNRM-ESM2-1_ssp585_thermal_forcing_8km_x_60m.nc"]
+                    "AIS/Ocean_Forcing/cnrm-esm2-1_ssp585/1995-2100/CNRM-ESM2-1_ssp585_thermal_forcing_8km_x_60m.nc"]  # noqa: E501
             },
             "CSIRO-Mk3-6-0": {
                 "RCP85": [
-                    "AIS/Ocean_Forcing/csiro-mk3-6-0_rcp8.5/1995-2100/CSIRO-Mk3-6-0_RCP85_thermal_forcing_8km_x_60m.nc"]
+                    "AIS/Ocean_Forcing/csiro-mk3-6-0_rcp8.5/1995-2100/CSIRO-Mk3-6-0_RCP85_thermal_forcing_8km_x_60m.nc"]  # noqa: E501
             },
             "HadGEM2-ES": {
                 "RCP85": [
-                    "AIS/Ocean_Forcing/hadgem2-es_rcp8.5/1995-2100/HadGEM2-ES_RCP85_thermal_forcing_8km_x_60m.nc"]
+                    "AIS/Ocean_Forcing/hadgem2-es_rcp8.5/1995-2100/HadGEM2-ES_RCP85_thermal_forcing_8km_x_60m.nc"]  # noqa: E501
             },
             "IPSL-CM5A-MR": {
                 "RCP26": [
-                    "AIS/Ocean_Forcing/ipsl-cm5a-mr_rcp2.6/1995-2100/IPSL-CM5A-MR_RCP26_thermal_forcing_8km_x_60m.nc"],
+                    "AIS/Ocean_Forcing/ipsl-cm5a-mr_rcp2.6/1995-2100/IPSL-CM5A-MR_RCP26_thermal_forcing_8km_x_60m.nc"],  # noqa: E501
                 "RCP85": [
-                    "AIS/Ocean_Forcing/ipsl-cm5a-mr_rcp8.5/1995-2100/IPSL-CM5A-MR_RCP85_thermal_forcing_8km_x_60m.nc"]
+                    "AIS/Ocean_Forcing/ipsl-cm5a-mr_rcp8.5/1995-2100/IPSL-CM5A-MR_RCP85_thermal_forcing_8km_x_60m.nc"]  # noqa: E501
             },
             "MIROC-ESM-CHEM": {
                 "RCP85": [
-                    "AIS/Ocean_Forcing/miroc-esm-chem_rcp8.5/1995-2100/MIROC-ESM-CHEM_thermal_forcing_8km_x_60m.nc"]
+                    "AIS/Ocean_Forcing/miroc-esm-chem_rcp8.5/1995-2100/MIROC-ESM-CHEM_thermal_forcing_8km_x_60m.nc"]  # noqa: E501
             },
             "NorESM1-M": {
                 "RCP26": [
-                    "AIS/Ocean_Forcing/noresm1-m_rcp2.6/1995-2100/NorESM1-M_RCP26_thermal_forcing_8km_x_60m.nc"],
+                    "AIS/Ocean_Forcing/noresm1-m_rcp2.6/1995-2100/NorESM1-M_RCP26_thermal_forcing_8km_x_60m.nc"],  # noqa: E501
                 "RCP85": [
-                    "AIS/Ocean_Forcing/noresm1-m_rcp8.5/1995-2100/NorESM1-M_thermal_forcing_8km_x_60m.nc"]
+                    "AIS/Ocean_Forcing/noresm1-m_rcp8.5/1995-2100/NorESM1-M_thermal_forcing_8km_x_60m.nc"]  # noqa: E501
             },
             "UKESM1-0-LL": {
                 "SSP585": [
-                    "AIS/Ocean_Forcing/ukesm1-0-ll_ssp585/1995-2100/UKESM1-0-LL_ssp585_thermal_forcing_8km_x_60m.nc"]
+                    "AIS/Ocean_Forcing/ukesm1-0-ll_ssp585/1995-2100/UKESM1-0-LL_ssp585_thermal_forcing_8km_x_60m.nc"]  # noqa: E501
             }
         },
         "2300": {
             "CCSM4": {
                 "RCP85": [
-                    "AIS/Ocean_forcing/ccsm4_RCP85/1995-2300/CCSM4_RCP85_thermal_forcing_8km_x_60m.nc"]
+                    "AIS/Ocean_forcing/ccsm4_RCP85/1995-2300/CCSM4_RCP85_thermal_forcing_8km_x_60m.nc"]  # noqa: E501
             },
             "CESM2-WACCM": {
                 "SSP585": [
-                    "AIS/Ocean_forcing/cesm2-waccm_ssp585/1995-2299/CESM2-WACCM_SSP585_thermal_forcing_8km_x_60m.nc"],
+                    "AIS/Ocean_forcing/cesm2-waccm_ssp585/1995-2299/CESM2-WACCM_SSP585_thermal_forcing_8km_x_60m.nc"],  # noqa: E501
                 "SSP585-repeat": [
-                    "AIS/Ocean_forcing/cesm2-waccm_ssp585-repeat/1995-2300/CESM2-WACCM_ssp585_thermal_forcing_8km_x_60m.nc"]
+                    "AIS/Ocean_forcing/cesm2-waccm_ssp585-repeat/1995-2300/CESM2-WACCM_ssp585_thermal_forcing_8km_x_60m.nc"]  # noqa: E501
             },
             "HadGEM2-ES": {
                 "RCP85": [
-                    "AIS/Ocean_forcing/hadgem2-es_RCP85/1995-2299/HadGEM2-ES_RCP85_thermal_forcing_8km_x_60m.nc"],
+                    "AIS/Ocean_forcing/hadgem2-es_RCP85/1995-2299/HadGEM2-ES_RCP85_thermal_forcing_8km_x_60m.nc"],  # noqa: E501
                 "RCP85-repeat": [
-                    "AIS/Ocean_forcing/hadgem2-es_RCP85-repeat/1995-2300/HadGEM2-ES_rcp85_thermal_forcing_8km_x_60m.nc"]
+                    "AIS/Ocean_forcing/hadgem2-es_RCP85-repeat/1995-2300/HadGEM2-ES_rcp85_thermal_forcing_8km_x_60m.nc"]  # noqa: E501
             },
             "NorESM1-M": {
                 "RCP26-repeat": [
-                    "AIS/Ocean_forcing/noresm1-m_RCP26-repeat/1995-2300/NorESM1-M_RCP26_thermal_forcing_8km_x_60m.nc"],
+                    "AIS/Ocean_forcing/noresm1-m_RCP26-repeat/1995-2300/NorESM1-M_RCP26_thermal_forcing_8km_x_60m.nc"],  # noqa: E501
                 "RCP85-repeat": [
-                    "AIS/Ocean_forcing/noresm1-m_RCP85-repeat/1995-2300/NorESM1-M_thermal_forcing_8km_x_60m.nc"]
+                    "AIS/Ocean_forcing/noresm1-m_RCP85-repeat/1995-2300/NorESM1-M_thermal_forcing_8km_x_60m.nc"]  # noqa: E501
             },
             "UKESM1-0-LL": {
                 "SSP126": [
-                    "AIS/Ocean_forcing/ukesm1-0-ll_ssp126/1995-2300/UKESM1-0-LL_thermal_forcing_8km_x_60m_v2.nc"],
+                    "AIS/Ocean_forcing/ukesm1-0-ll_ssp126/1995-2300/UKESM1-0-LL_thermal_forcing_8km_x_60m_v2.nc"],  # noqa: E501
                 "SSP585": [
-                    "AIS/Ocean_forcing/ukesm1-0-ll_ssp585/1995-2300/UKESM1-0-LL_SSP585_thermal_forcing_8km_x_60m.nc"],
+                    "AIS/Ocean_forcing/ukesm1-0-ll_ssp585/1995-2300/UKESM1-0-LL_SSP585_thermal_forcing_8km_x_60m.nc"],  # noqa: E501
                 "SSP585-repeat": [
-                    "AIS/Ocean_forcing/ukesm1-0-ll_ssp585-repeat/1995-2300/UKESM1-0-LL_ssp585_thermal_forcing_8km_x_60m.nc"]
+                    "AIS/Ocean_forcing/ukesm1-0-ll_ssp585-repeat/1995-2300/UKESM1-0-LL_ssp585_thermal_forcing_8km_x_60m.nc"]  # noqa: E501
             }
         }
     }
