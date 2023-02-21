@@ -45,9 +45,6 @@ class Analysis(Step):
             else:
                 mesh_name = f'QU{resolution}'
             self.add_input_file(
-                filename=f'{mesh_name}_namelist.ocean',
-                target=f'../{mesh_name}/init/namelist.ocean')
-            self.add_input_file(
                 filename=f'{mesh_name}_init.nc',
                 target=f'../{mesh_name}/init/initial_state.nc')
             self.add_input_file(
