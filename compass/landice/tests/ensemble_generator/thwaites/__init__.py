@@ -3,6 +3,7 @@ from importlib import resources
 
 import numpy as np
 
+from compass.landice.iceshelf_melt import calc_mean_TF
 from compass.landice.tests.ensemble_generator.ensemble_manager import (
     EnsembleManager,
 )
@@ -99,12 +100,50 @@ class ThwaitesEnsemble(TestCase):
         calv_spd_lim_vec = 30.0e3 / sec_in_yr * np.ones((max_samples,))
 
         # gamma0
-        # Currently set to a constant value, but likely to be added later
-        gamma0_vec = 14477.3367602277 * np.ones((max_samples,))
+        gamma0_idx = 2
+        # gamma0 range spans 5th pct MeanAnt through 95th pct PIGL
+        # from Jourdain et al. (2020)
+        gamma0_range = [9620.0, 471000.0]
+        gamma0_vec = param_unit_values[:, gamma0_idx] * \
+            (gamma0_range[1] - gamma0_range[0]) + \
+            gamma0_range[0]
+
+        # melt flux
+        meltflux_idx = 3
+        # melt flux range (Gt/yr) is Rignot et al. (2013) estimate with
+        # uncertainty.  Rignot extent ice-shelf area is close to our initial
+        # condition.  An area adjustment is added, assuming mean melt rate.
+        meltflux_range = [97.5 - 7.0, 97.5 + 7.0]
+        iceshelf_area_obs = 4411.0e6  # m2
+        meltflux_vec = param_unit_values[:, meltflux_idx] * \
+            (meltflux_range[1] - meltflux_range[0]) + \
+            meltflux_range[0]
 
         # deltaT
-        # Currently set to a constant value, but likely to be added later
-        deltaT_vec = 1.06652677059174 * np.ones((max_samples,))
+        section = self.config['ensemble']
+        input_file_path = section.get('input_file_path')
+        TF_file_path = section.get('TF_file_path')
+        mean_TF, iceshelf_area = calc_mean_TF(input_file_path, TF_file_path)
+        # Adjust observed melt flux for ice-shelf area in our initial condition
+        print(f'IS area: model={iceshelf_area}, rignot={iceshelf_area_obs}')
+        area_correction = iceshelf_area / iceshelf_area_obs
+        print(f"Ice-shelf area correction is {area_correction}.")
+        if (np.absolute(area_correction - 1.0) > 0.2):
+            sys.exit("ERROR: ice-shelf area correction is larger than 20%. "
+                     "Check data consistency before proceeding.")
+        meltflux_vec *= iceshelf_area / iceshelf_area_obs
+        TFs = np.linspace(-5.0, 10.0, num=int(15.0 / 0.01))
+        rhoi = 910.0
+        rhosw = 1028.0
+        cp_seawater = 3.974e3
+        latent_heat_ice = 335.0e3
+        c_melt = (rhosw * cp_seawater / (rhoi * latent_heat_ice))**2
+        deltaT_vec = np.zeros(max_samples)
+        for ii in range(self.start_run, self.end_run + 1):
+            meltfluxes = (gamma0_vec[ii] * c_melt * TFs * np.absolute(TFs) *
+                          iceshelf_area) * rhoi / 1.0e12  # Gt/yr
+            deltaT_vec[ii] = np.interp(meltflux_vec[ii], meltfluxes, TFs,
+                                       left=np.nan, right=np.nan) - mean_TF
 
         # add runs as steps based on the run range requested
         if self.end_run > max_samples:
