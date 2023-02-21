@@ -1,7 +1,9 @@
+import warnings
+
+import matplotlib.pyplot as plt
 import numpy as np
 import xarray as xr
-import matplotlib.pyplot as plt
-import warnings
+import numpy as np
 
 from compass.step import Step
 
