@@ -1,9 +1,8 @@
 import os
 
-from compass.testcase import TestCase
 from compass.ocean.tests.global_ocean.init.initial_state import InitialState
 from compass.ocean.tests.global_ocean.init.ssh_adjustment import SshAdjustment
-from compass.ocean.tests.global_ocean.configure import configure_global_ocean
+from compass.testcase import TestCase
 from compass.validate import compare_variables
 
 
@@ -67,11 +66,31 @@ class Init(TestCase):
             self.add_step(
                 SshAdjustment(test_case=self))
 
-    def configure(self):
+    def configure(self, config=None):
         """
         Modify the configuration options for this test case
+
+        config : compass.config.CompassConfigParser, optional
+            Configuration options to update if not those for this test case
         """
-        configure_global_ocean(test_case=self, mesh=self.mesh, init=self)
+        if config is None:
+            config = self.config
+
+        # set mesh-relate config options
+        self.mesh.configure(config=config)
+
+        initial_condition = self.initial_condition
+        descriptions = {'PHC': 'Polar science center Hydrographic '
+                               'Climatology (PHC)',
+                        'EN4_1900':
+                            "Met Office Hadley Centre's EN4 dataset from 1900"}
+        config.set('global_ocean', 'init_description',
+                   descriptions[initial_condition])
+
+        if self.with_bgc:
+            # todo: this needs to be filled in!
+            config.set('global_ocean', 'bgc_description',
+                       '<<<Missing>>>')
 
     def validate(self):
         """

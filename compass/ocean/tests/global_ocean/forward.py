@@ -1,12 +1,12 @@
 import os
 from importlib.resources import contents
 
-from compass.ocean.tests.global_ocean.configure import configure_global_ocean
-from compass.ocean.tests.global_ocean.metadata import \
-    add_mesh_and_init_metadata
 from compass.model import run_model
-from compass.testcase import TestCase
+from compass.ocean.tests.global_ocean.metadata import (
+    add_mesh_and_init_metadata,
+)
 from compass.step import Step
+from compass.testcase import TestCase
 
 
 class ForwardStep(Step):
@@ -164,6 +164,7 @@ class ForwardStep(Step):
             self.openmp_threads = config.getint(
                 'global_ocean', 'forward_threads')
 
+
 class ForwardTestCase(TestCase):
     """
     A parent class for test cases for forward runs with global MPAS-Ocean mesh
@@ -211,7 +212,7 @@ class ForwardTestCase(TestCase):
         """
         Modify the configuration options for this test case
         """
-        configure_global_ocean(test_case=self, mesh=self.mesh, init=self.init)
+        self.init.configure(config=self.config)
 
 
 def get_forward_subdir(init_subdir, time_integrator, name):

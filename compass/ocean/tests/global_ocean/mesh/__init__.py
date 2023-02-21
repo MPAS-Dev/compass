@@ -1,12 +1,17 @@
-from compass.testcase import TestCase
-from compass.mesh.spherical import IcosahedralMeshStep, \
-    QuasiUniformSphericalMeshStep
+from compass.mesh.spherical import (
+    IcosahedralMeshStep,
+    QuasiUniformSphericalMeshStep,
+)
 from compass.ocean.mesh.cull import CullMeshStep
 from compass.ocean.tests.global_ocean.mesh.arrm10to60 import ARRM10to60BaseMesh
 from compass.ocean.tests.global_ocean.mesh.ec30to60 import EC30to60BaseMesh
+from compass.ocean.tests.global_ocean.mesh.kuroshio import KuroshioBaseMesh
 from compass.ocean.tests.global_ocean.mesh.so12to60 import SO12to60BaseMesh
 from compass.ocean.tests.global_ocean.mesh.wc14 import WC14BaseMesh
-from compass.ocean.tests.global_ocean.configure import configure_global_ocean
+from compass.ocean.tests.global_ocean.metadata import (
+    get_author_and_email_from_git,
+)
+from compass.testcase import TestCase
 from compass.validate import compare_variables
 
 
@@ -68,6 +73,8 @@ class Mesh(TestCase):
             base_mesh_step = ARRM10to60BaseMesh(self, name=name, subdir=subdir)
         elif mesh_name in ['SO12to60', 'SOwISC12to60']:
             base_mesh_step = SO12to60BaseMesh(self, name=name, subdir=subdir)
+        elif mesh_name.startswith('Kuroshio'):
+            base_mesh_step = KuroshioBaseMesh(self, name=name, subdir=subdir)
         elif mesh_name in ['WC14']:
             base_mesh_step = WC14BaseMesh(self, name=name, subdir=subdir)
         else:
@@ -79,14 +86,39 @@ class Mesh(TestCase):
             test_case=self, base_mesh_step=base_mesh_step,
             with_ice_shelf_cavities=self.with_ice_shelf_cavities))
 
-    def configure(self):
+    def configure(self, config=None):
         """
         Modify the configuration options for this test case
+
+        config : compass.config.CompassConfigParser, optional
+            Configuration options to update if not those for this test case
         """
-        configure_global_ocean(test_case=self, mesh=self)
-        config = self.config
+        if config is None:
+            config = self.config
         config.set('spherical_mesh', 'add_mesh_density', 'True')
         config.set('spherical_mesh', 'plot_cell_width', 'True')
+        config.add_from_package('compass.mesh', 'mesh.cfg')
+        if self.mesh_name.startswith('Kuroshio'):
+            # add the config options for all kuroshio meshes
+            config.add_from_package(
+                'compass.ocean.tests.global_ocean.mesh.kuroshio',
+                'kuroshio.cfg', exception=True)
+        config.add_from_package(self.package, self.mesh_config_filename,
+                                exception=True)
+
+        if self.with_ice_shelf_cavities:
+            prefix = config.get('global_ocean', 'prefix')
+            config.set('global_ocean', 'prefix', f'{prefix}wISC')
+            config.set('global_ocean', 'wisc_description',
+                       'Includes cavities under the ice shelves around '
+                       'Antarctica')
+
+        # a description of the bathymetry
+        config.set('global_ocean', 'bathy_description',
+                   'Bathymetry is from GEBCO 2022, combined with BedMachine '
+                   'Antarctica v2 around Antarctica.')
+
+        get_author_and_email_from_git(config)
 
     def validate(self):
         """

@@ -1,7 +1,6 @@
 import os
 
 from compass.io import package_path, symlink
-from compass.ocean.tests.global_ocean.configure import configure_global_ocean
 from compass.ocean.tests.global_ocean.files_for_e3sm.diagnostic_maps import (
     DiagnosticMaps,
 )
@@ -92,15 +91,14 @@ class FilesForE3SM(TestCase):
         """
         Modify the configuration options for this test case
         """
+        if self.init is not None:
+            self.init.configure(config=self.config)
+
         mesh = self.mesh
-        init = self.init
         dynamic_adjustment = self.dynamic_adjustment
         config = self.config
         work_dir = self.work_dir
 
-        if mesh is not None:
-            configure_global_ocean(test_case=self, mesh=mesh,
-                                   init=init)
         package = 'compass.ocean.tests.global_ocean.files_for_e3sm'
         with package_path(package, 'README') as target:
             symlink(str(target), f'{work_dir}/README')

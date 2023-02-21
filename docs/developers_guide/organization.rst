@@ -679,21 +679,17 @@ as in :py:meth:`compass.ocean.tests.global_ocean.files_for_e3sm.FilesForE3SM.con
 
 .. code-block:: python
 
-    from importlib.resources import path
-
-    from compass.ocean.tests.global_ocean.configure import configure_global_ocean
-    from compass.io import symlink
+    from compass.io import symlink, package_path
 
 
     def configure(self):
         """
         Modify the configuration options for this test case
         """
-        configure_global_ocean(test_case=self, mesh=self.mesh, init=self.init)
-        with path('compass.ocean.tests.global_ocean.files_for_e3sm',
-                  'README') as target:
+        self.init.configure(config=self.config)
+        package = 'compass.ocean.tests.global_ocean.files_for_e3sm'
+        with package_path(package, 'README') as target:
             symlink(str(target), '{}/README'.format(self.work_dir))
-
 
 The ``configure()`` method is not the right place for adding or modifying steps
 that belong to a test case.  Steps should be added during init and altered only
