@@ -90,7 +90,11 @@ will typically be run with a customized cfg file.  Note the default run
 numbers create a small ensemble, but uncertainty quantification applications
 will typically need dozens or more simulations.
 
+
+The test-case-specific config options are:
+
 .. code-block:: cfg
+
    # config options for setting up an ensemble
    [ensemble]
 
@@ -104,6 +108,10 @@ will typically need dozens or more simulations.
    start_run = 0
    end_run = 3
 
+   # the name of the parameter vector file to use, included in the
+   # compass repository.  Currently there is only one option, but additional
+   # parameter vectors may be added in the future, or entirely replaced with
+   # code to generate parameter vectors as needed.
    param_vector_filename = Sobol_Initializations_seed_4_samples_100.csv
 
    # Path to the initial condition input file.
@@ -125,6 +133,21 @@ will typically need dozens or more simulations.
    # Eventually, compass could determine this, but we want explicit control for now
    # ntasks=32 for cori
    ntasks = 32
+
+A user should copy the default config file to a user-defined config file
+before setting up the test case and any necessary adjustments made.
+Importantly, the user-defined config should be modified
+to also include the following options that will be used for submitting the
+jobs for each ensemble member.
+
+.. code-block:: cfg
+
+   [parallel]
+   account = ALLOCATION_NAME_HERE
+   qos = regular
+
+   [job]
+   wall_time = 1:30:00
 
 thwaites
 --------
@@ -153,3 +176,45 @@ The model configuration uses:
 
 * ISMIP6 surface mass balance and sub-ice-shelf melting using climatological
   mean forcing
+
+Steps for setting up and running a Thwaites ensmble
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. With a compass conda environment set up, run
+   ``compass setup -n X -w WORK_DIR_PATH -f USER.cfg``
+   where ``WORK_DIR_PATH`` is a location that can store the whole
+   ensemble (typically a scratch drive) and ``USER.cfg`` is the
+   user-defined config described in the previous section that includes
+   options for ``[parallel]`` and ``[job]``, as well as any required
+   modifications to the ``[ensemble]`` section.  Likely, the only changes
+   one would need to make to the ``[ensemble]`` section are the
+   ``start_run`` and ``end_run`` values.
+
+2. After ``compass setup`` completes and all runs are set up, go to the
+   ``WORK_DIR_PATH`` and change to the
+   ``landice/ensemble_generator/thwaites-uq`` subdirectory.
+   From there you will see subdirectories for each run, a subdirectory for the
+   ``ensemble_manager`` and symlink to the visualization script.
+
+3. To submit jobs for the entire ensemble, change to the ``ensemble_manager``
+   subdirectory and execute ``compass run``.  Note, as stated above, this
+   currently will fail on a login node and has to be performed from a
+   interactive job or batch script.  This will be addressed in the future.
+
+4. Each run will have its own batch job that can be monitored with ``squeue``
+   or similar commands.
+
+5. When the ensemble has completed, you can assess the result through the
+   basic visualization script ``plot_ensemble.py``.  The script will skip runs
+   that are incomplete or failed, so you can run it while an emsemble is
+   still running to assess progress.
+
+6. If you want to add additional ensemble members, adjust
+   ``start_run`` and ``end_run`` in your config file and redo steps 1-5.
+   The ensemble_manager will always be set to run the most recent run
+   numbers defined in the config when ``compass setup`` was run.
+   The visualization script is independent of the run manager and will
+   process all runs it finds.
+
+It is also possible to run an individual run manually by changing to the run
+directory and submitting the job script yourself with ``sbatch``.
