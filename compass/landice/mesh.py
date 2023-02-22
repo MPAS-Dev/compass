@@ -1,6 +1,7 @@
-import numpy as np
-import jigsawpy
 import time
+
+import jigsawpy
+import numpy as np
 
 
 def gridded_flood_fill(field, iStart=None, jStart=None):
@@ -16,6 +17,12 @@ def gridded_flood_fill(field, iStart=None, jStart=None):
     field : numpy.ndarray
         Array from gridded dataset to use for flood-fill.
         Usually ice thickness.
+    iStart : int
+        x index from which to start flood fill for field.
+        Defaults to the center x coordinate.
+    jStart : int
+        y index from which to start flood fill.
+        Defaults to the center y coordinate.
 
     Returns
     -------
@@ -174,7 +181,7 @@ def set_cell_width(self, section, thk, bed=None, vx=None, vy=None,
     # convert km to m
     cull_distance = float(section.get('cull_distance')) * 1.e3
 
-    # Cell spacking function based on union of masks
+    # Cell spacing function based on union of masks
     if section.get('use_bed') == 'True':
         logger.info('Using bed elevation for spacing.')
         if flood_fill_iStart is not None and flood_fill_jStart is not None:
@@ -201,10 +208,10 @@ def set_cell_width(self, section, thk, bed=None, vx=None, vy=None,
         # low_dist_bed, use a linear ramp to damp influence of bed topo.
         spacing_bed[dist_to_grounding_line >= low_dist_bed] = (
             ( 1.0 - (dist_to_grounding_line[
-             dist_to_grounding_line >= low_dist_bed] 
+             dist_to_grounding_line >= low_dist_bed]
              - low_dist_bed) / (high_dist_bed - low_dist_bed) ) *
             spacing_bed[dist_to_grounding_line >= low_dist_bed] +
-            (dist_to_grounding_line[dist_to_grounding_line >= 
+            (dist_to_grounding_line[dist_to_grounding_line >=
              low_dist_bed] - low_dist_bed) /
             (high_dist_bed - low_dist_bed) * max_spac )
         spacing_bed[dist_to_grounding_line >= high_dist_bed] = max_spac
@@ -217,8 +224,8 @@ def set_cell_width(self, section, thk, bed=None, vx=None, vy=None,
             in_mask2[np.logical_and(
                        thk > 0, spacing_bed > (2. * min_spac))] = 0
             low_bed_mask2 = gridded_flood_fill(in_mask2,
-                                              iStart=flood_fill_iStart,
-                                              jStart=flood_fill_jStart)
+                                               iStart=flood_fill_iStart,
+                                               jStart=flood_fill_jStart)
             spacing_bed[low_bed_mask2 == 0] = max_spac
     else:
         spacing_bed = max_spac * np.ones_like(thk)
@@ -229,8 +236,8 @@ def set_cell_width(self, section, thk, bed=None, vx=None, vy=None,
         speed = (vx ** 2 + vy ** 2) ** 0.5
         lspd = np.log10(speed)
         spacing_speed = np.interp(lspd, [low_log_speed, high_log_speed],
-                            [max_spac, min_spac], left=max_spac,
-                            right=min_spac)
+                                  [max_spac, min_spac], left=max_spac,
+                                  right=min_spac)
 
         # Clean up where we have missing velocities. These are usually nans
         # or the default netCDF _FillValue of ~10.e36
@@ -302,6 +309,8 @@ def get_dist_to_edge_and_GL(self, thk, topg, x, y, section, window_size=None):
         x coordinates from gridded dataset
     y : numpy.ndarray
         y coordinates from gridded dataset
+    section : str
+        section of config file used to define mesh parameters
     window_size : int or float
         Size (in meters) of a search 'box' (one-directional) to use
         to calculate the distance from each cell to the ice margin.

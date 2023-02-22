@@ -178,8 +178,12 @@ class Mesh(Step):
         # optional - plot distance calculation
         # plt.pcolor(distToEdge/1000.0); plt.colorbar(); plt.show()
 
-        # Set cell widths based on mesh parameters set in config file
-        # Start flood-fill for bed topography at point off central west coast
+        # Set cell widths based on mesh parameters set in config file.
+        # Start flood-fill for bed topography in the ocean at a point
+        # with bed < low_bed. This is often necessary to remove pockets
+        # of high resolution that are no longer connected to the rest of
+        # the high resolution part of the mesh. These indices are specific
+        # to the mesh and the gridded data product used to set cell spacing.
         cell_width = set_cell_width(self, section='high_res_GIS_mesh', thk=thk,
                                     bed=topg, vx=vx, vy=vy,
                                     dist_to_edge=distToEdge,
