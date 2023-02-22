@@ -3,6 +3,7 @@ from compass.landice.tests.thwaites.decomposition_test import DecompositionTest
 from compass.landice.tests.thwaites.restart_test import RestartTest
 from compass.landice.tests.thwaites.high_res_mesh import HighResMesh
 
+
 class Thwaites(TestGroup):
     """
     A test group for low-res 4-14km Thwaites test cases.

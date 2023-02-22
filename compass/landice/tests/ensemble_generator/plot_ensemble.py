@@ -20,8 +20,17 @@ nRuns = len(runs)
 
 
 # obs from Rignot et al 2019 PNAS
-obs_discharge_thwaites = np.array([82.42,	83.25,	84.08,	84.90,	85.73,	86.56,	87.39,	88.22,	89.04,	89.87,	90.70,	91.40,	92.10,	92.80,	93.50,	94.20,	94.90,	95.60,	95.90,	96.20,	96.50,	96.80,	97.10,	97.40,	97.75,	98.10,	101.60,	101.40,	102.80,	104.30,	109.70,	114.10,	115.80,	118.70,	121.60,	123.80,	117.20,	115.10,	119.68])
-obs_discharge_haynes = np.array([10.10, 10.25, 10.40, 10.55, 10.70, 10.85, 11.00, 11.15, 11.30, 11.45, 11.60, 11.49, 11.37, 11.26, 11.14, 11.03, 10.91, 10.80, 10.93, 11.07, 11.20, 11.33, 11.47, 11.60, 11.35, 11.10, 12.20, 11.90, 12.50, 12.11, 12.80, 12.80, 12.90, 12.80, 13.90, 14.70, 12.30, 11.60, 12.53])
+obs_discharge_thwaites = np.array([
+    82.42, 83.25, 84.08, 84.90, 85.73, 86.56, 87.39, 88.22, 89.04, 89.87,
+    90.70, 91.40, 92.10, 92.80, 93.50, 94.20, 94.90, 95.60, 95.90, 96.20,
+    96.50, 96.80, 97.10, 97.40, 97.75, 98.10, 101.60, 101.40, 102.80,
+    104.30, 109.70, 114.10, 115.80, 118.70, 121.60, 123.80, 117.20, 115.10,
+    119.68])
+obs_discharge_haynes = np.array([
+    10.10, 10.25, 10.40, 10.55, 10.70, 10.85, 11.00, 11.15, 11.30, 11.45,
+    11.60, 11.49, 11.37, 11.26, 11.14, 11.03, 10.91, 10.80, 10.93, 11.07,
+    11.20, 11.33, 11.47, 11.60, 11.35, 11.10, 12.20, 11.90, 12.50, 12.11,
+    12.80, 12.80, 12.90, 12.80, 13.90, 14.70, 12.30, 11.60, 12.53])
 obs_discharge = obs_discharge_thwaites + obs_discharge_haynes
 obs_years = np.arange(1979, 2017+1) - 2000.0
 obs_sigmaD = (3.93**2 + 1.00**2)**0.5  # thwaites + haynes
@@ -191,16 +200,6 @@ plt.scatter(vmThresh, fricExp, s=markerSize, c=grdAreaChangeAll, plotnonfinite=F
 badIdx = np.nonzero(np.isnan(grdAreaChangeAll))[0]
 plt.plot(vmThresh[badIdx], fricExp[badIdx], 'kx')
 plt.colorbar()
-
-#axfltArea = fig.add_subplot(nrow, ncol, 4)
-#plt.title(f'Floating area change at year {targetYear} (km$^2$)')
-#plt.xlabel('von Mises stress threshold (kPa)')
-#plt.ylabel('basal friction law exponent')
-#plt.grid()
-#plt.scatter(vmThresh, fricExp, s=markerSize, c=fltAreaChangeAll, plotnonfinite=False)
-#badIdx = np.nonzero(np.isnan(fltAreaChangeAll))[0]
-#plt.plot(vmThresh[badIdx], fricExp[badIdx], 'kx')
-#plt.colorbar()
 
 axGLflux = fig.add_subplot(nrow, ncol, 4)
 plt.title(f'Grounding line flux at year {targetYear} (Gt)')
