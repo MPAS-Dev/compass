@@ -114,12 +114,12 @@
 <span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">importlib.resources</span> <span class="kn">import</span> <span class="n">contents</span>
 
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.configure</span> <span class="kn">import</span> <span class="n">configure_global_ocean</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.metadata</span> <span class="kn">import</span> \
-    <span class="n">add_mesh_and_init_metadata</span>
 <span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">run_model</span>
-<span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.metadata</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">add_mesh_and_init_metadata</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
+<span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
 
 
 <div class="viewcode-block" id="ForwardStep"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.forward.ForwardStep.html#compass.ocean.tests.global_ocean.forward.ForwardStep">[docs]</a><span class="k">class</span> <span class="nc">ForwardStep</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
@@ -277,6 +277,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">openmp_threads</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span>
                 <span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;forward_threads&#39;</span><span class="p">)</span></div>
 
+
 <div class="viewcode-block" id="ForwardTestCase"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.forward.ForwardTestCase.html#compass.ocean.tests.global_ocean.forward.ForwardTestCase">[docs]</a><span class="k">class</span> <span class="nc">ForwardTestCase</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A parent class for test cases for forward runs with global MPAS-Ocean mesh</span>
@@ -324,7 +325,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Modify the configuration options for this test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">configure_global_ocean</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">init</span><span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span></div></div>
 
 
 <span class="k">def</span> <span class="nf">get_forward_subdir</span><span class="p">(</span><span class="n">init_subdir</span><span class="p">,</span> <span class="n">time_integrator</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>

@@ -111,15 +111,20 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.ocean.tests.global_ocean.mesh</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
-<span class="kn">from</span> <span class="nn">compass.mesh.spherical</span> <span class="kn">import</span> <span class="n">IcosahedralMeshStep</span><span class="p">,</span> \
-    <span class="n">QuasiUniformSphericalMeshStep</span>
+<span></span><span class="kn">from</span> <span class="nn">compass.mesh.spherical</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">IcosahedralMeshStep</span><span class="p">,</span>
+    <span class="n">QuasiUniformSphericalMeshStep</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.mesh.cull</span> <span class="kn">import</span> <span class="n">CullMeshStep</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.arrm10to60</span> <span class="kn">import</span> <span class="n">ARRM10to60BaseMesh</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.ec30to60</span> <span class="kn">import</span> <span class="n">EC30to60BaseMesh</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.kuroshio</span> <span class="kn">import</span> <span class="n">KuroshioBaseMesh</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.so12to60</span> <span class="kn">import</span> <span class="n">SO12to60BaseMesh</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.wc14</span> <span class="kn">import</span> <span class="n">WC14BaseMesh</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.configure</span> <span class="kn">import</span> <span class="n">configure_global_ocean</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.metadata</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">get_author_and_email_from_git</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
 <span class="kn">from</span> <span class="nn">compass.validate</span> <span class="kn">import</span> <span class="n">compare_variables</span>
 
 
@@ -181,6 +186,8 @@
             <span class="n">base_mesh_step</span> <span class="o">=</span> <span class="n">ARRM10to60BaseMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">mesh_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;SO12to60&#39;</span><span class="p">,</span> <span class="s1">&#39;SOwISC12to60&#39;</span><span class="p">]:</span>
             <span class="n">base_mesh_step</span> <span class="o">=</span> <span class="n">SO12to60BaseMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">mesh_name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;Kuroshio&#39;</span><span class="p">):</span>
+            <span class="n">base_mesh_step</span> <span class="o">=</span> <span class="n">KuroshioBaseMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">mesh_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;WC14&#39;</span><span class="p">]:</span>
             <span class="n">base_mesh_step</span> <span class="o">=</span> <span class="n">WC14BaseMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">subdir</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -192,14 +199,39 @@
             <span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_mesh_step</span><span class="o">=</span><span class="n">base_mesh_step</span><span class="p">,</span>
             <span class="n">with_ice_shelf_cavities</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="Mesh.configure"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.mesh.Mesh.configure.html#compass.ocean.tests.global_ocean.mesh.Mesh.configure">[docs]</a>    <span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Mesh.configure"><a class="viewcode-back" href="../../../../../developers_guide/ocean/generated/compass.ocean.tests.global_ocean.mesh.Mesh.configure.html#compass.ocean.tests.global_ocean.mesh.Mesh.configure">[docs]</a>    <span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Modify the configuration options for this test case</span>
+
+<span class="sd">        config : compass.config.CompassConfigParser, optional</span>
+<span class="sd">            Configuration options to update if not those for this test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">configure_global_ocean</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
-        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;spherical_mesh&#39;</span><span class="p">,</span> <span class="s1">&#39;add_mesh_density&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">)</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;spherical_mesh&#39;</span><span class="p">,</span> <span class="s1">&#39;plot_cell_width&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">)</span></div>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;spherical_mesh&#39;</span><span class="p">,</span> <span class="s1">&#39;plot_cell_width&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="s1">&#39;compass.mesh&#39;</span><span class="p">,</span> <span class="s1">&#39;mesh.cfg&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;Kuroshio&#39;</span><span class="p">):</span>
+            <span class="c1"># add the config options for all kuroshio meshes</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span>
+                <span class="s1">&#39;compass.ocean.tests.global_ocean.mesh.kuroshio&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;kuroshio.cfg&#39;</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">package</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_config_filename</span><span class="p">,</span>
+                                <span class="n">exception</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_ice_shelf_cavities</span><span class="p">:</span>
+            <span class="n">prefix</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;prefix&#39;</span><span class="p">)</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;prefix&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">wISC&#39;</span><span class="p">)</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;wisc_description&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;Includes cavities under the ice shelves around &#39;</span>
+                       <span class="s1">&#39;Antarctica&#39;</span><span class="p">)</span>
+
+        <span class="c1"># a description of the bathymetry</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;global_ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;bathy_description&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;Bathymetry is from GEBCO 2022, combined with BedMachine &#39;</span>
+                   <span class="s1">&#39;Antarctica v2 around Antarctica.&#39;</span><span class="p">)</span>
+
+        <span class="n">get_author_and_email_from_git</span><span class="p">(</span><span class="n">config</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>

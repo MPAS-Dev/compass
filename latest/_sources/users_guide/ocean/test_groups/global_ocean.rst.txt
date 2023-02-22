@@ -335,14 +335,30 @@ ocean domain.
 A variant of this mesh has been used for low resolution simulations as part of
 the `E3SM v1 Cryosphere Campaign <https://e3sm.org/research/cryosphere-ocean/v1-cryosphere-ocean/>`_.
 
+.. _global_ocean_mesh_kuroshio:
+
+Kuroshio8to60 and Kuroshio12to60
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The Kuroshio 8- and 12- to 60-km meshes (Kuroshio8to60 and Kuroshio12to60) are
+designed to explore dynamics of the Kuroshio Current.
+
+The meshes have 8 and 12 km resolution, respectively, in the western
+North Pacific, tapering to 60 km at mid latitudes, 30 km at the equator, and
+35 km in polar regions (the same as the EC30to60).
+
+.. image:: images/kuroshio8to60.png
+   :width: 500 px
+   :align: center
+
 .. _global_ocean_mesh_sowisc12to60:
 
 SOwISC12to60
 ^^^^^^^^^^^^
 
 The Southern Ocean 12- to 60-km mesh with ice-shelf cavities (SOwISC12to60),
-sometimes called the Southern Ocean regionally refined mesh (SORRM) is intended
-to be the main simulation mesh for the
+sometimes called the Southern Ocean regionally refined mesh (SORRM), is
+intended to be the main simulation mesh for the
 `E3SM v2 Cryosphere Science Campaign <https://e3sm.org/research/cryosphere-ocean/v2-cryosphere-research/>`_.
 
 The mesh has 12 km resolution around Antarctica, tapering to 45 km in mid
@@ -353,6 +369,8 @@ in the North Pacific, and 35 km in the Arctic.  The mesh includes the
 .. image:: images/sowisc12to60.png
    :width: 500 px
    :align: center
+
+.. _global_ocean_mesh_wc14:
 
 WC14
 ^^^^

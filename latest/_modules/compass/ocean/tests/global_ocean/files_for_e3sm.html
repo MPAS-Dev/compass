@@ -114,7 +114,6 @@
 <span></span><span class="kn">import</span> <span class="nn">os</span>
 
 <span class="kn">from</span> <span class="nn">compass.io</span> <span class="kn">import</span> <span class="n">package_path</span><span class="p">,</span> <span class="n">symlink</span>
-<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.configure</span> <span class="kn">import</span> <span class="n">configure_global_ocean</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.files_for_e3sm.diagnostic_maps</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">DiagnosticMaps</span><span class="p">,</span>
 <span class="p">)</span>
@@ -205,15 +204,14 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Modify the configuration options for this test case</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">init</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+
         <span class="n">mesh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span>
-        <span class="n">init</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init</span>
         <span class="n">dynamic_adjustment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dynamic_adjustment</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">work_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">work_dir</span>
 
-        <span class="k">if</span> <span class="n">mesh</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">configure_global_ocean</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span>
-                                   <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">)</span>
         <span class="n">package</span> <span class="o">=</span> <span class="s1">&#39;compass.ocean.tests.global_ocean.files_for_e3sm&#39;</span>
         <span class="k">with</span> <span class="n">package_path</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="s1">&#39;README&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">target</span><span class="p">:</span>
             <span class="n">symlink</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">target</span><span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">work_dir</span><span class="si">}</span><span class="s1">/README&#39;</span><span class="p">)</span>

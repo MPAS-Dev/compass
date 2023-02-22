@@ -122,6 +122,9 @@
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.ec30to60.dynamic_adjustment</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">EC30to60DynamicAdjustment</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.kuroshio.dynamic_adjustment</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">KuroshioDynamicAdjustment</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">compass.ocean.tests.global_ocean.mesh.qu240.dynamic_adjustment</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">QU240DynamicAdjustment</span><span class="p">,</span>
 <span class="p">)</span>
@@ -333,6 +336,29 @@
                     <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
                     <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">))</span>
             <span class="n">dynamic_adjustment</span> <span class="o">=</span> <span class="n">WC14DynamicAdjustment</span><span class="p">(</span>
+                <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
+                <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">dynamic_adjustment</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
+                <span class="n">FilesForE3SM</span><span class="p">(</span>
+                    <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
+                    <span class="n">dynamic_adjustment</span><span class="o">=</span><span class="n">dynamic_adjustment</span><span class="p">))</span>
+
+        <span class="c1"># Kuroshio meshes without ice-shelf cavities</span>
+        <span class="k">for</span> <span class="n">mesh_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Kuroshio12to60&#39;</span><span class="p">,</span> <span class="s1">&#39;Kuroshio8to60&#39;</span><span class="p">]:</span>
+            <span class="n">mesh</span> <span class="o">=</span> <span class="n">Mesh</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_name</span><span class="o">=</span><span class="n">mesh_name</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+
+            <span class="n">init</span> <span class="o">=</span> <span class="n">Init</span><span class="p">(</span><span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span>
+                        <span class="n">initial_condition</span><span class="o">=</span><span class="s1">&#39;PHC&#39;</span><span class="p">,</span>
+                        <span class="n">with_bgc</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">init</span><span class="p">)</span>
+            <span class="n">time_integrator</span> <span class="o">=</span> <span class="s1">&#39;split_explicit&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span>
+                <span class="n">PerformanceTest</span><span class="p">(</span>
+                    <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
+                    <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">))</span>
+            <span class="n">dynamic_adjustment</span> <span class="o">=</span> <span class="n">KuroshioDynamicAdjustment</span><span class="p">(</span>
                 <span class="n">test_group</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
                 <span class="n">time_integrator</span><span class="o">=</span><span class="n">time_integrator</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_test_case</span><span class="p">(</span><span class="n">dynamic_adjustment</span><span class="p">)</span>

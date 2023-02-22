@@ -24,26 +24,6 @@ and ``streams.forward``), one specific to meshes with ice-shelf cavities
 (``namelist.wisc``), and some related to simulations with biogeochemistry
 (``namelist.bgc`` and ``streams.bgc``).
 
-.. _dev_ocean_global_ocean_config:
-
-configure
-~~~~~~~~~
-
-The function :py:func:`compass.ocean.tests.global_ocean.configure.configure_global_ocean()`
-is used to set config options for most test cases in ``global_ocean``.  It
-takes as arguments a test case object, a :ref:`dev_ocean_global_ocean_mesh`
-object, and optionally an :ref:`dev_ocean_global_ocean_init` object.  These
-2 or 3 test cases are used to:
-
-* add config options specific to the mesh
-
-* add config options specific to the test case
-
-* set config options describing the mesh and initial conditions (if ``init``
-  is provided).  The config options will be used to add
-  :ref:`dev_ocean_global_ocean_metadata` to output files describing the mesh
-  and initial condition.
-
 .. _dev_ocean_global_ocean_metadata:
 
 metadata
@@ -161,7 +141,9 @@ attribute ``self.time_integrator`` to determine whether ``split-explicit`` or
 ``RK4`` time integration will be used.
 
 In its ``configure()`` method, ``ForwardTestCase`` takes care of config options
-by calling :py:func:`compass.ocean.tests.global_ocean.configure.configure_global_ocean()`.
+by calling :py:meth:`compass.ocean.tests.global_ocean.init.Init.configure()`
+to also pick up config options (e.g. metadata) related to the mesh and
+initial condition.
 
 In its ``run()`` method, it sets the number of target and minimum number of
 cores as well as the number of threads based on config options.  Then, it calls
@@ -395,7 +377,7 @@ is identical except that it includes the cavities below ice shelves in the
 ocean domain.
 
 The class
-:py:class:`compass.ocean.tests.global_ocean.mesh.ec30to60.EC30to60Mesh` defines
+:py:class:`compass.ocean.tests.global_ocean.mesh.ec30to60.EC30to60BaseMesh` defines
 the resolution for both meshes. The ``compass.ocean.tests.global_ocean.mesh.ec30to60``
 module includes  namelist options appropriate for forward simulations with
 split-explicit (but not RK4) time integration on this mesh.  These set the time
@@ -454,6 +436,83 @@ The default config options for this mesh are:
 The vertical grid is a ``60layerPHC`` profile (see :ref:`dev_ocean_framework_vertical`)
 with 60 vertical levels ranging in thickness from 10 to 250 m.
 
+.. _dev_ocean_global_ocean_kuroshio:
+
+Kuroshio8to60 and Kuroshio12to60
+++++++++++++++++++++++++++++++++
+
+The ``Kuroshio8to60`` and ``Kuroshio12to60`` mehses are designed to explore
+dynamics of the Western Boundary Current (WBC) in the North Pacific Ocean, 
+the Kuroshio.
+
+The class
+:py:class:`compass.ocean.tests.global_ocean.mesh.kuroshio.KuroshioBaseMesh`
+defines the resolution for the meshes, where the finest resolution comes from
+the ``min_res`` config option in the ``[global_ocean]`` section of the config
+file.
+
+The ``compass.ocean.tests.global_ocean.mesh.kuroshio8to60`` and
+``compass.ocean.tests.global_ocean.mesh.kuroshio12to60`` modules include
+namelist options appropriate for forward simulations with split-explicit (but
+not RK4) time integration on this mesh.  These set the time step and default
+run duration for short runs with this mesh.
+
+Except for ``min_res``, default config options for these meshes come from a
+shared config file in the ``compass.ocean.tests.global_ocean.mesh.kuroshio``
+module:
+
+.. code-block:: cfg
+
+    # options related to the vertical grid
+    [vertical_grid]
+
+    # the type of vertical grid
+    grid_type = 60layerPHC
+
+    # options for global ocean testcases
+    [global_ocean]
+
+    ## config options related to the initial_state step
+    # number of cores to use
+    init_ntasks = 36
+    # minimum of cores, below which the step fails
+    init_min_tasks = 8
+    # maximum memory usage allowed (in MB)
+    init_max_memory = 1000
+
+    ## config options related to the forward steps
+    # number of cores to use
+    forward_ntasks = 1296
+    # minimum of cores, below which the step fails
+    forward_min_tasks = 128
+    # maximum memory usage allowed (in MB)
+    forward_max_memory = 1000
+
+    ## metadata related to the mesh
+    # the prefix (e.g. QU, EC, WC, SO, Kuroshio)
+    prefix = Kuroshio
+    # a description of the mesh and initial condition
+    mesh_description = MPAS Kuroshio regionally refined mesh for E3SM version
+                       ${e3sm_version} with enhanced resolution (${min_res} km) in
+                       Kuroshio-Oyashio Extension, 45-km resolution in the mid latitudes,
+                       30-km resolution in a 15-degree band around the equator, 60-km
+                       resolution in northern mid latitudes, 30 km in the north
+                       Atlantic and 35 km in the Arctic.  This mesh has ${levels}
+                       vertical levels.
+    # E3SM version that the mesh is intended for
+    e3sm_version = 2
+    # The revision number of the mesh, which should be incremented each time the
+    # mesh is revised
+    mesh_revision = 4
+    # the maximum (coarsest) resolution in the mesh, can be the same as min_res
+    max_res = 60
+    # the URL of the pull request documenting the creation of the mesh
+    pull_request = https://github.com/MPAS-Dev/compass/pull/525
+
+The vertical grid is a ``60layerPHC`` profile (see
+:ref:`dev_ocean_framework_vertical`) with 60 vertical levels ranging in
+thickness from 10 to 250 m.
+
 .. _dev_ocean_global_ocean_sowisc12to60:
 
 SOwISC12to60
@@ -465,7 +524,7 @@ mid-latitudes, 30-km at the equator and in the North Atlantic, 60-km resolution
 in the North Pacific, and 35-km resolution in the Arctic.
 
 The class
-:py:class:`compass.ocean.tests.global_ocean.mesh.so12to60.SO12to60Mesh` defines
+:py:class:`compass.ocean.tests.global_ocean.mesh.so12to60.SO12to60BaseMesh` defines
 the resolution for the mesh. The ``compass.ocean.tests.global_ocean.mesh.so12to60``
 module includes namelist options appropriate for forward simulations with
 split-explicit (but not RK4) time integration on this mesh.  These set the time
@@ -539,7 +598,7 @@ and a section of the North Atlantic containing the Gulf Stream. The resolution
 elsewhere varies between 35 km at the South Pole to 60 km at mid latitudes,
 with a band of 30-km resolution around the equator.
 
-The class :py:class:`compass.ocean.tests.global_ocean.mesh.wc14.WC14Mesh`
+The class :py:class:`compass.ocean.tests.global_ocean.mesh.wc14.WC14BaseMesh`
 defines the resolution for the mesh. The
 ``compass.ocean.tests.global_ocean.mesh.wc14`` module includes namelist options
 appropriate for forward simulations with split-explicit (but not RK4) time
@@ -611,6 +670,10 @@ fields used for initialization: the Polar science center Hydrographic Climatolog
 (`PHC <http://psc.apl.washington.edu/nonwp_projects/PHC/Climatology.html>`_)
 or the UK MetOffice's EN4 estimated climatology for the year 1900
 (`EN4_1900 <https://www.metoffice.gov.uk/hadobs/en4/download-en4-2-0.html>`_).
+
+In its ``configure()`` method, ``Init`` brings in config options related to
+the mesh (e.g. metadata) by calling
+:py:meth:`compass.ocean.tests.global_ocean.mesh.Mesh.configure()`.
 
 The test case includes 5 namelist replacement files and 3 streams files.
 ``namelist.init`` and ``streams.init`` modify the namelist options and set up
