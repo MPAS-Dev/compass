@@ -12,8 +12,7 @@ from mpas_tools.logging import LoggingContext, check_call
 from compass.config import CompassConfigParser
 from compass.logging import log_function_call, log_method_call
 from compass.parallel import (
-    check_parallel_system,
-    get_available_cores_and_nodes,
+    get_available_parallel_resources,
     set_cores_per_node,
 )
 
@@ -62,7 +61,7 @@ def run_tests(suite_name, quiet=False, is_test_case=False, steps_to_run=None,
                                    test_case.config_filename)
     config = CompassConfigParser()
     config.add_from_file(config_filename)
-    check_parallel_system(config)
+    available_resources = get_available_parallel_resources(config)
 
     # start logging to stdout/stderr
     with LoggingContext(suite_name) as logger:
@@ -95,7 +94,8 @@ def run_tests(suite_name, quiet=False, is_test_case=False, steps_to_run=None,
 
             success_str, success, test_time = _log_and_run_test(
                 test_case, logger, test_logger, quiet, log_filename,
-                is_test_case, steps_to_run, steps_not_to_run)
+                is_test_case, steps_to_run, steps_not_to_run,
+                available_resources)
             success_strs[test_name] = success_str
             if not success:
                 failures += 1
@@ -149,10 +149,10 @@ def run_single_step(step_is_subprocess=False):
     config = CompassConfigParser()
     config.add_from_file(step.config_filename)
 
-    check_parallel_system(config)
+    available_resources = get_available_parallel_resources(config)
 
     test_case.config = config
-    set_cores_per_node(test_case.config)
+    set_cores_per_node(test_case.config, available_resources['cores_per_node'])
 
     mpas_tools.io.default_format = config.get('io', 'format')
     mpas_tools.io.default_engine = config.get('io', 'engine')
@@ -164,7 +164,7 @@ def run_single_step(step_is_subprocess=False):
         test_case.stdout_logger = None
         log_function_call(function=_run_test, logger=logger)
         logger.info('')
-        _run_test(test_case)
+        _run_test(test_case, available_resources)
 
         if not step_is_subprocess:
             # only perform validation if the step is being run by a user on its
@@ -259,7 +259,7 @@ def _print_to_stdout(test_case, message):
 
 def _log_and_run_test(test_case, logger, test_logger, quiet,  # noqa: C901
                       log_filename, is_test_case, steps_to_run,
-                      steps_not_to_run):
+                      steps_not_to_run, available_resources):
     # ANSI fail text: https://stackoverflow.com/a/287944/7728169
     start_fail = '\033[91m'
     start_pass = '\033[92m'
@@ -289,7 +289,8 @@ def _log_and_run_test(test_case, logger, test_logger, quiet,  # noqa: C901
         config = CompassConfigParser()
         config.add_from_file(test_case.config_filename)
         test_case.config = config
-        set_cores_per_node(test_case.config)
+        set_cores_per_node(test_case.config,
+                           available_resources['cores_per_node'])
 
         mpas_tools.io.default_format = config.get('io', 'format')
         mpas_tools.io.default_engine = config.get('io', 'engine')
@@ -316,7 +317,7 @@ def _log_and_run_test(test_case, logger, test_logger, quiet,  # noqa: C901
             test_list = ', '.join(test_case.steps_to_run)
             test_logger.info(f'Running steps: {test_list}')
             try:
-                _run_test(test_case)
+                _run_test(test_case, available_resources)
                 run_status = success_str
                 test_pass = True
             except BaseException:
@@ -391,7 +392,7 @@ def _log_and_run_test(test_case, logger, test_logger, quiet,  # noqa: C901
     return success_str, success, test_time
 
 
-def _run_test(test_case):
+def _run_test(test_case, available_resources):
     """
     Run each step of the test case
     """
@@ -413,22 +414,21 @@ def _run_test(test_case):
                 _run_step_as_subprocess(
                     test_case, step, test_case.new_step_log_file)
             else:
-                _run_step(test_case, step, test_case.new_step_log_file)
+                _run_step(test_case, step, test_case.new_step_log_file,
+                          available_resources)
         except BaseException:
             _print_to_stdout(test_case, '      Failed')
             raise
         os.chdir(cwd)
 
 
-def _run_step(test_case, step, new_log_file):
+def _run_step(test_case, step, new_log_file, available_resources):
     """
     Run the requested step
     """
     logger = test_case.logger
-    config = test_case.config
     cwd = os.getcwd()
-    available_cores, _, _ = get_available_cores_and_nodes(config)
-    step.constrain_resources(available_cores)
+    step.constrain_resources(available_resources)
 
     missing_files = list()
     for input_file in step.inputs:
