@@ -35,7 +35,7 @@ def gridded_flood_fill(field, iStart=None, jStart=None):
     sz = field.shape
     searched_mask = np.zeros(sz)
     flood_mask = np.zeros(sz)
-    if iStart == None and jStart == None:
+    if iStart is None and jStart is None:
         iStart = sz[0] // 2
         jStart = sz[1] // 2
     flood_mask[iStart, jStart] = 1
@@ -193,7 +193,7 @@ def set_cell_width(self, section, thk, bed=None, vx=None, vy=None,
             # Do not let flood fill reach further than high_dist_bed into
             # the ice sheet interior.
             in_mask[np.logical_and(
-                       thk > 0, dist_to_grounding_line >= high_dist_bed)] = 0
+                thk > 0, dist_to_grounding_line >= high_dist_bed)] = 0
             low_bed_mask = gridded_flood_fill(in_mask,
                                               iStart=flood_fill_iStart,
                                               jStart=flood_fill_jStart)
@@ -202,18 +202,18 @@ def set_cell_width(self, section, thk, bed=None, vx=None, vy=None,
         # Use a logistics curve for bed topography spacing.
         k = 0.05  # This works well, but could try other values
         spacing_bed = min_spac + (max_spac - min_spac) / (1.0 + np.exp(
-                      -k * ( bed - np.mean([high_bed, low_bed]) ) ) )
+            -k * (bed - np.mean([high_bed, low_bed]))))
         # We only want bed topography to influence spacing within high_dist_bed
         # from the ice margin. In the region between high_dist_bed and
         # low_dist_bed, use a linear ramp to damp influence of bed topo.
         spacing_bed[dist_to_grounding_line >= low_dist_bed] = (
-            ( 1.0 - (dist_to_grounding_line[
-             dist_to_grounding_line >= low_dist_bed]
-             - low_dist_bed) / (high_dist_bed - low_dist_bed) ) *
+            (1.0 - (dist_to_grounding_line[
+                dist_to_grounding_line >= low_dist_bed] -
+                low_dist_bed) / (high_dist_bed - low_dist_bed)) *
             spacing_bed[dist_to_grounding_line >= low_dist_bed] +
             (dist_to_grounding_line[dist_to_grounding_line >=
-             low_dist_bed] - low_dist_bed) /
-            (high_dist_bed - low_dist_bed) * max_spac )
+                                    low_dist_bed] - low_dist_bed) /
+            (high_dist_bed - low_dist_bed) * max_spac)
         spacing_bed[dist_to_grounding_line >= high_dist_bed] = max_spac
         if flood_fill_iStart is not None and flood_fill_jStart is not None:
             spacing_bed[low_bed_mask == 0] = max_spac
@@ -222,7 +222,7 @@ def set_cell_width(self, section, thk, bed=None, vx=None, vy=None,
             # spacing_bed[dist_to_grounding_line >= high_dist_bed] = max_spac
             in_mask2 = (bed <= low_bed)
             in_mask2[np.logical_and(
-                       thk > 0, spacing_bed > (2. * min_spac))] = 0
+                thk > 0, spacing_bed > (2. * min_spac))] = 0
             low_bed_mask2 = gridded_flood_fill(in_mask2,
                                                iStart=flood_fill_iStart,
                                                jStart=flood_fill_jStart)
@@ -242,9 +242,9 @@ def set_cell_width(self, section, thk, bed=None, vx=None, vy=None,
         # Clean up where we have missing velocities. These are usually nans
         # or the default netCDF _FillValue of ~10.e36
         missing_data_mask = np.logical_or(
-                               np.logical_or(np.isnan(vx), np.isnan(vy)),
-                               np.logical_or(np.abs(vx) > 1.e5,
-                                             np.abs(vy) > 1.e5))
+            np.logical_or(np.isnan(vx), np.isnan(vy)),
+            np.logical_or(np.abs(vx) > 1.e5,
+                          np.abs(vy) > 1.e5))
         spacing_speed[missing_data_mask] = max_spac
         logger.info(f'Found {np.sum(missing_data_mask)} points in input '
                     f'dataset with missing velocity values. Setting '
@@ -258,8 +258,8 @@ def set_cell_width(self, section, thk, bed=None, vx=None, vy=None,
     if section.get('use_dist_to_edge') == 'True':
         logger.info('Using distance to ice edge for cell spacing')
         spacing_edge = np.interp(dist_to_edge, [low_dist, high_dist],
-                             [min_spac, max_spac], left=min_spac,
-                             right=max_spac)
+                                 [min_spac, max_spac], left=min_spac,
+                                 right=max_spac)
         spacing_edge[thk == 0.0] = min_spac
     else:
         spacing_edge = max_spac * np.ones_like(thk)
@@ -268,8 +268,8 @@ def set_cell_width(self, section, thk, bed=None, vx=None, vy=None,
     if section.get('use_dist_to_grounding_line') == 'True':
         logger.info('Using distance to grounding line for cell spacing')
         spacing_gl = np.interp(dist_to_grounding_line, [low_dist, high_dist],
-                             [min_spac, max_spac], left=min_spac,
-                             right=max_spac)
+                               [min_spac, max_spac], left=min_spac,
+                               right=max_spac)
         spacing_gl[thk == 0.0] = min_spac
     else:
         spacing_gl = max_spac * np.ones_like(thk)
@@ -315,10 +315,10 @@ def get_dist_to_edge_and_GL(self, thk, topg, x, y, section, window_size=None):
         Size (in meters) of a search 'box' (one-directional) to use
         to calculate the distance from each cell to the ice margin.
         Bigger number makes search slower, but if too small, the transition
-        zone could get truncated. We usually want this calculated as the maximum
-        of high_dist and high_dist_bed, but there may be cases in which it is useful
-        to set it manually. However, it should never be smaller than either high_dist
-        or high_dist_bed.
+        zone could get truncated. We usually want this calculated as the
+        maximum of high_dist and high_dist_bed, but there may be cases in
+        which it is useful to set it manually. However, it should never be
+        smaller than either high_dist or high_dist_bed.
 
     Returns
     -------
@@ -354,8 +354,6 @@ def get_dist_to_edge_and_GL(self, thk, topg, x, y, section, window_size=None):
 
     ice_mask = thk > 0.0
     grounded_mask = thk > (-1028.0 / 910.0 * topg)
-    floating_mask = np.logical_and(thk < (-1028.0 /
-                                          910.0 * topg), thk > 0.0)
     margin_mask = np.zeros(sz, dtype='i')
     grounding_line_mask = np.zeros(sz, dtype='i')
 

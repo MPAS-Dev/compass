@@ -1,19 +1,18 @@
-import numpy as np
 import netCDF4
 import xarray
-from matplotlib import pyplot as plt
-
-from mpas_tools.mesh.creation import build_planar_mesh
-from mpas_tools.mesh.conversion import convert, cull
-from mpas_tools.planar_hex import make_planar_hex_mesh
 from mpas_tools.io import write_netcdf
 from mpas_tools.logging import check_call
+from mpas_tools.mesh.conversion import convert, cull
+from mpas_tools.mesh.creation import build_planar_mesh
 
-from compass.step import Step
+from compass.landice.mesh import (
+    get_dist_to_edge_and_GL,
+    gridded_flood_fill,
+    set_cell_width,
+    set_rectangular_geom_points_and_edges,
+)
 from compass.model import make_graph_file
-from compass.landice.mesh import gridded_flood_fill, \
-                                 set_rectangular_geom_points_and_edges, \
-                                 set_cell_width, get_dist_to_edge_and_GL
+from compass.step import Step
 
 
 class Mesh(Step):
@@ -42,9 +41,9 @@ class Mesh(Step):
         self.add_output_file(filename='graph.info')
         self.add_output_file(filename='Humboldt_1to10km.nc')
         self.add_input_file(
-                filename='humboldt_1km_2020_04_20.epsg3413.icesheetonly.nc',
-                target='humboldt_1km_2020_04_20.epsg3413.icesheetonly.nc',
-                database='')
+            filename='humboldt_1km_2020_04_20.epsg3413.icesheetonly.nc',
+            target='humboldt_1km_2020_04_20.epsg3413.icesheetonly.nc',
+            database='')
         self.add_input_file(filename='Humboldt.geojson',
                             package='compass.landice.tests.humboldt',
                             target='Humboldt.geojson',
@@ -196,7 +195,7 @@ class Mesh(Step):
         yy0 = -1560000
         yy1 = -860000
         geom_points, geom_edges = set_rectangular_geom_points_and_edges(
-                                                           xx0, xx1, yy0, yy1)
+            xx0, xx1, yy0, yy1)
 
         # Remove ice not connected to the ice sheet.
         floodMask = gridded_flood_fill(thk)
@@ -207,8 +206,8 @@ class Mesh(Step):
         # Calculate distance from each grid point to ice edge
         # and grounding line, for use in cell spacing functions.
         distToEdge, distToGL = get_dist_to_edge_and_GL(
-                                            self, thk, topg, x1,
-                                            y1, section='humboldt_mesh')
+            self, thk, topg, x1,
+            y1, section='humboldt_mesh')
         # optional - plot distance calculation
         # plt.pcolor(distToEdge/1000.0); plt.colorbar(); plt.show()
 
