@@ -1,5 +1,5 @@
-import os
 import multiprocessing
+import os
 import subprocess
 import warnings
 
@@ -37,7 +37,7 @@ def get_available_cores_and_nodes(config):
         else:
             args = ['sinfo', '--noheader', '--node', node, '-o', '%Z']
             threads_per_core = _get_subprocess_int(args)
-        cores_per_node = sockets_per_node*cores_per_socket*threads_per_core
+        cores_per_node = sockets_per_node * cores_per_socket * threads_per_core
         args = ['squeue', '--noheader', '-j', job_id, '-o', '%D']
         nodes = _get_subprocess_int(args)
         cores = cores_per_node * nodes

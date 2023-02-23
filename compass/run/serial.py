@@ -1,17 +1,21 @@
 import argparse
-import sys
-import os
-import pickle
-import time
 import glob
 import inspect
+import os
+import pickle
+import sys
+import time
 
-from mpas_tools.logging import LoggingContext, check_call
 import mpas_tools.io
-from compass.parallel import check_parallel_system, set_cores_per_node, \
-    get_available_cores_and_nodes
-from compass.logging import log_method_call, log_function_call
+from mpas_tools.logging import LoggingContext, check_call
+
 from compass.config import CompassConfigParser
+from compass.logging import log_function_call, log_method_call
+from compass.parallel import (
+    check_parallel_system,
+    get_available_cores_and_nodes,
+    set_cores_per_node,
+)
 
 
 def run_tests(suite_name, quiet=False, is_test_case=False, steps_to_run=None,
@@ -40,15 +44,6 @@ def run_tests(suite_name, quiet=False, is_test_case=False, steps_to_run=None,
         A list of steps not to run if this is a test case, not a full suite.
         Typically, these are steps to remove from the defaults
     """
-    # ANSI fail text: https://stackoverflow.com/a/287944/7728169
-    start_fail = '\033[91m'
-    start_pass = '\033[92m'
-    start_time_color = '\033[94m'
-    end = '\033[0m'
-    pass_str = f'{start_pass}PASS{end}'
-    success_str = f'{start_pass}SUCCESS{end}'
-    fail_str = f'{start_fail}FAIL{end}'
-    error_str = f'{start_fail}ERROR{end}'
 
     # Allow a suite name to either include or not the .pickle suffix
     if suite_name.endswith('.pickle'):
@@ -84,7 +79,7 @@ def run_tests(suite_name, quiet=False, is_test_case=False, steps_to_run=None,
         cwd = os.getcwd()
         suite_start = time.time()
         test_times = dict()
-        success = dict()
+        success_strs = dict()
         for test_name in test_suite['test_cases']:
             test_case = test_suite['test_cases'][test_name]
 
@@ -97,121 +92,14 @@ def run_tests(suite_name, quiet=False, is_test_case=False, steps_to_run=None,
             else:
                 log_filename = f'{cwd}/case_outputs/{test_name}.log'
                 test_logger = None
-            with LoggingContext(test_name, logger=test_logger,
-                                log_filename=log_filename) as test_logger:
-                if quiet:
-                    # just log the step names and any failure messages to the
-                    # log file
-                    test_case.stdout_logger = test_logger
-                else:
-                    # log steps to stdout
-                    test_case.stdout_logger = logger
-                test_case.logger = test_logger
-                test_case.log_filename = log_filename
-                test_case.new_step_log_file = is_test_case
 
-                os.chdir(test_case.work_dir)
-
-                config = CompassConfigParser()
-                config.add_from_file(test_case.config_filename)
-                test_case.config = config
-                set_cores_per_node(test_case.config)
-
-                mpas_tools.io.default_format = config.get('io', 'format')
-                mpas_tools.io.default_engine = config.get('io', 'engine')
-
-                test_case.steps_to_run = _update_steps_to_run(
-                    steps_to_run, steps_not_to_run, config, test_case.steps)
-
-                test_start = time.time()
-                log_method_call(method=test_case.run, logger=test_logger)
-                test_logger.info('')
-                try:
-                    _test_case_run_deprecated(test_case)
-                    run_status = success_str
-                    test_pass = True
-                except BaseException:
-                    run_status = error_str
-                    test_pass = False
-                    test_logger.exception('Exception raised in the test '
-                                          'case\'s run() method')
-
-                if test_pass:
-                    log_function_call(function=_run_test, logger=test_logger)
-                    test_logger.info('')
-                    test_list = ', '.join(test_case.steps_to_run)
-                    test_logger.info(f'Running steps: {test_list}')
-                    try:
-                        _run_test(test_case)
-                        run_status = success_str
-                        test_pass = True
-                    except BaseException:
-                        run_status = error_str
-                        test_pass = False
-                        test_logger.exception('Exception raised while running '
-                                              'the steps of the test case')
-
-                if test_pass:
-                    test_logger.info('')
-                    log_method_call(method=test_case.validate,
-                                    logger=test_logger)
-                    test_logger.info('')
-                    try:
-                        test_case.validate()
-                    except BaseException:
-                        run_status = error_str
-                        test_pass = False
-                        test_logger.exception('Exception raised in the test '
-                                              'case\'s validate() method')
-
-                baseline_status = None
-                internal_status = None
-                if test_case.validation is not None:
-                    internal_pass = test_case.validation['internal_pass']
-                    baseline_pass = test_case.validation['baseline_pass']
-
-                    if internal_pass is not None:
-                        if internal_pass:
-                            internal_status = pass_str
-                        else:
-                            internal_status = fail_str
-                            test_logger.error(
-                                'Internal test case validation failed')
-                            test_pass = False
-
-                    if baseline_pass is not None:
-                        if baseline_pass:
-                            baseline_status = pass_str
-                        else:
-                            baseline_status = fail_str
-                            test_logger.error('Baseline validation failed')
-                            test_pass = False
-
-                status = f'  test execution:      {run_status}'
-                if internal_status is not None:
-                    status = f'{status}\n' \
-                             f'  test validation:     {internal_status}'
-                if baseline_status is not None:
-                    status = f'{status}\n' \
-                             f'  baseline comparison: {baseline_status}'
-
-                if test_pass:
-                    logger.info(status)
-                    success[test_name] = pass_str
-                else:
-                    logger.error(status)
-                    if not is_test_case:
-                        logger.error(f'  see: case_outputs/{test_name}.log')
-                    success[test_name] = fail_str
-                    failures += 1
-
-                test_times[test_name] = time.time() - test_start
-
-                secs = round(test_times[test_name])
-                mins = secs // 60
-                secs -= 60 * mins
-                logger.info(f'  test runtime:        '
-                            f'{start_time_color}{mins:02d}:{secs:02d}{end}')
+            success_str, success, test_time = _log_and_run_test(
+                test_case, logger, test_logger, quiet, log_filename,
+                is_test_case, steps_to_run, steps_not_to_run)
+            success_strs[test_name] = success_str
+            if not success:
+                failures += 1
+            test_times[test_name] = test_time
 
         suite_time = time.time() - suite_start
 
@@ -222,7 +110,7 @@ def run_tests(suite_name, quiet=False, is_test_case=False, steps_to_run=None,
             secs = round(test_time)
             mins = secs // 60
             secs -= 60 * mins
-            logger.info(f'{mins:02d}:{secs:02d} {success[test_name]} '
+            logger.info(f'{mins:02d}:{secs:02d} {success_strs[test_name]} '
                         f'{test_name}')
         secs = round(suite_time)
         mins = secs // 60
@@ -367,6 +255,140 @@ def _print_to_stdout(test_case, message):
         if test_case.logger != test_case.stdout_logger:
             # also write it to the log file
             test_case.logger.info(message)
+
+
+def _log_and_run_test(test_case, logger, test_logger, quiet,  # noqa: C901
+                      log_filename, is_test_case, steps_to_run,
+                      steps_not_to_run):
+    # ANSI fail text: https://stackoverflow.com/a/287944/7728169
+    start_fail = '\033[91m'
+    start_pass = '\033[92m'
+    start_time_color = '\033[94m'
+    end = '\033[0m'
+    pass_str = f'{start_pass}PASS{end}'
+    success_str = f'{start_pass}SUCCESS{end}'
+    fail_str = f'{start_fail}FAIL{end}'
+    error_str = f'{start_fail}ERROR{end}'
+
+    test_name = test_case.path.replace('/', '_')
+    with LoggingContext(test_name, logger=test_logger,
+                        log_filename=log_filename) as test_logger:
+        if quiet:
+            # just log the step names and any failure messages to the
+            # log file
+            test_case.stdout_logger = test_logger
+        else:
+            # log steps to stdout
+            test_case.stdout_logger = logger
+        test_case.logger = test_logger
+        test_case.log_filename = log_filename
+        test_case.new_step_log_file = is_test_case
+
+        os.chdir(test_case.work_dir)
+
+        config = CompassConfigParser()
+        config.add_from_file(test_case.config_filename)
+        test_case.config = config
+        set_cores_per_node(test_case.config)
+
+        mpas_tools.io.default_format = config.get('io', 'format')
+        mpas_tools.io.default_engine = config.get('io', 'engine')
+
+        test_case.steps_to_run = _update_steps_to_run(
+            steps_to_run, steps_not_to_run, config, test_case.steps)
+
+        test_start = time.time()
+        log_method_call(method=test_case.run, logger=test_logger)
+        test_logger.info('')
+        try:
+            _test_case_run_deprecated(test_case)
+            run_status = success_str
+            test_pass = True
+        except BaseException:
+            run_status = error_str
+            test_pass = False
+            test_logger.exception('Exception raised in the test '
+                                  'case\'s run() method')
+
+        if test_pass:
+            log_function_call(function=_run_test, logger=test_logger)
+            test_logger.info('')
+            test_list = ', '.join(test_case.steps_to_run)
+            test_logger.info(f'Running steps: {test_list}')
+            try:
+                _run_test(test_case)
+                run_status = success_str
+                test_pass = True
+            except BaseException:
+                run_status = error_str
+                test_pass = False
+                test_logger.exception('Exception raised while running '
+                                      'the steps of the test case')
+
+        if test_pass:
+            test_logger.info('')
+            log_method_call(method=test_case.validate,
+                            logger=test_logger)
+            test_logger.info('')
+            try:
+                test_case.validate()
+            except BaseException:
+                run_status = error_str
+                test_pass = False
+                test_logger.exception('Exception raised in the test '
+                                      'case\'s validate() method')
+
+        baseline_status = None
+        internal_status = None
+        if test_case.validation is not None:
+            internal_pass = test_case.validation['internal_pass']
+            baseline_pass = test_case.validation['baseline_pass']
+
+            if internal_pass is not None:
+                if internal_pass:
+                    internal_status = pass_str
+                else:
+                    internal_status = fail_str
+                    test_logger.error(
+                        'Internal test case validation failed')
+                    test_pass = False
+
+            if baseline_pass is not None:
+                if baseline_pass:
+                    baseline_status = pass_str
+                else:
+                    baseline_status = fail_str
+                    test_logger.error('Baseline validation failed')
+                    test_pass = False
+
+        status = f'  test execution:      {run_status}'
+        if internal_status is not None:
+            status = f'{status}\n' \
+                     f'  test validation:     {internal_status}'
+        if baseline_status is not None:
+            status = f'{status}\n' \
+                     f'  baseline comparison: {baseline_status}'
+
+        if test_pass:
+            logger.info(status)
+            success_str = pass_str
+            success = True
+        else:
+            logger.error(status)
+            if not is_test_case:
+                logger.error(f'  see: case_outputs/{test_name}.log')
+            success_str = fail_str
+            success = False
+
+        test_time = time.time() - test_start
+
+        secs = round(test_time)
+        mins = secs // 60
+        secs -= 60 * mins
+        logger.info(f'  test runtime:        '
+                    f'{start_time_color}{mins:02d}:{secs:02d}{end}')
+
+    return success_str, success, test_time
 
 
 def _run_test(test_case):
