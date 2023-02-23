@@ -1,8 +1,11 @@
-from compass.step import Step
-from importlib.resources import path
-from compass.io import symlink
 import os
+from importlib.resources import path
+
 from mpas_tools.logging import check_call
+
+from compass.io import symlink
+from compass.step import Step
+
 
 class EnsembleManager(Step):
     """
@@ -56,11 +59,12 @@ class EnsembleManager(Step):
                 runs.append(step)
 
         # Now loop over runs and process each
-        cwd = os.getcwd()  # save current working dir
         for run in runs:
-            runStep = self.test_case.steps[run]  # Get step object from 'steps' dictionary
+            # Get step object from 'steps' dictionary
+            runStep = self.test_case.steps[run]
             os.chdir(runStep.work_dir)
-            # TODO: assess if this run is unrun, partially run, or complete, and adjust accordingly
+            # TODO: assess if this run is unrun, partially run, or complete,
+            # and adjust accordingly
             check_call(['sbatch', 'job_script.sh'], logger)
             logger.info(f'Run {run} submitted.')
-        logger.info(f'All runs submitted.')
+        logger.info('All runs submitted.')

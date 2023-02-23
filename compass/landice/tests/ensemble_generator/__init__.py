@@ -1,6 +1,5 @@
+from compass.landice.tests.ensemble_generator.thwaites import ThwaitesEnsemble
 from compass.testgroup import TestGroup
-from compass.landice.tests.ensemble_generator.thwaites \
-        import ThwaitesEnsemble
 
 
 class EnsembleGenerator(TestGroup):

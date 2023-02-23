@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 
-import numpy as np
-from matplotlib import pyplot as plt
-import netCDF4
 import glob
-import sys, os
-import yaml
-import xarray as xr
+import os
+
 import matplotlib.tri as tri
+import netCDF4
+import numpy as np
+import xarray as xr
+import yaml
+from matplotlib import pyplot as plt
 
 targetYear = 20.0  # model year from start at which to calculate statistics
 labelRuns = True
@@ -32,7 +33,7 @@ obs_discharge_haynes = np.array([
     11.20, 11.33, 11.47, 11.60, 11.35, 11.10, 12.20, 11.90, 12.50, 12.11,
     12.80, 12.80, 12.90, 12.80, 13.90, 14.70, 12.30, 11.60, 12.53])
 obs_discharge = obs_discharge_thwaites + obs_discharge_haynes
-obs_years = np.arange(1979, 2017+1) - 2000.0
+obs_years = np.arange(1979, 2017 + 1) - 2000.0
 obs_sigmaD = (3.93**2 + 1.00**2)**0.5  # thwaites + haynes
 
 # initialize param vectors
@@ -46,6 +47,7 @@ areaChangeAll = np.zeros((nRuns,)) * np.nan
 fltAreaChangeAll = np.zeros((nRuns,)) * np.nan
 GLfluxAll = np.zeros((nRuns,)) * np.nan
 
+
 def get_nl_option(file, option_name):
     with open(file, "r") as fp:
         for line in fp:
@@ -53,12 +55,13 @@ def get_nl_option(file, option_name):
                 fp.close()
                 return float(line.split("=")[1].strip())
 
+
 # time series plot
 figTS = plt.figure(2, figsize=(8, 12), facecolor='w')
-nrow=2
-ncol=1
+nrow = 2
+ncol = 1
 axSLRts = figTS.add_subplot(nrow, ncol, 1)
-#plt.title(f'SLR at year {targetYear} (mm)')
+# plt.title(f'SLR at year {targetYear} (mm)')
 plt.xlabel('Year')
 plt.ylabel('SLR contribution (mm)')
 plt.grid()
@@ -67,12 +70,14 @@ axGLFts = figTS.add_subplot(nrow, ncol, 2)
 plt.xlabel('Year')
 plt.ylabel('GL flux (Gt)')
 plt.grid()
-axGLFts.fill_between(obs_years, obs_discharge - 2.0*obs_sigmaD, obs_discharge + 2.0*obs_sigmaD, color='k', alpha=0.1, label='D obs')
+axGLFts.fill_between(obs_years, obs_discharge - 2.0 * obs_sigmaD,
+                     obs_discharge + 2.0 * obs_sigmaD, color='k',
+                     alpha=0.1, label='D obs')
 
 # maps
 figMaps = plt.figure(3, figsize=(8, 12), facecolor='w')
-nrow=2
-ncol=1
+nrow = 2
+ncol = 1
 axMaps = figMaps.add_subplot(nrow, ncol, 1)
 axMaps.axis('equal')
 
@@ -85,8 +90,11 @@ for idx, run in enumerate(runs):
 
     # Get values from namelist in case run didn't produce output.nc files.
     nlFile = run + "/namelist.landice"
-    vmThresh[idx] = get_nl_option(nlFile, "config_floating_von_Mises_threshold_stress") / 1000.0  # convert to kPa
-    #vmSpdLim[idx] = get_nl_option(nlFile, "config_calving_speed_limit") * 3600.0 * 24.0 * 365.0 / 1000.0  # convert to km/yr
+    vmThresh[idx] = get_nl_option(
+        nlFile,
+        "config_floating_von_Mises_threshold_stress") / 1000.0  # kPa
+    # vmSpdLim[idx] = get_nl_option(nlFile, "config_calving_speed_limit") * \
+    #    3600.0 * 24.0 * 365.0 / 1000.0  # convert to km/yr
 
     # read yaml file for fric exp
     with open(run + '/albany_input.yaml', 'r') as stream:
@@ -94,7 +102,8 @@ for idx, run in enumerate(runs):
             loaded = yaml.safe_load(stream)
         except yaml.YAMLError as exc:
             print(exc)
-    fricExp[idx] = loaded['ANONYMOUS']['Problem']['LandIce BCs']['BC 0']['Basal Friction Coefficient']['Power Exponent']
+    fricExp[idx] = (loaded['ANONYMOUS']['Problem']['LandIce BCs']['BC 0']
+                    ['Basal Friction Coefficient']['Power Exponent'])
 
     fpath = run + "/output/globalStats.nc"
     if os.path.exists(fpath):
@@ -103,12 +112,11 @@ for idx, run in enumerate(runs):
 
         VAF = f.variables['volumeAboveFloatation'][:]
         SLR = (VAF[0] - VAF) / 3.62e14 * rhoi / rhosw * 1000.
-        groundingLineFlux = f.variables['groundingLineFlux'][:] / 1.0e12  # in Gt
-
+        groundingLineFlux = f.variables['groundingLineFlux'][:] / 1.0e12  # Gt
 
         # plot time series
         axSLRts.plot(years, SLR)
-        axGLFts.plot(years[1:], groundingLineFlux[1:])  # ignore first entry which is 0
+        axGLFts.plot(years[1:], groundingLineFlux[1:])  # first entry is 0
 
         # Only process runs that have reached target year
         indices = np.nonzero(years >= targetYear)[0]
@@ -129,7 +137,10 @@ for idx, run in enumerate(runs):
             GLfluxAll[idx] = groundingLineFlux[ii]
 
         # plot map
-        DS = xr.open_mfdataset(run + '/output/' + 'output_*.nc', combine='nested', concat_dim='Time', decode_timedelta=False, chunks={"Time": 10})
+        DS = xr.open_mfdataset(run + '/output/' + 'output_*.nc',
+                               combine='nested', concat_dim='Time',
+                               decode_timedelta=False,
+                               chunks={"Time": 10})
         yearsOutput = DS['daysSinceStart'].values[:] / 365.0
         indices = np.nonzero(yearsOutput >= targetYear)[0]
         if len(indices) > 0:
@@ -137,26 +148,25 @@ for idx, run in enumerate(runs):
 
             thickness = DS['thickness'].values
             bedTopo = DS['bedTopography'].values
-            xCell = DS['xCell'].values[0,:]
-            yCell = DS['yCell'].values[0,:]
+            xCell = DS['xCell'].values[0, :]
+            yCell = DS['yCell'].values[0, :]
 
             triang = tri.Triangulation(xCell, yCell)
-
 
             axMaps.tricontour(triang, thickness[0], [1.0], colors='k')
             axMaps.tricontour(triang, thickness[ii], [1.0], colors='r')
 
             ii5 = np.nonzero(yearsOutput >= 10.0)[0][0]
 
-            grd0 = ((thickness[0,:]*910.0/1028.0+bedTopo[0,:])>0.0)*(thickness[0,:]>0.0)
-            grd5 = ((thickness[ii5,:]*910.0/1028.0+bedTopo[ii5,:])>0.0)*(thickness[ii5,:]>0.0)
-            grd = ((thickness[ii,:]*910.0/1028.0+bedTopo[ii,:])>0.0)*(thickness[ii,:]>0.0)
+            grd0 = (((thickness[0, :] * 910.0 / 1028.0 + bedTopo[0, :]) >
+                    0.0) * (thickness[0, :] > 0.0))
+            grd5 = ((thickness[ii5, :] * 910.0 / 1028.0 + bedTopo[ii5, :]) >
+                    0.0) * (thickness[ii5, :] > 0.0)
+            grd = ((thickness[ii, :] * 910.0 / 1028.0 + bedTopo[ii, :]) >
+                   0.0) * (thickness[ii, :] > 0.0)
             axMaps.tricontour(triang, grd0, [0.5], colors='k')
             axMaps.tricontour(triang, grd5, [0.5], colors='c')
             axMaps.tricontour(triang, grd, [0.5], colors='b')
-
-
-
 
         f.close()
 
@@ -165,8 +175,8 @@ for idx, run in enumerate(runs):
 markerSize = 100
 
 fig = plt.figure(1, figsize=(14, 11), facecolor='w')
-nrow=2
-ncol=2
+nrow = 2
+ncol = 2
 
 axSLR = fig.add_subplot(nrow, ncol, 1)
 plt.title(f'SLR at year {targetYear} (mm)')
@@ -186,7 +196,8 @@ plt.title(f'Total area change at year {targetYear} (km$^2$)')
 plt.xlabel('von Mises stress threshold (kPa)')
 plt.ylabel('basal friction law exponent')
 plt.grid()
-plt.scatter(vmThresh, fricExp, s=markerSize, c=areaChangeAll, plotnonfinite=False)
+plt.scatter(vmThresh, fricExp, s=markerSize, c=areaChangeAll,
+            plotnonfinite=False)
 badIdx = np.nonzero(np.isnan(areaChangeAll))[0]
 plt.plot(vmThresh[badIdx], fricExp[badIdx], 'kx')
 plt.colorbar()
@@ -196,7 +207,8 @@ plt.title(f'Grounded area change at year {targetYear} (km$^2$)')
 plt.xlabel('von Mises stress threshold (kPa)')
 plt.ylabel('basal friction law exponent')
 plt.grid()
-plt.scatter(vmThresh, fricExp, s=markerSize, c=grdAreaChangeAll, plotnonfinite=False)
+plt.scatter(vmThresh, fricExp, s=markerSize, c=grdAreaChangeAll,
+            plotnonfinite=False)
 badIdx = np.nonzero(np.isnan(grdAreaChangeAll))[0]
 plt.plot(vmThresh[badIdx], fricExp[badIdx], 'kx')
 plt.colorbar()

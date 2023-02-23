@@ -1,4 +1,3 @@
-from compass.mpas_core import MpasCore
 from compass.landice.tests.antarctica import Antarctica
 from compass.landice.tests.calving_dt_convergence import CalvingDtConvergence
 from compass.landice.tests.circular_shelf import CircularShelf
@@ -14,6 +13,7 @@ from compass.landice.tests.kangerlussuaq import Kangerlussuaq
 from compass.landice.tests.koge_bugt_s import KogeBugtS
 from compass.landice.tests.mismipplus import MISMIPplus
 from compass.landice.tests.thwaites import Thwaites
+from compass.mpas_core import MpasCore
 
 
 class Landice(MpasCore):

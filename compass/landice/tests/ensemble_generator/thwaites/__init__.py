@@ -1,12 +1,16 @@
-from compass.validate import compare_variables
-from compass.testcase import TestCase
-from compass.landice.tests.ensemble_generator.ensemble_member \
-        import EnsembleMember
-from compass.landice.tests.ensemble_generator.ensemble_manager \
-        import EnsembleManager
-from importlib import resources
-import numpy as np
 import sys
+from importlib import resources
+
+import numpy as np
+
+from compass.landice.tests.ensemble_generator.ensemble_manager import (
+    EnsembleManager,
+)
+from compass.landice.tests.ensemble_generator.ensemble_member import (
+    EnsembleMember,
+)
+from compass.testcase import TestCase
+from compass.validate import compare_variables
 
 
 class ThwaitesEnsemble(TestCase):
@@ -31,7 +35,6 @@ class ThwaitesEnsemble(TestCase):
         # We don't want to initialize all the individual runs
         # So during init, we only add the run manager
         self.add_step(EnsembleManager(test_case=self))
-
 
     def configure(self):
         """
@@ -68,10 +71,8 @@ class ThwaitesEnsemble(TestCase):
                 param_file_name) as params_file:
             param_array = np.loadtxt(params_file, delimiter=',',
                                      skiprows=1)
-        param_sample_number = param_array[:,0]
-        param_unit_values = param_array[:,1:]
+        param_unit_values = param_array[:, 1:]
         max_samples = param_unit_values.shape[0]
-        max_params = param_unit_values.shape[1]
 
         # Define parameters being sampled and their ranges
         # These options could eventually become cfg options
@@ -80,16 +81,17 @@ class ThwaitesEnsemble(TestCase):
         # basal fric exp
         basal_fric_param_idx = 0
         basal_fric_exp_range = [0.1, 0.333333]
-        basal_fric_exp_vec = param_unit_values[:,basal_fric_param_idx] * \
-                (basal_fric_exp_range[1] - basal_fric_exp_range[0]) + \
-                basal_fric_exp_range[0]
+        basal_fric_exp_vec = param_unit_values[:, basal_fric_param_idx] * \
+            (basal_fric_exp_range[1] - basal_fric_exp_range[0]) + \
+            basal_fric_exp_range[0]
 
         # von mises threshold stress
         von_mises_threshold_idx = 1
         von_mises_threshold_range = [100.0e3, 300.0e3]
-        von_mises_threshold_vec = param_unit_values[:,von_mises_threshold_idx] * \
-                (von_mises_threshold_range[1] - von_mises_threshold_range[0]) + \
-                von_mises_threshold_range[0]
+        von_mises_threshold_vec = \
+            param_unit_values[:, von_mises_threshold_idx] * \
+            (von_mises_threshold_range[1] - von_mises_threshold_range[0]) + \
+            von_mises_threshold_range[0]
 
         # calving speed limit
         # Currently set to a constant value, but likely to be added later
@@ -106,16 +108,16 @@ class ThwaitesEnsemble(TestCase):
 
         # add runs as steps based on the run range requested
         if self.end_run > max_samples:
-            sys.exit("Error: end_run specified in config exceeds maximum sample "
-                     "size available in param_vector_filename")
-        for run_num in range(self.start_run, self.end_run+1):
+            sys.exit("Error: end_run specified in config exceeds maximum "
+                     "sample size available in param_vector_filename")
+        for run_num in range(self.start_run, self.end_run + 1):
             self.add_step(EnsembleMember(test_case=self, run_num=run_num,
-                                         test_resources_location='compass.landice.tests.ensemble_generator.thwaites',
-                                         basal_fric_exp=basal_fric_exp_vec[run_num],
-                                         von_mises_threshold=von_mises_threshold_vec[run_num],
-                                         calv_spd_lim=calv_spd_lim_vec[run_num],
-                                         gamma0=gamma0_vec[run_num],
-                                         deltaT=deltaT_vec[run_num]))
+                          test_resources_location='compass.landice.tests.ensemble_generator.thwaites',  # noqa
+                          basal_fric_exp=basal_fric_exp_vec[run_num],
+                          von_mises_threshold=von_mises_threshold_vec[run_num],
+                          calv_spd_lim=calv_spd_lim_vec[run_num],
+                          gamma0=gamma0_vec[run_num],
+                          deltaT=deltaT_vec[run_num]))
             # Note: do not add to steps_to_run, because ensemble_manager
             # will handle submitting and running the runs
 
@@ -123,7 +125,6 @@ class ThwaitesEnsemble(TestCase):
         # This is because the individual runs will be submitted as jobs
         # by the ensemble manager.
         self.steps_to_run = ['ensemble_manager',]
-
 
     # no run() method is needed
 
