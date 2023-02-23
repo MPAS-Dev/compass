@@ -1,10 +1,11 @@
 from importlib.resources import contents
 
-from compass.ocean.tests.global_ocean.metadata import \
-    add_mesh_and_init_metadata
 from compass.model import run_model
+from compass.ocean.plot import plot_initial_state, plot_vertical_grid
+from compass.ocean.tests.global_ocean.metadata import (
+    add_mesh_and_init_metadata,
+)
 from compass.ocean.vertical.grid_1d import generate_1d_grid, write_1d_grid
-from compass.ocean.plot import plot_vertical_grid, plot_initial_state
 from compass.step import Step
 
 
@@ -80,7 +81,7 @@ class InitialState(Step):
 
         self.add_input_file(
             filename='topography.nc',
-            target='BedMachineAntarctica_v2_and_GEBCO_2022_0.05_degree_20220729.nc',
+            target='BedMachineAntarctica_v2_and_GEBCO_2022_0.05_degree_20220729.nc',  # noqa: E501
             database='bathymetry_database')
 
         self.add_input_file(
@@ -152,13 +153,12 @@ class InitialState(Step):
         """
         self._get_resources()
 
-
-    def constrain_resources(self, available_cores):
+    def constrain_resources(self, available_resources):
         """
         Update resources at runtime from config options
         """
         self._get_resources()
-        super().constrain_resources(available_cores)
+        super().constrain_resources(available_resources)
 
     def run(self):
         """

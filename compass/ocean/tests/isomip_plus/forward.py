@@ -1,13 +1,13 @@
 import os
 import shutil
-import xarray
 import time
 
-from compass.model import run_model
-from compass.step import Step
+import xarray
 
+from compass.model import run_model
 from compass.ocean.tests.isomip_plus.evap import update_evaporation_flux
 from compass.ocean.tests.isomip_plus.viz.plot import MoviePlotter
+from compass.step import Step
 
 
 class Forward(Step):
@@ -133,12 +133,12 @@ class Forward(Step):
         """
         self._get_resources()
 
-    def constrain_resources(self, available_cores):
+    def constrain_resources(self, available_resources):
         """
         Update resources at runtime from config options
         """
         self._get_resources()
-        super().constrain_resources(available_cores)
+        super().constrain_resources(available_resources)
 
     def run(self):
         """
@@ -192,6 +192,7 @@ class Forward(Step):
         self.min_tasks = config.getint('isomip_plus', 'forward_min_tasks')
         self.openmp_threads = config.getint('isomip_plus', 'forward_threads')
 
+
 def get_time_steps(resolution):
     """
     Get the time step namelist replacements for the resolution
@@ -208,10 +209,10 @@ def get_time_steps(resolution):
     """
 
     # 4 minutes at 2 km, and proportional to resolution
-    dt = 2.*60*resolution
+    dt = 2. * 60 * resolution
 
     # 10 sec at 2 km, and proportional to resolution
-    btr_dt = 5.*resolution
+    btr_dt = 5. * resolution
 
     # https://stackoverflow.com/a/1384565/7728169
     # Note: this will drop any fractional seconds, which is usually okay

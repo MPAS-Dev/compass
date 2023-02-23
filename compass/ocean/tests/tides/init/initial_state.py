@@ -1,10 +1,10 @@
-from compass.model import run_model
-from compass.step import Step
-
-from compass.ocean.vertical.grid_1d import generate_1d_grid, write_1d_grid
-from compass.ocean.plot import plot_vertical_grid
 import netCDF4
 import numpy as np
+
+from compass.model import run_model
+from compass.ocean.plot import plot_vertical_grid
+from compass.ocean.vertical.grid_1d import generate_1d_grid, write_1d_grid
+from compass.step import Step
 
 
 class InitialState(Step):
@@ -89,13 +89,12 @@ class InitialState(Step):
         """
         self._get_resources()
 
-
-    def constrain_resources(self, available_cores):
+    def constrain_resources(self, available_resources):
         """
         Update resources at runtime from config options
         """
         self._get_resources()
-        super().constrain_resources(available_cores)
+        super().constrain_resources(available_resources)
 
     def run(self):
         """

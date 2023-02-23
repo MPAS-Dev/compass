@@ -32,7 +32,7 @@ class Forward(Step):
 
         mesh_name : str
             The name of the mesh
-        """
+        """  # noqa: E501
         super().__init__(test_case=test_case,
                          name=f'{mesh_name}_forward',
                          subdir=f'{mesh_name}/forward')
@@ -67,12 +67,12 @@ class Forward(Step):
         self.add_namelist_options({'config_dt': dt})
         self._get_resources()
 
-    def constrain_resources(self, available_cores):
+    def constrain_resources(self, available_resources):
         """
         Update resources at runtime from config options
         """
         self._get_resources()
-        super().constrain_resources(available_cores)
+        super().constrain_resources(available_resources)
 
     def run(self):
         """
