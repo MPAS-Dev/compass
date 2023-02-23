@@ -111,22 +111,22 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.landice.tests.greenland.mesh</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">netCDF4</span>
+<span></span><span class="kn">import</span> <span class="nn">netCDF4</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">xarray</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
-
-<span class="kn">from</span> <span class="nn">mpas_tools.mesh.creation</span> <span class="kn">import</span> <span class="n">build_planar_mesh</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.mesh.conversion</span> <span class="kn">import</span> <span class="n">convert</span><span class="p">,</span> <span class="n">cull</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.planar_hex</span> <span class="kn">import</span> <span class="n">make_planar_hex_mesh</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
 <span class="kn">from</span> <span class="nn">mpas_tools.logging</span> <span class="kn">import</span> <span class="n">check_call</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.mesh.conversion</span> <span class="kn">import</span> <span class="n">convert</span><span class="p">,</span> <span class="n">cull</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.mesh.creation</span> <span class="kn">import</span> <span class="n">build_planar_mesh</span>
 
-<span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
+<span class="kn">from</span> <span class="nn">compass.landice.mesh</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">get_dist_to_edge_and_GL</span><span class="p">,</span>
+    <span class="n">gridded_flood_fill</span><span class="p">,</span>
+    <span class="n">set_cell_width</span><span class="p">,</span>
+    <span class="n">set_rectangular_geom_points_and_edges</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">compass.model</span> <span class="kn">import</span> <span class="n">make_graph_file</span>
-<span class="kn">from</span> <span class="nn">compass.landice.mesh</span> <span class="kn">import</span> <span class="n">gridded_flood_fill</span><span class="p">,</span> \
-                                 <span class="n">set_rectangular_geom_points_and_edges</span><span class="p">,</span> \
-                                 <span class="n">set_cell_width</span><span class="p">,</span> <span class="n">get_dist_to_edge_and_GL</span>
+<span class="kn">from</span> <span class="nn">compass.step</span> <span class="kn">import</span> <span class="n">Step</span>
 
 
 <div class="viewcode-block" id="Mesh"><a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.greenland.mesh.Mesh.html#compass.landice.tests.greenland.mesh.Mesh">[docs]</a><span class="k">class</span> <span class="nc">Mesh</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
@@ -155,11 +155,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;graph.info&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_output_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;GIS.nc&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span>
-                <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;greenland_1km_2020_04_20.epsg3413.icesheetonly.nc&#39;</span><span class="p">,</span>
-                <span class="n">target</span><span class="o">=</span><span class="s1">&#39;greenland_1km_2020_04_20.epsg3413.icesheetonly.nc&#39;</span><span class="p">,</span>
-                <span class="n">database</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;greenland_8km_2020_04_20.epsg3413.nc&#39;</span><span class="p">,</span>
-                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;greenland_8km_2020_04_20.epsg3413.nc&#39;</span><span class="p">,</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;greenland_1km_2020_04_20.epsg3413.icesheetonly.nc&#39;</span><span class="p">,</span>
+            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;greenland_1km_2020_04_20.epsg3413.icesheetonly.nc&#39;</span><span class="p">,</span>
+            <span class="n">database</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input_file</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;greenland_2km_2020_04_20.epsg3413.nc&#39;</span><span class="p">,</span>
+                            <span class="n">target</span><span class="o">=</span><span class="s1">&#39;greenland_2km_2020_04_20.epsg3413.nc&#39;</span><span class="p">,</span>
                             <span class="n">database</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span></div>
 
     <span class="c1"># no setup() method is needed</span>
@@ -203,7 +203,7 @@
         <span class="n">cullDistance</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;cull_distance&#39;</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;calling define_cullMask.py&#39;</span><span class="p">)</span>
         <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;define_cullMask.py&#39;</span><span class="p">,</span> <span class="s1">&#39;-f&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;gis_1km_preCull.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;-m&#39;</span>
+                <span class="s1">&#39;gis_1km_preCull.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;-m&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;distance&#39;</span><span class="p">,</span> <span class="s1">&#39;-d&#39;</span><span class="p">,</span> <span class="n">cullDistance</span><span class="p">]</span>
 
         <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
@@ -259,7 +259,7 @@
 <span class="sd">        speed and distance to the ice margin.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># get needed fields from GIS dataset</span>
-        <span class="n">f</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="s1">&#39;greenland_8km_2020_04_20.epsg3413.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="s1">&#39;greenland_2km_2020_04_20.epsg3413.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
         <span class="n">f</span><span class="o">.</span><span class="n">set_auto_mask</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># disable masked arrays</span>
 
         <span class="n">x1</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;x1&#39;</span><span class="p">][:]</span>
@@ -276,7 +276,7 @@
         <span class="n">yy0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">y1</span><span class="p">)</span>
         <span class="n">yy1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">y1</span><span class="p">)</span>
         <span class="n">geom_points</span><span class="p">,</span> <span class="n">geom_edges</span> <span class="o">=</span> <span class="n">set_rectangular_geom_points_and_edges</span><span class="p">(</span>
-                                                           <span class="n">xx0</span><span class="p">,</span> <span class="n">xx1</span><span class="p">,</span> <span class="n">yy0</span><span class="p">,</span> <span class="n">yy1</span><span class="p">)</span>
+            <span class="n">xx0</span><span class="p">,</span> <span class="n">xx1</span><span class="p">,</span> <span class="n">yy0</span><span class="p">,</span> <span class="n">yy1</span><span class="p">)</span>
 
         <span class="c1"># Remove ice not connected to the ice sheet.</span>
         <span class="n">floodMask</span> <span class="o">=</span> <span class="n">gridded_flood_fill</span><span class="p">(</span><span class="n">thk</span><span class="p">)</span>
@@ -286,15 +286,23 @@
 
         <span class="c1"># Calculate distance from each grid point to ice edge</span>
         <span class="c1"># and grounding line, for use in cell spacing functions.</span>
-        <span class="n">distToEdge</span><span class="p">,</span> <span class="n">distToGL</span> <span class="o">=</span> <span class="n">get_dist_to_edge_and_GL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thk</span><span class="p">,</span> <span class="n">topg</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span>
-                                                       <span class="n">y1</span><span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="mf">1.e5</span><span class="p">)</span>
+        <span class="n">distToEdge</span><span class="p">,</span> <span class="n">distToGL</span> <span class="o">=</span> <span class="n">get_dist_to_edge_and_GL</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">thk</span><span class="p">,</span> <span class="n">topg</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;high_res_GIS_mesh&#39;</span><span class="p">)</span>
         <span class="c1"># optional - plot distance calculation</span>
         <span class="c1"># plt.pcolor(distToEdge/1000.0); plt.colorbar(); plt.show()</span>
 
-        <span class="c1"># Set cell widths based on mesh parameters set in config file</span>
+        <span class="c1"># Set cell widths based on mesh parameters set in config file.</span>
+        <span class="c1"># Start flood-fill for bed topography in the ocean at a point</span>
+        <span class="c1"># with bed &lt; low_bed. This is often necessary to remove pockets</span>
+        <span class="c1"># of high resolution that are no longer connected to the rest of</span>
+        <span class="c1"># the high resolution part of the mesh. These indices are specific</span>
+        <span class="c1"># to the mesh and the gridded data product used to set cell spacing.</span>
         <span class="n">cell_width</span> <span class="o">=</span> <span class="n">set_cell_width</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;high_res_GIS_mesh&#39;</span><span class="p">,</span> <span class="n">thk</span><span class="o">=</span><span class="n">thk</span><span class="p">,</span>
-                                    <span class="n">vx</span><span class="o">=</span><span class="n">vx</span><span class="p">,</span> <span class="n">vy</span><span class="o">=</span><span class="n">vy</span><span class="p">,</span> <span class="n">dist_to_edge</span><span class="o">=</span><span class="n">distToEdge</span><span class="p">,</span>
-                                    <span class="n">dist_to_grounding_line</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+                                    <span class="n">bed</span><span class="o">=</span><span class="n">topg</span><span class="p">,</span> <span class="n">vx</span><span class="o">=</span><span class="n">vx</span><span class="p">,</span> <span class="n">vy</span><span class="o">=</span><span class="n">vy</span><span class="p">,</span>
+                                    <span class="n">dist_to_edge</span><span class="o">=</span><span class="n">distToEdge</span><span class="p">,</span>
+                                    <span class="n">dist_to_grounding_line</span><span class="o">=</span><span class="n">distToGL</span><span class="p">,</span>
+                                    <span class="n">flood_fill_iStart</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                                    <span class="n">flood_fill_jStart</span><span class="o">=</span><span class="mi">700</span><span class="p">)</span>
         <span class="c1"># plt.pcolor(cell_width); plt.colorbar(); plt.show()</span>
 
         <span class="k">return</span> <span class="p">(</span><span class="n">cell_width</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float64&#39;</span><span class="p">),</span> <span class="n">x1</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float64&#39;</span><span class="p">),</span>
