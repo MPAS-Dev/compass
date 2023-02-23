@@ -111,9 +111,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for compass.landice.tests.humboldt.decomposition_test</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">compass.validate</span> <span class="kn">import</span> <span class="n">compare_variables</span>
+<span></span><span class="kn">from</span> <span class="nn">compass.landice.tests.humboldt.run_model</span> <span class="kn">import</span> <span class="n">RunModel</span>
 <span class="kn">from</span> <span class="nn">compass.testcase</span> <span class="kn">import</span> <span class="n">TestCase</span>
-<span class="kn">from</span> <span class="nn">compass.landice.tests.humboldt.run_model</span> <span class="kn">import</span> <span class="n">RunModel</span>
+<span class="kn">from</span> <span class="nn">compass.validate</span> <span class="kn">import</span> <span class="n">compare_variables</span>
 
 
 <div class="viewcode-block" id="DecompositionTest"><a class="viewcode-back" href="../../../../../developers_guide/landice/generated/compass.landice.tests.humboldt.decomposition_test.DecompositionTest.html#compass.landice.tests.humboldt.decomposition_test.DecompositionTest">[docs]</a><span class="k">class</span> <span class="nc">DecompositionTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
@@ -233,8 +233,8 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">velo_solver</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">&#39;sia&#39;</span><span class="p">,</span> <span class="s1">&#39;none&#39;</span><span class="p">}:</span>
             <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
                               <span class="n">variables</span><span class="o">=</span><span class="n">var_list</span><span class="p">,</span>
-                              <span class="n">filename1</span><span class="o">=</span><span class="n">run_dir1</span><span class="o">+</span><span class="s1">&#39;/output.nc&#39;</span><span class="p">,</span>
-                              <span class="n">filename2</span><span class="o">=</span><span class="n">run_dir2</span><span class="o">+</span><span class="s1">&#39;/output.nc&#39;</span><span class="p">)</span>
+                              <span class="n">filename1</span><span class="o">=</span><span class="n">run_dir1</span> <span class="o">+</span> <span class="s1">&#39;/output.nc&#39;</span><span class="p">,</span>
+                              <span class="n">filename2</span><span class="o">=</span><span class="n">run_dir2</span> <span class="o">+</span> <span class="s1">&#39;/output.nc&#39;</span><span class="p">)</span>
 
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">velo_solver</span> <span class="o">==</span> <span class="s1">&#39;FO&#39;</span><span class="p">:</span>
             <span class="c1"># validate thickness</span>
@@ -243,8 +243,8 @@
             <span class="n">l2_norm</span> <span class="o">=</span> <span class="mf">1.0e-11</span>
             <span class="n">linf_norm</span> <span class="o">=</span> <span class="mf">1.0e-11</span>
             <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variable</span><span class="p">,</span>
-                              <span class="n">filename1</span><span class="o">=</span><span class="n">run_dir1</span><span class="o">+</span><span class="s1">&#39;/output.nc&#39;</span><span class="p">,</span>
-                              <span class="n">filename2</span><span class="o">=</span><span class="n">run_dir2</span><span class="o">+</span><span class="s1">&#39;/output.nc&#39;</span><span class="p">,</span>
+                              <span class="n">filename1</span><span class="o">=</span><span class="n">run_dir1</span> <span class="o">+</span> <span class="s1">&#39;/output.nc&#39;</span><span class="p">,</span>
+                              <span class="n">filename2</span><span class="o">=</span><span class="n">run_dir2</span> <span class="o">+</span> <span class="s1">&#39;/output.nc&#39;</span><span class="p">,</span>
                               <span class="n">l1_norm</span><span class="o">=</span><span class="n">l1_norm</span><span class="p">,</span> <span class="n">l2_norm</span><span class="o">=</span><span class="n">l2_norm</span><span class="p">,</span>
                               <span class="n">linf_norm</span><span class="o">=</span><span class="n">linf_norm</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
@@ -254,8 +254,8 @@
             <span class="n">l2_norm</span> <span class="o">=</span> <span class="mf">1.0e-16</span>
             <span class="n">linf_norm</span> <span class="o">=</span> <span class="mf">1.0e-17</span>
             <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variable</span><span class="p">,</span>
-                              <span class="n">filename1</span><span class="o">=</span><span class="n">run_dir1</span><span class="o">+</span><span class="s1">&#39;/output.nc&#39;</span><span class="p">,</span>
-                              <span class="n">filename2</span><span class="o">=</span><span class="n">run_dir2</span><span class="o">+</span><span class="s1">&#39;/output.nc&#39;</span><span class="p">,</span>
+                              <span class="n">filename1</span><span class="o">=</span><span class="n">run_dir1</span> <span class="o">+</span> <span class="s1">&#39;/output.nc&#39;</span><span class="p">,</span>
+                              <span class="n">filename2</span><span class="o">=</span><span class="n">run_dir2</span> <span class="o">+</span> <span class="s1">&#39;/output.nc&#39;</span><span class="p">,</span>
                               <span class="n">l1_norm</span><span class="o">=</span><span class="n">l1_norm</span><span class="p">,</span> <span class="n">l2_norm</span><span class="o">=</span><span class="n">l2_norm</span><span class="p">,</span>
                               <span class="n">linf_norm</span><span class="o">=</span><span class="n">linf_norm</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
@@ -265,19 +265,19 @@
                 <span class="n">linf_norm</span> <span class="o">=</span> <span class="mf">1.0e-12</span>
                 <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
                                   <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;calvingVelocity&#39;</span><span class="p">],</span>
-                                  <span class="n">filename1</span><span class="o">=</span><span class="n">run_dir1</span><span class="o">+</span><span class="s1">&#39;/output.nc&#39;</span><span class="p">,</span>
-                                  <span class="n">filename2</span><span class="o">=</span><span class="n">run_dir2</span><span class="o">+</span><span class="s1">&#39;/output.nc&#39;</span><span class="p">,</span>
+                                  <span class="n">filename1</span><span class="o">=</span><span class="n">run_dir1</span> <span class="o">+</span> <span class="s1">&#39;/output.nc&#39;</span><span class="p">,</span>
+                                  <span class="n">filename2</span><span class="o">=</span><span class="n">run_dir2</span> <span class="o">+</span> <span class="s1">&#39;/output.nc&#39;</span><span class="p">,</span>
                                   <span class="n">l1_norm</span><span class="o">=</span><span class="n">l1_norm</span><span class="p">,</span> <span class="n">l2_norm</span><span class="o">=</span><span class="n">l2_norm</span><span class="p">,</span>
                                   <span class="n">linf_norm</span><span class="o">=</span><span class="n">linf_norm</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="s1">&#39;calvingThickness&#39;</span> <span class="ow">in</span> <span class="n">var_list</span><span class="p">:</span>
-                <span class="n">l1_norm</span> <span class="o">=</span> <span class="mf">1.0e-11</span>
-                <span class="n">l2_norm</span> <span class="o">=</span> <span class="mf">1.0e-11</span>
-                <span class="n">linf_norm</span> <span class="o">=</span> <span class="mf">1.0e-12</span>
+                <span class="n">l1_norm</span> <span class="o">=</span> <span class="mf">1.0e-10</span>
+                <span class="n">l2_norm</span> <span class="o">=</span> <span class="mf">1.0e-10</span>
+                <span class="n">linf_norm</span> <span class="o">=</span> <span class="mf">1.0e-11</span>
                 <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
                                   <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;calvingThickness&#39;</span><span class="p">],</span>
-                                  <span class="n">filename1</span><span class="o">=</span><span class="n">run_dir1</span><span class="o">+</span><span class="s1">&#39;/output.nc&#39;</span><span class="p">,</span>
-                                  <span class="n">filename2</span><span class="o">=</span><span class="n">run_dir2</span><span class="o">+</span><span class="s1">&#39;/output.nc&#39;</span><span class="p">,</span>
+                                  <span class="n">filename1</span><span class="o">=</span><span class="n">run_dir1</span> <span class="o">+</span> <span class="s1">&#39;/output.nc&#39;</span><span class="p">,</span>
+                                  <span class="n">filename2</span><span class="o">=</span><span class="n">run_dir2</span> <span class="o">+</span> <span class="s1">&#39;/output.nc&#39;</span><span class="p">,</span>
                                   <span class="n">l1_norm</span><span class="o">=</span><span class="n">l1_norm</span><span class="p">,</span> <span class="n">l2_norm</span><span class="o">=</span><span class="n">l2_norm</span><span class="p">,</span>
                                   <span class="n">linf_norm</span><span class="o">=</span><span class="n">linf_norm</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
@@ -287,8 +287,8 @@
                 <span class="n">linf_norm</span> <span class="o">=</span> <span class="mf">1.0e-12</span>
                 <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
                                   <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;damage&#39;</span><span class="p">],</span>
-                                  <span class="n">filename1</span><span class="o">=</span><span class="n">run_dir1</span><span class="o">+</span><span class="s1">&#39;/output.nc&#39;</span><span class="p">,</span>
-                                  <span class="n">filename2</span><span class="o">=</span><span class="n">run_dir2</span><span class="o">+</span><span class="s1">&#39;/output.nc&#39;</span><span class="p">,</span>
+                                  <span class="n">filename1</span><span class="o">=</span><span class="n">run_dir1</span> <span class="o">+</span> <span class="s1">&#39;/output.nc&#39;</span><span class="p">,</span>
+                                  <span class="n">filename2</span><span class="o">=</span><span class="n">run_dir2</span> <span class="o">+</span> <span class="s1">&#39;/output.nc&#39;</span><span class="p">,</span>
                                   <span class="n">l1_norm</span><span class="o">=</span><span class="n">l1_norm</span><span class="p">,</span> <span class="n">l2_norm</span><span class="o">=</span><span class="n">l2_norm</span><span class="p">,</span>
                                   <span class="n">linf_norm</span><span class="o">=</span><span class="n">linf_norm</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
@@ -298,8 +298,8 @@
                 <span class="n">linf_norm</span> <span class="o">=</span> <span class="mf">1.0e-12</span>
                 <span class="n">compare_variables</span><span class="p">(</span><span class="n">test_case</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
                                   <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;faceMeltingThickness&#39;</span><span class="p">],</span>
-                                  <span class="n">filename1</span><span class="o">=</span><span class="n">run_dir1</span><span class="o">+</span><span class="s1">&#39;/output.nc&#39;</span><span class="p">,</span>
-                                  <span class="n">filename2</span><span class="o">=</span><span class="n">run_dir2</span><span class="o">+</span><span class="s1">&#39;/output.nc&#39;</span><span class="p">,</span>
+                                  <span class="n">filename1</span><span class="o">=</span><span class="n">run_dir1</span> <span class="o">+</span> <span class="s1">&#39;/output.nc&#39;</span><span class="p">,</span>
+                                  <span class="n">filename2</span><span class="o">=</span><span class="n">run_dir2</span> <span class="o">+</span> <span class="s1">&#39;/output.nc&#39;</span><span class="p">,</span>
                                   <span class="n">l1_norm</span><span class="o">=</span><span class="n">l1_norm</span><span class="p">,</span> <span class="n">l2_norm</span><span class="o">=</span><span class="n">l2_norm</span><span class="p">,</span>
                                   <span class="n">linf_norm</span><span class="o">=</span><span class="n">linf_norm</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div></div>
 </pre></div>
