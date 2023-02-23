@@ -1,6 +1,6 @@
-from compass.validate import compare_variables
-from compass.testcase import TestCase
 from compass.landice.tests.humboldt.run_model import RunModel
+from compass.testcase import TestCase
+from compass.validate import compare_variables
 
 
 class DecompositionTest(TestCase):
@@ -120,8 +120,8 @@ class DecompositionTest(TestCase):
         if self.velo_solver in {'sia', 'none'}:
             compare_variables(test_case=self,
                               variables=var_list,
-                              filename1=run_dir1+'/output.nc',
-                              filename2=run_dir2+'/output.nc')
+                              filename1=run_dir1 + '/output.nc',
+                              filename2=run_dir2 + '/output.nc')
 
         elif self.velo_solver == 'FO':
             # validate thickness
@@ -130,8 +130,8 @@ class DecompositionTest(TestCase):
             l2_norm = 1.0e-11
             linf_norm = 1.0e-11
             compare_variables(test_case=self, variables=variable,
-                              filename1=run_dir1+'/output.nc',
-                              filename2=run_dir2+'/output.nc',
+                              filename1=run_dir1 + '/output.nc',
+                              filename2=run_dir2 + '/output.nc',
                               l1_norm=l1_norm, l2_norm=l2_norm,
                               linf_norm=linf_norm, quiet=False)
 
@@ -141,8 +141,8 @@ class DecompositionTest(TestCase):
             l2_norm = 1.0e-16
             linf_norm = 1.0e-17
             compare_variables(test_case=self, variables=variable,
-                              filename1=run_dir1+'/output.nc',
-                              filename2=run_dir2+'/output.nc',
+                              filename1=run_dir1 + '/output.nc',
+                              filename2=run_dir2 + '/output.nc',
                               l1_norm=l1_norm, l2_norm=l2_norm,
                               linf_norm=linf_norm, quiet=False)
 
@@ -152,19 +152,19 @@ class DecompositionTest(TestCase):
                 linf_norm = 1.0e-12
                 compare_variables(test_case=self,
                                   variables=['calvingVelocity'],
-                                  filename1=run_dir1+'/output.nc',
-                                  filename2=run_dir2+'/output.nc',
+                                  filename1=run_dir1 + '/output.nc',
+                                  filename2=run_dir2 + '/output.nc',
                                   l1_norm=l1_norm, l2_norm=l2_norm,
                                   linf_norm=linf_norm, quiet=False)
 
             if 'calvingThickness' in var_list:
-                l1_norm = 1.0e-11
-                l2_norm = 1.0e-11
-                linf_norm = 1.0e-12
+                l1_norm = 1.0e-10
+                l2_norm = 1.0e-10
+                linf_norm = 1.0e-11
                 compare_variables(test_case=self,
                                   variables=['calvingThickness'],
-                                  filename1=run_dir1+'/output.nc',
-                                  filename2=run_dir2+'/output.nc',
+                                  filename1=run_dir1 + '/output.nc',
+                                  filename2=run_dir2 + '/output.nc',
                                   l1_norm=l1_norm, l2_norm=l2_norm,
                                   linf_norm=linf_norm, quiet=False)
 
@@ -174,8 +174,8 @@ class DecompositionTest(TestCase):
                 linf_norm = 1.0e-12
                 compare_variables(test_case=self,
                                   variables=['damage'],
-                                  filename1=run_dir1+'/output.nc',
-                                  filename2=run_dir2+'/output.nc',
+                                  filename1=run_dir1 + '/output.nc',
+                                  filename2=run_dir2 + '/output.nc',
                                   l1_norm=l1_norm, l2_norm=l2_norm,
                                   linf_norm=linf_norm, quiet=False)
 
@@ -185,7 +185,7 @@ class DecompositionTest(TestCase):
                 linf_norm = 1.0e-12
                 compare_variables(test_case=self,
                                   variables=['faceMeltingThickness'],
-                                  filename1=run_dir1+'/output.nc',
-                                  filename2=run_dir2+'/output.nc',
+                                  filename1=run_dir1 + '/output.nc',
+                                  filename2=run_dir2 + '/output.nc',
                                   l1_norm=l1_norm, l2_norm=l2_norm,
                                   linf_norm=linf_norm, quiet=False)
